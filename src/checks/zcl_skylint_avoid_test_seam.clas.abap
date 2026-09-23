@@ -31,8 +31,8 @@ CLASS zcl_skylint_avoid_test_seam IMPLEMENTATION.
   METHOD check.
     LOOP AT is_procedure-statements ASSIGNING FIELD-SYMBOL(<ls_statement>)
          WHERE keyword = 'TEST-SEAM'.
-      report_statement( is_statement    = <ls_statement>
-                        iv_finding_code = c_finding_codes-test_seam ).
+      get_reporter( )->report_statement( is_statement    = <ls_statement>
+                                         iv_finding_code = c_finding_codes-test_seam ).
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

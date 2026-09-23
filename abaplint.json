@@ -15,8 +15,8 @@
   },
   "dependencies": [
     {
-      "folder": "/deps",
-      "files": "/**/*.*"
+      "folder": "/deps/*",
+      "files": "/src/**/*.*"
     }
   ],
   "syntax": {
@@ -48,7 +48,11 @@
       "exclude": [],
       "severity": "Error"
     },
-    "align_type_expressions": false,
+    "align_type_expressions": {
+      "exclude": [],
+      "severity": "Error",
+      "ignoreExceptions": true
+    },
     "allowed_object_naming": {
       "exclude": [],
       "severity": "Error"
@@ -57,8 +61,8 @@
       "exclude": [],
       "severity": "Error",
       "allowed": [
-        "CLAS",
-        "INTF"
+        "INTF",
+        "CLAS"
       ]
     },
     "ambiguous_statement": {
@@ -95,10 +99,6 @@
       "severity": "Error"
     },
     "cds_association_name": {
-      "exclude": [],
-      "severity": "Error"
-    },
-    "cds_check_syntax": {
       "exclude": [],
       "severity": "Error"
     },
@@ -291,19 +291,7 @@
       "exclude": [],
       "severity": "Error"
     },
-    "double_space": {
-      "exclude": [],
-      "severity": "Error",
-      "keywords": true,
-      "skipKeywords": [
-        "CHANGING",
-        "EXPORTING",
-        "OTHERS"
-      ],
-      "startParen": true,
-      "endParen": true,
-      "afterColon": true
-    },
+    "double_space": false,
     "downport": {
       "exclude": [],
       "severity": "Error"
@@ -713,12 +701,7 @@
       "exclude": [],
       "severity": "Error"
     },
-    "in_statement_indentation": {
-      "exclude": [],
-      "severity": "Error",
-      "blockStatements": 2,
-      "ignoreExceptions": true
-    },
+    "in_statement_indentation": false,
     "indentation": {
       "exclude": [],
       "severity": "Error",
@@ -907,23 +890,6 @@
       "exclude": [],
       "severity": "Error"
     },
-    "no_dynamic_stuff": {
-      "exclude": [],
-      "severity": "Error",
-      "callMethod": true,
-      "callFunction": true,
-      "callDatabaseProcedure": true,
-      "callTransformation": true,
-      "callTransaction": true,
-      "perform": true,
-      "submit": true,
-      "createObject": true,
-      "createData": true,
-      "getBadi": true,
-      "assign": true,
-      "internalTable": true,
-      "exportImport": true
-    },
     "no_exclamation_escape": {
       "exclude": [],
       "severity": "Error"
@@ -934,10 +900,6 @@
     },
     "no_inline_in_optional_branches": false,
     "no_macros": {
-      "exclude": [],
-      "severity": "Error"
-    },
-    "no_mandt_in_database_operations": {
       "exclude": [],
       "severity": "Error"
     },
@@ -964,7 +926,37 @@
       "ignoreNames": [],
       "ignorePatterns": [],
       "clas": "^ZC(L|X)_SKYLINT",
-      "intf": "^ZIF_SKYLINT"
+      "intf": "^ZIF_SKYLINT",
+      "prog": "^Z",
+      "fugr": "^Z",
+      "tabl": "^Z",
+      "ttyp": "^Z",
+      "dtel": "^Z",
+      "doma": "^Z",
+      "msag": "^Z",
+      "tran": "^Z",
+      "enqu": "^EZ",
+      "auth": "^Z",
+      "pinf": "^Z",
+      "idoc": "^Z",
+      "xslt": "^Z",
+      "ssfo": "^Z",
+      "ssst": "^Z",
+      "shlp": "^Z",
+      "sxci": "^Z",
+      "enhs": "^Z",
+      "enho": "^Z",
+      "cmod": "^Z",
+      "form": "^Z",
+      "sfpf": "^Z",
+      "sfpi": "^Z",
+      "aqqu": "^Z",
+      "aqsg": "^Z",
+      "aqbg": "^Z",
+      "suso": "^Z",
+      "sucu": "^Z",
+      "wdya": "^Z",
+      "wdyn": "^Z"
     },
     "obsolete_statement": {
       "exclude": [],
@@ -1003,7 +995,10 @@
       "loopExtract": true,
       "sortExtract": true
     },
-    "omit_parameter_name": false,
+    "omit_parameter_name": {
+      "exclude": [],
+      "severity": "Error"
+    },
     "omit_preceding_zeros": {
       "exclude": [],
       "severity": "Error"
@@ -1033,23 +1028,11 @@
       "severity": "Error",
       "style": "upper"
     },
-    "prefer_abap_bool": {
-      "exclude": [],
-      "severity": "Error"
-    },
-    "prefer_abap_bool_values": {
-      "exclude": [],
-      "severity": "Error"
-    },
     "prefer_corresponding": {
       "exclude": [],
       "severity": "Error"
     },
     "prefer_inline": false,
-    "prefer_insert_into_table": {
-      "exclude": [],
-      "severity": "Error"
-    },
     "prefer_is_not": {
       "exclude": [],
       "severity": "Error"
@@ -1081,10 +1064,6 @@
       "severity": "Error"
     },
     "prefer_returning_to_exporting": {
-      "exclude": [],
-      "severity": "Error"
-    },
-    "prefer_string_template": {
       "exclude": [],
       "severity": "Error"
     },
@@ -1276,10 +1255,6 @@
       "maxIssuesPerFile": 10,
       "ignoreExceptions": true
     },
-    "unnecessary_loop_guard": {
-      "exclude": [],
-      "severity": "Error"
-    },
     "unnecessary_pragma": {
       "exclude": [],
       "severity": "Error",
@@ -1331,10 +1306,6 @@
       "exclude": [],
       "severity": "Error"
     },
-    "use_message_class": {
-      "exclude": [],
-      "severity": "Error"
-    },
     "use_new": {
       "exclude": [],
       "severity": "Error"
@@ -1347,19 +1318,10 @@
       "exclude": [],
       "severity": "Error"
     },
-    "wrong_abapdoc_position": {
-      "exclude": [],
-      "severity": "Error"
-    },
-    "xml_bom": {
-      "exclude": [],
-      "severity": "Error"
-    },
     "xml_consistency": {
       "exclude": [],
       "severity": "Error",
-      "textAndTranslationLengthSeverity": "Error",
-      "dataElementSeverity": "Error"
+      "textAndTranslationLengthSeverity": "Error"
     }
   }
 }

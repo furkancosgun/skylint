@@ -1,12 +1,9 @@
 CLASS zcl_skylint_analyzer DEFINITION
   PUBLIC FINAL
-  CREATE PRIVATE.
+  CREATE PUBLIC.
 
   PUBLIC SECTION.
     INTERFACES zif_skylint_analyzer.
-
-    CLASS-METHODS get_instance
-      RETURNING VALUE(ro_instance) TYPE REF TO zif_skylint_analyzer.
 
     CLASS-METHODS class_constructor.
 
@@ -18,7 +15,6 @@ CLASS zcl_skylint_analyzer DEFINITION
       END OF ty_negation.
 
     CLASS-DATA gt_negations TYPE TABLE OF ty_negation.
-    CLASS-DATA go_singleton TYPE REF TO zif_skylint_analyzer.
 
     METHODS flatten_internal
       IMPORTING it_tokens      TYPE if_ci_atc_source_code_provider=>ty_tokens
@@ -55,13 +51,6 @@ CLASS zcl_skylint_analyzer IMPLEMENTATION.
                             ( operator = 'GE'  negated = 'LT' ) ).
   ENDMETHOD.
 
-  METHOD get_instance.
-    IF go_singleton IS NOT BOUND.
-      go_singleton = NEW zcl_skylint_analyzer( ).
-    ENDIF.
-    ro_instance = go_singleton.
-  ENDMETHOD.
-
   METHOD zif_skylint_analyzer~is_keyword.
     rv_yes = xsdbool( iv_token-references IS INITIAL AND iv_token-lexeme = iv_keyword ).
   ENDMETHOD.
@@ -81,7 +70,7 @@ CLASS zcl_skylint_analyzer IMPLEMENTATION.
                                                 WHEN ')'
                                                 THEN zif_skylint_analyzer=>bracket_type-clopening
                                                 ELSE zif_skylint_analyzer=>bracket_type-opening )
-                        ELSE zif_skylint_analyzer=>bracket_type-none ).
+                        ELSE          zif_skylint_analyzer=>bracket_type-none ).
   ENDMETHOD.
 
   METHOD zif_skylint_analyzer~is_comparison_operator.
@@ -104,7 +93,7 @@ CLASS zcl_skylint_analyzer IMPLEMENTATION.
                         WHEN 'OR'    THEN zif_skylint_analyzer=>connective-or
                         WHEN 'EQUIV' THEN zif_skylint_analyzer=>connective-equiv
                         WHEN 'NOT'   THEN zif_skylint_analyzer=>connective-not
-                        ELSE zif_skylint_analyzer=>connective-none ).
+                        ELSE              zif_skylint_analyzer=>connective-none ).
   ENDMETHOD.
 
   METHOD zif_skylint_analyzer~find_token.
@@ -127,7 +116,7 @@ CLASS zcl_skylint_analyzer IMPLEMENTATION.
          WHERE lexeme = lt_parts[ 1 ] AND references IS INITIAL.
       rv_index = sy-tabix.
       DATA(lv_part_idx) = 2.
-      WHILE lv_part_idx                <= lines( lt_parts )
+      WHILE     lv_part_idx                <= lines( lt_parts )
             AND rv_index + lv_part_idx - 1 <= lines( it_tokens ).
         ASSIGN it_tokens[ rv_index + lv_part_idx - 1 ] TO FIELD-SYMBOL(<ls_t>).
         IF <ls_t>-lexeme = lt_parts[ lv_part_idx ] AND <ls_t>-references IS INITIAL.
@@ -185,8 +174,8 @@ CLASS zcl_skylint_analyzer IMPLEMENTATION.
 
   METHOD zif_skylint_analyzer~find_closing_bracket.
     DATA(lv_type) = zif_skylint_analyzer~bracket_type( is_statement-tokens[ iv_open_pos ] ).
-    IF lv_type <> zif_skylint_analyzer=>bracket_type-opening
-        AND lv_type <> zif_skylint_analyzer=>bracket_type-closing.
+    IF     lv_type <> zif_skylint_analyzer=>bracket_type-opening
+       AND lv_type <> zif_skylint_analyzer=>bracket_type-closing.
       RAISE EXCEPTION NEW zcx_skylint_error( iv_text = |Not a bracket| ).
     ENDIF.
 
@@ -273,8 +262,8 @@ CLASS zcl_skylint_analyzer IMPLEMENTATION.
             lv_in_braces = abap_false.
           ENDIF.
         WHEN ` `.
-          IF lv_in_sq = abap_false AND lv_in_quotes = abap_false
-              AND ( lv_in_tpl = abap_false OR lv_in_braces = abap_true ).
+          IF     lv_in_sq = abap_false AND lv_in_quotes = abap_false
+             AND ( lv_in_tpl = abap_false OR lv_in_braces = abap_true ).
             lv_last_space = lv_i.
           ENDIF.
       ENDCASE.

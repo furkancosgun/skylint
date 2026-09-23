@@ -1,5 +1,6 @@
-# core - Skylint Infrastructure
+# Core - Skylint Infrastructure
 
-- base/: ATC base class & metadata handler
-- analyzer/: Token/statement analysis (stateless, extensible)
-- hook/: Lifecycle hooks reusable by any class (check or non-check)
+- `base/`: Minimalist ATC check base class (`zcl_skylint_check_base`) & metadata handler (`zcl_skylint_check_meta_data`)
+- `reporter/`: Finding reporter interface (`zif_skylint_reporter`) & location/checksum/pseudo-comment processor (`zcl_skylint_reporter`)
+- `quickfix/`: QuickFix builder interface (`zif_skylint_quickfix`) & code replacement engine (`zcl_skylint_quickfix`)
+- `analyzer/`: Token/statement analysis & AST helpers (`zif_skylint_analyzer`, `zcl_skylint_analyzer`)
