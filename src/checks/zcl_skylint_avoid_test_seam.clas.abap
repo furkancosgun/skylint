@@ -15,6 +15,7 @@ CLASS zcl_skylint_avoid_test_seam DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'TEST_SEAM_USAGE'.
+
 ENDCLASS.
 
 
@@ -29,8 +30,10 @@ CLASS zcl_skylint_avoid_test_seam IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    LOOP AT is_procedure-statements ASSIGNING FIELD-SYMBOL(<ls_statement>)
-         WHERE keyword = 'TEST-SEAM'.
+    DATA(lo_stream) = get_token_stream( is_procedure ).
+    DATA(lt_matches) = lo_stream->find_statements_by_keyword( 'TEST-SEAM' ).
+
+    LOOP AT lt_matches ASSIGNING FIELD-SYMBOL(<ls_statement>).
       get_reporter( )->report_statement( is_statement    = <ls_statement>
                                          iv_finding_code = c_finding_codes-test_seam ).
     ENDLOOP.
