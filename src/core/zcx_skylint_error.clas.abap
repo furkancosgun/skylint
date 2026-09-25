@@ -14,7 +14,7 @@ CLASS zcx_skylint_error DEFINITION
     METHODS get_text REDEFINITION.
 
   PRIVATE SECTION.
-    DATA mv_message TYPE string READ-ONLY.
+    DATA mv_message TYPE string.
 ENDCLASS.
 
 

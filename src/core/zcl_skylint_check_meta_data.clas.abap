@@ -55,12 +55,12 @@ CLASS zcl_skylint_check_meta_data IMPLEMENTATION.
 
   METHOD if_ci_atc_check_meta_data~get_finding_code_infos.
     DATA lv_pc TYPE string.
+    FIELD-SYMBOLS <ls_fc> TYPE ty_finding_code_config.
 
-    LOOP AT ms_config-finding_codes ASSIGNING FIELD-SYMBOL(<ls_fc>).
-      IF <ls_fc>-pseudo_comment IS NOT INITIAL AND <ls_fc>-pseudo_comment NP 'CI_*'.
-        lv_pc = |CI_{ <ls_fc>-pseudo_comment }|.
-      ELSE.
-        lv_pc = <ls_fc>-pseudo_comment.
+    LOOP AT ms_config-finding_codes ASSIGNING <ls_fc>.
+      lv_pc = <ls_fc>-pseudo_comment.
+      IF lv_pc IS NOT INITIAL AND lv_pc NP 'CI_*'.
+        lv_pc = |CI_{ lv_pc }|.
       ENDIF.
 
       INSERT VALUE #( code           = <ls_fc>-code
@@ -87,18 +87,18 @@ CLASS zcl_skylint_check_meta_data IMPLEMENTATION.
   METHOD has_valid_pseudo_comment.
     DATA lv_raw_pc TYPE string.
     DATA lv_ci_pc  TYPE string.
+    FIELD-SYMBOLS <ls_finding_code> TYPE ty_finding_code_config.
 
-    ASSIGN ms_config-finding_codes[ code = iv_finding_code ] TO FIELD-SYMBOL(<ls_finding_code>).
+    ASSIGN ms_config-finding_codes[ code = iv_finding_code ] TO <ls_finding_code>.
     IF sy-subrc <> 0 OR <ls_finding_code>-pseudo_comment IS INITIAL.
       rv_has_pseudo_comment = abap_false.
       RETURN.
     ENDIF.
 
     lv_raw_pc = <ls_finding_code>-pseudo_comment.
-    IF lv_raw_pc CP 'CI_*'.
-      lv_ci_pc = lv_raw_pc.
-    ELSE.
-      lv_ci_pc = |CI_{ lv_raw_pc }|.
+    lv_ci_pc  = lv_raw_pc.
+    IF lv_ci_pc NP 'CI_*'.
+      lv_ci_pc = |CI_{ lv_ci_pc }|.
     ENDIF.
 
     rv_has_pseudo_comment = xsdbool(

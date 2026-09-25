@@ -3,9 +3,9 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <VSEOCLASS>
-    <CLSNAME>ZCL_SKYLINT_TOKEN_STREAM</CLSNAME>
+    <CLSNAME>ZCL_SKYLINT_CHECK_META_DATA</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Fluent Token Stream Query Engine</DESCRIPT>
+    <DESCRIPT>skylint: Check Metadata Handler</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>
