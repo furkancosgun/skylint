@@ -1,0 +1,93 @@
+CLASS zcl_skylint_check_008 DEFINITION
+  PUBLIC
+  INHERITING FROM zcl_skylint_check_base
+  CREATE PUBLIC.
+
+  PUBLIC SECTION.
+    CONSTANTS:
+      BEGIN OF c_finding_codes,
+        assignment_chaining TYPE if_ci_atc_check=>ty_finding_code VALUE 'ASSIGNCHN',
+      END OF c_finding_codes.
+
+    METHODS constructor.
+
+  PROTECTED SECTION.
+    METHODS check REDEFINITION.
+
+  PRIVATE SECTION.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'ASSIGN_CHAIN'.
+
+    METHODS has_assignment_chain
+      IMPORTING
+        is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING
+        VALUE(rv_chain) TYPE abap_bool.
+
+ENDCLASS.
+
+
+CLASS zcl_skylint_check_008 IMPLEMENTATION.
+  METHOD constructor.
+    super->constructor(
+        VALUE #( description       = 'Avoid assignment chaining (a = b = c)'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #(
+                     ( code           = c_finding_codes-assignment_chaining
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Avoid chained assignments; write separate assignment statements'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
+  ENDMETHOD.
+
+  METHOD check.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF has_assignment_chain( <ls_statement> ) = abap_true.
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-assignment_chaining ).
+      ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD has_assignment_chain.
+    DATA lv_depth        TYPE i.
+    DATA lv_equals_count TYPE i.
+    DATA lv_lexeme       TYPE string.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    rv_chain = abap_false.
+
+    CASE is_statement-keyword.
+      WHEN 'IF' OR 'ELSEIF' OR 'CHECK' OR 'WHILE' OR 'WHEN'
+        OR 'WHERE' OR 'SELECT' OR 'UPDATE' OR 'MODIFY' OR 'DELETE'
+        OR 'TYPES' OR 'DATA' OR 'CONSTANTS' OR 'STATICS' OR 'ASSERT'.
+        RETURN.
+    ENDCASE.
+
+    lv_depth = 0.
+    lv_equals_count = 0.
+
+    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
+      lv_lexeme = <ls_token>-lexeme.
+
+      IF lv_lexeme CP '*(' OR lv_lexeme CP '*[' OR lv_lexeme CP '*{'
+         OR lv_lexeme = '(' OR lv_lexeme = '[' OR lv_lexeme = '{'.
+        lv_depth = lv_depth + 1.
+      ENDIF.
+
+      IF lv_depth = 0 AND lv_lexeme = '='.
+        lv_equals_count = lv_equals_count + 1.
+      ENDIF.
+
+      IF ( lv_lexeme CP '*)' OR lv_lexeme CP '*]' OR lv_lexeme CP '*}'
+         OR lv_lexeme = ')' OR lv_lexeme = ']' OR lv_lexeme = '}' )
+         AND lv_depth > 0.
+        lv_depth = lv_depth - 1.
+      ENDIF.
+    ENDLOOP.
+
+    IF lv_equals_count > 1.
+      rv_chain = abap_true.
+    ENDIF.
+  ENDMETHOD.
+ENDCLASS.

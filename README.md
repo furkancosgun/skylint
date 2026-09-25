@@ -34,9 +34,58 @@ skylint/
 │   └── tests/                                    # Target Test Objects for ATC Unit Tests
 │       └── zcl_skylint_test_001.clas.abap       # Code fixtures for Check 001
 │
+├── mock/                                         # Open-ABAP ATC Test Driver & Asserter Mocks
+│   ├── cl_ci_atc_unit_driver.clas.abap          # Native ATC driver factory mock
+│   └── if_ci_atc_unit_asserter.intf.abap        # Standard ATC Asserter interface mock
+│
 ├── abaplint.json                                 # abaplint configuration & rule sets
 └── package.json                                  # Project scripts & tooling
 ```
+
+---
+
+## 📋 Rule Roadmap & Implementation Checklist (Easiest to Hardest)
+
+The rules are systematically ordered by AST/parsing complexity. Each rule includes its designated numeric ID, category, description, and status.
+
+### 🟢 Level 1: Beginner / Direct Pattern Matching (Keyword & Single Statement)
+Direct single-statement keyword matching or simple token replacement with minimal index complexity.
+
+- [x] **`001: Avoid TEST-SEAM`** - Detect `TEST-SEAM` statements; recommend ABAP OO Test Doubles / Interfaces.
+- [x] **`002: Prefer lines( ) over DESCRIBE TABLE`** - Detect `DESCRIBE TABLE ... LINES ...`; suggest modern `lines( ... )`.
+- [x] **`003: Avoid CALL METHOD`** - Detect legacy `CALL METHOD lo->meth( )`; suggest functional `lo->meth( )`.
+- [x] **`004: Avoid DEFAULT KEY`** - Detect `WITH DEFAULT KEY` on internal tables; recommend `EMPTY KEY` or explicit keys.
+- [x] **`005: Prefer IS NOT over NOT IS`** - Detect `NOT ... IS INITIAL` / `NOT ... IS BOUND`; suggest `IS NOT INITIAL` / `IS NOT BOUND`.
+- [x] **`006: Avoid ME-> Self Reference`** - Detect unnecessary `me->` references when no ambiguity exists.
+- [x] **`007: Omit EXPORTING in Calls`** - Detect explicit `EXPORTING` in single-parameter / functional method calls.
+- [x] **`008: Avoid Assignment Chaining`** - Detect multiple assignment chains (`a = b = c = 0.`).
+- [x] **`009: Avoid Chained Declarations`** - Detect legacy chained declarations (`DATA: a, b.`); promote discrete `DATA`.
+- [x] **`010: Prefer String Templates over CONCATENATE`** - Detect legacy `CONCATENATE ... INTO ...`; suggest string templates `|...|`.
+
+### 🟡 Level 2: Intermediate / Block Scope & Control Statements
+Structure boundaries, control blocks (`IF`, `CASE`, `LOOP`, `TRY`), and condition evaluation.
+
+- [ ] **`011: Avoid Boolean Comparison`** - Detect `IF bool = abap_true` / `IF bool = 'X'`; promote direct `IF bool`.
+- [ ] **`012: Prefer line_exists( ) over READ TABLE NO FIELDS`** - Detect `READ TABLE ... TRANSPORTING NO FIELDS`; suggest `line_exists( ... )`.
+- [ ] **`013: EXIT Outside Loop -> Prefer RETURN`** - Detect `EXIT` statements in procedures outside loop constructs; suggest `RETURN`.
+- [ ] **`014: Avoid CHECK in Iterations`** - Detect `CHECK` inside `LOOP` / `DO` / `WHILE`; promote explicit `IF ... CONTINUE`.
+- [ ] **`015: Constant-Only Interfaces`** - Detect interfaces containing only `CONSTANTS`; suggest global classes or domain types.
+- [ ] **`016: Empty Control Blocks`** - Detect empty `IF`, `CASE`, `LOOP`, `TRY` statement bodies.
+- [ ] **`017: Empty CATCH Block`** - Detect empty `CATCH` blocks swallowing exceptions without logging or re-raising.
+- [ ] **`018: Missing Assert in Test Class`** - Detect AUnit test methods missing any `cl_abap_unit_assert` verification.
+- [ ] **`019: Identical Conditions in IF/CASE`** - Detect duplicate branch conditions in `IF ... ELSEIF` or `CASE ... WHEN`.
+- [ ] **`020: Nested IF Simplification`** - Detect consecutive nested single-line `IF` blocks that can be merged with `AND`.
+
+### 🔴 Level 3: Advanced / Data Flow, Security & Lifecycle
+Cross-statement flow, data access boundaries, exception propagation, and signature sizing.
+
+- [ ] **`021: DB Access Inside Loops`** - Detect SQL queries (`SELECT`, `MODIFY`, `INSERT`, `DELETE`) within loop iterations.
+- [ ] **`022: Avoid DB Access in Unit Tests`** - Detect direct database table access inside AUnit test methods (`FOR TESTING`).
+- [ ] **`023: Lost Previous Exception in CATCH`** - Detect re-raised exceptions missing `PREVIOUS = lx_exc` parameter.
+- [ ] **`024: Scope of Variable (Variable Leaking)`** - Detect variables declared in inner blocks referenced outside their intended scope.
+- [ ] **`025: Method Signature Cleanliness`** - Detect excessive parameter signatures (> 8 parameters); suggest structure or object parameters.
+
+---
 
 ---
 

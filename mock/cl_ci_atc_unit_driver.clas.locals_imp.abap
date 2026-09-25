@@ -93,21 +93,49 @@ CLASS lcl_ci_atc_unit_asserter IMPLEMENTATION.
     DATA lv_found         TYPE abap_bool.
     DATA lv_msg           TYPE string.
 
+    DATA lt_source_lines  TYPE STANDARD TABLE OF string WITH DEFAULT KEY.
+    DATA lv_line          TYPE string.
+
     lv_name = object-name.
 
-    WRITE '@KERNEL const fs = await import("fs");'.
-    WRITE '@KERNEL const path = await import("path");'.
-    WRITE '@KERNEL const nameClean = lv_name.get().toLowerCase().replace(/^\/cc4a\//, "");'.
-    WRITE '@KERNEL const candidates = ['.
-    WRITE '@KERNEL   path.join(process.cwd(), "src/tests", nameClean + ".clas.abap"),'.
-    WRITE '@KERNEL   path.join(process.cwd(), "src/tests", "zcl_skylint_" + nameClean + ".clas.abap"),'.
-    WRITE '@KERNEL   path.join(process.cwd(), "src/tests/zcl_skylint_test_001.clas.abap")'.
-    WRITE '@KERNEL ];'.
-    WRITE '@KERNEL let codeContent = "";'.
-    WRITE '@KERNEL for (const c of candidates) {'.
-    WRITE '@KERNEL   if (fs.existsSync(c)) { codeContent = fs.readFileSync(c, "utf8"); break; }'.
-    WRITE '@KERNEL }'.
-    WRITE '@KERNEL lv_source.set(codeContent);'.
+    READ REPORT lv_name INTO lt_source_lines.
+    IF sy-subrc = 0 AND lines( lt_source_lines ) > 0.
+      LOOP AT lt_source_lines INTO lv_line.
+        IF lv_source IS INITIAL.
+          lv_source = lv_line.
+        ELSE.
+          lv_source = |{ lv_source }\n{ lv_line }|.
+        ENDIF.
+      ENDLOOP.
+    ELSE.
+      WRITE '@KERNEL const fs = await import("fs");'.
+      WRITE '@KERNEL const path = await import("path");'.
+      WRITE '@KERNEL const rawName = lv_name.get().toLowerCase();'.
+      WRITE '@KERNEL const hashName = rawName.replace(/\//g, "#");'.
+      WRITE '@KERNEL const cleanName = rawName.replace(/[^a-z0-9_]/g, "");'.
+      WRITE '@KERNEL function searchAbapFile(dir) {'.
+      WRITE '@KERNEL   if (!fs.existsSync(dir)) return "";'.
+      WRITE '@KERNEL   const entries = fs.readdirSync(dir, { withFileTypes: true });'.
+      WRITE '@KERNEL   for (const entry of entries) {'.
+      WRITE '@KERNEL     const fullPath = path.join(dir, entry.name);'.
+      WRITE '@KERNEL     if (entry.isDirectory()) {'.
+      WRITE '@KERNEL       const found = searchAbapFile(fullPath);'.
+      WRITE '@KERNEL       if (found) return found;'.
+      WRITE '@KERNEL     } else if (entry.isFile() && entry.name.toLowerCase().endsWith(".abap")) {'.
+      WRITE '@KERNEL       const fileName = entry.name.toLowerCase();'.
+      WRITE '@KERNEL       const baseName = fileName.replace(/\.clas\.abap$/, "").replace(/\.abap$/, "");'.
+      WRITE '@KERNEL       const cleanBase = baseName.replace(/[^a-z0-9_]/g, "");'.
+      WRITE '@KERNEL       if (baseName === hashName || baseName === rawName || cleanBase === cleanName || cleanBase.includes(cleanName) || cleanName.includes(cleanBase)) {'.
+      WRITE '@KERNEL         return fs.readFileSync(fullPath, "utf8");'.
+      WRITE '@KERNEL       }'.
+      WRITE '@KERNEL     }'.
+      WRITE '@KERNEL   }'.
+      WRITE '@KERNEL   return "";'.
+      WRITE '@KERNEL }'.
+      WRITE '@KERNEL const srcDir = path.join(process.cwd(), "src");'.
+      WRITE '@KERNEL const codeContent = searchAbapFile(srcDir);'.
+      WRITE '@KERNEL lv_source.set(codeContent);'.
+    ENDIF.
 
     lt_procedures = build_procedures_from_source(
       iv_source      = lv_source
@@ -165,12 +193,18 @@ CLASS lcl_ci_atc_unit_asserter IMPLEMENTATION.
     DATA ls_statement        TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA ls_atc_token        TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA ls_procedure        TYPE if_ci_atc_source_code_provider=>ty_procedure.
+    FIELD-SYMBOLS <ls_stmt_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_in_proc          TYPE abap_bool.
     DATA lv_first_token      TYPE abap_bool.
     DATA lv_tok_idx          TYPE i.
     DATA lv_proc_start_row   TYPE i.
     DATA lv_rel_row          TYPE i.
     DATA lv_pc_str           TYPE string.
+
+    DATA lt_src_lines        TYPE STANDARD TABLE OF string WITH DEFAULT KEY.
+    DATA lv_src_line         TYPE string.
+
+    SPLIT iv_source AT |\n| INTO TABLE lt_src_lines.
 
     SCAN ABAP-SOURCE iv_source
       TOKENS INTO lt_tokens
@@ -221,6 +255,23 @@ CLASS lcl_ci_atc_unit_asserter IMPLEMENTATION.
         ENDIF.
         lv_tok_idx = lv_tok_idx + 1.
       ENDWHILE.
+
+      READ TABLE lt_src_lines INTO lv_src_line INDEX ls_statement-position-line.
+      IF sy-subrc = 0.
+        IF ( to_upper( lv_src_line ) CP |*{ ls_statement-keyword }:*|
+             OR to_upper( lv_src_line ) CP |*{ ls_statement-keyword } :*|
+             OR ls_stmnt-terminator = ',' )
+           AND lines( ls_statement-tokens ) >= 1.
+          READ TABLE ls_statement-tokens INTO ls_atc_token INDEX 2.
+          IF sy-subrc <> 0 OR ls_atc_token-lexeme <> ':'.
+            CLEAR ls_atc_token.
+            ls_atc_token-lexeme = ':'.
+            ls_atc_token-position-line = ls_statement-position-line.
+            ls_atc_token-position-column = ls_statement-position-column.
+            INSERT ls_atc_token INTO ls_statement-tokens INDEX 2.
+          ENDIF.
+        ENDIF.
+      ENDIF.
 
       IF ls_statement-keyword = 'METHOD'.
         CLEAR ls_procedure.
@@ -285,6 +336,9 @@ CLASS lcl_ci_atc_unit_asserter IMPLEMENTATION.
       IF lv_in_proc = abap_true.
         lv_rel_row = ls_statement-position-line - lv_proc_start_row + 1.
         ls_statement-position-line = lv_rel_row.
+        LOOP AT ls_statement-tokens ASSIGNING <ls_stmt_tok>.
+          <ls_stmt_tok>-position-line = <ls_stmt_tok>-position-line - lv_proc_start_row + 1.
+        ENDLOOP.
         APPEND ls_statement TO ls_procedure-statements.
       ENDIF.
 
