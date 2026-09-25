@@ -75,15 +75,34 @@ Structure boundaries, control blocks (`IF`, `CASE`, `LOOP`, `TRY`), and conditio
 - [ ] **`018: Missing Assert in Test Class`** - Detect AUnit test methods missing any `cl_abap_unit_assert` verification.
 - [ ] **`019: Identical Conditions in IF/CASE`** - Detect duplicate branch conditions in `IF ... ELSEIF` or `CASE ... WHEN`.
 - [ ] **`020: Nested IF Simplification`** - Detect consecutive nested single-line `IF` blocks that can be merged with `AND`.
+- [ ] **`021: WHEN OTHERS Must Be Last`** - Detect `WHEN OTHERS` positioned before specific `WHEN` branches in `CASE`.
+- [ ] **`022: Detect Unreachable Code`** - Detect dead statements directly following unconditional `RETURN`, `EXIT`, `RAISE EXCEPTION`.
+- [ ] **`023: Avoid Short CASE (Prefer IF)`** - Detect `CASE` statements containing only a single `WHEN` branch; suggest `IF ... ELSE`.
+- [ ] **`024: Avoid Yoda Conditions`** - Detect inverted comparisons (`IF 'X' = lv_var`); promote natural order (`IF lv_var = 'X'`).
+- [ ] **`025: Prefer Comparison Operators`** - Detect legacy comparison keywords (`EQ`, `NE`, `GT`, `LT`, `GE`, `LE`); enforce modern `=`, `<>`, `>`, `<`, `>=`, `<=`.
 
-### 🔴 Level 3: Advanced / Data Flow, Security & Lifecycle
-Cross-statement flow, data access boundaries, exception propagation, and signature sizing.
+### 🔵 Level 3: Modern ABAP & OO Architecture
+Modern expression syntax, encapsulation, test double design, and exception hygiene.
 
-- [ ] **`021: DB Access Inside Loops`** - Detect SQL queries (`SELECT`, `MODIFY`, `INSERT`, `DELETE`) within loop iterations.
-- [ ] **`022: Avoid DB Access in Unit Tests`** - Detect direct database table access inside AUnit test methods (`FOR TESTING`).
-- [ ] **`023: Lost Previous Exception in CATCH`** - Detect re-raised exceptions missing `PREVIOUS = lx_exc` parameter.
-- [ ] **`024: Scope of Variable (Variable Leaking)`** - Detect variables declared in inner blocks referenced outside their intended scope.
-- [ ] **`025: Method Signature Cleanliness`** - Detect excessive parameter signatures (> 8 parameters); suggest structure or object parameters.
+- [ ] **`026: Prefer NEW Constructor Expression`** - Detect legacy `CREATE OBJECT lo_obj`; recommend `lo_obj = NEW #( )`.
+- [ ] **`027: Prefer RAISE EXCEPTION NEW`** - Detect `RAISE EXCEPTION TYPE cx_xyz EXPORTING ...`; recommend `RAISE EXCEPTION NEW cx_xyz( ... )`.
+- [ ] **`028: Prefer xsdbool( ) Expression`** - Detect manual `IF cond. b = abap_true. ELSE. b = abap_false. ENDIF.`; suggest `b = xsdbool( cond )`.
+- [ ] **`029: Omit RECEIVING in Calls`** - Detect explicit `RECEIVING rv_out = lv_out` in functional method calls; suggest direct assignment.
+- [ ] **`030: Avoid Static Call via Instance`** - Detect static class methods called through instance variables (`lo_inst->static_m( )`); enforce `cl_class=>static_m( )`.
+- [ ] **`031: Avoid Public Attributes in Classes`** - Detect mutable `PUBLIC` instance/static variables; enforce encapsulation with `READ-ONLY` or getter/setter methods.
+- [ ] **`032: Avoid Obsolete Statements (MOVE, REFRESH, ADD)`** - Detect legacy `MOVE a TO b`, `REFRESH itab`, `ADD 1 TO i`; enforce modern `=` and `CLEAR`.
+- [ ] **`033: Lost Previous Exception in CATCH`** - Detect re-raised exceptions missing `PREVIOUS = lx_exc` parameter in `CATCH` blocks.
+- [ ] **`034: Method Signature Cleanliness`** - Detect excessive parameter signatures (> 8 parameters); suggest structure or object parameters.
+- [ ] **`035: Avoid DB Access in Unit Tests`** - Detect direct database table access inside AUnit test methods (`FOR TESTING`).
+
+### 🔴 Level 4: Database Performance & Security (SQL & Cloud)
+Cloud database integrity, SQL performance optimization, and sy-subrc validation.
+
+- [ ] **`036: DB Access Inside Loops`** - Detect SQL queries (`SELECT`, `MODIFY`, `INSERT`, `DELETE`) within loop iterations.
+- [ ] **`037: Unsecure FOR ALL ENTRIES (Empty itab check)`** - Detect `FOR ALL ENTRIES IN itab` without preceding `IF itab IS NOT INITIAL` check (prevents full table scan).
+- [ ] **`038: Select Performance (Avoid SELECT * / SELECT ... ENDSELECT)`** - Detect `SELECT *` without column projection and `SELECT ... ENDSELECT` cursor loops.
+- [ ] **`039: Check sy-subrc after DB & Table Operations`** - Detect unverified `sy-subrc` directly following `READ TABLE`, `ASSIGN`, `AUTHORITY-CHECK`, and `SELECT SINGLE`.
+- [ ] **`040: Scope of Variable (Variable Leaking)`** - Detect variables declared inside inner loop/condition blocks referenced outside their block scope.
 
 ---
 

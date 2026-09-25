@@ -108,33 +108,34 @@ CLASS lcl_ci_atc_unit_asserter IMPLEMENTATION.
         ENDIF.
       ENDLOOP.
     ELSE.
-      WRITE '@KERNEL const fs = await import("fs");'.
-      WRITE '@KERNEL const path = await import("path");'.
-      WRITE '@KERNEL const rawName = lv_name.get().toLowerCase();'.
-      WRITE '@KERNEL const hashName = rawName.replace(/\//g, "#");'.
-      WRITE '@KERNEL const cleanName = rawName.replace(/[^a-z0-9_]/g, "");'.
-      WRITE '@KERNEL function searchAbapFile(dir) {'.
-      WRITE '@KERNEL   if (!fs.existsSync(dir)) return "";'.
-      WRITE '@KERNEL   const entries = fs.readdirSync(dir, { withFileTypes: true });'.
-      WRITE '@KERNEL   for (const entry of entries) {'.
-      WRITE '@KERNEL     const fullPath = path.join(dir, entry.name);'.
-      WRITE '@KERNEL     if (entry.isDirectory()) {'.
-      WRITE '@KERNEL       const found = searchAbapFile(fullPath);'.
-      WRITE '@KERNEL       if (found) return found;'.
-      WRITE '@KERNEL     } else if (entry.isFile() && entry.name.toLowerCase().endsWith(".abap")) {'.
-      WRITE '@KERNEL       const fileName = entry.name.toLowerCase();'.
-      WRITE '@KERNEL       const baseName = fileName.replace(/\.clas\.abap$/, "").replace(/\.abap$/, "");'.
-      WRITE '@KERNEL       const cleanBase = baseName.replace(/[^a-z0-9_]/g, "");'.
-      WRITE '@KERNEL       if (baseName === hashName || baseName === rawName || cleanBase === cleanName || cleanBase.includes(cleanName) || cleanName.includes(cleanBase)) {'.
-      WRITE '@KERNEL         return fs.readFileSync(fullPath, "utf8");'.
+      WRITE '@KERNEL if (!globalThis.__abapFileMap) {'.
+      WRITE '@KERNEL   const fs = await import("fs");'.
+      WRITE '@KERNEL   const path = await import("path");'.
+      WRITE '@KERNEL   globalThis.__abapFileMap = new Map();'.
+      WRITE '@KERNEL   function indexDir(dir) {'.
+      WRITE '@KERNEL     if (!fs.existsSync(dir)) return;'.
+      WRITE '@KERNEL     const entries = fs.readdirSync(dir, { withFileTypes: true });'.
+      WRITE '@KERNEL     for (const entry of entries) {'.
+      WRITE '@KERNEL       const fullPath = path.join(dir, entry.name);'.
+      WRITE '@KERNEL       if (entry.isDirectory()) {'.
+      WRITE '@KERNEL         indexDir(fullPath);'.
+      WRITE '@KERNEL       } else if (entry.isFile() && entry.name.toLowerCase().endsWith(".abap")) {'.
+      WRITE '@KERNEL         const baseName = entry.name.toLowerCase().replace(/\.(clas|prog|fugr)?\.abap$/, "");'.
+      WRITE '@KERNEL         const key = baseName.replace(/[^a-z0-9_]/g, "");'.
+      WRITE '@KERNEL         globalThis.__abapFileMap.set(key, fullPath);'.
       WRITE '@KERNEL       }'.
       WRITE '@KERNEL     }'.
       WRITE '@KERNEL   }'.
-      WRITE '@KERNEL   return "";'.
+      WRITE '@KERNEL   indexDir(path.join(process.cwd(), "src"));'.
       WRITE '@KERNEL }'.
-      WRITE '@KERNEL const srcDir = path.join(process.cwd(), "src");'.
-      WRITE '@KERNEL const codeContent = searchAbapFile(srcDir);'.
-      WRITE '@KERNEL lv_source.set(codeContent);'.
+      WRITE '@KERNEL const fs = await import("fs");'.
+      WRITE '@KERNEL const lookupKey = lv_name.get().toLowerCase().replace(/[^a-z0-9_]/g, "");'.
+      WRITE '@KERNEL const targetPath = globalThis.__abapFileMap.get(lookupKey);'.
+      WRITE '@KERNEL if (targetPath) {'.
+      WRITE '@KERNEL   lv_source.set(fs.readFileSync(targetPath, "utf8"));'.
+      WRITE '@KERNEL } else {'.
+      WRITE '@KERNEL   lv_source.set("");'.
+      WRITE '@KERNEL }'.
     ENDIF.
 
     lt_procedures = build_procedures_from_source(
