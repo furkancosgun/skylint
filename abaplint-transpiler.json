@@ -7,6 +7,9 @@
     },
     {
       "folder": "/deps/open-abap-ci"
+    },
+    {
+      "folder": "/deps/steampunk-2305-api"
     }
   ],
   "write_unit_tests": true,
