@@ -2,7 +2,9 @@
   "global": {
     "files": "/src/**/*.*",
     "exclude": [],
-    "noIssues": [],
+    "noIssues": [
+      "/src/tests/*"
+    ],
     "skipGeneratedBOPFInterfaces": false,
     "skipGeneratedFunctionGroups": false,
     "skipGeneratedGatewayClasses": false,

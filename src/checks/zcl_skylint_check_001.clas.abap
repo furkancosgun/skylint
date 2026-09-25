@@ -1,4 +1,4 @@
-CLASS zcl_skylint_avoid_test_seam DEFINITION
+CLASS zcl_skylint_check_001 DEFINITION
   PUBLIC
   INHERITING FROM zcl_skylint_check_base
   CREATE PUBLIC.
@@ -20,7 +20,7 @@ CLASS zcl_skylint_avoid_test_seam DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_avoid_test_seam IMPLEMENTATION.
+CLASS zcl_skylint_check_001 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
         VALUE #( description       = 'Usage of TEST-SEAM'
@@ -32,7 +32,9 @@ CLASS zcl_skylint_avoid_test_seam IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    LOOP AT is_procedure-statements ASSIGNING FIELD-SYMBOL(<ls_statement>)
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'TEST-SEAM'.
       report_statement( is_statement    = <ls_statement>
                         iv_finding_code = c_finding_codes-test_seam ).
