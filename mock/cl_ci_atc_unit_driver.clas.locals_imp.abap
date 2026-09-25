@@ -84,6 +84,7 @@ CLASS lcl_ci_atc_unit_asserter IMPLEMENTATION.
     DATA lv_name          TYPE string.
     DATA lo_code_provider TYPE REF TO lcl_mock_code_provider.
     DATA lo_data_provider TYPE REF TO lcl_mock_data_provider.
+    DATA lo_factory       TYPE REF TO cl_ci_atc_assistant_factory.
     DATA lt_procedures    TYPE if_ci_atc_source_code_provider=>ty_procedures.
     DATA lt_actual        TYPE if_ci_atc_check=>ty_findings.
     DATA lt_filtered      TYPE if_ci_atc_check=>ty_findings.
@@ -117,6 +118,9 @@ CLASS lcl_ci_atc_unit_asserter IMPLEMENTATION.
 
     CREATE OBJECT lo_data_provider.
     lo_data_provider->set_code_provider( lo_code_provider ).
+
+    CREATE OBJECT lo_factory.
+    check->set_assistant_factory( lo_factory ).
 
     lt_actual = check->run(
       data_provider = lo_data_provider
@@ -173,6 +177,7 @@ CLASS lcl_ci_atc_unit_asserter IMPLEMENTATION.
       STATEMENTS INTO lt_stmnts
       WITH ANALYSIS
       WITH COMMENTS
+      WITH PRAGMAS '*'
       WITH INCLUDES.
 
     LOOP AT lt_stmnts INTO ls_stmnt.
@@ -189,6 +194,16 @@ CLASS lcl_ci_atc_unit_asserter IMPLEMENTATION.
               CONDENSE lv_pc_str.
               INSERT lv_pc_str INTO TABLE ls_statement-pseudo_comments.
             ENDIF.
+          ELSEIF ls_token-type = 'P' OR ls_token-str CP '##*'.
+            lv_pc_str = ls_token-str+2.
+            CONDENSE lv_pc_str.
+            INSERT lv_pc_str INTO TABLE ls_statement-pseudo_comments.
+
+            CLEAR ls_atc_token.
+            ls_atc_token-lexeme = ls_token-str.
+            ls_atc_token-position-line = ls_token-row.
+            ls_atc_token-position-column = ls_token-col.
+            INSERT ls_atc_token INTO TABLE ls_statement-tokens.
           ELSE.
             IF lv_first_token = abap_true.
               ls_statement-keyword = to_upper( ls_token-str ).
