@@ -9,8 +9,12 @@
       "folder": "/deps/open-abap-ci"
     },
     {
-      "folder": "/deps/steampunk-2305-api"
+      "folder": "/mock",
+      "files": "/**"
     }
+  ],
+  "exclude_filter": [
+    "src/tests/.*"
   ],
   "write_unit_tests": true,
   "write_source_map": true,
