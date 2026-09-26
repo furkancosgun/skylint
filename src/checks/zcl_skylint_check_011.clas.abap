@@ -18,16 +18,12 @@ CLASS zcl_skylint_check_011 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_BOOL_COMP'.
 
     METHODS has_boolean_comparison
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_has) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_has) TYPE abap_bool.
 
     METHODS is_boolean_literal
-      IMPORTING
-        iv_lexeme    TYPE string
-      RETURNING
-        VALUE(rv_is) TYPE abap_bool.
+      IMPORTING iv_lexeme    TYPE string
+      RETURNING VALUE(rv_is) TYPE abap_bool.
 
 ENDCLASS.
 
@@ -73,13 +69,13 @@ CLASS zcl_skylint_check_011 IMPLEMENTATION.
 
     DO lv_tok_cnt TIMES.
       lv_tok_idx = sy-index.
-      READ TABLE is_statement-tokens ASSIGNING <ls_token> INDEX lv_tok_idx.
+      ASSIGN is_statement-tokens[ lv_tok_idx ] TO <ls_token>.
       IF sy-subrc <> 0.
         EXIT.
       ENDIF.
 
       lv_lexeme = to_upper( <ls_token>-lexeme ).
-      IF lv_lexeme <> '=' AND lv_lexeme <> 'EQ' AND lv_lexeme <> '<>'
+      IF     lv_lexeme <> '='  AND lv_lexeme <> 'EQ' AND lv_lexeme <> '<>'
          AND lv_lexeme <> 'NE' AND lv_lexeme <> '><'.
         CONTINUE.
       ENDIF.
@@ -88,7 +84,7 @@ CLASS zcl_skylint_check_011 IMPLEMENTATION.
       lv_next_idx = lv_tok_idx + 1.
 
       IF lv_prev_idx >= 1.
-        READ TABLE is_statement-tokens ASSIGNING <ls_token> INDEX lv_prev_idx.
+        ASSIGN is_statement-tokens[ lv_prev_idx ] TO <ls_token>.
         IF sy-subrc = 0.
           lv_prev_lex = to_upper( <ls_token>-lexeme ).
           IF is_boolean_literal( lv_prev_lex ) = abap_true.
@@ -99,7 +95,7 @@ CLASS zcl_skylint_check_011 IMPLEMENTATION.
       ENDIF.
 
       IF lv_next_idx <= lv_tok_cnt.
-        READ TABLE is_statement-tokens ASSIGNING <ls_token> INDEX lv_next_idx.
+        ASSIGN is_statement-tokens[ lv_next_idx ] TO <ls_token>.
         IF sy-subrc = 0.
           lv_next_lex = to_upper( <ls_token>-lexeme ).
           IF is_boolean_literal( lv_next_lex ) = abap_true.

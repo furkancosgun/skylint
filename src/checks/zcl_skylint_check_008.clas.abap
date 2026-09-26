@@ -18,10 +18,8 @@ CLASS zcl_skylint_check_008 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'ASSIGN_CHAIN'.
 
     METHODS has_assignment_chain
-      IMPORTING
-        is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_chain) TYPE abap_bool.
+      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_chain) TYPE abap_bool.
 
 ENDCLASS.
 
@@ -70,19 +68,19 @@ CLASS zcl_skylint_check_008 IMPLEMENTATION.
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
       lv_lexeme = <ls_token>-lexeme.
 
-      IF lv_lexeme CP '*(' OR lv_lexeme CP '*[' OR lv_lexeme CP '*{'
-         OR lv_lexeme = '(' OR lv_lexeme = '[' OR lv_lexeme = '{'.
-        lv_depth = lv_depth + 1.
+      IF    lv_lexeme CP '*(' OR lv_lexeme CP '*[' OR lv_lexeme CP '*{'
+         OR lv_lexeme  = '('  OR lv_lexeme  = '['  OR lv_lexeme  = '{'.
+        lv_depth += 1.
       ENDIF.
 
       IF lv_depth = 0 AND lv_lexeme = '='.
-        lv_equals_count = lv_equals_count + 1.
+        lv_equals_count += 1.
       ENDIF.
 
-      IF ( lv_lexeme CP '*)' OR lv_lexeme CP '*]' OR lv_lexeme CP '*}'
-         OR lv_lexeme = ')' OR lv_lexeme = ']' OR lv_lexeme = '}' )
+      IF     (    lv_lexeme CP '*)' OR lv_lexeme CP '*]' OR lv_lexeme CP '*}'
+               OR lv_lexeme  = ')'  OR lv_lexeme  = ']'  OR lv_lexeme  = '}' )
          AND lv_depth > 0.
-        lv_depth = lv_depth - 1.
+        lv_depth -= 1.
       ENDIF.
     ENDLOOP.
 

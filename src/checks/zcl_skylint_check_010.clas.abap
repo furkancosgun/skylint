@@ -20,28 +20,25 @@ CLASS zcl_skylint_check_010 DEFINITION
     DATA mv_allow_in_byte_mode TYPE abap_bool VALUE abap_false.
 
     METHODS is_byte_mode
-      IMPORTING
-        is_statement        TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_byte_mode) TYPE abap_bool.
+      IMPORTING is_statement        TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_byte_mode) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_010 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Prefer string templates over CONCATENATE'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-prefer_template
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Use string template |...| instead of CONCATENATE'
-                       pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     ( name  = 'ALLOW_IN_BYTE_MODE'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                       value = REF #( mv_allow_in_byte_mode ) ) ) ) ).
+    super->constructor( VALUE #( description       = 'Prefer string templates over CONCATENATE'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-prefer_template
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Use string template |...| instead of CONCATENATE'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 attributes        = VALUE #(
+                                     ( name  = 'ALLOW_IN_BYTE_MODE'
+                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                       value = REF #( mv_allow_in_byte_mode ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

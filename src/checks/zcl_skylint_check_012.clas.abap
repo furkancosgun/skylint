@@ -18,10 +18,8 @@ CLASS zcl_skylint_check_012 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_LINE_EXISTS'.
 
     METHODS has_transporting_no_fields
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_has) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_has) TYPE abap_bool.
 
 ENDCLASS.
 
@@ -65,7 +63,7 @@ CLASS zcl_skylint_check_012 IMPLEMENTATION.
 
     DO lv_tok_cnt TIMES.
       lv_idx = sy-index.
-      READ TABLE is_statement-tokens ASSIGNING <ls_token> INDEX lv_idx.
+      ASSIGN is_statement-tokens[ lv_idx ] TO <ls_token>.
       IF sy-subrc <> 0.
         EXIT.
       ENDIF.
@@ -81,13 +79,13 @@ CLASS zcl_skylint_check_012 IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      READ TABLE is_statement-tokens ASSIGNING <ls_token> INDEX lv_t1_idx.
+      ASSIGN is_statement-tokens[ lv_t1_idx ] TO <ls_token>.
       IF sy-subrc <> 0.
         CONTINUE.
       ENDIF.
       lv_t1_lex = to_upper( <ls_token>-lexeme ).
 
-      READ TABLE is_statement-tokens ASSIGNING <ls_token> INDEX lv_t2_idx.
+      ASSIGN is_statement-tokens[ lv_t2_idx ] TO <ls_token>.
       IF sy-subrc <> 0.
         CONTINUE.
       ENDIF.

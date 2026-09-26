@@ -18,24 +18,21 @@ CLASS zcl_skylint_check_007 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'OMIT_EXPORTING'.
 
     METHODS is_exempt_statement
-      IMPORTING
-        iv_keyword       TYPE string
-      RETURNING
-        VALUE(rv_exempt) TYPE abap_bool.
+      IMPORTING iv_keyword       TYPE string
+      RETURNING VALUE(rv_exempt) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_007 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Omit explicit EXPORTING in method calls'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-omit_exporting
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Omit explicit EXPORTING keyword in method invocation'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'Omit explicit EXPORTING in method calls'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-omit_exporting
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Omit explicit EXPORTING keyword in method invocation'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

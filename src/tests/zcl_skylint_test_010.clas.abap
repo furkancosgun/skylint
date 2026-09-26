@@ -13,6 +13,7 @@ CLASS zcl_skylint_test_010 IMPLEMENTATION.
   METHOD without_pseudo_comments.
     DATA lv_a TYPE string.
     DATA lv_b TYPE string.
+    " TODO: variable is assigned but never used (ABAP cleaner)
     DATA lv_c TYPE string.
 
     lv_a = 'HELLO'.
@@ -23,6 +24,7 @@ CLASS zcl_skylint_test_010 IMPLEMENTATION.
   METHOD with_pseudo_comments.
     DATA lv_a TYPE string.
     DATA lv_b TYPE string.
+    " TODO: variable is assigned but never used (ABAP cleaner)
     DATA lv_c TYPE string.
 
     lv_a = 'HELLO'.
@@ -33,6 +35,7 @@ CLASS zcl_skylint_test_010 IMPLEMENTATION.
   METHOD valid_code.
     DATA lv_a TYPE string.
     DATA lv_b TYPE string.
+    " TODO: variable is assigned but never used (ABAP cleaner)
     DATA lv_c TYPE string.
 
     lv_a = 'HELLO'.

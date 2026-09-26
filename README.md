@@ -72,7 +72,7 @@ Structure boundaries, control blocks (`IF`, `CASE`, `LOOP`, `TRY`), and conditio
 - [x] **`015: Constant-Only Interfaces`** - Detect interfaces containing only `CONSTANTS`; suggest global classes or domain types.
 - [x] **`016: Empty Control Blocks`** - Detect empty `IF`, `CASE`, `LOOP`, `TRY` statement bodies.
 - [x] **`017: Empty CATCH Block`** - Detect empty `CATCH` blocks swallowing exceptions without logging or re-raising.
-- [x] **`018: Missing Assert in Test Class`** - Detect AUnit test methods missing any `cl_abap_unit_assert` verification.
+- [x] **`018: Unit Test Assert Validator`** - Detect invalid unit test assertions where actual and expected parameters are identical (`act = exp`).
 - [x] **`019: Identical Conditions in IF/CASE`** - Detect duplicate branch conditions in `IF ... ELSEIF` or `CASE ... WHEN`.
 - [x] **`020: Nested IF Simplification`** - Detect consecutive nested single-line `IF` blocks that can be merged with `AND`.
 - [x] **`021: WHEN OTHERS Must Be Last`** - Detect `WHEN OTHERS` positioned before specific `WHEN` branches in `CASE`.

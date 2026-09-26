@@ -24,18 +24,17 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_006 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Avoid self-reference ME->'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-avoid_me
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Avoid unnecessary ME-> reference'
-                       pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     ( name  = 'ALLOW_IN_CONSTRUCTORS'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                       value = REF #( mv_allow_in_constructors ) ) ) ) ).
+    super->constructor( VALUE #( description       = 'Avoid self-reference ME->'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-avoid_me
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Avoid unnecessary ME-> reference'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 attributes        = VALUE #(
+                                     ( name  = 'ALLOW_IN_CONSTRUCTORS'
+                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                       value = REF #( mv_allow_in_constructors ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

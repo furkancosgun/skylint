@@ -12,6 +12,7 @@ ENDCLASS.
 CLASS zcl_skylint_test_011 IMPLEMENTATION.
   METHOD without_pseudo_comments.
     DATA lv_flag TYPE abap_bool VALUE abap_true.
+
     IF lv_flag = abap_true.
       RETURN.
     ENDIF.
@@ -19,6 +20,7 @@ CLASS zcl_skylint_test_011 IMPLEMENTATION.
 
   METHOD with_pseudo_comments.
     DATA lv_flag TYPE abap_bool VALUE abap_true.
+
     IF lv_flag = abap_true. "#EC AVOID_BOOL_COMP
       RETURN.
     ENDIF.
@@ -26,7 +28,8 @@ CLASS zcl_skylint_test_011 IMPLEMENTATION.
 
   METHOD valid_code.
     DATA lv_flag TYPE abap_bool VALUE abap_true.
-    DATA lv_name TYPE string VALUE 'SKYLINT'.
+    DATA lv_name TYPE string    VALUE 'SKYLINT'.
+
     IF lv_flag.
       RETURN.
     ENDIF.

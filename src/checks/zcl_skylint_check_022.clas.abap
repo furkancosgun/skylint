@@ -25,42 +25,35 @@ CLASS zcl_skylint_check_022 DEFINITION
       ty_depth_states TYPE STANDARD TABLE OF ty_depth_state WITH EMPTY KEY.
 
     METHODS is_unconditional_jump
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
     METHODS is_depth_unreachable
-      IMPORTING
-        it_states     TYPE ty_depth_states
-        iv_depth      TYPE i
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING it_states     TYPE ty_depth_states
+                iv_depth      TYPE i
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
     METHODS set_depth_unreachable
-      IMPORTING
-        iv_depth  TYPE i
-        iv_val    TYPE abap_bool
-      CHANGING
-        ct_states TYPE ty_depth_states.
+      IMPORTING iv_depth  TYPE i
+                iv_val    TYPE abap_bool
+      CHANGING  ct_states TYPE ty_depth_states.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_022 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Detect unreachable code following unconditional jump statements'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-unreachable_code
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Statement is unreachable'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'Detect unreachable code following unconditional jump statements'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-unreachable_code
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Statement is unreachable'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_depth TYPE i.
+    DATA lv_depth  TYPE i.
     DATA lt_states TYPE ty_depth_states.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
@@ -77,7 +70,7 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-unreachable_code ).
           ENDIF.
-          lv_depth = lv_depth + 1.
+          lv_depth += 1.
           set_depth_unreachable( EXPORTING iv_depth  = lv_depth
                                            iv_val    = abap_false
                                  CHANGING  ct_states = lt_states ).
@@ -95,7 +88,7 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
                                            iv_val    = abap_false
                                  CHANGING  ct_states = lt_states ).
           IF lv_depth > 0.
-            lv_depth = lv_depth - 1.
+            lv_depth -= 1.
           ENDIF.
 
         WHEN 'ENDMETHOD' OR 'ENDFORM' OR 'ENDFUNCTION' OR 'ENDMODULE'.
@@ -122,19 +115,19 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
     rv_res = abap_false.
     lv_idx = 0.
     WHILE lv_idx <= iv_depth.
-      READ TABLE it_states ASSIGNING <ls_state> WITH KEY depth = lv_idx.
+      ASSIGN it_states[ depth = lv_idx ] TO <ls_state>.
       IF sy-subrc = 0 AND <ls_state>-unreachable = abap_true.
         rv_res = abap_true.
         RETURN.
       ENDIF.
-      lv_idx = lv_idx + 1.
+      lv_idx += 1.
     ENDWHILE.
   ENDMETHOD.
 
   METHOD set_depth_unreachable.
     FIELD-SYMBOLS <ls_state> TYPE ty_depth_state.
 
-    READ TABLE ct_states ASSIGNING <ls_state> WITH KEY depth = iv_depth.
+    ASSIGN ct_states[ depth = iv_depth ] TO <ls_state>.
     IF sy-subrc = 0.
       <ls_state>-unreachable = iv_val.
     ELSE.
@@ -160,7 +153,7 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
           RETURN.
         ENDIF.
 
-        READ TABLE is_statement-tokens ASSIGNING <ls_tok2> INDEX 2.
+        ASSIGN is_statement-tokens[ 2 ] TO <ls_tok2>.
         IF sy-subrc <> 0.
           RETURN.
         ENDIF.
@@ -173,7 +166,7 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
           WHEN 'EXCEPTION'.
             rv_res = abap_true.
             IF lines( is_statement-tokens ) >= 3.
-              READ TABLE is_statement-tokens ASSIGNING <ls_tok3> INDEX 3.
+              ASSIGN is_statement-tokens[ 3 ] TO <ls_tok3>.
               IF sy-subrc = 0.
                 lv_tok3 = to_upper( <ls_tok3>-lexeme ).
                 IF lv_tok3 = 'RESUMABLE'.

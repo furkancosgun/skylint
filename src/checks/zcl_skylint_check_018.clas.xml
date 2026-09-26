@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_018</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Missing Assert in Test Class</DESCRIPT>
+    <DESCRIPT>skylint: Unit Test Assert Validator (018)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

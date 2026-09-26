@@ -20,28 +20,25 @@ CLASS zcl_skylint_check_003 DEFINITION
     DATA mv_allow_dynamic TYPE abap_bool VALUE abap_true.
 
     METHODS is_dynamic_call
-      IMPORTING
-        is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_dynamic) TYPE abap_bool.
+      IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_dynamic) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_003 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Avoid static CALL METHOD statements'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-call_method
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Avoid static CALL METHOD; use functional method call instead'
-                       pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     ( name  = 'ALLOW_DYNAMIC'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                       value = REF #( mv_allow_dynamic ) ) ) ) ).
+    super->constructor( VALUE #( description       = 'Avoid static CALL METHOD statements'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-call_method
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Avoid static CALL METHOD; use functional method call instead'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 attributes        = VALUE #(
+                                     ( name  = 'ALLOW_DYNAMIC'
+                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                       value = REF #( mv_allow_dynamic ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -57,8 +54,8 @@ CLASS zcl_skylint_check_003 IMPLEMENTATION.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'CALL'.
-      IF lines( <ls_statement>-tokens ) >= 2
-         AND to_upper( <ls_statement>-tokens[ 2 ]-lexeme ) = 'METHOD'.
+      IF     lines( <ls_statement>-tokens )                >= 2
+         AND to_upper( <ls_statement>-tokens[ 2 ]-lexeme )  = 'METHOD'.
         IF lv_allow_dyn = abap_true AND is_dynamic_call( <ls_statement> ) = abap_true.
           CONTINUE.
         ENDIF.

@@ -18,28 +18,20 @@ CLASS zcl_skylint_check_024 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_YODA_CONDITIONS'.
 
     METHODS is_literal
-      IMPORTING
-        iv_str       TYPE string
-      RETURNING
-        VALUE(rv_is) TYPE abap_bool.
+      IMPORTING iv_str       TYPE string
+      RETURNING VALUE(rv_is) TYPE abap_bool.
 
     METHODS is_comparison_operator
-      IMPORTING
-        iv_str       TYPE string
-      RETURNING
-        VALUE(rv_is) TYPE abap_bool.
+      IMPORTING iv_str       TYPE string
+      RETURNING VALUE(rv_is) TYPE abap_bool.
 
     METHODS is_identifier
-      IMPORTING
-        iv_str       TYPE string
-      RETURNING
-        VALUE(rv_is) TYPE abap_bool.
+      IMPORTING iv_str       TYPE string
+      RETURNING VALUE(rv_is) TYPE abap_bool.
 
     METHODS has_yoda_condition
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_has) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_has) TYPE abap_bool.
 
 ENDCLASS.
 
@@ -85,15 +77,15 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
 
     lv_idx = 1.
     WHILE lv_idx <= lv_total - 2.
-      READ TABLE is_statement-tokens ASSIGNING <ls_t1> INDEX lv_idx.
+      ASSIGN is_statement-tokens[ lv_idx ] TO <ls_t1>.
       IF sy-subrc <> 0.
         EXIT.
       ENDIF.
-      READ TABLE is_statement-tokens ASSIGNING <ls_t2> INDEX lv_idx + 1.
+      ASSIGN is_statement-tokens[ lv_idx + 1 ] TO <ls_t2>.
       IF sy-subrc <> 0.
         EXIT.
       ENDIF.
-      READ TABLE is_statement-tokens ASSIGNING <ls_t3> INDEX lv_idx + 2.
+      ASSIGN is_statement-tokens[ lv_idx + 2 ] TO <ls_t3>.
       IF sy-subrc <> 0.
         EXIT.
       ENDIF.
@@ -102,15 +94,15 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
       lv_tok2 = <ls_t2>-lexeme.
       lv_tok3 = <ls_t3>-lexeme.
 
-      IF is_literal( lv_tok1 ) = abap_true
+      IF     is_literal( lv_tok1 )             = abap_true
          AND is_comparison_operator( lv_tok2 ) = abap_true
-         AND is_identifier( lv_tok3 ) = abap_true
-         AND is_literal( lv_tok3 ) = abap_false.
+         AND is_identifier( lv_tok3 )          = abap_true
+         AND is_literal( lv_tok3 )             = abap_false.
         rv_has = abap_true.
         RETURN.
       ENDIF.
 
-      lv_idx = lv_idx + 1.
+      lv_idx += 1.
     ENDWHILE.
   ENDMETHOD.
 
@@ -131,7 +123,7 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
                          off = lv_len - 1
                          len = 1 ).
 
-    IF ( lv_first = `'` AND lv_last = `'` )
+    IF    ( lv_first = `'` AND lv_last = `'` )
        OR ( lv_first = '`' AND lv_last = '`' )
        OR ( lv_first = '|' AND lv_last = '|' ).
       rv_is = abap_true.

@@ -22,14 +22,13 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_002 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Prefer lines( ) built-in function over DESCRIBE TABLE ... LINES'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-describe_lines
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Use lines( ) function instead of DESCRIBE TABLE ... LINES'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'Prefer lines( ) built-in function over DESCRIBE TABLE ... LINES'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-describe_lines
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Use lines( ) function instead of DESCRIBE TABLE ... LINES'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

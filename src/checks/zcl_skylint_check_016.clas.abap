@@ -18,11 +18,9 @@ CLASS zcl_skylint_check_016 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'EMPTY_CONTROL_BLOCK'.
 
     METHODS is_empty_control_block
-      IMPORTING
-        iv_current_kw TYPE string
-        iv_next_kw    TYPE string
-      RETURNING
-        VALUE(rv_is)  TYPE abap_bool.
+      IMPORTING iv_current_kw TYPE string
+                iv_next_kw    TYPE string
+      RETURNING VALUE(rv_is)  TYPE abap_bool.
 
 ENDCLASS.
 
@@ -50,14 +48,14 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
 
     DO lv_total TIMES.
       lv_idx = sy-index.
-      READ TABLE is_procedure-statements ASSIGNING <ls_statement> INDEX lv_idx.
+      ASSIGN is_procedure-statements[ lv_idx ] TO <ls_statement>.
       IF sy-subrc <> 0.
         EXIT.
       ENDIF.
 
       lv_next_idx = lv_idx + 1.
       IF lv_next_idx <= lv_total.
-        READ TABLE is_procedure-statements ASSIGNING <ls_next_stmt> INDEX lv_next_idx.
+        ASSIGN is_procedure-statements[ lv_next_idx ] TO <ls_next_stmt>.
         IF sy-subrc = 0.
           IF is_empty_control_block( iv_current_kw = <ls_statement>-keyword
                                      iv_next_kw    = <ls_next_stmt>-keyword ) = abap_true.

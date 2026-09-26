@@ -18,16 +18,12 @@ CLASS zcl_skylint_check_025 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_OPERATORS'.
 
     METHODS is_legacy_operator
-      IMPORTING
-        iv_lexeme    TYPE string
-      RETURNING
-        VALUE(rv_is) TYPE abap_bool.
+      IMPORTING iv_lexeme    TYPE string
+      RETURNING VALUE(rv_is) TYPE abap_bool.
 
     METHODS is_declaration_keyword
-      IMPORTING
-        iv_keyword   TYPE string
-      RETURNING
-        VALUE(rv_is) TYPE abap_bool.
+      IMPORTING iv_keyword   TYPE string
+      RETURNING VALUE(rv_is) TYPE abap_bool.
 
 ENDCLASS.
 

@@ -18,36 +18,31 @@ CLASS zcl_skylint_check_019 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'IDENTICAL_CONDITIONS'.
 
     METHODS check_duplicate_elseif
-      IMPORTING
-        iv_idx       TYPE i
-        is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
-        is_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure.
+      IMPORTING iv_idx       TYPE i
+                is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
+                is_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure.
 
     METHODS check_duplicate_when
-      IMPORTING
-        iv_idx       TYPE i
-        is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
-        is_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure.
+      IMPORTING iv_idx       TYPE i
+                is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
+                is_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure.
 
     METHODS get_condition_string
-      IMPORTING
-        is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_cond) TYPE string.
+      IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_cond) TYPE string.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_019 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Detect identical branch conditions in IF/ELSEIF and CASE/WHEN'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-identical_condition
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Identical condition in branch; duplicate branch is unreachable'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'Detect identical branch conditions in IF/ELSEIF and CASE/WHEN'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-identical_condition
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Identical condition in branch; duplicate branch is unreachable'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -83,14 +78,14 @@ CLASS zcl_skylint_check_019 IMPLEMENTATION.
     lv_back_idx = iv_idx - 1.
 
     WHILE lv_back_idx >= 1.
-      READ TABLE is_procedure-statements ASSIGNING <ls_back_stmt> INDEX lv_back_idx.
+      ASSIGN is_procedure-statements[ lv_back_idx ] TO <ls_back_stmt>.
       IF sy-subrc <> 0.
         EXIT.
       ENDIF.
 
       CASE <ls_back_stmt>-keyword.
         WHEN 'ENDIF'.
-          lv_depth = lv_depth + 1.
+          lv_depth += 1.
 
         WHEN 'IF'.
           IF lv_depth = 0.
@@ -101,7 +96,7 @@ CLASS zcl_skylint_check_019 IMPLEMENTATION.
             ENDIF.
             EXIT.
           ELSE.
-            lv_depth = lv_depth - 1.
+            lv_depth -= 1.
           ENDIF.
 
         WHEN 'ELSEIF'.
@@ -115,7 +110,7 @@ CLASS zcl_skylint_check_019 IMPLEMENTATION.
           ENDIF.
       ENDCASE.
 
-      lv_back_idx = lv_back_idx - 1.
+      lv_back_idx -= 1.
     ENDWHILE.
   ENDMETHOD.
 
@@ -131,20 +126,20 @@ CLASS zcl_skylint_check_019 IMPLEMENTATION.
     lv_back_idx = iv_idx - 1.
 
     WHILE lv_back_idx >= 1.
-      READ TABLE is_procedure-statements ASSIGNING <ls_back_stmt> INDEX lv_back_idx.
+      ASSIGN is_procedure-statements[ lv_back_idx ] TO <ls_back_stmt>.
       IF sy-subrc <> 0.
         EXIT.
       ENDIF.
 
       CASE <ls_back_stmt>-keyword.
         WHEN 'ENDCASE'.
-          lv_depth = lv_depth + 1.
+          lv_depth += 1.
 
         WHEN 'CASE'.
           IF lv_depth = 0.
             EXIT.
           ELSE.
-            lv_depth = lv_depth - 1.
+            lv_depth -= 1.
           ENDIF.
 
         WHEN 'WHEN'.
@@ -158,7 +153,7 @@ CLASS zcl_skylint_check_019 IMPLEMENTATION.
           ENDIF.
       ENDCASE.
 
-      lv_back_idx = lv_back_idx - 1.
+      lv_back_idx -= 1.
     ENDWHILE.
   ENDMETHOD.
 
@@ -175,7 +170,7 @@ CLASS zcl_skylint_check_019 IMPLEMENTATION.
 
     DO lv_tok_cnt - 1 TIMES.
       lv_tok_idx = sy-index + 1.
-      READ TABLE is_statement-tokens ASSIGNING <ls_token> INDEX lv_tok_idx.
+      ASSIGN is_statement-tokens[ lv_tok_idx ] TO <ls_token>.
       IF sy-subrc = 0.
         IF rv_cond IS INITIAL.
           rv_cond = to_upper( <ls_token>-lexeme ).

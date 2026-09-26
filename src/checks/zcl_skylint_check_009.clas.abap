@@ -20,28 +20,25 @@ CLASS zcl_skylint_check_009 DEFINITION
     DATA mv_allow_structure_chains TYPE abap_bool VALUE abap_true.
 
     METHODS is_structure_start
-      IMPORTING
-        is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_is) TYPE abap_bool.
+      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_is) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_009 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Avoid chained declarations (DATA:, TYPES:, etc.)'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-chained_declaration
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Avoid chained declarations; declare each entity individually'
-                       pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     ( name  = 'ALLOW_STRUCTURE_CHAINS'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                       value = REF #( mv_allow_structure_chains ) ) ) ) ).
+    super->constructor( VALUE #( description       = 'Avoid chained declarations (DATA:, TYPES:, etc.)'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-chained_declaration
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Avoid chained declarations; declare each entity individually'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 attributes        = VALUE #(
+                                     ( name  = 'ALLOW_STRUCTURE_CHAINS'
+                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                       value = REF #( mv_allow_structure_chains ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -64,7 +61,7 @@ CLASS zcl_skylint_check_009 IMPLEMENTATION.
 
     DO lv_total TIMES.
       lv_idx = sy-index.
-      READ TABLE is_procedure-statements ASSIGNING <ls_statement> INDEX lv_idx.
+      ASSIGN is_procedure-statements[ lv_idx ] TO <ls_statement>.
       IF sy-subrc <> 0.
         EXIT.
       ENDIF.
@@ -73,7 +70,7 @@ CLASS zcl_skylint_check_009 IMPLEMENTATION.
         WHEN 'DATA' OR 'TYPES' OR 'CONSTANTS' OR 'STATICS' OR 'FIELD-SYMBOLS' OR 'CLASS-DATA'.
           lv_next_idx = lv_idx + 1.
           IF lv_next_idx <= lv_total.
-            READ TABLE is_procedure-statements ASSIGNING <ls_next_stmt> INDEX lv_next_idx.
+            ASSIGN is_procedure-statements[ lv_next_idx ] TO <ls_next_stmt>.
             IF sy-subrc = 0 AND <ls_next_stmt>-keyword IS INITIAL.
               lv_report = abap_true.
               IF lv_allow_struct = abap_true AND is_structure_start( <ls_statement> ) = abap_true.

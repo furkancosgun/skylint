@@ -22,14 +22,13 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_013 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Prefer RETURN over EXIT outside loop constructs'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-exit_outside_loop
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Use RETURN instead of EXIT when leaving a procedure'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'Prefer RETURN over EXIT outside loop constructs'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-exit_outside_loop
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Use RETURN instead of EXIT when leaving a procedure'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -41,11 +40,11 @@ CLASS zcl_skylint_check_013 IMPLEMENTATION.
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'LOOP' OR 'DO' OR 'WHILE'.
-          lv_loop_depth = lv_loop_depth + 1.
+          lv_loop_depth += 1.
 
         WHEN 'ENDLOOP' OR 'ENDDO' OR 'ENDWHILE'.
           IF lv_loop_depth > 0.
-            lv_loop_depth = lv_loop_depth - 1.
+            lv_loop_depth -= 1.
           ENDIF.
 
         WHEN 'EXIT'.

@@ -15,7 +15,11 @@ CLASS zcl_skylint_check_015 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'CONSTANTS_INTERFACE'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'CONS_INTF'.
+
+    METHODS is_other_keyword
+      IMPORTING iv_keyword   TYPE string
+      RETURNING VALUE(rv_is) TYPE abap_bool.
 
 ENDCLASS.
 
@@ -36,14 +40,16 @@ CLASS zcl_skylint_check_015 IMPLEMENTATION.
     DATA lv_has_constant TYPE abap_bool.
     DATA lv_has_other    TYPE abap_bool.
     DATA lv_is_interface TYPE abap_bool.
+    DATA lv_chain_kw     TYPE string.
     FIELD-SYMBOLS <ls_first_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_statement>  TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     lv_has_constant = abap_false.
     lv_has_other    = abap_false.
     lv_is_interface = abap_false.
+    lv_chain_kw     = ''.
 
-    READ TABLE is_procedure-statements ASSIGNING <ls_first_stmt> INDEX 1.
+    ASSIGN is_procedure-statements[ 1 ] TO <ls_first_stmt>.
     IF sy-subrc <> 0.
       RETURN.
     ENDIF.
@@ -61,16 +67,21 @@ CLASS zcl_skylint_check_015 IMPLEMENTATION.
     ENDIF.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      CASE <ls_statement>-keyword.
-        WHEN 'INTERFACE' OR 'ENDINTERFACE' OR ''.
-          " Skip structural boundaries and chained parts
+      IF <ls_statement>-keyword IS NOT INITIAL.
+        lv_chain_kw = <ls_statement>-keyword.
+      ENDIF.
+
+      CASE lv_chain_kw.
+        WHEN 'INTERFACE' OR 'ENDINTERFACE'.
           CONTINUE.
 
         WHEN 'CONSTANTS'.
           lv_has_constant = abap_true.
 
         WHEN OTHERS.
-          lv_has_other = abap_true.
+          IF is_other_keyword( lv_chain_kw ) = abap_true.
+            lv_has_other = abap_true.
+          ENDIF.
       ENDCASE.
     ENDLOOP.
 
@@ -78,5 +89,18 @@ CLASS zcl_skylint_check_015 IMPLEMENTATION.
       report_statement( is_statement    = <ls_first_stmt>
                         iv_finding_code = c_finding_codes-constants_interface ).
     ENDIF.
+  ENDMETHOD.
+
+  METHOD is_other_keyword.
+    DATA lv_upper TYPE string.
+
+    lv_upper = to_upper( iv_keyword ).
+    CASE lv_upper.
+      WHEN 'METHODS' OR 'CLASS-METHODS' OR 'DATA' OR 'CLASS-DATA'
+        OR 'TYPES' OR 'INTERFACES' OR 'ALIASES' OR 'EVENTS' OR 'CLASS-EVENTS'.
+        rv_is = abap_true.
+      WHEN OTHERS.
+        rv_is = abap_false.
+    ENDCASE.
   ENDMETHOD.
 ENDCLASS.

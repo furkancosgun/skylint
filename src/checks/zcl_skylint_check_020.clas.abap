@@ -18,25 +18,22 @@ CLASS zcl_skylint_check_020 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'NESTED_IF'.
 
     METHODS is_nested_if_mergeable
-      IMPORTING
-        iv_idx       TYPE i
-        is_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure
-      RETURNING
-        VALUE(rv_is) TYPE abap_bool.
+      IMPORTING iv_idx       TYPE i
+                is_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure
+      RETURNING VALUE(rv_is) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_020 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Detect consecutive nested IF blocks that can be merged with AND'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-nested_if
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Nested IF block can be merged with outer IF using AND'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'Detect consecutive nested IF blocks that can be merged with AND'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-nested_if
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Nested IF block can be merged with outer IF using AND'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -71,7 +68,7 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    READ TABLE is_procedure-statements ASSIGNING <ls_next_stmt> INDEX lv_next_idx.
+    ASSIGN is_procedure-statements[ lv_next_idx ] TO <ls_next_stmt>.
     IF sy-subrc <> 0 OR <ls_next_stmt>-keyword <> 'IF'.
       RETURN.
     ENDIF.
@@ -81,22 +78,22 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
     lv_fwd_idx = lv_next_idx + 1.
 
     WHILE lv_fwd_idx <= lv_total.
-      READ TABLE is_procedure-statements ASSIGNING <ls_fwd_stmt> INDEX lv_fwd_idx.
+      ASSIGN is_procedure-statements[ lv_fwd_idx ] TO <ls_fwd_stmt>.
       IF sy-subrc <> 0.
         EXIT.
       ENDIF.
 
       CASE <ls_fwd_stmt>-keyword.
         WHEN 'IF'.
-          lv_depth = lv_depth + 1.
+          lv_depth += 1.
 
         WHEN 'ENDIF'.
-          lv_depth = lv_depth - 1.
+          lv_depth -= 1.
           IF lv_depth = 0.
             " We found matching ENDIF for inner IF!
             " Check if directly following statement is outer ENDIF
             IF lv_fwd_idx + 1 <= lv_total.
-              READ TABLE is_procedure-statements ASSIGNING <ls_outer_end> INDEX lv_fwd_idx + 1.
+              ASSIGN is_procedure-statements[ lv_fwd_idx + 1 ] TO <ls_outer_end>.
               IF sy-subrc = 0 AND <ls_outer_end>-keyword = 'ENDIF'.
                 rv_is = abap_true.
               ENDIF.
@@ -105,7 +102,7 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
           ENDIF.
       ENDCASE.
 
-      lv_fwd_idx = lv_fwd_idx + 1.
+      lv_fwd_idx += 1.
     ENDWHILE.
   ENDMETHOD.
 ENDCLASS.
