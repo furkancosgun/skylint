@@ -84,16 +84,16 @@ Structure boundaries, control blocks (`IF`, `CASE`, `LOOP`, `TRY`), and conditio
 ### 🔵 Level 3: Modern ABAP & OO Architecture
 Modern expression syntax, encapsulation, test double design, and exception hygiene.
 
-- [ ] **`026: Prefer NEW Constructor Expression`** - Detect legacy `CREATE OBJECT lo_obj`; recommend `lo_obj = NEW #( )`.
-- [ ] **`027: Prefer RAISE EXCEPTION NEW`** - Detect `RAISE EXCEPTION TYPE cx_xyz EXPORTING ...`; recommend `RAISE EXCEPTION NEW cx_xyz( ... )`.
-- [ ] **`028: Prefer xsdbool( ) Expression`** - Detect manual `IF cond. b = abap_true. ELSE. b = abap_false. ENDIF.`; suggest `b = xsdbool( cond )`.
-- [ ] **`029: Omit RECEIVING in Calls`** - Detect explicit `RECEIVING rv_out = lv_out` in functional method calls; suggest direct assignment.
-- [ ] **`030: Avoid Static Call via Instance`** - Detect static class methods called through instance variables (`lo_inst->static_m( )`); enforce `cl_class=>static_m( )`.
-- [ ] **`031: Avoid Public Attributes in Classes`** - Detect mutable `PUBLIC` instance/static variables; enforce encapsulation with `READ-ONLY` or getter/setter methods.
-- [ ] **`032: Avoid Obsolete Statements (MOVE, REFRESH, ADD)`** - Detect legacy `MOVE a TO b`, `REFRESH itab`, `ADD 1 TO i`; enforce modern `=` and `CLEAR`.
-- [ ] **`033: Lost Previous Exception in CATCH`** - Detect re-raised exceptions missing `PREVIOUS = lx_exc` parameter in `CATCH` blocks.
-- [ ] **`034: Method Signature Cleanliness`** - Detect excessive parameter signatures (> 8 parameters); suggest structure or object parameters.
-- [ ] **`035: Avoid DB Access in Unit Tests`** - Detect direct database table access inside AUnit test methods (`FOR TESTING`).
+- [x] **`026: Prefer NEW Constructor Expression`** - Detect legacy `CREATE OBJECT lo_obj`; recommend `lo_obj = NEW #( )`.
+- [x] **`027: Prefer RAISE EXCEPTION NEW`** - Detect `RAISE EXCEPTION TYPE cx_xyz EXPORTING ...`; recommend `RAISE EXCEPTION NEW cx_xyz( ... )`.
+- [x] **`028: Prefer xsdbool( ) Expression`** - Detect manual `IF cond. b = abap_true. ELSE. b = abap_false. ENDIF.`; suggest `b = xsdbool( cond )`.
+- [x] **`029: Omit RECEIVING in Calls`** - Detect explicit `RECEIVING rv_out = lv_out` in functional method calls; suggest direct assignment.
+- [x] **`030: Avoid Static Call via Instance`** - Detect static class methods called through instance variables (`lo_inst->static_m( )`); enforce `cl_class=>static_m( )`.
+- [x] **`031: Avoid Public Attributes in Classes`** - Detect mutable `PUBLIC` instance/static variables; enforce encapsulation with `READ-ONLY` or getter/setter methods.
+- [x] **`032: Avoid Obsolete Statements (MOVE, REFRESH, ADD)`** - Detect legacy `MOVE a TO b`, `REFRESH itab`, `ADD 1 TO i`; enforce modern `=` and `CLEAR`.
+- [x] **`033: Lost Previous Exception in CATCH`** - Detect re-raised exceptions missing `PREVIOUS = lx_exc` parameter in `CATCH` blocks.
+- [x] **`034: Method Signature Cleanliness`** - Detect excessive parameter signatures (> 8 parameters); suggest structure or object parameters.
+- [x] **`035: Avoid DB Access in Unit Tests`** - Detect direct database table access inside AUnit test methods (`FOR TESTING`).
 
 ### 🔴 Level 4: Database Performance & Security (SQL & Cloud)
 Cloud database integrity, SQL performance optimization, and sy-subrc validation.

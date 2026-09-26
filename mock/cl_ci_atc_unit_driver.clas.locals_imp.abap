@@ -202,6 +202,7 @@ CLASS lcl_ci_atc_unit_asserter IMPLEMENTATION.
     DATA ls_token            TYPE stokesx.
     DATA ls_statement        TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA ls_atc_token        TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_comp_ref         TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
     DATA ls_procedure        TYPE if_ci_atc_source_code_provider=>ty_procedure.
     FIELD-SYMBOLS <ls_stmt_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_in_proc          TYPE abap_bool.
@@ -271,6 +272,14 @@ CLASS lcl_ci_atc_unit_asserter IMPLEMENTATION.
             ls_atc_token-lexeme = ls_token-str.
             ls_atc_token-position-line = ls_token-row.
             ls_atc_token-position-column = ls_token-col.
+
+            IF ls_token-str CS '->' OR ls_token-str CS '=>'.
+              CLEAR ls_comp_ref.
+              ls_comp_ref-kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-method.
+              ls_comp_ref-full_name = to_upper( ls_token-str ).
+              INSERT ls_comp_ref INTO TABLE ls_atc_token-references.
+            ENDIF.
+
             INSERT ls_atc_token INTO TABLE ls_statement-tokens.
           ENDIF.
         ENDIF.
