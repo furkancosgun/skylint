@@ -14,19 +14,19 @@ CLASS zcl_skylint_test_005 IMPLEMENTATION.
     DATA lv_val TYPE i.
     DATA lo_obj TYPE REF TO zcl_skylint_test_005.
 
-    IF lv_val IS NOT INITIAL.
+    IF NOT lv_val IS INITIAL.
       lv_val = 1.
     ENDIF.
 
-    IF lo_obj IS NOT BOUND.
-      lo_obj = NEW #( ).
+    IF NOT lo_obj IS BOUND.
+      CREATE OBJECT lo_obj.
     ENDIF.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
     DATA lv_val TYPE i.
 
-    IF lv_val IS NOT INITIAL. "#EC PREFER_IS_NOT
+    IF NOT lv_val IS INITIAL. "#EC PREFER_IS_NOT
       lv_val = 1.
     ENDIF.
   ENDMETHOD.

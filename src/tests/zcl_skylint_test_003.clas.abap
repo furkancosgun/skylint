@@ -15,12 +15,12 @@ CLASS zcl_skylint_test_003 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD without_pseudo_comments.
-    my_method( ).
-    my_method( ).
+    CALL METHOD my_method.
+    CALL METHOD my_method( ).
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    my_method( ). "#EC CALL_METHOD
+    CALL METHOD my_method. "#EC CALL_METHOD
   ENDMETHOD.
 
   METHOD dynamic_calls.
@@ -35,6 +35,6 @@ CLASS zcl_skylint_test_003 IMPLEMENTATION.
     CALL METHOD (lv_meth).
     CALL METHOD lo_obj->(lv_meth).
     CALL METHOD (lv_clas)=>('MY_METHOD').
-    lo_obj->my_method( parameter-table lt_ptab ).
+    CALL METHOD lo_obj->my_method PARAMETER-TABLE lt_ptab.
   ENDMETHOD.
 ENDCLASS.

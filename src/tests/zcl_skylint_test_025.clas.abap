@@ -13,8 +13,7 @@ CLASS zcl_skylint_test_025 IMPLEMENTATION.
   METHOD without_pseudo_comments.
     DATA lv_a TYPE i.
     DATA lv_b TYPE i.
-
-    IF lv_a = lv_b.
+    IF lv_a EQ lv_b.
       RETURN.
     ENDIF.
   ENDMETHOD.
@@ -22,8 +21,7 @@ CLASS zcl_skylint_test_025 IMPLEMENTATION.
   METHOD with_pseudo_comments.
     DATA lv_a TYPE i.
     DATA lv_b TYPE i.
-
-    IF lv_a = lv_b. "#EC PREFER_OPERATORS
+    IF lv_a EQ lv_b. "#EC PREFER_OPERATORS
       RETURN.
     ENDIF.
   ENDMETHOD.
@@ -31,7 +29,6 @@ CLASS zcl_skylint_test_025 IMPLEMENTATION.
   METHOD valid_code.
     DATA lv_a TYPE i.
     DATA lv_b TYPE i.
-
     IF lv_a = lv_b.
       RETURN.
     ENDIF.
