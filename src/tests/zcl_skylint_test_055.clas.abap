@@ -1,0 +1,27 @@
+CLASS zcl_skylint_test_055 DEFINITION
+  PUBLIC FINAL
+  CREATE PUBLIC.
+
+  PUBLIC SECTION.
+    METHODS without_pseudo_comments.
+    METHODS with_pseudo_comments.
+    METHODS valid_code.
+
+ENDCLASS.
+
+
+CLASS zcl_skylint_test_055 IMPLEMENTATION.
+
+  METHOD without_pseudo_comments.
+    CALL TRANSACTION 'VA01' WITHOUT AUTHORITY-CHECK.
+  ENDMETHOD.
+
+  METHOD with_pseudo_comments.
+    CALL TRANSACTION 'VA01' WITHOUT AUTHORITY-CHECK. "#EC CALL_TRANSACTION
+  ENDMETHOD.
+
+  METHOD valid_code.
+    CALL TRANSACTION 'VA01' WITH AUTHORITY-CHECK.
+  ENDMETHOD.
+
+ENDCLASS.

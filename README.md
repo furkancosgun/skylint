@@ -112,16 +112,16 @@ Procedural limits, nesting depth control, dead comments cleanup, and constructor
 ### 🟡 Level 5: Security, Authority & Robust Error Handling
 Authorization enforcement, system variable safety, SQL host escaping, and class-based exceptions.
 
-- [ ] **`051: Avoid sy-* Variable Modification`** - Detect manual assignments to system variables (`sy-subrc = 0`, `sy-mandt = ...`).
-- [ ] **`052: Prefer RETURNING over single EXPORTING`** - Detect methods with a single `EXPORTING` parameter; recommend `RETURNING`.
-- [ ] **`053: Prefer Class-Based Exceptions`** - Detect classic non-class-based `EXCEPTIONS` in method definitions.
-- [ ] **`054: Dangerous Statements`** - Detect risky dynamic/unmanaged statements (`GENERATE SUBROUTINE POOL`, `INSERT REPORT`, `SYSTEM-CALL`).
-- [ ] **`055: Call Transaction Authority Check`** - Detect `CALL TRANSACTION` without prior `AUTHORITY-CHECK`.
-- [ ] **`056: SQL Escape Host Variables (@)`** - Enforce `@` prefix on host variables in ABAP SQL (`WHERE obj = @lv_val`).
-- [ ] **`057: SELECT UP TO 1 ROWS requires ORDER BY`** - Detect `SELECT ... UP TO 1 ROWS` missing `ORDER BY` clause.
-- [ ] **`058: Cyclomatic Complexity Threshold`** - Detect procedures exceeding cyclomatic complexity limit (CC > 15).
-- [ ] **`059: Superclass Final Validation`** - Enforce `FINAL` or explicit inheritance rules on utility/helper classes.
-- [ ] **`060: Uncaught Exception Validator`** - Detect missing `RAISING` declaration or `TRY/CATCH` for checked exceptions.
+- [x] **`051: Avoid sy-* Variable Modification`** - Detect manual assignments to system variables (`sy-subrc = 0`, `sy-mandt = ...`).
+- [x] **`052: Prefer RETURNING over single EXPORTING`** - Detect methods with a single `EXPORTING` parameter; recommend `RETURNING`.
+- [x] **`053: Prefer Class-Based Exceptions`** - Detect classic non-class-based `EXCEPTIONS` in method definitions.
+- [x] **`054: Dangerous Statements`** - Detect risky dynamic/unmanaged statements (`GENERATE SUBROUTINE POOL`, `INSERT REPORT`, `SYSTEM-CALL`).
+- [x] **`055: Call Transaction Authority Check`** - Detect `CALL TRANSACTION` without prior `AUTHORITY-CHECK`.
+- [x] **`056: SQL Escape Host Variables (@)`** - Enforce `@` prefix on host variables in ABAP SQL (`WHERE obj = @lv_val`).
+- [x] **`057: SELECT UP TO 1 ROWS requires ORDER BY`** - Detect `SELECT ... UP TO 1 ROWS` missing `ORDER BY` clause.
+- [x] **`058: Cyclomatic Complexity Threshold`** - Detect procedures exceeding cyclomatic complexity limit (CC > 15).
+- [x] **`059: Superclass Final Validation`** - Enforce `FINAL` or explicit inheritance rules on utility/helper classes.
+- [x] **`060: Avoid Raise Shortdump`** - Detect `RAISE SHORTDUMP` statements; recommend graceful class-based exceptions.
 
 ### 🔴 Level 6: Database Performance & Security (SQL & Cloud)
 Cloud database integrity, SQL performance optimization, and sy-subrc validation.
