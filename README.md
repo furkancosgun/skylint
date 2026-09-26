@@ -2,7 +2,7 @@
 
 > **Modern, Minimal & Cloud-Native ABAP Linter for SAP BTP & S/4HANA Public Cloud (ATC)**
 
-**Skylint** is an extensible ABAP Test Cockpit (ATC) check framework tailored specifically for **ABAP Cloud** (Language Version 5 / Steampunk). It provides a clean, zero-boilerplate base architecture to easily author, test, and maintain custom Clean ABAP rules with native QuickFix support.
+**Skylint** is an extensible ABAP Test Cockpit (ATC) check framework tailored specifically for **ABAP Cloud** (Language Version 5 / Steampunk / BTP). It provides a clean, zero-boilerplate base architecture to author, execute, and maintain custom Clean ABAP & Security rules with native QuickFix support.
 
 ---
 
@@ -11,7 +11,7 @@
 - **ABAP Cloud Native:** Built upon standard SAP ATC Cloud interfaces (`if_ci_atc_check`, `if_ci_atc_source_code_provider`, `cl_ci_atc_assistant_factory`).
 - **Zero Boilerplate Architecture:** Base class (`zcl_skylint_check_base`) encapsulates all lifecycle, procedural iteration, finding construction, and quickfix delegations. Subclasses only require `constructor` and `check`.
 - **Stateless Static Engine:** High-performance local helpers (`lcl_reporter`, `lcl_quickfix`) handle location extraction, checksum generation, and pseudo-comment resolution without instance or casting overhead.
-- **Enterprise Testing Workflow:** Follows the official SAP ATC testing standard (`cl_ci_atc_unit_driver`), executing checks against dedicated test dummy objects in `src/tests/`.
+- **Enterprise Testing Workflow:** Follows the official SAP ATC testing standard (`cl_ci_atc_unit_driver`), executing checks against dedicated test fixtures in `src/tests/`.
 - **QuickFix Ready:** Built-in helper APIs for code replacement, insertion (`insert_before`, `insert_after`), and statement deletion.
 
 ---
@@ -27,120 +27,142 @@ skylint/
 │   │   ├── zcl_skylint_check_meta_data.clas.abap# ATC metadata descriptor & pseudo-comment resolver
 │   │   └── zcx_skylint_error.clas.abap          # Core exception class
 │   │
-│   ├── checks/                                   # Numeric ATC Check Implementations
-│   │   ├── zcl_skylint_check_001.clas.abap      # Check 001: Avoid TEST-SEAM
-│   │   └── zcl_skylint_check_001.clas.testclasses.abap # ABAP Unit test (ATC driver)
+│   ├── checks/                                   # 60 Modular ATC Check Implementations (001 - 060)
+│   │   ├── zcl_skylint_check_001.clas.abap      # Check class implementation
+│   │   ├── zcl_skylint_check_001.clas.xml       # abapGit XML metadata (<WITH_UNIT_TESTS>X</WITH_UNIT_TESTS>)
+│   │   └── zcl_skylint_check_001.clas.testclasses.abap # ATC Unit Test Driver assertion
 │   │
-│   └── tests/                                    # Target Test Objects for ATC Unit Tests
-│       └── zcl_skylint_test_001.clas.abap       # Code fixtures for Check 001
+│   └── tests/                                    # Target Test Fixtures
+│       ├── zcl_skylint_test_001.clas.abap       # Test fixture with positive, negative & suppressed cases
+│       └── zcl_skylint_test_001.clas.xml        # abapGit XML metadata
 │
-├── mock/                                         # Open-ABAP ATC Test Driver & Asserter Mocks
+├── mock/                                         # Open-ABAP Transpiler ATC Test Driver & Asserter Mocks
 │   ├── cl_ci_atc_unit_driver.clas.abap          # Native ATC driver factory mock
 │   └── if_ci_atc_unit_asserter.intf.abap        # Standard ATC Asserter interface mock
 │
-├── abaplint.json                                 # abaplint configuration & rule sets
-└── package.json                                  # Project scripts & tooling
+├── abaplint.json                                 # abaplint validation configuration & rule sets
+└── package.json                                  # Build, transpile, lint, and unit test scripts
 ```
 
 ---
 
-## 📋 Rule Roadmap & Implementation Checklist (Easiest to Hardest)
+## 📋 Comprehensive Rule Catalog (60 Checks)
 
-The rules are systematically ordered by AST/parsing complexity. Each rule includes its designated numeric ID, category, description, and status.
+All 60 rules are systematically grouped across 6 progressive complexity levels.
 
-### 🟢 Level 1: Beginner / Direct Pattern Matching (Keyword & Single Statement)
-Direct single-statement keyword matching or simple token replacement with minimal index complexity.
+### 🟢 Level 1: Beginner / Direct Pattern Matching
+Direct single-statement keyword matching and literal replacements.
 
-- [x] **`001: Avoid TEST-SEAM`** - Detect `TEST-SEAM` statements; recommend ABAP OO Test Doubles / Interfaces.
-- [x] **`002: Prefer lines( ) over DESCRIBE TABLE`** - Detect `DESCRIBE TABLE ... LINES ...`; suggest modern `lines( ... )`.
-- [x] **`003: Avoid CALL METHOD`** - Detect legacy `CALL METHOD lo->meth( )`; suggest functional `lo->meth( )`.
-- [x] **`004: Avoid DEFAULT KEY`** - Detect `WITH DEFAULT KEY` on internal tables; recommend `EMPTY KEY` or explicit keys.
-- [x] **`005: Prefer IS NOT over NOT IS`** - Detect `NOT ... IS INITIAL` / `NOT ... IS BOUND`; suggest `IS NOT INITIAL` / `IS NOT BOUND`.
-- [x] **`006: Avoid ME-> Self Reference`** - Detect unnecessary `me->` references when no ambiguity exists.
-- [x] **`007: Omit EXPORTING in Calls`** - Detect explicit `EXPORTING` in single-parameter / functional method calls.
-- [x] **`008: Avoid Assignment Chaining`** - Detect multiple assignment chains (`a = b = c = 0.`).
-- [x] **`009: Avoid Chained Declarations`** - Detect legacy chained declarations (`DATA: a, b.`); promote discrete `DATA`.
-- [x] **`010: Prefer String Templates over CONCATENATE`** - Detect legacy `CONCATENATE ... INTO ...`; suggest string templates `|...|`.
+| ID | Rule Name & Class | Description | Finding Code | Pseudo-Comment | Status | QuickFix |
+|:---:|---|---|:---:|:---:|:---:|:---:|
+| **001** | [zcl_skylint_check_001](src/checks/zcl_skylint_check_001.clas.abap) | Detect `TEST-SEAM` statements; recommend ABAP OO Test Doubles / Interfaces | `TEST_SEAM` | `"#EC TEST_SEAM"` | ✅ Done | ⚡ Ready |
+| **002** | [zcl_skylint_check_002](src/checks/zcl_skylint_check_002.clas.abap) | Detect `DESCRIBE TABLE ... LINES ...`; suggest modern `lines( ... )` | `DESCRIBE_T` | `"#EC DESCRIBE_TABLE"` | ✅ Done | ⚡ Ready |
+| **003** | [zcl_skylint_check_003](src/checks/zcl_skylint_check_003.clas.abap) | Detect legacy `CALL METHOD lo->meth( )`; suggest functional `lo->meth( )` | `CALL_METH` | `"#EC CALL_METHOD"` | ✅ Done | ⚡ Ready |
+| **004** | [zcl_skylint_check_004](src/checks/zcl_skylint_check_004.clas.abap) | Detect `WITH DEFAULT KEY` on internal tables; recommend `EMPTY KEY` or explicit keys | `DEFAULT_K` | `"#EC DEFAULT_KEY"` | ✅ Done | ⚡ Ready |
+| **005** | [zcl_skylint_check_005](src/checks/zcl_skylint_check_005.clas.abap) | Detect `NOT ... IS INITIAL` / `NOT ... IS BOUND`; suggest `IS NOT INITIAL` / `IS NOT BOUND` | `PREFER_IS` | `"#EC PREFER_IS_NOT"` | ✅ Done | ⚡ Ready |
+| **006** | [zcl_skylint_check_006](src/checks/zcl_skylint_check_006.clas.abap) | Detect unnecessary `me->` references when no naming ambiguity exists | `ME_REF` | `"#EC AVOID_ME"` | ✅ Done | ⚡ Ready |
+| **007** | [zcl_skylint_check_007](src/checks/zcl_skylint_check_007.clas.abap) | Detect explicit `EXPORTING` in single-parameter or functional method calls | `OMIT_EXP` | `"#EC OMIT_EXPORTING"` | ✅ Done | ⚡ Ready |
+| **008** | [zcl_skylint_check_008](src/checks/zcl_skylint_check_008.clas.abap) | Detect multiple assignment chaining (`a = b = c = 0.`) | `CHAIN_EQ` | `"#EC CHAIN_ASSIGN"` | ✅ Done | ⚡ Ready |
+| **009** | [zcl_skylint_check_009](src/checks/zcl_skylint_check_009.clas.abap) | Detect legacy chained declarations (`DATA: a, b.`); promote discrete declarations | `CHAIN_DECL` | `"#EC CHAINED_DECL"` | ✅ Done | ⚡ Ready |
+| **010** | [zcl_skylint_check_010](src/checks/zcl_skylint_check_010.clas.abap) | Detect legacy `CONCATENATE ... INTO ...`; suggest string templates `\|...\|` | `CONCAT_STR` | `"#EC STRING_TEMPL"` | ✅ Done | ⚡ Ready |
+
+---
 
 ### 🟡 Level 2: Intermediate / Block Scope & Control Statements
 Structure boundaries, control blocks (`IF`, `CASE`, `LOOP`, `TRY`), and condition evaluation.
 
-- [x] **`011: Avoid Boolean Comparison`** - Detect `IF bool = abap_true` / `IF bool = 'X'`; promote direct `IF bool`.
-- [x] **`012: Prefer line_exists( ) over READ TABLE NO FIELDS`** - Detect `READ TABLE ... TRANSPORTING NO FIELDS`; suggest `line_exists( ... )`.
-- [x] **`013: EXIT Outside Loop -> Prefer RETURN`** - Detect `EXIT` statements in procedures outside loop constructs; suggest `RETURN`.
-- [x] **`014: Avoid CHECK in Iterations`** - Detect `CHECK` inside `LOOP` / `DO` / `WHILE`; promote explicit `IF ... CONTINUE`.
-- [x] **`015: Constant-Only Interfaces`** - Detect interfaces containing only `CONSTANTS`; suggest global classes or domain types.
-- [x] **`016: Empty Control Blocks`** - Detect empty `IF`, `CASE`, `LOOP`, `TRY` statement bodies.
-- [x] **`017: Empty CATCH Block`** - Detect empty `CATCH` blocks swallowing exceptions without logging or re-raising.
-- [x] **`018: Unit Test Assert Validator`** - Detect invalid unit test assertions where actual and expected parameters are identical (`act = exp`).
-- [x] **`019: Identical Conditions in IF/CASE`** - Detect duplicate branch conditions in `IF ... ELSEIF` or `CASE ... WHEN`.
-- [x] **`020: Nested IF Simplification`** - Detect consecutive nested single-line `IF` blocks that can be merged with `AND`.
-- [x] **`021: WHEN OTHERS Must Be Last`** - Detect `WHEN OTHERS` positioned before specific `WHEN` branches in `CASE`.
-- [x] **`022: Detect Unreachable Code`** - Detect dead statements directly following unconditional `RETURN`, `EXIT`, `RAISE EXCEPTION`.
-- [x] **`023: Avoid Short CASE (Prefer IF)`** - Detect `CASE` statements containing only a single `WHEN` branch; suggest `IF ... ELSE`.
-- [x] **`024: Avoid Yoda Conditions`** - Detect inverted comparisons (`IF 'X' = lv_var`); promote natural order (`IF lv_var = 'X'`).
-- [x] **`025: Prefer Comparison Operators`** - Detect legacy comparison keywords (`EQ`, `NE`, `GT`, `LT`, `GE`, `LE`); enforce modern `=`, `<>`, `>`, `<`, `>=`, `<=`.
+| ID | Rule Name & Class | Description | Finding Code | Pseudo-Comment | Status | QuickFix |
+|:---:|---|---|:---:|:---:|:---:|:---:|
+| **011** | [zcl_skylint_check_011](src/checks/zcl_skylint_check_011.clas.abap) | Detect `IF bool = abap_true` / `IF bool = 'X'`; promote direct `IF bool` | `BOOL_COMP` | `"#EC BOOL_COMPARISON"` | ✅ Done | ⚡ Ready |
+| **012** | [zcl_skylint_check_012](src/checks/zcl_skylint_check_012.clas.abap) | Detect `READ TABLE ... TRANSPORTING NO FIELDS`; suggest `line_exists( ... )` | `LINE_EXIST` | `"#EC LINE_EXISTS"` | ✅ Done | ⚡ Ready |
+| **013** | [zcl_skylint_check_013](src/checks/zcl_skylint_check_013.clas.abap) | Detect `EXIT` statements in procedures outside loop constructs; suggest `RETURN` | `EXIT_LOOP` | `"#EC EXIT_NOT_IN_LOOP"` | ✅ Done | ⚡ Ready |
+| **014** | [zcl_skylint_check_014](src/checks/zcl_skylint_check_014.clas.abap) | Detect `CHECK` inside `LOOP` / `DO` / `WHILE`; promote explicit `IF ... CONTINUE` | `CHECK_LOOP` | `"#EC CHECK_IN_LOOP"` | ✅ Done | ⚡ Ready |
+| **015** | [zcl_skylint_check_015](src/checks/zcl_skylint_check_015.clas.abap) | Detect interfaces containing only `CONSTANTS`; suggest global classes or types | `CONST_INTF` | `"#EC CONST_ONLY_INTF"` | ✅ Done | — |
+| **016** | [zcl_skylint_check_016](src/checks/zcl_skylint_check_016.clas.abap) | Detect empty `IF`, `CASE`, `LOOP`, `TRY` statement bodies | `EMPTY_BLCK` | `"#EC EMPTY_BLOCK"` | ✅ Done | ⚡ Ready |
+| **017** | [zcl_skylint_check_017](src/checks/zcl_skylint_check_017.clas.abap) | Detect empty `CATCH` blocks swallowing exceptions without handling or re-raising | `EMPTY_CAT` | `"#EC EMPTY_CATCH"` | ✅ Done | — |
+| **018** | [zcl_skylint_check_018](src/checks/zcl_skylint_check_018.clas.abap) | Detect invalid unit test assertions where actual and expected parameters are identical (`act = exp`) | `IDENT_ASSR` | `"#EC IDENTICAL_ASSERT"` | ✅ Done | — |
+| **019** | [zcl_skylint_check_019](src/checks/zcl_skylint_check_019.clas.abap) | Detect duplicate branch conditions in `IF ... ELSEIF` or `CASE ... WHEN` | `DUP_COND` | `"#EC IDENTICAL_COND"` | ✅ Done | — |
+| **020** | [zcl_skylint_check_020](src/checks/zcl_skylint_check_020.clas.abap) | Detect consecutive nested single-line `IF` blocks that can be merged with `AND` | `NESTED_IF` | `"#EC MERGE_NESTED_IF"` | ✅ Done | ⚡ Ready |
+| **021** | [zcl_skylint_check_021](src/checks/zcl_skylint_check_021.clas.abap) | Detect `WHEN OTHERS` positioned before specific `WHEN` branches in `CASE` | `OTHERS_POS` | `"#EC WHEN_OTHERS_LAST"` | ✅ Done | ⚡ Ready |
+| **022** | [zcl_skylint_check_022](src/checks/zcl_skylint_check_022.clas.abap) | Detect dead statements directly following unconditional `RETURN`, `EXIT`, `RAISE EXCEPTION` | `UNREACH` | `"#EC UNREACHABLE_CODE"` | ✅ Done | ⚡ Ready |
+| **023** | [zcl_skylint_check_023](src/checks/zcl_skylint_check_023.clas.abap) | Detect `CASE` statements containing only a single `WHEN` branch; suggest `IF ... ELSE` | `SHORT_CASE` | `"#EC PREFER_IF_OVER_CASE"` | ✅ Done | ⚡ Ready |
+| **024** | [zcl_skylint_check_024](src/checks/zcl_skylint_check_024.clas.abap) | Detect inverted comparisons (`IF 'X' = lv_var`); promote natural order (`IF lv_var = 'X'`) | `YODA_COND` | `"#EC AVOID_YODA"` | ✅ Done | ⚡ Ready |
+| **025** | [zcl_skylint_check_025](src/checks/zcl_skylint_check_025.clas.abap) | Detect legacy comparison keywords (`EQ`, `NE`, `GT`, `LT`, `GE`, `LE`); enforce modern `=`, `<>`, `>`, `<`, `>=`, `<=` | `OBS_COMP` | `"#EC MODERN_OPERATOR"` | ✅ Done | ⚡ Ready |
+
+---
 
 ### 🔵 Level 3: Modern ABAP & OO Architecture
 Modern expression syntax, encapsulation, test double design, and exception hygiene.
 
-- [x] **`026: Prefer NEW Constructor Expression`** - Detect legacy `CREATE OBJECT lo_obj`; recommend `lo_obj = NEW #( )`.
-- [x] **`027: Prefer RAISE EXCEPTION NEW`** - Detect `RAISE EXCEPTION TYPE cx_xyz EXPORTING ...`; recommend `RAISE EXCEPTION NEW cx_xyz( ... )`.
-- [x] **`028: Prefer xsdbool( ) Expression`** - Detect manual `IF cond. b = abap_true. ELSE. b = abap_false. ENDIF.`; suggest `b = xsdbool( cond )`.
-- [x] **`029: Omit RECEIVING in Calls`** - Detect explicit `RECEIVING rv_out = lv_out` in functional method calls; suggest direct assignment.
-- [x] **`030: Avoid Static Call via Instance`** - Detect static class methods called through instance variables (`lo_inst->static_m( )`); enforce `cl_class=>static_m( )`.
-- [x] **`031: Avoid Public Attributes in Classes`** - Detect mutable `PUBLIC` instance/static variables; enforce encapsulation with `READ-ONLY` or getter/setter methods.
-- [x] **`032: Avoid Obsolete Statements (MOVE, REFRESH, ADD)`** - Detect legacy `MOVE a TO b`, `REFRESH itab`, `ADD 1 TO i`; enforce modern `=` and `CLEAR`.
-- [x] **`033: Lost Previous Exception in CATCH`** - Detect re-raised exceptions missing `PREVIOUS = lx_exc` parameter in `CATCH` blocks.
-- [x] **`034: Method Signature Cleanliness`** - Detect excessive parameter signatures (> 8 parameters); suggest structure or object parameters.
-- [x] **`035: Avoid DB Access in Unit Tests`** - Detect direct database table access inside AUnit test methods (`FOR TESTING`).
+| ID | Rule Name & Class | Description | Finding Code | Pseudo-Comment | Status | QuickFix |
+|:---:|---|---|:---:|:---:|:---:|:---:|
+| **026** | [zcl_skylint_check_026](src/checks/zcl_skylint_check_026.clas.abap) | Detect legacy `CREATE OBJECT lo_obj`; recommend constructor expression `lo_obj = NEW #( )` | `PREFER_NEW` | `"#EC PREFER_NEW"` | ✅ Done | ⚡ Ready |
+| **027** | [zcl_skylint_check_027](src/checks/zcl_skylint_check_027.clas.abap) | Detect legacy `RAISE EXCEPTION TYPE cx_xyz EXPORTING ...`; recommend `RAISE EXCEPTION NEW cx_xyz( ... )` | `RAISE_NEW` | `"#EC RAISE_EXC_NEW"` | ✅ Done | ⚡ Ready |
+| **028** | [zcl_skylint_check_028](src/checks/zcl_skylint_check_028.clas.abap) | Detect manual `IF cond. b = abap_true. ELSE. b = abap_false. ENDIF.`; suggest `b = xsdbool( cond )` | `XSD_BOOL` | `"#EC PREFER_XSDBOOL"` | ✅ Done | ⚡ Ready |
+| **029** | [zcl_skylint_check_029](src/checks/zcl_skylint_check_029.clas.abap) | Detect explicit `RECEIVING rv_out = lv_out` in functional method calls; suggest direct assignment | `OMIT_RCV` | `"#EC OMIT_RECEIVING"` | ✅ Done | ⚡ Ready |
+| **030** | [zcl_skylint_check_030](src/checks/zcl_skylint_check_030.clas.abap) | Detect static class methods called through instance variables (`lo_inst->static_m( )`); enforce `cl_class=>static_m( )` | `STAT_INST` | `"#EC AVOID_STATIC_INST"` | ✅ Done | ⚡ Ready |
+| **031** | [zcl_skylint_check_031](src/checks/zcl_skylint_check_031.clas.abap) | Detect mutable `PUBLIC` instance/static attributes; enforce encapsulation with `READ-ONLY` or methods | `PUB_ATTR` | `"#EC NO_PUBLIC_ATTR"` | ✅ Done | — |
+| **032** | [zcl_skylint_check_032](src/checks/zcl_skylint_check_032.clas.abap) | Detect legacy `MOVE a TO b`, `REFRESH itab`, `ADD 1 TO i`; enforce modern `=`, `CLEAR` | `OBS_STMT` | `"#EC AVOID_OBSOLETE"` | ✅ Done | ⚡ Ready |
+| **033** | [zcl_skylint_check_033](src/checks/zcl_skylint_check_033.clas.abap) | Detect re-raised exceptions missing `PREVIOUS = lx_exc` parameter inside `CATCH` blocks | `LOST_PREV` | `"#EC LOST_PREV_EXC"` | ✅ Done | ⚡ Ready |
+| **034** | [zcl_skylint_check_034](src/checks/zcl_skylint_check_034.clas.abap) | Detect excessive parameter signatures (> 8 parameters); suggest structure or object parameters | `SIG_PARAMS` | `"#EC PARAM_COUNT"` | ✅ Done | — |
+| **035** | [zcl_skylint_check_035](src/checks/zcl_skylint_check_035.clas.abap) | Detect direct database table access inside ABAP Unit test methods (`FOR TESTING`) | `DB_IN_UT` | `"#EC AVOID_DB_IN_UT"` | ✅ Done | — |
 
-### 🟣 Level 4: Code Quality, Complexity & Structure
-Procedural limits, nesting depth control, dead comments cleanup, and constructor hygiene.
-
-- [x] **`041: Avoid Superfluous VALUE Operator`** - Detect redundant `VALUE #( ... )` wrapping when target type is identical.
-- [x] **`042: Identical Self Assignment`** - Detect redundant self-assignments (`lv_var = lv_var.`).
-- [x] **`043: Fully Typed Constants`** - Detect constants declared without explicit `TYPE` or length specification.
-- [x] **`044: Omit Parameter Name in Single Call`** - Detect explicit single parameter name passing when not needed (`lo->m( 1 )` vs `lo->m( iv_val = 1 )`).
-- [x] **`045: Try Without Catch`** - Detect `TRY ... ENDTRY` blocks missing both `CATCH` and `CLEANUP`.
-- [x] **`046: Avoid Local TABLES Declarations`** - Detect legacy `TABLES:` statement in local scopes.
-- [x] **`047: Prefer CORRESPONDING Expression`** - Detect legacy `MOVE-CORRESPONDING` statements; suggest functional `CORRESPONDING #( ... )`.
-- [x] **`048: Method Length Limit`** - Detect long methods exceeding statement limit (> 60 statements).
-- [x] **`049: Nesting Depth Limit`** - Detect excessive control block nesting depth (> 5 levels).
-- [x] **`050: Avoid Multiple Output Parameters`** - Detect methods with multiple `EXPORTING`/`CHANGING` output parameters.
-
-### 🟡 Level 5: Security, Authority & Robust Error Handling
-Authorization enforcement, system variable safety, SQL host escaping, and class-based exceptions.
-
-- [x] **`051: Avoid sy-* Variable Modification`** - Detect manual assignments to system variables (`sy-subrc = 0`, `sy-mandt = ...`).
-- [x] **`052: Prefer RETURNING over single EXPORTING`** - Detect methods with a single `EXPORTING` parameter; recommend `RETURNING`.
-- [x] **`053: Prefer Class-Based Exceptions`** - Detect classic non-class-based `EXCEPTIONS` in method definitions.
-- [x] **`054: Dangerous Statements`** - Detect risky dynamic/unmanaged statements (`GENERATE SUBROUTINE POOL`, `INSERT REPORT`, `SYSTEM-CALL`).
-- [x] **`055: Call Transaction Authority Check`** - Detect `CALL TRANSACTION` without prior `AUTHORITY-CHECK`.
-- [x] **`056: SQL Escape Host Variables (@)`** - Enforce `@` prefix on host variables in ABAP SQL (`WHERE obj = @lv_val`).
-- [x] **`057: SELECT UP TO 1 ROWS requires ORDER BY`** - Detect `SELECT ... UP TO 1 ROWS` missing `ORDER BY` clause.
-- [x] **`058: Cyclomatic Complexity Threshold`** - Detect procedures exceeding cyclomatic complexity limit (CC > 15).
-- [x] **`059: Superclass Final Validation`** - Enforce `FINAL` or explicit inheritance rules on utility/helper classes.
-- [x] **`060: Avoid Raise Shortdump`** - Detect `RAISE SHORTDUMP` statements; recommend graceful class-based exceptions.
+---
 
 ### 🔴 Level 6: Database Performance & Security (SQL & Cloud)
 Cloud database integrity, SQL performance optimization, and sy-subrc validation.
 
-- [x] **`036: DB Access Inside Loops`** - Detect SQL queries (`SELECT`, `MODIFY`, `INSERT`, `DELETE`) within loop iterations.
-- [x] **`037: Unsecure FOR ALL ENTRIES (Empty itab check)`** - Detect `FOR ALL ENTRIES IN itab` without preceding `IF itab IS NOT INITIAL` check (prevents full table scan).
-- [x] **`038: Select Performance (Avoid SELECT * / SELECT ... ENDSELECT)`** - Detect `SELECT *` without column projection and `SELECT ... ENDSELECT` cursor loops.
-- [x] **`039: Check sy-subrc after DB & Table Operations`** - Detect unverified `sy-subrc` directly following `READ TABLE`, `ASSIGN`, `AUTHORITY-CHECK`, and `SELECT SINGLE`.
-- [x] **`040: Scope of Variable (Variable Leaking)`** - Detect variables declared inside inner loop/condition blocks referenced outside their block scope.
+| ID | Rule Name & Class | Description | Finding Code | Pseudo-Comment | Status | QuickFix |
+|:---:|---|---|:---:|:---:|:---:|:---:|
+| **036** | [zcl_skylint_check_036](src/checks/zcl_skylint_check_036.clas.abap) | Detect SQL statements (`SELECT`, `MODIFY`, `INSERT`, `DELETE`) inside loop constructs (`LOOP`, `DO`, `WHILE`) | `DB_IN_LOOP` | `"#EC DB_IN_LOOP"` | ✅ Done | — |
+| **037** | [zcl_skylint_check_037](src/checks/zcl_skylint_check_037.clas.abap) | Detect `FOR ALL ENTRIES IN itab` without preceding `IF itab IS NOT INITIAL` check | `FAE_EMPTY` | `"#EC FAE_EMPTY_CHECK"` | ✅ Done | ⚡ Ready |
+| **038** | [zcl_skylint_check_038](src/checks/zcl_skylint_check_038.clas.abap) | Detect `SELECT *` without column projection and `SELECT ... ENDSELECT` cursor loops | `SEL_PERF` | `"#EC SELECT_PERF"` | ✅ Done | — |
+| **039** | [zcl_skylint_check_039](src/checks/zcl_skylint_check_039.clas.abap) | Detect unverified `sy-subrc` directly following `READ TABLE`, `ASSIGN`, `AUTHORITY-CHECK`, and `SELECT SINGLE` | `SUBRC_UNV` | `"#EC CHECK_SYSUBRC"` | ✅ Done | — |
+| **040** | [zcl_skylint_check_040](src/checks/zcl_skylint_check_040.clas.abap) | Detect variables declared inside inner loop/condition blocks referenced outside their block scope | `VAR_SCOPE` | `"#EC VAR_SCOPE_LEAK"` | ✅ Done | — |
 
 ---
 
+### 🟣 Level 4: Code Quality, Complexity & Structure
+Procedural limits, nesting depth control, dead comments cleanup, and constructor hygiene.
+
+| ID | Rule Name & Class | Description | Finding Code | Pseudo-Comment | Status | QuickFix |
+|:---:|---|---|:---:|:---:|:---:|:---:|
+| **041** | [zcl_skylint_check_041](src/checks/zcl_skylint_check_041.clas.abap) | Detect redundant `VALUE #( ... )` wrapping when target type is identical | `EXTRA_VAL` | `"#EC SUPERFLUOUS_VALUE"` | ✅ Done | ⚡ Ready |
+| **042** | [zcl_skylint_check_042](src/checks/zcl_skylint_check_042.clas.abap) | Detect redundant self-assignments (`lv_var = lv_var.`) | `SELF_ASSIGN` | `"#EC SELF_ASSIGNMENT"` | ✅ Done | ⚡ Ready |
+| **043** | [zcl_skylint_check_043](src/checks/zcl_skylint_check_043.clas.abap) | Detect constants declared without explicit `TYPE` or length specification | `UNTYPED_C` | `"#EC UNTYPED_CONSTANT"` | ✅ Done | ⚡ Ready |
+| **044** | [zcl_skylint_check_044](src/checks/zcl_skylint_check_044.clas.abap) | Detect explicit single parameter name passing when not needed (`lo->m( 1 )` vs `lo->m( iv_val = 1 )`) | `OMIT_PNAME` | `"#EC OMIT_PARAM_NAME"` | ✅ Done | ⚡ Ready |
+| **045** | [zcl_skylint_check_045](src/checks/zcl_skylint_check_045.clas.abap) | Detect `TRY ... ENDTRY` blocks missing both `CATCH` and `CLEANUP` sections | `TRY_NO_CAT` | `"#EC TRY_WITHOUT_CATCH"` | ✅ Done | ⚡ Ready |
+| **046** | [zcl_skylint_check_046](src/checks/zcl_skylint_check_046.clas.abap) | Detect legacy `TABLES:` statement in local scopes | `LOC_TABLES` | `"#EC AVOID_LOC_TABLES"` | ✅ Done | ⚡ Ready |
+| **047** | [zcl_skylint_check_047](src/checks/zcl_skylint_check_047.clas.abap) | Detect legacy `MOVE-CORRESPONDING` statements; suggest functional `CORRESPONDING #( ... )` | `PREF_CORR` | `"#EC PREFER_CORRESPONDING"` | ✅ Done | ⚡ Ready |
+| **048** | [zcl_skylint_check_048](src/checks/zcl_skylint_check_048.clas.abap) | Detect long methods exceeding statement limit (> 60 statements) | `METH_LEN` | `"#EC METHOD_LENGTH"` | ✅ Done | — |
+| **049** | [zcl_skylint_check_049](src/checks/zcl_skylint_check_049.clas.abap) | Detect excessive control block nesting depth (> 5 levels) | `NEST_DEPTH` | `"#EC MAX_NESTING_DEPTH"` | ✅ Done | — |
+| **050** | [zcl_skylint_check_050](src/checks/zcl_skylint_check_050.clas.abap) | Detect methods with multiple `EXPORTING`/`CHANGING` output parameters | `MULTI_OUT` | `"#EC MULTI_OUTPUT_PARAMS"` | ✅ Done | — |
+
 ---
 
-## 🚀 How to Create a New Check
+### 🟡 Level 5: Security, Authority & Robust Error Handling
+Authorization enforcement, system variable safety, SQL host escaping, and class-based exceptions.
 
-Writing a new rule in Skylint is as simple as creating a subclass of `zcl_skylint_check_base`.
+| ID | Rule Name & Class | Description | Finding Code | Pseudo-Comment | Status | QuickFix |
+|:---:|---|---|:---:|:---:|:---:|:---:|
+| **051** | [zcl_skylint_check_051](src/checks/zcl_skylint_check_051.clas.abap) | Detect manual assignments to system variables (`sy-subrc = 0`, `sy-mandt = ...`) | `SY_MOD` | `"#EC AVOID_SY_MOD"` | ✅ Done | — |
+| **052** | [zcl_skylint_check_052](src/checks/zcl_skylint_check_052.clas.abap) | Detect methods with a single `EXPORTING` parameter; recommend `RETURNING` | `PREF_RET` | `"#EC PREFER_RETURNING"` | ✅ Done | ⚡ Ready |
+| **053** | [zcl_skylint_check_053](src/checks/zcl_skylint_check_053.clas.abap) | Detect classic non-class-based `EXCEPTIONS` in method definitions | `NON_CB_EXC` | `"#EC CLASS_BASED_EXC"` | ✅ Done | — |
+| **054** | [zcl_skylint_check_054](src/checks/zcl_skylint_check_054.clas.abap) | Detect risky dynamic/unmanaged statements (`GENERATE SUBROUTINE POOL`, `INSERT REPORT`, `SYSTEM-CALL`) | `DANGER_STM` | `"#EC DANGEROUS_STMT"` | ✅ Done | — |
+| **055** | [zcl_skylint_check_055](src/checks/zcl_skylint_check_055.clas.abap) | Detect `CALL TRANSACTION` without prior `AUTHORITY-CHECK` | `AUTH_CHECK` | `"#EC CALL_TRANSACTION"` | ✅ Done | ⚡ Ready |
+| **056** | [zcl_skylint_check_056](src/checks/zcl_skylint_check_056.clas.abap) | Enforce `@` prefix on host variables in ABAP SQL (`INTO TABLE @lt_data`, `WHERE col = @lv_val`) | `SQL_HOST_E` | `"#EC SQL_HOST_VAR"` | ✅ Done | ⚡ Ready |
+| **057** | [zcl_skylint_check_057](src/checks/zcl_skylint_check_057.clas.abap) | Detect `SELECT ... UP TO 1 ROWS` missing explicit `ORDER BY` clause | `SELECT_UP` | `"#EC SELECT_UP_TO_1"` | ✅ Done | ⚡ Ready |
+| **058** | [zcl_skylint_check_058](src/checks/zcl_skylint_check_058.clas.abap) | Detect procedures exceeding cyclomatic complexity limit (CC > 15) | `CYCLO_COMP` | `"#EC CYCLOMATIC_COMPLEXITY"` | ✅ Done | — |
+| **059** | [zcl_skylint_check_059](src/checks/zcl_skylint_check_059.clas.abap) | Enforce `FINAL` or explicit inheritance design on helper/utility classes | `NOT_FINAL` | `"#EC CLASS_NOT_FINAL"` | ✅ Done | ⚡ Ready |
+| **060** | [zcl_skylint_check_060](src/checks/zcl_skylint_check_060.clas.abap) | Detect `RAISE SHORTDUMP` statements; recommend graceful class-based exceptions | `SHORTDUMP` | `"#EC AVOID_SHORTDUMP"` | ✅ Done | ⚡ Ready |
 
-### Step 1: Define the Check Class (`src/checks/zcl_skylint_check_002.clas.abap`)
+---
+
+## 🚀 How to Author a Custom Skylint Check
+
+Authoring an ATC check in Skylint requires just extending `zcl_skylint_check_base`:
+
+### Step 1: Define Check Metadata & Inspection Logic (`src/checks/zcl_skylint_check_002.clas.abap`)
 
 ```abap
 CLASS zcl_skylint_check_002 DEFINITION
@@ -188,9 +210,7 @@ CLASS zcl_skylint_check_002 IMPLEMENTATION.
 ENDCLASS.
 ```
 
-### Step 2: Create a Test Fixture (`src/tests/zcl_skylint_test_002.clas.abap`)
-
-Create an ABAP class that includes code examples for both non-compliant code and pseudo-comment suppressed code:
+### Step 2: Create Test Fixture (`src/tests/zcl_skylint_test_002.clas.abap`)
 
 ```abap
 CLASS zcl_skylint_test_002 DEFINITION
@@ -200,7 +220,9 @@ CLASS zcl_skylint_test_002 DEFINITION
   PUBLIC SECTION.
     METHODS without_pseudo_comments.
     METHODS with_pseudo_comments.
+    METHODS valid_code.
 ENDCLASS.
+
 
 CLASS zcl_skylint_test_002 IMPLEMENTATION.
   METHOD without_pseudo_comments.
@@ -209,6 +231,12 @@ CLASS zcl_skylint_test_002 IMPLEMENTATION.
 
   METHOD with_pseudo_comments.
     CHECK 1 = 2. "#EC PREFER_IS_NOT
+  ENDMETHOD.
+
+  METHOD valid_code.
+    IF 1 = 2.
+      RETURN.
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.
 ```
@@ -230,6 +258,7 @@ CLASS ltcl_check_002 DEFINITION FINAL
     METHODS execute_test_class FOR TESTING RAISING cx_static_check.
 ENDCLASS.
 
+
 CLASS ltcl_check_002 IMPLEMENTATION.
   METHOD execute_test_class.
     DATA ls_loc_without_pc TYPE if_ci_atc_check=>ty_location.
@@ -250,9 +279,10 @@ CLASS ltcl_check_002 IMPLEMENTATION.
     cl_ci_atc_unit_driver=>create_asserter( )->check_and_assert(
         check             = NEW zcl_skylint_check_002( )
         object            = VALUE #( type = 'CLAS' name = c_test_class )
-        expected_findings = VALUE #( code = zcl_skylint_check_002=>c_finding_codes-prefer_is_not
-                                     ( location = ls_loc_without_pc )
-                                     ( location = ls_loc_with_pc ) )
+        expected_findings = VALUE #( ( code     = zcl_skylint_check_002=>c_finding_codes-prefer_is_not
+                                       location = ls_loc_without_pc )
+                                     ( code     = zcl_skylint_check_002=>c_finding_codes-prefer_is_not
+                                       location = ls_loc_with_pc ) )
         asserter_config   = VALUE #( quickfixes = abap_false ) ).
   ENDMETHOD.
 ENDCLASS.
@@ -260,14 +290,12 @@ ENDCLASS.
 
 ---
 
-## 🛠️ Available APIs for Check Subclasses
-
-Inheriting from `zcl_skylint_check_base` gives you instant access to:
+## 🛠️ Available Base APIs (`zcl_skylint_check_base`)
 
 | Method | Description |
 |---|---|
-| `report_statement( is_statement, iv_finding_code, ... )` | Reports an ATC finding for a whole statement with auto location, checksum & pseudo comment check. |
-| `report_token( is_token, is_statement, iv_finding_code, ... )` | Reports an ATC finding specifically highlighting a token position. |
+| `report_statement( is_statement, iv_finding_code, ... )` | Reports an ATC finding for a statement with auto location, checksum & pseudo-comment suppression check. |
+| `report_token( is_token, is_statement, iv_finding_code, ... )` | Reports an ATC finding highlighting a specific token position. |
 | `report_finding( is_finding )` | Directly appends a custom `if_ci_atc_check=>ty_finding` structure. |
 | `get_attribute( iv_name, IMPORTING ev_value )` | Safely dereferences and retrieves dynamic ATC check attributes. |
 | `quickfix_replace( ... )` | Constructs a QuickFix context and generates replacement code. |
@@ -277,17 +305,20 @@ Inheriting from `zcl_skylint_check_base` gives you instant access to:
 
 ---
 
-## 🧪 Development & CI
+## 🧪 Development & Verification
 
 ```bash
 # Install dependencies
 npm install
 
-# Run abaplint validation across repository
+# Run full CI pipeline (abaplint validation + open-abap transpiler AUnit tests)
 npm test
 
-# Auto-fix fixable formatting/style issues
-npm run fix
+# Run abaplint separately
+npm run lint
+
+# Run AUnit tests separately
+npm run unit
 ```
 
 ---
