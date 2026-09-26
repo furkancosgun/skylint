@@ -197,6 +197,7 @@ CLASS lcl_ci_atc_unit_asserter IMPLEMENTATION.
     FIELD-SYMBOLS <ls_stmt_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_in_proc          TYPE abap_bool.
     DATA lv_first_token      TYPE abap_bool.
+    DATA lv_in_chain         TYPE abap_bool.
     DATA lv_tok_idx          TYPE i.
     DATA lv_proc_start_row   TYPE i.
     DATA lv_rel_row          TYPE i.
@@ -218,6 +219,15 @@ CLASS lcl_ci_atc_unit_asserter IMPLEMENTATION.
     LOOP AT lt_stmnts INTO ls_stmnt.
       CLEAR ls_statement.
       lv_first_token = abap_true.
+
+      IF lv_in_chain = abap_true.
+        ls_stmnt-prefixlen = 1.
+      ENDIF.
+      IF ls_stmnt-terminator = ','.
+        lv_in_chain = abap_true.
+      ELSE.
+        lv_in_chain = abap_false.
+      ENDIF.
 
       lv_tok_idx = ls_stmnt-from.
       WHILE lv_tok_idx <= ls_stmnt-to.
@@ -241,7 +251,11 @@ CLASS lcl_ci_atc_unit_asserter IMPLEMENTATION.
             INSERT ls_atc_token INTO TABLE ls_statement-tokens.
           ELSE.
             IF lv_first_token = abap_true.
-              ls_statement-keyword = to_upper( ls_token-str ).
+              IF ls_stmnt-prefixlen = 0.
+                ls_statement-keyword = to_upper( ls_token-str ).
+              ELSE.
+                ls_statement-keyword = ''.
+              ENDIF.
               ls_statement-position-line = ls_token-row.
               ls_statement-position-column = ls_token-col.
               lv_first_token = abap_false.
@@ -256,23 +270,6 @@ CLASS lcl_ci_atc_unit_asserter IMPLEMENTATION.
         ENDIF.
         lv_tok_idx = lv_tok_idx + 1.
       ENDWHILE.
-
-      READ TABLE lt_src_lines INTO lv_src_line INDEX ls_statement-position-line.
-      IF sy-subrc = 0.
-        IF ( to_upper( lv_src_line ) CP |*{ ls_statement-keyword }:*|
-             OR to_upper( lv_src_line ) CP |*{ ls_statement-keyword } :*|
-             OR ls_stmnt-terminator = ',' )
-           AND lines( ls_statement-tokens ) >= 1.
-          READ TABLE ls_statement-tokens INTO ls_atc_token INDEX 2.
-          IF sy-subrc <> 0 OR ls_atc_token-lexeme <> ':'.
-            CLEAR ls_atc_token.
-            ls_atc_token-lexeme = ':'.
-            ls_atc_token-position-line = ls_statement-position-line.
-            ls_atc_token-position-column = ls_statement-position-column.
-            INSERT ls_atc_token INTO ls_statement-tokens INDEX 2.
-          ENDIF.
-        ENDIF.
-      ENDIF.
 
       IF ls_statement-keyword = 'METHOD'.
         CLEAR ls_procedure.

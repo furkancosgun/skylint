@@ -19,11 +19,11 @@ CLASS zcl_skylint_check_009 DEFINITION
 
     DATA mv_allow_structure_chains TYPE abap_bool VALUE abap_true.
 
-    METHODS is_chained_declaration
+    METHODS is_structure_start
       IMPORTING
-        is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
+        is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING
-        VALUE(rv_chained) TYPE abap_bool.
+        VALUE(rv_is) TYPE abap_bool.
 
 ENDCLASS.
 
@@ -45,27 +45,13 @@ CLASS zcl_skylint_check_009 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF is_chained_declaration( <ls_statement> ) = abap_true.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-chained_declaration ).
-      ENDIF.
-    ENDLOOP.
-  ENDMETHOD.
-
-  METHOD is_chained_declaration.
     DATA lv_allow_struct TYPE abap_bool.
-    DATA lv_first_token  TYPE string.
-    DATA lv_lexeme       TYPE string.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
-
-    rv_chained = abap_false.
-
-    IF lines( is_statement-tokens ) < 2.
-      RETURN.
-    ENDIF.
+    DATA lv_total        TYPE i.
+    DATA lv_idx          TYPE i.
+    DATA lv_next_idx     TYPE i.
+    DATA lv_report       TYPE abap_bool.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_next_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     get_attribute( EXPORTING iv_name  = 'ALLOW_STRUCTURE_CHAINS'
                    IMPORTING ev_value = lv_allow_struct ).
@@ -74,24 +60,47 @@ CLASS zcl_skylint_check_009 IMPLEMENTATION.
       lv_allow_struct = mv_allow_structure_chains.
     ENDIF.
 
-    IF lv_allow_struct = abap_true.
-      LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-        lv_lexeme = to_upper( <ls_token>-lexeme ).
-        IF lv_lexeme = 'BEGIN' OR lv_lexeme = 'END'.
-          RETURN.
-        ENDIF.
-      ENDLOOP.
-    ENDIF.
+    lv_total = lines( is_procedure-statements ).
 
-    lv_first_token = to_upper( is_statement-tokens[ 1 ]-lexeme ).
+    DO lv_total TIMES.
+      lv_idx = sy-index.
+      READ TABLE is_procedure-statements ASSIGNING <ls_statement> INDEX lv_idx.
+      IF sy-subrc <> 0.
+        EXIT.
+      ENDIF.
 
-    CASE lv_first_token.
-      WHEN 'DATA' OR 'DATA:' OR 'TYPES' OR 'TYPES:' OR 'CONSTANTS' OR 'CONSTANTS:'
-        OR 'STATICS' OR 'STATICS:' OR 'FIELD-SYMBOLS' OR 'FIELD-SYMBOLS:'.
-        IF lv_first_token CP '*:'
-           OR ( lines( is_statement-tokens ) >= 2 AND is_statement-tokens[ 2 ]-lexeme = ':' ).
-          rv_chained = abap_true.
-        ENDIF.
-    ENDCASE.
+      CASE <ls_statement>-keyword.
+        WHEN 'DATA' OR 'TYPES' OR 'CONSTANTS' OR 'STATICS' OR 'FIELD-SYMBOLS' OR 'CLASS-DATA'.
+          lv_next_idx = lv_idx + 1.
+          IF lv_next_idx <= lv_total.
+            READ TABLE is_procedure-statements ASSIGNING <ls_next_stmt> INDEX lv_next_idx.
+            IF sy-subrc = 0 AND <ls_next_stmt>-keyword IS INITIAL.
+              lv_report = abap_true.
+              IF lv_allow_struct = abap_true AND is_structure_start( <ls_statement> ) = abap_true.
+                lv_report = abap_false.
+              ENDIF.
+
+              IF lv_report = abap_true.
+                report_statement( is_statement    = <ls_statement>
+                                  iv_finding_code = c_finding_codes-chained_declaration ).
+              ENDIF.
+            ENDIF.
+          ENDIF.
+      ENDCASE.
+    ENDDO.
+  ENDMETHOD.
+
+  METHOD is_structure_start.
+    DATA lv_lexeme TYPE string.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    rv_is = abap_false.
+    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
+      lv_lexeme = to_upper( <ls_token>-lexeme ).
+      IF lv_lexeme = 'BEGIN'.
+        rv_is = abap_true.
+        RETURN.
+      ENDIF.
+    ENDLOOP.
   ENDMETHOD.
 ENDCLASS.
