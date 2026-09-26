@@ -2,11 +2,9 @@ INTERFACE lif_without_pc.
   CONSTANTS c_val TYPE i VALUE 1.
 ENDINTERFACE.
 
-
 INTERFACE lif_with_pc. "#EC CONS_INTF
   CONSTANTS c_val TYPE i VALUE 1.
 ENDINTERFACE.
-
 
 INTERFACE lif_valid.
   CONSTANTS c_val TYPE i VALUE 1.
