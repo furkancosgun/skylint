@@ -98,11 +98,11 @@ Modern expression syntax, encapsulation, test double design, and exception hygie
 ### 🔴 Level 4: Database Performance & Security (SQL & Cloud)
 Cloud database integrity, SQL performance optimization, and sy-subrc validation.
 
-- [ ] **`036: DB Access Inside Loops`** - Detect SQL queries (`SELECT`, `MODIFY`, `INSERT`, `DELETE`) within loop iterations.
-- [ ] **`037: Unsecure FOR ALL ENTRIES (Empty itab check)`** - Detect `FOR ALL ENTRIES IN itab` without preceding `IF itab IS NOT INITIAL` check (prevents full table scan).
-- [ ] **`038: Select Performance (Avoid SELECT * / SELECT ... ENDSELECT)`** - Detect `SELECT *` without column projection and `SELECT ... ENDSELECT` cursor loops.
-- [ ] **`039: Check sy-subrc after DB & Table Operations`** - Detect unverified `sy-subrc` directly following `READ TABLE`, `ASSIGN`, `AUTHORITY-CHECK`, and `SELECT SINGLE`.
-- [ ] **`040: Scope of Variable (Variable Leaking)`** - Detect variables declared inside inner loop/condition blocks referenced outside their block scope.
+- [x] **`036: DB Access Inside Loops`** - Detect SQL queries (`SELECT`, `MODIFY`, `INSERT`, `DELETE`) within loop iterations.
+- [x] **`037: Unsecure FOR ALL ENTRIES (Empty itab check)`** - Detect `FOR ALL ENTRIES IN itab` without preceding `IF itab IS NOT INITIAL` check (prevents full table scan).
+- [x] **`038: Select Performance (Avoid SELECT * / SELECT ... ENDSELECT)`** - Detect `SELECT *` without column projection and `SELECT ... ENDSELECT` cursor loops.
+- [x] **`039: Check sy-subrc after DB & Table Operations`** - Detect unverified `sy-subrc` directly following `READ TABLE`, `ASSIGN`, `AUTHORITY-CHECK`, and `SELECT SINGLE`.
+- [x] **`040: Scope of Variable (Variable Leaking)`** - Detect variables declared inside inner loop/condition blocks referenced outside their block scope.
 
 ---
 
