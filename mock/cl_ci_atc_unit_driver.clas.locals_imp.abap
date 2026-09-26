@@ -93,25 +93,13 @@ CLASS lcl_ci_atc_unit_asserter IMPLEMENTATION.
     DATA lv_found         TYPE abap_bool.
     DATA lv_msg           TYPE string.
 
-    DATA lt_source_lines  TYPE STANDARD TABLE OF string WITH DEFAULT KEY.
-    DATA lv_line          TYPE string.
-
+    CLEAR lv_source.
     lv_name = object-name.
 
-    READ REPORT lv_name INTO lt_source_lines.
-    IF sy-subrc = 0 AND lines( lt_source_lines ) > 0.
-      LOOP AT lt_source_lines INTO lv_line.
-        IF lv_source IS INITIAL.
-          lv_source = lv_line.
-        ELSE.
-          lv_source = |{ lv_source }\n{ lv_line }|.
-        ENDIF.
-      ENDLOOP.
-    ELSE.
-      WRITE '@KERNEL if (!globalThis.__abapFileMap) {'.
+    WRITE '@KERNEL if (!globalThis.__abapClassIncludes) {'.
       WRITE '@KERNEL   const fs = await import("fs");'.
       WRITE '@KERNEL   const path = await import("path");'.
-      WRITE '@KERNEL   globalThis.__abapFileMap = new Map();'.
+      WRITE '@KERNEL   globalThis.__abapClassIncludes = new Map();'.
       WRITE '@KERNEL   function indexDir(dir) {'.
       WRITE '@KERNEL     if (!fs.existsSync(dir)) return;'.
       WRITE '@KERNEL     const entries = fs.readdirSync(dir, { withFileTypes: true });'.
@@ -120,9 +108,21 @@ CLASS lcl_ci_atc_unit_asserter IMPLEMENTATION.
       WRITE '@KERNEL       if (entry.isDirectory()) {'.
       WRITE '@KERNEL         indexDir(fullPath);'.
       WRITE '@KERNEL       } else if (entry.isFile() && entry.name.toLowerCase().endsWith(".abap")) {'.
-      WRITE '@KERNEL         const baseName = entry.name.toLowerCase().replace(/\.(clas|prog|fugr)?\.abap$/, "");'.
-      WRITE '@KERNEL         const key = baseName.replace(/[^a-z0-9_]/g, "");'.
-      WRITE '@KERNEL         globalThis.__abapFileMap.set(key, fullPath);'.
+      WRITE '@KERNEL         const m = entry.name.match(/^([^.]+)\.clas(\.locals_def|\.locals_imp)?\.abap$/i);'.
+      WRITE '@KERNEL         if (m) {'.
+      WRITE '@KERNEL           const className = m[1].toLowerCase().replace(/[^a-z0-9_]/g, "");'.
+      WRITE '@KERNEL           const type = m[2] ? m[2].toLowerCase().replace(".", "") : "main";'.
+      WRITE '@KERNEL           if (!globalThis.__abapClassIncludes.has(className)) {'.
+      WRITE '@KERNEL             globalThis.__abapClassIncludes.set(className, {});'.
+      WRITE '@KERNEL           }'.
+      WRITE '@KERNEL           globalThis.__abapClassIncludes.get(className)[type] = fullPath;'.
+      WRITE '@KERNEL         } else {'.
+      WRITE '@KERNEL           const base = entry.name.toLowerCase().replace(/\.(clas|prog|fugr|intf)?\.abap$/i, "").replace(/[^a-z0-9_]/g, "");'.
+      WRITE '@KERNEL           if (!globalThis.__abapClassIncludes.has(base)) {'.
+      WRITE '@KERNEL             globalThis.__abapClassIncludes.set(base, {});'.
+      WRITE '@KERNEL           }'.
+      WRITE '@KERNEL           globalThis.__abapClassIncludes.get(base)["main"] = fullPath;'.
+      WRITE '@KERNEL         }'.
       WRITE '@KERNEL       }'.
       WRITE '@KERNEL     }'.
       WRITE '@KERNEL   }'.
@@ -130,13 +130,22 @@ CLASS lcl_ci_atc_unit_asserter IMPLEMENTATION.
       WRITE '@KERNEL }'.
       WRITE '@KERNEL const fs = await import("fs");'.
       WRITE '@KERNEL const lookupKey = lv_name.get().toLowerCase().replace(/[^a-z0-9_]/g, "");'.
-      WRITE '@KERNEL const targetPath = globalThis.__abapFileMap.get(lookupKey);'.
-      WRITE '@KERNEL if (targetPath) {'.
-      WRITE '@KERNEL   lv_source.set(fs.readFileSync(targetPath, "utf8"));'.
+      WRITE '@KERNEL const classInfo = globalThis.__abapClassIncludes.get(lookupKey);'.
+      WRITE '@KERNEL if (classInfo) {'.
+      WRITE '@KERNEL   let combined = "";'.
+      WRITE '@KERNEL   if (classInfo.locals_def && fs.existsSync(classInfo.locals_def)) {'.
+      WRITE '@KERNEL     combined += fs.readFileSync(classInfo.locals_def, "utf8") + "\n";'.
+      WRITE '@KERNEL   }'.
+      WRITE '@KERNEL   if (classInfo.main && fs.existsSync(classInfo.main)) {'.
+      WRITE '@KERNEL     combined += fs.readFileSync(classInfo.main, "utf8") + "\n";'.
+      WRITE '@KERNEL   }'.
+      WRITE '@KERNEL   if (classInfo.locals_imp && fs.existsSync(classInfo.locals_imp)) {'.
+      WRITE '@KERNEL     combined += fs.readFileSync(classInfo.locals_imp, "utf8") + "\n";'.
+      WRITE '@KERNEL   }'.
+      WRITE '@KERNEL   lv_source.set(combined);'.
       WRITE '@KERNEL } else {'.
       WRITE '@KERNEL   lv_source.set("");'.
       WRITE '@KERNEL }'.
-    ENDIF.
 
     lt_procedures = build_procedures_from_source(
       iv_source      = lv_source

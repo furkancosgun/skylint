@@ -12,6 +12,7 @@ ENDCLASS.
 CLASS zcl_skylint_test_024 IMPLEMENTATION.
   METHOD without_pseudo_comments.
     DATA lv_val TYPE i.
+
     IF 1 = lv_val.
       RETURN.
     ENDIF.
@@ -19,6 +20,7 @@ CLASS zcl_skylint_test_024 IMPLEMENTATION.
 
   METHOD with_pseudo_comments.
     DATA lv_val TYPE i.
+
     IF 1 = lv_val. "#EC NO_YODA_CONDITIONS
       RETURN.
     ENDIF.
@@ -26,6 +28,7 @@ CLASS zcl_skylint_test_024 IMPLEMENTATION.
 
   METHOD valid_code.
     DATA lv_val TYPE i.
+
     IF lv_val = 1.
       RETURN.
     ENDIF.

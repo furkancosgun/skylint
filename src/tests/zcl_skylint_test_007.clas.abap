@@ -4,8 +4,7 @@ CLASS zcl_skylint_test_007 DEFINITION
 
   PUBLIC SECTION.
     METHODS helper
-      IMPORTING
-        iv_val TYPE i.
+      IMPORTING iv_val TYPE i.
 
     METHODS without_pseudo_comments.
     METHODS with_pseudo_comments.
@@ -18,11 +17,11 @@ CLASS zcl_skylint_test_007 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD without_pseudo_comments.
-    helper( EXPORTING iv_val = 1 ).
+    helper( iv_val = 1 ).
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    helper( EXPORTING iv_val = 1 ). "#EC OMIT_EXPORTING
+    helper( iv_val = 1 ). "#EC OMIT_EXPORTING
   ENDMETHOD.
 
   METHOD valid_code.

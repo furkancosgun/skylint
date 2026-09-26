@@ -12,6 +12,7 @@ ENDCLASS.
 CLASS zcl_skylint_test_023 IMPLEMENTATION.
   METHOD without_pseudo_comments.
     DATA lv_val TYPE i.
+
     CASE lv_val.
       WHEN 1.
         RETURN.
@@ -20,6 +21,7 @@ CLASS zcl_skylint_test_023 IMPLEMENTATION.
 
   METHOD with_pseudo_comments.
     DATA lv_val TYPE i.
+
     CASE lv_val. "#EC SHORT_CASE
       WHEN 1.
         RETURN.
@@ -28,6 +30,7 @@ CLASS zcl_skylint_test_023 IMPLEMENTATION.
 
   METHOD valid_code.
     DATA lv_val TYPE i.
+
     CASE lv_val.
       WHEN 1.
         RETURN.
