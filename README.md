@@ -46,9 +46,9 @@ skylint/
 
 ---
 
-## 📋 Comprehensive Rule Catalog (60 Checks)
+## 📋 Comprehensive 100-Rule Catalog & Roadmap
 
-All 60 rules are systematically grouped across 6 progressive complexity levels.
+All 100 Clean ABAP & Cloud rules are systematically organized across 10 progressive levels without duplication.
 
 ### 🟢 Level 1: Beginner / Direct Pattern Matching
 Direct single-statement keyword matching and literal replacements.
@@ -155,6 +155,78 @@ Authorization enforcement, system variable safety, SQL host escaping, and class-
 | **058** | [zcl_skylint_check_058](src/checks/zcl_skylint_check_058.clas.abap) | Detect procedures exceeding cyclomatic complexity limit (CC > 15) | `CYCLO_COMP` | `"#EC CYCLOMATIC_COMPLEXITY"` | ✅ Done | — |
 | **059** | [zcl_skylint_check_059](src/checks/zcl_skylint_check_059.clas.abap) | Enforce `FINAL` or explicit inheritance design on helper/utility classes | `NOT_FINAL` | `"#EC CLASS_NOT_FINAL"` | ✅ Done | ⚡ Ready |
 | **060** | [zcl_skylint_check_060](src/checks/zcl_skylint_check_060.clas.abap) | Detect `RAISE SHORTDUMP` statements; recommend graceful class-based exceptions | `SHORTDUMP` | `"#EC AVOID_SHORTDUMP"` | ✅ Done | ⚡ Ready |
+
+---
+
+### 🟧 Level 7: Modern Data Types, Literals & Expressions (061 - 070)
+Modern literal forms, table expressions, functional constructs, and typing cleanliness.
+
+| ID | Rule Name & Class | Description | Finding Code | Pseudo-Comment | Status | QuickFix |
+|:---:|---|---|:---:|:---:|:---:|:---:|
+| **061** | `zcl_skylint_check_061` | Prefer backtick string literals (``` `text` ```) over single quotes (`'text'`) for `STRING` types | `BACKTICK` | `"#EC STRING_BACKTICK"` | 📋 Planned | ⚡ Ready |
+| **062** | `zcl_skylint_check_062` | Avoid hardcoded magic numbers (`IF status = 4.`); recommend named constants | `MAGIC_NUM` | `"#EC MAGIC_NUMBER"` | 📋 Planned | — |
+| **063** | `zcl_skylint_check_063` | Prefer modern table expressions (`wa = itab[ 1 ]`) over `READ TABLE itab INDEX 1` | `TAB_EXPR` | `"#EC TABLE_EXPR"` | 📋 Planned | ⚡ Ready |
+| **064** | `zcl_skylint_check_064` | Prefer `INSERT ... INTO TABLE` over `APPEND` for generic/hashed/sorted table safety | `PREF_INSRT` | `"#EC PREFER_INSERT"` | 📋 Planned | ⚡ Ready |
+| **065** | `zcl_skylint_check_065` | Avoid obsolete control statements (`ON CHANGE OF`, `SUM`, `AT NEW`) inside `LOOP` | `OBS_L_CTRL` | `"#EC AVOID_LOOP_CTRL"` | 📋 Planned | — |
+| **066** | `zcl_skylint_check_066` | Prefer `COND #( ... )` / `SWITCH #( ... )` expressions over verbose multi-branch variable assignments | `COND_SWTCH` | `"#EC PREFER_COND"` | 📋 Planned | ⚡ Ready |
+| **067** | `zcl_skylint_check_067` | Avoid `LIKE` referencing internal data types; enforce explicit `TYPE` | `AVOID_LIKE` | `"#EC AVOID_LIKE_TYPE"` | 📋 Planned | ⚡ Ready |
+| **068** | `zcl_skylint_check_068` | Ensure `constructor` redefinition explicitly calls `super->constructor( )` | `SUPER_CALL` | `"#EC CONSTRUCTOR_SUPER"` | 📋 Planned | ⚡ Ready |
+| **069** | `zcl_skylint_check_069` | Prefer `REDUCE #( ... )` expression over manual loop aggregation into scalar variables | `PREF_REDUC` | `"#EC PREFER_REDUCE"` | 📋 Planned | ⚡ Ready |
+| **070** | `zcl_skylint_check_070` | Avoid generic `FIELD-SYMBOLS <fs> TYPE ANY` when specific data type is statically known | `GEN_FS_TYP` | `"#EC GENERIC_FS"` | 📋 Planned | — |
+
+---
+
+### 🟫 Level 8: Object-Oriented Design & Clean Interfaces (071 - 080)
+Encapsulation, component coupling, dependency injection, and signature naming conventions.
+
+| ID | Rule Name & Class | Description | Finding Code | Pseudo-Comment | Status | QuickFix |
+|:---:|---|---|:---:|:---:|:---:|:---:|
+| **071** | `zcl_skylint_check_071` | Avoid direct instantiation (`NEW cl_service( )`) in business logic; promote Constructor Injection | `NO_DIRECT_` | `"#EC AVOID_DIRECT_NEW"` | 📋 Planned | — |
+| **072** | `zcl_skylint_check_072` | Enforce class definition section ordering (`PUBLIC` -> `PROTECTED` -> `PRIVATE`) | `SECT_ORDER` | `"#EC SECTION_ORDER"` | 📋 Planned | ⚡ Ready |
+| **073** | `zcl_skylint_check_073` | Avoid static-only global classes; promote instantiable interface-based design | `STAT_CLASS` | `"#EC AVOID_STATIC_CLS"` | 📋 Planned | — |
+| **074** | `zcl_skylint_check_074` | Prefer interface methods over direct public class methods for decoupling | `INTF_METH` | `"#EC PREFER_INTERFACE"` | 📋 Planned | — |
+| **075** | `zcl_skylint_check_075` | Avoid deep class inheritance hierarchies (inheritance depth > 3) | `DEEP_INHRT` | `"#EC DEEP_INHERITANCE"` | 📋 Planned | — |
+| **076** | `zcl_skylint_check_076` | Ensure test double classes in program includes are marked `FOR TESTING` | `TEST_SCOPE` | `"#EC TEST_DOUBLE_SCOPE"` | 📋 Planned | ⚡ Ready |
+| **077** | `zcl_skylint_check_077` | Avoid unmodified `CHANGING` parameters in procedures; convert to `IMPORTING` | `UNCHG_PARM` | `"#EC UNMODIFIED_CHANGING"` | 📋 Planned | ⚡ Ready |
+| **078** | `zcl_skylint_check_078` | Enforce predicate naming (`IS_`, `HAS_`, `CAN_`, `CHECK_`) on boolean-returning methods | `BOOL_NAME` | `"#EC BOOL_METHOD_NAME"` | 📋 Planned | — |
+| **079** | `zcl_skylint_check_079` | Avoid passing `me` self-reference outside constructor during object initialization | `ME_IN_INIT` | `"#EC ME_IN_CONSTRUCTOR"` | 📋 Planned | — |
+| **080** | `zcl_skylint_check_080` | Limit total number of member attributes in a class (<= 15 attributes) | `ATTR_COUNT` | `"#EC MAX_CLASS_ATTR"` | 📋 Planned | — |
+
+---
+
+### 🟦 Level 9: Error Handling, Exception Design & Logging (081 - 090)
+Exception inheritance hierarchy, granularity, resource disposal, and messaging cleanliness.
+
+| ID | Rule Name & Class | Description | Finding Code | Pseudo-Comment | Status | QuickFix |
+|:---:|---|---|:---:|:---:|:---:|:---:|
+| **081** | `zcl_skylint_check_081` | Avoid generic `CATCH cx_root`; catch specific exception subclasses | `CATCH_ROOT` | `"#EC AVOID_CX_ROOT"` | 📋 Planned | — |
+| **082** | `zcl_skylint_check_082` | Avoid `CATCH cx_err` without `INTO lx_err` when error details or propagation are needed | `NO_CATCH_V` | `"#EC CATCH_NO_VAR"` | 📋 Planned | ⚡ Ready |
+| **083** | `zcl_skylint_check_083` | Ensure `TRY` blocks handling external resources include a `CLEANUP` section | `TRY_CLEAN` | `"#EC MISSING_CLEANUP"` | 📋 Planned | ⚡ Ready |
+| **084** | `zcl_skylint_check_084` | Avoid non-static mutable `DATA` declarations in interfaces; allow only `CONSTANTS` | `INTF_DATA` | `"#EC INTERFACE_DATA"` | 📋 Planned | — |
+| **085** | `zcl_skylint_check_085` | Ensure custom exception classes inherit from `CX_STATIC_CHECK` or `CX_NO_CHECK` | `EXC_BASE` | `"#EC CUSTOM_EXC_BASE"` | 📋 Planned | — |
+| **086** | `zcl_skylint_check_086` | Avoid manually raising SAP internal system exceptions (`RAISE EXCEPTION TYPE cx_sy_*`) | `RAISE_SYS` | `"#EC AVOID_RAISE_SY_EXC"` | 📋 Planned | — |
+| **087** | `zcl_skylint_check_087` | Enforce explicit `sy-subrc` verification directly after `FIND` / `SEARCH` operations | `FIND_SUBRC` | `"#EC CHECK_FIND_SUBRC"` | 📋 Planned | — |
+| **088** | `zcl_skylint_check_088` | Avoid nested `TRY ... ENDTRY` blocks; extract inner handling to dedicated helper methods | `NESTED_TRY` | `"#EC AVOID_NESTED_TRY"` | 📋 Planned | — |
+| **089** | `zcl_skylint_check_089` | Avoid legacy `MESSAGE ... RAISING`; enforce modern `RAISE EXCEPTION` | `MSG_RAISE` | `"#EC AVOID_MSG_RAISING"` | 📋 Planned | ⚡ Ready |
+| **090** | `zcl_skylint_check_090` | Ensure T100 exception instances provide `TEXTID` or required message parameter mapping | `MSG_TEXTID` | `"#EC MISSING_MSG_TEXTID"` | 📋 Planned | — |
+
+---
+
+### 🟪 Level 10: Cloud Ready, Secure Coding & Clean Syntax (091 - 100)
+Multi-tenancy isolation, RAP transactional consistency, and modern table filtering.
+
+| ID | Rule Name & Class | Description | Finding Code | Pseudo-Comment | Status | QuickFix |
+|:---:|---|---|:---:|:---:|:---:|:---:|
+| **091** | `zcl_skylint_check_091` | Avoid obsolete modularization constructs (`FORM ... ENDFORM`, `FUNCTION`) in ABAP Cloud | `AVOID_FORM` | `"#EC AVOID_FORM_ROUTINE"` | 📋 Planned | — |
+| **092** | `zcl_skylint_check_092` | Avoid hardcoded user name comparisons (`IF sy-uname = 'ADMIN'`); enforce authorizations | `HARD_UNAME` | `"#EC AVOID_HARDCODED_USER"` | 📋 Planned | — |
+| **093** | `zcl_skylint_check_093` | Avoid direct client specifications (`USING CLIENT`, `CLIENT SPECIFIED`) in ABAP SQL | `CLIENT_SPEC`| `"#EC AVOID_CLIENT_SPEC"` | 📋 Planned | ⚡ Ready |
+| **094** | `zcl_skylint_check_094` | Avoid `COMMIT WORK` or `ROLLBACK WORK` in RAP entity behavior implementations | `NO_COMMIT` | `"#EC AVOID_COMMIT_WORK"` | 📋 Planned | — |
+| **095** | `zcl_skylint_check_095` | Prefer modern `FILTER #( ... )` operator over manual filtering copy loops | `PREF_FILTR` | `"#EC PREFER_FILTER"` | 📋 Planned | ⚡ Ready |
+| **096** | `zcl_skylint_check_096` | Avoid full-line `MODIFY itab FROM wa` inside `LOOP` without `TRANSPORTING` clause | `FULL_MODIF` | `"#EC AVOID_FULL_MODIFY"` | 📋 Planned | ⚡ Ready |
+| **097** | `zcl_skylint_check_097` | Enforce test method naming convention (`TEST_` or `SHOULD_`) in ABAP Unit classes | `TEST_NAME` | `"#EC TEST_METHOD_NAME"` | 📋 Planned | — |
+| **098** | `zcl_skylint_check_098` | Avoid magic offset substring expressions (`var+0(2)`); suggest named constants or regex | `OFFST_MAG` | `"#EC MAGIC_OFFSET"` | 📋 Planned | — |
+| **099** | `zcl_skylint_check_099` | Avoid unescaped dynamic SQL clauses (`SELECT (cols) FROM (dbtab)`) without sanitization | `DYN_SQL` | `"#EC AVOID_DYNAMIC_SQL"` | 📋 Planned | — |
+| **100** | `zcl_skylint_check_100` | Prefer marking non-overridden public class methods as `FINAL` | `PREF_FINAL` | `"#EC PREFER_FINAL_METHOD"` | 📋 Planned | ⚡ Ready |
 
 ---
 
