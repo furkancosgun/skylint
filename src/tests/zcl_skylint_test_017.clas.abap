@@ -18,14 +18,12 @@ CLASS zcl_skylint_test_017 IMPLEMENTATION.
 
   METHOD with_pseudo_comments.
     TRY.
-      CATCH cx_root ##NO_HANDLER.
+      CATCH cx_root. "#EC NO_HANDLER
     ENDTRY.
   ENDMETHOD.
 
   METHOD valid_code.
-    " TODO: variable is assigned but never used (ABAP cleaner)
     DATA lx_e TYPE REF TO cx_root.
-
     TRY.
       CATCH cx_root INTO lx_e.
         RETURN.

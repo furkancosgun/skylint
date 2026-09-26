@@ -11,26 +11,24 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_002 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    DATA lt_tab   TYPE STANDARD TABLE OF string WITH EMPTY KEY.
-    " TODO: variable is assigned but never used (ABAP cleaner)
+    DATA lt_tab TYPE STANDARD TABLE OF string WITH EMPTY KEY.
     DATA lv_lines TYPE i.
 
-    lv_lines = lines( lt_tab ).
+    DESCRIBE TABLE lt_tab LINES lv_lines.
 
     IF 1 = 1.
-      lv_lines = lines( lt_tab ).
+      DESCRIBE TABLE lt_tab LINES lv_lines.
     ENDIF.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    DATA lt_tab   TYPE STANDARD TABLE OF string WITH EMPTY KEY.
-    " TODO: variable is assigned but never used (ABAP cleaner)
+    DATA lt_tab TYPE STANDARD TABLE OF string WITH EMPTY KEY.
     DATA lv_lines TYPE i.
 
-    lv_lines = lines( lt_tab ). "#EC DESCRIBE_LINES
+    DESCRIBE TABLE lt_tab LINES lv_lines. "#EC DESCRIBE_LINES
 
     IF 1 = 1.
-      lv_lines = lines( lt_tab ). "#EC DESCRIBE_LINES
+      DESCRIBE TABLE lt_tab LINES lv_lines. "#EC DESCRIBE_LINES
     ENDIF.
   ENDMETHOD.
 ENDCLASS.

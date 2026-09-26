@@ -17,12 +17,12 @@ CLASS zcl_skylint_test_006 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD without_pseudo_comments.
-    helper( ).
-    mv_value = 10.
+    me->helper( ).
+    me->mv_value = 10.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    helper( ). "#EC AVOID_ME
+    me->helper( ). "#EC AVOID_ME
   ENDMETHOD.
 
   METHOD valid_code.
