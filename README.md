@@ -95,7 +95,35 @@ Modern expression syntax, encapsulation, test double design, and exception hygie
 - [x] **`034: Method Signature Cleanliness`** - Detect excessive parameter signatures (> 8 parameters); suggest structure or object parameters.
 - [x] **`035: Avoid DB Access in Unit Tests`** - Detect direct database table access inside AUnit test methods (`FOR TESTING`).
 
-### 🔴 Level 4: Database Performance & Security (SQL & Cloud)
+### 🟣 Level 4: Code Quality, Complexity & Structure
+Procedural limits, nesting depth control, dead comments cleanup, and constructor hygiene.
+
+- [x] **`041: Avoid Superfluous VALUE Operator`** - Detect redundant `VALUE #( ... )` wrapping when target type is identical.
+- [x] **`042: Identical Self Assignment`** - Detect redundant self-assignments (`lv_var = lv_var.`).
+- [x] **`043: Fully Typed Constants`** - Detect constants declared without explicit `TYPE` or length specification.
+- [x] **`044: Omit Parameter Name in Single Call`** - Detect explicit single parameter name passing when not needed (`lo->m( 1 )` vs `lo->m( iv_val = 1 )`).
+- [x] **`045: Try Without Catch`** - Detect `TRY ... ENDTRY` blocks missing both `CATCH` and `CLEANUP`.
+- [x] **`046: Avoid Local TABLES Declarations`** - Detect legacy `TABLES:` statement in local scopes.
+- [x] **`047: Prefer CORRESPONDING Expression`** - Detect legacy `MOVE-CORRESPONDING` statements; suggest functional `CORRESPONDING #( ... )`.
+- [x] **`048: Method Length Limit`** - Detect long methods exceeding statement limit (> 60 statements).
+- [x] **`049: Nesting Depth Limit`** - Detect excessive control block nesting depth (> 5 levels).
+- [x] **`050: Avoid Multiple Output Parameters`** - Detect methods with multiple `EXPORTING`/`CHANGING` output parameters.
+
+### 🟡 Level 5: Security, Authority & Robust Error Handling
+Authorization enforcement, system variable safety, SQL host escaping, and class-based exceptions.
+
+- [ ] **`051: Avoid sy-* Variable Modification`** - Detect manual assignments to system variables (`sy-subrc = 0`, `sy-mandt = ...`).
+- [ ] **`052: Prefer RETURNING over single EXPORTING`** - Detect methods with a single `EXPORTING` parameter; recommend `RETURNING`.
+- [ ] **`053: Prefer Class-Based Exceptions`** - Detect classic non-class-based `EXCEPTIONS` in method definitions.
+- [ ] **`054: Dangerous Statements`** - Detect risky dynamic/unmanaged statements (`GENERATE SUBROUTINE POOL`, `INSERT REPORT`, `SYSTEM-CALL`).
+- [ ] **`055: Call Transaction Authority Check`** - Detect `CALL TRANSACTION` without prior `AUTHORITY-CHECK`.
+- [ ] **`056: SQL Escape Host Variables (@)`** - Enforce `@` prefix on host variables in ABAP SQL (`WHERE obj = @lv_val`).
+- [ ] **`057: SELECT UP TO 1 ROWS requires ORDER BY`** - Detect `SELECT ... UP TO 1 ROWS` missing `ORDER BY` clause.
+- [ ] **`058: Cyclomatic Complexity Threshold`** - Detect procedures exceeding cyclomatic complexity limit (CC > 15).
+- [ ] **`059: Superclass Final Validation`** - Enforce `FINAL` or explicit inheritance rules on utility/helper classes.
+- [ ] **`060: Uncaught Exception Validator`** - Detect missing `RAISING` declaration or `TRY/CATCH` for checked exceptions.
+
+### 🔴 Level 6: Database Performance & Security (SQL & Cloud)
 Cloud database integrity, SQL performance optimization, and sy-subrc validation.
 
 - [x] **`036: DB Access Inside Loops`** - Detect SQL queries (`SELECT`, `MODIFY`, `INSERT`, `DELETE`) within loop iterations.
