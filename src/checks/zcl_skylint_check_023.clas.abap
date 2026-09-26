@@ -1,0 +1,114 @@
+CLASS zcl_skylint_check_023 DEFINITION
+  PUBLIC
+  INHERITING FROM zcl_skylint_check_base
+  CREATE PUBLIC.
+
+  PUBLIC SECTION.
+    CONSTANTS:
+      BEGIN OF c_finding_codes,
+        short_case TYPE if_ci_atc_check=>ty_finding_code VALUE 'SHORTCASE',
+      END OF c_finding_codes.
+
+    METHODS constructor.
+
+  PROTECTED SECTION.
+    METHODS check REDEFINITION.
+
+  PRIVATE SECTION.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'SHORT_CASE'.
+
+    METHODS is_when_others
+      IMPORTING
+        is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING
+        VALUE(rv_is) TYPE abap_bool.
+
+    METHODS count_when_branches
+      IMPORTING
+        iv_start_idx TYPE i
+        is_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure
+      RETURNING
+        VALUE(rv_cnt) TYPE i.
+
+ENDCLASS.
+
+
+CLASS zcl_skylint_check_023 IMPLEMENTATION.
+  METHOD constructor.
+    super->constructor(
+        VALUE #( description       = 'Avoid short CASE constructs with only one WHEN branch; prefer IF'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #(
+                     ( code           = c_finding_codes-short_case
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'CASE statement has <= 1 WHEN branch; prefer IF'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
+  ENDMETHOD.
+
+  METHOD check.
+    DATA lv_idx TYPE i.
+    DATA lv_when_count TYPE i.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
+         WHERE keyword = 'CASE'.
+      lv_idx = sy-tabix.
+      lv_when_count = count_when_branches( iv_start_idx = lv_idx
+                                           is_procedure = is_procedure ).
+      IF lv_when_count <= 1.
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-short_case ).
+      ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD is_when_others.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    rv_is = abap_false.
+    IF lines( is_statement-tokens ) >= 2.
+      READ TABLE is_statement-tokens ASSIGNING <ls_token> INDEX 2.
+      IF sy-subrc = 0 AND to_upper( <ls_token>-lexeme ) = 'OTHERS'.
+        rv_is = abap_true.
+      ENDIF.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD count_when_branches.
+    DATA lv_total   TYPE i.
+    DATA lv_fwd_idx TYPE i.
+    DATA lv_depth   TYPE i.
+    FIELD-SYMBOLS <ls_fwd_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
+
+    rv_cnt = 0.
+    lv_total = lines( is_procedure-statements ).
+    lv_depth = 0.
+    lv_fwd_idx = iv_start_idx + 1.
+
+    WHILE lv_fwd_idx <= lv_total.
+      READ TABLE is_procedure-statements ASSIGNING <ls_fwd_stmt> INDEX lv_fwd_idx.
+      IF sy-subrc <> 0.
+        EXIT.
+      ENDIF.
+
+      CASE <ls_fwd_stmt>-keyword.
+        WHEN 'CASE'.
+          lv_depth = lv_depth + 1.
+
+        WHEN 'ENDCASE'.
+          IF lv_depth = 0.
+            RETURN.
+          ELSE.
+            lv_depth = lv_depth - 1.
+          ENDIF.
+
+        WHEN 'WHEN'.
+          IF lv_depth = 0 AND is_when_others( <ls_fwd_stmt> ) = abap_false.
+            rv_cnt = rv_cnt + 1.
+          ENDIF.
+      ENDCASE.
+
+      lv_fwd_idx = lv_fwd_idx + 1.
+    ENDWHILE.
+  ENDMETHOD.
+ENDCLASS.

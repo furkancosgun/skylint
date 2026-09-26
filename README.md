@@ -69,17 +69,17 @@ Structure boundaries, control blocks (`IF`, `CASE`, `LOOP`, `TRY`), and conditio
 - [x] **`012: Prefer line_exists( ) over READ TABLE NO FIELDS`** - Detect `READ TABLE ... TRANSPORTING NO FIELDS`; suggest `line_exists( ... )`.
 - [x] **`013: EXIT Outside Loop -> Prefer RETURN`** - Detect `EXIT` statements in procedures outside loop constructs; suggest `RETURN`.
 - [x] **`014: Avoid CHECK in Iterations`** - Detect `CHECK` inside `LOOP` / `DO` / `WHILE`; promote explicit `IF ... CONTINUE`.
-- [ ] **`015: Constant-Only Interfaces`** - Detect interfaces containing only `CONSTANTS`; suggest global classes or domain types.
-- [ ] **`016: Empty Control Blocks`** - Detect empty `IF`, `CASE`, `LOOP`, `TRY` statement bodies.
-- [ ] **`017: Empty CATCH Block`** - Detect empty `CATCH` blocks swallowing exceptions without logging or re-raising.
-- [ ] **`018: Missing Assert in Test Class`** - Detect AUnit test methods missing any `cl_abap_unit_assert` verification.
-- [ ] **`019: Identical Conditions in IF/CASE`** - Detect duplicate branch conditions in `IF ... ELSEIF` or `CASE ... WHEN`.
-- [ ] **`020: Nested IF Simplification`** - Detect consecutive nested single-line `IF` blocks that can be merged with `AND`.
-- [ ] **`021: WHEN OTHERS Must Be Last`** - Detect `WHEN OTHERS` positioned before specific `WHEN` branches in `CASE`.
-- [ ] **`022: Detect Unreachable Code`** - Detect dead statements directly following unconditional `RETURN`, `EXIT`, `RAISE EXCEPTION`.
-- [ ] **`023: Avoid Short CASE (Prefer IF)`** - Detect `CASE` statements containing only a single `WHEN` branch; suggest `IF ... ELSE`.
-- [ ] **`024: Avoid Yoda Conditions`** - Detect inverted comparisons (`IF 'X' = lv_var`); promote natural order (`IF lv_var = 'X'`).
-- [ ] **`025: Prefer Comparison Operators`** - Detect legacy comparison keywords (`EQ`, `NE`, `GT`, `LT`, `GE`, `LE`); enforce modern `=`, `<>`, `>`, `<`, `>=`, `<=`.
+- [x] **`015: Constant-Only Interfaces`** - Detect interfaces containing only `CONSTANTS`; suggest global classes or domain types.
+- [x] **`016: Empty Control Blocks`** - Detect empty `IF`, `CASE`, `LOOP`, `TRY` statement bodies.
+- [x] **`017: Empty CATCH Block`** - Detect empty `CATCH` blocks swallowing exceptions without logging or re-raising.
+- [x] **`018: Missing Assert in Test Class`** - Detect AUnit test methods missing any `cl_abap_unit_assert` verification.
+- [x] **`019: Identical Conditions in IF/CASE`** - Detect duplicate branch conditions in `IF ... ELSEIF` or `CASE ... WHEN`.
+- [x] **`020: Nested IF Simplification`** - Detect consecutive nested single-line `IF` blocks that can be merged with `AND`.
+- [x] **`021: WHEN OTHERS Must Be Last`** - Detect `WHEN OTHERS` positioned before specific `WHEN` branches in `CASE`.
+- [x] **`022: Detect Unreachable Code`** - Detect dead statements directly following unconditional `RETURN`, `EXIT`, `RAISE EXCEPTION`.
+- [x] **`023: Avoid Short CASE (Prefer IF)`** - Detect `CASE` statements containing only a single `WHEN` branch; suggest `IF ... ELSE`.
+- [x] **`024: Avoid Yoda Conditions`** - Detect inverted comparisons (`IF 'X' = lv_var`); promote natural order (`IF lv_var = 'X'`).
+- [x] **`025: Prefer Comparison Operators`** - Detect legacy comparison keywords (`EQ`, `NE`, `GT`, `LT`, `GE`, `LE`); enforce modern `=`, `<>`, `>`, `<`, `>=`, `<=`.
 
 ### 🔵 Level 3: Modern ABAP & OO Architecture
 Modern expression syntax, encapsulation, test double design, and exception hygiene.

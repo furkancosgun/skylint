@@ -203,6 +203,8 @@ CLASS lcl_ci_atc_unit_asserter IMPLEMENTATION.
     DATA lv_rel_row          TYPE i.
     DATA lv_pc_str           TYPE string.
 
+    DATA lv_last_stmt_idx    TYPE i.
+    FIELD-SYMBOLS <ls_prev_proc_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA lt_src_lines        TYPE STANDARD TABLE OF string WITH DEFAULT KEY.
     DATA lv_src_line         TYPE string.
 
@@ -222,11 +224,6 @@ CLASS lcl_ci_atc_unit_asserter IMPLEMENTATION.
 
       IF lv_in_chain = abap_true.
         ls_stmnt-prefixlen = 1.
-      ENDIF.
-      IF ls_stmnt-terminator = ','.
-        lv_in_chain = abap_true.
-      ELSE.
-        lv_in_chain = abap_false.
       ENDIF.
 
       lv_tok_idx = ls_stmnt-from.
@@ -270,6 +267,14 @@ CLASS lcl_ci_atc_unit_asserter IMPLEMENTATION.
         ENDIF.
         lv_tok_idx = lv_tok_idx + 1.
       ENDWHILE.
+
+      IF lines( ls_statement-tokens ) > 0.
+        IF ls_stmnt-terminator = ','.
+          lv_in_chain = abap_true.
+        ELSE.
+          lv_in_chain = abap_false.
+        ENDIF.
+      ENDIF.
 
       IF ls_statement-keyword = 'METHOD'.
         CLEAR ls_procedure.
@@ -329,22 +334,44 @@ CLASS lcl_ci_atc_unit_asserter IMPLEMENTATION.
           ls_procedure-id-main_unit-kind = if_ci_atc_source_code_provider=>compilation_unit_kinds-class.
           ls_procedure-id-main_unit-name = iv_object_name.
         ENDIF.
+      ELSEIF ls_statement-keyword = 'INTERFACE' AND lv_in_proc = abap_false.
+        CLEAR ls_procedure.
+        lv_in_proc = abap_true.
+        lv_proc_start_row = ls_statement-position-line.
+        ls_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+        READ TABLE ls_statement-tokens INTO ls_atc_token INDEX 2.
+        IF sy-subrc = 0.
+          ls_procedure-id-name = to_upper( ls_atc_token-lexeme ).
+        ENDIF.
+        ls_procedure-id-main_unit-kind = if_ci_atc_source_code_provider=>compilation_unit_kinds-interface.
+        ls_procedure-id-main_unit-name = iv_object_name.
       ENDIF.
 
       IF lv_in_proc = abap_true.
-        lv_rel_row = ls_statement-position-line - lv_proc_start_row + 1.
-        ls_statement-position-line = lv_rel_row.
-        LOOP AT ls_statement-tokens ASSIGNING <ls_stmt_tok>.
-          <ls_stmt_tok>-position-line = <ls_stmt_tok>-position-line - lv_proc_start_row + 1.
-        ENDLOOP.
-        APPEND ls_statement TO ls_procedure-statements.
+        IF lines( ls_statement-tokens ) = 0.
+          IF lines( ls_statement-pseudo_comments ) > 0 AND lines( ls_procedure-statements ) > 0.
+            lv_last_stmt_idx = lines( ls_procedure-statements ).
+            READ TABLE ls_procedure-statements ASSIGNING <ls_prev_proc_stmt> INDEX lv_last_stmt_idx.
+            IF sy-subrc = 0.
+              INSERT LINES OF ls_statement-pseudo_comments INTO TABLE <ls_prev_proc_stmt>-pseudo_comments.
+            ENDIF.
+          ENDIF.
+        ELSE.
+          lv_rel_row = ls_statement-position-line - lv_proc_start_row + 1.
+          ls_statement-position-line = lv_rel_row.
+          LOOP AT ls_statement-tokens ASSIGNING <ls_stmt_tok>.
+            <ls_stmt_tok>-position-line = <ls_stmt_tok>-position-line - lv_proc_start_row + 1.
+          ENDLOOP.
+          APPEND ls_statement TO ls_procedure-statements.
+        ENDIF.
       ENDIF.
 
       IF    ls_statement-keyword = 'ENDMETHOD'
          OR ls_statement-keyword = 'ENDFORM'
          OR ls_statement-keyword = 'ENDFUNCTION'
          OR ls_statement-keyword = 'ENDMODULE'
-         OR ( ls_statement-keyword = 'ENDCLASS' AND ls_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition ).
+         OR ( ls_statement-keyword = 'ENDCLASS' AND ls_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition )
+         OR ls_statement-keyword = 'ENDINTERFACE'.
         lv_in_proc = abap_false.
         APPEND ls_procedure TO rt_procedures.
         CLEAR ls_procedure.
