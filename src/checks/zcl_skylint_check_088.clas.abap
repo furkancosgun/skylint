@@ -32,20 +32,20 @@ CLASS zcl_skylint_check_088 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_in_loop TYPE i VALUE 0.
+    DATA lv_in_loop          TYPE i VALUE 0.
     DATA lv_has_transporting TYPE abap_bool.
-    DATA lv_is_itab_modify TYPE abap_bool.
+    DATA lv_is_itab_modify   TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'LOOP'.
-          lv_in_loop = lv_in_loop + 1.
+          lv_in_loop += 1.
 
         WHEN 'ENDLOOP'.
           IF lv_in_loop > 0.
-            lv_in_loop = lv_in_loop - 1.
+            lv_in_loop -= 1.
           ENDIF.
 
         WHEN 'MODIFY'.

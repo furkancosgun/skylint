@@ -25,18 +25,14 @@ CLASS zcl_skylint_check_040 DEFINITION
       ty_scoped_vars TYPE STANDARD TABLE OF ty_scoped_var WITH EMPTY KEY.
 
     METHODS extract_declared_vars
-      IMPORTING
-        is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
-        iv_block_id    TYPE i
-      RETURNING
-        VALUE(rt_vars) TYPE ty_scoped_vars.
+      IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_block_id    TYPE i
+      RETURNING VALUE(rt_vars) TYPE ty_scoped_vars.
 
     METHODS is_block_active
-      IMPORTING
-        iv_block_id   TYPE i
-        it_stack      TYPE string_table
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING iv_block_id   TYPE i
+                it_stack      TYPE string_table
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
 
@@ -44,26 +40,26 @@ ENDCLASS.
 CLASS zcl_skylint_check_040 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-      VALUE #( description       = 'Scope of variable (avoid variable leaking outside control blocks)'
-               remote_enablement = abap_true
-               finding_codes     = VALUE #(
-                   ( code           = c_finding_codes-scope_leak
-                     severity       = if_ci_atc_check=>finding_severities-warning
-                     text           = 'Variable declared in inner block is referenced outside its scope'
-                     pseudo_comment = c_pseudo_comment ) ) ) ).
+        VALUE #( description       = 'Scope of variable (avoid variable leaking outside control blocks)'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #(
+                     ( code           = c_finding_codes-scope_leak
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Variable declared in inner block is referenced outside its scope'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_block_counter TYPE i.
-    DATA lt_block_stack TYPE string_table.
-    DATA lt_scoped_vars TYPE ty_scoped_vars.
-    DATA lt_new_vars TYPE ty_scoped_vars.
+    DATA lv_block_counter    TYPE i.
+    DATA lt_block_stack      TYPE string_table.
+    DATA lt_scoped_vars      TYPE ty_scoped_vars.
+    DATA lt_new_vars         TYPE ty_scoped_vars.
     DATA lv_current_block_id TYPE i.
-    DATA lv_reported TYPE abap_bool.
-    DATA lv_token_str TYPE string.
+    DATA lv_reported         TYPE abap_bool.
+    DATA lv_token_str        TYPE string.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_var> TYPE ty_scoped_var.
+    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_var>       TYPE ty_scoped_var.
 
     lv_block_counter = 0.
 
@@ -71,14 +67,14 @@ CLASS zcl_skylint_check_040 IMPLEMENTATION.
       " 1. Update block stack on block openers and closers
       CASE <ls_statement>-keyword.
         WHEN 'IF' OR 'LOOP' OR 'DO' OR 'WHILE' OR 'CASE' OR 'TRY'.
-          lv_block_counter = lv_block_counter + 1.
+          lv_block_counter += 1.
           INSERT |{ lv_block_counter }| INTO lt_block_stack INDEX 1.
 
         WHEN 'ELSE' OR 'ELSEIF' OR 'WHEN' OR 'CATCH' OR 'CLEANUP'.
           IF lines( lt_block_stack ) > 0.
             DELETE lt_block_stack INDEX 1.
           ENDIF.
-          lv_block_counter = lv_block_counter + 1.
+          lv_block_counter += 1.
           INSERT |{ lv_block_counter }| INTO lt_block_stack INDEX 1.
 
         WHEN 'ENDIF' OR 'ENDLOOP' OR 'ENDDO' OR 'ENDWHILE' OR 'ENDCASE' OR 'ENDTRY'.
@@ -123,10 +119,10 @@ CLASS zcl_skylint_check_040 IMPLEMENTATION.
 
     ls_var-block_id = iv_block_id.
 
-    IF ( is_statement-keyword = 'DATA' OR is_statement-keyword = 'FIELD-SYMBOLS' ) AND
-       lines( is_statement-tokens ) >= 2 AND
-       is_statement-tokens[ 2 ]-lexeme <> 'BEGIN' AND
-       is_statement-tokens[ 2 ]-lexeme <> 'END'.
+    IF     ( is_statement-keyword = 'DATA' OR is_statement-keyword = 'FIELD-SYMBOLS' )
+       AND lines( is_statement-tokens )    >= 2
+       AND is_statement-tokens[ 2 ]-lexeme <> 'BEGIN'
+       AND is_statement-tokens[ 2 ]-lexeme <> 'END'.
       ls_var-name = to_upper( is_statement-tokens[ 2 ]-lexeme ).
       APPEND ls_var TO rt_vars.
     ENDIF.
@@ -137,7 +133,7 @@ CLASS zcl_skylint_check_040 IMPLEMENTATION.
         REPLACE FIRST OCCURRENCE OF '@DATA(' IN lv_lex WITH ''.
         REPLACE FIRST OCCURRENCE OF 'DATA(' IN lv_lex WITH ''.
         REPLACE FIRST OCCURRENCE OF ')' IN lv_lex WITH ''.
-        CONDENSE lv_lex.
+        lv_lex = condense( lv_lex ).
         IF lv_lex IS NOT INITIAL.
           ls_var-name = lv_lex.
           APPEND ls_var TO rt_vars.
@@ -146,7 +142,7 @@ CLASS zcl_skylint_check_040 IMPLEMENTATION.
         REPLACE FIRST OCCURRENCE OF '@FIELD-SYMBOLS(' IN lv_lex WITH ''.
         REPLACE FIRST OCCURRENCE OF 'FIELD-SYMBOLS(' IN lv_lex WITH ''.
         REPLACE FIRST OCCURRENCE OF ')' IN lv_lex WITH ''.
-        CONDENSE lv_lex.
+        lv_lex = condense( lv_lex ).
         IF lv_lex IS NOT INITIAL.
           ls_var-name = lv_lex.
           APPEND ls_var TO rt_vars.
@@ -157,6 +153,7 @@ CLASS zcl_skylint_check_040 IMPLEMENTATION.
 
   METHOD is_block_active.
     DATA lv_id_str TYPE string.
+
     rv_res = abap_false.
     lv_id_str = |{ iv_block_id }|.
     IF line_exists( it_stack[ table_line = lv_id_str ] ).

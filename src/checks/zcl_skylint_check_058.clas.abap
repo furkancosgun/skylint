@@ -20,34 +20,30 @@ CLASS zcl_skylint_check_058 DEFINITION
     DATA mv_max_complexity TYPE i VALUE 5.
 
     METHODS calculate_complexity
-      IMPORTING
-        is_procedure   TYPE if_ci_atc_source_code_provider=>ty_procedure
-      RETURNING
-        VALUE(rv_comp) TYPE i.
+      IMPORTING is_procedure   TYPE if_ci_atc_source_code_provider=>ty_procedure
+      RETURNING VALUE(rv_comp) TYPE i.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_058 IMPLEMENTATION.
-
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'skylint: Cyclomatic Complexity Threshold'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-cyclomatic_complexity
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Procedure cyclomatic complexity exceeds threshold'
-                       pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     ( name  = 'MAX_COMPLEXITY'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                       value = REF #( mv_max_complexity ) ) ) ) ).
+    super->constructor( VALUE #( description       = 'skylint: Cyclomatic Complexity Threshold'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-cyclomatic_complexity
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Procedure cyclomatic complexity exceeds threshold'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 attributes        = VALUE #(
+                                     ( name  = 'MAX_COMPLEXITY'
+                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                       value = REF #( mv_max_complexity ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     DATA lv_max TYPE i.
-    DATA lv_cc TYPE i.
+    DATA lv_cc  TYPE i.
     FIELD-SYMBOLS <ls_first_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
@@ -63,7 +59,7 @@ CLASS zcl_skylint_check_058 IMPLEMENTATION.
     lv_cc = calculate_complexity( is_procedure ).
 
     IF lv_cc > lv_max.
-      READ TABLE is_procedure-statements ASSIGNING <ls_first_stmt> INDEX 1.
+      ASSIGN is_procedure-statements[ 1 ] TO <ls_first_stmt>.
       IF sy-subrc = 0.
         report_statement( is_statement    = <ls_first_stmt>
                           iv_finding_code = c_finding_codes-cyclomatic_complexity ).
@@ -81,17 +77,16 @@ CLASS zcl_skylint_check_058 IMPLEMENTATION.
     LOOP AT is_procedure-statements ASSIGNING <ls_stmt>.
       CASE <ls_stmt>-keyword.
         WHEN 'IF' OR 'ELSEIF' OR 'LOOP' OR 'DO' OR 'WHILE' OR 'WHEN' OR 'CATCH' OR 'CLEANUP'.
-          rv_comp = rv_comp + 1.
+          rv_comp += 1.
       ENDCASE.
 
       LOOP AT <ls_stmt>-tokens INTO ls_tok.
         lv_lex = to_upper( ls_tok-lexeme ).
         CASE lv_lex.
           WHEN 'AND' OR 'OR' OR 'COND' OR 'SWITCH'.
-            rv_comp = rv_comp + 1.
+            rv_comp += 1.
         ENDCASE.
       ENDLOOP.
     ENDLOOP.
   ENDMETHOD.
-
 ENDCLASS.

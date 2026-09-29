@@ -24,11 +24,10 @@ CLASS zcl_skylint_check_079 IMPLEMENTATION.
     super->constructor(
         VALUE #( description       = 'Avoid nested TRY blocks; extract inner error handling to helper methods'
                  remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-nested_try
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Avoid nested TRY blocks; extract to dedicated method'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                 finding_codes     = VALUE #( ( code           = c_finding_codes-nested_try
+                                                severity       = if_ci_atc_check=>finding_severities-warning
+                                                text           = 'Avoid nested TRY blocks; extract to dedicated method'
+                                                pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -42,11 +41,11 @@ CLASS zcl_skylint_check_079 IMPLEMENTATION.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-nested_try ).
           ENDIF.
-          lv_try_depth = lv_try_depth + 1.
+          lv_try_depth += 1.
 
         WHEN 'ENDTRY'.
           IF lv_try_depth > 0.
-            lv_try_depth = lv_try_depth - 1.
+            lv_try_depth -= 1.
           ENDIF.
       ENDCASE.
     ENDLOOP.

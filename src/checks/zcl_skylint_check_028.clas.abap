@@ -18,17 +18,13 @@ CLASS zcl_skylint_check_028 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_XSDBOOL'.
 
     METHODS is_boolean_assignment
-      IMPORTING
-        is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
-      EXPORTING
-        ev_target    TYPE string
-        ev_is_bool   TYPE abap_bool.
+      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
+      EXPORTING ev_target    TYPE string
+                ev_is_bool   TYPE abap_bool.
 
     METHODS is_boolean_value
-      IMPORTING
-        iv_lexeme     TYPE string
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING iv_lexeme     TYPE string
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
 
@@ -36,27 +32,27 @@ ENDCLASS.
 CLASS zcl_skylint_check_028 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-      VALUE #( description       = 'Prefer xsdbool( ) expression over manual IF-ELSE assignment'
-               remote_enablement = abap_true
-               finding_codes     = VALUE #(
-                   ( code           = c_finding_codes-prefer_xsdbool
-                     severity       = if_ci_atc_check=>finding_severities-warning
-                     text           = 'Prefer xsdbool( ... ) instead of manual IF-ELSE boolean assignment'
-                     pseudo_comment = c_pseudo_comment ) ) ) ).
+        VALUE #( description       = 'Prefer xsdbool( ) expression over manual IF-ELSE assignment'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #(
+                     ( code           = c_finding_codes-prefer_xsdbool
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Prefer xsdbool( ... ) instead of manual IF-ELSE boolean assignment'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_idx TYPE i.
-    DATA lv_max TYPE i.
-    DATA ls_stmt_if TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_stmt_then TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_stmt_else TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_idx            TYPE i.
+    DATA lv_max            TYPE i.
+    DATA ls_stmt_if        TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_stmt_then      TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_stmt_else      TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA ls_stmt_else_body TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_stmt_endif TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lv_target_1 TYPE string.
-    DATA lv_target_2 TYPE string.
-    DATA lv_is_bool_1 TYPE abap_bool.
-    DATA lv_is_bool_2 TYPE abap_bool.
+    DATA ls_stmt_endif     TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_target_1       TYPE string.
+    DATA lv_target_2       TYPE string.
+    DATA lv_is_bool_1      TYPE abap_bool.
+    DATA lv_is_bool_2      TYPE abap_bool.
 
     lv_max = lines( is_procedure-statements ).
 
@@ -118,6 +114,7 @@ CLASS zcl_skylint_check_028 IMPLEMENTATION.
 
   METHOD is_boolean_value.
     DATA lv_upper TYPE string.
+
     lv_upper = to_upper( iv_lexeme ).
 
     CASE lv_upper.

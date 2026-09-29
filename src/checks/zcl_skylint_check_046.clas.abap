@@ -22,14 +22,13 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_046 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-      VALUE #( description       = 'Avoid local TABLES declaration'
-               remote_enablement = abap_true
-               finding_codes     = VALUE #(
-                   ( code           = c_finding_codes-local_tables
-                     severity       = if_ci_atc_check=>finding_severities-warning
-                     text           = 'TABLES declaration is obsolete; use explicit local structures'
-                     pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'Avoid local TABLES declaration'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-local_tables
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'TABLES declaration is obsolete; use explicit local structures'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

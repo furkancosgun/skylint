@@ -34,7 +34,7 @@ CLASS zcl_skylint_check_061 IMPLEMENTATION.
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_is_string_context    TYPE abap_bool.
+    DATA lv_is_string_context TYPE abap_bool.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_is_string_context = abap_false.

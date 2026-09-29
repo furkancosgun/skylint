@@ -32,10 +32,10 @@ CLASS zcl_skylint_check_084 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_has_uname TYPE abap_bool.
+    DATA lv_has_uname   TYPE abap_bool.
     DATA lv_has_literal TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'IF' OR keyword = 'ELSEIF' OR keyword = 'CHECK' OR keyword = 'WHEN'.

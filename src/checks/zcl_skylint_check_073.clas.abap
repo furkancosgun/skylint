@@ -35,10 +35,10 @@ CLASS zcl_skylint_check_073 IMPLEMENTATION.
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_is_bool_returning    TYPE abap_bool.
-    DATA lv_meth_name            TYPE string.
-    DATA lv_len                  TYPE i.
-    DATA lv_idx                  TYPE i.
+    DATA lv_is_bool_returning TYPE abap_bool.
+    DATA lv_meth_name         TYPE string.
+    DATA lv_len               TYPE i.
+    DATA lv_idx               TYPE i.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'METHODS' OR keyword = 'CLASS-METHODS'.
@@ -57,24 +57,24 @@ CLASS zcl_skylint_check_073 IMPLEMENTATION.
         IF sy-subrc = 0 AND to_upper( <ls_token>-lexeme ) = 'RETURNING'.
           " Look for boolean type keyword in remaining tokens
           LOOP AT <ls_statement>-tokens ASSIGNING <ls_token> FROM lv_idx.
-            IF to_upper( <ls_token>-lexeme ) = 'ABAP_BOOL'
-                OR to_upper( <ls_token>-lexeme ) = 'BOOLE_D'
-                OR to_upper( <ls_token>-lexeme ) = 'XSDBOOLEAN'
-                OR to_upper( <ls_token>-lexeme ) = 'BOOLEAN'.
+            IF    to_upper( <ls_token>-lexeme ) = 'ABAP_BOOL'
+               OR to_upper( <ls_token>-lexeme ) = 'BOOLE_D'
+               OR to_upper( <ls_token>-lexeme ) = 'XSDBOOLEAN'
+               OR to_upper( <ls_token>-lexeme ) = 'BOOLEAN'.
               lv_is_bool_returning = abap_true.
               EXIT.
             ENDIF.
           ENDLOOP.
           EXIT.
         ENDIF.
-        lv_idx = lv_idx + 1.
+        lv_idx += 1.
       ENDWHILE.
 
-      IF lv_is_bool_returning = abap_true
-          AND lv_meth_name NP 'IS_*' AND lv_meth_name NP 'HAS_*'
-          AND lv_meth_name NP 'CAN_*' AND lv_meth_name NP 'CHECK_*'
-          AND lv_meth_name NP 'ARE_*' AND lv_meth_name NP 'WAS_*'
-          AND lv_meth_name NP 'SHOULD_*'.
+      IF     lv_is_bool_returning  = abap_true
+         AND lv_meth_name         NP 'IS_*'     AND lv_meth_name NP 'HAS_*'
+         AND lv_meth_name         NP 'CAN_*'    AND lv_meth_name NP 'CHECK_*'
+         AND lv_meth_name         NP 'ARE_*'    AND lv_meth_name NP 'WAS_*'
+         AND lv_meth_name         NP 'SHOULD_*'.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-bool_method_name ).
       ENDIF.

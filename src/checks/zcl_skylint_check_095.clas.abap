@@ -39,8 +39,8 @@ CLASS zcl_skylint_check_095 IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF <ls_statement>-keyword = 'ADD' OR <ls_statement>-keyword = 'SUBTRACT'
-          OR <ls_statement>-keyword = 'MULTIPLY' OR <ls_statement>-keyword = 'DIVIDE'.
+      IF    <ls_statement>-keyword = 'ADD'      OR <ls_statement>-keyword = 'SUBTRACT'
+         OR <ls_statement>-keyword = 'MULTIPLY' OR <ls_statement>-keyword = 'DIVIDE'.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-calc_assign ).
         CONTINUE.

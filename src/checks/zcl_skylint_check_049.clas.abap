@@ -20,39 +20,33 @@ CLASS zcl_skylint_check_049 DEFINITION
     DATA mv_max_depth TYPE i VALUE 3.
 
     METHODS is_block_opener
-      IMPORTING
-        iv_keyword    TYPE string
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING iv_keyword    TYPE string
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
     METHODS is_block_closer
-      IMPORTING
-        iv_keyword    TYPE string
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING iv_keyword    TYPE string
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_049 IMPLEMENTATION.
-
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'skylint: Nesting Depth Limit (excessive control block nesting)'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-nesting_depth
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Control block nesting depth exceeds maximum allowed limit'
-                       pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     ( name  = 'MAX_DEPTH'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                       value = REF #( mv_max_depth ) ) ) ) ).
+    super->constructor( VALUE #( description       = 'skylint: Nesting Depth Limit (excessive control block nesting)'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-nesting_depth
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Control block nesting depth exceeds maximum allowed limit'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 attributes        = VALUE #(
+                                     ( name  = 'MAX_DEPTH'
+                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                       value = REF #( mv_max_depth ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_max TYPE i.
+    DATA lv_max   TYPE i.
     DATA lv_depth TYPE i.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
@@ -70,14 +64,14 @@ CLASS zcl_skylint_check_049 IMPLEMENTATION.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF is_block_opener( <ls_statement>-keyword ) = abap_true.
-        lv_depth = lv_depth + 1.
+        lv_depth += 1.
         IF lv_depth > lv_max.
           report_statement( is_statement    = <ls_statement>
                             iv_finding_code = c_finding_codes-nesting_depth ).
         ENDIF.
       ELSEIF is_block_closer( <ls_statement>-keyword ) = abap_true.
         IF lv_depth > 0.
-          lv_depth = lv_depth - 1.
+          lv_depth -= 1.
         ENDIF.
       ENDIF.
     ENDLOOP.
@@ -100,5 +94,4 @@ CLASS zcl_skylint_check_049 IMPLEMENTATION.
         rv_res = abap_false.
     ENDCASE.
   ENDMETHOD.
-
 ENDCLASS.

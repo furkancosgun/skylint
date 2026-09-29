@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_102 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        single_chain TYPE if_ci_atc_check=>ty_finding_code VALUE 'CHAIN_ONE',
+        param_escape TYPE if_ci_atc_check=>ty_finding_code VALUE 'PARAM_ESCP',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,49 +15,42 @@ CLASS zcl_skylint_check_102 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'SINGLE_CHAIN'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'UNNECESSARY_ESCAPE'.
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_102 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Simplify single-element colon declaration chain (DATA: lv_a TYPE i.)'
+        VALUE #( description       = 'Detect unnecessary exclamation mark parameter escape (!iv_param)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-single_chain
+                     ( code           = c_finding_codes-param_escape
                        severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Do not use colon chaining for a single declaration'
+                       text           = 'Only escape parameter names with ! if they clash with an ABAP keyword'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_first TYPE string.
-    DATA lv_has_comma TYPE abap_bool.
+    DATA lv_name TYPE string.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_tok>  TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_stmt>
-         WHERE keyword = 'DATA' OR keyword = 'TYPES' OR keyword = 'CONSTANTS' OR keyword = 'FIELD-SYMBOLS'.
-      IF lines( <ls_stmt>-tokens ) < 2.
-        CONTINUE.
-      ENDIF.
-
-      lv_first = to_upper( <ls_stmt>-tokens[ 1 ]-lexeme ).
-      IF lv_first CP '*:' OR ( lines( <ls_stmt>-tokens ) >= 2 AND <ls_stmt>-tokens[ 2 ]-lexeme = ':' ).
-        lv_has_comma = abap_false.
-        LOOP AT <ls_stmt>-tokens ASSIGNING <ls_tok>.
-          IF <ls_tok>-lexeme = ','.
-            lv_has_comma = abap_true.
+         WHERE keyword = 'METHODS' OR keyword = 'CLASS-METHODS'.
+      LOOP AT <ls_stmt>-tokens ASSIGNING <ls_tok>.
+        IF <ls_tok>-lexeme CP '!*'.
+          lv_name = to_upper( <ls_tok>-lexeme+1 ).
+          IF     lv_name <> 'EXPORTING' AND lv_name <> 'IMPORTING'
+             AND lv_name <> 'CHANGING'  AND lv_name <> 'RETURNING'
+             AND lv_name <> 'TABLES'    AND lv_name <> 'VALUE'
+             AND lv_name <> 'REFERENCE' AND lv_name <> 'DEFAULT'.
+            report_statement( is_statement    = <ls_stmt>
+                              iv_finding_code = c_finding_codes-param_escape ).
             EXIT.
           ENDIF.
-        ENDLOOP.
-
-        IF lv_has_comma = abap_false.
-          report_statement( is_statement    = <ls_stmt>
-                            iv_finding_code = c_finding_codes-single_chain ).
         ENDIF.
-      ENDIF.
+      ENDLOOP.
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

@@ -21,21 +21,20 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_089 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Enforce test method naming convention (TEST_, SHOULD_) in AUnit'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-test_name
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Test methods should start with TEST_ or SHOULD_'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'Enforce test method naming convention (TEST_, SHOULD_) in AUnit'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-test_name
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Test methods should start with TEST_ or SHOULD_'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_is_testing TYPE abap_bool.
+    DATA lv_is_testing  TYPE abap_bool.
     DATA lv_method_name TYPE string.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'METHODS'.
@@ -51,8 +50,8 @@ CLASS zcl_skylint_check_089 IMPLEMENTATION.
         ENDIF.
       ENDLOOP.
 
-      IF lv_is_testing = abap_true AND lv_method_name IS NOT INITIAL
-          AND NOT ( lv_method_name CP 'TEST_*' OR lv_method_name CP 'SHOULD_*' OR lv_method_name CP 'CHECK_*' ).
+      IF         lv_is_testing = abap_true AND lv_method_name IS NOT INITIAL
+         AND NOT ( lv_method_name CP 'TEST_*' OR lv_method_name CP 'SHOULD_*' OR lv_method_name CP 'CHECK_*' ).
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-test_name ).
       ENDIF.

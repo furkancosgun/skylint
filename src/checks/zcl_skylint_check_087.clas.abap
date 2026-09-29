@@ -21,24 +21,23 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_087 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Prefer FILTER #( ) table operator over manual filter copy loops'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-prefer_filter
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Prefer FILTER #( ... ) expression over manual filter copy loop'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'Prefer FILTER #( ) table operator over manual filter copy loops'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-prefer_filter
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Prefer FILTER #( ... ) expression over manual filter copy loop'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_has_where TYPE abap_bool.
-    DATA lv_tabix TYPE i.
+    DATA lv_has_where  TYPE abap_bool.
+    DATA lv_tabix      TYPE i.
     DATA lv_next_tabix TYPE i.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_body> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_end> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_body>      TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_end>       TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'LOOP'.
@@ -56,8 +55,8 @@ CLASS zcl_skylint_check_087 IMPLEMENTATION.
         lv_next_tabix = lv_tabix + 1.
         ASSIGN is_procedure-statements[ lv_next_tabix ] TO <ls_body>.
         ASSIGN is_procedure-statements[ lv_tabix + 2 ] TO <ls_end>.
-        IF sy-subrc = 0 AND ( <ls_body>-keyword = 'INSERT' OR <ls_body>-keyword = 'APPEND' ) AND
-           <ls_end>-keyword = 'ENDLOOP'.
+        IF     sy-subrc         = 0 AND ( <ls_body>-keyword = 'INSERT' OR <ls_body>-keyword = 'APPEND' )
+           AND <ls_end>-keyword = 'ENDLOOP'.
           report_statement( is_statement    = <ls_statement>
                             iv_finding_code = c_finding_codes-prefer_filter ).
         ENDIF.

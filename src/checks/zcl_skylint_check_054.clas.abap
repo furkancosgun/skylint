@@ -18,25 +18,21 @@ CLASS zcl_skylint_check_054 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'DANGEROUS_STMT'.
 
     METHODS is_dangerous_statement
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_054 IMPLEMENTATION.
-
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'skylint: Dangerous / Unmanaged Dynamic Statements'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-dangerous_statement
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Dangerous or unmanaged dynamic statement detected'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'skylint: Dangerous / Unmanaged Dynamic Statements'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-dangerous_statement
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Dangerous or unmanaged dynamic statement detected'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -63,25 +59,26 @@ CLASS zcl_skylint_check_054 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    IF lines( is_statement-tokens ) >= 2.
-      READ TABLE is_statement-tokens INDEX 1 INTO ls_tok1.
-      IF sy-subrc = 0.
-        READ TABLE is_statement-tokens INDEX 2 INTO ls_tok2.
-        IF sy-subrc = 0.
-          lv_tok1 = to_upper( ls_tok1-lexeme ).
-          lv_tok2 = to_upper( ls_tok2-lexeme ).
+    IF lines( is_statement-tokens ) < 2.
+      RETURN.
+    ENDIF.
 
-          IF ( lv_tok1 = 'SYNTAX' AND lv_tok2 = 'CHECK' )
-             OR ( lv_tok1 = 'SYSTEM' AND lv_tok2 = 'CALL' )
-             OR ( lv_tok1 = 'GENERATE' AND lv_tok2 = 'SUBROUTINE' )
-             OR ( lv_tok1 = 'INSERT' AND lv_tok2 = 'REPORT' )
-             OR ( lv_tok1 = 'DELETE' AND lv_tok2 = 'REPORT' )
-             OR ( lv_tok1 = 'READ' AND lv_tok2 = 'REPORT' ).
-            rv_res = abap_true.
-          ENDIF.
+    READ TABLE is_statement-tokens INDEX 1 INTO ls_tok1.
+    IF sy-subrc = 0.
+      READ TABLE is_statement-tokens INDEX 2 INTO ls_tok2.
+      IF sy-subrc = 0.
+        lv_tok1 = to_upper( ls_tok1-lexeme ).
+        lv_tok2 = to_upper( ls_tok2-lexeme ).
+
+        IF    ( lv_tok1 = 'SYNTAX'   AND lv_tok2 = 'CHECK' )
+           OR ( lv_tok1 = 'SYSTEM'   AND lv_tok2 = 'CALL' )
+           OR ( lv_tok1 = 'GENERATE' AND lv_tok2 = 'SUBROUTINE' )
+           OR ( lv_tok1 = 'INSERT'   AND lv_tok2 = 'REPORT' )
+           OR ( lv_tok1 = 'DELETE'   AND lv_tok2 = 'REPORT' )
+           OR ( lv_tok1 = 'READ'     AND lv_tok2 = 'REPORT' ).
+          rv_res = abap_true.
         ENDIF.
       ENDIF.
     ENDIF.
   ENDMETHOD.
-
 ENDCLASS.

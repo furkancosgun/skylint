@@ -32,8 +32,8 @@ CLASS zcl_skylint_check_100 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_idx TYPE i.
-    DATA lv_count TYPE i.
+    DATA lv_idx      TYPE i.
+    DATA lv_count    TYPE i.
     DATA lv_var_name TYPE string.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_prev> TYPE if_ci_atc_source_code_provider=>ty_statement.
@@ -55,7 +55,7 @@ CLASS zcl_skylint_check_100 IMPLEMENTATION.
             IF to_upper( <ls_prev>-tokens[ 2 ]-lexeme ) = lv_var_name.
               report_statement( is_statement    = <ls_stmt>
                                 iv_finding_code = c_finding_codes-needless_clear ).
-              lv_idx = lv_idx + 1.
+              lv_idx += 1.
               CONTINUE.
             ENDIF.
           ENDIF.
@@ -71,7 +71,7 @@ CLASS zcl_skylint_check_100 IMPLEMENTATION.
         ENDIF.
       ENDIF.
 
-      lv_idx = lv_idx + 1.
+      lv_idx += 1.
     ENDWHILE.
   ENDMETHOD.
 ENDCLASS.

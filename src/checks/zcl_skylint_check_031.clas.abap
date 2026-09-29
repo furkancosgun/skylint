@@ -18,10 +18,8 @@ CLASS zcl_skylint_check_031 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'NUM_PUBLIC_ATTR'.
 
     METHODS is_read_only
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
 
@@ -29,13 +27,13 @@ ENDCLASS.
 CLASS zcl_skylint_check_031 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-      VALUE #( description       = 'Avoid mutable public attributes in classes'
-               remote_enablement = abap_true
-               finding_codes     = VALUE #(
-                   ( code           = c_finding_codes-public_attribute
-                     severity       = if_ci_atc_check=>finding_severities-warning
-                     text           = 'Avoid public attributes; use private/protected with getters or READ-ONLY'
-                     pseudo_comment = c_pseudo_comment ) ) ) ).
+        VALUE #( description       = 'Avoid mutable public attributes in classes'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #(
+                     ( code           = c_finding_codes-public_attribute
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Avoid public attributes; use private/protected with getters or READ-ONLY'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

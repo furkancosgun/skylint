@@ -18,16 +18,13 @@ CLASS zcl_skylint_check_051 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_SY_MOD'.
 
     METHODS is_system_variable_mod
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_051 IMPLEMENTATION.
-
   METHOD constructor.
     super->constructor(
         VALUE #( description       = 'skylint: Avoid sy-* System Variable Modification'
@@ -56,22 +53,23 @@ CLASS zcl_skylint_check_051 IMPLEMENTATION.
 
     rv_res = abap_false.
 
-    IF lines( is_statement-tokens ) >= 2.
-      lv_tok1 = to_upper( is_statement-tokens[ 1 ]-lexeme ).
-      lv_tok2 = to_upper( is_statement-tokens[ 2 ]-lexeme ).
+    IF lines( is_statement-tokens ) < 2.
+      RETURN.
+    ENDIF.
 
-      " 1. Assignment: sy-subrc = 0.
-      IF lv_tok2 = '=' AND ( lv_tok1 CP 'SY-*' OR lv_tok1 CP 'SYST-*' ).
-        rv_res = abap_true.
-        RETURN.
-      ENDIF.
+    lv_tok1 = to_upper( is_statement-tokens[ 1 ]-lexeme ).
+    lv_tok2 = to_upper( is_statement-tokens[ 2 ]-lexeme ).
 
-      " 2. CLEAR statement: CLEAR sy-subrc.
-      IF lv_tok1 = 'CLEAR' AND ( lv_tok2 CP 'SY-*' OR lv_tok2 CP 'SYST-*' ).
-        rv_res = abap_true.
-        RETURN.
-      ENDIF.
+    " 1. Assignment: sy-subrc = 0.
+    IF lv_tok2 = '=' AND ( lv_tok1 CP 'SY-*' OR lv_tok1 CP 'SYST-*' ).
+      rv_res = abap_true.
+      RETURN.
+    ENDIF.
+
+    " 2. CLEAR statement: CLEAR sy-subrc.
+    IF lv_tok1 = 'CLEAR' AND ( lv_tok2 CP 'SY-*' OR lv_tok2 CP 'SYST-*' ).
+      rv_res = abap_true.
+      RETURN.
     ENDIF.
   ENDMETHOD.
-
 ENDCLASS.

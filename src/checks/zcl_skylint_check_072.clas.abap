@@ -35,9 +35,9 @@ CLASS zcl_skylint_check_072 IMPLEMENTATION.
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_param_name           TYPE string.
-    DATA lv_len                  TYPE i.
-    DATA lv_idx                  TYPE i.
+    DATA lv_param_name TYPE string.
+    DATA lv_len        TYPE i.
+    DATA lv_idx        TYPE i.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'METHODS' OR keyword = 'CLASS-METHODS'.
@@ -47,19 +47,19 @@ CLASS zcl_skylint_check_072 IMPLEMENTATION.
       WHILE lv_idx <= lv_len.
         ASSIGN <ls_statement>-tokens[ lv_idx ] TO <ls_token>.
         IF sy-subrc <> 0.
-          lv_idx = lv_idx + 1.
+          lv_idx += 1.
           CONTINUE.
         ENDIF.
 
         IF to_upper( <ls_token>-lexeme ) = 'CHANGING' AND lv_idx + 1 <= lv_len.
           lv_param_name = to_upper( <ls_statement>-tokens[ lv_idx + 1 ]-lexeme ).
-          IF lv_param_name CP '*UNCHANGED*' OR lv_param_name CP '*UNMODIFIED*'
-              OR lv_param_name CP '*READONLY*'.
+          IF    lv_param_name CP '*UNCHANGED*' OR lv_param_name CP '*UNMODIFIED*'
+             OR lv_param_name CP '*READONLY*'.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-unmodified_changing ).
           ENDIF.
         ENDIF.
-        lv_idx = lv_idx + 1.
+        lv_idx += 1.
       ENDWHILE.
     ENDLOOP.
   ENDMETHOD.

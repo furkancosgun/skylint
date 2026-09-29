@@ -71,10 +71,11 @@ CLASS zcl_skylint_check_009 IMPLEMENTATION.
           lv_next_idx = lv_idx + 1.
           IF lv_next_idx <= lv_total.
             ASSIGN is_procedure-statements[ lv_next_idx ] TO <ls_next_stmt>.
-            IF sy-subrc = 0 AND ( <ls_next_stmt>-keyword IS INITIAL
-               OR ( lines( <ls_next_stmt>-tokens ) > 0 AND lines( <ls_statement>-tokens ) > 0
-                    AND <ls_next_stmt>-tokens[ 1 ]-position-line = <ls_statement>-tokens[ 1 ]-position-line
-                    AND <ls_next_stmt>-position-line <> <ls_statement>-position-line ) ).
+            IF sy-subrc = 0 AND (    <ls_next_stmt>-keyword IS INITIAL
+                                  OR (     lines( <ls_next_stmt>-tokens )            > 0 AND lines(
+                                                                                                 <ls_statement>-tokens ) > 0
+                                       AND <ls_next_stmt>-tokens[ 1 ]-position-line  = <ls_statement>-tokens[ 1 ]-position-line
+                                       AND <ls_next_stmt>-position-line             <> <ls_statement>-position-line             ) ).
               lv_report = abap_true.
               IF lv_allow_struct = abap_true AND is_structure_start( <ls_statement> ) = abap_true.
                 lv_report = abap_false.

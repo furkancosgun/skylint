@@ -34,7 +34,7 @@ CLASS zcl_skylint_check_076 IMPLEMENTATION.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lv_in_interface         TYPE abap_bool.
+    DATA lv_in_interface TYPE abap_bool.
 
     lv_in_interface = abap_false.
 

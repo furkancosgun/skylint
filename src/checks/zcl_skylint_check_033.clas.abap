@@ -18,17 +18,13 @@ CLASS zcl_skylint_check_033 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'LOST_PREVIOUS'.
 
     METHODS extract_catch_var
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_var) TYPE string.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_var) TYPE string.
 
     METHODS has_previous_parameter
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-        iv_caught_var TYPE string
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_caught_var TYPE string
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
 
@@ -36,13 +32,13 @@ ENDCLASS.
 CLASS zcl_skylint_check_033 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-      VALUE #( description       = 'Lost PREVIOUS exception parameter in CATCH block'
-               remote_enablement = abap_true
-               finding_codes     = VALUE #(
-                   ( code           = c_finding_codes-lost_previous
-                     severity       = if_ci_atc_check=>finding_severities-warning
-                     text           = 'Pass caught exception to PREVIOUS parameter when raising new exception'
-                     pseudo_comment = c_pseudo_comment ) ) ) ).
+        VALUE #( description       = 'Lost PREVIOUS exception parameter in CATCH block'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #(
+                     ( code           = c_finding_codes-lost_previous
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Pass caught exception to PREVIOUS parameter when raising new exception'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -56,9 +52,9 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
         WHEN 'CLEANUP' OR 'ENDTRY'.
           CLEAR lv_caught_var.
         WHEN 'RAISE'.
-          IF lv_caught_var IS NOT INITIAL AND
-             has_previous_parameter( is_statement  = <ls_statement>
-                                     iv_caught_var = lv_caught_var ) = abap_false.
+          IF     lv_caught_var IS NOT INITIAL
+             AND has_previous_parameter( is_statement  = <ls_statement>
+                                         iv_caught_var = lv_caught_var )  = abap_false.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-lost_previous ).
           ENDIF.
@@ -89,9 +85,9 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
     rv_res = abap_false.
 
     " If statement is directly re-raising the caught exception variable (e.g. RAISE EXCEPTION lx_exc)
-    IF lines( is_statement-tokens ) = 3 AND
-       is_statement-tokens[ 2 ]-lexeme = 'EXCEPTION' AND
-       is_statement-tokens[ 3 ]-lexeme = iv_caught_var.
+    IF     lines( is_statement-tokens )    = 3
+       AND is_statement-tokens[ 2 ]-lexeme = 'EXCEPTION'
+       AND is_statement-tokens[ 3 ]-lexeme = iv_caught_var.
       rv_res = abap_true.
       RETURN.
     ENDIF.

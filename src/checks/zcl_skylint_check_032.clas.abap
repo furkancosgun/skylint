@@ -18,24 +18,21 @@ CLASS zcl_skylint_check_032 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'DEPRECATED_KEY'.
 
     METHODS is_obsolete_keyword
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_032 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-      VALUE #( description       = 'Avoid obsolete statements (MOVE, REFRESH, ADD, etc.)'
-               remote_enablement = abap_true
-               finding_codes     = VALUE #(
-                   ( code           = c_finding_codes-obsolete_statement
-                     severity       = if_ci_atc_check=>finding_severities-warning
-                     text           = 'Avoid obsolete statement; use modern expressions instead'
-                     pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'Avoid obsolete statements (MOVE, REFRESH, ADD, etc.)'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-obsolete_statement
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Avoid obsolete statement; use modern expressions instead'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -51,6 +48,7 @@ CLASS zcl_skylint_check_032 IMPLEMENTATION.
 
   METHOD is_obsolete_keyword.
     DATA ls_first_tok TYPE if_ci_atc_source_code_provider=>ty_token.
+
     rv_res = abap_false.
 
     CASE is_statement-keyword.

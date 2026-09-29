@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_104</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Prefer line_exists</DESCRIPT>
+    <DESCRIPT>skylint: Prefer line_index</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

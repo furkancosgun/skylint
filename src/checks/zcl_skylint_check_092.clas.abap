@@ -21,21 +21,20 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_092 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Prefer marking non-overridden methods as FINAL'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-prefer_final
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Declare method as FINAL if it is not intended to be redefined'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'Prefer marking non-overridden methods as FINAL'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-prefer_final
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Declare method as FINAL if it is not intended to be redefined'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_has_final TYPE abap_bool.
+    DATA lv_has_final  TYPE abap_bool.
     DATA lv_is_special TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'METHODS'.

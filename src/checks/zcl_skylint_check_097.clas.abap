@@ -33,10 +33,10 @@ CLASS zcl_skylint_check_097 IMPLEMENTATION.
 
   METHOD check.
     DATA lv_count TYPE i.
-    DATA lv_idx TYPE i.
-    FIELD-SYMBOLS <ls_last> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_idx   TYPE i.
+    FIELD-SYMBOLS <ls_last>       TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_first_exec> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_stmt>       TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     lv_count = lines( is_procedure-statements ).
     IF lv_count < 3.
@@ -57,15 +57,15 @@ CLASS zcl_skylint_check_097 IMPLEMENTATION.
     lv_idx = 1.
     WHILE lv_idx <= lv_count.
       ASSIGN is_procedure-statements[ lv_idx ] TO <ls_stmt>.
-      IF <ls_stmt>-keyword <> 'METHOD'
-          AND <ls_stmt>-keyword <> 'DATA'
-          AND <ls_stmt>-keyword <> 'TYPES'
-          AND <ls_stmt>-keyword <> 'CONSTANTS'
-          AND <ls_stmt>-keyword <> 'FIELD-SYMBOLS'.
+      IF     <ls_stmt>-keyword <> 'METHOD'
+         AND <ls_stmt>-keyword <> 'DATA'
+         AND <ls_stmt>-keyword <> 'TYPES'
+         AND <ls_stmt>-keyword <> 'CONSTANTS'
+         AND <ls_stmt>-keyword <> 'FIELD-SYMBOLS'.
         ASSIGN <ls_stmt> TO <ls_first_exec>.
         EXIT.
       ENDIF.
-      lv_idx = lv_idx + 1.
+      lv_idx += 1.
     ENDWHILE.
 
     IF <ls_first_exec> IS ASSIGNED AND <ls_first_exec>-keyword = 'IF'.

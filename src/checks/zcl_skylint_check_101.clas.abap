@@ -32,7 +32,7 @@ CLASS zcl_skylint_check_101 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_max_rank TYPE i VALUE 0.
+    DATA lv_max_rank  TYPE i VALUE 0.
     DATA lv_curr_rank TYPE i.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
 

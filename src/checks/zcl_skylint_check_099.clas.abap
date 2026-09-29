@@ -21,22 +21,21 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_099 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Detect unused local variables and field symbols'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-unused_var
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Local variable or field symbol is declared but never used'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'Detect unused local variables and field symbols'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-unused_var
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Local variable or field symbol is declared but never used'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     DATA lv_var_name TYPE string.
-    DATA lv_uses TYPE i.
+    DATA lv_uses     TYPE i.
     FIELD-SYMBOLS <ls_decl> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_tok>  TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_decl>
          WHERE keyword = 'DATA' OR keyword = 'FIELD-SYMBOLS'.
@@ -53,7 +52,7 @@ CLASS zcl_skylint_check_099 IMPLEMENTATION.
       LOOP AT is_procedure-statements ASSIGNING <ls_stmt>.
         LOOP AT <ls_stmt>-tokens ASSIGNING <ls_tok>.
           IF to_upper( <ls_tok>-lexeme ) = lv_var_name.
-            lv_uses = lv_uses + 1.
+            lv_uses += 1.
           ENDIF.
         ENDLOOP.
       ENDLOOP.

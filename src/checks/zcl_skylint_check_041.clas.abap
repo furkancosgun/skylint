@@ -18,28 +18,21 @@ CLASS zcl_skylint_check_041 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'SUPERFLUOUS_VAL'.
 
     METHODS is_superfluous_value
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
     METHODS is_empty_value_assignment
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
     METHODS has_nested_value_constructor
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_041 IMPLEMENTATION.
-
   METHOD constructor.
     super->constructor(
         VALUE #( description       = 'skylint: Avoid Superfluous VALUE Operator'
@@ -63,16 +56,16 @@ CLASS zcl_skylint_check_041 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_superfluous_value.
-    rv_res = xsdbool( is_empty_value_assignment( is_statement ) = abap_true
+    rv_res = xsdbool(    is_empty_value_assignment( is_statement )    = abap_true
                       OR has_nested_value_constructor( is_statement ) = abap_true ).
   ENDMETHOD.
 
   METHOD is_empty_value_assignment.
-    DATA lv_tok1 TYPE string.
-    DATA lv_tok2 TYPE string.
-    DATA lv_tok3 TYPE string.
-    DATA lv_tok4 TYPE string.
-    DATA lv_tok5 TYPE string.
+    DATA lv_tok1  TYPE string.
+    DATA lv_tok2  TYPE string.
+    DATA lv_tok3  TYPE string.
+    DATA lv_tok4  TYPE string.
+    DATA lv_tok5  TYPE string.
     DATA lv_count TYPE i.
 
     rv_res = abap_false.
@@ -94,7 +87,7 @@ CLASS zcl_skylint_check_041 IMPLEMENTATION.
       lv_tok4 = is_statement-tokens[ 5 ]-lexeme.
       lv_tok5 = is_statement-tokens[ 6 ]-lexeme.
 
-      IF lv_tok1 = '=' AND lv_tok2 = 'VALUE' AND ( lv_tok3 = '#' OR lv_tok3 CP '*_TAB' )
+      IF     lv_tok1 = '=' AND lv_tok2 = 'VALUE' AND ( lv_tok3 = '#' OR lv_tok3 CP '*_TAB' )
          AND lv_tok4 = '(' AND lv_tok5 = ')'.
         rv_res = abap_true.
       ENDIF.
@@ -102,11 +95,11 @@ CLASS zcl_skylint_check_041 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD has_nested_value_constructor.
-    DATA lv_idx TYPE i.
+    DATA lv_idx   TYPE i.
     DATA lv_count TYPE i.
-    DATA lv_tok1 TYPE string.
-    DATA lv_tok2 TYPE string.
-    DATA lv_tok3 TYPE string.
+    DATA lv_tok1  TYPE string.
+    DATA lv_tok2  TYPE string.
+    DATA lv_tok3  TYPE string.
 
     rv_res = abap_false.
     lv_count = lines( is_statement-tokens ).
@@ -125,5 +118,4 @@ CLASS zcl_skylint_check_041 IMPLEMENTATION.
       ENDIF.
     ENDDO.
   ENDMETHOD.
-
 ENDCLASS.

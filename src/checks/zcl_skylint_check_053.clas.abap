@@ -18,16 +18,13 @@ CLASS zcl_skylint_check_053 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'CLASS_EXCEPTIONS'.
 
     METHODS has_classic_exceptions
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_053 IMPLEMENTATION.
-
   METHOD constructor.
     super->constructor(
         VALUE #( description       = 'skylint: Prefer Class-Based Exceptions over Classic EXCEPTIONS'
@@ -67,5 +64,4 @@ CLASS zcl_skylint_check_053 IMPLEMENTATION.
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
-
 ENDCLASS.

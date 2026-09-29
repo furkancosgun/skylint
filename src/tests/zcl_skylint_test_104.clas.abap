@@ -12,19 +12,24 @@ ENDCLASS.
 CLASS zcl_skylint_test_104 IMPLEMENTATION.
   METHOD without_pseudo_comments.
     DATA lt_data TYPE STANDARD TABLE OF i WITH EMPTY KEY.
+    DATA lv_idx TYPE i.
+
     READ TABLE lt_data TRANSPORTING NO FIELDS WITH KEY table_line = 1.
+    lv_idx = sy-tabix.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
     DATA lt_data TYPE STANDARD TABLE OF i WITH EMPTY KEY.
-    READ TABLE lt_data TRANSPORTING NO FIELDS WITH KEY table_line = 1. "#EC PREFER_LINE_EXISTS
+    DATA lv_idx TYPE i.
+
+    READ TABLE lt_data TRANSPORTING NO FIELDS WITH KEY table_line = 1. "#EC PREFER_LINE_INDEX
+    lv_idx = sy-tabix.
   ENDMETHOD.
 
   METHOD valid_code.
     DATA lt_data TYPE STANDARD TABLE OF i WITH EMPTY KEY.
-    DATA lv_exists TYPE abap_bool.
-    IF line_exists( lt_data[ table_line = 1 ] ).
-      lv_exists = abap_true.
-    ENDIF.
+    DATA lv_idx TYPE i.
+
+    lv_idx = line_index( lt_data[ table_line = 1 ] ).
   ENDMETHOD.
 ENDCLASS.

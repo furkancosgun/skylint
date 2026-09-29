@@ -18,16 +18,13 @@ CLASS zcl_skylint_check_052 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_RETURNING'.
 
     METHODS is_single_exporting_only
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_052 IMPLEMENTATION.
-
   METHOD constructor.
     super->constructor(
         VALUE #( description       = 'skylint: Prefer RETURNING over single EXPORTING'
@@ -56,9 +53,9 @@ CLASS zcl_skylint_check_052 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_single_exporting_only.
-    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_lex TYPE string.
-    DATA lv_mode TYPE string.
+    DATA ls_tok       TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_lex       TYPE string.
+    DATA lv_mode      TYPE string.
     DATA lv_exp_count TYPE i.
     DATA lv_chg_count TYPE i.
     DATA lv_ret_count TYPE i.
@@ -90,11 +87,11 @@ CLASS zcl_skylint_check_052 IMPLEMENTATION.
         WHEN 'TYPE' OR 'LIKE'.
           CASE lv_mode.
             WHEN 'EXPORTING'.
-              lv_exp_count = lv_exp_count + 1.
+              lv_exp_count += 1.
             WHEN 'CHANGING'.
-              lv_chg_count = lv_chg_count + 1.
+              lv_chg_count += 1.
             WHEN 'RETURNING'.
-              lv_ret_count = lv_ret_count + 1.
+              lv_ret_count += 1.
           ENDCASE.
       ENDCASE.
     ENDLOOP.
@@ -103,5 +100,4 @@ CLASS zcl_skylint_check_052 IMPLEMENTATION.
       rv_res = abap_true.
     ENDIF.
   ENDMETHOD.
-
 ENDCLASS.

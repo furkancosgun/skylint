@@ -18,31 +18,25 @@ CLASS zcl_skylint_check_055 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'CALL_TRANSACTION'.
 
     METHODS is_call_transaction
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
     METHODS has_inline_auth_check
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_055 IMPLEMENTATION.
-
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'skylint: Call Transaction Authority Check'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-missing_auth_check
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'CALL TRANSACTION must be protected with AUTHORITY-CHECK'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'skylint: Call Transaction Authority Check'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-missing_auth_check
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'CALL TRANSACTION must be protected with AUTHORITY-CHECK'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -77,8 +71,8 @@ CLASS zcl_skylint_check_055 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD has_inline_auth_check.
-    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_lex TYPE string.
+    DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_lex  TYPE string.
     DATA lv_prev TYPE string.
 
     rv_res = abap_false.
@@ -93,5 +87,4 @@ CLASS zcl_skylint_check_055 IMPLEMENTATION.
       lv_prev = lv_lex.
     ENDLOOP.
   ENDMETHOD.
-
 ENDCLASS.

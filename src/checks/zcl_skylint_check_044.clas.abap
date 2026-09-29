@@ -18,24 +18,21 @@ CLASS zcl_skylint_check_044 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'OMIT_PARAM_NAME'.
 
     METHODS has_single_named_param
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_044 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-      VALUE #( description       = 'Omit parameter name in single parameter method call'
-               remote_enablement = abap_true
-               finding_codes     = VALUE #(
-                   ( code           = c_finding_codes-omit_param
-                     severity       = if_ci_atc_check=>finding_severities-warning
-                     text           = 'Omit explicit parameter name in single parameter method call'
-                     pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'Omit parameter name in single parameter method call'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-omit_param
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Omit explicit parameter name in single parameter method call'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -50,13 +47,13 @@ CLASS zcl_skylint_check_044 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD has_single_named_param.
-    DATA lv_count TYPE i.
-    DATA lv_idx TYPE i.
-    DATA lv_open_idx TYPE i.
-    DATA lv_close_idx TYPE i.
+    DATA lv_count        TYPE i.
+    DATA lv_idx          TYPE i.
+    DATA lv_open_idx     TYPE i.
+    DATA lv_close_idx    TYPE i.
     DATA lv_equals_count TYPE i.
-    DATA lv_comma_count TYPE i.
-    DATA lv_tok TYPE string.
+    DATA lv_comma_count  TYPE i.
+    DATA lv_tok          TYPE string.
 
     rv_res = abap_false.
     lv_count = lines( is_statement-tokens ).
@@ -84,18 +81,18 @@ CLASS zcl_skylint_check_044 IMPLEMENTATION.
         lv_tok = is_statement-tokens[ lv_idx ]-lexeme.
         CASE lv_tok.
           WHEN '='.
-            lv_equals_count = lv_equals_count + 1.
+            lv_equals_count += 1.
           WHEN ','.
-            lv_comma_count = lv_comma_count + 1.
+            lv_comma_count += 1.
         ENDCASE.
-        lv_idx = lv_idx + 1.
+        lv_idx += 1.
       ENDWHILE.
 
       IF lv_equals_count = 1 AND lv_comma_count = 0.
         " Ensure not a constructor VALUE #( ... ) or COND #( ... )
         lv_tok = to_upper( is_statement-tokens[ lv_open_idx ]-lexeme ).
-        IF lv_tok <> 'VALUE' AND lv_tok <> 'COND' AND lv_tok <> 'EXACT' AND
-           lv_tok <> 'CORRESPONDING' AND lv_tok <> '#(' AND lv_tok <> '('.
+        IF     lv_tok <> 'VALUE'         AND lv_tok <> 'COND' AND lv_tok <> 'EXACT'
+           AND lv_tok <> 'CORRESPONDING' AND lv_tok <> '#('   AND lv_tok <> '('.
           rv_res = abap_true.
         ENDIF.
       ENDIF.

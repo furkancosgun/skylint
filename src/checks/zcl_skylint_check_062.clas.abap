@@ -22,28 +22,27 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_062 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Avoid magic numbers in code; use named constants'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-magic_number
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Avoid hardcoded magic numbers; declare a named constant'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'Avoid magic numbers in code; use named constants'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-magic_number
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Avoid hardcoded magic numbers; declare a named constant'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_len                  TYPE i.
-    DATA lv_idx                  TYPE i.
-    DATA lv_char                 TYPE c LENGTH 1.
-    DATA lv_is_num               TYPE abap_bool.
+    DATA lv_len    TYPE i.
+    DATA lv_idx    TYPE i.
+    DATA lv_char   TYPE c LENGTH 1.
+    DATA lv_is_num TYPE abap_bool.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       " Skip declarations (DATA, CONSTANTS, TYPES, STATICS)
-      IF <ls_statement>-keyword = 'DATA' OR <ls_statement>-keyword = 'CONSTANTS'
-          OR <ls_statement>-keyword = 'TYPES' OR <ls_statement>-keyword = 'STATICS'.
+      IF    <ls_statement>-keyword = 'DATA'  OR <ls_statement>-keyword = 'CONSTANTS'
+         OR <ls_statement>-keyword = 'TYPES' OR <ls_statement>-keyword = 'STATICS'.
         CONTINUE.
       ENDIF.
 
@@ -62,7 +61,7 @@ CLASS zcl_skylint_check_062 IMPLEMENTATION.
             lv_is_num = abap_false.
             EXIT.
           ENDIF.
-          lv_idx = lv_idx + 1.
+          lv_idx += 1.
         ENDWHILE.
 
         " 0 and 1 are commonly allowed in indices/loop initializations

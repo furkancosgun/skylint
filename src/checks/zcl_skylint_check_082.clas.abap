@@ -21,23 +21,22 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_082 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Enforce explicit sy-subrc check directly after FIND or SEARCH'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-find_subrc
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Check sy-subrc immediately after FIND or SEARCH operation'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'Enforce explicit sy-subrc check directly after FIND or SEARCH'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-find_subrc
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Check sy-subrc immediately after FIND or SEARCH operation'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_tabix TYPE i.
+    DATA lv_tabix      TYPE i.
     DATA lv_next_tabix TYPE i.
-    DATA lv_has_subrc TYPE abap_bool.
+    DATA lv_has_subrc  TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_next> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_next>      TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_tabix = sy-tabix.

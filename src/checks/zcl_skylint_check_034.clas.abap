@@ -20,10 +20,8 @@ CLASS zcl_skylint_check_034 DEFINITION
     DATA mv_max_parameters TYPE i VALUE 8.
 
     METHODS count_parameters
-      IMPORTING
-        is_statement     TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_count)  TYPE i.
+      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_count) TYPE i.
 
 ENDCLASS.
 
@@ -31,17 +29,16 @@ ENDCLASS.
 CLASS zcl_skylint_check_034 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-      VALUE #( description       = 'Method signature cleanliness (excessive parameter count)'
-               remote_enablement = abap_true
-               finding_codes     = VALUE #(
-                   ( code           = c_finding_codes-too_many_parameters
-                     severity       = if_ci_atc_check=>finding_severities-warning
-                     text           = 'Method signature has too many parameters; consider grouping into structures'
-                     pseudo_comment = c_pseudo_comment ) )
-               attributes        = VALUE #(
-                   ( name  = 'MAX_PARAMETERS'
-                     kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                     value = REF #( mv_max_parameters ) ) ) ) ).
+        VALUE #( description       = 'Method signature cleanliness (excessive parameter count)'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #(
+                     ( code           = c_finding_codes-too_many_parameters
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Method signature has too many parameters; consider grouping into structures'
+                       pseudo_comment = c_pseudo_comment ) )
+                 attributes        = VALUE #( ( name  = 'MAX_PARAMETERS'
+                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                                value = REF #( mv_max_parameters ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -73,7 +70,7 @@ CLASS zcl_skylint_check_034 IMPLEMENTATION.
     rv_count = 0.
     LOOP AT is_statement-tokens INTO ls_tok.
       IF ls_tok-lexeme = 'TYPE' OR ls_tok-lexeme = 'LIKE'.
-        rv_count = rv_count + 1.
+        rv_count += 1.
       ENDIF.
     ENDLOOP.
   ENDMETHOD.

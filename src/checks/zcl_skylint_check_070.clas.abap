@@ -34,11 +34,11 @@ CLASS zcl_skylint_check_070 IMPLEMENTATION.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lv_tok                  TYPE string.
-    DATA lv_type_idx             TYPE i.
-    DATA lv_len                  TYPE i.
-    DATA lv_has_of               TYPE abap_bool.
-    DATA lv_i                    TYPE i.
+    DATA lv_tok      TYPE string.
+    DATA lv_type_idx TYPE i.
+    DATA lv_len      TYPE i.
+    DATA lv_has_of   TYPE abap_bool.
+    DATA lv_i        TYPE i.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'FIELD-SYMBOLS'.
@@ -52,44 +52,46 @@ CLASS zcl_skylint_check_070 IMPLEMENTATION.
           lv_type_idx = lv_i + 1.
           EXIT.
         ENDIF.
-        lv_i = lv_i + 1.
+        lv_i += 1.
       ENDWHILE.
 
-      IF lv_type_idx > 0 AND lv_type_idx <= lv_len.
-        lv_tok = to_upper( <ls_statement>-tokens[ lv_type_idx ]-lexeme ).
+      IF lv_type_idx <= 0 OR lv_type_idx > lv_len.
+        CONTINUE.
+      ENDIF.
 
-        " Generic scalars
-        IF lv_tok = 'ANY' OR lv_tok = 'DATA' OR lv_tok = 'CLIKE'
-            OR lv_tok = 'CSEQUENCE' OR lv_tok = 'XSEQUENCE'
-            OR lv_tok = 'NUMERIC' OR lv_tok = 'SIMPLE' OR lv_tok = 'DECFLOAT'.
-          report_statement( is_statement    = <ls_statement>
-                            iv_finding_code = c_finding_codes-generic_field_symbols ).
-          CONTINUE.
-        ENDIF.
+      lv_tok = to_upper( <ls_statement>-tokens[ lv_type_idx ]-lexeme ).
 
-        " Generic tables (ANY TABLE, INDEX TABLE, or STANDARD TABLE without OF)
-        IF lv_tok = 'TABLE' OR lv_tok = 'INDEX'.
-          report_statement( is_statement    = <ls_statement>
-                            iv_finding_code = c_finding_codes-generic_field_symbols ).
-          CONTINUE.
-        ENDIF.
+      " Generic scalars
+      IF    lv_tok = 'ANY'       OR lv_tok = 'DATA'      OR lv_tok = 'CLIKE'
+         OR lv_tok = 'CSEQUENCE' OR lv_tok = 'XSEQUENCE'
+         OR lv_tok = 'NUMERIC'   OR lv_tok = 'SIMPLE'    OR lv_tok = 'DECFLOAT'.
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-generic_field_symbols ).
+        CONTINUE.
+      ENDIF.
 
-        IF lv_tok = 'STANDARD' OR lv_tok = 'SORTED' OR lv_tok = 'HASHED'.
-          " Check if OF is missing
-          lv_has_of = abap_false.
-          lv_i = lv_type_idx + 1.
-          WHILE lv_i <= lv_len.
-            IF to_upper( <ls_statement>-tokens[ lv_i ]-lexeme ) = 'OF'.
-              lv_has_of = abap_true.
-              EXIT.
-            ENDIF.
-            lv_i = lv_i + 1.
-          ENDWHILE.
+      " Generic tables (ANY TABLE, INDEX TABLE, or STANDARD TABLE without OF)
+      IF lv_tok = 'TABLE' OR lv_tok = 'INDEX'.
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-generic_field_symbols ).
+        CONTINUE.
+      ENDIF.
 
-          IF lv_has_of = abap_false.
-            report_statement( is_statement    = <ls_statement>
-                              iv_finding_code = c_finding_codes-generic_field_symbols ).
+      IF lv_tok = 'STANDARD' OR lv_tok = 'SORTED' OR lv_tok = 'HASHED'.
+        " Check if OF is missing
+        lv_has_of = abap_false.
+        lv_i = lv_type_idx + 1.
+        WHILE lv_i <= lv_len.
+          IF to_upper( <ls_statement>-tokens[ lv_i ]-lexeme ) = 'OF'.
+            lv_has_of = abap_true.
+            EXIT.
           ENDIF.
+          lv_i += 1.
+        ENDWHILE.
+
+        IF lv_has_of = abap_false.
+          report_statement( is_statement    = <ls_statement>
+                            iv_finding_code = c_finding_codes-generic_field_symbols ).
         ENDIF.
       ENDIF.
     ENDLOOP.

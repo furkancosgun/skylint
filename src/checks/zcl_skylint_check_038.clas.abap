@@ -19,28 +19,23 @@ CLASS zcl_skylint_check_038 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'SELECT_PERF'.
 
     METHODS is_select_star
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_038 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-      VALUE #( description       = 'Select performance (Avoid SELECT * and SELECT ... ENDSELECT)'
-               remote_enablement = abap_true
-               finding_codes     = VALUE #(
-                   ( code           = c_finding_codes-select_star
-                     severity       = if_ci_atc_check=>finding_severities-warning
-                     text           = 'Avoid SELECT *; specify required columns explicitly'
-                     pseudo_comment = c_pseudo_comment )
-                   ( code           = c_finding_codes-select_endselect
-                     severity       = if_ci_atc_check=>finding_severities-warning
-                     text           = 'Avoid SELECT ... ENDSELECT loop; use array fetch INTO TABLE'
-                     pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'Select performance (Avoid SELECT * and SELECT ... ENDSELECT)'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     severity       = if_ci_atc_check=>finding_severities-warning
+                                     pseudo_comment = c_pseudo_comment
+                                     ( code = c_finding_codes-select_star
+                                       text = 'Avoid SELECT *; specify required columns explicitly' )
+                                     ( code = c_finding_codes-select_endselect
+                                       text = 'Avoid SELECT ... ENDSELECT loop; use array fetch INTO TABLE' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

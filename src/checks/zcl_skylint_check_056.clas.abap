@@ -18,39 +18,33 @@ CLASS zcl_skylint_check_056 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'SQL_HOST_VAR'.
 
     METHODS is_unescaped_host_var
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
     METHODS is_unescaped_rhs_token
-      IMPORTING
-        iv_token      TYPE string
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING iv_token      TYPE string
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_056 IMPLEMENTATION.
-
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'skylint: SQL Escape Host Variables (@)'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-sql_host_escape
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Host variables in ABAP SQL must be escaped with @'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'skylint: SQL Escape Host Variables (@)'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-sql_host_escape
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Host variables in ABAP SQL must be escaped with @'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'SELECT' OR keyword = 'UPDATE' OR keyword = 'DELETE'
-            OR keyword = 'INSERT' OR keyword = 'MODIFY'.
+         WHERE    keyword = 'SELECT' OR keyword = 'UPDATE' OR keyword = 'DELETE'
+               OR keyword = 'INSERT' OR keyword = 'MODIFY'.
       IF is_unescaped_host_var( <ls_statement> ) = abap_true.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-sql_host_escape ).
@@ -59,10 +53,10 @@ CLASS zcl_skylint_check_056 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_unescaped_host_var.
-    DATA lv_idx TYPE i.
-    DATA lv_count TYPE i.
-    DATA lv_tok TYPE string.
-    DATA lv_next TYPE string.
+    DATA lv_idx      TYPE i.
+    DATA lv_count    TYPE i.
+    DATA lv_tok      TYPE string.
+    DATA lv_next     TYPE string.
     DATA lv_in_where TYPE abap_bool.
 
     rv_res = abap_false.
@@ -93,7 +87,7 @@ CLASS zcl_skylint_check_056 IMPLEMENTATION.
               RETURN.
             ENDIF.
           WHEN OTHERS.
-            IF lv_next <> 'DISTINCT' AND lv_next(1) <> '('
+            IF     lv_next <> 'DISTINCT' AND lv_next(1) <> '('
                AND is_statement-tokens[ lv_idx + 1 ]-lexeme(1) <> '@'.
               rv_res = abap_true.
               RETURN.
@@ -102,17 +96,17 @@ CLASS zcl_skylint_check_056 IMPLEMENTATION.
       ENDIF.
 
       " 3. Check FOR ALL ENTRIES IN <target>
-      IF lv_tok = 'ENTRIES' AND lv_idx + 2 <= lv_count
-         AND to_upper( is_statement-tokens[ lv_idx + 1 ]-lexeme ) = 'IN'
-         AND is_statement-tokens[ lv_idx + 2 ]-lexeme(1) <> '@'.
+      IF     lv_tok = 'ENTRIES' AND lv_idx + 2 <= lv_count
+         AND to_upper( is_statement-tokens[ lv_idx + 1 ]-lexeme )  = 'IN'
+         AND is_statement-tokens[ lv_idx + 2 ]-lexeme(1)          <> '@'.
         rv_res = abap_true.
         RETURN.
       ENDIF.
 
       " 4. Check comparisons in WHERE / HAVING / SET clause
-      IF lv_in_where = abap_true AND lv_idx < lv_count
-         AND ( lv_tok = '=' OR lv_tok = '<>' OR lv_tok = '<'
-               OR lv_tok = '>' OR lv_tok = '<=' OR lv_tok = '>='
+      IF     lv_in_where = abap_true AND lv_idx < lv_count
+         AND (    lv_tok = '='    OR lv_tok = '<>' OR lv_tok = '<'
+               OR lv_tok = '>'    OR lv_tok = '<=' OR lv_tok = '>='
                OR lv_tok = 'LIKE' ).
         lv_next = is_statement-tokens[ lv_idx + 1 ]-lexeme.
         IF is_unescaped_rhs_token( lv_next ) = abap_true.
@@ -134,7 +128,7 @@ CLASS zcl_skylint_check_056 IMPLEMENTATION.
 
     lv_first = iv_token(1).
     " Escaped host variable (@...), string literals ('...', `...`), or numbers/parentheses
-    IF lv_first = '@' OR lv_first = '''' OR lv_first = '`'
+    IF    lv_first = '@' OR lv_first = '''' OR lv_first = '`'
        OR lv_first = '(' OR ( lv_first >= '0' AND lv_first <= '9' )
        OR lv_first = '+' OR lv_first = '-'.
       RETURN.
@@ -147,7 +141,7 @@ CLASS zcl_skylint_check_056 IMPLEMENTATION.
 
     lv_upper = to_upper( iv_token ).
     " Built-in SQL keywords / constants
-    IF lv_upper = 'NULL' OR lv_upper = 'INITIAL' OR lv_upper = 'SPACE'
+    IF    lv_upper = 'NULL' OR lv_upper = 'INITIAL' OR lv_upper = 'SPACE'
        OR lv_upper = 'TRUE' OR lv_upper = 'FALSE'.
       RETURN.
     ENDIF.
@@ -155,5 +149,4 @@ CLASS zcl_skylint_check_056 IMPLEMENTATION.
     " Unescaped host variable identifier
     rv_res = abap_true.
   ENDMETHOD.
-
 ENDCLASS.

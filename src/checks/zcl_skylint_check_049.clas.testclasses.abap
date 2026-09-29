@@ -15,31 +15,29 @@ ENDCLASS.
 
 
 CLASS ltcl_check_049 IMPLEMENTATION.
-
   METHOD execute_test_class.
-    DATA ls_loc_no_pc TYPE if_ci_atc_check=>ty_location.
+    DATA ls_loc_no_pc   TYPE if_ci_atc_check=>ty_location.
     DATA ls_loc_with_pc TYPE if_ci_atc_check=>ty_location.
 
-    ls_loc_no_pc = VALUE #(
-      object   = cl_ci_atc_unit_driver=>get_method_object(
-                   VALUE #( class  = c_test_class
-                            method = c_methods-without_pseudo_comments ) )
-      position = VALUE #( line = 5 column = 10 ) ).
+    ls_loc_no_pc = VALUE #( object   = cl_ci_atc_unit_driver=>get_method_object(
+                                           VALUE #( class  = c_test_class
+                                                    method = c_methods-without_pseudo_comments ) )
+                            position = VALUE #( line   = 5
+                                                column = 10 ) ).
 
-    ls_loc_with_pc = VALUE #(
-      object   = cl_ci_atc_unit_driver=>get_method_object(
-                   VALUE #( class  = c_test_class
-                            method = c_methods-with_pseudo_comments ) )
-      position = VALUE #( line = 5 column = 10 ) ).
+    ls_loc_with_pc = VALUE #( object   = cl_ci_atc_unit_driver=>get_method_object(
+                                             VALUE #( class  = c_test_class
+                                                      method = c_methods-with_pseudo_comments ) )
+                              position = VALUE #( line   = 5
+                                                  column = 10 ) ).
 
     cl_ci_atc_unit_driver=>create_asserter( )->check_and_assert(
         check             = NEW zcl_skylint_check_049( )
-        object            = VALUE #( type = 'CLAS' name = c_test_class )
-        expected_findings = VALUE #( ( code     = zcl_skylint_check_049=>c_finding_codes-nesting_depth
-                                       location = ls_loc_no_pc )
-                                     ( code     = zcl_skylint_check_049=>c_finding_codes-nesting_depth
-                                       location = ls_loc_with_pc ) )
+        object            = VALUE #( type = 'CLAS'
+                                     name = c_test_class )
+        expected_findings = VALUE #( code = zcl_skylint_check_049=>c_finding_codes-nesting_depth
+                                     ( location = ls_loc_no_pc )
+                                     ( location = ls_loc_with_pc ) )
         asserter_config   = VALUE #( quickfixes = abap_false ) ).
   ENDMETHOD.
-
 ENDCLASS.

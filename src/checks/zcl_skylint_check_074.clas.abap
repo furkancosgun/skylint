@@ -32,18 +32,17 @@ CLASS zcl_skylint_check_074 IMPLEMENTATION.
                        severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Avoid deep class inheritance; prefer composition over inheritance'
                        pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     ( name  = 'MAX_DEPTH'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                       value = REF #( mv_max_depth ) ) ) ) ).
+                 attributes        = VALUE #( ( name  = 'MAX_DEPTH'
+                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                                value = REF #( mv_max_depth ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_super_name           TYPE string.
-    DATA lv_len                  TYPE i.
-    DATA lv_idx                  TYPE i.
+    DATA lv_super_name TYPE string.
+    DATA lv_len        TYPE i.
+    DATA lv_idx        TYPE i.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'CLASS'.
@@ -55,15 +54,15 @@ CLASS zcl_skylint_check_074 IMPLEMENTATION.
         IF sy-subrc = 0 AND to_upper( <ls_token>-lexeme ) = 'INHERITING'.
           IF lv_idx + 2 <= lv_len.
             lv_super_name = to_upper( <ls_statement>-tokens[ lv_idx + 2 ]-lexeme ).
-            IF lv_super_name CP '*DEEP*' OR lv_super_name CP '*LEVEL*'
-                OR lv_super_name = 'CX_NO_CHECK'.
+            IF    lv_super_name CP '*DEEP*' OR lv_super_name CP '*LEVEL*'
+               OR lv_super_name  = 'CX_NO_CHECK'.
               report_statement( is_statement    = <ls_statement>
                                 iv_finding_code = c_finding_codes-deep_inheritance ).
             ENDIF.
           ENDIF.
           EXIT.
         ENDIF.
-        lv_idx = lv_idx + 1.
+        lv_idx += 1.
       ENDWHILE.
     ENDLOOP.
   ENDMETHOD.

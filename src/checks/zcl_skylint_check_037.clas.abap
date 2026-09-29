@@ -18,25 +18,19 @@ CLASS zcl_skylint_check_037 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'FAE_NO_CHECK'.
 
     METHODS extract_fae_table
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_tab) TYPE string.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_tab) TYPE string.
 
     METHODS has_preceding_check
-      IMPORTING
-        it_statements TYPE if_ci_atc_source_code_provider=>ty_statements
-        iv_current_idx TYPE i
-        iv_tab_name   TYPE string
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING it_statements  TYPE if_ci_atc_source_code_provider=>ty_statements
+                iv_current_idx TYPE i
+                iv_tab_name    TYPE string
+      RETURNING VALUE(rv_res)  TYPE abap_bool.
 
     METHODS statement_checks_table
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-        iv_tab_name   TYPE string
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_tab_name   TYPE string
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
 
@@ -44,17 +38,17 @@ ENDCLASS.
 CLASS zcl_skylint_check_037 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-      VALUE #( description       = 'Unsecure FOR ALL ENTRIES (Missing empty itab check)'
-               remote_enablement = abap_true
-               finding_codes     = VALUE #(
-                   ( code           = c_finding_codes-unsecure_fae
-                     severity       = if_ci_atc_check=>finding_severities-warning
-                     text           = 'FOR ALL ENTRIES without preceding IS NOT INITIAL check causes full table scan'
-                     pseudo_comment = c_pseudo_comment ) ) ) ).
+        VALUE #( description       = 'Unsecure FOR ALL ENTRIES (Missing empty itab check)'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #(
+                     ( code           = c_finding_codes-unsecure_fae
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'FOR ALL ENTRIES without preceding IS NOT INITIAL check causes full table scan'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_idx TYPE i.
+    DATA lv_idx     TYPE i.
     DATA lv_fae_tab TYPE string.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
@@ -63,10 +57,10 @@ CLASS zcl_skylint_check_037 IMPLEMENTATION.
       lv_idx = sy-tabix.
       lv_fae_tab = extract_fae_table( <ls_statement> ).
 
-      IF lv_fae_tab IS NOT INITIAL AND
-         has_preceding_check( it_statements  = is_procedure-statements
-                              iv_current_idx = lv_idx
-                              iv_tab_name    = lv_fae_tab ) = abap_false.
+      IF     lv_fae_tab IS NOT INITIAL
+         AND has_preceding_check( it_statements  = is_procedure-statements
+                                  iv_current_idx = lv_idx
+                                  iv_tab_name    = lv_fae_tab )             = abap_false.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-unsecure_fae ).
       ENDIF.
@@ -74,9 +68,9 @@ CLASS zcl_skylint_check_037 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD extract_fae_table.
-    DATA lv_idx TYPE i.
-    DATA lv_cnt TYPE i.
-    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_idx  TYPE i.
+    DATA lv_cnt  TYPE i.
+    DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_name TYPE string.
 
     rv_tab = ''.
@@ -84,10 +78,10 @@ CLASS zcl_skylint_check_037 IMPLEMENTATION.
 
     LOOP AT is_statement-tokens INTO ls_tok.
       lv_idx = sy-tabix.
-      IF ls_tok-lexeme = 'FOR' AND lv_idx + 4 <= lv_cnt AND
-         is_statement-tokens[ lv_idx + 1 ]-lexeme = 'ALL' AND
-         is_statement-tokens[ lv_idx + 2 ]-lexeme = 'ENTRIES' AND
-         is_statement-tokens[ lv_idx + 3 ]-lexeme = 'IN'.
+      IF     ls_tok-lexeme = 'FOR' AND lv_idx + 4 <= lv_cnt
+         AND is_statement-tokens[ lv_idx + 1 ]-lexeme = 'ALL'
+         AND is_statement-tokens[ lv_idx + 2 ]-lexeme = 'ENTRIES'
+         AND is_statement-tokens[ lv_idx + 3 ]-lexeme = 'IN'.
         lv_name = is_statement-tokens[ lv_idx + 4 ]-lexeme.
         IF lv_name(1) = '@'.
           lv_name = lv_name+1.
@@ -99,7 +93,7 @@ CLASS zcl_skylint_check_037 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD has_preceding_check.
-    DATA lv_idx TYPE i.
+    DATA lv_idx  TYPE i.
     DATA ls_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     rv_res = abap_false.
@@ -108,17 +102,17 @@ CLASS zcl_skylint_check_037 IMPLEMENTATION.
     WHILE lv_idx >= 1.
       ls_stmt = it_statements[ lv_idx ].
       IF statement_checks_table( is_statement = ls_stmt
-                                 iv_tab_name   = iv_tab_name ) = abap_true.
+                                 iv_tab_name  = iv_tab_name ) = abap_true.
         rv_res = abap_true.
         RETURN.
       ENDIF.
-      lv_idx = lv_idx - 1.
+      lv_idx -= 1.
     ENDWHILE.
   ENDMETHOD.
 
   METHOD statement_checks_table.
-    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_has_tab TYPE abap_bool.
+    DATA ls_tok       TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_has_tab   TYPE abap_bool.
     DATA lv_has_check TYPE abap_bool.
     DATA lv_clean_tok TYPE string.
 

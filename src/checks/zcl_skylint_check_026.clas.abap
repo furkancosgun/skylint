@@ -18,24 +18,21 @@ CLASS zcl_skylint_check_026 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_NEW'.
 
     METHODS is_static_create_object
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_026 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Prefer NEW #( ) constructor expression over legacy CREATE OBJECT'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-prefer_new
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Prefer NEW #( ) expression over CREATE OBJECT'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'Prefer NEW #( ) constructor expression over legacy CREATE OBJECT'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-prefer_new
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Prefer NEW #( ) expression over CREATE OBJECT'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -66,16 +63,16 @@ CLASS zcl_skylint_check_026 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    READ TABLE is_statement-tokens ASSIGNING <ls_t1> INDEX 2.
+    ASSIGN is_statement-tokens[ 2 ] TO <ls_t1>.
     IF sy-subrc <> 0 OR to_upper( <ls_t1>-lexeme ) <> 'OBJECT'.
       RETURN.
     ENDIF.
 
     " Check for RAP FOR TESTING
     IF lv_total >= 4.
-      READ TABLE is_statement-tokens ASSIGNING <ls_t1> INDEX lv_total - 1.
+      ASSIGN is_statement-tokens[ lv_total - 1 ] TO <ls_t1>.
       IF sy-subrc = 0.
-        READ TABLE is_statement-tokens ASSIGNING <ls_t2> INDEX lv_total.
+        ASSIGN is_statement-tokens[ lv_total ] TO <ls_t2>.
         IF sy-subrc = 0.
           lv_last1 = to_upper( <ls_t1>-lexeme ).
           lv_last2 = to_upper( <ls_t2>-lexeme ).
@@ -89,7 +86,7 @@ CLASS zcl_skylint_check_026 IMPLEMENTATION.
     " Check tokens for dynamic TYPE (...), PARAMETER-TABLE, or OLE strings
     lv_idx = 3.
     WHILE lv_idx <= lv_total.
-      READ TABLE is_statement-tokens ASSIGNING <ls_t1> INDEX lv_idx.
+      ASSIGN is_statement-tokens[ lv_idx ] TO <ls_t1>.
       IF sy-subrc <> 0.
         EXIT.
       ENDIF.
@@ -101,7 +98,7 @@ CLASS zcl_skylint_check_026 IMPLEMENTATION.
       ENDIF.
 
       IF lv_tok = 'TYPE' AND lv_idx < lv_total.
-        READ TABLE is_statement-tokens ASSIGNING <ls_t2> INDEX lv_idx + 1.
+        ASSIGN is_statement-tokens[ lv_idx + 1 ] TO <ls_t2>.
         IF sy-subrc = 0.
           lv_tok2 = <ls_t2>-lexeme.
           IF lv_tok2 CP '*( *' OR lv_tok2 CP '(*)' OR lv_tok2(1) = '('.
@@ -115,7 +112,7 @@ CLASS zcl_skylint_check_026 IMPLEMENTATION.
         RETURN.
       ENDIF.
 
-      lv_idx = lv_idx + 1.
+      lv_idx += 1.
     ENDWHILE.
 
     rv_res = abap_true.

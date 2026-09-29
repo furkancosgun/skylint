@@ -18,16 +18,12 @@ CLASS zcl_skylint_check_039 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'CHECK_SUBRC'.
 
     METHODS sets_sy_subrc
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
     METHODS checks_sy_subrc
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
 
@@ -35,18 +31,18 @@ ENDCLASS.
 CLASS zcl_skylint_check_039 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-      VALUE #( description       = 'Check sy-subrc after DB & table operations'
-               remote_enablement = abap_true
-               finding_codes     = VALUE #(
-                   ( code           = c_finding_codes-check_subrc
-                     severity       = if_ci_atc_check=>finding_severities-warning
-                     text           = 'Check sy-subrc directly after SELECT SINGLE, READ TABLE, or AUTHORITY-CHECK'
-                     pseudo_comment = c_pseudo_comment ) ) ) ).
+        VALUE #( description       = 'Check sy-subrc after DB & table operations'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #(
+                     ( code           = c_finding_codes-check_subrc
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Check sy-subrc directly after SELECT SINGLE, READ TABLE, or AUTHORITY-CHECK'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_idx TYPE i.
-    DATA lv_max TYPE i.
+    DATA lv_idx       TYPE i.
+    DATA lv_max       TYPE i.
     DATA ls_next_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
@@ -54,16 +50,18 @@ CLASS zcl_skylint_check_039 IMPLEMENTATION.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_idx = sy-tabix.
-      IF sets_sy_subrc( <ls_statement> ) = abap_true.
-        IF lv_idx = lv_max.
+      IF sets_sy_subrc( <ls_statement> ) = abap_false.
+        CONTINUE.
+      ENDIF.
+
+      IF lv_idx = lv_max.
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-check_subrc ).
+      ELSE.
+        ls_next_stmt = is_procedure-statements[ lv_idx + 1 ].
+        IF checks_sy_subrc( ls_next_stmt ) = abap_false.
           report_statement( is_statement    = <ls_statement>
                             iv_finding_code = c_finding_codes-check_subrc ).
-        ELSE.
-          ls_next_stmt = is_procedure-statements[ lv_idx + 1 ].
-          IF checks_sy_subrc( ls_next_stmt ) = abap_false.
-            report_statement( is_statement    = <ls_statement>
-                              iv_finding_code = c_finding_codes-check_subrc ).
-          ENDIF.
         ENDIF.
       ENDIF.
     ENDLOOP.

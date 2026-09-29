@@ -18,25 +18,21 @@ CLASS zcl_skylint_check_042 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'IDENTICAL_MOVE'.
 
     METHODS is_identical_assignment
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_042 IMPLEMENTATION.
-
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'skylint: Detect Identical Self Assignments'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-identical_move
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Identical assignment has no effect; remove redundant statement'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'skylint: Detect Identical Self Assignments'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-identical_move
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Identical assignment has no effect; remove redundant statement'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -51,8 +47,8 @@ CLASS zcl_skylint_check_042 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_identical_assignment.
-    DATA lv_left TYPE string.
-    DATA lv_eq TYPE string.
+    DATA lv_left  TYPE string.
+    DATA lv_eq    TYPE string.
     DATA lv_right TYPE string.
 
     rv_res = abap_false.
@@ -61,7 +57,7 @@ CLASS zcl_skylint_check_042 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    IF is_statement-keyword = 'DATA'
+    IF    is_statement-keyword = 'DATA'
        OR is_statement-keyword = 'CONSTANTS'
        OR is_statement-keyword = 'FIELD-SYMBOLS'.
       RETURN.
@@ -75,5 +71,4 @@ CLASS zcl_skylint_check_042 IMPLEMENTATION.
       rv_res = abap_true.
     ENDIF.
   ENDMETHOD.
-
 ENDCLASS.

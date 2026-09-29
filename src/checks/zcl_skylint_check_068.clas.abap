@@ -32,20 +32,19 @@ CLASS zcl_skylint_check_068 IMPLEMENTATION.
                        severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Avoid heavy business logic/loops in constructor; use injection only'
                        pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     ( name  = 'MAX_STATEMENTS'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                       value = REF #( mv_max_statements ) ) ) ) ).
+                 attributes        = VALUE #( ( name  = 'MAX_STATEMENTS'
+                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                                value = REF #( mv_max_statements ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lv_max_stmts            TYPE i.
-    DATA lv_stmt_count           TYPE i.
+    DATA lv_max_stmts  TYPE i.
+    DATA lv_stmt_count TYPE i.
 
-    IF is_procedure-id-name NP '*CONSTRUCTOR*'
-        AND is_procedure-id-name NP '*WITHOUT_PSEUDO_COMMENTS*'
-        AND is_procedure-id-name NP '*WITH_PSEUDO_COMMENTS*'.
+    IF     is_procedure-id-name NP '*CONSTRUCTOR*'
+       AND is_procedure-id-name NP '*WITHOUT_PSEUDO_COMMENTS*'
+       AND is_procedure-id-name NP '*WITH_PSEUDO_COMMENTS*'.
       RETURN.
     ENDIF.
 
@@ -60,18 +59,18 @@ CLASS zcl_skylint_check_068 IMPLEMENTATION.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       " Disallow heavy keywords directly
-      IF <ls_statement>-keyword = 'LOOP' OR <ls_statement>-keyword = 'SELECT'
-          OR <ls_statement>-keyword = 'CALL FUNCTION' OR <ls_statement>-keyword = 'SUBMIT'.
+      IF    <ls_statement>-keyword = 'LOOP'          OR <ls_statement>-keyword = 'SELECT'
+         OR <ls_statement>-keyword = 'CALL FUNCTION' OR <ls_statement>-keyword = 'SUBMIT'.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-constructor_logic ).
         CONTINUE.
       ENDIF.
 
       " Count logic statements (excluding METHOD, ENDMETHOD, DATA, TYPES, STATICS, CONSTANTS)
-      IF <ls_statement>-keyword <> 'METHOD' AND <ls_statement>-keyword <> 'ENDMETHOD'
-          AND <ls_statement>-keyword <> 'DATA' AND <ls_statement>-keyword <> 'TYPES'
-          AND <ls_statement>-keyword <> 'STATICS' AND <ls_statement>-keyword <> 'CONSTANTS'.
-        lv_stmt_count = lv_stmt_count + 1.
+      IF     <ls_statement>-keyword <> 'METHOD'  AND <ls_statement>-keyword <> 'ENDMETHOD'
+         AND <ls_statement>-keyword <> 'DATA'    AND <ls_statement>-keyword <> 'TYPES'
+         AND <ls_statement>-keyword <> 'STATICS' AND <ls_statement>-keyword <> 'CONSTANTS'.
+        lv_stmt_count += 1.
         IF lv_stmt_count > lv_max_stmts.
           report_statement( is_statement    = <ls_statement>
                             iv_finding_code = c_finding_codes-constructor_logic ).

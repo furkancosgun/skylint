@@ -33,11 +33,11 @@ CLASS zcl_skylint_check_091 IMPLEMENTATION.
 
   METHOD check.
     DATA lv_is_dynamic TYPE abap_bool.
-    DATA lv_idx TYPE i.
-    DATA lv_len TYPE i.
+    DATA lv_idx        TYPE i.
+    DATA lv_len        TYPE i.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_next> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_next>      TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'SELECT' OR keyword = 'UPDATE' OR keyword = 'DELETE'.
@@ -54,7 +54,7 @@ CLASS zcl_skylint_check_091 IMPLEMENTATION.
             EXIT.
           ENDIF.
         ENDIF.
-        lv_idx = lv_idx + 1.
+        lv_idx += 1.
       ENDWHILE.
 
       IF lv_is_dynamic = abap_true.

@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_104 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        pref_exists TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_EXST',
+        pref_index TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_INDX',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,55 +15,54 @@ CLASS zcl_skylint_check_104 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_LINE_EXISTS'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_LINE_INDEX'.
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_104 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Prefer line_exists( ... ) over READ TABLE TRANSPORTING NO FIELDS'
+        VALUE #( description       = 'Prefer line_index( ... ) over READ TABLE to retrieve row index'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-pref_exists
+                     ( code           = c_finding_codes-pref_index
                        severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Use modern line_exists( ... ) expression to check for table line existence'
+                       text           = 'Use modern line_index( ... ) expression instead of READ TABLE and sy-tabix'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_idx TYPE i.
-    DATA lv_len TYPE i.
-    DATA lv_found TYPE abap_bool.
+    DATA lv_idx       TYPE i.
+    DATA lv_count     TYPE i.
+    DATA lv_has_tabix TYPE abap_bool.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_tok1> TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_tok2> TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_tok3> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_next> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_tok>  TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_stmt>
-         WHERE keyword = 'READ'.
-      lv_len = lines( <ls_stmt>-tokens ).
-      lv_idx = 1.
-      lv_found = abap_false.
+    lv_count = lines( is_procedure-statements ).
+    lv_idx = 1.
 
-      WHILE lv_idx <= lv_len - 2.
-        ASSIGN <ls_stmt>-tokens[ lv_idx ] TO <ls_tok1>.
-        ASSIGN <ls_stmt>-tokens[ lv_idx + 1 ] TO <ls_tok2>.
-        ASSIGN <ls_stmt>-tokens[ lv_idx + 2 ] TO <ls_tok3>.
+    WHILE lv_idx < lv_count.
+      ASSIGN is_procedure-statements[ lv_idx ] TO <ls_stmt>.
 
-        IF to_upper( <ls_tok1>-lexeme ) = 'TRANSPORTING'
-            AND to_upper( <ls_tok2>-lexeme ) = 'NO'
-            AND to_upper( <ls_tok3>-lexeme ) = 'FIELDS'.
-          lv_found = abap_true.
-          EXIT.
+      IF <ls_stmt>-keyword = 'READ'.
+        ASSIGN is_procedure-statements[ lv_idx + 1 ] TO <ls_next>.
+        lv_has_tabix = abap_false.
+
+        LOOP AT <ls_next>-tokens ASSIGNING <ls_tok>.
+          IF to_upper( <ls_tok>-lexeme ) = 'SY-TABIX'.
+            lv_has_tabix = abap_true.
+            EXIT.
+          ENDIF.
+        ENDLOOP.
+
+        IF lv_has_tabix = abap_true.
+          report_statement( is_statement    = <ls_stmt>
+                            iv_finding_code = c_finding_codes-pref_index ).
         ENDIF.
-        lv_idx = lv_idx + 1.
-      ENDWHILE.
-
-      IF lv_found = abap_true.
-        report_statement( is_statement    = <ls_stmt>
-                          iv_finding_code = c_finding_codes-pref_exists ).
       ENDIF.
-    ENDLOOP.
+
+      lv_idx += 1.
+    ENDWHILE.
   ENDMETHOD.
 ENDCLASS.

@@ -18,16 +18,13 @@ CLASS zcl_skylint_check_059 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'CLASS_FINAL'.
 
     METHODS is_class_missing_final
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_059 IMPLEMENTATION.
-
   METHOD constructor.
     super->constructor(
         VALUE #( description       = 'skylint: Prefer FINAL Classes by Default'
@@ -56,12 +53,12 @@ CLASS zcl_skylint_check_059 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_class_missing_final.
-    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_lex TYPE string.
-    DATA lv_is_def TYPE abap_bool.
-    DATA lv_is_final TYPE abap_bool.
+    DATA ls_tok         TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_lex         TYPE string.
+    DATA lv_is_def      TYPE abap_bool.
+    DATA lv_is_final    TYPE abap_bool.
     DATA lv_is_abstract TYPE abap_bool.
-    DATA lv_is_test TYPE abap_bool.
+    DATA lv_is_test     TYPE abap_bool.
 
     rv_res = abap_false.
     lv_is_def = abap_false.
@@ -83,10 +80,9 @@ CLASS zcl_skylint_check_059 IMPLEMENTATION.
       ENDCASE.
     ENDLOOP.
 
-    IF lv_is_def = abap_true AND lv_is_final = abap_false
-       AND lv_is_abstract = abap_false AND lv_is_test = abap_false.
+    IF     lv_is_def      = abap_true  AND lv_is_final = abap_false
+       AND lv_is_abstract = abap_false AND lv_is_test  = abap_false.
       rv_res = abap_true.
     ENDIF.
   ENDMETHOD.
-
 ENDCLASS.

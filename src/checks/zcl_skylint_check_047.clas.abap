@@ -20,7 +20,6 @@ ENDCLASS.
 
 
 CLASS zcl_skylint_check_047 IMPLEMENTATION.
-
   METHOD constructor.
     super->constructor(
         VALUE #( description       = 'skylint: Prefer CORRESPONDING Expression over MOVE-CORRESPONDING'

@@ -12,6 +12,7 @@
     "lint": "abaplint",
     "fix": "abaplint --fix",
     "clean": "node scripts/clean.mjs",
+    "index": "node scripts/indexer.mjs",
     "deps": "git submodule update --init --recursive"
   },
   "devDependencies": {

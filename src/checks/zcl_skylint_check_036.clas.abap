@@ -18,35 +18,25 @@ CLASS zcl_skylint_check_036 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'DB_IN_LOOP'.
 
     METHODS is_direct_db_access
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
     METHODS is_db_delete
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
     METHODS is_db_insert
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
     METHODS is_db_modify
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
     METHODS has_token
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-        iv_lexeme     TYPE string
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_lexeme     TYPE string
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
 
@@ -54,13 +44,13 @@ ENDCLASS.
 CLASS zcl_skylint_check_036 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-      VALUE #( description       = 'Avoid database access inside loop iterations'
-               remote_enablement = abap_true
-               finding_codes     = VALUE #(
-                   ( code           = c_finding_codes-db_in_loop
-                     severity       = if_ci_atc_check=>finding_severities-warning
-                     text           = 'Database access inside loop iteration; consider bulk operation or JOIN'
-                     pseudo_comment = c_pseudo_comment ) ) ) ).
+        VALUE #( description       = 'Avoid database access inside loop iterations'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #(
+                     ( code           = c_finding_codes-db_in_loop
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Database access inside loop iteration; consider bulk operation or JOIN'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -72,10 +62,10 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'LOOP' OR 'DO' OR 'WHILE'.
-          lv_loop_depth = lv_loop_depth + 1.
+          lv_loop_depth += 1.
         WHEN 'ENDLOOP' OR 'ENDDO' OR 'ENDWHILE'.
           IF lv_loop_depth > 0.
-            lv_loop_depth = lv_loop_depth - 1.
+            lv_loop_depth -= 1.
           ENDIF.
         WHEN OTHERS.
           IF lv_loop_depth > 0 AND is_direct_db_access( <ls_statement> ) = abap_true.
@@ -95,8 +85,8 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
     " 1. Compiler references check
     LOOP AT is_statement-tokens INTO ls_tok.
       LOOP AT ls_tok-references INTO ls_ref.
-        IF ls_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_database OR
-           ls_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-write_database.
+        IF    ls_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_database
+           OR ls_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-write_database.
           rv_res = abap_true.
           RETURN.
         ENDIF.
@@ -123,12 +113,12 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    IF has_token( is_statement = is_statement
-                  iv_lexeme    = 'INDEX' ) = abap_true OR
-       has_token( is_statement = is_statement
-                  iv_lexeme    = 'ADJACENT' ) = abap_true OR
-       has_token( is_statement = is_statement
-                  iv_lexeme    = 'TO' ) = abap_true.
+    IF    has_token( is_statement = is_statement
+                     iv_lexeme    = 'INDEX' )    = abap_true
+       OR has_token( is_statement = is_statement
+                     iv_lexeme    = 'ADJACENT' ) = abap_true
+       OR has_token( is_statement = is_statement
+                     iv_lexeme    = 'TO' )       = abap_true.
       RETURN.
     ENDIF.
 
@@ -140,21 +130,21 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
 
   METHOD is_db_insert.
     rv_res = abap_false.
-    IF has_token( is_statement = is_statement
-                  iv_lexeme    = 'TABLE' ) = abap_true OR
-       has_token( is_statement = is_statement
-                  iv_lexeme    = 'INDEX' ) = abap_true OR
-       has_token( is_statement = is_statement
-                  iv_lexeme    = 'LINES' ) = abap_true OR
-       has_token( is_statement = is_statement
-                  iv_lexeme    = 'INITIAL' ) = abap_true.
+    IF    has_token( is_statement = is_statement
+                     iv_lexeme    = 'TABLE' )    = abap_true
+       OR has_token( is_statement = is_statement
+                     iv_lexeme    = 'INDEX' )    = abap_true
+       OR has_token( is_statement = is_statement
+                     iv_lexeme    = 'LINES' )    = abap_true
+       OR has_token( is_statement = is_statement
+                     iv_lexeme    = 'INITIAL' )  = abap_true.
       RETURN.
     ENDIF.
 
-    IF has_token( is_statement = is_statement
-                  iv_lexeme    = 'FROM' ) = abap_true OR
-       has_token( is_statement = is_statement
-                  iv_lexeme    = 'VALUES' ) = abap_true.
+    IF    has_token( is_statement = is_statement
+                     iv_lexeme    = 'FROM' )     = abap_true
+       OR has_token( is_statement = is_statement
+                     iv_lexeme    = 'VALUES' )   = abap_true.
       rv_res = abap_true.
     ENDIF.
   ENDMETHOD.
@@ -165,10 +155,10 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    IF has_token( is_statement = is_statement
-                  iv_lexeme    = 'INDEX' ) = abap_true OR
-       has_token( is_statement = is_statement
-                  iv_lexeme    = 'TRANSPORTING' ) = abap_true.
+    IF    has_token( is_statement = is_statement
+                     iv_lexeme    = 'INDEX' )        = abap_true
+       OR has_token( is_statement = is_statement
+                     iv_lexeme    = 'TRANSPORTING' ) = abap_true.
       RETURN.
     ENDIF.
 

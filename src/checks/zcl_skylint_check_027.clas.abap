@@ -18,10 +18,8 @@ CLASS zcl_skylint_check_027 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'RAISE_EXC_NEW'.
 
     METHODS is_raise_exception_type
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
 
@@ -66,14 +64,14 @@ CLASS zcl_skylint_check_027 IMPLEMENTATION.
 
     lv_idx = 1.
     WHILE lv_idx < lv_total.
-      READ TABLE is_statement-tokens ASSIGNING <ls_t> INDEX lv_idx.
+      ASSIGN is_statement-tokens[ lv_idx ] TO <ls_t>.
       IF sy-subrc <> 0.
         EXIT.
       ENDIF.
 
       lv_tok = to_upper( <ls_t>-lexeme ).
       IF lv_tok = 'TYPE'.
-        READ TABLE is_statement-tokens ASSIGNING <ls_n> INDEX lv_idx + 1.
+        ASSIGN is_statement-tokens[ lv_idx + 1 ] TO <ls_n>.
         IF sy-subrc = 0.
           lv_next = <ls_n>-lexeme.
           IF lv_next CP '*( *' OR lv_next CP '(*)' OR lv_next(1) = '('.
@@ -85,7 +83,7 @@ CLASS zcl_skylint_check_027 IMPLEMENTATION.
         ENDIF.
       ENDIF.
 
-      lv_idx = lv_idx + 1.
+      lv_idx += 1.
     ENDWHILE.
   ENDMETHOD.
 ENDCLASS.

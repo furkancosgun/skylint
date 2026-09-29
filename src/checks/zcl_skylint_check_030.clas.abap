@@ -20,45 +20,36 @@ CLASS zcl_skylint_check_030 DEFINITION
     DATA mt_static_methods TYPE HASHED TABLE OF string WITH UNIQUE KEY table_line.
 
     METHODS collect_static_methods
-      IMPORTING
-        is_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure.
+      IMPORTING is_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure.
 
     METHODS inspect_procedure
-      IMPORTING
-        is_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure.
+      IMPORTING is_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure.
 
     METHODS is_static_call
-      IMPORTING
-        is_token      TYPE if_ci_atc_source_code_provider=>ty_token
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING is_token      TYPE if_ci_atc_source_code_provider=>ty_token
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
     METHODS is_reference_to_static_method
-      IMPORTING
-        is_ref        TYPE if_ci_atc_source_code_provider=>ty_compiler_reference
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING is_ref        TYPE if_ci_atc_source_code_provider=>ty_compiler_reference
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
     METHODS parse_full_name
-      IMPORTING
-        iv_full_name  TYPE string
-      EXPORTING
-        ev_class_name TYPE string
-        ev_meth_name  TYPE string.
+      IMPORTING iv_full_name  TYPE string
+      EXPORTING ev_class_name TYPE string
+                ev_meth_name  TYPE string.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_030 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-      VALUE #( description       = 'Avoid calling static methods via instance arrow (->)'
-               remote_enablement = abap_true
-               finding_codes     = VALUE #(
-                   ( code           = c_finding_codes-static_call_via_instance
-                     severity       = if_ci_atc_check=>finding_severities-warning
-                     text           = 'Call static method using => instead of ->'
-                     pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'Avoid calling static methods via instance arrow (->)'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-static_call_via_instance
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Call static method using => instead of ->'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -156,10 +147,11 @@ CLASS zcl_skylint_check_030 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD parse_full_name.
-    DATA lv_str TYPE string.
+    DATA lv_str   TYPE string.
     DATA lt_parts TYPE STANDARD TABLE OF string WITH EMPTY KEY.
 
-    CLEAR: ev_class_name, ev_meth_name.
+    CLEAR: ev_class_name,
+           ev_meth_name.
     lv_str = to_upper( iv_full_name ).
 
     IF lv_str CS '->'.

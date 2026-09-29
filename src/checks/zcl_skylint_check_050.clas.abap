@@ -20,16 +20,13 @@ CLASS zcl_skylint_check_050 DEFINITION
     DATA mv_max_output_params TYPE i VALUE 1.
 
     METHODS count_output_parameters
-      IMPORTING
-        is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_count) TYPE i.
+      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_count) TYPE i.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_050 IMPLEMENTATION.
-
   METHOD constructor.
     super->constructor(
         VALUE #( description       = 'skylint: Avoid Multiple Output Parameters (prefer single RETURNING)'
@@ -39,10 +36,9 @@ CLASS zcl_skylint_check_050 IMPLEMENTATION.
                        severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Method has multiple output parameters; prefer single RETURNING'
                        pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     ( name  = 'MAX_OUTPUT_PARAMS'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                       value = REF #( mv_max_output_params ) ) ) ) ).
+                 attributes        = VALUE #( ( name  = 'MAX_OUTPUT_PARAMS'
+                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                                value = REF #( mv_max_output_params ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -69,8 +65,8 @@ CLASS zcl_skylint_check_050 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD count_output_parameters.
-    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_lex TYPE string.
+    DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_lex  TYPE string.
     DATA lv_mode TYPE string.
 
     rv_count = 0.
@@ -92,10 +88,9 @@ CLASS zcl_skylint_check_050 IMPLEMENTATION.
           lv_mode = ''.
         WHEN 'TYPE' OR 'LIKE'.
           IF lv_mode = 'EXPORTING' OR lv_mode = 'CHANGING' OR lv_mode = 'RETURNING'.
-            rv_count = rv_count + 1.
+            rv_count += 1.
           ENDIF.
       ENDCASE.
     ENDLOOP.
   ENDMETHOD.
-
 ENDCLASS.

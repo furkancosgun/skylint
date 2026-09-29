@@ -22,14 +22,13 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_063 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Prefer modern table expressions over READ TABLE statements'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-table_expression
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Prefer modern table expression over READ TABLE'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'Prefer modern table expressions over READ TABLE statements'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-table_expression
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Prefer modern table expression over READ TABLE'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

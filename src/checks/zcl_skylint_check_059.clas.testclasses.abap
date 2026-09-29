@@ -10,27 +10,27 @@ ENDCLASS.
 
 
 CLASS ltcl_check_059 IMPLEMENTATION.
-
   METHOD execute_test_class.
-    DATA ls_loc_no_pc TYPE if_ci_atc_check=>ty_location.
+    DATA ls_loc_no_pc   TYPE if_ci_atc_check=>ty_location.
     DATA ls_loc_with_pc TYPE if_ci_atc_check=>ty_location.
 
-    ls_loc_no_pc = VALUE #(
-      object   = VALUE #( type = 'CLAS' name = c_test_class )
-      position = VALUE #( line = 1 column = 0 ) ).
+    ls_loc_no_pc = VALUE #( object   = VALUE #( type = 'CLAS'
+                                                name = c_test_class )
+                            position = VALUE #( line   = 1
+                                                column = 0 ) ).
 
-    ls_loc_with_pc = VALUE #(
-      object   = VALUE #( type = 'CLAS' name = c_test_class )
-      position = VALUE #( line = 1 column = 0 ) ).
+    ls_loc_with_pc = VALUE #( object   = VALUE #( type = 'CLAS'
+                                                  name = c_test_class )
+                              position = VALUE #( line   = 1
+                                                  column = 0 ) ).
 
     cl_ci_atc_unit_driver=>create_asserter( )->check_and_assert(
         check             = NEW zcl_skylint_check_059( )
-        object            = VALUE #( type = 'CLAS' name = c_test_class )
-        expected_findings = VALUE #( ( code     = zcl_skylint_check_059=>c_finding_codes-class_not_final
-                                       location = ls_loc_no_pc )
-                                     ( code     = zcl_skylint_check_059=>c_finding_codes-class_not_final
-                                       location = ls_loc_with_pc ) )
+        object            = VALUE #( type = 'CLAS'
+                                     name = c_test_class )
+        expected_findings = VALUE #( code = zcl_skylint_check_059=>c_finding_codes-class_not_final
+                                     ( location = ls_loc_no_pc )
+                                     ( location = ls_loc_with_pc ) )
         asserter_config   = VALUE #( quickfixes = abap_false ) ).
   ENDMETHOD.
-
 ENDCLASS.

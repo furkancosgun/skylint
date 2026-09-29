@@ -18,16 +18,13 @@ CLASS zcl_skylint_check_057 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'SELECT_UP_TO_1'.
 
     METHODS is_unorder_select_up_to
-      IMPORTING
-        is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING
-        VALUE(rv_res) TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_057 IMPLEMENTATION.
-
   METHOD constructor.
     super->constructor(
         VALUE #( description       = 'skylint: SELECT UP TO 1 ROWS requires ORDER BY'
@@ -52,11 +49,11 @@ CLASS zcl_skylint_check_057 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_unorder_select_up_to.
-    DATA lv_idx TYPE i.
-    DATA lv_count TYPE i.
-    DATA lv_lex TYPE string.
-    DATA lv_next TYPE string.
-    DATA lv_has_up_to TYPE abap_bool.
+    DATA lv_idx          TYPE i.
+    DATA lv_count        TYPE i.
+    DATA lv_lex          TYPE string.
+    DATA lv_next         TYPE string.
+    DATA lv_has_up_to    TYPE abap_bool.
     DATA lv_has_order_by TYPE abap_bool.
 
     rv_res = abap_false.
@@ -89,5 +86,4 @@ CLASS zcl_skylint_check_057 IMPLEMENTATION.
       rv_res = abap_true.
     ENDIF.
   ENDMETHOD.
-
 ENDCLASS.

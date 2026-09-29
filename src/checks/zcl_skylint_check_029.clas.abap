@@ -22,23 +22,22 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_029 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-      VALUE #( description       = 'Omit RECEIVING in method calls'
-               remote_enablement = abap_true
-               finding_codes     = VALUE #(
-                   ( code           = c_finding_codes-omit_receiving
-                     severity       = if_ci_atc_check=>finding_severities-warning
-                     text           = 'Omit RECEIVING keyword; use functional call or omit parameter'
-                     pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'Omit RECEIVING in method calls'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-omit_receiving
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Omit RECEIVING keyword; use functional call or omit parameter'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_has_receiving TYPE abap_bool.
+    DATA lv_has_receiving  TYPE abap_bool.
     DATA lv_has_exceptions TYPE abap_bool.
-    DATA lv_tok_cnt TYPE i.
-    DATA lv_tok_idx TYPE i.
-    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_next_tok TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_tok_cnt        TYPE i.
+    DATA lv_tok_idx        TYPE i.
+    DATA ls_tok            TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_next_tok       TYPE if_ci_atc_source_code_provider=>ty_token.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.

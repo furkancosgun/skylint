@@ -21,20 +21,19 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_081 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Ensure TRY blocks handling resources include a CLEANUP section'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-missing_cleanup
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'TRY block handling resources is missing a CLEANUP section'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'Ensure TRY blocks handling resources include a CLEANUP section'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-missing_cleanup
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'TRY block handling resources is missing a CLEANUP section'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_in_try TYPE abap_bool VALUE abap_false.
-    DATA lv_has_cleanup TYPE abap_bool VALUE abap_false.
-    DATA ls_try_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_in_try      TYPE abap_bool                                    VALUE abap_false.
+    DATA lv_has_cleanup TYPE abap_bool                                    VALUE abap_false.
+    DATA ls_try_stmt    TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.

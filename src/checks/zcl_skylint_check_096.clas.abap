@@ -32,12 +32,12 @@ CLASS zcl_skylint_check_096 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_idx TYPE i.
-    DATA lv_count TYPE i.
+    DATA lv_idx      TYPE i.
+    DATA lv_count    TYPE i.
     DATA lv_prev_idx TYPE i.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_next> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_if> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_if>   TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     lv_count = lines( is_procedure-statements ).
     lv_idx = 1.
@@ -61,10 +61,10 @@ CLASS zcl_skylint_check_096 IMPLEMENTATION.
             ENDIF.
             EXIT.
           ENDIF.
-          lv_prev_idx = lv_prev_idx - 1.
+          lv_prev_idx -= 1.
         ENDWHILE.
       ENDIF.
-      lv_idx = lv_idx + 1.
+      lv_idx += 1.
     ENDWHILE.
   ENDMETHOD.
 ENDCLASS.
