@@ -46,9 +46,9 @@ skylint/
 
 ---
 
-## 📋 Comprehensive 100-Rule Catalog & Roadmap
+## 📋 Comprehensive 173-Rule Catalog & Roadmap
 
-All 100 Clean ABAP & Cloud rules are systematically organized across 10 progressive levels without duplication.
+All 173 Clean ABAP, ABAP Cleaner & Cloud rules are systematically organized across 16 progressive levels without duplication.
 
 ### 🟢 Level 1: Beginner / Direct Pattern Matching
 Direct single-statement keyword matching and literal replacements.
@@ -227,6 +227,127 @@ Multi-tenancy isolation, RAP transactional consistency, and modern table filteri
 | **098** | `zcl_skylint_check_098` | Avoid magic offset substring expressions (`var+0(2)`); suggest named constants or regex | `OFFST_MAG` | `"#EC MAGIC_OFFSET"` | 📋 Planned | — |
 | **099** | `zcl_skylint_check_099` | Avoid unescaped dynamic SQL clauses (`SELECT (cols) FROM (dbtab)`) without sanitization | `DYN_SQL` | `"#EC AVOID_DYNAMIC_SQL"` | 📋 Planned | — |
 | **100** | `zcl_skylint_check_100` | Prefer marking non-overridden public class methods as `FINAL` | `PREF_FINAL` | `"#EC PREFER_FINAL_METHOD"` | 📋 Planned | ⚡ Ready |
+
+---
+
+### 🟧 Level 11: Modern ABAP Statements & Control Flow Enhancements (101 - 106)
+Modern string built-in functions, calculation assignments, guard clauses, and testable assertion patterns.
+
+| ID | Rule Name & Class | Description | Finding Code | Pseudo-Comment | Status | QuickFix |
+|:---:|---|---|:---:|:---:|:---:|:---:|
+| **101** | `zcl_skylint_check_101` | Detect `CONDENSE` statement; suggest built-in `condense( ... )` string function | `CONDENSE_S` | `"#EC CONDENSE_STMT"` | 📋 Planned | ⚡ Ready |
+| **102** | `zcl_skylint_check_102` | Detect `TRANSLATE ... TO UPPER/LOWER CASE`; suggest `to_upper( ... )` / `to_lower( ... )` | `TRANSLATE_` | `"#EC TRANSLATE_STMT"` | 📋 Planned | ⚡ Ready |
+| **103** | `zcl_skylint_check_103` | Prefer calculation assignment operators (`+=`, `-=`, `*=`, `/=`) over `i = i + 1` | `CALC_ASSGN` | `"#EC PREFER_CALC_ASSIGN"` | 📋 Planned | ⚡ Ready |
+| **104** | `zcl_skylint_check_104` | Replace long `IF` block wrapping loop body end with early `IF NOT ... CONTINUE` guard clause | `GUARD_LOOP` | `"#EC GUARD_IN_LOOP"` | 📋 Planned | ⚡ Ready |
+| **105** | `zcl_skylint_check_105` | Replace long `IF` block wrapping method body end with early `IF NOT ... RETURN` guard clause | `GUARD_METH` | `"#EC GUARD_IN_METHOD"` | 📋 Planned | ⚡ Ready |
+| **106** | `zcl_skylint_check_106` | Detect native `ASSERT <condition>` in production logic; recommend testable assertion helper / exception | `PROD_ASSRT` | `"#EC PROD_ASSERT"` | 📋 Planned | ⚡ Ready |
+
+---
+
+### 🟨 Level 12: Declarations, Variable Hygiene & Documentation (107 - 113)
+Dead variable elimination, declaration ordering, redundant clears, and ABAP Doc standardization.
+
+| ID | Rule Name & Class | Description | Finding Code | Pseudo-Comment | Status | QuickFix |
+|:---:|---|---|:---:|:---:|:---:|:---:|
+| **107** | `zcl_skylint_check_107` | Detect unused local variables and field symbols (`DATA`, `FIELD-SYMBOLS`) | `UNUSED_VAR` | `"#EC UNUSED_VAR"` | 📋 Planned | ⚡ Ready |
+| **108** | `zcl_skylint_check_108` | Detect unnecessary `CLEAR` on newly declared variables or immediately before method exit | `NEEDLES_CL` | `"#EC NEEDLESS_CLEAR"` | 📋 Planned | ⚡ Ready |
+| **109** | `zcl_skylint_check_109` | Enforce standard local declaration order (`TYPES` -> `CONSTANTS` -> `DATA` -> `FIELD-SYMBOLS`) | `DECL_ORDER` | `"#EC LOCAL_DECL_ORDER"` | 📋 Planned | ⚡ Ready |
+| **110** | `zcl_skylint_check_110` | Simplify single-element colon declaration chain (`DATA: lv_a TYPE i.` -> `DATA lv_a TYPE i.`) | `CHAIN_ONE` | `"#EC SINGLE_CHAIN"` | 📋 Planned | ⚡ Ready |
+| **111** | `zcl_skylint_check_111` | Detect unnecessary exclamation mark parameter escape (`!iv_param`) when no keyword clash exists | `PARAM_ESCP` | `"#EC UNNECESSARY_ESCAPE"` | 📋 Planned | ⚡ Ready |
+| **112** | `zcl_skylint_check_112` | Detect obsolete `lang="en"` / `lang="..."` tag inside ABAP Doc comments | `ADOC_LANG` | `"#EC ABAP_DOC_LANG"` | 📋 Planned | ⚡ Ready |
+| **113** | `zcl_skylint_check_113` | Ensure all method parameters and exceptions are documented in corresponding ABAP Doc header | `ADOC_PARAM` | `"#EC ABAP_DOC_PARAMS"` | 📋 Planned | ⚡ Ready |
+
+---
+
+### 🟩 Level 13: Comments, Pragmas & Syntax Standardization (114 - 120)
+Pragma positioning, legacy pseudo-comment migration, redundant comment cleanup, and typo detection.
+
+| ID | Rule Name & Class | Description | Finding Code | Pseudo-Comment | Status | QuickFix |
+|:---:|---|---|:---:|:---:|:---:|:---:|
+| **114** | `zcl_skylint_check_114` | Detect legacy pseudo-comments (`"#EC ...`) replaceable by standard compiler pragmas (`##...`) | `MIG_PRAGMA` | `"#EC MIGRATE_PRAGMA"` | 📋 Planned | ⚡ Ready |
+| **115** | `zcl_skylint_check_115` | Ensure pragmas are placed before the closing period/comma rather than after or on separate lines | `PRAGMA_POS` | `"#EC PRAGMA_POSITION"` | 📋 Planned | ⚡ Ready |
+| **116** | `zcl_skylint_check_116` | Detect redundant end-of-block comments repeating construct name (`" ENDMETHOD lv_name`) | `END_COMMNT` | `"#EC REDUNDANT_END_COMMENT"` | 📋 Planned | ⚡ Ready |
+| **117** | `zcl_skylint_check_117` | Detect empty statements consisting only of redundant period or colon tokens (`.`, `::`) | `EMPTY_STMT` | `"#EC EMPTY_STATEMENT"` | 📋 Planned | ⚡ Ready |
+| **118** | `zcl_skylint_check_118` | Prefer `"` inline comments over legacy full-line asterisk `*` comments | `COMM_STYLE` | `"#EC PREFER_QUOTE_COMMENT"` | 📋 Planned | ⚡ Ready |
+| **119** | `zcl_skylint_check_119` | Move Boolean logical operators (`AND`, `OR`, `EQUIV`) from line end to start of next line | `LOG_OP_POS` | `"#EC OPERATOR_AT_LINE_START"` | 📋 Planned | ⚡ Ready |
+| **120** | `zcl_skylint_check_120` | Detect frequent typos in ABAP comments, documentation strings, and message literals | `TYPO_CHECK` | `"#EC COMMON_TYPO"` | 📋 Planned | ⚡ Ready |
+
+---
+
+### 🟪 Level 14: Whitespace, Indentation & Formatting Hygiene (121 - 134)
+Spacing, bracket positioning, line formatting, casing consistency, and blank line density.
+
+| ID | Rule Name & Class | Description | Finding Code | Pseudo-Comment | Status | QuickFix |
+|:---:|---|---|:---:|:---:|:---:|:---:|
+| **121** | `zcl_skylint_check_121` | Enforce closing brackets (`)`, `]`) at line end rather than isolated on standalone lines | `BRACKET_PO` | `"#EC BRACKET_POSITION"` | 📋 Planned | ⚡ Ready |
+| **122** | `zcl_skylint_check_122` | Detect needless consecutive whitespace inside statements where no alignment intent exists | `NEEDLS_SPC` | `"#EC NEEDLESS_SPACE"` | 📋 Planned | ⚡ Ready |
+| **123** | `zcl_skylint_check_123` | Ensure at least one space before and after the comment symbol `"` | `COMM_SPACE` | `"#EC SPACE_AROUND_COMMENT"` | 📋 Planned | ⚡ Ready |
+| **124** | `zcl_skylint_check_124` | Ensure proper space separation around text literals (`'...'`, `` `...` ``) | `LIT_SPACE` | `"#EC SPACE_AROUND_LITERAL"` | 📋 Planned | ⚡ Ready |
+| **125** | `zcl_skylint_check_125` | Remove invalid space preceding commas and period statement terminators (` ,`, ` .`) | `TERM_SPACE` | `"#EC SPACE_BEFORE_PERIOD"` | 📋 Planned | ⚡ Ready |
+| **126** | `zcl_skylint_check_126` | Enforce consistent 2-space indentation depth across ABAP statements and block scopes | `INDENT_ERR` | `"#EC INDENTATION"` | 📋 Planned | ⚡ Ready |
+| **127** | `zcl_skylint_check_127` | Enforce uppercase keywords and lowercase identifier casing standards | `CASE_STYLE` | `"#EC KEYWORD_CASING"` | 📋 Planned | ⚡ Ready |
+| **128** | `zcl_skylint_check_128` | Enforce CamelCase naming conventions for known CDS view entities and fields in ABAP | `CAMEL_CASE` | `"#EC CAMEL_CASE_NAME"` | 📋 Planned | ⚡ Ready |
+| **129** | `zcl_skylint_check_129` | Enforce CamelCase naming for CDS views in ABAP Unit test class doubles and test methods | `CDS_UT_CC` | `"#EC CDS_TEST_CAMEL_CASE"` | 📋 Planned | ⚡ Ready |
+| **130** | `zcl_skylint_check_130` | Detect multiple ABAP statements on a single line; enforce one statement per line | `STMT_P_LIN` | `"#EC ONE_STMT_PER_LINE"` | 📋 Planned | ⚡ Ready |
+| **131** | `zcl_skylint_check_131` | Standardize empty line spacing between sections inside `CLASS ... DEFINITION` | `DEF_EMPT_L` | `"#EC CLASS_DEF_EMPTY_LINES"` | 📋 Planned | ⚡ Ready |
+| **132** | `zcl_skylint_check_132` | Standardize empty line spacing outside method implementations (between methods/classes) | `OUT_METH_L` | `"#EC EMPTY_LINES_OUTSIDE"` | 📋 Planned | ⚡ Ready |
+| **133** | `zcl_skylint_check_133` | Detect excessive consecutive empty lines (> 1 empty line) within method bodies | `IN_METH_L` | `"#EC EMPTY_LINES_INSIDE"` | 📋 Planned | ⚡ Ready |
+| **134** | `zcl_skylint_check_134` | Standardize blank line structure within CDS test double class definitions | `CDS_TST_LN` | `"#EC CDS_TEST_EMPTY_LINES"` | 📋 Planned | ⚡ Ready |
+
+---
+
+### 🟦 Level 15: Code Alignment & Layout Formatting (135 - 150)
+Columnar alignment of declarations, assignments, parameters, logical clauses, and SQL queries.
+
+| ID | Rule Name & Class | Description | Finding Code | Pseudo-Comment | Status | QuickFix |
+|:---:|---|---|:---:|:---:|:---:|:---:|
+| **135** | `zcl_skylint_check_135` | Align parameter descriptions and exception tags in ABAP Doc header blocks | `ALGN_ABDOC` | `"#EC ALIGN_ABAP_DOC"` | 📋 Planned | ⚡ Ready |
+| **136** | `zcl_skylint_check_136` | Align consecutive `ALIASES ... FOR ...` interface component declarations | `ALGN_ALIAS` | `"#EC ALIGN_ALIASES"` | 📋 Planned | ⚡ Ready |
+| **137** | `zcl_skylint_check_137` | Align consecutive assignments to components of the same target structure/object | `ALGN_ASSGN` | `"#EC ALIGN_ASSIGNMENTS"` | 📋 Planned | ⚡ Ready |
+| **138** | `zcl_skylint_check_138` | Align variable lists across chained `CLEAR:`, `FREE:`, `SORT ... BY`, and `CATCH` blocks | `ALGN_CLRFR` | `"#EC ALIGN_CLEAR_FREE"` | 📋 Planned | ⚡ Ready |
+| **139** | `zcl_skylint_check_139` | Align `WHEN ... THEN ... ELSE` branches in `COND #( ... )` and `SWITCH #( ... )` expressions | `ALGN_CONDS` | `"#EC ALIGN_COND_EXPR"` | 📋 Planned | ⚡ Ready |
+| **140** | `zcl_skylint_check_140` | Align `TYPE`, `VALUE`, and `READ-ONLY` columns across consecutive `DATA`/`CONSTANTS` declarations | `ALGN_DECLS` | `"#EC ALIGN_DECLARATIONS"` | 📋 Planned | ⚡ Ready |
+| **141** | `zcl_skylint_check_141` | Align multi-line Boolean logical expressions to visually reflect operator precedence | `ALGN_LOGEX` | `"#EC ALIGN_LOGICAL_EXPR"` | 📋 Planned | ⚡ Ready |
+| **142** | `zcl_skylint_check_142` | Align parameter types and default values across `METHODS` and `CLASS-METHODS` declarations | `ALGN_METHD` | `"#EC ALIGN_METHODS"` | 📋 Planned | ⚡ Ready |
+| **143** | `zcl_skylint_check_143` | Align consecutive `METHODS ... FOR TESTING` declarations in unit test includes | `ALGN_TSTMT` | `"#EC ALIGN_TEST_METHODS"` | 📋 Planned | ⚡ Ready |
+| **144** | `zcl_skylint_check_144` | Align consecutive `METHODS ... [FINAL] REDEFINITION` declarations | `ALGN_REDEF` | `"#EC ALIGN_REDEFINITIONS"` | 📋 Planned | ⚡ Ready |
+| **145** | `zcl_skylint_check_145` | Align parameter assignments in method invocations and constructor component expressions | `ALGN_PARAM` | `"#EC ALIGN_PARAMETERS"` | 📋 Planned | ⚡ Ready |
+| **146** | `zcl_skylint_check_146` | Align main ABAP SQL query clauses (`SELECT`, `FROM`, `FIELDS`, `WHERE`, `GROUP BY`, `ORDER BY`) | `ALGN_SQLCL` | `"#EC ALIGN_SQL_CLAUSES"` | 📋 Planned | ⚡ Ready |
+| **147** | `zcl_skylint_check_147` | Align SQL `FROM` clause data sources, `JOIN` types, and `ON` condition predicates | `ALGN_SQLFR` | `"#EC ALIGN_SQL_FROM"` | 📋 Planned | ⚡ Ready |
+| **148** | `zcl_skylint_check_148` | Align projected field list items following `SELECT`, `FIELDS`, and `INTO ( ... )` | `ALGN_SQLLS` | `"#EC ALIGN_SQL_LISTS"` | 📋 Planned | ⚡ Ready |
+| **149** | `zcl_skylint_check_149` | Align secondary keyword continuation lines with the second word of the initial statement | `ALGN_SECWD` | `"#EC ALIGN_SECOND_WORD"` | 📋 Planned | ⚡ Ready |
+| **150** | `zcl_skylint_check_150` | Align parameters and interface definitions in legacy `FORM` / `PERFORM` subroutines | `ALGN_SUBRT` | `"#EC ALIGN_SUBROUTINES"` | 📋 Planned | ⚡ Ready |
+
+---
+
+### 🟫 Level 16: Core Data Services (CDS / DDL) Clean Architecture & Layout (151 - 173)
+Comprehensive DDL / CDS view formatting, annotation layout, clause positioning, and join alignments.
+
+| ID | Rule Name & Class | Description | Finding Code | Pseudo-Comment | Status | QuickFix |
+|:---:|---|---|:---:|:---:|:---:|:---:|
+| **151** | `zcl_skylint_check_151` | Standardize empty line spacing between major sections in CDS / DDL view definitions | `DDL_SEC_LN` | `"#EC DDL_EMPTY_SECTIONS"` | 📋 Planned | ⚡ Ready |
+| **152** | `zcl_skylint_check_152` | Standardize empty line spacing within select and join sections of CDS views | `DDL_WIN_LN` | `"#EC DDL_EMPTY_WITHIN"` | 📋 Planned | ⚡ Ready |
+| **153** | `zcl_skylint_check_153` | Enforce line breaks before `association` declarations in CDS view data sources | `DDL_BRK_AS` | `"#EC DDL_BREAK_ASSOC"` | 📋 Planned | ⚡ Ready |
+| **154** | `zcl_skylint_check_154` | Enforce line break and indentation before opening curly braces `{` in CDS select lists | `DDL_BRK_BR` | `"#EC DDL_BREAK_BRACES"` | 📋 Planned | ⚡ Ready |
+| **155** | `zcl_skylint_check_155` | Enforce line break before major CDS view clauses (`where`, `group by`, `having`, `union`) | `DDL_BRK_CL` | `"#EC DDL_BREAK_CLAUSES"` | 📋 Planned | ⚡ Ready |
+| **156** | `zcl_skylint_check_156` | Standardize line break and position in `define view / custom entity` header statements | `DDL_POS_DF` | `"#EC DDL_POS_DEFINE"` | 📋 Planned | ⚡ Ready |
+| **157** | `zcl_skylint_check_157` | Standardize line break and positioning before `join` keywords in CDS entity sources | `DDL_POS_JN` | `"#EC DDL_POS_JOIN"` | 📋 Planned | ⚡ Ready |
+| **158** | `zcl_skylint_check_158` | Standardize line break and positioning of `select from` clause in CDS entities | `DDL_POS_SL` | `"#EC DDL_POS_SELECT"` | 📋 Planned | ⚡ Ready |
+| **159** | `zcl_skylint_check_159` | Enforce CamelCase naming conventions for CDS entity and element identifier names | `DDL_CAMEL_` | `"#EC DDL_CAMEL_CASE"` | 📋 Planned | ⚡ Ready |
+| **160** | `zcl_skylint_check_160` | Enforce consistent spacing around brackets `(`, `)`, `[`, `]` in CDS view definitions | `DDL_SPC_BR` | `"#EC DDL_SPACE_BRACKET"` | 📋 Planned | ⚡ Ready |
+| **161** | `zcl_skylint_check_161` | Enforce consistent spacing around operators and symbols (`:`, `.`, `$`, `+`, `-`) in CDS | `DDL_SPC_SG` | `"#EC DDL_SPACE_SIGNS"` | 📋 Planned | ⚡ Ready |
+| **162** | `zcl_skylint_check_162` | Detect frequent typos in CDS view comments and header documentation | `DDL_TYPO_C` | `"#EC DDL_TYPO_CHECK"` | 📋 Planned | ⚡ Ready |
+| **163** | `zcl_skylint_check_163` | Standardize CDS annotation layout and multi-line formatting (`@EndUserText.label`, etc.) | `DDL_ANNO_L` | `"#EC DDL_ANNO_LAYOUT"` | 📋 Planned | ⚡ Ready |
+| **164** | `zcl_skylint_check_164` | Rearrange and consolidate nested CDS annotations into hierarchical structure | `DDL_ANNO_N` | `"#EC DDL_ANNO_NESTING"` | 📋 Planned | ⚡ Ready |
+| **165** | `zcl_skylint_check_165` | Align `join` and `association` aliases and `on` conditions in CDS data sources | `DDL_ALN_DS` | `"#EC DDL_ALIGN_SOURCES"` | 📋 Planned | ⚡ Ready |
+| **166** | `zcl_skylint_check_166` | Align parameter declarations in CDS parameterized view definitions (`with parameters ...`) | `DDL_ALN_EP` | `"#EC DDL_ALIGN_PARAMS"` | 📋 Planned | ⚡ Ready |
+| **167** | `zcl_skylint_check_167` | Align element name list and `group by` field lists in CDS view entities | `DDL_ALN_FL` | `"#EC DDL_ALIGN_FIELDS"` | 📋 Planned | ⚡ Ready |
+| **168** | `zcl_skylint_check_168` | Align built-in SQL function parameters after arrow `=>` notation in CDS calculations | `DDL_ALN_FP` | `"#EC DDL_ALIGN_FUNC_PARAM"` | 📋 Planned | ⚡ Ready |
+| **169** | `zcl_skylint_check_169` | Align complex multi-line logical conditions (`and`, `or`) in CDS `where` and `on` clauses | `DDL_ALN_LE` | `"#EC DDL_ALIGN_LOGIC"` | 📋 Planned | ⚡ Ready |
+| **170** | `zcl_skylint_check_170` | Align key elements, non-key fields, and `as` aliases in CDS select projection list | `DDL_ALN_SL` | `"#EC DDL_ALIGN_SELECT"` | 📋 Planned | ⚡ Ready |
+| **171** | `zcl_skylint_check_171` | Align parameterized data source input parameters in CDS view `from` clauses | `DDL_ALN_SP` | `"#EC DDL_ALIGN_SRC_PARAM"` | 📋 Planned | ⚡ Ready |
+| **172** | `zcl_skylint_check_172` | Standardize CDS Cardinality specifications (`[1..1]`, `[0..*]`, `[1..*]`) for associations | `DDL_CARDIN` | `"#EC DDL_CARDINALITY"` | 📋 Planned | ⚡ Ready |
+| **173** | `zcl_skylint_check_173` | Detect obsolete `DEFINE VIEW` syntax; enforce modern `DEFINE VIEW ENTITY` in ABAP Cloud CDS | `DDL_V_ENTI` | `"#EC DDL_VIEW_ENTITY"` | 📋 Planned | ⚡ Ready |
 
 ---
 

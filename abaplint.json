@@ -17,8 +17,16 @@
   },
   "dependencies": [
     {
-      "folder": "/deps/*",
-      "files": "/src/**/*.*"
+      "folder": "/deps/open-abap-core",
+      "files": "/**/*.*"
+    },
+    {
+      "folder": "/deps/open-abap-ci",
+      "files": "/**/*.*"
+    },
+    {
+      "folder": "/deps/steampunk-2305-api",
+      "files": "/**/*.*"
     }
   ],
   "syntax": {

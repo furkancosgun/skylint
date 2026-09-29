@@ -149,7 +149,7 @@ CLASS zcl_skylint_check_030 IMPLEMENTATION.
               rv_res = abap_true.
             ENDIF.
           ENDIF.
-        CATCH cx_static_check.
+        CATCH cx_root.
           RETURN.
       ENDTRY.
     ENDIF.
@@ -181,10 +181,14 @@ CLASS zcl_skylint_check_030 IMPLEMENTATION.
     IF lv_str CS '\'.
       SPLIT lv_str AT '\' INTO TABLE lt_parts.
       LOOP AT lt_parts INTO lv_str.
-        IF lv_str CP 'CLASS=*' OR lv_str CP 'TY:*'.
+        IF lv_str CP 'CLASS=*'.
           ev_class_name = lv_str+6.
-        ELSEIF lv_str CP 'METHOD=*' OR lv_str CP 'ME:*'.
+        ELSEIF lv_str CP 'TY:*'.
+          ev_class_name = lv_str+3.
+        ELSEIF lv_str CP 'METHOD=*'.
           ev_meth_name = lv_str+7.
+        ELSEIF lv_str CP 'ME:*'.
+          ev_meth_name = lv_str+3.
         ENDIF.
       ENDLOOP.
     ENDIF.
