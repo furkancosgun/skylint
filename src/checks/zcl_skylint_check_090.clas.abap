@@ -39,7 +39,7 @@ CLASS zcl_skylint_check_090 IMPLEMENTATION.
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
         lv_lexeme = <ls_token>-lexeme.
-        IF lv_lexeme CP '*+*(#*)' OR lv_lexeme CP '*+#(#*)'.
+        IF lv_lexeme CS '+' AND lv_lexeme CS '(' AND lv_lexeme CS ')'.
           report_statement( is_statement    = <ls_statement>
                             iv_finding_code = c_finding_codes-offset_magic ).
           EXIT.

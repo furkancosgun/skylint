@@ -28,7 +28,7 @@ CLASS ltcl_check_090 IMPLEMENTATION.
       object   = cl_ci_atc_unit_driver=>get_method_object(
                    VALUE #( class  = c_test_class
                             method = c_methods-with_pseudo_comments ) )
-      position = VALUE #( line = 12 column = 4 ) ).
+      position = VALUE #( line = 5 column = 4 ) ).
 
     cl_ci_atc_unit_driver=>create_asserter( )->check_and_assert(
         check             = NEW zcl_skylint_check_090( )
