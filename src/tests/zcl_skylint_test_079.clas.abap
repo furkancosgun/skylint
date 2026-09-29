@@ -12,24 +12,33 @@ ENDCLASS.
 CLASS zcl_skylint_test_079 IMPLEMENTATION.
   METHOD without_pseudo_comments.
     TRY.
+        TRY.
+            RETURN.
+          CATCH cx_static_check.
+            RETURN.
+        ENDTRY.
+      CATCH cx_root.
         RETURN.
-      CATCH cx_static_check.
     ENDTRY.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
     TRY.
+        TRY. "#EC AVOID_NESTED_TRY
+            RETURN.
+          CATCH cx_static_check.
+            RETURN.
+        ENDTRY.
+      CATCH cx_root.
         RETURN.
-      CATCH cx_static_check. "#EC EMPTY_CATCH_BLOCK
     ENDTRY.
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lv_handled TYPE abap_bool.
     TRY.
         RETURN.
       CATCH cx_static_check.
-        lv_handled = abap_true.
+        RETURN.
     ENDTRY.
   ENDMETHOD.
 ENDCLASS.

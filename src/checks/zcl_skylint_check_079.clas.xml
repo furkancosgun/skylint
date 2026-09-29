@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_079</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Empty CATCH block smell (079)</DESCRIPT>
+    <DESCRIPT>skylint: Avoid nested TRY blocks (079)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

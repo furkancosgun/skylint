@@ -22,20 +22,20 @@ CLASS ltcl_check_079 IMPLEMENTATION.
       object   = cl_ci_atc_unit_driver=>get_method_object(
                    VALUE #( class  = c_test_class
                             method = c_methods-without_pseudo_comments ) )
-      position = VALUE #( line = 4 column = 6 ) ).
+      position = VALUE #( line = 3 column = 8 ) ).
 
     ls_loc_with_pc = VALUE #(
       object   = cl_ci_atc_unit_driver=>get_method_object(
                    VALUE #( class  = c_test_class
                             method = c_methods-with_pseudo_comments ) )
-      position = VALUE #( line = 4 column = 6 ) ).
+      position = VALUE #( line = 3 column = 8 ) ).
 
     cl_ci_atc_unit_driver=>create_asserter( )->check_and_assert(
         check             = NEW zcl_skylint_check_079( )
         object            = VALUE #( type = 'CLAS' name = c_test_class )
-        expected_findings = VALUE #( ( code     = zcl_skylint_check_079=>c_finding_codes-catch_empty
+        expected_findings = VALUE #( ( code     = zcl_skylint_check_079=>c_finding_codes-nested_try
                                        location = ls_loc_no_pc )
-                                     ( code     = zcl_skylint_check_079=>c_finding_codes-catch_empty
+                                     ( code     = zcl_skylint_check_079=>c_finding_codes-nested_try
                                        location = ls_loc_with_pc ) )
         asserter_config   = VALUE #( quickfixes = abap_false ) ).
   ENDMETHOD.

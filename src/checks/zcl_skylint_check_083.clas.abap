@@ -1,0 +1,43 @@
+CLASS zcl_skylint_check_083 DEFINITION
+  PUBLIC
+  INHERITING FROM zcl_skylint_check_base
+  CREATE PUBLIC.
+
+  PUBLIC SECTION.
+    CONSTANTS:
+      BEGIN OF c_finding_codes,
+        avoid_form TYPE if_ci_atc_check=>ty_finding_code VALUE 'AVOID_FORM',
+      END OF c_finding_codes.
+
+    METHODS constructor.
+
+  PROTECTED SECTION.
+    METHODS check REDEFINITION.
+
+  PRIVATE SECTION.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_FORM_ROUTINE'.
+ENDCLASS.
+
+
+CLASS zcl_skylint_check_083 IMPLEMENTATION.
+  METHOD constructor.
+    super->constructor(
+        VALUE #( description       = 'Avoid obsolete FORM routines; use modern methods in ABAP Cloud'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #(
+                     ( code           = c_finding_codes-avoid_form
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Avoid obsolete FORM/PERFORM subroutines; use methods instead'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
+  ENDMETHOD.
+
+  METHOD check.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
+         WHERE keyword = 'PERFORM'.
+      report_statement( is_statement    = <ls_statement>
+                        iv_finding_code = c_finding_codes-avoid_form ).
+    ENDLOOP.
+  ENDMETHOD.
+ENDCLASS.
