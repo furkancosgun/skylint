@@ -27,7 +27,7 @@ skylint/
 │   │   ├── zcl_skylint_check_meta_data.clas.abap# ATC metadata descriptor & pseudo-comment resolver
 │   │   └── zcx_skylint_error.clas.abap          # Core exception class
 │   │
-│   ├── checks/                                   # 60 Modular ATC Check Implementations (001 - 060)
+│   ├── checks/                                   # 80 Modular ATC Check Implementations (001 - 080)
 │   │   ├── zcl_skylint_check_001.clas.abap      # Check class implementation
 │   │   ├── zcl_skylint_check_001.clas.xml       # abapGit XML metadata (<WITH_UNIT_TESTS>X</WITH_UNIT_TESTS>)
 │   │   └── zcl_skylint_check_001.clas.testclasses.abap # ATC Unit Test Driver assertion
@@ -163,34 +163,34 @@ Modern literal forms, table expressions, functional constructs, and typing clean
 
 | ID | Rule Name & Class | Description | Finding Code | Pseudo-Comment | Status | QuickFix |
 |:---:|---|---|:---:|:---:|:---:|:---:|
-| **061** | `zcl_skylint_check_061` | Prefer backtick string literals (``` `text` ```) over single quotes (`'text'`) for `STRING` types | `BACKTICK` | `"#EC STRING_BACKTICK"` | 📋 Planned | ⚡ Ready |
-| **062** | `zcl_skylint_check_062` | Avoid hardcoded magic numbers (`IF status = 4.`); recommend named constants | `MAGIC_NUM` | `"#EC MAGIC_NUMBER"` | 📋 Planned | — |
-| **063** | `zcl_skylint_check_063` | Prefer modern table expressions (`wa = itab[ 1 ]`) over `READ TABLE itab INDEX 1` | `TAB_EXPR` | `"#EC TABLE_EXPR"` | 📋 Planned | ⚡ Ready |
-| **064** | `zcl_skylint_check_064` | Prefer `INSERT ... INTO TABLE` over `APPEND` for generic/hashed/sorted table safety | `PREF_INSRT` | `"#EC PREFER_INSERT"` | 📋 Planned | ⚡ Ready |
-| **065** | `zcl_skylint_check_065` | Avoid obsolete control statements (`ON CHANGE OF`, `SUM`, `AT NEW`) inside `LOOP` | `OBS_L_CTRL` | `"#EC AVOID_LOOP_CTRL"` | 📋 Planned | — |
-| **066** | `zcl_skylint_check_066` | Prefer `COND #( ... )` / `SWITCH #( ... )` expressions over verbose multi-branch variable assignments | `COND_SWTCH` | `"#EC PREFER_COND"` | 📋 Planned | ⚡ Ready |
-| **067** | `zcl_skylint_check_067` | Avoid `LIKE` referencing internal data types; enforce explicit `TYPE` | `AVOID_LIKE` | `"#EC AVOID_LIKE_TYPE"` | 📋 Planned | ⚡ Ready |
-| **068** | `zcl_skylint_check_068` | Ensure `constructor` redefinition explicitly calls `super->constructor( )` | `SUPER_CALL` | `"#EC CONSTRUCTOR_SUPER"` | 📋 Planned | ⚡ Ready |
-| **069** | `zcl_skylint_check_069` | Prefer `REDUCE #( ... )` expression over manual loop aggregation into scalar variables | `PREF_REDUC` | `"#EC PREFER_REDUCE"` | 📋 Planned | ⚡ Ready |
-| **070** | `zcl_skylint_check_070` | Avoid generic `FIELD-SYMBOLS <fs> TYPE ANY` when specific data type is statically known | `GEN_FS_TYP` | `"#EC GENERIC_FS"` | 📋 Planned | — |
+| **061** | [zcl_skylint_check_061](src/checks/zcl_skylint_check_061.clas.abap) | Prefer backtick string literals (``` `text` ```) over single quotes (`'text'`) for `STRING` types | `BACKTICK` | `"#EC STRING_BACKTICK"` | ✅ Done | ⚡ Ready |
+| **062** | [zcl_skylint_check_062](src/checks/zcl_skylint_check_062.clas.abap) | Avoid hardcoded magic numbers (`IF status = 4.`); recommend named constants | `MAGIC_NUM` | `"#EC MAGIC_NUMBER"` | ✅ Done | — |
+| **063** | [zcl_skylint_check_063](src/checks/zcl_skylint_check_063.clas.abap) | Prefer modern table expressions (`wa = itab[ 1 ]`) over `READ TABLE itab INDEX 1` | `TAB_EXPR` | `"#EC TABLE_EXPR"` | ✅ Done | ⚡ Ready |
+| **064** | [zcl_skylint_check_064](src/checks/zcl_skylint_check_064.clas.abap) | Prefer `INSERT ... INTO TABLE` over `APPEND` for generic/hashed/sorted table safety | `PREF_INSRT` | `"#EC PREFER_INSERT"` | ✅ Done | ⚡ Ready |
+| **065** | [zcl_skylint_check_065](src/checks/zcl_skylint_check_065.clas.abap) | Avoid obsolete control statements (`ON CHANGE OF`, `SUM`, `AT NEW`) inside `LOOP` | `OBS_L_CTRL` | `"#EC AVOID_LOOP_CTRL"` | ✅ Done | — |
+| **066** | [zcl_skylint_check_066](src/checks/zcl_skylint_check_066.clas.abap) | Prefer `COND #( ... )` / `SWITCH #( ... )` expressions over verbose multi-branch variable assignments | `COND_SWTCH` | `"#EC PREFER_COND"` | ✅ Done | ⚡ Ready |
+| **067** | [zcl_skylint_check_067](src/checks/zcl_skylint_check_067.clas.abap) | Avoid `LIKE` referencing internal data types; enforce explicit `TYPE` | `AVOID_LIKE` | `"#EC AVOID_LIKE_TYPE"` | ✅ Done | ⚡ Ready |
+| **068** | [zcl_skylint_check_068](src/checks/zcl_skylint_check_068.clas.abap) | Keep constructors clean; avoid heavy business logic/loops/DB access (configurable max statements) | `CTOR_LOGIC` | `"#EC CONSTRUCTOR_LOGIC"` | ✅ Done | ⚡ Ready |
+| **069** | [zcl_skylint_check_069](src/checks/zcl_skylint_check_069.clas.abap) | Prefer functional `REDUCE #( ... )` expression over manual loop aggregation (arithmetic/string/bitwise) | `PREF_REDUC` | `"#EC PREFER_REDUCE"` | ✅ Done | ⚡ Ready |
+| **070** | [zcl_skylint_check_070](src/checks/zcl_skylint_check_070.clas.abap) | Avoid generic `FIELD-SYMBOLS` types (`ANY`, `DATA`, `CLIKE`, `CSEQUENCE`, generic tables); declare concrete type | `GEN_FS_TYP` | `"#EC GENERIC_FS"` | ✅ Done | — |
 
 ---
 
 ### 🟫 Level 8: Object-Oriented Design & Clean Interfaces (071 - 080)
-Encapsulation, component coupling, dependency injection, and signature naming conventions.
+Encapsulation, component coupling, exception handling, and clean interface design.
 
 | ID | Rule Name & Class | Description | Finding Code | Pseudo-Comment | Status | QuickFix |
 |:---:|---|---|:---:|:---:|:---:|:---:|
-| **071** | `zcl_skylint_check_071` | Avoid direct instantiation (`NEW cl_service( )`) in business logic; promote Constructor Injection | `NO_DIRECT_` | `"#EC AVOID_DIRECT_NEW"` | 📋 Planned | — |
-| **072** | `zcl_skylint_check_072` | Enforce class definition section ordering (`PUBLIC` -> `PROTECTED` -> `PRIVATE`) | `SECT_ORDER` | `"#EC SECTION_ORDER"` | 📋 Planned | ⚡ Ready |
-| **073** | `zcl_skylint_check_073` | Avoid static-only global classes; promote instantiable interface-based design | `STAT_CLASS` | `"#EC AVOID_STATIC_CLS"` | 📋 Planned | — |
-| **074** | `zcl_skylint_check_074` | Prefer interface methods over direct public class methods for decoupling | `INTF_METH` | `"#EC PREFER_INTERFACE"` | 📋 Planned | — |
-| **075** | `zcl_skylint_check_075` | Avoid deep class inheritance hierarchies (inheritance depth > 3) | `DEEP_INHRT` | `"#EC DEEP_INHERITANCE"` | 📋 Planned | — |
-| **076** | `zcl_skylint_check_076` | Ensure test double classes in program includes are marked `FOR TESTING` | `TEST_SCOPE` | `"#EC TEST_DOUBLE_SCOPE"` | 📋 Planned | ⚡ Ready |
-| **077** | `zcl_skylint_check_077` | Avoid unmodified `CHANGING` parameters in procedures; convert to `IMPORTING` | `UNCHG_PARM` | `"#EC UNMODIFIED_CHANGING"` | 📋 Planned | ⚡ Ready |
-| **078** | `zcl_skylint_check_078` | Enforce predicate naming (`IS_`, `HAS_`, `CAN_`, `CHECK_`) on boolean-returning methods | `BOOL_NAME` | `"#EC BOOL_METHOD_NAME"` | 📋 Planned | — |
-| **079** | `zcl_skylint_check_079` | Avoid passing `me` self-reference outside constructor during object initialization | `ME_IN_INIT` | `"#EC ME_IN_CONSTRUCTOR"` | 📋 Planned | — |
-| **080** | `zcl_skylint_check_080` | Limit total number of member attributes in a class (<= 15 attributes) | `ATTR_COUNT` | `"#EC MAX_CLASS_ATTR"` | 📋 Planned | — |
+| **071** | [zcl_skylint_check_071](src/checks/zcl_skylint_check_071.clas.abap) | Avoid static-only classes; promote instantiable interface-based design | `STAT_CLASS` | `"#EC AVOID_STATIC_CLS"` | ✅ Done | — |
+| **072** | [zcl_skylint_check_072](src/checks/zcl_skylint_check_072.clas.abap) | Avoid unmodified `CHANGING` parameters in procedures; convert to `IMPORTING` | `UNCHG_PARM` | `"#EC UNMODIFIED_CHANGING"` | ✅ Done | ⚡ Ready |
+| **073** | [zcl_skylint_check_073](src/checks/zcl_skylint_check_073.clas.abap) | Enforce predicate naming (`IS_`, `HAS_`, `CAN_`, `CHECK_`) on boolean-returning methods | `BOOL_NAME` | `"#EC BOOL_METHOD_NAME"` | ✅ Done | — |
+| **074** | [zcl_skylint_check_074](src/checks/zcl_skylint_check_074.clas.abap) | Avoid deep class inheritance hierarchies (inheritance depth > 3) | `DEEP_INHRT` | `"#EC DEEP_INHERITANCE"` | ✅ Done | — |
+| **075** | [zcl_skylint_check_075](src/checks/zcl_skylint_check_075.clas.abap) | Limit total number of member attributes in a class (configurable, default 15) | `ATTR_COUNT` | `"#EC MAX_CLASS_ATTR"` | ✅ Done | — |
+| **076** | [zcl_skylint_check_076](src/checks/zcl_skylint_check_076.clas.abap) | Avoid mutable `DATA` declarations in interfaces; allow only `CONSTANTS` | `INTF_DATA` | `"#EC INTERFACE_DATA"` | ✅ Done | — |
+| **077** | [zcl_skylint_check_077](src/checks/zcl_skylint_check_077.clas.abap) | Avoid generic `CATCH cx_root`; catch specific exception classes instead | `CATCH_ROOT` | `"#EC AVOID_CX_ROOT"` | ✅ Done | — |
+| **078** | [zcl_skylint_check_078](src/checks/zcl_skylint_check_078.clas.abap) | Avoid obsolete `MESSAGE ... RAISING`; raise class-based exceptions | `MSG_RAISE` | `"#EC AVOID_MSG_RAISING"` | ✅ Done | ⚡ Ready |
+| **079** | [zcl_skylint_check_079](src/checks/zcl_skylint_check_079.clas.abap) | Empty CATCH block detected; handle or document why exception is ignored | `CATCH_EMPTY` | `"#EC EMPTY_CATCH_BLOCK"` | ✅ Done | — |
+| **080** | [zcl_skylint_check_080](src/checks/zcl_skylint_check_080.clas.abap) | Avoid raising SAP internal system exceptions (`cx_sy_*`); use application exceptions | `RAISE_SYS` | `"#EC AVOID_RAISE_SY_EXC"` | ✅ Done | — |
 
 ---
 
