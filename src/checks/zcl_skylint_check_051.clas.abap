@@ -69,7 +69,6 @@ CLASS zcl_skylint_check_051 IMPLEMENTATION.
     " 2. CLEAR statement: CLEAR sy-subrc.
     IF lv_tok1 = 'CLEAR' AND ( lv_tok2 CP 'SY-*' OR lv_tok2 CP 'SYST-*' ).
       rv_res = abap_true.
-      RETURN.
     ENDIF.
   ENDMETHOD.
 ENDCLASS.
