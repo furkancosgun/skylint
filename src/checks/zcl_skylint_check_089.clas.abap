@@ -51,11 +51,10 @@ CLASS zcl_skylint_check_089 IMPLEMENTATION.
         ENDIF.
       ENDLOOP.
 
-      IF lv_is_testing = abap_true AND lv_method_name IS NOT INITIAL.
-        IF NOT ( lv_method_name CP 'TEST_*' OR lv_method_name CP 'SHOULD_*' OR lv_method_name CP 'CHECK_*' ).
-          report_statement( is_statement    = <ls_statement>
-                            iv_finding_code = c_finding_codes-test_name ).
-        ENDIF.
+      IF lv_is_testing = abap_true AND lv_method_name IS NOT INITIAL
+          AND NOT ( lv_method_name CP 'TEST_*' OR lv_method_name CP 'SHOULD_*' OR lv_method_name CP 'CHECK_*' ).
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-test_name ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.

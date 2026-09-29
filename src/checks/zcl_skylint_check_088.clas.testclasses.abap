@@ -28,7 +28,7 @@ CLASS ltcl_check_088 IMPLEMENTATION.
       object   = cl_ci_atc_unit_driver=>get_method_object(
                    VALUE #( class  = c_test_class
                             method = c_methods-with_pseudo_comments ) )
-      position = VALUE #( line = 15 column = 7 ) ).
+      position = VALUE #( line = 6 column = 7 ) ).
 
     cl_ci_atc_unit_driver=>create_asserter( )->check_and_assert(
         check             = NEW zcl_skylint_check_088( )
