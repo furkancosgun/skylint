@@ -49,6 +49,24 @@ CLASS zcl_skylint_check_base DEFINITION
                 iv_case_sensitive TYPE abap_bool DEFAULT abap_false
       RETURNING VALUE(rv_matched) TYPE abap_bool.
 
+    METHODS token_has_ref
+      IMPORTING is_token      TYPE if_ci_atc_source_code_provider=>ty_token
+                iv_kind       TYPE if_ci_atc_source_code_provider=>ty_reference_kind
+      RETURNING VALUE(rv_has) TYPE abap_bool.
+
+    METHODS statement_has_db_access
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_has) TYPE abap_bool.
+
+    METHODS statement_is_method_call
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_has) TYPE abap_bool.
+
+    METHODS has_token_lexeme
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_lexeme     TYPE string
+      RETURNING VALUE(rv_has) TYPE abap_bool.
+
     METHODS report_statement
       IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
                 iv_finding_code TYPE if_ci_atc_check=>ty_finding_code
@@ -396,5 +414,75 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
     IF lv_actual = lv_expected.
       rv_matched = abap_true.
     ENDIF.
+  ENDMETHOD.
+
+  METHOD token_has_ref.
+    FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+
+    rv_has = abap_false.
+
+    LOOP AT is_token-references ASSIGNING <ls_ref>
+         WHERE kind = iv_kind.
+      rv_has = abap_true.
+      RETURN.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD statement_has_db_access.
+    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_ref TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+
+    rv_has = abap_false.
+
+    LOOP AT is_statement-tokens INTO ls_tok.
+      LOOP AT ls_tok-references INTO ls_ref.
+        IF    ls_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_database
+           OR ls_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-write_database.
+          rv_has = abap_true.
+          RETURN.
+        ENDIF.
+      ENDLOOP.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD statement_is_method_call.
+    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    rv_has = abap_false.
+
+    CASE is_statement-keyword.
+      WHEN '+CALL_METHOD' OR 'CALL'.
+        rv_has = abap_true.
+        RETURN.
+    ENDCASE.
+
+    LOOP AT is_statement-tokens INTO ls_tok.
+      IF token_has_ref( is_token = ls_tok
+                        iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-method ) = abap_true.
+        rv_has = abap_true.
+        RETURN.
+      ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD has_token_lexeme.
+    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_first TYPE string.
+
+    rv_has = abap_false.
+
+    LOOP AT is_statement-tokens INTO ls_tok.
+      IF ls_tok-lexeme IS INITIAL.
+        CONTINUE.
+      ENDIF.
+      lv_first = ls_tok-lexeme(1).
+      IF lv_first = '''' OR lv_first = '`'.
+        CONTINUE.
+      ENDIF.
+      IF to_upper( ls_tok-lexeme ) = to_upper( iv_lexeme ).
+        rv_has = abap_true.
+        RETURN.
+      ENDIF.
+    ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

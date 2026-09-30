@@ -37,6 +37,6 @@ CLASS ltcl_check_007 IMPLEMENTATION.
         expected_findings = VALUE #( code = zcl_skylint_check_007=>c_finding_codes-omit_exporting
                                      ( location = ls_loc_no_pc )
                                      ( location = ls_loc_with_pc ) )
-        asserter_config   = VALUE #( quickfixes = abap_false ) ).
+        asserter_config   = VALUE #( quickfixes = abap_true ) ).
   ENDMETHOD.
 ENDCLASS.

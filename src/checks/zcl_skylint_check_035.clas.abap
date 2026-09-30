@@ -204,14 +204,7 @@ CLASS zcl_skylint_check_035 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD has_token.
-    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
-
-    rv_res = abap_false.
-    LOOP AT is_statement-tokens INTO ls_tok.
-      IF ls_tok-lexeme = iv_lexeme.
-        rv_res = abap_true.
-        RETURN.
-      ENDIF.
-    ENDLOOP.
+    rv_res = has_token_lexeme( is_statement = is_statement
+                               iv_lexeme    = iv_lexeme ).
   ENDMETHOD.
 ENDCLASS.

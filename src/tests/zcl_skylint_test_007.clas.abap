@@ -26,7 +26,9 @@ CLASS zcl_skylint_test_007 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD valid_code.
+    DATA lv_txt TYPE string.
     helper( iv_val = 1 ).
     helper( 1 ).
+    lv_txt = 'EXPORTING'.
   ENDMETHOD.
 ENDCLASS.
