@@ -33,10 +33,13 @@ CLASS zcl_skylint_check_092 IMPLEMENTATION.
 
   METHOD check.
     DATA lv_count TYPE i.
-    DATA lv_idx   TYPE i.
-    FIELD-SYMBOLS <ls_last>       TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_first_exec> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_stmt>       TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_idx TYPE i.
+    DATA ls_last TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_first_exec TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_last_found TYPE abap_bool.
+    DATA lv_stmt_found TYPE abap_bool.
+    DATA lv_has_first TYPE abap_bool.
 
     lv_count = lines( is_procedure-statements ).
     IF lv_count < 3.
@@ -44,32 +47,52 @@ CLASS zcl_skylint_check_092 IMPLEMENTATION.
     ENDIF.
 
     " Check if last statement before ENDMETHOD is ENDIF
-    ASSIGN is_procedure-statements[ lv_count ] TO <ls_last>.
-    IF <ls_last>-keyword = 'ENDMETHOD' AND lv_count >= 2.
-      ASSIGN is_procedure-statements[ lv_count - 1 ] TO <ls_last>.
+    get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                  iv_index      = lv_count
+                        IMPORTING es_statement  = ls_last
+                                  ev_found      = lv_last_found ).
+    IF lv_last_found = abap_false.
+      RETURN.
+    ENDIF.
+    IF ls_last-keyword = 'ENDMETHOD' AND lv_count >= 2.
+      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                    iv_index      = lv_count - 1
+                          IMPORTING es_statement  = ls_last
+                                    ev_found      = lv_last_found ).
+      IF lv_last_found = abap_false.
+        RETURN.
+      ENDIF.
     ENDIF.
 
-    IF <ls_last>-keyword <> 'ENDIF'.
+    IF ls_last-keyword <> 'ENDIF'.
       RETURN.
     ENDIF.
 
     " Find first executable statement (skip DATA, TYPES, CONSTANTS, FIELD-SYMBOLS)
     lv_idx = 1.
+    lv_has_first = abap_false.
     WHILE lv_idx <= lv_count.
-      ASSIGN is_procedure-statements[ lv_idx ] TO <ls_stmt>.
-      IF     <ls_stmt>-keyword <> 'METHOD'
-         AND <ls_stmt>-keyword <> 'DATA'
-         AND <ls_stmt>-keyword <> 'TYPES'
-         AND <ls_stmt>-keyword <> 'CONSTANTS'
-         AND <ls_stmt>-keyword <> 'FIELD-SYMBOLS'.
-        ASSIGN <ls_stmt> TO <ls_first_exec>.
-        EXIT.
+      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                    iv_index      = lv_idx
+                          IMPORTING es_statement  = ls_stmt
+                                    ev_found      = lv_stmt_found ).
+      IF lv_stmt_found = abap_false.
+        lv_idx += 1.
+        CONTINUE.
       ENDIF.
-      lv_idx += 1.
+      CASE ls_stmt-keyword.
+        WHEN 'METHOD' OR 'DATA' OR 'TYPES' OR 'CONSTANTS' OR 'FIELD-SYMBOLS'.
+          lv_idx += 1.
+          CONTINUE.
+        WHEN OTHERS.
+          ls_first_exec = ls_stmt.
+          lv_has_first = abap_true.
+          EXIT.
+      ENDCASE.
     ENDWHILE.
 
-    IF <ls_first_exec> IS ASSIGNED AND <ls_first_exec>-keyword = 'IF'.
-      report_statement( is_statement    = <ls_first_exec>
+    IF lv_has_first = abap_true AND ls_first_exec-keyword = 'IF'.
+      report_statement( is_statement    = ls_first_exec
                         iv_finding_code = c_finding_codes-guard_method ).
     ENDIF.
   ENDMETHOD.

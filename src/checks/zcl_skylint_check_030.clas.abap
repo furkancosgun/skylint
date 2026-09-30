@@ -61,16 +61,22 @@ CLASS zcl_skylint_check_030 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD collect_static_methods.
-    DATA ls_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_name TYPE string.
+    DATA ls_stmt  TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_tok   TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_name  TYPE string.
+    DATA lv_found TYPE abap_bool.
 
     LOOP AT is_procedure-statements INTO ls_stmt WHERE keyword = 'CLASS-METHODS'.
       IF lines( ls_stmt-tokens ) >= 2.
-        ls_tok = ls_stmt-tokens[ 2 ].
-        lv_name = to_upper( ls_tok-lexeme ).
-        IF lv_name IS NOT INITIAL.
-          INSERT lv_name INTO TABLE mt_static_methods.
+        get_token_safe( EXPORTING is_statement = ls_stmt
+                                  iv_index     = 2
+                        IMPORTING es_token     = ls_tok
+                                  ev_found     = lv_found ).
+        IF lv_found = abap_true.
+          lv_name = to_upper( ls_tok-lexeme ).
+          IF lv_name IS NOT INITIAL.
+            INSERT lv_name INTO TABLE mt_static_methods.
+          ENDIF.
         ENDIF.
       ENDIF.
     ENDLOOP.

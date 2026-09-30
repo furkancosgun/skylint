@@ -49,12 +49,16 @@ CLASS zcl_skylint_check_055 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_unorder_select_up_to.
-    DATA lv_idx          TYPE i.
-    DATA lv_count        TYPE i.
-    DATA lv_lex          TYPE string.
-    DATA lv_next         TYPE string.
-    DATA lv_has_up_to    TYPE abap_bool.
+    DATA lv_idx TYPE i.
+    DATA lv_count TYPE i.
+    DATA lv_lex TYPE string.
+    DATA lv_next TYPE string.
+    DATA lv_has_up_to TYPE abap_bool.
     DATA lv_has_order_by TYPE abap_bool.
+    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_next_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found TYPE abap_bool.
+    DATA lv_found_next TYPE abap_bool.
 
     rv_res = abap_false.
     lv_has_up_to = abap_false.
@@ -63,11 +67,24 @@ CLASS zcl_skylint_check_055 IMPLEMENTATION.
 
     DO lv_count TIMES.
       lv_idx = sy-index.
-      lv_lex = to_upper( is_statement-tokens[ lv_idx ]-lexeme ).
+      get_token_safe( EXPORTING is_statement = is_statement
+                                 iv_index     = lv_idx
+                       IMPORTING es_token     = ls_token
+                                 ev_found     = lv_found ).
+      IF lv_found = abap_false.
+        CONTINUE.
+      ENDIF.
+      lv_lex = to_upper( ls_token-lexeme ).
 
       " Check for separate tokens 'UP' followed by 'TO'
       IF lv_lex = 'UP' AND lv_idx < lv_count.
-        lv_next = to_upper( is_statement-tokens[ lv_idx + 1 ]-lexeme ).
+        get_token_safe( EXPORTING is_statement = is_statement
+                                   iv_index     = lv_idx + 1
+                         IMPORTING es_token     = ls_next_token
+                                   ev_found     = lv_found_next ).
+      ENDIF.
+      IF lv_lex = 'UP' AND lv_idx < lv_count AND lv_found_next = abap_true.
+        lv_next = to_upper( ls_next_token-lexeme ).
         IF lv_next = 'TO'.
           lv_has_up_to = abap_true.
         ENDIF.
@@ -75,7 +92,13 @@ CLASS zcl_skylint_check_055 IMPLEMENTATION.
 
       " Check for separate tokens 'ORDER' followed by 'BY'
       IF lv_lex = 'ORDER' AND lv_idx < lv_count.
-        lv_next = to_upper( is_statement-tokens[ lv_idx + 1 ]-lexeme ).
+        get_token_safe( EXPORTING is_statement = is_statement
+                                   iv_index     = lv_idx + 1
+                         IMPORTING es_token     = ls_next_token
+                                   ev_found     = lv_found_next ).
+      ENDIF.
+      IF lv_lex = 'ORDER' AND lv_idx < lv_count AND lv_found_next = abap_true.
+        lv_next = to_upper( ls_next_token-lexeme ).
         IF lv_next = 'BY'.
           lv_has_order_by = abap_true.
         ENDIF.

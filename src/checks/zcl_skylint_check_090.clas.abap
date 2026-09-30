@@ -36,27 +36,58 @@ CLASS zcl_skylint_check_090 IMPLEMENTATION.
     DATA lv_tok2 TYPE string.
     DATA lv_tok3 TYPE string.
     DATA lv_tok4 TYPE string.
+    DATA ls_tok1 TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok2 TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok3 TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok4 TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found1 TYPE abap_bool.
+    DATA lv_found2 TYPE abap_bool.
+    DATA lv_found3 TYPE abap_bool.
+    DATA lv_found4 TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF    <ls_statement>-keyword = 'ADD'      OR <ls_statement>-keyword = 'SUBTRACT'
-         OR <ls_statement>-keyword = 'MULTIPLY' OR <ls_statement>-keyword = 'DIVIDE'.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-calc_assign ).
-        CONTINUE.
-      ENDIF.
-
-      IF lines( <ls_statement>-tokens ) >= 5.
-        lv_tok1 = to_upper( <ls_statement>-tokens[ 1 ]-lexeme ).
-        lv_tok2 = to_upper( <ls_statement>-tokens[ 2 ]-lexeme ).
-        lv_tok3 = to_upper( <ls_statement>-tokens[ 3 ]-lexeme ).
-        lv_tok4 = to_upper( <ls_statement>-tokens[ 4 ]-lexeme ).
-
-        IF lv_tok2 = '=' AND lv_tok1 = lv_tok3 AND ( lv_tok4 = '+' OR lv_tok4 = '-' OR lv_tok4 = '*' OR lv_tok4 = '/' ).
+      CASE <ls_statement>-keyword.
+        WHEN 'ADD' OR 'SUBTRACT' OR 'MULTIPLY' OR 'DIVIDE'.
           report_statement( is_statement    = <ls_statement>
                             iv_finding_code = c_finding_codes-calc_assign ).
-        ENDIF.
-      ENDIF.
+        WHEN OTHERS.
+          get_token_safe( EXPORTING is_statement = <ls_statement>
+                                    iv_index     = 1
+                          IMPORTING es_token     = ls_tok1
+                                    ev_found     = lv_found1 ).
+          get_token_safe( EXPORTING is_statement = <ls_statement>
+                                    iv_index     = 2
+                          IMPORTING es_token     = ls_tok2
+                                    ev_found     = lv_found2 ).
+          get_token_safe( EXPORTING is_statement = <ls_statement>
+                                    iv_index     = 3
+                          IMPORTING es_token     = ls_tok3
+                                    ev_found     = lv_found3 ).
+          get_token_safe( EXPORTING is_statement = <ls_statement>
+                                    iv_index     = 4
+                          IMPORTING es_token     = ls_tok4
+                                    ev_found     = lv_found4 ).
+          IF lv_found1 = abap_false OR lv_found2 = abap_false.
+            CONTINUE.
+          ENDIF.
+          IF lv_found3 = abap_false OR lv_found4 = abap_false.
+            CONTINUE.
+          ENDIF.
+          lv_tok1 = to_upper( ls_tok1-lexeme ).
+          lv_tok2 = to_upper( ls_tok2-lexeme ).
+          lv_tok3 = to_upper( ls_tok3-lexeme ).
+          lv_tok4 = to_upper( ls_tok4-lexeme ).
+          IF lv_tok2 = '=' AND lv_tok1 = lv_tok3.
+            CASE lv_tok4.
+              WHEN '+' OR '-' OR '*' OR '/'.
+                report_statement( is_statement    = <ls_statement>
+                                  iv_finding_code = c_finding_codes-calc_assign ).
+              WHEN OTHERS.
+                CONTINUE.
+            ENDCASE.
+          ENDIF.
+      ENDCASE.
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

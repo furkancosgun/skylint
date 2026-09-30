@@ -58,22 +58,27 @@ CLASS zcl_skylint_check_023 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_when_others.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found TYPE abap_bool.
 
     rv_is = abap_false.
     IF lines( is_statement-tokens ) >= 2.
-      ASSIGN is_statement-tokens[ 2 ] TO <ls_token>.
-      IF sy-subrc = 0 AND to_upper( <ls_token>-lexeme ) = 'OTHERS'.
+      get_token_safe( EXPORTING is_statement = is_statement
+                                iv_index     = 2
+                      IMPORTING es_token     = ls_token
+                                ev_found     = lv_found ).
+      IF lv_found = abap_true AND to_upper( ls_token-lexeme ) = 'OTHERS'.
         rv_is = abap_true.
       ENDIF.
     ENDIF.
   ENDMETHOD.
 
   METHOD count_when_branches.
-    DATA lv_total   TYPE i.
-    DATA lv_fwd_idx TYPE i.
-    DATA lv_depth   TYPE i.
-    FIELD-SYMBOLS <ls_fwd_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_total    TYPE i.
+    DATA lv_fwd_idx  TYPE i.
+    DATA lv_depth    TYPE i.
+    DATA ls_fwd_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_found    TYPE abap_bool.
 
     rv_cnt = 0.
     lv_total = lines( is_procedure-statements ).
@@ -81,12 +86,15 @@ CLASS zcl_skylint_check_023 IMPLEMENTATION.
     lv_fwd_idx = iv_start_idx + 1.
 
     WHILE lv_fwd_idx <= lv_total.
-      ASSIGN is_procedure-statements[ lv_fwd_idx ] TO <ls_fwd_stmt>.
-      IF sy-subrc <> 0.
+      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                    iv_index       = lv_fwd_idx
+                          IMPORTING es_statement   = ls_fwd_stmt
+                                    ev_found       = lv_found ).
+      IF lv_found = abap_false.
         EXIT.
       ENDIF.
 
-      CASE <ls_fwd_stmt>-keyword.
+      CASE ls_fwd_stmt-keyword.
         WHEN 'CASE'.
           lv_depth += 1.
 
@@ -98,7 +106,7 @@ CLASS zcl_skylint_check_023 IMPLEMENTATION.
           ENDIF.
 
         WHEN 'WHEN'.
-          IF lv_depth = 0 AND is_when_others( <ls_fwd_stmt> ) = abap_false.
+          IF lv_depth = 0 AND is_when_others( ls_fwd_stmt ) = abap_false.
             rv_cnt += 1.
           ENDIF.
       ENDCASE.

@@ -49,12 +49,15 @@ CLASS zcl_skylint_check_027 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_raise_exception_type.
-    DATA lv_total TYPE i.
-    DATA lv_idx   TYPE i.
-    DATA lv_tok   TYPE string.
-    DATA lv_next  TYPE string.
-    FIELD-SYMBOLS <ls_t> TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_n> TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_total      TYPE i.
+    DATA lv_idx        TYPE i.
+    DATA lv_next_idx   TYPE i.
+    DATA lv_tok        TYPE string.
+    DATA lv_next       TYPE string.
+    DATA ls_t          TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_n          TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found      TYPE abap_bool.
+    DATA lv_found_next TYPE abap_bool.
 
     rv_res = abap_false.
     lv_total = lines( is_statement-tokens ).
@@ -64,16 +67,23 @@ CLASS zcl_skylint_check_027 IMPLEMENTATION.
 
     lv_idx = 1.
     WHILE lv_idx < lv_total.
-      ASSIGN is_statement-tokens[ lv_idx ] TO <ls_t>.
-      IF sy-subrc <> 0.
+      get_token_safe( EXPORTING is_statement = is_statement
+                                iv_index     = lv_idx
+                      IMPORTING es_token     = ls_t
+                                ev_found     = lv_found ).
+      IF lv_found = abap_false.
         EXIT.
       ENDIF.
 
-      lv_tok = to_upper( <ls_t>-lexeme ).
+      lv_tok = to_upper( ls_t-lexeme ).
       IF lv_tok = 'TYPE'.
-        ASSIGN is_statement-tokens[ lv_idx + 1 ] TO <ls_n>.
-        IF sy-subrc = 0.
-          lv_next = <ls_n>-lexeme.
+        lv_next_idx = lv_idx + 1.
+        get_token_safe( EXPORTING is_statement = is_statement
+                                  iv_index     = lv_next_idx
+                        IMPORTING es_token     = ls_n
+                                  ev_found     = lv_found_next ).
+        IF lv_found_next = abap_true.
+          lv_next = ls_n-lexeme.
           IF lv_next CP '*( *' OR lv_next CP '(*)' OR lv_next(1) = '('.
             " Dynamic type: TYPE (lv_cls)
             RETURN.

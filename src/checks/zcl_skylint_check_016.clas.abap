@@ -38,28 +38,36 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_total    TYPE i.
-    DATA lv_idx      TYPE i.
+    DATA lv_total TYPE i.
+    DATA lv_idx TYPE i.
     DATA lv_next_idx TYPE i.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_next_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_next_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_found TYPE abap_bool.
+    DATA lv_found_next TYPE abap_bool.
 
     lv_total = lines( is_procedure-statements ).
 
     DO lv_total TIMES.
       lv_idx = sy-index.
-      ASSIGN is_procedure-statements[ lv_idx ] TO <ls_statement>.
-      IF sy-subrc <> 0.
+      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                    iv_index       = lv_idx
+                          IMPORTING es_statement   = ls_statement
+                                    ev_found       = lv_found ).
+      IF lv_found = abap_false.
         EXIT.
       ENDIF.
 
       lv_next_idx = lv_idx + 1.
       IF lv_next_idx <= lv_total.
-        ASSIGN is_procedure-statements[ lv_next_idx ] TO <ls_next_stmt>.
-        IF sy-subrc = 0.
-          IF is_empty_control_block( iv_current_kw = <ls_statement>-keyword
-                                     iv_next_kw    = <ls_next_stmt>-keyword ) = abap_true.
-            report_statement( is_statement    = <ls_statement>
+        get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                      iv_index       = lv_next_idx
+                            IMPORTING es_statement   = ls_next_stmt
+                                      ev_found       = lv_found_next ).
+        IF lv_found_next = abap_true.
+          IF is_empty_control_block( iv_current_kw = ls_statement-keyword
+                                     iv_next_kw    = ls_next_stmt-keyword ) = abap_true.
+            report_statement( is_statement    = ls_statement
                               iv_finding_code = c_finding_codes-empty_control_block ).
           ENDIF.
         ENDIF.

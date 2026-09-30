@@ -53,11 +53,20 @@ CLASS zcl_skylint_check_054 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_unescaped_host_var.
-    DATA lv_idx      TYPE i.
-    DATA lv_count    TYPE i.
-    DATA lv_tok      TYPE string.
-    DATA lv_next     TYPE string.
+    DATA lv_idx TYPE i.
+    DATA lv_count TYPE i.
+    DATA lv_tok TYPE string.
+    DATA lv_next TYPE string.
     DATA lv_in_where TYPE abap_bool.
+    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_next_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_token2 TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_token5 TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found TYPE abap_bool.
+    DATA lv_found_next TYPE abap_bool.
+    DATA lv_found2 TYPE abap_bool.
+    DATA lv_found5 TYPE abap_bool.
+    DATA lv_next_up TYPE string.
 
     rv_res = abap_false.
     lv_in_where = abap_false.
@@ -65,7 +74,14 @@ CLASS zcl_skylint_check_054 IMPLEMENTATION.
 
     DO lv_count TIMES.
       lv_idx = sy-index.
-      lv_tok = to_upper( is_statement-tokens[ lv_idx ]-lexeme ).
+      get_token_safe( EXPORTING is_statement = is_statement
+                                 iv_index     = lv_idx
+                       IMPORTING es_token     = ls_token
+                                 ev_found     = lv_found ).
+      IF lv_found = abap_false.
+        CONTINUE.
+      ENDIF.
+      lv_tok = to_upper( ls_token-lexeme ).
 
       " 1. Track WHERE / HAVING / SET clause
       IF lv_tok = 'WHERE' OR lv_tok = 'HAVING' OR lv_tok = 'SET'.
@@ -74,21 +90,35 @@ CLASS zcl_skylint_check_054 IMPLEMENTATION.
 
       " 2. Check INTO targets
       IF lv_tok = 'INTO' AND lv_idx < lv_count.
-        lv_next = to_upper( is_statement-tokens[ lv_idx + 1 ]-lexeme ).
+        get_token_safe( EXPORTING is_statement = is_statement
+                                   iv_index     = lv_idx + 1
+                         IMPORTING es_token     = ls_next_token
+                                   ev_found     = lv_found_next ).
+      ENDIF.
+      IF lv_tok = 'INTO' AND lv_idx < lv_count AND lv_found_next = abap_true.
+        lv_next = to_upper( ls_next_token-lexeme ).
         CASE lv_next.
           WHEN 'TABLE'.
-            IF lv_idx + 2 <= lv_count AND is_statement-tokens[ lv_idx + 2 ]-lexeme(1) <> '@'.
+            get_token_safe( EXPORTING is_statement = is_statement
+                                       iv_index     = lv_idx + 2
+                             IMPORTING es_token     = ls_token2
+                                       ev_found     = lv_found2 ).
+            IF lv_found2 = abap_true AND ls_token2-lexeme(1) <> '@'.
               rv_res = abap_true.
               RETURN.
             ENDIF.
           WHEN 'CORRESPONDING'.
-            IF lv_idx + 5 <= lv_count AND is_statement-tokens[ lv_idx + 5 ]-lexeme(1) <> '@'.
+            get_token_safe( EXPORTING is_statement = is_statement
+                                       iv_index     = lv_idx + 5
+                             IMPORTING es_token     = ls_token5
+                                       ev_found     = lv_found5 ).
+            IF lv_found5 = abap_true AND ls_token5-lexeme(1) <> '@'.
               rv_res = abap_true.
               RETURN.
             ENDIF.
           WHEN OTHERS.
-            IF     lv_next <> 'DISTINCT' AND lv_next(1) <> '('
-               AND is_statement-tokens[ lv_idx + 1 ]-lexeme(1) <> '@'.
+            lv_next_up = to_upper( ls_next_token-lexeme ).
+            IF lv_next_up <> 'DISTINCT' AND lv_next_up(1) <> '(' AND ls_next_token-lexeme(1) <> '@'.
               rv_res = abap_true.
               RETURN.
             ENDIF.
@@ -96,19 +126,33 @@ CLASS zcl_skylint_check_054 IMPLEMENTATION.
       ENDIF.
 
       " 3. Check FOR ALL ENTRIES IN <target>
-      IF     lv_tok = 'ENTRIES' AND lv_idx + 2 <= lv_count
-         AND to_upper( is_statement-tokens[ lv_idx + 1 ]-lexeme )  = 'IN'
-         AND is_statement-tokens[ lv_idx + 2 ]-lexeme(1)          <> '@'.
+      get_token_safe( EXPORTING is_statement = is_statement
+                                 iv_index     = lv_idx + 1
+                       IMPORTING es_token     = ls_next_token
+                                 ev_found     = lv_found_next ).
+      get_token_safe( EXPORTING is_statement = is_statement
+                                 iv_index     = lv_idx + 2
+                       IMPORTING es_token     = ls_token2
+                                 ev_found     = lv_found2 ).
+      IF lv_tok = 'ENTRIES' AND lv_found_next = abap_true AND lv_found2 = abap_true
+         AND to_upper( ls_next_token-lexeme ) = 'IN' AND ls_token2-lexeme(1) <> '@'.
         rv_res = abap_true.
         RETURN.
       ENDIF.
 
       " 4. Check comparisons in WHERE / HAVING / SET clause
-      IF     lv_in_where = abap_true AND lv_idx < lv_count
-         AND (    lv_tok = '='    OR lv_tok = '<>' OR lv_tok = '<'
-               OR lv_tok = '>'    OR lv_tok = '<=' OR lv_tok = '>='
-               OR lv_tok = 'LIKE' ).
-        lv_next = is_statement-tokens[ lv_idx + 1 ]-lexeme.
+      IF lv_in_where = abap_true AND lv_idx < lv_count
+         AND ( lv_tok = '=' OR lv_tok = '<>' OR lv_tok = '<' OR lv_tok = '>'
+            OR lv_tok = '<=' OR lv_tok = '>=' OR lv_tok = 'LIKE' ).
+        get_token_safe( EXPORTING is_statement = is_statement
+                                   iv_index     = lv_idx + 1
+                         IMPORTING es_token     = ls_next_token
+                                   ev_found     = lv_found_next ).
+      ENDIF.
+      IF lv_in_where = abap_true AND lv_idx < lv_count AND lv_found_next = abap_true
+         AND ( lv_tok = '=' OR lv_tok = '<>' OR lv_tok = '<' OR lv_tok = '>'
+            OR lv_tok = '<=' OR lv_tok = '>=' OR lv_tok = 'LIKE' ).
+        lv_next = ls_next_token-lexeme.
         IF is_unescaped_rhs_token( lv_next ) = abap_true.
           rv_res = abap_true.
           RETURN.

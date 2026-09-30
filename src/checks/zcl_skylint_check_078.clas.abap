@@ -41,9 +41,10 @@ CLASS zcl_skylint_check_078 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_idx       TYPE i.
-    DATA lv_max       TYPE i.
+    DATA lv_idx TYPE i.
+    DATA lv_max TYPE i.
     DATA ls_next_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_next_found TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     lv_max = lines( is_procedure-statements ).
@@ -58,8 +59,11 @@ CLASS zcl_skylint_check_078 IMPLEMENTATION.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-check_subrc ).
       ELSE.
-        ls_next_stmt = is_procedure-statements[ lv_idx + 1 ].
-        IF checks_sy_subrc( ls_next_stmt ) = abap_false.
+        get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                      iv_index      = lv_idx + 1
+                            IMPORTING es_statement  = ls_next_stmt
+                                      ev_found      = lv_next_found ).
+        IF lv_next_found = abap_false OR checks_sy_subrc( ls_next_stmt ) = abap_false.
           report_statement( is_statement    = <ls_statement>
                             iv_finding_code = c_finding_codes-check_subrc ).
         ENDIF.
@@ -69,6 +73,8 @@ CLASS zcl_skylint_check_078 IMPLEMENTATION.
 
   METHOD sets_sy_subrc.
     DATA lv_second_lex TYPE string.
+    DATA ls_second TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found TYPE abap_bool.
 
     rv_res = abap_false.
 
@@ -76,19 +82,25 @@ CLASS zcl_skylint_check_078 IMPLEMENTATION.
       WHEN 'AUTHORITY-CHECK' OR 'FIND' OR 'SEARCH'.
         rv_res = abap_true.
       WHEN 'SELECT'.
-        IF lines( is_statement-tokens ) >= 2.
-          lv_second_lex = to_upper( is_statement-tokens[ 2 ]-lexeme ).
-          IF lv_second_lex = 'SINGLE'.
-            rv_res = abap_true.
-          ENDIF.
+        get_token_safe( EXPORTING is_statement = is_statement
+                                  iv_index     = 2
+                        IMPORTING es_token     = ls_second
+                                  ev_found     = lv_found ).
+        lv_second_lex = to_upper( ls_second-lexeme ).
+        IF lv_found = abap_true AND lv_second_lex = 'SINGLE'.
+          rv_res = abap_true.
         ENDIF.
       WHEN 'READ'.
-        IF lines( is_statement-tokens ) >= 2.
-          lv_second_lex = to_upper( is_statement-tokens[ 2 ]-lexeme ).
-          IF lv_second_lex = 'TABLE'.
-            rv_res = abap_true.
-          ENDIF.
+        get_token_safe( EXPORTING is_statement = is_statement
+                                  iv_index     = 2
+                        IMPORTING es_token     = ls_second
+                                  ev_found     = lv_found ).
+        lv_second_lex = to_upper( ls_second-lexeme ).
+        IF lv_found = abap_true AND lv_second_lex = 'TABLE'.
+          rv_res = abap_true.
         ENDIF.
+      WHEN OTHERS.
+        RETURN.
     ENDCASE.
   ENDMETHOD.
 

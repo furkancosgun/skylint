@@ -31,13 +31,15 @@ CLASS zcl_skylint_check_083 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_has_where  TYPE abap_bool.
-    DATA lv_tabix      TYPE i.
+    DATA lv_has_where TYPE abap_bool.
+    DATA lv_tabix TYPE i.
     DATA lv_next_tabix TYPE i.
+    DATA ls_body TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_end TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_body_found TYPE abap_bool.
+    DATA lv_end_found TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_body>      TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_end>       TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'LOOP'.
@@ -51,16 +53,31 @@ CLASS zcl_skylint_check_083 IMPLEMENTATION.
         ENDIF.
       ENDLOOP.
 
-      IF lv_has_where = abap_true AND lv_tabix + 2 <= lines( is_procedure-statements ).
-        lv_next_tabix = lv_tabix + 1.
-        ASSIGN is_procedure-statements[ lv_next_tabix ] TO <ls_body>.
-        ASSIGN is_procedure-statements[ lv_tabix + 2 ] TO <ls_end>.
-        IF     sy-subrc         = 0 AND ( <ls_body>-keyword = 'INSERT' OR <ls_body>-keyword = 'APPEND' )
-           AND <ls_end>-keyword = 'ENDLOOP'.
-          report_statement( is_statement    = <ls_statement>
-                            iv_finding_code = c_finding_codes-prefer_filter ).
-        ENDIF.
+      IF lv_has_where = abap_false.
+        CONTINUE.
       ENDIF.
+      lv_next_tabix = lv_tabix + 1.
+      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                    iv_index      = lv_next_tabix
+                          IMPORTING es_statement  = ls_body
+                                    ev_found      = lv_body_found ).
+      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                    iv_index      = lv_tabix + 2
+                          IMPORTING es_statement  = ls_end
+                                    ev_found      = lv_end_found ).
+      CASE lv_body_found.
+        WHEN abap_true.
+          IF lv_end_found = abap_false.
+            CONTINUE.
+          ENDIF.
+          IF ( ls_body-keyword = 'INSERT' OR ls_body-keyword = 'APPEND' )
+             AND ls_end-keyword = 'ENDLOOP'.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-prefer_filter ).
+          ENDIF.
+        WHEN OTHERS.
+          CONTINUE.
+      ENDCASE.
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

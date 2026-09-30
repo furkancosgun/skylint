@@ -40,10 +40,12 @@ CLASS zcl_skylint_check_029 IMPLEMENTATION.
     DATA lv_has_exceptions TYPE abap_bool.
     DATA lv_tok_cnt        TYPE i.
     DATA lv_tok_idx        TYPE i.
+    DATA lv_next_idx       TYPE i.
     DATA ls_tok            TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA ls_next_tok       TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_lex            TYPE string.
     DATA lv_next_lex       TYPE string.
+    DATA lv_found          TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
@@ -58,8 +60,15 @@ CLASS zcl_skylint_check_029 IMPLEMENTATION.
       LOOP AT <ls_statement>-tokens INTO ls_tok.
         lv_tok_idx = sy-tabix.
         CLEAR ls_next_tok.
-        IF lv_tok_idx < lv_tok_cnt.
-          ls_next_tok = <ls_statement>-tokens[ lv_tok_idx + 1 ].
+        lv_next_idx = lv_tok_idx + 1.
+        IF lv_next_idx <= lv_tok_cnt.
+          get_token_safe( EXPORTING is_statement = <ls_statement>
+                                    iv_index     = lv_next_idx
+                          IMPORTING es_token     = ls_next_tok
+                                    ev_found     = lv_found ).
+          IF lv_found = abap_false.
+            CLEAR ls_next_tok.
+          ENDIF.
         ENDIF.
 
         lv_lex = to_upper( ls_tok-lexeme ).

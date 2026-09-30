@@ -60,14 +60,19 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD has_yoda_condition.
-    DATA lv_idx   TYPE i.
-    DATA lv_total TYPE i.
-    DATA lv_tok1  TYPE string.
-    DATA lv_tok2  TYPE string.
-    DATA lv_tok3  TYPE string.
-    FIELD-SYMBOLS <ls_t1> TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_t2> TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_t3> TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_idx    TYPE i.
+    DATA lv_total  TYPE i.
+    DATA lv_next1  TYPE i.
+    DATA lv_next2  TYPE i.
+    DATA lv_tok1   TYPE string.
+    DATA lv_tok2   TYPE string.
+    DATA lv_tok3   TYPE string.
+    DATA ls_t1     TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_t2     TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_t3     TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found1 TYPE abap_bool.
+    DATA lv_found2 TYPE abap_bool.
+    DATA lv_found3 TYPE abap_bool.
 
     rv_has = abap_false.
     lv_total = lines( is_statement-tokens ).
@@ -77,22 +82,27 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
 
     lv_idx = 1.
     WHILE lv_idx <= lv_total - 2.
-      ASSIGN is_statement-tokens[ lv_idx ] TO <ls_t1>.
-      IF sy-subrc <> 0.
-        EXIT.
-      ENDIF.
-      ASSIGN is_statement-tokens[ lv_idx + 1 ] TO <ls_t2>.
-      IF sy-subrc <> 0.
-        EXIT.
-      ENDIF.
-      ASSIGN is_statement-tokens[ lv_idx + 2 ] TO <ls_t3>.
-      IF sy-subrc <> 0.
+      lv_next1 = lv_idx + 1.
+      lv_next2 = lv_idx + 2.
+      get_token_safe( EXPORTING is_statement = is_statement
+                                iv_index     = lv_idx
+                      IMPORTING es_token     = ls_t1
+                                ev_found     = lv_found1 ).
+      get_token_safe( EXPORTING is_statement = is_statement
+                                iv_index     = lv_next1
+                      IMPORTING es_token     = ls_t2
+                                ev_found     = lv_found2 ).
+      get_token_safe( EXPORTING is_statement = is_statement
+                                iv_index     = lv_next2
+                      IMPORTING es_token     = ls_t3
+                                ev_found     = lv_found3 ).
+      IF lv_found1 = abap_false OR lv_found2 = abap_false OR lv_found3 = abap_false.
         EXIT.
       ENDIF.
 
-      lv_tok1 = <ls_t1>-lexeme.
-      lv_tok2 = <ls_t2>-lexeme.
-      lv_tok3 = <ls_t3>-lexeme.
+      lv_tok1 = ls_t1-lexeme.
+      lv_tok2 = ls_t2-lexeme.
+      lv_tok3 = ls_t3-lexeme.
 
       IF     is_literal( lv_tok1 )             = abap_true
          AND is_comparison_operator( lv_tok2 ) = abap_true

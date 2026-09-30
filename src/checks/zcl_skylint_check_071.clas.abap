@@ -38,11 +38,15 @@ CLASS zcl_skylint_check_071 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_super_name TYPE string.
-    DATA lv_len        TYPE i.
-    DATA lv_idx        TYPE i.
+    DATA lv_len TYPE i.
+    DATA lv_idx TYPE i.
+    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_super TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found TYPE abap_bool.
+    DATA lv_super_found TYPE abap_bool.
+    DATA lv_lexeme TYPE string.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'CLASS'.
@@ -50,19 +54,32 @@ CLASS zcl_skylint_check_071 IMPLEMENTATION.
       lv_idx = 1.
 
       WHILE lv_idx <= lv_len.
-        ASSIGN <ls_statement>-tokens[ lv_idx ] TO <ls_token>.
-        IF sy-subrc = 0 AND to_upper( <ls_token>-lexeme ) = 'INHERITING'.
-          IF lv_idx + 2 <= lv_len.
-            lv_super_name = to_upper( <ls_statement>-tokens[ lv_idx + 2 ]-lexeme ).
-            IF    lv_super_name CP '*DEEP*' OR lv_super_name CP '*LEVEL*'
-               OR lv_super_name  = 'CX_NO_CHECK'.
-              report_statement( is_statement    = <ls_statement>
-                                iv_finding_code = c_finding_codes-deep_inheritance ).
-            ENDIF.
-          ENDIF.
-          EXIT.
+        get_token_safe( EXPORTING is_statement = <ls_statement>
+                                  iv_index     = lv_idx
+                        IMPORTING es_token     = ls_token
+                                  ev_found     = lv_found ).
+        IF lv_found = abap_false.
+          lv_idx += 1.
+          CONTINUE.
         ENDIF.
-        lv_idx += 1.
+        lv_lexeme = to_upper( ls_token-lexeme ).
+        IF lv_lexeme <> 'INHERITING'.
+          lv_idx += 1.
+          CONTINUE.
+        ENDIF.
+        get_token_safe( EXPORTING is_statement = <ls_statement>
+                                  iv_index     = lv_idx + 2
+                        IMPORTING es_token     = ls_super
+                                  ev_found     = lv_super_found ).
+        IF lv_super_found = abap_true.
+          lv_super_name = to_upper( ls_super-lexeme ).
+          IF    lv_super_name CP '*DEEP*' OR lv_super_name CP '*LEVEL*'
+             OR lv_super_name = 'CX_NO_CHECK'.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-deep_inheritance ).
+          ENDIF.
+        ENDIF.
+        EXIT.
       ENDWHILE.
     ENDLOOP.
   ENDMETHOD.

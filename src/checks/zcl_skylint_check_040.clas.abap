@@ -61,60 +61,75 @@ CLASS zcl_skylint_check_040 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_empty_value_assignment.
-    DATA lv_tok1  TYPE string.
-    DATA lv_tok2  TYPE string.
-    DATA lv_tok3  TYPE string.
-    DATA lv_tok4  TYPE string.
-    DATA lv_tok5  TYPE string.
     DATA lv_count TYPE i.
+    DATA lt_eq_val TYPE ty_token_lexemes.
+    DATA ls_tok4 TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok5 TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok6 TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found4 TYPE abap_bool.
+    DATA lv_found5 TYPE abap_bool.
+    DATA lv_found6 TYPE abap_bool.
+    DATA lv_matched TYPE abap_bool.
+    DATA lv_tok4_up TYPE string.
 
     rv_res = abap_false.
     lv_count = lines( is_statement-tokens ).
+    lt_eq_val = VALUE #( ( `=` ) ( `VALUE` ) ).
+    lv_matched = match_token_sequence( is_statement   = is_statement
+                                       it_expected    = lt_eq_val
+                                       iv_start_index = 2 ).
+    get_token_safe( EXPORTING is_statement = is_statement
+                              iv_index     = 4
+                    IMPORTING es_token     = ls_tok4
+                              ev_found     = lv_found4 ).
+    get_token_safe( EXPORTING is_statement = is_statement
+                              iv_index     = 5
+                    IMPORTING es_token     = ls_tok5
+                              ev_found     = lv_found5 ).
+    get_token_safe( EXPORTING is_statement = is_statement
+                              iv_index     = 6
+                    IMPORTING es_token     = ls_tok6
+                              ev_found     = lv_found6 ).
+    lv_tok4_up = to_upper( ls_tok4-lexeme ).
 
-    IF lv_count = 5.
-      lv_tok1 = is_statement-tokens[ 2 ]-lexeme.
-      lv_tok2 = to_upper( is_statement-tokens[ 3 ]-lexeme ).
-      lv_tok3 = to_upper( is_statement-tokens[ 4 ]-lexeme ).
-      lv_tok4 = is_statement-tokens[ 5 ]-lexeme.
-
-      IF lv_tok1 = '=' AND lv_tok2 = 'VALUE' AND ( lv_tok3 = '#(' OR lv_tok3 CP '*#(' ) AND lv_tok4 = ')'.
-        rv_res = abap_true.
-      ENDIF.
-    ELSEIF lv_count >= 6.
-      lv_tok1 = is_statement-tokens[ 2 ]-lexeme.
-      lv_tok2 = to_upper( is_statement-tokens[ 3 ]-lexeme ).
-      lv_tok3 = is_statement-tokens[ 4 ]-lexeme.
-      lv_tok4 = is_statement-tokens[ 5 ]-lexeme.
-      lv_tok5 = is_statement-tokens[ 6 ]-lexeme.
-
-      IF     lv_tok1 = '=' AND lv_tok2 = 'VALUE' AND ( lv_tok3 = '#' OR lv_tok3 CP '*_TAB' )
-         AND lv_tok4 = '(' AND lv_tok5 = ')'.
-        rv_res = abap_true.
-      ENDIF.
+    IF lv_count = 5 AND lv_matched = abap_true AND lv_found4 = abap_true AND lv_found5 = abap_true
+       AND ( lv_tok4_up = '#(' OR lv_tok4_up CP '*#(' ) AND ls_tok5-lexeme = ')'.
+      rv_res = abap_true.
+    ELSEIF lv_count >= 6 AND lv_matched = abap_true AND lv_found4 = abap_true
+       AND lv_found5 = abap_true AND lv_found6 = abap_true
+       AND ( ls_tok4-lexeme = '#' OR lv_tok4_up CP '*_TAB' )
+       AND ls_tok5-lexeme = '(' AND ls_tok6-lexeme = ')'.
+      rv_res = abap_true.
     ENDIF.
   ENDMETHOD.
 
   METHOD has_nested_value_constructor.
-    DATA lv_idx   TYPE i.
+    DATA lv_idx TYPE i.
     DATA lv_count TYPE i.
-    DATA lv_tok1  TYPE string.
-    DATA lv_tok2  TYPE string.
-    DATA lv_tok3  TYPE string.
+    DATA lt_open_val TYPE ty_token_lexemes.
+    DATA ls_third TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found3 TYPE abap_bool.
+    DATA lv_matched TYPE abap_bool.
+    DATA lv_third_up TYPE string.
 
     rv_res = abap_false.
     lv_count = lines( is_statement-tokens ).
+    lt_open_val = VALUE #( ( `(` ) ( `VALUE` ) ).
 
     DO lv_count TIMES.
       lv_idx = sy-index.
-      IF lv_idx + 2 <= lv_count.
-        lv_tok1 = is_statement-tokens[ lv_idx ]-lexeme.
-        lv_tok2 = to_upper( is_statement-tokens[ lv_idx + 1 ]-lexeme ).
-        lv_tok3 = to_upper( is_statement-tokens[ lv_idx + 2 ]-lexeme ).
-
-        IF lv_tok1 = '(' AND lv_tok2 = 'VALUE' AND ( lv_tok3 = '#(' OR lv_tok3 CP '*#(' ).
-          rv_res = abap_true.
-          RETURN.
-        ENDIF.
+      lv_matched = match_token_sequence( is_statement   = is_statement
+                                         it_expected    = lt_open_val
+                                         iv_start_index = lv_idx ).
+      get_token_safe( EXPORTING is_statement = is_statement
+                                iv_index     = lv_idx + 2
+                      IMPORTING es_token     = ls_third
+                                ev_found     = lv_found3 ).
+      lv_third_up = to_upper( ls_third-lexeme ).
+      IF lv_matched = abap_true AND lv_found3 = abap_true
+         AND ( lv_third_up = '#(' OR lv_third_up CP '*#(' ).
+        rv_res = abap_true.
+        RETURN.
       ENDIF.
     ENDDO.
   ENDMETHOD.

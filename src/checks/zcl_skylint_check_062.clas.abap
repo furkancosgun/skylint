@@ -33,9 +33,10 @@ CLASS zcl_skylint_check_062 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_tok2 TYPE string.
+    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found TYPE abap_bool.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
@@ -43,23 +44,26 @@ CLASS zcl_skylint_check_062 IMPLEMENTATION.
           report_statement( is_statement    = <ls_statement>
                             iv_finding_code = c_finding_codes-obsolete_loop_control ).
         WHEN 'ON'.
-          IF lines( <ls_statement>-tokens ) >= 2.
-            ASSIGN <ls_statement>-tokens[ 2 ] TO <ls_token>.
-            IF sy-subrc = 0 AND to_upper( <ls_token>-lexeme ) = 'CHANGE'.
-              report_statement( is_statement    = <ls_statement>
-                                iv_finding_code = c_finding_codes-obsolete_loop_control ).
-            ENDIF.
+          get_token_safe( EXPORTING is_statement = <ls_statement>
+                                     iv_index     = 2
+                           IMPORTING es_token     = ls_token
+                                     ev_found     = lv_found ).
+          IF lv_found = abap_true AND to_upper( ls_token-lexeme ) = 'CHANGE'.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-obsolete_loop_control ).
           ENDIF.
         WHEN 'AT'.
-          IF lines( <ls_statement>-tokens ) >= 2.
-            ASSIGN <ls_statement>-tokens[ 2 ] TO <ls_token>.
-            IF sy-subrc = 0.
-              lv_tok2 = to_upper( <ls_token>-lexeme ).
-              IF lv_tok2 = 'NEW' OR lv_tok2 = 'END' OR lv_tok2 = 'FIRST' OR lv_tok2 = 'LAST'.
-                report_statement( is_statement    = <ls_statement>
-                                  iv_finding_code = c_finding_codes-obsolete_loop_control ).
-              ENDIF.
-            ENDIF.
+          get_token_safe( EXPORTING is_statement = <ls_statement>
+                                     iv_index     = 2
+                           IMPORTING es_token     = ls_token
+                                     ev_found     = lv_found ).
+          IF lv_found = abap_true.
+            lv_tok2 = to_upper( ls_token-lexeme ).
+          ENDIF.
+          IF lv_found = abap_true
+             AND ( lv_tok2 = 'NEW' OR lv_tok2 = 'END' OR lv_tok2 = 'FIRST' OR lv_tok2 = 'LAST' ).
+            report_statement( is_statement    = <ls_statement>
+                                iv_finding_code = c_finding_codes-obsolete_loop_control ).
           ENDIF.
       ENDCASE.
     ENDLOOP.

@@ -47,17 +47,17 @@ CLASS zcl_skylint_check_005 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD has_not_is_pattern.
-    DATA lv_in_not      TYPE abap_bool.
-    DATA lv_is_idx      TYPE i.
-    DATA lv_lexeme      TYPE string.
+    DATA lv_in_not TYPE abap_bool.
+    DATA lv_is_idx TYPE i.
+    DATA lv_lexeme TYPE string.
     DATA lv_next_lexeme TYPE string.
-    DATA lv_token_count TYPE i.
-    DATA lv_idx         TYPE i.
+    DATA lv_idx TYPE i.
+    DATA ls_next_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found TYPE abap_bool.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_matched = abap_false.
     lv_in_not = abap_false.
-    lv_token_count = lines( is_statement-tokens ).
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
       lv_idx = sy-tabix.
@@ -69,8 +69,12 @@ CLASS zcl_skylint_check_005 IMPLEMENTATION.
         lv_in_not = abap_false.
       ELSEIF lv_in_not = abap_true AND lv_lexeme = 'IS'.
         lv_is_idx = lv_idx + 1.
-        IF lv_is_idx <= lv_token_count.
-          lv_next_lexeme = to_upper( is_statement-tokens[ lv_is_idx ]-lexeme ).
+        get_token_safe( EXPORTING is_statement = is_statement
+                                  iv_index     = lv_is_idx
+                        IMPORTING es_token     = ls_next_token
+                                  ev_found     = lv_found ).
+        IF lv_found = abap_true.
+          lv_next_lexeme = to_upper( ls_next_token-lexeme ).
           IF    lv_next_lexeme = 'INITIAL'   OR lv_next_lexeme = 'BOUND'
              OR lv_next_lexeme = 'ASSIGNED'  OR lv_next_lexeme = 'SUPPLIED'
              OR lv_next_lexeme = 'REQUESTED' OR lv_next_lexeme = 'INSTANCE'.

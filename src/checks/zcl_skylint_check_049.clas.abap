@@ -48,17 +48,30 @@ CLASS zcl_skylint_check_049 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_system_variable_mod.
+    DATA ls_token1 TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_token2 TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found1 TYPE abap_bool.
+    DATA lv_found2 TYPE abap_bool.
     DATA lv_tok1 TYPE string.
     DATA lv_tok2 TYPE string.
 
     rv_res = abap_false.
 
-    IF lines( is_statement-tokens ) < 2.
+    get_token_safe( EXPORTING is_statement = is_statement
+                               iv_index     = 1
+                     IMPORTING es_token     = ls_token1
+                               ev_found     = lv_found1 ).
+    get_token_safe( EXPORTING is_statement = is_statement
+                               iv_index     = 2
+                     IMPORTING es_token     = ls_token2
+                               ev_found     = lv_found2 ).
+
+    IF lv_found1 = abap_false OR lv_found2 = abap_false.
       RETURN.
     ENDIF.
 
-    lv_tok1 = to_upper( is_statement-tokens[ 1 ]-lexeme ).
-    lv_tok2 = to_upper( is_statement-tokens[ 2 ]-lexeme ).
+    lv_tok1 = to_upper( ls_token1-lexeme ).
+    lv_tok2 = to_upper( ls_token2-lexeme ).
 
     " 1. Assignment: sy-subrc = 0.
     IF lv_tok2 = '=' AND ( lv_tok1 CP 'SY-*' OR lv_tok1 CP 'SYST-*' ).

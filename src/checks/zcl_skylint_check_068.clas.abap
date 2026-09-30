@@ -33,11 +33,13 @@ CLASS zcl_skylint_check_068 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA lv_has_instance_meth TYPE abap_bool.
-    DATA lv_static_meth_cnt   TYPE i.
-    DATA ls_first_class_stmt  TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lv_found_class       TYPE abap_bool.
+    DATA lv_static_meth_cnt TYPE i.
+    DATA ls_first_class_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_found_class TYPE abap_bool.
+    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found TYPE abap_bool.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     lv_has_instance_meth = abap_false.
     lv_static_meth_cnt = 0.
@@ -48,7 +50,11 @@ CLASS zcl_skylint_check_068 IMPLEMENTATION.
         ls_first_class_stmt = <ls_statement>.
         lv_found_class = abap_true.
       ELSEIF <ls_statement>-keyword = 'METHODS'.
-        IF <ls_statement>-tokens[ 2 ]-lexeme <> 'CONSTRUCTOR'.
+        get_token_safe( EXPORTING is_statement = <ls_statement>
+                                   iv_index     = 2
+                         IMPORTING es_token     = ls_token
+                                   ev_found     = lv_found ).
+        IF lv_found = abap_true AND ls_token-lexeme <> 'CONSTRUCTOR'.
           lv_has_instance_meth = abap_true.
         ENDIF.
       ELSEIF <ls_statement>-keyword = 'CLASS-METHODS'.

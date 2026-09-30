@@ -32,23 +32,22 @@ CLASS zcl_skylint_check_004 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_prev_lexeme TYPE string.
-    DATA lv_curr_lexeme TYPE string.
+    DATA lt_expected TYPE ty_token_lexemes.
+    DATA lv_matched TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'TYPES' OR keyword = 'DATA' OR keyword = 'STATICS' OR keyword = 'CLASS-DATA'.
-      CLEAR lv_prev_lexeme.
-      LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-        lv_curr_lexeme = to_upper( <ls_token>-lexeme ).
-        IF lv_prev_lexeme = 'DEFAULT' AND lv_curr_lexeme = 'KEY'.
-          report_statement( is_statement    = <ls_statement>
-                            iv_finding_code = c_finding_codes-default_key ).
-          EXIT.
-        ENDIF.
-        lv_prev_lexeme = lv_curr_lexeme.
-      ENDLOOP.
+    lt_expected = VALUE #( ( `DEFAULT` ) ( `KEY` ) ).
+
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      CASE <ls_statement>-keyword.
+        WHEN 'TYPES' OR 'DATA' OR 'STATICS' OR 'CLASS-DATA'.
+          lv_matched = match_token_sequence( is_statement = <ls_statement>
+                                             it_expected  = lt_expected ).
+          IF lv_matched = abap_true.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-default_key ).
+          ENDIF.
+      ENDCASE.
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

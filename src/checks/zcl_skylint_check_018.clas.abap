@@ -101,13 +101,16 @@ CLASS zcl_skylint_check_018 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD get_param_value.
-    DATA lv_idx   TYPE i.
+    DATA lv_idx TYPE i.
     DATA lv_total TYPE i.
-    DATA lv_in    TYPE abap_bool.
+    DATA lv_in TYPE abap_bool.
     DATA lv_depth TYPE i.
-    DATA lv_curr  TYPE string.
-    FIELD-SYMBOLS <ls_t> TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_n> TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_curr TYPE string.
+    DATA lv_next_idx TYPE i.
+    DATA ls_cur_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_next_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found TYPE abap_bool.
+    DATA lv_found_next TYPE abap_bool.
 
     rv_val = ''.
     lv_in = abap_false.
@@ -116,17 +119,24 @@ CLASS zcl_skylint_check_018 IMPLEMENTATION.
     lv_idx = 1.
 
     WHILE lv_idx <= lv_total.
-      ASSIGN is_statement-tokens[ lv_idx ] TO <ls_t>.
-      IF sy-subrc <> 0.
+      get_token_safe( EXPORTING is_statement = is_statement
+                                iv_index     = lv_idx
+                      IMPORTING es_token     = ls_cur_token
+                                ev_found     = lv_found ).
+      IF lv_found = abap_false.
         EXIT.
       ENDIF.
 
-      lv_curr = to_upper( <ls_t>-lexeme ).
+      lv_curr = to_upper( ls_cur_token-lexeme ).
 
       IF lv_in = abap_false.
         IF lv_curr = iv_param AND lv_idx < lv_total.
-          ASSIGN is_statement-tokens[ lv_idx + 1 ] TO <ls_n>.
-          IF sy-subrc = 0 AND <ls_n>-lexeme = '='.
+          lv_next_idx = lv_idx + 1.
+          get_token_safe( EXPORTING is_statement = is_statement
+                                    iv_index     = lv_next_idx
+                          IMPORTING es_token     = ls_next_token
+                                    ev_found     = lv_found_next ).
+          IF lv_found_next = abap_true AND ls_next_token-lexeme = '='.
             lv_in = abap_true.
             lv_depth = 0.
             lv_idx += 2.
@@ -145,17 +155,21 @@ CLASS zcl_skylint_check_018 IMPLEMENTATION.
         ENDIF.
 
         IF lv_depth = 0 AND lv_idx < lv_total.
-          ASSIGN is_statement-tokens[ lv_idx + 1 ] TO <ls_n>.
-          IF sy-subrc = 0 AND <ls_n>-lexeme = '='.
+          lv_next_idx = lv_idx + 1.
+          get_token_safe( EXPORTING is_statement = is_statement
+                                    iv_index     = lv_next_idx
+                          IMPORTING es_token     = ls_next_token
+                                    ev_found     = lv_found_next ).
+          IF lv_found_next = abap_true AND ls_next_token-lexeme = '='.
             " Next parameter encountered
             RETURN.
           ENDIF.
         ENDIF.
 
         IF rv_val IS INITIAL.
-          rv_val = <ls_t>-lexeme.
+          rv_val = ls_cur_token-lexeme.
         ELSE.
-          rv_val = |{ rv_val } { <ls_t>-lexeme }|.
+          rv_val = |{ rv_val } { ls_cur_token-lexeme }|.
         ENDIF.
       ENDIF.
 

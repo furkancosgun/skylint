@@ -32,38 +32,65 @@ CLASS zcl_skylint_check_091 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_idx      TYPE i.
-    DATA lv_count    TYPE i.
+    DATA lv_idx TYPE i.
+    DATA lv_count TYPE i.
     DATA lv_prev_idx TYPE i.
-    FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_next> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_if>   TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_next TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_if TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_cand TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_stmt_found TYPE abap_bool.
+    DATA lv_next_found TYPE abap_bool.
+    DATA lv_if_found TYPE abap_bool.
+    DATA lv_cand_found TYPE abap_bool.
 
     lv_count = lines( is_procedure-statements ).
     lv_idx = 1.
 
     WHILE lv_idx < lv_count.
-      ASSIGN is_procedure-statements[ lv_idx ] TO <ls_stmt>.
-      ASSIGN is_procedure-statements[ lv_idx + 1 ] TO <ls_next>.
-
-      IF <ls_stmt>-keyword = 'ENDIF' AND <ls_next>-keyword = 'ENDLOOP'.
-        lv_prev_idx = lv_idx - 1.
-        WHILE lv_prev_idx > 1.
-          ASSIGN is_procedure-statements[ lv_prev_idx ] TO <ls_if>.
-          IF <ls_if>-keyword = 'LOOP'.
+      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                    iv_index      = lv_idx
+                          IMPORTING es_statement  = ls_stmt
+                                    ev_found      = lv_stmt_found ).
+      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                    iv_index      = lv_idx + 1
+                          IMPORTING es_statement  = ls_next
+                                    ev_found      = lv_next_found ).
+      IF lv_stmt_found = abap_false OR lv_next_found = abap_false.
+        lv_idx += 1.
+        CONTINUE.
+      ENDIF.
+      IF ls_stmt-keyword <> 'ENDIF' OR ls_next-keyword <> 'ENDLOOP'.
+        lv_idx += 1.
+        CONTINUE.
+      ENDIF.
+      lv_prev_idx = lv_idx - 1.
+      WHILE lv_prev_idx > 1.
+        get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                      iv_index      = lv_prev_idx
+                            IMPORTING es_statement  = ls_if
+                                      ev_found      = lv_if_found ).
+        IF lv_if_found = abap_false.
+          lv_prev_idx -= 1.
+          CONTINUE.
+        ENDIF.
+        CASE ls_if-keyword.
+          WHEN 'LOOP'.
             EXIT.
-          ENDIF.
-          IF <ls_if>-keyword = 'IF'.
-            ASSIGN is_procedure-statements[ lv_prev_idx - 1 ] TO <ls_next>.
-            IF sy-subrc = 0 AND <ls_next>-keyword = 'LOOP'.
-              report_statement( is_statement    = <ls_if>
+          WHEN 'IF'.
+            get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                          iv_index      = lv_prev_idx - 1
+                                IMPORTING es_statement  = ls_cand
+                                          ev_found      = lv_cand_found ).
+            IF lv_cand_found = abap_true AND ls_cand-keyword = 'LOOP'.
+              report_statement( is_statement    = ls_if
                                 iv_finding_code = c_finding_codes-guard_loop ).
             ENDIF.
             EXIT.
-          ENDIF.
-          lv_prev_idx -= 1.
-        ENDWHILE.
-      ENDIF.
+          WHEN OTHERS.
+            lv_prev_idx -= 1.
+        ENDCASE.
+      ENDWHILE.
       lv_idx += 1.
     ENDWHILE.
   ENDMETHOD.

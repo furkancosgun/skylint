@@ -102,28 +102,45 @@ CLASS zcl_skylint_check_039 IMPLEMENTATION.
       ENDLOOP.
 
       " 3. Register newly declared variables if inside a block
-      IF lines( lt_block_stack ) > 0.
-        lv_token_str = lt_block_stack[ 1 ].
-        lv_current_block_id = lv_token_str.
-        lt_new_vars = extract_declared_vars( is_statement = <ls_statement>
-                                             iv_block_id  = lv_current_block_id ).
-        APPEND LINES OF lt_new_vars TO lt_scoped_vars.
+      IF lines( lt_block_stack ) = 0.
+        CONTINUE.
       ENDIF.
+      READ TABLE lt_block_stack INTO lv_token_str INDEX 1.
+      IF sy-subrc <> 0.
+        CONTINUE.
+      ENDIF.
+      lv_current_block_id = lv_token_str.
+      lt_new_vars = extract_declared_vars( is_statement = <ls_statement>
+                                           iv_block_id  = lv_current_block_id ).
+      APPEND LINES OF lt_new_vars TO lt_scoped_vars.
     ENDLOOP.
   ENDMETHOD.
 
   METHOD extract_declared_vars.
     DATA lv_lex TYPE string.
     DATA ls_var TYPE ty_scoped_var.
+    DATA ls_tok2 TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found2 TYPE abap_bool.
+    DATA lv_is_decl TYPE abap_bool.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     ls_var-block_id = iv_block_id.
+    lv_is_decl = abap_false.
 
-    IF     ( is_statement-keyword = 'DATA' OR is_statement-keyword = 'FIELD-SYMBOLS' )
-       AND lines( is_statement-tokens )    >= 2
-       AND is_statement-tokens[ 2 ]-lexeme <> 'BEGIN'
-       AND is_statement-tokens[ 2 ]-lexeme <> 'END'.
-      ls_var-name = to_upper( is_statement-tokens[ 2 ]-lexeme ).
+    CASE is_statement-keyword.
+      WHEN 'DATA' OR 'FIELD-SYMBOLS'.
+        lv_is_decl = abap_true.
+      WHEN OTHERS.
+        lv_is_decl = abap_false.
+    ENDCASE.
+
+    get_token_safe( EXPORTING is_statement = is_statement
+                              iv_index     = 2
+                    IMPORTING es_token     = ls_tok2
+                              ev_found     = lv_found2 ).
+    IF lv_is_decl = abap_true AND lv_found2 = abap_true
+       AND ls_tok2-lexeme <> 'BEGIN' AND ls_tok2-lexeme <> 'END'.
+      ls_var-name = to_upper( ls_tok2-lexeme ).
       APPEND ls_var TO rt_vars.
     ENDIF.
 

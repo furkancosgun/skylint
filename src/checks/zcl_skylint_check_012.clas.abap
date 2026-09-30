@@ -49,52 +49,13 @@ CLASS zcl_skylint_check_012 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD has_transporting_no_fields.
-    DATA lv_tok_cnt TYPE i.
-    DATA lv_idx     TYPE i.
-    DATA lv_t1_idx  TYPE i.
-    DATA lv_t2_idx  TYPE i.
-    DATA lv_lex     TYPE string.
-    DATA lv_t1_lex  TYPE string.
-    DATA lv_t2_lex  TYPE string.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_seq_index TYPE i.
 
     rv_has = abap_false.
-    lv_tok_cnt = lines( is_statement-tokens ).
-
-    DO lv_tok_cnt TIMES.
-      lv_idx = sy-index.
-      ASSIGN is_statement-tokens[ lv_idx ] TO <ls_token>.
-      IF sy-subrc <> 0.
-        EXIT.
-      ENDIF.
-
-      lv_lex = to_upper( <ls_token>-lexeme ).
-      IF lv_lex <> 'TRANSPORTING'.
-        CONTINUE.
-      ENDIF.
-
-      lv_t1_idx = lv_idx + 1.
-      lv_t2_idx = lv_idx + 2.
-      IF lv_t2_idx > lv_tok_cnt.
-        CONTINUE.
-      ENDIF.
-
-      ASSIGN is_statement-tokens[ lv_t1_idx ] TO <ls_token>.
-      IF sy-subrc <> 0.
-        CONTINUE.
-      ENDIF.
-      lv_t1_lex = to_upper( <ls_token>-lexeme ).
-
-      ASSIGN is_statement-tokens[ lv_t2_idx ] TO <ls_token>.
-      IF sy-subrc <> 0.
-        CONTINUE.
-      ENDIF.
-      lv_t2_lex = to_upper( <ls_token>-lexeme ).
-
-      IF lv_t1_lex = 'NO' AND lv_t2_lex = 'FIELDS'.
-        rv_has = abap_true.
-        RETURN.
-      ENDIF.
-    ENDDO.
+    lv_seq_index = find_token_sequence( is_statement = is_statement
+                                        it_expected  = VALUE #( ( `TRANSPORTING` ) ( `NO` ) ( `FIELDS` ) ) ).
+    IF lv_seq_index > 0.
+      rv_has = abap_true.
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.

@@ -44,6 +44,10 @@ CLASS zcl_skylint_check_028 IMPLEMENTATION.
   METHOD check.
     DATA lv_idx            TYPE i.
     DATA lv_max            TYPE i.
+    DATA lv_idx_then       TYPE i.
+    DATA lv_idx_else       TYPE i.
+    DATA lv_idx_body       TYPE i.
+    DATA lv_idx_endif      TYPE i.
     DATA ls_stmt_if        TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA ls_stmt_then      TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA ls_stmt_else      TYPE if_ci_atc_source_code_provider=>ty_statement.
@@ -53,6 +57,10 @@ CLASS zcl_skylint_check_028 IMPLEMENTATION.
     DATA lv_target_2       TYPE string.
     DATA lv_is_bool_1      TYPE abap_bool.
     DATA lv_is_bool_2      TYPE abap_bool.
+    DATA lv_found_then     TYPE abap_bool.
+    DATA lv_found_else     TYPE abap_bool.
+    DATA lv_found_body     TYPE abap_bool.
+    DATA lv_found_endif    TYPE abap_bool.
 
     lv_max = lines( is_procedure-statements ).
 
@@ -62,10 +70,30 @@ CLASS zcl_skylint_check_028 IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      ls_stmt_then      = is_procedure-statements[ lv_idx + 1 ].
-      ls_stmt_else      = is_procedure-statements[ lv_idx + 2 ].
-      ls_stmt_else_body = is_procedure-statements[ lv_idx + 3 ].
-      ls_stmt_endif     = is_procedure-statements[ lv_idx + 4 ].
+      lv_idx_then = lv_idx + 1.
+      lv_idx_else = lv_idx + 2.
+      lv_idx_body = lv_idx + 3.
+      lv_idx_endif = lv_idx + 4.
+      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                    iv_index       = lv_idx_then
+                          IMPORTING es_statement   = ls_stmt_then
+                                    ev_found       = lv_found_then ).
+      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                    iv_index       = lv_idx_else
+                          IMPORTING es_statement   = ls_stmt_else
+                                    ev_found       = lv_found_else ).
+      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                    iv_index       = lv_idx_body
+                          IMPORTING es_statement   = ls_stmt_else_body
+                                    ev_found       = lv_found_body ).
+      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                    iv_index       = lv_idx_endif
+                          IMPORTING es_statement   = ls_stmt_endif
+                                    ev_found       = lv_found_endif ).
+      IF lv_found_then = abap_false OR lv_found_else = abap_false
+         OR lv_found_body = abap_false OR lv_found_endif = abap_false.
+        CONTINUE.
+      ENDIF.
 
       IF ls_stmt_else-keyword <> 'ELSE' OR ls_stmt_endif-keyword <> 'ENDIF'.
         CONTINUE.
@@ -90,6 +118,9 @@ CLASS zcl_skylint_check_028 IMPLEMENTATION.
     DATA ls_tok_target TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA ls_tok_eq     TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA ls_tok_val    TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found1     TYPE abap_bool.
+    DATA lv_found2     TYPE abap_bool.
+    DATA lv_found3     TYPE abap_bool.
 
     ev_is_bool = abap_false.
     CLEAR ev_target.
@@ -98,9 +129,21 @@ CLASS zcl_skylint_check_028 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    ls_tok_target = is_statement-tokens[ 1 ].
-    ls_tok_eq     = is_statement-tokens[ 2 ].
-    ls_tok_val    = is_statement-tokens[ 3 ].
+    get_token_safe( EXPORTING is_statement = is_statement
+                              iv_index     = 1
+                    IMPORTING es_token     = ls_tok_target
+                              ev_found     = lv_found1 ).
+    get_token_safe( EXPORTING is_statement = is_statement
+                              iv_index     = 2
+                    IMPORTING es_token     = ls_tok_eq
+                              ev_found     = lv_found2 ).
+    get_token_safe( EXPORTING is_statement = is_statement
+                              iv_index     = 3
+                    IMPORTING es_token     = ls_tok_val
+                              ev_found     = lv_found3 ).
+    IF lv_found1 = abap_false OR lv_found2 = abap_false OR lv_found3 = abap_false.
+      RETURN.
+    ENDIF.
 
     IF ls_tok_eq-lexeme <> '='.
       RETURN.

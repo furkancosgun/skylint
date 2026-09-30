@@ -48,14 +48,19 @@ CLASS zcl_skylint_check_026 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_static_create_object.
-    DATA lv_total TYPE i.
-    DATA lv_idx   TYPE i.
-    DATA lv_tok   TYPE string.
-    DATA lv_tok2  TYPE string.
-    DATA lv_last1 TYPE string.
-    DATA lv_last2 TYPE string.
-    FIELD-SYMBOLS <ls_t1> TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_t2> TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_total     TYPE i.
+    DATA lv_idx       TYPE i.
+    DATA lv_next_idx  TYPE i.
+    DATA lv_last_idx  TYPE i.
+    DATA lv_tok       TYPE string.
+    DATA lv_tok2      TYPE string.
+    DATA lv_last1     TYPE string.
+    DATA lv_last2     TYPE string.
+    DATA lt_expected  TYPE ty_token_lexemes.
+    DATA ls_t1        TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_t2        TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found     TYPE abap_bool.
+    DATA lv_found2    TYPE abap_bool.
 
     rv_res = abap_false.
     lv_total = lines( is_statement-tokens ).
@@ -63,44 +68,60 @@ CLASS zcl_skylint_check_026 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    ASSIGN is_statement-tokens[ 2 ] TO <ls_t1>.
-    IF sy-subrc <> 0 OR to_upper( <ls_t1>-lexeme ) <> 'OBJECT'.
+    lt_expected = VALUE #( ( `CREATE` ) ( `OBJECT` ) ).
+    IF match_token_sequence( is_statement = is_statement
+                             it_expected  = lt_expected ) = abap_false.
       RETURN.
     ENDIF.
 
     " Check for RAP FOR TESTING
     IF lv_total >= 4.
-      ASSIGN is_statement-tokens[ lv_total - 1 ] TO <ls_t1>.
-      IF sy-subrc = 0.
-        ASSIGN is_statement-tokens[ lv_total ] TO <ls_t2>.
-        IF sy-subrc = 0.
-          lv_last1 = to_upper( <ls_t1>-lexeme ).
-          lv_last2 = to_upper( <ls_t2>-lexeme ).
-          IF lv_last1 = 'FOR' AND lv_last2 = 'TESTING'.
-            RETURN.
-          ENDIF.
+      lv_last_idx = lv_total - 1.
+      get_token_safe( EXPORTING is_statement = is_statement
+                                iv_index     = lv_last_idx
+                      IMPORTING es_token     = ls_t1
+                                ev_found     = lv_found ).
+      get_token_safe( EXPORTING is_statement = is_statement
+                                iv_index     = lv_total
+                      IMPORTING es_token     = ls_t2
+                                ev_found     = lv_found2 ).
+      IF lv_found = abap_true AND lv_found2 = abap_true.
+        lv_last1 = to_upper( ls_t1-lexeme ).
+        lv_last2 = to_upper( ls_t2-lexeme ).
+        IF lv_last1 = 'FOR' AND lv_last2 = 'TESTING'.
+          RETURN.
         ENDIF.
       ENDIF.
     ENDIF.
 
-    " Check tokens for dynamic TYPE (...), PARAMETER-TABLE, or OLE strings
+    " Check tokens for PARAMETER-TABLE via sequence search
+    lt_expected = VALUE #( ( `PARAMETER-TABLE` ) ).
+    IF find_token_sequence( is_statement = is_statement
+                            it_expected  = lt_expected ) > 0.
+      RETURN.
+    ENDIF.
+
+    " Check tokens for dynamic TYPE (...), or OLE strings
     lv_idx = 3.
     WHILE lv_idx <= lv_total.
-      ASSIGN is_statement-tokens[ lv_idx ] TO <ls_t1>.
-      IF sy-subrc <> 0.
+      get_token_safe( EXPORTING is_statement = is_statement
+                                iv_index     = lv_idx
+                      IMPORTING es_token     = ls_t1
+                                ev_found     = lv_found ).
+      IF lv_found = abap_false.
         EXIT.
       ENDIF.
 
-      lv_tok = to_upper( <ls_t1>-lexeme ).
-
-      IF lv_tok = 'PARAMETER-TABLE'.
-        RETURN.
-      ENDIF.
+      lv_tok = to_upper( ls_t1-lexeme ).
 
       IF lv_tok = 'TYPE' AND lv_idx < lv_total.
-        ASSIGN is_statement-tokens[ lv_idx + 1 ] TO <ls_t2>.
-        IF sy-subrc = 0.
-          lv_tok2 = <ls_t2>-lexeme.
+        lv_next_idx = lv_idx + 1.
+        get_token_safe( EXPORTING is_statement = is_statement
+                                  iv_index     = lv_next_idx
+                        IMPORTING es_token     = ls_t2
+                                  ev_found     = lv_found2 ).
+        IF lv_found2 = abap_true.
+          lv_tok2 = ls_t2-lexeme.
           IF lv_tok2 CP '*( *' OR lv_tok2 CP '(*)' OR lv_tok2(1) = '('.
             RETURN.
           ENDIF.

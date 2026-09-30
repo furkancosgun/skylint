@@ -32,45 +32,61 @@ CLASS zcl_skylint_check_066 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_idx       TYPE i.
-    DATA lv_total     TYPE i.
-    DATA ls_next1     TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_next2     TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_idx TYPE i.
+    DATA lv_total TYPE i.
+    DATA ls_curr TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_next1 TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_next2 TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_found_curr TYPE abap_bool.
+    DATA lv_found1 TYPE abap_bool.
+    DATA lv_found2 TYPE abap_bool.
     DATA lv_has_accum TYPE abap_bool.
-    DATA lv_lexeme    TYPE string.
+    DATA lv_lexeme TYPE string.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     lv_total = lines( is_procedure-statements ).
     lv_idx = 1.
     WHILE lv_idx <= lv_total.
-      ASSIGN is_procedure-statements[ lv_idx ] TO <ls_statement>.
-      IF sy-subrc <> 0 OR <ls_statement>-keyword <> 'LOOP' OR lv_idx + 2 > lv_total.
+      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                     iv_index      = lv_idx
+                          IMPORTING es_statement  = ls_curr
+                                    ev_found      = lv_found_curr ).
+      IF lv_found_curr = abap_false OR ls_curr-keyword <> 'LOOP' OR lv_idx + 2 > lv_total.
         lv_idx += 1.
         CONTINUE.
       ENDIF.
 
       " Check short aggregation loop pattern: LOOP (idx+1: COMPUTE / statement) (idx+2: ENDLOOP)
-      ls_next1 = is_procedure-statements[ lv_idx + 1 ].
-      ls_next2 = is_procedure-statements[ lv_idx + 2 ].
+      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                     iv_index      = lv_idx + 1
+                          IMPORTING es_statement  = ls_next1
+                                    ev_found      = lv_found1 ).
+      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                     iv_index      = lv_idx + 2
+                          IMPORTING es_statement  = ls_next2
+                                    ev_found      = lv_found2 ).
+      IF lv_found1 = abap_false OR lv_found2 = abap_false.
+        lv_idx += 1.
+        CONTINUE.
+      ENDIF.
 
       IF ls_next2-keyword = 'ENDLOOP'.
         lv_has_accum = abap_false.
         LOOP AT ls_next1-tokens ASSIGNING <ls_token>.
           lv_lexeme = to_upper( <ls_token>-lexeme ).
-          IF    lv_lexeme  = '+'       OR lv_lexeme  = '-'           OR lv_lexeme = '*' OR lv_lexeme = '/'
-             OR lv_lexeme  = 'DIV'     OR lv_lexeme  = 'MOD'         OR lv_lexeme = '&&'
-             OR lv_lexeme  = 'ADD'     OR lv_lexeme  = 'SUBTRACT'    OR lv_lexeme = 'MULTIPLY'
-             OR lv_lexeme  = 'DIVIDE'  OR lv_lexeme  = 'CONCATENATE'
-             OR lv_lexeme CP '|*|'     OR lv_lexeme CP '*&&*'
-             OR lv_lexeme  = 'BIT-AND' OR lv_lexeme  = 'BIT-OR'      OR lv_lexeme = 'BIT-XOR'.
+          IF lv_lexeme = '+' OR lv_lexeme = '-' OR lv_lexeme = '*' OR lv_lexeme = '/'
+             OR lv_lexeme = 'DIV' OR lv_lexeme = 'MOD' OR lv_lexeme = '&&'
+             OR lv_lexeme = 'ADD' OR lv_lexeme = 'SUBTRACT' OR lv_lexeme = 'MULTIPLY'
+             OR lv_lexeme = 'DIVIDE' OR lv_lexeme = 'CONCATENATE'
+             OR lv_lexeme CP '|*|' OR lv_lexeme CP '*&&*'
+             OR lv_lexeme = 'BIT-AND' OR lv_lexeme = 'BIT-OR' OR lv_lexeme = 'BIT-XOR'.
             lv_has_accum = abap_true.
             EXIT.
           ENDIF.
         ENDLOOP.
 
         IF lv_has_accum = abap_true.
-          report_statement( is_statement    = <ls_statement>
+          report_statement( is_statement    = ls_curr
                             iv_finding_code = c_finding_codes-prefer_reduce ).
         ENDIF.
       ENDIF.

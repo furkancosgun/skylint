@@ -23,6 +23,12 @@ CLASS zcl_skylint_check_009 DEFINITION
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_is) TYPE abap_bool.
 
+    METHODS should_report_chain
+      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
+                is_next      TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_allow     TYPE abap_bool
+      RETURNING VALUE(rv_report) TYPE abap_bool.
+
 ENDCLASS.
 
 
@@ -43,12 +49,13 @@ CLASS zcl_skylint_check_009 IMPLEMENTATION.
 
   METHOD check.
     DATA lv_allow_struct TYPE abap_bool.
-    DATA lv_total        TYPE i.
-    DATA lv_idx          TYPE i.
-    DATA lv_next_idx     TYPE i.
-    DATA lv_report       TYPE abap_bool.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_next_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_total TYPE i.
+    DATA lv_idx TYPE i.
+    DATA lv_next_idx TYPE i.
+    DATA ls_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_next_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_found TYPE abap_bool.
+    DATA lv_found_next TYPE abap_bool.
 
     get_attribute( EXPORTING iv_name  = 'ALLOW_STRUCTURE_CHAINS'
                    IMPORTING ev_value = lv_allow_struct ).
@@ -61,30 +68,32 @@ CLASS zcl_skylint_check_009 IMPLEMENTATION.
 
     DO lv_total TIMES.
       lv_idx = sy-index.
-      ASSIGN is_procedure-statements[ lv_idx ] TO <ls_statement>.
-      IF sy-subrc <> 0.
+      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                    iv_index       = lv_idx
+                          IMPORTING es_statement   = ls_statement
+                                    ev_found       = lv_found ).
+      IF lv_found = abap_false.
         EXIT.
       ENDIF.
 
-      CASE <ls_statement>-keyword.
+      CASE ls_statement-keyword.
         WHEN 'DATA' OR 'TYPES' OR 'CONSTANTS' OR 'STATICS' OR 'FIELD-SYMBOLS' OR 'CLASS-DATA'.
           lv_next_idx = lv_idx + 1.
-          IF lv_next_idx <= lv_total.
-            ASSIGN is_procedure-statements[ lv_next_idx ] TO <ls_next_stmt>.
-            IF sy-subrc = 0 AND ( <ls_next_stmt>-keyword IS INITIAL
-               OR ( lines( <ls_next_stmt>-tokens ) > 0 AND lines( <ls_statement>-tokens ) > 0
-                    AND <ls_next_stmt>-tokens[ 1 ]-position-line = <ls_statement>-tokens[ 1 ]-position-line
-                    AND <ls_next_stmt>-position-line <> <ls_statement>-position-line ) ).
-              lv_report = abap_true.
-              IF lv_allow_struct = abap_true AND is_structure_start( <ls_statement> ) = abap_true.
-                lv_report = abap_false.
-              ENDIF.
-
-              IF lv_report = abap_true.
-                report_statement( is_statement    = <ls_statement>
-                                  iv_finding_code = c_finding_codes-chained_declaration ).
-              ENDIF.
-            ENDIF.
+          IF lv_next_idx > lv_total.
+            CONTINUE.
+          ENDIF.
+          get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                        iv_index       = lv_next_idx
+                              IMPORTING es_statement   = ls_next_stmt
+                                        ev_found       = lv_found_next ).
+          IF lv_found_next = abap_false.
+            CONTINUE.
+          ENDIF.
+          IF should_report_chain( is_statement = ls_statement
+                                  is_next      = ls_next_stmt
+                                  iv_allow     = lv_allow_struct ) = abap_true.
+            report_statement( is_statement    = ls_statement
+                              iv_finding_code = c_finding_codes-chained_declaration ).
           ENDIF.
       ENDCASE.
     ENDDO.
@@ -102,5 +111,43 @@ CLASS zcl_skylint_check_009 IMPLEMENTATION.
         RETURN.
       ENDIF.
     ENDLOOP.
+  ENDMETHOD.
+
+  METHOD should_report_chain.
+    DATA ls_cur_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_next_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found_cur TYPE abap_bool.
+    DATA lv_found_next TYPE abap_bool.
+    DATA lv_is_cont TYPE abap_bool.
+
+    rv_report = abap_false.
+
+    get_token_safe( EXPORTING is_statement = is_next
+                              iv_index     = 1
+                    IMPORTING es_token     = ls_next_token
+                              ev_found     = lv_found_next ).
+    get_token_safe( EXPORTING is_statement = is_statement
+                              iv_index     = 1
+                    IMPORTING es_token     = ls_cur_token
+                              ev_found     = lv_found_cur ).
+
+    IF lv_found_next = abap_false OR lv_found_cur = abap_false.
+      RETURN.
+    ENDIF.
+
+    IF is_next-keyword IS NOT INITIAL
+       AND ( ls_next_token-position-line <> ls_cur_token-position-line
+             OR is_next-position-line = is_statement-position-line ).
+      RETURN.
+    ENDIF.
+
+    lv_is_cont = abap_true.
+    IF iv_allow = abap_true AND is_structure_start( is_statement ) = abap_true.
+      lv_is_cont = abap_false.
+    ENDIF.
+
+    IF lv_is_cont = abap_true.
+      rv_report = abap_true.
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.

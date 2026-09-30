@@ -38,10 +38,11 @@ CLASS zcl_skylint_check_047 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_max   TYPE i.
+    DATA lv_max TYPE i.
     DATA lv_count TYPE i.
-    FIELD-SYMBOLS <ls_statement>  TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_first_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_first TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_found TYPE abap_bool.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
@@ -65,12 +66,17 @@ CLASS zcl_skylint_check_047 IMPLEMENTATION.
       ENDIF.
     ENDLOOP.
 
-    IF lv_count > lv_max.
-      ASSIGN is_procedure-statements[ 1 ] TO <ls_first_stmt>.
-      IF sy-subrc = 0.
-        report_statement( is_statement    = <ls_first_stmt>
-                          iv_finding_code = c_finding_codes-method_length ).
-      ENDIF.
+    IF lv_count <= lv_max.
+      RETURN.
     ENDIF.
+    get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                  iv_index      = 1
+                        IMPORTING es_statement  = ls_first
+                                  ev_found      = lv_found ).
+    IF lv_found = abap_false.
+      RETURN.
+    ENDIF.
+    report_statement( is_statement    = ls_first
+                      iv_finding_code = c_finding_codes-method_length ).
   ENDMETHOD.
 ENDCLASS.

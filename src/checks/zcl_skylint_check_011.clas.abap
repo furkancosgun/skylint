@@ -55,26 +55,32 @@ CLASS zcl_skylint_check_011 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD has_boolean_comparison.
-    DATA lv_tok_idx  TYPE i.
-    DATA lv_tok_cnt  TYPE i.
+    DATA lv_tok_idx TYPE i.
+    DATA lv_tok_cnt TYPE i.
     DATA lv_prev_idx TYPE i.
     DATA lv_next_idx TYPE i.
-    DATA lv_lexeme   TYPE string.
+    DATA lv_lexeme TYPE string.
     DATA lv_prev_lex TYPE string.
     DATA lv_next_lex TYPE string.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_cur_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_adj_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found TYPE abap_bool.
+    DATA lv_found_adj TYPE abap_bool.
 
     rv_has = abap_false.
     lv_tok_cnt = lines( is_statement-tokens ).
 
     DO lv_tok_cnt TIMES.
       lv_tok_idx = sy-index.
-      ASSIGN is_statement-tokens[ lv_tok_idx ] TO <ls_token>.
-      IF sy-subrc <> 0.
+      get_token_safe( EXPORTING is_statement = is_statement
+                                iv_index     = lv_tok_idx
+                      IMPORTING es_token     = ls_cur_token
+                                ev_found     = lv_found ).
+      IF lv_found = abap_false.
         EXIT.
       ENDIF.
 
-      lv_lexeme = to_upper( <ls_token>-lexeme ).
+      lv_lexeme = to_upper( ls_cur_token-lexeme ).
       IF     lv_lexeme <> '='  AND lv_lexeme <> 'EQ' AND lv_lexeme <> '<>'
          AND lv_lexeme <> 'NE' AND lv_lexeme <> '><'.
         CONTINUE.
@@ -84,9 +90,12 @@ CLASS zcl_skylint_check_011 IMPLEMENTATION.
       lv_next_idx = lv_tok_idx + 1.
 
       IF lv_prev_idx >= 1.
-        ASSIGN is_statement-tokens[ lv_prev_idx ] TO <ls_token>.
-        IF sy-subrc = 0.
-          lv_prev_lex = to_upper( <ls_token>-lexeme ).
+        get_token_safe( EXPORTING is_statement = is_statement
+                                  iv_index     = lv_prev_idx
+                        IMPORTING es_token     = ls_adj_token
+                                  ev_found     = lv_found_adj ).
+        IF lv_found_adj = abap_true.
+          lv_prev_lex = to_upper( ls_adj_token-lexeme ).
           IF is_boolean_literal( lv_prev_lex ) = abap_true.
             rv_has = abap_true.
             RETURN.
@@ -95,9 +104,12 @@ CLASS zcl_skylint_check_011 IMPLEMENTATION.
       ENDIF.
 
       IF lv_next_idx <= lv_tok_cnt.
-        ASSIGN is_statement-tokens[ lv_next_idx ] TO <ls_token>.
-        IF sy-subrc = 0.
-          lv_next_lex = to_upper( <ls_token>-lexeme ).
+        get_token_safe( EXPORTING is_statement = is_statement
+                                  iv_index     = lv_next_idx
+                        IMPORTING es_token     = ls_adj_token
+                                  ev_found     = lv_found_adj ).
+        IF lv_found_adj = abap_true.
+          lv_next_lex = to_upper( ls_adj_token-lexeme ).
           IF is_boolean_literal( lv_next_lex ) = abap_true.
             rv_has = abap_true.
             RETURN.

@@ -66,14 +66,20 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
     DATA lv_idx TYPE i.
     DATA lv_cnt TYPE i.
     DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_next TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found TYPE abap_bool.
 
     rv_var = ''.
     lv_cnt = lines( is_statement-tokens ).
 
     LOOP AT is_statement-tokens INTO ls_tok.
       lv_idx = sy-tabix.
-      IF ls_tok-lexeme = 'INTO' AND lv_idx < lv_cnt.
-        rv_var = is_statement-tokens[ lv_idx + 1 ]-lexeme.
+      get_token_safe( EXPORTING is_statement = is_statement
+                                iv_index     = lv_idx + 1
+                      IMPORTING es_token     = ls_next
+                                ev_found     = lv_found ).
+      IF ls_tok-lexeme = 'INTO' AND lv_idx < lv_cnt AND lv_found = abap_true.
+        rv_var = ls_next-lexeme.
         RETURN.
       ENDIF.
     ENDLOOP.
@@ -81,13 +87,24 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
 
   METHOD has_previous_parameter.
     DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok2 TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok3 TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found2 TYPE abap_bool.
+    DATA lv_found3 TYPE abap_bool.
 
     rv_res = abap_false.
 
     " If statement is directly re-raising the caught exception variable (e.g. RAISE EXCEPTION lx_exc)
-    IF     lines( is_statement-tokens )    = 3
-       AND is_statement-tokens[ 2 ]-lexeme = 'EXCEPTION'
-       AND is_statement-tokens[ 3 ]-lexeme = iv_caught_var.
+    get_token_safe( EXPORTING is_statement = is_statement
+                              iv_index     = 2
+                    IMPORTING es_token     = ls_tok2
+                              ev_found     = lv_found2 ).
+    get_token_safe( EXPORTING is_statement = is_statement
+                              iv_index     = 3
+                    IMPORTING es_token     = ls_tok3
+                              ev_found     = lv_found3 ).
+    IF lines( is_statement-tokens ) = 3 AND lv_found2 = abap_true AND lv_found3 = abap_true
+       AND ls_tok2-lexeme = 'EXCEPTION' AND ls_tok3-lexeme = iv_caught_var.
       rv_res = abap_true.
       RETURN.
     ENDIF.

@@ -33,11 +33,15 @@ CLASS zcl_skylint_check_069 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_param_name TYPE string.
-    DATA lv_len        TYPE i.
-    DATA lv_idx        TYPE i.
+    DATA lv_len TYPE i.
+    DATA lv_idx TYPE i.
+    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_next_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found TYPE abap_bool.
+    DATA lv_found_next TYPE abap_bool.
+    DATA lv_lex TYPE string.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'METHODS' OR keyword = 'CLASS-METHODS'.
@@ -45,15 +49,25 @@ CLASS zcl_skylint_check_069 IMPLEMENTATION.
       lv_idx = 1.
 
       WHILE lv_idx <= lv_len.
-        ASSIGN <ls_statement>-tokens[ lv_idx ] TO <ls_token>.
-        IF sy-subrc <> 0.
+        get_token_safe( EXPORTING is_statement = <ls_statement>
+                                   iv_index     = lv_idx
+                         IMPORTING es_token     = ls_token
+                                   ev_found     = lv_found ).
+        IF lv_found = abap_false.
           lv_idx += 1.
           CONTINUE.
         ENDIF.
+        lv_lex = to_upper( ls_token-lexeme ).
 
-        IF to_upper( <ls_token>-lexeme ) = 'CHANGING' AND lv_idx + 1 <= lv_len.
-          lv_param_name = to_upper( <ls_statement>-tokens[ lv_idx + 1 ]-lexeme ).
-          IF    lv_param_name CP '*UNCHANGED*' OR lv_param_name CP '*UNMODIFIED*'
+        IF lv_lex = 'CHANGING'.
+          get_token_safe( EXPORTING is_statement = <ls_statement>
+                                     iv_index     = lv_idx + 1
+                           IMPORTING es_token     = ls_next_token
+                                     ev_found     = lv_found_next ).
+        ENDIF.
+        IF lv_lex = 'CHANGING' AND lv_found_next = abap_true.
+          lv_param_name = to_upper( ls_next_token-lexeme ).
+          IF lv_param_name CP '*UNCHANGED*' OR lv_param_name CP '*UNMODIFIED*'
              OR lv_param_name CP '*READONLY*'.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-unmodified_changing ).

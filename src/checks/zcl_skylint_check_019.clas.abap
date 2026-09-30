@@ -67,29 +67,33 @@ CLASS zcl_skylint_check_019 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check_duplicate_elseif.
-    DATA lv_cond      TYPE string.
+    DATA lv_cond TYPE string.
     DATA lv_prev_cond TYPE string.
-    DATA lv_back_idx  TYPE i.
-    DATA lv_depth     TYPE i.
-    FIELD-SYMBOLS <ls_back_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_back_idx TYPE i.
+    DATA lv_depth TYPE i.
+    DATA ls_back_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_found TYPE abap_bool.
 
     lv_cond = get_condition_string( is_statement ).
     lv_depth = 0.
     lv_back_idx = iv_idx - 1.
 
     WHILE lv_back_idx >= 1.
-      ASSIGN is_procedure-statements[ lv_back_idx ] TO <ls_back_stmt>.
-      IF sy-subrc <> 0.
+      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                    iv_index       = lv_back_idx
+                          IMPORTING es_statement   = ls_back_stmt
+                                    ev_found       = lv_found ).
+      IF lv_found = abap_false.
         EXIT.
       ENDIF.
 
-      CASE <ls_back_stmt>-keyword.
+      CASE ls_back_stmt-keyword.
         WHEN 'ENDIF'.
           lv_depth += 1.
 
         WHEN 'IF'.
           IF lv_depth = 0.
-            lv_prev_cond = get_condition_string( <ls_back_stmt> ).
+            lv_prev_cond = get_condition_string( ls_back_stmt ).
             IF lv_prev_cond = lv_cond.
               report_statement( is_statement    = is_statement
                                 iv_finding_code = c_finding_codes-identical_condition ).
@@ -101,7 +105,7 @@ CLASS zcl_skylint_check_019 IMPLEMENTATION.
 
         WHEN 'ELSEIF'.
           IF lv_depth = 0.
-            lv_prev_cond = get_condition_string( <ls_back_stmt> ).
+            lv_prev_cond = get_condition_string( ls_back_stmt ).
             IF lv_prev_cond = lv_cond.
               report_statement( is_statement    = is_statement
                                 iv_finding_code = c_finding_codes-identical_condition ).
@@ -115,23 +119,27 @@ CLASS zcl_skylint_check_019 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check_duplicate_when.
-    DATA lv_cond      TYPE string.
+    DATA lv_cond TYPE string.
     DATA lv_prev_cond TYPE string.
-    DATA lv_back_idx  TYPE i.
-    DATA lv_depth     TYPE i.
-    FIELD-SYMBOLS <ls_back_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_back_idx TYPE i.
+    DATA lv_depth TYPE i.
+    DATA ls_back_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_found TYPE abap_bool.
 
     lv_cond = get_condition_string( is_statement ).
     lv_depth = 0.
     lv_back_idx = iv_idx - 1.
 
     WHILE lv_back_idx >= 1.
-      ASSIGN is_procedure-statements[ lv_back_idx ] TO <ls_back_stmt>.
-      IF sy-subrc <> 0.
+      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                    iv_index       = lv_back_idx
+                          IMPORTING es_statement   = ls_back_stmt
+                                    ev_found       = lv_found ).
+      IF lv_found = abap_false.
         EXIT.
       ENDIF.
 
-      CASE <ls_back_stmt>-keyword.
+      CASE ls_back_stmt-keyword.
         WHEN 'ENDCASE'.
           lv_depth += 1.
 
@@ -144,7 +152,7 @@ CLASS zcl_skylint_check_019 IMPLEMENTATION.
 
         WHEN 'WHEN'.
           IF lv_depth = 0.
-            lv_prev_cond = get_condition_string( <ls_back_stmt> ).
+            lv_prev_cond = get_condition_string( ls_back_stmt ).
             IF lv_prev_cond = lv_cond.
               report_statement( is_statement    = is_statement
                                 iv_finding_code = c_finding_codes-identical_condition ).
@@ -160,7 +168,8 @@ CLASS zcl_skylint_check_019 IMPLEMENTATION.
   METHOD get_condition_string.
     DATA lv_tok_cnt TYPE i.
     DATA lv_tok_idx TYPE i.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found TYPE abap_bool.
 
     rv_cond = ''.
     lv_tok_cnt = lines( is_statement-tokens ).
@@ -170,12 +179,15 @@ CLASS zcl_skylint_check_019 IMPLEMENTATION.
 
     DO lv_tok_cnt - 1 TIMES.
       lv_tok_idx = sy-index + 1.
-      ASSIGN is_statement-tokens[ lv_tok_idx ] TO <ls_token>.
-      IF sy-subrc = 0.
+      get_token_safe( EXPORTING is_statement = is_statement
+                                iv_index     = lv_tok_idx
+                      IMPORTING es_token     = ls_token
+                                ev_found     = lv_found ).
+      IF lv_found = abap_true.
         IF rv_cond IS INITIAL.
-          rv_cond = to_upper( <ls_token>-lexeme ).
+          rv_cond = to_upper( ls_token-lexeme ).
         ELSE.
-          rv_cond = |{ rv_cond } { to_upper( <ls_token>-lexeme ) }|.
+          rv_cond = |{ rv_cond } { to_upper( ls_token-lexeme ) }|.
         ENDIF.
       ENDIF.
     ENDDO.

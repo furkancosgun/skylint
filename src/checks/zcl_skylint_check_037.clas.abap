@@ -68,39 +68,50 @@ CLASS zcl_skylint_check_037 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD extract_fae_table.
-    DATA lv_idx  TYPE i.
-    DATA lv_cnt  TYPE i.
-    DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_pos TYPE i.
     DATA lv_name TYPE string.
+    DATA lt_expected TYPE ty_token_lexemes.
+    DATA ls_tab_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found TYPE abap_bool.
 
     rv_tab = ''.
-    lv_cnt = lines( is_statement-tokens ).
-
-    LOOP AT is_statement-tokens INTO ls_tok.
-      lv_idx = sy-tabix.
-      IF     ls_tok-lexeme = 'FOR' AND lv_idx + 4 <= lv_cnt
-         AND is_statement-tokens[ lv_idx + 1 ]-lexeme = 'ALL'
-         AND is_statement-tokens[ lv_idx + 2 ]-lexeme = 'ENTRIES'
-         AND is_statement-tokens[ lv_idx + 3 ]-lexeme = 'IN'.
-        lv_name = is_statement-tokens[ lv_idx + 4 ]-lexeme.
-        IF lv_name(1) = '@'.
-          lv_name = lv_name+1.
-        ENDIF.
-        rv_tab = to_upper( lv_name ).
-        RETURN.
-      ENDIF.
-    ENDLOOP.
+    lt_expected = VALUE #( ( `FOR` ) ( `ALL` ) ( `ENTRIES` ) ( `IN` ) ).
+    lv_pos = find_token_sequence( is_statement = is_statement
+                                                it_expected  = lt_expected ).
+    IF lv_pos = 0.
+      RETURN.
+    ENDIF.
+    get_token_safe( EXPORTING is_statement = is_statement
+                              iv_index     = lv_pos + 4
+                    IMPORTING es_token     = ls_tab_token
+                              ev_found     = lv_found ).
+    IF lv_found = abap_false.
+      RETURN.
+    ENDIF.
+    lv_name = ls_tab_token-lexeme.
+    IF lv_name(1) = '@'.
+      lv_name = lv_name+1.
+    ENDIF.
+    rv_tab = to_upper( lv_name ).
   ENDMETHOD.
 
   METHOD has_preceding_check.
-    DATA lv_idx  TYPE i.
+    DATA lv_idx TYPE i.
     DATA ls_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_found TYPE abap_bool.
 
     rv_res = abap_false.
     lv_idx = iv_current_idx - 1.
 
     WHILE lv_idx >= 1.
-      ls_stmt = it_statements[ lv_idx ].
+      get_statement_safe( EXPORTING it_statements = it_statements
+                                    iv_index      = lv_idx
+                          IMPORTING es_statement  = ls_stmt
+                                    ev_found      = lv_found ).
+      IF lv_found = abap_false.
+        lv_idx -= 1.
+        CONTINUE.
+      ENDIF.
       IF statement_checks_table( is_statement = ls_stmt
                                  iv_tab_name  = iv_tab_name ) = abap_true.
         rv_res = abap_true.

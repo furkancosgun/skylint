@@ -33,12 +33,15 @@ CLASS zcl_skylint_check_070 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_is_bool_returning TYPE abap_bool.
-    DATA lv_meth_name         TYPE string.
-    DATA lv_len               TYPE i.
-    DATA lv_idx               TYPE i.
+    DATA lv_meth_name TYPE string.
+    DATA lv_len TYPE i.
+    DATA lv_idx TYPE i.
+    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found TYPE abap_bool.
+    DATA lv_lexeme TYPE string.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'METHODS' OR keyword = 'CLASS-METHODS'.
@@ -48,13 +51,28 @@ CLASS zcl_skylint_check_070 IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      lv_meth_name = to_upper( <ls_statement>-tokens[ 2 ]-lexeme ).
+      get_token_safe( EXPORTING is_statement = <ls_statement>
+                                iv_index     = 2
+                      IMPORTING es_token     = ls_token
+                                ev_found     = lv_found ).
+      IF lv_found = abap_false.
+        CONTINUE.
+      ENDIF.
+      lv_meth_name = to_upper( ls_token-lexeme ).
 
       " Check if method returns boolean
       lv_idx = 1.
       WHILE lv_idx <= lv_len.
-        ASSIGN <ls_statement>-tokens[ lv_idx ] TO <ls_token>.
-        IF sy-subrc = 0 AND to_upper( <ls_token>-lexeme ) = 'RETURNING'.
+        get_token_safe( EXPORTING is_statement = <ls_statement>
+                                  iv_index     = lv_idx
+                        IMPORTING es_token     = ls_token
+                                  ev_found     = lv_found ).
+        IF lv_found = abap_false.
+          lv_idx += 1.
+          CONTINUE.
+        ENDIF.
+        lv_lexeme = to_upper( ls_token-lexeme ).
+        IF lv_lexeme = 'RETURNING'.
           " Look for boolean type keyword in remaining tokens
           LOOP AT <ls_statement>-tokens ASSIGNING <ls_token> FROM lv_idx.
             IF    to_upper( <ls_token>-lexeme ) = 'ABAP_BOOL'

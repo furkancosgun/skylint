@@ -137,10 +137,12 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_unconditional_jump.
-    DATA lv_tok2 TYPE string.
-    DATA lv_tok3 TYPE string.
-    FIELD-SYMBOLS <ls_tok2> TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_tok3> TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_tok2   TYPE string.
+    DATA lv_tok3   TYPE string.
+    DATA ls_tok2   TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok3   TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found  TYPE abap_bool.
+    DATA lv_found3 TYPE abap_bool.
 
     rv_res = abap_false.
 
@@ -153,11 +155,14 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
           RETURN.
         ENDIF.
 
-        ASSIGN is_statement-tokens[ 2 ] TO <ls_tok2>.
-        IF sy-subrc <> 0.
+        get_token_safe( EXPORTING is_statement = is_statement
+                                  iv_index     = 2
+                        IMPORTING es_token     = ls_tok2
+                                  ev_found     = lv_found ).
+        IF lv_found = abap_false.
           RETURN.
         ENDIF.
-        lv_tok2 = to_upper( <ls_tok2>-lexeme ).
+        lv_tok2 = to_upper( ls_tok2-lexeme ).
 
         CASE lv_tok2.
           WHEN 'SHORTDUMP'.
@@ -166,9 +171,12 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
           WHEN 'EXCEPTION'.
             rv_res = abap_true.
             IF lines( is_statement-tokens ) >= 3.
-              ASSIGN is_statement-tokens[ 3 ] TO <ls_tok3>.
-              IF sy-subrc = 0.
-                lv_tok3 = to_upper( <ls_tok3>-lexeme ).
+              get_token_safe( EXPORTING is_statement = is_statement
+                                        iv_index     = 3
+                              IMPORTING es_token     = ls_tok3
+                                        ev_found     = lv_found3 ).
+              IF lv_found3 = abap_true.
+                lv_tok3 = to_upper( ls_tok3-lexeme ).
                 IF lv_tok3 = 'RESUMABLE'.
                   rv_res = abap_false.
                 ENDIF.

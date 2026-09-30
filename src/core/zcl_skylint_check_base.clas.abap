@@ -14,6 +14,34 @@ CLASS zcl_skylint_check_base DEFINITION
     METHODS check ABSTRACT
       IMPORTING is_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure.
 
+    TYPES ty_token_lexemes TYPE STANDARD TABLE OF string WITH EMPTY KEY.
+
+    METHODS get_token_safe
+      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_index     TYPE i
+      EXPORTING es_token     TYPE if_ci_atc_source_code_provider=>ty_token
+                ev_found     TYPE abap_bool.
+
+    METHODS get_statement_safe
+      IMPORTING it_statements  TYPE if_ci_atc_source_code_provider=>ty_statements
+                iv_index       TYPE i
+      EXPORTING es_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
+                ev_found       TYPE abap_bool.
+
+    METHODS find_token_sequence
+      IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
+                it_expected       TYPE ty_token_lexemes
+                iv_start_index    TYPE i DEFAULT 1
+                iv_case_sensitive TYPE abap_bool DEFAULT abap_false
+      RETURNING VALUE(rv_index)   TYPE i.
+
+    METHODS match_token_sequence
+      IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
+                it_expected       TYPE ty_token_lexemes
+                iv_start_index    TYPE i DEFAULT 1
+                iv_case_sensitive TYPE abap_bool DEFAULT abap_false
+      RETURNING VALUE(rv_matched) TYPE abap_bool.
+
     METHODS report_statement
       IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
                 iv_finding_code TYPE if_ci_atc_check=>ty_finding_code
@@ -202,5 +230,130 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
                                        iv_quickfix_code     = iv_quickfix_code
                                        is_procedure_id      = is_procedure_id
                                        iv_statement_index   = iv_statement_index ).
+  ENDMETHOD.
+
+  METHOD get_token_safe.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    CLEAR es_token.
+    ev_found = abap_false.
+
+    IF iv_index <= 0 OR iv_index > lines( is_statement-tokens ).
+      RETURN.
+    ENDIF.
+
+    READ TABLE is_statement-tokens ASSIGNING <ls_token> INDEX iv_index.
+    IF sy-subrc = 0.
+      es_token = <ls_token>.
+      ev_found = abap_true.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD get_statement_safe.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+
+    CLEAR es_statement.
+    ev_found = abap_false.
+
+    IF iv_index <= 0 OR iv_index > lines( it_statements ).
+      RETURN.
+    ENDIF.
+
+    READ TABLE it_statements ASSIGNING <ls_statement> INDEX iv_index.
+    IF sy-subrc = 0.
+      es_statement = <ls_statement>.
+      ev_found = abap_true.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD find_token_sequence.
+    DATA lv_expected_count TYPE i.
+    DATA lv_token_count TYPE i.
+    DATA lv_start TYPE i.
+    DATA lv_offset TYPE i.
+    DATA lv_exp_idx TYPE i.
+    DATA lv_tok_idx TYPE i.
+    DATA lv_expected TYPE string.
+    DATA lv_actual TYPE string.
+    DATA lv_all_match TYPE abap_bool.
+    DATA ls_exp_token TYPE string.
+    DATA ls_act_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_exp> TYPE string.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    rv_index = 0.
+    lv_expected_count = lines( it_expected ).
+    lv_token_count = lines( is_statement-tokens ).
+
+    IF lv_expected_count = 0 OR lv_token_count = 0.
+      RETURN.
+    ENDIF.
+
+    IF iv_start_index <= 0 OR iv_start_index > lv_token_count.
+      RETURN.
+    ENDIF.
+
+    IF lv_expected_count > lv_token_count.
+      RETURN.
+    ENDIF.
+
+    LOOP AT is_statement-tokens ASSIGNING <ls_token> FROM iv_start_index.
+      lv_start = sy-tabix.
+      IF lv_start + lv_expected_count - 1 > lv_token_count.
+        EXIT.
+      ENDIF.
+
+      lv_all_match = abap_true.
+      DO lv_expected_count TIMES.
+        lv_offset = sy-index - 1.
+        lv_exp_idx = sy-index.
+        lv_tok_idx = lv_start + lv_offset.
+
+        READ TABLE it_expected ASSIGNING <ls_exp> INDEX lv_exp_idx.
+        IF sy-subrc <> 0.
+          lv_all_match = abap_false.
+          EXIT.
+        ENDIF.
+        ls_exp_token = <ls_exp>.
+
+        READ TABLE is_statement-tokens INTO ls_act_token INDEX lv_tok_idx.
+        IF sy-subrc <> 0.
+          lv_all_match = abap_false.
+          EXIT.
+        ENDIF.
+
+        IF iv_case_sensitive = abap_true.
+          lv_expected = ls_exp_token.
+          lv_actual = ls_act_token-lexeme.
+        ELSE.
+          lv_expected = to_upper( ls_exp_token ).
+          lv_actual = to_upper( ls_act_token-lexeme ).
+        ENDIF.
+
+        IF lv_expected <> lv_actual.
+          lv_all_match = abap_false.
+          EXIT.
+        ENDIF.
+      ENDDO.
+
+      IF lv_all_match = abap_true.
+        rv_index = lv_start.
+        RETURN.
+      ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD match_token_sequence.
+    DATA lv_index TYPE i.
+
+    rv_matched = abap_false.
+    lv_index = find_token_sequence( is_statement      = is_statement
+                                    it_expected       = it_expected
+                                    iv_start_index    = iv_start_index
+                                    iv_case_sensitive = iv_case_sensitive ).
+
+    IF lv_index > 0.
+      rv_matched = abap_true.
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.

@@ -66,13 +66,15 @@ CLASS zcl_skylint_check_043 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD has_single_named_param.
-    DATA lv_count        TYPE i.
-    DATA lv_idx          TYPE i.
-    DATA lv_open_idx     TYPE i.
-    DATA lv_close_idx    TYPE i.
+    DATA lv_count TYPE i.
+    DATA lv_idx TYPE i.
+    DATA lv_open_idx TYPE i.
+    DATA lv_close_idx TYPE i.
     DATA lv_equals_count TYPE i.
-    DATA lv_comma_count  TYPE i.
-    DATA lv_tok          TYPE string.
+    DATA lv_comma_count TYPE i.
+    DATA lv_tok TYPE string.
+    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found TYPE abap_bool.
 
     rv_res = abap_false.
     lv_count = lines( is_statement-tokens ).
@@ -83,7 +85,14 @@ CLASS zcl_skylint_check_043 IMPLEMENTATION.
 
     DO lv_count TIMES.
       lv_idx = sy-index.
-      lv_tok = is_statement-tokens[ lv_idx ]-lexeme.
+      get_token_safe( EXPORTING is_statement = is_statement
+                                iv_index     = lv_idx
+                      IMPORTING es_token     = ls_token
+                                ev_found     = lv_found ).
+      IF lv_found = abap_false.
+        CONTINUE.
+      ENDIF.
+      lv_tok = ls_token-lexeme.
       IF lv_tok CP '*(' OR lv_tok = '('.
         lv_open_idx = lv_idx.
       ELSEIF lv_tok = ')'.
@@ -92,29 +101,44 @@ CLASS zcl_skylint_check_043 IMPLEMENTATION.
       ENDIF.
     ENDDO.
 
-    IF lv_open_idx > 0 AND lv_close_idx > lv_open_idx + 2.
-      lv_equals_count = 0.
-      lv_comma_count = 0.
-      lv_idx = lv_open_idx + 1.
-      WHILE lv_idx < lv_close_idx.
-        lv_tok = is_statement-tokens[ lv_idx ]-lexeme.
-        CASE lv_tok.
-          WHEN '='.
-            lv_equals_count += 1.
-          WHEN ','.
-            lv_comma_count += 1.
-        ENDCASE.
-        lv_idx += 1.
-      ENDWHILE.
+    IF lv_open_idx = 0 OR lv_close_idx <= lv_open_idx + 2.
+      RETURN.
+    ENDIF.
 
-      IF lv_equals_count = 1 AND lv_comma_count = 0.
-        " Ensure not a constructor VALUE #( ... ) or COND #( ... )
-        lv_tok = to_upper( is_statement-tokens[ lv_open_idx ]-lexeme ).
-        IF     lv_tok <> 'VALUE'         AND lv_tok <> 'COND' AND lv_tok <> 'EXACT'
-           AND lv_tok <> 'CORRESPONDING' AND lv_tok <> '#('   AND lv_tok <> '('.
-          rv_res = abap_true.
-        ENDIF.
+    lv_equals_count = 0.
+    lv_comma_count = 0.
+    lv_idx = lv_open_idx + 1.
+    WHILE lv_idx < lv_close_idx.
+      get_token_safe( EXPORTING is_statement = is_statement
+                                iv_index     = lv_idx
+                      IMPORTING es_token     = ls_token
+                                ev_found     = lv_found ).
+      IF lv_found = abap_false.
+        lv_idx += 1.
+        CONTINUE.
       ENDIF.
+      lv_tok = ls_token-lexeme.
+      CASE lv_tok.
+        WHEN '='.
+          lv_equals_count += 1.
+        WHEN ','.
+          lv_comma_count += 1.
+      ENDCASE.
+      lv_idx += 1.
+    ENDWHILE.
+
+    " Ensure not a constructor VALUE #( ... ) or COND #( ... )
+    get_token_safe( EXPORTING is_statement = is_statement
+                              iv_index     = lv_open_idx
+                    IMPORTING es_token     = ls_token
+                              ev_found     = lv_found ).
+    IF lv_found = abap_false.
+      RETURN.
+    ENDIF.
+    lv_tok = to_upper( ls_token-lexeme ).
+    IF lv_equals_count = 1 AND lv_comma_count = 0 AND lv_tok <> 'VALUE' AND lv_tok <> 'COND'
+       AND lv_tok <> 'EXACT' AND lv_tok <> 'CORRESPONDING' AND lv_tok <> '#(' AND lv_tok <> '('.
+      rv_res = abap_true.
     ENDIF.
   ENDMETHOD.
 ENDCLASS.

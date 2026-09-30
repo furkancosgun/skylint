@@ -38,10 +38,11 @@ CLASS zcl_skylint_check_015 IMPLEMENTATION.
 
   METHOD check.
     DATA lv_has_constant TYPE abap_bool.
-    DATA lv_has_other    TYPE abap_bool.
+    DATA lv_has_other TYPE abap_bool.
     DATA lv_is_interface TYPE abap_bool.
-    DATA lv_chain_kw     TYPE string.
-    FIELD-SYMBOLS <ls_first_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_chain_kw TYPE string.
+    DATA ls_first_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_found TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement>  TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     lv_has_constant = abap_false.
@@ -49,12 +50,15 @@ CLASS zcl_skylint_check_015 IMPLEMENTATION.
     lv_is_interface = abap_false.
     lv_chain_kw     = ''.
 
-    ASSIGN is_procedure-statements[ 1 ] TO <ls_first_stmt>.
-    IF sy-subrc <> 0.
+    get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                  iv_index       = 1
+                        IMPORTING es_statement   = ls_first_stmt
+                                  ev_found       = lv_found ).
+    IF lv_found = abap_false.
       RETURN.
     ENDIF.
 
-    IF <ls_first_stmt>-keyword = 'INTERFACE'.
+    IF ls_first_stmt-keyword = 'INTERFACE'.
       lv_is_interface = abap_true.
     ENDIF.
 
@@ -86,7 +90,7 @@ CLASS zcl_skylint_check_015 IMPLEMENTATION.
     ENDLOOP.
 
     IF lv_has_constant = abap_true AND lv_has_other = abap_false.
-      report_statement( is_statement    = <ls_first_stmt>
+      report_statement( is_statement    = ls_first_stmt
                         iv_finding_code = c_finding_codes-constants_interface ).
     ENDIF.
   ENDMETHOD.

@@ -54,15 +54,17 @@ CLASS zcl_skylint_check_003 IMPLEMENTATION.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'CALL'.
-      IF     lines( <ls_statement>-tokens )                >= 2
-         AND to_upper( <ls_statement>-tokens[ 2 ]-lexeme )  = 'METHOD'.
-        IF lv_allow_dyn = abap_true AND is_dynamic_call( <ls_statement> ) = abap_true.
-          CONTINUE.
-        ENDIF.
-
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-call_method ).
+      IF match_token_sequence( is_statement = <ls_statement>
+                               it_expected  = VALUE #( ( `CALL` ) ( `METHOD` ) ) ) = abap_false.
+        CONTINUE.
       ENDIF.
+
+      IF lv_allow_dyn = abap_true AND is_dynamic_call( <ls_statement> ) = abap_true.
+        CONTINUE.
+      ENDIF.
+
+      report_statement( is_statement    = <ls_statement>
+                        iv_finding_code = c_finding_codes-call_method ).
     ENDLOOP.
   ENDMETHOD.
 

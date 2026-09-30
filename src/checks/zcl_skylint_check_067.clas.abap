@@ -33,12 +33,14 @@ CLASS zcl_skylint_check_067 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lv_tok      TYPE string.
+    DATA lv_tok TYPE string.
     DATA lv_type_idx TYPE i.
-    DATA lv_len      TYPE i.
-    DATA lv_has_of   TYPE abap_bool.
-    DATA lv_i        TYPE i.
+    DATA lv_len TYPE i.
+    DATA lv_has_of TYPE abap_bool.
+    DATA lv_i TYPE i.
+    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found TYPE abap_bool.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'FIELD-SYMBOLS'.
@@ -48,7 +50,11 @@ CLASS zcl_skylint_check_067 IMPLEMENTATION.
       " Find token position of TYPE
       lv_i = 1.
       WHILE lv_i <= lv_len.
-        IF to_upper( <ls_statement>-tokens[ lv_i ]-lexeme ) = 'TYPE'.
+        get_token_safe( EXPORTING is_statement = <ls_statement>
+                                   iv_index     = lv_i
+                         IMPORTING es_token     = ls_token
+                                   ev_found     = lv_found ).
+        IF lv_found = abap_true AND to_upper( ls_token-lexeme ) = 'TYPE'.
           lv_type_idx = lv_i + 1.
           EXIT.
         ENDIF.
@@ -59,12 +65,18 @@ CLASS zcl_skylint_check_067 IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      lv_tok = to_upper( <ls_statement>-tokens[ lv_type_idx ]-lexeme ).
+      get_token_safe( EXPORTING is_statement = <ls_statement>
+                                 iv_index     = lv_type_idx
+                       IMPORTING es_token     = ls_token
+                                 ev_found     = lv_found ).
+      IF lv_found = abap_false.
+        CONTINUE.
+      ENDIF.
+      lv_tok = to_upper( ls_token-lexeme ).
 
       " Generic scalars
-      IF    lv_tok = 'ANY'       OR lv_tok = 'DATA'      OR lv_tok = 'CLIKE'
-         OR lv_tok = 'CSEQUENCE' OR lv_tok = 'XSEQUENCE'
-         OR lv_tok = 'NUMERIC'   OR lv_tok = 'SIMPLE'    OR lv_tok = 'DECFLOAT'.
+      IF lv_tok = 'ANY' OR lv_tok = 'DATA' OR lv_tok = 'CLIKE' OR lv_tok = 'CSEQUENCE'
+         OR lv_tok = 'XSEQUENCE' OR lv_tok = 'NUMERIC' OR lv_tok = 'SIMPLE' OR lv_tok = 'DECFLOAT'.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-generic_field_symbols ).
         CONTINUE.
@@ -82,7 +94,11 @@ CLASS zcl_skylint_check_067 IMPLEMENTATION.
         lv_has_of = abap_false.
         lv_i = lv_type_idx + 1.
         WHILE lv_i <= lv_len.
-          IF to_upper( <ls_statement>-tokens[ lv_i ]-lexeme ) = 'OF'.
+          get_token_safe( EXPORTING is_statement = <ls_statement>
+                                     iv_index     = lv_i
+                           IMPORTING es_token     = ls_token
+                                     ev_found     = lv_found ).
+          IF lv_found = abap_true AND to_upper( ls_token-lexeme ) = 'OF'.
             lv_has_of = abap_true.
             EXIT.
           ENDIF.
