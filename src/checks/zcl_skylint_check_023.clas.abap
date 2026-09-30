@@ -58,19 +58,9 @@ CLASS zcl_skylint_check_023 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_when_others.
-    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_found TYPE abap_bool.
-
-    rv_is = abap_false.
-    IF lines( is_statement-tokens ) >= 2.
-      get_token_safe( EXPORTING is_statement = is_statement
-                                iv_index     = 2
-                      IMPORTING es_token     = ls_token
-                                ev_found     = lv_found ).
-      IF lv_found = abap_true AND to_upper( ls_token-lexeme ) = 'OTHERS'.
-        rv_is = abap_true.
-      ENDIF.
-    ENDIF.
+    rv_is = matches_token_at( is_statement = is_statement
+                              iv_index     = 2
+                              iv_expected  = `OTHERS` ).
   ENDMETHOD.
 
   METHOD count_when_branches.

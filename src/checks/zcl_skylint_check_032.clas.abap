@@ -47,16 +47,15 @@ CLASS zcl_skylint_check_032 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_obsolete_keyword.
-    DATA ls_first_tok TYPE if_ci_atc_source_code_provider=>ty_token.
-
     rv_res = abap_false.
 
     CASE is_statement-keyword.
       WHEN 'MOVE' OR 'REFRESH'.
         rv_res = abap_true.
       WHEN 'COMPUTE'.
-        READ TABLE is_statement-tokens INTO ls_first_tok INDEX 1.
-        IF sy-subrc = 0 AND to_upper( ls_first_tok-lexeme ) = 'COMPUTE'.
+        IF matches_token_at( is_statement = is_statement
+                             iv_index     = 1
+                             iv_expected  = `COMPUTE` ) = abap_true.
           rv_res = abap_true.
         ENDIF.
     ENDCASE.

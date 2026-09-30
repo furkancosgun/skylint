@@ -33,9 +33,6 @@ CLASS zcl_skylint_check_062 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_tok2 TYPE string.
-    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_found TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
@@ -44,24 +41,25 @@ CLASS zcl_skylint_check_062 IMPLEMENTATION.
           report_statement( is_statement    = <ls_statement>
                             iv_finding_code = c_finding_codes-obsolete_loop_control ).
         WHEN 'ON'.
-          get_token_safe( EXPORTING is_statement = <ls_statement>
-                                     iv_index     = 2
-                           IMPORTING es_token     = ls_token
-                                     ev_found     = lv_found ).
-          IF lv_found = abap_true AND to_upper( ls_token-lexeme ) = 'CHANGE'.
+          IF matches_token_at( is_statement = <ls_statement>
+                               iv_index     = 2
+                               iv_expected  = `CHANGE` ) = abap_true.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_loop_control ).
           ENDIF.
         WHEN 'AT'.
-          get_token_safe( EXPORTING is_statement = <ls_statement>
-                                     iv_index     = 2
-                           IMPORTING es_token     = ls_token
-                                     ev_found     = lv_found ).
-          IF lv_found = abap_true.
-            lv_tok2 = to_upper( ls_token-lexeme ).
-          ENDIF.
-          IF lv_found = abap_true
-             AND ( lv_tok2 = 'NEW' OR lv_tok2 = 'END' OR lv_tok2 = 'FIRST' OR lv_tok2 = 'LAST' ).
+          IF matches_token_at( is_statement = <ls_statement>
+                               iv_index     = 2
+                               iv_expected  = `NEW` ) = abap_true
+             OR matches_token_at( is_statement = <ls_statement>
+                                  iv_index     = 2
+                                  iv_expected  = `END` ) = abap_true
+             OR matches_token_at( is_statement = <ls_statement>
+                                  iv_index     = 2
+                                  iv_expected  = `FIRST` ) = abap_true
+             OR matches_token_at( is_statement = <ls_statement>
+                                  iv_index     = 2
+                                  iv_expected  = `LAST` ) = abap_true.
             report_statement( is_statement    = <ls_statement>
                                 iv_finding_code = c_finding_codes-obsolete_loop_control ).
           ENDIF.

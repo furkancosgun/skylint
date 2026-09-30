@@ -137,13 +137,6 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_unconditional_jump.
-    DATA lv_tok2   TYPE string.
-    DATA lv_tok3   TYPE string.
-    DATA ls_tok2   TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_tok3   TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_found  TYPE abap_bool.
-    DATA lv_found3 TYPE abap_bool.
-
     rv_res = abap_false.
 
     CASE is_statement-keyword.
@@ -151,38 +144,20 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
         rv_res = abap_true.
 
       WHEN 'RAISE'.
-        IF lines( is_statement-tokens ) < 2.
-          RETURN.
+        IF matches_token_at( is_statement = is_statement
+                             iv_index     = 2
+                             iv_expected  = `SHORTDUMP` ) = abap_true.
+          rv_res = abap_true.
+        ELSEIF matches_token_at( is_statement = is_statement
+                                 iv_index     = 2
+                                 iv_expected  = `EXCEPTION` ) = abap_true.
+          rv_res = abap_true.
+          IF matches_token_at( is_statement = is_statement
+                               iv_index     = 3
+                               iv_expected  = `RESUMABLE` ) = abap_true.
+            rv_res = abap_false.
+          ENDIF.
         ENDIF.
-
-        get_token_safe( EXPORTING is_statement = is_statement
-                                  iv_index     = 2
-                        IMPORTING es_token     = ls_tok2
-                                  ev_found     = lv_found ).
-        IF lv_found = abap_false.
-          RETURN.
-        ENDIF.
-        lv_tok2 = to_upper( ls_tok2-lexeme ).
-
-        CASE lv_tok2.
-          WHEN 'SHORTDUMP'.
-            rv_res = abap_true.
-
-          WHEN 'EXCEPTION'.
-            rv_res = abap_true.
-            IF lines( is_statement-tokens ) >= 3.
-              get_token_safe( EXPORTING is_statement = is_statement
-                                        iv_index     = 3
-                              IMPORTING es_token     = ls_tok3
-                                        ev_found     = lv_found3 ).
-              IF lv_found3 = abap_true.
-                lv_tok3 = to_upper( ls_tok3-lexeme ).
-                IF lv_tok3 = 'RESUMABLE'.
-                  rv_res = abap_false.
-                ENDIF.
-              ENDIF.
-            ENDIF.
-        ENDCASE.
     ENDCASE.
   ENDMETHOD.
 ENDCLASS.

@@ -56,28 +56,22 @@ CLASS zcl_skylint_check_038 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_select_star.
-    DATA ls_tok2 TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_tok3 TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_found2 TYPE abap_bool.
-    DATA lv_found3 TYPE abap_bool.
-
     rv_res = abap_false.
-    get_token_safe( EXPORTING is_statement = is_statement
-                              iv_index     = 2
-                    IMPORTING es_token     = ls_tok2
-                              ev_found     = lv_found2 ).
-    get_token_safe( EXPORTING is_statement = is_statement
-                              iv_index     = 3
-                    IMPORTING es_token     = ls_tok3
-                              ev_found     = lv_found3 ).
 
-    IF lv_found2 = abap_true AND ls_tok2-lexeme = '*'.
+    IF matches_token_at( is_statement = is_statement
+                         iv_index     = 2
+                         iv_expected  = `*` ) = abap_true.
       rv_res = abap_true.
       RETURN.
     ENDIF.
 
-    IF lv_found2 = abap_true AND lv_found3 = abap_true
-       AND ls_tok2-lexeme = 'SINGLE' AND ls_tok3-lexeme = '*'.
+    IF matches_token_at( is_statement      = is_statement
+                         iv_index          = 2
+                         iv_expected       = `SINGLE`
+                         iv_case_sensitive = abap_true ) = abap_true
+       AND matches_token_at( is_statement = is_statement
+                             iv_index     = 3
+                             iv_expected  = `*` ) = abap_true.
       rv_res = abap_true.
     ENDIF.
   ENDMETHOD.

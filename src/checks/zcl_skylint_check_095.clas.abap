@@ -114,23 +114,13 @@ CLASS zcl_skylint_check_095 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_same_data_decl.
-    DATA ls_prev_tok TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_prev_tok_found TYPE abap_bool.
-    DATA lv_prev_lex TYPE string.
-
     rv_same = abap_false.
     IF is_prev-keyword <> 'DATA'.
       RETURN.
     ENDIF.
-    get_token_safe( EXPORTING is_statement = is_prev
-                              iv_index     = 2
-                    IMPORTING es_token     = ls_prev_tok
-                              ev_found     = lv_prev_tok_found ).
-    IF lv_prev_tok_found = abap_false.
-      RETURN.
-    ENDIF.
-    lv_prev_lex = to_upper( ls_prev_tok-lexeme ).
-    IF lv_prev_lex = iv_var_name.
+    IF matches_token_at( is_statement = is_prev
+                         iv_index     = 2
+                         iv_expected  = iv_var_name ) = abap_true.
       rv_same = abap_true.
     ENDIF.
   ENDMETHOD.

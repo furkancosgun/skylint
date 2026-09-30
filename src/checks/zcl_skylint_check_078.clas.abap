@@ -72,31 +72,21 @@ CLASS zcl_skylint_check_078 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD sets_sy_subrc.
-    DATA lv_second_lex TYPE string.
-    DATA ls_second TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_found TYPE abap_bool.
-
     rv_res = abap_false.
 
     CASE is_statement-keyword.
       WHEN 'AUTHORITY-CHECK' OR 'FIND' OR 'SEARCH'.
         rv_res = abap_true.
       WHEN 'SELECT'.
-        get_token_safe( EXPORTING is_statement = is_statement
-                                  iv_index     = 2
-                        IMPORTING es_token     = ls_second
-                                  ev_found     = lv_found ).
-        lv_second_lex = to_upper( ls_second-lexeme ).
-        IF lv_found = abap_true AND lv_second_lex = 'SINGLE'.
+        IF matches_token_at( is_statement = is_statement
+                             iv_index     = 2
+                             iv_expected  = `SINGLE` ) = abap_true.
           rv_res = abap_true.
         ENDIF.
       WHEN 'READ'.
-        get_token_safe( EXPORTING is_statement = is_statement
-                                  iv_index     = 2
-                        IMPORTING es_token     = ls_second
-                                  ev_found     = lv_found ).
-        lv_second_lex = to_upper( ls_second-lexeme ).
-        IF lv_found = abap_true AND lv_second_lex = 'TABLE'.
+        IF matches_token_at( is_statement = is_statement
+                             iv_index     = 2
+                             iv_expected  = `TABLE` ) = abap_true.
           rv_res = abap_true.
         ENDIF.
       WHEN OTHERS.

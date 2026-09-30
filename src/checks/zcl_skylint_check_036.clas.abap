@@ -107,16 +107,12 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_db_delete.
-    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_found TYPE abap_bool.
-
     rv_res = abap_false.
 
-    get_token_safe( EXPORTING is_statement = is_statement
-                              iv_index     = 2
-                    IMPORTING es_token     = ls_token
-                              ev_found     = lv_found ).
-    IF lv_found = abap_true AND ls_token-lexeme = 'TABLE'.
+    IF matches_token_at( is_statement      = is_statement
+                         iv_index          = 2
+                         iv_expected       = `TABLE`
+                         iv_case_sensitive = abap_true ) = abap_true.
       RETURN.
     ENDIF.
 
@@ -157,15 +153,11 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_db_modify.
-    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_found TYPE abap_bool.
-
     rv_res = abap_false.
-    get_token_safe( EXPORTING is_statement = is_statement
-                              iv_index     = 2
-                    IMPORTING es_token     = ls_token
-                              ev_found     = lv_found ).
-    IF lv_found = abap_true AND ls_token-lexeme = 'TABLE'.
+    IF matches_token_at( is_statement      = is_statement
+                         iv_index          = 2
+                         iv_expected       = `TABLE`
+                         iv_case_sensitive = abap_true ) = abap_true.
       RETURN.
     ENDIF.
 

@@ -42,6 +42,13 @@ CLASS zcl_skylint_check_base DEFINITION
                 iv_case_sensitive TYPE abap_bool DEFAULT abap_false
       RETURNING VALUE(rv_matched) TYPE abap_bool.
 
+    METHODS matches_token_at
+      IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_index          TYPE i
+                iv_expected       TYPE string
+                iv_case_sensitive TYPE abap_bool DEFAULT abap_false
+      RETURNING VALUE(rv_matched) TYPE abap_bool.
+
     METHODS report_statement
       IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
                 iv_finding_code TYPE if_ci_atc_check=>ty_finding_code
@@ -353,6 +360,40 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
                                     iv_case_sensitive = iv_case_sensitive ).
 
     IF lv_index > 0.
+      rv_matched = abap_true.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD matches_token_at.
+    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found TYPE abap_bool.
+    DATA lv_actual TYPE string.
+    DATA lv_expected TYPE string.
+
+    rv_matched = abap_false.
+
+    IF iv_index <= 0.
+      RETURN.
+    ENDIF.
+
+    get_token_safe( EXPORTING is_statement = is_statement
+                              iv_index     = iv_index
+                    IMPORTING es_token     = ls_token
+                              ev_found     = lv_found ).
+
+    IF lv_found = abap_false.
+      RETURN.
+    ENDIF.
+
+    IF iv_case_sensitive = abap_true.
+      lv_actual = ls_token-lexeme.
+      lv_expected = iv_expected.
+    ELSE.
+      lv_actual = to_upper( ls_token-lexeme ).
+      lv_expected = to_upper( iv_expected ).
+    ENDIF.
+
+    IF lv_actual = lv_expected.
       rv_matched = abap_true.
     ENDIF.
   ENDMETHOD.

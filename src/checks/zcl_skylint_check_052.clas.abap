@@ -47,11 +47,6 @@ CLASS zcl_skylint_check_052 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_dangerous_statement.
-    DATA ls_tok1 TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_tok2 TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_tok1 TYPE string.
-    DATA lv_tok2 TYPE string.
-
     rv_res = abap_false.
 
     IF is_statement-keyword = 'SYNTAX-CHECK' OR is_statement-keyword = 'SYSTEM-CALL'.
@@ -59,26 +54,43 @@ CLASS zcl_skylint_check_052 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    IF lines( is_statement-tokens ) < 2.
-      RETURN.
-    ENDIF.
-
-    READ TABLE is_statement-tokens INDEX 1 INTO ls_tok1.
-    IF sy-subrc = 0.
-      READ TABLE is_statement-tokens INDEX 2 INTO ls_tok2.
-      IF sy-subrc = 0.
-        lv_tok1 = to_upper( ls_tok1-lexeme ).
-        lv_tok2 = to_upper( ls_tok2-lexeme ).
-
-        IF    ( lv_tok1 = 'SYNTAX'   AND lv_tok2 = 'CHECK' )
-           OR ( lv_tok1 = 'SYSTEM'   AND lv_tok2 = 'CALL' )
-           OR ( lv_tok1 = 'GENERATE' AND lv_tok2 = 'SUBROUTINE' )
-           OR ( lv_tok1 = 'INSERT'   AND lv_tok2 = 'REPORT' )
-           OR ( lv_tok1 = 'DELETE'   AND lv_tok2 = 'REPORT' )
-           OR ( lv_tok1 = 'READ'     AND lv_tok2 = 'REPORT' ).
-          rv_res = abap_true.
-        ENDIF.
-      ENDIF.
+    IF ( matches_token_at( is_statement = is_statement
+                           iv_index = 1
+                           iv_expected = `SYNTAX` ) = abap_true
+         AND matches_token_at( is_statement = is_statement
+                               iv_index = 2
+                               iv_expected = `CHECK` ) = abap_true )
+        OR ( matches_token_at( is_statement = is_statement
+                               iv_index = 1
+                               iv_expected = `SYSTEM` ) = abap_true
+         AND matches_token_at( is_statement = is_statement
+                               iv_index = 2
+                               iv_expected = `CALL` ) = abap_true )
+        OR ( matches_token_at( is_statement = is_statement
+                               iv_index = 1
+                               iv_expected = `GENERATE` ) = abap_true
+         AND matches_token_at( is_statement = is_statement
+                               iv_index = 2
+                               iv_expected = `SUBROUTINE` ) = abap_true )
+        OR ( matches_token_at( is_statement = is_statement
+                               iv_index = 1
+                               iv_expected = `INSERT` ) = abap_true
+         AND matches_token_at( is_statement = is_statement
+                               iv_index = 2
+                               iv_expected = `REPORT` ) = abap_true )
+        OR ( matches_token_at( is_statement = is_statement
+                               iv_index = 1
+                               iv_expected = `DELETE` ) = abap_true
+         AND matches_token_at( is_statement = is_statement
+                               iv_index = 2
+                               iv_expected = `REPORT` ) = abap_true )
+        OR ( matches_token_at( is_statement = is_statement
+                               iv_index = 1
+                               iv_expected = `READ` ) = abap_true
+         AND matches_token_at( is_statement = is_statement
+                               iv_index = 2
+                               iv_expected = `REPORT` ) = abap_true ).
+      rv_res = abap_true.
     ENDIF.
   ENDMETHOD.
 ENDCLASS.

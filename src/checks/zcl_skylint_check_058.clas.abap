@@ -48,15 +48,12 @@ CLASS zcl_skylint_check_058 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_raise_shortdump.
-    DATA ls_tok2 TYPE if_ci_atc_source_code_provider=>ty_token.
-
     rv_res = abap_false.
 
-    IF lines( is_statement-tokens ) >= 2.
-      READ TABLE is_statement-tokens INDEX 2 INTO ls_tok2.
-      IF sy-subrc = 0 AND to_upper( ls_tok2-lexeme ) = 'SHORTDUMP'.
-        rv_res = abap_true.
-      ENDIF.
+    IF matches_token_at( is_statement = is_statement
+                         iv_index     = 2
+                         iv_expected  = `SHORTDUMP` ) = abap_true.
+      rv_res = abap_true.
     ENDIF.
   ENDMETHOD.
 ENDCLASS.
