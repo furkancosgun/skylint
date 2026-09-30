@@ -3,6 +3,10 @@ CLASS zcl_skylint_test_036 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
+    METHODS helper
+      IMPORTING
+        iv_val TYPE string.
+
     METHODS without_pseudo_comments.
     METHODS with_pseudo_comments.
     METHODS valid_code.
@@ -10,28 +14,18 @@ ENDCLASS.
 
 
 CLASS zcl_skylint_test_036 IMPLEMENTATION.
+  METHOD helper.
+  ENDMETHOD.
+
   METHOD without_pseudo_comments.
-    DATA lt_data TYPE STANDARD TABLE OF string WITH DEFAULT KEY.
-    DATA lv_res  TYPE string.
-    DO 10 TIMES.
-      SELECT SINGLE @abap_true FROM tadir INTO @lv_res WHERE obj_name = 'TEST'.
-    ENDDO.
+    helper( iv_val = 'TEST' ).
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    DATA lt_data TYPE STANDARD TABLE OF string WITH DEFAULT KEY.
-    DATA lv_res  TYPE string.
-    DO 10 TIMES.
-      SELECT SINGLE @abap_true FROM tadir INTO @lv_res WHERE obj_name = 'TEST'. "#EC DB_IN_LOOP
-    ENDDO.
+    helper( iv_val = 'TEST' ). "#EC OMIT_PARAM_NAME
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lt_data TYPE STANDARD TABLE OF string WITH DEFAULT KEY.
-    DATA lv_res  TYPE string.
-    SELECT SINGLE @abap_true FROM tadir INTO @lv_res WHERE obj_name = 'TEST'.
-    LOOP AT lt_data INTO lv_res.
-      lv_res = 'OK'.
-    ENDLOOP.
+    helper( 'TEST' ).
   ENDMETHOD.
 ENDCLASS.

@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_006 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        avoid_me TYPE if_ci_atc_check=>ty_finding_code VALUE 'AVOIDME',
+        omit_exporting TYPE if_ci_atc_check=>ty_finding_code VALUE 'OMITEXPORT',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,50 +15,82 @@ CLASS zcl_skylint_check_006 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_ME'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'OMIT_EXPORTING'.
 
-    DATA mv_allow_in_constructors TYPE abap_bool VALUE abap_false.
+    CONSTANTS:
+      BEGIN OF c_quickfix_codes,
+        omit_exporting TYPE zcl_skylint_check_base=>ty_quickfix_code VALUE 'OMIT_EXP',
+      END OF c_quickfix_codes.
+
+    METHODS is_exempt_statement
+      IMPORTING iv_keyword       TYPE string
+      RETURNING VALUE(rv_exempt) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_006 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Avoid self-reference ME->'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-avoid_me
-                                       severity       = if_ci_atc_check=>finding_severities-warning
-                                       text           = 'Avoid unnecessary ME-> reference'
-                                       pseudo_comment = c_pseudo_comment ) )
-                                 attributes        = VALUE #(
-                                     ( name  = 'ALLOW_IN_CONSTRUCTORS'
-                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                                       value = REF #( mv_allow_in_constructors ) ) ) ) ).
+    super->constructor(
+        VALUE #( description       = 'Omit explicit EXPORTING in method calls'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #(
+                     ( code           = c_finding_codes-omit_exporting
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Omit explicit EXPORTING keyword in method invocation'
+                       pseudo_comment = c_pseudo_comment ) )
+                 quickfix_codes    = VALUE #(
+                     ( code       = c_quickfix_codes-omit_exporting
+                       short_text = 'Remove EXPORTING keyword' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_allow_ctor TYPE abap_bool.
-    DATA lv_lexeme     TYPE string.
+    DATA lv_stmt_idx TYPE i.
+    DATA lv_tok_idx TYPE i.
+    DATA lt_expected TYPE ty_token_lexemes.
+    DATA lo_details TYPE if_ci_atc_check=>ty_details.
+    DATA lt_empty_code TYPE if_ci_atc_quickfix=>ty_code.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    get_attribute( EXPORTING iv_name  = 'ALLOW_IN_CONSTRUCTORS'
-                   IMPORTING ev_value = lv_allow_ctor ).
+    lt_expected = VALUE #( ( `EXPORTING` ) ).
 
-    IF is_procedure-id-name = 'CONSTRUCTOR' AND lv_allow_ctor = abap_true.
-      RETURN.
-    ENDIF.
-
+    "TODO: exempt yapisina gerek yok bu senaryoda compiler seviyesinde method cagrisi oldugundan emin olabiliriz.
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-        lv_lexeme = to_upper( <ls_token>-lexeme ).
-        IF lv_lexeme CP 'ME->*'.
-          report_token( is_token        = <ls_token>
-                        is_statement    = <ls_statement>
-                        iv_finding_code = c_finding_codes-avoid_me ).
-        ENDIF.
-      ENDLOOP.
+      IF is_exempt_statement( <ls_statement>-keyword ) = abap_true.
+        CONTINUE.
+      ENDIF.
+
+      IF statement_is_method_call( <ls_statement> ) = abap_false.
+        CONTINUE.
+      ENDIF.
+
+      lv_tok_idx = find_token_sequence( is_statement = <ls_statement>
+                                        it_expected  = lt_expected ).
+      IF lv_tok_idx = 0.
+        CONTINUE.
+      ENDIF.
+
+      lv_stmt_idx = sy-tabix.
+      lo_details = quickfix_replace( iv_quickfix_code = c_quickfix_codes-omit_exporting
+                                     is_procedure_id  = is_procedure-id
+                                     iv_statement_from = lv_stmt_idx
+                                     iv_token_from    = lv_tok_idx
+                                     iv_token_to      = lv_tok_idx
+                                     it_new_code      = lt_empty_code ).
+      report_statement( is_statement    = <ls_statement>
+                        iv_finding_code = c_finding_codes-omit_exporting
+                        io_details      = lo_details ).
     ENDLOOP.
+  ENDMETHOD.
+
+  METHOD is_exempt_statement.
+    CASE iv_keyword.
+      WHEN 'CALL' OR 'EXPORT' OR 'METHODS' OR 'CLASS-METHODS'
+        OR 'EVENTS' OR 'CLASS-EVENTS' OR 'INTERFACES' OR 'SUBMIT'
+        OR 'FORM' OR 'FUNCTION' OR 'MODULE'.
+        rv_exempt = abap_true.
+      WHEN OTHERS.
+        rv_exempt = abap_false.
+    ENDCASE.
   ENDMETHOD.
 ENDCLASS.

@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_TEST_002</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>Test Fixture for Skylint Check 002</DESCRIPT>
+    <DESCRIPT>Test fixture for check 003</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

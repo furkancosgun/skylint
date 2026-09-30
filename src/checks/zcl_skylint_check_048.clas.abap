@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_048 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        nesting_depth TYPE if_ci_atc_check=>ty_finding_code VALUE 'NESTING_DP',
+        class_not_final TYPE if_ci_atc_check=>ty_finding_code VALUE 'NOT_FINAL',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,16 +15,10 @@ CLASS zcl_skylint_check_048 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'NESTING_DEPTH'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'CLASS_FINAL'.
 
-    DATA mv_max_depth TYPE i VALUE 3.
-
-    METHODS is_block_opener
-      IMPORTING iv_keyword    TYPE string
-      RETURNING VALUE(rv_res) TYPE abap_bool.
-
-    METHODS is_block_closer
-      IMPORTING iv_keyword    TYPE string
+    METHODS is_class_missing_final
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
@@ -32,62 +26,63 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_048 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Nesting Depth Limit (excessive control block nesting)'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-nesting_depth
-                                       severity       = if_ci_atc_check=>finding_severities-warning
-                                       text           = 'Control block nesting depth exceeds maximum allowed limit'
-                                       pseudo_comment = c_pseudo_comment ) )
-                                 attributes        = VALUE #(
-                                     ( name  = 'MAX_DEPTH'
-                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                                       value = REF #( mv_max_depth ) ) ) ) ).
+    super->constructor(
+        VALUE #( description       = 'skylint: Prefer FINAL Classes by Default'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #(
+                     ( code           = c_finding_codes-class_not_final
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Classes should be marked FINAL by default unless designed for inheritance'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_max   TYPE i.
-    DATA lv_depth TYPE i.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    get_attribute( EXPORTING iv_name  = 'MAX_DEPTH'
-                   IMPORTING ev_value = lv_max ).
-    IF lv_max <= 0.
-      lv_max = mv_max_depth.
+    IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
     ENDIF.
 
-    lv_depth = 0.
-
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF is_block_opener( <ls_statement>-keyword ) = abap_true.
-        lv_depth += 1.
-        IF lv_depth > lv_max.
-          report_statement( is_statement    = <ls_statement>
-                            iv_finding_code = c_finding_codes-nesting_depth ).
-        ENDIF.
-      ELSEIF is_block_closer( <ls_statement>-keyword ) = abap_true.
-        IF lv_depth > 0.
-          lv_depth -= 1.
-        ENDIF.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
+         WHERE keyword = 'CLASS'.
+      IF is_class_missing_final( <ls_statement> ) = abap_true.
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-class_not_final ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD is_block_opener.
-    CASE iv_keyword.
-      WHEN 'IF' OR 'CASE' OR 'LOOP' OR 'DO' OR 'WHILE' OR 'TRY'.
-        rv_res = abap_true.
-      WHEN OTHERS.
-        rv_res = abap_false.
-    ENDCASE.
-  ENDMETHOD.
+  METHOD is_class_missing_final.
+    DATA ls_tok         TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_lex         TYPE string.
+    DATA lv_is_def      TYPE abap_bool.
+    DATA lv_is_final    TYPE abap_bool.
+    DATA lv_is_abstract TYPE abap_bool.
+    DATA lv_is_test     TYPE abap_bool.
 
-  METHOD is_block_closer.
-    CASE iv_keyword.
-      WHEN 'ENDIF' OR 'ENDCASE' OR 'ENDLOOP' OR 'ENDDO' OR 'ENDWHILE' OR 'ENDTRY'.
-        rv_res = abap_true.
-      WHEN OTHERS.
-        rv_res = abap_false.
-    ENDCASE.
+    rv_res = abap_false.
+    lv_is_def = abap_false.
+    lv_is_final = abap_false.
+    lv_is_abstract = abap_false.
+    lv_is_test = abap_false.
+
+    LOOP AT is_statement-tokens INTO ls_tok.
+      lv_lex = to_upper( ls_tok-lexeme ).
+      CASE lv_lex.
+        WHEN 'DEFINITION'.
+          lv_is_def = abap_true.
+        WHEN 'FINAL'.
+          lv_is_final = abap_true.
+        WHEN 'ABSTRACT'.
+          lv_is_abstract = abap_true.
+        WHEN 'TESTING'.
+          lv_is_test = abap_true.
+      ENDCASE.
+    ENDLOOP.
+
+    IF     lv_is_def      = abap_true  AND lv_is_final = abap_false
+       AND lv_is_abstract = abap_false AND lv_is_test  = abap_false.
+      rv_res = abap_true.
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.

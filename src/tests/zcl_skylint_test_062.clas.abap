@@ -11,34 +11,34 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_062 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    DATA lt_tab TYPE string_table.
-    DATA lv_line TYPE string.
-    LOOP AT lt_tab INTO lv_line.
-      AT FIRST.
-        lv_line = 'first'.
-      ENDAT.
-      SUM.
-    ENDLOOP.
+    TRY.
+        TRY.
+            RETURN.
+          CATCH cx_static_check.
+            RETURN.
+        ENDTRY.
+      CATCH cx_root.
+        RETURN.
+    ENDTRY.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    DATA lt_tab TYPE string_table.
-    DATA lv_line TYPE string.
-    LOOP AT lt_tab INTO lv_line.
-      AT FIRST. "#EC AVOID_LOOP_CTRL
-        lv_line = 'first'.
-      ENDAT.
-      SUM. "#EC AVOID_LOOP_CTRL
-    ENDLOOP.
+    TRY.
+        TRY. "#EC AVOID_NESTED_TRY
+            RETURN.
+          CATCH cx_static_check.
+            RETURN.
+        ENDTRY.
+      CATCH cx_root.
+        RETURN.
+    ENDTRY.
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lt_tab TYPE string_table.
-    DATA lv_line TYPE string.
-    LOOP AT lt_tab INTO lv_line.
-      IF sy-tabix = 1.
-        lv_line = 'first'.
-      ENDIF.
-    ENDLOOP.
+    TRY.
+        RETURN.
+      CATCH cx_static_check.
+        RETURN.
+    ENDTRY.
   ENDMETHOD.
 ENDCLASS.

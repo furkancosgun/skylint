@@ -34,7 +34,7 @@ CLASS ltcl_check_077 IMPLEMENTATION.
         check             = NEW zcl_skylint_check_077( )
         object            = VALUE #( type = 'CLAS'
                                      name = c_test_class )
-        expected_findings = VALUE #( code = zcl_skylint_check_077=>c_finding_codes-raise_sys
+        expected_findings = VALUE #( code = zcl_skylint_check_077=>c_finding_codes-unused_var
                                      ( location = ls_loc_no_pc )
                                      ( location = ls_loc_with_pc ) )
         asserter_config   = VALUE #( quickfixes = abap_false ) ).

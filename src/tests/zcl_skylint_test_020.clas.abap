@@ -11,23 +11,22 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_020 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    IF 1 = 1.
-      IF 2 = 2.
-        RETURN.
-      ENDIF.
+    DATA lv_val TYPE i.
+    IF 1 = lv_val.
+      RETURN.
     ENDIF.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    IF 1 = 1. "#EC NESTED_IF
-      IF 2 = 2.
-        RETURN.
-      ENDIF.
+    DATA lv_val TYPE i.
+    IF 1 = lv_val. "#EC NO_YODA_CONDITIONS
+      RETURN.
     ENDIF.
   ENDMETHOD.
 
   METHOD valid_code.
-    IF 1 = 1 AND 2 = 2.
+    DATA lv_val TYPE i.
+    IF lv_val = 1.
       RETURN.
     ENDIF.
   ENDMETHOD.

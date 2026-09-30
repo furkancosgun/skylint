@@ -11,23 +11,14 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_065 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    DATA lt_tab TYPE string_table.
-    DATA lv_line TYPE string.
-    LOOP AT lt_tab INTO lv_line.
-      lv_line = 'test'.
-    ENDLOOP.
+    PERFORM my_subroutine IF FOUND.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    DATA lt_tab TYPE string_table.
-    DATA lv_line TYPE string.
-    LOOP AT lt_tab INTO lv_line. "#EC CONSTRUCTOR_LOGIC
-      lv_line = 'test'.
-    ENDLOOP.
+    PERFORM my_subroutine IF FOUND. "#EC AVOID_FORM_ROUTINE
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lv_name TYPE string.
-    lv_name = 'test'.
+    without_pseudo_comments( ).
   ENDMETHOD.
 ENDCLASS.

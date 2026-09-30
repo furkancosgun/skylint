@@ -3,32 +3,47 @@ CLASS zcl_skylint_test_029 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS helper_method
-      RETURNING
-        VALUE(rv_res) TYPE i.
-    METHODS without_pseudo_comments.
-    METHODS with_pseudo_comments.
-    METHODS valid_code.
+    METHODS bad_method
+      IMPORTING
+        iv_1 TYPE i
+        iv_2 TYPE i
+        iv_3 TYPE i
+        iv_4 TYPE i
+        iv_5 TYPE i
+        iv_6 TYPE i
+        iv_7 TYPE i
+        iv_8 TYPE i
+        iv_9 TYPE i.
+
+    METHODS bad_method_suppressed
+      IMPORTING
+        iv_1 TYPE i
+        iv_2 TYPE i
+        iv_3 TYPE i
+        iv_4 TYPE i
+        iv_5 TYPE i
+        iv_6 TYPE i
+        iv_7 TYPE i
+        iv_8 TYPE i
+        iv_9 TYPE i ##PARAM_COUNT.
+
+    METHODS good_method
+      IMPORTING
+        iv_1 TYPE i
+        iv_2 TYPE i.
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_029 IMPLEMENTATION.
-  METHOD helper_method.
-    rv_res = 42.
+  METHOD bad_method.
+    RETURN.
   ENDMETHOD.
 
-  METHOD without_pseudo_comments.
-    DATA lv_result TYPE i.
-    helper_method( RECEIVING rv_res = lv_result ).
+  METHOD bad_method_suppressed.
+    RETURN.
   ENDMETHOD.
 
-  METHOD with_pseudo_comments.
-    DATA lv_result TYPE i.
-    helper_method( RECEIVING rv_res = lv_result ). "#EC RECEIVING_USAGE
-  ENDMETHOD.
-
-  METHOD valid_code.
-    DATA lv_result TYPE i.
-    lv_result = helper_method( ).
+  METHOD good_method.
+    RETURN.
   ENDMETHOD.
 ENDCLASS.

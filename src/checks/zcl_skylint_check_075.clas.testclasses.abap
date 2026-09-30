@@ -21,20 +21,20 @@ CLASS ltcl_check_075 IMPLEMENTATION.
     ls_loc_no_pc = VALUE #( object   = cl_ci_atc_unit_driver=>get_method_object(
                                            VALUE #( class  = c_test_class
                                                     method = c_methods-without_pseudo_comments ) )
-                            position = VALUE #( line   = 2
+                            position = VALUE #( line   = 3
                                                 column = 4 ) ).
 
     ls_loc_with_pc = VALUE #( object   = cl_ci_atc_unit_driver=>get_method_object(
                                              VALUE #( class  = c_test_class
                                                       method = c_methods-with_pseudo_comments ) )
-                              position = VALUE #( line   = 2
+                              position = VALUE #( line   = 3
                                                   column = 4 ) ).
 
     cl_ci_atc_unit_driver=>create_asserter( )->check_and_assert(
         check             = NEW zcl_skylint_check_075( )
         object            = VALUE #( type = 'CLAS'
                                      name = c_test_class )
-        expected_findings = VALUE #( code = zcl_skylint_check_075=>c_finding_codes-msg_raise
+        expected_findings = VALUE #( code = zcl_skylint_check_075=>c_finding_codes-guard_method
                                      ( location = ls_loc_no_pc )
                                      ( location = ls_loc_with_pc ) )
         asserter_config   = VALUE #( quickfixes = abap_false ) ).

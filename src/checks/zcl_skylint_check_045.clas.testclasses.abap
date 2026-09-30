@@ -10,6 +10,7 @@ CLASS ltcl_check_045 DEFINITION FINAL
       END OF c_methods.
 
     METHODS execute_test_class FOR TESTING RAISING cx_static_check.
+
 ENDCLASS.
 
 
@@ -34,7 +35,7 @@ CLASS ltcl_check_045 IMPLEMENTATION.
         check             = NEW zcl_skylint_check_045( )
         object            = VALUE #( type = 'CLAS'
                                      name = c_test_class )
-        expected_findings = VALUE #( code = zcl_skylint_check_045=>c_finding_codes-local_tables
+        expected_findings = VALUE #( code = zcl_skylint_check_045=>c_finding_codes-missing_auth_check
                                      ( location = ls_loc_no_pc )
                                      ( location = ls_loc_with_pc ) )
         asserter_config   = VALUE #( quickfixes = abap_false ) ).

@@ -20,14 +20,14 @@ CLASS ltcl_check_069 IMPLEMENTATION.
 
     ls_loc_with_pc = VALUE #( object   = VALUE #( type = 'CLAS'
                                                   name = c_test_class )
-                              position = VALUE #( line   = 9
+                              position = VALUE #( line   = 7
                                                   column = 4 ) ).
 
     cl_ci_atc_unit_driver=>create_asserter( )->check_and_assert(
         check             = NEW zcl_skylint_check_069( )
         object            = VALUE #( type = 'CLAS'
                                      name = c_test_class )
-        expected_findings = VALUE #( code = zcl_skylint_check_069=>c_finding_codes-unmodified_changing
+        expected_findings = VALUE #( code = zcl_skylint_check_069=>c_finding_codes-test_name
                                      ( location = ls_loc_no_pc )
                                      ( location = ls_loc_with_pc ) )
         asserter_config   = VALUE #( quickfixes = abap_false ) ).

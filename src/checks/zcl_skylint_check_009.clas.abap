@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_009 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        chained_declaration TYPE if_ci_atc_check=>ty_finding_code VALUE 'CHAINDECL',
+        prefer_template TYPE if_ci_atc_check=>ty_finding_code VALUE 'CONCATSTR',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,140 +15,70 @@ CLASS zcl_skylint_check_009 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'CHAIN_DECL'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_STR_TMPL'.
 
-    DATA mv_allow_structure_chains TYPE abap_bool VALUE abap_true.
+    DATA mv_allow_in_byte_mode TYPE abap_bool VALUE abap_false.
 
-    METHODS is_structure_start
-      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_is) TYPE abap_bool.
-
-    METHODS should_report_chain
-      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
-                is_next      TYPE if_ci_atc_source_code_provider=>ty_statement
-                iv_allow     TYPE abap_bool
-      RETURNING VALUE(rv_report) TYPE abap_bool.
+    METHODS is_byte_mode
+      IMPORTING is_statement        TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_byte_mode) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_009 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Avoid chained declarations (DATA:, TYPES:, etc.)'
+    super->constructor( VALUE #( description       = 'Prefer string templates over CONCATENATE'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-chained_declaration
+                                     ( code           = c_finding_codes-prefer_template
                                        severity       = if_ci_atc_check=>finding_severities-warning
-                                       text           = 'Avoid chained declarations; declare each entity individually'
+                                       text           = 'Use string template |...| instead of CONCATENATE'
                                        pseudo_comment = c_pseudo_comment ) )
                                  attributes        = VALUE #(
-                                     ( name  = 'ALLOW_STRUCTURE_CHAINS'
+                                     ( name  = 'ALLOW_IN_BYTE_MODE'
                                        kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                                       value = REF #( mv_allow_structure_chains ) ) ) ) ).
+                                       value = REF #( mv_allow_in_byte_mode ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    "TODO: okunması zor bir kod daha basit bir pattern match yazılabilir.
-    DATA lv_allow_struct TYPE abap_bool.
-    DATA lv_total TYPE i.
-    DATA lv_idx TYPE i.
-    DATA lv_next_idx TYPE i.
-    DATA ls_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_next_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lv_found TYPE abap_bool.
-    DATA lv_found_next TYPE abap_bool.
+    DATA lv_allow_byte TYPE abap_bool.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    get_attribute( EXPORTING iv_name  = 'ALLOW_STRUCTURE_CHAINS'
-                   IMPORTING ev_value = lv_allow_struct ).
+    get_attribute( EXPORTING iv_name  = 'ALLOW_IN_BYTE_MODE'
+                   IMPORTING ev_value = lv_allow_byte ).
 
-    IF lv_allow_struct IS INITIAL.
-      lv_allow_struct = mv_allow_structure_chains.
+    "TODO: gereksiz if
+    IF lv_allow_byte IS INITIAL.
+      lv_allow_byte = mv_allow_in_byte_mode.
     ENDIF.
 
-    lv_total = lines( is_procedure-statements ).
-
-    DO lv_total TIMES.
-      lv_idx = sy-index.
-      get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                    iv_index       = lv_idx
-                          IMPORTING es_statement   = ls_statement
-                                    ev_found       = lv_found ).
-      IF lv_found = abap_false.
-        EXIT.
+    "TODO: byte mode ne kadar gerekli tartisilir string template yeterli duruyor
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
+         WHERE keyword = 'CONCATENATE'.
+      IF lv_allow_byte = abap_true AND is_byte_mode( <ls_statement> ) = abap_true.
+        CONTINUE.
       ENDIF.
 
-      CASE ls_statement-keyword.
-        WHEN 'DATA' OR 'TYPES' OR 'CONSTANTS' OR 'STATICS' OR 'FIELD-SYMBOLS' OR 'CLASS-DATA'.
-          lv_next_idx = lv_idx + 1.
-          IF lv_next_idx > lv_total.
-            CONTINUE.
-          ENDIF.
-          get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                        iv_index       = lv_next_idx
-                              IMPORTING es_statement   = ls_next_stmt
-                                        ev_found       = lv_found_next ).
-          IF lv_found_next = abap_false.
-            CONTINUE.
-          ENDIF.
-          IF should_report_chain( is_statement = ls_statement
-                                  is_next      = ls_next_stmt
-                                  iv_allow     = lv_allow_struct ) = abap_true.
-            report_statement( is_statement    = ls_statement
-                              iv_finding_code = c_finding_codes-chained_declaration ).
-          ENDIF.
-      ENDCASE.
-    ENDDO.
-  ENDMETHOD.
-
-  METHOD is_structure_start.
-    DATA lv_lexeme TYPE string.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
-
-    rv_is = abap_false.
-    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      lv_lexeme = to_upper( <ls_token>-lexeme ).
-      IF lv_lexeme = 'BEGIN'.
-        rv_is = abap_true.
-        RETURN.
-      ENDIF.
+      report_statement( is_statement    = <ls_statement>
+                        iv_finding_code = c_finding_codes-prefer_template ).
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD should_report_chain.
-    DATA ls_cur_token TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_next_token TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_found_cur TYPE abap_bool.
-    DATA lv_found_next TYPE abap_bool.
-    DATA lv_is_cont TYPE abap_bool.
+  METHOD is_byte_mode.
+    DATA lv_prev_lexeme TYPE string.
+    DATA lv_curr_lexeme TYPE string.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    rv_report = abap_false.
+    rv_byte_mode = abap_false.
 
-    get_token_safe( EXPORTING is_statement = is_next
-                              iv_index     = 1
-                    IMPORTING es_token     = ls_next_token
-                              ev_found     = lv_found_next ).
-    get_token_safe( EXPORTING is_statement = is_statement
-                              iv_index     = 1
-                    IMPORTING es_token     = ls_cur_token
-                              ev_found     = lv_found_cur ).
-
-    IF lv_found_next = abap_false OR lv_found_cur = abap_false.
-      RETURN.
-    ENDIF.
-
-    IF is_next-keyword IS NOT INITIAL
-       AND ( ls_next_token-position-line <> ls_cur_token-position-line
-             OR is_next-position-line = is_statement-position-line ).
-      RETURN.
-    ENDIF.
-
-    lv_is_cont = abap_true.
-    IF iv_allow = abap_true AND is_structure_start( is_statement ) = abap_true.
-      lv_is_cont = abap_false.
-    ENDIF.
-
-    IF lv_is_cont = abap_true.
-      rv_report = abap_true.
-    ENDIF.
+    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
+      lv_curr_lexeme = to_upper( <ls_token>-lexeme ).
+      IF lv_prev_lexeme = 'BYTE' AND lv_curr_lexeme = 'MODE'.
+        rv_byte_mode = abap_true.
+        RETURN.
+      ENDIF.
+      lv_prev_lexeme = lv_curr_lexeme.
+    ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

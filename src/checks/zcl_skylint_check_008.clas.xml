@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_008</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Avoid Assignment Chaining (008)</DESCRIPT>
+    <DESCRIPT>skylint: Avoid Chained Declarations (008)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

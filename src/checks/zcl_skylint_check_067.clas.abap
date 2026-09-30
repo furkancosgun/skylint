@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_067 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        generic_field_symbols TYPE if_ci_atc_check=>ty_finding_code VALUE 'GEN_FS_TYP',
+        no_commit TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_COMMIT',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,102 +15,30 @@ CLASS zcl_skylint_check_067 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'GENERIC_FS'.
-
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_COMMIT_WORK'.
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_067 IMPLEMENTATION.
   METHOD constructor.
-    "TODO bu kural silinecek
     super->constructor(
-        VALUE #( description       = 'Avoid generic FIELD-SYMBOLS declarations (ANY/DATA/CLIKE/TABLE)'
+        VALUE #( description       = 'Avoid COMMIT WORK / ROLLBACK WORK in behavior implementations'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-generic_field_symbols
+                     ( code           = c_finding_codes-no_commit
                        severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Avoid generic built-in types for FIELD-SYMBOLS; specify concrete type'
+                       text           = 'Avoid COMMIT/ROLLBACK WORK; transactional control belongs to framework'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_tok TYPE string.
-    DATA lv_type_idx TYPE i.
-    DATA lv_len TYPE i.
-    DATA lv_has_of TYPE abap_bool.
-    DATA lv_i TYPE i.
-    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_found TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    "TODO behavior implementations oldugunu compiler uzerinden anlamamiz lazim
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'FIELD-SYMBOLS'.
-      lv_len = lines( <ls_statement>-tokens ).
-      lv_type_idx = 0.
-
-      " Find token position of TYPE
-      lv_i = 1.
-      WHILE lv_i <= lv_len.
-        get_token_safe( EXPORTING is_statement = <ls_statement>
-                                   iv_index     = lv_i
-                         IMPORTING es_token     = ls_token
-                                   ev_found     = lv_found ).
-        IF lv_found = abap_true AND to_upper( ls_token-lexeme ) = 'TYPE'.
-          lv_type_idx = lv_i + 1.
-          EXIT.
-        ENDIF.
-        lv_i += 1.
-      ENDWHILE.
-
-      IF lv_type_idx <= 0 OR lv_type_idx > lv_len.
-        CONTINUE.
-      ENDIF.
-
-      get_token_safe( EXPORTING is_statement = <ls_statement>
-                                 iv_index     = lv_type_idx
-                       IMPORTING es_token     = ls_token
-                                 ev_found     = lv_found ).
-      IF lv_found = abap_false.
-        CONTINUE.
-      ENDIF.
-      lv_tok = to_upper( ls_token-lexeme ).
-
-      " Generic scalars
-      IF lv_tok = 'ANY' OR lv_tok = 'DATA' OR lv_tok = 'CLIKE' OR lv_tok = 'CSEQUENCE'
-         OR lv_tok = 'XSEQUENCE' OR lv_tok = 'NUMERIC' OR lv_tok = 'SIMPLE' OR lv_tok = 'DECFLOAT'.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-generic_field_symbols ).
-        CONTINUE.
-      ENDIF.
-
-      " Generic tables (ANY TABLE, INDEX TABLE, or STANDARD TABLE without OF)
-      IF lv_tok = 'TABLE' OR lv_tok = 'INDEX'.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-generic_field_symbols ).
-        CONTINUE.
-      ENDIF.
-
-      IF lv_tok = 'STANDARD' OR lv_tok = 'SORTED' OR lv_tok = 'HASHED'.
-        " Check if OF is missing
-        lv_has_of = abap_false.
-        lv_i = lv_type_idx + 1.
-        WHILE lv_i <= lv_len.
-          get_token_safe( EXPORTING is_statement = <ls_statement>
-                                     iv_index     = lv_i
-                           IMPORTING es_token     = ls_token
-                                     ev_found     = lv_found ).
-          IF lv_found = abap_true AND to_upper( ls_token-lexeme ) = 'OF'.
-            lv_has_of = abap_true.
-            EXIT.
-          ENDIF.
-          lv_i += 1.
-        ENDWHILE.
-
-        IF lv_has_of = abap_false.
-          report_statement( is_statement    = <ls_statement>
-                            iv_finding_code = c_finding_codes-generic_field_symbols ).
-        ENDIF.
-      ENDIF.
+         WHERE keyword = 'COMMIT' OR keyword = 'ROLLBACK'.
+      report_statement( is_statement    = <ls_statement>
+                        iv_finding_code = c_finding_codes-no_commit ).
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

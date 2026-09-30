@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_012 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_line_exists TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFLINEX',
+        exit_outside_loop TYPE if_ci_atc_check=>ty_finding_code VALUE 'EXITOUTLP',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,48 +15,45 @@ CLASS zcl_skylint_check_012 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_LINE_EXISTS'.
-
-    METHODS has_transporting_no_fields
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_has) TYPE abap_bool.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'EXIT_OUTSIDE_LOOP'.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_012 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Prefer line_exists( ) over READ TABLE ... TRANSPORTING NO FIELDS'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-prefer_line_exists
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Prefer line_exists( ... ) instead of READ TABLE ... TRANSPORTING NO FIELDS'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    "TODO:013 VE 014 checkleri birbirine benziyor. exit ve return keywordleri icin ortak bir check yazilabilir.
+    super->constructor( VALUE #( description       = 'Prefer RETURN over EXIT outside loop constructs'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-exit_outside_loop
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Use RETURN instead of EXIT when leaving a procedure'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
+    DATA lv_loop_depth TYPE i.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    "TODO:BINARY SEARCH varsa report edilmemeli çünkü line_exists binary search ile çalışmıyor.
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'READ'.
-      IF has_transporting_no_fields( <ls_statement> ) = abap_true.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-prefer_line_exists ).
-      ENDIF.
+    lv_loop_depth = 0.
+
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      CASE <ls_statement>-keyword.
+        WHEN 'LOOP' OR 'DO' OR 'WHILE'.
+          lv_loop_depth += 1.
+
+        WHEN 'ENDLOOP' OR 'ENDDO' OR 'ENDWHILE'.
+          IF lv_loop_depth > 0.
+            lv_loop_depth -= 1.
+          ENDIF.
+
+        WHEN 'EXIT'.
+          IF lv_loop_depth = 0.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-exit_outside_loop ).
+          ENDIF.
+      ENDCASE.
     ENDLOOP.
-  ENDMETHOD.
-
-  METHOD has_transporting_no_fields.
-    DATA lv_seq_index TYPE i.
-
-    rv_has = abap_false.
-    lv_seq_index = find_token_sequence( is_statement = is_statement
-                                        it_expected  = VALUE #( ( `TRANSPORTING` ) ( `NO` ) ( `FIELDS` ) ) ).
-    IF lv_seq_index > 0.
-      rv_has = abap_true.
-    ENDIF.
   ENDMETHOD.
 ENDCLASS.

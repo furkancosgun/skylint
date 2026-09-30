@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_034 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        too_many_parameters TYPE if_ci_atc_check=>ty_finding_code VALUE 'PARAMCOUNT',
+        identical_move TYPE if_ci_atc_check=>ty_finding_code VALUE 'IDENTMOVE',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,63 +15,82 @@ CLASS zcl_skylint_check_034 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'PARAM_COUNT'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'IDENTICAL_MOVE'.
 
-    DATA mv_max_parameters TYPE i VALUE 8.
-
-    METHODS count_parameters
-      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_count) TYPE i.
+    METHODS is_identical_assignment
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_034 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Method signature cleanliness (excessive parameter count)'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-too_many_parameters
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Method signature has too many parameters; consider grouping into structures'
-                       pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #( ( name  = 'MAX_PARAMETERS'
-                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                                                value = REF #( mv_max_parameters ) ) ) ) ).
+    "TODO bu kural compiler seviyesinde calismali COMPUTE keywordu atamalarda calisir
+    super->constructor( VALUE #( description       = 'skylint: Detect Identical Self Assignments'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-identical_move
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Identical assignment has no effect; remove redundant statement'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_max TYPE i.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
-      RETURN.
-    ENDIF.
-
-    get_attribute( EXPORTING iv_name  = 'MAX_PARAMETERS'
-                   IMPORTING ev_value = lv_max ).
-    IF lv_max <= 0.
-      lv_max = mv_max_parameters.
-    ENDIF.
-
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'METHODS' OR keyword = 'CLASS-METHODS'.
-      IF count_parameters( <ls_statement> ) > lv_max.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF is_identical_assignment( <ls_statement> ) = abap_true.
         report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-too_many_parameters ).
+                          iv_finding_code = c_finding_codes-identical_move ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD count_parameters.
-    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
+  METHOD is_identical_assignment.
+    DATA lv_left TYPE string.
+    DATA lv_eq TYPE string.
+    DATA lv_right TYPE string.
+    DATA ls_tok1 TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok2 TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok3 TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found1 TYPE abap_bool.
+    DATA lv_found2 TYPE abap_bool.
+    DATA lv_found3 TYPE abap_bool.
 
-    rv_count = 0.
-    LOOP AT is_statement-tokens INTO ls_tok.
-      IF ls_tok-lexeme = 'TYPE' OR ls_tok-lexeme = 'LIKE'.
-        rv_count += 1.
-      ENDIF.
-    ENDLOOP.
+    rv_res = abap_false.
+
+    IF lines( is_statement-tokens ) <> 3.
+      RETURN.
+    ENDIF.
+
+    CASE is_statement-keyword.
+      WHEN 'DATA' OR 'CONSTANTS' OR 'FIELD-SYMBOLS'.
+        RETURN.
+    ENDCASE.
+
+    get_token_safe( EXPORTING is_statement = is_statement
+                              iv_index     = 1
+                    IMPORTING es_token     = ls_tok1
+                              ev_found     = lv_found1 ).
+    get_token_safe( EXPORTING is_statement = is_statement
+                              iv_index     = 2
+                    IMPORTING es_token     = ls_tok2
+                              ev_found     = lv_found2 ).
+    get_token_safe( EXPORTING is_statement = is_statement
+                              iv_index     = 3
+                    IMPORTING es_token     = ls_tok3
+                              ev_found     = lv_found3 ).
+    IF lv_found1 = abap_false OR lv_found2 = abap_false OR lv_found3 = abap_false.
+      RETURN.
+    ENDIF.
+
+    lv_left = to_upper( ls_tok1-lexeme ).
+    lv_eq = ls_tok2-lexeme.
+    lv_right = to_upper( ls_tok3-lexeme ).
+
+    IF lv_eq = '=' AND lv_left = lv_right.
+      rv_res = abap_true.
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.

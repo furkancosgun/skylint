@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_012</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Prefer line_exists over READ TABLE</DESCRIPT>
+    <DESCRIPT>skylint: EXIT outside loop prefer RETURN</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

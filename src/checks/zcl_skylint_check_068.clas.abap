@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_068 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        static_class TYPE if_ci_atc_check=>ty_finding_code VALUE 'STAT_CLASS',
+        full_modify TYPE if_ci_atc_check=>ty_finding_code VALUE 'FULL_MODIF',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,57 +15,59 @@ CLASS zcl_skylint_check_068 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_STATIC_CLS'.
-
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_FULL_MODIFY'.
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_068 IMPLEMENTATION.
   METHOD constructor.
-    "TODO rtti + compiler güvenelim
     super->constructor(
-        VALUE #( description       = 'Avoid static-only classes; prefer instantiable interface-based design'
+        VALUE #( description       = 'Avoid full-line MODIFY itab inside LOOP without TRANSPORTING clause'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-static_class
+                     ( code           = c_finding_codes-full_modify
                        severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Avoid static-only classes; declare instance methods and interfaces'
+                       text           = 'Specify TRANSPORTING fields in MODIFY itab inside loop for performance'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_has_instance_meth TYPE abap_bool.
-    DATA lv_static_meth_cnt TYPE i.
-    DATA ls_first_class_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lv_found_class TYPE abap_bool.
-    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_found TYPE abap_bool.
+    DATA lv_in_loop          TYPE i VALUE 0.
+    DATA lv_has_transporting TYPE abap_bool.
+    DATA lv_is_itab_modify   TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-
-    lv_has_instance_meth = abap_false.
-    lv_static_meth_cnt = 0.
-    lv_found_class = abap_false.
+    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF <ls_statement>-keyword = 'CLASS' AND lv_found_class = abap_false.
-        ls_first_class_stmt = <ls_statement>.
-        lv_found_class = abap_true.
-      ELSEIF <ls_statement>-keyword = 'METHODS'.
-        get_token_safe( EXPORTING is_statement = <ls_statement>
-                                   iv_index     = 2
-                         IMPORTING es_token     = ls_token
-                                   ev_found     = lv_found ).
-        IF lv_found = abap_true AND ls_token-lexeme <> 'CONSTRUCTOR'.
-          lv_has_instance_meth = abap_true.
-        ENDIF.
-      ELSEIF <ls_statement>-keyword = 'CLASS-METHODS'.
-        lv_static_meth_cnt += 1.
-      ENDIF.
-    ENDLOOP.
+      CASE <ls_statement>-keyword.
+        WHEN 'LOOP'.
+          lv_in_loop += 1.
 
-    IF lv_static_meth_cnt > 0 AND lv_has_instance_meth = abap_false AND lv_found_class = abap_true.
-      report_statement( is_statement    = ls_first_class_stmt
-                        iv_finding_code = c_finding_codes-static_class ).
-    ENDIF.
+        WHEN 'ENDLOOP'.
+          IF lv_in_loop > 0.
+            lv_in_loop -= 1.
+          ENDIF.
+
+        WHEN 'MODIFY'.
+          IF lv_in_loop > 0.
+            lv_has_transporting = abap_false.
+            lv_is_itab_modify = abap_false.
+
+            LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
+              IF to_upper( <ls_token>-lexeme ) = 'TRANSPORTING'.
+                lv_has_transporting = abap_true.
+              ENDIF.
+              IF to_upper( <ls_token>-lexeme ) = 'FROM' OR to_upper( <ls_token>-lexeme ) = 'INDEX'.
+                lv_is_itab_modify = abap_true.
+              ENDIF.
+            ENDLOOP.
+
+            IF lv_is_itab_modify = abap_true AND lv_has_transporting = abap_false.
+              report_statement( is_statement    = <ls_statement>
+                                iv_finding_code = c_finding_codes-full_modify ).
+            ENDIF.
+          ENDIF.
+      ENDCASE.
+    ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

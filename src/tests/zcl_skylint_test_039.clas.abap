@@ -6,29 +6,35 @@ CLASS zcl_skylint_test_039 DEFINITION
     METHODS without_pseudo_comments.
     METHODS with_pseudo_comments.
     METHODS valid_code.
+
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_039 IMPLEMENTATION.
+
   METHOD without_pseudo_comments.
-    IF 1 = 1.
-      DATA(lv_val) = 1.
-    ENDIF.
-    lv_val = 2.
+    DATA lv_a TYPE i.
+    lv_a = 1.
+    lv_a = 2.
+    lv_a = 3.
+    lv_a = 4.
+    lv_a = 5.
+    lv_a = 6.
   ENDMETHOD.
 
-  METHOD with_pseudo_comments.
-    IF 1 = 1.
-      DATA(lv_val) = 1.
-    ENDIF.
-    lv_val = 2. "#EC SCOPE_OF_VAR
+  METHOD with_pseudo_comments. "#EC METHOD_LENGTH
+    DATA lv_a TYPE i.
+    lv_a = 1.
+    lv_a = 2.
+    lv_a = 3.
+    lv_a = 4.
+    lv_a = 5.
+    lv_a = 6.
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lv_val TYPE i.
-    IF 1 = 1.
-      lv_val = 1.
-    ENDIF.
-    lv_val = 2.
+    DATA lv_a TYPE i.
+    lv_a = 1.
   ENDMETHOD.
+
 ENDCLASS.

@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_015</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Avoid Constant-Only Interfaces</DESCRIPT>
+    <DESCRIPT>skylint: Empty CATCH Block</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

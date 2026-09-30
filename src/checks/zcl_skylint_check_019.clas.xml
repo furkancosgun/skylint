@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_019</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Identical Conditions in IF/CASE</DESCRIPT>
+    <DESCRIPT>skylint: Avoid Short CASE (019)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

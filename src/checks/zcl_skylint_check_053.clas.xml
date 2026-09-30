@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_053</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Transaction Auth Check (053)</DESCRIPT>
+    <DESCRIPT>skylint: Avoid LIKE Declarations (053)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

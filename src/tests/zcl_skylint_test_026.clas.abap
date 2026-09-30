@@ -3,6 +3,8 @@ CLASS zcl_skylint_test_026 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
+    CLASS-METHODS my_static_method.
+
     METHODS without_pseudo_comments.
     METHODS with_pseudo_comments.
     METHODS valid_code.
@@ -10,20 +12,19 @@ ENDCLASS.
 
 
 CLASS zcl_skylint_test_026 IMPLEMENTATION.
+  METHOD my_static_method.
+    RETURN.
+  ENDMETHOD.
+
   METHOD without_pseudo_comments.
-    DATA lo_obj TYPE REF TO zcl_skylint_test_026.
-    CREATE OBJECT lo_obj.
+    me->my_static_method( ).
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    DATA lo_obj TYPE REF TO zcl_skylint_test_026.
-    CREATE OBJECT lo_obj. "#EC PREF_NEW
+    me->my_static_method( ). "#EC STATIC_CALL
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lo_obj TYPE REF TO zcl_skylint_test_026.
-    DATA lv_cls TYPE string VALUE 'ZCL_SKYLINT_TEST_026'.
-    lo_obj = NEW #( ).
-    CREATE OBJECT lo_obj TYPE (lv_cls).
+    zcl_skylint_test_026=>my_static_method( ).
   ENDMETHOD.
 ENDCLASS.

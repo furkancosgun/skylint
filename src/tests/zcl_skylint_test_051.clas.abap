@@ -3,30 +3,28 @@ CLASS zcl_skylint_test_051 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS bad_method
-      EXCEPTIONS
-        failed.
-
-    METHODS bad_method_pc
-      EXCEPTIONS
-        failed. "#EC CLASS_EXCEPTIONS
-
-    METHODS good_method
-      RAISING
-        cx_static_check.
-
+    METHODS without_pseudo_comments.
+    METHODS with_pseudo_comments.
+    METHODS valid_code.
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_051 IMPLEMENTATION.
-
-  METHOD bad_method.
+  METHOD without_pseudo_comments.
+    DATA lt_tab TYPE string_table.
+    DATA lv_line TYPE string VALUE 'abc'.
+    APPEND lv_line TO lt_tab.
   ENDMETHOD.
 
-  METHOD bad_method_pc.
+  METHOD with_pseudo_comments.
+    DATA lt_tab TYPE string_table.
+    DATA lv_line TYPE string VALUE 'abc'.
+    APPEND lv_line TO lt_tab. "#EC PREFER_INSERT
   ENDMETHOD.
 
-  METHOD good_method.
+  METHOD valid_code.
+    DATA lt_tab TYPE string_table.
+    DATA lv_line TYPE string VALUE 'abc'.
+    INSERT lv_line INTO TABLE lt_tab.
   ENDMETHOD.
-
 ENDCLASS.

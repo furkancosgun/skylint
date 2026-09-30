@@ -3,25 +3,32 @@ CLASS zcl_skylint_test_075 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    EXCEPTIONS
-      failed.
-
-    METHODS without_pseudo_comments EXCEPTIONS failed.
-    METHODS with_pseudo_comments EXCEPTIONS failed.
+    METHODS without_pseudo_comments.
+    METHODS with_pseudo_comments.
     METHODS valid_code.
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_075 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    MESSAGE 'Error' TYPE 'E' RAISING failed.
+    DATA lv_valid TYPE abap_bool VALUE abap_true.
+    IF lv_valid = abap_true.
+      lv_valid = abap_false.
+    ENDIF.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    MESSAGE 'Error' TYPE 'E' RAISING failed. "#EC AVOID_MSG_RAISING
+    DATA lv_valid TYPE abap_bool VALUE abap_true.
+    IF lv_valid = abap_true. "#EC GUARD_IN_METHOD
+      lv_valid = abap_false.
+    ENDIF.
   ENDMETHOD.
 
   METHOD valid_code.
-    MESSAGE 'Info message' TYPE 'I'.
+    DATA lv_valid TYPE abap_bool VALUE abap_true.
+    IF lv_valid = abap_false.
+      RETURN.
+    ENDIF.
+    lv_valid = abap_false.
   ENDMETHOD.
 ENDCLASS.

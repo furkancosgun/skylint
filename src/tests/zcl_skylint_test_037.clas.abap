@@ -3,12 +3,6 @@ CLASS zcl_skylint_test_037 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    TYPES:
-      BEGIN OF ty_entry,
-        obj_name TYPE string,
-      END OF ty_entry.
-    TYPES tt_entries TYPE STANDARD TABLE OF ty_entry WITH DEFAULT KEY.
-
     METHODS without_pseudo_comments.
     METHODS with_pseudo_comments.
     METHODS valid_code.
@@ -17,22 +11,26 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_037 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    DATA lt_entries TYPE tt_entries.
-    DATA lt_res TYPE tt_entries.
-    SELECT obj_name FROM tadir FOR ALL ENTRIES IN @lt_entries WHERE obj_name = @lt_entries-obj_name INTO TABLE @lt_res.
+    DATA lv_val TYPE i.
+    TRY.
+        lv_val = 1.
+    ENDTRY.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    DATA lt_entries TYPE tt_entries.
-    DATA lt_res TYPE tt_entries.
-    SELECT obj_name FROM tadir FOR ALL ENTRIES IN @lt_entries WHERE obj_name = @lt_entries-obj_name INTO TABLE @lt_res. "#EC FAE_NO_CHECK
+    DATA lv_val TYPE i.
+    TRY. "#EC TRY_WITHOUT_CATCH
+        lv_val = 1.
+    ENDTRY.
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lt_entries TYPE tt_entries.
-    DATA lt_res TYPE tt_entries.
-    IF lt_entries IS NOT INITIAL.
-      SELECT obj_name FROM tadir FOR ALL ENTRIES IN @lt_entries WHERE obj_name = @lt_entries-obj_name INTO TABLE @lt_res.
-    ENDIF.
+    DATA lv_val TYPE i.
+    DATA lx_root TYPE REF TO cx_root.
+    TRY.
+        lv_val = 1.
+      CATCH cx_root INTO lx_root.
+        lv_val = 0.
+    ENDTRY.
   ENDMETHOD.
 ENDCLASS.

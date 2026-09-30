@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_071 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        deep_inheritance TYPE if_ci_atc_check=>ty_finding_code VALUE 'DEEP_INHRT',
+        prefer_final TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_FINAL',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,73 +15,49 @@ CLASS zcl_skylint_check_071 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'DEEP_INHERITANCE'.
-
-    DATA mv_max_depth TYPE i VALUE 3.
-
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_FINAL_METHOD'.
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_071 IMPLEMENTATION.
   METHOD constructor.
-    "TODO bu kural compiler + rtti ile yeniden yazılsın
-    super->constructor(
-        VALUE #( description       = 'Avoid deep class inheritance hierarchies (> 3 levels)'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-deep_inheritance
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Avoid deep class inheritance; prefer composition over inheritance'
-                       pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #( ( name  = 'MAX_DEPTH'
-                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                                                value = REF #( mv_max_depth ) ) ) ) ).
+    super->constructor( VALUE #( description       = 'Prefer marking non-overridden methods as FINAL'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-prefer_final
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Declare method as FINAL if it is not intended to be redefined'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_super_name TYPE string.
-    DATA lv_len TYPE i.
-    DATA lv_idx TYPE i.
-    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_super TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_found TYPE abap_bool.
-    DATA lv_super_found TYPE abap_bool.
-    DATA lv_lexeme TYPE string.
+    DATA lv_has_final  TYPE abap_bool.
+    DATA lv_is_special TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'CLASS'.
-      lv_len = lines( <ls_statement>-tokens ).
-      lv_idx = 1.
+         WHERE keyword = 'METHODS'.
+      lv_has_final = abap_false.
+      lv_is_special = abap_false.
 
-      WHILE lv_idx <= lv_len.
-        get_token_safe( EXPORTING is_statement = <ls_statement>
-                                  iv_index     = lv_idx
-                        IMPORTING es_token     = ls_token
-                                  ev_found     = lv_found ).
-        IF lv_found = abap_false.
-          lv_idx += 1.
-          CONTINUE.
-        ENDIF.
-        lv_lexeme = to_upper( ls_token-lexeme ).
-        IF lv_lexeme <> 'INHERITING'.
-          lv_idx += 1.
-          CONTINUE.
-        ENDIF.
-        get_token_safe( EXPORTING is_statement = <ls_statement>
-                                  iv_index     = lv_idx + 2
-                        IMPORTING es_token     = ls_super
-                                  ev_found     = lv_super_found ).
-        IF lv_super_found = abap_true.
-          lv_super_name = to_upper( ls_super-lexeme ).
-          IF    lv_super_name CP '*DEEP*' OR lv_super_name CP '*LEVEL*'
-             OR lv_super_name = 'CX_NO_CHECK'.
-            report_statement( is_statement    = <ls_statement>
-                              iv_finding_code = c_finding_codes-deep_inheritance ).
-          ENDIF.
-        ENDIF.
-        EXIT.
-      ENDWHILE.
+      LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
+        CASE to_upper( <ls_token>-lexeme ).
+          WHEN 'FINAL'.
+            lv_has_final = abap_true.
+          WHEN 'REDEFINITION' OR 'ABSTRACT' OR 'TESTING' OR 'CONSTRUCTOR'.
+            lv_is_special = abap_true.
+        ENDCASE.
+      ENDLOOP.
+
+      IF lv_is_special = abap_false AND lv_has_final = abap_false.
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-prefer_final ).
+      ENDIF.
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

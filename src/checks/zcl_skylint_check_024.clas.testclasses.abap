@@ -34,7 +34,7 @@ CLASS ltcl_check_024 IMPLEMENTATION.
         check             = NEW zcl_skylint_check_024( )
         object            = VALUE #( type = 'CLAS'
                                      name = c_test_class )
-        expected_findings = VALUE #( code = zcl_skylint_check_024=>c_finding_codes-yoda_condition
+        expected_findings = VALUE #( code = zcl_skylint_check_024=>c_finding_codes-prefer_xsdbool
                                      ( location = ls_loc_no_pc )
                                      ( location = ls_loc_with_pc ) )
         asserter_config   = VALUE #( quickfixes = abap_false ) ).

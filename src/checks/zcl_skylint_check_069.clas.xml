@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_069</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Unmodified CHANGING Param (069)</DESCRIPT>
+    <DESCRIPT>skylint: Enforce test method naming</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

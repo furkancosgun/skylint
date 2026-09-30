@@ -6,23 +6,39 @@ CLASS zcl_skylint_test_040 DEFINITION
     METHODS without_pseudo_comments.
     METHODS with_pseudo_comments.
     METHODS valid_code.
+
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_040 IMPLEMENTATION.
+
   METHOD without_pseudo_comments.
-    DATA lt_tab TYPE string_table.
-    lt_tab = VALUE #( ).
+    IF 1 = 1.
+      IF 2 = 2.
+        IF 3 = 3.
+          IF 4 = 4.
+          ENDIF.
+        ENDIF.
+      ENDIF.
+    ENDIF.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    DATA lt_tab TYPE string_table.
-    lt_tab = VALUE #( ). "#EC SUPERFLUOUS_VAL
+    IF 1 = 1.
+      IF 2 = 2.
+        IF 3 = 3.
+          IF 4 = 4. "#EC NESTING_DEPTH
+          ENDIF.
+        ENDIF.
+      ENDIF.
+    ENDIF.
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lt_tab TYPE string_table.
-    CLEAR lt_tab.
-    lt_tab = VALUE #( ( `item1` ) ).
+    IF 1 = 1.
+      IF 2 = 2.
+      ENDIF.
+    ENDIF.
   ENDMETHOD.
+
 ENDCLASS.

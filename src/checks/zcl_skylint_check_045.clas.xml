@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_045</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Avoid Local TABLES Declarations (045)</DESCRIPT>
+    <DESCRIPT>skylint: Transaction Auth Check (045)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

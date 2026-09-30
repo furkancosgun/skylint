@@ -11,23 +11,24 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_018 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    DATA lv_val TYPE i VALUE 10.
-    cl_abap_unit_assert=>assert_equals(
-        act = lv_val
-        exp = lv_val ).
+    DATA lv_x TYPE i.
+    RETURN.
+    lv_x = 1.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    DATA lv_val TYPE i VALUE 10.
-    cl_abap_unit_assert=>assert_equals(
-        act = lv_val
-        exp = lv_val ). "#EC UT_ASSERT
+    DATA lv_x TYPE i.
+    RETURN.
+    lv_x = 1. "#EC UNREACHABLE_CODE
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lv_val TYPE i VALUE 10.
-    cl_abap_unit_assert=>assert_equals(
-        act = lv_val
-        exp = 20 ).
+    DATA lv_x TYPE i.
+    IF lv_x = 0.
+      RETURN.
+    ELSE.
+      lv_x = 2.
+    ENDIF.
+    lv_x = 3.
   ENDMETHOD.
 ENDCLASS.

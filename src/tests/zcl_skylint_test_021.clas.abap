@@ -11,32 +11,26 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_021 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    DATA lv_val TYPE i VALUE 1.
-    CASE lv_val.
-      WHEN OTHERS.
-        RETURN.
-      WHEN 1.
-        RETURN.
-    ENDCASE.
+    DATA lv_a TYPE i.
+    DATA lv_b TYPE i.
+    IF lv_a EQ lv_b.
+      RETURN.
+    ENDIF.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    DATA lv_val TYPE i VALUE 1.
-    CASE lv_val.
-      WHEN OTHERS. "#EC WHEN_OTHERS_LAST
-        RETURN.
-      WHEN 1.
-        RETURN.
-    ENDCASE.
+    DATA lv_a TYPE i.
+    DATA lv_b TYPE i.
+    IF lv_a EQ lv_b. "#EC PREFER_OPERATORS
+      RETURN.
+    ENDIF.
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lv_val TYPE i VALUE 1.
-    CASE lv_val.
-      WHEN 1.
-        RETURN.
-      WHEN OTHERS.
-        RETURN.
-    ENDCASE.
+    DATA lv_a TYPE i.
+    DATA lv_b TYPE i.
+    IF lv_a = lv_b.
+      RETURN.
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.

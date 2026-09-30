@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_021</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: WHEN OTHERS Must Be Last</DESCRIPT>
+    <DESCRIPT>skylint: Prefer Comparison Operators (021)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

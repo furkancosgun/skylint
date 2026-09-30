@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_041 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        identical_move TYPE if_ci_atc_check=>ty_finding_code VALUE 'IDENTMOVE',
+        system_var_mod TYPE if_ci_atc_check=>ty_finding_code VALUE 'SYS_VAR_MD',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,9 +15,9 @@ CLASS zcl_skylint_check_041 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'IDENTICAL_MOVE'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_SY_MOD'.
 
-    METHODS is_identical_assignment
+    METHODS is_system_variable_mod
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
@@ -26,70 +26,62 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_041 IMPLEMENTATION.
   METHOD constructor.
-    "TODO bu kural compiler seviyesinde çalışmalı COMPUTE keywordu atamalarda çalışır
-    super->constructor( VALUE #( description       = 'skylint: Detect Identical Self Assignments'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-identical_move
-                                       severity       = if_ci_atc_check=>finding_severities-warning
-                                       text           = 'Identical assignment has no effect; remove redundant statement'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    "TODO compiler ile desteklensin deger atim durumlarini
+    super->constructor(
+        VALUE #( description       = 'skylint: Avoid sy-* System Variable Modification'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #(
+                     ( code           = c_finding_codes-system_var_mod
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Avoid modifying system fields (sy-*); system variables are read-only'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF is_identical_assignment( <ls_statement> ) = abap_true.
+      IF is_system_variable_mod( <ls_statement> ) = abap_true.
         report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-identical_move ).
+                          iv_finding_code = c_finding_codes-system_var_mod ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD is_identical_assignment.
-    DATA lv_left TYPE string.
-    DATA lv_eq TYPE string.
-    DATA lv_right TYPE string.
-    DATA ls_tok1 TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_tok2 TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_tok3 TYPE if_ci_atc_source_code_provider=>ty_token.
+  METHOD is_system_variable_mod.
+    DATA ls_token1 TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_token2 TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_found1 TYPE abap_bool.
     DATA lv_found2 TYPE abap_bool.
-    DATA lv_found3 TYPE abap_bool.
+    DATA lv_tok1 TYPE string.
+    DATA lv_tok2 TYPE string.
 
     rv_res = abap_false.
 
-    IF lines( is_statement-tokens ) <> 3.
+    get_token_safe( EXPORTING is_statement = is_statement
+                               iv_index     = 1
+                     IMPORTING es_token     = ls_token1
+                               ev_found     = lv_found1 ).
+    get_token_safe( EXPORTING is_statement = is_statement
+                               iv_index     = 2
+                     IMPORTING es_token     = ls_token2
+                               ev_found     = lv_found2 ).
+
+    IF lv_found1 = abap_false OR lv_found2 = abap_false.
       RETURN.
     ENDIF.
 
-    CASE is_statement-keyword.
-      WHEN 'DATA' OR 'CONSTANTS' OR 'FIELD-SYMBOLS'.
-        RETURN.
-    ENDCASE.
+    lv_tok1 = to_upper( ls_token1-lexeme ).
+    lv_tok2 = to_upper( ls_token2-lexeme ).
 
-    get_token_safe( EXPORTING is_statement = is_statement
-                              iv_index     = 1
-                    IMPORTING es_token     = ls_tok1
-                              ev_found     = lv_found1 ).
-    get_token_safe( EXPORTING is_statement = is_statement
-                              iv_index     = 2
-                    IMPORTING es_token     = ls_tok2
-                              ev_found     = lv_found2 ).
-    get_token_safe( EXPORTING is_statement = is_statement
-                              iv_index     = 3
-                    IMPORTING es_token     = ls_tok3
-                              ev_found     = lv_found3 ).
-    IF lv_found1 = abap_false OR lv_found2 = abap_false OR lv_found3 = abap_false.
+    " 1. Assignment: sy-subrc = 0.
+    IF lv_tok2 = '=' AND ( lv_tok1 CP 'SY-*' OR lv_tok1 CP 'SYST-*' ).
+      rv_res = abap_true.
       RETURN.
     ENDIF.
 
-    lv_left = to_upper( ls_tok1-lexeme ).
-    lv_eq = ls_tok2-lexeme.
-    lv_right = to_upper( ls_tok3-lexeme ).
-
-    IF lv_eq = '=' AND lv_left = lv_right.
+    " 2. CLEAR statement: CLEAR sy-subrc.
+    IF lv_tok1 = 'CLEAR' AND ( lv_tok2 CP 'SY-*' OR lv_tok2 CP 'SYST-*' ).
       rv_res = abap_true.
     ENDIF.
   ENDMETHOD.

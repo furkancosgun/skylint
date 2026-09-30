@@ -11,22 +11,24 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_017 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    TRY.
-      CATCH cx_root.
-    ENDTRY.
+    IF 1 = 1.
+      IF 2 = 2.
+        RETURN.
+      ENDIF.
+    ENDIF.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    TRY.
-      CATCH cx_root. "#EC NO_HANDLER
-    ENDTRY.
+    IF 1 = 1. "#EC NESTED_IF
+      IF 2 = 2.
+        RETURN.
+      ENDIF.
+    ENDIF.
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lx_e TYPE REF TO cx_root.
-    TRY.
-      CATCH cx_root INTO lx_e.
-        RETURN.
-    ENDTRY.
+    IF 1 = 1 AND 2 = 2.
+      RETURN.
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.

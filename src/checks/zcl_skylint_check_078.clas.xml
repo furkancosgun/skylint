@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_078</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Custom Exception Base (078)</DESCRIPT>
+    <DESCRIPT>skylint: Enforce declaration order</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

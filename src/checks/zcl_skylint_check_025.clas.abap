@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_025 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_operator TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFEROP',
+        omit_receiving TYPE if_ci_atc_check=>ty_finding_code VALUE 'OMITRECEIV',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,74 +15,92 @@ CLASS zcl_skylint_check_025 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_OPERATORS'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'RECEIVING_USAGE'.
 
-    METHODS is_legacy_operator
-      IMPORTING iv_lexeme    TYPE string
-      RETURNING VALUE(rv_is) TYPE abap_bool.
-
-    METHODS is_declaration_keyword
-      IMPORTING iv_keyword   TYPE string
-      RETURNING VALUE(rv_is) TYPE abap_bool.
+    METHODS is_exempt_statement
+      IMPORTING iv_keyword       TYPE string
+      RETURNING VALUE(rv_exempt) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_025 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Prefer comparison operators (=, <>, <, >, <=, >=) over legacy textual keywords'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-prefer_operator
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Prefer modern comparison operators (=, <>, <, >, <=, >=) over legacy keywords'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    "TODO omit exporting ile birlestirelim bunlari nerdeyse ayni
+    "TODO functional call ise keyword +CALL_METHOD gelir bu sayede cok daha kolay kontrol ederiz
+    "TODO mutlaka compiler seviyesinde cekelim
+    super->constructor( VALUE #( description       = 'Omit RECEIVING in method calls'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-omit_receiving
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Omit RECEIVING keyword; use functional call or omit parameter'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
+    DATA lv_has_receiving  TYPE abap_bool.
+    DATA lv_has_exceptions TYPE abap_bool.
+    DATA lv_tok_cnt        TYPE i.
+    DATA lv_tok_idx        TYPE i.
+    DATA lv_next_idx       TYPE i.
+    DATA ls_tok            TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_next_tok       TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_lex            TYPE string.
+    DATA lv_next_lex       TYPE string.
+    DATA lv_found          TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    "TODO COMPILER SEVIYESINDE cozebiliriz gibi duruyor kontrol edelim
-    "ABAPLINT kontrol edelim nasıl yapmış
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF is_declaration_keyword( <ls_statement>-keyword ) = abap_true.
+      IF is_exempt_statement( <ls_statement>-keyword ) = abap_true.
         CONTINUE.
       ENDIF.
 
-      LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-        IF is_legacy_operator( <ls_token>-lexeme ) = abap_true.
-          report_statement( is_statement    = <ls_statement>
-                            iv_finding_code = c_finding_codes-prefer_operator ).
-          EXIT.
+      lv_has_receiving  = abap_false.
+      lv_has_exceptions = abap_false.
+      lv_tok_cnt = lines( <ls_statement>-tokens ).
+
+      LOOP AT <ls_statement>-tokens INTO ls_tok.
+        lv_tok_idx = sy-tabix.
+        CLEAR ls_next_tok.
+        lv_next_idx = lv_tok_idx + 1.
+        IF lv_next_idx <= lv_tok_cnt.
+          get_token_safe( EXPORTING is_statement = <ls_statement>
+                                    iv_index     = lv_next_idx
+                          IMPORTING es_token     = ls_next_tok
+                                    ev_found     = lv_found ).
+          IF lv_found = abap_false.
+            CLEAR ls_next_tok.
+          ENDIF.
+        ENDIF.
+
+        lv_lex = to_upper( ls_tok-lexeme ).
+        lv_next_lex = to_upper( ls_next_tok-lexeme ).
+
+        IF lv_lex = 'RECEIVING' AND lv_next_lex <> '='.
+          lv_has_receiving = abap_true.
+        ENDIF.
+
+        IF lv_lex = 'EXCEPTIONS' AND lv_next_lex <> '='.
+          lv_has_exceptions = abap_true.
         ENDIF.
       ENDLOOP.
+
+      IF lv_has_receiving = abap_true AND lv_has_exceptions = abap_false.
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-omit_receiving ).
+      ENDIF.
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD is_legacy_operator.
-    DATA lv_upper TYPE string.
-
-    lv_upper = to_upper( iv_lexeme ).
-    CASE lv_upper.
-      WHEN 'EQ' OR 'NE' OR 'GT' OR 'LT' OR 'GE' OR 'LE'.
-        rv_is = abap_true.
+  METHOD is_exempt_statement.
+    CASE iv_keyword.
+      WHEN 'CALL' OR 'EXPORT' OR 'METHODS' OR 'CLASS-METHODS'
+        OR 'EVENTS' OR 'CLASS-EVENTS' OR 'INTERFACES' OR 'SUBMIT'
+        OR 'FORM' OR 'FUNCTION' OR 'MODULE'.
+        rv_exempt = abap_true.
       WHEN OTHERS.
-        rv_is = abap_false.
-    ENDCASE.
-  ENDMETHOD.
-
-  METHOD is_declaration_keyword.
-    DATA lv_upper TYPE string.
-
-    lv_upper = to_upper( iv_keyword ).
-    CASE lv_upper.
-      WHEN 'DATA' OR 'TYPES' OR 'CONSTANTS' OR 'STATICS'
-        OR 'PARAMETERS' OR 'FIELD-SYMBOLS' OR 'METHODS' OR 'CLASS-METHODS'.
-        rv_is = abap_true.
-      WHEN OTHERS.
-        rv_is = abap_false.
+        rv_exempt = abap_false.
     ENDCASE.
   ENDMETHOD.
 ENDCLASS.

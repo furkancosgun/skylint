@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_065 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        constructor_logic TYPE if_ci_atc_check=>ty_finding_code VALUE 'CTOR_LOGIC',
+        avoid_form TYPE if_ci_atc_check=>ty_finding_code VALUE 'AVOID_FORM',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,69 +15,28 @@ CLASS zcl_skylint_check_065 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'CONSTRUCTOR_LOGIC'.
-
-    DATA mv_max_statements TYPE i VALUE 10.
-
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_FORM_ROUTINE'.
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_065 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Keep constructors clean; avoid heavy business logic/loops/DB access'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-constructor_logic
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Avoid heavy business logic/loops in constructor; use injection only'
-                       pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #( ( name  = 'MAX_STATEMENTS'
-                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                                                value = REF #( mv_max_statements ) ) ) ) ).
+    super->constructor( VALUE #( description       = 'Avoid obsolete FORM routines; use modern methods in ABAP Cloud'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-avoid_form
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Avoid obsolete FORM/PERFORM subroutines; use methods instead'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lv_max_stmts  TYPE i.
-    DATA lv_stmt_count TYPE i.  
 
-    "TODO constructor olmalı sadece bu if te
-    IF     is_procedure-id-name NP '*CONSTRUCTOR*'
-       AND is_procedure-id-name NP '*WITHOUT_PSEUDO_COMMENTS*'
-       AND is_procedure-id-name NP '*WITH_PSEUDO_COMMENTS*'.
-      RETURN.
-    ENDIF.
-
-    get_attribute( EXPORTING iv_name  = 'MAX_STATEMENTS'
-                   IMPORTING ev_value = lv_max_stmts ).
-
-    IF lv_max_stmts <= 0.
-      lv_max_stmts = mv_max_statements.
-    ENDIF.
-
-    lv_stmt_count = 0.
-
-      "TODO bunlar olmayacak sadece statement saymak yeterli METHOD ve ENDMETHOD hariç
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      " Disallow heavy keywords directly
-      IF    <ls_statement>-keyword = 'LOOP'          OR <ls_statement>-keyword = 'SELECT'
-         OR <ls_statement>-keyword = 'CALL FUNCTION' OR <ls_statement>-keyword = 'SUBMIT'.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-constructor_logic ).
-        CONTINUE.
-      ENDIF.
-
-      " Count logic statements (excluding METHOD, ENDMETHOD, DATA, TYPES, STATICS, CONSTANTS)
-      IF     <ls_statement>-keyword <> 'METHOD'  AND <ls_statement>-keyword <> 'ENDMETHOD'
-         AND <ls_statement>-keyword <> 'DATA'    AND <ls_statement>-keyword <> 'TYPES'
-         AND <ls_statement>-keyword <> 'STATICS' AND <ls_statement>-keyword <> 'CONSTANTS'.
-        lv_stmt_count += 1.
-        IF lv_stmt_count > lv_max_stmts.
-          report_statement( is_statement    = <ls_statement>
-                            iv_finding_code = c_finding_codes-constructor_logic ).
-        ENDIF.
-      ENDIF.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
+         WHERE keyword = 'PERFORM' OR keyword = 'FORM'.
+      report_statement( is_statement    = <ls_statement>
+                        iv_finding_code = c_finding_codes-avoid_form ).
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

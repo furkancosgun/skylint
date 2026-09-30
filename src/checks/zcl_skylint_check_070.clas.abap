@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_070 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        bool_method_name TYPE if_ci_atc_check=>ty_finding_code VALUE 'BOOL_NAME',
+        dyn_sql TYPE if_ci_atc_check=>ty_finding_code VALUE 'DYN_SQL',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,87 +15,67 @@ CLASS zcl_skylint_check_070 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'BOOL_METHOD_NAME'.
-
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_DYNAMIC_SQL'.
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_070 IMPLEMENTATION.
   METHOD constructor.
-    "TODO bu kural compiler + rtti ile yeniden yazılsın
+    "TODO bu kural compiler uzerinden yeniden yazilsin
     super->constructor(
-        VALUE #( description       = 'Enforce predicate naming (IS_, HAS_, CAN_) on boolean methods'
+        VALUE #( description       = 'Avoid dynamic SQL table or clause names without sanitization'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-bool_method_name
+                     ( code           = c_finding_codes-dyn_sql
                        severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Boolean-returning method should use predicate name (IS_, HAS_, CAN_)'
+                       text           = 'Avoid dynamic table or clause in SQL; use static SQL or sanitize'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_is_bool_returning TYPE abap_bool.
-    DATA lv_meth_name TYPE string.
-    DATA lv_len TYPE i.
+    DATA lv_is_dynamic TYPE abap_bool.
     DATA lv_idx TYPE i.
+    DATA lv_len TYPE i.
     DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_next TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_found TYPE abap_bool.
+    DATA lv_next_found TYPE abap_bool.
     DATA lv_lexeme TYPE string.
+    DATA lv_next_lex TYPE string.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'METHODS' OR keyword = 'CLASS-METHODS'.
-      lv_is_bool_returning = abap_false.
+         WHERE keyword = 'SELECT' OR keyword = 'UPDATE' OR keyword = 'DELETE'.
+      lv_is_dynamic = abap_false.
       lv_len = lines( <ls_statement>-tokens ).
-      IF lv_len < 2.
-        CONTINUE.
-      ENDIF.
-
-      get_token_safe( EXPORTING is_statement = <ls_statement>
-                                iv_index     = 2
-                      IMPORTING es_token     = ls_token
-                                ev_found     = lv_found ).
-      IF lv_found = abap_false.
-        CONTINUE.
-      ENDIF.
-      lv_meth_name = to_upper( ls_token-lexeme ).
-
-      " Check if method returns boolean
       lv_idx = 1.
-      WHILE lv_idx <= lv_len.
+
+      WHILE lv_idx < lv_len.
         get_token_safe( EXPORTING is_statement = <ls_statement>
                                   iv_index     = lv_idx
                         IMPORTING es_token     = ls_token
                                   ev_found     = lv_found ).
-        IF lv_found = abap_false.
+        get_token_safe( EXPORTING is_statement = <ls_statement>
+                                  iv_index     = lv_idx + 1
+                        IMPORTING es_token     = ls_next
+                                  ev_found     = lv_next_found ).
+        IF lv_found = abap_false OR lv_next_found = abap_false.
           lv_idx += 1.
           CONTINUE.
         ENDIF.
         lv_lexeme = to_upper( ls_token-lexeme ).
-        IF lv_lexeme = 'RETURNING'.
-          " Look for boolean type keyword in remaining tokens
-          LOOP AT <ls_statement>-tokens ASSIGNING <ls_token> FROM lv_idx.
-            IF    to_upper( <ls_token>-lexeme ) = 'ABAP_BOOL'
-               OR to_upper( <ls_token>-lexeme ) = 'BOOLE_D'
-               OR to_upper( <ls_token>-lexeme ) = 'XSDBOOLEAN'
-               OR to_upper( <ls_token>-lexeme ) = 'BOOLEAN'.
-              lv_is_bool_returning = abap_true.
-              EXIT.
-            ENDIF.
-          ENDLOOP.
+        lv_next_lex = ls_next-lexeme.
+        IF ( lv_lexeme = 'FROM' OR lv_lexeme = 'WHERE' )
+           AND ( lv_next_lex CP '(*)' OR lv_next_lex = '(' ).
+          lv_is_dynamic = abap_true.
           EXIT.
         ENDIF.
         lv_idx += 1.
       ENDWHILE.
 
-      IF     lv_is_bool_returning  = abap_true
-         AND lv_meth_name         NP 'IS_*'     AND lv_meth_name NP 'HAS_*'
-         AND lv_meth_name         NP 'CAN_*'    AND lv_meth_name NP 'CHECK_*'
-         AND lv_meth_name         NP 'ARE_*'    AND lv_meth_name NP 'WAS_*'
-         AND lv_meth_name         NP 'SHOULD_*'.
+      IF lv_is_dynamic = abap_true.
         report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-bool_method_name ).
+                          iv_finding_code = c_finding_codes-dyn_sql ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.

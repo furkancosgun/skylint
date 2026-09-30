@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_026 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_new TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFERNEW',
+        static_call_via_instance TYPE if_ci_atc_check=>ty_finding_code VALUE 'STATICVIAINST',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,128 +15,207 @@ CLASS zcl_skylint_check_026 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_NEW'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'STATIC_CALL'.
 
-    METHODS is_static_create_object
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+    DATA mt_static_methods TYPE HASHED TABLE OF string WITH UNIQUE KEY table_line.
+
+    METHODS collect_static_methods
+      IMPORTING is_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure.
+
+    METHODS inspect_procedure
+      IMPORTING is_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure.
+
+    METHODS is_static_call
+      IMPORTING is_token      TYPE if_ci_atc_source_code_provider=>ty_token
       RETURNING VALUE(rv_res) TYPE abap_bool.
+
+    METHODS is_reference_to_static_method
+      IMPORTING is_ref        TYPE if_ci_atc_source_code_provider=>ty_compiler_reference
+      RETURNING VALUE(rv_res) TYPE abap_bool.
+
+    METHODS parse_full_name
+      IMPORTING iv_full_name  TYPE string
+      EXPORTING ev_class_name TYPE string
+                ev_meth_name  TYPE string.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_026 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Prefer NEW #( ) constructor expression over legacy CREATE OBJECT'
+    super->constructor( VALUE #( description       = 'Avoid calling static methods via instance arrow (->)'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-prefer_new
+                                     ( code           = c_finding_codes-static_call_via_instance
                                        severity       = if_ci_atc_check=>finding_severities-warning
-                                       text           = 'Prefer NEW #( ) expression over CREATE OBJECT'
+                                       text           = 'Call static method using => instead of ->'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      collect_static_methods( is_procedure ).
+    ELSE.
+      inspect_procedure( is_procedure ).
+    ENDIF.
+  ENDMETHOD.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'CREATE'.
-      IF is_static_create_object( <ls_statement> ) = abap_true.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-prefer_new ).
+  METHOD collect_static_methods.
+    DATA ls_stmt      TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_tok       TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_name      TYPE string.
+    DATA lv_class     TYPE string.
+    DATA lv_found     TYPE abap_bool.
+    DATA lo_descr     TYPE REF TO cl_abap_typedescr.
+    DATA lo_class     TYPE REF TO cl_abap_classdescr.
+    FIELD-SYMBOLS <ls_meth> TYPE abap_methdescr.
+
+    lv_class = is_procedure-id-main_unit-name.
+    IF lv_class IS INITIAL.
+      lv_class = is_procedure-id-name.
+    ENDIF.
+
+    IF lv_class IS NOT INITIAL.
+      cl_abap_typedescr=>describe_by_name(
+        EXPORTING
+          p_name         = lv_class
+        RECEIVING
+          type           = lo_descr
+        EXCEPTIONS
+          type_not_found = 1
+          OTHERS         = 2 ).
+      IF sy-subrc = 0 AND lo_descr IS BOUND AND lo_descr->kind = cl_abap_typedescr=>kind_class.
+        lo_class ?= lo_descr.
+        LOOP AT lo_class->methods ASSIGNING <ls_meth> WHERE is_class = abap_true.
+          lv_name = <ls_meth>-name.
+          INSERT lv_name INTO TABLE mt_static_methods.
+        ENDLOOP.
+      ENDIF.
+    ENDIF.
+
+    LOOP AT is_procedure-statements INTO ls_stmt WHERE keyword = 'CLASS-METHODS'.
+      IF lines( ls_stmt-tokens ) >= 2.
+        get_token_safe( EXPORTING is_statement = ls_stmt
+                                  iv_index     = 2
+                        IMPORTING es_token     = ls_tok
+                                  ev_found     = lv_found ).
+        IF lv_found = abap_true.
+          lv_name = to_upper( ls_tok-lexeme ).
+          IF lv_name IS NOT INITIAL.
+            INSERT lv_name INTO TABLE mt_static_methods.
+          ENDIF.
+        ENDIF.
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD is_static_create_object.
-    "TODO burası compiler seviyesinde halledilir gibi duruyor kontrol edelim çok kötü yazılmış
-    DATA lv_total     TYPE i.
-    DATA lv_idx       TYPE i.
-    DATA lv_next_idx  TYPE i.
-    DATA lv_last_idx  TYPE i.
-    DATA lv_tok       TYPE string.
-    DATA lv_tok2      TYPE string.
-    DATA lv_last1     TYPE string.
-    DATA lv_last2     TYPE string.
-    DATA lt_expected  TYPE ty_token_lexemes.
-    DATA ls_t1        TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_t2        TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_found     TYPE abap_bool.
-    DATA lv_found2    TYPE abap_bool.
+  METHOD inspect_procedure.
+    DATA ls_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    LOOP AT is_procedure-statements INTO ls_stmt.
+      LOOP AT ls_stmt-tokens INTO ls_tok.
+        IF is_static_call( ls_tok ) = abap_true.
+          report_statement( is_statement    = ls_stmt
+                            iv_finding_code = c_finding_codes-static_call_via_instance ).
+          EXIT.
+        ENDIF.
+      ENDLOOP.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD is_static_call.
+    DATA ls_ref TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     rv_res = abap_false.
-    lv_total = lines( is_statement-tokens ).
-    IF lv_total < 2.
+
+    IF is_token-lexeme NS '->'.
       RETURN.
     ENDIF.
 
-    lt_expected = VALUE #( ( `CREATE` ) ( `OBJECT` ) ).
-    IF match_token_sequence( is_statement = is_statement
-                             it_expected  = lt_expected ) = abap_false.
-      RETURN.
-    ENDIF.
-
-    " Check for RAP FOR TESTING
-    IF lv_total >= 4.
-      lv_last_idx = lv_total - 1.
-      get_token_safe( EXPORTING is_statement = is_statement
-                                iv_index     = lv_last_idx
-                      IMPORTING es_token     = ls_t1
-                                ev_found     = lv_found ).
-      get_token_safe( EXPORTING is_statement = is_statement
-                                iv_index     = lv_total
-                      IMPORTING es_token     = ls_t2
-                                ev_found     = lv_found2 ).
-      IF lv_found = abap_true AND lv_found2 = abap_true.
-        lv_last1 = to_upper( ls_t1-lexeme ).
-        lv_last2 = to_upper( ls_t2-lexeme ).
-        IF lv_last1 = 'FOR' AND lv_last2 = 'TESTING'.
-          RETURN.
-        ENDIF.
-      ENDIF.
-    ENDIF.
-
-    " Check tokens for PARAMETER-TABLE via sequence search
-    lt_expected = VALUE #( ( `PARAMETER-TABLE` ) ).
-    IF find_token_sequence( is_statement = is_statement
-                            it_expected  = lt_expected ) > 0.
-      RETURN.
-    ENDIF.
-
-    " Check tokens for dynamic TYPE (...), or OLE strings
-    lv_idx = 3.
-    WHILE lv_idx <= lv_total.
-      get_token_safe( EXPORTING is_statement = is_statement
-                                iv_index     = lv_idx
-                      IMPORTING es_token     = ls_t1
-                                ev_found     = lv_found ).
-      IF lv_found = abap_false.
-        EXIT.
-      ENDIF.
-
-      lv_tok = to_upper( ls_t1-lexeme ).
-
-      IF lv_tok = 'TYPE' AND lv_idx < lv_total.
-        lv_next_idx = lv_idx + 1.
-        get_token_safe( EXPORTING is_statement = is_statement
-                                  iv_index     = lv_next_idx
-                        IMPORTING es_token     = ls_t2
-                                  ev_found     = lv_found2 ).
-        IF lv_found2 = abap_true.
-          lv_tok2 = ls_t2-lexeme.
-          IF lv_tok2 CP '*( *' OR lv_tok2 CP '(*)' OR lv_tok2(1) = '('.
-            RETURN.
-          ENDIF.
-        ENDIF.
-      ENDIF.
-
-      " OLE Automation: CREATE OBJECT excel 'Excel.Application'
-      IF lv_idx = 3 AND ( lv_tok(1) = `'` OR lv_tok(1) = '`' ).
+    LOOP AT is_token-references INTO ls_ref
+         WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-method.
+      IF is_reference_to_static_method( ls_ref ) = abap_true.
+        rv_res = abap_true.
         RETURN.
       ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
 
-      lv_idx += 1.
-    ENDWHILE.
+  METHOD is_reference_to_static_method.
+    DATA lv_class TYPE string.
+    DATA lv_meth  TYPE string.
+    DATA lo_descr TYPE REF TO cl_abap_typedescr.
+    DATA lo_class TYPE REF TO cl_abap_classdescr.
+    FIELD-SYMBOLS <ls_meth> TYPE abap_methdescr.
 
-    rv_res = abap_true.
+    rv_res = abap_false.
+    parse_full_name( EXPORTING iv_full_name  = is_ref-full_name
+                     IMPORTING ev_class_name = lv_class
+                               ev_meth_name  = lv_meth ).
+
+    IF lv_meth IS INITIAL.
+      lv_meth = to_upper( is_ref-full_name ).
+    ENDIF.
+
+    IF line_exists( mt_static_methods[ table_line = lv_meth ] ).
+      rv_res = abap_true.
+      RETURN.
+    ENDIF.
+
+    IF lv_class IS NOT INITIAL.
+      TRY.
+          lo_descr = cl_abap_typedescr=>describe_by_name( lv_class ).
+          IF lo_descr->kind = cl_abap_typedescr=>kind_class.
+            lo_class ?= lo_descr.
+            ASSIGN lo_class->methods[ name = lv_meth ] TO <ls_meth>.
+            IF sy-subrc = 0 AND <ls_meth>-is_class = abap_true.
+              rv_res = abap_true.
+            ENDIF.
+          ENDIF.
+        CATCH cx_root.
+          RETURN.
+      ENDTRY.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD parse_full_name.
+    DATA lv_str   TYPE string.
+    DATA lt_parts TYPE STANDARD TABLE OF string WITH EMPTY KEY.
+
+    CLEAR: ev_class_name,
+           ev_meth_name.
+    lv_str = to_upper( iv_full_name ).
+
+    IF lv_str CS '->'.
+      SPLIT lv_str AT '->' INTO ev_class_name ev_meth_name.
+      IF ev_meth_name CS '('.
+        SPLIT ev_meth_name AT '(' INTO ev_meth_name lv_str.
+      ENDIF.
+      RETURN.
+    ENDIF.
+
+    IF lv_str CS '=>'.
+      SPLIT lv_str AT '=>' INTO ev_class_name ev_meth_name.
+      IF ev_meth_name CS '('.
+        SPLIT ev_meth_name AT '(' INTO ev_meth_name lv_str.
+      ENDIF.
+      RETURN.
+    ENDIF.
+
+    IF lv_str CS '\'.
+      SPLIT lv_str AT '\' INTO TABLE lt_parts.
+      LOOP AT lt_parts INTO lv_str.
+        IF lv_str CP 'CLASS=*'.
+          ev_class_name = lv_str+6.
+        ELSEIF lv_str CP 'TY:*'.
+          ev_class_name = lv_str+3.
+        ELSEIF lv_str CP 'METHOD=*'.
+          ev_meth_name = lv_str+7.
+        ELSEIF lv_str CP 'ME:*'.
+          ev_meth_name = lv_str+3.
+        ENDIF.
+      ENDLOOP.
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.

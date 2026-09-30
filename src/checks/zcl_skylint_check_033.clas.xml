@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_033</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Lost Previous Exception in CATCH (033)</DESCRIPT>
+    <DESCRIPT>skylint: Scope of Variable (033)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

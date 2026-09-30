@@ -13,28 +13,34 @@ ENDCLASS.
 CLASS zcl_skylint_test_047 IMPLEMENTATION.
 
   METHOD without_pseudo_comments.
-    DATA lv_a TYPE i.
-    lv_a = 1.
-    lv_a = 2.
-    lv_a = 3.
-    lv_a = 4.
-    lv_a = 5.
-    lv_a = 6.
+    IF 1 = 1.
+    ENDIF.
+    IF 2 = 2.
+    ENDIF.
+    IF 3 = 3.
+    ENDIF.
+    IF 4 = 4.
+    ENDIF.
+    IF 5 = 5.
+    ENDIF.
   ENDMETHOD.
 
-  METHOD with_pseudo_comments. "#EC METHOD_LENGTH
-    DATA lv_a TYPE i.
-    lv_a = 1.
-    lv_a = 2.
-    lv_a = 3.
-    lv_a = 4.
-    lv_a = 5.
-    lv_a = 6.
+  METHOD with_pseudo_comments. "#EC CYCLOMATIC_COMPLEXITY
+    IF 1 = 1.
+    ENDIF.
+    IF 2 = 2.
+    ENDIF.
+    IF 3 = 3.
+    ENDIF.
+    IF 4 = 4.
+    ENDIF.
+    IF 5 = 5.
+    ENDIF.
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lv_a TYPE i.
-    lv_a = 1.
+    IF 1 = 1.
+    ENDIF.
   ENDMETHOD.
 
 ENDCLASS.

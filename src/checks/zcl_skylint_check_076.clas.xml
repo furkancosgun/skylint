@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_076</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Avoid nested TRY blocks (076)</DESCRIPT>
+    <DESCRIPT>skylint: Detect ASSERT in production</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_007</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Omit EXPORTING Check (007)</DESCRIPT>
+    <DESCRIPT>skylint: Avoid Assignment Chaining (007)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

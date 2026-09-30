@@ -1,37 +1,25 @@
-CLASS lcl_bad DEFINITION
-  CREATE PUBLIC.
-ENDCLASS.
-
-CLASS lcl_bad_pc DEFINITION
-  CREATE PUBLIC. "#EC CLASS_FINAL
-ENDCLASS.
-
-CLASS lcl_good DEFINITION FINAL
-  CREATE PUBLIC.
-ENDCLASS.
-
 CLASS zcl_skylint_test_057 DEFINITION
-  PUBLIC FINAL
+  PUBLIC
+  INHERITING FROM cx_no_check
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS run.
-
+    METHODS without_pseudo_comments.
+    METHODS with_pseudo_comments.
+    METHODS valid_code.
 ENDCLASS.
 
-
-CLASS lcl_bad IMPLEMENTATION.
-ENDCLASS.
-
-CLASS lcl_bad_pc IMPLEMENTATION.
-ENDCLASS.
-
-CLASS lcl_good IMPLEMENTATION.
-ENDCLASS.
 
 CLASS zcl_skylint_test_057 IMPLEMENTATION.
-
-  METHOD run.
+  METHOD without_pseudo_comments.
+    " Implementation
   ENDMETHOD.
 
+  METHOD with_pseudo_comments.
+    " Implementation
+  ENDMETHOD.
+
+  METHOD valid_code.
+    " Implementation
+  ENDMETHOD.
 ENDCLASS.

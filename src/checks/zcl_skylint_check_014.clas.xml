@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_014</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Avoid CHECK in Iterations</DESCRIPT>
+    <DESCRIPT>skylint: Empty Control Blocks</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

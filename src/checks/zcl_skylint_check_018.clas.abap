@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_018 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        unit_test_assert TYPE if_ci_atc_check=>ty_finding_code VALUE 'UTASSERT',
+        unreachable_code TYPE if_ci_atc_check=>ty_finding_code VALUE 'UNREACHCD',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,166 +15,150 @@ CLASS zcl_skylint_check_018 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'UT_ASSERT'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'UNREACHABLE_CODE'.
 
-    METHODS is_assert_call
+    TYPES:
+      BEGIN OF ty_depth_state,
+        depth       TYPE i,
+        unreachable TYPE abap_bool,
+      END OF ty_depth_state,
+      ty_depth_states TYPE STANDARD TABLE OF ty_depth_state WITH EMPTY KEY.
+
+    METHODS is_unconditional_jump
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
-    METHODS get_param_value
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-                iv_param      TYPE string
-      RETURNING VALUE(rv_val) TYPE string.
-
-    METHODS has_invalid_assertion
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+    METHODS is_depth_unreachable
+      IMPORTING it_states     TYPE ty_depth_states
+                iv_depth      TYPE i
       RETURNING VALUE(rv_res) TYPE abap_bool.
+
+    METHODS set_depth_unreachable
+      IMPORTING iv_depth  TYPE i
+                iv_val    TYPE abap_bool
+      CHANGING  ct_states TYPE ty_depth_states.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_018 IMPLEMENTATION.
   METHOD constructor.
-    "TODO bu kural silelim saçmalık 
-    super->constructor(
-        VALUE #( description       = 'Validate unit test assertions (avoid identical act and exp parameters)'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-unit_test_assert
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Invalid unit test assertion; actual and expected parameters are identical'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    "TODO gayet temiz yine de bi kontrol edelim
+    super->constructor( VALUE #( description       = 'Detect unreachable code following unconditional jump statements'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-unreachable_code
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Statement is unreachable'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
+    DATA lv_depth  TYPE i.
+    DATA lt_states TYPE ty_depth_states.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    lv_depth = 0.
+    set_depth_unreachable( EXPORTING iv_depth  = 0
+                                     iv_val    = abap_false
+                           CHANGING  ct_states = lt_states ).
+
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF has_invalid_assertion( <ls_statement> ) = abap_true.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-unit_test_assert ).
-      ENDIF.
+      CASE <ls_statement>-keyword.
+        WHEN 'IF' OR 'CASE' OR 'LOOP' OR 'DO' OR 'WHILE' OR 'TRY'.
+          IF is_depth_unreachable( it_states = lt_states
+                                   iv_depth  = lv_depth ) = abap_true.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-unreachable_code ).
+          ENDIF.
+          lv_depth += 1.
+          set_depth_unreachable( EXPORTING iv_depth  = lv_depth
+                                           iv_val    = abap_false
+                                 CHANGING  ct_states = lt_states ).
+
+        WHEN 'ELSE' OR 'ELSEIF' OR 'WHEN' OR 'CATCH' OR 'CLEANUP'.
+          IF lv_depth > 0 AND is_depth_unreachable( it_states = lt_states
+                                                    iv_depth  = lv_depth - 1 ) = abap_false.
+            set_depth_unreachable( EXPORTING iv_depth  = lv_depth
+                                             iv_val    = abap_false
+                                   CHANGING  ct_states = lt_states ).
+          ENDIF.
+
+        WHEN 'ENDIF' OR 'ENDCASE' OR 'ENDLOOP' OR 'ENDDO' OR 'ENDWHILE' OR 'ENDTRY'.
+          set_depth_unreachable( EXPORTING iv_depth  = lv_depth
+                                           iv_val    = abap_false
+                                 CHANGING  ct_states = lt_states ).
+          IF lv_depth > 0.
+            lv_depth -= 1.
+          ENDIF.
+
+        WHEN 'ENDMETHOD' OR 'ENDFORM' OR 'ENDFUNCTION' OR 'ENDMODULE'.
+          CONTINUE.
+
+        WHEN OTHERS.
+          IF is_depth_unreachable( it_states = lt_states
+                                   iv_depth  = lv_depth ) = abap_true.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-unreachable_code ).
+          ELSEIF is_unconditional_jump( <ls_statement> ) = abap_true.
+            set_depth_unreachable( EXPORTING iv_depth  = lv_depth
+                                             iv_val    = abap_true
+                                   CHANGING  ct_states = lt_states ).
+          ENDIF.
+      ENDCASE.
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD has_invalid_assertion.
-    DATA lv_act TYPE string.
-    DATA lv_exp TYPE string.
+  METHOD is_depth_unreachable.
+    DATA lv_idx TYPE i.
+    FIELD-SYMBOLS <ls_state> TYPE ty_depth_state.
 
     rv_res = abap_false.
-    IF is_assert_call( is_statement ) = abap_false.
-      RETURN.
-    ENDIF.
-
-    lv_act = get_param_value( is_statement = is_statement
-                              iv_param     = 'ACT' ).
-    IF lv_act IS INITIAL.
-      lv_act = get_param_value( is_statement = is_statement
-                                iv_param     = 'ACTUAL' ).
-    ENDIF.
-
-    lv_exp = get_param_value( is_statement = is_statement
-                              iv_param     = 'EXP' ).
-    IF lv_exp IS INITIAL.
-      lv_exp = get_param_value( is_statement = is_statement
-                                iv_param     = 'EXPECTED' ).
-    ENDIF.
-
-    IF     lv_act             IS NOT INITIAL
-       AND lv_exp             IS NOT INITIAL
-       AND to_upper( lv_act )  = to_upper( lv_exp ).
-      rv_res = abap_true.
-    ENDIF.
-  ENDMETHOD.
-
-  METHOD is_assert_call.
-    DATA lv_tok TYPE string.
-    FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
-
-    rv_res = abap_false.
-    LOOP AT is_statement-tokens ASSIGNING <ls_tok>.
-      lv_tok = to_upper( <ls_tok>-lexeme ).
-      IF lv_tok CP '*ASSERT*' OR lv_tok CP '*CL_AUNIT_ASSERT*' OR lv_tok CP '*CL_ABAP_UNIT_ASSERT*'.
+    lv_idx = 0.
+    WHILE lv_idx <= iv_depth.
+      ASSIGN it_states[ depth = lv_idx ] TO <ls_state>.
+      IF sy-subrc = 0 AND <ls_state>-unreachable = abap_true.
         rv_res = abap_true.
         RETURN.
       ENDIF.
-    ENDLOOP.
-  ENDMETHOD.
-
-  METHOD get_param_value.
-    DATA lv_idx TYPE i.
-    DATA lv_total TYPE i.
-    DATA lv_in TYPE abap_bool.
-    DATA lv_depth TYPE i.
-    DATA lv_curr TYPE string.
-    DATA lv_next_idx TYPE i.
-    DATA ls_cur_token TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_next_token TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_found TYPE abap_bool.
-    DATA lv_found_next TYPE abap_bool.
-
-    rv_val = ''.
-    lv_in = abap_false.
-    lv_depth = 0.
-    lv_total = lines( is_statement-tokens ).
-    lv_idx = 1.
-
-    WHILE lv_idx <= lv_total.
-      get_token_safe( EXPORTING is_statement = is_statement
-                                iv_index     = lv_idx
-                      IMPORTING es_token     = ls_cur_token
-                                ev_found     = lv_found ).
-      IF lv_found = abap_false.
-        EXIT.
-      ENDIF.
-
-      lv_curr = to_upper( ls_cur_token-lexeme ).
-
-      IF lv_in = abap_false.
-        IF lv_curr = iv_param AND lv_idx < lv_total.
-          lv_next_idx = lv_idx + 1.
-          get_token_safe( EXPORTING is_statement = is_statement
-                                    iv_index     = lv_next_idx
-                          IMPORTING es_token     = ls_next_token
-                                    ev_found     = lv_found_next ).
-          IF lv_found_next = abap_true AND ls_next_token-lexeme = '='.
-            lv_in = abap_true.
-            lv_depth = 0.
-            lv_idx += 2.
-            CONTINUE.
-          ENDIF.
-        ENDIF.
-      ELSE.
-        IF lv_curr CP '*( *' OR lv_curr = '('.
-          lv_depth += 1.
-        ELSEIF lv_curr CP '* )*' OR lv_curr = ')'.
-          IF lv_depth > 0.
-            lv_depth -= 1.
-          ELSE.
-            RETURN.
-          ENDIF.
-        ENDIF.
-
-        IF lv_depth = 0 AND lv_idx < lv_total.
-          lv_next_idx = lv_idx + 1.
-          get_token_safe( EXPORTING is_statement = is_statement
-                                    iv_index     = lv_next_idx
-                          IMPORTING es_token     = ls_next_token
-                                    ev_found     = lv_found_next ).
-          IF lv_found_next = abap_true AND ls_next_token-lexeme = '='.
-            " Next parameter encountered
-            RETURN.
-          ENDIF.
-        ENDIF.
-
-        IF rv_val IS INITIAL.
-          rv_val = ls_cur_token-lexeme.
-        ELSE.
-          rv_val = |{ rv_val } { ls_cur_token-lexeme }|.
-        ENDIF.
-      ENDIF.
-
       lv_idx += 1.
     ENDWHILE.
+  ENDMETHOD.
+
+  METHOD set_depth_unreachable.
+    FIELD-SYMBOLS <ls_state> TYPE ty_depth_state.
+
+    ASSIGN ct_states[ depth = iv_depth ] TO <ls_state>.
+    IF sy-subrc = 0.
+      <ls_state>-unreachable = iv_val.
+    ELSE.
+      INSERT VALUE #( depth       = iv_depth
+                      unreachable = iv_val ) INTO TABLE ct_states.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD is_unconditional_jump.
+    rv_res = abap_false.
+
+    CASE is_statement-keyword.
+      WHEN 'RETURN' OR 'EXIT' OR 'CONTINUE'.
+        rv_res = abap_true.
+
+      WHEN 'RAISE'.
+        IF matches_token_at( is_statement = is_statement
+                             iv_index     = 2
+                             iv_expected  = `SHORTDUMP` ) = abap_true.
+          rv_res = abap_true.
+        ELSEIF matches_token_at( is_statement = is_statement
+                                 iv_index     = 2
+                                 iv_expected  = `EXCEPTION` ) = abap_true.
+          rv_res = abap_true.
+          IF matches_token_at( is_statement = is_statement
+                               iv_index     = 3
+                               iv_expected  = `RESUMABLE` ) = abap_true.
+            rv_res = abap_false.
+          ENDIF.
+        ENDIF.
+    ENDCASE.
   ENDMETHOD.
 ENDCLASS.

@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_031</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Avoid Public Attributes in Classes (031)</DESCRIPT>
+    <DESCRIPT>skylint: Unsecure FOR ALL ENTRIES (031)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

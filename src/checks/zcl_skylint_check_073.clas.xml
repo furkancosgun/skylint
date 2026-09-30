@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_073</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Mutable DATA in Interfaces (073)</DESCRIPT>
+    <DESCRIPT>skylint: Prefer calculation assignment</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

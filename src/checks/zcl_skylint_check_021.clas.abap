@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_021 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        when_others_not_last TYPE if_ci_atc_check=>ty_finding_code VALUE 'WHENOTHERS',
+        prefer_operator TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFEROP',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,94 +15,74 @@ CLASS zcl_skylint_check_021 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'WHEN_OTHERS_LAST'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_OPERATORS'.
 
-    METHODS is_when_others
-      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
+    METHODS is_legacy_operator
+      IMPORTING iv_lexeme    TYPE string
       RETURNING VALUE(rv_is) TYPE abap_bool.
 
-    METHODS has_subsequent_when
-      IMPORTING iv_idx        TYPE i
-                is_procedure  TYPE if_ci_atc_source_code_provider=>ty_procedure
-      RETURNING VALUE(rv_has) TYPE abap_bool.
+    METHODS is_declaration_keyword
+      IMPORTING iv_keyword   TYPE string
+      RETURNING VALUE(rv_is) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_021 IMPLEMENTATION.
   METHOD constructor.
-    "TODO bu kuralı sil abapta zaten others başta olamaz else ifadesi gibidr SYNTAX ERROR
-    super->constructor( VALUE #( description       = 'Enforce WHEN OTHERS to be the last branch in CASE construct'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-when_others_not_last
-                                       severity       = if_ci_atc_check=>finding_severities-warning
-                                       text           = 'WHEN OTHERS must be the last branch in CASE construct'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor(
+        VALUE #( description       = 'Prefer comparison operators (=, <>, <, >, <=, >=) over legacy textual keywords'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #(
+                     ( code           = c_finding_codes-prefer_operator
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Prefer modern comparison operators (=, <>, <, >, <=, >=) over legacy keywords'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_idx TYPE i.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'WHEN'.
-      lv_idx = sy-tabix.
-      IF     is_when_others( <ls_statement> )                   = abap_true
-         AND has_subsequent_when( iv_idx       = lv_idx
-                                  is_procedure = is_procedure ) = abap_true.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-when_others_not_last ).
+    "TODO COMPILER SEVIYESINDE cozebiliriz gibi duruyor kontrol edelim
+    "ABAPLINT kontrol edelim nasil yapmis
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF is_declaration_keyword( <ls_statement>-keyword ) = abap_true.
+        CONTINUE.
       ENDIF.
+
+      LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
+        IF is_legacy_operator( <ls_token>-lexeme ) = abap_true.
+          report_statement( is_statement    = <ls_statement>
+                            iv_finding_code = c_finding_codes-prefer_operator ).
+          EXIT.
+        ENDIF.
+      ENDLOOP.
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD is_when_others.
-    rv_is = matches_token_at( is_statement = is_statement
-                              iv_index     = 2
-                              iv_expected  = `OTHERS` ).
+  METHOD is_legacy_operator.
+    DATA lv_upper TYPE string.
+
+    lv_upper = to_upper( iv_lexeme ).
+    CASE lv_upper.
+      WHEN 'EQ' OR 'NE' OR 'GT' OR 'LT' OR 'GE' OR 'LE'.
+        rv_is = abap_true.
+      WHEN OTHERS.
+        rv_is = abap_false.
+    ENDCASE.
   ENDMETHOD.
 
-  METHOD has_subsequent_when.
-    DATA lv_total    TYPE i.
-    DATA lv_fwd_idx  TYPE i.
-    DATA lv_depth    TYPE i.
-    DATA ls_fwd_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lv_found    TYPE abap_bool.
+  METHOD is_declaration_keyword.
+    DATA lv_upper TYPE string.
 
-    rv_has = abap_false.
-    lv_total = lines( is_procedure-statements ).
-    lv_depth = 0.
-    lv_fwd_idx = iv_idx + 1.
-
-    WHILE lv_fwd_idx <= lv_total.
-      get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                    iv_index       = lv_fwd_idx
-                          IMPORTING es_statement   = ls_fwd_stmt
-                                    ev_found       = lv_found ).
-      IF lv_found = abap_false.
-        EXIT.
-      ENDIF.
-
-      CASE ls_fwd_stmt-keyword.
-        WHEN 'CASE'.
-          lv_depth += 1.
-
-        WHEN 'ENDCASE'.
-          IF lv_depth = 0.
-            RETURN.
-          ELSE.
-            lv_depth -= 1.
-          ENDIF.
-
-        WHEN 'WHEN'.
-          IF lv_depth = 0.
-            rv_has = abap_true.
-            RETURN.
-          ENDIF.
-      ENDCASE.
-
-      lv_fwd_idx += 1.
-    ENDWHILE.
+    lv_upper = to_upper( iv_keyword ).
+    CASE lv_upper.
+      WHEN 'DATA' OR 'TYPES' OR 'CONSTANTS' OR 'STATICS'
+        OR 'PARAMETERS' OR 'FIELD-SYMBOLS' OR 'METHODS' OR 'CLASS-METHODS'.
+        rv_is = abap_true.
+      WHEN OTHERS.
+        rv_is = abap_false.
+    ENDCASE.
   ENDMETHOD.
 ENDCLASS.

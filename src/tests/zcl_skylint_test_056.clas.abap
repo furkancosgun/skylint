@@ -3,44 +3,27 @@ CLASS zcl_skylint_test_056 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS without_pseudo_comments.
-    METHODS with_pseudo_comments.
-    METHODS valid_code.
+    METHODS process_data
+      RETURNING VALUE(rv_ok) TYPE abap_bool.
 
+    METHODS calculate_result
+      RETURNING VALUE(rv_ok) TYPE abap_bool. "#EC BOOL_METHOD_NAME
+
+    METHODS is_valid
+      RETURNING VALUE(rv_ok) TYPE abap_bool.
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_056 IMPLEMENTATION.
-
-  METHOD without_pseudo_comments.
-    IF 1 = 1.
-    ENDIF.
-    IF 2 = 2.
-    ENDIF.
-    IF 3 = 3.
-    ENDIF.
-    IF 4 = 4.
-    ENDIF.
-    IF 5 = 5.
-    ENDIF.
+  METHOD process_data.
+    rv_ok = abap_true.
   ENDMETHOD.
 
-  METHOD with_pseudo_comments. "#EC CYCLOMATIC_COMPLEXITY
-    IF 1 = 1.
-    ENDIF.
-    IF 2 = 2.
-    ENDIF.
-    IF 3 = 3.
-    ENDIF.
-    IF 4 = 4.
-    ENDIF.
-    IF 5 = 5.
-    ENDIF.
+  METHOD calculate_result.
+    rv_ok = abap_true.
   ENDMETHOD.
 
-  METHOD valid_code.
-    IF 1 = 1.
-    ENDIF.
+  METHOD is_valid.
+    rv_ok = abap_true.
   ENDMETHOD.
-
 ENDCLASS.

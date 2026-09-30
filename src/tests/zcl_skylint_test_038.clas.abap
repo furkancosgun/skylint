@@ -4,30 +4,39 @@ CLASS zcl_skylint_test_038 DEFINITION
 
   PUBLIC SECTION.
     TYPES:
-      BEGIN OF ty_entry,
-        obj_name TYPE string,
-      END OF ty_entry.
-    TYPES tt_entries TYPE STANDARD TABLE OF ty_entry WITH DEFAULT KEY.
+      BEGIN OF ty_struct,
+        col1 TYPE i,
+        col2 TYPE string,
+      END OF ty_struct.
 
     METHODS without_pseudo_comments.
     METHODS with_pseudo_comments.
     METHODS valid_code.
+
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_038 IMPLEMENTATION.
+
   METHOD without_pseudo_comments.
-    DATA lt_data TYPE STANDARD TABLE OF tadir WITH DEFAULT KEY.
-    SELECT * FROM tadir INTO TABLE @lt_data.
+    DATA ls_src TYPE ty_struct.
+    DATA ls_dst TYPE ty_struct.
+
+    MOVE-CORRESPONDING ls_src TO ls_dst.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    DATA lt_data TYPE STANDARD TABLE OF tadir WITH DEFAULT KEY.
-    SELECT * FROM tadir INTO TABLE @lt_data. "#EC SELECT_PERF
+    DATA ls_src TYPE ty_struct.
+    DATA ls_dst TYPE ty_struct.
+
+    MOVE-CORRESPONDING ls_src TO ls_dst. "#EC PREFER_CORRESPONDING
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lt_data TYPE tt_entries.
-    SELECT obj_name FROM tadir INTO TABLE @lt_data.
+    DATA ls_src TYPE ty_struct.
+    DATA ls_dst TYPE ty_struct.
+
+    ls_dst = CORRESPONDING #( ls_src ).
   ENDMETHOD.
+
 ENDCLASS.

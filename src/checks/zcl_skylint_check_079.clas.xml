@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_079</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Avoid FORM routines (079)</DESCRIPT>
+    <DESCRIPT>skylint: Detect unnecessary ! escape</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

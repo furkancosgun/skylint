@@ -23,32 +23,28 @@ CLASS ltcl_check_001 IMPLEMENTATION.
     ls_loc_without_pc_1 = VALUE #( object   = cl_ci_atc_unit_driver=>get_method_object(
                                                   VALUE #( class  = c_test_class
                                                            method = c_methods-without_pseudo_comments ) )
-                                   position = VALUE #( line   = 2
-                                                       column = 4 ) ).
+                                   position = VALUE #( line = 5 ) ).
 
     ls_loc_without_pc_2 = VALUE #( object   = cl_ci_atc_unit_driver=>get_method_object(
                                                   VALUE #( class  = c_test_class
                                                            method = c_methods-without_pseudo_comments ) )
-                                   position = VALUE #( line   = 8
-                                                       column = 6 ) ).
+                                   position = VALUE #( line = 8 ) ).
 
     ls_loc_with_pc_1 = VALUE #( object   = cl_ci_atc_unit_driver=>get_method_object(
                                                VALUE #( class  = c_test_class
                                                         method = c_methods-with_pseudo_comments ) )
-                                position = VALUE #( line   = 2
-                                                    column = 4 ) ).
+                                position = VALUE #( line = 5 ) ).
 
     ls_loc_with_pc_2 = VALUE #( object   = cl_ci_atc_unit_driver=>get_method_object(
                                                VALUE #( class  = c_test_class
                                                         method = c_methods-with_pseudo_comments ) )
-                                position = VALUE #( line   = 8
-                                                    column = 6 ) ).
+                                position = VALUE #( line = 8 ) ).
 
     cl_ci_atc_unit_driver=>create_asserter( )->check_and_assert(
         check             = NEW zcl_skylint_check_001( )
         object            = VALUE #( type = 'CLAS'
                                      name = c_test_class )
-        expected_findings = VALUE #( code = zcl_skylint_check_001=>c_finding_codes-test_seam
+        expected_findings = VALUE #( code = zcl_skylint_check_001=>c_finding_codes-describe_lines
                                      ( location = ls_loc_without_pc_1 )
                                      ( location = ls_loc_without_pc_2 )
                                      ( location = ls_loc_with_pc_1 )

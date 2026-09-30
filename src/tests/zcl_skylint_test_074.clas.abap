@@ -11,29 +11,36 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_074 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    DATA lx_root TYPE REF TO cx_root.
-    TRY.
-        RETURN.
-      CATCH cx_root INTO lx_root.
-        RETURN.
-    ENDTRY.
+    DATA lt_data TYPE STANDARD TABLE OF i WITH EMPTY KEY.
+    DATA lv_val TYPE i.
+
+    LOOP AT lt_data INTO lv_val.
+      IF lv_val > 0.
+        lv_val = lv_val * 2.
+      ENDIF.
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    DATA lx_root TYPE REF TO cx_root.
-    TRY.
-        RETURN.
-      CATCH cx_root INTO lx_root. "#EC AVOID_CX_ROOT
-        RETURN.
-    ENDTRY.
+    DATA lt_data TYPE STANDARD TABLE OF i WITH EMPTY KEY.
+    DATA lv_val TYPE i.
+
+    LOOP AT lt_data INTO lv_val.
+      IF lv_val > 0. "#EC GUARD_IN_LOOP
+        lv_val = lv_val * 2.
+      ENDIF.
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lx_error TYPE REF TO cx_static_check.
-    TRY.
-        RETURN.
-      CATCH cx_static_check INTO lx_error.
-        RETURN.
-    ENDTRY.
+    DATA lt_data TYPE STANDARD TABLE OF i WITH EMPTY KEY.
+    DATA lv_val TYPE i.
+
+    LOOP AT lt_data INTO lv_val.
+      IF lv_val <= 0.
+        CONTINUE.
+      ENDIF.
+      lv_val = lv_val * 2.
+    ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

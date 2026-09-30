@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_034</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Method Signature Cleanliness (034)</DESCRIPT>
+    <DESCRIPT>skylint: Identical Self Assignment (034)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

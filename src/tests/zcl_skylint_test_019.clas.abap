@@ -11,26 +11,28 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_019 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    IF 1 = 1.
-      RETURN.
-    ELSEIF 1 = 1.
-      RETURN.
-    ENDIF.
+    DATA lv_val TYPE i.
+    CASE lv_val.
+      WHEN 1.
+        RETURN.
+    ENDCASE.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    IF 1 = 1.
-      RETURN.
-    ELSEIF 1 = 1. "#EC IDENTICAL_CONDITIONS
-      RETURN.
-    ENDIF.
+    DATA lv_val TYPE i.
+    CASE lv_val. "#EC SHORT_CASE
+      WHEN 1.
+        RETURN.
+    ENDCASE.
   ENDMETHOD.
 
   METHOD valid_code.
-    IF 1 = 1.
-      RETURN.
-    ELSEIF 1 = 2.
-      RETURN.
-    ENDIF.
+    DATA lv_val TYPE i.
+    CASE lv_val.
+      WHEN 1.
+        RETURN.
+      WHEN 2.
+        RETURN.
+    ENDCASE.
   ENDMETHOD.
 ENDCLASS.

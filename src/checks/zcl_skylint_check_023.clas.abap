@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_023 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        short_case TYPE if_ci_atc_check=>ty_finding_code VALUE 'SHORTCASE',
+        raise_exception_new TYPE if_ci_atc_check=>ty_finding_code VALUE 'RAISEEXCNEW',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,93 +15,41 @@ CLASS zcl_skylint_check_023 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'SHORT_CASE'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'RAISE_EXC_NEW'.
 
-    METHODS is_when_others
-      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_is) TYPE abap_bool.
-
-    METHODS count_when_branches
-      IMPORTING iv_start_idx  TYPE i
-                is_procedure  TYPE if_ci_atc_source_code_provider=>ty_procedure
-      RETURNING VALUE(rv_cnt) TYPE i.
+    METHODS is_raise_exception_type
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_023 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Avoid short CASE constructs with only one WHEN branch; prefer IF'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-short_case
-                                       severity       = if_ci_atc_check=>finding_severities-warning
-                                       text           = 'CASE statement has <= 1 WHEN branch; prefer IF'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor(
+        VALUE #( description       = 'Prefer RAISE EXCEPTION NEW over RAISE EXCEPTION TYPE'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #(
+                     ( code           = c_finding_codes-raise_exception_new
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Prefer RAISE EXCEPTION NEW cx_name( ) over RAISE EXCEPTION TYPE'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_idx        TYPE i.
-    DATA lv_when_count TYPE i.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'CASE'.
-      lv_idx = sy-tabix.
-      lv_when_count = count_when_branches( iv_start_idx = lv_idx
-                                           is_procedure = is_procedure ).
-      IF lv_when_count <= 1.
+         WHERE keyword = 'RAISE'.
+      IF is_raise_exception_type( <ls_statement> ) = abap_true.
         report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-short_case ).
+                          iv_finding_code = c_finding_codes-raise_exception_new ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD is_when_others.
-    rv_is = matches_token_at( is_statement = is_statement
-                              iv_index     = 2
-                              iv_expected  = `OTHERS` ).
-  ENDMETHOD.
-
-  METHOD count_when_branches.
-    DATA lv_total    TYPE i.
-    DATA lv_fwd_idx  TYPE i.
-    DATA lv_depth    TYPE i.
-    DATA ls_fwd_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lv_found    TYPE abap_bool.
-
-    rv_cnt = 0.
-    lv_total = lines( is_procedure-statements ).
-    lv_depth = 0.
-    lv_fwd_idx = iv_start_idx + 1.
-
-    WHILE lv_fwd_idx <= lv_total.
-      get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                    iv_index       = lv_fwd_idx
-                          IMPORTING es_statement   = ls_fwd_stmt
-                                    ev_found       = lv_found ).
-      IF lv_found = abap_false.
-        EXIT.
-      ENDIF.
-
-      CASE ls_fwd_stmt-keyword.
-        WHEN 'CASE'.
-          lv_depth += 1.
-
-        WHEN 'ENDCASE'.
-          IF lv_depth = 0.
-            RETURN.
-          ELSE.
-            lv_depth -= 1.
-          ENDIF.
-
-        WHEN 'WHEN'.
-          IF lv_depth = 0 AND is_when_others( ls_fwd_stmt ) = abap_false.
-            rv_cnt += 1.
-          ENDIF.
-      ENDCASE.
-
-      lv_fwd_idx += 1.
-    ENDWHILE.
+  METHOD is_raise_exception_type.
+    rv_res = xsdbool( find_token_sequence( is_statement = is_statement
+                                           it_expected  = VALUE #( ( `RAISE` ) ( `EXCEPTION` ) ( `TYPE` ) ) ) > 0 ).
   ENDMETHOD.
 ENDCLASS.

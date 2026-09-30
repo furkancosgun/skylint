@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_045 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        local_tables TYPE if_ci_atc_check=>ty_finding_code VALUE 'LOCALTAB',
+        missing_auth_check TYPE if_ci_atc_check=>ty_finding_code VALUE 'AUTH_CHECK',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,20 +15,27 @@ CLASS zcl_skylint_check_045 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'LOCAL_TABLES'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'CALL_TRANSACTION'.
+
+    METHODS is_call_transaction
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
+
+    METHODS has_inline_auth_check
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_045 IMPLEMENTATION.
   METHOD constructor.
-    "TODO avoid veya obsolete ile birleştirilsin FIELD-GROUPS da eklensin listeye
-    super->constructor( VALUE #( description       = 'Avoid local TABLES declaration'
+    super->constructor( VALUE #( description       = 'skylint: Call Transaction Authority Check'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-local_tables
+                                     ( code           = c_finding_codes-missing_auth_check
                                        severity       = if_ci_atc_check=>finding_severities-warning
-                                       text           = 'TABLES declaration is obsolete; use explicit local structures'
+                                       text           = 'CALL TRANSACTION must be protected with AUTHORITY-CHECK'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
@@ -36,9 +43,22 @@ CLASS zcl_skylint_check_045 IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'TABLES'.
-      report_statement( is_statement    = <ls_statement>
-                        iv_finding_code = c_finding_codes-local_tables ).
+         WHERE keyword = 'CALL'.
+      IF     is_call_transaction( <ls_statement> )   = abap_true
+         AND has_inline_auth_check( <ls_statement> ) = abap_false.
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-missing_auth_check ).
+      ENDIF.
     ENDLOOP.
+  ENDMETHOD.
+
+  METHOD is_call_transaction.
+    rv_res = xsdbool( find_token_sequence( is_statement = is_statement
+                                           it_expected  = VALUE #( ( `CALL` ) ( `TRANSACTION` ) ) ) > 0 ).
+  ENDMETHOD.
+
+  METHOD has_inline_auth_check.
+    rv_res = xsdbool( find_token_sequence( is_statement = is_statement
+                                           it_expected  = VALUE #( ( `WITH` ) ( `AUTHORITY-CHECK` ) ) ) > 0 ).
   ENDMETHOD.
 ENDCLASS.

@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_022</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Detect Unreachable Code (022)</DESCRIPT>
+    <DESCRIPT>skylint: Prefer NEW Constructor Expression (022)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

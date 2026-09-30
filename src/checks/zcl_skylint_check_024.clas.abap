@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_024 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        yoda_condition TYPE if_ci_atc_check=>ty_finding_code VALUE 'YODACOND',
+        prefer_xsdbool TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFERXSDBOOL',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,187 +15,158 @@ CLASS zcl_skylint_check_024 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_YODA_CONDITIONS'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_XSDBOOL'.
 
-    METHODS is_literal
-      IMPORTING iv_str       TYPE string
-      RETURNING VALUE(rv_is) TYPE abap_bool.
+    METHODS is_boolean_assignment
+      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
+      EXPORTING ev_target    TYPE string
+                ev_is_bool   TYPE abap_bool.
 
-    METHODS is_comparison_operator
-      IMPORTING iv_str       TYPE string
-      RETURNING VALUE(rv_is) TYPE abap_bool.
-
-    METHODS is_identifier
-      IMPORTING iv_str       TYPE string
-      RETURNING VALUE(rv_is) TYPE abap_bool.
-
-    METHODS has_yoda_condition
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_has) TYPE abap_bool.
+    METHODS is_boolean_value
+      IMPORTING iv_lexeme     TYPE string
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_024 IMPLEMENTATION.
   METHOD constructor.
+    "TODO bu kural kontrol edilmesi cok zor bir yapi boolc ifadesi varsa xsdbool cevirmek daha dogru olabilir
+    "TODO yine de kalsin gercekten calistigina eminsek refactoring yapip kullanalim
     super->constructor(
-        VALUE #( description       = 'Avoid Yoda conditions in comparison expressions'
+        VALUE #( description       = 'Prefer xsdbool( ) expression over manual IF-ELSE assignment'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-yoda_condition
+                     ( code           = c_finding_codes-prefer_xsdbool
                        severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Avoid Yoda conditions; place variable before literal in comparison'
+                       text           = 'Prefer xsdbool( ... ) instead of manual IF-ELSE boolean assignment'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_idx            TYPE i.
+    DATA lv_max            TYPE i.
+    DATA lv_idx_then       TYPE i.
+    DATA lv_idx_else       TYPE i.
+    DATA lv_idx_body       TYPE i.
+    DATA lv_idx_endif      TYPE i.
+    DATA ls_stmt_if        TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_stmt_then      TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_stmt_else      TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_stmt_else_body TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_stmt_endif     TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_target_1       TYPE string.
+    DATA lv_target_2       TYPE string.
+    DATA lv_is_bool_1      TYPE abap_bool.
+    DATA lv_is_bool_2      TYPE abap_bool.
+    DATA lv_found_then     TYPE abap_bool.
+    DATA lv_found_else     TYPE abap_bool.
+    DATA lv_found_body     TYPE abap_bool.
+    DATA lv_found_endif    TYPE abap_bool.
 
-      "TODO bunu direkt compiler seviyesinde halledelim
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF has_yoda_condition( <ls_statement> ) = abap_true.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-yoda_condition ).
+    lv_max = lines( is_procedure-statements ).
+
+    LOOP AT is_procedure-statements INTO ls_stmt_if WHERE keyword = 'IF'.
+      lv_idx = sy-tabix.
+      IF lv_idx + 4 > lv_max.
+        CONTINUE.
+      ENDIF.
+
+      lv_idx_then = lv_idx + 1.
+      lv_idx_else = lv_idx + 2.
+      lv_idx_body = lv_idx + 3.
+      lv_idx_endif = lv_idx + 4.
+      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                    iv_index       = lv_idx_then
+                          IMPORTING es_statement   = ls_stmt_then
+                                    ev_found       = lv_found_then ).
+      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                    iv_index       = lv_idx_else
+                          IMPORTING es_statement   = ls_stmt_else
+                                    ev_found       = lv_found_else ).
+      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                    iv_index       = lv_idx_body
+                          IMPORTING es_statement   = ls_stmt_else_body
+                                    ev_found       = lv_found_body ).
+      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                    iv_index       = lv_idx_endif
+                          IMPORTING es_statement   = ls_stmt_endif
+                                    ev_found       = lv_found_endif ).
+      IF lv_found_then = abap_false OR lv_found_else = abap_false
+         OR lv_found_body = abap_false OR lv_found_endif = abap_false.
+        CONTINUE.
+      ENDIF.
+
+      IF ls_stmt_else-keyword <> 'ELSE' OR ls_stmt_endif-keyword <> 'ENDIF'.
+        CONTINUE.
+      ENDIF.
+
+      is_boolean_assignment( EXPORTING is_statement = ls_stmt_then
+                             IMPORTING ev_target    = lv_target_1
+                                       ev_is_bool   = lv_is_bool_1 ).
+
+      is_boolean_assignment( EXPORTING is_statement = ls_stmt_else_body
+                             IMPORTING ev_target    = lv_target_2
+                                       ev_is_bool   = lv_is_bool_2 ).
+
+      IF lv_is_bool_1 = abap_true AND lv_is_bool_2 = abap_true AND lv_target_1 = lv_target_2.
+        report_statement( is_statement    = ls_stmt_if
+                          iv_finding_code = c_finding_codes-prefer_xsdbool ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD has_yoda_condition.
-    DATA lv_idx    TYPE i.
-    DATA lv_total  TYPE i.
-    DATA lv_next1  TYPE i.
-    DATA lv_next2  TYPE i.
-    DATA lv_tok1   TYPE string.
-    DATA lv_tok2   TYPE string.
-    DATA lv_tok3   TYPE string.
-    DATA ls_t1     TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_t2     TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_t3     TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_found1 TYPE abap_bool.
-    DATA lv_found2 TYPE abap_bool.
-    DATA lv_found3 TYPE abap_bool.
+  METHOD is_boolean_assignment.
+    DATA ls_tok_target TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok_eq     TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok_val    TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found1     TYPE abap_bool.
+    DATA lv_found2     TYPE abap_bool.
+    DATA lv_found3     TYPE abap_bool.
 
-    rv_has = abap_false.
-    lv_total = lines( is_statement-tokens ).
-    IF lv_total < 3.
+    ev_is_bool = abap_false.
+    CLEAR ev_target.
+
+    IF lines( is_statement-tokens ) <> 3.
       RETURN.
     ENDIF.
 
-    lv_idx = 1.
-    WHILE lv_idx <= lv_total - 2.
-      lv_next1 = lv_idx + 1.
-      lv_next2 = lv_idx + 2.
-      get_token_safe( EXPORTING is_statement = is_statement
-                                iv_index     = lv_idx
-                      IMPORTING es_token     = ls_t1
-                                ev_found     = lv_found1 ).
-      get_token_safe( EXPORTING is_statement = is_statement
-                                iv_index     = lv_next1
-                      IMPORTING es_token     = ls_t2
-                                ev_found     = lv_found2 ).
-      get_token_safe( EXPORTING is_statement = is_statement
-                                iv_index     = lv_next2
-                      IMPORTING es_token     = ls_t3
-                                ev_found     = lv_found3 ).
-      IF lv_found1 = abap_false OR lv_found2 = abap_false OR lv_found3 = abap_false.
-        EXIT.
-      ENDIF.
-
-      lv_tok1 = ls_t1-lexeme.
-      lv_tok2 = ls_t2-lexeme.
-      lv_tok3 = ls_t3-lexeme.
-
-      IF     is_literal( lv_tok1 )             = abap_true
-         AND is_comparison_operator( lv_tok2 ) = abap_true
-         AND is_identifier( lv_tok3 )          = abap_true
-         AND is_literal( lv_tok3 )             = abap_false.
-        rv_has = abap_true.
-        RETURN.
-      ENDIF.
-
-      lv_idx += 1.
-    ENDWHILE.
-  ENDMETHOD.
-
-  METHOD is_literal.
-    DATA lv_len   TYPE i.
-    DATA lv_first TYPE c LENGTH 1.
-    DATA lv_last  TYPE c LENGTH 1.
-    DATA lv_rest  TYPE string.
-
-    rv_is = abap_false.
-    lv_len = strlen( iv_str ).
-    IF lv_len = 0.
+    get_token_safe( EXPORTING is_statement = is_statement
+                              iv_index     = 1
+                    IMPORTING es_token     = ls_tok_target
+                              ev_found     = lv_found1 ).
+    get_token_safe( EXPORTING is_statement = is_statement
+                              iv_index     = 2
+                    IMPORTING es_token     = ls_tok_eq
+                              ev_found     = lv_found2 ).
+    get_token_safe( EXPORTING is_statement = is_statement
+                              iv_index     = 3
+                    IMPORTING es_token     = ls_tok_val
+                              ev_found     = lv_found3 ).
+    IF lv_found1 = abap_false OR lv_found2 = abap_false OR lv_found3 = abap_false.
       RETURN.
     ENDIF.
 
-    lv_first = iv_str(1).
-    lv_last = substring( val = iv_str
-                         off = lv_len - 1
-                         len = 1 ).
-
-    IF    ( lv_first = `'` AND lv_last = `'` )
-       OR ( lv_first = '`' AND lv_last = '`' )
-       OR ( lv_first = '|' AND lv_last = '|' ).
-      rv_is = abap_true.
+    IF ls_tok_eq-lexeme <> '='.
       RETURN.
     ENDIF.
 
-    IF iv_str CO '0123456789'.
-      rv_is = abap_true.
-      RETURN.
-    ENDIF.
-
-    "TODO abapta +- ifadeleri mutlaka tırnak ile kullanılır gereksiz bir if
-    IF ( lv_first = '+' OR lv_first = '-' ) AND lv_len > 1.
-      lv_rest = substring( val = iv_str
-                           off = 1 ).
-      IF lv_rest CO '0123456789'.
-        rv_is = abap_true.
-        RETURN.
-      ENDIF.
+    IF is_boolean_value( ls_tok_val-lexeme ) = abap_true.
+      ev_target  = ls_tok_target-lexeme.
+      ev_is_bool = abap_true.
     ENDIF.
   ENDMETHOD.
 
-  METHOD is_comparison_operator.
-    DATA lv_op TYPE string.
-
-    "TODO XSDBOOL kullanılabilir burda case yerine ortak bir methoda çıkarmak daha temiz olabilir başka yerlerdede varsa
-    lv_op = to_upper( iv_str ).
-    CASE lv_op.
-      WHEN '=' OR '<>' OR '<' OR '>' OR '<=' OR '>='
-        OR 'EQ' OR 'NE' OR 'LT' OR 'GT' OR 'LE' OR 'GE'
-        OR 'CS' OR 'CP' OR 'NS' OR 'NP'
-        OR 'CO' OR 'CN' OR 'CA' OR 'NA'.
-        rv_is = abap_true.
-      WHEN OTHERS.
-        rv_is = abap_false.
-    ENDCASE.
-  ENDMETHOD.
-
-  METHOD is_identifier.
+  METHOD is_boolean_value.
     DATA lv_upper TYPE string.
-    DATA lv_first TYPE c LENGTH 1.
 
-    rv_is = abap_false.
-    IF iv_str IS INITIAL.
-      RETURN.
-    ENDIF.
-
-    lv_upper = to_upper( iv_str ).
-    lv_first = lv_upper(1).
-
-    IF lv_first NA 'ABCDEFGHIJKLMNOPQRSTUVWXYZ_'.
-      RETURN.
-    ENDIF.
+    lv_upper = to_upper( iv_lexeme ).
 
     CASE lv_upper.
-      WHEN 'AND' OR 'OR' OR 'NOT' OR 'EQUIV' OR 'IS' OR 'INITIAL' OR 'BOUND'
-        OR 'ASSIGNED' OR 'REQUESTED' OR 'SUPPLIED' OR 'IN' OR 'BETWEEN'
-        OR 'LIKE' OR 'LINES' OR 'TABLE' OR 'LINE_EXISTS' OR 'LINE_INDEX'.
-        RETURN.
+      WHEN 'ABAP_TRUE' OR 'ABAP_FALSE' OR '''X''' OR ''' ''' OR '''''' OR 'SPACE'.
+        rv_res = abap_true.
       WHEN OTHERS.
-        rv_is = abap_true.
+        rv_res = abap_false.
     ENDCASE.
   ENDMETHOD.
 ENDCLASS.

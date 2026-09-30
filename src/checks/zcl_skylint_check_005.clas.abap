@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_005 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_is_not TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFERISNT',
+        avoid_me TYPE if_ci_atc_check=>ty_finding_code VALUE 'AVOIDME',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,76 +15,50 @@ CLASS zcl_skylint_check_005 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_IS_NOT'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_ME'.
 
-    METHODS has_not_is_pattern
-      IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_matched) TYPE abap_bool.
+    DATA mv_allow_in_constructors TYPE abap_bool VALUE abap_false.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_005 IMPLEMENTATION.
   METHOD constructor.
-    "TODO: ne kadar doğru çalışıyor emin değilim ama NOT ... IS patternini yakalıyor gibi duruyor. Daha iyi bir pattern match yazılabilir
-    super->constructor( VALUE #( description       = 'Prefer IS NOT over NOT ... IS'
+    super->constructor( VALUE #( description       = 'Avoid self-reference ME->'
                                  remote_enablement = abap_true
-                                 finding_codes     = VALUE #( ( code           = c_finding_codes-prefer_is_not
-                                                                severity = if_ci_atc_check=>finding_severities-warning
-                                                                text           = 'Use IS NOT instead of NOT ... IS'
-                                                                pseudo_comment = c_pseudo_comment ) ) ) ).
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-avoid_me
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Avoid unnecessary ME-> reference'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 attributes        = VALUE #(
+                                     ( name  = 'ALLOW_IN_CONSTRUCTORS'
+                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                       value = REF #( mv_allow_in_constructors ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> LIKE LINE OF is_procedure-statements.
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'IF' OR keyword = 'ELSEIF' OR keyword = 'CHECK'
-            OR keyword = 'WHILE' OR keyword = 'WAIT'.
-      IF has_not_is_pattern( <ls_statement> ) = abap_true.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-prefer_is_not ).
-      ENDIF.
-    ENDLOOP.
-  ENDMETHOD.
+    DATA lv_allow_ctor TYPE abap_bool.
+    DATA lv_lexeme     TYPE string.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
-  METHOD has_not_is_pattern.
-    DATA lv_in_not TYPE abap_bool.
-    DATA lv_is_idx TYPE i.
-    DATA lv_lexeme TYPE string.
-    DATA lv_next_lexeme TYPE string.
-    DATA lv_idx TYPE i.
-    DATA ls_next_token TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_found TYPE abap_bool.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+    get_attribute( EXPORTING iv_name  = 'ALLOW_IN_CONSTRUCTORS'
+                   IMPORTING ev_value = lv_allow_ctor ).
 
-    rv_matched = abap_false.
-    lv_in_not = abap_false.
+    IF is_procedure-id-name = 'CONSTRUCTOR' AND lv_allow_ctor = abap_true.
+      RETURN.
+    ENDIF.
 
-    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      lv_idx = sy-tabix.
-      lv_lexeme = to_upper( <ls_token>-lexeme ).
-
-      IF lv_lexeme = 'NOT'.
-        lv_in_not = abap_true.
-      ELSEIF lv_lexeme = 'AND' OR lv_lexeme = 'OR' OR lv_lexeme = ')' OR lv_lexeme = '('.
-        lv_in_not = abap_false.
-      ELSEIF lv_in_not = abap_true AND lv_lexeme = 'IS'.
-        lv_is_idx = lv_idx + 1.
-        get_token_safe( EXPORTING is_statement = is_statement
-                                  iv_index     = lv_is_idx
-                        IMPORTING es_token     = ls_next_token
-                                  ev_found     = lv_found ).
-        IF lv_found = abap_true.
-          lv_next_lexeme = to_upper( ls_next_token-lexeme ).
-          IF    lv_next_lexeme = 'INITIAL'   OR lv_next_lexeme = 'BOUND'
-             OR lv_next_lexeme = 'ASSIGNED'  OR lv_next_lexeme = 'SUPPLIED'
-             OR lv_next_lexeme = 'REQUESTED' OR lv_next_lexeme = 'INSTANCE'.
-            rv_matched = abap_true.
-            RETURN.
-          ENDIF.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
+        lv_lexeme = to_upper( <ls_token>-lexeme ).
+        IF lv_lexeme CP 'ME->*'.
+          report_token( is_token        = <ls_token>
+                        is_statement    = <ls_statement>
+                        iv_finding_code = c_finding_codes-avoid_me ).
         ENDIF.
-        lv_in_not = abap_false.
-      ENDIF.
+      ENDLOOP.
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

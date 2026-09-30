@@ -3,47 +3,26 @@ CLASS zcl_skylint_test_034 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS bad_method
-      IMPORTING
-        iv_1 TYPE i
-        iv_2 TYPE i
-        iv_3 TYPE i
-        iv_4 TYPE i
-        iv_5 TYPE i
-        iv_6 TYPE i
-        iv_7 TYPE i
-        iv_8 TYPE i
-        iv_9 TYPE i.
-
-    METHODS bad_method_suppressed
-      IMPORTING
-        iv_1 TYPE i
-        iv_2 TYPE i
-        iv_3 TYPE i
-        iv_4 TYPE i
-        iv_5 TYPE i
-        iv_6 TYPE i
-        iv_7 TYPE i
-        iv_8 TYPE i
-        iv_9 TYPE i ##PARAM_COUNT.
-
-    METHODS good_method
-      IMPORTING
-        iv_1 TYPE i
-        iv_2 TYPE i.
+    METHODS without_pseudo_comments.
+    METHODS with_pseudo_comments.
+    METHODS valid_code.
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_034 IMPLEMENTATION.
-  METHOD bad_method.
-    RETURN.
+  METHOD without_pseudo_comments.
+    DATA lv_val TYPE string.
+    lv_val = lv_val.
   ENDMETHOD.
 
-  METHOD bad_method_suppressed.
-    RETURN.
+  METHOD with_pseudo_comments.
+    DATA lv_val TYPE string.
+    lv_val = lv_val. "#EC IDENTICAL_MOVE
   ENDMETHOD.
 
-  METHOD good_method.
-    RETURN.
+  METHOD valid_code.
+    DATA lv_val TYPE string.
+    DATA lv_src TYPE string.
+    lv_val = lv_src.
   ENDMETHOD.
 ENDCLASS.

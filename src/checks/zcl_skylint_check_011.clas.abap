@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_011 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        bool_comparison TYPE if_ci_atc_check=>ty_finding_code VALUE 'BOOLCOMP',
+        prefer_line_exists TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFLINEX',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,15 +15,11 @@ CLASS zcl_skylint_check_011 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_BOOL_COMP'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_LINE_EXISTS'.
 
-    METHODS has_boolean_comparison
+    METHODS has_transporting_no_fields
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_has) TYPE abap_bool.
-
-    METHODS is_boolean_literal
-      IMPORTING iv_lexeme    TYPE string
-      RETURNING VALUE(rv_is) TYPE abap_bool.
 
 ENDCLASS.
 
@@ -31,103 +27,42 @@ ENDCLASS.
 CLASS zcl_skylint_check_011 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Avoid direct comparison against boolean literals (abap_true, ''X'', etc.)'
+        VALUE #( description       = 'Prefer line_exists( ) over READ TABLE ... TRANSPORTING NO FIELDS'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-bool_comparison
+                     ( code           = c_finding_codes-prefer_line_exists
                        severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Avoid boolean comparison; use IF bool or IF NOT bool directly'
+                       text           = 'Prefer line_exists( ... ) instead of READ TABLE ... TRANSPORTING NO FIELDS'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    "TODO: okunması zor bir kod daha basit bir pattern match yazılabilir. 
-    "if lv_result. "boyle bir kod geçerli değil sadece function call varsa o zaman geçerli olur 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      CASE <ls_statement>-keyword.
-        WHEN 'IF' OR 'ELSEIF' OR 'CHECK' OR 'WHILE'.
-          IF has_boolean_comparison( <ls_statement> ) = abap_true.
-            report_statement( is_statement    = <ls_statement>
-                              iv_finding_code = c_finding_codes-bool_comparison ).
-          ENDIF.
-      ENDCASE.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
+         WHERE keyword = 'READ'.
+      IF has_transporting_no_fields( <ls_statement> ) = abap_true.
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-prefer_line_exists ).
+      ENDIF.
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD has_boolean_comparison.
-    DATA lv_tok_idx TYPE i.
-    DATA lv_tok_cnt TYPE i.
-    DATA lv_prev_idx TYPE i.
-    DATA lv_next_idx TYPE i.
-    DATA lv_lexeme TYPE string.
-    DATA lv_prev_lex TYPE string.
-    DATA lv_next_lex TYPE string.
-    DATA ls_cur_token TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_adj_token TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_found TYPE abap_bool.
-    DATA lv_found_adj TYPE abap_bool.
+  METHOD has_transporting_no_fields.
+    DATA lv_seq_index TYPE i.
 
     rv_has = abap_false.
-    lv_tok_cnt = lines( is_statement-tokens ).
 
-    DO lv_tok_cnt TIMES.
-      lv_tok_idx = sy-index.
-      get_token_safe( EXPORTING is_statement = is_statement
-                                iv_index     = lv_tok_idx
-                      IMPORTING es_token     = ls_cur_token
-                                ev_found     = lv_found ).
-      IF lv_found = abap_false.
-        EXIT.
-      ENDIF.
+    " line_exists does not support binary search; exempt READ TABLE with BINARY SEARCH
+    IF find_token_sequence( is_statement = is_statement
+                            it_expected  = VALUE #( ( `BINARY` ) ( `SEARCH` ) ) ) > 0.
+      RETURN.
+    ENDIF.
 
-      lv_lexeme = to_upper( ls_cur_token-lexeme ).
-      IF     lv_lexeme <> '='  AND lv_lexeme <> 'EQ' AND lv_lexeme <> '<>'
-         AND lv_lexeme <> 'NE' AND lv_lexeme <> '><'.
-        CONTINUE.
-      ENDIF.
-
-      lv_prev_idx = lv_tok_idx - 1.
-      lv_next_idx = lv_tok_idx + 1.
-
-      IF lv_prev_idx >= 1.
-        get_token_safe( EXPORTING is_statement = is_statement
-                                  iv_index     = lv_prev_idx
-                        IMPORTING es_token     = ls_adj_token
-                                  ev_found     = lv_found_adj ).
-        IF lv_found_adj = abap_true.
-          lv_prev_lex = to_upper( ls_adj_token-lexeme ).
-          IF is_boolean_literal( lv_prev_lex ) = abap_true.
-            rv_has = abap_true.
-            RETURN.
-          ENDIF.
-        ENDIF.
-      ENDIF.
-
-      IF lv_next_idx <= lv_tok_cnt.
-        get_token_safe( EXPORTING is_statement = is_statement
-                                  iv_index     = lv_next_idx
-                        IMPORTING es_token     = ls_adj_token
-                                  ev_found     = lv_found_adj ).
-        IF lv_found_adj = abap_true.
-          lv_next_lex = to_upper( ls_adj_token-lexeme ).
-          IF is_boolean_literal( lv_next_lex ) = abap_true.
-            rv_has = abap_true.
-            RETURN.
-          ENDIF.
-        ENDIF.
-      ENDIF.
-    ENDDO.
-  ENDMETHOD.
-
-  METHOD is_boolean_literal.
-    rv_is = abap_false.
-
-    CASE iv_lexeme.
-      WHEN 'ABAP_TRUE' OR 'ABAP_FALSE' OR 'ABAP_UNDEFINED' OR 'SPACE'
-        OR '''X''' OR '`X`' OR '''''' OR '``'.
-        rv_is = abap_true.
-    ENDCASE.
+    lv_seq_index = find_token_sequence( is_statement = is_statement
+                                        it_expected  = VALUE #( ( `TRANSPORTING` ) ( `NO` ) ( `FIELDS` ) ) ).
+    IF lv_seq_index > 0.
+      rv_has = abap_true.
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.

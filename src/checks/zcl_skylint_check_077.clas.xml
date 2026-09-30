@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_077</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Avoid raising cx_sy_* exceptions (077)</DESCRIPT>
+    <DESCRIPT>skylint: Detect unused local variables</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

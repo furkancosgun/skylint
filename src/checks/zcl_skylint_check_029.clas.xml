@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_029</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Omit RECEIVING in Calls (029)</DESCRIPT>
+    <DESCRIPT>skylint: Method Signature Cleanliness (029)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

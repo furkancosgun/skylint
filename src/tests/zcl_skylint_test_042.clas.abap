@@ -3,23 +3,39 @@ CLASS zcl_skylint_test_042 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS without_pseudo_comments.
-    METHODS with_pseudo_comments.
-    METHODS valid_code.
+    METHODS bad_method
+      IMPORTING
+        iv_val TYPE i
+      EXPORTING
+        ev_res TYPE i.
+
+    METHODS bad_method_pc
+      IMPORTING
+        iv_val TYPE i
+      EXPORTING
+        ev_res TYPE i. "#EC PREFER_RETURNING
+
+    METHODS good_method
+      IMPORTING
+        iv_val        TYPE i
+      RETURNING
+        VALUE(rv_res) TYPE i.
+
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_042 IMPLEMENTATION.
-  METHOD without_pseudo_comments.
-    CONSTANTS c_untyped VALUE 'X'.
+
+  METHOD bad_method.
+    ev_res = iv_val.
   ENDMETHOD.
 
-  METHOD with_pseudo_comments.
-    CONSTANTS c_untyped VALUE 'X'. "#EC FULLY_TYPED_CONST
+  METHOD bad_method_pc.
+    ev_res = iv_val.
   ENDMETHOD.
 
-  METHOD valid_code.
-    CONSTANTS c_typed TYPE c LENGTH 1 VALUE 'X'.
-    CONSTANTS c_str TYPE string VALUE 'HELLO'.
+  METHOD good_method.
+    rv_res = iv_val.
   ENDMETHOD.
+
 ENDCLASS.

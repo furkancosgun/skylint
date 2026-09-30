@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_010 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_template TYPE if_ci_atc_check=>ty_finding_code VALUE 'CONCATSTR',
+        bool_comparison TYPE if_ci_atc_check=>ty_finding_code VALUE 'BOOLCOMP',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,70 +15,119 @@ CLASS zcl_skylint_check_010 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_STR_TMPL'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_BOOL_COMP'.
 
-    DATA mv_allow_in_byte_mode TYPE abap_bool VALUE abap_false.
+    METHODS has_boolean_comparison
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_has) TYPE abap_bool.
 
-    METHODS is_byte_mode
-      IMPORTING is_statement        TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_byte_mode) TYPE abap_bool.
+    METHODS is_boolean_literal
+      IMPORTING iv_lexeme    TYPE string
+      RETURNING VALUE(rv_is) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_010 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Prefer string templates over CONCATENATE'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-prefer_template
-                                       severity       = if_ci_atc_check=>finding_severities-warning
-                                       text           = 'Use string template |...| instead of CONCATENATE'
-                                       pseudo_comment = c_pseudo_comment ) )
-                                 attributes        = VALUE #(
-                                     ( name  = 'ALLOW_IN_BYTE_MODE'
-                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                                       value = REF #( mv_allow_in_byte_mode ) ) ) ) ).
+    super->constructor(
+        VALUE #( description       = 'Avoid direct comparison against boolean literals (abap_true, ''X'', etc.)'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #(
+                     ( code           = c_finding_codes-bool_comparison
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Avoid boolean comparison; use IF bool or IF NOT bool directly'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_allow_byte TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    get_attribute( EXPORTING iv_name  = 'ALLOW_IN_BYTE_MODE'
-                   IMPORTING ev_value = lv_allow_byte ).
-
-    "TODO: gereksiz if 
-    IF lv_allow_byte IS INITIAL.
-      lv_allow_byte = mv_allow_in_byte_mode.
-    ENDIF.
-
-    "TODO: byte mode ne kadar gerekli tartışılır string template yeterli duruyor
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'CONCATENATE'.
-      IF lv_allow_byte = abap_true AND is_byte_mode( <ls_statement> ) = abap_true.
-        CONTINUE.
-      ENDIF.
-
-      report_statement( is_statement    = <ls_statement>
-                        iv_finding_code = c_finding_codes-prefer_template ).
+    "TODO: okunmasi zor bir kod daha basit bir pattern match yazilabilir.
+    "if lv_result. "boyle bir kod gecerli degil sadece function call varsa o zaman gecerli olur
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      CASE <ls_statement>-keyword.
+        WHEN 'IF' OR 'ELSEIF' OR 'CHECK' OR 'WHILE'.
+          IF has_boolean_comparison( <ls_statement> ) = abap_true.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-bool_comparison ).
+          ENDIF.
+      ENDCASE.
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD is_byte_mode.
-    DATA lv_prev_lexeme TYPE string.
-    DATA lv_curr_lexeme TYPE string.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+  METHOD has_boolean_comparison.
+    DATA lv_tok_idx TYPE i.
+    DATA lv_tok_cnt TYPE i.
+    DATA lv_prev_idx TYPE i.
+    DATA lv_next_idx TYPE i.
+    DATA lv_lexeme TYPE string.
+    DATA lv_prev_lex TYPE string.
+    DATA lv_next_lex TYPE string.
+    DATA ls_cur_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_adj_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found TYPE abap_bool.
+    DATA lv_found_adj TYPE abap_bool.
 
-    rv_byte_mode = abap_false.
+    rv_has = abap_false.
+    lv_tok_cnt = lines( is_statement-tokens ).
 
-    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      lv_curr_lexeme = to_upper( <ls_token>-lexeme ).
-      IF lv_prev_lexeme = 'BYTE' AND lv_curr_lexeme = 'MODE'.
-        rv_byte_mode = abap_true.
-        RETURN.
+    DO lv_tok_cnt TIMES.
+      lv_tok_idx = sy-index.
+      get_token_safe( EXPORTING is_statement = is_statement
+                                iv_index     = lv_tok_idx
+                      IMPORTING es_token     = ls_cur_token
+                                ev_found     = lv_found ).
+      IF lv_found = abap_false.
+        EXIT.
       ENDIF.
-      lv_prev_lexeme = lv_curr_lexeme.
-    ENDLOOP.
+
+      lv_lexeme = to_upper( ls_cur_token-lexeme ).
+      IF     lv_lexeme <> '='  AND lv_lexeme <> 'EQ' AND lv_lexeme <> '<>'
+         AND lv_lexeme <> 'NE' AND lv_lexeme <> '><'.
+        CONTINUE.
+      ENDIF.
+
+      lv_prev_idx = lv_tok_idx - 1.
+      lv_next_idx = lv_tok_idx + 1.
+
+      IF lv_prev_idx >= 1.
+        get_token_safe( EXPORTING is_statement = is_statement
+                                  iv_index     = lv_prev_idx
+                        IMPORTING es_token     = ls_adj_token
+                                  ev_found     = lv_found_adj ).
+        IF lv_found_adj = abap_true.
+          lv_prev_lex = to_upper( ls_adj_token-lexeme ).
+          IF is_boolean_literal( lv_prev_lex ) = abap_true.
+            rv_has = abap_true.
+            RETURN.
+          ENDIF.
+        ENDIF.
+      ENDIF.
+
+      IF lv_next_idx <= lv_tok_cnt.
+        get_token_safe( EXPORTING is_statement = is_statement
+                                  iv_index     = lv_next_idx
+                        IMPORTING es_token     = ls_adj_token
+                                  ev_found     = lv_found_adj ).
+        IF lv_found_adj = abap_true.
+          lv_next_lex = to_upper( ls_adj_token-lexeme ).
+          IF is_boolean_literal( lv_next_lex ) = abap_true.
+            rv_has = abap_true.
+            RETURN.
+          ENDIF.
+        ENDIF.
+      ENDIF.
+    ENDDO.
+  ENDMETHOD.
+
+  METHOD is_boolean_literal.
+    rv_is = abap_false.
+
+    CASE iv_lexeme.
+      WHEN 'ABAP_TRUE' OR 'ABAP_FALSE' OR 'ABAP_UNDEFINED' OR 'SPACE'
+        OR '''X''' OR '`X`' OR '''''' OR '``'.
+        rv_is = abap_true.
+    ENDCASE.
   ENDMETHOD.
 ENDCLASS.

@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_017 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        empty_catch TYPE if_ci_atc_check=>ty_finding_code VALUE 'EMPTYCATCH',
+        nested_if TYPE if_ci_atc_check=>ty_finding_code VALUE 'NESTEDIF',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,10 +15,11 @@ CLASS zcl_skylint_check_017 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_HANDLER'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NESTED_IF'.
 
-    METHODS is_empty_catch
-      IMPORTING iv_next_kw   TYPE string
+    METHODS is_nested_if_mergeable
+      IMPORTING iv_idx       TYPE i
+                is_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure
       RETURNING VALUE(rv_is) TYPE abap_bool.
 
 ENDCLASS.
@@ -26,64 +27,97 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_017 IMPLEMENTATION.
   METHOD constructor.
-    "TODO 016 ile benzer 
-    super->constructor(
-        VALUE #( description       = 'Detect empty CATCH blocks swallowing exceptions'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-empty_catch
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Empty CATCH block swallowing exception; handle, log or re-raise'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    "TODO daha temiz yazilabilir
+    super->constructor( VALUE #( description       = 'Detect consecutive nested IF blocks that can be merged with AND'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-nested_if
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Nested IF block can be merged with outer IF using AND'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_total TYPE i.
     DATA lv_idx TYPE i.
-    DATA lv_next_idx TYPE i.
-    DATA ls_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_next_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lv_found TYPE abap_bool.
-    DATA lv_found_next TYPE abap_bool.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
+         WHERE keyword = 'IF'.
+      lv_idx = sy-tabix.
+      IF is_nested_if_mergeable( iv_idx       = lv_idx
+                                 is_procedure = is_procedure ) = abap_true.
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-nested_if ).
+      ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD is_nested_if_mergeable.
+    DATA lv_total      TYPE i.
+    DATA lv_next_idx   TYPE i.
+    DATA lv_fwd_idx    TYPE i.
+    DATA lv_check_idx  TYPE i.
+    DATA lv_depth      TYPE i.
+    DATA ls_next_stmt  TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_fwd_stmt   TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_outer_end  TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_found      TYPE abap_bool.
+    DATA lv_found_fwd  TYPE abap_bool.
+    DATA lv_found_outer TYPE abap_bool.
+
+    rv_is = abap_false.
     lv_total = lines( is_procedure-statements ).
+    lv_next_idx = iv_idx + 1.
 
-    DO lv_total TIMES.
-      lv_idx = sy-index.
+    IF lv_next_idx > lv_total.
+      RETURN.
+    ENDIF.
+
+    get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                  iv_index       = lv_next_idx
+                        IMPORTING es_statement   = ls_next_stmt
+                                  ev_found       = lv_found ).
+    IF lv_found = abap_false OR ls_next_stmt-keyword <> 'IF'.
+      RETURN.
+    ENDIF.
+
+    " Find matching ENDIF for inner IF (at lv_next_idx)
+    lv_depth = 1.
+    lv_fwd_idx = lv_next_idx + 1.
+
+    WHILE lv_fwd_idx <= lv_total.
       get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                    iv_index       = lv_idx
-                          IMPORTING es_statement   = ls_statement
-                                    ev_found       = lv_found ).
-      IF lv_found = abap_false.
+                                    iv_index       = lv_fwd_idx
+                          IMPORTING es_statement   = ls_fwd_stmt
+                                    ev_found       = lv_found_fwd ).
+      IF lv_found_fwd = abap_false.
         EXIT.
       ENDIF.
 
-      IF ls_statement-keyword <> 'CATCH'.
-        CONTINUE.
-      ENDIF.
+      CASE ls_fwd_stmt-keyword.
+        WHEN 'IF'.
+          lv_depth += 1.
 
-      lv_next_idx = lv_idx + 1.
-      IF lv_next_idx <= lv_total.
-        get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                      iv_index       = lv_next_idx
-                            IMPORTING es_statement   = ls_next_stmt
-                                      ev_found       = lv_found_next ).
-        IF lv_found_next = abap_true.
-          IF is_empty_catch( ls_next_stmt-keyword ) = abap_true.
-            report_statement( is_statement    = ls_statement
-                              iv_finding_code = c_finding_codes-empty_catch ).
+        WHEN 'ENDIF'.
+          lv_depth -= 1.
+          IF lv_depth = 0.
+            " We found matching ENDIF for inner IF!
+            " Check if directly following statement is outer ENDIF
+            lv_check_idx = lv_fwd_idx + 1.
+            IF lv_check_idx <= lv_total.
+              get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                            iv_index       = lv_check_idx
+                                  IMPORTING es_statement   = ls_outer_end
+                                            ev_found       = lv_found_outer ).
+              IF lv_found_outer = abap_true AND ls_outer_end-keyword = 'ENDIF'.
+                rv_is = abap_true.
+              ENDIF.
+            ENDIF.
+            RETURN.
           ENDIF.
-        ENDIF.
-      ENDIF.
-    ENDDO.
-  ENDMETHOD.
+      ENDCASE.
 
-  METHOD is_empty_catch.
-    rv_is = abap_false.
-
-    CASE iv_next_kw.
-      WHEN 'CATCH' OR 'CLEANUP' OR 'ENDTRY' OR 'ENDCATCH'.
-        rv_is = abap_true.
-    ENDCASE.
+      lv_fwd_idx += 1.
+    ENDWHILE.
   ENDMETHOD.
 ENDCLASS.

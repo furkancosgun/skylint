@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_005</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Prefer IS NOT Check (005)</DESCRIPT>
+    <DESCRIPT>skylint: Avoid ME-&gt; Check (005)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

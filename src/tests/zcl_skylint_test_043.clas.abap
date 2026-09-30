@@ -3,29 +3,30 @@ CLASS zcl_skylint_test_043 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS helper
-      IMPORTING
-        iv_val TYPE string.
+    METHODS bad_method
+      EXCEPTIONS
+        failed.
 
-    METHODS without_pseudo_comments.
-    METHODS with_pseudo_comments.
-    METHODS valid_code.
+    METHODS bad_method_pc
+      EXCEPTIONS
+        failed. "#EC CLASS_EXCEPTIONS
+
+    METHODS good_method
+      RAISING
+        cx_static_check.
+
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_043 IMPLEMENTATION.
-  METHOD helper.
+
+  METHOD bad_method.
   ENDMETHOD.
 
-  METHOD without_pseudo_comments.
-    helper( iv_val = 'TEST' ).
+  METHOD bad_method_pc.
   ENDMETHOD.
 
-  METHOD with_pseudo_comments.
-    helper( iv_val = 'TEST' ). "#EC OMIT_PARAM_NAME
+  METHOD good_method.
   ENDMETHOD.
 
-  METHOD valid_code.
-    helper( 'TEST' ).
-  ENDMETHOD.
 ENDCLASS.

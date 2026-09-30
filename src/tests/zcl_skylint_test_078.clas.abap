@@ -11,33 +11,19 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_078 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    DATA lv_val TYPE string.
-    SELECT SINGLE obj_name FROM tadir INTO @lv_val WHERE obj_name = 'TEST'.
-    lv_val = 'DONE'.
-    DATA lv_str TYPE string VALUE 'Hello World'.
-    FIND 'World' IN lv_str.
-    RETURN.
+    DATA lv_val TYPE i.
+    TYPES ty_val TYPE i.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    DATA lv_val TYPE string.
-    SELECT SINGLE obj_name FROM tadir INTO @lv_val WHERE obj_name = 'TEST'. "#EC CHECK_SUBRC
-    lv_val = 'DONE'.
-    DATA lv_str TYPE string VALUE 'Hello World'.
-    FIND 'World' IN lv_str. "#EC CHECK_SUBRC
-    RETURN.
+    DATA lv_val TYPE i.
+    TYPES ty_val TYPE i. "#EC LOCAL_DECL_ORDER
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lv_val TYPE string.
-    SELECT SINGLE obj_name FROM tadir INTO @lv_val WHERE obj_name = 'TEST'.
-    IF sy-subrc = 0.
-      lv_val = 'FOUND'.
-    ENDIF.
-    DATA lv_str TYPE string VALUE 'Hello World'.
-    FIND 'World' IN lv_str.
-    IF sy-subrc = 0.
-      RETURN.
-    ENDIF.
+    TYPES ty_val TYPE i.
+    CONSTANTS c_val TYPE i VALUE 1.
+    DATA lv_val TYPE i.
+    FIELD-SYMBOLS <fs_val> TYPE i.
   ENDMETHOD.
 ENDCLASS.

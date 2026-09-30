@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_059 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        backtick TYPE if_ci_atc_check=>ty_finding_code VALUE 'BACKTICK',
+        interface_data TYPE if_ci_atc_check=>ty_finding_code VALUE 'INTF_DATA',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,47 +15,41 @@ CLASS zcl_skylint_check_059 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'STRING_BACKTICK'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'INTERFACE_DATA'.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_059 IMPLEMENTATION.
   METHOD constructor.
-    "TODO bu kuralı sil
     super->constructor(
-        VALUE #( description       = 'Prefer backtick string literals over single quotes for STRING'
+        VALUE #( description       = 'Avoid mutable DATA declarations in interfaces; allow only CONSTANTS'
                  remote_enablement = abap_true
-                 finding_codes     = VALUE #( ( code           = c_finding_codes-backtick
-                                                severity       = if_ci_atc_check=>finding_severities-warning
-                                                text           = 'Prefer backtick string literals over single quotes'
-                                                pseudo_comment = c_pseudo_comment ) ) ) ).
+                 finding_codes     = VALUE #(
+                     ( code           = c_finding_codes-interface_data
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Avoid mutable DATA in interfaces; declare CONSTANTS or move to class'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_is_string_context TYPE abap_bool.
+    DATA lv_in_interface TYPE abap_bool.
+
+    IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
+    lv_in_interface = abap_false.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      lv_is_string_context = abap_false.
-
-      " Check if statement is in string type context (e.g. TYPE STRING, STRING(, etc.)
-      LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-        IF to_upper( <ls_token>-lexeme ) CS 'STRING'.
-          lv_is_string_context = abap_true.
-          EXIT.
-        ENDIF.
-      ENDLOOP.
-
-      IF lv_is_string_context = abap_true.
-        LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-          IF strlen( <ls_token>-lexeme ) > 0 AND <ls_token>-lexeme(1) = ''''.
-            report_statement( is_statement    = <ls_statement>
-                              iv_finding_code = c_finding_codes-backtick ).
-            EXIT.
-          ENDIF.
-        ENDLOOP.
+      IF <ls_statement>-keyword = 'INTERFACE'.
+        lv_in_interface = abap_true.
+      ELSEIF <ls_statement>-keyword = 'ENDINTERFACE'.
+        lv_in_interface = abap_false.
+      ELSEIF lv_in_interface = abap_true AND <ls_statement>-keyword = 'DATA'.
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-interface_data ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.

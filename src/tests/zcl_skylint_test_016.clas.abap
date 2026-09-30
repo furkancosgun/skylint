@@ -12,16 +12,24 @@ ENDCLASS.
 CLASS zcl_skylint_test_016 IMPLEMENTATION.
   METHOD without_pseudo_comments.
     IF 1 = 1.
+      RETURN.
+    ELSEIF 1 = 1.
+      RETURN.
     ENDIF.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    IF 1 = 1. "#EC EMPTY_CONTROL_BLOCK
+    IF 1 = 1.
+      RETURN.
+    ELSEIF 1 = 1. "#EC IDENTICAL_CONDITIONS
+      RETURN.
     ENDIF.
   ENDMETHOD.
 
   METHOD valid_code.
     IF 1 = 1.
+      RETURN.
+    ELSEIF 1 = 2.
       RETURN.
     ENDIF.
   ENDMETHOD.

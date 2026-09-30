@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_015 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        constants_interface TYPE if_ci_atc_check=>ty_finding_code VALUE 'CONSTINTF',
+        empty_catch TYPE if_ci_atc_check=>ty_finding_code VALUE 'EMPTYCATCH',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,10 +15,10 @@ CLASS zcl_skylint_check_015 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'CONS_INTF'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_HANDLER'.
 
-    METHODS is_other_keyword
-      IMPORTING iv_keyword   TYPE string
+    METHODS is_empty_catch
+      IMPORTING iv_next_kw   TYPE string
       RETURNING VALUE(rv_is) TYPE abap_bool.
 
 ENDCLASS.
@@ -26,86 +26,64 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_015 IMPLEMENTATION.
   METHOD constructor.
-    "TODO: bu tam bir saçmalık manuel arama yerine rtti kullanalım veya bu check silinsin
+    "TODO 016 ile benzer
     super->constructor(
-        VALUE #( description       = 'Avoid interfaces containing only constants'
+        VALUE #( description       = 'Detect empty CATCH blocks swallowing exceptions'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-constants_interface
+                     ( code           = c_finding_codes-empty_catch
                        severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Interface contains only CONSTANTS; use global classes or domain types'
+                       text           = 'Empty CATCH block swallowing exception; handle, log or re-raise'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_has_constant TYPE abap_bool.
-    DATA lv_has_other TYPE abap_bool.
-    DATA lv_is_interface TYPE abap_bool.
-    DATA lv_chain_kw TYPE string.
-    DATA ls_first_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_total TYPE i.
+    DATA lv_idx TYPE i.
+    DATA lv_next_idx TYPE i.
+    DATA ls_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_next_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA lv_found TYPE abap_bool.
-    FIELD-SYMBOLS <ls_statement>  TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_found_next TYPE abap_bool.
 
-    lv_has_constant = abap_false.
-    lv_has_other    = abap_false.
-    lv_is_interface = abap_false.
-    lv_chain_kw     = ''.
+    lv_total = lines( is_procedure-statements ).
 
-    get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                  iv_index       = 1
-                        IMPORTING es_statement   = ls_first_stmt
-                                  ev_found       = lv_found ).
-    IF lv_found = abap_false.
-      RETURN.
-    ENDIF.
-
-    IF ls_first_stmt-keyword = 'INTERFACE'.
-      lv_is_interface = abap_true.
-    ENDIF.
-
-    IF is_procedure-id-main_unit-kind = if_ci_atc_source_code_provider=>compilation_unit_kinds-interface.
-      lv_is_interface = abap_true.
-    ENDIF.
-
-    IF lv_is_interface = abap_false.
-      RETURN.
-    ENDIF.
-
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF <ls_statement>-keyword IS NOT INITIAL.
-        lv_chain_kw = <ls_statement>-keyword.
+    DO lv_total TIMES.
+      lv_idx = sy-index.
+      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                    iv_index       = lv_idx
+                          IMPORTING es_statement   = ls_statement
+                                    ev_found       = lv_found ).
+      IF lv_found = abap_false.
+        EXIT.
       ENDIF.
 
-      CASE lv_chain_kw.
-        WHEN 'INTERFACE' OR 'ENDINTERFACE'.
-          CONTINUE.
+      IF ls_statement-keyword <> 'CATCH'.
+        CONTINUE.
+      ENDIF.
 
-        WHEN 'CONSTANTS'.
-          lv_has_constant = abap_true.
-
-        WHEN OTHERS.
-          IF is_other_keyword( lv_chain_kw ) = abap_true.
-            lv_has_other = abap_true.
+      lv_next_idx = lv_idx + 1.
+      IF lv_next_idx <= lv_total.
+        get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                      iv_index       = lv_next_idx
+                            IMPORTING es_statement   = ls_next_stmt
+                                      ev_found       = lv_found_next ).
+        IF lv_found_next = abap_true.
+          IF is_empty_catch( ls_next_stmt-keyword ) = abap_true.
+            report_statement( is_statement    = ls_statement
+                              iv_finding_code = c_finding_codes-empty_catch ).
           ENDIF.
-      ENDCASE.
-    ENDLOOP.
-
-    IF lv_has_constant = abap_true AND lv_has_other = abap_false.
-      report_statement( is_statement    = ls_first_stmt
-                        iv_finding_code = c_finding_codes-constants_interface ).
-    ENDIF.
+        ENDIF.
+      ENDIF.
+    ENDDO.
   ENDMETHOD.
 
-  METHOD is_other_keyword.
-    DATA lv_upper TYPE string.
+  METHOD is_empty_catch.
+    rv_is = abap_false.
 
-    lv_upper = to_upper( iv_keyword ).
-    CASE lv_upper.
-      WHEN 'METHODS' OR 'CLASS-METHODS' OR 'DATA' OR 'CLASS-DATA'
-        OR 'TYPES' OR 'INTERFACES' OR 'ALIASES' OR 'EVENTS' OR 'CLASS-EVENTS'.
+    CASE iv_next_kw.
+      WHEN 'CATCH' OR 'CLEANUP' OR 'ENDTRY' OR 'ENDCATCH'.
         rv_is = abap_true.
-      WHEN OTHERS.
-        rv_is = abap_false.
     ENDCASE.
   ENDMETHOD.
 ENDCLASS.

@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_032</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Avoid Obsolete Statements (032)</DESCRIPT>
+    <DESCRIPT>skylint: Select Performance (032)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

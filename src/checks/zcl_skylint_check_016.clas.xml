@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_016</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Empty Control Blocks</DESCRIPT>
+    <DESCRIPT>skylint: Identical Conditions in IF/CASE</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

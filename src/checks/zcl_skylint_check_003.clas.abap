@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_003 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        call_method TYPE if_ci_atc_check=>ty_finding_code VALUE 'CALLMETHOD',
+        default_key TYPE if_ci_atc_check=>ty_finding_code VALUE 'DEFAULTKEY',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,82 +15,39 @@ CLASS zcl_skylint_check_003 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'CALL_METHOD'.
-
-    DATA mv_allow_dynamic TYPE abap_bool VALUE abap_true.
-
-    METHODS is_dynamic_call
-      IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_dynamic) TYPE abap_bool.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'DEFAULT_KEY'.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_003 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Avoid static CALL METHOD statements'
+    super->constructor( VALUE #( description       = 'Avoid WITH DEFAULT KEY; prefer EMPTY KEY or explicit keys'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-call_method
+                                     ( code           = c_finding_codes-default_key
                                        severity       = if_ci_atc_check=>finding_severities-warning
-                                       text           = 'Avoid static CALL METHOD; use functional method call instead'
-                                       pseudo_comment = c_pseudo_comment ) )
-                                 attributes        = VALUE #(
-                                     ( name  = 'ALLOW_DYNAMIC'
-                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                                       value = REF #( mv_allow_dynamic ) ) ) ) ).
+                                       text           = 'Avoid WITH DEFAULT KEY; specify EMPTY KEY or explicit key'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_allow_dyn TYPE abap_bool.
+    DATA lt_expected TYPE ty_token_lexemes.
+    DATA lv_matched TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    get_attribute( EXPORTING iv_name  = 'ALLOW_DYNAMIC'
-                   IMPORTING ev_value = lv_allow_dyn ).
+    lt_expected = VALUE #( ( `DEFAULT` ) ( `KEY` ) ).
 
-    "TODO: SONUÇ OLMAMASI DA BIR SONUÇTUR allow_dynamic false ise boştur bu doğru değil gibi if gereksiz
-    IF lv_allow_dyn IS INITIAL.
-      lv_allow_dyn = mv_allow_dynamic.
-    ENDIF.
-
-    "TODO: COMPILER seviyesinde bur bir fonksion çağrısı mı diye bakalım daha basit match_token_sequence gayey iyi
-    "allow dynamic daha düzgün yazılabilir
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'CALL'.
-      IF match_token_sequence( is_statement = <ls_statement>
-                               it_expected  = VALUE #( ( `CALL` ) ( `METHOD` ) ) ) = abap_false.
-        CONTINUE.
-      ENDIF.
-
-      IF lv_allow_dyn = abap_true AND is_dynamic_call( <ls_statement> ) = abap_true.
-        CONTINUE.
-      ENDIF.
-
-      report_statement( is_statement    = <ls_statement>
-                        iv_finding_code = c_finding_codes-call_method ).
-    ENDLOOP.
-  ENDMETHOD.
-
-  METHOD is_dynamic_call.
-    DATA lv_token_idx TYPE i.
-    DATA lv_lexeme    TYPE string.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
-
-    rv_dynamic = abap_false.
-
-    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      lv_token_idx = sy-tabix.
-      lv_lexeme = to_upper( <ls_token>-lexeme ).
-
-      IF lv_lexeme = 'PARAMETER-TABLE' OR lv_lexeme = 'EXCEPTION-TABLE'.
-        rv_dynamic = abap_true.
-        RETURN.
-      ENDIF.
-
-      IF lv_token_idx = 3 AND ( lv_lexeme CP '(*' OR lv_lexeme CP '*->(*' OR lv_lexeme CP '*=>(*' ).
-        rv_dynamic = abap_true.
-        RETURN.
-      ENDIF.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      CASE <ls_statement>-keyword.
+        WHEN 'TYPES' OR 'DATA' OR 'STATICS' OR 'CLASS-DATA'.
+          lv_matched = match_token_sequence( is_statement = <ls_statement>
+                                             it_expected  = lt_expected ).
+          IF lv_matched = abap_true.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-default_key ).
+          ENDIF.
+      ENDCASE.
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

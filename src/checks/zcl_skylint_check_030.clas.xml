@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_030</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Avoid Static Call via Instance (030)</DESCRIPT>
+    <DESCRIPT>skylint: DB Access Inside Loops (030)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

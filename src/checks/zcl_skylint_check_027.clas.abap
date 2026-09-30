@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_027 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        raise_exception_new TYPE if_ci_atc_check=>ty_finding_code VALUE 'RAISEEXCNEW',
+        public_attribute TYPE if_ci_atc_check=>ty_finding_code VALUE 'NOPUBATTR',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,9 +15,9 @@ CLASS zcl_skylint_check_027 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'RAISE_EXC_NEW'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NUM_PUBLIC_ATTR'.
 
-    METHODS is_raise_exception_type
+    METHODS is_read_only
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
@@ -27,74 +27,49 @@ ENDCLASS.
 CLASS zcl_skylint_check_027 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Prefer RAISE EXCEPTION NEW over RAISE EXCEPTION TYPE'
+        VALUE #( description       = 'Avoid mutable public attributes in classes'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-raise_exception_new
+                     ( code           = c_finding_codes-public_attribute
                        severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Prefer RAISE EXCEPTION NEW cx_name( ) over RAISE EXCEPTION TYPE'
+                       text           = 'Avoid public attributes; use private/protected with getters or READ-ONLY'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
+    DATA lv_in_public TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'RAISE'.
-      IF is_raise_exception_type( <ls_statement> ) = abap_true.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-raise_exception_new ).
-      ENDIF.
-    ENDLOOP.
-  ENDMETHOD.
-
-  METHOD is_raise_exception_type.
-    "TODO raise exception type dinamik olmaaz mutlaka tip gerektirir syntax error alır dinmaiklikte
-    DATA lv_total      TYPE i.
-    DATA lv_idx        TYPE i.
-    DATA lv_next_idx   TYPE i.
-    DATA lv_tok        TYPE string.
-    DATA lv_next       TYPE string.
-    DATA ls_t          TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_n          TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_found      TYPE abap_bool.
-    DATA lv_found_next TYPE abap_bool.
-
-    rv_res = abap_false.
-    lv_total = lines( is_statement-tokens ).
-    IF lv_total < 3.
+    IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    lv_idx = 1.
-    WHILE lv_idx < lv_total.
-      get_token_safe( EXPORTING is_statement = is_statement
-                                iv_index     = lv_idx
-                      IMPORTING es_token     = ls_t
-                                ev_found     = lv_found ).
-      IF lv_found = abap_false.
-        EXIT.
-      ENDIF.
+    lv_in_public = abap_false.
 
-      lv_tok = to_upper( ls_t-lexeme ).
-      IF lv_tok = 'TYPE'.
-        lv_next_idx = lv_idx + 1.
-        get_token_safe( EXPORTING is_statement = is_statement
-                                  iv_index     = lv_next_idx
-                        IMPORTING es_token     = ls_n
-                                  ev_found     = lv_found_next ).
-        IF lv_found_next = abap_true.
-          lv_next = ls_n-lexeme.
-          IF lv_next CP '*( *' OR lv_next CP '(*)' OR lv_next(1) = '('.
-            " Dynamic type: TYPE (lv_cls)
-            RETURN.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      CASE <ls_statement>-keyword.
+        WHEN 'PUBLIC'.
+          lv_in_public = abap_true.
+        WHEN 'PROTECTED' OR 'PRIVATE'.
+          lv_in_public = abap_false.
+        WHEN 'DATA' OR 'CLASS-DATA'.
+          IF lv_in_public = abap_true AND is_read_only( <ls_statement> ) = abap_false.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-public_attribute ).
           ENDIF.
-          rv_res = abap_true.
-          RETURN.
-        ENDIF.
-      ENDIF.
+      ENDCASE.
+    ENDLOOP.
+  ENDMETHOD.
 
-      lv_idx += 1.
-    ENDWHILE.
+  METHOD is_read_only.
+    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    rv_res = abap_false.
+    LOOP AT is_statement-tokens INTO ls_tok.
+      IF ls_tok-lexeme = 'READ-ONLY'.
+        rv_res = abap_true.
+        RETURN.
+      ENDIF.
+    ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

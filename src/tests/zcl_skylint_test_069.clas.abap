@@ -3,30 +3,23 @@ CLASS zcl_skylint_test_069 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS without_pseudo_comments
-      CHANGING cv_unmodified TYPE i.
-
-    METHODS with_pseudo_comments
-      CHANGING cv_unmodified TYPE i. "#EC UNMODIFIED_CHANGING
-
-    METHODS valid_code
-      IMPORTING iv_val TYPE i.
+    METHODS run_calculation FOR TESTING.
+    METHODS execute_flow FOR TESTING. "#EC TEST_METHOD_NAME
+    METHODS test_valid_operation FOR TESTING.
+    METHODS should_return_true FOR TESTING.
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_069 IMPLEMENTATION.
-  METHOD without_pseudo_comments.
-    DATA lv_val TYPE i.
-    lv_val = cv_unmodified.
+  METHOD run_calculation.
   ENDMETHOD.
 
-  METHOD with_pseudo_comments.
-    DATA lv_val TYPE i.
-    lv_val = cv_unmodified.
+  METHOD execute_flow.
   ENDMETHOD.
 
-  METHOD valid_code.
-    DATA lv_val TYPE i.
-    lv_val = iv_val.
+  METHOD test_valid_operation.
+  ENDMETHOD.
+
+  METHOD should_return_true.
   ENDMETHOD.
 ENDCLASS.

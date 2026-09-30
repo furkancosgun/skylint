@@ -35,7 +35,7 @@ CLASS ltcl_check_049 IMPLEMENTATION.
         check             = NEW zcl_skylint_check_049( )
         object            = VALUE #( type = 'CLAS'
                                      name = c_test_class )
-        expected_findings = VALUE #( code = zcl_skylint_check_049=>c_finding_codes-system_var_mod
+        expected_findings = VALUE #( code = zcl_skylint_check_049=>c_finding_codes-raise_shortdump
                                      ( location = ls_loc_no_pc )
                                      ( location = ls_loc_with_pc ) )
         asserter_config   = VALUE #( quickfixes = abap_false ) ).

@@ -11,14 +11,15 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_077 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    RAISE EXCEPTION TYPE cx_sy_zerodivide.
+    DATA lv_unused TYPE i.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    RAISE EXCEPTION TYPE cx_sy_zerodivide. "#EC AVOID_RAISE_SY_EXC
+    DATA lv_unused TYPE i. "#EC UNUSED_VAR
   ENDMETHOD.
 
   METHOD valid_code.
-    RAISE EXCEPTION TYPE cx_static_check.
+    DATA lv_used TYPE i.
+    lv_used = 10.
   ENDMETHOD.
 ENDCLASS.

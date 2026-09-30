@@ -11,26 +11,24 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_001 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    TEST-SEAM seam1.
-      DATA lv_a TYPE i.
-      lv_a = 1.
-    END-TEST-SEAM.
+    DATA lt_tab TYPE STANDARD TABLE OF string WITH EMPTY KEY.
+    DATA lv_lines TYPE i.
+
+    DESCRIBE TABLE lt_tab LINES lv_lines.
 
     IF 1 = 1.
-      TEST-SEAM seam2.
-      END-TEST-SEAM.
+      DESCRIBE TABLE lt_tab LINES lv_lines.
     ENDIF.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    TEST-SEAM seam1. "#EC TEST_SEAM_USAGE
-      DATA lv_a TYPE i.
-      lv_a = 1.
-    END-TEST-SEAM.
+    DATA lt_tab TYPE STANDARD TABLE OF string WITH EMPTY KEY.
+    DATA lv_lines TYPE i.
+
+    DESCRIBE TABLE lt_tab LINES lv_lines. "#EC DESCRIBE_LINES
 
     IF 1 = 1.
-      TEST-SEAM seam2. "#EC TEST_SEAM_USAGE
-      END-TEST-SEAM.
+      DESCRIBE TABLE lt_tab LINES lv_lines. "#EC DESCRIBE_LINES
     ENDIF.
   ENDMETHOD.
 ENDCLASS.

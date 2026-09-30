@@ -6,25 +6,28 @@ CLASS zcl_skylint_test_054 DEFINITION
     METHODS without_pseudo_comments.
     METHODS with_pseudo_comments.
     METHODS valid_code.
-
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_054 IMPLEMENTATION.
-
   METHOD without_pseudo_comments.
-    DATA lt_data TYPE STANDARD TABLE OF t100.
-    SELECT * FROM t100 INTO TABLE lt_data.
+    DATA lt_tab TYPE string_table.
+    DATA lv_line TYPE string.
+    LOOP AT lt_tab INTO lv_line.
+      lv_line = 'test'.
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    DATA lt_data TYPE STANDARD TABLE OF t100.
-    SELECT * FROM t100 INTO TABLE lt_data. "#EC SQL_HOST_VAR
+    DATA lt_tab TYPE string_table.
+    DATA lv_line TYPE string.
+    LOOP AT lt_tab INTO lv_line. "#EC CONSTRUCTOR_LOGIC
+      lv_line = 'test'.
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lt_data TYPE STANDARD TABLE OF t100.
-    SELECT * FROM t100 INTO TABLE @lt_data.
+    DATA lv_name TYPE string.
+    lv_name = 'test'.
   ENDMETHOD.
-
 ENDCLASS.

@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_025</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Prefer Comparison Operators (025)</DESCRIPT>
+    <DESCRIPT>skylint: Omit RECEIVING in Calls (025)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

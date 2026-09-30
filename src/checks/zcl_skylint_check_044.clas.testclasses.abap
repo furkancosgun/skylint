@@ -10,6 +10,7 @@ CLASS ltcl_check_044 DEFINITION FINAL
       END OF c_methods.
 
     METHODS execute_test_class FOR TESTING RAISING cx_static_check.
+
 ENDCLASS.
 
 
@@ -34,7 +35,7 @@ CLASS ltcl_check_044 IMPLEMENTATION.
         check             = NEW zcl_skylint_check_044( )
         object            = VALUE #( type = 'CLAS'
                                      name = c_test_class )
-        expected_findings = VALUE #( code = zcl_skylint_check_044=>c_finding_codes-try_without_catch
+        expected_findings = VALUE #( code = zcl_skylint_check_044=>c_finding_codes-dangerous_statement
                                      ( location = ls_loc_no_pc )
                                      ( location = ls_loc_with_pc ) )
         asserter_config   = VALUE #( quickfixes = abap_false ) ).

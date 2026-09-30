@@ -1,25 +1,21 @@
 CLASS zcl_skylint_test_071 DEFINITION
   PUBLIC
-  INHERITING FROM cx_no_check
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS without_pseudo_comments.
-    METHODS with_pseudo_comments.
-    METHODS valid_code.
+    METHODS calculate_amount.
+    METHODS process_order. "#EC PREFER_FINAL_METHOD
+    METHODS get_id FINAL.
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_071 IMPLEMENTATION.
-  METHOD without_pseudo_comments.
-    " Implementation
+  METHOD calculate_amount.
   ENDMETHOD.
 
-  METHOD with_pseudo_comments.
-    " Implementation
+  METHOD process_order.
   ENDMETHOD.
 
-  METHOD valid_code.
-    " Implementation
+  METHOD get_id.
   ENDMETHOD.
 ENDCLASS.

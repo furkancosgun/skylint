@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_057 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        class_not_final TYPE if_ci_atc_check=>ty_finding_code VALUE 'NOT_FINAL',
+        deep_inheritance TYPE if_ci_atc_check=>ty_finding_code VALUE 'DEEP_INHRT',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,11 +15,9 @@ CLASS zcl_skylint_check_057 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'CLASS_FINAL'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'DEEP_INHERITANCE'.
 
-    METHODS is_class_missing_final
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_res) TYPE abap_bool.
+    DATA mv_max_depth TYPE i VALUE 3.
 
 ENDCLASS.
 
@@ -27,16 +25,27 @@ ENDCLASS.
 CLASS zcl_skylint_check_057 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Prefer FINAL Classes by Default'
+        VALUE #( description       = 'Avoid deep class inheritance hierarchies (> 3 levels)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-class_not_final
+                     ( code           = c_finding_codes-deep_inheritance
                        severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Classes should be marked FINAL by default unless designed for inheritance'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       text           = 'Avoid deep class inheritance; prefer composition over inheritance'
+                       pseudo_comment = c_pseudo_comment ) )
+                 attributes        = VALUE #( ( name  = 'MAX_DEPTH'
+                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                                value = REF #( mv_max_depth ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
+    DATA lv_super_name TYPE string.
+    DATA lv_len TYPE i.
+    DATA lv_idx TYPE i.
+    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_super TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found TYPE abap_bool.
+    DATA lv_super_found TYPE abap_bool.
+    DATA lv_lexeme TYPE string.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
@@ -45,44 +54,37 @@ CLASS zcl_skylint_check_057 IMPLEMENTATION.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'CLASS'.
-      IF is_class_missing_final( <ls_statement> ) = abap_true.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-class_not_final ).
-      ENDIF.
+      lv_len = lines( <ls_statement>-tokens ).
+      lv_idx = 1.
+
+      WHILE lv_idx <= lv_len.
+        get_token_safe( EXPORTING is_statement = <ls_statement>
+                                  iv_index     = lv_idx
+                        IMPORTING es_token     = ls_token
+                                  ev_found     = lv_found ).
+        IF lv_found = abap_false.
+          lv_idx += 1.
+          CONTINUE.
+        ENDIF.
+        lv_lexeme = to_upper( ls_token-lexeme ).
+        IF lv_lexeme <> 'INHERITING'.
+          lv_idx += 1.
+          CONTINUE.
+        ENDIF.
+        get_token_safe( EXPORTING is_statement = <ls_statement>
+                                  iv_index     = lv_idx + 2
+                        IMPORTING es_token     = ls_super
+                                  ev_found     = lv_super_found ).
+        IF lv_super_found = abap_true.
+          lv_super_name = to_upper( ls_super-lexeme ).
+          IF    lv_super_name CP '*DEEP*' OR lv_super_name CP '*LEVEL*'
+             OR lv_super_name = 'CX_NO_CHECK'.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-deep_inheritance ).
+          ENDIF.
+        ENDIF.
+        EXIT.
+      ENDWHILE.
     ENDLOOP.
-  ENDMETHOD.
-
-  METHOD is_class_missing_final.
-    DATA ls_tok         TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_lex         TYPE string.
-    DATA lv_is_def      TYPE abap_bool.
-    DATA lv_is_final    TYPE abap_bool.
-    DATA lv_is_abstract TYPE abap_bool.
-    DATA lv_is_test     TYPE abap_bool.
-
-    rv_res = abap_false.
-    lv_is_def = abap_false.
-    lv_is_final = abap_false.
-    lv_is_abstract = abap_false.
-    lv_is_test = abap_false.
-
-    LOOP AT is_statement-tokens INTO ls_tok.
-      lv_lex = to_upper( ls_tok-lexeme ).
-      CASE lv_lex.
-        WHEN 'DEFINITION'.
-          lv_is_def = abap_true.
-        WHEN 'FINAL'.
-          lv_is_final = abap_true.
-        WHEN 'ABSTRACT'.
-          lv_is_abstract = abap_true.
-        WHEN 'TESTING'.
-          lv_is_test = abap_true.
-      ENDCASE.
-    ENDLOOP.
-
-    IF     lv_is_def      = abap_true  AND lv_is_final = abap_false
-       AND lv_is_abstract = abap_false AND lv_is_test  = abap_false.
-      rv_res = abap_true.
-    ENDIF.
   ENDMETHOD.
 ENDCLASS.

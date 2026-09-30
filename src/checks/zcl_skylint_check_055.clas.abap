@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_055 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        missing_order_by TYPE if_ci_atc_check=>ty_finding_code VALUE 'SELECT_UP',
+        static_class TYPE if_ci_atc_check=>ty_finding_code VALUE 'STAT_CLASS',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,11 +15,7 @@ CLASS zcl_skylint_check_055 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'SELECT_UP_TO_1'.
-
-    METHODS is_unorder_select_up_to
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_res) TYPE abap_bool.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_STATIC_CLS'.
 
 ENDCLASS.
 
@@ -27,87 +23,52 @@ ENDCLASS.
 CLASS zcl_skylint_check_055 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: SELECT UP TO 1 ROWS requires ORDER BY'
+        VALUE #( description       = 'Avoid static-only classes; prefer instantiable interface-based design'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-missing_order_by
+                     ( code           = c_finding_codes-static_class
                        severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'SELECT UP TO 1 ROWS requires an explicit ORDER BY clause for determinism'
+                       text           = 'Avoid static-only classes; declare instance methods and interfaces'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
+    DATA lv_has_instance_meth TYPE abap_bool.
+    DATA lv_static_meth_cnt TYPE i.
+    DATA ls_first_class_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_found_class TYPE abap_bool.
+    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'SELECT'.
-      IF is_unorder_select_up_to( <ls_statement> ) = abap_true.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-missing_order_by ).
+    IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
+    lv_has_instance_meth = abap_false.
+    lv_static_meth_cnt = 0.
+    lv_found_class = abap_false.
+
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF <ls_statement>-keyword = 'CLASS' AND lv_found_class = abap_false.
+        ls_first_class_stmt = <ls_statement>.
+        lv_found_class = abap_true.
+      ELSEIF <ls_statement>-keyword = 'METHODS'.
+        get_token_safe( EXPORTING is_statement = <ls_statement>
+                                   iv_index     = 2
+                         IMPORTING es_token     = ls_token
+                                   ev_found     = lv_found ).
+        IF lv_found = abap_true AND ls_token-lexeme <> 'CONSTRUCTOR'.
+          lv_has_instance_meth = abap_true.
+        ENDIF.
+      ELSEIF <ls_statement>-keyword = 'CLASS-METHODS'.
+        lv_static_meth_cnt += 1.
       ENDIF.
     ENDLOOP.
-  ENDMETHOD.
 
-  METHOD is_unorder_select_up_to.
-    "TODO match_token_sequence kullan index hesabı istemiyorum UP TO match ettiyse ORDER BY da match etmiosa reportla
-    DATA lv_idx TYPE i.
-    DATA lv_count TYPE i.
-    DATA lv_lex TYPE string.
-    DATA lv_next TYPE string.
-    DATA lv_has_up_to TYPE abap_bool.
-    DATA lv_has_order_by TYPE abap_bool.
-    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_next_token TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_found TYPE abap_bool.
-    DATA lv_found_next TYPE abap_bool.
-
-    rv_res = abap_false.
-    lv_has_up_to = abap_false.
-    lv_has_order_by = abap_false.
-    lv_count = lines( is_statement-tokens ).
-
-    DO lv_count TIMES.
-      lv_idx = sy-index.
-      get_token_safe( EXPORTING is_statement = is_statement
-                                 iv_index     = lv_idx
-                       IMPORTING es_token     = ls_token
-                                 ev_found     = lv_found ).
-      IF lv_found = abap_false.
-        CONTINUE.
-      ENDIF.
-      lv_lex = to_upper( ls_token-lexeme ).
-
-      " Check for separate tokens 'UP' followed by 'TO'
-      IF lv_lex = 'UP' AND lv_idx < lv_count.
-        get_token_safe( EXPORTING is_statement = is_statement
-                                   iv_index     = lv_idx + 1
-                         IMPORTING es_token     = ls_next_token
-                                   ev_found     = lv_found_next ).
-      ENDIF.
-      IF lv_lex = 'UP' AND lv_idx < lv_count AND lv_found_next = abap_true.
-        lv_next = to_upper( ls_next_token-lexeme ).
-        IF lv_next = 'TO'.
-          lv_has_up_to = abap_true.
-        ENDIF.
-      ENDIF.
-
-      " Check for separate tokens 'ORDER' followed by 'BY'
-      IF lv_lex = 'ORDER' AND lv_idx < lv_count.
-        get_token_safe( EXPORTING is_statement = is_statement
-                                   iv_index     = lv_idx + 1
-                         IMPORTING es_token     = ls_next_token
-                                   ev_found     = lv_found_next ).
-      ENDIF.
-      IF lv_lex = 'ORDER' AND lv_idx < lv_count AND lv_found_next = abap_true.
-        lv_next = to_upper( ls_next_token-lexeme ).
-        IF lv_next = 'BY'.
-          lv_has_order_by = abap_true.
-        ENDIF.
-      ENDIF.
-    ENDDO.
-
-    IF lv_has_up_to = abap_true AND lv_has_order_by = abap_false.
-      rv_res = abap_true.
+    IF lv_static_meth_cnt > 0 AND lv_has_instance_meth = abap_false AND lv_found_class = abap_true.
+      report_statement( is_statement    = ls_first_class_stmt
+                        iv_finding_code = c_finding_codes-static_class ).
     ENDIF.
   ENDMETHOD.
 ENDCLASS.

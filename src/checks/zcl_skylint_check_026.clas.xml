@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_026</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Prefer NEW Constructor Expression (026)</DESCRIPT>
+    <DESCRIPT>skylint: Avoid Static Call via Instance (026)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

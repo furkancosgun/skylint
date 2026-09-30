@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_002</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>Skylint Check 002: Prefer lines() over DESCRIBE TABLE</DESCRIPT>
+    <DESCRIPT>skylint: Avoid static CALL METHOD Check (002)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

@@ -11,29 +11,21 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_011 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    DATA lv_flag TYPE abap_bool VALUE abap_true.
-    IF lv_flag = abap_true.
-      RETURN.
-    ENDIF.
+    DATA lt_tab TYPE STANDARD TABLE OF string WITH DEFAULT KEY.
+    READ TABLE lt_tab INDEX 1 TRANSPORTING NO FIELDS.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    DATA lv_flag TYPE abap_bool VALUE abap_true.
-    IF lv_flag = abap_true. "#EC AVOID_BOOL_COMP
-      RETURN.
-    ENDIF.
+    DATA lt_tab TYPE STANDARD TABLE OF string WITH DEFAULT KEY.
+    READ TABLE lt_tab INDEX 1 TRANSPORTING NO FIELDS. "#EC PREFER_LINE_EXISTS
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lv_flag TYPE abap_bool VALUE abap_true.
-    DATA lv_name TYPE string VALUE 'SKYLINT'.
-    IF lv_flag.
-      RETURN.
-    ENDIF.
-    IF NOT lv_flag.
-      RETURN.
-    ENDIF.
-    IF lv_name = 'SKYLINT'.
+    DATA lt_tab TYPE STANDARD TABLE OF string WITH DEFAULT KEY.
+    DATA lv_row TYPE string.
+    READ TABLE lt_tab INTO lv_row INDEX 1.
+    READ TABLE lt_tab WITH KEY table_line = 'A' BINARY SEARCH TRANSPORTING NO FIELDS.
+    IF line_exists( lt_tab[ 1 ] ).
       RETURN.
     ENDIF.
   ENDMETHOD.

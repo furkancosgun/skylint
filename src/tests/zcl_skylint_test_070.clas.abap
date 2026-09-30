@@ -3,27 +3,30 @@ CLASS zcl_skylint_test_070 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS process_data
-      RETURNING VALUE(rv_ok) TYPE abap_bool.
-
-    METHODS calculate_result
-      RETURNING VALUE(rv_ok) TYPE abap_bool. "#EC BOOL_METHOD_NAME
-
-    METHODS is_valid
-      RETURNING VALUE(rv_ok) TYPE abap_bool.
+    METHODS without_pseudo_comments.
+    METHODS with_pseudo_comments.
+    METHODS valid_code.
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_070 IMPLEMENTATION.
-  METHOD process_data.
-    rv_ok = abap_true.
+  METHOD without_pseudo_comments.
+    DATA lv_tab TYPE string VALUE 'T100'.
+    DATA lt_res TYPE STANDARD TABLE OF t100 WITH EMPTY KEY.
+
+    SELECT * FROM (lv_tab) INTO TABLE @lt_res.
   ENDMETHOD.
 
-  METHOD calculate_result.
-    rv_ok = abap_true.
+  METHOD with_pseudo_comments.
+    DATA lv_tab TYPE string VALUE 'T100'.
+    DATA lt_res TYPE STANDARD TABLE OF t100 WITH EMPTY KEY.
+
+    SELECT * FROM (lv_tab) INTO TABLE @lt_res. "#EC AVOID_DYNAMIC_SQL
   ENDMETHOD.
 
-  METHOD is_valid.
-    rv_ok = abap_true.
+  METHOD valid_code.
+    DATA lt_res TYPE STANDARD TABLE OF t100 WITH EMPTY KEY.
+
+    SELECT * FROM t100 INTO TABLE @lt_res.
   ENDMETHOD.
 ENDCLASS.

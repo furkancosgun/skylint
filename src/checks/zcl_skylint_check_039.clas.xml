@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_039</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Scope of Variable (039)</DESCRIPT>
+    <DESCRIPT>skylint: Method Length Limit (039)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

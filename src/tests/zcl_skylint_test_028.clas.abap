@@ -11,33 +11,20 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_028 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    DATA lv_active TYPE abap_bool.
-    IF 1 = 2.
-      lv_active = abap_true.
-    ELSE.
-      lv_active = abap_false.
-    ENDIF.
+    DATA lv_a TYPE i.
+    DATA lv_b TYPE i.
+    MOVE lv_a TO lv_b.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    DATA lv_active TYPE abap_bool.
-    IF 1 = 2. "#EC PREFER_XSDBOOL
-      lv_active = abap_true.
-    ELSE.
-      lv_active = abap_false.
-    ENDIF.
+    DATA lv_a TYPE i.
+    DATA lv_b TYPE i.
+    MOVE lv_a TO lv_b. "#EC DEPRECATED_KEY
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lv_active TYPE abap_bool.
-    DATA lv_name   TYPE string.
-
-    lv_active = xsdbool( 1 = 2 ).
-
-    IF 1 = 2.
-      lv_name = 'FOO'.
-    ELSE.
-      lv_name = 'BAR'.
-    ENDIF.
+    DATA lv_a TYPE i.
+    DATA lv_b TYPE i.
+    lv_b = lv_a.
   ENDMETHOD.
 ENDCLASS.

@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_013 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        exit_outside_loop TYPE if_ci_atc_check=>ty_finding_code VALUE 'EXITOUTLP',
+        check_in_loop TYPE if_ci_atc_check=>ty_finding_code VALUE 'CHKINLOOP',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,20 +15,19 @@ CLASS zcl_skylint_check_013 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'EXIT_OUTSIDE_LOOP'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'CHECK_IN_LOOP'.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_013 IMPLEMENTATION.
   METHOD constructor.
-    "TODO:013 VE 014 checkleri birbirine benziyor. exit ve return keywordleri için ortak bir check yazılabilir.
-    super->constructor( VALUE #( description       = 'Prefer RETURN over EXIT outside loop constructs'
+    super->constructor( VALUE #( description       = 'Avoid CHECK in loop/iteration structures (prefer IF ... CONTINUE)'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-exit_outside_loop
+                                     ( code           = c_finding_codes-check_in_loop
                                        severity       = if_ci_atc_check=>finding_severities-warning
-                                       text           = 'Use RETURN instead of EXIT when leaving a procedure'
+                                       text           = 'Avoid CHECK inside loop; use IF ... CONTINUE instead'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
@@ -48,10 +47,10 @@ CLASS zcl_skylint_check_013 IMPLEMENTATION.
             lv_loop_depth -= 1.
           ENDIF.
 
-        WHEN 'EXIT'.
-          IF lv_loop_depth = 0.
+        WHEN 'CHECK'.
+          IF lv_loop_depth > 0.
             report_statement( is_statement    = <ls_statement>
-                              iv_finding_code = c_finding_codes-exit_outside_loop ).
+                              iv_finding_code = c_finding_codes-check_in_loop ).
           ENDIF.
       ENDCASE.
     ENDLOOP.

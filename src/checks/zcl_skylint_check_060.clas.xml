@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_060</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Avoid Magic Numbers (060)</DESCRIPT>
+    <DESCRIPT>skylint: Avoid generic CATCH cx_root (060)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

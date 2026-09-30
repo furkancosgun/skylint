@@ -11,26 +11,17 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_066 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    DATA lt_numbers TYPE STANDARD TABLE OF i WITH EMPTY KEY.
-    DATA lv_num TYPE i.
-    DATA lv_sum TYPE i VALUE 0.
-    LOOP AT lt_numbers INTO lv_num.
-      lv_sum = lv_sum + lv_num.
-    ENDLOOP.
+    DATA lt_data TYPE TABLE OF tadir.
+    SELECT * FROM tadir USING CLIENT '100' INTO TABLE @lt_data.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    DATA lt_numbers TYPE STANDARD TABLE OF i WITH EMPTY KEY.
-    DATA lv_num TYPE i.
-    DATA lv_sum TYPE i VALUE 0.
-    LOOP AT lt_numbers INTO lv_num. "#EC PREFER_REDUCE
-      lv_sum = lv_sum + lv_num.
-    ENDLOOP.
+    DATA lt_data TYPE TABLE OF tadir.
+    SELECT * FROM tadir USING CLIENT '100' INTO TABLE @lt_data. "#EC AVOID_CLIENT_SPEC
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lt_numbers TYPE STANDARD TABLE OF i WITH EMPTY KEY.
-    DATA lv_sum TYPE i.
-    lv_sum = REDUCE i( INIT s = 0 FOR n IN lt_numbers NEXT s = s + n ).
+    DATA lt_data TYPE TABLE OF tadir.
+    SELECT * FROM tadir INTO TABLE @lt_data.
   ENDMETHOD.
 ENDCLASS.

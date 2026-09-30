@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_020</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Nested IF Simplification</DESCRIPT>
+    <DESCRIPT>skylint: Avoid Yoda Conditions (020)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

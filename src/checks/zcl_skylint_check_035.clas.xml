@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_035</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Avoid DB Access in Unit Tests (035)</DESCRIPT>
+    <DESCRIPT>skylint: Fully Typed Constants (035)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_024</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Avoid Yoda Conditions (024)</DESCRIPT>
+    <DESCRIPT>skylint: Prefer xsdbool( ) Expression (024)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

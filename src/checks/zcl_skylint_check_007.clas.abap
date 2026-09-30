@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_007 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        omit_exporting TYPE if_ci_atc_check=>ty_finding_code VALUE 'OMITEXPORT',
+        assignment_chaining TYPE if_ci_atc_check=>ty_finding_code VALUE 'ASSIGNCHN',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,16 +15,11 @@ CLASS zcl_skylint_check_007 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'OMIT_EXPORTING'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'ASSIGN_CHAIN'.
 
-    CONSTANTS:
-      BEGIN OF c_quickfix_codes,
-        omit_exporting TYPE zcl_skylint_check_base=>ty_quickfix_code VALUE 'OMIT_EXP',
-      END OF c_quickfix_codes.
-
-    METHODS is_exempt_statement
-      IMPORTING iv_keyword       TYPE string
-      RETURNING VALUE(rv_exempt) TYPE abap_bool.
+    METHODS has_assignment_chain
+      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_chain) TYPE abap_bool.
 
 ENDCLASS.
 
@@ -32,65 +27,67 @@ ENDCLASS.
 CLASS zcl_skylint_check_007 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Omit explicit EXPORTING in method calls'
+        VALUE #( description       = 'Avoid assignment chaining (a = b = c)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-omit_exporting
+                     ( code           = c_finding_codes-assignment_chaining
                        severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Omit explicit EXPORTING keyword in method invocation'
-                       pseudo_comment = c_pseudo_comment ) )
-                 quickfix_codes    = VALUE #(
-                     ( code       = c_quickfix_codes-omit_exporting
-                       short_text = 'Remove EXPORTING keyword' ) ) ) ).
+                       text           = 'Avoid chained assignments; write separate assignment statements'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_stmt_idx TYPE i.
-    DATA lv_tok_idx TYPE i.
-    DATA lt_expected TYPE ty_token_lexemes.
-    DATA lo_details TYPE if_ci_atc_check=>ty_details.
-    DATA lt_empty_code TYPE if_ci_atc_quickfix=>ty_code.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    lt_expected = VALUE #( ( `EXPORTING` ) ).
-
-    "TODO: exempt yapısına gerek yok bu senaryoda compiler seviyesinde method çağrısı olduğundan emin olabiliriz.
+    "TODO: bu yapi genelde COMPUTE keywordu olarak yorumlaniyor ATC tarafinda
+    "manuel bakmak gereksiz
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF is_exempt_statement( <ls_statement>-keyword ) = abap_true.
-        CONTINUE.
+      IF has_assignment_chain( <ls_statement> ) = abap_true.
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-assignment_chaining ).
       ENDIF.
-
-      IF statement_is_method_call( <ls_statement> ) = abap_false.
-        CONTINUE.
-      ENDIF.
-
-      lv_tok_idx = find_token_sequence( is_statement = <ls_statement>
-                                        it_expected  = lt_expected ).
-      IF lv_tok_idx = 0.
-        CONTINUE.
-      ENDIF.
-
-      lv_stmt_idx = sy-tabix.
-      lo_details = quickfix_replace( iv_quickfix_code = c_quickfix_codes-omit_exporting
-                                     is_procedure_id  = is_procedure-id
-                                     iv_statement_from = lv_stmt_idx
-                                     iv_token_from    = lv_tok_idx
-                                     iv_token_to      = lv_tok_idx
-                                     it_new_code      = lt_empty_code ).
-      report_statement( is_statement    = <ls_statement>
-                        iv_finding_code = c_finding_codes-omit_exporting
-                        io_details      = lo_details ).
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD is_exempt_statement.
-    CASE iv_keyword.
-      WHEN 'CALL' OR 'EXPORT' OR 'METHODS' OR 'CLASS-METHODS'
-        OR 'EVENTS' OR 'CLASS-EVENTS' OR 'INTERFACES' OR 'SUBMIT'
-        OR 'FORM' OR 'FUNCTION' OR 'MODULE'.
-        rv_exempt = abap_true.
-      WHEN OTHERS.
-        rv_exempt = abap_false.
+  METHOD has_assignment_chain.
+    DATA lv_depth        TYPE i.
+    DATA lv_equals_count TYPE i.
+    DATA lv_lexeme       TYPE string.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    rv_chain = abap_false.
+
+    CASE is_statement-keyword.
+      WHEN 'IF' OR 'ELSEIF' OR 'CHECK' OR 'WHILE' OR 'WHEN'
+        OR 'WHERE' OR 'SELECT' OR 'UPDATE' OR 'MODIFY' OR 'DELETE'
+        OR 'TYPES' OR 'DATA' OR 'CONSTANTS' OR 'STATICS' OR 'ASSERT'.
+        RETURN.
     ENDCASE.
+
+    lv_depth = 0.
+    lv_equals_count = 0.
+
+    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
+      lv_lexeme = <ls_token>-lexeme.
+
+      IF    lv_lexeme CP '*(' OR lv_lexeme CP '*[' OR lv_lexeme CP '*{'
+         OR lv_lexeme  = '('  OR lv_lexeme  = '['  OR lv_lexeme  = '{'.
+        lv_depth += 1.
+      ENDIF.
+
+      IF lv_depth = 0 AND lv_lexeme = '='.
+        lv_equals_count += 1.
+      ENDIF.
+
+      IF     (    lv_lexeme CP '*)' OR lv_lexeme CP '*]' OR lv_lexeme CP '*}'
+               OR lv_lexeme  = ')'  OR lv_lexeme  = ']'  OR lv_lexeme  = '}' )
+         AND lv_depth > 0.
+        lv_depth -= 1.
+      ENDIF.
+    ENDLOOP.
+
+    IF lv_equals_count > 1.
+      rv_chain = abap_true.
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.

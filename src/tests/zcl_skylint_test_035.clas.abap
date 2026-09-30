@@ -11,21 +11,15 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_035 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    DATA lv_val TYPE string.
-    SELECT SINGLE @abap_true FROM tadir INTO @lv_val WHERE obj_name = 'TEST'.
+    CONSTANTS c_untyped VALUE 'X'.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    DATA lv_val TYPE string.
-    SELECT SINGLE @abap_true FROM tadir INTO @lv_val WHERE obj_name = 'TEST'. "#EC DB_ACCESS_UT
+    CONSTANTS c_untyped VALUE 'X'. "#EC FULLY_TYPED_CONST
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lv_val TYPE string.
-    DATA lt_tab TYPE STANDARD TABLE OF string WITH DEFAULT KEY.
-    lv_val = 'TEST'.
-    INSERT lv_val INTO TABLE lt_tab.
-    MODIFY lt_tab FROM lv_val INDEX 1.
-    DELETE lt_tab INDEX 1.
+    CONSTANTS c_typed TYPE c LENGTH 1 VALUE 'X'.
+    CONSTANTS c_str TYPE string VALUE 'HELLO'.
   ENDMETHOD.
 ENDCLASS.

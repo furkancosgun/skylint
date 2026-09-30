@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_040</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Avoid Superfluous VALUE Operator (040)</DESCRIPT>
+    <DESCRIPT>skylint: Nesting Depth Limit (040)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

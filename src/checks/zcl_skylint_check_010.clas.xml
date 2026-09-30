@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_010</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Prefer String Templates (010)</DESCRIPT>
+    <DESCRIPT>skylint: Avoid Boolean Comparison</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

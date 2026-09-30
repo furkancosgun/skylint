@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_063</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Prefer COND/SWITCH Expressions (063)</DESCRIPT>
+    <DESCRIPT>skylint: Avoid raising cx_sy_* exceptions (063)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

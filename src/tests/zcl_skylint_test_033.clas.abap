@@ -11,29 +11,24 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_033 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    DATA lx_root TYPE REF TO cx_root.
-    TRY.
-        RAISE EXCEPTION NEW cx_sy_zerodivide( ).
-      CATCH cx_root INTO lx_root.
-        RAISE EXCEPTION TYPE cx_no_check.
-    ENDTRY.
+    IF 1 = 1.
+      DATA(lv_val) = 1.
+    ENDIF.
+    lv_val = 2.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    DATA lx_root TYPE REF TO cx_root.
-    TRY.
-        RAISE EXCEPTION NEW cx_sy_zerodivide( ).
-      CATCH cx_root INTO lx_root.
-        RAISE EXCEPTION TYPE cx_no_check. "#EC LOST_PREVIOUS
-    ENDTRY.
+    IF 1 = 1.
+      DATA(lv_val) = 1.
+    ENDIF.
+    lv_val = 2. "#EC SCOPE_OF_VAR
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lx_root TYPE REF TO cx_root.
-    TRY.
-        RAISE EXCEPTION NEW cx_sy_zerodivide( ).
-      CATCH cx_root INTO lx_root.
-        RAISE EXCEPTION TYPE cx_no_check EXPORTING previous = lx_root.
-    ENDTRY.
+    DATA lv_val TYPE i.
+    IF 1 = 1.
+      lv_val = 1.
+    ENDIF.
+    lv_val = 2.
   ENDMETHOD.
 ENDCLASS.

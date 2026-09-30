@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_036</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: DB Access Inside Loops (036)</DESCRIPT>
+    <DESCRIPT>skylint: Omit Parameter Name in Single Call (036)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

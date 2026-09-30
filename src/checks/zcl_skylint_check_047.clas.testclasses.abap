@@ -35,7 +35,7 @@ CLASS ltcl_check_047 IMPLEMENTATION.
         check             = NEW zcl_skylint_check_047( )
         object            = VALUE #( type = 'CLAS'
                                      name = c_test_class )
-        expected_findings = VALUE #( code = zcl_skylint_check_047=>c_finding_codes-method_length
+        expected_findings = VALUE #( code = zcl_skylint_check_047=>c_finding_codes-cyclomatic_complexity
                                      ( location = ls_loc_no_pc )
                                      ( location = ls_loc_with_pc ) )
         asserter_config   = VALUE #( quickfixes = abap_false ) ).

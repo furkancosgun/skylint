@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_050 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_returning TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFER_RET',
+        magic_number TYPE if_ci_atc_check=>ty_finding_code VALUE 'MAGIC_NUM',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,90 +15,63 @@ CLASS zcl_skylint_check_050 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_RETURNING'.
-
-    METHODS is_single_exporting_only
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_res) TYPE abap_bool.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'MAGIC_NUMBER'.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_050 IMPLEMENTATION.
   METHOD constructor.
-    "TODO compiler + rtti ile yeniden yazalım
-    super->constructor(
-        VALUE #( description       = 'skylint: Prefer RETURNING over single EXPORTING'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-prefer_returning
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Prefer functional RETURNING parameter over single EXPORTING parameter'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    "TODO sadece numerik mi? '1' boyle olunca? compiler guvenelim yeniden yazilsin bu sinif
+    super->constructor( VALUE #( description       = 'Avoid magic numbers in code; use named constants'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-magic_number
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Avoid hardcoded magic numbers; declare a named constant'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_len    TYPE i.
+    DATA lv_idx    TYPE i.
+    DATA lv_char   TYPE c LENGTH 1.
+    DATA lv_is_num TYPE abap_bool.
 
-    IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
-      RETURN.
-    ENDIF.
-
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'METHODS' OR keyword = 'CLASS-METHODS'.
-      IF is_single_exporting_only( <ls_statement> ) = abap_true.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-prefer_returning ).
-      ENDIF.
-    ENDLOOP.
-  ENDMETHOD.
-
-  METHOD is_single_exporting_only.
-    DATA ls_tok       TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_lex       TYPE string.
-    DATA lv_mode      TYPE string.
-    DATA lv_exp_count TYPE i.
-    DATA lv_chg_count TYPE i.
-    DATA lv_ret_count TYPE i.
-
-    rv_res = abap_false.
-    lv_mode = ''.
-    lv_exp_count = 0.
-    lv_chg_count = 0.
-    lv_ret_count = 0.
-
-    LOOP AT is_statement-tokens INTO ls_tok.
-      lv_lex = to_upper( ls_tok-lexeme ).
-
-      IF lv_lex = 'FOR' OR lv_lex = 'EVENT' OR lv_lex = 'REDEFINITION'.
-        RETURN.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      " Skip declarations (DATA, CONSTANTS, TYPES, STATICS)
+      IF    <ls_statement>-keyword = 'DATA'  OR <ls_statement>-keyword = 'CONSTANTS'
+         OR <ls_statement>-keyword = 'TYPES' OR <ls_statement>-keyword = 'STATICS'.
+        CONTINUE.
       ENDIF.
 
-      CASE lv_lex.
-        WHEN 'IMPORTING'.
-          lv_mode = 'IMPORTING'.
-        WHEN 'EXPORTING'.
-          lv_mode = 'EXPORTING'.
-        WHEN 'CHANGING'.
-          lv_mode = 'CHANGING'.
-        WHEN 'RETURNING'.
-          lv_mode = 'RETURNING'.
-        WHEN 'RAISING' OR 'EXCEPTIONS'.
-          lv_mode = ''.
-        WHEN 'TYPE' OR 'LIKE'.
-          CASE lv_mode.
-            WHEN 'EXPORTING'.
-              lv_exp_count += 1.
-            WHEN 'CHANGING'.
-              lv_chg_count += 1.
-            WHEN 'RETURNING'.
-              lv_ret_count += 1.
-          ENDCASE.
-      ENDCASE.
-    ENDLOOP.
+      LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
+        lv_len = strlen( <ls_token>-lexeme ).
+        IF lv_len = 0.
+          CONTINUE.
+        ENDIF.
 
-    IF lv_exp_count = 1 AND lv_chg_count = 0 AND lv_ret_count = 0.
-      rv_res = abap_true.
-    ENDIF.
+        " Check if token consists purely of digits
+        lv_is_num = abap_true.
+        lv_idx = 0.
+        WHILE lv_idx < lv_len.
+          lv_char = <ls_token>-lexeme+lv_idx(1).
+          IF lv_char < '0' OR lv_char > '9'.
+            lv_is_num = abap_false.
+            EXIT.
+          ENDIF.
+          lv_idx += 1.
+        ENDWHILE.
+
+        " 0 and 1 are commonly allowed in indices/loop initializations
+        IF lv_is_num = abap_true AND <ls_token>-lexeme <> '0' AND <ls_token>-lexeme <> '1'.
+          report_statement( is_statement    = <ls_statement>
+                            iv_finding_code = c_finding_codes-magic_number ).
+          EXIT.
+        ENDIF.
+      ENDLOOP.
+    ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

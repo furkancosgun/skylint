@@ -15,21 +15,14 @@ ENDCLASS.
 
 CLASS ltcl_check_006 IMPLEMENTATION.
   METHOD execute_test_class.
-    DATA ls_loc_no_pc1  TYPE if_ci_atc_check=>ty_location.
-    DATA ls_loc_no_pc2  TYPE if_ci_atc_check=>ty_location.
+    DATA ls_loc_no_pc   TYPE if_ci_atc_check=>ty_location.
     DATA ls_loc_with_pc TYPE if_ci_atc_check=>ty_location.
 
-    ls_loc_no_pc1 = VALUE #( object   = cl_ci_atc_unit_driver=>get_method_object(
-                                            VALUE #( class  = c_test_class
-                                                     method = c_methods-without_pseudo_comments ) )
-                             position = VALUE #( line   = 2
-                                                 column = 4 ) ).
-
-    ls_loc_no_pc2 = VALUE #( object   = cl_ci_atc_unit_driver=>get_method_object(
-                                            VALUE #( class  = c_test_class
-                                                     method = c_methods-without_pseudo_comments ) )
-                             position = VALUE #( line   = 3
-                                                 column = 4 ) ).
+    ls_loc_no_pc = VALUE #( object   = cl_ci_atc_unit_driver=>get_method_object(
+                                           VALUE #( class  = c_test_class
+                                                    method = c_methods-without_pseudo_comments ) )
+                            position = VALUE #( line   = 2
+                                                column = 4 ) ).
 
     ls_loc_with_pc = VALUE #( object   = cl_ci_atc_unit_driver=>get_method_object(
                                              VALUE #( class  = c_test_class
@@ -41,10 +34,9 @@ CLASS ltcl_check_006 IMPLEMENTATION.
         check             = NEW zcl_skylint_check_006( )
         object            = VALUE #( type = 'CLAS'
                                      name = c_test_class )
-        expected_findings = VALUE #( code = zcl_skylint_check_006=>c_finding_codes-avoid_me
-                                     ( location = ls_loc_no_pc1 )
-                                     ( location = ls_loc_no_pc2 )
+        expected_findings = VALUE #( code = zcl_skylint_check_006=>c_finding_codes-omit_exporting
+                                     ( location = ls_loc_no_pc )
                                      ( location = ls_loc_with_pc ) )
-        asserter_config   = VALUE #( quickfixes = abap_false ) ).
+        asserter_config   = VALUE #( quickfixes = abap_true ) ).
   ENDMETHOD.
 ENDCLASS.

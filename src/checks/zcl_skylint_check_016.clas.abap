@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_016 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        empty_control_block TYPE if_ci_atc_check=>ty_finding_code VALUE 'EMPTYCTRL',
+        identical_condition TYPE if_ci_atc_check=>ty_finding_code VALUE 'DUPCOND',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,112 +15,182 @@ CLASS zcl_skylint_check_016 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'EMPTY_CONTROL_BLOCK'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'IDENTICAL_CONDITIONS'.
 
-    METHODS is_empty_control_block
-      IMPORTING iv_current_kw TYPE string
-                iv_next_kw    TYPE string
-      RETURNING VALUE(rv_is)  TYPE abap_bool.
+    METHODS check_duplicate_elseif
+      IMPORTING iv_idx       TYPE i
+                is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
+                is_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure.
+
+    METHODS check_duplicate_when
+      IMPORTING iv_idx       TYPE i
+                is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
+                is_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure.
+
+    METHODS get_condition_string
+      IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_cond) TYPE string.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_016 IMPLEMENTATION.
   METHOD constructor.
-    "TODO: genel olarak başarılı daha anlaşılır ve compact yazılabilir
-    "017 ile benziyor kontrol edelim ayrıca if case loop try gibi yapıları parametrik yapalım
-    "ayrı ayrı kullanıcı atc den seçim yapabilsin
-    super->constructor(
-        VALUE #( description       = 'Detect empty control blocks (IF, CASE, LOOP, TRY, etc.)'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-empty_control_block
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Empty control block detected; remove redundant control statement'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    "TODO genel olarak temiz duruyor ama daha temiz yazilabilir kontorl edelim
+    super->constructor( VALUE #( description       = 'Detect identical branch conditions in IF/ELSEIF and CASE/WHEN'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-identical_condition
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Identical condition in branch; duplicate branch is unreachable'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_total TYPE i.
     DATA lv_idx TYPE i.
-    DATA lv_next_idx TYPE i.
-    DATA ls_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_next_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      lv_idx = sy-tabix.
+
+      CASE <ls_statement>-keyword.
+        WHEN 'ELSEIF'.
+          check_duplicate_elseif( iv_idx       = lv_idx
+                                  is_statement = <ls_statement>
+                                  is_procedure = is_procedure ).
+
+        WHEN 'WHEN'.
+          check_duplicate_when( iv_idx       = lv_idx
+                                is_statement = <ls_statement>
+                                is_procedure = is_procedure ).
+      ENDCASE.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD check_duplicate_elseif.
+    DATA lv_cond TYPE string.
+    DATA lv_prev_cond TYPE string.
+    DATA lv_back_idx TYPE i.
+    DATA lv_depth TYPE i.
+    DATA ls_back_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA lv_found TYPE abap_bool.
-    DATA lv_found_next TYPE abap_bool.
 
-    lv_total = lines( is_procedure-statements ).
+    lv_cond = get_condition_string( is_statement ).
+    lv_depth = 0.
+    lv_back_idx = iv_idx - 1.
 
-    DO lv_total TIMES.
-      lv_idx = sy-index.
+    WHILE lv_back_idx >= 1.
       get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                    iv_index       = lv_idx
-                          IMPORTING es_statement   = ls_statement
+                                    iv_index       = lv_back_idx
+                          IMPORTING es_statement   = ls_back_stmt
                                     ev_found       = lv_found ).
       IF lv_found = abap_false.
         EXIT.
       ENDIF.
 
-      lv_next_idx = lv_idx + 1.
-      IF lv_next_idx <= lv_total.
-        get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                      iv_index       = lv_next_idx
-                            IMPORTING es_statement   = ls_next_stmt
-                                      ev_found       = lv_found_next ).
-        IF lv_found_next = abap_true.
-          IF is_empty_control_block( iv_current_kw = ls_statement-keyword
-                                     iv_next_kw    = ls_next_stmt-keyword ) = abap_true.
-            report_statement( is_statement    = ls_statement
-                              iv_finding_code = c_finding_codes-empty_control_block ).
+      CASE ls_back_stmt-keyword.
+        WHEN 'ENDIF'.
+          lv_depth += 1.
+
+        WHEN 'IF'.
+          IF lv_depth = 0.
+            lv_prev_cond = get_condition_string( ls_back_stmt ).
+            IF lv_prev_cond = lv_cond.
+              report_statement( is_statement    = is_statement
+                                iv_finding_code = c_finding_codes-identical_condition ).
+            ENDIF.
+            EXIT.
+          ELSE.
+            lv_depth -= 1.
           ENDIF.
+
+        WHEN 'ELSEIF'.
+          IF lv_depth = 0.
+            lv_prev_cond = get_condition_string( ls_back_stmt ).
+            IF lv_prev_cond = lv_cond.
+              report_statement( is_statement    = is_statement
+                                iv_finding_code = c_finding_codes-identical_condition ).
+              EXIT.
+            ENDIF.
+          ENDIF.
+      ENDCASE.
+
+      lv_back_idx -= 1.
+    ENDWHILE.
+  ENDMETHOD.
+
+  METHOD check_duplicate_when.
+    DATA lv_cond TYPE string.
+    DATA lv_prev_cond TYPE string.
+    DATA lv_back_idx TYPE i.
+    DATA lv_depth TYPE i.
+    DATA ls_back_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_found TYPE abap_bool.
+
+    lv_cond = get_condition_string( is_statement ).
+    lv_depth = 0.
+    lv_back_idx = iv_idx - 1.
+
+    WHILE lv_back_idx >= 1.
+      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                    iv_index       = lv_back_idx
+                          IMPORTING es_statement   = ls_back_stmt
+                                    ev_found       = lv_found ).
+      IF lv_found = abap_false.
+        EXIT.
+      ENDIF.
+
+      CASE ls_back_stmt-keyword.
+        WHEN 'ENDCASE'.
+          lv_depth += 1.
+
+        WHEN 'CASE'.
+          IF lv_depth = 0.
+            EXIT.
+          ELSE.
+            lv_depth -= 1.
+          ENDIF.
+
+        WHEN 'WHEN'.
+          IF lv_depth = 0.
+            lv_prev_cond = get_condition_string( ls_back_stmt ).
+            IF lv_prev_cond = lv_cond.
+              report_statement( is_statement    = is_statement
+                                iv_finding_code = c_finding_codes-identical_condition ).
+              EXIT.
+            ENDIF.
+          ENDIF.
+      ENDCASE.
+
+      lv_back_idx -= 1.
+    ENDWHILE.
+  ENDMETHOD.
+
+  METHOD get_condition_string.
+    DATA lv_tok_cnt TYPE i.
+    DATA lv_tok_idx TYPE i.
+    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found TYPE abap_bool.
+
+    rv_cond = ''.
+    lv_tok_cnt = lines( is_statement-tokens ).
+    IF lv_tok_cnt < 2.
+      RETURN.
+    ENDIF.
+
+    DO lv_tok_cnt - 1 TIMES.
+      lv_tok_idx = sy-index + 1.
+      get_token_safe( EXPORTING is_statement = is_statement
+                                iv_index     = lv_tok_idx
+                      IMPORTING es_token     = ls_token
+                                ev_found     = lv_found ).
+      IF lv_found = abap_true.
+        IF rv_cond IS INITIAL.
+          rv_cond = to_upper( ls_token-lexeme ).
+        ELSE.
+          rv_cond = |{ rv_cond } { to_upper( ls_token-lexeme ) }|.
         ENDIF.
       ENDIF.
     ENDDO.
-  ENDMETHOD.
-
-  METHOD is_empty_control_block.
-    rv_is = abap_false.
-
-    CASE iv_current_kw.
-      WHEN 'IF' OR 'ELSEIF'.
-        IF iv_next_kw = 'ENDIF' OR iv_next_kw = 'ELSEIF' OR iv_next_kw = 'ELSE'.
-          rv_is = abap_true.
-        ENDIF.
-
-      WHEN 'ELSE'.
-        IF iv_next_kw = 'ENDIF'.
-          rv_is = abap_true.
-        ENDIF.
-
-      WHEN 'LOOP'.
-        IF iv_next_kw = 'ENDLOOP'.
-          rv_is = abap_true.
-        ENDIF.
-
-      WHEN 'DO'.
-        IF iv_next_kw = 'ENDDO'.
-          rv_is = abap_true.
-        ENDIF.
-
-      WHEN 'WHILE'.
-        IF iv_next_kw = 'ENDWHILE'.
-          rv_is = abap_true.
-        ENDIF.
-
-      WHEN 'TRY'.
-        IF iv_next_kw = 'CATCH' OR iv_next_kw = 'CLEANUP' OR iv_next_kw = 'ENDTRY'.
-          rv_is = abap_true.
-        ENDIF.
-
-      WHEN 'CASE'.
-        IF iv_next_kw = 'ENDCASE'.
-          rv_is = abap_true.
-        ENDIF.
-
-      WHEN 'WHEN'.
-        IF iv_next_kw = 'WHEN' OR iv_next_kw = 'ENDCASE'.
-          rv_is = abap_true.
-        ENDIF.
-    ENDCASE.
   ENDMETHOD.
 ENDCLASS.

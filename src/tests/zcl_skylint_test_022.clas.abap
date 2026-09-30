@@ -11,24 +11,19 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_022 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    DATA lv_x TYPE i.
-    RETURN.
-    lv_x = 1.
+    DATA lo_obj TYPE REF TO zcl_skylint_test_022.
+    CREATE OBJECT lo_obj.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    DATA lv_x TYPE i.
-    RETURN.
-    lv_x = 1. "#EC UNREACHABLE_CODE
+    DATA lo_obj TYPE REF TO zcl_skylint_test_022.
+    CREATE OBJECT lo_obj. "#EC PREF_NEW
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lv_x TYPE i.
-    IF lv_x = 0.
-      RETURN.
-    ELSE.
-      lv_x = 2.
-    ENDIF.
-    lv_x = 3.
+    DATA lo_obj TYPE REF TO zcl_skylint_test_022.
+    DATA lv_cls TYPE string VALUE 'ZCL_SKYLINT_TEST_022'.
+    lo_obj = NEW #( ).
+    CREATE OBJECT lo_obj TYPE (lv_cls).
   ENDMETHOD.
 ENDCLASS.

@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_052</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Dangerous Statements (052)</DESCRIPT>
+    <DESCRIPT>skylint: Avoid Obsolete Loop Control (052)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>
