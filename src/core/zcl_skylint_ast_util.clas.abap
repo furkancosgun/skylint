@@ -107,6 +107,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
     DATA ls_exp_token      TYPE string.
     DATA ls_act_token      TYPE if_ci_atc_source_code_provider=>ty_token.
     FIELD-SYMBOLS <ls_exp>   TYPE string.
+    " TODO: variable is assigned but never used (ABAP cleaner)
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_index = 0.

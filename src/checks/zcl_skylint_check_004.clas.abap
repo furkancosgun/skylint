@@ -28,11 +28,10 @@ CLASS zcl_skylint_check_004 IMPLEMENTATION.
   METHOD constructor.
     super->constructor( VALUE #( description       = 'Prefer IS NOT over NOT ... IS'
                                  remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-prefer_is_not
-                                       severity = if_ci_atc_check=>finding_severities-warning
-                                       text           = 'Use IS NOT instead of NOT ... IS'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                                 finding_codes     = VALUE #( ( code           = c_finding_codes-prefer_is_not
+                                                                severity = if_ci_atc_check=>finding_severities-warning
+                                                                text           = 'Use IS NOT instead of NOT ... IS'
+                                                                pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
