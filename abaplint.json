@@ -784,10 +784,7 @@
       "exception": "^LCX_.+$",
       "test": "^LTCL_.+$"
     },
-    "local_testclass_consistency": {
-      "exclude": [],
-      "severity": "Error"
-    },
+    "local_testclass_consistency": false,
     "local_variable_names": {
       "exclude": [],
       "severity": "Error",
