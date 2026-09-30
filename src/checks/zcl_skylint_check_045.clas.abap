@@ -53,12 +53,14 @@ CLASS zcl_skylint_check_045 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_call_transaction.
-    rv_res = xsdbool( zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
-                                           it_expected  = VALUE #( ( `CALL` ) ( `TRANSACTION` ) ) ) > 0 ).
+    rv_res = xsdbool( zcl_skylint_ast_util=>find_token_sequence(
+                          is_statement = is_statement
+                          it_expected  = VALUE #( ( `CALL` ) ( `TRANSACTION` ) ) ) > 0 ).
   ENDMETHOD.
 
   METHOD has_inline_auth_check.
-    rv_res = xsdbool( zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
-                                           it_expected  = VALUE #( ( `WITH` ) ( `AUTHORITY-CHECK` ) ) ) > 0 ).
+    rv_res = xsdbool( zcl_skylint_ast_util=>find_token_sequence(
+                          is_statement = is_statement
+                          it_expected  = VALUE #( ( `WITH` ) ( `AUTHORITY-CHECK` ) ) ) > 0 ).
   ENDMETHOD.
 ENDCLASS.

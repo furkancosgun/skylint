@@ -20,14 +20,14 @@ CLASS zcl_skylint_ast_util DEFINITION
     CLASS-METHODS find_token_sequence
       IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
                 it_expected       TYPE ty_token_lexemes
-                iv_start_index    TYPE i DEFAULT 1
+                iv_start_index    TYPE i         DEFAULT 1
                 iv_case_sensitive TYPE abap_bool DEFAULT abap_false
       RETURNING VALUE(rv_index)   TYPE i.
 
     CLASS-METHODS match_token_sequence
       IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
                 it_expected       TYPE ty_token_lexemes
-                iv_start_index    TYPE i DEFAULT 1
+                iv_start_index    TYPE i         DEFAULT 1
                 iv_case_sensitive TYPE abap_bool DEFAULT abap_false
       RETURNING VALUE(rv_matched) TYPE abap_bool.
 
@@ -70,7 +70,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    READ TABLE is_statement-tokens ASSIGNING <ls_token> INDEX iv_index.
+    ASSIGN is_statement-tokens[ iv_index ] TO <ls_token>.
     IF sy-subrc = 0.
       es_token = <ls_token>.
       ev_found = abap_true.
@@ -87,7 +87,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    READ TABLE it_statements ASSIGNING <ls_statement> INDEX iv_index.
+    ASSIGN it_statements[ iv_index ] TO <ls_statement>.
     IF sy-subrc = 0.
       es_statement = <ls_statement>.
       ev_found = abap_true.
@@ -137,7 +137,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
         lv_exp_idx = sy-index.
         lv_tok_idx = lv_start + lv_offset.
 
-        READ TABLE it_expected ASSIGNING <ls_exp> INDEX lv_exp_idx.
+        ASSIGN it_expected[ lv_exp_idx ] TO <ls_exp>.
         IF sy-subrc <> 0.
           lv_all_match = abap_false.
           EXIT.
@@ -220,11 +220,9 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD token_has_ref.
-    FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
-
     rv_has = abap_false.
 
-    LOOP AT is_token-references ASSIGNING <ls_ref>
+    LOOP AT is_token-references TRANSPORTING NO FIELDS
          WHERE kind = iv_kind.
       rv_has = abap_true.
       RETURN.

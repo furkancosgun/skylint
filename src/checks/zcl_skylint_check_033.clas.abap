@@ -17,13 +17,12 @@ CLASS zcl_skylint_check_033 DEFINITION
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'SCOPE_OF_VAR'.
 
-    TYPES:
-      BEGIN OF ty_scoped_var,
-        name     TYPE string,
-        block_id TYPE i,
-      END OF ty_scoped_var,
-      ty_scoped_vars TYPE STANDARD TABLE OF ty_scoped_var WITH EMPTY KEY,
-      ty_block_ids   TYPE STANDARD TABLE OF i WITH EMPTY KEY.
+    TYPES: BEGIN OF ty_scoped_var,
+             name     TYPE string,
+             block_id TYPE i,
+           END OF ty_scoped_var,
+           ty_scoped_vars TYPE STANDARD TABLE OF ty_scoped_var WITH EMPTY KEY.
+    TYPES ty_block_ids TYPE STANDARD TABLE OF i WITH EMPTY KEY.
 
     METHODS extract_declared_vars
       IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
@@ -132,9 +131,9 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
     " 1. Inspect compiler semantic references (definitions)
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
       LOOP AT <ls_token>-references ASSIGNING <ls_ref>
-           WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-             AND ( usage_grade = if_ci_atc_source_code_provider=>usage_grades-definition
-                OR usage_mode  = if_ci_atc_source_code_provider=>usage_modes-definition_with_write ).
+           WHERE     kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+                 AND (    usage_grade = if_ci_atc_source_code_provider=>usage_grades-definition
+                       OR usage_mode  = if_ci_atc_source_code_provider=>usage_modes-definition_with_write ).
         lv_var_name = ''.
         IF <ls_ref>-full_name CS '\DA:'.
           SPLIT <ls_ref>-full_name AT '\' INTO TABLE lt_parts.
@@ -167,9 +166,9 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
     " 2. Explicit DATA / FIELD-SYMBOLS statements inside blocks
     IF is_statement-keyword = 'DATA' OR is_statement-keyword = 'FIELD-SYMBOLS'.
       zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                                iv_index     = 2
-                      IMPORTING es_token     = ls_tok2
-                                ev_found     = lv_found2 ).
+                                                      iv_index     = 2
+                                            IMPORTING es_token     = ls_tok2
+                                                      ev_found     = lv_found2 ).
       IF lv_found2 = abap_true AND ls_tok2-lexeme <> 'BEGIN' AND ls_tok2-lexeme <> 'END'.
         ls_var-name = to_upper( ls_tok2-lexeme ).
         IF NOT line_exists( rt_vars[ name = ls_var-name ] ).

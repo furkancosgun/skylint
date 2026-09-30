@@ -25,10 +25,10 @@ CLASS zcl_skylint_check_025 IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Omit RECEIVING in method calls'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-omit_receiving
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Omit RECEIVING keyword; use functional call or omit parameter'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                                     ( code           = c_finding_codes-omit_receiving
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Omit RECEIVING keyword; use functional call or omit parameter'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -38,13 +38,14 @@ CLASS zcl_skylint_check_025 IMPLEMENTATION.
     DATA ls_tok            TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA ls_next_tok       TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_next_idx       TYPE i.
+    " TODO: variable is assigned but never used (ABAP cleaner)
     DATA lv_found          TYPE abap_bool.
     DATA lv_lex            TYPE string.
     DATA lv_next_lex       TYPE string.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF <ls_statement>-keyword = 'METHODS' OR <ls_statement>-keyword = 'CLASS-METHODS'
+      IF    <ls_statement>-keyword = 'METHODS' OR <ls_statement>-keyword = 'CLASS-METHODS'
          OR <ls_statement>-keyword = 'INTERFACES'.
         CONTINUE.
       ENDIF.
@@ -67,9 +68,9 @@ CLASS zcl_skylint_check_025 IMPLEMENTATION.
         lv_next_idx = sy-tabix + 1.
         CLEAR ls_next_tok.
         zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = <ls_statement>
-                                  iv_index     = lv_next_idx
-                        IMPORTING es_token     = ls_next_tok
-                                  ev_found     = lv_found ).
+                                                        iv_index     = lv_next_idx
+                                              IMPORTING es_token     = ls_next_tok
+                                                        ev_found     = lv_found ).
 
         lv_lex = to_upper( ls_tok-lexeme ).
         lv_next_lex = to_upper( ls_next_tok-lexeme ).

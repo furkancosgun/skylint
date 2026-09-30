@@ -52,16 +52,16 @@ CLASS zcl_skylint_check_017 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_nested_if_mergeable.
-    DATA lv_total      TYPE i.
-    DATA lv_next_idx   TYPE i.
-    DATA lv_fwd_idx    TYPE i.
-    DATA lv_check_idx  TYPE i.
-    DATA lv_depth      TYPE i.
-    DATA ls_next_stmt  TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_fwd_stmt   TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_outer_end  TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lv_found      TYPE abap_bool.
-    DATA lv_found_fwd  TYPE abap_bool.
+    DATA lv_total       TYPE i.
+    DATA lv_next_idx    TYPE i.
+    DATA lv_fwd_idx     TYPE i.
+    DATA lv_check_idx   TYPE i.
+    DATA lv_depth       TYPE i.
+    DATA ls_next_stmt   TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_fwd_stmt    TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_outer_end   TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_found       TYPE abap_bool.
+    DATA lv_found_fwd   TYPE abap_bool.
     DATA lv_found_outer TYPE abap_bool.
 
     rv_is = abap_false.
@@ -73,9 +73,9 @@ CLASS zcl_skylint_check_017 IMPLEMENTATION.
     ENDIF.
 
     zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                  iv_index       = lv_next_idx
-                        IMPORTING es_statement   = ls_next_stmt
-                                  ev_found       = lv_found ).
+                                                        iv_index      = lv_next_idx
+                                              IMPORTING es_statement  = ls_next_stmt
+                                                        ev_found      = lv_found ).
     IF lv_found = abap_false OR ls_next_stmt-keyword <> 'IF'.
       RETURN.
     ENDIF.
@@ -86,9 +86,9 @@ CLASS zcl_skylint_check_017 IMPLEMENTATION.
 
     WHILE lv_fwd_idx <= lv_total.
       zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                    iv_index       = lv_fwd_idx
-                          IMPORTING es_statement   = ls_fwd_stmt
-                                    ev_found       = lv_found_fwd ).
+                                                          iv_index      = lv_fwd_idx
+                                                IMPORTING es_statement  = ls_fwd_stmt
+                                                          ev_found      = lv_found_fwd ).
       IF lv_found_fwd = abap_false.
         EXIT.
       ENDIF.
@@ -105,9 +105,9 @@ CLASS zcl_skylint_check_017 IMPLEMENTATION.
             lv_check_idx = lv_fwd_idx + 1.
             IF lv_check_idx <= lv_total.
               zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                            iv_index       = lv_check_idx
-                                  IMPORTING es_statement   = ls_outer_end
-                                            ev_found       = lv_found_outer ).
+                                                                  iv_index      = lv_check_idx
+                                                        IMPORTING es_statement  = ls_outer_end
+                                                                  ev_found      = lv_found_outer ).
               IF lv_found_outer = abap_true AND ls_outer_end-keyword = 'ENDIF'.
                 rv_is = abap_true.
               ENDIF.

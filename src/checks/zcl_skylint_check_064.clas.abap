@@ -41,9 +41,9 @@ CLASS zcl_skylint_check_064 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_idx TYPE i.
-    DATA lv_max TYPE i.
-    DATA ls_next_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_idx        TYPE i.
+    DATA lv_max        TYPE i.
+    DATA ls_next_stmt  TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA lv_next_found TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
@@ -60,9 +60,9 @@ CLASS zcl_skylint_check_064 IMPLEMENTATION.
                           iv_finding_code = c_finding_codes-check_subrc ).
       ELSE.
         zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                      iv_index      = lv_idx + 1
-                            IMPORTING es_statement  = ls_next_stmt
-                                      ev_found      = lv_next_found ).
+                                                            iv_index      = lv_idx + 1
+                                                  IMPORTING es_statement  = ls_next_stmt
+                                                            ev_found      = lv_next_found ).
         IF lv_next_found = abap_false OR checks_sy_subrc( ls_next_stmt ) = abap_false.
           report_statement( is_statement    = <ls_statement>
                             iv_finding_code = c_finding_codes-check_subrc ).
@@ -79,14 +79,14 @@ CLASS zcl_skylint_check_064 IMPLEMENTATION.
         rv_res = abap_true.
       WHEN 'SELECT'.
         IF zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                             iv_index     = 2
-                             iv_expected  = `SINGLE` ) = abap_true.
+                                                   iv_index     = 2
+                                                   iv_expected  = `SINGLE` ) = abap_true.
           rv_res = abap_true.
         ENDIF.
       WHEN 'READ'.
         IF zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                             iv_index     = 2
-                             iv_expected  = `TABLE` ) = abap_true.
+                                                   iv_index     = 2
+                                                   iv_expected  = `TABLE` ) = abap_true.
           rv_res = abap_true.
         ENDIF.
       WHEN OTHERS.

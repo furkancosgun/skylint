@@ -46,10 +46,10 @@ CLASS zcl_skylint_check_015 IMPLEMENTATION.
          WHERE keyword = 'CATCH'.
       lv_idx = sy-tabix.
       zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                    iv_index      = lv_idx + 1
-                          IMPORTING es_statement  = ls_next_stmt
-                                    ev_found      = lv_found_next ).
-      IF lv_found_next = abap_true
+                                                          iv_index      = lv_idx + 1
+                                                IMPORTING es_statement  = ls_next_stmt
+                                                          ev_found      = lv_found_next ).
+      IF     lv_found_next = abap_true
          AND is_empty_catch( ls_next_stmt-keyword ) = abap_true.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-empty_catch ).

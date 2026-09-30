@@ -40,29 +40,25 @@ CLASS zcl_skylint_check_071 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    cl_abap_typedescr=>describe_by_name(
-      EXPORTING
-        p_name         = is_procedure-id-main_unit-name
-      RECEIVING
-        p_descr_ref    = lo_descr
-      EXCEPTIONS
-        type_not_found = 1
-        OTHERS         = 2 ).
+    cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = is_procedure-id-main_unit-name
+                                         RECEIVING  p_descr_ref    = lo_descr
+                                         EXCEPTIONS type_not_found = 1
+                                                    OTHERS         = 2 ).
     IF sy-subrc <> 0 OR lo_descr IS NOT BOUND OR lo_descr->kind <> cl_abap_typedescr=>kind_class.
       RETURN.
     ENDIF.
 
     lo_class ?= lo_descr.
 
-    READ TABLE is_procedure-statements ASSIGNING <ls_statement> INDEX 1.
+    ASSIGN is_procedure-statements[ 1 ] TO <ls_statement>.
     IF sy-subrc <> 0.
       RETURN.
     ENDIF.
 
     LOOP AT lo_class->methods INTO ls_meth
-         WHERE is_final     = abap_false
-           AND is_abstract  = abap_false
-           AND is_redefined = abap_false.
+         WHERE     is_final     = abap_false
+               AND is_abstract  = abap_false
+               AND is_redefined = abap_false.
       IF ls_meth-name <> 'CONSTRUCTOR' AND ls_meth-name <> 'CLASS_CONSTRUCTOR'.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-prefer_final ).

@@ -58,7 +58,7 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
 
       lv_tok_idx = 0.
       LOOP AT ls_statement-tokens INTO ls_token.
-        lv_tok_idx = lv_tok_idx + 1.
+        lv_tok_idx += 1.
 
         LOOP AT ls_token-references INTO ls_ref
              WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-method.
@@ -96,21 +96,18 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
 
     rv_res = abap_false.
 
-    zcl_skylint_rtti_util=>get_single_importing_param(
-      EXPORTING
-        iv_full_name  = is_ref-full_name
-      IMPORTING
-        ev_param_name = lv_param_name
-        ev_is_single  = lv_is_single ).
+    zcl_skylint_rtti_util=>get_single_importing_param( EXPORTING iv_full_name  = is_ref-full_name
+                                                       IMPORTING ev_param_name = lv_param_name
+                                                                 ev_is_single  = lv_is_single ).
 
     IF lv_is_single = abap_false.
       RETURN.
     ENDIF.
 
     zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                              iv_index     = iv_tok_idx
-                    IMPORTING es_token     = ls_tok
-                              ev_found     = lv_tok_found ).
+                                                    iv_index     = iv_tok_idx
+                                          IMPORTING es_token     = ls_tok
+                                                    ev_found     = lv_tok_found ).
     IF lv_tok_found = abap_false.
       RETURN.
     ENDIF.
@@ -119,9 +116,9 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
       lv_param_idx = iv_tok_idx + 1.
     ELSE.
       zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                                iv_index     = iv_tok_idx + 1
-                      IMPORTING es_token     = ls_tok
-                                ev_found     = lv_tok_found ).
+                                                      iv_index     = iv_tok_idx + 1
+                                            IMPORTING es_token     = ls_tok
+                                                      ev_found     = lv_tok_found ).
       IF lv_tok_found = abap_true AND ls_tok-lexeme = '('.
         lv_param_idx = iv_tok_idx + 2.
       ELSE.
@@ -130,9 +127,9 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
     ENDIF.
 
     zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                              iv_index     = lv_param_idx
-                    IMPORTING es_token     = ls_tok
-                              ev_found     = lv_tok_found ).
+                                                    iv_index     = lv_param_idx
+                                          IMPORTING es_token     = ls_tok
+                                                    ev_found     = lv_tok_found ).
     IF lv_tok_found = abap_false.
       RETURN.
     ENDIF.
@@ -141,9 +138,9 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
       WHEN lv_param_name.
         lv_next_idx = lv_param_idx + 1.
         zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                                  iv_index     = lv_next_idx
-                        IMPORTING es_token     = ls_next_tok
-                                  ev_found     = lv_tok_found ).
+                                                        iv_index     = lv_next_idx
+                                              IMPORTING es_token     = ls_next_tok
+                                                        ev_found     = lv_tok_found ).
         IF lv_tok_found = abap_true AND ls_next_tok-lexeme = '='.
           rv_res = abap_true.
         ENDIF.

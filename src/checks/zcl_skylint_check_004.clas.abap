@@ -26,21 +26,20 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_004 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Prefer IS NOT over NOT ... IS'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-prefer_is_not
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Use IS NOT instead of NOT ... IS'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'Prefer IS NOT over NOT ... IS'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-prefer_is_not
+                                       severity = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Use IS NOT instead of NOT ... IS'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> LIKE LINE OF is_procedure-statements.
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'IF' OR keyword = 'ELSEIF' OR keyword = 'CHECK'
-            OR keyword = 'WHILE' OR keyword = 'WAIT'.
+            OR keyword = 'WHILE'.
       IF has_not_is_pattern( <ls_statement> ) = abap_true.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-prefer_is_not ).
@@ -49,13 +48,13 @@ CLASS zcl_skylint_check_004 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD has_not_is_pattern.
-    DATA lv_in_not TYPE abap_bool.
-    DATA lv_is_idx TYPE i.
-    DATA lv_lexeme TYPE string.
+    DATA lv_in_not      TYPE abap_bool.
+    DATA lv_is_idx      TYPE i.
+    DATA lv_lexeme      TYPE string.
     DATA lv_next_lexeme TYPE string.
-    DATA lv_idx TYPE i.
-    DATA ls_next_token TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_found TYPE abap_bool.
+    DATA lv_idx         TYPE i.
+    DATA ls_next_token  TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found       TYPE abap_bool.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_matched = abap_false.
@@ -72,9 +71,9 @@ CLASS zcl_skylint_check_004 IMPLEMENTATION.
       ELSEIF lv_in_not = abap_true AND lv_lexeme = 'IS'.
         lv_is_idx = lv_idx + 1.
         zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                                  iv_index     = lv_is_idx
-                        IMPORTING es_token     = ls_next_token
-                                  ev_found     = lv_found ).
+                                                        iv_index     = lv_is_idx
+                                              IMPORTING es_token     = ls_next_token
+                                                        ev_found     = lv_found ).
         IF lv_found = abap_true.
           lv_next_lexeme = to_upper( ls_next_token-lexeme ).
           IF    lv_next_lexeme = 'INITIAL'   OR lv_next_lexeme = 'BOUND'

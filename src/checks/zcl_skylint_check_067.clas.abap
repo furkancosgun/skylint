@@ -59,7 +59,7 @@ CLASS zcl_skylint_check_067 IMPLEMENTATION.
 
     " 1. Inspect RTTI superclass hierarchy (CL_ABAP_BEHAVIOR_HANDLER / CL_ABAP_BEHAVIOR_SAVER)
     lt_supers = zcl_skylint_rtti_util=>get_super_classes( lv_unit_name ).
-    IF line_exists( lt_supers[ table_line = 'CL_ABAP_BEHAVIOR_HANDLER' ] )
+    IF    line_exists( lt_supers[ table_line = 'CL_ABAP_BEHAVIOR_HANDLER' ] )
        OR line_exists( lt_supers[ table_line = 'CL_ABAP_BEHAVIOR_SAVER' ] ).
       rv_res = abap_true.
       RETURN.

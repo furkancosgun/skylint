@@ -49,7 +49,8 @@ CLASS zcl_skylint_check_023 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_raise_exception_type.
-    rv_res = xsdbool( zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
-                                           it_expected  = VALUE #( ( `RAISE` ) ( `EXCEPTION` ) ( `TYPE` ) ) ) > 0 ).
+    rv_res = xsdbool( zcl_skylint_ast_util=>find_token_sequence(
+                          is_statement = is_statement
+                          it_expected  = VALUE #( ( `RAISE` ) ( `EXCEPTION` ) ( `TYPE` ) ) ) > 0 ).
   ENDMETHOD.
 ENDCLASS.

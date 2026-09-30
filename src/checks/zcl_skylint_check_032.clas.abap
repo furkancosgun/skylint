@@ -59,18 +59,18 @@ CLASS zcl_skylint_check_032 IMPLEMENTATION.
     rv_res = abap_false.
 
     IF zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                         iv_index     = 2
-                         iv_expected  = `*` ) = abap_true.
+                                               iv_index     = 2
+                                               iv_expected  = `*` ) = abap_true.
       rv_res = abap_true.
       RETURN.
     ENDIF.
 
-    IF zcl_skylint_ast_util=>matches_token_at( is_statement      = is_statement
-                         iv_index          = 2
-                         iv_expected       = `SINGLE` ) = abap_true
+    IF     zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
+                                                   iv_index     = 2
+                                                   iv_expected  = `SINGLE` )   = abap_true
        AND zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                             iv_index     = 3
-                             iv_expected  = `*` ) = abap_true.
+                                                   iv_index     = 3
+                                                   iv_expected  = `*` )        = abap_true.
       rv_res = abap_true.
     ENDIF.
   ENDMETHOD.

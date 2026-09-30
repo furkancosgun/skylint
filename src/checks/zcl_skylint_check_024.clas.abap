@@ -75,22 +75,22 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
       lv_idx_body = lv_idx + 3.
       lv_idx_endif = lv_idx + 4.
       zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                    iv_index       = lv_idx_then
-                          IMPORTING es_statement   = ls_stmt_then
-                                    ev_found       = lv_found_then ).
+                                                          iv_index      = lv_idx_then
+                                                IMPORTING es_statement  = ls_stmt_then
+                                                          ev_found      = lv_found_then ).
       zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                    iv_index       = lv_idx_else
-                          IMPORTING es_statement   = ls_stmt_else
-                                    ev_found       = lv_found_else ).
+                                                          iv_index      = lv_idx_else
+                                                IMPORTING es_statement  = ls_stmt_else
+                                                          ev_found      = lv_found_else ).
       zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                    iv_index       = lv_idx_body
-                          IMPORTING es_statement   = ls_stmt_else_body
-                                    ev_found       = lv_found_body ).
+                                                          iv_index      = lv_idx_body
+                                                IMPORTING es_statement  = ls_stmt_else_body
+                                                          ev_found      = lv_found_body ).
       zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                    iv_index       = lv_idx_endif
-                          IMPORTING es_statement   = ls_stmt_endif
-                                    ev_found       = lv_found_endif ).
-      IF lv_found_then = abap_false OR lv_found_else = abap_false
+                                                          iv_index      = lv_idx_endif
+                                                IMPORTING es_statement  = ls_stmt_endif
+                                                          ev_found      = lv_found_endif ).
+      IF    lv_found_then = abap_false OR lv_found_else  = abap_false
          OR lv_found_body = abap_false OR lv_found_endif = abap_false.
         CONTINUE.
       ENDIF.
@@ -130,17 +130,17 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
     ENDIF.
 
     zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                              iv_index     = 1
-                    IMPORTING es_token     = ls_tok_target
-                              ev_found     = lv_found1 ).
+                                                    iv_index     = 1
+                                          IMPORTING es_token     = ls_tok_target
+                                                    ev_found     = lv_found1 ).
     zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                              iv_index     = 2
-                    IMPORTING es_token     = ls_tok_eq
-                              ev_found     = lv_found2 ).
+                                                    iv_index     = 2
+                                          IMPORTING es_token     = ls_tok_eq
+                                                    ev_found     = lv_found2 ).
     zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                              iv_index     = 3
-                    IMPORTING es_token     = ls_tok_val
-                              ev_found     = lv_found3 ).
+                                                    iv_index     = 3
+                                          IMPORTING es_token     = ls_tok_val
+                                                    ev_found     = lv_found3 ).
     IF lv_found1 = abap_false OR lv_found2 = abap_false OR lv_found3 = abap_false.
       RETURN.
     ENDIF.

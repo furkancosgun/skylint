@@ -54,8 +54,8 @@ CLASS zcl_skylint_check_028 IMPLEMENTATION.
         rv_res = abap_true.
       WHEN 'COMPUTE'.
         IF zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                             iv_index     = 1
-                             iv_expected  = `COMPUTE` ) = abap_true.
+                                                   iv_index     = 1
+                                                   iv_expected  = `COMPUTE` ) = abap_true.
           rv_res = abap_true.
         ENDIF.
     ENDCASE.

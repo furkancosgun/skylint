@@ -49,7 +49,7 @@ CLASS zcl_skylint_check_046 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_unorder_select_up_to.
-    DATA lv_has_up_to   TYPE abap_bool.
+    DATA lv_has_up_to    TYPE abap_bool.
     DATA lv_has_order_by TYPE abap_bool.
 
     rv_res = abap_false.
@@ -57,12 +57,12 @@ CLASS zcl_skylint_check_046 IMPLEMENTATION.
     lv_has_order_by = abap_false.
 
     IF zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
-                            it_expected  = VALUE #( ( `UP` ) ( `TO` ) ) ) > 0.
+                                                  it_expected  = VALUE #( ( `UP` ) ( `TO` ) ) ) > 0.
       lv_has_up_to = abap_true.
     ENDIF.
 
     IF zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
-                            it_expected  = VALUE #( ( `ORDER` ) ( `BY` ) ) ) > 0.
+                                                  it_expected  = VALUE #( ( `ORDER` ) ( `BY` ) ) ) > 0.
       lv_has_order_by = abap_true.
     ENDIF.
 

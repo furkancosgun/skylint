@@ -56,8 +56,7 @@ CLASS zcl_skylint_check_009 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_byte_mode.
-    rv_byte_mode = zcl_skylint_ast_util=>match_token_sequence(
-        is_statement = is_statement
-        it_expected  = VALUE #( ( `BYTE` ) ( `MODE` ) ) ).
+    rv_byte_mode = zcl_skylint_ast_util=>match_token_sequence( is_statement = is_statement
+                                                               it_expected  = VALUE #( ( `BYTE` ) ( `MODE` ) ) ).
   ENDMETHOD.
 ENDCLASS.

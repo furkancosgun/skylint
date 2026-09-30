@@ -62,17 +62,17 @@ CLASS zcl_skylint_check_034 IMPLEMENTATION.
     ENDIF.
 
     zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                              iv_index     = 1
-                    IMPORTING es_token     = ls_tok1
-                              ev_found     = lv_found1 ).
+                                                    iv_index     = 1
+                                          IMPORTING es_token     = ls_tok1
+                                                    ev_found     = lv_found1 ).
     zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                              iv_index     = 2
-                    IMPORTING es_token     = ls_tok2
-                              ev_found     = lv_found2 ).
+                                                    iv_index     = 2
+                                          IMPORTING es_token     = ls_tok2
+                                                    ev_found     = lv_found2 ).
     zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                              iv_index     = 3
-                    IMPORTING es_token     = ls_tok3
-                              ev_found     = lv_found3 ).
+                                                    iv_index     = 3
+                                          IMPORTING es_token     = ls_tok3
+                                                    ev_found     = lv_found3 ).
     IF lv_found1 = abap_false OR lv_found2 = abap_false OR lv_found3 = abap_false.
       RETURN.
     ENDIF.

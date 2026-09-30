@@ -38,7 +38,7 @@ CLASS zcl_skylint_check_039 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_max TYPE i.
+    DATA lv_max   TYPE i.
     DATA lv_count TYPE i.
     DATA ls_first TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA lv_found TYPE abap_bool.
@@ -70,9 +70,9 @@ CLASS zcl_skylint_check_039 IMPLEMENTATION.
       RETURN.
     ENDIF.
     zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                  iv_index      = 1
-                        IMPORTING es_statement  = ls_first
-                                  ev_found      = lv_found ).
+                                                        iv_index      = 1
+                                              IMPORTING es_statement  = ls_first
+                                                        ev_found      = lv_found ).
     IF lv_found = abap_false.
       RETURN.
     ENDIF.

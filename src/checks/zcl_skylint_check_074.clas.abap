@@ -32,15 +32,16 @@ CLASS zcl_skylint_check_074 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_idx        TYPE i.
-    DATA lv_max        TYPE i.
-    DATA lv_scan_idx   TYPE i.
-    DATA lv_if_depth   TYPE i.
-    DATA ls_first      TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_stmt       TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_after      TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lv_has_else   TYPE abap_bool.
-    DATA lv_found      TYPE abap_bool.
+    DATA lv_idx      TYPE i.
+    DATA lv_max      TYPE i.
+    DATA lv_scan_idx TYPE i.
+    DATA lv_if_depth TYPE i.
+    DATA ls_first    TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_stmt     TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_after    TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_has_else TYPE abap_bool.
+    DATA lv_found    TYPE abap_bool.
+    " TODO: variable is assigned but never used (ABAP cleaner)
     FIELD-SYMBOLS <ls_loop> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     lv_max = lines( is_procedure-statements ).
@@ -54,9 +55,9 @@ CLASS zcl_skylint_check_074 IMPLEMENTATION.
 
       " First statement inside loop must be IF
       zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                    iv_index      = lv_idx + 1
-                          IMPORTING es_statement  = ls_first
-                                    ev_found      = lv_found ).
+                                                          iv_index      = lv_idx + 1
+                                                IMPORTING es_statement  = ls_first
+                                                          ev_found      = lv_found ).
       IF lv_found = abap_false OR ls_first-keyword <> 'IF'.
         CONTINUE.
       ENDIF.
@@ -68,9 +69,9 @@ CLASS zcl_skylint_check_074 IMPLEMENTATION.
 
       WHILE lv_scan_idx <= lv_max AND lv_if_depth > 0.
         zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                      iv_index      = lv_scan_idx
-                            IMPORTING es_statement  = ls_stmt
-                                      ev_found      = lv_found ).
+                                                            iv_index      = lv_scan_idx
+                                                  IMPORTING es_statement  = ls_stmt
+                                                            ev_found      = lv_found ).
         IF lv_found = abap_false.
           EXIT.
         ENDIF.
@@ -87,10 +88,10 @@ CLASS zcl_skylint_check_074 IMPLEMENTATION.
             IF lv_if_depth = 0.
               " Check if statement immediately after ENDIF is the loop closing keyword
               zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                            iv_index      = lv_scan_idx + 1
-                                  IMPORTING es_statement  = ls_after
-                                            ev_found      = lv_found ).
-              IF lv_found = abap_true AND lv_has_else = abap_false
+                                                                  iv_index      = lv_scan_idx + 1
+                                                        IMPORTING es_statement  = ls_after
+                                                                  ev_found      = lv_found ).
+              IF     lv_found = abap_true AND lv_has_else = abap_false
                  AND ( ls_after-keyword = 'ENDLOOP' OR ls_after-keyword = 'ENDDO' OR ls_after-keyword = 'ENDWHILE' ).
                 report_statement( is_statement    = ls_first
                                   iv_finding_code = c_finding_codes-guard_loop ).

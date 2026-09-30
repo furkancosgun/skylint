@@ -67,12 +67,12 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check_duplicate_elseif.
-    DATA lv_cond TYPE string.
+    DATA lv_cond      TYPE string.
     DATA lv_prev_cond TYPE string.
-    DATA lv_back_idx TYPE i.
-    DATA lv_depth TYPE i.
+    DATA lv_back_idx  TYPE i.
+    DATA lv_depth     TYPE i.
     DATA ls_back_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lv_found TYPE abap_bool.
+    DATA lv_found     TYPE abap_bool.
 
     lv_cond = get_condition_string( is_statement ).
     lv_depth = 0.
@@ -80,9 +80,9 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
 
     WHILE lv_back_idx >= 1.
       zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                    iv_index       = lv_back_idx
-                          IMPORTING es_statement   = ls_back_stmt
-                                    ev_found       = lv_found ).
+                                                          iv_index      = lv_back_idx
+                                                IMPORTING es_statement  = ls_back_stmt
+                                                          ev_found      = lv_found ).
       IF lv_found = abap_false.
         EXIT.
       ENDIF.
@@ -119,12 +119,12 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check_duplicate_when.
-    DATA lv_cond TYPE string.
+    DATA lv_cond      TYPE string.
     DATA lv_prev_cond TYPE string.
-    DATA lv_back_idx TYPE i.
-    DATA lv_depth TYPE i.
+    DATA lv_back_idx  TYPE i.
+    DATA lv_depth     TYPE i.
     DATA ls_back_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lv_found TYPE abap_bool.
+    DATA lv_found     TYPE abap_bool.
 
     lv_cond = get_condition_string( is_statement ).
     lv_depth = 0.
@@ -132,9 +132,9 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
 
     WHILE lv_back_idx >= 1.
       zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                    iv_index       = lv_back_idx
-                          IMPORTING es_statement   = ls_back_stmt
-                                    ev_found       = lv_found ).
+                                                          iv_index      = lv_back_idx
+                                                IMPORTING es_statement  = ls_back_stmt
+                                                          ev_found      = lv_found ).
       IF lv_found = abap_false.
         EXIT.
       ENDIF.
@@ -168,8 +168,8 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
   METHOD get_condition_string.
     DATA lv_tok_cnt TYPE i.
     DATA lv_tok_idx TYPE i.
-    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_found TYPE abap_bool.
+    DATA ls_token   TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found   TYPE abap_bool.
 
     rv_cond = ''.
     lv_tok_cnt = lines( is_statement-tokens ).
@@ -180,9 +180,9 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
     DO lv_tok_cnt - 1 TIMES.
       lv_tok_idx = sy-index + 1.
       zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                                iv_index     = lv_tok_idx
-                      IMPORTING es_token     = ls_token
-                                ev_found     = lv_found ).
+                                                      iv_index     = lv_tok_idx
+                                            IMPORTING es_token     = ls_token
+                                                      ev_found     = lv_found ).
       IF lv_found = abap_true.
         IF rv_cond IS INITIAL.
           rv_cond = to_upper( ls_token-lexeme ).

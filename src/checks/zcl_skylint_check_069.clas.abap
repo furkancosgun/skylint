@@ -24,10 +24,10 @@ CLASS zcl_skylint_check_069 IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Enforce test method naming convention (TEST_, SHOULD_) in AUnit'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-test_name
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Test methods should start with TEST_ or SHOULD_'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                                     ( code           = c_finding_codes-test_name
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Test methods should start with TEST_ or SHOULD_'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -42,14 +42,14 @@ CLASS zcl_skylint_check_069 IMPLEMENTATION.
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'METHODS'.
       IF zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
-                              it_expected  = lt_expected ) = 0.
+                                                    it_expected  = lt_expected ) = 0.
         CONTINUE.
       ENDIF.
 
       zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = <ls_statement>
-                                iv_index     = 2
-                      IMPORTING es_token     = ls_tok2
-                                ev_found     = lv_found2 ).
+                                                      iv_index     = 2
+                                            IMPORTING es_token     = ls_tok2
+                                                      ev_found     = lv_found2 ).
       IF lv_found2 = abap_false.
         CONTINUE.
       ENDIF.

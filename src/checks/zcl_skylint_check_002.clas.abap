@@ -17,12 +17,9 @@ CLASS zcl_skylint_check_002 DEFINITION
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'CALL_METHOD'.
 
-    DATA mv_allow_dynamic TYPE abap_bool VALUE abap_true.
-
     METHODS is_dynamic_call
       IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_dynamic) TYPE abap_bool.
-
 ENDCLASS.
 
 
@@ -34,11 +31,7 @@ CLASS zcl_skylint_check_002 IMPLEMENTATION.
                                      ( code           = c_finding_codes-call_method
                                        severity       = if_ci_atc_check=>finding_severities-warning
                                        text           = 'Avoid static CALL METHOD; use functional method call instead'
-                                       pseudo_comment = c_pseudo_comment ) )
-                                 attributes        = VALUE #(
-                                     ( name  = 'ALLOW_DYNAMIC'
-                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                                       value = abap_true ) ) ) ).
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -47,11 +40,11 @@ CLASS zcl_skylint_check_002 IMPLEMENTATION.
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'CALL'.
       IF zcl_skylint_ast_util=>match_token_sequence( is_statement = <ls_statement>
-                               it_expected  = VALUE #( ( `CALL` ) ( `METHOD` ) ) ) = abap_false.
+                                                     it_expected  = VALUE #( ( `CALL` ) ( `METHOD` ) ) ) = abap_false.
         CONTINUE.
       ENDIF.
 
-      IF mv_allow_dynamic = abap_true AND is_dynamic_call( <ls_statement> ) = abap_true.
+      IF is_dynamic_call( <ls_statement> ) = abap_true.
         CONTINUE.
       ENDIF.
 
@@ -76,7 +69,7 @@ CLASS zcl_skylint_check_002 IMPLEMENTATION.
         RETURN.
       ENDIF.
 
-      IF lv_token_idx = 3 AND ( lv_lexeme CP '(*' OR lv_lexeme CP '*->(*' OR lv_lexeme CP '*=>(*' ).
+      IF lv_token_idx = 3 AND lv_lexeme CP '(*)'.
         rv_dynamic = abap_true.
         RETURN.
       ENDIF.

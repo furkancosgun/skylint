@@ -59,8 +59,8 @@ CLASS zcl_skylint_check_019 IMPLEMENTATION.
 
   METHOD is_when_others.
     rv_is = zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                              iv_index     = 2
-                              iv_expected  = `OTHERS` ).
+                                                    iv_index     = 2
+                                                    iv_expected  = `OTHERS` ).
   ENDMETHOD.
 
   METHOD count_when_branches.
@@ -77,9 +77,9 @@ CLASS zcl_skylint_check_019 IMPLEMENTATION.
 
     WHILE lv_fwd_idx <= lv_total.
       zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                    iv_index       = lv_fwd_idx
-                          IMPORTING es_statement   = ls_fwd_stmt
-                                    ev_found       = lv_found ).
+                                                          iv_index      = lv_fwd_idx
+                                                IMPORTING es_statement  = ls_fwd_stmt
+                                                          ev_found      = lv_found ).
       IF lv_found = abap_false.
         EXIT.
       ENDIF.

@@ -68,7 +68,7 @@ CLASS zcl_skylint_check_030 IMPLEMENTATION.
     " 1. Inspect compiler semantic references (read/write database)
     LOOP AT is_statement-tokens INTO ls_tok.
       LOOP AT ls_tok-references INTO ls_ref.
-        IF ls_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_database
+        IF    ls_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_database
            OR ls_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-write_database.
           rv_res = abap_true.
           RETURN.
@@ -81,11 +81,11 @@ CLASS zcl_skylint_check_030 IMPLEMENTATION.
       WHEN 'SELECT' OR 'UPDATE'.
         rv_res = abap_true.
       WHEN 'DELETE' OR 'INSERT' OR 'MODIFY'.
-        IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
-                             iv_lexeme    = 'FROM' ) = abap_true
+        IF     zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                       iv_lexeme    = 'FROM' )     = abap_true
            AND zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                                 iv_index     = 2
-                                 iv_expected  = `TABLE` ) = abap_false.
+                                                       iv_index     = 2
+                                                       iv_expected  = `TABLE` )    = abap_false.
           rv_res = abap_true.
         ENDIF.
     ENDCASE.

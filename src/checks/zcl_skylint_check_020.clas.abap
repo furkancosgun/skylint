@@ -78,17 +78,17 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
     lv_idx = 1.
     WHILE lv_idx <= lv_total - 2.
       zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                                iv_index     = lv_idx
-                      IMPORTING es_token     = ls_t1
-                                ev_found     = lv_found1 ).
+                                                      iv_index     = lv_idx
+                                            IMPORTING es_token     = ls_t1
+                                                      ev_found     = lv_found1 ).
       zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                                iv_index     = lv_idx + 1
-                      IMPORTING es_token     = ls_t2
-                                ev_found     = lv_found2 ).
+                                                      iv_index     = lv_idx + 1
+                                            IMPORTING es_token     = ls_t2
+                                                      ev_found     = lv_found2 ).
       zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                                iv_index     = lv_idx + 2
-                      IMPORTING es_token     = ls_t3
-                                ev_found     = lv_found3 ).
+                                                      iv_index     = lv_idx + 2
+                                            IMPORTING es_token     = ls_t3
+                                                      ev_found     = lv_found3 ).
       IF lv_found1 = abap_false OR lv_found2 = abap_false OR lv_found3 = abap_false.
         EXIT.
       ENDIF.
@@ -137,7 +137,7 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
     DATA lv_op TYPE string.
 
     lv_op = to_upper( iv_str ).
-    rv_is = xsdbool( lv_op = '=' OR lv_op = '<>' OR lv_op = '<' OR lv_op = '>'
+    rv_is = xsdbool(    lv_op = '='  OR lv_op = '<>' OR lv_op = '<'  OR lv_op = '>'
                      OR lv_op = '<=' OR lv_op = '>=' OR lv_op = 'EQ' OR lv_op = 'NE'
                      OR lv_op = 'LT' OR lv_op = 'GT' OR lv_op = 'LE' OR lv_op = 'GE'
                      OR lv_op = 'CS' OR lv_op = 'CP' OR lv_op = 'NS' OR lv_op = 'NP'

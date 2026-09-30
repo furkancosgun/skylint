@@ -37,9 +37,9 @@ CLASS zcl_skylint_check_066 IMPLEMENTATION.
          WHERE    keyword = 'SELECT' OR keyword = 'UPDATE' OR keyword = 'MODIFY'
                OR keyword = 'DELETE' OR keyword = 'INSERT'.
       IF    zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
-                                 it_expected  = VALUE #( ( `USING` ) ( `CLIENT` ) ) ) > 0
+                                                       it_expected  = VALUE #( ( `USING` ) ( `CLIENT` ) ) )     > 0
          OR zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
-                                 it_expected  = VALUE #( ( `CLIENT` ) ( `SPECIFIED` ) ) ) > 0.
+                                                       it_expected  = VALUE #( ( `CLIENT` ) ( `SPECIFIED` ) ) ) > 0.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-client_spec ).
       ENDIF.

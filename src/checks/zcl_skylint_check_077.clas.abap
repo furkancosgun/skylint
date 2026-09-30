@@ -32,20 +32,20 @@ CLASS zcl_skylint_check_077 IMPLEMENTATION.
 
   METHOD check.
     DATA lv_var_name TYPE string.
-    DATA lv_uses TYPE i.
-    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_found TYPE abap_bool.
+    DATA lv_uses     TYPE i.
+    DATA ls_token    TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found    TYPE abap_bool.
     FIELD-SYMBOLS <ls_decl> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_tok>  TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    "DAHA temiz yazilabilir compiler guvenebiliriz
+    " DAHA temiz yazilabilir compiler guvenebiliriz
     LOOP AT is_procedure-statements ASSIGNING <ls_decl>
          WHERE keyword = 'DATA' OR keyword = 'FIELD-SYMBOLS'.
       zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = <ls_decl>
-                                iv_index     = 2
-                      IMPORTING es_token     = ls_token
-                                ev_found     = lv_found ).
+                                                      iv_index     = 2
+                                            IMPORTING es_token     = ls_token
+                                                      ev_found     = lv_found ).
       IF lv_found = abap_false.
         CONTINUE.
       ENDIF.

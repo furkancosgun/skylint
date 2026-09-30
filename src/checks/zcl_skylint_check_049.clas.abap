@@ -51,8 +51,8 @@ CLASS zcl_skylint_check_049 IMPLEMENTATION.
     rv_res = abap_false.
 
     IF zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                         iv_index     = 2
-                         iv_expected  = `SHORTDUMP` ) = abap_true.
+                                               iv_index     = 2
+                                               iv_expected  = `SHORTDUMP` ) = abap_true.
       rv_res = abap_true.
     ENDIF.
   ENDMETHOD.

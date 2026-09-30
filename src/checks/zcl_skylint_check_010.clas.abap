@@ -76,9 +76,9 @@ CLASS zcl_skylint_check_010 IMPLEMENTATION.
 
           IF lv_prev_idx >= 1.
             zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                                      iv_index     = lv_prev_idx
-                            IMPORTING es_token     = ls_adj_token
-                                      ev_found     = lv_found_adj ).
+                                                            iv_index     = lv_prev_idx
+                                                  IMPORTING es_token     = ls_adj_token
+                                                            ev_found     = lv_found_adj ).
             IF lv_found_adj = abap_true AND is_boolean_literal( to_upper( ls_adj_token-lexeme ) ) = abap_true.
               rv_has = abap_true.
               RETURN.
@@ -87,9 +87,9 @@ CLASS zcl_skylint_check_010 IMPLEMENTATION.
 
           IF lv_next_idx <= lines( is_statement-tokens ).
             zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                                      iv_index     = lv_next_idx
-                            IMPORTING es_token     = ls_adj_token
-                                      ev_found     = lv_found_adj ).
+                                                            iv_index     = lv_next_idx
+                                                  IMPORTING es_token     = ls_adj_token
+                                                            ev_found     = lv_found_adj ).
             IF lv_found_adj = abap_true AND is_boolean_literal( to_upper( ls_adj_token-lexeme ) ) = abap_true.
               rv_has = abap_true.
               RETURN.

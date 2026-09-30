@@ -46,17 +46,19 @@ CLASS zcl_skylint_check_070 IMPLEMENTATION.
 
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
         lv_lexeme = to_upper( <ls_token>-lexeme ).
-        IF lv_lexeme = 'FROM' OR lv_lexeme = 'WHERE' OR lv_lexeme = 'JOIN'.
-          zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = <ls_statement>
-                                    iv_index     = sy-tabix + 1
-                          IMPORTING es_token     = ls_next
-                                    ev_found     = lv_next_found ).
-          IF lv_next_found = abap_true.
-            lv_next_lex = ls_next-lexeme.
-            IF lv_next_lex CP '(*' OR lv_next_lex = '('.
-              lv_is_dynamic = abap_true.
-              EXIT.
-            ENDIF.
+        IF NOT ( lv_lexeme = 'FROM' OR lv_lexeme = 'WHERE' OR lv_lexeme = 'JOIN' ).
+          CONTINUE.
+        ENDIF.
+
+        zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = <ls_statement>
+                                                        iv_index     = sy-tabix + 1
+                                              IMPORTING es_token     = ls_next
+                                                        ev_found     = lv_next_found ).
+        IF lv_next_found = abap_true.
+          lv_next_lex = ls_next-lexeme.
+          IF lv_next_lex CP '(*' OR lv_next_lex = '('.
+            lv_is_dynamic = abap_true.
+            EXIT.
           ENDIF.
         ENDIF.
       ENDLOOP.

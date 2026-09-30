@@ -73,9 +73,9 @@ CLASS zcl_skylint_check_041 IMPLEMENTATION.
       WHEN 'COMPUTE'.
         " sy-subrc = ...
         zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                                  iv_index     = 1
-                        IMPORTING es_token     = ls_tok
-                                  ev_found     = lv_found ).
+                                                        iv_index     = 1
+                                              IMPORTING es_token     = ls_tok
+                                                        ev_found     = lv_found ).
         IF lv_found = abap_true.
           lv_lex = to_upper( ls_tok-lexeme ).
           IF lv_lex CP 'SY-*' OR lv_lex CP 'SYST-*'.
@@ -87,9 +87,9 @@ CLASS zcl_skylint_check_041 IMPLEMENTATION.
       WHEN 'CLEAR'.
         " CLEAR sy-subrc
         zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                                  iv_index     = 2
-                        IMPORTING es_token     = ls_tok
-                                  ev_found     = lv_found ).
+                                                        iv_index     = 2
+                                              IMPORTING es_token     = ls_tok
+                                                        ev_found     = lv_found ).
         IF lv_found = abap_true.
           lv_lex = to_upper( ls_tok-lexeme ).
           IF lv_lex CP 'SY-*' OR lv_lex CP 'SYST-*'.

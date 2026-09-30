@@ -162,7 +162,7 @@ CLASS lcl_quickfix IMPLEMENTATION.
     IF lo_quickfixes IS INITIAL.
       RETURN.
     ENDIF.
-    lo_context    = io_assistant_factory->create_quickfix_context( ls_context_params ).
+    lo_context = io_assistant_factory->create_quickfix_context( ls_context_params ).
     lo_quickfixes->create_quickfix( iv_quickfix_code )->replace( context = lo_context
                                                                  code    = it_new_code ).
 

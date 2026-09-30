@@ -44,7 +44,7 @@ CLASS zcl_skylint_check_063 IMPLEMENTATION.
         lv_is_raise = abap_true.
       ELSE.
         lv_is_raise = zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                        iv_lexeme    = 'THROW' ).
+                                                              iv_lexeme    = 'THROW' ).
       ENDIF.
       IF lv_is_raise = abap_false.
         CONTINUE.

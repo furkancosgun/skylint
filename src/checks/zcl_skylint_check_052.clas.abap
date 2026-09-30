@@ -42,26 +42,26 @@ CLASS zcl_skylint_check_052 IMPLEMENTATION.
                             iv_finding_code = c_finding_codes-obsolete_loop_control ).
         WHEN 'ON'.
           IF zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
-                               iv_index     = 2
-                               iv_expected  = `CHANGE` ) = abap_true.
+                                                     iv_index     = 2
+                                                     iv_expected  = `CHANGE` ) = abap_true.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_loop_control ).
           ENDIF.
         WHEN 'AT'.
-          IF zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
-                               iv_index     = 2
-                               iv_expected  = `NEW` ) = abap_true
+          IF    zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
+                                                        iv_index     = 2
+                                                        iv_expected  = `NEW` )        = abap_true
              OR zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
-                                  iv_index     = 2
-                                  iv_expected  = `END` ) = abap_true
+                                                        iv_index     = 2
+                                                        iv_expected  = `END` )        = abap_true
              OR zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
-                                  iv_index     = 2
-                                  iv_expected  = `FIRST` ) = abap_true
+                                                        iv_index     = 2
+                                                        iv_expected  = `FIRST` )      = abap_true
              OR zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
-                                  iv_index     = 2
-                                  iv_expected  = `LAST` ) = abap_true.
+                                                        iv_index     = 2
+                                                        iv_expected  = `LAST` )       = abap_true.
             report_statement( is_statement    = <ls_statement>
-                                iv_finding_code = c_finding_codes-obsolete_loop_control ).
+                              iv_finding_code = c_finding_codes-obsolete_loop_control ).
           ENDIF.
       ENDCASE.
     ENDLOOP.

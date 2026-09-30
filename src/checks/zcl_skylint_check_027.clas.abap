@@ -34,6 +34,7 @@ CLASS zcl_skylint_check_027 IMPLEMENTATION.
   METHOD check.
     DATA lo_descr TYPE REF TO cl_abap_typedescr.
     DATA lo_class TYPE REF TO cl_abap_classdescr.
+    " TODO: variable is assigned but never used (ABAP cleaner)
     DATA ls_attr  TYPE abap_attrdescr.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
@@ -41,29 +42,25 @@ CLASS zcl_skylint_check_027 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    cl_abap_typedescr=>describe_by_name(
-      EXPORTING
-        p_name         = is_procedure-id-main_unit-name
-      RECEIVING
-        p_descr_ref    = lo_descr
-      EXCEPTIONS
-        type_not_found = 1
-        OTHERS         = 2 ).
+    cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = is_procedure-id-main_unit-name
+                                         RECEIVING  p_descr_ref    = lo_descr
+                                         EXCEPTIONS type_not_found = 1
+                                                    OTHERS         = 2 ).
     IF sy-subrc <> 0 OR lo_descr IS NOT BOUND OR lo_descr->kind <> cl_abap_typedescr=>kind_class.
       RETURN.
     ENDIF.
 
     lo_class ?= lo_descr.
 
-    READ TABLE is_procedure-statements ASSIGNING <ls_statement> INDEX 1.
+    ASSIGN is_procedure-statements[ 1 ] TO <ls_statement>.
     IF sy-subrc <> 0.
       RETURN.
     ENDIF.
 
     LOOP AT lo_class->attributes INTO ls_attr
-         WHERE visibility  = cl_abap_classdescr=>public
-           AND is_read_only = abap_false
-           AND is_constant  = abap_false.
+         WHERE     visibility   = cl_abap_classdescr=>public
+               AND is_read_only = abap_false
+               AND is_constant  = abap_false.
       report_statement( is_statement    = <ls_statement>
                         iv_finding_code = c_finding_codes-public_attribute ).
     ENDLOOP.

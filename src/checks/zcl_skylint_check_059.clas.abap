@@ -36,20 +36,17 @@ CLASS zcl_skylint_check_059 IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA lo_descr TYPE REF TO cl_abap_typedescr.
     DATA lo_obj   TYPE REF TO cl_abap_objectdescr.
+    " TODO: variable is assigned but never used (ABAP cleaner)
     DATA ls_attr  TYPE abap_attrdescr.
 
     IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    cl_abap_typedescr=>describe_by_name(
-      EXPORTING
-        p_name         = is_procedure-id-main_unit-name
-      RECEIVING
-        p_descr_ref    = lo_descr
-      EXCEPTIONS
-        type_not_found = 1
-        OTHERS         = 2 ).
+    cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = is_procedure-id-main_unit-name
+                                         RECEIVING  p_descr_ref    = lo_descr
+                                         EXCEPTIONS type_not_found = 1
+                                                    OTHERS         = 2 ).
     IF sy-subrc <> 0 OR lo_descr IS NOT BOUND.
       RETURN.
     ENDIF.
@@ -60,7 +57,7 @@ CLASS zcl_skylint_check_059 IMPLEMENTATION.
 
     lo_obj ?= lo_descr.
 
-    READ TABLE is_procedure-statements ASSIGNING <ls_statement> INDEX 1.
+    ASSIGN is_procedure-statements[ 1 ] TO <ls_statement>.
     IF sy-subrc <> 0.
       RETURN.
     ENDIF.

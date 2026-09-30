@@ -52,9 +52,9 @@ CLASS zcl_skylint_check_075 IMPLEMENTATION.
     DO lv_max TIMES.
       lv_idx = sy-index.
       zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                    iv_index      = lv_idx
-                          IMPORTING es_statement  = ls_stmt
-                                    ev_found      = lv_found ).
+                                                          iv_index      = lv_idx
+                                                IMPORTING es_statement  = ls_stmt
+                                                          ev_found      = lv_found ).
       IF lv_found = abap_false.
         CONTINUE.
       ENDIF.
@@ -80,9 +80,9 @@ CLASS zcl_skylint_check_075 IMPLEMENTATION.
 
     WHILE lv_scan_idx <= lv_max AND lv_if_depth > 0.
       zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                    iv_index      = lv_scan_idx
-                          IMPORTING es_statement  = ls_stmt
-                                    ev_found      = lv_found ).
+                                                          iv_index      = lv_scan_idx
+                                                IMPORTING es_statement  = ls_stmt
+                                                          ev_found      = lv_found ).
       IF lv_found = abap_false.
         EXIT.
       ENDIF.
@@ -103,9 +103,9 @@ CLASS zcl_skylint_check_075 IMPLEMENTATION.
                                 iv_finding_code = c_finding_codes-guard_method ).
             ELSE.
               zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                            iv_index      = lv_scan_idx + 1
-                                  IMPORTING es_statement  = ls_after
-                                            ev_found      = lv_found ).
+                                                                  iv_index      = lv_scan_idx + 1
+                                                        IMPORTING es_statement  = ls_after
+                                                                  ev_found      = lv_found ).
               IF lv_found = abap_true AND lv_has_else = abap_false AND ls_after-keyword = 'ENDMETHOD'.
                 report_statement( is_statement    = ls_first
                                   iv_finding_code = c_finding_codes-guard_method ).

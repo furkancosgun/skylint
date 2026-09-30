@@ -16,25 +16,23 @@ CLASS zcl_skylint_check_072 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment_condense TYPE string VALUE 'CONDENSE_STMT'.
+    CONSTANTS c_pseudo_comment_condense  TYPE string VALUE 'CONDENSE_STMT'.
     CONSTANTS c_pseudo_comment_translate TYPE string VALUE 'TRANSLATE_STMT'.
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_072 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Detect obsolete string statements; prefer built-in functions'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-condense_stmt
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Use modern built-in string function condense( ... ) instead'
-                       pseudo_comment = c_pseudo_comment_condense )
-                     ( code           = c_finding_codes-translate_stmt
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Use modern string functions to_upper() or to_lower() instead'
-                       pseudo_comment = c_pseudo_comment_translate ) ) ) ).
+    super->constructor( VALUE #( description       = 'Detect obsolete string statements; prefer built-in functions'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     severity = if_ci_atc_check=>finding_severities-warning
+                                     ( code           = c_finding_codes-condense_stmt
+                                       text           = 'Use modern built-in string function condense( ... ) instead'
+                                       pseudo_comment = c_pseudo_comment_condense )
+                                     ( code           = c_finding_codes-translate_stmt
+                                       text           = 'Use modern string functions to_upper() or to_lower() instead'
+                                       pseudo_comment = c_pseudo_comment_translate ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
