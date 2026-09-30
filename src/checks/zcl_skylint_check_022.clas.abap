@@ -43,6 +43,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_022 IMPLEMENTATION.
   METHOD constructor.
+    "TODO gayet temiz yine de bi kontrol edelim
     super->constructor( VALUE #( description       = 'Detect unreachable code following unconditional jump statements'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(

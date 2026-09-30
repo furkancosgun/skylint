@@ -40,6 +40,7 @@ CLASS zcl_skylint_check_097 IMPLEMENTATION.
          WHERE keyword = 'METHODS' OR keyword = 'CLASS-METHODS'.
       LOOP AT <ls_stmt>-tokens ASSIGNING <ls_tok>.
         IF <ls_tok>-lexeme CP '!*'.
+          "TODO aşağıdaki hiçbir if'e gerek yok silinsin direkt raporlanabilir
           lv_name = to_upper( <ls_tok>-lexeme+1 ).
           IF     lv_name <> 'EXPORTING' AND lv_name <> 'IMPORTING'
              AND lv_name <> 'CHANGING'  AND lv_name <> 'RETURNING'

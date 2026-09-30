@@ -133,14 +133,17 @@ CLASS zcl_skylint_check_037 IMPLEMENTATION.
 
     LOOP AT is_statement-tokens INTO ls_tok.
       lv_clean_tok = to_upper( ls_tok-lexeme ).
+      "TODO bu koşul neden var?
       IF lv_clean_tok(1) = '@'.
         lv_clean_tok = lv_clean_tok+1.
       ENDIF.
 
+      "TODO cp yanlış bir yaklaşım cp olmayacak veya lv_cleantok + [] headerline ifadesi olabilir
       IF lv_clean_tok = iv_tab_name OR lv_clean_tok CP |*{ iv_tab_name }*|.
         lv_has_tab = abap_true.
       ENDIF.
 
+      "TODO lines ve line_exists compiler seviyesinde nasıl geliyor bakmak lazım lines( olabilir
       IF lv_clean_tok = 'INITIAL' OR lv_clean_tok = 'LINES' OR lv_clean_tok = 'LINE_EXISTS'.
         lv_has_check = abap_true.
       ENDIF.

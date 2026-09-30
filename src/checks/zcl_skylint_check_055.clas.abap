@@ -49,6 +49,7 @@ CLASS zcl_skylint_check_055 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_unorder_select_up_to.
+    "TODO match_token_sequence kullan index hesabı istemiyorum UP TO match ettiyse ORDER BY da match etmiosa reportla
     DATA lv_idx TYPE i.
     DATA lv_count TYPE i.
     DATA lv_lex TYPE string.

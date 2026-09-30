@@ -26,6 +26,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_041 IMPLEMENTATION.
   METHOD constructor.
+    "TODO bu kural compiler seviyesinde çalışmalı COMPUTE keywordu atamalarda çalışır
     super->constructor( VALUE #( description       = 'skylint: Detect Identical Self Assignments'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(

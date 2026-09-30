@@ -22,6 +22,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_068 IMPLEMENTATION.
   METHOD constructor.
+    "TODO rtti + compiler güvenelim
     super->constructor(
         VALUE #( description       = 'Avoid static-only classes; prefer instantiable interface-based design'
                  remote_enablement = abap_true

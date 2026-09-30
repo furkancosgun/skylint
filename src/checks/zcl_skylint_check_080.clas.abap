@@ -21,6 +21,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_080 IMPLEMENTATION.
   METHOD constructor.
+    "TODO bu kural silinsin
     super->constructor(
         VALUE #( description       = 'Avoid hardcoded user name comparisons; enforce authorization checks'
                  remote_enablement = abap_true

@@ -22,6 +22,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_063 IMPLEMENTATION.
   METHOD constructor.
+    "TODO bu kural silinsin
     super->constructor(
         VALUE #( description       = 'Prefer COND / SWITCH expressions over multi-branch variable assignment'
                  remote_enablement = abap_true

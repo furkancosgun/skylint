@@ -48,10 +48,13 @@ CLASS zcl_skylint_check_003 IMPLEMENTATION.
     get_attribute( EXPORTING iv_name  = 'ALLOW_DYNAMIC'
                    IMPORTING ev_value = lv_allow_dyn ).
 
+    "TODO: SONUÇ OLMAMASI DA BIR SONUÇTUR allow_dynamic false ise boştur bu doğru değil gibi if gereksiz
     IF lv_allow_dyn IS INITIAL.
       lv_allow_dyn = mv_allow_dynamic.
     ENDIF.
 
+    "TODO: COMPILER seviyesinde bur bir fonksion çağrısı mı diye bakalım daha basit match_token_sequence gayey iyi
+    "allow dynamic daha düzgün yazılabilir
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'CALL'.
       IF match_token_sequence( is_statement = <ls_statement>

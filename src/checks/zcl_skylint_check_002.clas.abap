@@ -22,6 +22,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_002 IMPLEMENTATION.
   METHOD constructor.
+    "TODO [KIND knd] [OCCURS n] varsa prefer etmemek lazım ama bilemiyorum çok önemli değil
     super->constructor( VALUE #( description       = 'Prefer lines( ) built-in function over DESCRIBE TABLE ... LINES'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(

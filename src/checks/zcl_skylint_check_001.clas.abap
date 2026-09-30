@@ -22,6 +22,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_001 IMPLEMENTATION.
   METHOD constructor.
+    "TODO : obsolete olarak birleştir + TEST-INJECT ekle
     super->constructor(
         VALUE #( description       = 'Usage of TEST-SEAM'
                  remote_enablement = abap_true

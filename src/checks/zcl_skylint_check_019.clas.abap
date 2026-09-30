@@ -36,6 +36,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_019 IMPLEMENTATION.
   METHOD constructor.
+    "TODO genel olarak temiz duruyor ama daha temiz yazılabilir kontorl edelim
     super->constructor( VALUE #( description       = 'Detect identical branch conditions in IF/ELSEIF and CASE/WHEN'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(

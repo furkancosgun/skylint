@@ -33,6 +33,7 @@ CLASS zcl_skylint_check_079 IMPLEMENTATION.
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    "TODO FORM eklemek de doğru olmazmı?
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'PERFORM'.
       report_statement( is_statement    = <ls_statement>

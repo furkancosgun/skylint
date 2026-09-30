@@ -21,6 +21,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_077 IMPLEMENTATION.
   METHOD constructor.
+    "TODO bu kural şuan sadece raise exception type durumunda çalışır compiler ekleyelim
     super->constructor(
         VALUE #( description       = 'Avoid raising SAP internal system exceptions (cx_sy_*)'
                  remote_enablement = abap_true

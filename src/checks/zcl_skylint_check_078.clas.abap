@@ -72,8 +72,9 @@ CLASS zcl_skylint_check_078 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD sets_sy_subrc.
-    rv_res = abap_false.
+    rv_res = abap_false.  
 
+    "TODO listeye ASSIGN de ekleyelim
     CASE is_statement-keyword.
       WHEN 'AUTHORITY-CHECK' OR 'FIND' OR 'SEARCH'.
         rv_res = abap_true.
@@ -98,6 +99,7 @@ CLASS zcl_skylint_check_078 IMPLEMENTATION.
     DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_lex  TYPE string.
 
+    "TODO assigned neden var? compiler güvenelim
     rv_res = abap_false.
     LOOP AT is_statement-tokens INTO ls_tok.
       lv_lex = to_upper( ls_tok-lexeme ).

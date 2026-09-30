@@ -21,6 +21,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_083 IMPLEMENTATION.
   METHOD constructor.
+    "TODO bu kural silinsin
     super->constructor( VALUE #( description       = 'Prefer FILTER #( ) table operator over manual filter copy loops'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(

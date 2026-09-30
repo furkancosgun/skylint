@@ -22,6 +22,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_045 IMPLEMENTATION.
   METHOD constructor.
+    "TODO avoid veya obsolete ile birleştirilsin FIELD-GROUPS da eklensin listeye
     super->constructor( VALUE #( description       = 'Avoid local TABLES declaration'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(

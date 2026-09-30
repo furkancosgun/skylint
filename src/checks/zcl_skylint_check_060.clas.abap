@@ -22,6 +22,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_060 IMPLEMENTATION.
   METHOD constructor.
+    "TODO sadece numerik mı? '1' boyle olunca? compiler güvenelim yeniden yazılsın bu sınıf 
     super->constructor( VALUE #( description       = 'Avoid magic numbers in code; use named constants'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(

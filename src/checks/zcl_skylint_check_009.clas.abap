@@ -48,6 +48,7 @@ CLASS zcl_skylint_check_009 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
+    "TODO: okunması zor bir kod daha basit bir pattern match yazılabilir.
     DATA lv_allow_struct TYPE abap_bool.
     DATA lv_total TYPE i.
     DATA lv_idx TYPE i.

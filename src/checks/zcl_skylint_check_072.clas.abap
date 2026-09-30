@@ -24,6 +24,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_072 IMPLEMENTATION.
   METHOD constructor.
+    "TODO bu kural compiler + rtti ile yeniden yazılsın
     super->constructor(
         VALUE #( description       = 'Limit number of member attributes in a class (God Class smell)'
                  remote_enablement = abap_true

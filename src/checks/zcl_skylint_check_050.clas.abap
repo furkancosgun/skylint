@@ -26,6 +26,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_050 IMPLEMENTATION.
   METHOD constructor.
+    "TODO compiler + rtti ile yeniden yazalım
     super->constructor(
         VALUE #( description       = 'skylint: Prefer RETURNING over single EXPORTING'
                  remote_enablement = abap_true

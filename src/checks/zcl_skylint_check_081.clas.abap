@@ -39,6 +39,7 @@ CLASS zcl_skylint_check_081 IMPLEMENTATION.
          WHERE    keyword = 'SELECT' OR keyword = 'UPDATE' OR keyword = 'MODIFY'
                OR keyword = 'DELETE' OR keyword = 'INSERT'.
       CLEAR lv_prev_tok.
+      "TODO match_token_sequence bu yapı kullanılsın
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
         IF    ( lv_prev_tok = 'USING'  AND to_upper( <ls_token>-lexeme ) = 'CLIENT' )
            OR ( lv_prev_tok = 'CLIENT' AND to_upper( <ls_token>-lexeme ) = 'SPECIFIED' ).

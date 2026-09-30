@@ -21,6 +21,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_087 IMPLEMENTATION.
   METHOD constructor.
+    "TODO bu kural compiler üzerinden yeniden yazılsın
     super->constructor(
         VALUE #( description       = 'Avoid dynamic SQL table or clause names without sanitization'
                  remote_enablement = abap_true

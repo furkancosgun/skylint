@@ -43,6 +43,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_030 IMPLEMENTATION.
   METHOD constructor.
+    "TODO bu kural mutlaka compiler + rtti seviyesine method toplama olmamamlı 
     super->constructor( VALUE #( description       = 'Avoid calling static methods via instance arrow (->)'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(

@@ -48,6 +48,7 @@ CLASS zcl_skylint_check_026 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_static_create_object.
+    "TODO burası compiler seviyesinde halledilir gibi duruyor kontrol edelim çok kötü yazılmış
     DATA lv_total     TYPE i.
     DATA lv_idx       TYPE i.
     DATA lv_next_idx  TYPE i.

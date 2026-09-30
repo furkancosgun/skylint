@@ -39,6 +39,7 @@ CLASS zcl_skylint_check_012 IMPLEMENTATION.
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    "TODO:BINARY SEARCH varsa report edilmemeli çünkü line_exists binary search ile çalışmıyor.
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'READ'.
       IF has_transporting_no_fields( <ls_statement> ) = abap_true.

@@ -30,6 +30,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_043 IMPLEMENTATION.
   METHOD constructor.
+    "TODO bu kuralda compiler seviyesine çıkarılsın + rtti ile desteklensin manuel parametre toplanmasın
     super->constructor( VALUE #( description       = 'Omit parameter name in single parameter method call'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(

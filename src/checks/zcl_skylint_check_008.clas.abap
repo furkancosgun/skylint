@@ -39,6 +39,8 @@ CLASS zcl_skylint_check_008 IMPLEMENTATION.
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    "TODO: bu yapı genelde COMPUTE keywordu olarak yorumlanıyor ATC tarafında
+    "manuel bakmak gereksiz
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF has_assignment_chain( <ls_statement> ) = abap_true.
         report_statement( is_statement    = <ls_statement>

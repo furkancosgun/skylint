@@ -51,6 +51,7 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+      "TODO bunu direkt compiler seviyesinde halledelim
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF has_yoda_condition( <ls_statement> ) = abap_true.
         report_statement( is_statement    = <ls_statement>
@@ -145,6 +146,7 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
+    "TODO abapta +- ifadeleri mutlaka tırnak ile kullanılır gereksiz bir if
     IF ( lv_first = '+' OR lv_first = '-' ) AND lv_len > 1.
       lv_rest = substring( val = iv_str
                            off = 1 ).
@@ -158,6 +160,7 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
   METHOD is_comparison_operator.
     DATA lv_op TYPE string.
 
+    "TODO XSDBOOL kullanılabilir burda case yerine ortak bir methoda çıkarmak daha temiz olabilir başka yerlerdede varsa
     lv_op = to_upper( iv_str ).
     CASE lv_op.
       WHEN '=' OR '<>' OR '<' OR '>' OR '<=' OR '>='

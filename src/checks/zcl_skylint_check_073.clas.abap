@@ -22,6 +22,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_073 IMPLEMENTATION.
   METHOD constructor.
+    "TODO bu kural compiler + rtti ile yeniden yazılsın
     super->constructor(
         VALUE #( description       = 'Avoid mutable DATA declarations in interfaces; allow only CONSTANTS'
                  remote_enablement = abap_true

@@ -26,6 +26,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_049 IMPLEMENTATION.
   METHOD constructor.
+    "TODO compiler ile desteklensin değer atım durumlarını
     super->constructor(
         VALUE #( description       = 'skylint: Avoid sy-* System Variable Modification'
                  remote_enablement = abap_true

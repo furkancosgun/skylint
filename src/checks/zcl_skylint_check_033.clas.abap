@@ -31,6 +31,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_033 IMPLEMENTATION.
   METHOD constructor.
+    "TODO bu kural kaldırılsın
     super->constructor(
         VALUE #( description       = 'Lost PREVIOUS exception parameter in CATCH block'
                  remote_enablement = abap_true

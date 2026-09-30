@@ -24,6 +24,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_071 IMPLEMENTATION.
   METHOD constructor.
+    "TODO bu kural compiler + rtti ile yeniden yazılsın
     super->constructor(
         VALUE #( description       = 'Avoid deep class inheritance hierarchies (> 3 levels)'
                  remote_enablement = abap_true

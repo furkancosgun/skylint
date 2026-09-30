@@ -34,6 +34,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_040 IMPLEMENTATION.
   METHOD constructor.
+    "TODO bu kural kaldırılsın
     super->constructor(
         VALUE #( description       = 'skylint: Avoid Superfluous VALUE Operator'
                  remote_enablement = abap_true

@@ -32,6 +32,7 @@ CLASS zcl_skylint_check_091 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
+    "TODO daha temiz yazılsın
     DATA lv_idx TYPE i.
     DATA lv_count TYPE i.
     DATA lv_prev_idx TYPE i.

@@ -49,6 +49,7 @@ CLASS zcl_skylint_check_027 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_raise_exception_type.
+    "TODO raise exception type dinamik olmaaz mutlaka tip gerektirir syntax error alır dinmaiklikte
     DATA lv_total      TYPE i.
     DATA lv_idx        TYPE i.
     DATA lv_next_idx   TYPE i.

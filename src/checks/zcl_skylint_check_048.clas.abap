@@ -50,10 +50,6 @@ CLASS zcl_skylint_check_048 IMPLEMENTATION.
     DATA lv_depth TYPE i.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
-      RETURN.
-    ENDIF.
-
     get_attribute( EXPORTING iv_name  = 'MAX_DEPTH'
                    IMPORTING ev_value = lv_max ).
     IF lv_max <= 0.

@@ -26,6 +26,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_015 IMPLEMENTATION.
   METHOD constructor.
+    "TODO: bu tam bir saçmalık manuel arama yerine rtti kullanalım veya bu check silinsin
     super->constructor(
         VALUE #( description       = 'Avoid interfaces containing only constants'
                  remote_enablement = abap_true

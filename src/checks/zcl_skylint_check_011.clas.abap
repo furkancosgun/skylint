@@ -43,6 +43,8 @@ CLASS zcl_skylint_check_011 IMPLEMENTATION.
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    "TODO: okunması zor bir kod daha basit bir pattern match yazılabilir. 
+    "if lv_result. "boyle bir kod geçerli değil sadece function call varsa o zaman geçerli olur 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'IF' OR 'ELSEIF' OR 'CHECK' OR 'WHILE'.

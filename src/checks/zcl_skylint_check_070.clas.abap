@@ -22,6 +22,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_070 IMPLEMENTATION.
   METHOD constructor.
+    "TODO bu kural compiler + rtti ile yeniden yazılsın
     super->constructor(
         VALUE #( description       = 'Enforce predicate naming (IS_, HAS_, CAN_) on boolean methods'
                  remote_enablement = abap_true

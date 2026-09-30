@@ -22,6 +22,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_066 IMPLEMENTATION.
   METHOD constructor.
+    "TODO bu kural silinecek
     super->constructor( VALUE #( description       = 'Prefer REDUCE expression over manual loop aggregation'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(

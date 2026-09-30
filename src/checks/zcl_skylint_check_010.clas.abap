@@ -48,10 +48,12 @@ CLASS zcl_skylint_check_010 IMPLEMENTATION.
     get_attribute( EXPORTING iv_name  = 'ALLOW_IN_BYTE_MODE'
                    IMPORTING ev_value = lv_allow_byte ).
 
+    "TODO: gereksiz if 
     IF lv_allow_byte IS INITIAL.
       lv_allow_byte = mv_allow_in_byte_mode.
     ENDIF.
 
+    "TODO: byte mode ne kadar gerekli tartışılır string template yeterli duruyor
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'CONCATENATE'.
       IF lv_allow_byte = abap_true AND is_byte_mode( <ls_statement> ) = abap_true.

@@ -40,6 +40,7 @@ CLASS zcl_skylint_check_053 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
+    "TODO match_token_sequence kullan keyword CALL gelecek AUTHORITY-CHECK gelmeyecek
     DATA lv_auth_checked TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 

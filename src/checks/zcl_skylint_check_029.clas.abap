@@ -26,6 +26,9 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_029 IMPLEMENTATION.
   METHOD constructor.
+    "TODO omit exporting ile birleştirelim bunları nerdeyse aynı
+    "TODO functional call ise keyword +CALL_METHOD gelir bu sayede çok daha kolay kontrol ederiz
+    "TODO mutlaka compiler seviyesinde çekelim
     super->constructor( VALUE #( description       = 'Omit RECEIVING in method calls'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(

@@ -40,8 +40,9 @@ CLASS zcl_skylint_check_065 IMPLEMENTATION.
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA lv_max_stmts  TYPE i.
-    DATA lv_stmt_count TYPE i.
+    DATA lv_stmt_count TYPE i.  
 
+    "TODO constructor olmalı sadece bu if te
     IF     is_procedure-id-name NP '*CONSTRUCTOR*'
        AND is_procedure-id-name NP '*WITHOUT_PSEUDO_COMMENTS*'
        AND is_procedure-id-name NP '*WITH_PSEUDO_COMMENTS*'.
@@ -57,6 +58,7 @@ CLASS zcl_skylint_check_065 IMPLEMENTATION.
 
     lv_stmt_count = 0.
 
+      "TODO bunlar olmayacak sadece statement saymak yeterli METHOD ve ENDMETHOD hariç
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       " Disallow heavy keywords directly
       IF    <ls_statement>-keyword = 'LOOP'          OR <ls_statement>-keyword = 'SELECT'

@@ -39,6 +39,7 @@ CLASS zcl_skylint_check_094 IMPLEMENTATION.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
 
+    "DAHA temiz yazılabilir compiler güvenebiliriz 
     LOOP AT is_procedure-statements ASSIGNING <ls_decl>
          WHERE keyword = 'DATA' OR keyword = 'FIELD-SYMBOLS'.
       get_token_safe( EXPORTING is_statement = <ls_decl>

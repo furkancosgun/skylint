@@ -26,6 +26,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_017 IMPLEMENTATION.
   METHOD constructor.
+    "TODO 016 ile benzer 
     super->constructor(
         VALUE #( description       = 'Detect empty CATCH blocks swallowing exceptions'
                  remote_enablement = abap_true

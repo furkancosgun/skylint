@@ -35,6 +35,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_018 IMPLEMENTATION.
   METHOD constructor.
+    "TODO bu kural silelim saçmalık 
     super->constructor(
         VALUE #( description       = 'Validate unit test assertions (avoid identical act and exp parameters)'
                  remote_enablement = abap_true

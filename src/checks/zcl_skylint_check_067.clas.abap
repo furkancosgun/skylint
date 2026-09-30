@@ -22,6 +22,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_067 IMPLEMENTATION.
   METHOD constructor.
+    "TODO bu kural silinecek
     super->constructor(
         VALUE #( description       = 'Avoid generic FIELD-SYMBOLS declarations (ANY/DATA/CLIKE/TABLE)'
                  remote_enablement = abap_true

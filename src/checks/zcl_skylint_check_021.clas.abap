@@ -31,6 +31,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_021 IMPLEMENTATION.
   METHOD constructor.
+    "TODO bu kuralı sil abapta zaten others başta olamaz else ifadesi gibidr SYNTAX ERROR
     super->constructor( VALUE #( description       = 'Enforce WHEN OTHERS to be the last branch in CASE construct'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(

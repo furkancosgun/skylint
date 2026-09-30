@@ -36,6 +36,7 @@ CLASS zcl_skylint_check_088 IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
+    "TODO rtti üzerinden çözebiliriz diye düşünüyorum kontorl edelim
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'METHODS'.
       lv_has_final = abap_false.

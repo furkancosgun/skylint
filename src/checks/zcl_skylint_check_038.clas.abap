@@ -67,8 +67,7 @@ CLASS zcl_skylint_check_038 IMPLEMENTATION.
 
     IF matches_token_at( is_statement      = is_statement
                          iv_index          = 2
-                         iv_expected       = `SINGLE`
-                         iv_case_sensitive = abap_true ) = abap_true
+                         iv_expected       = `SINGLE` ) = abap_true
        AND matches_token_at( is_statement = is_statement
                              iv_index     = 3
                              iv_expected  = `*` ) = abap_true.

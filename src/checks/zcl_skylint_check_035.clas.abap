@@ -47,6 +47,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_035 IMPLEMENTATION.
   METHOD constructor.
+    "TODO bu kural kaldırılsın
     super->constructor(
         VALUE #( description       = 'Avoid direct database access in unit tests'
                  remote_enablement = abap_true

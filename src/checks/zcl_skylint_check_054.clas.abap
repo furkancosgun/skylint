@@ -30,6 +30,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_054 IMPLEMENTATION.
   METHOD constructor.
+    "TODO bu kural silinsin 
     super->constructor( VALUE #( description       = 'skylint: SQL Escape Host Variables (@)'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(

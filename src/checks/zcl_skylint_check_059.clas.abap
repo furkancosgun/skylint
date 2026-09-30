@@ -22,6 +22,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_059 IMPLEMENTATION.
   METHOD constructor.
+    "TODO bu kuralı sil
     super->constructor(
         VALUE #( description       = 'Prefer backtick string literals over single quotes for STRING'
                  remote_enablement = abap_true

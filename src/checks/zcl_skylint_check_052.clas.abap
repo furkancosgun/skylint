@@ -54,6 +54,8 @@ CLASS zcl_skylint_check_052 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
+    "TODO hypnated keywordler ayrı ayrı gelmez SYNTAX-CHECK gibi
+    "TODO matches token at yerine match_token_sequence kullan olabildiğince peş peşe gelen keywordlerde
     IF ( matches_token_at( is_statement = is_statement
                            iv_index = 1
                            iv_expected = `SYNTAX` ) = abap_true

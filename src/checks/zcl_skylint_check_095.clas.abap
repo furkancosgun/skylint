@@ -26,6 +26,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_095 IMPLEMENTATION.
   METHOD constructor.
+    "TODO bu kural silinsin
     super->constructor(
         VALUE #( description       = 'Detect needless CLEAR on newly declared variable or before exit'
                  remote_enablement = abap_true

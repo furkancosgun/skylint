@@ -22,6 +22,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_013 IMPLEMENTATION.
   METHOD constructor.
+    "TODO:013 VE 014 checkleri birbirine benziyor. exit ve return keywordleri için ortak bir check yazılabilir.
     super->constructor( VALUE #( description       = 'Prefer RETURN over EXIT outside loop constructs'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(

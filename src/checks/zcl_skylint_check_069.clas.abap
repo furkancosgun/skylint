@@ -22,6 +22,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_069 IMPLEMENTATION.
   METHOD constructor.
+    "TODO bu kural silinsin 
     super->constructor(
         VALUE #( description       = 'Avoid unmodified CHANGING parameters; prefer IMPORTING'
                  remote_enablement = abap_true

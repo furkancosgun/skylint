@@ -54,6 +54,7 @@ CLASS zcl_skylint_check_007 IMPLEMENTATION.
 
     lt_expected = VALUE #( ( `EXPORTING` ) ).
 
+    "TODO: exempt yapısına gerek yok bu senaryoda compiler seviyesinde method çağrısı olduğundan emin olabiliriz.
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF is_exempt_statement( <ls_statement>-keyword ) = abap_true.
         CONTINUE.

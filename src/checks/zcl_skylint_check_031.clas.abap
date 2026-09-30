@@ -26,6 +26,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_031 IMPLEMENTATION.
   METHOD constructor.
+    "TODO rtti seviyesinde kontrol etmek çok daha kolay gibi düşünelim
     super->constructor(
         VALUE #( description       = 'Avoid mutable public attributes in classes'
                  remote_enablement = abap_true

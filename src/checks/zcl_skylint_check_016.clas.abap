@@ -27,6 +27,9 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_016 IMPLEMENTATION.
   METHOD constructor.
+    "TODO: genel olarak başarılı daha anlaşılır ve compact yazılabilir
+    "017 ile benziyor kontrol edelim ayrıca if case loop try gibi yapıları parametrik yapalım
+    "ayrı ayrı kullanıcı atc den seçim yapabilsin
     super->constructor(
         VALUE #( description       = 'Detect empty control blocks (IF, CASE, LOOP, TRY, etc.)'
                  remote_enablement = abap_true

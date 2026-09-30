@@ -21,6 +21,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_086 IMPLEMENTATION.
   METHOD constructor.
+    "TODO bu kural silinsin
     super->constructor(
         VALUE #( description       = 'Avoid magic offset/length substring expressions (var+0(2))'
                  remote_enablement = abap_true

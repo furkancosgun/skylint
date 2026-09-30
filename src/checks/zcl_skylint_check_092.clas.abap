@@ -32,6 +32,7 @@ CLASS zcl_skylint_check_092 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
+    "TODO daha temiz yazılsın
     DATA lv_count TYPE i.
     DATA lv_idx TYPE i.
     DATA ls_last TYPE if_ci_atc_source_code_provider=>ty_statement.

@@ -43,6 +43,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_036 IMPLEMENTATION.
   METHOD constructor.
+    "TODO sadece compiler referans kontorl edilsin manuel kontrol edilme olmasın
     super->constructor(
         VALUE #( description       = 'Avoid database access inside loop iterations'
                  remote_enablement = abap_true

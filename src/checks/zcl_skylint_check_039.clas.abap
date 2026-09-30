@@ -39,6 +39,9 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_039 IMPLEMENTATION.
   METHOD constructor.
+    "TODO bu kural mutlaka compiler seviyesinde olmalı manuel data(* olmamalı 
+    "TODO scope içi data tanımlamlarda verebilirz
+    "TODO ayrıca daha temiz yazılmalı
     super->constructor(
         VALUE #( description       = 'Scope of variable (avoid variable leaking outside control blocks)'
                  remote_enablement = abap_true

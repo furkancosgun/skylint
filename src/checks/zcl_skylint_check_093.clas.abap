@@ -33,7 +33,8 @@ CLASS zcl_skylint_check_093 IMPLEMENTATION.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-
+    
+    "TODO bu tür prefer ya da obsolete olan yapıları yani single keyword bakıp raporladığımız şeyleri tek bir sınıfa toplayalım
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'ASSERT'.
       report_statement( is_statement    = <ls_statement>
