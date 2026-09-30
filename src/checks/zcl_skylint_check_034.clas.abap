@@ -61,15 +61,15 @@ CLASS zcl_skylint_check_034 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    get_token_safe( EXPORTING is_statement = is_statement
+    zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
                               iv_index     = 1
                     IMPORTING es_token     = ls_tok1
                               ev_found     = lv_found1 ).
-    get_token_safe( EXPORTING is_statement = is_statement
+    zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
                               iv_index     = 2
                     IMPORTING es_token     = ls_tok2
                               ev_found     = lv_found2 ).
-    get_token_safe( EXPORTING is_statement = is_statement
+    zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
                               iv_index     = 3
                     IMPORTING es_token     = ls_tok3
                               ev_found     = lv_found3 ).

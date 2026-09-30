@@ -50,7 +50,7 @@ CLASS zcl_skylint_check_049 IMPLEMENTATION.
   METHOD is_raise_shortdump.
     rv_res = abap_false.
 
-    IF matches_token_at( is_statement = is_statement
+    IF zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
                          iv_index     = 2
                          iv_expected  = `SHORTDUMP` ) = abap_true.
       rv_res = abap_true.

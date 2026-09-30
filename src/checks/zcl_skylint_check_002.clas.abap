@@ -38,7 +38,7 @@ CLASS zcl_skylint_check_002 IMPLEMENTATION.
                                  attributes        = VALUE #(
                                      ( name  = 'ALLOW_DYNAMIC'
                                        kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                                       value = REF #( mv_allow_dynamic ) ) ) ) ).
+                                       value = abap_true ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -46,7 +46,7 @@ CLASS zcl_skylint_check_002 IMPLEMENTATION.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'CALL'.
-      IF match_token_sequence( is_statement = <ls_statement>
+      IF zcl_skylint_ast_util=>match_token_sequence( is_statement = <ls_statement>
                                it_expected  = VALUE #( ( `CALL` ) ( `METHOD` ) ) ) = abap_false.
         CONTINUE.
       ENDIF.

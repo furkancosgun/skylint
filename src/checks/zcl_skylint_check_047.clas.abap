@@ -60,7 +60,7 @@ CLASS zcl_skylint_check_047 IMPLEMENTATION.
     lv_cc = calculate_complexity( is_procedure ).
 
     IF lv_cc > lv_max.
-      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+      zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
                                      iv_index      = 1
                           IMPORTING es_statement  = ls_first_stmt
                                     ev_found      = lv_found ).

@@ -58,17 +58,17 @@ CLASS zcl_skylint_check_032 IMPLEMENTATION.
   METHOD is_select_star.
     rv_res = abap_false.
 
-    IF matches_token_at( is_statement = is_statement
+    IF zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
                          iv_index     = 2
                          iv_expected  = `*` ) = abap_true.
       rv_res = abap_true.
       RETURN.
     ENDIF.
 
-    IF matches_token_at( is_statement      = is_statement
+    IF zcl_skylint_ast_util=>matches_token_at( is_statement      = is_statement
                          iv_index          = 2
                          iv_expected       = `SINGLE` ) = abap_true
-       AND matches_token_at( is_statement = is_statement
+       AND zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
                              iv_index     = 3
                              iv_expected  = `*` ) = abap_true.
       rv_res = abap_true.

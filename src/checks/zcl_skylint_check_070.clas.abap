@@ -47,7 +47,7 @@ CLASS zcl_skylint_check_070 IMPLEMENTATION.
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
         lv_lexeme = to_upper( <ls_token>-lexeme ).
         IF lv_lexeme = 'FROM' OR lv_lexeme = 'WHERE' OR lv_lexeme = 'JOIN'.
-          get_token_safe( EXPORTING is_statement = <ls_statement>
+          zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = <ls_statement>
                                     iv_index     = sy-tabix + 1
                           IMPORTING es_token     = ls_next
                                     ev_found     = lv_next_found ).

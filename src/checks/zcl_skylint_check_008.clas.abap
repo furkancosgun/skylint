@@ -60,7 +60,7 @@ CLASS zcl_skylint_check_008 IMPLEMENTATION.
       CASE <ls_statement>-keyword.
         WHEN 'DATA' OR 'TYPES' OR 'CONSTANTS' OR 'STATICS' OR 'FIELD-SYMBOLS' OR 'CLASS-DATA'.
           lv_next_idx = lv_idx + 1.
-          get_statement_safe( EXPORTING it_statements = is_procedure-statements
+          zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
                                         iv_index      = lv_next_idx
                               IMPORTING es_statement  = ls_next_stmt
                                         ev_found      = lv_found_next ).
@@ -98,11 +98,11 @@ CLASS zcl_skylint_check_008 IMPLEMENTATION.
 
     rv_report = abap_false.
 
-    get_token_safe( EXPORTING is_statement = is_next
+    zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_next
                               iv_index     = 1
                     IMPORTING es_token     = ls_next_token
                               ev_found     = lv_found_next ).
-    get_token_safe( EXPORTING is_statement = is_statement
+    zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
                               iv_index     = 1
                     IMPORTING es_token     = ls_cur_token
                               ev_found     = lv_found_cur ).

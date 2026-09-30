@@ -81,9 +81,9 @@ CLASS zcl_skylint_check_030 IMPLEMENTATION.
       WHEN 'SELECT' OR 'UPDATE'.
         rv_res = abap_true.
       WHEN 'DELETE' OR 'INSERT' OR 'MODIFY'.
-        IF has_token_lexeme( is_statement = is_statement
+        IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
                              iv_lexeme    = 'FROM' ) = abap_true
-           AND matches_token_at( is_statement = is_statement
+           AND zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
                                  iv_index     = 2
                                  iv_expected  = `TABLE` ) = abap_false.
           rv_res = abap_true.

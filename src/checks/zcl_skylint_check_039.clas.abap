@@ -69,7 +69,7 @@ CLASS zcl_skylint_check_039 IMPLEMENTATION.
     IF lv_count <= lv_max.
       RETURN.
     ENDIF.
-    get_statement_safe( EXPORTING it_statements = is_procedure-statements
+    zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
                                   iv_index      = 1
                         IMPORTING es_statement  = ls_first
                                   ev_found      = lv_found ).

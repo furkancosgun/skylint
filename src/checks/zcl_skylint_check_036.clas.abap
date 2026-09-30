@@ -107,7 +107,7 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    get_token_safe( EXPORTING is_statement = is_statement
+    zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
                               iv_index     = iv_tok_idx
                     IMPORTING es_token     = ls_tok
                               ev_found     = lv_tok_found ).
@@ -118,7 +118,7 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
     IF ls_tok-lexeme CP '*('.
       lv_param_idx = iv_tok_idx + 1.
     ELSE.
-      get_token_safe( EXPORTING is_statement = is_statement
+      zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
                                 iv_index     = iv_tok_idx + 1
                       IMPORTING es_token     = ls_tok
                                 ev_found     = lv_tok_found ).
@@ -129,7 +129,7 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
       ENDIF.
     ENDIF.
 
-    get_token_safe( EXPORTING is_statement = is_statement
+    zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
                               iv_index     = lv_param_idx
                     IMPORTING es_token     = ls_tok
                               ev_found     = lv_tok_found ).
@@ -140,7 +140,7 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
     CASE to_upper( ls_tok-lexeme ).
       WHEN lv_param_name.
         lv_next_idx = lv_param_idx + 1.
-        get_token_safe( EXPORTING is_statement = is_statement
+        zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
                                   iv_index     = lv_next_idx
                         IMPORTING es_token     = ls_next_tok
                                   ev_found     = lv_tok_found ).

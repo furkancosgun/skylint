@@ -54,12 +54,12 @@ CLASS zcl_skylint_check_011 IMPLEMENTATION.
     rv_has = abap_false.
 
     " line_exists does not support binary search; exempt READ TABLE with BINARY SEARCH
-    IF find_token_sequence( is_statement = is_statement
+    IF zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
                             it_expected  = VALUE #( ( `BINARY` ) ( `SEARCH` ) ) ) > 0.
       RETURN.
     ENDIF.
 
-    lv_seq_index = find_token_sequence( is_statement = is_statement
+    lv_seq_index = zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
                                         it_expected  = VALUE #( ( `TRANSPORTING` ) ( `NO` ) ( `FIELDS` ) ) ).
     IF lv_seq_index > 0.
       rv_has = abap_true.

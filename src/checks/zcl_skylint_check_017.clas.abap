@@ -72,7 +72,7 @@ CLASS zcl_skylint_check_017 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    get_statement_safe( EXPORTING it_statements = is_procedure-statements
+    zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
                                   iv_index       = lv_next_idx
                         IMPORTING es_statement   = ls_next_stmt
                                   ev_found       = lv_found ).
@@ -85,7 +85,7 @@ CLASS zcl_skylint_check_017 IMPLEMENTATION.
     lv_fwd_idx = lv_next_idx + 1.
 
     WHILE lv_fwd_idx <= lv_total.
-      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+      zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
                                     iv_index       = lv_fwd_idx
                           IMPORTING es_statement   = ls_fwd_stmt
                                     ev_found       = lv_found_fwd ).
@@ -104,7 +104,7 @@ CLASS zcl_skylint_check_017 IMPLEMENTATION.
             " Check if directly following statement is outer ENDIF
             lv_check_idx = lv_fwd_idx + 1.
             IF lv_check_idx <= lv_total.
-              get_statement_safe( EXPORTING it_statements = is_procedure-statements
+              zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
                                             iv_index       = lv_check_idx
                                   IMPORTING es_statement   = ls_outer_end
                                             ev_found       = lv_found_outer ).

@@ -79,7 +79,7 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
     lv_back_idx = iv_idx - 1.
 
     WHILE lv_back_idx >= 1.
-      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+      zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
                                     iv_index       = lv_back_idx
                           IMPORTING es_statement   = ls_back_stmt
                                     ev_found       = lv_found ).
@@ -131,7 +131,7 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
     lv_back_idx = iv_idx - 1.
 
     WHILE lv_back_idx >= 1.
-      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+      zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
                                     iv_index       = lv_back_idx
                           IMPORTING es_statement   = ls_back_stmt
                                     ev_found       = lv_found ).
@@ -179,7 +179,7 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
 
     DO lv_tok_cnt - 1 TIMES.
       lv_tok_idx = sy-index + 1.
-      get_token_safe( EXPORTING is_statement = is_statement
+      zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
                                 iv_index     = lv_tok_idx
                       IMPORTING es_token     = ls_token
                                 ev_found     = lv_found ).

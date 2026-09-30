@@ -59,7 +59,7 @@ CLASS zcl_skylint_check_064 IMPLEMENTATION.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-check_subrc ).
       ELSE.
-        get_statement_safe( EXPORTING it_statements = is_procedure-statements
+        zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
                                       iv_index      = lv_idx + 1
                             IMPORTING es_statement  = ls_next_stmt
                                       ev_found      = lv_next_found ).
@@ -78,13 +78,13 @@ CLASS zcl_skylint_check_064 IMPLEMENTATION.
       WHEN 'ASSIGN' OR 'AUTHORITY-CHECK' OR 'FIND' OR 'SEARCH'.
         rv_res = abap_true.
       WHEN 'SELECT'.
-        IF matches_token_at( is_statement = is_statement
+        IF zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
                              iv_index     = 2
                              iv_expected  = `SINGLE` ) = abap_true.
           rv_res = abap_true.
         ENDIF.
       WHEN 'READ'.
-        IF matches_token_at( is_statement = is_statement
+        IF zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
                              iv_index     = 2
                              iv_expected  = `TABLE` ) = abap_true.
           rv_res = abap_true.

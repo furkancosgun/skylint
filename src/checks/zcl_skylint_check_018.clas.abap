@@ -144,15 +144,15 @@ CLASS zcl_skylint_check_018 IMPLEMENTATION.
         rv_res = abap_true.
 
       WHEN 'RAISE'.
-        IF matches_token_at( is_statement = is_statement
+        IF zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
                              iv_index     = 2
                              iv_expected  = `SHORTDUMP` ) = abap_true.
           rv_res = abap_true.
-        ELSEIF matches_token_at( is_statement = is_statement
+        ELSEIF zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
                                  iv_index     = 2
                                  iv_expected  = `EXCEPTION` ) = abap_true.
           rv_res = abap_true.
-          IF matches_token_at( is_statement = is_statement
+          IF zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
                                iv_index     = 3
                                iv_expected  = `RESUMABLE` ) = abap_true.
             rv_res = abap_false.

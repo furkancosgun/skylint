@@ -54,13 +54,13 @@ CLASS zcl_skylint_check_044 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    IF    find_token_sequence( is_statement = is_statement
+    IF    zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
                                it_expected  = VALUE #( ( `GENERATE` ) ( `SUBROUTINE` ) ) ) > 0
-       OR find_token_sequence( is_statement = is_statement
+       OR zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
                                it_expected  = VALUE #( ( `INSERT` ) ( `REPORT` ) ) ) > 0
-       OR find_token_sequence( is_statement = is_statement
+       OR zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
                                it_expected  = VALUE #( ( `DELETE` ) ( `REPORT` ) ) ) > 0
-       OR find_token_sequence( is_statement = is_statement
+       OR zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
                                it_expected  = VALUE #( ( `READ` ) ( `REPORT` ) ) ) > 0.
       rv_res = abap_true.
     ENDIF.

@@ -45,7 +45,7 @@ CLASS zcl_skylint_check_015 IMPLEMENTATION.
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'CATCH'.
       lv_idx = sy-tabix.
-      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+      zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
                                     iv_index      = lv_idx + 1
                           IMPORTING es_statement  = ls_next_stmt
                                     ev_found      = lv_found_next ).

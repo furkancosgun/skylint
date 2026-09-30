@@ -47,11 +47,11 @@ CLASS zcl_skylint_check_001 IMPLEMENTATION.
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
         CASE to_upper( <ls_token>-lexeme ).
           WHEN 'TABLE'.
-            lv_has_table = abap_true.
+            lv_has_table = xsdbool( <ls_token>-references IS INITIAL ).
           WHEN 'LINES'.
-            lv_has_lines = abap_true.
+            lv_has_lines = xsdbool( <ls_token>-references IS INITIAL ).
           WHEN 'KIND' OR 'OCCURS'.
-            lv_has_other = abap_true.
+            lv_has_other = xsdbool( <ls_token>-references IS INITIAL ).
         ENDCASE.
       ENDLOOP.
 

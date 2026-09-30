@@ -34,19 +34,19 @@ CLASS zcl_skylint_check_069 IMPLEMENTATION.
     DATA lv_method_name TYPE string.
     DATA ls_tok2        TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_found2      TYPE abap_bool.
-    DATA lt_expected    TYPE ty_token_lexemes.
+    DATA lt_expected    TYPE zcl_skylint_ast_util=>ty_token_lexemes.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     lt_expected = VALUE #( ( `FOR` ) ( `TESTING` ) ).
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'METHODS'.
-      IF find_token_sequence( is_statement = <ls_statement>
+      IF zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
                               it_expected  = lt_expected ) = 0.
         CONTINUE.
       ENDIF.
 
-      get_token_safe( EXPORTING is_statement = <ls_statement>
+      zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = <ls_statement>
                                 iv_index     = 2
                       IMPORTING es_token     = ls_tok2
                                 ev_found     = lv_found2 ).

@@ -70,18 +70,18 @@ CLASS zcl_skylint_check_031 IMPLEMENTATION.
   METHOD extract_fae_table.
     DATA lv_pos TYPE i.
     DATA lv_name TYPE string.
-    DATA lt_expected TYPE ty_token_lexemes.
+    DATA lt_expected TYPE zcl_skylint_ast_util=>ty_token_lexemes.
     DATA ls_tab_token TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_found TYPE abap_bool.
 
     rv_tab = ''.
     lt_expected = VALUE #( ( `FOR` ) ( `ALL` ) ( `ENTRIES` ) ( `IN` ) ).
-    lv_pos = find_token_sequence( is_statement = is_statement
+    lv_pos = zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
                                                 it_expected  = lt_expected ).
     IF lv_pos = 0.
       RETURN.
     ENDIF.
-    get_token_safe( EXPORTING is_statement = is_statement
+    zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
                               iv_index     = lv_pos + 4
                     IMPORTING es_token     = ls_tab_token
                               ev_found     = lv_found ).
@@ -104,7 +104,7 @@ CLASS zcl_skylint_check_031 IMPLEMENTATION.
     lv_idx = iv_current_idx - 1.
 
     WHILE lv_idx >= 1.
-      get_statement_safe( EXPORTING it_statements = it_statements
+      zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = it_statements
                                     iv_index      = lv_idx
                           IMPORTING es_statement  = ls_stmt
                                     ev_found      = lv_found ).

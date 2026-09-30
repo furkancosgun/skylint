@@ -42,7 +42,7 @@ CLASS zcl_skylint_check_077 IMPLEMENTATION.
     "DAHA temiz yazilabilir compiler guvenebiliriz
     LOOP AT is_procedure-statements ASSIGNING <ls_decl>
          WHERE keyword = 'DATA' OR keyword = 'FIELD-SYMBOLS'.
-      get_token_safe( EXPORTING is_statement = <ls_decl>
+      zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = <ls_decl>
                                 iv_index     = 2
                       IMPORTING es_token     = ls_token
                                 ev_found     = lv_found ).

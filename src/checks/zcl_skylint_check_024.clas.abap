@@ -74,19 +74,19 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
       lv_idx_else = lv_idx + 2.
       lv_idx_body = lv_idx + 3.
       lv_idx_endif = lv_idx + 4.
-      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+      zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
                                     iv_index       = lv_idx_then
                           IMPORTING es_statement   = ls_stmt_then
                                     ev_found       = lv_found_then ).
-      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+      zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
                                     iv_index       = lv_idx_else
                           IMPORTING es_statement   = ls_stmt_else
                                     ev_found       = lv_found_else ).
-      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+      zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
                                     iv_index       = lv_idx_body
                           IMPORTING es_statement   = ls_stmt_else_body
                                     ev_found       = lv_found_body ).
-      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+      zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
                                     iv_index       = lv_idx_endif
                           IMPORTING es_statement   = ls_stmt_endif
                                     ev_found       = lv_found_endif ).
@@ -129,15 +129,15 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    get_token_safe( EXPORTING is_statement = is_statement
+    zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
                               iv_index     = 1
                     IMPORTING es_token     = ls_tok_target
                               ev_found     = lv_found1 ).
-    get_token_safe( EXPORTING is_statement = is_statement
+    zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
                               iv_index     = 2
                     IMPORTING es_token     = ls_tok_eq
                               ev_found     = lv_found2 ).
-    get_token_safe( EXPORTING is_statement = is_statement
+    zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
                               iv_index     = 3
                     IMPORTING es_token     = ls_tok_val
                               ev_found     = lv_found3 ).

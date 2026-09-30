@@ -166,7 +166,7 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
 
     " 2. Explicit DATA / FIELD-SYMBOLS statements inside blocks
     IF is_statement-keyword = 'DATA' OR is_statement-keyword = 'FIELD-SYMBOLS'.
-      get_token_safe( EXPORTING is_statement = is_statement
+      zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
                                 iv_index     = 2
                       IMPORTING es_token     = ls_tok2
                                 ev_found     = lv_found2 ).

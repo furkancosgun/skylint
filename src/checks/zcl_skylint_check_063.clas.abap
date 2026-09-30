@@ -43,7 +43,7 @@ CLASS zcl_skylint_check_063 IMPLEMENTATION.
       IF <ls_statement>-keyword = 'RAISE'.
         lv_is_raise = abap_true.
       ELSE.
-        lv_is_raise = has_token_lexeme( is_statement = <ls_statement>
+        lv_is_raise = zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
                                         iv_lexeme    = 'THROW' ).
       ENDIF.
       IF lv_is_raise = abap_false.

@@ -53,18 +53,18 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
     DATA lv_tok TYPE string.
 
     rv_res = abap_false.
-    IF match_token_sequence( is_statement = is_statement
+    IF zcl_skylint_ast_util=>match_token_sequence( is_statement = is_statement
                              it_expected  = VALUE #( ( `CREATE` ) ( `OBJECT` ) ) ) = abap_false.
       RETURN.
     ENDIF.
 
     " Exclude RAP FOR TESTING and dynamic calls
-    IF match_token_sequence( is_statement = is_statement
+    IF zcl_skylint_ast_util=>match_token_sequence( is_statement = is_statement
                              it_expected  = VALUE #( ( `FOR` ) ( `TESTING` ) ) ) = abap_true.
       RETURN.
     ENDIF.
 
-    IF match_token_sequence( is_statement = is_statement
+    IF zcl_skylint_ast_util=>match_token_sequence( is_statement = is_statement
                              it_expected  = VALUE #( ( `PARAMETER-TABLE` ) ) ) = abap_true.
       RETURN.
     ENDIF.
@@ -78,7 +78,7 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
         RETURN.
       ENDIF.
 
-      IF lv_tok = 'TYPE' AND matches_token_at( is_statement = is_statement
+      IF lv_tok = 'TYPE' AND zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
                                                iv_index     = lv_idx + 1
                                                iv_expected  = '(' ) = abap_true.
         RETURN.

@@ -58,7 +58,7 @@ CLASS zcl_skylint_check_019 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_when_others.
-    rv_is = matches_token_at( is_statement = is_statement
+    rv_is = zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
                               iv_index     = 2
                               iv_expected  = `OTHERS` ).
   ENDMETHOD.
@@ -76,7 +76,7 @@ CLASS zcl_skylint_check_019 IMPLEMENTATION.
     lv_fwd_idx = iv_start_idx + 1.
 
     WHILE lv_fwd_idx <= lv_total.
-      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+      zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
                                     iv_index       = lv_fwd_idx
                           IMPORTING es_statement   = ls_fwd_stmt
                                     ev_found       = lv_found ).

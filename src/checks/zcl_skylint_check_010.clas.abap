@@ -75,7 +75,7 @@ CLASS zcl_skylint_check_010 IMPLEMENTATION.
           lv_next_idx = lv_tok_idx + 1.
 
           IF lv_prev_idx >= 1.
-            get_token_safe( EXPORTING is_statement = is_statement
+            zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
                                       iv_index     = lv_prev_idx
                             IMPORTING es_token     = ls_adj_token
                                       ev_found     = lv_found_adj ).
@@ -86,7 +86,7 @@ CLASS zcl_skylint_check_010 IMPLEMENTATION.
           ENDIF.
 
           IF lv_next_idx <= lines( is_statement-tokens ).
-            get_token_safe( EXPORTING is_statement = is_statement
+            zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
                                       iv_index     = lv_next_idx
                             IMPORTING es_token     = ls_adj_token
                                       ev_found     = lv_found_adj ).

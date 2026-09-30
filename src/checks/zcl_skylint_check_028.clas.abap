@@ -53,7 +53,7 @@ CLASS zcl_skylint_check_028 IMPLEMENTATION.
       WHEN 'MOVE' OR 'REFRESH' OR 'TEST-SEAM' OR 'TEST-INJECT' OR 'TABLES' OR 'FIELD-GROUPS'.
         rv_res = abap_true.
       WHEN 'COMPUTE'.
-        IF matches_token_at( is_statement = is_statement
+        IF zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
                              iv_index     = 1
                              iv_expected  = `COMPUTE` ) = abap_true.
           rv_res = abap_true.

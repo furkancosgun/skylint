@@ -72,7 +72,7 @@ CLASS zcl_skylint_check_041 IMPLEMENTATION.
     CASE is_statement-keyword.
       WHEN 'COMPUTE'.
         " sy-subrc = ...
-        get_token_safe( EXPORTING is_statement = is_statement
+        zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
                                   iv_index     = 1
                         IMPORTING es_token     = ls_tok
                                   ev_found     = lv_found ).
@@ -86,7 +86,7 @@ CLASS zcl_skylint_check_041 IMPLEMENTATION.
 
       WHEN 'CLEAR'.
         " CLEAR sy-subrc
-        get_token_safe( EXPORTING is_statement = is_statement
+        zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
                                   iv_index     = 2
                         IMPORTING es_token     = ls_tok
                                   ev_found     = lv_found ).

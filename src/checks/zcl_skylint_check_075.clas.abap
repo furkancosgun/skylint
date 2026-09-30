@@ -51,7 +51,7 @@ CLASS zcl_skylint_check_075 IMPLEMENTATION.
     " 1. Locate the first executable statement
     DO lv_max TIMES.
       lv_idx = sy-index.
-      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+      zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
                                     iv_index      = lv_idx
                           IMPORTING es_statement  = ls_stmt
                                     ev_found      = lv_found ).
@@ -79,7 +79,7 @@ CLASS zcl_skylint_check_075 IMPLEMENTATION.
     lv_scan_idx = lv_first_idx + 1.
 
     WHILE lv_scan_idx <= lv_max AND lv_if_depth > 0.
-      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+      zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
                                     iv_index      = lv_scan_idx
                           IMPORTING es_statement  = ls_stmt
                                     ev_found      = lv_found ).
@@ -102,7 +102,7 @@ CLASS zcl_skylint_check_075 IMPLEMENTATION.
               report_statement( is_statement    = ls_first
                                 iv_finding_code = c_finding_codes-guard_method ).
             ELSE.
-              get_statement_safe( EXPORTING it_statements = is_procedure-statements
+              zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
                                             iv_index      = lv_scan_idx + 1
                                   IMPORTING es_statement  = ls_after
                                             ev_found      = lv_found ).

@@ -77,15 +77,15 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
 
     lv_idx = 1.
     WHILE lv_idx <= lv_total - 2.
-      get_token_safe( EXPORTING is_statement = is_statement
+      zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
                                 iv_index     = lv_idx
                       IMPORTING es_token     = ls_t1
                                 ev_found     = lv_found1 ).
-      get_token_safe( EXPORTING is_statement = is_statement
+      zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
                                 iv_index     = lv_idx + 1
                       IMPORTING es_token     = ls_t2
                                 ev_found     = lv_found2 ).
-      get_token_safe( EXPORTING is_statement = is_statement
+      zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
                                 iv_index     = lv_idx + 2
                       IMPORTING es_token     = ls_t3
                                 ev_found     = lv_found3 ).

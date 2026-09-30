@@ -46,11 +46,11 @@ CLASS zcl_skylint_check_073 IMPLEMENTATION.
           report_statement( is_statement    = <ls_statement>
                             iv_finding_code = c_finding_codes-calc_assign ).
         WHEN OTHERS.
-          get_token_safe( EXPORTING is_statement = <ls_statement>
+          zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = <ls_statement>
                                     iv_index     = 1
                           IMPORTING es_token     = ls_tok1
                                     ev_found     = lv_found1 ).
-          get_token_safe( EXPORTING is_statement = <ls_statement>
+          zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = <ls_statement>
                                     iv_index     = 3
                           IMPORTING es_token     = ls_tok3
                                     ev_found     = lv_found3 ).
@@ -60,19 +60,19 @@ CLASS zcl_skylint_check_073 IMPLEMENTATION.
           lv_tok1 = to_upper( ls_tok1-lexeme ).
           lv_tok3 = to_upper( ls_tok3-lexeme ).
           IF lv_tok1 = lv_tok3
-             AND matches_token_at( is_statement = <ls_statement>
+             AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
                                    iv_index = 2
                                    iv_expected = `=` ) = abap_true
-             AND ( matches_token_at( is_statement = <ls_statement>
+             AND ( zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
                                      iv_index = 4
                                      iv_expected = `+` ) = abap_true
-                OR matches_token_at( is_statement = <ls_statement>
+                OR zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
                                      iv_index = 4
                                      iv_expected = `-` ) = abap_true
-                OR matches_token_at( is_statement = <ls_statement>
+                OR zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
                                      iv_index = 4
                                      iv_expected = `*` ) = abap_true
-                OR matches_token_at( is_statement = <ls_statement>
+                OR zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
                                      iv_index = 4
                                      iv_expected = `/` ) = abap_true ).
             report_statement( is_statement    = <ls_statement>

@@ -71,7 +71,7 @@ CLASS zcl_skylint_check_004 IMPLEMENTATION.
         lv_in_not = abap_false.
       ELSEIF lv_in_not = abap_true AND lv_lexeme = 'IS'.
         lv_is_idx = lv_idx + 1.
-        get_token_safe( EXPORTING is_statement = is_statement
+        zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
                                   iv_index     = lv_is_idx
                         IMPORTING es_token     = ls_next_token
                                   ev_found     = lv_found ).

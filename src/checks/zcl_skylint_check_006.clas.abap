@@ -47,7 +47,7 @@ CLASS zcl_skylint_check_006 IMPLEMENTATION.
   METHOD check.
     DATA lv_stmt_idx TYPE i.
     DATA lv_tok_idx TYPE i.
-    DATA lt_expected TYPE ty_token_lexemes.
+    DATA lt_expected TYPE zcl_skylint_ast_util=>ty_token_lexemes.
     DATA lo_details TYPE if_ci_atc_check=>ty_details.
     DATA lt_empty_code TYPE if_ci_atc_quickfix=>ty_code.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
@@ -60,11 +60,11 @@ CLASS zcl_skylint_check_006 IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      IF statement_is_method_call( <ls_statement> ) = abap_false.
+      IF zcl_skylint_ast_util=>statement_is_method_call( <ls_statement> ) = abap_false.
         CONTINUE.
       ENDIF.
 
-      lv_tok_idx = find_token_sequence( is_statement = <ls_statement>
+      lv_tok_idx = zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
                                         it_expected  = lt_expected ).
       IF lv_tok_idx = 0.
         CONTINUE.

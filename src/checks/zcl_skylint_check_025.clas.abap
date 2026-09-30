@@ -49,7 +49,7 @@ CLASS zcl_skylint_check_025 IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      lv_is_call = statement_is_method_call( <ls_statement> ).
+      lv_is_call = zcl_skylint_ast_util=>statement_is_method_call( <ls_statement> ).
       IF lv_is_call = abap_false.
         lv_is_call = zcl_skylint_rtti_util=>has_compiler_reference(
                          is_statement = <ls_statement>
@@ -66,7 +66,7 @@ CLASS zcl_skylint_check_025 IMPLEMENTATION.
       LOOP AT <ls_statement>-tokens INTO ls_tok.
         lv_next_idx = sy-tabix + 1.
         CLEAR ls_next_tok.
-        get_token_safe( EXPORTING is_statement = <ls_statement>
+        zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = <ls_statement>
                                   iv_index     = lv_next_idx
                         IMPORTING es_token     = ls_next_tok
                                   ev_found     = lv_found ).

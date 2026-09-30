@@ -17,59 +17,6 @@ CLASS zcl_skylint_check_base DEFINITION
     METHODS check ABSTRACT
       IMPORTING is_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure.
 
-    TYPES ty_token_lexemes TYPE STANDARD TABLE OF string WITH EMPTY KEY.
-
-    METHODS get_token_safe
-      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
-                iv_index     TYPE i
-      EXPORTING es_token     TYPE if_ci_atc_source_code_provider=>ty_token
-                ev_found     TYPE abap_bool.
-
-    METHODS get_statement_safe
-      IMPORTING it_statements  TYPE if_ci_atc_source_code_provider=>ty_statements
-                iv_index       TYPE i
-      EXPORTING es_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
-                ev_found       TYPE abap_bool.
-
-    METHODS find_token_sequence
-      IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
-                it_expected       TYPE ty_token_lexemes
-                iv_start_index    TYPE i DEFAULT 1
-                iv_case_sensitive TYPE abap_bool DEFAULT abap_false
-      RETURNING VALUE(rv_index)   TYPE i.
-
-    METHODS match_token_sequence
-      IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
-                it_expected       TYPE ty_token_lexemes
-                iv_start_index    TYPE i DEFAULT 1
-                iv_case_sensitive TYPE abap_bool DEFAULT abap_false
-      RETURNING VALUE(rv_matched) TYPE abap_bool.
-
-    METHODS matches_token_at
-      IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
-                iv_index          TYPE i
-                iv_expected       TYPE string
-                iv_case_sensitive TYPE abap_bool DEFAULT abap_false
-      RETURNING VALUE(rv_matched) TYPE abap_bool.
-
-    METHODS token_has_ref
-      IMPORTING is_token      TYPE if_ci_atc_source_code_provider=>ty_token
-                iv_kind       TYPE if_ci_atc_source_code_provider=>ty_reference_kind
-      RETURNING VALUE(rv_has) TYPE abap_bool.
-
-    METHODS statement_has_db_access
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_has) TYPE abap_bool.
-
-    METHODS statement_is_method_call
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_has) TYPE abap_bool.
-
-    METHODS has_token_lexeme
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-                iv_lexeme     TYPE string
-      RETURNING VALUE(rv_has) TYPE abap_bool.
-
     METHODS report_statement
       IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
                 iv_finding_code TYPE if_ci_atc_check=>ty_finding_code
@@ -132,7 +79,6 @@ CLASS zcl_skylint_check_base DEFINITION
     DATA mo_meta_data         TYPE REF TO zcl_skylint_check_meta_data.
     DATA mt_findings          TYPE if_ci_atc_check=>ty_findings.
     DATA mt_attributes        TYPE if_ci_atc_check_meta_data=>ty_attributes.
-
 ENDCLASS.
 
 
@@ -258,70 +204,6 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
                                        iv_quickfix_code     = iv_quickfix_code
                                        is_procedure_id      = is_procedure_id
                                        iv_statement_index   = iv_statement_index ).
-  ENDMETHOD.
-
-  METHOD get_token_safe.
-    zcl_skylint_ast_util=>get_token_safe(
-      EXPORTING
-        is_statement = is_statement
-        iv_index     = iv_index
-      IMPORTING
-        es_token     = es_token
-        ev_found     = ev_found ).
-  ENDMETHOD.
-
-  METHOD get_statement_safe.
-    zcl_skylint_ast_util=>get_statement_safe(
-      EXPORTING
-        it_statements = it_statements
-        iv_index      = iv_index
-      IMPORTING
-        es_statement  = es_statement
-        ev_found      = ev_found ).
-  ENDMETHOD.
-
-  METHOD find_token_sequence.
-    rv_index = zcl_skylint_ast_util=>find_token_sequence(
-        is_statement      = is_statement
-        it_expected       = it_expected
-        iv_start_index    = iv_start_index
-        iv_case_sensitive = iv_case_sensitive ).
-  ENDMETHOD.
-
-  METHOD match_token_sequence.
-    rv_matched = zcl_skylint_ast_util=>match_token_sequence(
-        is_statement      = is_statement
-        it_expected       = it_expected
-        iv_start_index    = iv_start_index
-        iv_case_sensitive = iv_case_sensitive ).
-  ENDMETHOD.
-
-  METHOD matches_token_at.
-    rv_matched = zcl_skylint_ast_util=>matches_token_at(
-        is_statement      = is_statement
-        iv_index          = iv_index
-        iv_expected       = iv_expected
-        iv_case_sensitive = iv_case_sensitive ).
-  ENDMETHOD.
-
-  METHOD token_has_ref.
-    rv_has = zcl_skylint_ast_util=>token_has_ref(
-        is_token = is_token
-        iv_kind  = iv_kind ).
-  ENDMETHOD.
-
-  METHOD statement_has_db_access.
-    rv_has = zcl_skylint_ast_util=>statement_has_db_access( is_statement ).
-  ENDMETHOD.
-
-  METHOD statement_is_method_call.
-    rv_has = zcl_skylint_ast_util=>statement_is_method_call( is_statement ).
-  ENDMETHOD.
-
-  METHOD has_token_lexeme.
-    rv_has = zcl_skylint_ast_util=>has_token_lexeme(
-        is_statement = is_statement
-        iv_lexeme    = iv_lexeme ).
   ENDMETHOD.
 
   METHOD is_open_abap.

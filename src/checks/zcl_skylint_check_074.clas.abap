@@ -53,7 +53,7 @@ CLASS zcl_skylint_check_074 IMPLEMENTATION.
       ENDIF.
 
       " First statement inside loop must be IF
-      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+      zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
                                     iv_index      = lv_idx + 1
                           IMPORTING es_statement  = ls_first
                                     ev_found      = lv_found ).
@@ -67,7 +67,7 @@ CLASS zcl_skylint_check_074 IMPLEMENTATION.
       lv_scan_idx = lv_idx + 2.
 
       WHILE lv_scan_idx <= lv_max AND lv_if_depth > 0.
-        get_statement_safe( EXPORTING it_statements = is_procedure-statements
+        zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
                                       iv_index      = lv_scan_idx
                             IMPORTING es_statement  = ls_stmt
                                       ev_found      = lv_found ).
@@ -86,7 +86,7 @@ CLASS zcl_skylint_check_074 IMPLEMENTATION.
             lv_if_depth -= 1.
             IF lv_if_depth = 0.
               " Check if statement immediately after ENDIF is the loop closing keyword
-              get_statement_safe( EXPORTING it_statements = is_procedure-statements
+              zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
                                             iv_index      = lv_scan_idx + 1
                                   IMPORTING es_statement  = ls_after
                                             ev_found      = lv_found ).
