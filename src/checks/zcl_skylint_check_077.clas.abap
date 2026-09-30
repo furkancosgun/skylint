@@ -39,7 +39,6 @@ CLASS zcl_skylint_check_077 IMPLEMENTATION.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_tok>  TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    " DAHA temiz yazilabilir compiler guvenebiliriz
     LOOP AT is_procedure-statements ASSIGNING <ls_decl>
          WHERE keyword = 'DATA' OR keyword = 'FIELD-SYMBOLS'.
       zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = <ls_decl>
@@ -63,7 +62,6 @@ CLASS zcl_skylint_check_077 IMPLEMENTATION.
         ENDLOOP.
       ENDLOOP.
 
-      " If only seen in its own declaration statement
       IF lv_uses <= 1.
         report_statement( is_statement    = <ls_decl>
                           iv_finding_code = c_finding_codes-unused_var ).
