@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_084 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        hardcoded_user TYPE if_ci_atc_check=>ty_finding_code VALUE 'HARD_UNAME',
+        full_modify TYPE if_ci_atc_check=>ty_finding_code VALUE 'FULL_MODIF',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,45 +15,59 @@ CLASS zcl_skylint_check_084 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_HARDCODED_USER'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_FULL_MODIFY'.
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_084 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Avoid hardcoded user name comparisons; enforce authorization checks'
+        VALUE #( description       = 'Avoid full-line MODIFY itab inside LOOP without TRANSPORTING clause'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-hardcoded_user
+                     ( code           = c_finding_codes-full_modify
                        severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Avoid hardcoded sy-uname comparisons; use AUTHORITY-CHECK instead'
+                       text           = 'Specify TRANSPORTING fields in MODIFY itab inside loop for performance'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_has_uname   TYPE abap_bool.
-    DATA lv_has_literal TYPE abap_bool.
+    DATA lv_in_loop          TYPE i VALUE 0.
+    DATA lv_has_transporting TYPE abap_bool.
+    DATA lv_is_itab_modify   TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'IF' OR keyword = 'ELSEIF' OR keyword = 'CHECK' OR keyword = 'WHEN'.
-      lv_has_uname = abap_false.
-      lv_has_literal = abap_false.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      CASE <ls_statement>-keyword.
+        WHEN 'LOOP'.
+          lv_in_loop += 1.
 
-      LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-        IF to_upper( <ls_token>-lexeme ) = 'SY-UNAME'.
-          lv_has_uname = abap_true.
-        ELSEIF <ls_token>-lexeme CP '''*''' OR <ls_token>-lexeme CP '`*`'.
-          lv_has_literal = abap_true.
-        ENDIF.
-      ENDLOOP.
+        WHEN 'ENDLOOP'.
+          IF lv_in_loop > 0.
+            lv_in_loop -= 1.
+          ENDIF.
 
-      IF lv_has_uname = abap_true AND lv_has_literal = abap_true.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-hardcoded_user ).
-      ENDIF.
+        WHEN 'MODIFY'.
+          IF lv_in_loop > 0.
+            lv_has_transporting = abap_false.
+            lv_is_itab_modify = abap_false.
+
+            LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
+              IF to_upper( <ls_token>-lexeme ) = 'TRANSPORTING'.
+                lv_has_transporting = abap_true.
+              ENDIF.
+              IF to_upper( <ls_token>-lexeme ) = 'FROM' OR to_upper( <ls_token>-lexeme ) = 'INDEX'.
+                lv_is_itab_modify = abap_true.
+              ENDIF.
+            ENDLOOP.
+
+            IF lv_is_itab_modify = abap_true AND lv_has_transporting = abap_false.
+              report_statement( is_statement    = <ls_statement>
+                                iv_finding_code = c_finding_codes-full_modify ).
+            ENDIF.
+          ENDIF.
+      ENDCASE.
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

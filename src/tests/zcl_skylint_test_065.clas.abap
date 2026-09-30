@@ -14,31 +14,20 @@ CLASS zcl_skylint_test_065 IMPLEMENTATION.
     DATA lt_tab TYPE string_table.
     DATA lv_line TYPE string.
     LOOP AT lt_tab INTO lv_line.
-      AT FIRST.
-        lv_line = 'first'.
-      ENDAT.
-      SUM.
+      lv_line = 'test'.
     ENDLOOP.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
     DATA lt_tab TYPE string_table.
     DATA lv_line TYPE string.
-    LOOP AT lt_tab INTO lv_line.
-      AT FIRST. "#EC AVOID_LOOP_CTRL
-        lv_line = 'first'.
-      ENDAT.
-      SUM. "#EC AVOID_LOOP_CTRL
+    LOOP AT lt_tab INTO lv_line. "#EC CONSTRUCTOR_LOGIC
+      lv_line = 'test'.
     ENDLOOP.
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lt_tab TYPE string_table.
-    DATA lv_line TYPE string.
-    LOOP AT lt_tab INTO lv_line.
-      IF sy-tabix = 1.
-        lv_line = 'first'.
-      ENDIF.
-    ENDLOOP.
+    DATA lv_name TYPE string.
+    lv_name = 'test'.
   ENDMETHOD.
 ENDCLASS.

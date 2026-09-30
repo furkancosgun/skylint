@@ -3,23 +3,28 @@ CLASS zcl_skylint_test_089 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS run_calculation FOR TESTING.
-    METHODS execute_flow FOR TESTING. "#EC TEST_METHOD_NAME
-    METHODS test_valid_operation FOR TESTING.
-    METHODS should_return_true FOR TESTING.
+    METHODS without_pseudo_comments.
+    METHODS with_pseudo_comments.
+    METHODS valid_code.
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_089 IMPLEMENTATION.
-  METHOD run_calculation.
+  METHOD without_pseudo_comments.
+    DATA lv_text TYPE string VALUE '  abc  '.
+    CONDENSE lv_text.
+    TRANSLATE lv_text TO UPPER CASE.
   ENDMETHOD.
 
-  METHOD execute_flow.
+  METHOD with_pseudo_comments.
+    DATA lv_text TYPE string VALUE '  abc  '.
+    CONDENSE lv_text. "#EC CONDENSE_STMT
+    TRANSLATE lv_text TO UPPER CASE. "#EC TRANSLATE_STMT
   ENDMETHOD.
 
-  METHOD test_valid_operation.
-  ENDMETHOD.
-
-  METHOD should_return_true.
+  METHOD valid_code.
+    DATA lv_text TYPE string VALUE '  abc  '.
+    lv_text = condense( lv_text ).
+    lv_text = to_upper( lv_text ).
   ENDMETHOD.
 ENDCLASS.

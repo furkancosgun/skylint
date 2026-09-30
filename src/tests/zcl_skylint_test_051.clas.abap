@@ -3,26 +3,30 @@ CLASS zcl_skylint_test_051 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS without_pseudo_comments.
-    METHODS with_pseudo_comments.
-    METHODS valid_code.
+    METHODS bad_method
+      EXCEPTIONS
+        failed.
+
+    METHODS bad_method_pc
+      EXCEPTIONS
+        failed. "#EC CLASS_EXCEPTIONS
+
+    METHODS good_method
+      RAISING
+        cx_static_check.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_051 IMPLEMENTATION.
 
-  METHOD without_pseudo_comments.
-    sy-subrc = 0.
+  METHOD bad_method.
   ENDMETHOD.
 
-  METHOD with_pseudo_comments.
-    sy-subrc = 0. "#EC AVOID_SY_MOD
+  METHOD bad_method_pc.
   ENDMETHOD.
 
-  METHOD valid_code.
-    DATA lv_subrc TYPE i.
-    lv_subrc = sy-subrc.
+  METHOD good_method.
   ENDMETHOD.
 
 ENDCLASS.

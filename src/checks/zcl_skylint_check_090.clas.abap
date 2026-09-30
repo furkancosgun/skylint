@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_090 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        offset_magic TYPE if_ci_atc_check=>ty_finding_code VALUE 'OFFST_MAG',
+        calc_assign TYPE if_ci_atc_check=>ty_finding_code VALUE 'CALC_ASSGN',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,36 +15,48 @@ CLASS zcl_skylint_check_090 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'MAGIC_OFFSET'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_CALC_ASSIGN'.
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_090 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Avoid magic offset/length substring expressions (var+0(2))'
+        VALUE #( description       = 'Prefer calculation assignment operators (+=, -=, *=, /=) over var = var + 1'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-offset_magic
+                     ( code           = c_finding_codes-calc_assign
                        severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Avoid magic numbers in string offset/length; use constants or functions'
+                       text           = 'Use calculation assignment operator (+=, -=) or ADD statement replacement'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_lexeme TYPE string.
+    DATA lv_tok1 TYPE string.
+    DATA lv_tok2 TYPE string.
+    DATA lv_tok3 TYPE string.
+    DATA lv_tok4 TYPE string.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-        lv_lexeme = <ls_token>-lexeme.
-        IF lv_lexeme CS '+' AND lv_lexeme CS '(' AND lv_lexeme CS ')'.
+      IF    <ls_statement>-keyword = 'ADD'      OR <ls_statement>-keyword = 'SUBTRACT'
+         OR <ls_statement>-keyword = 'MULTIPLY' OR <ls_statement>-keyword = 'DIVIDE'.
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-calc_assign ).
+        CONTINUE.
+      ENDIF.
+
+      IF lines( <ls_statement>-tokens ) >= 5.
+        lv_tok1 = to_upper( <ls_statement>-tokens[ 1 ]-lexeme ).
+        lv_tok2 = to_upper( <ls_statement>-tokens[ 2 ]-lexeme ).
+        lv_tok3 = to_upper( <ls_statement>-tokens[ 3 ]-lexeme ).
+        lv_tok4 = to_upper( <ls_statement>-tokens[ 4 ]-lexeme ).
+
+        IF lv_tok2 = '=' AND lv_tok1 = lv_tok3 AND ( lv_tok4 = '+' OR lv_tok4 = '-' OR lv_tok4 = '*' OR lv_tok4 = '/' ).
           report_statement( is_statement    = <ls_statement>
-                            iv_finding_code = c_finding_codes-offset_magic ).
-          EXIT.
+                            iv_finding_code = c_finding_codes-calc_assign ).
         ENDIF.
-      ENDLOOP.
+      ENDIF.
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

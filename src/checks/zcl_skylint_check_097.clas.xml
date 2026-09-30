@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_097</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Suggest RETURN guard clause</DESCRIPT>
+    <DESCRIPT>skylint: Detect unnecessary ! escape</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

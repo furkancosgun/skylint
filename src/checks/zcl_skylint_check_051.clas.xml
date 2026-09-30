@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_051</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Avoid sy-* Modification (051)</DESCRIPT>
+    <DESCRIPT>skylint: Class Exceptions (051)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

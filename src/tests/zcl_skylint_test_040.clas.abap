@@ -11,24 +11,18 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_040 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    IF 1 = 1.
-      DATA(lv_val) = 1.
-    ENDIF.
-    lv_val = 2.
+    DATA lt_tab TYPE string_table.
+    lt_tab = VALUE #( ).
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    IF 1 = 1.
-      DATA(lv_val) = 1.
-    ENDIF.
-    lv_val = 2. "#EC SCOPE_OF_VAR
+    DATA lt_tab TYPE string_table.
+    lt_tab = VALUE #( ). "#EC SUPERFLUOUS_VAL
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lv_val TYPE i.
-    IF 1 = 1.
-      lv_val = 1.
-    ENDIF.
-    lv_val = 2.
+    DATA lt_tab TYPE string_table.
+    CLEAR lt_tab.
+    lt_tab = VALUE #( ( `item1` ) ).
   ENDMETHOD.
 ENDCLASS.

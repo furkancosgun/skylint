@@ -11,17 +11,18 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_095 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    DATA lv_i TYPE i VALUE 0.
-    lv_i = lv_i + 1.
+    DATA lv_val TYPE i.
+    CLEAR lv_val.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    DATA lv_i TYPE i VALUE 0.
-    lv_i = lv_i + 1. "#EC PREFER_CALC_ASSIGN
+    DATA lv_val TYPE i.
+    CLEAR lv_val. "#EC NEEDLESS_CLEAR
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lv_i TYPE i VALUE 0.
-    lv_i += 1.
+    DATA lv_val TYPE i.
+    lv_val = 5.
+    lv_val = lv_val + 2.
   ENDMETHOD.
 ENDCLASS.

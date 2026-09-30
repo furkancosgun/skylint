@@ -26,7 +26,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_032 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Avoid obsolete statements (MOVE, REFRESH, ADD, etc.)'
+    super->constructor( VALUE #( description       = 'Avoid obsolete statements (MOVE, REFRESH, etc.)'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-obsolete_statement
@@ -52,7 +52,7 @@ CLASS zcl_skylint_check_032 IMPLEMENTATION.
     rv_res = abap_false.
 
     CASE is_statement-keyword.
-      WHEN 'MOVE' OR 'REFRESH' OR 'ADD' OR 'SUBTRACT' OR 'MULTIPLY' OR 'DIVIDE' OR 'TRANSLATE'.
+      WHEN 'MOVE' OR 'REFRESH'.
         rv_res = abap_true.
       WHEN 'COMPUTE'.
         READ TABLE is_statement-tokens INTO ls_first_tok INDEX 1.

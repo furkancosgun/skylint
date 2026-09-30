@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_058 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        cyclomatic_complexity TYPE if_ci_atc_check=>ty_finding_code VALUE 'CYCLO_COMP',
+        raise_shortdump TYPE if_ci_atc_check=>ty_finding_code VALUE 'SHORTDUMP',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,78 +15,48 @@ CLASS zcl_skylint_check_058 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'CYCLOMATIC_COMPLEXITY'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_SHORTDUMP'.
 
-    DATA mv_max_complexity TYPE i VALUE 5.
-
-    METHODS calculate_complexity
-      IMPORTING is_procedure   TYPE if_ci_atc_source_code_provider=>ty_procedure
-      RETURNING VALUE(rv_comp) TYPE i.
+    METHODS is_raise_shortdump
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_058 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Cyclomatic Complexity Threshold'
+    super->constructor( VALUE #( description       = 'skylint: Avoid RAISE SHORTDUMP (prefer graceful exceptions)'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-cyclomatic_complexity
+                                     ( code           = c_finding_codes-raise_shortdump
                                        severity       = if_ci_atc_check=>finding_severities-warning
-                                       text           = 'Procedure cyclomatic complexity exceeds threshold'
-                                       pseudo_comment = c_pseudo_comment ) )
-                                 attributes        = VALUE #(
-                                     ( name  = 'MAX_COMPLEXITY'
-                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                                       value = REF #( mv_max_complexity ) ) ) ) ).
+                                       text           = 'Avoid RAISE SHORTDUMP; prefer graceful class-based exceptions'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_max TYPE i.
-    DATA lv_cc  TYPE i.
-    FIELD-SYMBOLS <ls_first_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
-      RETURN.
-    ENDIF.
-
-    get_attribute( EXPORTING iv_name  = 'MAX_COMPLEXITY'
-                   IMPORTING ev_value = lv_max ).
-    IF lv_max <= 0.
-      lv_max = mv_max_complexity.
-    ENDIF.
-
-    lv_cc = calculate_complexity( is_procedure ).
-
-    IF lv_cc > lv_max.
-      ASSIGN is_procedure-statements[ 1 ] TO <ls_first_stmt>.
-      IF sy-subrc = 0.
-        report_statement( is_statement    = <ls_first_stmt>
-                          iv_finding_code = c_finding_codes-cyclomatic_complexity ).
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
+         WHERE keyword = 'RAISE'.
+      IF is_raise_shortdump( <ls_statement> ) = abap_true.
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-raise_shortdump ).
       ENDIF.
-    ENDIF.
+    ENDLOOP.
   ENDMETHOD.
 
-  METHOD calculate_complexity.
-    FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_lex TYPE string.
+  METHOD is_raise_shortdump.
+    DATA ls_tok2 TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    rv_comp = 1.
+    rv_res = abap_false.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_stmt>.
-      CASE <ls_stmt>-keyword.
-        WHEN 'IF' OR 'ELSEIF' OR 'LOOP' OR 'DO' OR 'WHILE' OR 'WHEN' OR 'CATCH' OR 'CLEANUP'.
-          rv_comp += 1.
-      ENDCASE.
-
-      LOOP AT <ls_stmt>-tokens INTO ls_tok.
-        lv_lex = to_upper( ls_tok-lexeme ).
-        CASE lv_lex.
-          WHEN 'AND' OR 'OR' OR 'COND' OR 'SWITCH'.
-            rv_comp += 1.
-        ENDCASE.
-      ENDLOOP.
-    ENDLOOP.
+    IF lines( is_statement-tokens ) >= 2.
+      READ TABLE is_statement-tokens INDEX 2 INTO ls_tok2.
+      IF sy-subrc = 0 AND to_upper( ls_tok2-lexeme ) = 'SHORTDUMP'.
+        rv_res = abap_true.
+      ENDIF.
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.

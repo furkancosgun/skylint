@@ -11,22 +11,14 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_082 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    DATA lv_str TYPE string VALUE 'Hello World'.
-    FIND 'World' IN lv_str.
-    RETURN.
+    COMMIT WORK.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    DATA lv_str TYPE string VALUE 'Hello World'.
-    FIND 'World' IN lv_str. "#EC CHECK_FIND_SUBRC
-    RETURN.
+    COMMIT WORK. "#EC AVOID_COMMIT_WORK
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lv_str TYPE string VALUE 'Hello World'.
-    FIND 'World' IN lv_str.
-    IF sy-subrc = 0.
-      RETURN.
-    ENDIF.
+    RETURN.
   ENDMETHOD.
 ENDCLASS.

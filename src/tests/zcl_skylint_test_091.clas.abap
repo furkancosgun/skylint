@@ -11,22 +11,36 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_091 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    DATA lv_tab TYPE string VALUE 'T100'.
-    DATA lt_res TYPE STANDARD TABLE OF t100 WITH EMPTY KEY.
+    DATA lt_data TYPE STANDARD TABLE OF i WITH EMPTY KEY.
+    DATA lv_val TYPE i.
 
-    SELECT * FROM (lv_tab) INTO TABLE @lt_res.
+    LOOP AT lt_data INTO lv_val.
+      IF lv_val > 0.
+        lv_val = lv_val * 2.
+      ENDIF.
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    DATA lv_tab TYPE string VALUE 'T100'.
-    DATA lt_res TYPE STANDARD TABLE OF t100 WITH EMPTY KEY.
+    DATA lt_data TYPE STANDARD TABLE OF i WITH EMPTY KEY.
+    DATA lv_val TYPE i.
 
-    SELECT * FROM (lv_tab) INTO TABLE @lt_res. "#EC AVOID_DYNAMIC_SQL
+    LOOP AT lt_data INTO lv_val.
+      IF lv_val > 0. "#EC GUARD_IN_LOOP
+        lv_val = lv_val * 2.
+      ENDIF.
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lt_res TYPE STANDARD TABLE OF t100 WITH EMPTY KEY.
+    DATA lt_data TYPE STANDARD TABLE OF i WITH EMPTY KEY.
+    DATA lv_val TYPE i.
 
-    SELECT * FROM t100 INTO TABLE @lt_res.
+    LOOP AT lt_data INTO lv_val.
+      IF lv_val <= 0.
+        CONTINUE.
+      ENDIF.
+      lv_val = lv_val * 2.
+    ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

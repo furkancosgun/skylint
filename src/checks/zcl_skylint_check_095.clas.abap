@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_095 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        calc_assign TYPE if_ci_atc_check=>ty_finding_code VALUE 'CALC_ASSGN',
+        needless_clear TYPE if_ci_atc_check=>ty_finding_code VALUE 'NEEDLES_CL',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,48 +15,63 @@ CLASS zcl_skylint_check_095 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_CALC_ASSIGN'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NEEDLESS_CLEAR'.
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_095 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Prefer calculation assignment operators (+=, -=, *=, /=) over var = var + 1'
+        VALUE #( description       = 'Detect needless CLEAR on newly declared variable or before exit'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-calc_assign
+                     ( code           = c_finding_codes-needless_clear
                        severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Use calculation assignment operator (+=, -=) or ADD statement replacement'
+                       text           = 'Variables are initialized automatically; avoid CLEAR after DATA or before exit'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_tok1 TYPE string.
-    DATA lv_tok2 TYPE string.
-    DATA lv_tok3 TYPE string.
-    DATA lv_tok4 TYPE string.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_idx      TYPE i.
+    DATA lv_count    TYPE i.
+    DATA lv_var_name TYPE string.
+    FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_prev> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_next> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF    <ls_statement>-keyword = 'ADD'      OR <ls_statement>-keyword = 'SUBTRACT'
-         OR <ls_statement>-keyword = 'MULTIPLY' OR <ls_statement>-keyword = 'DIVIDE'.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-calc_assign ).
-        CONTINUE.
-      ENDIF.
+    lv_count = lines( is_procedure-statements ).
+    lv_idx = 1.
 
-      IF lines( <ls_statement>-tokens ) >= 5.
-        lv_tok1 = to_upper( <ls_statement>-tokens[ 1 ]-lexeme ).
-        lv_tok2 = to_upper( <ls_statement>-tokens[ 2 ]-lexeme ).
-        lv_tok3 = to_upper( <ls_statement>-tokens[ 3 ]-lexeme ).
-        lv_tok4 = to_upper( <ls_statement>-tokens[ 4 ]-lexeme ).
+    WHILE lv_idx <= lv_count.
+      ASSIGN is_procedure-statements[ lv_idx ] TO <ls_stmt>.
 
-        IF lv_tok2 = '=' AND lv_tok1 = lv_tok3 AND ( lv_tok4 = '+' OR lv_tok4 = '-' OR lv_tok4 = '*' OR lv_tok4 = '/' ).
-          report_statement( is_statement    = <ls_statement>
-                            iv_finding_code = c_finding_codes-calc_assign ).
+      IF <ls_stmt>-keyword = 'CLEAR' AND lines( <ls_stmt>-tokens ) >= 2.
+        lv_var_name = to_upper( <ls_stmt>-tokens[ 2 ]-lexeme ).
+
+        " Case 1: Immediately after DATA declaration
+        IF lv_idx > 1.
+          ASSIGN is_procedure-statements[ lv_idx - 1 ] TO <ls_prev>.
+          IF <ls_prev>-keyword = 'DATA' AND lines( <ls_prev>-tokens ) >= 2.
+            IF to_upper( <ls_prev>-tokens[ 2 ]-lexeme ) = lv_var_name.
+              report_statement( is_statement    = <ls_stmt>
+                                iv_finding_code = c_finding_codes-needless_clear ).
+              lv_idx += 1.
+              CONTINUE.
+            ENDIF.
+          ENDIF.
+        ENDIF.
+
+        " Case 2: Immediately before ENDMETHOD
+        IF lv_idx < lv_count.
+          ASSIGN is_procedure-statements[ lv_idx + 1 ] TO <ls_next>.
+          IF <ls_next>-keyword = 'ENDMETHOD'.
+            report_statement( is_statement    = <ls_stmt>
+                              iv_finding_code = c_finding_codes-needless_clear ).
+          ENDIF.
         ENDIF.
       ENDIF.
-    ENDLOOP.
+
+      lv_idx += 1.
+    ENDWHILE.
   ENDMETHOD.
 ENDCLASS.

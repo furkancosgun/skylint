@@ -13,28 +13,32 @@ ENDCLASS.
 CLASS zcl_skylint_test_048 IMPLEMENTATION.
 
   METHOD without_pseudo_comments.
-    DATA lv_a TYPE i.
-    lv_a = 1.
-    lv_a = 2.
-    lv_a = 3.
-    lv_a = 4.
-    lv_a = 5.
-    lv_a = 6.
+    IF 1 = 1.
+      IF 2 = 2.
+        IF 3 = 3.
+          IF 4 = 4.
+          ENDIF.
+        ENDIF.
+      ENDIF.
+    ENDIF.
   ENDMETHOD.
 
-  METHOD with_pseudo_comments. "#EC METHOD_LENGTH
-    DATA lv_a TYPE i.
-    lv_a = 1.
-    lv_a = 2.
-    lv_a = 3.
-    lv_a = 4.
-    lv_a = 5.
-    lv_a = 6.
+  METHOD with_pseudo_comments.
+    IF 1 = 1.
+      IF 2 = 2.
+        IF 3 = 3.
+          IF 4 = 4. "#EC NESTING_DEPTH
+          ENDIF.
+        ENDIF.
+      ENDIF.
+    ENDIF.
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lv_a TYPE i.
-    lv_a = 1.
+    IF 1 = 1.
+      IF 2 = 2.
+      ENDIF.
+    ENDIF.
   ENDMETHOD.
 
 ENDCLASS.

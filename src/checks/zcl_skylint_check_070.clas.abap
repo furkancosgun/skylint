@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_070 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        generic_field_symbols TYPE if_ci_atc_check=>ty_finding_code VALUE 'GEN_FS_TYP',
+        bool_method_name TYPE if_ci_atc_check=>ty_finding_code VALUE 'BOOL_NAME',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_check_070 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'GENERIC_FS'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'BOOL_METHOD_NAME'.
 
 ENDCLASS.
 
@@ -23,76 +23,60 @@ ENDCLASS.
 CLASS zcl_skylint_check_070 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Avoid generic FIELD-SYMBOLS declarations (ANY/DATA/CLIKE/TABLE)'
+        VALUE #( description       = 'Enforce predicate naming (IS_, HAS_, CAN_) on boolean methods'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-generic_field_symbols
+                     ( code           = c_finding_codes-bool_method_name
                        severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Avoid generic built-in types for FIELD-SYMBOLS; specify concrete type'
+                       text           = 'Boolean-returning method should use predicate name (IS_, HAS_, CAN_)'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lv_tok      TYPE string.
-    DATA lv_type_idx TYPE i.
-    DATA lv_len      TYPE i.
-    DATA lv_has_of   TYPE abap_bool.
-    DATA lv_i        TYPE i.
+    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_is_bool_returning TYPE abap_bool.
+    DATA lv_meth_name         TYPE string.
+    DATA lv_len               TYPE i.
+    DATA lv_idx               TYPE i.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'FIELD-SYMBOLS'.
+         WHERE keyword = 'METHODS' OR keyword = 'CLASS-METHODS'.
+      lv_is_bool_returning = abap_false.
       lv_len = lines( <ls_statement>-tokens ).
-      lv_type_idx = 0.
+      IF lv_len < 2.
+        CONTINUE.
+      ENDIF.
 
-      " Find token position of TYPE
-      lv_i = 1.
-      WHILE lv_i <= lv_len.
-        IF to_upper( <ls_statement>-tokens[ lv_i ]-lexeme ) = 'TYPE'.
-          lv_type_idx = lv_i + 1.
+      lv_meth_name = to_upper( <ls_statement>-tokens[ 2 ]-lexeme ).
+
+      " Check if method returns boolean
+      lv_idx = 1.
+      WHILE lv_idx <= lv_len.
+        ASSIGN <ls_statement>-tokens[ lv_idx ] TO <ls_token>.
+        IF sy-subrc = 0 AND to_upper( <ls_token>-lexeme ) = 'RETURNING'.
+          " Look for boolean type keyword in remaining tokens
+          LOOP AT <ls_statement>-tokens ASSIGNING <ls_token> FROM lv_idx.
+            IF    to_upper( <ls_token>-lexeme ) = 'ABAP_BOOL'
+               OR to_upper( <ls_token>-lexeme ) = 'BOOLE_D'
+               OR to_upper( <ls_token>-lexeme ) = 'XSDBOOLEAN'
+               OR to_upper( <ls_token>-lexeme ) = 'BOOLEAN'.
+              lv_is_bool_returning = abap_true.
+              EXIT.
+            ENDIF.
+          ENDLOOP.
           EXIT.
         ENDIF.
-        lv_i += 1.
+        lv_idx += 1.
       ENDWHILE.
 
-      IF lv_type_idx <= 0 OR lv_type_idx > lv_len.
-        CONTINUE.
-      ENDIF.
-
-      lv_tok = to_upper( <ls_statement>-tokens[ lv_type_idx ]-lexeme ).
-
-      " Generic scalars
-      IF    lv_tok = 'ANY'       OR lv_tok = 'DATA'      OR lv_tok = 'CLIKE'
-         OR lv_tok = 'CSEQUENCE' OR lv_tok = 'XSEQUENCE'
-         OR lv_tok = 'NUMERIC'   OR lv_tok = 'SIMPLE'    OR lv_tok = 'DECFLOAT'.
+      IF     lv_is_bool_returning  = abap_true
+         AND lv_meth_name         NP 'IS_*'     AND lv_meth_name NP 'HAS_*'
+         AND lv_meth_name         NP 'CAN_*'    AND lv_meth_name NP 'CHECK_*'
+         AND lv_meth_name         NP 'ARE_*'    AND lv_meth_name NP 'WAS_*'
+         AND lv_meth_name         NP 'SHOULD_*'.
         report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-generic_field_symbols ).
-        CONTINUE.
-      ENDIF.
-
-      " Generic tables (ANY TABLE, INDEX TABLE, or STANDARD TABLE without OF)
-      IF lv_tok = 'TABLE' OR lv_tok = 'INDEX'.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-generic_field_symbols ).
-        CONTINUE.
-      ENDIF.
-
-      IF lv_tok = 'STANDARD' OR lv_tok = 'SORTED' OR lv_tok = 'HASHED'.
-        " Check if OF is missing
-        lv_has_of = abap_false.
-        lv_i = lv_type_idx + 1.
-        WHILE lv_i <= lv_len.
-          IF to_upper( <ls_statement>-tokens[ lv_i ]-lexeme ) = 'OF'.
-            lv_has_of = abap_true.
-            EXIT.
-          ENDIF.
-          lv_i += 1.
-        ENDWHILE.
-
-        IF lv_has_of = abap_false.
-          report_statement( is_statement    = <ls_statement>
-                            iv_finding_code = c_finding_codes-generic_field_symbols ).
-        ENDIF.
+                          iv_finding_code = c_finding_codes-bool_method_name ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.

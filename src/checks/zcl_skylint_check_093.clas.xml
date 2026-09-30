@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_093</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Suggest condense function</DESCRIPT>
+    <DESCRIPT>skylint: Detect ASSERT in production</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

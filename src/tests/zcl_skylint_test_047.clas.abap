@@ -3,12 +3,6 @@ CLASS zcl_skylint_test_047 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    TYPES:
-      BEGIN OF ty_struct,
-        col1 TYPE i,
-        col2 TYPE string,
-      END OF ty_struct.
-
     METHODS without_pseudo_comments.
     METHODS with_pseudo_comments.
     METHODS valid_code.
@@ -19,24 +13,28 @@ ENDCLASS.
 CLASS zcl_skylint_test_047 IMPLEMENTATION.
 
   METHOD without_pseudo_comments.
-    DATA ls_src TYPE ty_struct.
-    DATA ls_dst TYPE ty_struct.
-
-    MOVE-CORRESPONDING ls_src TO ls_dst.
+    DATA lv_a TYPE i.
+    lv_a = 1.
+    lv_a = 2.
+    lv_a = 3.
+    lv_a = 4.
+    lv_a = 5.
+    lv_a = 6.
   ENDMETHOD.
 
-  METHOD with_pseudo_comments.
-    DATA ls_src TYPE ty_struct.
-    DATA ls_dst TYPE ty_struct.
-
-    MOVE-CORRESPONDING ls_src TO ls_dst. "#EC PREFER_CORRESPONDING
+  METHOD with_pseudo_comments. "#EC METHOD_LENGTH
+    DATA lv_a TYPE i.
+    lv_a = 1.
+    lv_a = 2.
+    lv_a = 3.
+    lv_a = 4.
+    lv_a = 5.
+    lv_a = 6.
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA ls_src TYPE ty_struct.
-    DATA ls_dst TYPE ty_struct.
-
-    ls_dst = CORRESPONDING #( ls_src ).
+    DATA lv_a TYPE i.
+    lv_a = 1.
   ENDMETHOD.
 
 ENDCLASS.

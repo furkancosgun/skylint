@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_097 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        guard_method TYPE if_ci_atc_check=>ty_finding_code VALUE 'GUARD_METH',
+        param_escape TYPE if_ci_atc_check=>ty_finding_code VALUE 'PARAM_ESCP',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,62 +15,42 @@ CLASS zcl_skylint_check_097 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'GUARD_IN_METHOD'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'UNNECESSARY_ESCAPE'.
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_097 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Use early RETURN guard clause instead of wrapping method in IF block'
+        VALUE #( description       = 'Detect unnecessary exclamation mark parameter escape (!iv_param)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-guard_method
+                     ( code           = c_finding_codes-param_escape
                        severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Invert IF condition and use RETURN to reduce nesting in method'
+                       text           = 'Only escape parameter names with ! if they clash with an ABAP keyword'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_count TYPE i.
-    DATA lv_idx   TYPE i.
-    FIELD-SYMBOLS <ls_last>       TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_first_exec> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_stmt>       TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_name TYPE string.
+    FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_tok>  TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    lv_count = lines( is_procedure-statements ).
-    IF lv_count < 3.
-      RETURN.
-    ENDIF.
-
-    " Check if last statement before ENDMETHOD is ENDIF
-    ASSIGN is_procedure-statements[ lv_count ] TO <ls_last>.
-    IF <ls_last>-keyword = 'ENDMETHOD' AND lv_count >= 2.
-      ASSIGN is_procedure-statements[ lv_count - 1 ] TO <ls_last>.
-    ENDIF.
-
-    IF <ls_last>-keyword <> 'ENDIF'.
-      RETURN.
-    ENDIF.
-
-    " Find first executable statement (skip DATA, TYPES, CONSTANTS, FIELD-SYMBOLS)
-    lv_idx = 1.
-    WHILE lv_idx <= lv_count.
-      ASSIGN is_procedure-statements[ lv_idx ] TO <ls_stmt>.
-      IF     <ls_stmt>-keyword <> 'METHOD'
-         AND <ls_stmt>-keyword <> 'DATA'
-         AND <ls_stmt>-keyword <> 'TYPES'
-         AND <ls_stmt>-keyword <> 'CONSTANTS'
-         AND <ls_stmt>-keyword <> 'FIELD-SYMBOLS'.
-        ASSIGN <ls_stmt> TO <ls_first_exec>.
-        EXIT.
-      ENDIF.
-      lv_idx += 1.
-    ENDWHILE.
-
-    IF <ls_first_exec> IS ASSIGNED AND <ls_first_exec>-keyword = 'IF'.
-      report_statement( is_statement    = <ls_first_exec>
-                        iv_finding_code = c_finding_codes-guard_method ).
-    ENDIF.
+    LOOP AT is_procedure-statements ASSIGNING <ls_stmt>
+         WHERE keyword = 'METHODS' OR keyword = 'CLASS-METHODS'.
+      LOOP AT <ls_stmt>-tokens ASSIGNING <ls_tok>.
+        IF <ls_tok>-lexeme CP '!*'.
+          lv_name = to_upper( <ls_tok>-lexeme+1 ).
+          IF     lv_name <> 'EXPORTING' AND lv_name <> 'IMPORTING'
+             AND lv_name <> 'CHANGING'  AND lv_name <> 'RETURNING'
+             AND lv_name <> 'TABLES'    AND lv_name <> 'VALUE'
+             AND lv_name <> 'REFERENCE' AND lv_name <> 'DEFAULT'.
+            report_statement( is_statement    = <ls_stmt>
+                              iv_finding_code = c_finding_codes-param_escape ).
+            EXIT.
+          ENDIF.
+        ENDIF.
+      ENDLOOP.
+    ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

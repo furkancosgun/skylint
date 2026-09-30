@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_058</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Cyclomatic Complexity (058)</DESCRIPT>
+    <DESCRIPT>skylint: Avoid Shortdump (058)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

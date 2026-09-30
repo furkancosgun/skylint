@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_043</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Fully Typed Constants (043)</DESCRIPT>
+    <DESCRIPT>skylint: Omit Parameter Name in Single Call (043)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

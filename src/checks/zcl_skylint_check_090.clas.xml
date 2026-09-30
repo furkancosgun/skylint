@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_090</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Avoid magic offset expressions</DESCRIPT>
+    <DESCRIPT>skylint: Prefer calculation assignment</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

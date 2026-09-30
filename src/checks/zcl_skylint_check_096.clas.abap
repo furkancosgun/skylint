@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_096 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        guard_loop TYPE if_ci_atc_check=>ty_finding_code VALUE 'GUARD_LOOP',
+        decl_order TYPE if_ci_atc_check=>ty_finding_code VALUE 'DECL_ORDER',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,56 +15,48 @@ CLASS zcl_skylint_check_096 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'GUARD_IN_LOOP'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'LOCAL_DECL_ORDER'.
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_096 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Use early CONTINUE guard clause instead of wrapping loop in IF block'
+        VALUE #( description       = 'Enforce local declaration order (TYPES -> CONSTANTS -> DATA -> FIELD-SYMBOLS)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-guard_loop
+                     ( code           = c_finding_codes-decl_order
                        severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Invert IF condition and use CONTINUE to reduce nesting in loop'
+                       text           = 'Declare local TYPES before CONSTANTS before DATA before FIELD-SYMBOLS'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_idx      TYPE i.
-    DATA lv_count    TYPE i.
-    DATA lv_prev_idx TYPE i.
+    DATA lv_max_rank  TYPE i VALUE 0.
+    DATA lv_curr_rank TYPE i.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_next> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_if>   TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    lv_count = lines( is_procedure-statements ).
-    lv_idx = 1.
+    LOOP AT is_procedure-statements ASSIGNING <ls_stmt>.
+      lv_curr_rank = 0.
+      CASE <ls_stmt>-keyword.
+        WHEN 'TYPES'.
+          lv_curr_rank = 1.
+        WHEN 'CONSTANTS'.
+          lv_curr_rank = 2.
+        WHEN 'DATA'.
+          lv_curr_rank = 3.
+        WHEN 'FIELD-SYMBOLS'.
+          lv_curr_rank = 4.
+      ENDCASE.
 
-    WHILE lv_idx < lv_count.
-      ASSIGN is_procedure-statements[ lv_idx ] TO <ls_stmt>.
-      ASSIGN is_procedure-statements[ lv_idx + 1 ] TO <ls_next>.
-
-      IF <ls_stmt>-keyword = 'ENDIF' AND <ls_next>-keyword = 'ENDLOOP'.
-        lv_prev_idx = lv_idx - 1.
-        WHILE lv_prev_idx > 1.
-          ASSIGN is_procedure-statements[ lv_prev_idx ] TO <ls_if>.
-          IF <ls_if>-keyword = 'LOOP'.
-            EXIT.
-          ENDIF.
-          IF <ls_if>-keyword = 'IF'.
-            ASSIGN is_procedure-statements[ lv_prev_idx - 1 ] TO <ls_next>.
-            IF sy-subrc = 0 AND <ls_next>-keyword = 'LOOP'.
-              report_statement( is_statement    = <ls_if>
-                                iv_finding_code = c_finding_codes-guard_loop ).
-            ENDIF.
-            EXIT.
-          ENDIF.
-          lv_prev_idx -= 1.
-        ENDWHILE.
+      IF lv_curr_rank > 0.
+        IF lv_curr_rank < lv_max_rank.
+          report_statement( is_statement    = <ls_stmt>
+                            iv_finding_code = c_finding_codes-decl_order ).
+        ELSE.
+          lv_max_rank = lv_curr_rank.
+        ENDIF.
       ENDIF.
-      lv_idx += 1.
-    ENDWHILE.
+    ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

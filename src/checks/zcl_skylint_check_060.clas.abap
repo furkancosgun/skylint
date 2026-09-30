@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_060 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        raise_shortdump TYPE if_ci_atc_check=>ty_finding_code VALUE 'SHORTDUMP',
+        magic_number TYPE if_ci_atc_check=>ty_finding_code VALUE 'MAGIC_NUM',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,48 +15,62 @@ CLASS zcl_skylint_check_060 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_SHORTDUMP'.
-
-    METHODS is_raise_shortdump
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_res) TYPE abap_bool.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'MAGIC_NUMBER'.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_060 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Avoid RAISE SHORTDUMP (prefer graceful exceptions)'
+    super->constructor( VALUE #( description       = 'Avoid magic numbers in code; use named constants'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-raise_shortdump
+                                     ( code           = c_finding_codes-magic_number
                                        severity       = if_ci_atc_check=>finding_severities-warning
-                                       text           = 'Avoid RAISE SHORTDUMP; prefer graceful class-based exceptions'
+                                       text           = 'Avoid hardcoded magic numbers; declare a named constant'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_len    TYPE i.
+    DATA lv_idx    TYPE i.
+    DATA lv_char   TYPE c LENGTH 1.
+    DATA lv_is_num TYPE abap_bool.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'RAISE'.
-      IF is_raise_shortdump( <ls_statement> ) = abap_true.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-raise_shortdump ).
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      " Skip declarations (DATA, CONSTANTS, TYPES, STATICS)
+      IF    <ls_statement>-keyword = 'DATA'  OR <ls_statement>-keyword = 'CONSTANTS'
+         OR <ls_statement>-keyword = 'TYPES' OR <ls_statement>-keyword = 'STATICS'.
+        CONTINUE.
       ENDIF.
+
+      LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
+        lv_len = strlen( <ls_token>-lexeme ).
+        IF lv_len = 0.
+          CONTINUE.
+        ENDIF.
+
+        " Check if token consists purely of digits
+        lv_is_num = abap_true.
+        lv_idx = 0.
+        WHILE lv_idx < lv_len.
+          lv_char = <ls_token>-lexeme+lv_idx(1).
+          IF lv_char < '0' OR lv_char > '9'.
+            lv_is_num = abap_false.
+            EXIT.
+          ENDIF.
+          lv_idx += 1.
+        ENDWHILE.
+
+        " 0 and 1 are commonly allowed in indices/loop initializations
+        IF lv_is_num = abap_true AND <ls_token>-lexeme <> '0' AND <ls_token>-lexeme <> '1'.
+          report_statement( is_statement    = <ls_statement>
+                            iv_finding_code = c_finding_codes-magic_number ).
+          EXIT.
+        ENDIF.
+      ENDLOOP.
     ENDLOOP.
-  ENDMETHOD.
-
-  METHOD is_raise_shortdump.
-    DATA ls_tok2 TYPE if_ci_atc_source_code_provider=>ty_token.
-
-    rv_res = abap_false.
-
-    IF lines( is_statement-tokens ) >= 2.
-      READ TABLE is_statement-tokens INDEX 2 INTO ls_tok2.
-      IF sy-subrc = 0 AND to_upper( ls_tok2-lexeme ) = 'SHORTDUMP'.
-        rv_res = abap_true.
-      ENDIF.
-    ENDIF.
   ENDMETHOD.
 ENDCLASS.

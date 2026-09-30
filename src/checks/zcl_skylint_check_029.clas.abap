@@ -17,6 +17,10 @@ CLASS zcl_skylint_check_029 DEFINITION
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'RECEIVING_USAGE'.
 
+    METHODS is_exempt_statement
+      IMPORTING iv_keyword       TYPE string
+      RETURNING VALUE(rv_exempt) TYPE abap_bool.
+
 ENDCLASS.
 
 
@@ -38,9 +42,15 @@ CLASS zcl_skylint_check_029 IMPLEMENTATION.
     DATA lv_tok_idx        TYPE i.
     DATA ls_tok            TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA ls_next_tok       TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_lex            TYPE string.
+    DATA lv_next_lex       TYPE string.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF is_exempt_statement( <ls_statement>-keyword ) = abap_true.
+        CONTINUE.
+      ENDIF.
+
       lv_has_receiving  = abap_false.
       lv_has_exceptions = abap_false.
       lv_tok_cnt = lines( <ls_statement>-tokens ).
@@ -52,11 +62,14 @@ CLASS zcl_skylint_check_029 IMPLEMENTATION.
           ls_next_tok = <ls_statement>-tokens[ lv_tok_idx + 1 ].
         ENDIF.
 
-        IF ls_tok-lexeme = 'RECEIVING' AND ls_next_tok-lexeme <> '='.
+        lv_lex = to_upper( ls_tok-lexeme ).
+        lv_next_lex = to_upper( ls_next_tok-lexeme ).
+
+        IF lv_lex = 'RECEIVING' AND lv_next_lex <> '='.
           lv_has_receiving = abap_true.
         ENDIF.
 
-        IF ls_tok-lexeme = 'EXCEPTIONS' AND ls_next_tok-lexeme <> '='.
+        IF lv_lex = 'EXCEPTIONS' AND lv_next_lex <> '='.
           lv_has_exceptions = abap_true.
         ENDIF.
       ENDLOOP.
@@ -66,5 +79,16 @@ CLASS zcl_skylint_check_029 IMPLEMENTATION.
                           iv_finding_code = c_finding_codes-omit_receiving ).
       ENDIF.
     ENDLOOP.
+  ENDMETHOD.
+
+  METHOD is_exempt_statement.
+    CASE iv_keyword.
+      WHEN 'CALL' OR 'EXPORT' OR 'METHODS' OR 'CLASS-METHODS'
+        OR 'EVENTS' OR 'CLASS-EVENTS' OR 'INTERFACES' OR 'SUBMIT'
+        OR 'FORM' OR 'FUNCTION' OR 'MODULE'.
+        rv_exempt = abap_true.
+      WHEN OTHERS.
+        rv_exempt = abap_false.
+    ENDCASE.
   ENDMETHOD.
 ENDCLASS.

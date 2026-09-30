@@ -3,30 +3,27 @@ CLASS zcl_skylint_test_070 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS without_pseudo_comments.
-    METHODS with_pseudo_comments.
-    METHODS valid_code.
+    METHODS process_data
+      RETURNING VALUE(rv_ok) TYPE abap_bool.
+
+    METHODS calculate_result
+      RETURNING VALUE(rv_ok) TYPE abap_bool. "#EC BOOL_METHOD_NAME
+
+    METHODS is_valid
+      RETURNING VALUE(rv_ok) TYPE abap_bool.
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_070 IMPLEMENTATION.
-  METHOD without_pseudo_comments.
-    FIELD-SYMBOLS <fs_generic> TYPE any.
-    FIELD-SYMBOLS <fs_data> TYPE data.
-    FIELD-SYMBOLS <fs_clike> TYPE clike.
-    FIELD-SYMBOLS <fs_table> TYPE any table.
+  METHOD process_data.
+    rv_ok = abap_true.
   ENDMETHOD.
 
-  METHOD with_pseudo_comments.
-    FIELD-SYMBOLS <fs_generic> TYPE any.       "#EC GENERIC_FS
-    FIELD-SYMBOLS <fs_data> TYPE data.         "#EC GENERIC_FS
-    FIELD-SYMBOLS <fs_clike> TYPE clike.       "#EC GENERIC_FS
-    FIELD-SYMBOLS <fs_table> TYPE any table.   "#EC GENERIC_FS
+  METHOD calculate_result.
+    rv_ok = abap_true.
   ENDMETHOD.
 
-  METHOD valid_code.
-    FIELD-SYMBOLS <fs_str> TYPE string.
-    FIELD-SYMBOLS <fs_int> TYPE i.
-    FIELD-SYMBOLS <fs_tab> TYPE string_table.
+  METHOD is_valid.
+    rv_ok = abap_true.
   ENDMETHOD.
 ENDCLASS.

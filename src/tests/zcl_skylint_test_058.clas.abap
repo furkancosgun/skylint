@@ -13,34 +13,21 @@ ENDCLASS.
 CLASS zcl_skylint_test_058 IMPLEMENTATION.
 
   METHOD without_pseudo_comments.
-    IF 1 = 1.
-    ENDIF.
-    IF 2 = 2.
-    ENDIF.
-    IF 3 = 3.
-    ENDIF.
-    IF 4 = 4.
-    ENDIF.
-    IF 5 = 5.
-    ENDIF.
+    RAISE SHORTDUMP TYPE cx_sy_create_error
+      EXPORTING
+        textid = cx_sy_create_error=>cx_sy_create_error.
   ENDMETHOD.
 
-  METHOD with_pseudo_comments. "#EC CYCLOMATIC_COMPLEXITY
-    IF 1 = 1.
-    ENDIF.
-    IF 2 = 2.
-    ENDIF.
-    IF 3 = 3.
-    ENDIF.
-    IF 4 = 4.
-    ENDIF.
-    IF 5 = 5.
-    ENDIF.
+  METHOD with_pseudo_comments.
+    RAISE SHORTDUMP TYPE cx_sy_create_error "#EC AVOID_SHORTDUMP
+      EXPORTING
+        textid = cx_sy_create_error=>cx_sy_create_error.
   ENDMETHOD.
 
   METHOD valid_code.
-    IF 1 = 1.
-    ENDIF.
+    DATA lx_err TYPE REF TO cx_sy_create_error.
+    CREATE OBJECT lx_err.
+    RAISE EXCEPTION lx_err.
   ENDMETHOD.
 
 ENDCLASS.

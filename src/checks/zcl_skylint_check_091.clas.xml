@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_091</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Avoid dynamic SQL clauses</DESCRIPT>
+    <DESCRIPT>skylint: Suggest CONTINUE guard clause</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

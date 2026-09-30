@@ -11,28 +11,26 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_066 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    DATA lv_flag TYPE abap_bool VALUE abap_true.
-    DATA lv_text TYPE string.
-    IF lv_flag = abap_true.
-      lv_text = 'YES'.
-    ELSE.
-      lv_text = 'NO'.
-    ENDIF.
+    DATA lt_numbers TYPE STANDARD TABLE OF i WITH EMPTY KEY.
+    DATA lv_num TYPE i.
+    DATA lv_sum TYPE i VALUE 0.
+    LOOP AT lt_numbers INTO lv_num.
+      lv_sum = lv_sum + lv_num.
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    DATA lv_flag TYPE abap_bool VALUE abap_true.
-    DATA lv_text TYPE string.
-    IF lv_flag = abap_true. "#EC PREFER_COND
-      lv_text = 'YES'.
-    ELSE.
-      lv_text = 'NO'.
-    ENDIF.
+    DATA lt_numbers TYPE STANDARD TABLE OF i WITH EMPTY KEY.
+    DATA lv_num TYPE i.
+    DATA lv_sum TYPE i VALUE 0.
+    LOOP AT lt_numbers INTO lv_num. "#EC PREFER_REDUCE
+      lv_sum = lv_sum + lv_num.
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lv_flag TYPE abap_bool VALUE abap_true.
-    DATA lv_text TYPE string.
-    lv_text = COND #( WHEN lv_flag = abap_true THEN 'YES' ELSE 'NO' ).
+    DATA lt_numbers TYPE STANDARD TABLE OF i WITH EMPTY KEY.
+    DATA lv_sum TYPE i.
+    lv_sum = REDUCE i( INIT s = 0 FOR n IN lt_numbers NEXT s = s + n ).
   ENDMETHOD.
 ENDCLASS.

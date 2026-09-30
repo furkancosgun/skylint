@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_083</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Avoid FORM routines (083)</DESCRIPT>
+    <DESCRIPT>skylint: Prefer FILTER #( ) (083)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

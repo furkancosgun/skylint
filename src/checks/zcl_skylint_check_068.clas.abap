@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_068 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        constructor_logic TYPE if_ci_atc_check=>ty_finding_code VALUE 'CTOR_LOGIC',
+        static_class TYPE if_ci_atc_check=>ty_finding_code VALUE 'STAT_CLASS',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,9 +15,7 @@ CLASS zcl_skylint_check_068 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'CONSTRUCTOR_LOGIC'.
-
-    DATA mv_max_statements TYPE i VALUE 10.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_STATIC_CLS'.
 
 ENDCLASS.
 
@@ -25,57 +23,42 @@ ENDCLASS.
 CLASS zcl_skylint_check_068 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Keep constructors clean; avoid heavy business logic/loops/DB access'
+        VALUE #( description       = 'Avoid static-only classes; prefer instantiable interface-based design'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-constructor_logic
+                     ( code           = c_finding_codes-static_class
                        severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Avoid heavy business logic/loops in constructor; use injection only'
-                       pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #( ( name  = 'MAX_STATEMENTS'
-                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                                                value = REF #( mv_max_statements ) ) ) ) ).
+                       text           = 'Avoid static-only classes; declare instance methods and interfaces'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lv_max_stmts  TYPE i.
-    DATA lv_stmt_count TYPE i.
+    DATA lv_has_instance_meth TYPE abap_bool.
+    DATA lv_static_meth_cnt   TYPE i.
+    DATA ls_first_class_stmt  TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_found_class       TYPE abap_bool.
 
-    IF     is_procedure-id-name NP '*CONSTRUCTOR*'
-       AND is_procedure-id-name NP '*WITHOUT_PSEUDO_COMMENTS*'
-       AND is_procedure-id-name NP '*WITH_PSEUDO_COMMENTS*'.
-      RETURN.
-    ENDIF.
-
-    get_attribute( EXPORTING iv_name  = 'MAX_STATEMENTS'
-                   IMPORTING ev_value = lv_max_stmts ).
-
-    IF lv_max_stmts <= 0.
-      lv_max_stmts = mv_max_statements.
-    ENDIF.
-
-    lv_stmt_count = 0.
+    lv_has_instance_meth = abap_false.
+    lv_static_meth_cnt = 0.
+    lv_found_class = abap_false.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      " Disallow heavy keywords directly
-      IF    <ls_statement>-keyword = 'LOOP'          OR <ls_statement>-keyword = 'SELECT'
-         OR <ls_statement>-keyword = 'CALL FUNCTION' OR <ls_statement>-keyword = 'SUBMIT'.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-constructor_logic ).
-        CONTINUE.
-      ENDIF.
-
-      " Count logic statements (excluding METHOD, ENDMETHOD, DATA, TYPES, STATICS, CONSTANTS)
-      IF     <ls_statement>-keyword <> 'METHOD'  AND <ls_statement>-keyword <> 'ENDMETHOD'
-         AND <ls_statement>-keyword <> 'DATA'    AND <ls_statement>-keyword <> 'TYPES'
-         AND <ls_statement>-keyword <> 'STATICS' AND <ls_statement>-keyword <> 'CONSTANTS'.
-        lv_stmt_count += 1.
-        IF lv_stmt_count > lv_max_stmts.
-          report_statement( is_statement    = <ls_statement>
-                            iv_finding_code = c_finding_codes-constructor_logic ).
+      IF <ls_statement>-keyword = 'CLASS' AND lv_found_class = abap_false.
+        ls_first_class_stmt = <ls_statement>.
+        lv_found_class = abap_true.
+      ELSEIF <ls_statement>-keyword = 'METHODS'.
+        IF <ls_statement>-tokens[ 2 ]-lexeme <> 'CONSTRUCTOR'.
+          lv_has_instance_meth = abap_true.
         ENDIF.
+      ELSEIF <ls_statement>-keyword = 'CLASS-METHODS'.
+        lv_static_meth_cnt += 1.
       ENDIF.
     ENDLOOP.
+
+    IF lv_static_meth_cnt > 0 AND lv_has_instance_meth = abap_false AND lv_found_class = abap_true.
+      report_statement( is_statement    = ls_first_class_stmt
+                        iv_finding_code = c_finding_codes-static_class ).
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.

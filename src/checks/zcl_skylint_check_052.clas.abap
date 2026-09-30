@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_052 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_returning TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFER_RET',
+        dangerous_statement TYPE if_ci_atc_check=>ty_finding_code VALUE 'DANGER_STM',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,9 +15,9 @@ CLASS zcl_skylint_check_052 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_RETURNING'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'DANGEROUS_STMT'.
 
-    METHODS is_single_exporting_only
+    METHODS is_dangerous_statement
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
@@ -26,78 +26,59 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_052 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'skylint: Prefer RETURNING over single EXPORTING'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-prefer_returning
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Prefer functional RETURNING parameter over single EXPORTING parameter'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'skylint: Dangerous / Unmanaged Dynamic Statements'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-dangerous_statement
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Dangerous or unmanaged dynamic statement detected'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
-      RETURN.
-    ENDIF.
-
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'METHODS' OR keyword = 'CLASS-METHODS'.
-      IF is_single_exporting_only( <ls_statement> ) = abap_true.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF is_dangerous_statement( <ls_statement> ) = abap_true.
         report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-prefer_returning ).
+                          iv_finding_code = c_finding_codes-dangerous_statement ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD is_single_exporting_only.
-    DATA ls_tok       TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_lex       TYPE string.
-    DATA lv_mode      TYPE string.
-    DATA lv_exp_count TYPE i.
-    DATA lv_chg_count TYPE i.
-    DATA lv_ret_count TYPE i.
+  METHOD is_dangerous_statement.
+    DATA ls_tok1 TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok2 TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_tok1 TYPE string.
+    DATA lv_tok2 TYPE string.
 
     rv_res = abap_false.
-    lv_mode = ''.
-    lv_exp_count = 0.
-    lv_chg_count = 0.
-    lv_ret_count = 0.
 
-    LOOP AT is_statement-tokens INTO ls_tok.
-      lv_lex = to_upper( ls_tok-lexeme ).
-
-      IF lv_lex = 'FOR' OR lv_lex = 'EVENT' OR lv_lex = 'REDEFINITION'.
-        RETURN.
-      ENDIF.
-
-      CASE lv_lex.
-        WHEN 'IMPORTING'.
-          lv_mode = 'IMPORTING'.
-        WHEN 'EXPORTING'.
-          lv_mode = 'EXPORTING'.
-        WHEN 'CHANGING'.
-          lv_mode = 'CHANGING'.
-        WHEN 'RETURNING'.
-          lv_mode = 'RETURNING'.
-        WHEN 'RAISING' OR 'EXCEPTIONS'.
-          lv_mode = ''.
-        WHEN 'TYPE' OR 'LIKE'.
-          CASE lv_mode.
-            WHEN 'EXPORTING'.
-              lv_exp_count += 1.
-            WHEN 'CHANGING'.
-              lv_chg_count += 1.
-            WHEN 'RETURNING'.
-              lv_ret_count += 1.
-          ENDCASE.
-      ENDCASE.
-    ENDLOOP.
-
-    IF lv_exp_count = 1 AND lv_chg_count = 0 AND lv_ret_count = 0.
+    IF is_statement-keyword = 'SYNTAX-CHECK' OR is_statement-keyword = 'SYSTEM-CALL'.
       rv_res = abap_true.
+      RETURN.
+    ENDIF.
+
+    IF lines( is_statement-tokens ) < 2.
+      RETURN.
+    ENDIF.
+
+    READ TABLE is_statement-tokens INDEX 1 INTO ls_tok1.
+    IF sy-subrc = 0.
+      READ TABLE is_statement-tokens INDEX 2 INTO ls_tok2.
+      IF sy-subrc = 0.
+        lv_tok1 = to_upper( ls_tok1-lexeme ).
+        lv_tok2 = to_upper( ls_tok2-lexeme ).
+
+        IF    ( lv_tok1 = 'SYNTAX'   AND lv_tok2 = 'CHECK' )
+           OR ( lv_tok1 = 'SYSTEM'   AND lv_tok2 = 'CALL' )
+           OR ( lv_tok1 = 'GENERATE' AND lv_tok2 = 'SUBROUTINE' )
+           OR ( lv_tok1 = 'INSERT'   AND lv_tok2 = 'REPORT' )
+           OR ( lv_tok1 = 'DELETE'   AND lv_tok2 = 'REPORT' )
+           OR ( lv_tok1 = 'READ'     AND lv_tok2 = 'REPORT' ).
+          rv_res = abap_true.
+        ENDIF.
+      ENDIF.
     ENDIF.
   ENDMETHOD.
 ENDCLASS.

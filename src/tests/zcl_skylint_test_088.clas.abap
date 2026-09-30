@@ -1,39 +1,21 @@
 CLASS zcl_skylint_test_088 DEFINITION
-  PUBLIC FINAL
+  PUBLIC
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS without_pseudo_comments.
-    METHODS with_pseudo_comments.
-    METHODS valid_code.
+    METHODS calculate_amount.
+    METHODS process_order. "#EC PREFER_FINAL_METHOD
+    METHODS get_id FINAL.
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_088 IMPLEMENTATION.
-  METHOD without_pseudo_comments.
-    DATA lt_data TYPE STANDARD TABLE OF string WITH EMPTY KEY.
-    DATA lv_line TYPE string.
-
-    LOOP AT lt_data INTO lv_line.
-      MODIFY lt_data FROM lv_line.
-    ENDLOOP.
+  METHOD calculate_amount.
   ENDMETHOD.
 
-  METHOD with_pseudo_comments.
-    DATA lt_data TYPE STANDARD TABLE OF string WITH EMPTY KEY.
-    DATA lv_line TYPE string.
-
-    LOOP AT lt_data INTO lv_line.
-      MODIFY lt_data FROM lv_line. "#EC AVOID_FULL_MODIFY
-    ENDLOOP.
+  METHOD process_order.
   ENDMETHOD.
 
-  METHOD valid_code.
-    DATA lt_data TYPE STANDARD TABLE OF string WITH EMPTY KEY.
-    DATA lv_line TYPE string.
-
-    LOOP AT lt_data INTO lv_line.
-      MODIFY lt_data FROM lv_line TRANSPORTING (table_line).
-    ENDLOOP.
+  METHOD get_id.
   ENDMETHOD.
 ENDCLASS.

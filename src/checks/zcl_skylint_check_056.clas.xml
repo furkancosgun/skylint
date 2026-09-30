@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_056</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: SQL Host Variables (056)</DESCRIPT>
+    <DESCRIPT>skylint: Cyclomatic Complexity (056)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_080</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Avoid raising cx_sy_* exceptions (080)</DESCRIPT>
+    <DESCRIPT>skylint: Avoid hardcoded sy-uname (080)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

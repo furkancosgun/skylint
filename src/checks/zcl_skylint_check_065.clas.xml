@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_065</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Avoid Obsolete Loop Control (065)</DESCRIPT>
+    <DESCRIPT>skylint: Constructor Super Call (065)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

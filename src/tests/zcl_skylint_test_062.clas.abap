@@ -11,24 +11,34 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_062 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    DATA lv_status TYPE i VALUE 0.
-    IF lv_status = 42.
-      lv_status = 99.
-    ENDIF.
+    DATA lt_tab TYPE string_table.
+    DATA lv_line TYPE string.
+    LOOP AT lt_tab INTO lv_line.
+      AT FIRST.
+        lv_line = 'first'.
+      ENDAT.
+      SUM.
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    DATA lv_status TYPE i VALUE 0.
-    IF lv_status = 42. "#EC MAGIC_NUMBER
-      lv_status = 99.  "#EC MAGIC_NUMBER
-    ENDIF.
+    DATA lt_tab TYPE string_table.
+    DATA lv_line TYPE string.
+    LOOP AT lt_tab INTO lv_line.
+      AT FIRST. "#EC AVOID_LOOP_CTRL
+        lv_line = 'first'.
+      ENDAT.
+      SUM. "#EC AVOID_LOOP_CTRL
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD valid_code.
-    CONSTANTS c_max_limit TYPE i VALUE 42.
-    DATA lv_status TYPE i VALUE 0.
-    IF lv_status = c_max_limit.
-      lv_status = 1.
-    ENDIF.
+    DATA lt_tab TYPE string_table.
+    DATA lv_line TYPE string.
+    LOOP AT lt_tab INTO lv_line.
+      IF sy-tabix = 1.
+        lv_line = 'first'.
+      ENDIF.
+    ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

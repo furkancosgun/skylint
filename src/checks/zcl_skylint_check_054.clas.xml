@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_054</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Dangerous Statements (054)</DESCRIPT>
+    <DESCRIPT>skylint: SQL Host Variables (054)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

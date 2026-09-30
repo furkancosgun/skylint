@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_084</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Avoid hardcoded sy-uname (084)</DESCRIPT>
+    <DESCRIPT>skylint: Avoid full MODIFY in LOOP</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

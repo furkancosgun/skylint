@@ -11,34 +11,14 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_079 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    TRY.
-        TRY.
-            RETURN.
-          CATCH cx_static_check.
-            RETURN.
-        ENDTRY.
-      CATCH cx_root.
-        RETURN.
-    ENDTRY.
+    PERFORM my_subroutine IF FOUND.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    TRY.
-        TRY. "#EC AVOID_NESTED_TRY
-            RETURN.
-          CATCH cx_static_check.
-            RETURN.
-        ENDTRY.
-      CATCH cx_root.
-        RETURN.
-    ENDTRY.
+    PERFORM my_subroutine IF FOUND. "#EC AVOID_FORM_ROUTINE
   ENDMETHOD.
 
   METHOD valid_code.
-    TRY.
-        RETURN.
-      CATCH cx_static_check.
-        RETURN.
-    ENDTRY.
+    without_pseudo_comments( ).
   ENDMETHOD.
 ENDCLASS.

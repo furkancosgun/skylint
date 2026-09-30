@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_094</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Suggest to_upper / to_lower</DESCRIPT>
+    <DESCRIPT>skylint: Detect unused local variables</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

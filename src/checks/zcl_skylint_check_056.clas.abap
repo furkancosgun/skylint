@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_056 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        sql_host_escape TYPE if_ci_atc_check=>ty_finding_code VALUE 'SQL_HOST_E',
+        cyclomatic_complexity TYPE if_ci_atc_check=>ty_finding_code VALUE 'CYCLO_COMP',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,138 +15,78 @@ CLASS zcl_skylint_check_056 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'SQL_HOST_VAR'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'CYCLOMATIC_COMPLEXITY'.
 
-    METHODS is_unescaped_host_var
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_res) TYPE abap_bool.
+    DATA mv_max_complexity TYPE i VALUE 5.
 
-    METHODS is_unescaped_rhs_token
-      IMPORTING iv_token      TYPE string
-      RETURNING VALUE(rv_res) TYPE abap_bool.
+    METHODS calculate_complexity
+      IMPORTING is_procedure   TYPE if_ci_atc_source_code_provider=>ty_procedure
+      RETURNING VALUE(rv_comp) TYPE i.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_056 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: SQL Escape Host Variables (@)'
+    super->constructor( VALUE #( description       = 'skylint: Cyclomatic Complexity Threshold'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-sql_host_escape
+                                     ( code           = c_finding_codes-cyclomatic_complexity
                                        severity       = if_ci_atc_check=>finding_severities-warning
-                                       text           = 'Host variables in ABAP SQL must be escaped with @'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                                       text           = 'Procedure cyclomatic complexity exceeds threshold'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 attributes        = VALUE #(
+                                     ( name  = 'MAX_COMPLEXITY'
+                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                       value = REF #( mv_max_complexity ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_max TYPE i.
+    DATA lv_cc  TYPE i.
+    FIELD-SYMBOLS <ls_first_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE    keyword = 'SELECT' OR keyword = 'UPDATE' OR keyword = 'DELETE'
-               OR keyword = 'INSERT' OR keyword = 'MODIFY'.
-      IF is_unescaped_host_var( <ls_statement> ) = abap_true.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-sql_host_escape ).
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
+    get_attribute( EXPORTING iv_name  = 'MAX_COMPLEXITY'
+                   IMPORTING ev_value = lv_max ).
+    IF lv_max <= 0.
+      lv_max = mv_max_complexity.
+    ENDIF.
+
+    lv_cc = calculate_complexity( is_procedure ).
+
+    IF lv_cc > lv_max.
+      ASSIGN is_procedure-statements[ 1 ] TO <ls_first_stmt>.
+      IF sy-subrc = 0.
+        report_statement( is_statement    = <ls_first_stmt>
+                          iv_finding_code = c_finding_codes-cyclomatic_complexity ).
       ENDIF.
-    ENDLOOP.
+    ENDIF.
   ENDMETHOD.
 
-  METHOD is_unescaped_host_var.
-    DATA lv_idx      TYPE i.
-    DATA lv_count    TYPE i.
-    DATA lv_tok      TYPE string.
-    DATA lv_next     TYPE string.
-    DATA lv_in_where TYPE abap_bool.
+  METHOD calculate_complexity.
+    FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_lex TYPE string.
 
-    rv_res = abap_false.
-    lv_in_where = abap_false.
-    lv_count = lines( is_statement-tokens ).
+    rv_comp = 1.
 
-    DO lv_count TIMES.
-      lv_idx = sy-index.
-      lv_tok = to_upper( is_statement-tokens[ lv_idx ]-lexeme ).
+    LOOP AT is_procedure-statements ASSIGNING <ls_stmt>.
+      CASE <ls_stmt>-keyword.
+        WHEN 'IF' OR 'ELSEIF' OR 'LOOP' OR 'DO' OR 'WHILE' OR 'WHEN' OR 'CATCH' OR 'CLEANUP'.
+          rv_comp += 1.
+      ENDCASE.
 
-      " 1. Track WHERE / HAVING / SET clause
-      IF lv_tok = 'WHERE' OR lv_tok = 'HAVING' OR lv_tok = 'SET'.
-        lv_in_where = abap_true.
-      ENDIF.
-
-      " 2. Check INTO targets
-      IF lv_tok = 'INTO' AND lv_idx < lv_count.
-        lv_next = to_upper( is_statement-tokens[ lv_idx + 1 ]-lexeme ).
-        CASE lv_next.
-          WHEN 'TABLE'.
-            IF lv_idx + 2 <= lv_count AND is_statement-tokens[ lv_idx + 2 ]-lexeme(1) <> '@'.
-              rv_res = abap_true.
-              RETURN.
-            ENDIF.
-          WHEN 'CORRESPONDING'.
-            IF lv_idx + 5 <= lv_count AND is_statement-tokens[ lv_idx + 5 ]-lexeme(1) <> '@'.
-              rv_res = abap_true.
-              RETURN.
-            ENDIF.
-          WHEN OTHERS.
-            IF     lv_next <> 'DISTINCT' AND lv_next(1) <> '('
-               AND is_statement-tokens[ lv_idx + 1 ]-lexeme(1) <> '@'.
-              rv_res = abap_true.
-              RETURN.
-            ENDIF.
+      LOOP AT <ls_stmt>-tokens INTO ls_tok.
+        lv_lex = to_upper( ls_tok-lexeme ).
+        CASE lv_lex.
+          WHEN 'AND' OR 'OR' OR 'COND' OR 'SWITCH'.
+            rv_comp += 1.
         ENDCASE.
-      ENDIF.
-
-      " 3. Check FOR ALL ENTRIES IN <target>
-      IF     lv_tok = 'ENTRIES' AND lv_idx + 2 <= lv_count
-         AND to_upper( is_statement-tokens[ lv_idx + 1 ]-lexeme )  = 'IN'
-         AND is_statement-tokens[ lv_idx + 2 ]-lexeme(1)          <> '@'.
-        rv_res = abap_true.
-        RETURN.
-      ENDIF.
-
-      " 4. Check comparisons in WHERE / HAVING / SET clause
-      IF     lv_in_where = abap_true AND lv_idx < lv_count
-         AND (    lv_tok = '='    OR lv_tok = '<>' OR lv_tok = '<'
-               OR lv_tok = '>'    OR lv_tok = '<=' OR lv_tok = '>='
-               OR lv_tok = 'LIKE' ).
-        lv_next = is_statement-tokens[ lv_idx + 1 ]-lexeme.
-        IF is_unescaped_rhs_token( lv_next ) = abap_true.
-          rv_res = abap_true.
-          RETURN.
-        ENDIF.
-      ENDIF.
-    ENDDO.
-  ENDMETHOD.
-
-  METHOD is_unescaped_rhs_token.
-    DATA lv_first TYPE c LENGTH 1.
-    DATA lv_upper TYPE string.
-
-    rv_res = abap_false.
-    IF iv_token IS INITIAL.
-      RETURN.
-    ENDIF.
-
-    lv_first = iv_token(1).
-    " Escaped host variable (@...), string literals ('...', `...`), or numbers/parentheses
-    IF    lv_first = '@' OR lv_first = '''' OR lv_first = '`'
-       OR lv_first = '(' OR ( lv_first >= '0' AND lv_first <= '9' )
-       OR lv_first = '+' OR lv_first = '-'.
-      RETURN.
-    ENDIF.
-
-    " Join field (tab~field) or DB column reference
-    IF iv_token CS '~'.
-      RETURN.
-    ENDIF.
-
-    lv_upper = to_upper( iv_token ).
-    " Built-in SQL keywords / constants
-    IF    lv_upper = 'NULL' OR lv_upper = 'INITIAL' OR lv_upper = 'SPACE'
-       OR lv_upper = 'TRUE' OR lv_upper = 'FALSE'.
-      RETURN.
-    ENDIF.
-
-    " Unescaped host variable identifier
-    rv_res = abap_true.
+      ENDLOOP.
+    ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

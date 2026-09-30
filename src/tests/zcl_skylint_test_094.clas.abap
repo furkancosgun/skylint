@@ -11,17 +11,15 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_094 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    DATA lv_text TYPE string VALUE 'abc'.
-    TRANSLATE lv_text TO UPPER CASE.
+    DATA lv_unused TYPE i.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    DATA lv_text TYPE string VALUE 'abc'.
-    TRANSLATE lv_text TO UPPER CASE. "#EC TRANSLATE_STMT
+    DATA lv_unused TYPE i. "#EC UNUSED_VAR
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lv_text TYPE string VALUE 'abc'.
-    lv_text = to_upper( lv_text ).
+    DATA lv_used TYPE i.
+    lv_used = 10.
   ENDMETHOD.
 ENDCLASS.

@@ -3,32 +3,23 @@ CLASS zcl_skylint_test_097 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS without_pseudo_comments.
-    METHODS with_pseudo_comments.
-    METHODS valid_code.
+    METHODS method_one IMPORTING !iv_param TYPE string.
+    METHODS method_two IMPORTING !iv_param TYPE string. "#EC UNNECESSARY_ESCAPE
+    METHODS method_three IMPORTING !exporting TYPE string.
+    METHODS method_four IMPORTING iv_param TYPE string.
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_097 IMPLEMENTATION.
-  METHOD without_pseudo_comments.
-    DATA lv_valid TYPE abap_bool VALUE abap_true.
-    IF lv_valid = abap_true.
-      lv_valid = abap_false.
-    ENDIF.
+  METHOD method_one.
   ENDMETHOD.
 
-  METHOD with_pseudo_comments.
-    DATA lv_valid TYPE abap_bool VALUE abap_true.
-    IF lv_valid = abap_true. "#EC GUARD_IN_METHOD
-      lv_valid = abap_false.
-    ENDIF.
+  METHOD method_two.
   ENDMETHOD.
 
-  METHOD valid_code.
-    DATA lv_valid TYPE abap_bool VALUE abap_true.
-    IF lv_valid = abap_false.
-      RETURN.
-    ENDIF.
-    lv_valid = abap_false.
+  METHOD method_three.
+  ENDMETHOD.
+
+  METHOD method_four.
   ENDMETHOD.
 ENDCLASS.

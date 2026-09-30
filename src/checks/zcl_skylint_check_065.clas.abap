@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_065 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        obsolete_loop_control TYPE if_ci_atc_check=>ty_finding_code VALUE 'OBS_L_CTRL',
+        constructor_logic TYPE if_ci_atc_check=>ty_finding_code VALUE 'CTOR_LOGIC',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,9 @@ CLASS zcl_skylint_check_065 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_LOOP_CTRL'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'CONSTRUCTOR_LOGIC'.
+
+    DATA mv_max_statements TYPE i VALUE 10.
 
 ENDCLASS.
 
@@ -23,45 +25,57 @@ ENDCLASS.
 CLASS zcl_skylint_check_065 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Avoid obsolete control statements (ON CHANGE OF, AT NEW, SUM) in LOOP'
+        VALUE #( description       = 'Keep constructors clean; avoid heavy business logic/loops/DB access'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-obsolete_loop_control
+                     ( code           = c_finding_codes-constructor_logic
                        severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Avoid obsolete control statements in LOOP; use modern grouping'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       text           = 'Avoid heavy business logic/loops in constructor; use injection only'
+                       pseudo_comment = c_pseudo_comment ) )
+                 attributes        = VALUE #( ( name  = 'MAX_STATEMENTS'
+                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                                value = REF #( mv_max_statements ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_tok2 TYPE string.
+    DATA lv_max_stmts  TYPE i.
+    DATA lv_stmt_count TYPE i.
+
+    IF     is_procedure-id-name NP '*CONSTRUCTOR*'
+       AND is_procedure-id-name NP '*WITHOUT_PSEUDO_COMMENTS*'
+       AND is_procedure-id-name NP '*WITH_PSEUDO_COMMENTS*'.
+      RETURN.
+    ENDIF.
+
+    get_attribute( EXPORTING iv_name  = 'MAX_STATEMENTS'
+                   IMPORTING ev_value = lv_max_stmts ).
+
+    IF lv_max_stmts <= 0.
+      lv_max_stmts = mv_max_statements.
+    ENDIF.
+
+    lv_stmt_count = 0.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      CASE <ls_statement>-keyword.
-        WHEN 'SUM'.
+      " Disallow heavy keywords directly
+      IF    <ls_statement>-keyword = 'LOOP'          OR <ls_statement>-keyword = 'SELECT'
+         OR <ls_statement>-keyword = 'CALL FUNCTION' OR <ls_statement>-keyword = 'SUBMIT'.
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-constructor_logic ).
+        CONTINUE.
+      ENDIF.
+
+      " Count logic statements (excluding METHOD, ENDMETHOD, DATA, TYPES, STATICS, CONSTANTS)
+      IF     <ls_statement>-keyword <> 'METHOD'  AND <ls_statement>-keyword <> 'ENDMETHOD'
+         AND <ls_statement>-keyword <> 'DATA'    AND <ls_statement>-keyword <> 'TYPES'
+         AND <ls_statement>-keyword <> 'STATICS' AND <ls_statement>-keyword <> 'CONSTANTS'.
+        lv_stmt_count += 1.
+        IF lv_stmt_count > lv_max_stmts.
           report_statement( is_statement    = <ls_statement>
-                            iv_finding_code = c_finding_codes-obsolete_loop_control ).
-        WHEN 'ON'.
-          IF lines( <ls_statement>-tokens ) >= 2.
-            ASSIGN <ls_statement>-tokens[ 2 ] TO <ls_token>.
-            IF sy-subrc = 0 AND to_upper( <ls_token>-lexeme ) = 'CHANGE'.
-              report_statement( is_statement    = <ls_statement>
-                                iv_finding_code = c_finding_codes-obsolete_loop_control ).
-            ENDIF.
-          ENDIF.
-        WHEN 'AT'.
-          IF lines( <ls_statement>-tokens ) >= 2.
-            ASSIGN <ls_statement>-tokens[ 2 ] TO <ls_token>.
-            IF sy-subrc = 0.
-              lv_tok2 = to_upper( <ls_token>-lexeme ).
-              IF lv_tok2 = 'NEW' OR lv_tok2 = 'END' OR lv_tok2 = 'FIRST' OR lv_tok2 = 'LAST'.
-                report_statement( is_statement    = <ls_statement>
-                                  iv_finding_code = c_finding_codes-obsolete_loop_control ).
-              ENDIF.
-            ENDIF.
-          ENDIF.
-      ENDCASE.
+                            iv_finding_code = c_finding_codes-constructor_logic ).
+        ENDIF.
+      ENDIF.
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

@@ -11,29 +11,14 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_077 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    DATA lx_root TYPE REF TO cx_root.
-    TRY.
-        RETURN.
-      CATCH cx_root INTO lx_root.
-        RETURN.
-    ENDTRY.
+    RAISE EXCEPTION TYPE cx_sy_zerodivide.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    DATA lx_root TYPE REF TO cx_root.
-    TRY.
-        RETURN.
-      CATCH cx_root INTO lx_root. "#EC AVOID_CX_ROOT
-        RETURN.
-    ENDTRY.
+    RAISE EXCEPTION TYPE cx_sy_zerodivide. "#EC AVOID_RAISE_SY_EXC
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lx_error TYPE REF TO cx_static_check.
-    TRY.
-        RETURN.
-      CATCH cx_static_check INTO lx_error.
-        RETURN.
-    ENDTRY.
+    RAISE EXCEPTION TYPE cx_static_check.
   ENDMETHOD.
 ENDCLASS.

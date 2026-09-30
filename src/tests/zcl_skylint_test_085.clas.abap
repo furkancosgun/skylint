@@ -3,25 +3,23 @@ CLASS zcl_skylint_test_085 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS without_pseudo_comments.
-    METHODS with_pseudo_comments.
-    METHODS valid_code.
+    METHODS run_calculation FOR TESTING.
+    METHODS execute_flow FOR TESTING. "#EC TEST_METHOD_NAME
+    METHODS test_valid_operation FOR TESTING.
+    METHODS should_return_true FOR TESTING.
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_085 IMPLEMENTATION.
-  METHOD without_pseudo_comments.
-    DATA lt_data TYPE TABLE OF tadir.
-    SELECT * FROM tadir USING CLIENT '100' INTO TABLE @lt_data.
+  METHOD run_calculation.
   ENDMETHOD.
 
-  METHOD with_pseudo_comments.
-    DATA lt_data TYPE TABLE OF tadir.
-    SELECT * FROM tadir USING CLIENT '100' INTO TABLE @lt_data. "#EC AVOID_CLIENT_SPEC
+  METHOD execute_flow.
   ENDMETHOD.
 
-  METHOD valid_code.
-    DATA lt_data TYPE TABLE OF tadir.
-    SELECT * FROM tadir INTO TABLE @lt_data.
+  METHOD test_valid_operation.
+  ENDMETHOD.
+
+  METHOD should_return_true.
   ENDMETHOD.
 ENDCLASS.

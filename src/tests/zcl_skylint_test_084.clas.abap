@@ -11,21 +11,29 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_084 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    IF sy-uname = 'ADMIN'.
-      RETURN.
-    ENDIF.
+    DATA lt_data TYPE STANDARD TABLE OF string WITH EMPTY KEY.
+    DATA lv_line TYPE string.
+
+    LOOP AT lt_data INTO lv_line.
+      MODIFY lt_data FROM lv_line.
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    IF sy-uname = 'ADMIN'. "#EC AVOID_HARDCODED_USER
-      RETURN.
-    ENDIF.
+    DATA lt_data TYPE STANDARD TABLE OF string WITH EMPTY KEY.
+    DATA lv_line TYPE string.
+
+    LOOP AT lt_data INTO lv_line.
+      MODIFY lt_data FROM lv_line. "#EC AVOID_FULL_MODIFY
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lv_allowed_user TYPE string VALUE 'ADMIN'.
-    IF sy-uname = lv_allowed_user.
-      RETURN.
-    ENDIF.
+    DATA lt_data TYPE STANDARD TABLE OF string WITH EMPTY KEY.
+    DATA lv_line TYPE string.
+
+    LOOP AT lt_data INTO lv_line.
+      MODIFY lt_data FROM lv_line TRANSPORTING (table_line).
+    ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

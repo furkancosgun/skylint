@@ -11,22 +11,28 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_063 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    DATA lt_tab TYPE string_table.
-    DATA lv_line TYPE string.
-    READ TABLE lt_tab INTO lv_line INDEX 1.
+    DATA lv_flag TYPE abap_bool VALUE abap_true.
+    DATA lv_text TYPE string.
+    IF lv_flag = abap_true.
+      lv_text = 'YES'.
+    ELSE.
+      lv_text = 'NO'.
+    ENDIF.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    DATA lt_tab TYPE string_table.
-    DATA lv_line TYPE string.
-    READ TABLE lt_tab INTO lv_line INDEX 1. "#EC TABLE_EXPR
+    DATA lv_flag TYPE abap_bool VALUE abap_true.
+    DATA lv_text TYPE string.
+    IF lv_flag = abap_true. "#EC PREFER_COND
+      lv_text = 'YES'.
+    ELSE.
+      lv_text = 'NO'.
+    ENDIF.
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lt_tab TYPE string_table.
-    DATA lv_line TYPE string.
-    IF line_exists( lt_tab[ 1 ] ).
-      lv_line = lt_tab[ 1 ].
-    ENDIF.
+    DATA lv_flag TYPE abap_bool VALUE abap_true.
+    DATA lv_text TYPE string.
+    lv_text = COND #( WHEN lv_flag = abap_true THEN 'YES' ELSE 'NO' ).
   ENDMETHOD.
 ENDCLASS.

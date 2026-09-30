@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_096</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Suggest CONTINUE guard clause</DESCRIPT>
+    <DESCRIPT>skylint: Enforce declaration order</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

@@ -1,37 +1,31 @@
-CLASS lcl_bad DEFINITION
-  CREATE PUBLIC.
-ENDCLASS.
-
-CLASS lcl_bad_pc DEFINITION
-  CREATE PUBLIC. "#EC CLASS_FINAL
-ENDCLASS.
-
-CLASS lcl_good DEFINITION FINAL
-  CREATE PUBLIC.
-ENDCLASS.
-
 CLASS zcl_skylint_test_059 DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS run.
-
+    METHODS without_pseudo_comments.
+    METHODS with_pseudo_comments.
+    METHODS valid_code.
 ENDCLASS.
 
-
-CLASS lcl_bad IMPLEMENTATION.
-ENDCLASS.
-
-CLASS lcl_bad_pc IMPLEMENTATION.
-ENDCLASS.
-
-CLASS lcl_good IMPLEMENTATION.
-ENDCLASS.
 
 CLASS zcl_skylint_test_059 IMPLEMENTATION.
-
-  METHOD run.
+  METHOD without_pseudo_comments.
+    DATA lv_str TYPE string VALUE 'Hello World'.
+    DATA lv_res TYPE string.
+    lv_res = COND string( WHEN 1 = 1 THEN 'Yes' ELSE 'No' ).
   ENDMETHOD.
 
+  METHOD with_pseudo_comments.
+    DATA lv_str TYPE string VALUE 'Hello World'. "#EC STRING_BACKTICK
+    DATA lv_res TYPE string.
+    lv_res = COND string( WHEN 1 = 1 THEN 'Yes' ELSE 'No' ). "#EC STRING_BACKTICK
+  ENDMETHOD.
+
+  METHOD valid_code.
+    DATA lv_str TYPE string VALUE `Hello World`.
+    DATA lv_res TYPE string.
+    lv_res = COND string( WHEN 1 = 1 THEN `Yes` ELSE `No` ).
+    DATA lv_char TYPE c LENGTH 10 VALUE 'char literal'.
+  ENDMETHOD.
 ENDCLASS.

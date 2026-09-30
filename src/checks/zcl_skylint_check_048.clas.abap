@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_048 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        method_length TYPE if_ci_atc_check=>ty_finding_code VALUE 'METHOD_LEN',
+        nesting_depth TYPE if_ci_atc_check=>ty_finding_code VALUE 'NESTING_DP',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,62 +15,83 @@ CLASS zcl_skylint_check_048 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'METHOD_LENGTH'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NESTING_DEPTH'.
 
-    DATA mv_max_statements TYPE i VALUE 5.
+    DATA mv_max_depth TYPE i VALUE 3.
+
+    METHODS is_block_opener
+      IMPORTING iv_keyword    TYPE string
+      RETURNING VALUE(rv_res) TYPE abap_bool.
+
+    METHODS is_block_closer
+      IMPORTING iv_keyword    TYPE string
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_048 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Method Length Limit (excessive statement count)'
+    super->constructor( VALUE #( description       = 'skylint: Nesting Depth Limit (excessive control block nesting)'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-method_length
+                                     ( code           = c_finding_codes-nesting_depth
                                        severity       = if_ci_atc_check=>finding_severities-warning
-                                       text           = 'Method length exceeds maximum allowed statement limit'
+                                       text           = 'Control block nesting depth exceeds maximum allowed limit'
                                        pseudo_comment = c_pseudo_comment ) )
                                  attributes        = VALUE #(
-                                     ( name  = 'MAX_STATEMENTS'
+                                     ( name  = 'MAX_DEPTH'
                                        kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                                       value = REF #( mv_max_statements ) ) ) ) ).
+                                       value = REF #( mv_max_depth ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     DATA lv_max   TYPE i.
-    DATA lv_count TYPE i.
-    FIELD-SYMBOLS <ls_statement>  TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_first_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_depth TYPE i.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    get_attribute( EXPORTING iv_name  = 'MAX_STATEMENTS'
+    get_attribute( EXPORTING iv_name  = 'MAX_DEPTH'
                    IMPORTING ev_value = lv_max ).
     IF lv_max <= 0.
-      lv_max = mv_max_statements.
+      lv_max = mv_max_depth.
     ENDIF.
 
-    lv_count = 0.
+    lv_depth = 0.
+
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF     <ls_statement>-keyword <> 'METHOD'
-         AND <ls_statement>-keyword <> 'ENDMETHOD'
-         AND <ls_statement>-keyword <> 'FORM'
-         AND <ls_statement>-keyword <> 'ENDFORM'
-         AND <ls_statement>-keyword <> 'FUNCTION'
-         AND <ls_statement>-keyword <> 'ENDFUNCTION'.
-        lv_count += 1.
+      IF is_block_opener( <ls_statement>-keyword ) = abap_true.
+        lv_depth += 1.
+        IF lv_depth > lv_max.
+          report_statement( is_statement    = <ls_statement>
+                            iv_finding_code = c_finding_codes-nesting_depth ).
+        ENDIF.
+      ELSEIF is_block_closer( <ls_statement>-keyword ) = abap_true.
+        IF lv_depth > 0.
+          lv_depth -= 1.
+        ENDIF.
       ENDIF.
     ENDLOOP.
+  ENDMETHOD.
 
-    IF lv_count > lv_max.
-      ASSIGN is_procedure-statements[ 1 ] TO <ls_first_stmt>.
-      IF sy-subrc = 0.
-        report_statement( is_statement    = <ls_first_stmt>
-                          iv_finding_code = c_finding_codes-method_length ).
-      ENDIF.
-    ENDIF.
+  METHOD is_block_opener.
+    CASE iv_keyword.
+      WHEN 'IF' OR 'CASE' OR 'LOOP' OR 'DO' OR 'WHILE' OR 'TRY'.
+        rv_res = abap_true.
+      WHEN OTHERS.
+        rv_res = abap_false.
+    ENDCASE.
+  ENDMETHOD.
+
+  METHOD is_block_closer.
+    CASE iv_keyword.
+      WHEN 'ENDIF' OR 'ENDCASE' OR 'ENDLOOP' OR 'ENDDO' OR 'ENDWHILE' OR 'ENDTRY'.
+        rv_res = abap_true.
+      WHEN OTHERS.
+        rv_res = abap_false.
+    ENDCASE.
   ENDMETHOD.
 ENDCLASS.

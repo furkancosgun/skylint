@@ -3,29 +3,25 @@ CLASS zcl_skylint_test_075 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    DATA mv_attr1 TYPE i.
-    DATA mv_attr2 TYPE i.
-    DATA mv_attr3 TYPE i.
-    DATA mv_attr4 TYPE i.
-    DATA mv_attr5 TYPE i.
-    DATA mv_attr6 TYPE i.
+    EXCEPTIONS
+      failed.
 
-    METHODS without_pseudo_comments.
-    METHODS with_pseudo_comments.
+    METHODS without_pseudo_comments EXCEPTIONS failed.
+    METHODS with_pseudo_comments EXCEPTIONS failed.
     METHODS valid_code.
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_075 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    " Implementation
+    MESSAGE 'Error' TYPE 'E' RAISING failed.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    " Implementation
+    MESSAGE 'Error' TYPE 'E' RAISING failed. "#EC AVOID_MSG_RAISING
   ENDMETHOD.
 
   METHOD valid_code.
-    " Implementation
+    MESSAGE 'Info message' TYPE 'I'.
   ENDMETHOD.
 ENDCLASS.

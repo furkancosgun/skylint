@@ -13,18 +13,34 @@ ENDCLASS.
 CLASS zcl_skylint_test_056 IMPLEMENTATION.
 
   METHOD without_pseudo_comments.
-    DATA lt_data TYPE STANDARD TABLE OF t100.
-    SELECT * FROM t100 INTO TABLE lt_data.
+    IF 1 = 1.
+    ENDIF.
+    IF 2 = 2.
+    ENDIF.
+    IF 3 = 3.
+    ENDIF.
+    IF 4 = 4.
+    ENDIF.
+    IF 5 = 5.
+    ENDIF.
   ENDMETHOD.
 
-  METHOD with_pseudo_comments.
-    DATA lt_data TYPE STANDARD TABLE OF t100.
-    SELECT * FROM t100 INTO TABLE lt_data. "#EC SQL_HOST_VAR
+  METHOD with_pseudo_comments. "#EC CYCLOMATIC_COMPLEXITY
+    IF 1 = 1.
+    ENDIF.
+    IF 2 = 2.
+    ENDIF.
+    IF 3 = 3.
+    ENDIF.
+    IF 4 = 4.
+    ENDIF.
+    IF 5 = 5.
+    ENDIF.
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lt_data TYPE STANDARD TABLE OF t100.
-    SELECT * FROM t100 INTO TABLE @lt_data.
+    IF 1 = 1.
+    ENDIF.
   ENDMETHOD.
 
 ENDCLASS.

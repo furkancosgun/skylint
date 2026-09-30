@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_076</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Mutable DATA in Interfaces (076)</DESCRIPT>
+    <DESCRIPT>skylint: Avoid nested TRY blocks (076)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

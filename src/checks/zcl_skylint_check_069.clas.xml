@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_069</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Prefer REDUCE Expression (069)</DESCRIPT>
+    <DESCRIPT>skylint: Unmodified CHANGING Param (069)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

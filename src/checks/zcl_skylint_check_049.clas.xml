@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_049</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Nesting Depth Limit (049)</DESCRIPT>
+    <DESCRIPT>skylint: Avoid sy-* Modification (049)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

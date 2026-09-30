@@ -11,18 +11,18 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_041 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    DATA lt_tab TYPE string_table.
-    lt_tab = VALUE #( ).
+    DATA lv_val TYPE string.
+    lv_val = lv_val.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    DATA lt_tab TYPE string_table.
-    lt_tab = VALUE #( ). "#EC SUPERFLUOUS_VAL
+    DATA lv_val TYPE string.
+    lv_val = lv_val. "#EC IDENTICAL_MOVE
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lt_tab TYPE string_table.
-    CLEAR lt_tab.
-    lt_tab = VALUE #( ( `item1` ) ).
+    DATA lv_val TYPE string.
+    DATA lv_src TYPE string.
+    lv_val = lv_src.
   ENDMETHOD.
 ENDCLASS.

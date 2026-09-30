@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_059</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Class Final Validation (059)</DESCRIPT>
+    <DESCRIPT>skylint: Prefer Backtick String Literals (059)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

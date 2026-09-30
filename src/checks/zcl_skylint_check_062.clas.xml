@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_062</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Avoid Magic Numbers (062)</DESCRIPT>
+    <DESCRIPT>skylint: Avoid Obsolete Loop Control (062)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

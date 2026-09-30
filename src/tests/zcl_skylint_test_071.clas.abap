@@ -1,24 +1,25 @@
 CLASS zcl_skylint_test_071 DEFINITION
-  PUBLIC FINAL
+  PUBLIC
+  INHERITING FROM cx_no_check
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    CLASS-METHODS without_pseudo_comments.
-    CLASS-METHODS with_pseudo_comments.
-    CLASS-METHODS valid_code.
+    METHODS without_pseudo_comments.
+    METHODS with_pseudo_comments.
+    METHODS valid_code.
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_071 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    " Static only
+    " Implementation
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    " Static only "#EC AVOID_STATIC_CLS
+    " Implementation
   ENDMETHOD.
 
   METHOD valid_code.
-    " Static only
+    " Implementation
   ENDMETHOD.
 ENDCLASS.

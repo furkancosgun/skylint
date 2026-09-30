@@ -34,7 +34,7 @@ CLASS ltcl_check_041 IMPLEMENTATION.
         check             = NEW zcl_skylint_check_041( )
         object            = VALUE #( type = 'CLAS'
                                      name = c_test_class )
-        expected_findings = VALUE #( code = zcl_skylint_check_041=>c_finding_codes-superfluous_val
+        expected_findings = VALUE #( code = zcl_skylint_check_041=>c_finding_codes-identical_move
                                      ( location = ls_loc_no_pc )
                                      ( location = ls_loc_with_pc ) )
         asserter_config   = VALUE #( quickfixes = abap_false ) ).

@@ -6,28 +6,29 @@ CLASS zcl_skylint_test_060 DEFINITION
     METHODS without_pseudo_comments.
     METHODS with_pseudo_comments.
     METHODS valid_code.
-
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_060 IMPLEMENTATION.
-
   METHOD without_pseudo_comments.
-    RAISE SHORTDUMP TYPE cx_sy_create_error
-      EXPORTING
-        textid = cx_sy_create_error=>cx_sy_create_error.
+    DATA lv_status TYPE i VALUE 0.
+    IF lv_status = 42.
+      lv_status = 99.
+    ENDIF.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    RAISE SHORTDUMP TYPE cx_sy_create_error "#EC AVOID_SHORTDUMP
-      EXPORTING
-        textid = cx_sy_create_error=>cx_sy_create_error.
+    DATA lv_status TYPE i VALUE 0.
+    IF lv_status = 42. "#EC MAGIC_NUMBER
+      lv_status = 99.  "#EC MAGIC_NUMBER
+    ENDIF.
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lx_err TYPE REF TO cx_sy_create_error.
-    CREATE OBJECT lx_err.
-    RAISE EXCEPTION lx_err.
+    CONSTANTS c_max_limit TYPE i VALUE 42.
+    DATA lv_status TYPE i VALUE 0.
+    IF lv_status = c_max_limit.
+      lv_status = 1.
+    ENDIF.
   ENDMETHOD.
-
 ENDCLASS.

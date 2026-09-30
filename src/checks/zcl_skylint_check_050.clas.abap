@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_050 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        multiple_output_params TYPE if_ci_atc_check=>ty_finding_code VALUE 'OUT_PARAM',
+        prefer_returning TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFER_RET',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,13 +15,11 @@ CLASS zcl_skylint_check_050 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'OUTPUT_PARAMS'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_RETURNING'.
 
-    DATA mv_max_output_params TYPE i VALUE 1.
-
-    METHODS count_output_parameters
-      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_count) TYPE i.
+    METHODS is_single_exporting_only
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
 
@@ -29,51 +27,51 @@ ENDCLASS.
 CLASS zcl_skylint_check_050 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Avoid Multiple Output Parameters (prefer single RETURNING)'
+        VALUE #( description       = 'skylint: Prefer RETURNING over single EXPORTING'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-multiple_output_params
+                     ( code           = c_finding_codes-prefer_returning
                        severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Method has multiple output parameters; prefer single RETURNING'
-                       pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #( ( name  = 'MAX_OUTPUT_PARAMS'
-                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                                                value = REF #( mv_max_output_params ) ) ) ) ).
+                       text           = 'Prefer functional RETURNING parameter over single EXPORTING parameter'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_max TYPE i.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    get_attribute( EXPORTING iv_name  = 'MAX_OUTPUT_PARAMS'
-                   IMPORTING ev_value = lv_max ).
-    IF lv_max <= 0.
-      lv_max = mv_max_output_params.
-    ENDIF.
-
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'METHODS' OR keyword = 'CLASS-METHODS'.
-      IF count_output_parameters( <ls_statement> ) > lv_max.
+      IF is_single_exporting_only( <ls_statement> ) = abap_true.
         report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-multiple_output_params ).
+                          iv_finding_code = c_finding_codes-prefer_returning ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD count_output_parameters.
-    DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_lex  TYPE string.
-    DATA lv_mode TYPE string.
+  METHOD is_single_exporting_only.
+    DATA ls_tok       TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_lex       TYPE string.
+    DATA lv_mode      TYPE string.
+    DATA lv_exp_count TYPE i.
+    DATA lv_chg_count TYPE i.
+    DATA lv_ret_count TYPE i.
 
-    rv_count = 0.
+    rv_res = abap_false.
     lv_mode = ''.
+    lv_exp_count = 0.
+    lv_chg_count = 0.
+    lv_ret_count = 0.
 
     LOOP AT is_statement-tokens INTO ls_tok.
       lv_lex = to_upper( ls_tok-lexeme ).
+
+      IF lv_lex = 'FOR' OR lv_lex = 'EVENT' OR lv_lex = 'REDEFINITION'.
+        RETURN.
+      ENDIF.
 
       CASE lv_lex.
         WHEN 'IMPORTING'.
@@ -84,13 +82,22 @@ CLASS zcl_skylint_check_050 IMPLEMENTATION.
           lv_mode = 'CHANGING'.
         WHEN 'RETURNING'.
           lv_mode = 'RETURNING'.
-        WHEN 'RAISING' OR 'EXCEPTIONS' OR 'FOR' OR 'REDEFINITION'.
+        WHEN 'RAISING' OR 'EXCEPTIONS'.
           lv_mode = ''.
         WHEN 'TYPE' OR 'LIKE'.
-          IF lv_mode = 'EXPORTING' OR lv_mode = 'CHANGING' OR lv_mode = 'RETURNING'.
-            rv_count += 1.
-          ENDIF.
+          CASE lv_mode.
+            WHEN 'EXPORTING'.
+              lv_exp_count += 1.
+            WHEN 'CHANGING'.
+              lv_chg_count += 1.
+            WHEN 'RETURNING'.
+              lv_ret_count += 1.
+          ENDCASE.
       ENDCASE.
     ENDLOOP.
+
+    IF lv_exp_count = 1 AND lv_chg_count = 0 AND lv_ret_count = 0.
+      rv_res = abap_true.
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.

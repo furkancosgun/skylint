@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_073 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        bool_method_name TYPE if_ci_atc_check=>ty_finding_code VALUE 'BOOL_NAME',
+        interface_data TYPE if_ci_atc_check=>ty_finding_code VALUE 'INTF_DATA',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_check_073 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'BOOL_METHOD_NAME'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'INTERFACE_DATA'.
 
 ENDCLASS.
 
@@ -23,60 +23,29 @@ ENDCLASS.
 CLASS zcl_skylint_check_073 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Enforce predicate naming (IS_, HAS_, CAN_) on boolean methods'
+        VALUE #( description       = 'Avoid mutable DATA declarations in interfaces; allow only CONSTANTS'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-bool_method_name
+                     ( code           = c_finding_codes-interface_data
                        severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Boolean-returning method should use predicate name (IS_, HAS_, CAN_)'
+                       text           = 'Avoid mutable DATA in interfaces; declare CONSTANTS or move to class'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_is_bool_returning TYPE abap_bool.
-    DATA lv_meth_name         TYPE string.
-    DATA lv_len               TYPE i.
-    DATA lv_idx               TYPE i.
+    DATA lv_in_interface TYPE abap_bool.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'METHODS' OR keyword = 'CLASS-METHODS'.
-      lv_is_bool_returning = abap_false.
-      lv_len = lines( <ls_statement>-tokens ).
-      IF lv_len < 2.
-        CONTINUE.
-      ENDIF.
+    lv_in_interface = abap_false.
 
-      lv_meth_name = to_upper( <ls_statement>-tokens[ 2 ]-lexeme ).
-
-      " Check if method returns boolean
-      lv_idx = 1.
-      WHILE lv_idx <= lv_len.
-        ASSIGN <ls_statement>-tokens[ lv_idx ] TO <ls_token>.
-        IF sy-subrc = 0 AND to_upper( <ls_token>-lexeme ) = 'RETURNING'.
-          " Look for boolean type keyword in remaining tokens
-          LOOP AT <ls_statement>-tokens ASSIGNING <ls_token> FROM lv_idx.
-            IF    to_upper( <ls_token>-lexeme ) = 'ABAP_BOOL'
-               OR to_upper( <ls_token>-lexeme ) = 'BOOLE_D'
-               OR to_upper( <ls_token>-lexeme ) = 'XSDBOOLEAN'
-               OR to_upper( <ls_token>-lexeme ) = 'BOOLEAN'.
-              lv_is_bool_returning = abap_true.
-              EXIT.
-            ENDIF.
-          ENDLOOP.
-          EXIT.
-        ENDIF.
-        lv_idx += 1.
-      ENDWHILE.
-
-      IF     lv_is_bool_returning  = abap_true
-         AND lv_meth_name         NP 'IS_*'     AND lv_meth_name NP 'HAS_*'
-         AND lv_meth_name         NP 'CAN_*'    AND lv_meth_name NP 'CHECK_*'
-         AND lv_meth_name         NP 'ARE_*'    AND lv_meth_name NP 'WAS_*'
-         AND lv_meth_name         NP 'SHOULD_*'.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF <ls_statement>-keyword = 'INTERFACE'.
+        lv_in_interface = abap_true.
+      ELSEIF <ls_statement>-keyword = 'ENDINTERFACE'.
+        lv_in_interface = abap_false.
+      ELSEIF lv_in_interface = abap_true AND <ls_statement>-keyword = 'DATA'.
         report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-bool_method_name ).
+                          iv_finding_code = c_finding_codes-interface_data ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.

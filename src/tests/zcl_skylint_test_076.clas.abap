@@ -1,15 +1,8 @@
-INTERFACE lif_test_bad.
-  DATA gv_flag TYPE abap_bool.
-  DATA gv_pc TYPE abap_bool. "#EC INTERFACE_DATA
-  CONSTANTS c_ok TYPE abap_bool VALUE abap_true.
-ENDINTERFACE.
-
 CLASS zcl_skylint_test_076 DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    INTERFACES lif_test_bad.
     METHODS without_pseudo_comments.
     METHODS with_pseudo_comments.
     METHODS valid_code.
@@ -18,14 +11,34 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_076 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    " Implementation
+    TRY.
+        TRY.
+            RETURN.
+          CATCH cx_static_check.
+            RETURN.
+        ENDTRY.
+      CATCH cx_root.
+        RETURN.
+    ENDTRY.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    " Implementation
+    TRY.
+        TRY. "#EC AVOID_NESTED_TRY
+            RETURN.
+          CATCH cx_static_check.
+            RETURN.
+        ENDTRY.
+      CATCH cx_root.
+        RETURN.
+    ENDTRY.
   ENDMETHOD.
 
   METHOD valid_code.
-    " Implementation
+    TRY.
+        RETURN.
+      CATCH cx_static_check.
+        RETURN.
+    ENDTRY.
   ENDMETHOD.
 ENDCLASS.

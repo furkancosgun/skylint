@@ -34,7 +34,7 @@ CLASS ltcl_check_093 IMPLEMENTATION.
         check             = NEW zcl_skylint_check_093( )
         object            = VALUE #( type = 'CLAS'
                                      name = c_test_class )
-        expected_findings = VALUE #( code = zcl_skylint_check_093=>c_finding_codes-condense_stmt
+        expected_findings = VALUE #( code = zcl_skylint_check_093=>c_finding_codes-prod_assert
                                      ( location = ls_loc_no_pc )
                                      ( location = ls_loc_with_pc ) )
         asserter_config   = VALUE #( quickfixes = abap_false ) ).

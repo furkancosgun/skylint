@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_051 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        system_var_mod TYPE if_ci_atc_check=>ty_finding_code VALUE 'SYS_VAR_MD',
+        class_based_exceptions TYPE if_ci_atc_check=>ty_finding_code VALUE 'CLASS_EXC',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,9 +15,9 @@ CLASS zcl_skylint_check_051 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_SY_MOD'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'CLASS_EXCEPTIONS'.
 
-    METHODS is_system_variable_mod
+    METHODS has_classic_exceptions
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
@@ -27,48 +27,41 @@ ENDCLASS.
 CLASS zcl_skylint_check_051 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Avoid sy-* System Variable Modification'
+        VALUE #( description       = 'skylint: Prefer Class-Based Exceptions over Classic EXCEPTIONS'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-system_var_mod
+                     ( code           = c_finding_codes-class_based_exceptions
                        severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Avoid modifying system fields (sy-*); system variables are read-only'
+                       text           = 'Prefer class-based exceptions (RAISING) over classic EXCEPTIONS'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF is_system_variable_mod( <ls_statement> ) = abap_true.
+    IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
+         WHERE keyword = 'METHODS' OR keyword = 'CLASS-METHODS'.
+      IF has_classic_exceptions( <ls_statement> ) = abap_true.
         report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-system_var_mod ).
+                          iv_finding_code = c_finding_codes-class_based_exceptions ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD is_system_variable_mod.
-    DATA lv_tok1 TYPE string.
-    DATA lv_tok2 TYPE string.
+  METHOD has_classic_exceptions.
+    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_res = abap_false.
 
-    IF lines( is_statement-tokens ) < 2.
-      RETURN.
-    ENDIF.
-
-    lv_tok1 = to_upper( is_statement-tokens[ 1 ]-lexeme ).
-    lv_tok2 = to_upper( is_statement-tokens[ 2 ]-lexeme ).
-
-    " 1. Assignment: sy-subrc = 0.
-    IF lv_tok2 = '=' AND ( lv_tok1 CP 'SY-*' OR lv_tok1 CP 'SYST-*' ).
-      rv_res = abap_true.
-      RETURN.
-    ENDIF.
-
-    " 2. CLEAR statement: CLEAR sy-subrc.
-    IF lv_tok1 = 'CLEAR' AND ( lv_tok2 CP 'SY-*' OR lv_tok2 CP 'SYST-*' ).
-      rv_res = abap_true.
-    ENDIF.
+    LOOP AT is_statement-tokens INTO ls_tok.
+      IF to_upper( ls_tok-lexeme ) = 'EXCEPTIONS'.
+        rv_res = abap_true.
+        RETURN.
+      ENDIF.
+    ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

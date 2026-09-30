@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_066</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Prefer COND/SWITCH Expressions (066)</DESCRIPT>
+    <DESCRIPT>skylint: Prefer REDUCE Expression (066)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

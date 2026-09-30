@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_072</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Unmodified CHANGING Param (072)</DESCRIPT>
+    <DESCRIPT>skylint: Class Attribute Count (072)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

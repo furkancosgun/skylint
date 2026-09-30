@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_059 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        class_not_final TYPE if_ci_atc_check=>ty_finding_code VALUE 'NOT_FINAL',
+        backtick TYPE if_ci_atc_check=>ty_finding_code VALUE 'BACKTICK',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,11 +15,7 @@ CLASS zcl_skylint_check_059 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'CLASS_FINAL'.
-
-    METHODS is_class_missing_final
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_res) TYPE abap_bool.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'STRING_BACKTICK'.
 
 ENDCLASS.
 
@@ -27,62 +23,39 @@ ENDCLASS.
 CLASS zcl_skylint_check_059 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Prefer FINAL Classes by Default'
+        VALUE #( description       = 'Prefer backtick string literals over single quotes for STRING'
                  remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-class_not_final
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Classes should be marked FINAL by default unless designed for inheritance'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                 finding_codes     = VALUE #( ( code           = c_finding_codes-backtick
+                                                severity       = if_ci_atc_check=>finding_severities-warning
+                                                text           = 'Prefer backtick string literals over single quotes'
+                                                pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_is_string_context TYPE abap_bool.
 
-    IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
-      RETURN.
-    ENDIF.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      lv_is_string_context = abap_false.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'CLASS'.
-      IF is_class_missing_final( <ls_statement> ) = abap_true.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-class_not_final ).
+      " Check if statement is in string type context (e.g. TYPE STRING, STRING(, etc.)
+      LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
+        IF to_upper( <ls_token>-lexeme ) CS 'STRING'.
+          lv_is_string_context = abap_true.
+          EXIT.
+        ENDIF.
+      ENDLOOP.
+
+      IF lv_is_string_context = abap_true.
+        LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
+          IF strlen( <ls_token>-lexeme ) > 0 AND <ls_token>-lexeme(1) = ''''.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-backtick ).
+            EXIT.
+          ENDIF.
+        ENDLOOP.
       ENDIF.
     ENDLOOP.
-  ENDMETHOD.
-
-  METHOD is_class_missing_final.
-    DATA ls_tok         TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_lex         TYPE string.
-    DATA lv_is_def      TYPE abap_bool.
-    DATA lv_is_final    TYPE abap_bool.
-    DATA lv_is_abstract TYPE abap_bool.
-    DATA lv_is_test     TYPE abap_bool.
-
-    rv_res = abap_false.
-    lv_is_def = abap_false.
-    lv_is_final = abap_false.
-    lv_is_abstract = abap_false.
-    lv_is_test = abap_false.
-
-    LOOP AT is_statement-tokens INTO ls_tok.
-      lv_lex = to_upper( ls_tok-lexeme ).
-      CASE lv_lex.
-        WHEN 'DEFINITION'.
-          lv_is_def = abap_true.
-        WHEN 'FINAL'.
-          lv_is_final = abap_true.
-        WHEN 'ABSTRACT'.
-          lv_is_abstract = abap_true.
-        WHEN 'TESTING'.
-          lv_is_test = abap_true.
-      ENDCASE.
-    ENDLOOP.
-
-    IF     lv_is_def      = abap_true  AND lv_is_final = abap_false
-       AND lv_is_abstract = abap_false AND lv_is_test  = abap_false.
-      rv_res = abap_true.
-    ENDIF.
   ENDMETHOD.
 ENDCLASS.

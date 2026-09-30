@@ -11,20 +11,17 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_064 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    DATA lt_tab TYPE string_table.
-    DATA lv_line TYPE string VALUE 'abc'.
-    APPEND lv_line TO lt_tab.
+    DATA lv_a TYPE i VALUE 10.
+    DATA lv_b LIKE lv_a.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    DATA lt_tab TYPE string_table.
-    DATA lv_line TYPE string VALUE 'abc'.
-    APPEND lv_line TO lt_tab. "#EC PREFER_INSERT
+    DATA lv_a TYPE i VALUE 10.
+    DATA lv_b LIKE lv_a. "#EC AVOID_LIKE_TYPE
   ENDMETHOD.
 
   METHOD valid_code.
-    DATA lt_tab TYPE string_table.
-    DATA lv_line TYPE string VALUE 'abc'.
-    INSERT lv_line INTO TABLE lt_tab.
+    DATA lv_a TYPE i VALUE 10.
+    DATA lv_b TYPE i.
   ENDMETHOD.
 ENDCLASS.

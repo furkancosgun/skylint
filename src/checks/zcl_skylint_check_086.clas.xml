@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_086</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Avoid COMMIT/ROLLBACK (086)</DESCRIPT>
+    <DESCRIPT>skylint: Avoid magic offset expressions</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

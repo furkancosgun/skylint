@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_070</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Generic Field Symbols (070)</DESCRIPT>
+    <DESCRIPT>skylint: Boolean Predicate Naming (070)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

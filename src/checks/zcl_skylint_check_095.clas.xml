@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_095</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Prefer calculation assignment</DESCRIPT>
+    <DESCRIPT>skylint: Detect needless CLEAR</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

@@ -3,6 +3,10 @@ CLASS zcl_skylint_test_043 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
+    METHODS helper
+      IMPORTING
+        iv_val TYPE string.
+
     METHODS without_pseudo_comments.
     METHODS with_pseudo_comments.
     METHODS valid_code.
@@ -10,16 +14,18 @@ ENDCLASS.
 
 
 CLASS zcl_skylint_test_043 IMPLEMENTATION.
+  METHOD helper.
+  ENDMETHOD.
+
   METHOD without_pseudo_comments.
-    CONSTANTS c_untyped VALUE 'X'.
+    helper( iv_val = 'TEST' ).
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    CONSTANTS c_untyped VALUE 'X'. "#EC FULLY_TYPED_CONST
+    helper( iv_val = 'TEST' ). "#EC OMIT_PARAM_NAME
   ENDMETHOD.
 
   METHOD valid_code.
-    CONSTANTS c_typed TYPE c LENGTH 1 VALUE 'X'.
-    CONSTANTS c_str TYPE string VALUE 'HELLO'.
+    helper( 'TEST' ).
   ENDMETHOD.
 ENDCLASS.

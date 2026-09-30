@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_041</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Avoid Superfluous VALUE Operator (041)</DESCRIPT>
+    <DESCRIPT>skylint: Identical Self Assignment (041)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

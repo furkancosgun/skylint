@@ -3,39 +3,28 @@ CLASS zcl_skylint_test_052 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS bad_method
-      IMPORTING
-        iv_val TYPE i
-      EXPORTING
-        ev_res TYPE i.
-
-    METHODS bad_method_pc
-      IMPORTING
-        iv_val TYPE i
-      EXPORTING
-        ev_res TYPE i. "#EC PREFER_RETURNING
-
-    METHODS good_method
-      IMPORTING
-        iv_val        TYPE i
-      RETURNING
-        VALUE(rv_res) TYPE i.
+    METHODS without_pseudo_comments.
+    METHODS with_pseudo_comments.
+    METHODS valid_code.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_052 IMPLEMENTATION.
 
-  METHOD bad_method.
-    ev_res = iv_val.
+  METHOD without_pseudo_comments.
+    DATA lt_code TYPE STANDARD TABLE OF string.
+    INSERT REPORT 'ZTEST' FROM lt_code.
   ENDMETHOD.
 
-  METHOD bad_method_pc.
-    ev_res = iv_val.
+  METHOD with_pseudo_comments.
+    DATA lt_code TYPE STANDARD TABLE OF string.
+    INSERT REPORT 'ZTEST' FROM lt_code. "#EC DANGEROUS_STMT
   ENDMETHOD.
 
-  METHOD good_method.
-    rv_res = iv_val.
+  METHOD valid_code.
+    DATA lt_code TYPE STANDARD TABLE OF string.
+    INSERT 'LINE' INTO TABLE lt_code.
   ENDMETHOD.
 
 ENDCLASS.

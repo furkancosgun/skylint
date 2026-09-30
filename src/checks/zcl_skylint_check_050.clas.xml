@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_050</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Output Parameters Limit (050)</DESCRIPT>
+    <DESCRIPT>skylint: Prefer RETURNING (050)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

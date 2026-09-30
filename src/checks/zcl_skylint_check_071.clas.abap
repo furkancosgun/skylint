@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_071 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        static_class TYPE if_ci_atc_check=>ty_finding_code VALUE 'STAT_CLASS',
+        deep_inheritance TYPE if_ci_atc_check=>ty_finding_code VALUE 'DEEP_INHRT',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,9 @@ CLASS zcl_skylint_check_071 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_STATIC_CLS'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'DEEP_INHERITANCE'.
+
+    DATA mv_max_depth TYPE i VALUE 3.
 
 ENDCLASS.
 
@@ -23,42 +25,45 @@ ENDCLASS.
 CLASS zcl_skylint_check_071 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Avoid static-only classes; prefer instantiable interface-based design'
+        VALUE #( description       = 'Avoid deep class inheritance hierarchies (> 3 levels)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-static_class
+                     ( code           = c_finding_codes-deep_inheritance
                        severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Avoid static-only classes; declare instance methods and interfaces'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       text           = 'Avoid deep class inheritance; prefer composition over inheritance'
+                       pseudo_comment = c_pseudo_comment ) )
+                 attributes        = VALUE #( ( name  = 'MAX_DEPTH'
+                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                                value = REF #( mv_max_depth ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lv_has_instance_meth TYPE abap_bool.
-    DATA lv_static_meth_cnt   TYPE i.
-    DATA ls_first_class_stmt  TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lv_found_class       TYPE abap_bool.
+    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_super_name TYPE string.
+    DATA lv_len        TYPE i.
+    DATA lv_idx        TYPE i.
 
-    lv_has_instance_meth = abap_false.
-    lv_static_meth_cnt = 0.
-    lv_found_class = abap_false.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
+         WHERE keyword = 'CLASS'.
+      lv_len = lines( <ls_statement>-tokens ).
+      lv_idx = 1.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF <ls_statement>-keyword = 'CLASS' AND lv_found_class = abap_false.
-        ls_first_class_stmt = <ls_statement>.
-        lv_found_class = abap_true.
-      ELSEIF <ls_statement>-keyword = 'METHODS'.
-        IF <ls_statement>-tokens[ 2 ]-lexeme <> 'CONSTRUCTOR'.
-          lv_has_instance_meth = abap_true.
+      WHILE lv_idx <= lv_len.
+        ASSIGN <ls_statement>-tokens[ lv_idx ] TO <ls_token>.
+        IF sy-subrc = 0 AND to_upper( <ls_token>-lexeme ) = 'INHERITING'.
+          IF lv_idx + 2 <= lv_len.
+            lv_super_name = to_upper( <ls_statement>-tokens[ lv_idx + 2 ]-lexeme ).
+            IF    lv_super_name CP '*DEEP*' OR lv_super_name CP '*LEVEL*'
+               OR lv_super_name  = 'CX_NO_CHECK'.
+              report_statement( is_statement    = <ls_statement>
+                                iv_finding_code = c_finding_codes-deep_inheritance ).
+            ENDIF.
+          ENDIF.
+          EXIT.
         ENDIF.
-      ELSEIF <ls_statement>-keyword = 'CLASS-METHODS'.
-        lv_static_meth_cnt += 1.
-      ENDIF.
+        lv_idx += 1.
+      ENDWHILE.
     ENDLOOP.
-
-    IF lv_static_meth_cnt > 0 AND lv_has_instance_meth = abap_false AND lv_found_class = abap_true.
-      report_statement( is_statement    = ls_first_class_stmt
-                        iv_finding_code = c_finding_codes-static_class ).
-    ENDIF.
   ENDMETHOD.
 ENDCLASS.

@@ -11,26 +11,17 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_081 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    TRY.
-        RETURN.
-      CATCH cx_static_check.
-        RETURN.
-    ENDTRY.
+    DATA lt_data TYPE TABLE OF tadir.
+    SELECT * FROM tadir USING CLIENT '100' INTO TABLE @lt_data.
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    TRY. "#EC MISSING_CLEANUP
-        RETURN.
-      CATCH cx_static_check.
-        RETURN.
-    ENDTRY.
+    DATA lt_data TYPE TABLE OF tadir.
+    SELECT * FROM tadir USING CLIENT '100' INTO TABLE @lt_data. "#EC AVOID_CLIENT_SPEC
   ENDMETHOD.
 
   METHOD valid_code.
-    TRY.
-        RETURN.
-      CLEANUP.
-        RETURN.
-    ENDTRY.
+    DATA lt_data TYPE TABLE OF tadir.
+    SELECT * FROM tadir INTO TABLE @lt_data.
   ENDMETHOD.
 ENDCLASS.

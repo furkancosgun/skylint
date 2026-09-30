@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_087</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Prefer FILTER #( ) (087)</DESCRIPT>
+    <DESCRIPT>skylint: Avoid dynamic SQL clauses</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

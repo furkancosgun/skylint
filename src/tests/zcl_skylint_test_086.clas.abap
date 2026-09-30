@@ -11,14 +11,25 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_086 IMPLEMENTATION.
   METHOD without_pseudo_comments.
-    COMMIT WORK.
+    DATA lv_text TYPE string.
+    DATA lv_sub TYPE string.
+
+    lv_sub = lv_text+0(2).
   ENDMETHOD.
 
   METHOD with_pseudo_comments.
-    COMMIT WORK. "#EC AVOID_COMMIT_WORK
+    DATA lv_text TYPE string.
+    DATA lv_sub TYPE string.
+
+    lv_sub = lv_text+0(2). "#EC MAGIC_OFFSET
   ENDMETHOD.
 
   METHOD valid_code.
-    RETURN.
+    DATA lv_text TYPE string.
+    DATA lv_sub TYPE string.
+    DATA lv_offset TYPE i.
+    DATA lv_len TYPE i.
+
+    lv_sub = substring( val = lv_text off = lv_offset len = lv_len ).
   ENDMETHOD.
 ENDCLASS.

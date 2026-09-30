@@ -3,30 +3,25 @@ CLASS zcl_skylint_test_053 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS bad_method
-      EXCEPTIONS
-        failed.
-
-    METHODS bad_method_pc
-      EXCEPTIONS
-        failed. "#EC CLASS_EXCEPTIONS
-
-    METHODS good_method
-      RAISING
-        cx_static_check.
+    METHODS without_pseudo_comments.
+    METHODS with_pseudo_comments.
+    METHODS valid_code.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_053 IMPLEMENTATION.
 
-  METHOD bad_method.
+  METHOD without_pseudo_comments.
+    CALL TRANSACTION 'VA01' WITHOUT AUTHORITY-CHECK.
   ENDMETHOD.
 
-  METHOD bad_method_pc.
+  METHOD with_pseudo_comments.
+    CALL TRANSACTION 'VA01' WITHOUT AUTHORITY-CHECK. "#EC CALL_TRANSACTION
   ENDMETHOD.
 
-  METHOD good_method.
+  METHOD valid_code.
+    CALL TRANSACTION 'VA01' WITH AUTHORITY-CHECK.
   ENDMETHOD.
 
 ENDCLASS.

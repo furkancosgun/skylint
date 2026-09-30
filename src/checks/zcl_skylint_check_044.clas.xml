@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_044</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Omit Parameter Name in Single Call (044)</DESCRIPT>
+    <DESCRIPT>skylint: Try Without Catch (044)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

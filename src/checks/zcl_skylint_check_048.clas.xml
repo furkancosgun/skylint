@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCL_SKYLINT_CHECK_048</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Method Length Limit (048)</DESCRIPT>
+    <DESCRIPT>skylint: Nesting Depth Limit (048)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>
