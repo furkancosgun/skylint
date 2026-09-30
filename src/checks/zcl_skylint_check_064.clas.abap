@@ -74,9 +74,8 @@ CLASS zcl_skylint_check_064 IMPLEMENTATION.
   METHOD sets_sy_subrc.
     rv_res = abap_false.
 
-    "TODO listeye ASSIGN de ekleyelim
     CASE is_statement-keyword.
-      WHEN 'AUTHORITY-CHECK' OR 'FIND' OR 'SEARCH'.
+      WHEN 'ASSIGN' OR 'AUTHORITY-CHECK' OR 'FIND' OR 'SEARCH'.
         rv_res = abap_true.
       WHEN 'SELECT'.
         IF matches_token_at( is_statement = is_statement
@@ -96,17 +95,24 @@ CLASS zcl_skylint_check_064 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD checks_sy_subrc.
-    DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_lex  TYPE string.
+    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_ref TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    DATA lv_lex TYPE string.
 
-    "TODO assigned neden var? compiler guvenelim
     rv_res = abap_false.
     LOOP AT is_statement-tokens INTO ls_tok.
       lv_lex = to_upper( ls_tok-lexeme ).
-      IF lv_lex = 'SY-SUBRC' OR lv_lex = 'SUBRC' OR lv_lex = 'ASSIGNED'.
+      IF lv_lex = 'SY-SUBRC' OR lv_lex = 'SUBRC'.
         rv_res = abap_true.
         RETURN.
       ENDIF.
+
+      LOOP AT ls_tok-references INTO ls_ref.
+        IF to_upper( ls_ref-full_name ) CS 'SY-SUBRC' OR to_upper( ls_ref-full_name ) CS 'SYST-SUBRC'.
+          rv_res = abap_true.
+          RETURN.
+        ENDIF.
+      ENDLOOP.
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

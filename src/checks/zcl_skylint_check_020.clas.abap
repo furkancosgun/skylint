@@ -51,7 +51,6 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-      "TODO bunu direkt compiler seviyesinde halledelim
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF has_yoda_condition( <ls_statement> ) = abap_true.
         report_statement( is_statement    = <ls_statement>
@@ -63,11 +62,6 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
   METHOD has_yoda_condition.
     DATA lv_idx    TYPE i.
     DATA lv_total  TYPE i.
-    DATA lv_next1  TYPE i.
-    DATA lv_next2  TYPE i.
-    DATA lv_tok1   TYPE string.
-    DATA lv_tok2   TYPE string.
-    DATA lv_tok3   TYPE string.
     DATA ls_t1     TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA ls_t2     TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA ls_t3     TYPE if_ci_atc_source_code_provider=>ty_token.
@@ -83,32 +77,26 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
 
     lv_idx = 1.
     WHILE lv_idx <= lv_total - 2.
-      lv_next1 = lv_idx + 1.
-      lv_next2 = lv_idx + 2.
       get_token_safe( EXPORTING is_statement = is_statement
                                 iv_index     = lv_idx
                       IMPORTING es_token     = ls_t1
                                 ev_found     = lv_found1 ).
       get_token_safe( EXPORTING is_statement = is_statement
-                                iv_index     = lv_next1
+                                iv_index     = lv_idx + 1
                       IMPORTING es_token     = ls_t2
                                 ev_found     = lv_found2 ).
       get_token_safe( EXPORTING is_statement = is_statement
-                                iv_index     = lv_next2
+                                iv_index     = lv_idx + 2
                       IMPORTING es_token     = ls_t3
                                 ev_found     = lv_found3 ).
       IF lv_found1 = abap_false OR lv_found2 = abap_false OR lv_found3 = abap_false.
         EXIT.
       ENDIF.
 
-      lv_tok1 = ls_t1-lexeme.
-      lv_tok2 = ls_t2-lexeme.
-      lv_tok3 = ls_t3-lexeme.
-
-      IF     is_literal( lv_tok1 )             = abap_true
-         AND is_comparison_operator( lv_tok2 ) = abap_true
-         AND is_identifier( lv_tok3 )          = abap_true
-         AND is_literal( lv_tok3 )             = abap_false.
+      IF     is_literal( ls_t1-lexeme )             = abap_true
+         AND is_comparison_operator( ls_t2-lexeme ) = abap_true
+         AND is_identifier( ls_t3-lexeme )          = abap_true
+         AND is_literal( ls_t3-lexeme )             = abap_false.
         rv_has = abap_true.
         RETURN.
       ENDIF.
@@ -121,7 +109,6 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
     DATA lv_len   TYPE i.
     DATA lv_first TYPE c LENGTH 1.
     DATA lv_last  TYPE c LENGTH 1.
-    DATA lv_rest  TYPE string.
 
     rv_is = abap_false.
     lv_len = strlen( iv_str ).
@@ -143,34 +130,18 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
 
     IF iv_str CO '0123456789'.
       rv_is = abap_true.
-      RETURN.
-    ENDIF.
-
-    "TODO abapta +- ifadeleri mutlaka tirnak ile kullanilir gereksiz bir if
-    IF ( lv_first = '+' OR lv_first = '-' ) AND lv_len > 1.
-      lv_rest = substring( val = iv_str
-                           off = 1 ).
-      IF lv_rest CO '0123456789'.
-        rv_is = abap_true.
-        RETURN.
-      ENDIF.
     ENDIF.
   ENDMETHOD.
 
   METHOD is_comparison_operator.
     DATA lv_op TYPE string.
 
-    "TODO XSDBOOL kullanilabilir burda case yerine ortak bir methoda cikarmak daha temiz olabilir baska yerlerdede varsa
     lv_op = to_upper( iv_str ).
-    CASE lv_op.
-      WHEN '=' OR '<>' OR '<' OR '>' OR '<=' OR '>='
-        OR 'EQ' OR 'NE' OR 'LT' OR 'GT' OR 'LE' OR 'GE'
-        OR 'CS' OR 'CP' OR 'NS' OR 'NP'
-        OR 'CO' OR 'CN' OR 'CA' OR 'NA'.
-        rv_is = abap_true.
-      WHEN OTHERS.
-        rv_is = abap_false.
-    ENDCASE.
+    rv_is = xsdbool( lv_op = '=' OR lv_op = '<>' OR lv_op = '<' OR lv_op = '>'
+                     OR lv_op = '<=' OR lv_op = '>=' OR lv_op = 'EQ' OR lv_op = 'NE'
+                     OR lv_op = 'LT' OR lv_op = 'GT' OR lv_op = 'LE' OR lv_op = 'GE'
+                     OR lv_op = 'CS' OR lv_op = 'CP' OR lv_op = 'NS' OR lv_op = 'NP'
+                     OR lv_op = 'CO' OR lv_op = 'CN' OR lv_op = 'CA' OR lv_op = 'NA' ).
   ENDMETHOD.
 
   METHOD is_identifier.

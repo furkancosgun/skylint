@@ -26,14 +26,14 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_004 IMPLEMENTATION.
   METHOD constructor.
-    "TODO: ne kadar dogru calisiyor emin degilim ama NOT ... IS patternini yakaliyor
-    "gibi duruyor. Daha iyi bir pattern match yazilabilir
-    super->constructor( VALUE #( description       = 'Prefer IS NOT over NOT ... IS'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #( ( code           = c_finding_codes-prefer_is_not
-                                                                severity = if_ci_atc_check=>finding_severities-warning
-                                                                text           = 'Use IS NOT instead of NOT ... IS'
-                                                                pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor(
+        VALUE #( description       = 'Prefer IS NOT over NOT ... IS'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #(
+                     ( code           = c_finding_codes-prefer_is_not
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Use IS NOT instead of NOT ... IS'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

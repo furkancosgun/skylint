@@ -17,7 +17,7 @@ CLASS zcl_skylint_check_057 DEFINITION
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'DEEP_INHERITANCE'.
 
-    DATA mv_max_depth TYPE i VALUE 3.
+    DATA mv_max_depth TYPE i VALUE 1.
 
 ENDCLASS.
 
@@ -25,7 +25,7 @@ ENDCLASS.
 CLASS zcl_skylint_check_057 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Avoid deep class inheritance hierarchies (> 3 levels)'
+        VALUE #( description       = 'Avoid deep class inheritance hierarchies'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-deep_inheritance
@@ -38,53 +38,51 @@ CLASS zcl_skylint_check_057 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_super_name TYPE string.
-    DATA lv_len TYPE i.
-    DATA lv_idx TYPE i.
-    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_super TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_found TYPE abap_bool.
-    DATA lv_super_found TYPE abap_bool.
-    DATA lv_lexeme TYPE string.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lo_descr    TYPE REF TO cl_abap_typedescr.
+    DATA lo_class    TYPE REF TO cl_abap_classdescr.
+    DATA lo_super    TYPE REF TO cl_abap_classdescr.
+    DATA lv_depth    TYPE i.
+    DATA lv_max_depth TYPE i.
 
     IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'CLASS'.
-      lv_len = lines( <ls_statement>-tokens ).
-      lv_idx = 1.
+    get_attribute( EXPORTING iv_name  = 'MAX_DEPTH'
+                   IMPORTING ev_value = lv_max_depth ).
 
-      WHILE lv_idx <= lv_len.
-        get_token_safe( EXPORTING is_statement = <ls_statement>
-                                  iv_index     = lv_idx
-                        IMPORTING es_token     = ls_token
-                                  ev_found     = lv_found ).
-        IF lv_found = abap_false.
-          lv_idx += 1.
-          CONTINUE.
-        ENDIF.
-        lv_lexeme = to_upper( ls_token-lexeme ).
-        IF lv_lexeme <> 'INHERITING'.
-          lv_idx += 1.
-          CONTINUE.
-        ENDIF.
-        get_token_safe( EXPORTING is_statement = <ls_statement>
-                                  iv_index     = lv_idx + 2
-                        IMPORTING es_token     = ls_super
-                                  ev_found     = lv_super_found ).
-        IF lv_super_found = abap_true.
-          lv_super_name = to_upper( ls_super-lexeme ).
-          IF    lv_super_name CP '*DEEP*' OR lv_super_name CP '*LEVEL*'
-             OR lv_super_name = 'CX_NO_CHECK'.
-            report_statement( is_statement    = <ls_statement>
-                              iv_finding_code = c_finding_codes-deep_inheritance ).
-          ENDIF.
-        ENDIF.
-        EXIT.
-      ENDWHILE.
-    ENDLOOP.
+    IF lv_max_depth <= 0.
+      lv_max_depth = mv_max_depth.
+    ENDIF.
+
+    cl_abap_typedescr=>describe_by_name(
+      EXPORTING
+        p_name         = is_procedure-id-main_unit-name
+      RECEIVING
+        p_descr_ref    = lo_descr
+      EXCEPTIONS
+        type_not_found = 1
+        OTHERS         = 2 ).
+    IF sy-subrc <> 0 OR lo_descr IS NOT BOUND OR lo_descr->kind <> cl_abap_typedescr=>kind_class.
+      RETURN.
+    ENDIF.
+
+    lo_class ?= lo_descr.
+    lv_depth = 0.
+
+    lo_super = lo_class->get_super_class_type( ).
+    WHILE lo_super IS BOUND.
+      lv_depth += 1.
+      lo_super = lo_super->get_super_class_type( ).
+    ENDWHILE.
+
+    IF lv_depth > lv_max_depth.
+      READ TABLE is_procedure-statements ASSIGNING <ls_statement> INDEX 1.
+      IF sy-subrc = 0.
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-deep_inheritance ).
+      ENDIF.
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.

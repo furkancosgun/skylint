@@ -34,23 +34,40 @@ CLASS zcl_skylint_check_059 IMPLEMENTATION.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lv_in_interface TYPE abap_bool.
+    DATA lo_descr TYPE REF TO cl_abap_typedescr.
+    DATA lo_obj   TYPE REF TO cl_abap_objectdescr.
+    DATA ls_attr  TYPE abap_attrdescr.
 
     IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    lv_in_interface = abap_false.
+    cl_abap_typedescr=>describe_by_name(
+      EXPORTING
+        p_name         = is_procedure-id-main_unit-name
+      RECEIVING
+        p_descr_ref    = lo_descr
+      EXCEPTIONS
+        type_not_found = 1
+        OTHERS         = 2 ).
+    IF sy-subrc <> 0 OR lo_descr IS NOT BOUND.
+      RETURN.
+    ENDIF.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF <ls_statement>-keyword = 'INTERFACE'.
-        lv_in_interface = abap_true.
-      ELSEIF <ls_statement>-keyword = 'ENDINTERFACE'.
-        lv_in_interface = abap_false.
-      ELSEIF lv_in_interface = abap_true AND <ls_statement>-keyword = 'DATA'.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-interface_data ).
-      ENDIF.
+    IF lo_descr->kind <> cl_abap_typedescr=>kind_intf AND lo_descr->kind <> cl_abap_typedescr=>kind_class.
+      RETURN.
+    ENDIF.
+
+    lo_obj ?= lo_descr.
+
+    READ TABLE is_procedure-statements ASSIGNING <ls_statement> INDEX 1.
+    IF sy-subrc <> 0.
+      RETURN.
+    ENDIF.
+
+    LOOP AT lo_obj->attributes INTO ls_attr WHERE is_constant = abap_false.
+      report_statement( is_statement    = <ls_statement>
+                        iv_finding_code = c_finding_codes-interface_data ).
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

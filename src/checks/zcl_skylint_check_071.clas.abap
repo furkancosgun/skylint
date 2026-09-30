@@ -31,30 +31,39 @@ CLASS zcl_skylint_check_071 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_has_final  TYPE abap_bool.
-    DATA lv_is_special TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lo_descr TYPE REF TO cl_abap_typedescr.
+    DATA lo_class TYPE REF TO cl_abap_classdescr.
+    DATA ls_meth  TYPE abap_methdescr.
 
     IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'METHODS'.
-      lv_has_final = abap_false.
-      lv_is_special = abap_false.
+    cl_abap_typedescr=>describe_by_name(
+      EXPORTING
+        p_name         = is_procedure-id-main_unit-name
+      RECEIVING
+        p_descr_ref    = lo_descr
+      EXCEPTIONS
+        type_not_found = 1
+        OTHERS         = 2 ).
+    IF sy-subrc <> 0 OR lo_descr IS NOT BOUND OR lo_descr->kind <> cl_abap_typedescr=>kind_class.
+      RETURN.
+    ENDIF.
 
-      LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-        CASE to_upper( <ls_token>-lexeme ).
-          WHEN 'FINAL'.
-            lv_has_final = abap_true.
-          WHEN 'REDEFINITION' OR 'ABSTRACT' OR 'TESTING' OR 'CONSTRUCTOR'.
-            lv_is_special = abap_true.
-        ENDCASE.
-      ENDLOOP.
+    lo_class ?= lo_descr.
 
-      IF lv_is_special = abap_false AND lv_has_final = abap_false.
+    READ TABLE is_procedure-statements ASSIGNING <ls_statement> INDEX 1.
+    IF sy-subrc <> 0.
+      RETURN.
+    ENDIF.
+
+    LOOP AT lo_class->methods INTO ls_meth
+         WHERE is_final     = abap_false
+           AND is_abstract  = abap_false
+           AND is_redefined = abap_false.
+      IF ls_meth-name <> 'CONSTRUCTOR' AND ls_meth-name <> 'CLASS_CONSTRUCTOR'.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-prefer_final ).
       ENDIF.

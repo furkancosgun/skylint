@@ -18,6 +18,10 @@ CLASS ltcl_check_036 IMPLEMENTATION.
     DATA ls_loc_no_pc   TYPE if_ci_atc_check=>ty_location.
     DATA ls_loc_with_pc TYPE if_ci_atc_check=>ty_location.
 
+    IF zcl_skylint_check_base=>is_open_abap( ) = abap_true.
+      RETURN.
+    ENDIF.
+
     ls_loc_no_pc = VALUE #( object   = cl_ci_atc_unit_driver=>get_method_object(
                                            VALUE #( class  = c_test_class
                                                     method = c_methods-without_pseudo_comments ) )

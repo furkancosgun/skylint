@@ -126,25 +126,28 @@ CLASS zcl_skylint_check_031 IMPLEMENTATION.
     DATA lv_has_tab   TYPE abap_bool.
     DATA lv_has_check TYPE abap_bool.
     DATA lv_clean_tok TYPE string.
+    DATA lv_tab_body  TYPE string.
 
     rv_res = abap_false.
     lv_has_tab = abap_false.
     lv_has_check = abap_false.
+    lv_tab_body = |{ iv_tab_name }[]|.
 
     LOOP AT is_statement-tokens INTO ls_tok.
       lv_clean_tok = to_upper( ls_tok-lexeme ).
-      "TODO bu kosul neden var?
-      IF lv_clean_tok(1) = '@'.
+      IF lv_clean_tok CP '@*'.
         lv_clean_tok = lv_clean_tok+1.
       ENDIF.
 
-      "TODO cp yanlis bir yaklasim cp olmayacak veya lv_cleantok + [] headerline ifadesi olabilir
-      IF lv_clean_tok = iv_tab_name OR lv_clean_tok CP |*{ iv_tab_name }*|.
+      IF lv_clean_tok = iv_tab_name OR lv_clean_tok = lv_tab_body.
         lv_has_tab = abap_true.
       ENDIF.
 
-      "TODO lines ve line_exists compiler seviyesinde nasil geliyor bakmak lazim lines( olabilir
-      IF lv_clean_tok = 'INITIAL' OR lv_clean_tok = 'LINES' OR lv_clean_tok = 'LINE_EXISTS'.
+      IF    lv_clean_tok = 'INITIAL'
+         OR lv_clean_tok = 'LINES'
+         OR lv_clean_tok = 'LINES('
+         OR lv_clean_tok = 'LINE_EXISTS'
+         OR lv_clean_tok = 'LINE_EXISTS('.
         lv_has_check = abap_true.
       ENDIF.
     ENDLOOP.

@@ -42,19 +42,8 @@ CLASS zcl_skylint_check_002 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_allow_dyn TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    get_attribute( EXPORTING iv_name  = 'ALLOW_DYNAMIC'
-                   IMPORTING ev_value = lv_allow_dyn ).
-
-    "TODO: SONUC OLMAMASI DA BIR SONUCTUR allow_dynamic false ise bostur bu dogru degil gibi if gereksiz
-    IF lv_allow_dyn IS INITIAL.
-      lv_allow_dyn = mv_allow_dynamic.
-    ENDIF.
-
-    "TODO: COMPILER seviyesinde bur bir fonksion cagrisi mi diye bakalim daha basit match_token_sequence gayey iyi
-    "allow dynamic daha duzgun yazilabilir
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'CALL'.
       IF match_token_sequence( is_statement = <ls_statement>
@@ -62,7 +51,7 @@ CLASS zcl_skylint_check_002 IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      IF lv_allow_dyn = abap_true AND is_dynamic_call( <ls_statement> ) = abap_true.
+      IF mv_allow_dynamic = abap_true AND is_dynamic_call( <ls_statement> ) = abap_true.
         CONTINUE.
       ENDIF.
 

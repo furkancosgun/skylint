@@ -107,7 +107,7 @@ All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 | **054** | [zcl_skylint_check_054](src/checks/zcl_skylint_check_054.clas.abap) | Keep constructors clean; avoid heavy business logic/loops/DB access | `CTOR_LOGIC` | `"#EC CONSTRUCTOR_LOGIC"` | ✅ Done | — |
 | **055** | [zcl_skylint_check_055](src/checks/zcl_skylint_check_055.clas.abap) | Avoid static-only classes; prefer instantiable interface-based design | `STAT_CLASS` | `"#EC AVOID_STATIC_CLS"` | ✅ Done | — |
 | **056** | [zcl_skylint_check_056](src/checks/zcl_skylint_check_056.clas.abap) | Enforce predicate naming (IS_, HAS_, CAN_) on boolean methods | `BOOL_NAME` | `"#EC BOOL_METHOD_NAME"` | ✅ Done | — |
-| **057** | [zcl_skylint_check_057](src/checks/zcl_skylint_check_057.clas.abap) | Avoid deep class inheritance hierarchies (> 3 levels) | `DEEP_INHRT` | `"#EC DEEP_INHERITANCE"` | ✅ Done | — |
+| **057** | [zcl_skylint_check_057](src/checks/zcl_skylint_check_057.clas.abap) | Avoid deep class inheritance hierarchies | `DEEP_INHRT` | `"#EC DEEP_INHERITANCE"` | ✅ Done | — |
 | **058** | [zcl_skylint_check_058](src/checks/zcl_skylint_check_058.clas.abap) | Limit number of member attributes in a class (God Class smell) | `ATTR_COUNT` | `"#EC MAX_CLASS_ATTR"` | ✅ Done | — |
 | **059** | [zcl_skylint_check_059](src/checks/zcl_skylint_check_059.clas.abap) | Avoid mutable DATA declarations in interfaces; allow only CONSTANTS | `INTF_DATA` | `"#EC INTERFACE_DATA"` | ✅ Done | — |
 | **060** | [zcl_skylint_check_060](src/checks/zcl_skylint_check_060.clas.abap) | Avoid generic CATCH cx_root; catch specific exception classes | `CATCH_ROOT` | `"#EC AVOID_CX_ROOT"` | ✅ Done | — |

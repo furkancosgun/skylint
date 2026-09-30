@@ -12,6 +12,10 @@ CLASS ltcl_check_055 IMPLEMENTATION.
   METHOD execute_test_class.
     DATA ls_loc TYPE if_ci_atc_check=>ty_location.
 
+    IF zcl_skylint_check_base=>is_open_abap( ) = abap_true.
+      RETURN.
+    ENDIF.
+
     ls_loc = VALUE #( object   = VALUE #( type = 'CLAS'
                                           name = c_test_class )
                       position = VALUE #( line   = 1

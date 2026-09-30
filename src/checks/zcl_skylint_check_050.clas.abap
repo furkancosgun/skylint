@@ -22,23 +22,18 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_050 IMPLEMENTATION.
   METHOD constructor.
-    "TODO sadece numerik mi? '1' boyle olunca? compiler guvenelim yeniden yazilsin bu sinif
     super->constructor( VALUE #( description       = 'Avoid magic numbers in code; use named constants'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-magic_number
-                                       severity       = if_ci_atc_check=>finding_severities-warning
-                                       text           = 'Avoid hardcoded magic numbers; declare a named constant'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                     ( code           = c_finding_codes-magic_number
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Avoid hardcoded magic numbers; declare a named constant'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_len    TYPE i.
-    DATA lv_idx    TYPE i.
-    DATA lv_char   TYPE c LENGTH 1.
-    DATA lv_is_num TYPE abap_bool.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       " Skip declarations (DATA, CONSTANTS, TYPES, STATICS)
@@ -48,25 +43,17 @@ CLASS zcl_skylint_check_050 IMPLEMENTATION.
       ENDIF.
 
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-        lv_len = strlen( <ls_token>-lexeme ).
-        IF lv_len = 0.
+        " Semantic identifiers resolved by compiler are not raw numeric literals
+        IF <ls_token>-references IS NOT INITIAL.
           CONTINUE.
         ENDIF.
 
-        " Check if token consists purely of digits
-        lv_is_num = abap_true.
-        lv_idx = 0.
-        WHILE lv_idx < lv_len.
-          lv_char = <ls_token>-lexeme+lv_idx(1).
-          IF lv_char < '0' OR lv_char > '9'.
-            lv_is_num = abap_false.
-            EXIT.
-          ENDIF.
-          lv_idx += 1.
-        ENDWHILE.
+        IF <ls_token>-lexeme IS INITIAL.
+          CONTINUE.
+        ENDIF.
 
-        " 0 and 1 are commonly allowed in indices/loop initializations
-        IF lv_is_num = abap_true AND <ls_token>-lexeme <> '0' AND <ls_token>-lexeme <> '1'.
+        " Detect hardcoded numeric literals (excluding standard 0 and 1 indices)
+        IF <ls_token>-lexeme CO '0123456789' AND <ls_token>-lexeme <> '0' AND <ls_token>-lexeme <> '1'.
           report_statement( is_statement    = <ls_statement>
                             iv_finding_code = c_finding_codes-magic_number ).
           EXIT.

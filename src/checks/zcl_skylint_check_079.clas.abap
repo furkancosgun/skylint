@@ -32,7 +32,6 @@ CLASS zcl_skylint_check_079 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_name TYPE string.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_tok>  TYPE if_ci_atc_source_code_provider=>ty_token.
 
@@ -40,16 +39,9 @@ CLASS zcl_skylint_check_079 IMPLEMENTATION.
          WHERE keyword = 'METHODS' OR keyword = 'CLASS-METHODS'.
       LOOP AT <ls_stmt>-tokens ASSIGNING <ls_tok>.
         IF <ls_tok>-lexeme CP '!*'.
-          "TODO asagidaki hicbir if'e gerek yok silinsin direkt raporlanabilir
-          lv_name = to_upper( <ls_tok>-lexeme+1 ).
-          IF     lv_name <> 'EXPORTING' AND lv_name <> 'IMPORTING'
-             AND lv_name <> 'CHANGING'  AND lv_name <> 'RETURNING'
-             AND lv_name <> 'TABLES'    AND lv_name <> 'VALUE'
-             AND lv_name <> 'REFERENCE' AND lv_name <> 'DEFAULT'.
-            report_statement( is_statement    = <ls_stmt>
-                              iv_finding_code = c_finding_codes-param_escape ).
-            EXIT.
-          ENDIF.
+          report_statement( is_statement    = <ls_stmt>
+                            iv_finding_code = c_finding_codes-param_escape ).
+          EXIT.
         ENDIF.
       ENDLOOP.
     ENDLOOP.

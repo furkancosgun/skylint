@@ -16,11 +16,6 @@ CLASS zcl_skylint_check_027 DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'NUM_PUBLIC_ATTR'.
-
-    METHODS is_read_only
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_res) TYPE abap_bool.
-
 ENDCLASS.
 
 
@@ -37,39 +32,40 @@ CLASS zcl_skylint_check_027 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_in_public TYPE abap_bool.
+    DATA lo_descr TYPE REF TO cl_abap_typedescr.
+    DATA lo_class TYPE REF TO cl_abap_classdescr.
+    DATA ls_attr  TYPE abap_attrdescr.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    lv_in_public = abap_false.
+    cl_abap_typedescr=>describe_by_name(
+      EXPORTING
+        p_name         = is_procedure-id-main_unit-name
+      RECEIVING
+        p_descr_ref    = lo_descr
+      EXCEPTIONS
+        type_not_found = 1
+        OTHERS         = 2 ).
+    IF sy-subrc <> 0 OR lo_descr IS NOT BOUND OR lo_descr->kind <> cl_abap_typedescr=>kind_class.
+      RETURN.
+    ENDIF.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      CASE <ls_statement>-keyword.
-        WHEN 'PUBLIC'.
-          lv_in_public = abap_true.
-        WHEN 'PROTECTED' OR 'PRIVATE'.
-          lv_in_public = abap_false.
-        WHEN 'DATA' OR 'CLASS-DATA'.
-          IF lv_in_public = abap_true AND is_read_only( <ls_statement> ) = abap_false.
-            report_statement( is_statement    = <ls_statement>
-                              iv_finding_code = c_finding_codes-public_attribute ).
-          ENDIF.
-      ENDCASE.
-    ENDLOOP.
-  ENDMETHOD.
+    lo_class ?= lo_descr.
 
-  METHOD is_read_only.
-    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
+    READ TABLE is_procedure-statements ASSIGNING <ls_statement> INDEX 1.
+    IF sy-subrc <> 0.
+      RETURN.
+    ENDIF.
 
-    rv_res = abap_false.
-    LOOP AT is_statement-tokens INTO ls_tok.
-      IF ls_tok-lexeme = 'READ-ONLY'.
-        rv_res = abap_true.
-        RETURN.
-      ENDIF.
+    LOOP AT lo_class->attributes INTO ls_attr
+         WHERE visibility  = cl_abap_classdescr=>public
+           AND is_read_only = abap_false
+           AND is_constant  = abap_false.
+      report_statement( is_statement    = <ls_statement>
+                        iv_finding_code = c_finding_codes-public_attribute ).
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

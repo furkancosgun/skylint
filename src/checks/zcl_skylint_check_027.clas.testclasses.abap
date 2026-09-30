@@ -13,6 +13,10 @@ CLASS ltcl_check_027 IMPLEMENTATION.
     DATA ls_loc_no_pc   TYPE if_ci_atc_check=>ty_location.
     DATA ls_loc_with_pc TYPE if_ci_atc_check=>ty_location.
 
+    IF zcl_skylint_check_base=>is_open_abap( ) = abap_true.
+      RETURN.
+    ENDIF.
+
     ls_loc_no_pc = VALUE #( object   = VALUE #( type = 'CLAS'
                                                 name = c_test_class )
                             position = VALUE #( line   = 6

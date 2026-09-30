@@ -48,56 +48,31 @@ CLASS zcl_skylint_check_008 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    "TODO: okunmasi zor bir kod daha basit bir pattern match yazilabilir.
-    DATA lv_allow_struct TYPE abap_bool.
-    DATA lv_total TYPE i.
-    DATA lv_idx TYPE i.
-    DATA lv_next_idx TYPE i.
-    DATA ls_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_next_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lv_found TYPE abap_bool.
+    DATA lv_idx        TYPE i.
+    DATA lv_next_idx   TYPE i.
+    DATA ls_next_stmt  TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA lv_found_next TYPE abap_bool.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    get_attribute( EXPORTING iv_name  = 'ALLOW_STRUCTURE_CHAINS'
-                   IMPORTING ev_value = lv_allow_struct ).
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      lv_idx = sy-tabix.
 
-    IF lv_allow_struct IS INITIAL.
-      lv_allow_struct = mv_allow_structure_chains.
-    ENDIF.
-
-    lv_total = lines( is_procedure-statements ).
-
-    DO lv_total TIMES.
-      lv_idx = sy-index.
-      get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                    iv_index       = lv_idx
-                          IMPORTING es_statement   = ls_statement
-                                    ev_found       = lv_found ).
-      IF lv_found = abap_false.
-        EXIT.
-      ENDIF.
-
-      CASE ls_statement-keyword.
+      CASE <ls_statement>-keyword.
         WHEN 'DATA' OR 'TYPES' OR 'CONSTANTS' OR 'STATICS' OR 'FIELD-SYMBOLS' OR 'CLASS-DATA'.
           lv_next_idx = lv_idx + 1.
-          IF lv_next_idx > lv_total.
-            CONTINUE.
-          ENDIF.
           get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                        iv_index       = lv_next_idx
-                              IMPORTING es_statement   = ls_next_stmt
-                                        ev_found       = lv_found_next ).
-          IF lv_found_next = abap_false.
-            CONTINUE.
-          ENDIF.
-          IF should_report_chain( is_statement = ls_statement
-                                  is_next      = ls_next_stmt
-                                  iv_allow     = lv_allow_struct ) = abap_true.
-            report_statement( is_statement    = ls_statement
+                                        iv_index      = lv_next_idx
+                              IMPORTING es_statement  = ls_next_stmt
+                                        ev_found      = lv_found_next ).
+          IF lv_found_next = abap_true
+             AND should_report_chain( is_statement = <ls_statement>
+                                      is_next      = ls_next_stmt
+                                      iv_allow     = mv_allow_structure_chains ) = abap_true.
+            report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-chained_declaration ).
           ENDIF.
       ENDCASE.
-    ENDDO.
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD is_structure_start.

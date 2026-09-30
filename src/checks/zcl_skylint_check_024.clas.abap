@@ -31,8 +31,6 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_024 IMPLEMENTATION.
   METHOD constructor.
-    "TODO bu kural kontrol edilmesi cok zor bir yapi boolc ifadesi varsa xsdbool cevirmek daha dogru olabilir
-    "TODO yine de kalsin gercekten calistigina eminsek refactoring yapip kullanalim
     super->constructor(
         VALUE #( description       = 'Prefer xsdbool( ) expression over manual IF-ELSE assignment'
                  remote_enablement = abap_true

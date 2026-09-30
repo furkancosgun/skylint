@@ -32,69 +32,89 @@ CLASS zcl_skylint_check_075 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    "TODO daha temiz yazilsin
-    DATA lv_count TYPE i.
-    DATA lv_idx TYPE i.
-    DATA ls_last TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_first_exec TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lv_last_found TYPE abap_bool.
-    DATA lv_stmt_found TYPE abap_bool.
-    DATA lv_has_first TYPE abap_bool.
+    DATA lv_max       TYPE i.
+    DATA lv_idx       TYPE i.
+    DATA lv_first_idx TYPE i.
+    DATA lv_scan_idx  TYPE i.
+    DATA lv_if_depth  TYPE i.
+    DATA lv_has_else  TYPE abap_bool.
+    DATA ls_first     TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_stmt      TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_after     TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_found     TYPE abap_bool.
 
-    lv_count = lines( is_procedure-statements ).
-    IF lv_count < 3.
+    lv_max = lines( is_procedure-statements ).
+    IF lv_max < 3.
       RETURN.
     ENDIF.
 
-    " Check if last statement before ENDMETHOD is ENDIF
-    get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                  iv_index      = lv_count
-                        IMPORTING es_statement  = ls_last
-                                  ev_found      = lv_last_found ).
-    IF lv_last_found = abap_false.
-      RETURN.
-    ENDIF.
-    IF ls_last-keyword = 'ENDMETHOD' AND lv_count >= 2.
-      get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                    iv_index      = lv_count - 1
-                          IMPORTING es_statement  = ls_last
-                                    ev_found      = lv_last_found ).
-      IF lv_last_found = abap_false.
-        RETURN.
-      ENDIF.
-    ENDIF.
-
-    IF ls_last-keyword <> 'ENDIF'.
-      RETURN.
-    ENDIF.
-
-    " Find first executable statement (skip DATA, TYPES, CONSTANTS, FIELD-SYMBOLS)
-    lv_idx = 1.
-    lv_has_first = abap_false.
-    WHILE lv_idx <= lv_count.
+    " 1. Locate the first executable statement
+    DO lv_max TIMES.
+      lv_idx = sy-index.
       get_statement_safe( EXPORTING it_statements = is_procedure-statements
                                     iv_index      = lv_idx
                           IMPORTING es_statement  = ls_stmt
-                                    ev_found      = lv_stmt_found ).
-      IF lv_stmt_found = abap_false.
-        lv_idx += 1.
+                                    ev_found      = lv_found ).
+      IF lv_found = abap_false.
         CONTINUE.
       ENDIF.
+
       CASE ls_stmt-keyword.
-        WHEN 'METHOD' OR 'DATA' OR 'TYPES' OR 'CONSTANTS' OR 'FIELD-SYMBOLS'.
-          lv_idx += 1.
+        WHEN 'METHOD' OR 'DATA' OR 'TYPES' OR 'CONSTANTS' OR 'STATICS' OR 'FIELD-SYMBOLS'.
           CONTINUE.
         WHEN OTHERS.
-          ls_first_exec = ls_stmt.
-          lv_has_first = abap_true.
+          ls_first = ls_stmt.
+          lv_first_idx = lv_idx.
           EXIT.
       ENDCASE.
-    ENDWHILE.
+    ENDDO.
 
-    IF lv_has_first = abap_true AND ls_first_exec-keyword = 'IF'.
-      report_statement( is_statement    = ls_first_exec
-                        iv_finding_code = c_finding_codes-guard_method ).
+    IF ls_first-keyword <> 'IF' OR lv_first_idx = 0.
+      RETURN.
     ENDIF.
+
+    " 2. Find matching ENDIF for this IF block
+    lv_if_depth = 1.
+    lv_has_else = abap_false.
+    lv_scan_idx = lv_first_idx + 1.
+
+    WHILE lv_scan_idx <= lv_max AND lv_if_depth > 0.
+      get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                    iv_index      = lv_scan_idx
+                          IMPORTING es_statement  = ls_stmt
+                                    ev_found      = lv_found ).
+      IF lv_found = abap_false.
+        EXIT.
+      ENDIF.
+
+      CASE ls_stmt-keyword.
+        WHEN 'IF'.
+          lv_if_depth += 1.
+        WHEN 'ELSE' OR 'ELSEIF'.
+          IF lv_if_depth = 1.
+            lv_has_else = abap_true.
+          ENDIF.
+        WHEN 'ENDIF'.
+          lv_if_depth -= 1.
+          IF lv_if_depth = 0.
+            " Statement immediately following ENDIF must be ENDMETHOD or EOF
+            IF lv_scan_idx = lv_max.
+              report_statement( is_statement    = ls_first
+                                iv_finding_code = c_finding_codes-guard_method ).
+            ELSE.
+              get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                            iv_index      = lv_scan_idx + 1
+                                  IMPORTING es_statement  = ls_after
+                                            ev_found      = lv_found ).
+              IF lv_found = abap_true AND lv_has_else = abap_false AND ls_after-keyword = 'ENDMETHOD'.
+                report_statement( is_statement    = ls_first
+                                  iv_finding_code = c_finding_codes-guard_method ).
+              ENDIF.
+            ENDIF.
+            EXIT.
+          ENDIF.
+      ENDCASE.
+      lv_scan_idx += 1.
+    ENDWHILE.
   ENDMETHOD.
 ENDCLASS.

@@ -33,42 +33,52 @@ CLASS zcl_skylint_check_055 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_has_instance_meth TYPE abap_bool.
-    DATA lv_static_meth_cnt TYPE i.
-    DATA ls_first_class_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lv_found_class TYPE abap_bool.
-    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_found TYPE abap_bool.
+    DATA lo_descr       TYPE REF TO cl_abap_typedescr.
+    DATA lo_class       TYPE REF TO cl_abap_classdescr.
+    DATA ls_meth        TYPE abap_methdescr.
+    DATA lv_static_cnt  TYPE i.
+    DATA lv_has_inst    TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    lv_has_instance_meth = abap_false.
-    lv_static_meth_cnt = 0.
-    lv_found_class = abap_false.
+    cl_abap_typedescr=>describe_by_name(
+      EXPORTING
+        p_name         = is_procedure-id-main_unit-name
+      RECEIVING
+        p_descr_ref    = lo_descr
+      EXCEPTIONS
+        type_not_found = 1
+        OTHERS         = 2 ).
+    IF sy-subrc <> 0 OR lo_descr IS NOT BOUND OR lo_descr->kind <> cl_abap_typedescr=>kind_class.
+      RETURN.
+    ENDIF.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF <ls_statement>-keyword = 'CLASS' AND lv_found_class = abap_false.
-        ls_first_class_stmt = <ls_statement>.
-        lv_found_class = abap_true.
-      ELSEIF <ls_statement>-keyword = 'METHODS'.
-        get_token_safe( EXPORTING is_statement = <ls_statement>
-                                   iv_index     = 2
-                         IMPORTING es_token     = ls_token
-                                   ev_found     = lv_found ).
-        IF lv_found = abap_true AND ls_token-lexeme <> 'CONSTRUCTOR'.
-          lv_has_instance_meth = abap_true.
-        ENDIF.
-      ELSEIF <ls_statement>-keyword = 'CLASS-METHODS'.
-        lv_static_meth_cnt += 1.
+    lo_class ?= lo_descr.
+    IF lines( lo_class->methods ) = 0.
+      RETURN.
+    ENDIF.
+
+    lv_static_cnt = 0.
+    lv_has_inst = abap_false.
+
+    LOOP AT lo_class->methods INTO ls_meth.
+      IF ls_meth-is_class = abap_true.
+        lv_static_cnt += 1.
+      ELSEIF ls_meth-name <> 'CONSTRUCTOR'.
+        lv_has_inst = abap_true.
+        EXIT.
       ENDIF.
     ENDLOOP.
 
-    IF lv_static_meth_cnt > 0 AND lv_has_instance_meth = abap_false AND lv_found_class = abap_true.
-      report_statement( is_statement    = ls_first_class_stmt
-                        iv_finding_code = c_finding_codes-static_class ).
+    IF lv_static_cnt > 0 AND lv_has_inst = abap_false.
+      READ TABLE is_procedure-statements ASSIGNING <ls_statement> INDEX 1.
+      IF sy-subrc = 0.
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-static_class ).
+      ENDIF.
     ENDIF.
   ENDMETHOD.
 ENDCLASS.

@@ -43,8 +43,6 @@ CLASS zcl_skylint_check_010 IMPLEMENTATION.
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    "TODO: okunmasi zor bir kod daha basit bir pattern match yazilabilir.
-    "if lv_result. "boyle bir kod gecerli degil sadece function call varsa o zaman gecerli olur
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'IF' OR 'ELSEIF' OR 'CHECK' OR 'WHILE'.
@@ -57,68 +55,48 @@ CLASS zcl_skylint_check_010 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD has_boolean_comparison.
-    DATA lv_tok_idx TYPE i.
-    DATA lv_tok_cnt TYPE i.
-    DATA lv_prev_idx TYPE i.
-    DATA lv_next_idx TYPE i.
-    DATA lv_lexeme TYPE string.
-    DATA lv_prev_lex TYPE string.
-    DATA lv_next_lex TYPE string.
-    DATA ls_cur_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_tok_idx   TYPE i.
+    DATA lv_prev_idx  TYPE i.
+    DATA lv_next_idx  TYPE i.
+    DATA ls_token     TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA ls_adj_token TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_found TYPE abap_bool.
     DATA lv_found_adj TYPE abap_bool.
+    DATA lv_lexeme    TYPE string.
 
     rv_has = abap_false.
-    lv_tok_cnt = lines( is_statement-tokens ).
 
-    DO lv_tok_cnt TIMES.
-      lv_tok_idx = sy-index.
-      get_token_safe( EXPORTING is_statement = is_statement
-                                iv_index     = lv_tok_idx
-                      IMPORTING es_token     = ls_cur_token
-                                ev_found     = lv_found ).
-      IF lv_found = abap_false.
-        EXIT.
-      ENDIF.
+    LOOP AT is_statement-tokens INTO ls_token.
+      lv_tok_idx = sy-tabix.
+      lv_lexeme = to_upper( ls_token-lexeme ).
 
-      lv_lexeme = to_upper( ls_cur_token-lexeme ).
-      IF     lv_lexeme <> '='  AND lv_lexeme <> 'EQ' AND lv_lexeme <> '<>'
-         AND lv_lexeme <> 'NE' AND lv_lexeme <> '><'.
-        CONTINUE.
-      ENDIF.
+      CASE lv_lexeme.
+        WHEN '=' OR 'EQ' OR '<>' OR 'NE' OR '><'.
+          lv_prev_idx = lv_tok_idx - 1.
+          lv_next_idx = lv_tok_idx + 1.
 
-      lv_prev_idx = lv_tok_idx - 1.
-      lv_next_idx = lv_tok_idx + 1.
-
-      IF lv_prev_idx >= 1.
-        get_token_safe( EXPORTING is_statement = is_statement
-                                  iv_index     = lv_prev_idx
-                        IMPORTING es_token     = ls_adj_token
-                                  ev_found     = lv_found_adj ).
-        IF lv_found_adj = abap_true.
-          lv_prev_lex = to_upper( ls_adj_token-lexeme ).
-          IF is_boolean_literal( lv_prev_lex ) = abap_true.
-            rv_has = abap_true.
-            RETURN.
+          IF lv_prev_idx >= 1.
+            get_token_safe( EXPORTING is_statement = is_statement
+                                      iv_index     = lv_prev_idx
+                            IMPORTING es_token     = ls_adj_token
+                                      ev_found     = lv_found_adj ).
+            IF lv_found_adj = abap_true AND is_boolean_literal( to_upper( ls_adj_token-lexeme ) ) = abap_true.
+              rv_has = abap_true.
+              RETURN.
+            ENDIF.
           ENDIF.
-        ENDIF.
-      ENDIF.
 
-      IF lv_next_idx <= lv_tok_cnt.
-        get_token_safe( EXPORTING is_statement = is_statement
-                                  iv_index     = lv_next_idx
-                        IMPORTING es_token     = ls_adj_token
-                                  ev_found     = lv_found_adj ).
-        IF lv_found_adj = abap_true.
-          lv_next_lex = to_upper( ls_adj_token-lexeme ).
-          IF is_boolean_literal( lv_next_lex ) = abap_true.
-            rv_has = abap_true.
-            RETURN.
+          IF lv_next_idx <= lines( is_statement-tokens ).
+            get_token_safe( EXPORTING is_statement = is_statement
+                                      iv_index     = lv_next_idx
+                            IMPORTING es_token     = ls_adj_token
+                                      ev_found     = lv_found_adj ).
+            IF lv_found_adj = abap_true AND is_boolean_literal( to_upper( ls_adj_token-lexeme ) ) = abap_true.
+              rv_has = abap_true.
+              RETURN.
+            ENDIF.
           ENDIF.
-        ENDIF.
-      ENDIF.
-    ENDDO.
+      ENDCASE.
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD is_boolean_literal.

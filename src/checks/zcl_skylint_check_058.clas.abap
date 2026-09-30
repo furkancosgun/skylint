@@ -39,10 +39,9 @@ CLASS zcl_skylint_check_058 IMPLEMENTATION.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lo_descr            TYPE REF TO cl_abap_typedescr.
+    DATA lo_class            TYPE REF TO cl_abap_classdescr.
     DATA lv_max_attr         TYPE i.
-    DATA lv_attr_count       TYPE i.
-    DATA ls_first_class_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lv_found_class      TYPE abap_bool.
 
     IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
@@ -55,21 +54,26 @@ CLASS zcl_skylint_check_058 IMPLEMENTATION.
       lv_max_attr = mv_max_attributes.
     ENDIF.
 
-    lv_attr_count = 0.
-    lv_found_class = abap_false.
+    cl_abap_typedescr=>describe_by_name(
+      EXPORTING
+        p_name         = is_procedure-id-main_unit-name
+      RECEIVING
+        p_descr_ref    = lo_descr
+      EXCEPTIONS
+        type_not_found = 1
+        OTHERS         = 2 ).
+    IF sy-subrc <> 0 OR lo_descr IS NOT BOUND OR lo_descr->kind <> cl_abap_typedescr=>kind_class.
+      RETURN.
+    ENDIF.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF <ls_statement>-keyword = 'CLASS' AND lv_found_class = abap_false.
-        ls_first_class_stmt = <ls_statement>.
-        lv_found_class = abap_true.
-      ELSEIF <ls_statement>-keyword = 'DATA' OR <ls_statement>-keyword = 'CLASS-DATA'.
-        lv_attr_count += 1.
+    lo_class ?= lo_descr.
+
+    IF lines( lo_class->attributes ) > lv_max_attr.
+      READ TABLE is_procedure-statements ASSIGNING <ls_statement> INDEX 1.
+      IF sy-subrc = 0.
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-attribute_count ).
       ENDIF.
-    ENDLOOP.
-
-    IF lv_found_class = abap_true AND lv_attr_count > lv_max_attr.
-      report_statement( is_statement    = ls_first_class_stmt
-                        iv_finding_code = c_finding_codes-attribute_count ).
     ENDIF.
   ENDMETHOD.
 ENDCLASS.

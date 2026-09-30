@@ -39,9 +39,8 @@ CLASS zcl_skylint_check_007 IMPLEMENTATION.
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    "TODO: bu yapi genelde COMPUTE keywordu olarak yorumlaniyor ATC tarafinda
-    "manuel bakmak gereksiz
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
+         WHERE keyword = 'COMPUTE'.
       IF has_assignment_chain( <ls_statement> ) = abap_true.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-assignment_chaining ).
@@ -56,13 +55,6 @@ CLASS zcl_skylint_check_007 IMPLEMENTATION.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_chain = abap_false.
-
-    CASE is_statement-keyword.
-      WHEN 'IF' OR 'ELSEIF' OR 'CHECK' OR 'WHILE' OR 'WHEN'
-        OR 'WHERE' OR 'SELECT' OR 'UPDATE' OR 'MODIFY' OR 'DELETE'
-        OR 'TYPES' OR 'DATA' OR 'CONSTANTS' OR 'STATICS' OR 'ASSERT'.
-        RETURN.
-    ENDCASE.
 
     lv_depth = 0.
     lv_equals_count = 0.

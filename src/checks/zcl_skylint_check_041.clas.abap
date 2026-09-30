@@ -26,7 +26,6 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_041 IMPLEMENTATION.
   METHOD constructor.
-    "TODO compiler ile desteklensin deger atim durumlarini
     super->constructor(
         VALUE #( description       = 'skylint: Avoid sy-* System Variable Modification'
                  remote_enablement = abap_true
@@ -49,40 +48,55 @@ CLASS zcl_skylint_check_041 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_system_variable_mod.
-    DATA ls_token1 TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_token2 TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_found1 TYPE abap_bool.
-    DATA lv_found2 TYPE abap_bool.
-    DATA lv_tok1 TYPE string.
-    DATA lv_tok2 TYPE string.
+    DATA ls_tok   TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_ref   TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    DATA lv_lex   TYPE string.
+    DATA lv_found TYPE abap_bool.
 
     rv_res = abap_false.
 
-    get_token_safe( EXPORTING is_statement = is_statement
-                               iv_index     = 1
-                     IMPORTING es_token     = ls_token1
-                               ev_found     = lv_found1 ).
-    get_token_safe( EXPORTING is_statement = is_statement
-                               iv_index     = 2
-                     IMPORTING es_token     = ls_token2
-                               ev_found     = lv_found2 ).
+    " 1. Compiler References (write mode on system structure)
+    LOOP AT is_statement-tokens INTO ls_tok.
+      lv_lex = to_upper( ls_tok-lexeme ).
+      IF lv_lex CP 'SY-*' OR lv_lex CP 'SYST-*'.
+        LOOP AT ls_tok-references INTO ls_ref.
+          IF ls_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-write.
+            rv_res = abap_true.
+            RETURN.
+          ENDIF.
+        ENDLOOP.
+      ENDIF.
+    ENDLOOP.
 
-    IF lv_found1 = abap_false OR lv_found2 = abap_false.
-      RETURN.
-    ENDIF.
+    " 2. Direct statement AST analysis for assignments and modifications
+    CASE is_statement-keyword.
+      WHEN 'COMPUTE'.
+        " sy-subrc = ...
+        get_token_safe( EXPORTING is_statement = is_statement
+                                  iv_index     = 1
+                        IMPORTING es_token     = ls_tok
+                                  ev_found     = lv_found ).
+        IF lv_found = abap_true.
+          lv_lex = to_upper( ls_tok-lexeme ).
+          IF lv_lex CP 'SY-*' OR lv_lex CP 'SYST-*'.
+            rv_res = abap_true.
+            RETURN.
+          ENDIF.
+        ENDIF.
 
-    lv_tok1 = to_upper( ls_token1-lexeme ).
-    lv_tok2 = to_upper( ls_token2-lexeme ).
-
-    " 1. Assignment: sy-subrc = 0.
-    IF lv_tok2 = '=' AND ( lv_tok1 CP 'SY-*' OR lv_tok1 CP 'SYST-*' ).
-      rv_res = abap_true.
-      RETURN.
-    ENDIF.
-
-    " 2. CLEAR statement: CLEAR sy-subrc.
-    IF lv_tok1 = 'CLEAR' AND ( lv_tok2 CP 'SY-*' OR lv_tok2 CP 'SYST-*' ).
-      rv_res = abap_true.
-    ENDIF.
+      WHEN 'CLEAR'.
+        " CLEAR sy-subrc
+        get_token_safe( EXPORTING is_statement = is_statement
+                                  iv_index     = 2
+                        IMPORTING es_token     = ls_tok
+                                  ev_found     = lv_found ).
+        IF lv_found = abap_true.
+          lv_lex = to_upper( ls_tok-lexeme ).
+          IF lv_lex CP 'SY-*' OR lv_lex CP 'SYST-*'.
+            rv_res = abap_true.
+            RETURN.
+          ENDIF.
+        ENDIF.
+    ENDCASE.
   ENDMETHOD.
 ENDCLASS.

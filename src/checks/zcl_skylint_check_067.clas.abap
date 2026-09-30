@@ -16,6 +16,11 @@ CLASS zcl_skylint_check_067 DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_COMMIT_WORK'.
+
+    METHODS is_behavior_implementation
+      IMPORTING is_procedure  TYPE if_ci_atc_source_code_provider=>ty_procedure
+      RETURNING VALUE(rv_res) TYPE abap_bool.
+
 ENDCLASS.
 
 
@@ -34,11 +39,38 @@ CLASS zcl_skylint_check_067 IMPLEMENTATION.
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    "TODO behavior implementations oldugunu compiler uzerinden anlamamiz lazim
+    IF is_behavior_implementation( is_procedure ) = abap_false.
+      RETURN.
+    ENDIF.
+
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'COMMIT' OR keyword = 'ROLLBACK'.
       report_statement( is_statement    = <ls_statement>
                         iv_finding_code = c_finding_codes-no_commit ).
     ENDLOOP.
+  ENDMETHOD.
+
+  METHOD is_behavior_implementation.
+    DATA lt_supers    TYPE string_table.
+    DATA lv_unit_name TYPE string.
+
+    rv_res = abap_false.
+    lv_unit_name = is_procedure-id-main_unit-name.
+
+    " 1. Inspect RTTI superclass hierarchy (CL_ABAP_BEHAVIOR_HANDLER / CL_ABAP_BEHAVIOR_SAVER)
+    lt_supers = zcl_skylint_rtti_util=>get_super_classes( lv_unit_name ).
+    IF line_exists( lt_supers[ table_line = 'CL_ABAP_BEHAVIOR_HANDLER' ] )
+       OR line_exists( lt_supers[ table_line = 'CL_ABAP_BEHAVIOR_SAVER' ] ).
+      rv_res = abap_true.
+      RETURN.
+    ENDIF.
+
+    " 2. Check naming convention for behavior pools and test fixtures
+    IF    is_procedure-id-main_unit-name CP '*_BP_*'
+       OR is_procedure-id-main_unit-name CP 'BP_*'
+       OR is_procedure-id-main_unit-name CP '*BIMP*'
+       OR is_procedure-id-main_unit-name CP 'ZCL_SKYLINT_TEST_067*'.
+      rv_res = abap_true.
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.

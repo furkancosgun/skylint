@@ -48,94 +48,42 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_static_create_object.
-    "TODO burasi compiler seviyesinde halledilir gibi duruyor kontrol edelim cok kotu yazilmis
-    DATA lv_total     TYPE i.
-    DATA lv_idx       TYPE i.
-    DATA lv_next_idx  TYPE i.
-    DATA lv_last_idx  TYPE i.
-    DATA lv_tok       TYPE string.
-    DATA lv_tok2      TYPE string.
-    DATA lv_last1     TYPE string.
-    DATA lv_last2     TYPE string.
-    DATA lt_expected  TYPE ty_token_lexemes.
-    DATA ls_t1        TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_t2        TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_found     TYPE abap_bool.
-    DATA lv_found2    TYPE abap_bool.
+    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_idx TYPE i.
+    DATA lv_tok TYPE string.
 
     rv_res = abap_false.
-    lv_total = lines( is_statement-tokens ).
-    IF lv_total < 2.
-      RETURN.
-    ENDIF.
-
-    lt_expected = VALUE #( ( `CREATE` ) ( `OBJECT` ) ).
     IF match_token_sequence( is_statement = is_statement
-                             it_expected  = lt_expected ) = abap_false.
+                             it_expected  = VALUE #( ( `CREATE` ) ( `OBJECT` ) ) ) = abap_false.
       RETURN.
     ENDIF.
 
-    " Check for RAP FOR TESTING
-    IF lv_total >= 4.
-      lv_last_idx = lv_total - 1.
-      get_token_safe( EXPORTING is_statement = is_statement
-                                iv_index     = lv_last_idx
-                      IMPORTING es_token     = ls_t1
-                                ev_found     = lv_found ).
-      get_token_safe( EXPORTING is_statement = is_statement
-                                iv_index     = lv_total
-                      IMPORTING es_token     = ls_t2
-                                ev_found     = lv_found2 ).
-      IF lv_found = abap_true AND lv_found2 = abap_true.
-        lv_last1 = to_upper( ls_t1-lexeme ).
-        lv_last2 = to_upper( ls_t2-lexeme ).
-        IF lv_last1 = 'FOR' AND lv_last2 = 'TESTING'.
-          RETURN.
-        ENDIF.
-      ENDIF.
-    ENDIF.
-
-    " Check tokens for PARAMETER-TABLE via sequence search
-    lt_expected = VALUE #( ( `PARAMETER-TABLE` ) ).
-    IF find_token_sequence( is_statement = is_statement
-                            it_expected  = lt_expected ) > 0.
+    " Exclude RAP FOR TESTING and dynamic calls
+    IF match_token_sequence( is_statement = is_statement
+                             it_expected  = VALUE #( ( `FOR` ) ( `TESTING` ) ) ) = abap_true.
       RETURN.
     ENDIF.
 
-    " Check tokens for dynamic TYPE (...), or OLE strings
-    lv_idx = 3.
-    WHILE lv_idx <= lv_total.
-      get_token_safe( EXPORTING is_statement = is_statement
-                                iv_index     = lv_idx
-                      IMPORTING es_token     = ls_t1
-                                ev_found     = lv_found ).
-      IF lv_found = abap_false.
-        EXIT.
-      ENDIF.
+    IF match_token_sequence( is_statement = is_statement
+                             it_expected  = VALUE #( ( `PARAMETER-TABLE` ) ) ) = abap_true.
+      RETURN.
+    ENDIF.
 
-      lv_tok = to_upper( ls_t1-lexeme ).
+    LOOP AT is_statement-tokens INTO ls_tok FROM 3.
+      lv_idx = sy-tabix.
+      lv_tok = to_upper( ls_tok-lexeme ).
 
-      IF lv_tok = 'TYPE' AND lv_idx < lv_total.
-        lv_next_idx = lv_idx + 1.
-        get_token_safe( EXPORTING is_statement = is_statement
-                                  iv_index     = lv_next_idx
-                        IMPORTING es_token     = ls_t2
-                                  ev_found     = lv_found2 ).
-        IF lv_found2 = abap_true.
-          lv_tok2 = ls_t2-lexeme.
-          IF lv_tok2 CP '*( *' OR lv_tok2 CP '(*)' OR lv_tok2(1) = '('.
-            RETURN.
-          ENDIF.
-        ENDIF.
-      ENDIF.
-
-      " OLE Automation: CREATE OBJECT excel 'Excel.Application'
       IF lv_idx = 3 AND ( lv_tok(1) = `'` OR lv_tok(1) = '`' ).
+        " OLE automation
         RETURN.
       ENDIF.
 
-      lv_idx += 1.
-    ENDWHILE.
+      IF lv_tok = 'TYPE' AND matches_token_at( is_statement = is_statement
+                                               iv_index     = lv_idx + 1
+                                               iv_expected  = '(' ) = abap_true.
+        RETURN.
+      ENDIF.
+    ENDLOOP.
 
     rv_res = abap_true.
   ENDMETHOD.

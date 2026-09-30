@@ -17,10 +17,6 @@ CLASS zcl_skylint_check_042 DEFINITION
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_RETURNING'.
 
-    METHODS is_single_exporting_only
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_res) TYPE abap_bool.
-
 ENDCLASS.
 
 
@@ -38,66 +34,62 @@ CLASS zcl_skylint_check_042 IMPLEMENTATION.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lo_descr     TYPE REF TO cl_abap_typedescr.
+    DATA lo_class     TYPE REF TO cl_abap_classdescr.
+    DATA ls_meth      TYPE abap_methdescr.
+    DATA ls_param     TYPE abap_parmdescr.
+    DATA lv_exp_count TYPE i.
+    DATA lv_chg_count TYPE i.
+    DATA lv_ret_count TYPE i.
 
     IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'METHODS' OR keyword = 'CLASS-METHODS'.
-      IF is_single_exporting_only( <ls_statement> ) = abap_true.
+    cl_abap_typedescr=>describe_by_name(
+      EXPORTING
+        p_name         = is_procedure-id-main_unit-name
+      RECEIVING
+        p_descr_ref    = lo_descr
+      EXCEPTIONS
+        type_not_found = 1
+        OTHERS         = 2 ).
+    IF sy-subrc <> 0 OR lo_descr IS NOT BOUND OR lo_descr->kind <> cl_abap_typedescr=>kind_class.
+      RETURN.
+    ENDIF.
+
+    lo_class ?= lo_descr.
+
+    READ TABLE is_procedure-statements ASSIGNING <ls_statement> INDEX 1.
+    IF sy-subrc <> 0.
+      RETURN.
+    ENDIF.
+
+    LOOP AT lo_class->methods INTO ls_meth
+         WHERE is_redefined = abap_false.
+      IF ls_meth-name = 'CONSTRUCTOR' OR ls_meth-name = 'CLASS_CONSTRUCTOR' OR ls_meth-for_event IS NOT INITIAL.
+        CONTINUE.
+      ENDIF.
+
+      lv_exp_count = 0.
+      lv_chg_count = 0.
+      lv_ret_count = 0.
+
+      LOOP AT ls_meth-parameters INTO ls_param.
+        CASE ls_param-parm_kind.
+          WHEN cl_abap_objectdescr=>exporting.
+            lv_exp_count += 1.
+          WHEN cl_abap_objectdescr=>changing.
+            lv_chg_count += 1.
+          WHEN cl_abap_objectdescr=>returning.
+            lv_ret_count += 1.
+        ENDCASE.
+      ENDLOOP.
+
+      IF lv_exp_count = 1 AND lv_chg_count = 0 AND lv_ret_count = 0.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-prefer_returning ).
       ENDIF.
     ENDLOOP.
-  ENDMETHOD.
-
-  METHOD is_single_exporting_only.
-    DATA ls_tok       TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_lex       TYPE string.
-    DATA lv_mode      TYPE string.
-    DATA lv_exp_count TYPE i.
-    DATA lv_chg_count TYPE i.
-    DATA lv_ret_count TYPE i.
-
-    rv_res = abap_false.
-    lv_mode = ''.
-    lv_exp_count = 0.
-    lv_chg_count = 0.
-    lv_ret_count = 0.
-
-    LOOP AT is_statement-tokens INTO ls_tok.
-      lv_lex = to_upper( ls_tok-lexeme ).
-
-      IF lv_lex = 'FOR' OR lv_lex = 'EVENT' OR lv_lex = 'REDEFINITION'.
-        RETURN.
-      ENDIF.
-
-      CASE lv_lex.
-        WHEN 'IMPORTING'.
-          lv_mode = 'IMPORTING'.
-        WHEN 'EXPORTING'.
-          lv_mode = 'EXPORTING'.
-        WHEN 'CHANGING'.
-          lv_mode = 'CHANGING'.
-        WHEN 'RETURNING'.
-          lv_mode = 'RETURNING'.
-        WHEN 'RAISING' OR 'EXCEPTIONS'.
-          lv_mode = ''.
-        WHEN 'TYPE' OR 'LIKE'.
-          CASE lv_mode.
-            WHEN 'EXPORTING'.
-              lv_exp_count += 1.
-            WHEN 'CHANGING'.
-              lv_chg_count += 1.
-            WHEN 'RETURNING'.
-              lv_ret_count += 1.
-          ENDCASE.
-      ENDCASE.
-    ENDLOOP.
-
-    IF lv_exp_count = 1 AND lv_chg_count = 0 AND lv_ret_count = 0.
-      rv_res = abap_true.
-    ENDIF.
   ENDMETHOD.
 ENDCLASS.

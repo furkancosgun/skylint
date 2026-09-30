@@ -27,7 +27,6 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_017 IMPLEMENTATION.
   METHOD constructor.
-    "TODO daha temiz yazilabilir
     super->constructor( VALUE #( description       = 'Detect consecutive nested IF blocks that can be merged with AND'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(

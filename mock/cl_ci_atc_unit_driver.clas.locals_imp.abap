@@ -649,6 +649,79 @@ CLASS lcl_ci_atc_unit_asserter IMPLEMENTATION.
       WRITE '@KERNEL     combined += fs.readFileSync(classInfo.locals_imp, "utf8") + "\n";'.
       WRITE '@KERNEL   }'.
       WRITE '@KERNEL   lv_source.set(combined);'.
+      WRITE '@KERNEL   if (globalThis.abap && globalThis.abap.Classes) {'.
+      WRITE '@KERNEL     const upperObj = lv_name.get().toUpperCase().trimEnd();'.
+      WRITE '@KERNEL     const attributes = {};'.
+      WRITE '@KERNEL     const methods = {};'.
+      WRITE '@KERNEL     const interfaces = [];'.
+      WRITE '@KERNEL     let staticSuper = undefined;'.
+      WRITE '@KERNEL     let currentVis = "U";'.
+      WRITE '@KERNEL     const rawStatements = combined.replace(/\r/g, "").replace(/^\*.*$/gm, "").replace(/".*$/gm, "").split(".");'.
+      WRITE '@KERNEL     for (let rawStmt of rawStatements) {'.
+      WRITE '@KERNEL       let stmt = rawStmt.replace(/\s+/g, " ").trim();'.
+      WRITE '@KERNEL       const u = stmt.toUpperCase();'.
+      WRITE '@KERNEL       if (u.includes("PUBLIC SECTION")) currentVis = "U";'.
+      WRITE '@KERNEL       else if (u.includes("PROTECTED SECTION")) currentVis = "O";'.
+      WRITE '@KERNEL       else if (u.includes("PRIVATE SECTION")) currentVis = "I";'.
+      WRITE '@KERNEL       else if (u.startsWith("INTERFACES ") || u.startsWith("INTERFACES:")) {'.
+      WRITE '@KERNEL         const match = u.match(/INTERFACES[:\s]+([A-Z0-9_]+)/);'.
+      WRITE '@KERNEL         if (match) interfaces.push(match[1]);'.
+      WRITE '@KERNEL       } else if (u.includes("INHERITING FROM ")) {'.
+      WRITE '@KERNEL         const match = u.match(/INHERITING\s+FROM\s+([A-Z0-9_]+)/);'.
+      WRITE '@KERNEL         if (match) {'.
+      WRITE '@KERNEL           const sName = match[1];'.
+      WRITE '@KERNEL           staticSuper = globalThis.abap.Classes[sName];'.
+      WRITE '@KERNEL         }'.
+      WRITE '@KERNEL       } else if (u.startsWith("DATA ") || u.startsWith("DATA:") || u.startsWith("CLASS-DATA ") || u.startsWith("CLASS-DATA:") || u.startsWith("CONSTANTS ") || u.startsWith("CONSTANTS:")) {'.
+      WRITE '@KERNEL         const isConst = u.startsWith("CONSTANTS");'.
+      WRITE '@KERNEL         const isClass = isConst || u.startsWith("CLASS-DATA");'.
+      WRITE '@KERNEL         const isReadOnly = u.includes("READ-ONLY");'.
+      WRITE '@KERNEL         const m = u.match(/(?:DATA|CLASS-DATA|CONSTANTS)[:\s]+([A-Z0-9_]+)/);'.
+      WRITE '@KERNEL         if (m) {'.
+      WRITE '@KERNEL           const attrName = m[1];'.
+      WRITE '@KERNEL           attributes[attrName] = {'.
+      WRITE '@KERNEL             is_constant: isConst ? "X" : " ",'.
+      WRITE '@KERNEL             is_class: isClass ? "X" : " ",'.
+      WRITE '@KERNEL             is_read_only: isReadOnly ? "X" : " ",'.
+      WRITE '@KERNEL             visibility: currentVis,'.
+      WRITE '@KERNEL             type: () => new globalThis.abap.types.Integer()'.
+      WRITE '@KERNEL           };'.
+      WRITE '@KERNEL         }'.
+      WRITE '@KERNEL       } else if (u.startsWith("METHODS ") || u.startsWith("METHODS:") || u.startsWith("CLASS-METHODS ") || u.startsWith("CLASS-METHODS:")) {'.
+      WRITE '@KERNEL         const isClass = u.startsWith("CLASS-METHODS");'.
+      WRITE '@KERNEL         const m = u.match(/(?:METHODS|CLASS-METHODS)[:\s]+([A-Z0-9_]+)/);'.
+      WRITE '@KERNEL         if (m) {'.
+      WRITE '@KERNEL           const methName = m[1];'.
+      WRITE '@KERNEL           const params = {};'.
+      WRITE '@KERNEL           if (u.includes("RETURNING")) {'.
+      WRITE '@KERNEL             let typeName = "string";'.
+      WRITE '@KERNEL             if (u.includes("ABAP_BOOL") || u.includes("BOOLEAN") || u.includes("BOOLE_D")) {'.
+      WRITE '@KERNEL               typeName = "abap_bool";'.
+      WRITE '@KERNEL             }'.
+      WRITE '@KERNEL             params["RESULT"] = {'.
+      WRITE '@KERNEL               parm_kind: "R",'.
+      WRITE '@KERNEL               type_name: typeName,'.
+      WRITE '@KERNEL               type: () => new globalThis.abap.types.Character(1)'.
+      WRITE '@KERNEL             };'.
+      WRITE '@KERNEL           }'.
+      WRITE '@KERNEL           methods[methName] = {'.
+      WRITE '@KERNEL             visibility: currentVis,'.
+      WRITE '@KERNEL             is_class: isClass ? "X" : " ",'.
+      WRITE '@KERNEL             parameters: params'.
+      WRITE '@KERNEL           };'.
+      WRITE '@KERNEL         }'.
+      WRITE '@KERNEL       }'.
+      WRITE '@KERNEL     }'.
+      WRITE '@KERNEL     const isIntf = combined.toUpperCase().includes("INTERFACE " + upperObj);'.
+      WRITE '@KERNEL     globalThis.abap.Classes[upperObj] = class {'.
+      WRITE '@KERNEL       static INTERNAL_NAME = upperObj;'.
+      WRITE '@KERNEL       static INTERNAL_TYPE = isIntf ? "INTF" : "CLAS";'.
+      WRITE '@KERNEL       static ATTRIBUTES = attributes;'.
+      WRITE '@KERNEL       static METHODS = methods;'.
+      WRITE '@KERNEL       static IMPLEMENTED_INTERFACES = interfaces;'.
+      WRITE '@KERNEL       static STATIC_SUPER = staticSuper;'.
+      WRITE '@KERNEL     };'.
+      WRITE '@KERNEL   }'.
       WRITE '@KERNEL } else {'.
       WRITE '@KERNEL   lv_source.set("");'.
       WRITE '@KERNEL }'.

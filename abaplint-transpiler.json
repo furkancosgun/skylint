@@ -13,9 +13,7 @@
       "files": "/**"
     }
   ],
-  "exclude_filter": [
-    "src/tests/.*"
-  ],
+  "exclude_filter": [],
   "write_unit_tests": true,
   "write_source_map": true,
   "options": {

@@ -24,35 +24,39 @@ CLASS zcl_skylint_check_069 IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Enforce test method naming convention (TEST_, SHOULD_) in AUnit'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-test_name
-                                       severity       = if_ci_atc_check=>finding_severities-warning
-                                       text           = 'Test methods should start with TEST_ or SHOULD_'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                     ( code           = c_finding_codes-test_name
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Test methods should start with TEST_ or SHOULD_'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_is_testing  TYPE abap_bool.
     DATA lv_method_name TYPE string.
+    DATA ls_tok2        TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found2      TYPE abap_bool.
+    DATA lt_expected    TYPE ty_token_lexemes.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    "TODO compiler uzerinden anlayabiliriz diye dusunuyorum kontrol edelim
+    lt_expected = VALUE #( ( `FOR` ) ( `TESTING` ) ).
+
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'METHODS'.
-      lv_is_testing = abap_false.
-      lv_method_name = ''.
+      IF find_token_sequence( is_statement = <ls_statement>
+                              it_expected  = lt_expected ) = 0.
+        CONTINUE.
+      ENDIF.
 
-      LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-        IF sy-tabix = 2.
-          lv_method_name = to_upper( <ls_token>-lexeme ).
-        ENDIF.
-        IF to_upper( <ls_token>-lexeme ) = 'TESTING'.
-          lv_is_testing = abap_true.
-        ENDIF.
-      ENDLOOP.
+      get_token_safe( EXPORTING is_statement = <ls_statement>
+                                iv_index     = 2
+                      IMPORTING es_token     = ls_tok2
+                                ev_found     = lv_found2 ).
+      IF lv_found2 = abap_false.
+        CONTINUE.
+      ENDIF.
 
-      IF         lv_is_testing = abap_true AND lv_method_name IS NOT INITIAL
-         AND NOT ( lv_method_name CP 'TEST_*' OR lv_method_name CP 'SHOULD_*' OR lv_method_name CP 'CHECK_*' ).
+      lv_method_name = to_upper( ls_tok2-lexeme ).
+
+      IF NOT ( lv_method_name CP 'TEST_*' OR lv_method_name CP 'SHOULD_*' OR lv_method_name CP 'CHECK_*' ).
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-test_name ).
       ENDIF.

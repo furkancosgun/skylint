@@ -33,70 +33,50 @@ CLASS zcl_skylint_check_056 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
+    DATA lo_descr             TYPE REF TO cl_abap_typedescr.
+    DATA lo_class             TYPE REF TO cl_abap_classdescr.
+    DATA ls_meth              TYPE abap_methdescr.
+    DATA ls_param             TYPE abap_parmdescr.
     DATA lv_is_bool_returning TYPE abap_bool.
-    DATA lv_meth_name TYPE string.
-    DATA lv_len TYPE i.
-    DATA lv_idx TYPE i.
-    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_found TYPE abap_bool.
-    DATA lv_lexeme TYPE string.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'METHODS' OR keyword = 'CLASS-METHODS'.
+    cl_abap_typedescr=>describe_by_name(
+      EXPORTING
+        p_name         = is_procedure-id-main_unit-name
+      RECEIVING
+        p_descr_ref    = lo_descr
+      EXCEPTIONS
+        type_not_found = 1
+        OTHERS         = 2 ).
+    IF sy-subrc <> 0 OR lo_descr IS NOT BOUND OR lo_descr->kind <> cl_abap_typedescr=>kind_class.
+      RETURN.
+    ENDIF.
+
+    lo_class ?= lo_descr.
+
+    READ TABLE is_procedure-statements ASSIGNING <ls_statement> INDEX 1.
+    IF sy-subrc <> 0.
+      RETURN.
+    ENDIF.
+
+    LOOP AT lo_class->methods INTO ls_meth.
       lv_is_bool_returning = abap_false.
-      lv_len = lines( <ls_statement>-tokens ).
-      IF lv_len < 2.
-        CONTINUE.
-      ENDIF.
-
-      get_token_safe( EXPORTING is_statement = <ls_statement>
-                                iv_index     = 2
-                      IMPORTING es_token     = ls_token
-                                ev_found     = lv_found ).
-      IF lv_found = abap_false.
-        CONTINUE.
-      ENDIF.
-      lv_meth_name = to_upper( ls_token-lexeme ).
-
-      " Check if method returns boolean
-      lv_idx = 1.
-      WHILE lv_idx <= lv_len.
-        get_token_safe( EXPORTING is_statement = <ls_statement>
-                                  iv_index     = lv_idx
-                        IMPORTING es_token     = ls_token
-                                  ev_found     = lv_found ).
-        IF lv_found = abap_false.
-          lv_idx += 1.
-          CONTINUE.
-        ENDIF.
-        lv_lexeme = to_upper( ls_token-lexeme ).
-        IF lv_lexeme = 'RETURNING'.
-          " Look for boolean type keyword in remaining tokens
-          LOOP AT <ls_statement>-tokens ASSIGNING <ls_token> FROM lv_idx.
-            IF    to_upper( <ls_token>-lexeme ) = 'ABAP_BOOL'
-               OR to_upper( <ls_token>-lexeme ) = 'BOOLE_D'
-               OR to_upper( <ls_token>-lexeme ) = 'XSDBOOLEAN'
-               OR to_upper( <ls_token>-lexeme ) = 'BOOLEAN'.
-              lv_is_bool_returning = abap_true.
-              EXIT.
-            ENDIF.
-          ENDLOOP.
+      LOOP AT ls_meth-parameters INTO ls_param WHERE parm_kind = cl_abap_objectdescr=>returning.
+        IF ls_param-type_kind = cl_abap_typedescr=>typekind_char AND ls_param-length = 1.
+          lv_is_bool_returning = abap_true.
           EXIT.
         ENDIF.
-        lv_idx += 1.
-      ENDWHILE.
+      ENDLOOP.
 
-      IF     lv_is_bool_returning  = abap_true
-         AND lv_meth_name         NP 'IS_*'     AND lv_meth_name NP 'HAS_*'
-         AND lv_meth_name         NP 'CAN_*'    AND lv_meth_name NP 'CHECK_*'
-         AND lv_meth_name         NP 'ARE_*'    AND lv_meth_name NP 'WAS_*'
-         AND lv_meth_name         NP 'SHOULD_*'.
+      IF     lv_is_bool_returning = abap_true
+         AND ls_meth-name        NP 'IS_*'     AND ls_meth-name NP 'HAS_*'
+         AND ls_meth-name        NP 'CAN_*'    AND ls_meth-name NP 'CHECK_*'
+         AND ls_meth-name        NP 'ARE_*'    AND ls_meth-name NP 'WAS_*'
+         AND ls_meth-name        NP 'SHOULD_*'.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-bool_method_name ).
       ENDIF.

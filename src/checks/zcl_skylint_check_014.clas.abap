@@ -27,9 +27,6 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_014 IMPLEMENTATION.
   METHOD constructor.
-    "TODO: genel olarak basarili daha anlasilir ve compact yazilabilir
-    "017 ile benziyor kontrol edelim ayrica if case loop try gibi yapilari parametrik yapalim
-    "ayri ayri kullanici atc den secim yapabilsin
     super->constructor(
         VALUE #( description       = 'Detect empty control blocks (IF, CASE, LOOP, TRY, etc.)'
                  remote_enablement = abap_true
@@ -41,41 +38,24 @@ CLASS zcl_skylint_check_014 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_total TYPE i.
-    DATA lv_idx TYPE i.
-    DATA lv_next_idx TYPE i.
-    DATA ls_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_next_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lv_found TYPE abap_bool.
+    DATA lv_idx        TYPE i.
+    DATA ls_next_stmt  TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA lv_found_next TYPE abap_bool.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    lv_total = lines( is_procedure-statements ).
-
-    DO lv_total TIMES.
-      lv_idx = sy-index.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      lv_idx = sy-tabix.
       get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                    iv_index       = lv_idx
-                          IMPORTING es_statement   = ls_statement
-                                    ev_found       = lv_found ).
-      IF lv_found = abap_false.
-        EXIT.
-      ENDIF.
-
-      lv_next_idx = lv_idx + 1.
-      IF lv_next_idx <= lv_total.
-        get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                      iv_index       = lv_next_idx
-                            IMPORTING es_statement   = ls_next_stmt
-                                      ev_found       = lv_found_next ).
-        IF lv_found_next = abap_true.
-          IF is_empty_control_block( iv_current_kw = ls_statement-keyword
+                                    iv_index      = lv_idx + 1
+                          IMPORTING es_statement  = ls_next_stmt
+                                    ev_found      = lv_found_next ).
+      IF lv_found_next = abap_true
+         AND is_empty_control_block( iv_current_kw = <ls_statement>-keyword
                                      iv_next_kw    = ls_next_stmt-keyword ) = abap_true.
-            report_statement( is_statement    = ls_statement
-                              iv_finding_code = c_finding_codes-empty_control_block ).
-          ENDIF.
-        ENDIF.
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-empty_control_block ).
       ENDIF.
-    ENDDO.
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD is_empty_control_block.

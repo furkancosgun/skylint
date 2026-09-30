@@ -21,8 +21,10 @@ CLASS zcl_skylint_check_036 DEFINITION
       IMPORTING iv_keyword       TYPE string
       RETURNING VALUE(rv_exempt) TYPE abap_bool.
 
-    METHODS has_single_named_param
+    METHODS is_single_named_param_call
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_tok_idx    TYPE i
+                is_ref        TYPE if_ci_atc_source_code_provider=>ty_compiler_reference
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
@@ -30,7 +32,6 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_036 IMPLEMENTATION.
   METHOD constructor.
-    "TODO bu kuralda compiler seviyesine cikarilsin + rtti ile desteklensin manuel parametre toplanmasin
     super->constructor( VALUE #( description       = 'Omit parameter name in single parameter method call'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
@@ -41,17 +42,35 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_token     TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_ref       TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    DATA lv_tok_idx   TYPE i.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF is_exempt_statement( <ls_statement>-keyword ) = abap_true.
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
+    LOOP AT is_procedure-statements INTO ls_statement.
+      IF is_exempt_statement( ls_statement-keyword ) = abap_true.
         CONTINUE.
       ENDIF.
 
-      IF has_single_named_param( <ls_statement> ) = abap_true.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-omit_param ).
-      ENDIF.
+      lv_tok_idx = 0.
+      LOOP AT ls_statement-tokens INTO ls_token.
+        lv_tok_idx = lv_tok_idx + 1.
+
+        LOOP AT ls_token-references INTO ls_ref
+             WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-method.
+          IF is_single_named_param_call( is_statement = ls_statement
+                                         iv_tok_idx   = lv_tok_idx
+                                         is_ref       = ls_ref ) = abap_true.
+            report_statement( is_statement    = ls_statement
+                              iv_finding_code = c_finding_codes-omit_param ).
+            EXIT.
+          ENDIF.
+        ENDLOOP.
+      ENDLOOP.
     ENDLOOP.
   ENDMETHOD.
 
@@ -66,80 +85,70 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
     ENDCASE.
   ENDMETHOD.
 
-  METHOD has_single_named_param.
-    DATA lv_count TYPE i.
-    DATA lv_idx TYPE i.
-    DATA lv_open_idx TYPE i.
-    DATA lv_close_idx TYPE i.
-    DATA lv_equals_count TYPE i.
-    DATA lv_comma_count TYPE i.
-    DATA lv_tok TYPE string.
-    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_found TYPE abap_bool.
+  METHOD is_single_named_param_call.
+    DATA lv_param_name TYPE string.
+    DATA lv_is_single  TYPE abap_bool.
+    DATA ls_tok        TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_next_tok   TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_param_idx  TYPE i.
+    DATA lv_next_idx   TYPE i.
+    DATA lv_tok_found  TYPE abap_bool.
 
     rv_res = abap_false.
-    lv_count = lines( is_statement-tokens ).
 
-    IF lv_count < 4.
+    zcl_skylint_rtti_util=>get_single_importing_param(
+      EXPORTING
+        iv_full_name  = is_ref-full_name
+      IMPORTING
+        ev_param_name = lv_param_name
+        ev_is_single  = lv_is_single ).
+
+    IF lv_is_single = abap_false.
       RETURN.
     ENDIF.
 
-    DO lv_count TIMES.
-      lv_idx = sy-index.
-      get_token_safe( EXPORTING is_statement = is_statement
-                                iv_index     = lv_idx
-                      IMPORTING es_token     = ls_token
-                                ev_found     = lv_found ).
-      IF lv_found = abap_false.
-        CONTINUE.
-      ENDIF.
-      lv_tok = ls_token-lexeme.
-      IF lv_tok CP '*(' OR lv_tok = '('.
-        lv_open_idx = lv_idx.
-      ELSEIF lv_tok = ')'.
-        lv_close_idx = lv_idx.
-        EXIT.
-      ENDIF.
-    ENDDO.
-
-    IF lv_open_idx = 0 OR lv_close_idx <= lv_open_idx + 2.
-      RETURN.
-    ENDIF.
-
-    lv_equals_count = 0.
-    lv_comma_count = 0.
-    lv_idx = lv_open_idx + 1.
-    WHILE lv_idx < lv_close_idx.
-      get_token_safe( EXPORTING is_statement = is_statement
-                                iv_index     = lv_idx
-                      IMPORTING es_token     = ls_token
-                                ev_found     = lv_found ).
-      IF lv_found = abap_false.
-        lv_idx += 1.
-        CONTINUE.
-      ENDIF.
-      lv_tok = ls_token-lexeme.
-      CASE lv_tok.
-        WHEN '='.
-          lv_equals_count += 1.
-        WHEN ','.
-          lv_comma_count += 1.
-      ENDCASE.
-      lv_idx += 1.
-    ENDWHILE.
-
-    " Ensure not a constructor VALUE #( ... ) or COND #( ... )
     get_token_safe( EXPORTING is_statement = is_statement
-                              iv_index     = lv_open_idx
-                    IMPORTING es_token     = ls_token
-                              ev_found     = lv_found ).
-    IF lv_found = abap_false.
+                              iv_index     = iv_tok_idx
+                    IMPORTING es_token     = ls_tok
+                              ev_found     = lv_tok_found ).
+    IF lv_tok_found = abap_false.
       RETURN.
     ENDIF.
-    lv_tok = to_upper( ls_token-lexeme ).
-    IF lv_equals_count = 1 AND lv_comma_count = 0 AND lv_tok <> 'VALUE' AND lv_tok <> 'COND'
-       AND lv_tok <> 'EXACT' AND lv_tok <> 'CORRESPONDING' AND lv_tok <> '#(' AND lv_tok <> '('.
-      rv_res = abap_true.
+
+    IF ls_tok-lexeme CP '*('.
+      lv_param_idx = iv_tok_idx + 1.
+    ELSE.
+      get_token_safe( EXPORTING is_statement = is_statement
+                                iv_index     = iv_tok_idx + 1
+                      IMPORTING es_token     = ls_tok
+                                ev_found     = lv_tok_found ).
+      IF lv_tok_found = abap_true AND ls_tok-lexeme = '('.
+        lv_param_idx = iv_tok_idx + 2.
+      ELSE.
+        RETURN.
+      ENDIF.
     ENDIF.
+
+    get_token_safe( EXPORTING is_statement = is_statement
+                              iv_index     = lv_param_idx
+                    IMPORTING es_token     = ls_tok
+                              ev_found     = lv_tok_found ).
+    IF lv_tok_found = abap_false.
+      RETURN.
+    ENDIF.
+
+    CASE to_upper( ls_tok-lexeme ).
+      WHEN lv_param_name.
+        lv_next_idx = lv_param_idx + 1.
+        get_token_safe( EXPORTING is_statement = is_statement
+                                  iv_index     = lv_next_idx
+                        IMPORTING es_token     = ls_next_tok
+                                  ev_found     = lv_tok_found ).
+        IF lv_tok_found = abap_true AND ls_next_tok-lexeme = '='.
+          rv_res = abap_true.
+        ENDIF.
+      WHEN |{ lv_param_name }=|.
+        rv_res = abap_true.
+    ENDCASE.
   ENDMETHOD.
 ENDCLASS.

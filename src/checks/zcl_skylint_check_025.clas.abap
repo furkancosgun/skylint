@@ -17,62 +17,59 @@ CLASS zcl_skylint_check_025 DEFINITION
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'RECEIVING_USAGE'.
 
-    METHODS is_exempt_statement
-      IMPORTING iv_keyword       TYPE string
-      RETURNING VALUE(rv_exempt) TYPE abap_bool.
-
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_025 IMPLEMENTATION.
   METHOD constructor.
-    "TODO omit exporting ile birlestirelim bunlari nerdeyse ayni
-    "TODO functional call ise keyword +CALL_METHOD gelir bu sayede cok daha kolay kontrol ederiz
-    "TODO mutlaka compiler seviyesinde cekelim
     super->constructor( VALUE #( description       = 'Omit RECEIVING in method calls'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-omit_receiving
-                                       severity       = if_ci_atc_check=>finding_severities-warning
-                                       text           = 'Omit RECEIVING keyword; use functional call or omit parameter'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                     ( code           = c_finding_codes-omit_receiving
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Omit RECEIVING keyword; use functional call or omit parameter'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     DATA lv_has_receiving  TYPE abap_bool.
     DATA lv_has_exceptions TYPE abap_bool.
-    DATA lv_tok_cnt        TYPE i.
-    DATA lv_tok_idx        TYPE i.
-    DATA lv_next_idx       TYPE i.
+    DATA lv_is_call        TYPE abap_bool.
     DATA ls_tok            TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA ls_next_tok       TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_next_idx       TYPE i.
+    DATA lv_found          TYPE abap_bool.
     DATA lv_lex            TYPE string.
     DATA lv_next_lex       TYPE string.
-    DATA lv_found          TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF is_exempt_statement( <ls_statement>-keyword ) = abap_true.
+      IF <ls_statement>-keyword = 'METHODS' OR <ls_statement>-keyword = 'CLASS-METHODS'
+         OR <ls_statement>-keyword = 'INTERFACES'.
+        CONTINUE.
+      ENDIF.
+
+      lv_is_call = statement_is_method_call( <ls_statement> ).
+      IF lv_is_call = abap_false.
+        lv_is_call = zcl_skylint_rtti_util=>has_compiler_reference(
+                         is_statement = <ls_statement>
+                         iv_kind      = if_ci_atc_source_code_provider=>compiler_reference_kinds-method ).
+      ENDIF.
+
+      IF lv_is_call = abap_false.
         CONTINUE.
       ENDIF.
 
       lv_has_receiving  = abap_false.
       lv_has_exceptions = abap_false.
-      lv_tok_cnt = lines( <ls_statement>-tokens ).
 
       LOOP AT <ls_statement>-tokens INTO ls_tok.
-        lv_tok_idx = sy-tabix.
+        lv_next_idx = sy-tabix + 1.
         CLEAR ls_next_tok.
-        lv_next_idx = lv_tok_idx + 1.
-        IF lv_next_idx <= lv_tok_cnt.
-          get_token_safe( EXPORTING is_statement = <ls_statement>
-                                    iv_index     = lv_next_idx
-                          IMPORTING es_token     = ls_next_tok
-                                    ev_found     = lv_found ).
-          IF lv_found = abap_false.
-            CLEAR ls_next_tok.
-          ENDIF.
-        ENDIF.
+        get_token_safe( EXPORTING is_statement = <ls_statement>
+                                  iv_index     = lv_next_idx
+                        IMPORTING es_token     = ls_next_tok
+                                  ev_found     = lv_found ).
 
         lv_lex = to_upper( ls_tok-lexeme ).
         lv_next_lex = to_upper( ls_next_tok-lexeme ).
@@ -91,16 +88,5 @@ CLASS zcl_skylint_check_025 IMPLEMENTATION.
                           iv_finding_code = c_finding_codes-omit_receiving ).
       ENDIF.
     ENDLOOP.
-  ENDMETHOD.
-
-  METHOD is_exempt_statement.
-    CASE iv_keyword.
-      WHEN 'CALL' OR 'EXPORT' OR 'METHODS' OR 'CLASS-METHODS'
-        OR 'EVENTS' OR 'CLASS-EVENTS' OR 'INTERFACES' OR 'SUBMIT'
-        OR 'FORM' OR 'FUNCTION' OR 'MODULE'.
-        rv_exempt = abap_true.
-      WHEN OTHERS.
-        rv_exempt = abap_false.
-    ENDCASE.
   ENDMETHOD.
 ENDCLASS.

@@ -21,29 +21,11 @@ CLASS zcl_skylint_check_030 DEFINITION
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
-    METHODS is_db_delete
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_res) TYPE abap_bool.
-
-    METHODS is_db_insert
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_res) TYPE abap_bool.
-
-    METHODS is_db_modify
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_res) TYPE abap_bool.
-
-    METHODS has_token
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-                iv_lexeme     TYPE string
-      RETURNING VALUE(rv_res) TYPE abap_bool.
-
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_030 IMPLEMENTATION.
   METHOD constructor.
-    "TODO sadece compiler referans kontorl edilsin manuel kontrol edilme olmasin
     super->constructor(
         VALUE #( description       = 'Avoid database access inside loop iterations'
                  remote_enablement = abap_true
@@ -83,10 +65,10 @@ CLASS zcl_skylint_check_030 IMPLEMENTATION.
 
     rv_res = abap_false.
 
-    " 1. Compiler references check
+    " 1. Inspect compiler semantic references (read/write database)
     LOOP AT is_statement-tokens INTO ls_tok.
       LOOP AT ls_tok-references INTO ls_ref.
-        IF    ls_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_database
+        IF ls_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_database
            OR ls_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-write_database.
           rv_res = abap_true.
           RETURN.
@@ -94,89 +76,18 @@ CLASS zcl_skylint_check_030 IMPLEMENTATION.
       ENDLOOP.
     ENDLOOP.
 
-    " 2. Syntactic AST classification
+    " 2. Open SQL statements
     CASE is_statement-keyword.
       WHEN 'SELECT' OR 'UPDATE'.
         rv_res = abap_true.
-      WHEN 'DELETE'.
-        rv_res = is_db_delete( is_statement ).
-      WHEN 'INSERT'.
-        rv_res = is_db_insert( is_statement ).
-      WHEN 'MODIFY'.
-        rv_res = is_db_modify( is_statement ).
+      WHEN 'DELETE' OR 'INSERT' OR 'MODIFY'.
+        IF has_token_lexeme( is_statement = is_statement
+                             iv_lexeme    = 'FROM' ) = abap_true
+           AND matches_token_at( is_statement = is_statement
+                                 iv_index     = 2
+                                 iv_expected  = `TABLE` ) = abap_false.
+          rv_res = abap_true.
+        ENDIF.
     ENDCASE.
-  ENDMETHOD.
-
-  METHOD is_db_delete.
-    rv_res = abap_false.
-
-    IF matches_token_at( is_statement      = is_statement
-                         iv_index          = 2
-                         iv_expected       = `TABLE`
-                         iv_case_sensitive = abap_true ) = abap_true.
-      RETURN.
-    ENDIF.
-
-    IF    has_token( is_statement = is_statement
-                     iv_lexeme    = 'INDEX' )    = abap_true
-       OR has_token( is_statement = is_statement
-                     iv_lexeme    = 'ADJACENT' ) = abap_true
-       OR has_token( is_statement = is_statement
-                     iv_lexeme    = 'TO' )       = abap_true.
-      RETURN.
-    ENDIF.
-
-    IF has_token( is_statement = is_statement
-                  iv_lexeme    = 'FROM' ) = abap_true.
-      rv_res = abap_true.
-    ENDIF.
-  ENDMETHOD.
-
-  METHOD is_db_insert.
-    rv_res = abap_false.
-    IF    has_token( is_statement = is_statement
-                     iv_lexeme    = 'TABLE' )    = abap_true
-       OR has_token( is_statement = is_statement
-                     iv_lexeme    = 'INDEX' )    = abap_true
-       OR has_token( is_statement = is_statement
-                     iv_lexeme    = 'LINES' )    = abap_true
-       OR has_token( is_statement = is_statement
-                     iv_lexeme    = 'INITIAL' )  = abap_true.
-      RETURN.
-    ENDIF.
-
-    IF    has_token( is_statement = is_statement
-                     iv_lexeme    = 'FROM' )     = abap_true
-       OR has_token( is_statement = is_statement
-                     iv_lexeme    = 'VALUES' )   = abap_true.
-      rv_res = abap_true.
-    ENDIF.
-  ENDMETHOD.
-
-  METHOD is_db_modify.
-    rv_res = abap_false.
-    IF matches_token_at( is_statement      = is_statement
-                         iv_index          = 2
-                         iv_expected       = `TABLE`
-                         iv_case_sensitive = abap_true ) = abap_true.
-      RETURN.
-    ENDIF.
-
-    IF    has_token( is_statement = is_statement
-                     iv_lexeme    = 'INDEX' )        = abap_true
-       OR has_token( is_statement = is_statement
-                     iv_lexeme    = 'TRANSPORTING' ) = abap_true.
-      RETURN.
-    ENDIF.
-
-    IF has_token( is_statement = is_statement
-                  iv_lexeme    = 'FROM' ) = abap_true.
-      rv_res = abap_true.
-    ENDIF.
-  ENDMETHOD.
-
-  METHOD has_token.
-    rv_res = has_token_lexeme( is_statement = is_statement
-                               iv_lexeme    = iv_lexeme ).
   ENDMETHOD.
 ENDCLASS.

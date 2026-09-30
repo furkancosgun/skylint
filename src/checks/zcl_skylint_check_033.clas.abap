@@ -22,7 +22,8 @@ CLASS zcl_skylint_check_033 DEFINITION
         name     TYPE string,
         block_id TYPE i,
       END OF ty_scoped_var,
-      ty_scoped_vars TYPE STANDARD TABLE OF ty_scoped_var WITH EMPTY KEY.
+      ty_scoped_vars TYPE STANDARD TABLE OF ty_scoped_var WITH EMPTY KEY,
+      ty_block_ids   TYPE STANDARD TABLE OF i WITH EMPTY KEY.
 
     METHODS extract_declared_vars
       IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
@@ -31,7 +32,7 @@ CLASS zcl_skylint_check_033 DEFINITION
 
     METHODS is_block_active
       IMPORTING iv_block_id   TYPE i
-                it_stack      TYPE string_table
+                it_stack      TYPE ty_block_ids
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
@@ -39,9 +40,6 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_033 IMPLEMENTATION.
   METHOD constructor.
-    "TODO bu kural mutlaka compiler seviyesinde olmali manuel data(* olmamali
-    "TODO scope ici data tanimlamlarda verebilirz
-    "TODO ayrica daha temiz yazilmali
     super->constructor(
         VALUE #( description       = 'Scope of variable (avoid variable leaking outside control blocks)'
                  remote_enablement = abap_true
@@ -54,7 +52,7 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
 
   METHOD check.
     DATA lv_block_counter    TYPE i.
-    DATA lt_block_stack      TYPE string_table.
+    DATA lt_block_stack      TYPE ty_block_ids.
     DATA lt_scoped_vars      TYPE ty_scoped_vars.
     DATA lt_new_vars         TYPE ty_scoped_vars.
     DATA lv_current_block_id TYPE i.
@@ -71,14 +69,14 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
       CASE <ls_statement>-keyword.
         WHEN 'IF' OR 'LOOP' OR 'DO' OR 'WHILE' OR 'CASE' OR 'TRY'.
           lv_block_counter += 1.
-          INSERT |{ lv_block_counter }| INTO lt_block_stack INDEX 1.
+          INSERT lv_block_counter INTO lt_block_stack INDEX 1.
 
         WHEN 'ELSE' OR 'ELSEIF' OR 'WHEN' OR 'CATCH' OR 'CLEANUP'.
           IF lines( lt_block_stack ) > 0.
             DELETE lt_block_stack INDEX 1.
           ENDIF.
           lv_block_counter += 1.
-          INSERT |{ lv_block_counter }| INTO lt_block_stack INDEX 1.
+          INSERT lv_block_counter INTO lt_block_stack INDEX 1.
 
         WHEN 'ENDIF' OR 'ENDLOOP' OR 'ENDDO' OR 'ENDWHILE' OR 'ENDCASE' OR 'ENDTRY'.
           IF lines( lt_block_stack ) > 0.
@@ -108,11 +106,10 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
       IF lines( lt_block_stack ) = 0.
         CONTINUE.
       ENDIF.
-      READ TABLE lt_block_stack INTO lv_token_str INDEX 1.
+      READ TABLE lt_block_stack INTO lv_current_block_id INDEX 1.
       IF sy-subrc <> 0.
         CONTINUE.
       ENDIF.
-      lv_current_block_id = lv_token_str.
       lt_new_vars = extract_declared_vars( is_statement = <ls_statement>
                                            iv_block_id  = lv_current_block_id ).
       APPEND LINES OF lt_new_vars TO lt_scoped_vars.
@@ -120,64 +117,69 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD extract_declared_vars.
-    DATA lv_lex TYPE string.
-    DATA ls_var TYPE ty_scoped_var.
-    DATA ls_tok2 TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_found2 TYPE abap_bool.
-    DATA lv_is_decl TYPE abap_bool.
+    DATA ls_var      TYPE ty_scoped_var.
+    DATA ls_tok2     TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found2   TYPE abap_bool.
+    DATA lv_var_name TYPE string.
+    DATA lt_parts    TYPE string_table.
+    DATA lv_part     TYPE string.
+    DATA lv_lex      TYPE string.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_ref>   TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     ls_var-block_id = iv_block_id.
-    lv_is_decl = abap_false.
 
-    CASE is_statement-keyword.
-      WHEN 'DATA' OR 'FIELD-SYMBOLS'.
-        lv_is_decl = abap_true.
-      WHEN OTHERS.
-        lv_is_decl = abap_false.
-    ENDCASE.
-
-    get_token_safe( EXPORTING is_statement = is_statement
-                              iv_index     = 2
-                    IMPORTING es_token     = ls_tok2
-                              ev_found     = lv_found2 ).
-    IF lv_is_decl = abap_true AND lv_found2 = abap_true
-       AND ls_tok2-lexeme <> 'BEGIN' AND ls_tok2-lexeme <> 'END'.
-      ls_var-name = to_upper( ls_tok2-lexeme ).
-      APPEND ls_var TO rt_vars.
-    ENDIF.
-
+    " 1. Inspect compiler semantic references (definitions)
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
+      LOOP AT <ls_token>-references ASSIGNING <ls_ref>
+           WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+             AND ( usage_grade = if_ci_atc_source_code_provider=>usage_grades-definition
+                OR usage_mode  = if_ci_atc_source_code_provider=>usage_modes-definition_with_write ).
+        lv_var_name = ''.
+        IF <ls_ref>-full_name CS '\DA:'.
+          SPLIT <ls_ref>-full_name AT '\' INTO TABLE lt_parts.
+          LOOP AT lt_parts INTO lv_part WHERE table_line CP 'DA:*'.
+            lv_var_name = lv_part+3.
+          ENDLOOP.
+        ENDIF.
+        IF lv_var_name IS NOT INITIAL.
+          ls_var-name = to_upper( lv_var_name ).
+          IF NOT line_exists( rt_vars[ name = ls_var-name ] ).
+            APPEND ls_var TO rt_vars.
+          ENDIF.
+        ENDIF.
+      ENDLOOP.
+
+      " Semantic token inspection for inline declarations
       lv_lex = to_upper( <ls_token>-lexeme ).
       IF lv_lex CP 'DATA(*)' OR lv_lex CP '@DATA(*)'.
         REPLACE FIRST OCCURRENCE OF '@DATA(' IN lv_lex WITH ''.
         REPLACE FIRST OCCURRENCE OF 'DATA(' IN lv_lex WITH ''.
         REPLACE FIRST OCCURRENCE OF ')' IN lv_lex WITH ''.
         lv_lex = condense( lv_lex ).
-        IF lv_lex IS NOT INITIAL.
-          ls_var-name = lv_lex.
-          APPEND ls_var TO rt_vars.
-        ENDIF.
-      ELSEIF lv_lex CP 'FIELD-SYMBOLS(*)' OR lv_lex CP '@FIELD-SYMBOLS(*)'.
-        REPLACE FIRST OCCURRENCE OF '@FIELD-SYMBOLS(' IN lv_lex WITH ''.
-        REPLACE FIRST OCCURRENCE OF 'FIELD-SYMBOLS(' IN lv_lex WITH ''.
-        REPLACE FIRST OCCURRENCE OF ')' IN lv_lex WITH ''.
-        lv_lex = condense( lv_lex ).
-        IF lv_lex IS NOT INITIAL.
+        IF lv_lex IS NOT INITIAL AND NOT line_exists( rt_vars[ name = lv_lex ] ).
           ls_var-name = lv_lex.
           APPEND ls_var TO rt_vars.
         ENDIF.
       ENDIF.
     ENDLOOP.
+
+    " 2. Explicit DATA / FIELD-SYMBOLS statements inside blocks
+    IF is_statement-keyword = 'DATA' OR is_statement-keyword = 'FIELD-SYMBOLS'.
+      get_token_safe( EXPORTING is_statement = is_statement
+                                iv_index     = 2
+                      IMPORTING es_token     = ls_tok2
+                                ev_found     = lv_found2 ).
+      IF lv_found2 = abap_true AND ls_tok2-lexeme <> 'BEGIN' AND ls_tok2-lexeme <> 'END'.
+        ls_var-name = to_upper( ls_tok2-lexeme ).
+        IF NOT line_exists( rt_vars[ name = ls_var-name ] ).
+          APPEND ls_var TO rt_vars.
+        ENDIF.
+      ENDIF.
+    ENDIF.
   ENDMETHOD.
 
   METHOD is_block_active.
-    DATA lv_id_str TYPE string.
-
-    rv_res = abap_false.
-    lv_id_str = |{ iv_block_id }|.
-    IF line_exists( it_stack[ table_line = lv_id_str ] ).
-      rv_res = abap_true.
-    ENDIF.
+    rv_res = xsdbool( line_exists( it_stack[ table_line = iv_block_id ] ) ).
   ENDMETHOD.
 ENDCLASS.
