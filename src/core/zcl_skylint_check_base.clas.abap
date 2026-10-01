@@ -7,6 +7,26 @@ CLASS zcl_skylint_check_base DEFINITION
 
     TYPES ty_quickfix_code TYPE c LENGTH 10.
 
+    TYPES:
+      BEGIN OF ty_recorded_quickfix,
+        kind           TYPE c LENGTH 1,
+        quickfix_code  TYPE ty_quickfix_code,
+        statement_from TYPE i,
+        statement_to   TYPE i,
+        token_from     TYPE i,
+        token_to       TYPE i,
+        new_code       TYPE if_ci_atc_quickfix=>ty_code,
+      END OF ty_recorded_quickfix,
+      ty_recorded_quickfixes TYPE STANDARD TABLE OF ty_recorded_quickfix WITH EMPTY KEY.
+
+    CONSTANTS:
+      BEGIN OF c_recorded_kinds,
+        replace       TYPE c LENGTH 1 VALUE 'R',
+        insert_before TYPE c LENGTH 1 VALUE 'B',
+        insert_after  TYPE c LENGTH 1 VALUE 'A',
+        delete        TYPE c LENGTH 1 VALUE 'D',
+      END OF c_recorded_kinds.
+
     CLASS-METHODS is_open_abap
       RETURNING VALUE(rv_result) TYPE abap_bool.
 
@@ -17,6 +37,9 @@ CLASS zcl_skylint_check_base DEFINITION
       IMPORTING is_procedure     TYPE if_ci_atc_source_code_provider=>ty_procedure
                 io_code_provider TYPE REF TO if_ci_atc_source_code_provider OPTIONAL
       RETURNING VALUE(rt_findings) TYPE if_ci_atc_check=>ty_findings.
+
+    METHODS get_recorded_quickfixes
+      RETURNING VALUE(rt_recorded) TYPE ty_recorded_quickfixes.
 
   PROTECTED SECTION.
     METHODS check ABSTRACT
@@ -84,6 +107,7 @@ CLASS zcl_skylint_check_base DEFINITION
     DATA mo_meta_data         TYPE REF TO zcl_skylint_check_meta_data.
     DATA mt_findings          TYPE if_ci_atc_check=>ty_findings.
     DATA mt_attributes        TYPE if_ci_atc_check_meta_data=>ty_attributes.
+    DATA mt_recorded          TYPE ty_recorded_quickfixes.
 ENDCLASS.
 
 
@@ -113,6 +137,7 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
     FIELD-SYMBOLS <ls_procedure> TYPE if_ci_atc_source_code_provider=>ty_procedure.
 
     CLEAR mt_findings.
+    CLEAR mt_recorded.
     mo_code_provider = data_provider->get_code_provider( ).
 
     TRY.
@@ -177,40 +202,6 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
     ENDIF.
   ENDMETHOD.
 
-  METHOD quickfix_replace.
-    ro_details = lcl_quickfix=>replace_code( io_assistant_factory = mo_assistant_factory
-                                             iv_quickfix_code     = iv_quickfix_code
-                                             is_procedure_id      = is_procedure_id
-                                             iv_statement_from    = iv_statement_from
-                                             iv_statement_to      = iv_statement_to
-                                             iv_token_from        = iv_token_from
-                                             iv_token_to          = iv_token_to
-                                             it_new_code          = it_new_code ).
-  ENDMETHOD.
-
-  METHOD quickfix_insert_before.
-    ro_details = lcl_quickfix=>insert_before( io_assistant_factory = mo_assistant_factory
-                                              iv_quickfix_code     = iv_quickfix_code
-                                              is_procedure_id      = is_procedure_id
-                                              iv_statement_index   = iv_statement_index
-                                              it_new_code          = it_new_code ).
-  ENDMETHOD.
-
-  METHOD quickfix_insert_after.
-    ro_details = lcl_quickfix=>insert_after( io_assistant_factory = mo_assistant_factory
-                                             iv_quickfix_code     = iv_quickfix_code
-                                             is_procedure_id      = is_procedure_id
-                                             iv_statement_index   = iv_statement_index
-                                             it_new_code          = it_new_code ).
-  ENDMETHOD.
-
-  METHOD quickfix_delete.
-    ro_details = lcl_quickfix=>delete( io_assistant_factory = mo_assistant_factory
-                                       iv_quickfix_code     = iv_quickfix_code
-                                       is_procedure_id      = is_procedure_id
-                                       iv_statement_index   = iv_statement_index ).
-  ENDMETHOD.
-
   METHOD is_open_abap.
     rv_result = xsdbool( sy-saprl = 'OPEN' ).
   ENDMETHOD.
@@ -218,7 +209,80 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
   METHOD run_for_testing.
     mo_code_provider = io_code_provider.
     CLEAR mt_findings.
+    CLEAR mt_recorded.
     check( is_procedure ).
     rt_findings = mt_findings.
+  ENDMETHOD.
+
+  METHOD get_recorded_quickfixes.
+    rt_recorded = mt_recorded.
+  ENDMETHOD.
+
+  METHOD quickfix_replace.
+    DATA ls_recorded TYPE ty_recorded_quickfix.
+
+    ls_recorded-kind = c_recorded_kinds-replace.
+    ls_recorded-quickfix_code = iv_quickfix_code.
+    ls_recorded-statement_from = iv_statement_from.
+    ls_recorded-statement_to = iv_statement_to.
+    ls_recorded-token_from = iv_token_from.
+    ls_recorded-token_to = iv_token_to.
+    ls_recorded-new_code = it_new_code.
+    APPEND ls_recorded TO mt_recorded.
+
+    ro_details = lcl_quickfix=>replace_code( io_assistant_factory = mo_assistant_factory
+                                              iv_quickfix_code     = iv_quickfix_code
+                                              is_procedure_id      = is_procedure_id
+                                              iv_statement_from    = iv_statement_from
+                                              iv_statement_to      = iv_statement_to
+                                              iv_token_from        = iv_token_from
+                                              iv_token_to          = iv_token_to
+                                              it_new_code          = it_new_code ).
+  ENDMETHOD.
+
+  METHOD quickfix_insert_before.
+    DATA ls_recorded TYPE ty_recorded_quickfix.
+
+    ls_recorded-kind = c_recorded_kinds-insert_before.
+    ls_recorded-quickfix_code = iv_quickfix_code.
+    ls_recorded-statement_from = iv_statement_index.
+    ls_recorded-new_code = it_new_code.
+    APPEND ls_recorded TO mt_recorded.
+
+    ro_details = lcl_quickfix=>insert_before( io_assistant_factory = mo_assistant_factory
+                                               iv_quickfix_code     = iv_quickfix_code
+                                               is_procedure_id      = is_procedure_id
+                                               iv_statement_index   = iv_statement_index
+                                               it_new_code          = it_new_code ).
+  ENDMETHOD.
+
+  METHOD quickfix_insert_after.
+    DATA ls_recorded TYPE ty_recorded_quickfix.
+
+    ls_recorded-kind = c_recorded_kinds-insert_after.
+    ls_recorded-quickfix_code = iv_quickfix_code.
+    ls_recorded-statement_from = iv_statement_index.
+    ls_recorded-new_code = it_new_code.
+    APPEND ls_recorded TO mt_recorded.
+
+    ro_details = lcl_quickfix=>insert_after( io_assistant_factory = mo_assistant_factory
+                                              iv_quickfix_code     = iv_quickfix_code
+                                              is_procedure_id      = is_procedure_id
+                                              iv_statement_index   = iv_statement_index
+                                              it_new_code          = it_new_code ).
+  ENDMETHOD.
+
+  METHOD quickfix_delete.
+    DATA ls_recorded TYPE ty_recorded_quickfix.
+
+    ls_recorded-kind = c_recorded_kinds-delete.
+    ls_recorded-quickfix_code = iv_quickfix_code.
+    ls_recorded-statement_from = iv_statement_index.
+    APPEND ls_recorded TO mt_recorded.
+
+    ro_details = lcl_quickfix=>delete( io_assistant_factory = mo_assistant_factory
+                                       iv_quickfix_code     = iv_quickfix_code
+                                       is_procedure_id      = is_procedure_id
+                                       iv_statement_index   = iv_statement_index ).
   ENDMETHOD.
 ENDCLASS.

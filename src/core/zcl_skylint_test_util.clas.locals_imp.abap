@@ -156,10 +156,66 @@ CLASS lcl_runner DEFINITION FINAL.
       RETURNING VALUE(rt_findings)  TYPE if_ci_atc_check=>ty_findings
       RAISING cx_static_check.
 
+    CLASS-METHODS build_procedure
+      IMPORTING iv_source           TYPE string
+                iv_class_definition TYPE abap_bool DEFAULT abap_false
+      RETURNING VALUE(rs_procedure) TYPE if_ci_atc_source_code_provider=>ty_procedure.
+
+    CLASS-METHODS wrap_source
+      IMPORTING iv_source           TYPE string
+                iv_class_definition TYPE abap_bool DEFAULT abap_false
+      RETURNING VALUE(rv_source)    TYPE string.
+
   PRIVATE SECTION.
     CLASS-METHODS wrap_if_needed
       IMPORTING iv_source        TYPE string
       RETURNING VALUE(rv_source) TYPE string.
+ENDCLASS.
+
+
+CLASS lcl_applier DEFINITION FINAL.
+  PUBLIC SECTION.
+    CLASS-METHODS apply
+      IMPORTING it_lines         TYPE string_table
+                is_procedure     TYPE if_ci_atc_source_code_provider=>ty_procedure
+                is_recorded      TYPE zcl_skylint_check_base=>ty_recorded_quickfix
+      RETURNING VALUE(rt_lines)  TYPE string_table.
+
+  PRIVATE SECTION.
+    CLASS-METHODS statement_lines
+      IMPORTING is_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure
+                iv_index     TYPE i
+      EXPORTING ev_first     TYPE i
+                ev_last      TYPE i
+                ev_found     TYPE abap_bool.
+
+    CLASS-METHODS join_code
+      IMPORTING it_code       TYPE if_ci_atc_quickfix=>ty_code
+      RETURNING VALUE(rv_text) TYPE string.
+
+    CLASS-METHODS apply_token_replace
+      IMPORTING it_lines         TYPE string_table
+                is_procedure     TYPE if_ci_atc_source_code_provider=>ty_procedure
+                is_recorded      TYPE zcl_skylint_check_base=>ty_recorded_quickfix
+      RETURNING VALUE(rt_lines)  TYPE string_table.
+
+    CLASS-METHODS apply_statement_replace
+      IMPORTING it_lines         TYPE string_table
+                is_procedure     TYPE if_ci_atc_source_code_provider=>ty_procedure
+                is_recorded      TYPE zcl_skylint_check_base=>ty_recorded_quickfix
+      RETURNING VALUE(rt_lines)  TYPE string_table.
+
+    CLASS-METHODS insert_lines
+      IMPORTING it_lines         TYPE string_table
+                iv_at            TYPE i
+                it_code          TYPE if_ci_atc_quickfix=>ty_code
+      RETURNING VALUE(rt_lines)  TYPE string_table.
+
+    CLASS-METHODS delete_lines
+      IMPORTING it_lines         TYPE string_table
+                iv_from          TYPE i
+                iv_to            TYPE i
+      RETURNING VALUE(rt_lines)  TYPE string_table.
 ENDCLASS.
 
 
@@ -214,11 +270,7 @@ CLASS lcl_lexer IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_blank.
-    IF iv_ch = ` ` OR iv_ch = cl_abap_char_utilities=>horizontal_tab OR iv_ch = mv_nl.
-      rv_yes = abap_true.
-    ELSE.
-      rv_yes = abap_false.
-    ENDIF.
+    rv_yes = xsdbool( iv_ch = ` ` OR iv_ch = cl_abap_char_utilities=>horizontal_tab OR iv_ch = mv_nl ).
   ENDMETHOD.
 
   METHOD is_field_symbol_ahead.
@@ -978,27 +1030,254 @@ CLASS lcl_runner IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD execute.
-    DATA lo_lexer    TYPE REF TO lcl_lexer.
     DATA lo_provider TYPE REF TO lcl_test_code_provider.
-    DATA lv_src      TYPE string.
-    DATA lt_toks     TYPE lcl_lexer=>ty_tokens.
-    DATA lt_stmts    TYPE if_ci_atc_source_code_provider=>ty_statements.
     DATA ls_proc     TYPE if_ci_atc_source_code_provider=>ty_procedure.
 
-    IF iv_class_definition = abap_true.
-      lv_src = iv_source.
-    ELSE.
-      lv_src = wrap_if_needed( iv_source ).
-    ENDIF.
-    lo_lexer = NEW #( lv_src ).
-    lt_toks = lo_lexer->run( ).
-    lt_stmts = lcl_parser=>build_statements( lt_toks ).
-    ls_proc = lcl_parser=>slice_procedure( it_statements       = lt_stmts
-                                           iv_class_definition = iv_class_definition ).
+    ls_proc = build_procedure( iv_source           = iv_source
+                               iv_class_definition = iv_class_definition ).
 
     lo_provider = NEW #( ).
     lo_provider->set_procedure( ls_proc ).
     rt_findings = io_check->run_for_testing( is_procedure     = ls_proc
                                              io_code_provider = lo_provider ).
+  ENDMETHOD.
+
+  METHOD wrap_source.
+    IF iv_class_definition = abap_true.
+      rv_source = iv_source.
+    ELSE.
+      rv_source = wrap_if_needed( iv_source ).
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD build_procedure.
+    DATA lo_lexer TYPE REF TO lcl_lexer.
+    DATA lv_src   TYPE string.
+    DATA lt_toks  TYPE lcl_lexer=>ty_tokens.
+    DATA lt_stmts TYPE if_ci_atc_source_code_provider=>ty_statements.
+
+    lv_src = wrap_source( iv_source           = iv_source
+                          iv_class_definition = iv_class_definition ).
+    lo_lexer = NEW #( lv_src ).
+    lt_toks = lo_lexer->run( ).
+    lt_stmts = lcl_parser=>build_statements( lt_toks ).
+    rs_procedure = lcl_parser=>slice_procedure( it_statements       = lt_stmts
+                                                iv_class_definition = iv_class_definition ).
+  ENDMETHOD.
+ENDCLASS.
+
+
+CLASS lcl_applier IMPLEMENTATION.
+  METHOD apply.
+    DATA lv_start TYPE i.
+    DATA lv_end   TYPE i.
+    DATA lv_found TYPE abap_bool.
+
+    rt_lines = it_lines.
+    CASE is_recorded-kind.
+      WHEN zcl_skylint_check_base=>c_recorded_kinds-replace.
+        IF is_recorded-token_from > 0.
+          rt_lines = apply_token_replace( it_lines     = rt_lines
+                                          is_procedure = is_procedure
+                                          is_recorded  = is_recorded ).
+        ELSE.
+          rt_lines = apply_statement_replace( it_lines     = rt_lines
+                                              is_procedure = is_procedure
+                                              is_recorded  = is_recorded ).
+        ENDIF.
+      WHEN zcl_skylint_check_base=>c_recorded_kinds-insert_before.
+        statement_lines( EXPORTING is_procedure = is_procedure
+                                   iv_index     = is_recorded-statement_from
+                         IMPORTING ev_first     = lv_start
+                                   ev_found     = lv_found ).
+        IF lv_found = abap_false.
+          RETURN.
+        ENDIF.
+        rt_lines = insert_lines( it_lines = rt_lines
+                                iv_at     = lv_start
+                                it_code   = is_recorded-new_code ).
+      WHEN zcl_skylint_check_base=>c_recorded_kinds-insert_after.
+        statement_lines( EXPORTING is_procedure = is_procedure
+                                   iv_index     = is_recorded-statement_from
+                         IMPORTING ev_last      = lv_end
+                                   ev_found     = lv_found ).
+        IF lv_found = abap_false.
+          RETURN.
+        ENDIF.
+        rt_lines = insert_lines( it_lines = rt_lines
+                                iv_at     = lv_end + 1
+                                it_code   = is_recorded-new_code ).
+      WHEN zcl_skylint_check_base=>c_recorded_kinds-delete.
+        statement_lines( EXPORTING is_procedure = is_procedure
+                                   iv_index     = is_recorded-statement_from
+                         IMPORTING ev_first     = lv_start
+                                   ev_last      = lv_end
+                                   ev_found     = lv_found ).
+        IF lv_found = abap_false.
+          RETURN.
+        ENDIF.
+        rt_lines = delete_lines( it_lines = rt_lines
+                                iv_from   = lv_start
+                                iv_to     = lv_end ).
+      WHEN OTHERS.
+        RETURN.
+    ENDCASE.
+  ENDMETHOD.
+
+  METHOD apply_token_replace.
+    DATA ls_stmt     TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_found    TYPE abap_bool.
+    DATA ls_tok_from TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok_to   TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_found_from TYPE abap_bool.
+    DATA lv_found_to   TYPE abap_bool.
+    DATA lv_line     TYPE string.
+    DATA lv_line_no  TYPE i.
+    DATA lv_new      TYPE string.
+    DATA lv_col_from TYPE i.
+    DATA lv_col_to   TYPE i.
+    DATA lv_cut_from TYPE i.
+    DATA lv_cut_to   TYPE i.
+    DATA lv_len      TYPE i.
+    DATA lv_head     TYPE string.
+    DATA lv_tail     TYPE string.
+
+    rt_lines = it_lines.
+    zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                                        iv_index      = is_recorded-statement_from
+                                              IMPORTING es_statement  = ls_stmt
+                                                        ev_found      = lv_found ).
+    IF lv_found = abap_false.
+      RETURN.
+    ENDIF.
+    zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = ls_stmt
+                                                    iv_index     = is_recorded-token_from
+                                          IMPORTING es_token     = ls_tok_from
+                                                    ev_found     = lv_found_from ).
+    zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = ls_stmt
+                                                    iv_index     = is_recorded-token_to
+                                          IMPORTING es_token     = ls_tok_to
+                                                    ev_found     = lv_found_to ).
+    IF lv_found_from = abap_false OR lv_found_to = abap_false.
+      RETURN.
+    ENDIF.
+    lv_line_no = ls_tok_from-position-line.
+    READ TABLE rt_lines INTO lv_line INDEX lv_line_no.
+    IF sy-subrc <> 0.
+      RETURN.
+    ENDIF.
+    lv_len = strlen( lv_line ).
+    lv_col_from = ls_tok_from-position-column.
+    lv_col_to = ls_tok_to-position-column + strlen( ls_tok_to-lexeme ).
+    lv_cut_from = lv_col_from - 1.
+    lv_cut_to = lv_col_to - 1.
+    IF lv_cut_from < 0.
+      lv_cut_from = 0.
+    ENDIF.
+    IF lv_cut_from > lv_len.
+      lv_cut_from = lv_len.
+    ENDIF.
+    IF lv_cut_to < 0.
+      lv_cut_to = 0.
+    ENDIF.
+    IF lv_cut_to > lv_len.
+      lv_cut_to = lv_len.
+    ENDIF.
+    lv_new = join_code( is_recorded-new_code ).
+    lv_head = lv_line(lv_cut_from).
+    lv_tail = lv_line+lv_cut_to.
+    lv_line = lv_head && lv_new && lv_tail.
+    MODIFY rt_lines FROM lv_line INDEX lv_line_no.
+  ENDMETHOD.
+
+  METHOD apply_statement_replace.
+    DATA lv_stmt_to TYPE i.
+    DATA lv_start   TYPE i.
+    DATA lv_end     TYPE i.
+    DATA lv_found   TYPE abap_bool.
+
+    rt_lines = it_lines.
+    lv_stmt_to = is_recorded-statement_to.
+    IF lv_stmt_to IS INITIAL.
+      lv_stmt_to = is_recorded-statement_from.
+    ENDIF.
+    statement_lines( EXPORTING is_procedure = is_procedure
+                               iv_index     = is_recorded-statement_from
+                     IMPORTING ev_first     = lv_start
+                               ev_found     = lv_found ).
+    statement_lines( EXPORTING is_procedure = is_procedure
+                               iv_index     = lv_stmt_to
+                     IMPORTING ev_last      = lv_end
+                               ev_found     = lv_found ).
+    IF lv_found = abap_false.
+      RETURN.
+    ENDIF.
+    rt_lines = delete_lines( it_lines = rt_lines
+                            iv_from   = lv_start
+                            iv_to     = lv_end ).
+    rt_lines = insert_lines( it_lines = rt_lines
+                            iv_at     = lv_start
+                            it_code   = is_recorded-new_code ).
+  ENDMETHOD.
+
+  METHOD insert_lines.
+    DATA lv_row TYPE string.
+    DATA lv_ins TYPE i.
+
+    rt_lines = it_lines.
+    lv_ins = iv_at.
+    LOOP AT it_code INTO lv_row.
+      INSERT lv_row INTO rt_lines INDEX lv_ins.
+      lv_ins = lv_ins + 1.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD delete_lines.
+    DATA lv_del TYPE i.
+
+    rt_lines = it_lines.
+    IF iv_to < iv_from.
+      RETURN.
+    ENDIF.
+    lv_del = iv_to - iv_from + 1.
+    DO lv_del TIMES.
+      DELETE rt_lines INDEX iv_from.
+    ENDDO.
+  ENDMETHOD.
+
+  METHOD statement_lines.
+    DATA ls_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    CLEAR ev_first.
+    CLEAR ev_last.
+    ev_found = abap_false.
+    zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
+                                                        iv_index      = iv_index
+                                              IMPORTING es_statement  = ls_stmt
+                                                        ev_found      = ev_found ).
+    IF ev_found = abap_false.
+      RETURN.
+    ENDIF.
+    ev_first = ls_stmt-position-line.
+    ev_last = ev_first.
+    LOOP AT ls_stmt-tokens INTO ls_tok.
+      IF ls_tok-position-line > ev_last.
+        ev_last = ls_tok-position-line.
+      ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD join_code.
+    DATA lv_row TYPE string.
+
+    CLEAR rv_text.
+    LOOP AT it_code INTO lv_row.
+      IF rv_text IS INITIAL.
+        rv_text = lv_row.
+      ELSE.
+        rv_text = rv_text && ` ` && lv_row.
+      ENDIF.
+    ENDLOOP.
   ENDMETHOD.
 ENDCLASS.
