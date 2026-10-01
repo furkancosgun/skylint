@@ -667,7 +667,9 @@
       ]
     },
     "functional_writing": {
-      "exclude": [],
+      "exclude": [
+        "/src/core/zcl_skylint_rtti_util.clas.abap"
+      ],
       "severity": "Error",
       "ignoreExceptions": true
     },

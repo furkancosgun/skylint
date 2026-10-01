@@ -3,63 +3,126 @@ CLASS zcl_skylint_rtti_util DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    CLASS-METHODS parse_full_name
-      IMPORTING iv_full_name    TYPE string
-      EXPORTING ev_program_name TYPE string
-                ev_class_name   TYPE string
-                ev_meth_name    TYPE string.
+    CLASS-METHODS describe_class
+      IMPORTING iv_class_name        TYPE clike
+      RETURNING VALUE(ro_classdescr) TYPE REF TO cl_abap_classdescr.
+
+    CLASS-METHODS describe_interface
+      IMPORTING iv_intf_name        TYPE clike
+      RETURNING VALUE(ro_intfdescr) TYPE REF TO cl_abap_intfdescr.
+
+    CLASS-METHODS describe_object
+      IMPORTING iv_name            TYPE clike
+      RETURNING VALUE(ro_objdescr) TYPE REF TO cl_abap_objectdescr.
+
+    CLASS-METHODS get_super_classes
+      IMPORTING iv_class_name           TYPE clike
+      RETURNING VALUE(rt_super_classes) TYPE string_table.
 
     CLASS-METHODS get_method_descr
-      IMPORTING iv_full_name TYPE string
+      IMPORTING iv_full_name TYPE clike
       EXPORTING es_method    TYPE abap_methdescr
                 ev_found     TYPE abap_bool.
 
     CLASS-METHODS is_static_method
-      IMPORTING iv_full_name TYPE string
+      IMPORTING iv_full_name TYPE clike
+      RETURNING VALUE(rv_is) TYPE abap_bool.
+
+    CLASS-METHODS is_boolean_returning_method
+      IMPORTING is_method    TYPE abap_methdescr
       RETURNING VALUE(rv_is) TYPE abap_bool.
 
     CLASS-METHODS get_single_importing_param
-      IMPORTING iv_full_name  TYPE string
+      IMPORTING iv_full_name  TYPE clike
       EXPORTING ev_param_name TYPE string
                 ev_is_single  TYPE abap_bool.
-
-    CLASS-METHODS describe_class
-      IMPORTING iv_class_name        TYPE string
-      RETURNING VALUE(ro_classdescr) TYPE REF TO cl_abap_classdescr.
-
-    CLASS-METHODS describe_object
-      IMPORTING iv_name            TYPE string
-      RETURNING VALUE(ro_objdescr) TYPE REF TO cl_abap_objectdescr.
-
-    CLASS-METHODS get_super_classes
-      IMPORTING iv_class_name           TYPE string
-      RETURNING VALUE(rt_super_classes) TYPE string_table.
 
     CLASS-METHODS has_compiler_reference
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
                 iv_kind       TYPE if_ci_atc_source_code_provider=>ty_reference_kind
       RETURNING VALUE(rv_has) TYPE abap_bool.
 
+  PRIVATE SECTION.
+    CLASS-METHODS parse_full_name
+      IMPORTING iv_full_name    TYPE clike
+      EXPORTING ev_program_name TYPE string
+                ev_class_name   TYPE string
+                ev_meth_name    TYPE string.
+
 ENDCLASS.
 
 
 CLASS zcl_skylint_rtti_util IMPLEMENTATION.
+  METHOD describe_object.
+    DATA lo_descr TYPE REF TO cl_abap_typedescr.
+
+    TRY.
+        cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = iv_name
+                                             RECEIVING  p_descr_ref    = lo_descr
+                                             EXCEPTIONS type_not_found = 1
+                                                        OTHERS         = 2 ).
+        IF     sy-subrc = 0 AND lo_descr IS BOUND
+           AND ( lo_descr->kind = cl_abap_typedescr=>kind_class OR lo_descr->kind = cl_abap_typedescr=>kind_intf ).
+          ro_objdescr ?= lo_descr.
+        ENDIF.
+      CATCH cx_root.
+        CLEAR ro_objdescr.
+    ENDTRY.
+  ENDMETHOD.
+
+  METHOD describe_class.
+    DATA lo_obj TYPE REF TO cl_abap_objectdescr.
+
+    lo_obj = describe_object( iv_class_name ).
+    IF lo_obj IS BOUND AND lo_obj->kind = cl_abap_typedescr=>kind_class.
+      ro_classdescr ?= lo_obj.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD describe_interface.
+    DATA lo_obj TYPE REF TO cl_abap_objectdescr.
+
+    lo_obj = describe_object( iv_intf_name ).
+    IF lo_obj IS BOUND AND lo_obj->kind = cl_abap_typedescr=>kind_intf.
+      ro_intfdescr ?= lo_obj.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD get_super_classes.
+    DATA lo_class      TYPE REF TO cl_abap_classdescr.
+    DATA lo_super      TYPE REF TO cl_abap_classdescr.
+    DATA lv_super_name TYPE string.
+
+    lo_class = describe_class( iv_class_name ).
+    IF lo_class IS NOT BOUND.
+      RETURN.
+    ENDIF.
+
+    lo_super = lo_class.
+    WHILE lo_super IS BOUND.
+      CALL METHOD lo_super->get_super_class_type
+        RECEIVING
+          p_descr_ref           = lo_super
+        EXCEPTIONS
+          super_class_not_found = 1
+          OTHERS                = 2.
+      IF sy-subrc <> 0 OR lo_super IS NOT BOUND.
+        EXIT.
+      ENDIF.
+      lv_super_name = lo_super->get_relative_name( ).
+      INSERT lv_super_name INTO TABLE rt_super_classes.
+    ENDWHILE.
+  ENDMETHOD.
+
   METHOD parse_full_name.
     DATA lv_str   TYPE string.
     DATA lt_parts TYPE STANDARD TABLE OF string WITH EMPTY KEY.
+    DATA lv_part  TYPE string.
 
     CLEAR: ev_program_name,
            ev_class_name,
            ev_meth_name.
     lv_str = to_upper( iv_full_name ).
-
-    IF lv_str CS '->'.
-      SPLIT lv_str AT '->' INTO ev_class_name ev_meth_name.
-      IF ev_meth_name CS '('.
-        SPLIT ev_meth_name AT '(' INTO ev_meth_name lv_str.
-      ENDIF.
-      RETURN.
-    ENDIF.
 
     IF lv_str CS '=>'.
       SPLIT lv_str AT '=>' INTO ev_class_name ev_meth_name.
@@ -71,33 +134,23 @@ CLASS zcl_skylint_rtti_util IMPLEMENTATION.
 
     IF lv_str CS '\'.
       SPLIT lv_str AT '\' INTO TABLE lt_parts.
-      LOOP AT lt_parts INTO lv_str.
-        IF lv_str CP 'PROGRAM=*'.
-          ev_program_name = lv_str+8.
-        ELSEIF lv_str CP 'PR:*'.
-          ev_program_name = lv_str+3.
-        ELSEIF lv_str CP 'CLASS=*'.
-          ev_class_name = lv_str+6.
-        ELSEIF lv_str CP 'INTF=*'.
-          ev_class_name = lv_str+5.
-        ELSEIF lv_str CP 'TY:*'.
-          ev_class_name = lv_str+3.
-        ELSEIF lv_str CP 'METHOD=*'.
-          ev_meth_name = lv_str+7.
-        ELSEIF lv_str CP 'ME:*'.
-          ev_meth_name = lv_str+3.
+      LOOP AT lt_parts INTO lv_part.
+        IF lv_part CP 'PR:*'.
+          ev_program_name = lv_part+3.
+        ELSEIF lv_part CP 'TY:*'.
+          ev_class_name = lv_part+3.
+        ELSEIF lv_part CP 'ME:*'.
+          ev_meth_name = lv_part+3.
         ENDIF.
       ENDLOOP.
     ENDIF.
   ENDMETHOD.
 
   METHOD get_method_descr.
-    DATA lv_program   TYPE string.
-    DATA lv_class     TYPE string.
-    DATA lv_meth      TYPE string.
-    DATA lv_rtti_name TYPE string.
-    DATA lo_descr     TYPE REF TO cl_abap_typedescr.
-    DATA lo_obj       TYPE REF TO cl_abap_objectdescr.
+    DATA lv_program TYPE string.
+    DATA lv_class   TYPE string.
+    DATA lv_meth    TYPE string.
+    DATA lo_obj     TYPE REF TO cl_abap_objectdescr.
 
     CLEAR: es_method,
            ev_found.
@@ -112,27 +165,15 @@ CLASS zcl_skylint_rtti_util IMPLEMENTATION.
     ENDIF.
 
     IF lv_program IS NOT INITIAL.
-      lv_rtti_name = |\\PROGRAM={ lv_program }\\CLASS={ lv_class }|.
+      lo_obj = describe_object( |\\PROGRAM={ lv_program }\\CLASS={ lv_class }| ).
+      IF lo_obj IS NOT BOUND.
+        lo_obj = describe_object( |\\PROGRAM={ lv_program }\\INTF={ lv_class }| ).
+      ENDIF.
     ELSE.
-      lv_rtti_name = lv_class.
+      lo_obj = describe_object( lv_class ).
     ENDIF.
 
-    cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = lv_rtti_name
-                                         RECEIVING  p_descr_ref    = lo_descr
-                                         EXCEPTIONS type_not_found = 1
-                                                    OTHERS         = 2 ).
-
-    IF sy-subrc <> 0 AND lv_program IS NOT INITIAL.
-      lv_rtti_name = |\\PROGRAM={ lv_program }\\INTF={ lv_class }|.
-      cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = lv_rtti_name
-                                           RECEIVING  p_descr_ref    = lo_descr
-                                           EXCEPTIONS type_not_found = 1
-                                                      OTHERS         = 2 ).
-    ENDIF.
-
-    IF     sy-subrc = 0 AND lo_descr IS BOUND
-       AND ( lo_descr->kind = cl_abap_typedescr=>kind_class OR lo_descr->kind = cl_abap_typedescr=>kind_intf ).
-      lo_obj ?= lo_descr.
+    IF lo_obj IS BOUND.
       READ TABLE lo_obj->methods INTO es_method WITH KEY name = to_upper( lv_meth ).
       IF sy-subrc = 0.
         ev_found = abap_true.
@@ -151,6 +192,19 @@ CLASS zcl_skylint_rtti_util IMPLEMENTATION.
     IF lv_found = abap_true AND ls_meth-is_class = abap_true.
       rv_is = abap_true.
     ENDIF.
+  ENDMETHOD.
+
+  METHOD is_boolean_returning_method.
+    FIELD-SYMBOLS <ls_param> TYPE abap_parmdescr.
+
+    rv_is = abap_false.
+    LOOP AT is_method-parameters ASSIGNING <ls_param>
+         WHERE parm_kind = cl_abap_objectdescr=>returning.
+      IF <ls_param>-type_kind = cl_abap_typedescr=>typekind_char AND <ls_param>-length = 1.
+        rv_is = abap_true.
+        RETURN.
+      ENDIF.
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD get_single_importing_param.
@@ -172,7 +226,7 @@ CLASS zcl_skylint_rtti_util IMPLEMENTATION.
 
     LOOP AT ls_meth-parameters ASSIGNING <ls_param>.
       IF <ls_param>-parm_kind <> cl_abap_objectdescr=>returning.
-        lv_input_count += 1.
+        lv_input_count = lv_input_count + 1.
         ls_single_param = <ls_param>.
       ENDIF.
     ENDLOOP.
@@ -183,57 +237,13 @@ CLASS zcl_skylint_rtti_util IMPLEMENTATION.
     ENDIF.
   ENDMETHOD.
 
-  METHOD describe_class.
-    DATA lo_descr TYPE REF TO cl_abap_typedescr.
-
-    cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = iv_class_name
-                                         RECEIVING  p_descr_ref    = lo_descr
-                                         EXCEPTIONS type_not_found = 1
-                                                    OTHERS         = 2 ).
-    IF sy-subrc = 0 AND lo_descr IS BOUND AND lo_descr->kind = cl_abap_typedescr=>kind_class.
-      ro_classdescr ?= lo_descr.
-    ENDIF.
-  ENDMETHOD.
-
-  METHOD describe_object.
-    DATA lo_descr TYPE REF TO cl_abap_typedescr.
-
-    cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = iv_name
-                                         RECEIVING  p_descr_ref    = lo_descr
-                                         EXCEPTIONS type_not_found = 1
-                                                    OTHERS         = 2 ).
-    IF     sy-subrc = 0 AND lo_descr IS BOUND
-       AND ( lo_descr->kind = cl_abap_typedescr=>kind_class OR lo_descr->kind = cl_abap_typedescr=>kind_intf ).
-      ro_objdescr ?= lo_descr.
-    ENDIF.
-  ENDMETHOD.
-
-  METHOD get_super_classes.
-    DATA lo_class      TYPE REF TO cl_abap_classdescr.
-    DATA lo_super      TYPE REF TO cl_abap_classdescr.
-    DATA lv_super_name TYPE string.
-
-    lo_class = describe_class( iv_class_name ).
-    IF lo_class IS NOT BOUND.
-      RETURN.
-    ENDIF.
-
-    lo_super = lo_class->get_super_class_type( ).
-    WHILE lo_super IS BOUND.
-      lv_super_name = lo_super->get_relative_name( ).
-      INSERT lv_super_name INTO TABLE rt_super_classes.
-      lo_super = lo_super->get_super_class_type( ).
-    ENDWHILE.
-  ENDMETHOD.
-
   METHOD has_compiler_reference.
-    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
-    " TODO: variable is assigned but never used (ABAP cleaner)
-    DATA ls_ref   TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_ref>   TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     rv_has = abap_false.
-    LOOP AT is_statement-tokens INTO ls_token.
-      LOOP AT ls_token-references INTO ls_ref WHERE kind = iv_kind.
+    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
+      LOOP AT <ls_token>-references ASSIGNING <ls_ref> WHERE kind = iv_kind.
         rv_has = abap_true.
         RETURN.
       ENDLOOP.

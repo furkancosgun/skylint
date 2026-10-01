@@ -34,35 +34,23 @@ CLASS zcl_skylint_check_059 IMPLEMENTATION.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lo_descr TYPE REF TO cl_abap_typedescr.
-    DATA lo_obj   TYPE REF TO cl_abap_objectdescr.
-    " TODO: variable is assigned but never used (ABAP cleaner)
-    DATA ls_attr  TYPE abap_attrdescr.
+    DATA lo_obj TYPE REF TO cl_abap_objectdescr.
 
     IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = is_procedure-id-main_unit-name
-                                         RECEIVING  p_descr_ref    = lo_descr
-                                         EXCEPTIONS type_not_found = 1
-                                                    OTHERS         = 2 ).
-    IF sy-subrc <> 0 OR lo_descr IS NOT BOUND.
+    lo_obj = zcl_skylint_rtti_util=>describe_object( is_procedure-id-main_unit-name ).
+    IF lo_obj IS NOT BOUND.
       RETURN.
     ENDIF.
-
-    IF lo_descr->kind <> cl_abap_typedescr=>kind_intf AND lo_descr->kind <> cl_abap_typedescr=>kind_class.
-      RETURN.
-    ENDIF.
-
-    lo_obj ?= lo_descr.
 
     ASSIGN is_procedure-statements[ 1 ] TO <ls_statement>.
     IF sy-subrc <> 0.
       RETURN.
     ENDIF.
 
-    LOOP AT lo_obj->attributes INTO ls_attr WHERE is_constant = abap_false.
+    LOOP AT lo_obj->attributes TRANSPORTING NO FIELDS WHERE is_constant = abap_false.
       report_statement( is_statement    = <ls_statement>
                         iv_finding_code = c_finding_codes-interface_data ).
     ENDLOOP.

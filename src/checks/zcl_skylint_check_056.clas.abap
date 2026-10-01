@@ -33,26 +33,18 @@ CLASS zcl_skylint_check_056 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lo_descr             TYPE REF TO cl_abap_typedescr.
-    DATA lo_class             TYPE REF TO cl_abap_classdescr.
-    DATA ls_meth              TYPE abap_methdescr.
-    DATA ls_param             TYPE abap_parmdescr.
-    DATA lv_is_bool_returning TYPE abap_bool.
+    DATA lo_class TYPE REF TO cl_abap_classdescr.
+    DATA ls_meth  TYPE abap_methdescr.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = is_procedure-id-main_unit-name
-                                         RECEIVING  p_descr_ref    = lo_descr
-                                         EXCEPTIONS type_not_found = 1
-                                                    OTHERS         = 2 ).
-    IF sy-subrc <> 0 OR lo_descr IS NOT BOUND OR lo_descr->kind <> cl_abap_typedescr=>kind_class.
+    lo_class = zcl_skylint_rtti_util=>describe_class( is_procedure-id-main_unit-name ).
+    IF lo_class IS NOT BOUND.
       RETURN.
     ENDIF.
-
-    lo_class ?= lo_descr.
 
     ASSIGN is_procedure-statements[ 1 ] TO <ls_statement>.
     IF sy-subrc <> 0.
@@ -60,19 +52,11 @@ CLASS zcl_skylint_check_056 IMPLEMENTATION.
     ENDIF.
 
     LOOP AT lo_class->methods INTO ls_meth.
-      lv_is_bool_returning = abap_false.
-      LOOP AT ls_meth-parameters INTO ls_param WHERE parm_kind = cl_abap_objectdescr=>returning.
-        IF ls_param-type_kind = cl_abap_typedescr=>typekind_char AND ls_param-length = 1.
-          lv_is_bool_returning = abap_true.
-          EXIT.
-        ENDIF.
-      ENDLOOP.
-
-      IF     lv_is_bool_returning  = abap_true
-         AND ls_meth-name         NP 'IS_*'     AND ls_meth-name NP 'HAS_*'
-         AND ls_meth-name         NP 'CAN_*'    AND ls_meth-name NP 'CHECK_*'
-         AND ls_meth-name         NP 'ARE_*'    AND ls_meth-name NP 'WAS_*'
-         AND ls_meth-name         NP 'SHOULD_*'.
+      IF     zcl_skylint_rtti_util=>is_boolean_returning_method( ls_meth ) = abap_true
+         AND ls_meth-name NP 'IS_*'     AND ls_meth-name NP 'HAS_*'
+         AND ls_meth-name NP 'CAN_*'    AND ls_meth-name NP 'CHECK_*'
+         AND ls_meth-name NP 'ARE_*'    AND ls_meth-name NP 'WAS_*'
+         AND ls_meth-name NP 'SHOULD_*'.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-bool_method_name ).
       ENDIF.

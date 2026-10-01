@@ -39,7 +39,6 @@ CLASS zcl_skylint_check_058 IMPLEMENTATION.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lo_descr    TYPE REF TO cl_abap_typedescr.
     DATA lo_class    TYPE REF TO cl_abap_classdescr.
     DATA lv_max_attr TYPE i.
 
@@ -54,15 +53,10 @@ CLASS zcl_skylint_check_058 IMPLEMENTATION.
       lv_max_attr = mv_max_attributes.
     ENDIF.
 
-    cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = is_procedure-id-main_unit-name
-                                         RECEIVING  p_descr_ref    = lo_descr
-                                         EXCEPTIONS type_not_found = 1
-                                                    OTHERS         = 2 ).
-    IF sy-subrc <> 0 OR lo_descr IS NOT BOUND OR lo_descr->kind <> cl_abap_typedescr=>kind_class.
+    lo_class = zcl_skylint_rtti_util=>describe_class( is_procedure-id-main_unit-name ).
+    IF lo_class IS NOT BOUND.
       RETURN.
     ENDIF.
-
-    lo_class ?= lo_descr.
 
     IF lines( lo_class->attributes ) > lv_max_attr.
       ASSIGN is_procedure-statements[ 1 ] TO <ls_statement>.
