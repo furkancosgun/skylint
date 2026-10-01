@@ -13,6 +13,11 @@ CLASS zcl_skylint_check_base DEFINITION
     METHODS constructor
       IMPORTING is_config TYPE zcl_skylint_check_meta_data=>ty_config OPTIONAL.
 
+    METHODS run_for_testing
+      IMPORTING is_procedure     TYPE if_ci_atc_source_code_provider=>ty_procedure
+                io_code_provider TYPE REF TO if_ci_atc_source_code_provider OPTIONAL
+      RETURNING VALUE(rt_findings) TYPE if_ci_atc_check=>ty_findings.
+
   PROTECTED SECTION.
     METHODS check ABSTRACT
       IMPORTING is_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure.
@@ -208,5 +213,12 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
 
   METHOD is_open_abap.
     rv_result = xsdbool( sy-saprl = 'OPEN' ).
+  ENDMETHOD.
+
+  METHOD run_for_testing.
+    mo_code_provider = io_code_provider.
+    CLEAR mt_findings.
+    check( is_procedure ).
+    rt_findings = mt_findings.
   ENDMETHOD.
 ENDCLASS.

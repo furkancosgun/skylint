@@ -679,10 +679,7 @@
       "exclude": [],
       "severity": "Error"
     },
-    "identical_contents": {
-      "exclude": [],
-      "severity": "Error"
-    },
+    "identical_contents": false,
     "identical_descriptions": {
       "exclude": [],
       "severity": "Error"
