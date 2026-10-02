@@ -154,10 +154,22 @@ function main() {
     syncBranch(t, headInfo);
   }
 
-  console.log('\n✨ Branch synchronization complete!');
-  console.log('You can now inspect or push the branches:');
-  console.log('  git push origin cloud');
-  console.log('  git push origin standard\n');
+  const shouldPush = process.argv.includes('--push');
+
+  if (shouldPush) {
+    console.log('\n🚀 Pushing synchronized branches to remote origin...');
+    for (const t of targets) {
+      run(`git push origin ${t}`);
+      console.log(`  ✓ Pushed origin/${t}`);
+    }
+    console.log('\n✨ All branches synchronized and pushed to GitHub!');
+  } else {
+    console.log('\n✨ Branch synchronization complete!');
+    console.log('You can now inspect or push the branches:');
+    console.log('  git push origin cloud');
+    console.log('  git push origin standard\n');
+  }
 }
 
 main();
+
