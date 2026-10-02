@@ -34,10 +34,6 @@ CLASS zcl_skylint_check_073 IMPLEMENTATION.
   METHOD check.
     DATA lv_tok1   TYPE string.
     DATA lv_tok3   TYPE string.
-    DATA ls_tok1   TYPE zif_skylint_types=>ty_token.
-    DATA ls_tok3   TYPE zif_skylint_types=>ty_token.
-    DATA lv_found1 TYPE abap_bool.
-    DATA lv_found3 TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
@@ -46,19 +42,13 @@ CLASS zcl_skylint_check_073 IMPLEMENTATION.
           report_statement( is_statement    = <ls_statement>
                             iv_finding_code = c_finding_codes-calc_assign ).
         WHEN OTHERS.
-          zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = <ls_statement>
-                                                          iv_index     = 1
-                                                IMPORTING es_token     = ls_tok1
-                                                          ev_found     = lv_found1 ).
-          zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = <ls_statement>
-                                                          iv_index     = 3
-                                                IMPORTING es_token     = ls_tok3
-                                                          ev_found     = lv_found3 ).
-          IF lv_found1 = abap_false OR lv_found3 = abap_false.
+          lv_tok1 = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
+                                                            iv_index     = 1 ).
+          lv_tok3 = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
+                                                            iv_index     = 3 ).
+          IF lv_tok1 IS INITIAL OR lv_tok3 IS INITIAL.
             CONTINUE.
           ENDIF.
-          lv_tok1 = to_upper( ls_tok1-lexeme ).
-          lv_tok3 = to_upper( ls_tok3-lexeme ).
           IF     lv_tok1 = lv_tok3
              AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
                                                          iv_index     = 2

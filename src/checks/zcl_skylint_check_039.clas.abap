@@ -41,7 +41,6 @@ CLASS zcl_skylint_check_039 IMPLEMENTATION.
     DATA lv_max   TYPE i.
     DATA lv_count TYPE i.
     DATA ls_first TYPE zif_skylint_types=>ty_statement.
-    DATA lv_found TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
     IF is_procedure-id-kind = zif_skylint_types=>procedure_kinds-class_definition.
@@ -69,11 +68,9 @@ CLASS zcl_skylint_check_039 IMPLEMENTATION.
     IF lv_count <= lv_max.
       RETURN.
     ENDIF.
-    zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                                        iv_index      = 1
-                                              IMPORTING es_statement  = ls_first
-                                                        ev_found      = lv_found ).
-    IF lv_found = abap_false.
+    ls_first = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+                                                         iv_index      = 1 ).
+    IF ls_first-keyword IS INITIAL.
       RETURN.
     ENDIF.
     report_statement( is_statement    = ls_first

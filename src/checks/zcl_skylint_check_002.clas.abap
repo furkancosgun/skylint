@@ -54,25 +54,22 @@ CLASS zcl_skylint_check_002 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_dynamic_call.
-    DATA lv_token_idx TYPE i.
-    DATA lv_lexeme    TYPE string.
-    FIELD-SYMBOLS <ls_token> TYPE zif_skylint_types=>ty_token.
+    DATA ls_third TYPE zif_skylint_types=>ty_token.
 
     rv_dynamic = abap_false.
 
-    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      lv_token_idx = sy-tabix.
-      lv_lexeme = to_upper( <ls_token>-lexeme ).
+    IF    zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                  iv_lexeme    = 'PARAMETER-TABLE' ) = abap_true
+       OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                  iv_lexeme    = 'EXCEPTION-TABLE' ) = abap_true.
+      rv_dynamic = abap_true.
+      RETURN.
+    ENDIF.
 
-      IF lv_lexeme = 'PARAMETER-TABLE' OR lv_lexeme = 'EXCEPTION-TABLE'.
-        rv_dynamic = abap_true.
-        RETURN.
-      ENDIF.
-
-      IF lv_token_idx = 3 AND lv_lexeme CP '(*)'.
-        rv_dynamic = abap_true.
-        RETURN.
-      ENDIF.
-    ENDLOOP.
+    ls_third = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                iv_index     = 3 ).
+    IF to_upper( ls_third-lexeme ) CP '(*)'.
+      rv_dynamic = abap_true.
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.

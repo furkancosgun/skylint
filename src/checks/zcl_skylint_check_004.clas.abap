@@ -48,12 +48,9 @@ CLASS zcl_skylint_check_004 IMPLEMENTATION.
 
   METHOD has_not_is_pattern.
     DATA lv_in_not      TYPE abap_bool.
-    DATA lv_is_idx      TYPE i.
     DATA lv_lexeme      TYPE string.
     DATA lv_next_lexeme TYPE string.
     DATA lv_idx         TYPE i.
-    DATA ls_next_token  TYPE zif_skylint_types=>ty_token.
-    DATA lv_found       TYPE abap_bool.
     FIELD-SYMBOLS <ls_token> TYPE zif_skylint_types=>ty_token.
 
     rv_matched = abap_false.
@@ -68,20 +65,13 @@ CLASS zcl_skylint_check_004 IMPLEMENTATION.
       ELSEIF lv_lexeme = 'AND' OR lv_lexeme = 'OR' OR lv_lexeme = ')' OR lv_lexeme = '('.
         lv_in_not = abap_false.
       ELSEIF lv_in_not = abap_true AND lv_lexeme = 'IS'.
-        lv_is_idx = lv_idx + 1.
-        zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                                                        iv_index     = lv_is_idx
-                                              IMPORTING es_token     = ls_next_token
-                                                        ev_found     = lv_found ).
-        IF lv_found = abap_true.
-          lv_next_lexeme = to_upper( ls_next_token-lexeme ).
-          IF    lv_next_lexeme = 'INITIAL'   OR lv_next_lexeme = 'BOUND'
-             OR lv_next_lexeme = 'ASSIGNED'  OR lv_next_lexeme = 'SUPPLIED'
-             OR lv_next_lexeme = 'REQUESTED' OR lv_next_lexeme = 'INSTANCE'.
+        lv_next_lexeme = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
+                                                                 iv_index     = lv_idx + 1 ).
+        CASE lv_next_lexeme.
+          WHEN 'INITIAL' OR 'BOUND' OR 'ASSIGNED' OR 'SUPPLIED' OR 'REQUESTED' OR 'INSTANCE'.
             rv_matched = abap_true.
             RETURN.
-          ENDIF.
-        ENDIF.
+        ENDCASE.
         lv_in_not = abap_false.
       ENDIF.
     ENDLOOP.

@@ -48,9 +48,10 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_static_create_object.
-    DATA ls_tok TYPE zif_skylint_types=>ty_token.
-    DATA lv_idx TYPE i.
-    DATA lv_tok TYPE string.
+    DATA ls_tok   TYPE zif_skylint_types=>ty_token.
+    DATA lv_idx   TYPE i.
+    DATA lv_tok   TYPE string.
+    DATA lv_count TYPE i.
 
     rv_res = abap_false.
     IF zcl_skylint_ast_util=>match_token_sequence( is_statement = is_statement
@@ -69,21 +70,25 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    LOOP AT is_statement-tokens INTO ls_tok FROM 3.
-      lv_idx = sy-tabix.
-      lv_tok = to_upper( ls_tok-lexeme ).
+    ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                iv_index     = 3 ).
+    lv_tok = to_upper( ls_tok-lexeme ).
+    IF ls_tok-lexeme IS NOT INITIAL AND ( lv_tok(1) = `'` OR lv_tok(1) = '`' ).
+      RETURN.
+    ENDIF.
 
-      IF lv_idx = 3 AND ( lv_tok(1) = `'` OR lv_tok(1) = '`' ).
-        " OLE automation
+    lv_count = zcl_skylint_ast_util=>token_count( is_statement ).
+    lv_idx = 3.
+    WHILE lv_idx <= lv_count.
+      IF    zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
+                                                    iv_index     = lv_idx ) = 'TYPE'
+         AND zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
+                                                     iv_index     = lv_idx + 1
+                                                     iv_expected  = '(' ) = abap_true.
         RETURN.
       ENDIF.
-
-      IF lv_tok = 'TYPE' AND zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                                                                     iv_index     = lv_idx + 1
-                                                                     iv_expected  = '(' ) = abap_true.
-        RETURN.
-      ENDIF.
-    ENDLOOP.
+      lv_idx += 1.
+    ENDWHILE.
 
     rv_res = abap_true.
   ENDMETHOD.

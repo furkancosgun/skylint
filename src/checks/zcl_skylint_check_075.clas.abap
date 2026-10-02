@@ -41,21 +41,17 @@ CLASS zcl_skylint_check_075 IMPLEMENTATION.
     DATA ls_first     TYPE zif_skylint_types=>ty_statement.
     DATA ls_stmt      TYPE zif_skylint_types=>ty_statement.
     DATA ls_after     TYPE zif_skylint_types=>ty_statement.
-    DATA lv_found     TYPE abap_bool.
 
-    lv_max = lines( is_procedure-statements ).
+    lv_max = zcl_skylint_ast_util=>statement_count( is_procedure-statements ).
     IF lv_max < 3.
       RETURN.
     ENDIF.
 
-    " 1. Locate the first executable statement
     DO lv_max TIMES.
       lv_idx = sy-index.
-      zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                                          iv_index      = lv_idx
-                                                IMPORTING es_statement  = ls_stmt
-                                                          ev_found      = lv_found ).
-      IF lv_found = abap_false.
+      ls_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+                                                     iv_index      = lv_idx ).
+      IF ls_stmt-keyword IS INITIAL.
         CONTINUE.
       ENDIF.
 
@@ -73,17 +69,14 @@ CLASS zcl_skylint_check_075 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    " 2. Find matching ENDIF for this IF block
     lv_if_depth = 1.
     lv_has_else = abap_false.
     lv_scan_idx = lv_first_idx + 1.
 
     WHILE lv_scan_idx <= lv_max AND lv_if_depth > 0.
-      zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                                          iv_index      = lv_scan_idx
-                                                IMPORTING es_statement  = ls_stmt
-                                                          ev_found      = lv_found ).
-      IF lv_found = abap_false.
+      ls_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+                                                     iv_index      = lv_scan_idx ).
+      IF ls_stmt-keyword IS INITIAL.
         EXIT.
       ENDIF.
 
@@ -97,16 +90,13 @@ CLASS zcl_skylint_check_075 IMPLEMENTATION.
         WHEN 'ENDIF'.
           lv_if_depth -= 1.
           IF lv_if_depth = 0.
-            " Statement immediately following ENDIF must be ENDMETHOD or EOF
             IF lv_scan_idx = lv_max.
               report_statement( is_statement    = ls_first
                                 iv_finding_code = c_finding_codes-guard_method ).
             ELSE.
-              zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                                                  iv_index      = lv_scan_idx + 1
-                                                        IMPORTING es_statement  = ls_after
-                                                                  ev_found      = lv_found ).
-              IF lv_found = abap_true AND lv_has_else = abap_false AND ls_after-keyword = 'ENDMETHOD'.
+              ls_after = zcl_skylint_ast_util=>get_next_statement( it_statements     = is_procedure-statements
+                                                                  iv_current_index = lv_scan_idx ).
+              IF lv_has_else = abap_false AND ls_after-keyword = 'ENDMETHOD'.
                 report_statement( is_statement    = ls_first
                                   iv_finding_code = c_finding_codes-guard_method ).
               ENDIF.

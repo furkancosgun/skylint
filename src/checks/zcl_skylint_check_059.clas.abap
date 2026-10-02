@@ -33,8 +33,8 @@ CLASS zcl_skylint_check_059 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
-    DATA lo_obj TYPE REF TO cl_abap_objectdescr.
+    DATA ls_statement TYPE zif_skylint_types=>ty_statement.
+    DATA lo_obj       TYPE REF TO cl_abap_objectdescr.
 
     IF is_procedure-id-kind <> zif_skylint_types=>procedure_kinds-class_definition.
       RETURN.
@@ -45,13 +45,14 @@ CLASS zcl_skylint_check_059 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    ASSIGN is_procedure-statements[ 1 ] TO <ls_statement>.
-    IF sy-subrc <> 0.
+    ls_statement = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+                                                        iv_index      = 1 ).
+    IF ls_statement-keyword IS INITIAL.
       RETURN.
     ENDIF.
 
     LOOP AT lo_obj->attributes TRANSPORTING NO FIELDS WHERE is_constant = abap_false.
-      report_statement( is_statement    = <ls_statement>
+      report_statement( is_statement    = ls_statement
                         iv_finding_code = c_finding_codes-interface_data ).
     ENDLOOP.
   ENDMETHOD.

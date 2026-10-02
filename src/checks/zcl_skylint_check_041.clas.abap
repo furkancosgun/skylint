@@ -48,14 +48,12 @@ CLASS zcl_skylint_check_041 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_system_variable_mod.
-    DATA ls_tok   TYPE zif_skylint_types=>ty_token.
-    DATA ls_ref   TYPE zif_skylint_types=>ty_compiler_reference.
-    DATA lv_lex   TYPE string.
-    DATA lv_found TYPE abap_bool.
+    DATA ls_tok TYPE zif_skylint_types=>ty_token.
+    DATA ls_ref TYPE zif_skylint_types=>ty_compiler_reference.
+    DATA lv_lex TYPE string.
 
     rv_res = abap_false.
 
-    " 1. Compiler References (write mode on system structure)
     LOOP AT is_statement-tokens INTO ls_tok.
       lv_lex = to_upper( ls_tok-lexeme ).
       IF lv_lex CP 'SY-*' OR lv_lex CP 'SYST-*'.
@@ -68,34 +66,22 @@ CLASS zcl_skylint_check_041 IMPLEMENTATION.
       ENDIF.
     ENDLOOP.
 
-    " 2. Direct statement AST analysis for assignments and modifications
     CASE is_statement-keyword.
       WHEN 'COMPUTE'.
-        " sy-subrc = ...
-        zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                                                        iv_index     = 1
-                                              IMPORTING es_token     = ls_tok
-                                                        ev_found     = lv_found ).
-        IF lv_found = abap_true.
-          lv_lex = to_upper( ls_tok-lexeme ).
-          IF lv_lex CP 'SY-*' OR lv_lex CP 'SYST-*'.
-            rv_res = abap_true.
-            RETURN.
-          ENDIF.
+        ls_tok = zcl_skylint_ast_util=>get_first_token( is_statement ).
+        lv_lex = to_upper( ls_tok-lexeme ).
+        IF lv_lex CP 'SY-*' OR lv_lex CP 'SYST-*'.
+          rv_res = abap_true.
+          RETURN.
         ENDIF.
 
       WHEN 'CLEAR'.
-        " CLEAR sy-subrc
-        zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                                                        iv_index     = 2
-                                              IMPORTING es_token     = ls_tok
-                                                        ev_found     = lv_found ).
-        IF lv_found = abap_true.
-          lv_lex = to_upper( ls_tok-lexeme ).
-          IF lv_lex CP 'SY-*' OR lv_lex CP 'SYST-*'.
-            rv_res = abap_true.
-            RETURN.
-          ENDIF.
+        ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                  iv_index     = 2 ).
+        lv_lex = to_upper( ls_tok-lexeme ).
+        IF lv_lex CP 'SY-*' OR lv_lex CP 'SYST-*'.
+          rv_res = abap_true.
+          RETURN.
         ENDIF.
     ENDCASE.
   ENDMETHOD.

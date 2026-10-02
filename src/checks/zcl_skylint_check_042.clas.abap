@@ -33,8 +33,8 @@ CLASS zcl_skylint_check_042 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
     DATA lo_class     TYPE REF TO cl_abap_classdescr.
+    DATA ls_statement TYPE zif_skylint_types=>ty_statement.
     DATA ls_meth      TYPE abap_methdescr.
     DATA ls_param     TYPE abap_parmdescr.
     DATA lv_exp_count TYPE i.
@@ -50,8 +50,9 @@ CLASS zcl_skylint_check_042 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    ASSIGN is_procedure-statements[ 1 ] TO <ls_statement>.
-    IF sy-subrc <> 0.
+    ls_statement = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+                                                        iv_index      = 1 ).
+    IF ls_statement-keyword IS INITIAL.
       RETURN.
     ENDIF.
 
@@ -77,7 +78,7 @@ CLASS zcl_skylint_check_042 IMPLEMENTATION.
       ENDLOOP.
 
       IF lv_exp_count = 1 AND lv_chg_count = 0 AND lv_ret_count = 0.
-        report_statement( is_statement    = <ls_statement>
+        report_statement( is_statement    = ls_statement
                           iv_finding_code = c_finding_codes-prefer_returning ).
       ENDIF.
     ENDLOOP.

@@ -32,8 +32,6 @@ CLASS zcl_skylint_check_069 IMPLEMENTATION.
 
   METHOD check.
     DATA lv_method_name TYPE string.
-    DATA ls_tok2        TYPE zif_skylint_types=>ty_token.
-    DATA lv_found2      TYPE abap_bool.
     DATA lt_expected    TYPE zcl_skylint_ast_util=>ty_token_lexemes.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
@@ -46,15 +44,11 @@ CLASS zcl_skylint_check_069 IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = <ls_statement>
-                                                      iv_index     = 2
-                                            IMPORTING es_token     = ls_tok2
-                                                      ev_found     = lv_found2 ).
-      IF lv_found2 = abap_false.
+      lv_method_name = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
+                                                                              iv_index     = 2 ).
+      IF lv_method_name IS INITIAL.
         CONTINUE.
       ENDIF.
-
-      lv_method_name = to_upper( ls_tok2-lexeme ).
 
       IF NOT ( lv_method_name CP 'TEST_*' OR lv_method_name CP 'SHOULD_*' OR lv_method_name CP 'CHECK_*' ).
         report_statement( is_statement    = <ls_statement>

@@ -35,13 +35,7 @@ CLASS zcl_skylint_check_025 IMPLEMENTATION.
     DATA lv_has_receiving  TYPE abap_bool.
     DATA lv_has_exceptions TYPE abap_bool.
     DATA lv_is_call        TYPE abap_bool.
-    DATA ls_tok            TYPE zif_skylint_types=>ty_token.
     DATA ls_next_tok       TYPE zif_skylint_types=>ty_token.
-    DATA lv_next_idx       TYPE i.
-    " TODO: variable is assigned but never used (ABAP cleaner)
-    DATA lv_found          TYPE abap_bool.
-    DATA lv_lex            TYPE string.
-    DATA lv_next_lex       TYPE string.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
@@ -64,25 +58,23 @@ CLASS zcl_skylint_check_025 IMPLEMENTATION.
       lv_has_receiving  = abap_false.
       lv_has_exceptions = abap_false.
 
-      LOOP AT <ls_statement>-tokens INTO ls_tok.
-        lv_next_idx = sy-tabix + 1.
-        CLEAR ls_next_tok.
-        zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = <ls_statement>
-                                                        iv_index     = lv_next_idx
-                                              IMPORTING es_token     = ls_next_tok
-                                                        ev_found     = lv_found ).
-
-        lv_lex = to_upper( ls_tok-lexeme ).
-        lv_next_lex = to_upper( ls_next_tok-lexeme ).
-
-        IF lv_lex = 'RECEIVING' AND lv_next_lex <> '='.
+      IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                 iv_lexeme    = 'RECEIVING' ) = abap_true.
+        ls_next_tok = zcl_skylint_ast_util=>get_token_after( is_statement = <ls_statement>
+                                                             iv_lexeme    = 'RECEIVING' ).
+        IF ls_next_tok-lexeme IS INITIAL OR to_upper( ls_next_tok-lexeme ) <> '='.
           lv_has_receiving = abap_true.
         ENDIF.
+      ENDIF.
 
-        IF lv_lex = 'EXCEPTIONS' AND lv_next_lex <> '='.
+      IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                 iv_lexeme    = 'EXCEPTIONS' ) = abap_true.
+        ls_next_tok = zcl_skylint_ast_util=>get_token_after( is_statement = <ls_statement>
+                                                             iv_lexeme    = 'EXCEPTIONS' ).
+        IF ls_next_tok-lexeme IS INITIAL OR to_upper( ls_next_tok-lexeme ) <> '='.
           lv_has_exceptions = abap_true.
         ENDIF.
-      ENDLOOP.
+      ENDIF.
 
       IF lv_has_receiving = abap_true AND lv_has_exceptions = abap_false.
         report_statement( is_statement    = <ls_statement>

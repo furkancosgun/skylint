@@ -72,18 +72,15 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
     DATA lv_back_idx  TYPE i.
     DATA lv_depth     TYPE i.
     DATA ls_back_stmt TYPE zif_skylint_types=>ty_statement.
-    DATA lv_found     TYPE abap_bool.
 
     lv_cond = get_condition_string( is_statement ).
     lv_depth = 0.
     lv_back_idx = iv_idx - 1.
 
     WHILE lv_back_idx >= 1.
-      zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                                          iv_index      = lv_back_idx
-                                                IMPORTING es_statement  = ls_back_stmt
-                                                          ev_found      = lv_found ).
-      IF lv_found = abap_false.
+      ls_back_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+                                                           iv_index      = lv_back_idx ).
+      IF ls_back_stmt-keyword IS INITIAL.
         EXIT.
       ENDIF.
 
@@ -124,18 +121,15 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
     DATA lv_back_idx  TYPE i.
     DATA lv_depth     TYPE i.
     DATA ls_back_stmt TYPE zif_skylint_types=>ty_statement.
-    DATA lv_found     TYPE abap_bool.
 
     lv_cond = get_condition_string( is_statement ).
     lv_depth = 0.
     lv_back_idx = iv_idx - 1.
 
     WHILE lv_back_idx >= 1.
-      zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                                          iv_index      = lv_back_idx
-                                                IMPORTING es_statement  = ls_back_stmt
-                                                          ev_found      = lv_found ).
-      IF lv_found = abap_false.
+      ls_back_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+                                                           iv_index      = lv_back_idx ).
+      IF ls_back_stmt-keyword IS INITIAL.
         EXIT.
       ENDIF.
 
@@ -169,21 +163,18 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
     DATA lv_tok_cnt TYPE i.
     DATA lv_tok_idx TYPE i.
     DATA ls_token   TYPE zif_skylint_types=>ty_token.
-    DATA lv_found   TYPE abap_bool.
 
     rv_cond = ''.
-    lv_tok_cnt = lines( is_statement-tokens ).
+    lv_tok_cnt = zcl_skylint_ast_util=>token_count( is_statement ).
     IF lv_tok_cnt < 2.
       RETURN.
     ENDIF.
 
     DO lv_tok_cnt - 1 TIMES.
       lv_tok_idx = sy-index + 1.
-      zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                                                      iv_index     = lv_tok_idx
-                                            IMPORTING es_token     = ls_token
-                                                      ev_found     = lv_found ).
-      IF lv_found = abap_true.
+      ls_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                   iv_index     = lv_tok_idx ).
+      IF ls_token-lexeme IS NOT INITIAL.
         IF rv_cond IS INITIAL.
           rv_cond = to_upper( ls_token-lexeme ).
         ELSE.

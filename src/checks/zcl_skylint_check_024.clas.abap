@@ -42,12 +42,7 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_idx            TYPE i.
     DATA lv_max            TYPE i.
-    DATA lv_idx_then       TYPE i.
-    DATA lv_idx_else       TYPE i.
-    DATA lv_idx_body       TYPE i.
-    DATA lv_idx_endif      TYPE i.
     DATA ls_stmt_if        TYPE zif_skylint_types=>ty_statement.
     DATA ls_stmt_then      TYPE zif_skylint_types=>ty_statement.
     DATA ls_stmt_else      TYPE zif_skylint_types=>ty_statement.
@@ -57,41 +52,24 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
     DATA lv_target_2       TYPE string.
     DATA lv_is_bool_1      TYPE abap_bool.
     DATA lv_is_bool_2      TYPE abap_bool.
-    DATA lv_found_then     TYPE abap_bool.
-    DATA lv_found_else     TYPE abap_bool.
-    DATA lv_found_body     TYPE abap_bool.
-    DATA lv_found_endif    TYPE abap_bool.
 
-    lv_max = lines( is_procedure-statements ).
+    lv_max = zcl_skylint_ast_util=>statement_count( is_procedure-statements ).
 
     LOOP AT is_procedure-statements INTO ls_stmt_if WHERE keyword = 'IF'.
-      lv_idx = sy-tabix.
-      IF lv_idx + 4 > lv_max.
+      IF sy-tabix + 4 > lv_max.
         CONTINUE.
       ENDIF.
 
-      lv_idx_then = lv_idx + 1.
-      lv_idx_else = lv_idx + 2.
-      lv_idx_body = lv_idx + 3.
-      lv_idx_endif = lv_idx + 4.
-      zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                                          iv_index      = lv_idx_then
-                                                IMPORTING es_statement  = ls_stmt_then
-                                                          ev_found      = lv_found_then ).
-      zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                                          iv_index      = lv_idx_else
-                                                IMPORTING es_statement  = ls_stmt_else
-                                                          ev_found      = lv_found_else ).
-      zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                                          iv_index      = lv_idx_body
-                                                IMPORTING es_statement  = ls_stmt_else_body
-                                                          ev_found      = lv_found_body ).
-      zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                                          iv_index      = lv_idx_endif
-                                                IMPORTING es_statement  = ls_stmt_endif
-                                                          ev_found      = lv_found_endif ).
-      IF    lv_found_then = abap_false OR lv_found_else  = abap_false
-         OR lv_found_body = abap_false OR lv_found_endif = abap_false.
+      ls_stmt_then = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_procedure-statements
+                                                               iv_current_index = sy-tabix ).
+      ls_stmt_else = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_procedure-statements
+                                                               iv_current_index = sy-tabix + 1 ).
+      ls_stmt_else_body = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_procedure-statements
+                                                                    iv_current_index = sy-tabix + 2 ).
+      ls_stmt_endif = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_procedure-statements
+                                                                iv_current_index = sy-tabix + 3 ).
+      IF    ls_stmt_then-keyword IS INITIAL OR ls_stmt_else-keyword IS INITIAL
+         OR ls_stmt_else_body-keyword IS INITIAL OR ls_stmt_endif-keyword IS INITIAL.
         CONTINUE.
       ENDIF.
 
@@ -118,30 +96,22 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
     DATA ls_tok_target TYPE zif_skylint_types=>ty_token.
     DATA ls_tok_eq     TYPE zif_skylint_types=>ty_token.
     DATA ls_tok_val    TYPE zif_skylint_types=>ty_token.
-    DATA lv_found1     TYPE abap_bool.
-    DATA lv_found2     TYPE abap_bool.
-    DATA lv_found3     TYPE abap_bool.
 
     ev_is_bool = abap_false.
     CLEAR ev_target.
 
-    IF lines( is_statement-tokens ) <> 3.
+    IF zcl_skylint_ast_util=>token_count( is_statement ) <> 3.
       RETURN.
     ENDIF.
 
-    zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                                                    iv_index     = 1
-                                          IMPORTING es_token     = ls_tok_target
-                                                    ev_found     = lv_found1 ).
-    zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                                                    iv_index     = 2
-                                          IMPORTING es_token     = ls_tok_eq
-                                                    ev_found     = lv_found2 ).
-    zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                                                    iv_index     = 3
-                                          IMPORTING es_token     = ls_tok_val
-                                                    ev_found     = lv_found3 ).
-    IF lv_found1 = abap_false OR lv_found2 = abap_false OR lv_found3 = abap_false.
+    ls_tok_target = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                     iv_index     = 1 ).
+    ls_tok_eq = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                 iv_index     = 2 ).
+    ls_tok_val = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                  iv_index     = 3 ).
+    IF    ls_tok_target-lexeme IS INITIAL OR ls_tok_eq-lexeme IS INITIAL
+       OR ls_tok_val-lexeme IS INITIAL.
       RETURN.
     ENDIF.
 

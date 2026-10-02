@@ -34,7 +34,6 @@ CLASS zcl_skylint_check_070 IMPLEMENTATION.
   METHOD check.
     DATA lv_is_dynamic TYPE abap_bool.
     DATA ls_next       TYPE zif_skylint_types=>ty_token.
-    DATA lv_next_found TYPE abap_bool.
     DATA lv_lexeme     TYPE string.
     DATA lv_next_lex   TYPE string.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
@@ -50,16 +49,13 @@ CLASS zcl_skylint_check_070 IMPLEMENTATION.
           CONTINUE.
         ENDIF.
 
-        zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = <ls_statement>
-                                                        iv_index     = sy-tabix + 1
-                                              IMPORTING es_token     = ls_next
-                                                        ev_found     = lv_next_found ).
-        IF lv_next_found = abap_true.
-          lv_next_lex = ls_next-lexeme.
-          IF lv_next_lex CP '(*' OR lv_next_lex = '('.
-            lv_is_dynamic = abap_true.
-            EXIT.
-          ENDIF.
+        ls_next = zcl_skylint_ast_util=>get_token_after( is_statement   = <ls_statement>
+                                                              iv_lexeme      = lv_lexeme
+                                                              iv_start_index = sy-tabix ).
+        lv_next_lex = ls_next-lexeme.
+        IF lv_next_lex IS NOT INITIAL AND ( lv_next_lex CP '(*' OR lv_next_lex = '(' ).
+          lv_is_dynamic = abap_true.
+          EXIT.
         ENDIF.
       ENDLOOP.
 

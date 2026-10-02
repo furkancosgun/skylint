@@ -68,19 +68,16 @@ CLASS zcl_skylint_check_019 IMPLEMENTATION.
     DATA lv_fwd_idx  TYPE i.
     DATA lv_depth    TYPE i.
     DATA ls_fwd_stmt TYPE zif_skylint_types=>ty_statement.
-    DATA lv_found    TYPE abap_bool.
 
     rv_cnt = 0.
-    lv_total = lines( is_procedure-statements ).
+    lv_total = zcl_skylint_ast_util=>statement_count( is_procedure-statements ).
     lv_depth = 0.
     lv_fwd_idx = iv_start_idx + 1.
 
     WHILE lv_fwd_idx <= lv_total.
-      zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                                          iv_index      = lv_fwd_idx
-                                                IMPORTING es_statement  = ls_fwd_stmt
-                                                          ev_found      = lv_found ).
-      IF lv_found = abap_false.
+      ls_fwd_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+                                                          iv_index      = lv_fwd_idx ).
+      IF ls_fwd_stmt-keyword IS INITIAL.
         EXIT.
       ENDIF.
 

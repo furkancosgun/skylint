@@ -45,7 +45,6 @@ CLASS zcl_skylint_check_047 IMPLEMENTATION.
     DATA lv_max        TYPE i.
     DATA lv_cc         TYPE i.
     DATA ls_first_stmt TYPE zif_skylint_types=>ty_statement.
-    DATA lv_found      TYPE abap_bool.
 
     IF is_procedure-id-kind = zif_skylint_types=>procedure_kinds-class_definition.
       RETURN.
@@ -60,11 +59,9 @@ CLASS zcl_skylint_check_047 IMPLEMENTATION.
     lv_cc = calculate_complexity( is_procedure ).
 
     IF lv_cc > lv_max.
-      zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                                          iv_index      = 1
-                                                IMPORTING es_statement  = ls_first_stmt
-                                                          ev_found      = lv_found ).
-      IF lv_found = abap_true.
+      ls_first_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+                                                           iv_index      = 1 ).
+      IF ls_first_stmt-keyword IS NOT INITIAL.
         report_statement( is_statement    = ls_first_stmt
                           iv_finding_code = c_finding_codes-cyclomatic_complexity ).
       ENDIF.

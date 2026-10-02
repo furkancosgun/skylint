@@ -76,7 +76,6 @@ CLASS zcl_skylint_check_008 IMPLEMENTATION.
     DATA lv_count      TYPE i.
     DATA lv_is_struct  TYPE abap_bool.
     DATA ls_target     TYPE zif_skylint_types=>ty_statement.
-    DATA lv_found_tgt  TYPE abap_bool.
     DATA ls_quickfix   TYPE zif_skylint_types=>ty_quickfix.
     DATA lt_new_code   TYPE zif_skylint_types=>ty_code_lines.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
@@ -108,11 +107,9 @@ CLASS zcl_skylint_check_008 IMPLEMENTATION.
                                               iv_statement_to   = lv_skip_until
                                               it_new_code       = lt_new_code ).
             ENDIF.
-            zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                                                iv_index      = lv_idx + 1
-                                                      IMPORTING es_statement  = ls_target
-                                                                ev_found      = lv_found_tgt ).
-            IF lv_found_tgt = abap_true.
+            ls_target = zcl_skylint_ast_util=>get_next_statement( it_statements     = is_procedure-statements
+                                                                             iv_current_index = lv_idx ).
+            IF ls_target-keyword IS NOT INITIAL.
               report_statement( is_statement    = ls_target
                                 iv_finding_code = c_finding_codes-chained_declaration
                                 is_quickfix     = ls_quickfix ).
@@ -125,18 +122,15 @@ CLASS zcl_skylint_check_008 IMPLEMENTATION.
   METHOD collect_chain_count.
     DATA lv_next_idx TYPE i.
     DATA ls_next     TYPE zif_skylint_types=>ty_statement.
-    DATA lv_found    TYPE abap_bool.
     DATA lv_done     TYPE abap_bool.
 
     rv_count = 1.
     lv_next_idx = iv_start + 1.
     lv_done = abap_false.
     WHILE lv_done = abap_false.
-      zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = it_statements
-                                                          iv_index      = lv_next_idx
-                                                IMPORTING es_statement  = ls_next
-                                                          ev_found      = lv_found ).
-      IF lv_found = abap_false.
+      ls_next = zcl_skylint_ast_util=>get_statement( it_statements = it_statements
+                                                     iv_index      = lv_next_idx ).
+      IF ls_next-keyword IS INITIAL.
         lv_done = abap_true.
       ELSEIF ls_next-keyword <> is_head-keyword.
         lv_done = abap_true.
@@ -176,19 +170,11 @@ CLASS zcl_skylint_check_008 IMPLEMENTATION.
   METHOD is_same_position.
     DATA ls_first_tok  TYPE zif_skylint_types=>ty_token.
     DATA ls_second_tok TYPE zif_skylint_types=>ty_token.
-    DATA lv_found_one  TYPE abap_bool.
-    DATA lv_found_two  TYPE abap_bool.
 
     rv_same = abap_false.
-    zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_first
-                                                    iv_index     = 1
-                                          IMPORTING es_token     = ls_first_tok
-                                                    ev_found     = lv_found_one ).
-    zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_second
-                                                    iv_index     = 1
-                                          IMPORTING es_token     = ls_second_tok
-                                                    ev_found     = lv_found_two ).
-    IF lv_found_one = abap_false OR lv_found_two = abap_false.
+    ls_first_tok = zcl_skylint_ast_util=>get_first_token( is_first ).
+    ls_second_tok = zcl_skylint_ast_util=>get_first_token( is_second ).
+    IF ls_first_tok-lexeme IS INITIAL OR ls_second_tok-lexeme IS INITIAL.
       RETURN.
     ENDIF.
     IF ls_first_tok-position = ls_second_tok-position.

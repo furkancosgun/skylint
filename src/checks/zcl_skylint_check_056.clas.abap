@@ -33,9 +33,9 @@ CLASS zcl_skylint_check_056 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lo_class TYPE REF TO cl_abap_classdescr.
-    DATA ls_meth  TYPE abap_methdescr.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    DATA lo_class     TYPE REF TO cl_abap_classdescr.
+    DATA ls_meth      TYPE abap_methdescr.
+    DATA ls_statement TYPE zif_skylint_types=>ty_statement.
 
     IF is_procedure-id-kind <> zif_skylint_types=>procedure_kinds-class_definition.
       RETURN.
@@ -46,8 +46,9 @@ CLASS zcl_skylint_check_056 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    ASSIGN is_procedure-statements[ 1 ] TO <ls_statement>.
-    IF sy-subrc <> 0.
+    ls_statement = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+                                                        iv_index      = 1 ).
+    IF ls_statement-keyword IS INITIAL.
       RETURN.
     ENDIF.
 
@@ -57,7 +58,7 @@ CLASS zcl_skylint_check_056 IMPLEMENTATION.
          AND ls_meth-name NP 'CAN_*'    AND ls_meth-name NP 'CHECK_*'
          AND ls_meth-name NP 'ARE_*'    AND ls_meth-name NP 'WAS_*'
          AND ls_meth-name NP 'SHOULD_*'.
-        report_statement( is_statement    = <ls_statement>
+        report_statement( is_statement    = ls_statement
                           iv_finding_code = c_finding_codes-bool_method_name ).
       ENDIF.
     ENDLOOP.

@@ -52,44 +52,29 @@ CLASS zcl_skylint_check_017 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_nested_if_mergeable.
-    DATA lv_total       TYPE i.
-    DATA lv_next_idx    TYPE i.
-    DATA lv_fwd_idx     TYPE i.
-    DATA lv_check_idx   TYPE i.
-    DATA lv_depth       TYPE i.
-    DATA ls_next_stmt   TYPE zif_skylint_types=>ty_statement.
-    DATA ls_fwd_stmt    TYPE zif_skylint_types=>ty_statement.
-    DATA ls_outer_end   TYPE zif_skylint_types=>ty_statement.
-    DATA lv_found       TYPE abap_bool.
-    DATA lv_found_fwd   TYPE abap_bool.
-    DATA lv_found_outer TYPE abap_bool.
+    DATA lv_total     TYPE i.
+    DATA lv_fwd_idx   TYPE i.
+    DATA lv_depth     TYPE i.
+    DATA ls_next_stmt TYPE zif_skylint_types=>ty_statement.
+    DATA ls_fwd_stmt  TYPE zif_skylint_types=>ty_statement.
+    DATA ls_outer_end TYPE zif_skylint_types=>ty_statement.
 
     rv_is = abap_false.
-    lv_total = lines( is_procedure-statements ).
-    lv_next_idx = iv_idx + 1.
+    lv_total = zcl_skylint_ast_util=>statement_count( is_procedure-statements ).
 
-    IF lv_next_idx > lv_total.
+    ls_next_stmt = zcl_skylint_ast_util=>get_next_statement( it_statements     = is_procedure-statements
+                                                              iv_current_index = iv_idx ).
+    IF ls_next_stmt-keyword <> 'IF'.
       RETURN.
     ENDIF.
 
-    zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                                        iv_index      = lv_next_idx
-                                              IMPORTING es_statement  = ls_next_stmt
-                                                        ev_found      = lv_found ).
-    IF lv_found = abap_false OR ls_next_stmt-keyword <> 'IF'.
-      RETURN.
-    ENDIF.
-
-    " Find matching ENDIF for inner IF (at lv_next_idx)
     lv_depth = 1.
-    lv_fwd_idx = lv_next_idx + 1.
+    lv_fwd_idx = iv_idx + 2.
 
     WHILE lv_fwd_idx <= lv_total.
-      zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                                          iv_index      = lv_fwd_idx
-                                                IMPORTING es_statement  = ls_fwd_stmt
-                                                          ev_found      = lv_found_fwd ).
-      IF lv_found_fwd = abap_false.
+      ls_fwd_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+                                                          iv_index      = lv_fwd_idx ).
+      IF ls_fwd_stmt-keyword IS INITIAL.
         EXIT.
       ENDIF.
 
@@ -100,17 +85,10 @@ CLASS zcl_skylint_check_017 IMPLEMENTATION.
         WHEN 'ENDIF'.
           lv_depth -= 1.
           IF lv_depth = 0.
-            " We found matching ENDIF for inner IF!
-            " Check if directly following statement is outer ENDIF
-            lv_check_idx = lv_fwd_idx + 1.
-            IF lv_check_idx <= lv_total.
-              zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                                                  iv_index      = lv_check_idx
-                                                        IMPORTING es_statement  = ls_outer_end
-                                                                  ev_found      = lv_found_outer ).
-              IF lv_found_outer = abap_true AND ls_outer_end-keyword = 'ENDIF'.
-                rv_is = abap_true.
-              ENDIF.
+            ls_outer_end = zcl_skylint_ast_util=>get_next_statement( it_statements     = is_procedure-statements
+                                                                      iv_current_index = lv_fwd_idx ).
+            IF ls_outer_end-keyword = 'ENDIF'.
+              rv_is = abap_true.
             ENDIF.
             RETURN.
           ENDIF.

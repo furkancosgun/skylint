@@ -38,7 +38,7 @@ CLASS zcl_skylint_check_057 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    DATA ls_statement TYPE zif_skylint_types=>ty_statement.
     DATA lo_class     TYPE REF TO cl_abap_classdescr.
     DATA lt_supers    TYPE string_table.
     DATA lv_max_depth TYPE i.
@@ -61,12 +61,12 @@ CLASS zcl_skylint_check_057 IMPLEMENTATION.
 
     lt_supers = zcl_skylint_rtti_util=>get_super_classes( is_procedure-id-main_unit-name ).
 
-    IF lines( lt_supers ) > lv_max_depth.
-      ASSIGN is_procedure-statements[ 1 ] TO <ls_statement>.
-      IF sy-subrc = 0.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-deep_inheritance ).
-      ENDIF.
+    ls_statement = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+                                                        iv_index      = 1 ).
+    IF     lines( lt_supers ) > lv_max_depth
+       AND ls_statement-keyword IS NOT INITIAL.
+      report_statement( is_statement    = ls_statement
+                        iv_finding_code = c_finding_codes-deep_inheritance ).
     ENDIF.
   ENDMETHOD.
 ENDCLASS.

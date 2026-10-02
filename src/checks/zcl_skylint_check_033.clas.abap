@@ -64,7 +64,6 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
     lv_block_counter = 0.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      " 1. Update block stack on block openers and closers
       CASE <ls_statement>-keyword.
         WHEN 'IF' OR 'LOOP' OR 'DO' OR 'WHILE' OR 'CASE' OR 'TRY'.
           lv_block_counter += 1.
@@ -83,7 +82,6 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
           ENDIF.
       ENDCASE.
 
-      " 2. Check if statement references any variable outside its defining block
       lv_reported = abap_false.
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
         lv_token_str = to_upper( <ls_token>-lexeme ).
@@ -101,7 +99,6 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
         ENDIF.
       ENDLOOP.
 
-      " 3. Register newly declared variables if inside a block
       IF lines( lt_block_stack ) = 0.
         CONTINUE.
       ENDIF.
@@ -118,7 +115,6 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
   METHOD extract_declared_vars.
     DATA ls_var      TYPE ty_scoped_var.
     DATA ls_tok2     TYPE zif_skylint_types=>ty_token.
-    DATA lv_found2   TYPE abap_bool.
     DATA lv_var_name TYPE string.
     DATA lt_parts    TYPE string_table.
     DATA lv_part     TYPE string.
@@ -128,7 +124,6 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
 
     ls_var-block_id = iv_block_id.
 
-    " 1. Inspect compiler semantic references (definitions)
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
       LOOP AT <ls_token>-references ASSIGNING <ls_ref>
            WHERE     kind = zif_skylint_types=>compiler_reference_kinds-data
@@ -149,7 +144,6 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
         ENDIF.
       ENDLOOP.
 
-      " Semantic token inspection for inline declarations
       lv_lex = to_upper( <ls_token>-lexeme ).
       IF lv_lex CP 'DATA(*)' OR lv_lex CP '@DATA(*)'.
         REPLACE FIRST OCCURRENCE OF '@DATA(' IN lv_lex WITH ''.
@@ -163,13 +157,11 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
       ENDIF.
     ENDLOOP.
 
-    " 2. Explicit DATA / FIELD-SYMBOLS statements inside blocks
     IF is_statement-keyword = 'DATA' OR is_statement-keyword = 'FIELD-SYMBOLS'.
-      zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                                                      iv_index     = 2
-                                            IMPORTING es_token     = ls_tok2
-                                                      ev_found     = lv_found2 ).
-      IF lv_found2 = abap_true AND ls_tok2-lexeme <> 'BEGIN' AND ls_tok2-lexeme <> 'END'.
+      ls_tok2 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                 iv_index     = 2 ).
+      IF    ls_tok2-lexeme IS NOT INITIAL AND ls_tok2-lexeme <> 'BEGIN'
+         AND ls_tok2-lexeme <> 'END'.
         ls_var-name = to_upper( ls_tok2-lexeme ).
         IF NOT line_exists( rt_vars[ name = ls_var-name ] ).
           APPEND ls_var TO rt_vars.
