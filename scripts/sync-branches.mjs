@@ -159,7 +159,7 @@ function main() {
   if (shouldPush) {
     console.log('\n🚀 Pushing synchronized branches to remote origin...');
     for (const t of targets) {
-      run(`git push origin ${t}`);
+      run(`git push --force-with-lease origin ${t}`);
       console.log(`  ✓ Pushed origin/${t}`);
     }
     console.log('\n✨ All branches synchronized and pushed to GitHub!');
