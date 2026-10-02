@@ -131,7 +131,7 @@ function detectQuickFixStatus(checkContent, testclassesContent) {
   const hasQuickFixCall = /quickfix_codes|quickfix_replace|quickfix_insert_before|quickfix_insert_after|quickfix_delete|c_quickfix_codes|io_details/i.test(checkContent);
 
   // 2. Checks if unit test asserts quickfixes enabled
-  const hasQuickFixTest = /quickfixes\s*=\s*abap_true/i.test(testclassesContent);
+  const hasQuickFixTest = /quickfixes\s*=\s*abap_true|assert_quickfix/i.test(testclassesContent);
 
   // 3. Checks if check has explicit quickfix metadata annotation in comment
   const hasQuickFixComment = /quickfix\s*:\s*(ready|true|enabled|yes)/i.test(checkContent);

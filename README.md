@@ -1,18 +1,26 @@
 # ☁️ Skylint
 
-> **Modern, Minimal & Cloud-Native ABAP Linter for SAP BTP & S/4HANA Public Cloud (ATC)**
+> **Modern, Minimal & Universal ABAP Linter for SAP BTP, S/4HANA & Open-ABAP**
 
-**Skylint** is an extensible ABAP Test Cockpit (ATC) check framework tailored specifically for **ABAP Cloud** (Language Version 5 / Steampunk / BTP). It provides a clean, zero-boilerplate base architecture to author, execute, and maintain custom Clean ABAP & Security rules with native QuickFix support.
+**Skylint** is an extensible, high-performance static code analysis framework for ABAP. Built with a **platform-agnostic core architecture**, Skylint decouples check domain logic from proprietary platform interfaces. The core rules operate on a clean, universal Abstract Syntax Tree (AST) model (`zif_skylint_types`), allowing the exact same Clean ABAP & Security rules to run seamlessly across:
+
+- 🌐 **ABAP Cloud (ATC)**: SAP BTP ABAP Environment & S/4HANA Public Cloud (`if_ci_atc_check`).
+- 🏢 **Classic On-Premise (Code Inspector)**: SAP NetWeaver 7.40+ and S/4HANA Private Cloud (`CL_CI_TEST_SCAN`).
+- ⚡ **Open-ABAP / Node.js**: CI/CD pipelines, pre-commit hooks, and local unit test suites without requiring an SAP system.
 
 ---
 
 ## ⚡ Highlights
 
-- **ABAP Cloud Native:** Built upon standard SAP ATC Cloud interfaces (`if_ci_atc_check`, `if_ci_atc_source_code_provider`, `cl_ci_atc_assistant_factory`).
-- **Zero Boilerplate Architecture:** Base class (`zcl_skylint_check_base`) encapsulates all lifecycle, procedural iteration, finding construction, and quickfix delegations. Subclasses only require `constructor` and `check`.
-- **Stateless Static Engine:** High-performance local helpers (`lcl_reporter`, `lcl_quickfix`) handle location extraction, checksum generation, and pseudo-comment resolution without instance or casting overhead.
-- **Enterprise Testing Workflow:** Follows the official SAP ATC testing standard (`cl_ci_atc_unit_driver`), executing checks against dedicated test fixtures in `src/tests/`.
-- **QuickFix Ready:** Built-in helper APIs for code replacement, insertion (`insert_before`, `insert_after`), and statement deletion.
+- **Platform-Agnostic Core (`main`):** Zero external platform dependencies. All types, tokens, statements, findings, and quickfixes are modeled cleanly in `zif_skylint_types`.
+- **Zero Boilerplate Architecture:** Base class (`zcl_skylint_check_base`) encapsulates finding registration, statement/token reporting, attribute resolution, and pseudo-comment filtering. Subclasses only require `constructor` and `check`.
+- **Universal Normalized AST:** Normalized statement streams with unrolled chained statements (`DATA: ...`), implicit assignments tagged as `COMPUTE`, functional method calls tagged as `+CALL_METHOD`, and compiler symbol references attached directly to tokens.
+- **Modern In-Memory Testing:** Lightning-fast unit tests using `zcl_skylint_test_util` (`assert_findings`, `assert_no_findings`, `assert_quickfix`) with inline source snippets.
+- **QuickFix Ready:** Built-in helper API (`quickfix_replace`) for automated code transformations and refactoring.
+- **Multi-Platform Branch Strategy:**
+  - `main`: Platform-agnostic core rules + universal AST engine.
+  - `cloud`: Native SAP ATC Cloud adapter (`if_ci_atc_check` / Language Version 5).
+  - `standard`: Classic SAP Code Inspector adapter (`CL_CI_TEST_SCAN` / NetWeaver 7.40+).
 
 ---
 
@@ -21,25 +29,28 @@
 ```text
 skylint/
 ├── src/
-│   ├── core/                                     # Core infrastructure & Base classes
-│   │   ├── zcl_skylint_check_base.clas.abap     # Abstract Base Check class (if_ci_atc_check)
-│   │   ├── zcl_skylint_check_base.clas.locals_imp.abap # Static reporter & quickfix engines
-│   │   ├── zcl_skylint_check_meta_data.clas.abap# ATC metadata descriptor & pseudo-comment resolver
-│   │   └── zcx_skylint_error.clas.abap          # Core exception class
+│   ├── core/                                     # Platform-Agnostic Core Infrastructure
+│   │   ├── zif_skylint_types.intf.abap           # Universal AST, finding & quickfix type definitions
+│   │   ├── zcl_skylint_check_base.clas.abap      # Universal base check class
+│   │   ├── zcl_skylint_ast_util.clas.abap        # AST & token sequence traversal utility
+│   │   ├── zcl_skylint_rtti_util.clas.abap       # Safe ABAP RTTI inspection utility
+│   │   ├── zcl_skylint_test_util.clas.abap       # Universal AST builder & unit test asserter
+│   │   └── zcx_skylint_error.clas.abap           # Core exception class
 │   │
-│   ├── checks/                                   # 80 Modular ATC Check Implementations (001 - 080)
-│   │   ├── zcl_skylint_check_001.clas.abap      # Check class implementation
-│   │   ├── zcl_skylint_check_001.clas.xml       # abapGit XML metadata (<WITH_UNIT_TESTS>X</WITH_UNIT_TESTS>)
-│   │   └── zcl_skylint_check_001.clas.testclasses.abap # ATC Unit Test Driver assertion
+│   ├── checks/                                   # 79 Modular Check Implementations (001 - 079)
+│   │   ├── zcl_skylint_check_001.clas.abap       # Check class implementation
+│   │   ├── zcl_skylint_check_001.clas.xml        # abapGit XML metadata (<WITH_UNIT_TESTS>X</WITH_UNIT_TESTS>)
+│   │   └── zcl_skylint_check_001.clas.testclasses.abap # Unit test suite (zcl_skylint_test_util)
 │   │
-│   └── tests/                                    # Target Test Fixtures
-│       ├── zcl_skylint_test_001.clas.abap       # Test fixture with positive, negative & suppressed cases
-│       └── zcl_skylint_test_001.clas.xml        # abapGit XML metadata
+│   └── tests/                                    # Target Test Fixtures (Full Class Mocks)
+│       ├── zcl_skylint_test_001.clas.abap        # Test fixture with positive, negative & suppressed cases
+│       └── zcl_skylint_test_001.clas.xml         # abapGit XML metadata
 │
-├── mock/                                         # Open-ABAP Transpiler ATC Test Driver & Asserter Mocks
-│   ├── cl_ci_atc_unit_driver.clas.abap          # Native ATC driver factory mock
-│   └── if_ci_atc_unit_asserter.intf.abap        # Standard ATC Asserter interface mock
 ├── abaplint.json                                 # abaplint validation configuration & rule sets
+└── package.json                                  # Build, transpile, lint, and unit test scripts
+```
+
+---         # abaplint validation configuration & rule sets
 └── package.json                                  # Build, transpile, lint, and unit test scripts
 ```
 
@@ -58,7 +69,7 @@ All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 | **005** | [zcl_skylint_check_005](src/checks/zcl_skylint_check_005.clas.abap) | Avoid self-reference ME-> | `AVOIDME` | `"#EC AVOID_ME"` | ✅ Done | — |
 | **006** | [zcl_skylint_check_006](src/checks/zcl_skylint_check_006.clas.abap) | Omit explicit EXPORTING in method calls | `OMITEXPORT` | `"#EC OMIT_EXPORTING"` | ✅ Done | ⚡ Ready |
 | **007** | [zcl_skylint_check_007](src/checks/zcl_skylint_check_007.clas.abap) | Avoid assignment chaining (a = b = c) | `ASSIGNCHN` | `"#EC ASSIGN_CHAIN"` | ✅ Done | — |
-| **008** | [zcl_skylint_check_008](src/checks/zcl_skylint_check_008.clas.abap) | Avoid chained declarations (DATA:, TYPES:, etc.) | `CHAINDECL` | `"#EC CHAIN_DECL"` | ✅ Done | — |
+| **008** | [zcl_skylint_check_008](src/checks/zcl_skylint_check_008.clas.abap) | Avoid chained declarations (DATA:, TYPES:, etc.) | `CHAINDECL` | `"#EC CHAIN_DECL"` | ✅ Done | ⚡ Ready |
 | **009** | [zcl_skylint_check_009](src/checks/zcl_skylint_check_009.clas.abap) | Prefer string templates over CONCATENATE | `CONCATSTR` | `"#EC PREFER_STR_TMPL"` | ✅ Done | — |
 | **010** | [zcl_skylint_check_010](src/checks/zcl_skylint_check_010.clas.abap) | Avoid direct comparison against boolean literals (abap_true, | `BOOLCOMP` | `"#EC AVOID_BOOL_COMP"` | ✅ Done | — |
 | **011** | [zcl_skylint_check_011](src/checks/zcl_skylint_check_011.clas.abap) | Prefer line_exists( ) over READ TABLE ... TRANSPORTING NO FIELDS | `PREFLINEX` | `"#EC PREFER_LINE_EXISTS"` | ✅ Done | — |
@@ -135,7 +146,7 @@ All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 
 ## 🚀 How to Author a Custom Skylint Check
 
-Authoring an ATC check in Skylint requires just extending `zcl_skylint_check_base`:
+Authoring a check in Skylint requires extending `zcl_skylint_check_base` and implementing two methods:
 
 ### Step 1: Define Check Metadata & Inspection Logic (`src/checks/zcl_skylint_check_002.clas.abap`)
 
@@ -148,7 +159,7 @@ CLASS zcl_skylint_check_002 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_is_not TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFERISNT',
+        prefer_is_not TYPE zif_skylint_types=>ty_finding_code VALUE 'PREFERISNT',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -168,13 +179,13 @@ CLASS zcl_skylint_check_002 IMPLEMENTATION.
       VALUE #( description       = 'Prefer IS NOT over NOT IS'
                remote_enablement = abap_true
                finding_codes     = VALUE #( ( code           = c_finding_codes-prefer_is_not
-                                              severity       = if_ci_atc_check=>finding_severities-warning
+                                              severity       = zif_skylint_types=>severities-warning
                                               text           = 'Use IS NOT instead of NOT ... IS INITIAL'
                                               pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'CHECK'.
@@ -185,82 +196,68 @@ CLASS zcl_skylint_check_002 IMPLEMENTATION.
 ENDCLASS.
 ```
 
-### Step 2: Create Test Fixture (`src/tests/zcl_skylint_test_002.clas.abap`)
+### Step 2: Implement Unit Tests (`src/checks/zcl_skylint_check_002.clas.testclasses.abap`)
 
-```abap
-CLASS zcl_skylint_test_002 DEFINITION
-  PUBLIC FINAL
-  CREATE PUBLIC.
-
-  PUBLIC SECTION.
-    METHODS without_pseudo_comments.
-    METHODS with_pseudo_comments.
-    METHODS valid_code.
-ENDCLASS.
-
-
-CLASS zcl_skylint_test_002 IMPLEMENTATION.
-  METHOD without_pseudo_comments.
-    CHECK 1 = 2.
-  ENDMETHOD.
-
-  METHOD with_pseudo_comments.
-    CHECK 1 = 2. "#EC PREFER_IS_NOT
-  ENDMETHOD.
-
-  METHOD valid_code.
-    IF 1 = 2.
-      RETURN.
-    ENDIF.
-  ENDMETHOD.
-ENDCLASS.
-```
-
-### Step 3: Add ATC Asserter Unit Tests (`src/checks/zcl_skylint_check_002.clas.testclasses.abap`)
+Skylint provides an in-memory test utility (`zcl_skylint_test_util`) that normalizes source code into an AST and asserts expected findings directly:
 
 ```abap
 CLASS ltcl_check_002 DEFINITION FINAL
   FOR TESTING RISK LEVEL HARMLESS DURATION SHORT.
 
   PRIVATE SECTION.
-    CONSTANTS c_test_class TYPE c LENGTH 30 VALUE 'ZCL_SKYLINT_TEST_002'.
-    CONSTANTS:
-      BEGIN OF c_methods,
-        without_pseudo_comments TYPE c LENGTH 30 VALUE 'WITHOUT_PSEUDO_COMMENTS',
-        with_pseudo_comments    TYPE c LENGTH 30 VALUE 'WITH_PSEUDO_COMMENTS',
-      END OF c_methods.
-
-    METHODS execute_test_class FOR TESTING RAISING cx_static_check.
+    METHODS test_finding FOR TESTING RAISING cx_static_check.
+    METHODS test_clean   FOR TESTING RAISING cx_static_check.
 ENDCLASS.
 
 
 CLASS ltcl_check_002 IMPLEMENTATION.
-  METHOD execute_test_class.
-    DATA ls_loc_without_pc TYPE if_ci_atc_check=>ty_location.
-    DATA ls_loc_with_pc    TYPE if_ci_atc_check=>ty_location.
+  METHOD test_finding.
+    zcl_skylint_test_util=>assert_findings(
+        io_check    = NEW zcl_skylint_check_002( )
+        it_source   = VALUE #( ( `CHECK NOT lv_val IS INITIAL.` ) )
+        it_expected = VALUE #( ( line = 2
+                                 code = zcl_skylint_check_002=>c_finding_codes-prefer_is_not ) ) ).
+  ENDMETHOD.
 
-    ls_loc_without_pc = VALUE #(
-      object   = cl_ci_atc_unit_driver=>get_method_object(
-                   VALUE #( class  = c_test_class
-                            method = c_methods-without_pseudo_comments ) )
-      position = VALUE #( line = 2 column = 4 ) ).
-
-    ls_loc_with_pc = VALUE #(
-      object   = cl_ci_atc_unit_driver=>get_method_object(
-                   VALUE #( class  = c_test_class
-                            method = c_methods-with_pseudo_comments ) )
-      position = VALUE #( line = 2 column = 4 ) ).
-
-    cl_ci_atc_unit_driver=>create_asserter( )->check_and_assert(
-        check             = NEW zcl_skylint_check_002( )
-        object            = VALUE #( type = 'CLAS' name = c_test_class )
-        expected_findings = VALUE #( ( code     = zcl_skylint_check_002=>c_finding_codes-prefer_is_not
-                                       location = ls_loc_without_pc )
-                                     ( code     = zcl_skylint_check_002=>c_finding_codes-prefer_is_not
-                                       location = ls_loc_with_pc ) )
-        asserter_config   = VALUE #( quickfixes = abap_false ) ).
+  METHOD test_clean.
+    zcl_skylint_test_util=>assert_no_findings(
+        io_check  = NEW zcl_skylint_check_002( )
+        it_source = VALUE #( ( `CHECK lv_val IS NOT INITIAL.` ) ) ).
   ENDMETHOD.
 ENDCLASS.
+```
+
+### Step 3: Add Native QuickFix Support (Optional)
+
+Checks can register automated QuickFix transformations:
+
+```abap
+" 1. Register QuickFix in constructor:
+super->constructor(
+    VALUE #(
+        ...
+        quickfix_codes = VALUE #(
+            ( code       = c_quickfix_codes-prefer_is_not
+              short_text = 'Replace with IS NOT' ) ) ) ).
+
+" 2. Generate and attach quickfix in check():
+DATA ls_quickfix TYPE zif_skylint_types=>ty_quickfix.
+
+ls_quickfix = quickfix_replace(
+    iv_quickfix_code  = c_quickfix_codes-prefer_is_not
+    iv_statement_from = sy-tabix
+    it_new_code       = VALUE #( ( 'CHECK lv_val IS NOT INITIAL.' ) ) ).
+
+report_statement( is_statement    = <ls_statement>
+                  iv_finding_code = c_finding_codes-prefer_is_not
+                  is_quickfix     = ls_quickfix ).
+
+" 3. Verify transformation in unit tests:
+zcl_skylint_test_util=>assert_quickfix(
+    io_check          = NEW zcl_skylint_check_002( )
+    it_bad_source     = VALUE #( ( `CHECK NOT lv_val IS INITIAL.` ) )
+    it_expected_fixed = VALUE #( ( `CHECK lv_val IS NOT INITIAL.` ) )
+    iv_quickfix_code  = zcl_skylint_check_002=>c_quickfix_codes-prefer_is_not ).
 ```
 
 ---
@@ -269,14 +266,39 @@ ENDCLASS.
 
 | Method | Description |
 |---|---|
-| `report_statement( is_statement, iv_finding_code, ... )` | Reports an ATC finding for a statement with auto location, checksum & pseudo-comment suppression check. |
-| `report_token( is_token, is_statement, iv_finding_code, ... )` | Reports an ATC finding highlighting a specific token position. |
-| `report_finding( is_finding )` | Directly appends a custom `if_ci_atc_check=>ty_finding` structure. |
-| `get_attribute( iv_name, IMPORTING ev_value )` | Safely dereferences and retrieves dynamic ATC check attributes. |
-| `quickfix_replace( ... )` | Constructs a QuickFix context and generates replacement code. |
-| `quickfix_insert_before( ... )` | Inserts new statements before the specified statement index. |
-| `quickfix_insert_after( ... )` | Inserts new statements after the specified statement index. |
-| `quickfix_delete( ... )` | Generates a quickfix to delete a statement. |
+| `report_statement( is_statement, iv_finding_code, is_quickfix )` | Reports a finding for a statement with auto location, line numbers, and pseudo-comment suppression. |
+| `report_token( is_token, is_statement, iv_finding_code, is_quickfix )` | Reports a finding pinpointing a specific token column and length. |
+| `report_finding( is_finding )` | Directly appends a custom `zif_skylint_types=>ty_finding` structure. |
+| `get_attribute( iv_name, IMPORTING ev_value )` | Safely dereferences and retrieves dynamic check configuration attributes. |
+| `quickfix_replace( iv_quickfix_code, iv_statement_from, it_new_code, ... )` | Constructs a standardized QuickFix replacement descriptor. |
+
+---
+
+## 🏛️ Multi-Platform Branch Strategy
+
+Skylint is structured across dedicated branches to maintain a pure, zero-dependency core while delivering first-class integration with all SAP environments:
+
+```
+          ┌──────────────────────────────────────────────┐
+          │               main (Core AST)                │
+          │  • Pure Domain Logic (79 Rules)              │
+          │  • Neutral Types (zif_skylint_types)         │
+          │  • Universal Test Runner (Node.js / CI)      │
+          └──────────────────────┬───────────────────────┘
+                                 │
+                 ┌───────────────┴───────────────┐
+                 ▼                               ▼
+  ┌──────────────────────────────┐ ┌──────────────────────────────┐
+  │         cloud Branch         │ │       standard Branch        │
+  │  • ABAP Cloud Native         │ │  • Classic SAP NetWeaver     │
+  │  • if_ci_atc_check Adapter   │ │  • CL_CI_TEST_SCAN Adapter   │
+  │  • BTP & S/4HANA Public ATC  │ │  • On-Prem Code Inspector    │
+  └──────────────────────────────┘ └──────────────────────────────┘
+```
+
+1. **`main` (Agnostic Core):** Contains all lint rules, AST utilities, and testing drivers with zero external SAP dependencies. Fully transpilable with Open-ABAP for Node.js CI/CD pipelines.
+2. **`cloud` (ABAP Cloud / Steampunk / BTP):** Adapter layer implementing standard SAP ATC Cloud interfaces (`if_ci_atc_check`, `if_ci_atc_source_code_provider`). Maps ATC procedures directly to `zif_skylint_types`.
+3. **`standard` (Classic On-Premise):** Adapter layer integrating with SAP Code Inspector (`CL_CI_TEST_SCAN`, `CL_CI_TEST_ROOT`). Converts classic scan tokens into `zif_skylint_types` for execution in NetWeaver 7.40+.
 
 ---
 
@@ -286,7 +308,7 @@ ENDCLASS.
 # Install dependencies
 npm install
 
-# Run full CI pipeline (abaplint validation + open-abap transpiler AUnit tests)
+# Run full CI pipeline (abaplint validation + open-abap transpiler unit tests)
 npm test
 
 # Run abaplint separately
@@ -300,12 +322,13 @@ npm run unit
 
 ## 📦 Deployment via abapGit
 
-1. Clone or import this repository in your SAP BTP ABAP Environment or S/4HANA Cloud system using **abapGit**.
-2. Activate all objects.
-3. Configure the check classes in your ATC Check Variant (`transaction ATC` or ADT).
+1. For **ABAP Cloud / BTP**: Clone the `cloud` branch via **abapGit** in your BTP ABAP Environment or S/4HANA Cloud system.
+2. For **On-Premise NetWeaver / S/4HANA**: Clone the `standard` branch via **abapGit**.
+3. Activate all objects and add the check classes to your ATC or Code Inspector Check Variant.
 
 ---
 
 ## 📄 License
 
 This project is licensed under the [MIT License](LICENSE).
+
