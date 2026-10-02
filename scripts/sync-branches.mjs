@@ -158,7 +158,13 @@ function syncBranch(target, headInfo) {
   }
 
   // 9. Stage only tracked / valid files (never node_modules)
-  run('git add -A src .abapgit.xml README.md abaplint.json .gitignore .gitattributes LICENSE package.json');
+  const filesToStage = ['src', '.abapgit.xml', 'README.md', 'abaplint.json', '.gitignore', 'package.json'];
+  for (const extra of ['.gitattributes', 'LICENSE', 'AGENTS.md']) {
+    if (fs.existsSync(path.join(rootDir, extra))) {
+      filesToStage.push(extra);
+    }
+  }
+  run(`git add -A ${filesToStage.join(' ')}`);
   
   // Clean untracked garbage if any was leftover
   const status = run('git status --porcelain');
