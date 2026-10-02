@@ -64,8 +64,8 @@ function prepareSnapshot() {
     fs.cpSync(path.join(rootDir, '.abaplint'), path.join(tempSyncDir, '.abaplint'), { recursive: true });
   }
 
-  // Copy common meta files
-  for (const f of ['LICENSE', 'package.json']) {
+  // Copy common meta and config files
+  for (const f of ['.gitignore', '.gitattributes', 'LICENSE', 'package.json']) {
     const srcFile = path.join(rootDir, f);
     if (fs.existsSync(srcFile)) {
       fs.cpSync(srcFile, path.join(tempSyncDir, f));
@@ -75,8 +75,9 @@ function prepareSnapshot() {
 
 function cleanWorkingDirExceptGit() {
   const entries = fs.readdirSync(rootDir);
+  const preserved = new Set(['.git', 'node_modules', '.gitignore']);
   for (const entry of entries) {
-    if (entry === '.git' || entry === 'node_modules') continue;
+    if (preserved.has(entry)) continue;
     fs.rmSync(path.join(rootDir, entry), { recursive: true, force: true });
   }
 }
@@ -103,10 +104,16 @@ function syncBranch(target, headInfo) {
   // Clean current branch tree
   cleanWorkingDirExceptGit();
 
-  // 1. Copy common source tree
+  // 1. Preserve/restore .gitignore
+  const gitignoreFile = path.join(tempSyncDir, '.gitignore');
+  if (fs.existsSync(gitignoreFile)) {
+    fs.cpSync(gitignoreFile, path.join(rootDir, '.gitignore'));
+  }
+
+  // 2. Copy common source tree
   fs.cpSync(path.join(tempSyncDir, 'src'), path.join(rootDir, 'src'), { recursive: true });
 
-  // 2. Copy target adapter into src/adapters/
+  // 3. Copy target adapter into src/adapters/
   const adapterSrc = path.join(tempSyncDir, 'adapters', target, 'src');
   if (fs.existsSync(adapterSrc)) {
     const destAdapters = path.join(rootDir, 'src', 'adapters');
@@ -114,36 +121,35 @@ function syncBranch(target, headInfo) {
     fs.cpSync(adapterSrc, destAdapters, { recursive: true });
   }
 
-  // 3. Copy target .abapgit.xml
+  // 4. Copy target .abapgit.xml
   const targetAbapGit = path.join(tempSyncDir, 'adapters', target, '.abapgit.xml');
   if (fs.existsSync(targetAbapGit)) {
     fs.cpSync(targetAbapGit, path.join(rootDir, '.abapgit.xml'));
   }
 
-  // 4. Copy target README.md
+  // 5. Copy target README.md
   const targetReadme = path.join(tempSyncDir, 'adapters', target, 'README.md');
   if (fs.existsSync(targetReadme)) {
     fs.cpSync(targetReadme, path.join(rootDir, 'README.md'));
   }
 
-  // 5. Copy target linter profile to root abaplint.json
+  // 6. Copy target linter profile to root abaplint.json
   const targetLintProfile = path.join(tempSyncDir, '.abaplint', `abap_${target}.json`);
   if (fs.existsSync(targetLintProfile)) {
-    // Read and adjust file globs for root directory execution
     let lintContent = fs.readFileSync(targetLintProfile, 'utf8');
     lintContent = lintContent.replace(/\/..\//g, '/');
     fs.writeFileSync(path.join(rootDir, 'abaplint.json'), lintContent, 'utf8');
   }
 
-  // 6. Common files
-  for (const f of ['LICENSE', 'package.json']) {
+  // 7. Common files
+  for (const f of ['LICENSE', 'package.json', '.gitattributes']) {
     const srcF = path.join(tempSyncDir, f);
     if (fs.existsSync(srcF)) {
       fs.cpSync(srcF, path.join(rootDir, f));
     }
   }
 
-  // 7. Verify linter on the generated tree
+  // 8. Verify linter on the generated tree
   try {
     run('npx abaplint');
     console.log(`  ✓ Linter validation passed for [${target}]`);
@@ -151,10 +157,12 @@ function syncBranch(target, headInfo) {
     console.warn(`  ⚠ Linter warning/notice during [${target}] validation (proceeding with sync)`);
   }
 
-  // 8. Commit changes
-  run('git add .');
-  const staged = run('git status --porcelain');
-  if (staged.length > 0) {
+  // 9. Stage only tracked / valid files (never node_modules)
+  run('git add -A src .abapgit.xml README.md abaplint.json .gitignore .gitattributes LICENSE package.json');
+  
+  // Clean untracked garbage if any was leftover
+  const status = run('git status --porcelain');
+  if (status.length > 0) {
     const commitMsg = `sync(${target}): mirror core and checks from main (${headInfo.shortSha})\n\nSource-Commit: ${headInfo.sha}\nSubject: ${headInfo.message}`;
     run(`git commit -m "${commitMsg.replace(/"/g, '\\"')}"`);
     console.log(`  ✓ Committed sync changes to [${target}]`);
