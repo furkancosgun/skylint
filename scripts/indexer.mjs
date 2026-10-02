@@ -224,25 +224,6 @@ function generateReadmeCatalog(checks) {
   console.log('✓ README.md catalog generated successfully.');
 }
 
-/**
- * Update create_default method in zcl_skylint_runner with active checks
- */
-function updateRunnerRegistrations(checks) {
-  const runnerPath = path.join(rootDir, 'src', 'core', 'zcl_skylint_runner.clas.abap');
-  if (!fs.existsSync(runnerPath)) return;
-
-  let content = fs.readFileSync(runnerPath, 'utf8');
-  const registrations = checks.map(c => `    ro_runner->register_check( NEW zcl_skylint_check_${c.id}( ) ).`).join('\n');
-  const replacement = `  METHOD create_default.\n    ro_runner = NEW zcl_skylint_runner( ).\n    " Active checks registered by indexer\n${registrations}\n  ENDMETHOD.`;
-
-  const regex = /  METHOD create_default\.[\s\S]*?  ENDMETHOD\./;
-  if (regex.test(content)) {
-    content = content.replace(regex, replacement);
-    fs.writeFileSync(runnerPath, content, 'utf8');
-    console.log('✓ zcl_skylint_runner check registrations updated.');
-  }
-}
-
 function main() {
   console.log('🔍 Checking rules indexing...');
 
@@ -255,10 +236,7 @@ function main() {
   // 3. Re-read discovered checks after renumbering
   checks = discoverChecks();
 
-  // 4. Update runner registrations
-  updateRunnerRegistrations(checks);
-
-  // 5. Generate README catalog
+  // 4. Generate README catalog
   generateReadmeCatalog(checks);
 
   console.log(`\n🎉 Indexer complete! Active checks: ${checks.length}`);

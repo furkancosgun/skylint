@@ -4,8 +4,11 @@
  *
  * Local branch distribution tool for Skylint:
  * Mirrors core checks from `main` to target platform delivery branches:
- *   - `cloud`    -> Core + checks + Native ATC Cloud Adapter (if_ci_atc_check)
- *   - `standard` -> Core + checks + Classic Code Inspector Adapter (CL_CI_TEST_SCAN)
+ *   - `cloud`    -> zcl_skylint_check_base implements if_ci_atc_check (Native ATC Cloud)
+ *   - `standard` -> zcl_skylint_check_base inherits cl_ci_test_scan (Classic Code Inspector)
+ *
+ * Each check rule (ZCL_SKYLINT_CHECK_001..079) is an individual, selectable ATC rule
+ * in SAP Check Variants (SCI / SATC / Eclipse ADT).
  *
  * Uses git worktree for 100% safe, isolated, and atomic branch building
  * without ever switching the active workspace branch.
@@ -59,22 +62,25 @@ function syncBranch(target, headInfo) {
   run(`git worktree add -B ${target} "${worktreeDir}" HEAD`);
 
   try {
-    // 1. Copy target adapter into worktree's src/adapters/
-    const adapterSrc = path.join(rootDir, 'adapters', target, 'src');
-    if (fs.existsSync(adapterSrc)) {
-      const destAdapters = path.join(worktreeDir, 'src', 'adapters');
-      fs.mkdirSync(destAdapters, { recursive: true });
-      fs.cpSync(adapterSrc, destAdapters, { recursive: true });
+    // 1. Swap zcl_skylint_check_base with platform-specific implementation
+    const platformBaseAbap = path.join(rootDir, 'platform', target, 'zcl_skylint_check_base.clas.abap');
+    const platformBaseXml = path.join(rootDir, 'platform', target, 'zcl_skylint_check_base.clas.xml');
+
+    if (fs.existsSync(platformBaseAbap)) {
+      fs.cpSync(platformBaseAbap, path.join(worktreeDir, 'src', 'core', 'zcl_skylint_check_base.clas.abap'));
+    }
+    if (fs.existsSync(platformBaseXml)) {
+      fs.cpSync(platformBaseXml, path.join(worktreeDir, 'src', 'core', 'zcl_skylint_check_base.clas.xml'));
     }
 
     // 2. Copy target .abapgit.xml
-    const targetAbapGit = path.join(rootDir, 'adapters', target, '.abapgit.xml');
+    const targetAbapGit = path.join(rootDir, 'platform', target, '.abapgit.xml');
     if (fs.existsSync(targetAbapGit)) {
       fs.cpSync(targetAbapGit, path.join(worktreeDir, '.abapgit.xml'));
     }
 
     // 3. Copy target README.md
-    const targetReadme = path.join(rootDir, 'adapters', target, 'README.md');
+    const targetReadme = path.join(rootDir, 'platform', target, 'README.md');
     if (fs.existsSync(targetReadme)) {
       fs.cpSync(targetReadme, path.join(worktreeDir, 'README.md'));
     }
@@ -87,10 +93,10 @@ function syncBranch(target, headInfo) {
       fs.writeFileSync(path.join(worktreeDir, 'abaplint.json'), lintContent, 'utf8');
     }
 
-    // 5. Remove adapters/ from the delivery branch
-    const worktreeAdapters = path.join(worktreeDir, 'adapters');
-    if (fs.existsSync(worktreeAdapters)) {
-      fs.rmSync(worktreeAdapters, { recursive: true, force: true });
+    // 5. Remove platform/ from the delivery branch
+    const worktreePlatform = path.join(worktreeDir, 'platform');
+    if (fs.existsSync(worktreePlatform)) {
+      fs.rmSync(worktreePlatform, { recursive: true, force: true });
     }
 
     // 6. Remove .abaplint/ from the delivery branch
@@ -111,7 +117,7 @@ function syncBranch(target, headInfo) {
     run(`git -C "${worktreeDir}" add -A`);
     const status = run(`git -C "${worktreeDir}" status --porcelain`);
     if (status.length > 0) {
-      const commitMsg = `sync(${target}): mirror core and checks from main (${headInfo.shortSha})\n\nSource-Commit: ${headInfo.sha}\nSubject: ${headInfo.message}`;
+      const commitMsg = `sync(${target}): adapt zcl_skylint_check_base and mirror 79 rules from main (${headInfo.shortSha})\n\nSource-Commit: ${headInfo.sha}\nSubject: ${headInfo.message}`;
       run(`git -C "${worktreeDir}" commit -m "${commitMsg.replace(/"/g, '\\"')}"`);
       console.log(`  ✓ Successfully updated branch [${target}]`);
     } else {

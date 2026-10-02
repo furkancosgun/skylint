@@ -3,9 +3,9 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <VSEOCLASS>
-    <CLSNAME>ZCL_SKYLINT_SCI_ADAPTER</CLSNAME>
+    <CLSNAME>ZCL_SKYLINT_CHECK_BASE</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Classic Code Inspector Adapter (CL_CI_TEST_SCAN)</DESCRIPT>
+    <DESCRIPT>skylint: ATC Cloud Check Base Class (if_ci_atc_check)</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>
