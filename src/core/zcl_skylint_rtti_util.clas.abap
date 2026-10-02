@@ -87,12 +87,12 @@ CLASS zcl_skylint_rtti_util IMPLEMENTATION.
 
     lo_super = lo_class.
     WHILE lo_super IS BOUND.
-      CALL METHOD lo_super->get_super_class_type
+      lo_super->get_super_class_type(
         RECEIVING
           p_descr_ref           = lo_super
         EXCEPTIONS
           super_class_not_found = 1
-          OTHERS                = 2.
+          OTHERS                = 2 ).
       IF sy-subrc <> 0 OR lo_super IS NOT BOUND.
         EXIT.
       ENDIF.

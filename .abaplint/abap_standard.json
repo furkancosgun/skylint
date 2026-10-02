@@ -1,0 +1,48 @@
+{
+  "global": {
+    "files": "/../src/**/*.*",
+    "exclude": []
+  },
+  "dependencies": [
+    {
+      "folder": "/../deps/open-abap-core",
+      "files": "/**/*.*"
+    }
+  ],
+  "syntax": {
+    "version": "v750",
+    "errorNamespace": "^(Z|Y|LCL_|TY_|LIF_)"
+  },
+  "rules": {
+    "7bit_ascii": {
+      "severity": "Error"
+    },
+    "begin_end_names": {
+      "severity": "Error"
+    },
+    "check_syntax": {
+      "severity": "Error"
+    },
+    "global_class": {
+      "severity": "Error"
+    },
+    "implement_methods": {
+      "severity": "Error"
+    },
+    "method_implemented_twice": {
+      "severity": "Error"
+    },
+    "parser_error": {
+      "severity": "Error"
+    },
+    "superclass_final": {
+      "severity": "Error"
+    },
+    "unknown_types": {
+      "severity": "Error"
+    },
+    "xml_consistency": {
+      "severity": "Error"
+    }
+  }
+}

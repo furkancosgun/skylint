@@ -19,6 +19,6 @@ CLASS ltcl_check_073 IMPLEMENTATION.
   METHOD test_clean.
     zcl_skylint_test_util=>assert_no_findings(
         io_check  = NEW zcl_skylint_check_073( )
-        it_source = VALUE #( ( `lv_x += 1.` ) ) ).
+        it_source = VALUE #( ( `lv_x = 10.` ) ) ).
   ENDMETHOD.
 ENDCLASS.

@@ -13,14 +13,18 @@
     "fix": "abaplint --fix",
     "clean": "node scripts/clean.mjs",
     "index": "node scripts/indexer.mjs",
-    "deps": "git submodule update --init --recursive"
+    "deps": "git submodule update --init --recursive",
+    "check:cloud": "abaplint .abaplint/abap_cloud.json",
+    "check:standard": "abaplint .abaplint/abap_standard.json",
+    "sync": "node scripts/sync-branches.mjs all",
+    "sync:cloud": "node scripts/sync-branches.mjs cloud",
+    "sync:standard": "node scripts/sync-branches.mjs standard"
   },
   "devDependencies": {
     "abap-kit": "latest",
     "@abaplint/cli": "latest",
     "@abaplint/runtime": "latest",
     "@abaplint/transpiler-cli": "latest",
-    "@abaplint/database-sqlite": "latest",
-    "express": "latest"
+    "@abaplint/database-sqlite": "latest"
   }
 }

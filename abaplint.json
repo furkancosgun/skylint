@@ -2,9 +2,7 @@
   "global": {
     "files": "/src/**/*.*",
     "exclude": [],
-    "noIssues": [
-      "/src/tests/*"
-    ],
+    "noIssues": [],
     "skipGeneratedBOPFInterfaces": false,
     "skipGeneratedFunctionGroups": false,
     "skipGeneratedGatewayClasses": false,
@@ -659,9 +657,7 @@
       ]
     },
     "functional_writing": {
-      "exclude": [
-        "/src/core/zcl_skylint_rtti_util.clas.abap"
-      ],
+      "exclude": [],
       "severity": "Error",
       "ignoreExceptions": true
     },

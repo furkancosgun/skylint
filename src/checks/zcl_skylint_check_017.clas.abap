@@ -80,10 +80,10 @@ CLASS zcl_skylint_check_017 IMPLEMENTATION.
 
       CASE ls_fwd_stmt-keyword.
         WHEN 'IF'.
-          lv_depth += 1.
+          lv_depth = lv_depth + 1.
 
         WHEN 'ENDIF'.
-          lv_depth -= 1.
+          lv_depth = lv_depth - 1.
           IF lv_depth = 0.
             ls_outer_end = zcl_skylint_ast_util=>get_next_statement( it_statements     = is_procedure-statements
                                                                       iv_current_index = lv_fwd_idx ).
@@ -94,7 +94,7 @@ CLASS zcl_skylint_check_017 IMPLEMENTATION.
           ENDIF.
       ENDCASE.
 
-      lv_fwd_idx += 1.
+      lv_fwd_idx = lv_fwd_idx + 1.
     ENDWHILE.
   ENDMETHOD.
 ENDCLASS.

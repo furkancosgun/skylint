@@ -69,11 +69,11 @@ CLASS zcl_skylint_check_042 IMPLEMENTATION.
       LOOP AT ls_meth-parameters INTO ls_param.
         CASE ls_param-parm_kind.
           WHEN cl_abap_objectdescr=>exporting.
-            lv_exp_count += 1.
+            lv_exp_count = lv_exp_count + 1.
           WHEN cl_abap_objectdescr=>changing.
-            lv_chg_count += 1.
+            lv_chg_count = lv_chg_count + 1.
           WHEN cl_abap_objectdescr=>returning.
-            lv_ret_count += 1.
+            lv_ret_count = lv_ret_count + 1.
         ENDCASE.
       ENDLOOP.
 
