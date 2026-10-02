@@ -37,7 +37,7 @@ CLASS zcl_skylint_check_070 IMPLEMENTATION.
     DATA lv_next_found TYPE abap_bool.
     DATA lv_lexeme     TYPE string.
     DATA lv_next_lex   TYPE string.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
     FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>

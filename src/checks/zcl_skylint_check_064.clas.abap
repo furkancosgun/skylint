@@ -18,11 +18,11 @@ CLASS zcl_skylint_check_064 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'CHECK_SUBRC'.
 
     METHODS sets_sy_subrc
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
     METHODS checks_sy_subrc
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
@@ -43,9 +43,9 @@ CLASS zcl_skylint_check_064 IMPLEMENTATION.
   METHOD check.
     DATA lv_idx        TYPE i.
     DATA lv_max        TYPE i.
-    DATA ls_next_stmt  TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_next_stmt  TYPE zif_skylint_types=>ty_statement.
     DATA lv_next_found TYPE abap_bool.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
     lv_max = lines( is_procedure-statements ).
 

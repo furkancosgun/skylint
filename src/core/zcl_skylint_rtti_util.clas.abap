@@ -7,10 +7,6 @@ CLASS zcl_skylint_rtti_util DEFINITION
       IMPORTING iv_class_name        TYPE clike
       RETURNING VALUE(ro_classdescr) TYPE REF TO cl_abap_classdescr.
 
-    CLASS-METHODS describe_interface
-      IMPORTING iv_intf_name        TYPE clike
-      RETURNING VALUE(ro_intfdescr) TYPE REF TO cl_abap_intfdescr.
-
     CLASS-METHODS describe_object
       IMPORTING iv_name            TYPE clike
       RETURNING VALUE(ro_objdescr) TYPE REF TO cl_abap_objectdescr.
@@ -38,8 +34,8 @@ CLASS zcl_skylint_rtti_util DEFINITION
                 ev_is_single  TYPE abap_bool.
 
     CLASS-METHODS has_compiler_reference
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-                iv_kind       TYPE if_ci_atc_source_code_provider=>ty_reference_kind
+      IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
+                iv_kind       TYPE zif_skylint_types=>ty_reference_kind
       RETURNING VALUE(rv_has) TYPE abap_bool.
 
   PRIVATE SECTION.
@@ -76,15 +72,6 @@ CLASS zcl_skylint_rtti_util IMPLEMENTATION.
     lo_obj = describe_object( iv_class_name ).
     IF lo_obj IS BOUND AND lo_obj->kind = cl_abap_typedescr=>kind_class.
       ro_classdescr ?= lo_obj.
-    ENDIF.
-  ENDMETHOD.
-
-  METHOD describe_interface.
-    DATA lo_obj TYPE REF TO cl_abap_objectdescr.
-
-    lo_obj = describe_object( iv_intf_name ).
-    IF lo_obj IS BOUND AND lo_obj->kind = cl_abap_typedescr=>kind_intf.
-      ro_intfdescr ?= lo_obj.
     ENDIF.
   ENDMETHOD.
 
@@ -238,8 +225,8 @@ CLASS zcl_skylint_rtti_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD has_compiler_reference.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_ref>   TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    FIELD-SYMBOLS <ls_token> TYPE zif_skylint_types=>ty_token.
+    FIELD-SYMBOLS <ls_ref>   TYPE zif_skylint_types=>ty_compiler_reference.
 
     rv_has = abap_false.
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.

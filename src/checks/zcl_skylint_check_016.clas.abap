@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_016 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        identical_condition TYPE if_ci_atc_check=>ty_finding_code VALUE 'DUPCOND',
+        identical_condition TYPE zif_skylint_types=>ty_finding_code VALUE 'DUPCOND',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -19,16 +19,16 @@ CLASS zcl_skylint_check_016 DEFINITION
 
     METHODS check_duplicate_elseif
       IMPORTING iv_idx       TYPE i
-                is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
-                is_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure.
+                is_statement TYPE zif_skylint_types=>ty_statement
+                is_procedure TYPE zif_skylint_types=>ty_procedure.
 
     METHODS check_duplicate_when
       IMPORTING iv_idx       TYPE i
-                is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
-                is_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure.
+                is_statement TYPE zif_skylint_types=>ty_statement
+                is_procedure TYPE zif_skylint_types=>ty_procedure.
 
     METHODS get_condition_string
-      IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
+      IMPORTING is_statement   TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_cond) TYPE string.
 
 ENDCLASS.
@@ -40,14 +40,14 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-identical_condition
-                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       severity       = zif_skylint_types=>severities-warning
                                        text           = 'Identical condition in branch; duplicate branch is unreachable'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     DATA lv_idx TYPE i.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_idx = sy-tabix.
@@ -71,7 +71,7 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
     DATA lv_prev_cond TYPE string.
     DATA lv_back_idx  TYPE i.
     DATA lv_depth     TYPE i.
-    DATA ls_back_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_back_stmt TYPE zif_skylint_types=>ty_statement.
     DATA lv_found     TYPE abap_bool.
 
     lv_cond = get_condition_string( is_statement ).
@@ -123,7 +123,7 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
     DATA lv_prev_cond TYPE string.
     DATA lv_back_idx  TYPE i.
     DATA lv_depth     TYPE i.
-    DATA ls_back_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_back_stmt TYPE zif_skylint_types=>ty_statement.
     DATA lv_found     TYPE abap_bool.
 
     lv_cond = get_condition_string( is_statement ).
@@ -168,7 +168,7 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
   METHOD get_condition_string.
     DATA lv_tok_cnt TYPE i.
     DATA lv_tok_idx TYPE i.
-    DATA ls_token   TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_token   TYPE zif_skylint_types=>ty_token.
     DATA lv_found   TYPE abap_bool.
 
     rv_cond = ''.

@@ -33,7 +33,7 @@ CLASS zcl_skylint_check_012 IMPLEMENTATION.
 
   METHOD check.
     DATA lv_loop_depth TYPE i.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
     lv_loop_depth = 0.
 

@@ -36,10 +36,10 @@ CLASS zcl_skylint_check_026 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA ls_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_stmt TYPE zif_skylint_types=>ty_statement.
     DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+    IF is_procedure-id-kind = zif_skylint_types=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 

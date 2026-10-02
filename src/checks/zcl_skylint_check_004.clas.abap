@@ -18,7 +18,7 @@ CLASS zcl_skylint_check_004 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_IS_NOT'.
 
     METHODS has_not_is_pattern
-      IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
+      IMPORTING is_statement      TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_matched) TYPE abap_bool.
 
 ENDCLASS.

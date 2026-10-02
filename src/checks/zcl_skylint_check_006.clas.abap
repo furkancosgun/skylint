@@ -19,7 +19,7 @@ CLASS zcl_skylint_check_006 DEFINITION
 
     CONSTANTS:
       BEGIN OF c_quickfix_codes,
-        omit_exporting TYPE zcl_skylint_check_base=>ty_quickfix_code VALUE 'OMIT_EXP',
+        omit_exporting TYPE zif_skylint_types=>ty_quickfix_code VALUE 'OMIT_EXP',
       END OF c_quickfix_codes.
 ENDCLASS.
 
@@ -30,7 +30,7 @@ CLASS zcl_skylint_check_006 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-omit_exporting
-                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       severity       = zif_skylint_types=>severities-warning
                                        text           = 'Omit explicit EXPORTING keyword in method invocation'
                                        pseudo_comment = c_pseudo_comment ) )
                                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-omit_exporting
@@ -41,9 +41,9 @@ CLASS zcl_skylint_check_006 IMPLEMENTATION.
     DATA lv_stmt_idx   TYPE i.
     DATA lv_tok_idx    TYPE i.
     DATA lt_expected   TYPE zcl_skylint_ast_util=>ty_token_lexemes.
-    DATA lo_details    TYPE if_ci_atc_check=>ty_details.
-    DATA lt_empty_code TYPE if_ci_atc_quickfix=>ty_code.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_quickfix   TYPE zif_skylint_types=>ty_quickfix.
+    DATA lt_empty_code TYPE zif_skylint_types=>ty_code_lines.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
     lt_expected = VALUE #( ( `EXPORTING` ) ).
 
@@ -65,15 +65,14 @@ CLASS zcl_skylint_check_006 IMPLEMENTATION.
       ENDIF.
 
       lv_stmt_idx = sy-tabix.
-      lo_details = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-omit_exporting
-                                     is_procedure_id   = is_procedure-id
-                                     iv_statement_from = lv_stmt_idx
-                                     iv_token_from     = lv_tok_idx
-                                     iv_token_to       = lv_tok_idx
-                                     it_new_code       = lt_empty_code ).
+      ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-omit_exporting
+                                      iv_statement_from = lv_stmt_idx
+                                      iv_token_from     = lv_tok_idx
+                                      iv_token_to       = lv_tok_idx
+                                      it_new_code       = lt_empty_code ).
       report_statement( is_statement    = <ls_statement>
                         iv_finding_code = c_finding_codes-omit_exporting
-                        io_details      = lo_details ).
+                        is_quickfix     = ls_quickfix ).
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

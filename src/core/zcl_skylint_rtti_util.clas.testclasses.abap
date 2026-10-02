@@ -3,7 +3,6 @@ CLASS ltcl_rtti_util DEFINITION FINAL
 
   PRIVATE SECTION.
     METHODS test_describe_class FOR TESTING.
-    METHODS test_describe_interface FOR TESTING.
     METHODS test_describe_object FOR TESTING.
     METHODS test_get_super_classes FOR TESTING.
     METHODS test_is_static_method FOR TESTING.
@@ -24,23 +23,13 @@ CLASS ltcl_rtti_util IMPLEMENTATION.
     cl_abap_unit_assert=>assert_not_bound( lo_class ).
   ENDMETHOD.
 
-  METHOD test_describe_interface.
-    DATA lo_intf TYPE REF TO cl_abap_intfdescr.
-
-    lo_intf = zcl_skylint_rtti_util=>describe_interface( 'IF_CI_ATC_CHECK' ).
-    cl_abap_unit_assert=>assert_bound( lo_intf ).
-
-    lo_intf = zcl_skylint_rtti_util=>describe_interface( 'ZCL_SKYLINT_RTTI_UTIL' ).
-    cl_abap_unit_assert=>assert_not_bound( lo_intf ).
-  ENDMETHOD.
-
   METHOD test_describe_object.
     DATA lo_obj TYPE REF TO cl_abap_objectdescr.
 
     lo_obj = zcl_skylint_rtti_util=>describe_object( 'ZCL_SKYLINT_RTTI_UTIL' ).
     cl_abap_unit_assert=>assert_bound( lo_obj ).
 
-    lo_obj = zcl_skylint_rtti_util=>describe_object( 'IF_CI_ATC_CHECK' ).
+    lo_obj = zcl_skylint_rtti_util=>describe_object( 'ZIF_SKYLINT_TYPES' ).
     cl_abap_unit_assert=>assert_bound( lo_obj ).
 
     lo_obj = zcl_skylint_rtti_util=>describe_object( 'NON_EXISTENT_OBJ' ).
@@ -107,21 +96,21 @@ CLASS ltcl_rtti_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_has_compiler_ref.
-    DATA ls_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_stmt TYPE zif_skylint_types=>ty_statement.
     DATA lv_has  TYPE abap_bool.
 
     ls_stmt = VALUE #( tokens = VALUE #( ( references = VALUE #(
-        ( kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-method ) ) ) ) ).
+        ( kind = zif_skylint_types=>compiler_reference_kinds-method ) ) ) ) ).
 
     lv_has = zcl_skylint_rtti_util=>has_compiler_reference(
         is_statement = ls_stmt
-        iv_kind      = if_ci_atc_source_code_provider=>compiler_reference_kinds-method ).
+        iv_kind      = zif_skylint_types=>compiler_reference_kinds-method ).
     cl_abap_unit_assert=>assert_equals( act = lv_has
                                         exp = abap_true ).
 
     lv_has = zcl_skylint_rtti_util=>has_compiler_reference(
         is_statement = ls_stmt
-        iv_kind      = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
+        iv_kind      = zif_skylint_types=>compiler_reference_kinds-data ).
     cl_abap_unit_assert=>assert_equals( act = lv_has
                                         exp = abap_false ).
   ENDMETHOD.

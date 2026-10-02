@@ -18,7 +18,7 @@ CLASS zcl_skylint_check_024 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_XSDBOOL'.
 
     METHODS is_boolean_assignment
-      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
+      IMPORTING is_statement TYPE zif_skylint_types=>ty_statement
       EXPORTING ev_target    TYPE string
                 ev_is_bool   TYPE abap_bool.
 
@@ -48,11 +48,11 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
     DATA lv_idx_else       TYPE i.
     DATA lv_idx_body       TYPE i.
     DATA lv_idx_endif      TYPE i.
-    DATA ls_stmt_if        TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_stmt_then      TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_stmt_else      TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_stmt_else_body TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_stmt_endif     TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_stmt_if        TYPE zif_skylint_types=>ty_statement.
+    DATA ls_stmt_then      TYPE zif_skylint_types=>ty_statement.
+    DATA ls_stmt_else      TYPE zif_skylint_types=>ty_statement.
+    DATA ls_stmt_else_body TYPE zif_skylint_types=>ty_statement.
+    DATA ls_stmt_endif     TYPE zif_skylint_types=>ty_statement.
     DATA lv_target_1       TYPE string.
     DATA lv_target_2       TYPE string.
     DATA lv_is_bool_1      TYPE abap_bool.

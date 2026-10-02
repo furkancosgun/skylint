@@ -18,7 +18,7 @@ CLASS zcl_skylint_check_044 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'DANGEROUS_STMT'.
 
     METHODS is_dangerous_statement
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
@@ -36,7 +36,7 @@ CLASS zcl_skylint_check_044 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF is_dangerous_statement( <ls_statement> ) = abap_true.

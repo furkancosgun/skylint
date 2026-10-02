@@ -22,7 +22,7 @@ CLASS zcl_skylint_check_036 DEFINITION
       RETURNING VALUE(rv_exempt) TYPE abap_bool.
 
     METHODS is_single_named_param_call
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
                 iv_tok_idx    TYPE i
                 is_ref        TYPE if_ci_atc_source_code_provider=>ty_compiler_reference
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -42,12 +42,12 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA ls_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_statement TYPE zif_skylint_types=>ty_statement.
     DATA ls_token     TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA ls_ref       TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
     DATA lv_tok_idx   TYPE i.
 
-    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+    IF is_procedure-id-kind = zif_skylint_types=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 

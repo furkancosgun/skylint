@@ -19,7 +19,7 @@ CLASS zcl_skylint_check_037 DEFINITION
 
     TYPES:
       BEGIN OF ty_try_block,
-        statement TYPE if_ci_atc_source_code_provider=>ty_statement,
+        statement TYPE zif_skylint_types=>ty_statement,
         has_catch TYPE abap_bool,
       END OF ty_try_block,
       ty_try_blocks TYPE STANDARD TABLE OF ty_try_block WITH EMPTY KEY.
@@ -42,7 +42,7 @@ CLASS zcl_skylint_check_037 IMPLEMENTATION.
     DATA lt_try_stack   TYPE ty_try_blocks.
     DATA ls_try         TYPE ty_try_block.
     DATA lv_stack_lines TYPE i.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
     FIELD-SYMBOLS <ls_top_try>   TYPE ty_try_block.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.

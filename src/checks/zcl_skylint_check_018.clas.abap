@@ -25,7 +25,7 @@ CLASS zcl_skylint_check_018 DEFINITION
       ty_depth_states TYPE STANDARD TABLE OF ty_depth_state WITH EMPTY KEY.
 
     METHODS is_unconditional_jump
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
     METHODS is_depth_unreachable
@@ -55,7 +55,7 @@ CLASS zcl_skylint_check_018 IMPLEMENTATION.
   METHOD check.
     DATA lv_depth  TYPE i.
     DATA lt_states TYPE ty_depth_states.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
     lv_depth = 0.
     set_depth_unreachable( EXPORTING iv_depth  = 0

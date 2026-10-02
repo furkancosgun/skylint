@@ -32,7 +32,7 @@ CLASS zcl_skylint_check_062 IMPLEMENTATION.
 
   METHOD check.
     DATA lv_try_depth TYPE i VALUE 0.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.

@@ -18,7 +18,7 @@ CLASS zcl_skylint_check_043 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'CLASS_EXCEPTIONS'.
 
     METHODS has_classic_exceptions
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
@@ -37,9 +37,9 @@ CLASS zcl_skylint_check_043 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
-    IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+    IF is_procedure-id-kind <> zif_skylint_types=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 

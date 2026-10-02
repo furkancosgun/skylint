@@ -25,7 +25,7 @@ CLASS zcl_skylint_check_033 DEFINITION
     TYPES ty_block_ids TYPE STANDARD TABLE OF i WITH EMPTY KEY.
 
     METHODS extract_declared_vars
-      IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
+      IMPORTING is_statement   TYPE zif_skylint_types=>ty_statement
                 iv_block_id    TYPE i
       RETURNING VALUE(rt_vars) TYPE ty_scoped_vars.
 
@@ -57,7 +57,7 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
     DATA lv_current_block_id TYPE i.
     DATA lv_reported         TYPE abap_bool.
     DATA lv_token_str        TYPE string.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
     FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
     FIELD-SYMBOLS <ls_var>       TYPE ty_scoped_var.
 

@@ -35,7 +35,7 @@ CLASS zcl_skylint_check_069 IMPLEMENTATION.
     DATA ls_tok2        TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_found2      TYPE abap_bool.
     DATA lt_expected    TYPE zcl_skylint_ast_util=>ty_token_lexemes.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
     lt_expected = VALUE #( ( `FOR` ) ( `TESTING` ) ).
 

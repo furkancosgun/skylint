@@ -18,7 +18,7 @@ CLASS zcl_skylint_check_010 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_BOOL_COMP'.
 
     METHODS has_boolean_comparison
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_has) TYPE abap_bool.
 
     METHODS is_boolean_literal
@@ -41,7 +41,7 @@ CLASS zcl_skylint_check_010 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.

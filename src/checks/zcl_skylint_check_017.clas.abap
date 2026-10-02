@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_017 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        nested_if TYPE if_ci_atc_check=>ty_finding_code VALUE 'NESTEDIF',
+        nested_if TYPE zif_skylint_types=>ty_finding_code VALUE 'NESTEDIF',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -19,7 +19,7 @@ CLASS zcl_skylint_check_017 DEFINITION
 
     METHODS is_nested_if_mergeable
       IMPORTING iv_idx       TYPE i
-                is_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure
+                is_procedure TYPE zif_skylint_types=>ty_procedure
       RETURNING VALUE(rv_is) TYPE abap_bool.
 
 ENDCLASS.
@@ -31,14 +31,14 @@ CLASS zcl_skylint_check_017 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-nested_if
-                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       severity       = zif_skylint_types=>severities-warning
                                        text           = 'Nested IF block can be merged with outer IF using AND'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     DATA lv_idx TYPE i.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'IF'.
@@ -57,9 +57,9 @@ CLASS zcl_skylint_check_017 IMPLEMENTATION.
     DATA lv_fwd_idx     TYPE i.
     DATA lv_check_idx   TYPE i.
     DATA lv_depth       TYPE i.
-    DATA ls_next_stmt   TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_fwd_stmt    TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_outer_end   TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_next_stmt   TYPE zif_skylint_types=>ty_statement.
+    DATA ls_fwd_stmt    TYPE zif_skylint_types=>ty_statement.
+    DATA ls_outer_end   TYPE zif_skylint_types=>ty_statement.
     DATA lv_found       TYPE abap_bool.
     DATA lv_found_fwd   TYPE abap_bool.
     DATA lv_found_outer TYPE abap_bool.

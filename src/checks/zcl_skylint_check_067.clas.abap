@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_067 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        no_commit TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_COMMIT',
+        no_commit TYPE zif_skylint_types=>ty_finding_code VALUE 'NO_COMMIT',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -18,7 +18,7 @@ CLASS zcl_skylint_check_067 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_COMMIT_WORK'.
 
     METHODS is_behavior_implementation
-      IMPORTING is_procedure  TYPE if_ci_atc_source_code_provider=>ty_procedure
+      IMPORTING is_procedure  TYPE zif_skylint_types=>ty_procedure
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
@@ -31,13 +31,13 @@ CLASS zcl_skylint_check_067 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-no_commit
-                       severity       = if_ci_atc_check=>finding_severities-warning
+                       severity       = zif_skylint_types=>severities-warning
                        text           = 'Avoid COMMIT/ROLLBACK WORK; transactional control belongs to framework'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
     IF is_behavior_implementation( is_procedure ) = abap_false.
       RETURN.

@@ -76,17 +76,17 @@ ENDCLASS.
 CLASS lcl_parser DEFINITION FINAL.
   PUBLIC SECTION.
     CLASS-METHODS build_statements
-      IMPORTING it_tokens             TYPE lcl_lexer=>ty_tokens
-      RETURNING VALUE(rt_statements)  TYPE if_ci_atc_source_code_provider=>ty_statements.
+      IMPORTING it_tokens            TYPE lcl_lexer=>ty_tokens
+      RETURNING VALUE(rt_statements) TYPE zif_skylint_types=>ty_statements.
 
     CLASS-METHODS has_method
-      IMPORTING it_statements    TYPE if_ci_atc_source_code_provider=>ty_statements
-      RETURNING VALUE(rv_yes)    TYPE abap_bool.
+      IMPORTING it_statements TYPE zif_skylint_types=>ty_statements
+      RETURNING VALUE(rv_yes) TYPE abap_bool.
 
     CLASS-METHODS slice_procedure
-      IMPORTING it_statements          TYPE if_ci_atc_source_code_provider=>ty_statements
-                iv_class_definition    TYPE abap_bool DEFAULT abap_false
-      RETURNING VALUE(rs_procedure)    TYPE if_ci_atc_source_code_provider=>ty_procedure.
+      IMPORTING it_statements       TYPE zif_skylint_types=>ty_statements
+                iv_class_definition TYPE abap_bool DEFAULT abap_false
+      RETURNING VALUE(rs_procedure) TYPE zif_skylint_types=>ty_procedure.
 
   PRIVATE SECTION.
     CLASS-METHODS emit_statement
@@ -95,25 +95,25 @@ CLASS lcl_parser DEFINITION FINAL.
                 it_pseudo     TYPE string_table
                 iv_in_chain   TYPE abap_bool
                 iv_header_kw  TYPE string
-      CHANGING  ct_statements TYPE if_ci_atc_source_code_provider=>ty_statements.
+      CHANGING  ct_statements TYPE zif_skylint_types=>ty_statements.
 
     CLASS-METHODS collect_pseudo
       IMPORTING is_token      TYPE lcl_lexer=>ty_token
-      CHANGING  ct_statements TYPE if_ci_atc_source_code_provider=>ty_statements
+      CHANGING  ct_statements TYPE zif_skylint_types=>ty_statements
                 ct_pending    TYPE string_table.
 
     CLASS-METHODS pseudo_words
-      IMPORTING iv_text          TYPE string
-      RETURNING VALUE(rt_words)  TYPE string_table.
+      IMPORTING iv_text         TYPE string
+      RETURNING VALUE(rt_words) TYPE string_table.
 
     CLASS-METHODS paren_delta
       IMPORTING iv_lexeme       TYPE string
       RETURNING VALUE(rv_delta) TYPE i.
 
     CLASS-METHODS determine_keyword
-      IMPORTING it_tokens        TYPE lcl_lexer=>ty_tokens
-                iv_in_chain      TYPE abap_bool
-                iv_header_kw     TYPE string
+      IMPORTING it_tokens         TYPE lcl_lexer=>ty_tokens
+                iv_in_chain       TYPE abap_bool
+                iv_header_kw      TYPE string
       RETURNING VALUE(rv_keyword) TYPE string.
 
     CLASS-METHODS is_assignment
@@ -125,27 +125,14 @@ CLASS lcl_parser DEFINITION FINAL.
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
     CLASS-METHODS add_refs
-      CHANGING cs_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
-ENDCLASS.
-
-
-CLASS lcl_test_code_provider DEFINITION FINAL.
-  PUBLIC SECTION.
-    INTERFACES if_ci_atc_source_code_provider.
-
-    METHODS set_procedure
-      IMPORTING is_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure.
-
-  PRIVATE SECTION.
-    DATA ms_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure.
-    DATA mv_has_proc  TYPE abap_bool.
+      CHANGING cs_statement TYPE zif_skylint_types=>ty_statement.
 ENDCLASS.
 
 
 CLASS lcl_runner DEFINITION FINAL.
   PUBLIC SECTION.
     CLASS-METHODS join_source
-      IMPORTING iv_source        TYPE string OPTIONAL
+      IMPORTING iv_source        TYPE string       OPTIONAL
                 it_source        TYPE string_table OPTIONAL
       RETURNING VALUE(rv_source) TYPE string.
 
@@ -153,13 +140,13 @@ CLASS lcl_runner DEFINITION FINAL.
       IMPORTING io_check            TYPE REF TO zcl_skylint_check_base
                 iv_source           TYPE string
                 iv_class_definition TYPE abap_bool DEFAULT abap_false
-      RETURNING VALUE(rt_findings)  TYPE if_ci_atc_check=>ty_findings
-      RAISING cx_static_check.
+      RETURNING VALUE(rt_findings)  TYPE zif_skylint_types=>ty_findings
+      RAISING   cx_static_check.
 
     CLASS-METHODS build_procedure
       IMPORTING iv_source           TYPE string
                 iv_class_definition TYPE abap_bool DEFAULT abap_false
-      RETURNING VALUE(rs_procedure) TYPE if_ci_atc_source_code_provider=>ty_procedure.
+      RETURNING VALUE(rs_procedure) TYPE zif_skylint_types=>ty_procedure.
 
     CLASS-METHODS wrap_source
       IMPORTING iv_source           TYPE string
@@ -176,47 +163,48 @@ ENDCLASS.
 CLASS lcl_applier DEFINITION FINAL.
   PUBLIC SECTION.
     CLASS-METHODS apply
-      IMPORTING it_lines         TYPE string_table
-                is_procedure     TYPE if_ci_atc_source_code_provider=>ty_procedure
-                is_recorded      TYPE zcl_skylint_check_base=>ty_recorded_quickfix
-      RETURNING VALUE(rt_lines)  TYPE string_table.
+      IMPORTING it_lines        TYPE string_table
+                is_procedure    TYPE zif_skylint_types=>ty_procedure
+                is_recorded     TYPE zif_skylint_types=>ty_quickfix
+      RETURNING VALUE(rt_lines) TYPE string_table.
 
   PRIVATE SECTION.
     CLASS-METHODS statement_lines
-      IMPORTING is_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure
+      IMPORTING is_procedure TYPE zif_skylint_types=>ty_procedure
                 iv_index     TYPE i
       EXPORTING ev_first     TYPE i
                 ev_last      TYPE i
                 ev_found     TYPE abap_bool.
 
     CLASS-METHODS join_code
-      IMPORTING it_code       TYPE if_ci_atc_quickfix=>ty_code
+      IMPORTING it_code        TYPE zif_skylint_types=>ty_code_lines
       RETURNING VALUE(rv_text) TYPE string.
 
     CLASS-METHODS apply_token_replace
-      IMPORTING it_lines         TYPE string_table
-                is_procedure     TYPE if_ci_atc_source_code_provider=>ty_procedure
-                is_recorded      TYPE zcl_skylint_check_base=>ty_recorded_quickfix
-      RETURNING VALUE(rt_lines)  TYPE string_table.
+      IMPORTING it_lines        TYPE string_table
+                is_procedure    TYPE zif_skylint_types=>ty_procedure
+                is_recorded     TYPE zif_skylint_types=>ty_quickfix
+      RETURNING VALUE(rt_lines) TYPE string_table.
 
     CLASS-METHODS apply_statement_replace
-      IMPORTING it_lines         TYPE string_table
-                is_procedure     TYPE if_ci_atc_source_code_provider=>ty_procedure
-                is_recorded      TYPE zcl_skylint_check_base=>ty_recorded_quickfix
-      RETURNING VALUE(rt_lines)  TYPE string_table.
+      IMPORTING it_lines        TYPE string_table
+                is_procedure    TYPE zif_skylint_types=>ty_procedure
+                is_recorded     TYPE zif_skylint_types=>ty_quickfix
+      RETURNING VALUE(rt_lines) TYPE string_table.
 
     CLASS-METHODS insert_lines
-      IMPORTING it_lines         TYPE string_table
-                iv_at            TYPE i
-                it_code          TYPE if_ci_atc_quickfix=>ty_code
-      RETURNING VALUE(rt_lines)  TYPE string_table.
+      IMPORTING it_lines        TYPE string_table
+                iv_at           TYPE i
+                it_code         TYPE zif_skylint_types=>ty_code_lines
+      RETURNING VALUE(rt_lines) TYPE string_table.
 
     CLASS-METHODS delete_lines
-      IMPORTING it_lines         TYPE string_table
-                iv_from          TYPE i
-                iv_to            TYPE i
-      RETURNING VALUE(rt_lines)  TYPE string_table.
+      IMPORTING it_lines        TYPE string_table
+                iv_from         TYPE i
+                iv_to           TYPE i
+      RETURNING VALUE(rt_lines) TYPE string_table.
 ENDCLASS.
+
 
 
 CLASS lcl_lexer IMPLEMENTATION.
@@ -590,11 +578,11 @@ CLASS lcl_parser IMPLEMENTATION.
   METHOD emit_statement.
     DATA lt_all      TYPE lcl_lexer=>ty_tokens.
     DATA ls_lex      TYPE lcl_lexer=>ty_token.
-    DATA ls_atc      TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_stmt     TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_tok      TYPE zif_skylint_types=>ty_token.
+    DATA ls_stmt     TYPE zif_skylint_types=>ty_statement.
     DATA lv_word     TYPE string.
     DATA lv_col      TYPE i.
-    FIELD-SYMBOLS <ls_t> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_t> TYPE zif_skylint_types=>ty_token.
 
     IF iv_in_chain = abap_true.
       APPEND LINES OF it_prefix TO lt_all.
@@ -606,15 +594,15 @@ CLASS lcl_parser IMPLEMENTATION.
 
     CLEAR ls_stmt.
     LOOP AT lt_all INTO ls_lex.
-      CLEAR ls_atc.
-      ls_atc-lexeme = ls_lex-lexeme.
-      ls_atc-position-line = ls_lex-line.
+      CLEAR ls_tok.
+      ls_tok-lexeme = ls_lex-lexeme.
+      ls_tok-position-line = ls_lex-line.
       lv_col = ls_lex-column.
       IF lv_col > 255.
         lv_col = 255.
       ENDIF.
-      ls_atc-position-column = lv_col.
-      APPEND ls_atc TO ls_stmt-tokens.
+      ls_tok-position-column = lv_col.
+      APPEND ls_tok TO ls_stmt-tokens.
     ENDLOOP.
 
     READ TABLE ls_stmt-tokens ASSIGNING <ls_t> INDEX 1.
@@ -640,7 +628,7 @@ CLASS lcl_parser IMPLEMENTATION.
     DATA lt_words TYPE string_table.
     DATA lv_word  TYPE string.
     DATA lv_idx   TYPE i.
-    FIELD-SYMBOLS <ls_last> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_last> TYPE zif_skylint_types=>ty_statement.
 
     IF is_token-is_pragma = abap_true AND strlen( is_token-lexeme ) > 2.
       lv_word = is_token-lexeme+2.
@@ -847,8 +835,8 @@ CLASS lcl_parser IMPLEMENTATION.
     DATA lv_len  TYPE i.
     DATA lv_off  TYPE i.
     DATA lv_name TYPE string.
-    DATA ls_ref  TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
-    FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_ref  TYPE zif_skylint_types=>ty_compiler_reference.
+    FIELD-SYMBOLS <ls_tok> TYPE zif_skylint_types=>ty_token.
 
     LOOP AT cs_statement-tokens ASSIGNING <ls_tok>.
       lv_up = to_upper( <ls_tok>-lexeme ).
@@ -859,15 +847,15 @@ CLASS lcl_parser IMPLEMENTATION.
           lv_meth = lv_meth(lv_len).
         ENDIF.
         CLEAR ls_ref.
-        ls_ref-kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-type.
+        ls_ref-kind = zif_skylint_types=>compiler_reference_kinds-type.
         ls_ref-full_name = |\\TY:{ lv_cls }|.
-        ls_ref-usage_grade = if_ci_atc_source_code_provider=>usage_grades-direct.
+        ls_ref-usage_grade = zif_skylint_types=>usage_grades-direct.
         INSERT ls_ref INTO TABLE <ls_tok>-references.
         CLEAR ls_ref.
-        ls_ref-kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-method.
+        ls_ref-kind = zif_skylint_types=>compiler_reference_kinds-method.
         ls_ref-full_name = |\\TY:{ lv_cls }\\ME:{ lv_meth }|.
-        ls_ref-usage_grade = if_ci_atc_source_code_provider=>usage_grades-direct.
-        ls_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-read.
+        ls_ref-usage_grade = zif_skylint_types=>usage_grades-direct.
+        ls_ref-usage_mode = zif_skylint_types=>usage_modes-read.
         INSERT ls_ref INTO TABLE <ls_tok>-references.
       ELSEIF lv_up CS '->'.
         SPLIT lv_up AT '->' INTO lv_cls lv_meth.
@@ -876,14 +864,14 @@ CLASS lcl_parser IMPLEMENTATION.
           lv_meth = lv_meth(lv_len).
         ENDIF.
         CLEAR ls_ref.
-        ls_ref-kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-method.
+        ls_ref-kind = zif_skylint_types=>compiler_reference_kinds-method.
         IF lv_cls = 'ME'.
           ls_ref-full_name = |\\TY:ZSKYLINT_TEST\\ME:{ lv_meth }|.
         ELSE.
           ls_ref-full_name = |{ lv_cls }->{ lv_meth }|.
         ENDIF.
-        ls_ref-usage_grade = if_ci_atc_source_code_provider=>usage_grades-direct.
-        ls_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-read.
+        ls_ref-usage_grade = zif_skylint_types=>usage_grades-direct.
+        ls_ref-usage_mode = zif_skylint_types=>usage_modes-read.
         INSERT ls_ref INTO TABLE <ls_tok>-references.
       ENDIF.
 
@@ -909,17 +897,17 @@ CLASS lcl_parser IMPLEMENTATION.
       ENDIF.
       IF lv_name IS NOT INITIAL.
         CLEAR ls_ref.
-        ls_ref-kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
+        ls_ref-kind = zif_skylint_types=>compiler_reference_kinds-data.
         ls_ref-full_name = |\\TY:ZSKYLINT_TEST\\ME:TEST\\DA:{ lv_name }|.
-        ls_ref-usage_grade = if_ci_atc_source_code_provider=>usage_grades-definition.
-        ls_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-definition_with_write.
+        ls_ref-usage_grade = zif_skylint_types=>usage_grades-definition.
+        ls_ref-usage_mode = zif_skylint_types=>usage_modes-definition_with_write.
         INSERT ls_ref INTO TABLE <ls_tok>-references.
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
 
   METHOD has_method.
-    FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_stmt> TYPE zif_skylint_types=>ty_statement.
 
     rv_yes = abap_false.
     LOOP AT it_statements ASSIGNING <ls_stmt> WHERE keyword = 'METHOD'.
@@ -930,18 +918,18 @@ CLASS lcl_parser IMPLEMENTATION.
 
   METHOD slice_procedure.
     DATA lv_started TYPE abap_bool.
-    FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_stmt> TYPE zif_skylint_types=>ty_statement.
 
     CLEAR rs_procedure.
-    rs_procedure-id-main_unit-kind = if_ci_atc_source_code_provider=>compilation_unit_kinds-class.
+    rs_procedure-id-main_unit-kind = zif_skylint_types=>compilation_unit_kinds-class.
     rs_procedure-id-main_unit-name = zcl_skylint_test_util=>c_test_class.
     IF iv_class_definition = abap_true.
-      rs_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      rs_procedure-id-kind = zif_skylint_types=>procedure_kinds-class_definition.
       rs_procedure-id-name = '0'.
       APPEND LINES OF it_statements TO rs_procedure-statements.
       RETURN.
     ENDIF.
-    rs_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-method.
+    rs_procedure-id-kind = zif_skylint_types=>procedure_kinds-method.
     rs_procedure-id-name = |ZSKYLINT_TEST=>TEST|.
 
     LOOP AT it_statements ASSIGNING <ls_stmt>.
@@ -955,43 +943,6 @@ CLASS lcl_parser IMPLEMENTATION.
         RETURN.
       ENDIF.
     ENDLOOP.
-  ENDMETHOD.
-ENDCLASS.
-
-
-CLASS lcl_test_code_provider IMPLEMENTATION.
-  METHOD set_procedure.
-    ms_procedure = is_procedure.
-    mv_has_proc = abap_true.
-  ENDMETHOD.
-
-  METHOD if_ci_atc_source_code_provider~get_procedures.
-    DATA lt_procs TYPE if_ci_atc_source_code_provider=>ty_procedures.
-
-    CREATE DATA procedures.
-    IF mv_has_proc = abap_true.
-      INSERT ms_procedure INTO TABLE lt_procs.
-      procedures->* = lt_procs.
-    ENDIF.
-  ENDMETHOD.
-
-  METHOD if_ci_atc_source_code_provider~object_to_comp_unit.
-    compilation_unit-kind = if_ci_atc_source_code_provider=>compilation_unit_kinds-class.
-    compilation_unit-name = zcl_skylint_test_util=>c_test_class.
-  ENDMETHOD.
-
-  METHOD if_ci_atc_source_code_provider~get_statement_location.
-    location-object-type = 'CLAS'.
-    location-object-name = zcl_skylint_test_util=>c_test_class.
-    location-position = statement-position.
-  ENDMETHOD.
-
-  METHOD if_ci_atc_source_code_provider~get_statement_checksum.
-    checksum = 0.
-  ENDMETHOD.
-
-  METHOD if_ci_atc_source_code_provider~get_called_procedure.
-    CLEAR procedure.
   ENDMETHOD.
 ENDCLASS.
 
@@ -1015,8 +966,8 @@ CLASS lcl_runner IMPLEMENTATION.
 
   METHOD wrap_if_needed.
     DATA lo_lexer TYPE REF TO lcl_lexer.
-    DATA lt_toks   TYPE lcl_lexer=>ty_tokens.
-    DATA lt_stmts  TYPE if_ci_atc_source_code_provider=>ty_statements.
+    DATA lt_toks  TYPE lcl_lexer=>ty_tokens.
+    DATA lt_stmts TYPE zif_skylint_types=>ty_statements.
 
     lo_lexer = NEW #( iv_source ).
     lt_toks = lo_lexer->run( ).
@@ -1030,16 +981,12 @@ CLASS lcl_runner IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD execute.
-    DATA lo_provider TYPE REF TO lcl_test_code_provider.
-    DATA ls_proc     TYPE if_ci_atc_source_code_provider=>ty_procedure.
+    DATA ls_proc TYPE zif_skylint_types=>ty_procedure.
 
     ls_proc = build_procedure( iv_source           = iv_source
                                iv_class_definition = iv_class_definition ).
 
-    lo_provider = NEW #( ).
-    lo_provider->set_procedure( ls_proc ).
-    rt_findings = io_check->run_for_testing( is_procedure     = ls_proc
-                                             io_code_provider = lo_provider ).
+    rt_findings = io_check->run( ls_proc ).
   ENDMETHOD.
 
   METHOD wrap_source.
@@ -1054,7 +1001,7 @@ CLASS lcl_runner IMPLEMENTATION.
     DATA lo_lexer TYPE REF TO lcl_lexer.
     DATA lv_src   TYPE string.
     DATA lt_toks  TYPE lcl_lexer=>ty_tokens.
-    DATA lt_stmts TYPE if_ci_atc_source_code_provider=>ty_statements.
+    DATA lt_stmts TYPE zif_skylint_types=>ty_statements.
 
     lv_src = wrap_source( iv_source           = iv_source
                           iv_class_definition = iv_class_definition ).
@@ -1067,6 +1014,7 @@ CLASS lcl_runner IMPLEMENTATION.
 ENDCLASS.
 
 
+
 CLASS lcl_applier IMPLEMENTATION.
   METHOD apply.
     DATA lv_start TYPE i.
@@ -1075,7 +1023,7 @@ CLASS lcl_applier IMPLEMENTATION.
 
     rt_lines = it_lines.
     CASE is_recorded-kind.
-      WHEN zcl_skylint_check_base=>c_recorded_kinds-replace.
+      WHEN zif_skylint_types=>quickfix_kinds-replace.
         IF is_recorded-token_from > 0.
           rt_lines = apply_token_replace( it_lines     = rt_lines
                                           is_procedure = is_procedure
@@ -1085,7 +1033,7 @@ CLASS lcl_applier IMPLEMENTATION.
                                               is_procedure = is_procedure
                                               is_recorded  = is_recorded ).
         ENDIF.
-      WHEN zcl_skylint_check_base=>c_recorded_kinds-insert_before.
+      WHEN zif_skylint_types=>quickfix_kinds-insert_before.
         statement_lines( EXPORTING is_procedure = is_procedure
                                    iv_index     = is_recorded-statement_from
                          IMPORTING ev_first     = lv_start
@@ -1096,7 +1044,7 @@ CLASS lcl_applier IMPLEMENTATION.
         rt_lines = insert_lines( it_lines = rt_lines
                                 iv_at     = lv_start
                                 it_code   = is_recorded-new_code ).
-      WHEN zcl_skylint_check_base=>c_recorded_kinds-insert_after.
+      WHEN zif_skylint_types=>quickfix_kinds-insert_after.
         statement_lines( EXPORTING is_procedure = is_procedure
                                    iv_index     = is_recorded-statement_from
                          IMPORTING ev_last      = lv_end
@@ -1107,7 +1055,7 @@ CLASS lcl_applier IMPLEMENTATION.
         rt_lines = insert_lines( it_lines = rt_lines
                                 iv_at     = lv_end + 1
                                 it_code   = is_recorded-new_code ).
-      WHEN zcl_skylint_check_base=>c_recorded_kinds-delete.
+      WHEN zif_skylint_types=>quickfix_kinds-delete.
         statement_lines( EXPORTING is_procedure = is_procedure
                                    iv_index     = is_recorded-statement_from
                          IMPORTING ev_first     = lv_start
@@ -1125,10 +1073,10 @@ CLASS lcl_applier IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD apply_token_replace.
-    DATA ls_stmt     TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_stmt     TYPE zif_skylint_types=>ty_statement.
     DATA lv_found    TYPE abap_bool.
-    DATA ls_tok_from TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_tok_to   TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok_from TYPE zif_skylint_types=>ty_token.
+    DATA ls_tok_to   TYPE zif_skylint_types=>ty_token.
     DATA lv_found_from TYPE abap_bool.
     DATA lv_found_to   TYPE abap_bool.
     DATA lv_line     TYPE string.
@@ -1246,8 +1194,8 @@ CLASS lcl_applier IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD statement_lines.
-    DATA ls_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_stmt TYPE zif_skylint_types=>ty_statement.
+    DATA ls_tok  TYPE zif_skylint_types=>ty_token.
 
     CLEAR ev_first.
     CLEAR ev_last.

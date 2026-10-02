@@ -38,12 +38,12 @@ CLASS zcl_skylint_check_057 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
     DATA lo_class     TYPE REF TO cl_abap_classdescr.
     DATA lt_supers    TYPE string_table.
     DATA lv_max_depth TYPE i.
 
-    IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+    IF is_procedure-id-kind <> zif_skylint_types=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 

@@ -34,7 +34,7 @@ CLASS zcl_skylint_check_003 IMPLEMENTATION.
   METHOD check.
     DATA lt_expected TYPE zcl_skylint_ast_util=>ty_token_lexemes.
     DATA lv_matched  TYPE abap_bool.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
     lt_expected = VALUE #( ( `DEFAULT` ) ( `KEY` ) ).
 

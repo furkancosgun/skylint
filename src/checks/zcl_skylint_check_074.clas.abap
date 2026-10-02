@@ -36,13 +36,13 @@ CLASS zcl_skylint_check_074 IMPLEMENTATION.
     DATA lv_max      TYPE i.
     DATA lv_scan_idx TYPE i.
     DATA lv_if_depth TYPE i.
-    DATA ls_first    TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_stmt     TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_after    TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_first    TYPE zif_skylint_types=>ty_statement.
+    DATA ls_stmt     TYPE zif_skylint_types=>ty_statement.
+    DATA ls_after    TYPE zif_skylint_types=>ty_statement.
     DATA lv_has_else TYPE abap_bool.
     DATA lv_found    TYPE abap_bool.
     " TODO: variable is assigned but never used (ABAP cleaner)
-    FIELD-SYMBOLS <ls_loop> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_loop> TYPE zif_skylint_types=>ty_statement.
 
     lv_max = lines( is_procedure-statements ).
 

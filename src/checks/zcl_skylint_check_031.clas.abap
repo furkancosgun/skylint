@@ -18,17 +18,17 @@ CLASS zcl_skylint_check_031 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'FAE_NO_CHECK'.
 
     METHODS extract_fae_table
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_tab) TYPE string.
 
     METHODS has_preceding_check
-      IMPORTING it_statements  TYPE if_ci_atc_source_code_provider=>ty_statements
+      IMPORTING it_statements  TYPE zif_skylint_types=>ty_statements
                 iv_current_idx TYPE i
                 iv_tab_name    TYPE string
       RETURNING VALUE(rv_res)  TYPE abap_bool.
 
     METHODS statement_checks_table
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
                 iv_tab_name   TYPE string
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
@@ -50,7 +50,7 @@ CLASS zcl_skylint_check_031 IMPLEMENTATION.
   METHOD check.
     DATA lv_idx     TYPE i.
     DATA lv_fae_tab TYPE string.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'SELECT'.
@@ -97,7 +97,7 @@ CLASS zcl_skylint_check_031 IMPLEMENTATION.
 
   METHOD has_preceding_check.
     DATA lv_idx   TYPE i.
-    DATA ls_stmt  TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_stmt  TYPE zif_skylint_types=>ty_statement.
     DATA lv_found TYPE abap_bool.
 
     rv_res = abap_false.

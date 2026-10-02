@@ -40,11 +40,11 @@ CLASS zcl_skylint_check_039 IMPLEMENTATION.
   METHOD check.
     DATA lv_max   TYPE i.
     DATA lv_count TYPE i.
-    DATA ls_first TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_first TYPE zif_skylint_types=>ty_statement.
     DATA lv_found TYPE abap_bool.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
-    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+    IF is_procedure-id-kind = zif_skylint_types=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 

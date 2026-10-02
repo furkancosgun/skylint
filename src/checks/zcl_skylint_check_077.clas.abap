@@ -35,8 +35,8 @@ CLASS zcl_skylint_check_077 IMPLEMENTATION.
     DATA lv_uses     TYPE i.
     DATA ls_token    TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_found    TYPE abap_bool.
-    FIELD-SYMBOLS <ls_decl> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_decl> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_stmt> TYPE zif_skylint_types=>ty_statement.
     FIELD-SYMBOLS <ls_tok>  TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_decl>

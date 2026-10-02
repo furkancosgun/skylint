@@ -38,9 +38,9 @@ CLASS zcl_skylint_check_075 IMPLEMENTATION.
     DATA lv_scan_idx  TYPE i.
     DATA lv_if_depth  TYPE i.
     DATA lv_has_else  TYPE abap_bool.
-    DATA ls_first     TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_stmt      TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_after     TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_first     TYPE zif_skylint_types=>ty_statement.
+    DATA ls_stmt      TYPE zif_skylint_types=>ty_statement.
+    DATA ls_after     TYPE zif_skylint_types=>ty_statement.
     DATA lv_found     TYPE abap_bool.
 
     lv_max = lines( is_procedure-statements ).

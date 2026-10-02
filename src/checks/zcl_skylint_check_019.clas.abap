@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_019 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        short_case TYPE if_ci_atc_check=>ty_finding_code VALUE 'SHORTCASE',
+        short_case TYPE zif_skylint_types=>ty_finding_code VALUE 'SHORTCASE',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -18,12 +18,12 @@ CLASS zcl_skylint_check_019 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'SHORT_CASE'.
 
     METHODS is_when_others
-      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
+      IMPORTING is_statement TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_is) TYPE abap_bool.
 
     METHODS count_when_branches
       IMPORTING iv_start_idx  TYPE i
-                is_procedure  TYPE if_ci_atc_source_code_provider=>ty_procedure
+                is_procedure  TYPE zif_skylint_types=>ty_procedure
       RETURNING VALUE(rv_cnt) TYPE i.
 
 ENDCLASS.
@@ -35,7 +35,7 @@ CLASS zcl_skylint_check_019 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-short_case
-                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       severity       = zif_skylint_types=>severities-warning
                                        text           = 'CASE statement has <= 1 WHEN branch; prefer IF'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
@@ -43,7 +43,7 @@ CLASS zcl_skylint_check_019 IMPLEMENTATION.
   METHOD check.
     DATA lv_idx        TYPE i.
     DATA lv_when_count TYPE i.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'CASE'.
@@ -67,7 +67,7 @@ CLASS zcl_skylint_check_019 IMPLEMENTATION.
     DATA lv_total    TYPE i.
     DATA lv_fwd_idx  TYPE i.
     DATA lv_depth    TYPE i.
-    DATA ls_fwd_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_fwd_stmt TYPE zif_skylint_types=>ty_statement.
     DATA lv_found    TYPE abap_bool.
 
     rv_cnt = 0.

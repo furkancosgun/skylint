@@ -38,7 +38,7 @@ CLASS zcl_skylint_check_054 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
     DATA lv_max_stmts  TYPE i.
     DATA lv_stmt_count TYPE i.
 

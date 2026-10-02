@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_025 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        omit_receiving TYPE if_ci_atc_check=>ty_finding_code VALUE 'OMITRECEIV',
+        omit_receiving TYPE zif_skylint_types=>ty_finding_code VALUE 'OMITRECEIV',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -26,7 +26,7 @@ CLASS zcl_skylint_check_025 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-omit_receiving
-                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       severity       = zif_skylint_types=>severities-warning
                                        text           = 'Omit RECEIVING keyword; use functional call or omit parameter'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
@@ -35,14 +35,14 @@ CLASS zcl_skylint_check_025 IMPLEMENTATION.
     DATA lv_has_receiving  TYPE abap_bool.
     DATA lv_has_exceptions TYPE abap_bool.
     DATA lv_is_call        TYPE abap_bool.
-    DATA ls_tok            TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_next_tok       TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok            TYPE zif_skylint_types=>ty_token.
+    DATA ls_next_tok       TYPE zif_skylint_types=>ty_token.
     DATA lv_next_idx       TYPE i.
     " TODO: variable is assigned but never used (ABAP cleaner)
     DATA lv_found          TYPE abap_bool.
     DATA lv_lex            TYPE string.
     DATA lv_next_lex       TYPE string.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF    <ls_statement>-keyword = 'METHODS' OR <ls_statement>-keyword = 'CLASS-METHODS'
@@ -54,7 +54,7 @@ CLASS zcl_skylint_check_025 IMPLEMENTATION.
       IF lv_is_call = abap_false.
         lv_is_call = zcl_skylint_rtti_util=>has_compiler_reference(
                          is_statement = <ls_statement>
-                         iv_kind      = if_ci_atc_source_code_provider=>compiler_reference_kinds-method ).
+                         iv_kind      = zif_skylint_types=>compiler_reference_kinds-method ).
       ENDIF.
 
       IF lv_is_call = abap_false.

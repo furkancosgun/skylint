@@ -37,9 +37,9 @@ CLASS zcl_skylint_check_055 IMPLEMENTATION.
     DATA ls_meth       TYPE abap_methdescr.
     DATA lv_static_cnt TYPE i.
     DATA lv_has_inst   TYPE abap_bool.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
-    IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+    IF is_procedure-id-kind <> zif_skylint_types=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 

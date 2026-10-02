@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_047 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        cyclomatic_complexity TYPE if_ci_atc_check=>ty_finding_code VALUE 'CYCLO_COMP',
+        cyclomatic_complexity TYPE zif_skylint_types=>ty_finding_code VALUE 'CYCLO_COMP',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -20,7 +20,7 @@ CLASS zcl_skylint_check_047 DEFINITION
     DATA mv_max_complexity TYPE i VALUE 5.
 
     METHODS calculate_complexity
-      IMPORTING is_procedure   TYPE if_ci_atc_source_code_provider=>ty_procedure
+      IMPORTING is_procedure   TYPE zif_skylint_types=>ty_procedure
       RETURNING VALUE(rv_comp) TYPE i.
 
 ENDCLASS.
@@ -32,22 +32,22 @@ CLASS zcl_skylint_check_047 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-cyclomatic_complexity
-                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       severity       = zif_skylint_types=>severities-warning
                                        text           = 'Procedure cyclomatic complexity exceeds threshold'
                                        pseudo_comment = c_pseudo_comment ) )
                                  attributes        = VALUE #(
                                      ( name  = 'MAX_COMPLEXITY'
-                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                       kind  = zif_skylint_types=>attribute_kinds-elementary
                                        value = REF #( mv_max_complexity ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     DATA lv_max        TYPE i.
     DATA lv_cc         TYPE i.
-    DATA ls_first_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_first_stmt TYPE zif_skylint_types=>ty_statement.
     DATA lv_found      TYPE abap_bool.
 
-    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+    IF is_procedure-id-kind = zif_skylint_types=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
@@ -72,8 +72,8 @@ CLASS zcl_skylint_check_047 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD calculate_complexity.
-    FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_stmt> TYPE zif_skylint_types=>ty_statement.
+    DATA ls_tok TYPE zif_skylint_types=>ty_token.
     DATA lv_lex TYPE string.
 
     rv_comp = 1.

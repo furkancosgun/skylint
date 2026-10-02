@@ -35,7 +35,7 @@ CLASS zcl_skylint_check_068 IMPLEMENTATION.
     DATA lv_in_loop          TYPE i VALUE 0.
     DATA lv_has_transporting TYPE abap_bool.
     DATA lv_is_itab_modify   TYPE abap_bool.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
     FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.

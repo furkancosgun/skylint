@@ -18,7 +18,7 @@ CLASS zcl_skylint_check_030 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'DB_IN_LOOP'.
 
     METHODS is_direct_db_access
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
@@ -38,7 +38,7 @@ CLASS zcl_skylint_check_030 IMPLEMENTATION.
 
   METHOD check.
     DATA lv_loop_depth TYPE i.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
     lv_loop_depth = 0.
 
