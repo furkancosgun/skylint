@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_073 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        calc_assign TYPE if_ci_atc_check=>ty_finding_code VALUE 'CALC_ASSGN',
+        calc_assign TYPE zif_skylint_types=>ty_finding_code VALUE 'CALC_ASSGN',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -26,7 +26,7 @@ CLASS zcl_skylint_check_073 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-calc_assign
-                       severity       = if_ci_atc_check=>finding_severities-warning
+                       severity       = zif_skylint_types=>severities-warning
                        text           = 'Use calculation assignment operator (+=, -=) or ADD statement replacement'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
@@ -34,8 +34,8 @@ CLASS zcl_skylint_check_073 IMPLEMENTATION.
   METHOD check.
     DATA lv_tok1   TYPE string.
     DATA lv_tok3   TYPE string.
-    DATA ls_tok1   TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_tok3   TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok1   TYPE zif_skylint_types=>ty_token.
+    DATA ls_tok3   TYPE zif_skylint_types=>ty_token.
     DATA lv_found1 TYPE abap_bool.
     DATA lv_found3 TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.

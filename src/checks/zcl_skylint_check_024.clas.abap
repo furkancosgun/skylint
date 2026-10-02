@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_024 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_xsdbool TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFERXSDBOOL',
+        prefer_xsdbool TYPE zif_skylint_types=>ty_finding_code VALUE 'PREFERXSDBOOL',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -36,7 +36,7 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-prefer_xsdbool
-                       severity       = if_ci_atc_check=>finding_severities-warning
+                       severity       = zif_skylint_types=>severities-warning
                        text           = 'Prefer xsdbool( ... ) instead of manual IF-ELSE boolean assignment'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
@@ -115,9 +115,9 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_boolean_assignment.
-    DATA ls_tok_target TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_tok_eq     TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_tok_val    TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok_target TYPE zif_skylint_types=>ty_token.
+    DATA ls_tok_eq     TYPE zif_skylint_types=>ty_token.
+    DATA ls_tok_val    TYPE zif_skylint_types=>ty_token.
     DATA lv_found1     TYPE abap_bool.
     DATA lv_found2     TYPE abap_bool.
     DATA lv_found3     TYPE abap_bool.

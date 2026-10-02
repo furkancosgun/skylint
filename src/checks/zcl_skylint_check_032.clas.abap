@@ -6,8 +6,8 @@ CLASS zcl_skylint_check_032 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        select_star      TYPE if_ci_atc_check=>ty_finding_code VALUE 'SELECTSTAR',
-        select_endselect TYPE if_ci_atc_check=>ty_finding_code VALUE 'ENDSELECT',
+        select_star      TYPE zif_skylint_types=>ty_finding_code VALUE 'SELECTSTAR',
+        select_endselect TYPE zif_skylint_types=>ty_finding_code VALUE 'ENDSELECT',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -30,7 +30,7 @@ CLASS zcl_skylint_check_032 IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Select performance (Avoid SELECT * and SELECT ... ENDSELECT)'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     severity       = if_ci_atc_check=>finding_severities-warning
+                                     severity       = zif_skylint_types=>severities-warning
                                      pseudo_comment = c_pseudo_comment
                                      ( code = c_finding_codes-select_star
                                        text = 'Avoid SELECT *; specify required columns explicitly' )

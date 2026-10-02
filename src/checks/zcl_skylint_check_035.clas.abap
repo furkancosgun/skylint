@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_035 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        fully_typed TYPE if_ci_atc_check=>ty_finding_code VALUE 'FULLYTYPED',
+        fully_typed TYPE zif_skylint_types=>ty_finding_code VALUE 'FULLYTYPED',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -30,7 +30,7 @@ CLASS zcl_skylint_check_035 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-fully_typed
-                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       severity       = zif_skylint_types=>severities-warning
                                        text           = 'Constant declaration should explicitly specify TYPE'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
@@ -48,7 +48,7 @@ CLASS zcl_skylint_check_035 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_untyped_constant.
-    DATA ls_tok      TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok      TYPE zif_skylint_types=>ty_token.
     DATA lv_has_type TYPE abap_bool.
     DATA lv_is_struc TYPE abap_bool.
 

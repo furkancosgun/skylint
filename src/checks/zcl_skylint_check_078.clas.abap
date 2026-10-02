@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_078 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        decl_order TYPE if_ci_atc_check=>ty_finding_code VALUE 'DECL_ORDER',
+        decl_order TYPE zif_skylint_types=>ty_finding_code VALUE 'DECL_ORDER',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -26,7 +26,7 @@ CLASS zcl_skylint_check_078 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-decl_order
-                       severity       = if_ci_atc_check=>finding_severities-warning
+                       severity       = zif_skylint_types=>severities-warning
                        text           = 'Declare local TYPES before CONSTANTS before DATA before FIELD-SYMBOLS'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.

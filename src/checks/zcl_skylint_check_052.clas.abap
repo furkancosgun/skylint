@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_052 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        obsolete_loop_control TYPE if_ci_atc_check=>ty_finding_code VALUE 'OBS_L_CTRL',
+        obsolete_loop_control TYPE zif_skylint_types=>ty_finding_code VALUE 'OBS_L_CTRL',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -27,7 +27,7 @@ CLASS zcl_skylint_check_052 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-obsolete_loop_control
-                       severity       = if_ci_atc_check=>finding_severities-warning
+                       severity       = zif_skylint_types=>severities-warning
                        text           = 'Avoid obsolete control statements in LOOP; use modern grouping'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.

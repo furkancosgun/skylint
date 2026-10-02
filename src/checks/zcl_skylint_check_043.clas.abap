@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_043 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        class_based_exceptions TYPE if_ci_atc_check=>ty_finding_code VALUE 'CLASS_EXC',
+        class_based_exceptions TYPE zif_skylint_types=>ty_finding_code VALUE 'CLASS_EXC',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -31,7 +31,7 @@ CLASS zcl_skylint_check_043 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-class_based_exceptions
-                       severity       = if_ci_atc_check=>finding_severities-warning
+                       severity       = zif_skylint_types=>severities-warning
                        text           = 'Prefer class-based exceptions (RAISING) over classic EXCEPTIONS'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
@@ -53,7 +53,7 @@ CLASS zcl_skylint_check_043 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD has_classic_exceptions.
-    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok TYPE zif_skylint_types=>ty_token.
 
     rv_res = abap_false.
 

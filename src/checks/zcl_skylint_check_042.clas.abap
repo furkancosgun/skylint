@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_042 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_returning TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFER_RET',
+        prefer_returning TYPE zif_skylint_types=>ty_finding_code VALUE 'PREFER_RET',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -27,7 +27,7 @@ CLASS zcl_skylint_check_042 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-prefer_returning
-                       severity       = if_ci_atc_check=>finding_severities-warning
+                       severity       = zif_skylint_types=>severities-warning
                        text           = 'Prefer functional RETURNING parameter over single EXPORTING parameter'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.

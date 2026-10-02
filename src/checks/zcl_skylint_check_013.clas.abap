@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_013 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        check_in_loop TYPE if_ci_atc_check=>ty_finding_code VALUE 'CHKINLOOP',
+        check_in_loop TYPE zif_skylint_types=>ty_finding_code VALUE 'CHKINLOOP',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -26,7 +26,7 @@ CLASS zcl_skylint_check_013 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-check_in_loop
-                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       severity       = zif_skylint_types=>severities-warning
                                        text           = 'Avoid CHECK inside loop; use IF ... CONTINUE instead'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.

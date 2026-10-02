@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_069 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        test_name TYPE if_ci_atc_check=>ty_finding_code VALUE 'TEST_NAME',
+        test_name TYPE zif_skylint_types=>ty_finding_code VALUE 'TEST_NAME',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -25,14 +25,14 @@ CLASS zcl_skylint_check_069 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-test_name
-                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       severity       = zif_skylint_types=>severities-warning
                                        text           = 'Test methods should start with TEST_ or SHOULD_'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     DATA lv_method_name TYPE string.
-    DATA ls_tok2        TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok2        TYPE zif_skylint_types=>ty_token.
     DATA lv_found2      TYPE abap_bool.
     DATA lt_expected    TYPE zcl_skylint_ast_util=>ty_token_lexemes.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.

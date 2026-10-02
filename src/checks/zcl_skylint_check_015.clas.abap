@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_015 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        empty_catch TYPE if_ci_atc_check=>ty_finding_code VALUE 'EMPTYCATCH',
+        empty_catch TYPE zif_skylint_types=>ty_finding_code VALUE 'EMPTYCATCH',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -31,7 +31,7 @@ CLASS zcl_skylint_check_015 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-empty_catch
-                       severity       = if_ci_atc_check=>finding_severities-warning
+                       severity       = zif_skylint_types=>severities-warning
                        text           = 'Empty CATCH block swallowing exception; handle, log or re-raise'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.

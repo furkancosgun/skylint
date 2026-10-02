@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_048 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        class_not_final TYPE if_ci_atc_check=>ty_finding_code VALUE 'NOT_FINAL',
+        class_not_final TYPE zif_skylint_types=>ty_finding_code VALUE 'NOT_FINAL',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -31,7 +31,7 @@ CLASS zcl_skylint_check_048 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-class_not_final
-                       severity       = if_ci_atc_check=>finding_severities-warning
+                       severity       = zif_skylint_types=>severities-warning
                        text           = 'Classes should be marked FINAL by default unless designed for inheritance'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
@@ -53,7 +53,7 @@ CLASS zcl_skylint_check_048 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_class_missing_final.
-    DATA ls_tok         TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok         TYPE zif_skylint_types=>ty_token.
     DATA lv_lex         TYPE string.
     DATA lv_is_def      TYPE abap_bool.
     DATA lv_is_final    TYPE abap_bool.

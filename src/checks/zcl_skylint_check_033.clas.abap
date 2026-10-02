@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_033 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        scope_leak TYPE if_ci_atc_check=>ty_finding_code VALUE 'SCOPELEAK',
+        scope_leak TYPE zif_skylint_types=>ty_finding_code VALUE 'SCOPELEAK',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -44,7 +44,7 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-scope_leak
-                       severity       = if_ci_atc_check=>finding_severities-warning
+                       severity       = zif_skylint_types=>severities-warning
                        text           = 'Variable declared in inner block is referenced outside its scope'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
@@ -58,7 +58,7 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
     DATA lv_reported         TYPE abap_bool.
     DATA lv_token_str        TYPE string.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_token>     TYPE zif_skylint_types=>ty_token.
     FIELD-SYMBOLS <ls_var>       TYPE ty_scoped_var.
 
     lv_block_counter = 0.
@@ -117,23 +117,23 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
 
   METHOD extract_declared_vars.
     DATA ls_var      TYPE ty_scoped_var.
-    DATA ls_tok2     TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok2     TYPE zif_skylint_types=>ty_token.
     DATA lv_found2   TYPE abap_bool.
     DATA lv_var_name TYPE string.
     DATA lt_parts    TYPE string_table.
     DATA lv_part     TYPE string.
     DATA lv_lex      TYPE string.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_ref>   TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    FIELD-SYMBOLS <ls_token> TYPE zif_skylint_types=>ty_token.
+    FIELD-SYMBOLS <ls_ref>   TYPE zif_skylint_types=>ty_compiler_reference.
 
     ls_var-block_id = iv_block_id.
 
     " 1. Inspect compiler semantic references (definitions)
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
       LOOP AT <ls_token>-references ASSIGNING <ls_ref>
-           WHERE     kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-                 AND (    usage_grade = if_ci_atc_source_code_provider=>usage_grades-definition
-                       OR usage_mode  = if_ci_atc_source_code_provider=>usage_modes-definition_with_write ).
+           WHERE     kind = zif_skylint_types=>compiler_reference_kinds-data
+                 AND (    usage_grade = zif_skylint_types=>usage_grades-definition
+                       OR usage_mode  = zif_skylint_types=>usage_modes-definition_with_write ).
         lv_var_name = ''.
         IF <ls_ref>-full_name CS '\DA:'.
           SPLIT <ls_ref>-full_name AT '\' INTO TABLE lt_parts.

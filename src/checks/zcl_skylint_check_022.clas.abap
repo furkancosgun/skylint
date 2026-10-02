@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_022 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_new TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFERNEW',
+        prefer_new TYPE zif_skylint_types=>ty_finding_code VALUE 'PREFERNEW',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -30,7 +30,7 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-prefer_new
-                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       severity       = zif_skylint_types=>severities-warning
                                        text           = 'Prefer NEW #( ) expression over CREATE OBJECT'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
@@ -48,7 +48,7 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_static_create_object.
-    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok TYPE zif_skylint_types=>ty_token.
     DATA lv_idx TYPE i.
     DATA lv_tok TYPE string.
 

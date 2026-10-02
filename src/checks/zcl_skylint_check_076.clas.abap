@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_076 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prod_assert TYPE if_ci_atc_check=>ty_finding_code VALUE 'PROD_ASSRT',
+        prod_assert TYPE zif_skylint_types=>ty_finding_code VALUE 'PROD_ASSRT',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -26,7 +26,7 @@ CLASS zcl_skylint_check_076 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-prod_assert
-                       severity       = if_ci_atc_check=>finding_severities-warning
+                       severity       = zif_skylint_types=>severities-warning
                        text           = 'Avoid native ASSERT in production logic; raise an exception instead'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.

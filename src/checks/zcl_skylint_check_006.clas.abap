@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_006 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        omit_exporting TYPE if_ci_atc_check=>ty_finding_code VALUE 'OMITEXPORT',
+        omit_exporting TYPE zif_skylint_types=>ty_finding_code VALUE 'OMITEXPORT',
       END OF c_finding_codes.
 
     METHODS constructor.

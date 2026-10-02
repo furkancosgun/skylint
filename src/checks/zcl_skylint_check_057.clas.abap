@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_057 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        deep_inheritance TYPE if_ci_atc_check=>ty_finding_code VALUE 'DEEP_INHRT',
+        deep_inheritance TYPE zif_skylint_types=>ty_finding_code VALUE 'DEEP_INHRT',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -29,11 +29,11 @@ CLASS zcl_skylint_check_057 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-deep_inheritance
-                       severity       = if_ci_atc_check=>finding_severities-warning
+                       severity       = zif_skylint_types=>severities-warning
                        text           = 'Avoid deep class inheritance; prefer composition over inheritance'
                        pseudo_comment = c_pseudo_comment ) )
                  attributes        = VALUE #( ( name  = 'MAX_DEPTH'
-                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                                kind  = zif_skylint_types=>attribute_kinds-elementary
                                                 value = REF #( mv_max_depth ) ) ) ) ).
   ENDMETHOD.
 

@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_049 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        raise_shortdump TYPE if_ci_atc_check=>ty_finding_code VALUE 'SHORTDUMP',
+        raise_shortdump TYPE zif_skylint_types=>ty_finding_code VALUE 'SHORTDUMP',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -30,7 +30,7 @@ CLASS zcl_skylint_check_049 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-raise_shortdump
-                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       severity       = zif_skylint_types=>severities-warning
                                        text           = 'Avoid RAISE SHORTDUMP; prefer graceful class-based exceptions'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.

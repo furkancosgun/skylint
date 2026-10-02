@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_056 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        bool_method_name TYPE if_ci_atc_check=>ty_finding_code VALUE 'BOOL_NAME',
+        bool_method_name TYPE zif_skylint_types=>ty_finding_code VALUE 'BOOL_NAME',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -27,7 +27,7 @@ CLASS zcl_skylint_check_056 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-bool_method_name
-                       severity       = if_ci_atc_check=>finding_severities-warning
+                       severity       = zif_skylint_types=>severities-warning
                        text           = 'Boolean-returning method should use predicate name (IS_, HAS_, CAN_)'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.

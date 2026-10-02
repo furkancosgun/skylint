@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_027 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        public_attribute TYPE if_ci_atc_check=>ty_finding_code VALUE 'NOPUBATTR',
+        public_attribute TYPE zif_skylint_types=>ty_finding_code VALUE 'NOPUBATTR',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -26,7 +26,7 @@ CLASS zcl_skylint_check_027 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-public_attribute
-                       severity       = if_ci_atc_check=>finding_severities-warning
+                       severity       = zif_skylint_types=>severities-warning
                        text           = 'Avoid public attributes; use private/protected with getters or READ-ONLY'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.

@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_010 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        bool_comparison TYPE if_ci_atc_check=>ty_finding_code VALUE 'BOOLCOMP',
+        bool_comparison TYPE zif_skylint_types=>ty_finding_code VALUE 'BOOLCOMP',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -35,7 +35,7 @@ CLASS zcl_skylint_check_010 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-bool_comparison
-                       severity       = if_ci_atc_check=>finding_severities-warning
+                       severity       = zif_skylint_types=>severities-warning
                        text           = 'Avoid boolean comparison; use IF bool or IF NOT bool directly'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
@@ -58,8 +58,8 @@ CLASS zcl_skylint_check_010 IMPLEMENTATION.
     DATA lv_tok_idx   TYPE i.
     DATA lv_prev_idx  TYPE i.
     DATA lv_next_idx  TYPE i.
-    DATA ls_token     TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_adj_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_token     TYPE zif_skylint_types=>ty_token.
+    DATA ls_adj_token TYPE zif_skylint_types=>ty_token.
     DATA lv_found_adj TYPE abap_bool.
     DATA lv_lexeme    TYPE string.
 

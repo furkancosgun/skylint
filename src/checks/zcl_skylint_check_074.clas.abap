@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_074 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        guard_loop TYPE if_ci_atc_check=>ty_finding_code VALUE 'GUARD_LOOP',
+        guard_loop TYPE zif_skylint_types=>ty_finding_code VALUE 'GUARD_LOOP',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -26,7 +26,7 @@ CLASS zcl_skylint_check_074 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-guard_loop
-                       severity       = if_ci_atc_check=>finding_severities-warning
+                       severity       = zif_skylint_types=>severities-warning
                        text           = 'Invert IF condition and use CONTINUE to reduce nesting in loop'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.

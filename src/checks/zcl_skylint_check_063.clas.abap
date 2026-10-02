@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_063 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        raise_sys TYPE if_ci_atc_check=>ty_finding_code VALUE 'RAISE_SYS',
+        raise_sys TYPE zif_skylint_types=>ty_finding_code VALUE 'RAISE_SYS',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -26,15 +26,15 @@ CLASS zcl_skylint_check_063 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-raise_sys
-                       severity       = if_ci_atc_check=>finding_severities-warning
+                       severity       = zif_skylint_types=>severities-warning
                        text           = 'Avoid raising SAP internal system exceptions; use application exceptions'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_ref>       TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    FIELD-SYMBOLS <ls_token>     TYPE zif_skylint_types=>ty_token.
+    FIELD-SYMBOLS <ls_ref>       TYPE zif_skylint_types=>ty_compiler_reference.
     DATA lv_is_raise   TYPE abap_bool.
     DATA lv_is_sys_exc TYPE abap_bool.
 
@@ -61,7 +61,7 @@ CLASS zcl_skylint_check_063 IMPLEMENTATION.
         " 2. Compiler semantic references (type reference to CX_SY_*)
         IF lv_is_sys_exc = abap_false.
           LOOP AT <ls_token>-references ASSIGNING <ls_ref>
-               WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-type.
+               WHERE kind = zif_skylint_types=>compiler_reference_kinds-type.
             IF to_upper( <ls_ref>-full_name ) CS 'CX_SY_'.
               lv_is_sys_exc = abap_true.
               EXIT.

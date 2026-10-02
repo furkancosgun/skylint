@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_009 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_template TYPE if_ci_atc_check=>ty_finding_code VALUE 'CONCATSTR',
+        prefer_template TYPE zif_skylint_types=>ty_finding_code VALUE 'CONCATSTR',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -32,12 +32,12 @@ CLASS zcl_skylint_check_009 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-prefer_template
-                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       severity       = zif_skylint_types=>severities-warning
                                        text           = 'Use string template |...| instead of CONCATENATE'
                                        pseudo_comment = c_pseudo_comment ) )
                                  attributes        = VALUE #(
                                      ( name  = 'ALLOW_IN_BYTE_MODE'
-                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                       kind  = zif_skylint_types=>attribute_kinds-boolean
                                        value = REF #( mv_allow_in_byte_mode ) ) ) ) ).
   ENDMETHOD.
 

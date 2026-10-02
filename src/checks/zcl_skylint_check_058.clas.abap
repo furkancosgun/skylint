@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_058 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        attribute_count TYPE if_ci_atc_check=>ty_finding_code VALUE 'ATTR_COUNT',
+        attribute_count TYPE zif_skylint_types=>ty_finding_code VALUE 'ATTR_COUNT',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -29,11 +29,11 @@ CLASS zcl_skylint_check_058 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-attribute_count
-                       severity       = if_ci_atc_check=>finding_severities-warning
+                       severity       = zif_skylint_types=>severities-warning
                        text           = 'Class has too many member attributes; split into cohesive components'
                        pseudo_comment = c_pseudo_comment ) )
                  attributes        = VALUE #( ( name  = 'MAX_ATTRIBUTES'
-                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                                kind  = zif_skylint_types=>attribute_kinds-elementary
                                                 value = REF #( mv_max_attributes ) ) ) ) ).
   ENDMETHOD.
 

@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_023 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        raise_exception_new TYPE if_ci_atc_check=>ty_finding_code VALUE 'RAISEEXCNEW',
+        raise_exception_new TYPE zif_skylint_types=>ty_finding_code VALUE 'RAISEEXCNEW',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -31,7 +31,7 @@ CLASS zcl_skylint_check_023 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-raise_exception_new
-                       severity       = if_ci_atc_check=>finding_severities-warning
+                       severity       = zif_skylint_types=>severities-warning
                        text           = 'Prefer RAISE EXCEPTION NEW cx_name( ) over RAISE EXCEPTION TYPE'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.

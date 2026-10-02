@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_026 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        static_call_via_instance TYPE if_ci_atc_check=>ty_finding_code VALUE 'STATICVIAINST',
+        static_call_via_instance TYPE zif_skylint_types=>ty_finding_code VALUE 'STATICVIAINST',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -18,7 +18,7 @@ CLASS zcl_skylint_check_026 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'STATIC_CALL'.
 
     METHODS is_static_call
-      IMPORTING is_token      TYPE if_ci_atc_source_code_provider=>ty_token
+      IMPORTING is_token      TYPE zif_skylint_types=>ty_token
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
@@ -30,14 +30,14 @@ CLASS zcl_skylint_check_026 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-static_call_via_instance
-                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       severity       = zif_skylint_types=>severities-warning
                                        text           = 'Call static method using => instead of ->'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     DATA ls_stmt TYPE zif_skylint_types=>ty_statement.
-    DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok  TYPE zif_skylint_types=>ty_token.
 
     IF is_procedure-id-kind = zif_skylint_types=>procedure_kinds-class_definition.
       RETURN.
@@ -55,7 +55,7 @@ CLASS zcl_skylint_check_026 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_static_call.
-    DATA ls_ref TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    DATA ls_ref TYPE zif_skylint_types=>ty_compiler_reference.
 
     rv_res = abap_false.
 
@@ -64,7 +64,7 @@ CLASS zcl_skylint_check_026 IMPLEMENTATION.
     ENDIF.
 
     LOOP AT is_token-references INTO ls_ref
-         WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-method.
+         WHERE kind = zif_skylint_types=>compiler_reference_kinds-method.
       IF zcl_skylint_rtti_util=>is_static_method( ls_ref-full_name ) = abap_true.
         rv_res = abap_true.
         RETURN.

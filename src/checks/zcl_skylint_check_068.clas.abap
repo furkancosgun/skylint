@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_068 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        full_modify TYPE if_ci_atc_check=>ty_finding_code VALUE 'FULL_MODIF',
+        full_modify TYPE zif_skylint_types=>ty_finding_code VALUE 'FULL_MODIF',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -26,7 +26,7 @@ CLASS zcl_skylint_check_068 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-full_modify
-                       severity       = if_ci_atc_check=>finding_severities-warning
+                       severity       = zif_skylint_types=>severities-warning
                        text           = 'Specify TRANSPORTING fields in MODIFY itab inside loop for performance'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
@@ -36,7 +36,7 @@ CLASS zcl_skylint_check_068 IMPLEMENTATION.
     DATA lv_has_transporting TYPE abap_bool.
     DATA lv_is_itab_modify   TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_token>     TYPE zif_skylint_types=>ty_token.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.

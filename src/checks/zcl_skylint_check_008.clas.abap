@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_008 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        chained_declaration TYPE if_ci_atc_check=>ty_finding_code VALUE 'CHAINDECL',
+        chained_declaration TYPE zif_skylint_types=>ty_finding_code VALUE 'CHAINDECL',
       END OF c_finding_codes.
 
     METHODS constructor.

@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_054 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        constructor_logic TYPE if_ci_atc_check=>ty_finding_code VALUE 'CTOR_LOGIC',
+        constructor_logic TYPE zif_skylint_types=>ty_finding_code VALUE 'CTOR_LOGIC',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -29,11 +29,11 @@ CLASS zcl_skylint_check_054 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-constructor_logic
-                       severity       = if_ci_atc_check=>finding_severities-warning
+                       severity       = zif_skylint_types=>severities-warning
                        text           = 'Avoid heavy business logic/loops in constructor; use injection only'
                        pseudo_comment = c_pseudo_comment ) )
                  attributes        = VALUE #( ( name  = 'MAX_STATEMENTS'
-                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                                kind  = zif_skylint_types=>attribute_kinds-elementary
                                                 value = REF #( mv_max_statements ) ) ) ) ).
   ENDMETHOD.
 

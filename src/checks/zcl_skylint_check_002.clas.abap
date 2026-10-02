@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_002 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        call_method TYPE if_ci_atc_check=>ty_finding_code VALUE 'CALLMETHOD',
+        call_method TYPE zif_skylint_types=>ty_finding_code VALUE 'CALLMETHOD',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -29,7 +29,7 @@ CLASS zcl_skylint_check_002 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-call_method
-                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       severity       = zif_skylint_types=>severities-warning
                                        text           = 'Avoid static CALL METHOD; use functional method call instead'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
@@ -56,7 +56,7 @@ CLASS zcl_skylint_check_002 IMPLEMENTATION.
   METHOD is_dynamic_call.
     DATA lv_token_idx TYPE i.
     DATA lv_lexeme    TYPE string.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_token> TYPE zif_skylint_types=>ty_token.
 
     rv_dynamic = abap_false.
 

@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_055 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        static_class TYPE if_ci_atc_check=>ty_finding_code VALUE 'STAT_CLASS',
+        static_class TYPE zif_skylint_types=>ty_finding_code VALUE 'STAT_CLASS',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -27,7 +27,7 @@ CLASS zcl_skylint_check_055 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-static_class
-                       severity       = if_ci_atc_check=>finding_severities-warning
+                       severity       = zif_skylint_types=>severities-warning
                        text           = 'Avoid static-only classes; declare instance methods and interfaces'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.

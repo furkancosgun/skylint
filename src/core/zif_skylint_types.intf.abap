@@ -168,9 +168,6 @@ INTERFACE zif_skylint_types
     END OF ty_finding,
     ty_findings TYPE STANDARD TABLE OF ty_finding WITH EMPTY KEY.
 
-  " ======================================================================
-  " 9. CHECK METADATA & CONFIGURATION
-  " ======================================================================
   CONSTANTS:
     BEGIN OF attribute_kinds,
       boolean    TYPE string VALUE 'BOOLEAN',

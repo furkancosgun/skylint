@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_020 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        yoda_condition TYPE if_ci_atc_check=>ty_finding_code VALUE 'YODACOND',
+        yoda_condition TYPE zif_skylint_types=>ty_finding_code VALUE 'YODACOND',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -43,7 +43,7 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-yoda_condition
-                       severity       = if_ci_atc_check=>finding_severities-warning
+                       severity       = zif_skylint_types=>severities-warning
                        text           = 'Avoid Yoda conditions; place variable before literal in comparison'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
@@ -62,9 +62,9 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
   METHOD has_yoda_condition.
     DATA lv_idx    TYPE i.
     DATA lv_total  TYPE i.
-    DATA ls_t1     TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_t2     TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_t3     TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_t1     TYPE zif_skylint_types=>ty_token.
+    DATA ls_t2     TYPE zif_skylint_types=>ty_token.
+    DATA ls_t3     TYPE zif_skylint_types=>ty_token.
     DATA lv_found1 TYPE abap_bool.
     DATA lv_found2 TYPE abap_bool.
     DATA lv_found3 TYPE abap_bool.

@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_064 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        check_subrc TYPE if_ci_atc_check=>ty_finding_code VALUE 'CHECKSUBRC',
+        check_subrc TYPE zif_skylint_types=>ty_finding_code VALUE 'CHECKSUBRC',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -35,7 +35,7 @@ CLASS zcl_skylint_check_064 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-check_subrc
-                       severity       = if_ci_atc_check=>finding_severities-warning
+                       severity       = zif_skylint_types=>severities-warning
                        text           = 'Check sy-subrc after SELECT SINGLE, READ, AUTHORITY-CHECK, FIND, SEARCH'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
@@ -95,8 +95,8 @@ CLASS zcl_skylint_check_064 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD checks_sy_subrc.
-    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_ref TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    DATA ls_tok TYPE zif_skylint_types=>ty_token.
+    DATA ls_ref TYPE zif_skylint_types=>ty_compiler_reference.
     DATA lv_lex TYPE string.
 
     rv_res = abap_false.

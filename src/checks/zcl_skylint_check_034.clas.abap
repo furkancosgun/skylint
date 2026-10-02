@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_034 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        identical_move TYPE if_ci_atc_check=>ty_finding_code VALUE 'IDENTMOVE',
+        identical_move TYPE zif_skylint_types=>ty_finding_code VALUE 'IDENTMOVE',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -30,7 +30,7 @@ CLASS zcl_skylint_check_034 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-identical_move
-                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       severity       = zif_skylint_types=>severities-warning
                                        text           = 'Identical assignment has no effect; remove redundant statement'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
@@ -48,9 +48,9 @@ CLASS zcl_skylint_check_034 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_identical_assignment.
-    DATA ls_tok1   TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_tok2   TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_tok3   TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok1   TYPE zif_skylint_types=>ty_token.
+    DATA ls_tok2   TYPE zif_skylint_types=>ty_token.
+    DATA ls_tok3   TYPE zif_skylint_types=>ty_token.
     DATA lv_found1 TYPE abap_bool.
     DATA lv_found2 TYPE abap_bool.
     DATA lv_found3 TYPE abap_bool.

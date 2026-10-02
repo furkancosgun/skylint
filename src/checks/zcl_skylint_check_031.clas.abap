@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_031 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        unsecure_fae TYPE if_ci_atc_check=>ty_finding_code VALUE 'FAENOCHECK',
+        unsecure_fae TYPE zif_skylint_types=>ty_finding_code VALUE 'FAENOCHECK',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -42,7 +42,7 @@ CLASS zcl_skylint_check_031 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-unsecure_fae
-                       severity       = if_ci_atc_check=>finding_severities-warning
+                       severity       = zif_skylint_types=>severities-warning
                        text           = 'FOR ALL ENTRIES without preceding IS NOT INITIAL check causes full table scan'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
@@ -71,7 +71,7 @@ CLASS zcl_skylint_check_031 IMPLEMENTATION.
     DATA lv_pos       TYPE i.
     DATA lv_name      TYPE string.
     DATA lt_expected  TYPE zcl_skylint_ast_util=>ty_token_lexemes.
-    DATA ls_tab_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tab_token TYPE zif_skylint_types=>ty_token.
     DATA lv_found     TYPE abap_bool.
 
     rv_tab = ''.
@@ -122,7 +122,7 @@ CLASS zcl_skylint_check_031 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD statement_checks_table.
-    DATA ls_tok       TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok       TYPE zif_skylint_types=>ty_token.
     DATA lv_has_tab   TYPE abap_bool.
     DATA lv_has_check TYPE abap_bool.
     DATA lv_clean_tok TYPE string.

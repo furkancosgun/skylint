@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_028 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        obsolete_statement TYPE if_ci_atc_check=>ty_finding_code VALUE 'OBSOLETE',
+        obsolete_statement TYPE zif_skylint_types=>ty_finding_code VALUE 'OBSOLETE',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -30,7 +30,7 @@ CLASS zcl_skylint_check_028 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-obsolete_statement
-                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       severity       = zif_skylint_types=>severities-warning
                                        text           = 'Avoid obsolete statement; use modern expressions instead'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.

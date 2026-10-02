@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_065 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        avoid_form TYPE if_ci_atc_check=>ty_finding_code VALUE 'AVOID_FORM',
+        avoid_form TYPE zif_skylint_types=>ty_finding_code VALUE 'AVOID_FORM',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -25,7 +25,7 @@ CLASS zcl_skylint_check_065 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-avoid_form
-                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       severity       = zif_skylint_types=>severities-warning
                                        text           = 'Avoid obsolete FORM/PERFORM subroutines; use methods instead'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.

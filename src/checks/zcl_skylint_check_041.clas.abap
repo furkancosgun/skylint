@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_041 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        system_var_mod TYPE if_ci_atc_check=>ty_finding_code VALUE 'SYS_VAR_MD',
+        system_var_mod TYPE zif_skylint_types=>ty_finding_code VALUE 'SYS_VAR_MD',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -31,7 +31,7 @@ CLASS zcl_skylint_check_041 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-system_var_mod
-                       severity       = if_ci_atc_check=>finding_severities-warning
+                       severity       = zif_skylint_types=>severities-warning
                        text           = 'Avoid modifying system fields (sy-*); system variables are read-only'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
@@ -48,8 +48,8 @@ CLASS zcl_skylint_check_041 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_system_variable_mod.
-    DATA ls_tok   TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_ref   TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    DATA ls_tok   TYPE zif_skylint_types=>ty_token.
+    DATA ls_ref   TYPE zif_skylint_types=>ty_compiler_reference.
     DATA lv_lex   TYPE string.
     DATA lv_found TYPE abap_bool.
 
@@ -60,7 +60,7 @@ CLASS zcl_skylint_check_041 IMPLEMENTATION.
       lv_lex = to_upper( ls_tok-lexeme ).
       IF lv_lex CP 'SY-*' OR lv_lex CP 'SYST-*'.
         LOOP AT ls_tok-references INTO ls_ref.
-          IF ls_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-write.
+          IF ls_ref-usage_mode = zif_skylint_types=>usage_modes-write.
             rv_res = abap_true.
             RETURN.
           ENDIF.

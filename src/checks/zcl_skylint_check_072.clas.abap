@@ -6,8 +6,8 @@ CLASS zcl_skylint_check_072 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        condense_stmt  TYPE if_ci_atc_check=>ty_finding_code VALUE 'CONDENSE_S',
-        translate_stmt TYPE if_ci_atc_check=>ty_finding_code VALUE 'TRANSLATE_',
+        condense_stmt  TYPE zif_skylint_types=>ty_finding_code VALUE 'CONDENSE_S',
+        translate_stmt TYPE zif_skylint_types=>ty_finding_code VALUE 'TRANSLATE_',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -26,7 +26,7 @@ CLASS zcl_skylint_check_072 IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Detect obsolete string statements; prefer built-in functions'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     severity = if_ci_atc_check=>finding_severities-warning
+                                     severity = zif_skylint_types=>severities-warning
                                      ( code           = c_finding_codes-condense_stmt
                                        text           = 'Use modern built-in string function condense( ... ) instead'
                                        pseudo_comment = c_pseudo_comment_condense )

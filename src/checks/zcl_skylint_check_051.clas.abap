@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_051 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_insert TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_INSRT',
+        prefer_insert TYPE zif_skylint_types=>ty_finding_code VALUE 'PREF_INSRT',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -26,7 +26,7 @@ CLASS zcl_skylint_check_051 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-prefer_insert
-                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       severity       = zif_skylint_types=>severities-warning
                                        text           = 'Prefer INSERT ... INTO TABLE over APPEND'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.

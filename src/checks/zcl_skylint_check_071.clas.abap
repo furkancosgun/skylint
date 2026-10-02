@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_071 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_final TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_FINAL',
+        prefer_final TYPE zif_skylint_types=>ty_finding_code VALUE 'PREF_FINAL',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -25,7 +25,7 @@ CLASS zcl_skylint_check_071 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-prefer_final
-                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       severity       = zif_skylint_types=>severities-warning
                                        text           = 'Declare method as FINAL if it is not intended to be redefined'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.

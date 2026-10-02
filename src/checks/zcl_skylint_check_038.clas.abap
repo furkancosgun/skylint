@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_038 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_corresponding TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFER_COR',
+        prefer_corresponding TYPE zif_skylint_types=>ty_finding_code VALUE 'PREFER_COR',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -26,7 +26,7 @@ CLASS zcl_skylint_check_038 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-prefer_corresponding
-                       severity       = if_ci_atc_check=>finding_severities-warning
+                       severity       = zif_skylint_types=>severities-warning
                        text           = 'Prefer functional CORRESPONDING #( ... ) over MOVE-CORRESPONDING'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.

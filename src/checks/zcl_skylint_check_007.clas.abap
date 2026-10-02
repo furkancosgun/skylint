@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_007 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        assignment_chaining TYPE if_ci_atc_check=>ty_finding_code VALUE 'ASSIGNCHN',
+        assignment_chaining TYPE zif_skylint_types=>ty_finding_code VALUE 'ASSIGNCHN',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -31,7 +31,7 @@ CLASS zcl_skylint_check_007 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-assignment_chaining
-                       severity       = if_ci_atc_check=>finding_severities-warning
+                       severity       = zif_skylint_types=>severities-warning
                        text           = 'Avoid chained assignments; write separate assignment statements'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
@@ -52,7 +52,7 @@ CLASS zcl_skylint_check_007 IMPLEMENTATION.
     DATA lv_depth        TYPE i.
     DATA lv_equals_count TYPE i.
     DATA lv_lexeme       TYPE string.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_token> TYPE zif_skylint_types=>ty_token.
 
     rv_chain = abap_false.
 

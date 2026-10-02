@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_077 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        unused_var TYPE if_ci_atc_check=>ty_finding_code VALUE 'UNUSED_VAR',
+        unused_var TYPE zif_skylint_types=>ty_finding_code VALUE 'UNUSED_VAR',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -25,7 +25,7 @@ CLASS zcl_skylint_check_077 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-unused_var
-                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       severity       = zif_skylint_types=>severities-warning
                                        text           = 'Local variable or field symbol is declared but never used'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
@@ -33,11 +33,11 @@ CLASS zcl_skylint_check_077 IMPLEMENTATION.
   METHOD check.
     DATA lv_var_name TYPE string.
     DATA lv_uses     TYPE i.
-    DATA ls_token    TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_token    TYPE zif_skylint_types=>ty_token.
     DATA lv_found    TYPE abap_bool.
     FIELD-SYMBOLS <ls_decl> TYPE zif_skylint_types=>ty_statement.
     FIELD-SYMBOLS <ls_stmt> TYPE zif_skylint_types=>ty_statement.
-    FIELD-SYMBOLS <ls_tok>  TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_tok>  TYPE zif_skylint_types=>ty_token.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_decl>
          WHERE keyword = 'DATA' OR keyword = 'FIELD-SYMBOLS'.

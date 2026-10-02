@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_005 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        avoid_me TYPE if_ci_atc_check=>ty_finding_code VALUE 'AVOIDME',
+        avoid_me TYPE zif_skylint_types=>ty_finding_code VALUE 'AVOIDME',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -28,12 +28,12 @@ CLASS zcl_skylint_check_005 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-avoid_me
-                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       severity       = zif_skylint_types=>severities-warning
                                        text           = 'Avoid unnecessary ME-> reference'
                                        pseudo_comment = c_pseudo_comment ) )
                                  attributes        = VALUE #(
                                      ( name  = 'ALLOW_IN_CONSTRUCTORS'
-                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                       kind  = zif_skylint_types=>attribute_kinds-boolean
                                        value = REF #( mv_allow_in_constructors ) ) ) ) ).
   ENDMETHOD.
 
@@ -41,7 +41,7 @@ CLASS zcl_skylint_check_005 IMPLEMENTATION.
     DATA lv_allow_ctor TYPE abap_bool.
     DATA lv_lexeme     TYPE string.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_token>     TYPE zif_skylint_types=>ty_token.
 
     get_attribute( EXPORTING iv_name  = 'ALLOW_IN_CONSTRUCTORS'
                    IMPORTING ev_value = lv_allow_ctor ).

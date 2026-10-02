@@ -4,13 +4,6 @@
   "libs": [
     {
       "folder": "/deps/open-abap-core"
-    },
-    {
-      "folder": "/deps/open-abap-ci"
-    },
-    {
-      "folder": "/mock",
-      "files": "/**"
     }
   ],
   "exclude_filter": [],

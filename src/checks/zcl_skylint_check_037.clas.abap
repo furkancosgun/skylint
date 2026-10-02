@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_037 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        try_without_catch TYPE if_ci_atc_check=>ty_finding_code VALUE 'TRYWITHOUTC',
+        try_without_catch TYPE zif_skylint_types=>ty_finding_code VALUE 'TRYWITHOUTC',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -33,7 +33,7 @@ CLASS zcl_skylint_check_037 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-try_without_catch
-                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       severity       = zif_skylint_types=>severities-warning
                                        text           = 'TRY block without CATCH is superfluous'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.

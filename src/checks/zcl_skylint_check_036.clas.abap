@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_036 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        omit_param TYPE if_ci_atc_check=>ty_finding_code VALUE 'OMITPARM',
+        omit_param TYPE zif_skylint_types=>ty_finding_code VALUE 'OMITPARM',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -24,7 +24,7 @@ CLASS zcl_skylint_check_036 DEFINITION
     METHODS is_single_named_param_call
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
                 iv_tok_idx    TYPE i
-                is_ref        TYPE if_ci_atc_source_code_provider=>ty_compiler_reference
+                is_ref        TYPE zif_skylint_types=>ty_compiler_reference
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
@@ -36,15 +36,15 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-omit_param
-                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       severity       = zif_skylint_types=>severities-warning
                                        text           = 'Omit explicit parameter name in single parameter method call'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     DATA ls_statement TYPE zif_skylint_types=>ty_statement.
-    DATA ls_token     TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_ref       TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    DATA ls_token     TYPE zif_skylint_types=>ty_token.
+    DATA ls_ref       TYPE zif_skylint_types=>ty_compiler_reference.
     DATA lv_tok_idx   TYPE i.
 
     IF is_procedure-id-kind = zif_skylint_types=>procedure_kinds-class_definition.
@@ -61,7 +61,7 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
         lv_tok_idx += 1.
 
         LOOP AT ls_token-references INTO ls_ref
-             WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-method.
+             WHERE kind = zif_skylint_types=>compiler_reference_kinds-method.
           IF is_single_named_param_call( is_statement = ls_statement
                                          iv_tok_idx   = lv_tok_idx
                                          is_ref       = ls_ref ) = abap_true.
@@ -88,8 +88,8 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
   METHOD is_single_named_param_call.
     DATA lv_param_name TYPE string.
     DATA lv_is_single  TYPE abap_bool.
-    DATA ls_tok        TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_next_tok   TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok        TYPE zif_skylint_types=>ty_token.
+    DATA ls_next_tok   TYPE zif_skylint_types=>ty_token.
     DATA lv_param_idx  TYPE i.
     DATA lv_next_idx   TYPE i.
     DATA lv_tok_found  TYPE abap_bool.

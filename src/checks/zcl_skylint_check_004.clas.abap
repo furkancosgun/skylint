@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_004 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_is_not TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFERISNT',
+        prefer_is_not TYPE zif_skylint_types=>ty_finding_code VALUE 'PREFERISNT',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -29,7 +29,7 @@ CLASS zcl_skylint_check_004 IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Prefer IS NOT over NOT ... IS'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #( ( code           = c_finding_codes-prefer_is_not
-                                                                severity = if_ci_atc_check=>finding_severities-warning
+                                                                severity = zif_skylint_types=>severities-warning
                                                                 text           = 'Use IS NOT instead of NOT ... IS'
                                                                 pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
@@ -52,9 +52,9 @@ CLASS zcl_skylint_check_004 IMPLEMENTATION.
     DATA lv_lexeme      TYPE string.
     DATA lv_next_lexeme TYPE string.
     DATA lv_idx         TYPE i.
-    DATA ls_next_token  TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_next_token  TYPE zif_skylint_types=>ty_token.
     DATA lv_found       TYPE abap_bool.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_token> TYPE zif_skylint_types=>ty_token.
 
     rv_matched = abap_false.
     lv_in_not = abap_false.

@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_021 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_operator TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFEROP',
+        prefer_operator TYPE zif_skylint_types=>ty_finding_code VALUE 'PREFEROP',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -35,14 +35,14 @@ CLASS zcl_skylint_check_021 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-prefer_operator
-                       severity       = if_ci_atc_check=>finding_severities-warning
+                       severity       = zif_skylint_types=>severities-warning
                        text           = 'Prefer modern comparison operators (=, <>, <, >, <=, >=) over legacy keywords'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_token>     TYPE zif_skylint_types=>ty_token.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF is_declaration_keyword( <ls_statement>-keyword ) = abap_true.

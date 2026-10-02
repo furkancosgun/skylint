@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_062 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        nested_try TYPE if_ci_atc_check=>ty_finding_code VALUE 'NESTED_TRY',
+        nested_try TYPE zif_skylint_types=>ty_finding_code VALUE 'NESTED_TRY',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -25,7 +25,7 @@ CLASS zcl_skylint_check_062 IMPLEMENTATION.
         VALUE #( description       = 'Avoid nested TRY blocks; extract inner error handling to helper methods'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #( ( code           = c_finding_codes-nested_try
-                                                severity       = if_ci_atc_check=>finding_severities-warning
+                                                severity       = zif_skylint_types=>severities-warning
                                                 text           = 'Avoid nested TRY blocks; extract to dedicated method'
                                                 pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.

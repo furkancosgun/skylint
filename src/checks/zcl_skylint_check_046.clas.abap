@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_046 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        missing_order_by TYPE if_ci_atc_check=>ty_finding_code VALUE 'SELECT_UP',
+        missing_order_by TYPE zif_skylint_types=>ty_finding_code VALUE 'SELECT_UP',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -31,7 +31,7 @@ CLASS zcl_skylint_check_046 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-missing_order_by
-                       severity       = if_ci_atc_check=>finding_severities-warning
+                       severity       = zif_skylint_types=>severities-warning
                        text           = 'SELECT UP TO 1 ROWS requires an explicit ORDER BY clause for determinism'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
