@@ -41,32 +41,21 @@ CLASS zcl_skylint_check_064 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_idx        TYPE i.
-    DATA lv_max        TYPE i.
-    DATA ls_next_stmt  TYPE zif_skylint_types=>ty_statement.
-    DATA lv_next_found TYPE abap_bool.
+    DATA ls_next_stmt TYPE zif_skylint_types=>ty_statement.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
-    lv_max = lines( is_procedure-statements ).
-
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      lv_idx = sy-tabix.
       IF sets_sy_subrc( <ls_statement> ) = abap_false.
         CONTINUE.
       ENDIF.
 
-      IF lv_idx = lv_max.
+      ls_next_stmt = zcl_skylint_ast_util=>get_next_statement(
+          it_statements    = is_procedure-statements
+          iv_current_index = sy-tabix ).
+
+      IF ls_next_stmt-keyword IS INITIAL OR checks_sy_subrc( ls_next_stmt ) = abap_false.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-check_subrc ).
-      ELSE.
-        zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                                            iv_index      = lv_idx + 1
-                                                  IMPORTING es_statement  = ls_next_stmt
-                                                            ev_found      = lv_next_found ).
-        IF lv_next_found = abap_false OR checks_sy_subrc( ls_next_stmt ) = abap_false.
-          report_statement( is_statement    = <ls_statement>
-                            iv_finding_code = c_finding_codes-check_subrc ).
-        ENDIF.
       ENDIF.
     ENDLOOP.
   ENDMETHOD.

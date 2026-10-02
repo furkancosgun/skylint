@@ -38,18 +38,14 @@ CLASS zcl_skylint_check_014 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_idx        TYPE i.
-    DATA ls_next_stmt  TYPE zif_skylint_types=>ty_statement.
-    DATA lv_found_next TYPE abap_bool.
+    DATA ls_next_stmt TYPE zif_skylint_types=>ty_statement.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      lv_idx = sy-tabix.
-      zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = is_procedure-statements
-                                                          iv_index      = lv_idx + 1
-                                                IMPORTING es_statement  = ls_next_stmt
-                                                          ev_found      = lv_found_next ).
-      IF     lv_found_next = abap_true
+      ls_next_stmt = zcl_skylint_ast_util=>get_next_statement(
+          it_statements    = is_procedure-statements
+          iv_current_index = sy-tabix ).
+      IF     ls_next_stmt-keyword IS NOT INITIAL
          AND is_empty_control_block( iv_current_kw = <ls_statement>-keyword
                                      iv_next_kw    = ls_next_stmt-keyword ) = abap_true.
         report_statement( is_statement    = <ls_statement>

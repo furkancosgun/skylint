@@ -33,22 +33,14 @@ CLASS zcl_skylint_check_077 IMPLEMENTATION.
   METHOD check.
     DATA lv_var_name TYPE string.
     DATA lv_uses     TYPE i.
-    DATA ls_token    TYPE zif_skylint_types=>ty_token.
-    DATA lv_found    TYPE abap_bool.
     FIELD-SYMBOLS <ls_decl> TYPE zif_skylint_types=>ty_statement.
     FIELD-SYMBOLS <ls_stmt> TYPE zif_skylint_types=>ty_statement.
     FIELD-SYMBOLS <ls_tok>  TYPE zif_skylint_types=>ty_token.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_decl>
          WHERE keyword = 'DATA' OR keyword = 'FIELD-SYMBOLS'.
-      zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = <ls_decl>
-                                                      iv_index     = 2
-                                            IMPORTING es_token     = ls_token
-                                                      ev_found     = lv_found ).
-      IF lv_found = abap_false.
-        CONTINUE.
-      ENDIF.
-      lv_var_name = to_upper( ls_token-lexeme ).
+      lv_var_name = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_decl>
+                                                            iv_index     = 2 ).
       IF lv_var_name IS INITIAL.
         CONTINUE.
       ENDIF.

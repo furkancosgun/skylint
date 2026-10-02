@@ -68,26 +68,17 @@ CLASS zcl_skylint_check_031 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD extract_fae_table.
-    DATA lv_pos       TYPE i.
     DATA lv_name      TYPE string.
-    DATA lt_expected  TYPE zcl_skylint_ast_util=>ty_token_lexemes.
     DATA ls_tab_token TYPE zif_skylint_types=>ty_token.
-    DATA lv_found     TYPE abap_bool.
 
     rv_tab = ''.
-    lt_expected = VALUE #( ( `FOR` ) ( `ALL` ) ( `ENTRIES` ) ( `IN` ) ).
-    lv_pos = zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
-                                                        it_expected  = lt_expected ).
-    IF lv_pos = 0.
+    ls_tab_token = zcl_skylint_ast_util=>get_token_after_sequence(
+        is_statement = is_statement
+        it_expected  = VALUE #( ( `FOR` ) ( `ALL` ) ( `ENTRIES` ) ( `IN` ) ) ).
+    IF ls_tab_token-lexeme IS INITIAL.
       RETURN.
     ENDIF.
-    zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                                                    iv_index     = lv_pos + 4
-                                          IMPORTING es_token     = ls_tab_token
-                                                    ev_found     = lv_found ).
-    IF lv_found = abap_false.
-      RETURN.
-    ENDIF.
+
     lv_name = ls_tab_token-lexeme.
     IF lv_name(1) = '@'.
       lv_name = lv_name+1.
@@ -96,19 +87,16 @@ CLASS zcl_skylint_check_031 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD has_preceding_check.
-    DATA lv_idx   TYPE i.
-    DATA ls_stmt  TYPE zif_skylint_types=>ty_statement.
-    DATA lv_found TYPE abap_bool.
+    DATA lv_idx  TYPE i.
+    DATA ls_stmt TYPE zif_skylint_types=>ty_statement.
 
     rv_res = abap_false.
     lv_idx = iv_current_idx - 1.
 
     WHILE lv_idx >= 1.
-      zcl_skylint_ast_util=>get_statement_safe( EXPORTING it_statements = it_statements
-                                                          iv_index      = lv_idx
-                                                IMPORTING es_statement  = ls_stmt
-                                                          ev_found      = lv_found ).
-      IF lv_found = abap_false.
+      ls_stmt = zcl_skylint_ast_util=>get_statement( it_statements = it_statements
+                                                     iv_index      = lv_idx ).
+      IF ls_stmt-keyword IS INITIAL.
         lv_idx -= 1.
         CONTINUE.
       ENDIF.
@@ -144,9 +132,7 @@ CLASS zcl_skylint_check_031 IMPLEMENTATION.
       ENDIF.
 
       IF    lv_clean_tok = 'INITIAL'
-         OR lv_clean_tok = 'LINES'
          OR lv_clean_tok = 'LINES('
-         OR lv_clean_tok = 'LINE_EXISTS'
          OR lv_clean_tok = 'LINE_EXISTS('.
         lv_has_check = abap_true.
       ENDIF.

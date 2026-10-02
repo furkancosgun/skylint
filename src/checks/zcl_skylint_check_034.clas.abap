@@ -48,37 +48,25 @@ CLASS zcl_skylint_check_034 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_identical_assignment.
-    DATA ls_tok1   TYPE zif_skylint_types=>ty_token.
-    DATA ls_tok2   TYPE zif_skylint_types=>ty_token.
-    DATA ls_tok3   TYPE zif_skylint_types=>ty_token.
-    DATA lv_found1 TYPE abap_bool.
-    DATA lv_found2 TYPE abap_bool.
-    DATA lv_found3 TYPE abap_bool.
+    DATA lv_left  TYPE string.
+    DATA lv_right TYPE string.
 
     rv_res = abap_false.
 
-    IF lines( is_statement-tokens ) <> 3.
+    IF zcl_skylint_ast_util=>token_count( is_statement ) <> 3.
       RETURN.
     ENDIF.
 
-    zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                                                    iv_index     = 1
-                                          IMPORTING es_token     = ls_tok1
-                                                    ev_found     = lv_found1 ).
-    zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                                                    iv_index     = 2
-                                          IMPORTING es_token     = ls_tok2
-                                                    ev_found     = lv_found2 ).
-    zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                                                    iv_index     = 3
-                                          IMPORTING es_token     = ls_tok3
-                                                    ev_found     = lv_found3 ).
-    IF lv_found1 = abap_false OR lv_found2 = abap_false OR lv_found3 = abap_false.
-      RETURN.
-    ENDIF.
-
-    IF ls_tok2-lexeme = '=' AND to_upper( ls_tok1-lexeme ) = to_upper( ls_tok3-lexeme ).
-      rv_res = abap_true.
+    IF zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
+                                               iv_index     = 2
+                                               iv_expected  = '=' ) = abap_true.
+      lv_left = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
+                                                        iv_index     = 1 ).
+      lv_right = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
+                                                         iv_index     = 3 ).
+      IF lv_left = lv_right.
+        rv_res = abap_true.
+      ENDIF.
     ENDIF.
   ENDMETHOD.
 ENDCLASS.

@@ -97,9 +97,31 @@ INTERFACE zif_skylint_types
     END OF ty_compiler_reference,
     ty_compiler_references TYPE STANDARD TABLE OF ty_compiler_reference WITH EMPTY KEY.
 
+  TYPES ty_token_type TYPE c LENGTH 1.
+
+  CONSTANTS:
+    BEGIN OF token_types,
+      identifier TYPE ty_token_type VALUE 'I',
+      literal    TYPE ty_token_type VALUE 'S',
+      comment    TYPE ty_token_type VALUE 'C',
+      pragma     TYPE ty_token_type VALUE 'P',
+    END OF token_types.
+
+  TYPES ty_statement_type TYPE c LENGTH 1.
+
+  CONSTANTS:
+    BEGIN OF statement_types,
+      standard      TYPE ty_statement_type VALUE 'K',
+      compute       TYPE ty_statement_type VALUE 'C',
+      method_direct TYPE ty_statement_type VALUE 'A',
+      comment       TYPE ty_statement_type VALUE 'P',
+      pragma        TYPE ty_statement_type VALUE 'G',
+    END OF statement_types.
+
   TYPES:
     BEGIN OF ty_token,
       lexeme     TYPE ty_lexeme,
+      type       TYPE ty_token_type,
       position   TYPE ty_position,
       references TYPE ty_compiler_references,
     END OF ty_token,
@@ -110,6 +132,7 @@ INTERFACE zif_skylint_types
   TYPES:
     BEGIN OF ty_statement,
       keyword         TYPE ty_keyword,
+      type            TYPE ty_statement_type,
       tokens          TYPE ty_tokens,
       position        TYPE ty_position,
       pseudo_comments TYPE ty_pseudo_comments,

@@ -60,43 +60,31 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD has_yoda_condition.
-    DATA lv_idx    TYPE i.
-    DATA lv_total  TYPE i.
-    DATA ls_t1     TYPE zif_skylint_types=>ty_token.
-    DATA ls_t2     TYPE zif_skylint_types=>ty_token.
-    DATA ls_t3     TYPE zif_skylint_types=>ty_token.
-    DATA lv_found1 TYPE abap_bool.
-    DATA lv_found2 TYPE abap_bool.
-    DATA lv_found3 TYPE abap_bool.
+    DATA lv_idx   TYPE i.
+    DATA lv_total TYPE i.
+    DATA ls_t1    TYPE zif_skylint_types=>ty_token.
+    DATA ls_t2    TYPE zif_skylint_types=>ty_token.
+    DATA ls_t3    TYPE zif_skylint_types=>ty_token.
 
     rv_has = abap_false.
-    lv_total = lines( is_statement-tokens ).
+    lv_total = zcl_skylint_ast_util=>token_count( is_statement ).
     IF lv_total < 3.
       RETURN.
     ENDIF.
 
     lv_idx = 1.
     WHILE lv_idx <= lv_total - 2.
-      zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                                                      iv_index     = lv_idx
-                                            IMPORTING es_token     = ls_t1
-                                                      ev_found     = lv_found1 ).
-      zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                                                      iv_index     = lv_idx + 1
-                                            IMPORTING es_token     = ls_t2
-                                                      ev_found     = lv_found2 ).
-      zcl_skylint_ast_util=>get_token_safe( EXPORTING is_statement = is_statement
-                                                      iv_index     = lv_idx + 2
-                                            IMPORTING es_token     = ls_t3
-                                                      ev_found     = lv_found3 ).
-      IF lv_found1 = abap_false OR lv_found2 = abap_false OR lv_found3 = abap_false.
-        EXIT.
-      ENDIF.
+      ls_t1 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                              iv_index     = lv_idx ).
+      ls_t2 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                              iv_index     = lv_idx + 1 ).
+      ls_t3 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                              iv_index     = lv_idx + 2 ).
 
-      IF     is_literal( ls_t1-lexeme )             = abap_true
-         AND is_comparison_operator( ls_t2-lexeme ) = abap_true
-         AND is_identifier( ls_t3-lexeme )          = abap_true
-         AND is_literal( ls_t3-lexeme )             = abap_false.
+      IF     zcl_skylint_ast_util=>token_is_literal( ls_t1 ) = abap_true
+         AND zcl_skylint_ast_util=>is_comparison_operator( ls_t2-lexeme ) = abap_true
+         AND is_identifier( ls_t3-lexeme ) = abap_true
+         AND zcl_skylint_ast_util=>token_is_literal( ls_t3 ) = abap_false.
         rv_has = abap_true.
         RETURN.
       ENDIF.
@@ -106,42 +94,13 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_literal.
-    DATA lv_len   TYPE i.
-    DATA lv_first TYPE c LENGTH 1.
-    DATA lv_last  TYPE c LENGTH 1.
-
-    rv_is = abap_false.
-    lv_len = strlen( iv_str ).
-    IF lv_len = 0.
-      RETURN.
-    ENDIF.
-
-    lv_first = iv_str(1).
-    lv_last = substring( val = iv_str
-                         off = lv_len - 1
-                         len = 1 ).
-
-    IF    ( lv_first = `'` AND lv_last = `'` )
-       OR ( lv_first = '`' AND lv_last = '`' )
-       OR ( lv_first = '|' AND lv_last = '|' ).
-      rv_is = abap_true.
-      RETURN.
-    ENDIF.
-
-    IF iv_str CO '0123456789'.
-      rv_is = abap_true.
-    ENDIF.
+    DATA ls_dummy TYPE zif_skylint_types=>ty_token.
+    ls_dummy-lexeme = iv_str.
+    rv_is = zcl_skylint_ast_util=>token_is_literal( ls_dummy ).
   ENDMETHOD.
 
   METHOD is_comparison_operator.
-    DATA lv_op TYPE string.
-
-    lv_op = to_upper( iv_str ).
-    rv_is = xsdbool(    lv_op = '='  OR lv_op = '<>' OR lv_op = '<'  OR lv_op = '>'
-                     OR lv_op = '<=' OR lv_op = '>=' OR lv_op = 'EQ' OR lv_op = 'NE'
-                     OR lv_op = 'LT' OR lv_op = 'GT' OR lv_op = 'LE' OR lv_op = 'GE'
-                     OR lv_op = 'CS' OR lv_op = 'CP' OR lv_op = 'NS' OR lv_op = 'NP'
-                     OR lv_op = 'CO' OR lv_op = 'CN' OR lv_op = 'CA' OR lv_op = 'NA' ).
+    rv_is = zcl_skylint_ast_util=>is_comparison_operator( iv_str ).
   ENDMETHOD.
 
   METHOD is_identifier.
