@@ -45,7 +45,7 @@ CLASS zcl_skylint_check_069 IMPLEMENTATION.
       ENDIF.
 
       lv_method_name = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
-                                                                              iv_index     = 2 ).
+                                                               iv_index     = 2 ).
       IF lv_method_name IS INITIAL.
         CONTINUE.
       ENDIF.

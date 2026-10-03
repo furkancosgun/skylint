@@ -41,11 +41,11 @@ CLASS zcl_skylint_check_068 IMPLEMENTATION.
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'LOOP'.
-          lv_in_loop = lv_in_loop + 1.
+          lv_in_loop += 1.
 
         WHEN 'ENDLOOP'.
           IF lv_in_loop > 0.
-            lv_in_loop = lv_in_loop - 1.
+            lv_in_loop -= 1.
           ENDIF.
 
         WHEN 'MODIFY'.

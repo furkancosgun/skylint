@@ -35,10 +35,9 @@ CLASS zcl_skylint_check_047 IMPLEMENTATION.
                                        severity       = zif_skylint_types=>severities-warning
                                        text           = 'Procedure cyclomatic complexity exceeds threshold'
                                        pseudo_comment = c_pseudo_comment ) )
-                                 attributes        = VALUE #(
-                                     ( name  = 'MAX_COMPLEXITY'
-                                       kind  = zif_skylint_types=>attribute_kinds-elementary
-                                       value = REF #( mv_max_complexity ) ) ) ) ).
+                                 attributes        = VALUE #( ( name  = 'MAX_COMPLEXITY'
+                                                                kind  = zif_skylint_types=>attribute_kinds-elementary
+                                                                value = REF #( mv_max_complexity ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -78,14 +77,14 @@ CLASS zcl_skylint_check_047 IMPLEMENTATION.
     LOOP AT is_procedure-statements ASSIGNING <ls_stmt>.
       CASE <ls_stmt>-keyword.
         WHEN 'IF' OR 'ELSEIF' OR 'LOOP' OR 'DO' OR 'WHILE' OR 'WHEN' OR 'CATCH' OR 'CLEANUP'.
-          rv_comp = rv_comp + 1.
+          rv_comp += 1.
       ENDCASE.
 
       LOOP AT <ls_stmt>-tokens INTO ls_tok.
         lv_lex = to_upper( ls_tok-lexeme ).
         CASE lv_lex.
           WHEN 'AND' OR 'OR' OR 'COND' OR 'SWITCH'.
-            rv_comp = rv_comp + 1.
+            rv_comp += 1.
         ENDCASE.
       ENDLOOP.
     ENDLOOP.

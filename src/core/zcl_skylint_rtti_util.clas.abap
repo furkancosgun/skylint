@@ -87,12 +87,9 @@ CLASS zcl_skylint_rtti_util IMPLEMENTATION.
 
     lo_super = lo_class.
     WHILE lo_super IS BOUND.
-      lo_super->get_super_class_type(
-        RECEIVING
-          p_descr_ref           = lo_super
-        EXCEPTIONS
-          super_class_not_found = 1
-          OTHERS                = 2 ).
+      lo_super->get_super_class_type( RECEIVING  p_descr_ref           = lo_super
+                                      EXCEPTIONS super_class_not_found = 1
+                                                 OTHERS                = 2 ).
       IF sy-subrc <> 0 OR lo_super IS NOT BOUND.
         EXIT.
       ENDIF.
@@ -213,7 +210,7 @@ CLASS zcl_skylint_rtti_util IMPLEMENTATION.
 
     LOOP AT ls_meth-parameters ASSIGNING <ls_param>.
       IF <ls_param>-parm_kind <> cl_abap_objectdescr=>returning.
-        lv_input_count = lv_input_count + 1.
+        lv_input_count += 1.
         ls_single_param = <ls_param>.
       ENDIF.
     ENDLOOP.
@@ -226,6 +223,7 @@ CLASS zcl_skylint_rtti_util IMPLEMENTATION.
 
   METHOD has_compiler_reference.
     FIELD-SYMBOLS <ls_token> TYPE zif_skylint_types=>ty_token.
+    " TODO: variable is assigned but never used (ABAP cleaner)
     FIELD-SYMBOLS <ls_ref>   TYPE zif_skylint_types=>ty_compiler_reference.
 
     rv_has = abap_false.

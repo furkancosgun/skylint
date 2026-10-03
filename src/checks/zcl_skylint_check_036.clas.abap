@@ -58,7 +58,7 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
 
       lv_tok_idx = 0.
       LOOP AT ls_statement-tokens INTO ls_token.
-        lv_tok_idx = lv_tok_idx + 1.
+        lv_tok_idx += 1.
 
         LOOP AT ls_token-references INTO ls_ref
              WHERE kind = zif_skylint_types=>compiler_reference_kinds-method.
@@ -95,8 +95,8 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
     rv_res = abap_false.
 
     zcl_skylint_rtti_util=>get_single_importing_param( EXPORTING iv_full_name  = is_ref-full_name
-                                                        IMPORTING ev_param_name = lv_param_name
-                                                                  ev_is_single  = lv_is_single ).
+                                                       IMPORTING ev_param_name = lv_param_name
+                                                                 ev_is_single  = lv_is_single ).
 
     IF lv_is_single = abap_false.
       RETURN.
@@ -125,15 +125,12 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    CASE to_upper( ls_tok-lexeme ).
-      WHEN lv_param_name.
-        ls_next_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                       iv_index     = lv_param_idx + 1 ).
-        IF ls_next_tok-lexeme = '='.
-          rv_res = abap_true.
-        ENDIF.
-      WHEN |{ lv_param_name }=|.
+    IF ls_tok-lexeme = lv_param_name.
+      ls_next_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                     iv_index     = lv_param_idx + 1 ).
+      IF ls_next_tok-lexeme = '='.
         rv_res = abap_true.
-    ENDCASE.
+      ENDIF.
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.

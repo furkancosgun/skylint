@@ -1,15 +1,14 @@
 INTERFACE zif_skylint_types
   PUBLIC.
 
-  TYPES:
-    ty_object_type   TYPE c LENGTH 4,
-    ty_object_name   TYPE c LENGTH 40,
-    ty_keyword       TYPE string,
-    ty_lexeme        TYPE string,
-    ty_full_name     TYPE string,
-    ty_finding_code  TYPE c LENGTH 10,
-    ty_severity      TYPE c LENGTH 1,
-    ty_quickfix_code TYPE c LENGTH 10.
+  TYPES ty_object_type   TYPE c LENGTH 4.
+  TYPES ty_object_name   TYPE c LENGTH 40.
+  TYPES ty_keyword       TYPE string.
+  TYPES ty_lexeme        TYPE string.
+  TYPES ty_full_name     TYPE string.
+  TYPES ty_finding_code  TYPE c LENGTH 10.
+  TYPES ty_severity      TYPE c LENGTH 1.
+  TYPES ty_quickfix_code TYPE c LENGTH 10.
 
   TYPES:
     BEGIN OF ty_position,
@@ -50,10 +49,9 @@ INTERFACE zif_skylint_types
       main_unit TYPE ty_compilation_unit,
     END OF ty_procedure_id.
 
-  TYPES:
-    ty_reference_kind TYPE c LENGTH 2,
-    ty_usage_mode     TYPE c LENGTH 1,
-    ty_usage_grade    TYPE c LENGTH 1.
+  TYPES ty_reference_kind TYPE c LENGTH 2.
+  TYPES ty_usage_mode     TYPE c LENGTH 1.
+  TYPES ty_usage_grade    TYPE c LENGTH 1.
 
   CONSTANTS:
     BEGIN OF compiler_reference_kinds,
@@ -141,8 +139,7 @@ INTERFACE zif_skylint_types
       index           TYPE i,
       is_in_scope     TYPE abap_bool,
     END OF ty_statement,
-    ty_statements TYPE STANDARD TABLE OF ty_statement WITH EMPTY KEY
-      WITH NON-UNIQUE SORTED KEY keyword COMPONENTS keyword.
+    ty_statements TYPE STANDARD TABLE OF ty_statement WITH EMPTY KEY.
 
   TYPES:
     BEGIN OF ty_procedure,

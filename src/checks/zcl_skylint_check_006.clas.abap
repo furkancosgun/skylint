@@ -8,6 +8,10 @@ CLASS zcl_skylint_check_006 DEFINITION
       BEGIN OF c_finding_codes,
         omit_exporting TYPE zif_skylint_types=>ty_finding_code VALUE 'OMITEXPORT',
       END OF c_finding_codes.
+    CONSTANTS:
+      BEGIN OF c_quickfix_codes,
+        omit_exporting TYPE zif_skylint_types=>ty_quickfix_code VALUE 'OMIT_EXP',
+      END OF c_quickfix_codes.
 
     METHODS constructor.
 
@@ -17,10 +21,6 @@ CLASS zcl_skylint_check_006 DEFINITION
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'OMIT_EXPORTING'.
 
-    CONSTANTS:
-      BEGIN OF c_quickfix_codes,
-        omit_exporting TYPE zif_skylint_types=>ty_quickfix_code VALUE 'OMIT_EXP',
-      END OF c_quickfix_codes.
 ENDCLASS.
 
 

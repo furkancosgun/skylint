@@ -75,26 +75,27 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
     lv_idx = 1.
     WHILE lv_idx <= lv_total - 2.
       ls_t1 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                              iv_index     = lv_idx ).
+                                               iv_index     = lv_idx ).
       ls_t2 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                              iv_index     = lv_idx + 1 ).
+                                               iv_index     = lv_idx + 1 ).
       ls_t3 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                              iv_index     = lv_idx + 2 ).
+                                               iv_index     = lv_idx + 2 ).
 
-      IF     zcl_skylint_ast_util=>token_is_literal( ls_t1 ) = abap_true
+      IF     zcl_skylint_ast_util=>token_is_literal( ls_t1 )              = abap_true
          AND zcl_skylint_ast_util=>is_comparison_operator( ls_t2-lexeme ) = abap_true
          AND is_identifier( ls_t3-lexeme ) = abap_true
-         AND zcl_skylint_ast_util=>token_is_literal( ls_t3 ) = abap_false.
+         AND zcl_skylint_ast_util=>token_is_literal( ls_t3 )              = abap_false.
         rv_has = abap_true.
         RETURN.
       ENDIF.
 
-      lv_idx = lv_idx + 1.
+      lv_idx += 1.
     ENDWHILE.
   ENDMETHOD.
 
   METHOD is_literal.
     DATA ls_dummy TYPE zif_skylint_types=>ty_token.
+
     ls_dummy-lexeme = iv_str.
     rv_is = zcl_skylint_ast_util=>token_is_literal( ls_dummy ).
   ENDMETHOD.

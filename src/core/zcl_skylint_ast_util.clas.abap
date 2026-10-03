@@ -11,10 +11,10 @@ CLASS zcl_skylint_ast_util DEFINITION
       RETURNING VALUE(rs_token) TYPE zif_skylint_types=>ty_token.
 
     CLASS-METHODS get_token_lexeme
-      IMPORTING is_statement     TYPE zif_skylint_types=>ty_statement
-                iv_index         TYPE i
+      IMPORTING is_statement      TYPE zif_skylint_types=>ty_statement
+                iv_index          TYPE i
                 iv_case_sensitive TYPE abap_bool DEFAULT abap_false
-      RETURNING VALUE(rv_lexeme) TYPE string.
+      RETURNING VALUE(rv_lexeme)  TYPE string.
 
     CLASS-METHODS get_first_token
       IMPORTING is_statement    TYPE zif_skylint_types=>ty_statement
@@ -137,7 +137,6 @@ ENDCLASS.
 
 
 CLASS zcl_skylint_ast_util IMPLEMENTATION.
-
   METHOD get_token.
     FIELD-SYMBOLS <ls_token> TYPE zif_skylint_types=>ty_token.
 
@@ -240,7 +239,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
           RETURN.
         ENDIF.
       ENDIF.
-      lv_idx = lv_idx + 1.
+      lv_idx += 1.
     ENDWHILE.
   ENDMETHOD.
 
@@ -445,7 +444,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_assignment.
-    rv_yes = xsdbool( is_statement-type = zif_skylint_types=>statement_types-compute
+    rv_yes = xsdbool(    is_statement-type    = zif_skylint_types=>statement_types-compute
                       OR is_statement-keyword = 'COMPUTE' ).
   ENDMETHOD.
 
@@ -552,5 +551,4 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
   METHOD statement_count.
     rv_count = lines( it_statements ).
   ENDMETHOD.
-
 ENDCLASS.

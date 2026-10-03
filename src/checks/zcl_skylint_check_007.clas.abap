@@ -64,17 +64,17 @@ CLASS zcl_skylint_check_007 IMPLEMENTATION.
 
       IF    lv_lexeme CP '*(' OR lv_lexeme CP '*[' OR lv_lexeme CP '*{'
          OR lv_lexeme  = '('  OR lv_lexeme  = '['  OR lv_lexeme  = '{'.
-        lv_depth = lv_depth + 1.
+        lv_depth += 1.
       ENDIF.
 
       IF lv_depth = 0 AND lv_lexeme = '='.
-        lv_equals_count = lv_equals_count + 1.
+        lv_equals_count += 1.
       ENDIF.
 
       IF     (    lv_lexeme CP '*)' OR lv_lexeme CP '*]' OR lv_lexeme CP '*}'
                OR lv_lexeme  = ')'  OR lv_lexeme  = ']'  OR lv_lexeme  = '}' )
          AND lv_depth > 0.
-        lv_depth = lv_depth - 1.
+        lv_depth -= 1.
       ENDIF.
     ENDLOOP.
 

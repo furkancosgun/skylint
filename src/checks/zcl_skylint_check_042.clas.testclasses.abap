@@ -6,7 +6,7 @@ CLASS ltcl_check_042 DEFINITION FINAL
     " describe_by_name always fails and check returns early. Class-definition
     " procedure mode used for both guards.
     METHODS test_finding FOR TESTING RAISING cx_static_check.
-    METHODS test_clean FOR TESTING RAISING cx_static_check.
+    METHODS test_clean   FOR TESTING RAISING cx_static_check.
 ENDCLASS.
 
 

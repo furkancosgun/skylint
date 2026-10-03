@@ -14,32 +14,32 @@ CLASS zcl_skylint_test_util DEFINITION
 
     CLASS-METHODS run_check
       IMPORTING io_check            TYPE REF TO zcl_skylint_check_base
-                iv_source           TYPE string                              OPTIONAL
-                it_source           TYPE string_table                        OPTIONAL
-                iv_class_definition TYPE abap_bool                           DEFAULT abap_false
+                iv_source           TYPE string       OPTIONAL
+                it_source           TYPE string_table OPTIONAL
+                iv_class_definition TYPE abap_bool    DEFAULT abap_false
       RETURNING VALUE(rt_findings)  TYPE zif_skylint_types=>ty_findings
       RAISING   cx_static_check.
 
     CLASS-METHODS assert_findings
       IMPORTING io_check            TYPE REF TO zcl_skylint_check_base
-                iv_source           TYPE string                              OPTIONAL
-                it_source           TYPE string_table                        OPTIONAL
+                iv_source           TYPE string       OPTIONAL
+                it_source           TYPE string_table OPTIONAL
                 it_expected         TYPE ty_expected_findings
-                iv_class_definition TYPE abap_bool                           DEFAULT abap_false
+                iv_class_definition TYPE abap_bool    DEFAULT abap_false
       RAISING   cx_static_check.
 
     CLASS-METHODS assert_no_findings
       IMPORTING io_check            TYPE REF TO zcl_skylint_check_base
-                iv_source           TYPE string                              OPTIONAL
-                it_source           TYPE string_table                        OPTIONAL
-                iv_class_definition TYPE abap_bool                           DEFAULT abap_false
+                iv_source           TYPE string       OPTIONAL
+                it_source           TYPE string_table OPTIONAL
+                iv_class_definition TYPE abap_bool    DEFAULT abap_false
       RAISING   cx_static_check.
 
     CLASS-METHODS assert_fixed
       IMPORTING io_check            TYPE REF TO zcl_skylint_check_base
-                iv_fixed_source     TYPE string                              OPTIONAL
-                it_fixed_source     TYPE string_table                        OPTIONAL
-                iv_class_definition TYPE abap_bool                           DEFAULT abap_false
+                iv_fixed_source     TYPE string       OPTIONAL
+                it_fixed_source     TYPE string_table OPTIONAL
+                iv_class_definition TYPE abap_bool    DEFAULT abap_false
       RAISING   cx_static_check.
 
     CLASS-METHODS assert_quickfix
@@ -53,14 +53,13 @@ CLASS zcl_skylint_test_util DEFINITION
 
   PRIVATE SECTION.
     CLASS-METHODS canonicalize
-      IMPORTING it_source       TYPE string_table
-      RETURNING VALUE(rv_text)  TYPE string.
+      IMPORTING it_source      TYPE string_table
+      RETURNING VALUE(rv_text) TYPE string.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_util IMPLEMENTATION.
-
   METHOD run_check.
     DATA lv_source TYPE string.
 
@@ -83,8 +82,8 @@ CLASS zcl_skylint_test_util IMPLEMENTATION.
                            it_source           = it_source
                            iv_class_definition = iv_class_definition ).
 
-    cl_abap_unit_assert=>assert_equals( act = lines( lt_actual )
-                                        exp = lines( it_expected )
+    cl_abap_unit_assert=>assert_equals( exp = lines( it_expected )
+                                        act = lines( lt_actual )
                                         msg = 'Skylint findings count does not match expected' ).
 
     LOOP AT it_expected INTO ls_exp.
@@ -115,8 +114,8 @@ CLASS zcl_skylint_test_util IMPLEMENTATION.
                            it_source           = it_source
                            iv_class_definition = iv_class_definition ).
 
-    cl_abap_unit_assert=>assert_equals( act = lines( lt_actual )
-                                        exp = 0
+    cl_abap_unit_assert=>assert_equals( exp = 0
+                                        act = lines( lt_actual )
                                         msg = 'Expected no Skylint findings but some were reported' ).
   ENDMETHOD.
 
@@ -143,22 +142,20 @@ CLASS zcl_skylint_test_util IMPLEMENTATION.
     lt_findings = run_check( io_check            = io_check
                              iv_source           = lv_bad_str
                              iv_class_definition = iv_class_definition ).
-    cl_abap_unit_assert=>assert_equals( act = lines( lt_findings )
-                                        exp = 1
+    cl_abap_unit_assert=>assert_equals( exp = 1
+                                        act = lines( lt_findings )
                                         msg = 'Quickfix test needs exactly one finding on bad source' ).
 
     lt_recorded = io_check->get_recorded_quickfixes( ).
-    cl_abap_unit_assert=>assert_equals( act = lines( lt_recorded )
-                                        exp = 1
+    cl_abap_unit_assert=>assert_equals( exp = 1
+                                        act = lines( lt_recorded )
                                         msg = 'Check recorded no quickfix for this finding' ).
     READ TABLE lt_recorded INTO ls_recorded INDEX 1.
-    cl_abap_unit_assert=>assert_equals( act = sy-subrc
-                                        exp = 0
-                                        msg = 'Quickfix record missing unexpectedly' ).
+    cl_abap_unit_assert=>assert_subrc( msg = 'Quickfix record missing unexpectedly' ).
 
     IF iv_quickfix_code IS NOT INITIAL.
-      cl_abap_unit_assert=>assert_equals( act = ls_recorded-code
-                                          exp = iv_quickfix_code
+      cl_abap_unit_assert=>assert_equals( exp = iv_quickfix_code
+                                          act = ls_recorded-code
                                           msg = 'Unexpected quickfix code recorded' ).
     ENDIF.
 
@@ -178,8 +175,8 @@ CLASS zcl_skylint_test_util IMPLEMENTATION.
     IF it_expected_fixed IS NOT INITIAL.
       lv_actual = canonicalize( lt_fixed ).
       lv_expected = canonicalize( it_expected_fixed ).
-      cl_abap_unit_assert=>assert_equals( act = lv_actual
-                                          exp = lv_expected
+      cl_abap_unit_assert=>assert_equals( exp = lv_expected
+                                          act = lv_actual
                                           msg = 'Quickfix result text does not match expected fixed source' ).
     ENDIF.
   ENDMETHOD.
@@ -200,7 +197,7 @@ CLASS zcl_skylint_test_util IMPLEMENTATION.
         IF lv_line IS INITIAL.
           lv_line = <ls_tok>-lexeme.
         ELSE.
-          lv_line = lv_line && ` ` && <ls_tok>-lexeme.
+          lv_line = |{ lv_line } { <ls_tok>-lexeme }|.
         ENDIF.
       ENDLOOP.
       IF rv_text IS INITIAL.
@@ -210,5 +207,4 @@ CLASS zcl_skylint_test_util IMPLEMENTATION.
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
-
 ENDCLASS.

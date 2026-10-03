@@ -2,13 +2,13 @@ CLASS ltcl_rtti_util DEFINITION FINAL
   FOR TESTING RISK LEVEL HARMLESS DURATION SHORT.
 
   PRIVATE SECTION.
-    METHODS test_describe_class FOR TESTING.
-    METHODS test_describe_object FOR TESTING.
+    METHODS test_describe_class    FOR TESTING.
+    METHODS test_describe_object   FOR TESTING.
     METHODS test_get_super_classes FOR TESTING.
-    METHODS test_is_static_method FOR TESTING.
+    METHODS test_is_static_method  FOR TESTING.
     METHODS test_is_bool_returning FOR TESTING.
-    METHODS test_get_method_descr FOR TESTING.
-    METHODS test_has_compiler_ref FOR TESTING.
+    METHODS test_get_method_descr  FOR TESTING.
+    METHODS test_has_compiler_ref  FOR TESTING.
 ENDCLASS.
 
 
@@ -41,8 +41,8 @@ CLASS ltcl_rtti_util IMPLEMENTATION.
 
     lt_supers = zcl_skylint_rtti_util=>get_super_classes( 'ZCL_SKYLINT_CHECK_001' ).
     cl_abap_unit_assert=>assert_not_initial( lt_supers ).
-    cl_abap_unit_assert=>assert_equals( act = lt_supers[ 1 ]
-                                        exp = 'ZCL_SKYLINT_CHECK_BASE' ).
+    cl_abap_unit_assert=>assert_equals( exp = 'ZCL_SKYLINT_CHECK_BASE'
+                                        act = lt_supers[ 1 ] ).
 
     lt_supers = zcl_skylint_rtti_util=>get_super_classes( 'ZCL_NON_EXISTENT_CLASS' ).
     cl_abap_unit_assert=>assert_initial( lt_supers ).
@@ -52,12 +52,10 @@ CLASS ltcl_rtti_util IMPLEMENTATION.
     DATA lv_is TYPE abap_bool.
 
     lv_is = zcl_skylint_rtti_util=>is_static_method( 'ZCL_SKYLINT_RTTI_UTIL=>DESCRIBE_CLASS' ).
-    cl_abap_unit_assert=>assert_equals( act = lv_is
-                                        exp = abap_true ).
+    cl_abap_unit_assert=>assert_true( lv_is ).
 
     lv_is = zcl_skylint_rtti_util=>is_static_method( 'NON_EXISTENT=>METHOD' ).
-    cl_abap_unit_assert=>assert_equals( act = lv_is
-                                        exp = abap_false ).
+    cl_abap_unit_assert=>assert_false( lv_is ).
   ENDMETHOD.
 
   METHOD test_is_bool_returning.
@@ -69,30 +67,26 @@ CLASS ltcl_rtti_util IMPLEMENTATION.
                                                type_kind = cl_abap_typedescr=>typekind_char
                                                length    = 1 ) ) ).
     lv_is = zcl_skylint_rtti_util=>is_boolean_returning_method( ls_meth ).
-    cl_abap_unit_assert=>assert_equals( act = lv_is
-                                        exp = abap_true ).
+    cl_abap_unit_assert=>assert_true( lv_is ).
 
     ls_meth = VALUE #( parameters = VALUE #( ( name      = 'RV_INT'
                                                parm_kind = cl_abap_objectdescr=>returning
                                                type_kind = cl_abap_typedescr=>typekind_int
                                                length    = 4 ) ) ).
     lv_is = zcl_skylint_rtti_util=>is_boolean_returning_method( ls_meth ).
-    cl_abap_unit_assert=>assert_equals( act = lv_is
-                                        exp = abap_false ).
+    cl_abap_unit_assert=>assert_false( lv_is ).
   ENDMETHOD.
 
   METHOD test_get_method_descr.
     DATA ls_meth  TYPE abap_methdescr.
     DATA lv_found TYPE abap_bool.
 
-    zcl_skylint_rtti_util=>get_method_descr(
-      EXPORTING iv_full_name = '\TY:ZCL_SKYLINT_RTTI_UTIL\ME:DESCRIBE_CLASS'
-      IMPORTING es_method    = ls_meth
-                ev_found     = lv_found ).
-    cl_abap_unit_assert=>assert_equals( act = lv_found
-                                        exp = abap_true ).
-    cl_abap_unit_assert=>assert_equals( act = ls_meth-name
-                                        exp = 'DESCRIBE_CLASS' ).
+    zcl_skylint_rtti_util=>get_method_descr( EXPORTING iv_full_name = '\TY:ZCL_SKYLINT_RTTI_UTIL\ME:DESCRIBE_CLASS'
+                                             IMPORTING es_method    = ls_meth
+                                                       ev_found     = lv_found ).
+    cl_abap_unit_assert=>assert_true( lv_found ).
+    cl_abap_unit_assert=>assert_equals( exp = 'DESCRIBE_CLASS'
+                                        act = ls_meth-name ).
   ENDMETHOD.
 
   METHOD test_has_compiler_ref.
@@ -100,18 +94,16 @@ CLASS ltcl_rtti_util IMPLEMENTATION.
     DATA lv_has  TYPE abap_bool.
 
     ls_stmt = VALUE #( tokens = VALUE #( ( references = VALUE #(
-        ( kind = zif_skylint_types=>compiler_reference_kinds-method ) ) ) ) ).
+                                               ( kind = zif_skylint_types=>compiler_reference_kinds-method ) ) ) ) ).
 
     lv_has = zcl_skylint_rtti_util=>has_compiler_reference(
-        is_statement = ls_stmt
-        iv_kind      = zif_skylint_types=>compiler_reference_kinds-method ).
-    cl_abap_unit_assert=>assert_equals( act = lv_has
-                                        exp = abap_true ).
+                 is_statement = ls_stmt
+                 iv_kind      = zif_skylint_types=>compiler_reference_kinds-method ).
+    cl_abap_unit_assert=>assert_true( lv_has ).
 
     lv_has = zcl_skylint_rtti_util=>has_compiler_reference(
-        is_statement = ls_stmt
-        iv_kind      = zif_skylint_types=>compiler_reference_kinds-data ).
-    cl_abap_unit_assert=>assert_equals( act = lv_has
-                                        exp = abap_false ).
+                 is_statement = ls_stmt
+                 iv_kind      = zif_skylint_types=>compiler_reference_kinds-data ).
+    cl_abap_unit_assert=>assert_false( lv_has ).
   ENDMETHOD.
 ENDCLASS.

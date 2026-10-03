@@ -3,7 +3,7 @@ CLASS ltcl_check_078 DEFINITION FINAL
 
   PRIVATE SECTION.
     METHODS test_finding FOR TESTING RAISING cx_static_check.
-    METHODS test_clean FOR TESTING RAISING cx_static_check.
+    METHODS test_clean   FOR TESTING RAISING cx_static_check.
 ENDCLASS.
 
 
@@ -18,9 +18,8 @@ CLASS ltcl_check_078 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_clean.
-    zcl_skylint_test_util=>assert_no_findings(
-        io_check  = NEW zcl_skylint_check_078( )
-        it_source = VALUE #( ( `TYPES ty_t TYPE i.` )
-                             ( `DATA lv_x TYPE i.` ) ) ).
+    zcl_skylint_test_util=>assert_no_findings( io_check  = NEW zcl_skylint_check_078( )
+                                               it_source = VALUE #( ( `TYPES ty_t TYPE i.` )
+                                                                    ( `DATA lv_x TYPE i.` ) ) ).
   ENDMETHOD.
 ENDCLASS.

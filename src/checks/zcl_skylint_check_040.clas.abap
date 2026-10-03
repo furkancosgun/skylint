@@ -39,10 +39,9 @@ CLASS zcl_skylint_check_040 IMPLEMENTATION.
                                        severity       = zif_skylint_types=>severities-warning
                                        text           = 'Control block nesting depth exceeds maximum allowed limit'
                                        pseudo_comment = c_pseudo_comment ) )
-                                 attributes        = VALUE #(
-                                     ( name  = 'MAX_DEPTH'
-                                       kind  = zif_skylint_types=>attribute_kinds-elementary
-                                       value = REF #( mv_max_depth ) ) ) ) ).
+                                 attributes        = VALUE #( ( name  = 'MAX_DEPTH'
+                                                                kind  = zif_skylint_types=>attribute_kinds-elementary
+                                                                value = REF #( mv_max_depth ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -60,14 +59,14 @@ CLASS zcl_skylint_check_040 IMPLEMENTATION.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF is_block_opener( <ls_statement>-keyword ) = abap_true.
-        lv_depth = lv_depth + 1.
+        lv_depth += 1.
         IF lv_depth > lv_max.
           report_statement( is_statement    = <ls_statement>
                             iv_finding_code = c_finding_codes-nesting_depth ).
         ENDIF.
       ELSEIF is_block_closer( <ls_statement>-keyword ) = abap_true.
         IF lv_depth > 0.
-          lv_depth = lv_depth - 1.
+          lv_depth -= 1.
         ENDIF.
       ENDIF.
     ENDLOOP.

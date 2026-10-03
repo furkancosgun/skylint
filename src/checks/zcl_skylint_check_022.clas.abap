@@ -71,7 +71,7 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
     ENDIF.
 
     ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = 3 ).
+                                              iv_index     = 3 ).
     lv_tok = to_upper( ls_tok-lexeme ).
     IF ls_tok-lexeme IS NOT INITIAL AND ( lv_tok(1) = `'` OR lv_tok(1) = '`' ).
       RETURN.
@@ -80,14 +80,14 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
     lv_count = zcl_skylint_ast_util=>token_count( is_statement ).
     lv_idx = 3.
     WHILE lv_idx <= lv_count.
-      IF    zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                    iv_index     = lv_idx ) = 'TYPE'
+      IF     zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
+                                                     iv_index     = lv_idx )     = 'TYPE'
          AND zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
                                                      iv_index     = lv_idx + 1
-                                                     iv_expected  = '(' ) = abap_true.
+                                                     iv_expected  = '(' )        = abap_true.
         RETURN.
       ENDIF.
-      lv_idx = lv_idx + 1.
+      lv_idx += 1.
     ENDWHILE.
 
     rv_res = abap_true.

@@ -69,17 +69,17 @@ CLASS zcl_skylint_check_010 IMPLEMENTATION.
       CASE lv_lexeme.
         WHEN '=' OR 'EQ' OR '<>' OR 'NE' OR '><'.
           ls_adj_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                           iv_index     = lv_tok_idx - 1 ).
-          IF ls_adj_token-lexeme IS NOT INITIAL
-             AND is_boolean_literal( to_upper( ls_adj_token-lexeme ) ) = abap_true.
+                                                          iv_index     = lv_tok_idx - 1 ).
+          IF     ls_adj_token-lexeme IS NOT INITIAL
+             AND is_boolean_literal( to_upper( ls_adj_token-lexeme ) )  = abap_true.
             rv_has = abap_true.
             RETURN.
           ENDIF.
 
           ls_adj_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                           iv_index     = lv_tok_idx + 1 ).
-          IF ls_adj_token-lexeme IS NOT INITIAL
-             AND is_boolean_literal( to_upper( ls_adj_token-lexeme ) ) = abap_true.
+                                                          iv_index     = lv_tok_idx + 1 ).
+          IF     ls_adj_token-lexeme IS NOT INITIAL
+             AND is_boolean_literal( to_upper( ls_adj_token-lexeme ) )  = abap_true.
             rv_has = abap_true.
             RETURN.
           ENDIF.

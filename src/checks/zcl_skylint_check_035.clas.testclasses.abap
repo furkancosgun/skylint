@@ -3,7 +3,7 @@ CLASS ltcl_check_035 DEFINITION FINAL
 
   PRIVATE SECTION.
     METHODS test_finding FOR TESTING RAISING cx_static_check.
-    METHODS test_clean FOR TESTING RAISING cx_static_check.
+    METHODS test_clean   FOR TESTING RAISING cx_static_check.
 ENDCLASS.
 
 
@@ -17,8 +17,7 @@ CLASS ltcl_check_035 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_clean.
-    zcl_skylint_test_util=>assert_no_findings(
-        io_check  = NEW zcl_skylint_check_035( )
-        it_source = VALUE #( ( `CONSTANTS lc_val TYPE string VALUE 'X'.` ) ) ).
+    zcl_skylint_test_util=>assert_no_findings( io_check  = NEW zcl_skylint_check_035( )
+                                               it_source = VALUE #( ( `CONSTANTS lc_val TYPE string VALUE 'X'.` ) ) ).
   ENDMETHOD.
 ENDCLASS.

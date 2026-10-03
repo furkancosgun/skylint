@@ -8,13 +8,6 @@ CLASS zcl_skylint_check_008 DEFINITION
       BEGIN OF c_finding_codes,
         chained_declaration TYPE zif_skylint_types=>ty_finding_code VALUE 'CHAINDECL',
       END OF c_finding_codes.
-
-    METHODS constructor.
-
-  PROTECTED SECTION.
-    METHODS check REDEFINITION.
-
-  PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'CHAIN_DECL'.
 
     CONSTANTS:
@@ -22,6 +15,12 @@ CLASS zcl_skylint_check_008 DEFINITION
         resolve_chain TYPE zif_skylint_types=>ty_quickfix_code VALUE 'PREFINLDCL',
       END OF c_quickfix_codes.
 
+    METHODS constructor.
+
+  PROTECTED SECTION.
+    METHODS check REDEFINITION.
+
+  PRIVATE SECTION.
     DATA mv_allow_structure_chains TYPE abap_bool VALUE abap_true.
 
     METHODS is_structure_start
@@ -29,24 +28,24 @@ CLASS zcl_skylint_check_008 DEFINITION
       RETURNING VALUE(rv_is) TYPE abap_bool.
 
     METHODS is_same_position
-      IMPORTING is_first      TYPE zif_skylint_types=>ty_statement
-                is_second     TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_first       TYPE zif_skylint_types=>ty_statement
+                is_second      TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_same) TYPE abap_bool.
 
     METHODS flatten_statement
-      IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement   TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_line) TYPE string.
 
     METHODS collect_chain_count
-      IMPORTING it_statements  TYPE zif_skylint_types=>ty_statements
-                iv_start       TYPE i
-                is_head        TYPE zif_skylint_types=>ty_statement
+      IMPORTING it_statements   TYPE zif_skylint_types=>ty_statements
+                iv_start        TYPE i
+                is_head         TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_count) TYPE i.
 
     METHODS build_chain_code
-      IMPORTING it_statements TYPE zif_skylint_types=>ty_statements
-                iv_from       TYPE i
-                iv_to         TYPE i
+      IMPORTING it_statements  TYPE zif_skylint_types=>ty_statements
+                iv_from        TYPE i
+                iv_to          TYPE i
       RETURNING VALUE(rt_code) TYPE zif_skylint_types=>ty_code_lines.
 
 ENDCLASS.
@@ -54,20 +53,19 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_008 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Avoid chained declarations (DATA:, TYPES:, etc.)'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-chained_declaration
-                                       severity       = zif_skylint_types=>severities-warning
-                                       text           = 'Avoid chained declarations; declare each entity individually'
-                                       pseudo_comment = c_pseudo_comment ) )
-                                 quickfix_codes    = VALUE #(
-                                     ( code       = c_quickfix_codes-resolve_chain
-                                       short_text = 'Resolve chain into single declarations' ) )
-                                 attributes        = VALUE #(
-                                     ( name  = 'ALLOW_STRUCTURE_CHAINS'
-                                       kind  = zif_skylint_types=>attribute_kinds-boolean
-                                       value = REF #( mv_allow_structure_chains ) ) ) ) ).
+    super->constructor(
+        VALUE #( description       = 'Avoid chained declarations (DATA:, TYPES:, etc.)'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #(
+                     ( code           = c_finding_codes-chained_declaration
+                       severity       = zif_skylint_types=>severities-warning
+                       text           = 'Avoid chained declarations; declare each entity individually'
+                       pseudo_comment = c_pseudo_comment ) )
+                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-resolve_chain
+                                                short_text = 'Resolve chain into single declarations' ) )
+                 attributes        = VALUE #( ( name  = 'ALLOW_STRUCTURE_CHAINS'
+                                                kind  = zif_skylint_types=>attribute_kinds-boolean
+                                                value = REF #( mv_allow_structure_chains ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -107,8 +105,8 @@ CLASS zcl_skylint_check_008 IMPLEMENTATION.
                                               iv_statement_to   = lv_skip_until
                                               it_new_code       = lt_new_code ).
             ENDIF.
-            ls_target = zcl_skylint_ast_util=>get_next_statement( it_statements     = is_procedure-statements
-                                                                             iv_current_index = lv_idx ).
+            ls_target = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_procedure-statements
+                                                                  iv_current_index = lv_idx ).
             IF ls_target-keyword IS NOT INITIAL.
               report_statement( is_statement    = ls_target
                                 iv_finding_code = c_finding_codes-chained_declaration
@@ -138,8 +136,8 @@ CLASS zcl_skylint_check_008 IMPLEMENTATION.
                                is_second = ls_next ) = abap_false.
         lv_done = abap_true.
       ELSE.
-        rv_count = rv_count + 1.
-        lv_next_idx = lv_next_idx + 1.
+        rv_count += 1.
+        lv_next_idx += 1.
       ENDIF.
     ENDWHILE.
   ENDMETHOD.
@@ -190,10 +188,10 @@ CLASS zcl_skylint_check_008 IMPLEMENTATION.
       IF rv_line IS INITIAL.
         rv_line = ls_tok-lexeme.
       ELSE.
-        rv_line = rv_line && ` ` && ls_tok-lexeme.
+        rv_line = |{ rv_line } { ls_tok-lexeme }|.
       ENDIF.
     ENDLOOP.
-    rv_line = rv_line && `.`.
+    rv_line = |{ rv_line }.|.
     REPLACE ALL OCCURRENCES OF ` ,` IN rv_line WITH `,`.
     REPLACE ALL OCCURRENCES OF ` .` IN rv_line WITH `.`.
     REPLACE ALL OCCURRENCES OF ` )` IN rv_line WITH `)`.

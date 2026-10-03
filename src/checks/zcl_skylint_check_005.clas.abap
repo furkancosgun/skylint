@@ -26,15 +26,13 @@ CLASS zcl_skylint_check_005 IMPLEMENTATION.
   METHOD constructor.
     super->constructor( VALUE #( description       = 'Avoid self-reference ME->'
                                  remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-avoid_me
-                                       severity       = zif_skylint_types=>severities-warning
-                                       text           = 'Avoid unnecessary ME-> reference'
-                                       pseudo_comment = c_pseudo_comment ) )
-                                 attributes        = VALUE #(
-                                     ( name  = 'ALLOW_IN_CONSTRUCTORS'
-                                       kind  = zif_skylint_types=>attribute_kinds-boolean
-                                       value = REF #( mv_allow_in_constructors ) ) ) ) ).
+                                 finding_codes     = VALUE #( ( code           = c_finding_codes-avoid_me
+                                                                severity       = zif_skylint_types=>severities-warning
+                                                                text           = 'Avoid unnecessary ME-> reference'
+                                                                pseudo_comment = c_pseudo_comment ) )
+                                 attributes        = VALUE #( ( name  = 'ALLOW_IN_CONSTRUCTORS'
+                                                                kind  = zif_skylint_types=>attribute_kinds-boolean
+                                                                value = REF #( mv_allow_in_constructors ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

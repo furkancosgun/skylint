@@ -41,11 +41,11 @@ CLASS zcl_skylint_check_062 IMPLEMENTATION.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-nested_try ).
           ENDIF.
-          lv_try_depth = lv_try_depth + 1.
+          lv_try_depth += 1.
 
         WHEN 'ENDTRY'.
           IF lv_try_depth > 0.
-            lv_try_depth = lv_try_depth - 1.
+            lv_try_depth -= 1.
           ENDIF.
       ENDCASE.
     ENDLOOP.

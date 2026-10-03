@@ -35,10 +35,9 @@ CLASS zcl_skylint_check_009 IMPLEMENTATION.
                                        severity       = zif_skylint_types=>severities-warning
                                        text           = 'Use string template |...| instead of CONCATENATE'
                                        pseudo_comment = c_pseudo_comment ) )
-                                 attributes        = VALUE #(
-                                     ( name  = 'ALLOW_IN_BYTE_MODE'
-                                       kind  = zif_skylint_types=>attribute_kinds-boolean
-                                       value = REF #( mv_allow_in_byte_mode ) ) ) ) ).
+                                 attributes        = VALUE #( ( name  = 'ALLOW_IN_BYTE_MODE'
+                                                                kind  = zif_skylint_types=>attribute_kinds-boolean
+                                                                value = REF #( mv_allow_in_byte_mode ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

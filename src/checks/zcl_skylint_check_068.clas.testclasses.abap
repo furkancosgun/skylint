@@ -3,7 +3,7 @@ CLASS ltcl_check_068 DEFINITION FINAL
 
   PRIVATE SECTION.
     METHODS test_finding FOR TESTING RAISING cx_static_check.
-    METHODS test_clean FOR TESTING RAISING cx_static_check.
+    METHODS test_clean   FOR TESTING RAISING cx_static_check.
 ENDCLASS.
 
 
@@ -19,10 +19,9 @@ CLASS ltcl_check_068 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_clean.
-    zcl_skylint_test_util=>assert_no_findings(
-        io_check  = NEW zcl_skylint_check_068( )
-        it_source = VALUE #( ( `LOOP AT lt_tab INTO ls_row.` )
-                             ( `MODIFY lt_tab FROM ls_row TRANSPORTING field1.` )
-                             ( `ENDLOOP.` ) ) ).
+    zcl_skylint_test_util=>assert_no_findings( io_check  = NEW zcl_skylint_check_068( )
+                                               it_source = VALUE #( ( `LOOP AT lt_tab INTO ls_row.` )
+                                                                    ( `MODIFY lt_tab FROM ls_row TRANSPORTING field1.` )
+                                                                    ( `ENDLOOP.` ) ) ).
   ENDMETHOD.
 ENDCLASS.

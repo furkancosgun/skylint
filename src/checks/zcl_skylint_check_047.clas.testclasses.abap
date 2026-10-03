@@ -5,7 +5,7 @@ CLASS ltcl_check_047 DEFINITION FINAL
     " Finding is reported on the first procedure statement (METHOD test.),
     " hence expected line = 1. Five IFs give complexity 6 > default max 5.
     METHODS test_finding FOR TESTING RAISING cx_static_check.
-    METHODS test_clean FOR TESTING RAISING cx_static_check.
+    METHODS test_clean   FOR TESTING RAISING cx_static_check.
 ENDCLASS.
 
 
@@ -28,9 +28,8 @@ CLASS ltcl_check_047 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_clean.
-    zcl_skylint_test_util=>assert_no_findings(
-        io_check  = NEW zcl_skylint_check_047( )
-        it_source = VALUE #( ( `IF lv_a = 1.` )
-                             ( `ENDIF.` ) ) ).
+    zcl_skylint_test_util=>assert_no_findings( io_check  = NEW zcl_skylint_check_047( )
+                                               it_source = VALUE #( ( `IF lv_a = 1.` )
+                                                                    ( `ENDIF.` ) ) ).
   ENDMETHOD.
 ENDCLASS.

@@ -60,8 +60,8 @@ CLASS zcl_skylint_check_058 IMPLEMENTATION.
 
     ls_statement = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
                                                         iv_index      = 1 ).
-    IF     lines( lo_class->attributes ) > lv_max_attr
-       AND ls_statement-keyword IS NOT INITIAL.
+    IF     lines( lo_class->attributes )  > lv_max_attr
+       AND ls_statement-keyword          IS NOT INITIAL.
       report_statement( is_statement    = ls_statement
                         iv_finding_code = c_finding_codes-attribute_count ).
     ENDIF.

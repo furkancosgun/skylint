@@ -31,10 +31,9 @@ CLASS zcl_skylint_check_039 IMPLEMENTATION.
                                        severity       = zif_skylint_types=>severities-warning
                                        text           = 'Method length exceeds maximum allowed statement limit'
                                        pseudo_comment = c_pseudo_comment ) )
-                                 attributes        = VALUE #(
-                                     ( name  = 'MAX_STATEMENTS'
-                                       kind  = zif_skylint_types=>attribute_kinds-elementary
-                                       value = REF #( mv_max_statements ) ) ) ) ).
+                                 attributes        = VALUE #( ( name  = 'MAX_STATEMENTS'
+                                                                kind  = zif_skylint_types=>attribute_kinds-elementary
+                                                                value = REF #( mv_max_statements ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -61,7 +60,7 @@ CLASS zcl_skylint_check_039 IMPLEMENTATION.
          AND <ls_statement>-keyword <> 'ENDFORM'
          AND <ls_statement>-keyword <> 'FUNCTION'
          AND <ls_statement>-keyword <> 'ENDFUNCTION'.
-        lv_count = lv_count + 1.
+        lv_count += 1.
       ENDIF.
     ENDLOOP.
 
@@ -69,7 +68,7 @@ CLASS zcl_skylint_check_039 IMPLEMENTATION.
       RETURN.
     ENDIF.
     ls_first = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                         iv_index      = 1 ).
+                                                    iv_index      = 1 ).
     IF ls_first-keyword IS INITIAL.
       RETURN.
     ENDIF.

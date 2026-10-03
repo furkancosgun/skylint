@@ -62,8 +62,8 @@ CLASS zcl_skylint_check_017 IMPLEMENTATION.
     rv_is = abap_false.
     lv_total = zcl_skylint_ast_util=>statement_count( is_procedure-statements ).
 
-    ls_next_stmt = zcl_skylint_ast_util=>get_next_statement( it_statements     = is_procedure-statements
-                                                              iv_current_index = iv_idx ).
+    ls_next_stmt = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_procedure-statements
+                                                             iv_current_index = iv_idx ).
     IF ls_next_stmt-keyword <> 'IF'.
       RETURN.
     ENDIF.
@@ -73,20 +73,20 @@ CLASS zcl_skylint_check_017 IMPLEMENTATION.
 
     WHILE lv_fwd_idx <= lv_total.
       ls_fwd_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                          iv_index      = lv_fwd_idx ).
+                                                         iv_index      = lv_fwd_idx ).
       IF ls_fwd_stmt-keyword IS INITIAL.
         EXIT.
       ENDIF.
 
       CASE ls_fwd_stmt-keyword.
         WHEN 'IF'.
-          lv_depth = lv_depth + 1.
+          lv_depth += 1.
 
         WHEN 'ENDIF'.
-          lv_depth = lv_depth - 1.
+          lv_depth -= 1.
           IF lv_depth = 0.
-            ls_outer_end = zcl_skylint_ast_util=>get_next_statement( it_statements     = is_procedure-statements
-                                                                      iv_current_index = lv_fwd_idx ).
+            ls_outer_end = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_procedure-statements
+                                                                     iv_current_index = lv_fwd_idx ).
             IF ls_outer_end-keyword = 'ENDIF'.
               rv_is = abap_true.
             ENDIF.
@@ -94,7 +94,7 @@ CLASS zcl_skylint_check_017 IMPLEMENTATION.
           ENDIF.
       ENDCASE.
 
-      lv_fwd_idx = lv_fwd_idx + 1.
+      lv_fwd_idx += 1.
     ENDWHILE.
   ENDMETHOD.
 ENDCLASS.

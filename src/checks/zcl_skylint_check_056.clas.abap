@@ -53,10 +53,10 @@ CLASS zcl_skylint_check_056 IMPLEMENTATION.
     ENDIF.
 
     LOOP AT lo_class->methods INTO ls_meth.
-      IF     zcl_skylint_rtti_util=>is_boolean_returning_method( ls_meth ) = abap_true
-         AND ls_meth-name NP 'IS_*'     AND ls_meth-name NP 'HAS_*'
-         AND ls_meth-name NP 'CAN_*'    AND ls_meth-name NP 'CHECK_*'
-         AND ls_meth-name NP 'ARE_*'    AND ls_meth-name NP 'WAS_*'
+      IF     zcl_skylint_rtti_util=>is_boolean_returning_method( ls_meth )  = abap_true
+         AND ls_meth-name NP 'IS_*' AND ls_meth-name NP 'HAS_*'
+         AND ls_meth-name NP 'CAN_*' AND ls_meth-name NP 'CHECK_*'
+         AND ls_meth-name NP 'ARE_*' AND ls_meth-name NP 'WAS_*'
          AND ls_meth-name NP 'SHOULD_*'.
         report_statement( is_statement    = ls_statement
                           iv_finding_code = c_finding_codes-bool_method_name ).

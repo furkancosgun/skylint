@@ -45,11 +45,10 @@ CLASS zcl_skylint_check_018 IMPLEMENTATION.
   METHOD constructor.
     super->constructor( VALUE #( description       = 'Detect unreachable code following unconditional jump statements'
                                  remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-unreachable_code
-                                       severity       = zif_skylint_types=>severities-warning
-                                       text           = 'Statement is unreachable'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                                 finding_codes     = VALUE #( ( code           = c_finding_codes-unreachable_code
+                                                                severity       = zif_skylint_types=>severities-warning
+                                                                text           = 'Statement is unreachable'
+                                                                pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -70,7 +69,7 @@ CLASS zcl_skylint_check_018 IMPLEMENTATION.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-unreachable_code ).
           ENDIF.
-          lv_depth = lv_depth + 1.
+          lv_depth += 1.
           set_depth_unreachable( EXPORTING iv_depth  = lv_depth
                                            iv_val    = abap_false
                                  CHANGING  ct_states = lt_states ).
@@ -88,7 +87,7 @@ CLASS zcl_skylint_check_018 IMPLEMENTATION.
                                            iv_val    = abap_false
                                  CHANGING  ct_states = lt_states ).
           IF lv_depth > 0.
-            lv_depth = lv_depth - 1.
+            lv_depth -= 1.
           ENDIF.
 
         WHEN 'ENDMETHOD' OR 'ENDFORM' OR 'ENDFUNCTION' OR 'ENDMODULE'.
@@ -120,7 +119,7 @@ CLASS zcl_skylint_check_018 IMPLEMENTATION.
         rv_res = abap_true.
         RETURN.
       ENDIF.
-      lv_idx = lv_idx + 1.
+      lv_idx += 1.
     ENDWHILE.
   ENDMETHOD.
 

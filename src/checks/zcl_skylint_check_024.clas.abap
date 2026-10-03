@@ -43,7 +43,7 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
 
   METHOD check.
     DATA lv_max            TYPE i.
-    DATA ls_stmt_if        TYPE zif_skylint_types=>ty_statement.
+    DATA lv_idx            TYPE i.
     DATA ls_stmt_then      TYPE zif_skylint_types=>ty_statement.
     DATA ls_stmt_else      TYPE zif_skylint_types=>ty_statement.
     DATA ls_stmt_else_body TYPE zif_skylint_types=>ty_statement.
@@ -52,23 +52,29 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
     DATA lv_target_2       TYPE string.
     DATA lv_is_bool_1      TYPE abap_bool.
     DATA lv_is_bool_2      TYPE abap_bool.
+    FIELD-SYMBOLS <ls_stmt_if> TYPE zif_skylint_types=>ty_statement.
 
     lv_max = zcl_skylint_ast_util=>statement_count( is_procedure-statements ).
 
-    LOOP AT is_procedure-statements INTO ls_stmt_if WHERE keyword = 'IF'.
-      IF sy-tabix + 4 > lv_max.
+    LOOP AT is_procedure-statements ASSIGNING <ls_stmt_if>.
+      IF <ls_stmt_if>-keyword <> 'IF'.
         CONTINUE.
       ENDIF.
 
-      ls_stmt_then = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_procedure-statements
-                                                               iv_current_index = sy-tabix ).
-      ls_stmt_else = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_procedure-statements
-                                                               iv_current_index = sy-tabix + 1 ).
-      ls_stmt_else_body = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_procedure-statements
-                                                                    iv_current_index = sy-tabix + 2 ).
-      ls_stmt_endif = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_procedure-statements
-                                                                iv_current_index = sy-tabix + 3 ).
-      IF    ls_stmt_then-keyword IS INITIAL OR ls_stmt_else-keyword IS INITIAL
+      lv_idx = sy-tabix.
+      IF lv_idx + 4 > lv_max.
+        CONTINUE.
+      ENDIF.
+
+      ls_stmt_then = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+                                                          iv_index      = lv_idx + 1 ).
+      ls_stmt_else = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+                                                          iv_index      = lv_idx + 2 ).
+      ls_stmt_else_body = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+                                                               iv_index      = lv_idx + 3 ).
+      ls_stmt_endif = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+                                                           iv_index      = lv_idx + 4 ).
+      IF    ls_stmt_then-keyword      IS INITIAL OR ls_stmt_else-keyword  IS INITIAL
          OR ls_stmt_else_body-keyword IS INITIAL OR ls_stmt_endif-keyword IS INITIAL.
         CONTINUE.
       ENDIF.
@@ -86,7 +92,7 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
                                        ev_is_bool   = lv_is_bool_2 ).
 
       IF lv_is_bool_1 = abap_true AND lv_is_bool_2 = abap_true AND lv_target_1 = lv_target_2.
-        report_statement( is_statement    = ls_stmt_if
+        report_statement( is_statement    = <ls_stmt_if>
                           iv_finding_code = c_finding_codes-prefer_xsdbool ).
       ENDIF.
     ENDLOOP.
@@ -111,7 +117,7 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
     ls_tok_val = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                   iv_index     = 3 ).
     IF    ls_tok_target-lexeme IS INITIAL OR ls_tok_eq-lexeme IS INITIAL
-       OR ls_tok_val-lexeme IS INITIAL.
+       OR ls_tok_val-lexeme    IS INITIAL.
       RETURN.
     ENDIF.
 
@@ -120,7 +126,7 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
     ENDIF.
 
     IF is_boolean_value( ls_tok_val-lexeme ) = abap_true.
-      ev_target  = ls_tok_target-lexeme.
+      ev_target  = to_upper( ls_tok_target-lexeme ).
       ev_is_bool = abap_true.
     ENDIF.
   ENDMETHOD.

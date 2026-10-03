@@ -49,9 +49,8 @@ CLASS zcl_skylint_check_064 IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      ls_next_stmt = zcl_skylint_ast_util=>get_next_statement(
-          it_statements    = is_procedure-statements
-          iv_current_index = sy-tabix ).
+      ls_next_stmt = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_procedure-statements
+                                                               iv_current_index = sy-tabix ).
 
       IF ls_next_stmt-keyword IS INITIAL OR checks_sy_subrc( ls_next_stmt ) = abap_false.
         report_statement( is_statement    = <ls_statement>

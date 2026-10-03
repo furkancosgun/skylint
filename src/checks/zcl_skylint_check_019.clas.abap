@@ -76,29 +76,29 @@ CLASS zcl_skylint_check_019 IMPLEMENTATION.
 
     WHILE lv_fwd_idx <= lv_total.
       ls_fwd_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                          iv_index      = lv_fwd_idx ).
+                                                         iv_index      = lv_fwd_idx ).
       IF ls_fwd_stmt-keyword IS INITIAL.
         EXIT.
       ENDIF.
 
       CASE ls_fwd_stmt-keyword.
         WHEN 'CASE'.
-          lv_depth = lv_depth + 1.
+          lv_depth += 1.
 
         WHEN 'ENDCASE'.
           IF lv_depth = 0.
             RETURN.
           ELSE.
-            lv_depth = lv_depth - 1.
+            lv_depth -= 1.
           ENDIF.
 
         WHEN 'WHEN'.
           IF lv_depth = 0 AND is_when_others( ls_fwd_stmt ) = abap_false.
-            rv_cnt = rv_cnt + 1.
+            rv_cnt += 1.
           ENDIF.
       ENDCASE.
 
-      lv_fwd_idx = lv_fwd_idx + 1.
+      lv_fwd_idx += 1.
     ENDWHILE.
   ENDMETHOD.
 ENDCLASS.

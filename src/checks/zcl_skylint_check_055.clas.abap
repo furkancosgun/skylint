@@ -56,7 +56,7 @@ CLASS zcl_skylint_check_055 IMPLEMENTATION.
 
     LOOP AT lo_class->methods INTO ls_meth.
       IF ls_meth-is_class = abap_true.
-        lv_static_cnt = lv_static_cnt + 1.
+        lv_static_cnt += 1.
       ELSEIF ls_meth-name <> 'CONSTRUCTOR'.
         lv_has_inst = abap_true.
         EXIT.
@@ -64,9 +64,9 @@ CLASS zcl_skylint_check_055 IMPLEMENTATION.
     ENDLOOP.
 
     ls_statement = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                          iv_index      = 1 ).
-    IF     lv_static_cnt > 0
-       AND lv_has_inst = abap_false
+                                                        iv_index      = 1 ).
+    IF     lv_static_cnt         > 0
+       AND lv_has_inst           = abap_false
        AND ls_statement-keyword IS NOT INITIAL.
       report_statement( is_statement    = ls_statement
                         iv_finding_code = c_finding_codes-static_class ).

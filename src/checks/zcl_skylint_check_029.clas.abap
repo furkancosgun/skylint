@@ -70,7 +70,7 @@ CLASS zcl_skylint_check_029 IMPLEMENTATION.
     rv_count = 0.
     LOOP AT is_statement-tokens INTO ls_tok.
       IF ls_tok-lexeme = 'TYPE' OR ls_tok-lexeme = 'LIKE'.
-        rv_count = rv_count + 1.
+        rv_count += 1.
       ENDIF.
     ENDLOOP.
   ENDMETHOD.

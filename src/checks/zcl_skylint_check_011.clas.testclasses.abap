@@ -3,7 +3,7 @@ CLASS ltcl_check_011 DEFINITION FINAL
 
   PRIVATE SECTION.
     METHODS test_finding FOR TESTING RAISING cx_static_check.
-    METHODS test_clean FOR TESTING RAISING cx_static_check.
+    METHODS test_clean   FOR TESTING RAISING cx_static_check.
 ENDCLASS.
 
 
@@ -17,8 +17,7 @@ CLASS ltcl_check_011 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_clean.
-    zcl_skylint_test_util=>assert_no_findings(
-        io_check  = NEW zcl_skylint_check_011( )
-        it_source = VALUE #( ( `READ TABLE lt_tab INTO ls_row INDEX 1.` ) ) ).
+    zcl_skylint_test_util=>assert_no_findings( io_check  = NEW zcl_skylint_check_011( )
+                                               it_source = VALUE #( ( `READ TABLE lt_tab INTO ls_row INDEX 1.` ) ) ).
   ENDMETHOD.
 ENDCLASS.

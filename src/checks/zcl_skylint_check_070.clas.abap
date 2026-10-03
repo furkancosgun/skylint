@@ -50,8 +50,8 @@ CLASS zcl_skylint_check_070 IMPLEMENTATION.
         ENDIF.
 
         ls_next = zcl_skylint_ast_util=>get_token_after( is_statement   = <ls_statement>
-                                                              iv_lexeme      = lv_lexeme
-                                                              iv_start_index = sy-tabix ).
+                                                         iv_lexeme      = lv_lexeme
+                                                         iv_start_index = sy-tabix ).
         lv_next_lex = ls_next-lexeme.
         IF lv_next_lex IS NOT INITIAL AND ( lv_next_lex CP '(*' OR lv_next_lex = '(' ).
           lv_is_dynamic = abap_true.

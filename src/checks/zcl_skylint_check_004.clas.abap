@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_004 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_is_not TYPE zif_skylint_types=>ty_finding_code VALUE 'PREFERISNT',
+        prefer_is_not TYPE zif_skylint_types VALUE 'PREFERISNT',
       END OF c_finding_codes.
 
     METHODS constructor.

@@ -32,7 +32,7 @@ CLASS zcl_skylint_check_027 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lo_class    TYPE REF TO cl_abap_classdescr.
+    DATA lo_class     TYPE REF TO cl_abap_classdescr.
     DATA ls_statement TYPE zif_skylint_types=>ty_statement.
 
     IF is_procedure-id-kind <> zif_skylint_types=>procedure_kinds-class_definition.

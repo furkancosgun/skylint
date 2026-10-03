@@ -63,7 +63,7 @@ CLASS zcl_skylint_check_057 IMPLEMENTATION.
 
     ls_statement = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
                                                         iv_index      = 1 ).
-    IF     lines( lt_supers ) > lv_max_depth
+    IF     lines( lt_supers )    > lv_max_depth
        AND ls_statement-keyword IS NOT INITIAL.
       report_statement( is_statement    = ls_statement
                         iv_finding_code = c_finding_codes-deep_inheritance ).

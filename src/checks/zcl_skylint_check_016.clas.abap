@@ -79,14 +79,14 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
 
     WHILE lv_back_idx >= 1.
       ls_back_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                           iv_index      = lv_back_idx ).
+                                                          iv_index      = lv_back_idx ).
       IF ls_back_stmt-keyword IS INITIAL.
         EXIT.
       ENDIF.
 
       CASE ls_back_stmt-keyword.
         WHEN 'ENDIF'.
-          lv_depth = lv_depth + 1.
+          lv_depth += 1.
 
         WHEN 'IF'.
           IF lv_depth = 0.
@@ -97,7 +97,7 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
             ENDIF.
             EXIT.
           ELSE.
-            lv_depth = lv_depth - 1.
+            lv_depth -= 1.
           ENDIF.
 
         WHEN 'ELSEIF'.
@@ -111,7 +111,7 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
           ENDIF.
       ENDCASE.
 
-      lv_back_idx = lv_back_idx - 1.
+      lv_back_idx -= 1.
     ENDWHILE.
   ENDMETHOD.
 
@@ -128,20 +128,20 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
 
     WHILE lv_back_idx >= 1.
       ls_back_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                           iv_index      = lv_back_idx ).
+                                                          iv_index      = lv_back_idx ).
       IF ls_back_stmt-keyword IS INITIAL.
         EXIT.
       ENDIF.
 
       CASE ls_back_stmt-keyword.
         WHEN 'ENDCASE'.
-          lv_depth = lv_depth + 1.
+          lv_depth += 1.
 
         WHEN 'CASE'.
           IF lv_depth = 0.
             EXIT.
           ELSE.
-            lv_depth = lv_depth - 1.
+            lv_depth -= 1.
           ENDIF.
 
         WHEN 'WHEN'.
@@ -155,7 +155,7 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
           ENDIF.
       ENDCASE.
 
-      lv_back_idx = lv_back_idx - 1.
+      lv_back_idx -= 1.
     ENDWHILE.
   ENDMETHOD.
 
@@ -173,7 +173,7 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
     DO lv_tok_cnt - 1 TIMES.
       lv_tok_idx = sy-index + 1.
       ls_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                   iv_index     = lv_tok_idx ).
+                                                  iv_index     = lv_tok_idx ).
       IF ls_token-lexeme IS NOT INITIAL.
         IF rv_cond IS INITIAL.
           rv_cond = to_upper( ls_token-lexeme ).

@@ -82,20 +82,20 @@ CLASS zcl_skylint_check_075 IMPLEMENTATION.
 
       CASE ls_stmt-keyword.
         WHEN 'IF'.
-          lv_if_depth = lv_if_depth + 1.
+          lv_if_depth += 1.
         WHEN 'ELSE' OR 'ELSEIF'.
           IF lv_if_depth = 1.
             lv_has_else = abap_true.
           ENDIF.
         WHEN 'ENDIF'.
-          lv_if_depth = lv_if_depth - 1.
+          lv_if_depth -= 1.
           IF lv_if_depth = 0.
             IF lv_scan_idx = lv_max.
               report_statement( is_statement    = ls_first
                                 iv_finding_code = c_finding_codes-guard_method ).
             ELSE.
-              ls_after = zcl_skylint_ast_util=>get_next_statement( it_statements     = is_procedure-statements
-                                                                  iv_current_index = lv_scan_idx ).
+              ls_after = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_procedure-statements
+                                                                   iv_current_index = lv_scan_idx ).
               IF lv_has_else = abap_false AND ls_after-keyword = 'ENDMETHOD'.
                 report_statement( is_statement    = ls_first
                                   iv_finding_code = c_finding_codes-guard_method ).
@@ -104,7 +104,7 @@ CLASS zcl_skylint_check_075 IMPLEMENTATION.
             EXIT.
           ENDIF.
       ENDCASE.
-      lv_scan_idx = lv_scan_idx + 1.
+      lv_scan_idx += 1.
     ENDWHILE.
   ENDMETHOD.
 ENDCLASS.
