@@ -23,7 +23,7 @@ CLASS zcl_skylint_check_019 DEFINITION
 
     METHODS count_when_branches
       IMPORTING iv_start_idx  TYPE i
-                is_procedure  TYPE zif_skylint_types=>ty_procedure
+                is_code_block  TYPE zif_skylint_types=>ty_code_block
       RETURNING VALUE(rv_cnt) TYPE i.
 
 ENDCLASS.
@@ -45,11 +45,11 @@ CLASS zcl_skylint_check_019 IMPLEMENTATION.
     DATA lv_when_count TYPE i.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
          WHERE keyword = 'CASE'.
       lv_idx = sy-tabix.
       lv_when_count = count_when_branches( iv_start_idx = lv_idx
-                                           is_procedure = is_procedure ).
+                                           is_code_block = is_code_block ).
       IF lv_when_count <= 1.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-short_case ).
@@ -70,12 +70,12 @@ CLASS zcl_skylint_check_019 IMPLEMENTATION.
     DATA ls_fwd_stmt TYPE zif_skylint_types=>ty_statement.
 
     rv_cnt = 0.
-    lv_total = zcl_skylint_ast_util=>statement_count( is_procedure-statements ).
+    lv_total = zcl_skylint_ast_util=>statement_count( is_code_block-statements ).
     lv_depth = 0.
     lv_fwd_idx = iv_start_idx + 1.
 
     WHILE lv_fwd_idx <= lv_total.
-      ls_fwd_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+      ls_fwd_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
                                                          iv_index      = lv_fwd_idx ).
       IF ls_fwd_stmt-keyword IS INITIAL.
         EXIT.

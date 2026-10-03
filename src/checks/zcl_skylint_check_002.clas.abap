@@ -37,7 +37,7 @@ CLASS zcl_skylint_check_002 IMPLEMENTATION.
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
          WHERE keyword = 'CALL'.
       IF zcl_skylint_ast_util=>match_token_sequence( is_statement = <ls_statement>
                                                      it_expected  = VALUE #( ( `CALL` ) ( `METHOD` ) ) ) = abap_false.

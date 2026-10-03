@@ -61,7 +61,7 @@ CLASS zcl_skylint_check_018 IMPLEMENTATION.
                                      iv_val    = abap_false
                            CHANGING  ct_states = lt_states ).
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'IF' OR 'CASE' OR 'LOOP' OR 'DO' OR 'WHILE' OR 'TRY'.
           IF is_depth_unreachable( it_states = lt_states

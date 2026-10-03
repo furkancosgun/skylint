@@ -42,7 +42,7 @@ CLASS zcl_skylint_check_054 IMPLEMENTATION.
     DATA lv_max_stmts  TYPE i.
     DATA lv_stmt_count TYPE i.
 
-    IF is_procedure-id-name NP '*CONSTRUCTOR*'.
+    IF is_code_block-block_name NP '*CONSTRUCTOR*'.
       RETURN.
     ENDIF.
 
@@ -55,7 +55,7 @@ CLASS zcl_skylint_check_054 IMPLEMENTATION.
 
     lv_stmt_count = 0.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
       IF <ls_statement>-keyword = 'METHOD' OR <ls_statement>-keyword = 'ENDMETHOD'.
         CONTINUE.
       ENDIF.

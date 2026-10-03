@@ -35,7 +35,7 @@ CLASS zcl_skylint_check_050 IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
     FIELD-SYMBOLS <ls_token>     TYPE zif_skylint_types=>ty_token.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
       " Skip declarations (DATA, CONSTANTS, TYPES, STATICS)
       IF    <ls_statement>-keyword = 'DATA'  OR <ls_statement>-keyword = 'CONSTANTS'
          OR <ls_statement>-keyword = 'TYPES' OR <ls_statement>-keyword = 'STATICS'.

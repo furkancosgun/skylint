@@ -47,11 +47,11 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
     DATA ls_ref       TYPE zif_skylint_types=>ty_compiler_reference.
     DATA lv_tok_idx   TYPE i.
 
-    IF is_procedure-id-kind = zif_skylint_types=>procedure_kinds-class_definition.
+    IF is_code_block-block_kind = zif_skylint_types=>block_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    LOOP AT is_procedure-statements INTO ls_statement.
+    LOOP AT is_code_block-statements INTO ls_statement.
       IF is_exempt_statement( ls_statement-keyword ) = abap_true.
         CONTINUE.
       ENDIF.

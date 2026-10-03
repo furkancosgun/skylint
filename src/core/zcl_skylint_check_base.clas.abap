@@ -7,7 +7,7 @@ CLASS zcl_skylint_check_base DEFINITION
       IMPORTING is_config TYPE zif_skylint_types=>ty_config OPTIONAL.
 
     METHODS run
-      IMPORTING is_procedure       TYPE zif_skylint_types=>ty_procedure
+      IMPORTING is_code_block      TYPE zif_skylint_types=>ty_code_block
       RETURNING VALUE(rt_findings) TYPE zif_skylint_types=>ty_findings.
 
     METHODS get_config
@@ -18,7 +18,7 @@ CLASS zcl_skylint_check_base DEFINITION
 
   PROTECTED SECTION.
     METHODS check ABSTRACT
-      IMPORTING is_procedure TYPE zif_skylint_types=>ty_procedure.
+      IMPORTING is_code_block TYPE zif_skylint_types=>ty_code_block.
 
     METHODS report_statement
       IMPORTING is_statement    TYPE zif_skylint_types=>ty_statement
@@ -86,7 +86,7 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
   METHOD run.
     CLEAR mt_findings.
     CLEAR mt_quickfixes.
-    check( is_procedure ).
+    check( is_code_block ).
     rt_findings = mt_findings.
   ENDMETHOD.
 

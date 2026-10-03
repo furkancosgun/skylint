@@ -57,7 +57,7 @@ CLASS zcl_skylint_check_040 IMPLEMENTATION.
 
     lv_depth = 0.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
       IF is_block_opener( <ls_statement>-keyword ) = abap_true.
         lv_depth += 1.
         IF lv_depth > lv_max.

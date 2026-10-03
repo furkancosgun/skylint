@@ -37,7 +37,7 @@ CLASS zcl_skylint_check_069 IMPLEMENTATION.
 
     lt_expected = VALUE #( ( `FOR` ) ( `TESTING` ) ).
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
          WHERE keyword = 'METHODS'.
       IF zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
                                                     it_expected  = lt_expected ) = 0.

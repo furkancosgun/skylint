@@ -43,16 +43,16 @@ CLASS zcl_skylint_check_074 IMPLEMENTATION.
     " TODO: variable is assigned but never used (ABAP cleaner)
     FIELD-SYMBOLS <ls_loop> TYPE zif_skylint_types=>ty_statement.
 
-    lv_max = zcl_skylint_ast_util=>statement_count( is_procedure-statements ).
+    lv_max = zcl_skylint_ast_util=>statement_count( is_code_block-statements ).
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_loop>
+    LOOP AT is_code_block-statements ASSIGNING <ls_loop>
          WHERE keyword = 'LOOP' OR keyword = 'DO' OR keyword = 'WHILE'.
       lv_idx = sy-tabix.
       IF lv_idx + 3 > lv_max.
         CONTINUE.
       ENDIF.
 
-      ls_first = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_procedure-statements
+      ls_first = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_code_block-statements
                                                            iv_current_index = lv_idx ).
       IF ls_first-keyword <> 'IF'.
         CONTINUE.
@@ -63,7 +63,7 @@ CLASS zcl_skylint_check_074 IMPLEMENTATION.
       lv_scan_idx = lv_idx + 2.
 
       WHILE lv_scan_idx <= lv_max AND lv_if_depth > 0.
-        ls_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+        ls_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
                                                        iv_index      = lv_scan_idx ).
         IF ls_stmt-keyword IS INITIAL.
           EXIT.
@@ -79,7 +79,7 @@ CLASS zcl_skylint_check_074 IMPLEMENTATION.
           WHEN 'ENDIF'.
             lv_if_depth -= 1.
             IF lv_if_depth = 0.
-              ls_after = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_procedure-statements
+              ls_after = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_code_block-statements
                                                                    iv_current_index = lv_scan_idx ).
               IF     lv_has_else = abap_false
                  AND ( ls_after-keyword = 'ENDLOOP' OR ls_after-keyword = 'ENDDO' OR ls_after-keyword = 'ENDWHILE' ).

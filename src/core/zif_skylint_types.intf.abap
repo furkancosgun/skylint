@@ -16,38 +16,23 @@ INTERFACE zif_skylint_types
       column TYPE i,
     END OF ty_position.
 
-  TYPES ty_compilation_unit_kind TYPE ty_object_type.
+  CONSTANTS:
+    BEGIN OF object_types,
+      class          TYPE ty_object_type VALUE 'CLAS',
+      program        TYPE ty_object_type VALUE 'PROG',
+      function_group TYPE ty_object_type VALUE 'FUGR',
+      interface      TYPE ty_object_type VALUE 'INTF',
+    END OF object_types.
+
+  TYPES ty_block_kind TYPE ty_object_type.
 
   CONSTANTS:
-    BEGIN OF compilation_unit_kinds,
-      class          TYPE ty_compilation_unit_kind VALUE 'CLAS',
-      report         TYPE ty_compilation_unit_kind VALUE 'PROG',
-      function_group TYPE ty_compilation_unit_kind VALUE 'FUGR',
-      interface      TYPE ty_compilation_unit_kind VALUE 'INTF',
-    END OF compilation_unit_kinds.
-
-  TYPES:
-    BEGIN OF ty_compilation_unit,
-      kind TYPE ty_compilation_unit_kind,
-      name TYPE ty_object_name,
-    END OF ty_compilation_unit.
-
-  TYPES ty_procedure_kind TYPE ty_object_type.
-
-  CONSTANTS:
-    BEGIN OF procedure_kinds,
-      method           TYPE ty_procedure_kind VALUE 'METH',
-      class_definition TYPE ty_procedure_kind VALUE 'DECL',
-      form_routine     TYPE ty_procedure_kind VALUE 'FORM',
-      function         TYPE ty_procedure_kind VALUE 'FUNC',
-    END OF procedure_kinds.
-
-  TYPES:
-    BEGIN OF ty_procedure_id,
-      kind      TYPE ty_procedure_kind,
-      name      TYPE string,
-      main_unit TYPE ty_compilation_unit,
-    END OF ty_procedure_id.
+    BEGIN OF block_kinds,
+      method           TYPE ty_block_kind VALUE 'METH',
+      class_definition TYPE ty_block_kind VALUE 'DECL',
+      form_routine     TYPE ty_block_kind VALUE 'FORM',
+      function         TYPE ty_block_kind VALUE 'FUNC',
+    END OF block_kinds.
 
   TYPES ty_reference_kind TYPE c LENGTH 2.
   TYPES ty_usage_mode     TYPE c LENGTH 1.
@@ -55,14 +40,9 @@ INTERFACE zif_skylint_types
 
   CONSTANTS:
     BEGIN OF compiler_reference_kinds,
-      data      TYPE ty_reference_kind VALUE 'DA',
-      method    TYPE ty_reference_kind VALUE 'ME',
-      type      TYPE ty_reference_kind VALUE 'TY',
-      form      TYPE ty_reference_kind VALUE 'FO',
-      function  TYPE ty_reference_kind VALUE 'FU',
-      interface TYPE ty_reference_kind VALUE 'IN',
-      table_key TYPE ty_reference_kind VALUE 'TK',
-      message   TYPE ty_reference_kind VALUE 'MG',
+      data   TYPE ty_reference_kind VALUE 'DA',
+      method TYPE ty_reference_kind VALUE 'ME',
+      type   TYPE ty_reference_kind VALUE 'TY',
     END OF compiler_reference_kinds.
 
   CONSTANTS:
@@ -112,8 +92,6 @@ INTERFACE zif_skylint_types
       standard      TYPE ty_statement_type VALUE 'K',
       compute       TYPE ty_statement_type VALUE 'C',
       method_direct TYPE ty_statement_type VALUE 'A',
-      comment       TYPE ty_statement_type VALUE 'P',
-      pragma        TYPE ty_statement_type VALUE 'G',
     END OF statement_types.
 
   TYPES:
@@ -134,18 +112,17 @@ INTERFACE zif_skylint_types
       tokens          TYPE ty_tokens,
       position        TYPE ty_position,
       pseudo_comments TYPE ty_pseudo_comments,
-      include         TYPE ty_object_name,
-      level           TYPE i,
-      index           TYPE i,
-      is_in_scope     TYPE abap_bool,
     END OF ty_statement,
     ty_statements TYPE STANDARD TABLE OF ty_statement WITH EMPTY KEY.
 
   TYPES:
-    BEGIN OF ty_procedure,
-      id         TYPE ty_procedure_id,
-      statements TYPE ty_statements,
-    END OF ty_procedure.
+    BEGIN OF ty_code_block,
+      object_name TYPE ty_object_name,
+      object_type TYPE ty_object_type,
+      block_kind  TYPE ty_block_kind,
+      block_name  TYPE string,
+      statements  TYPE ty_statements,
+    END OF ty_code_block.
 
   CONSTANTS:
     BEGIN OF severities,

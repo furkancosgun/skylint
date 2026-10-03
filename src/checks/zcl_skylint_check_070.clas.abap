@@ -39,7 +39,7 @@ CLASS zcl_skylint_check_070 IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
     FIELD-SYMBOLS <ls_token>     TYPE zif_skylint_types=>ty_token.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
          WHERE keyword = 'SELECT' OR keyword = 'UPDATE' OR keyword = 'DELETE' OR keyword = 'MODIFY'.
       lv_is_dynamic = abap_false.
 

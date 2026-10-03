@@ -47,7 +47,7 @@ CLASS zcl_skylint_check_006 IMPLEMENTATION.
 
     lt_expected = VALUE #( ( `EXPORTING` ) ).
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
       IF    <ls_statement>-keyword = 'METHODS'    OR <ls_statement>-keyword = 'CLASS-METHODS'
          OR <ls_statement>-keyword = 'INTERFACES' OR <ls_statement>-keyword = 'CALL'
          OR <ls_statement>-keyword = 'EVENTS'     OR <ls_statement>-keyword = 'CLASS-EVENTS'.

@@ -38,7 +38,7 @@ CLASS zcl_skylint_check_034 IMPLEMENTATION.
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
          WHERE keyword = 'COMPUTE'.
       IF is_identical_assignment( <ls_statement> ) = abap_true.
         report_statement( is_statement    = <ls_statement>

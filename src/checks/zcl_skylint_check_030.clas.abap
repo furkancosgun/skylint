@@ -42,7 +42,7 @@ CLASS zcl_skylint_check_030 IMPLEMENTATION.
 
     lv_loop_depth = 0.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'LOOP' OR 'DO' OR 'WHILE'.
           lv_loop_depth += 1.

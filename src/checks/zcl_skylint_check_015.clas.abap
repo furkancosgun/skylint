@@ -40,9 +40,9 @@ CLASS zcl_skylint_check_015 IMPLEMENTATION.
     DATA ls_next_stmt TYPE zif_skylint_types=>ty_statement.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
          WHERE keyword = 'CATCH'.
-      ls_next_stmt = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_procedure-statements
+      ls_next_stmt = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_code_block-statements
                                                                iv_current_index = sy-tabix ).
       IF     ls_next_stmt-keyword                   IS NOT INITIAL
          AND is_empty_catch( ls_next_stmt-keyword )  = abap_true.

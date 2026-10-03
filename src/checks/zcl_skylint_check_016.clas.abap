@@ -20,12 +20,12 @@ CLASS zcl_skylint_check_016 DEFINITION
     METHODS check_duplicate_elseif
       IMPORTING iv_idx       TYPE i
                 is_statement TYPE zif_skylint_types=>ty_statement
-                is_procedure TYPE zif_skylint_types=>ty_procedure.
+                is_code_block TYPE zif_skylint_types=>ty_code_block.
 
     METHODS check_duplicate_when
       IMPORTING iv_idx       TYPE i
                 is_statement TYPE zif_skylint_types=>ty_statement
-                is_procedure TYPE zif_skylint_types=>ty_procedure.
+                is_code_block TYPE zif_skylint_types=>ty_code_block.
 
     METHODS get_condition_string
       IMPORTING is_statement   TYPE zif_skylint_types=>ty_statement
@@ -49,19 +49,19 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
     DATA lv_idx TYPE i.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
       lv_idx = sy-tabix.
 
       CASE <ls_statement>-keyword.
         WHEN 'ELSEIF'.
           check_duplicate_elseif( iv_idx       = lv_idx
                                   is_statement = <ls_statement>
-                                  is_procedure = is_procedure ).
+                                  is_code_block = is_code_block ).
 
         WHEN 'WHEN'.
           check_duplicate_when( iv_idx       = lv_idx
                                 is_statement = <ls_statement>
-                                is_procedure = is_procedure ).
+                                is_code_block = is_code_block ).
       ENDCASE.
     ENDLOOP.
   ENDMETHOD.
@@ -78,7 +78,7 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
     lv_back_idx = iv_idx - 1.
 
     WHILE lv_back_idx >= 1.
-      ls_back_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+      ls_back_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
                                                           iv_index      = lv_back_idx ).
       IF ls_back_stmt-keyword IS INITIAL.
         EXIT.
@@ -127,7 +127,7 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
     lv_back_idx = iv_idx - 1.
 
     WHILE lv_back_idx >= 1.
-      ls_back_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+      ls_back_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
                                                           iv_index      = lv_back_idx ).
       IF ls_back_stmt-keyword IS INITIAL.
         EXIT.

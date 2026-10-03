@@ -38,7 +38,7 @@ CLASS zcl_skylint_check_003 IMPLEMENTATION.
 
     lt_expected = VALUE #( ( `DEFAULT` ) ( `KEY` ) ).
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'TYPES' OR 'DATA' OR 'STATICS' OR 'CLASS-DATA' OR 'FIELD-SYMBOL'.
           lv_matched = zcl_skylint_ast_util=>match_token_sequence( is_statement = <ls_statement>

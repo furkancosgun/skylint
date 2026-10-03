@@ -34,7 +34,7 @@ CLASS zcl_skylint_check_062 IMPLEMENTATION.
     DATA lv_try_depth TYPE i VALUE 0.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'TRY'.
           IF lv_try_depth >= 1.

@@ -44,12 +44,12 @@ CLASS zcl_skylint_check_064 IMPLEMENTATION.
     DATA ls_next_stmt TYPE zif_skylint_types=>ty_statement.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
       IF sets_sy_subrc( <ls_statement> ) = abap_false.
         CONTINUE.
       ENDIF.
 
-      ls_next_stmt = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_procedure-statements
+      ls_next_stmt = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_code_block-statements
                                                                iv_current_index = sy-tabix ).
 
       IF ls_next_stmt-keyword IS INITIAL OR checks_sy_subrc( ls_next_stmt ) = abap_false.

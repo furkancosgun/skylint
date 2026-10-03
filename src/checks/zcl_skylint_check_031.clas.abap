@@ -52,13 +52,13 @@ CLASS zcl_skylint_check_031 IMPLEMENTATION.
     DATA lv_fae_tab TYPE string.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
          WHERE keyword = 'SELECT'.
       lv_idx = sy-tabix.
       lv_fae_tab = extract_fae_table( <ls_statement> ).
 
       IF     lv_fae_tab IS NOT INITIAL
-         AND has_preceding_check( it_statements  = is_procedure-statements
+         AND has_preceding_check( it_statements  = is_code_block-statements
                                   iv_current_idx = lv_idx
                                   iv_tab_name    = lv_fae_tab )             = abap_false.
         report_statement( is_statement    = <ls_statement>

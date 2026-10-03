@@ -42,14 +42,14 @@ CLASS zcl_skylint_check_075 IMPLEMENTATION.
     DATA ls_stmt      TYPE zif_skylint_types=>ty_statement.
     DATA ls_after     TYPE zif_skylint_types=>ty_statement.
 
-    lv_max = zcl_skylint_ast_util=>statement_count( is_procedure-statements ).
+    lv_max = zcl_skylint_ast_util=>statement_count( is_code_block-statements ).
     IF lv_max < 3.
       RETURN.
     ENDIF.
 
     DO lv_max TIMES.
       lv_idx = sy-index.
-      ls_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+      ls_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
                                                      iv_index      = lv_idx ).
       IF ls_stmt-keyword IS INITIAL.
         CONTINUE.
@@ -74,7 +74,7 @@ CLASS zcl_skylint_check_075 IMPLEMENTATION.
     lv_scan_idx = lv_first_idx + 1.
 
     WHILE lv_scan_idx <= lv_max AND lv_if_depth > 0.
-      ls_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+      ls_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
                                                      iv_index      = lv_scan_idx ).
       IF ls_stmt-keyword IS INITIAL.
         EXIT.
@@ -94,7 +94,7 @@ CLASS zcl_skylint_check_075 IMPLEMENTATION.
               report_statement( is_statement    = ls_first
                                 iv_finding_code = c_finding_codes-guard_method ).
             ELSE.
-              ls_after = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_procedure-statements
+              ls_after = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_code_block-statements
                                                                    iv_current_index = lv_scan_idx ).
               IF lv_has_else = abap_false AND ls_after-keyword = 'ENDMETHOD'.
                 report_statement( is_statement    = ls_first

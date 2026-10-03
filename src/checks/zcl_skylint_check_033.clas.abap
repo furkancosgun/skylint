@@ -63,7 +63,7 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
 
     lv_block_counter = 0.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'IF' OR 'LOOP' OR 'DO' OR 'WHILE' OR 'CASE' OR 'TRY'.
           lv_block_counter += 1.

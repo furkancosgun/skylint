@@ -37,7 +37,7 @@ CLASS zcl_skylint_check_077 IMPLEMENTATION.
     FIELD-SYMBOLS <ls_stmt> TYPE zif_skylint_types=>ty_statement.
     FIELD-SYMBOLS <ls_tok>  TYPE zif_skylint_types=>ty_token.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_decl>
+    LOOP AT is_code_block-statements ASSIGNING <ls_decl>
          WHERE keyword = 'DATA' OR keyword = 'FIELD-SYMBOLS'.
       lv_var_name = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_decl>
                                                             iv_index     = 2 ).
@@ -46,7 +46,7 @@ CLASS zcl_skylint_check_077 IMPLEMENTATION.
       ENDIF.
 
       lv_uses = 0.
-      LOOP AT is_procedure-statements ASSIGNING <ls_stmt>.
+      LOOP AT is_code_block-statements ASSIGNING <ls_stmt>.
         LOOP AT <ls_stmt>-tokens ASSIGNING <ls_tok>.
           IF to_upper( <ls_tok>-lexeme ) = lv_var_name.
             lv_uses += 1.

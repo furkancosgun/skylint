@@ -132,12 +132,12 @@ CLASS lcl_parser DEFINITION FINAL.
 ENDCLASS.
 
 
-CLASS lcl_procedure_builder DEFINITION FINAL.
+CLASS lcl_code_block_builder DEFINITION FINAL.
   PUBLIC SECTION.
-    CLASS-METHODS slice_procedure
+    CLASS-METHODS slice_code_block
       IMPORTING it_statements       TYPE zif_skylint_types=>ty_statements
                 iv_class_definition TYPE abap_bool DEFAULT abap_false
-      RETURNING VALUE(rs_procedure) TYPE zif_skylint_types=>ty_procedure.
+      RETURNING VALUE(rs_code_block) TYPE zif_skylint_types=>ty_code_block.
 ENDCLASS.
 
 
@@ -155,10 +155,10 @@ CLASS lcl_runner DEFINITION FINAL.
       RETURNING VALUE(rt_findings)  TYPE zif_skylint_types=>ty_findings
       RAISING   cx_static_check.
 
-    CLASS-METHODS build_procedure
+    CLASS-METHODS build_code_block
       IMPORTING iv_source           TYPE string
                 iv_class_definition TYPE abap_bool DEFAULT abap_false
-      RETURNING VALUE(rs_procedure) TYPE zif_skylint_types=>ty_procedure.
+      RETURNING VALUE(rs_code_block) TYPE zif_skylint_types=>ty_code_block.
 
     CLASS-METHODS wrap_source
       IMPORTING iv_source           TYPE string
@@ -176,13 +176,13 @@ CLASS lcl_applier DEFINITION FINAL.
   PUBLIC SECTION.
     CLASS-METHODS apply
       IMPORTING it_lines        TYPE string_table
-                is_procedure    TYPE zif_skylint_types=>ty_procedure
+                is_code_block TYPE zif_skylint_types=>ty_code_block
                 is_recorded     TYPE zif_skylint_types=>ty_quickfix
       RETURNING VALUE(rt_lines) TYPE string_table.
 
   PRIVATE SECTION.
     CLASS-METHODS statement_lines
-      IMPORTING is_procedure TYPE zif_skylint_types=>ty_procedure
+      IMPORTING is_code_block TYPE zif_skylint_types=>ty_code_block
                 iv_index     TYPE i
       EXPORTING ev_first     TYPE i
                 ev_last      TYPE i
@@ -194,13 +194,13 @@ CLASS lcl_applier DEFINITION FINAL.
 
     CLASS-METHODS apply_token_replace
       IMPORTING it_lines        TYPE string_table
-                is_procedure    TYPE zif_skylint_types=>ty_procedure
+                is_code_block TYPE zif_skylint_types=>ty_code_block
                 is_recorded     TYPE zif_skylint_types=>ty_quickfix
       RETURNING VALUE(rt_lines) TYPE string_table.
 
     CLASS-METHODS apply_statement_replace
       IMPORTING it_lines        TYPE string_table
-                is_procedure    TYPE zif_skylint_types=>ty_procedure
+                is_code_block TYPE zif_skylint_types=>ty_code_block
                 is_recorded     TYPE zif_skylint_types=>ty_quickfix
       RETURNING VALUE(rt_lines) TYPE string_table.
 
@@ -889,10 +889,6 @@ CLASS lcl_parser IMPLEMENTATION.
                                       IMPORTING ev_keyword        = ls_stmt-keyword
                                                 ev_statement_type = ls_stmt-type ).
 
-    ls_stmt-is_in_scope = abap_true.
-    ls_stmt-level       = 1.
-    ls_stmt-index       = lines( ct_statements ) + 1.
-
     lcl_compiler=>enrich_references( CHANGING cs_statement = ls_stmt ).
     APPEND ls_stmt TO ct_statements.
   ENDMETHOD.
@@ -1000,29 +996,29 @@ CLASS lcl_parser IMPLEMENTATION.
 ENDCLASS.
 
 
-CLASS lcl_procedure_builder IMPLEMENTATION.
-  METHOD slice_procedure.
+CLASS lcl_code_block_builder IMPLEMENTATION.
+  METHOD slice_code_block.
     DATA lv_started TYPE abap_bool.
     FIELD-SYMBOLS <ls_stmt> TYPE zif_skylint_types=>ty_statement.
 
-    CLEAR rs_procedure.
-    rs_procedure-id-main_unit-kind = zif_skylint_types=>compilation_unit_kinds-class.
-    rs_procedure-id-main_unit-name = zcl_skylint_test_util=>c_test_class.
+    CLEAR rs_code_block.
+    rs_code_block-object_type = zif_skylint_types=>object_types-class.
+    rs_code_block-object_name = zcl_skylint_test_util=>c_test_class.
     IF iv_class_definition = abap_true.
-      rs_procedure-id-kind = zif_skylint_types=>procedure_kinds-class_definition.
-      rs_procedure-id-name = '0'.
-      APPEND LINES OF it_statements TO rs_procedure-statements.
+      rs_code_block-block_kind = zif_skylint_types=>block_kinds-class_definition.
+      rs_code_block-block_name = '0'.
+      APPEND LINES OF it_statements TO rs_code_block-statements.
       RETURN.
     ENDIF.
-    rs_procedure-id-kind = zif_skylint_types=>procedure_kinds-method.
-    rs_procedure-id-name = |ZSKYLINT_TEST=>TEST|.
+    rs_code_block-block_kind = zif_skylint_types=>block_kinds-method.
+    rs_code_block-block_name = |ZSKYLINT_TEST=>TEST|.
 
     LOOP AT it_statements ASSIGNING <ls_stmt>.
       IF lv_started = abap_false AND <ls_stmt>-keyword = 'METHOD'.
         lv_started = abap_true.
       ENDIF.
       IF lv_started = abap_true.
-        APPEND <ls_stmt> TO rs_procedure-statements.
+        APPEND <ls_stmt> TO rs_code_block-statements.
       ENDIF.
       IF lv_started = abap_true AND <ls_stmt>-keyword = 'ENDMETHOD'.
         RETURN.
@@ -1066,9 +1062,9 @@ CLASS lcl_runner IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD execute.
-    DATA ls_proc TYPE zif_skylint_types=>ty_procedure.
+    DATA ls_proc TYPE zif_skylint_types=>ty_code_block.
 
-    ls_proc = build_procedure( iv_source           = iv_source
+    ls_proc = build_code_block( iv_source           = iv_source
                                iv_class_definition = iv_class_definition ).
 
     rt_findings = io_check->run( ls_proc ).
@@ -1082,7 +1078,7 @@ CLASS lcl_runner IMPLEMENTATION.
     ENDIF.
   ENDMETHOD.
 
-  METHOD build_procedure.
+  METHOD build_code_block.
     DATA lo_lexer TYPE REF TO lcl_lexer.
     DATA lv_src   TYPE string.
     DATA lt_toks  TYPE zif_skylint_types=>ty_tokens.
@@ -1093,8 +1089,8 @@ CLASS lcl_runner IMPLEMENTATION.
     lo_lexer = NEW #( lv_src ).
     lt_toks = lo_lexer->run( ).
     lt_stmts = lcl_parser=>build_statements( lt_toks ).
-    rs_procedure = lcl_procedure_builder=>slice_procedure( it_statements       = lt_stmts
-                                                           iv_class_definition = iv_class_definition ).
+    rs_code_block = lcl_code_block_builder=>slice_code_block( it_statements       = lt_stmts
+                                                             iv_class_definition = iv_class_definition ).
   ENDMETHOD.
 ENDCLASS.
 
@@ -1110,15 +1106,15 @@ CLASS lcl_applier IMPLEMENTATION.
       WHEN zif_skylint_types=>quickfix_kinds-replace.
         IF is_recorded-token_from > 0.
           rt_lines = apply_token_replace( it_lines     = rt_lines
-                                          is_procedure = is_procedure
+                                          is_code_block = is_code_block
                                           is_recorded  = is_recorded ).
         ELSE.
           rt_lines = apply_statement_replace( it_lines     = rt_lines
-                                              is_procedure = is_procedure
+                                              is_code_block = is_code_block
                                               is_recorded  = is_recorded ).
         ENDIF.
       WHEN zif_skylint_types=>quickfix_kinds-insert_before.
-        statement_lines( EXPORTING is_procedure = is_procedure
+        statement_lines( EXPORTING is_code_block = is_code_block
                                    iv_index     = is_recorded-statement_from
                          IMPORTING ev_first     = lv_start
                                    ev_found     = lv_found ).
@@ -1129,7 +1125,7 @@ CLASS lcl_applier IMPLEMENTATION.
                                  iv_at    = lv_start
                                  it_code  = is_recorded-new_code ).
       WHEN zif_skylint_types=>quickfix_kinds-insert_after.
-        statement_lines( EXPORTING is_procedure = is_procedure
+        statement_lines( EXPORTING is_code_block = is_code_block
                                    iv_index     = is_recorded-statement_from
                          IMPORTING ev_last      = lv_end
                                    ev_found     = lv_found ).
@@ -1140,7 +1136,7 @@ CLASS lcl_applier IMPLEMENTATION.
                                  iv_at    = lv_end + 1
                                  it_code  = is_recorded-new_code ).
       WHEN zif_skylint_types=>quickfix_kinds-delete.
-        statement_lines( EXPORTING is_procedure = is_procedure
+        statement_lines( EXPORTING is_code_block = is_code_block
                                    iv_index     = is_recorded-statement_from
                          IMPORTING ev_first     = lv_start
                                    ev_last      = lv_end
@@ -1172,7 +1168,7 @@ CLASS lcl_applier IMPLEMENTATION.
     DATA lv_tail     TYPE string.
 
     rt_lines = it_lines.
-    ls_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+    ls_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
                                                    iv_index      = is_recorded-statement_from ).
     IF ls_stmt-keyword IS INITIAL.
       RETURN.
@@ -1224,11 +1220,11 @@ CLASS lcl_applier IMPLEMENTATION.
     IF lv_stmt_to IS INITIAL.
       lv_stmt_to = is_recorded-statement_from.
     ENDIF.
-    statement_lines( EXPORTING is_procedure = is_procedure
+    statement_lines( EXPORTING is_code_block = is_code_block
                                iv_index     = is_recorded-statement_from
                      IMPORTING ev_first     = lv_start
                                ev_found     = lv_found ).
-    statement_lines( EXPORTING is_procedure = is_procedure
+    statement_lines( EXPORTING is_code_block = is_code_block
                                iv_index     = lv_stmt_to
                      IMPORTING ev_last      = lv_end
                                ev_found     = lv_found ).
@@ -1275,7 +1271,7 @@ CLASS lcl_applier IMPLEMENTATION.
     CLEAR ev_first.
     CLEAR ev_last.
     ev_found = abap_false.
-    ls_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+    ls_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
                                                    iv_index      = iv_index ).
     IF ls_stmt-keyword IS INITIAL.
       RETURN.

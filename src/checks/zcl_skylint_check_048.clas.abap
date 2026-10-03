@@ -39,11 +39,11 @@ CLASS zcl_skylint_check_048 IMPLEMENTATION.
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
-    IF is_procedure-id-kind <> zif_skylint_types=>procedure_kinds-class_definition.
+    IF is_code_block-block_kind <> zif_skylint_types=>block_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
          WHERE keyword = 'CLASS'.
       IF is_class_missing_final( <ls_statement> ) = abap_true.
         report_statement( is_statement    = <ls_statement>

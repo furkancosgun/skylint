@@ -33,7 +33,7 @@ CLASS zcl_skylint_check_066 IMPLEMENTATION.
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
          WHERE    keyword = 'SELECT' OR keyword = 'UPDATE' OR keyword = 'MODIFY'
                OR keyword = 'DELETE' OR keyword = 'INSERT'.
       IF    zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>

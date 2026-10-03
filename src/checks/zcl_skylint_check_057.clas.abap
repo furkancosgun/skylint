@@ -43,7 +43,7 @@ CLASS zcl_skylint_check_057 IMPLEMENTATION.
     DATA lt_supers    TYPE string_table.
     DATA lv_max_depth TYPE i.
 
-    IF is_procedure-id-kind <> zif_skylint_types=>procedure_kinds-class_definition.
+    IF is_code_block-block_kind <> zif_skylint_types=>block_kinds-class_definition.
       RETURN.
     ENDIF.
 
@@ -54,14 +54,14 @@ CLASS zcl_skylint_check_057 IMPLEMENTATION.
       lv_max_depth = mv_max_depth.
     ENDIF.
 
-    lo_class = zcl_skylint_rtti_util=>describe_class( is_procedure-id-main_unit-name ).
+    lo_class = zcl_skylint_rtti_util=>describe_class( is_code_block-object_name ).
     IF lo_class IS NOT BOUND.
       RETURN.
     ENDIF.
 
-    lt_supers = zcl_skylint_rtti_util=>get_super_classes( is_procedure-id-main_unit-name ).
+    lt_supers = zcl_skylint_rtti_util=>get_super_classes( is_code_block-object_name ).
 
-    ls_statement = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+    ls_statement = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
                                                         iv_index      = 1 ).
     IF     lines( lt_supers )    > lv_max_depth
        AND ls_statement-keyword IS NOT INITIAL.

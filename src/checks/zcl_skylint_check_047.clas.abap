@@ -20,7 +20,7 @@ CLASS zcl_skylint_check_047 DEFINITION
     DATA mv_max_complexity TYPE i VALUE 5.
 
     METHODS calculate_complexity
-      IMPORTING is_procedure   TYPE zif_skylint_types=>ty_procedure
+      IMPORTING is_code_block   TYPE zif_skylint_types=>ty_code_block
       RETURNING VALUE(rv_comp) TYPE i.
 
 ENDCLASS.
@@ -45,7 +45,7 @@ CLASS zcl_skylint_check_047 IMPLEMENTATION.
     DATA lv_cc         TYPE i.
     DATA ls_first_stmt TYPE zif_skylint_types=>ty_statement.
 
-    IF is_procedure-id-kind = zif_skylint_types=>procedure_kinds-class_definition.
+    IF is_code_block-block_kind = zif_skylint_types=>block_kinds-class_definition.
       RETURN.
     ENDIF.
 
@@ -55,10 +55,10 @@ CLASS zcl_skylint_check_047 IMPLEMENTATION.
       lv_max = mv_max_complexity.
     ENDIF.
 
-    lv_cc = calculate_complexity( is_procedure ).
+    lv_cc = calculate_complexity( is_code_block ).
 
     IF lv_cc > lv_max.
-      ls_first_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+      ls_first_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
                                                            iv_index      = 1 ).
       IF ls_first_stmt-keyword IS NOT INITIAL.
         report_statement( is_statement    = ls_first_stmt
@@ -74,7 +74,7 @@ CLASS zcl_skylint_check_047 IMPLEMENTATION.
 
     rv_comp = 1.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_stmt>.
+    LOOP AT is_code_block-statements ASSIGNING <ls_stmt>.
       CASE <ls_stmt>-keyword.
         WHEN 'IF' OR 'ELSEIF' OR 'LOOP' OR 'DO' OR 'WHILE' OR 'WHEN' OR 'CATCH' OR 'CLEANUP'.
           rv_comp += 1.

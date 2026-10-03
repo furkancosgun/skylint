@@ -39,11 +39,11 @@ CLASS zcl_skylint_check_026 IMPLEMENTATION.
     DATA ls_stmt TYPE zif_skylint_types=>ty_statement.
     DATA ls_tok  TYPE zif_skylint_types=>ty_token.
 
-    IF is_procedure-id-kind = zif_skylint_types=>procedure_kinds-class_definition.
+    IF is_code_block-block_kind = zif_skylint_types=>block_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    LOOP AT is_procedure-statements INTO ls_stmt.
+    LOOP AT is_code_block-statements INTO ls_stmt.
       LOOP AT ls_stmt-tokens INTO ls_tok.
         IF is_static_call( ls_tok ) = abap_true.
           report_statement( is_statement    = ls_stmt

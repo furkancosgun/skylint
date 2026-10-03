@@ -133,7 +133,7 @@ CLASS zcl_skylint_test_util IMPLEMENTATION.
     DATA lv_bad_str  TYPE string.
     DATA lt_bad      TYPE string_table.
     DATA lt_fixed    TYPE string_table.
-    DATA ls_proc     TYPE zif_skylint_types=>ty_procedure.
+    DATA ls_proc     TYPE zif_skylint_types=>ty_code_block.
     DATA lv_actual   TYPE string.
     DATA lv_expected TYPE string.
 
@@ -162,10 +162,10 @@ CLASS zcl_skylint_test_util IMPLEMENTATION.
     lv_bad_str = lcl_runner=>wrap_source( iv_source           = lv_bad_str
                                           iv_class_definition = iv_class_definition ).
     SPLIT lv_bad_str AT cl_abap_char_utilities=>newline INTO TABLE lt_bad.
-    ls_proc = lcl_runner=>build_procedure( iv_source           = lv_bad_str
+    ls_proc = lcl_runner=>build_code_block( iv_source           = lv_bad_str
                                            iv_class_definition = iv_class_definition ).
     lt_fixed = lcl_applier=>apply( it_lines     = lt_bad
-                                   is_procedure = ls_proc
+                                   is_code_block = ls_proc
                                    is_recorded  = ls_recorded ).
 
     assert_no_findings( io_check            = io_check
@@ -183,14 +183,14 @@ CLASS zcl_skylint_test_util IMPLEMENTATION.
 
   METHOD canonicalize.
     DATA lv_joined TYPE string.
-    DATA ls_proc   TYPE zif_skylint_types=>ty_procedure.
+    DATA ls_proc   TYPE zif_skylint_types=>ty_code_block.
     DATA lv_line   TYPE string.
     FIELD-SYMBOLS <ls_stmt> TYPE zif_skylint_types=>ty_statement.
     FIELD-SYMBOLS <ls_tok>  TYPE zif_skylint_types=>ty_token.
 
     CLEAR rv_text.
     lv_joined = lcl_runner=>join_source( it_source = it_source ).
-    ls_proc = lcl_runner=>build_procedure( lv_joined ).
+    ls_proc = lcl_runner=>build_code_block( lv_joined ).
     LOOP AT ls_proc-statements ASSIGNING <ls_stmt>.
       CLEAR lv_line.
       LOOP AT <ls_stmt>-tokens ASSIGNING <ls_tok>.

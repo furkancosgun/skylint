@@ -43,7 +43,7 @@ CLASS zcl_skylint_check_009 IMPLEMENTATION.
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
          WHERE keyword = 'CONCATENATE'.
       IF mv_allow_in_byte_mode = abap_true AND is_byte_mode( <ls_statement> ) = abap_true.
         CONTINUE.

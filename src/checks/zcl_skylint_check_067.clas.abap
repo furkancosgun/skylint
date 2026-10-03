@@ -18,7 +18,7 @@ CLASS zcl_skylint_check_067 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_COMMIT_WORK'.
 
     METHODS is_behavior_implementation
-      IMPORTING is_procedure  TYPE zif_skylint_types=>ty_procedure
+      IMPORTING is_code_block  TYPE zif_skylint_types=>ty_code_block
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
@@ -39,11 +39,11 @@ CLASS zcl_skylint_check_067 IMPLEMENTATION.
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
-    IF is_behavior_implementation( is_procedure ) = abap_false.
+    IF is_behavior_implementation( is_code_block ) = abap_false.
       RETURN.
     ENDIF.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
          WHERE keyword = 'COMMIT' OR keyword = 'ROLLBACK'.
       report_statement( is_statement    = <ls_statement>
                         iv_finding_code = c_finding_codes-no_commit ).
@@ -55,7 +55,7 @@ CLASS zcl_skylint_check_067 IMPLEMENTATION.
     DATA lv_unit_name TYPE string.
 
     rv_res = abap_false.
-    lv_unit_name = is_procedure-id-main_unit-name.
+    lv_unit_name = is_code_block-object_name.
 
     lt_supers = zcl_skylint_rtti_util=>get_super_classes( lv_unit_name ).
     IF    line_exists( lt_supers[ table_line = 'CL_ABAP_BEHAVIOR_HANDLER' ] )

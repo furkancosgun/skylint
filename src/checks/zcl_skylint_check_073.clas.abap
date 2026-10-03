@@ -36,7 +36,7 @@ CLASS zcl_skylint_check_073 IMPLEMENTATION.
     DATA lv_tok3 TYPE string.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'ADD' OR 'SUBTRACT' OR 'MULTIPLY' OR 'DIVIDE'.
           report_statement( is_statement    = <ls_statement>

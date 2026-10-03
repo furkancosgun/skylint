@@ -42,7 +42,7 @@ CLASS zcl_skylint_check_039 IMPLEMENTATION.
     DATA ls_first TYPE zif_skylint_types=>ty_statement.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
-    IF is_procedure-id-kind = zif_skylint_types=>procedure_kinds-class_definition.
+    IF is_code_block-block_kind = zif_skylint_types=>block_kinds-class_definition.
       RETURN.
     ENDIF.
 
@@ -53,7 +53,7 @@ CLASS zcl_skylint_check_039 IMPLEMENTATION.
     ENDIF.
 
     lv_count = 0.
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
       IF     <ls_statement>-keyword <> 'METHOD'
          AND <ls_statement>-keyword <> 'ENDMETHOD'
          AND <ls_statement>-keyword <> 'FORM'
@@ -67,7 +67,7 @@ CLASS zcl_skylint_check_039 IMPLEMENTATION.
     IF lv_count <= lv_max.
       RETURN.
     ENDIF.
-    ls_first = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+    ls_first = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
                                                     iv_index      = 1 ).
     IF ls_first-keyword IS INITIAL.
       RETURN.

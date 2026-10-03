@@ -38,7 +38,7 @@ CLASS zcl_skylint_check_025 IMPLEMENTATION.
     DATA ls_next_tok       TYPE zif_skylint_types=>ty_token.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
       IF    <ls_statement>-keyword = 'METHODS' OR <ls_statement>-keyword = 'CLASS-METHODS'
          OR <ls_statement>-keyword = 'INTERFACES'.
         CONTINUE.

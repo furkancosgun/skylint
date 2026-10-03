@@ -36,7 +36,7 @@ CLASS zcl_skylint_check_078 IMPLEMENTATION.
     DATA lv_curr_rank TYPE i.
     FIELD-SYMBOLS <ls_stmt> TYPE zif_skylint_types=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_stmt>.
+    LOOP AT is_code_block-statements ASSIGNING <ls_stmt>.
       lv_curr_rank = 0.
       CASE <ls_stmt>-keyword.
         WHEN 'TYPES'.

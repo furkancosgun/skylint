@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_004 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_is_not TYPE zif_skylint_types VALUE 'PREFERISNT',
+        prefer_is_not TYPE zif_skylint_types=>ty_finding_code VALUE 'PREFERISNT',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -35,8 +35,8 @@ CLASS zcl_skylint_check_004 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> LIKE LINE OF is_procedure-statements.
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
+    FIELD-SYMBOLS <ls_statement> LIKE LINE OF is_code_block-statements.
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
          WHERE keyword = 'IF' OR keyword = 'ELSEIF' OR keyword = 'CHECK'
             OR keyword = 'WHILE'.
       IF has_not_is_pattern( <ls_statement> ) = abap_true.

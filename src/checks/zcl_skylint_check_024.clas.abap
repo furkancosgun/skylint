@@ -54,9 +54,9 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
     DATA lv_is_bool_2      TYPE abap_bool.
     FIELD-SYMBOLS <ls_stmt_if> TYPE zif_skylint_types=>ty_statement.
 
-    lv_max = zcl_skylint_ast_util=>statement_count( is_procedure-statements ).
+    lv_max = zcl_skylint_ast_util=>statement_count( is_code_block-statements ).
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_stmt_if>.
+    LOOP AT is_code_block-statements ASSIGNING <ls_stmt_if>.
       IF <ls_stmt_if>-keyword <> 'IF'.
         CONTINUE.
       ENDIF.
@@ -66,13 +66,13 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      ls_stmt_then = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+      ls_stmt_then = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
                                                           iv_index      = lv_idx + 1 ).
-      ls_stmt_else = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+      ls_stmt_else = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
                                                           iv_index      = lv_idx + 2 ).
-      ls_stmt_else_body = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+      ls_stmt_else_body = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
                                                                iv_index      = lv_idx + 3 ).
-      ls_stmt_endif = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+      ls_stmt_endif = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
                                                            iv_index      = lv_idx + 4 ).
       IF    ls_stmt_then-keyword      IS INITIAL OR ls_stmt_else-keyword  IS INITIAL
          OR ls_stmt_else_body-keyword IS INITIAL OR ls_stmt_endif-keyword IS INITIAL.

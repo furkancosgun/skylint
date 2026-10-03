@@ -36,16 +36,16 @@ CLASS zcl_skylint_check_059 IMPLEMENTATION.
     DATA ls_statement TYPE zif_skylint_types=>ty_statement.
     DATA lo_obj       TYPE REF TO cl_abap_objectdescr.
 
-    IF is_procedure-id-kind <> zif_skylint_types=>procedure_kinds-class_definition.
+    IF is_code_block-block_kind <> zif_skylint_types=>block_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    lo_obj = zcl_skylint_rtti_util=>describe_object( is_procedure-id-main_unit-name ).
+    lo_obj = zcl_skylint_rtti_util=>describe_object( is_code_block-object_name ).
     IF lo_obj IS NOT BOUND.
       RETURN.
     ENDIF.
 
-    ls_statement = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+    ls_statement = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
                                                         iv_index      = 1 ).
     IF ls_statement-keyword IS INITIAL.
       RETURN.

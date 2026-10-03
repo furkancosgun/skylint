@@ -45,7 +45,7 @@ CLASS zcl_skylint_check_029 IMPLEMENTATION.
     DATA lv_max TYPE i.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
-    IF is_procedure-id-kind <> zif_skylint_types=>procedure_kinds-class_definition.
+    IF is_code_block-block_kind <> zif_skylint_types=>block_kinds-class_definition.
       RETURN.
     ENDIF.
 
@@ -55,7 +55,7 @@ CLASS zcl_skylint_check_029 IMPLEMENTATION.
       lv_max = mv_max_parameters.
     ENDIF.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
          WHERE keyword = 'METHODS' OR keyword = 'CLASS-METHODS'.
       IF count_parameters( <ls_statement> ) > lv_max.
         report_statement( is_statement    = <ls_statement>

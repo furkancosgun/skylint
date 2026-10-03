@@ -44,7 +44,7 @@ CLASS zcl_skylint_check_021 IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
     FIELD-SYMBOLS <ls_token>     TYPE zif_skylint_types=>ty_token.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
       IF is_declaration_keyword( <ls_statement>-keyword ) = abap_true.
         CONTINUE.
       ENDIF.

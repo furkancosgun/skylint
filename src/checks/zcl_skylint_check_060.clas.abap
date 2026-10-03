@@ -35,7 +35,7 @@ CLASS zcl_skylint_check_060 IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
     FIELD-SYMBOLS <ls_token>     TYPE zif_skylint_types=>ty_token.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
          WHERE keyword = 'CATCH'.
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
         IF to_upper( <ls_token>-lexeme ) = 'CX_ROOT'.

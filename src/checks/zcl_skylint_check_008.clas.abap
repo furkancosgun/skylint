@@ -78,7 +78,7 @@ CLASS zcl_skylint_check_008 IMPLEMENTATION.
     DATA lt_new_code   TYPE zif_skylint_types=>ty_code_lines.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
       lv_idx = sy-tabix.
       IF lv_idx <= lv_skip_until.
         CONTINUE.
@@ -86,7 +86,7 @@ CLASS zcl_skylint_check_008 IMPLEMENTATION.
 
       CASE <ls_statement>-keyword.
         WHEN 'DATA' OR 'TYPES' OR 'CLASS-DATA' OR 'CONSTANTS' OR 'STATICS'.
-          lv_count = collect_chain_count( it_statements = is_procedure-statements
+          lv_count = collect_chain_count( it_statements = is_code_block-statements
                                           iv_start      = lv_idx
                                           is_head       = <ls_statement> ).
           IF lv_count > 1.
@@ -97,7 +97,7 @@ CLASS zcl_skylint_check_008 IMPLEMENTATION.
             ENDIF.
             CLEAR ls_quickfix.
             IF lv_is_struct = abap_false.
-              lt_new_code = build_chain_code( it_statements = is_procedure-statements
+              lt_new_code = build_chain_code( it_statements = is_code_block-statements
                                               iv_from       = lv_idx
                                               iv_to         = lv_skip_until ).
               ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-resolve_chain
@@ -105,7 +105,7 @@ CLASS zcl_skylint_check_008 IMPLEMENTATION.
                                               iv_statement_to   = lv_skip_until
                                               it_new_code       = lt_new_code ).
             ENDIF.
-            ls_target = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_procedure-statements
+            ls_target = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_code_block-statements
                                                                   iv_current_index = lv_idx ).
             IF ls_target-keyword IS NOT INITIAL.
               report_statement( is_statement    = ls_target

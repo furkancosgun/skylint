@@ -8,7 +8,7 @@ This document outlines the mandatory engineering guidelines, architectural desig
 
 1. **Platform-Agnostic Core (`main` branch):**
    - The core checks in `src/checks/` **MUST NEVER** reference platform-specific APIs or interfaces (neither SAP ATC Cloud `if_ci_atc_*` nor classic Code Inspector `cl_ci_*`).
-   - All AST structures, procedure types, token representations, findings, severities, and quickfix types are defined centrally in `zif_skylint_types`.
+   - All AST structures, code block types, token representations, findings, severities, and quickfix types are defined centrally in `zif_skylint_types`.
    - The `main` branch is 100% portable and executable via Open-ABAP transpiler in Node.js, SAP NetWeaver 7.40+, S/4HANA On-Premise, and SAP BTP ABAP Environment.
 
 2. **Multi-Platform Branch Architecture:**
@@ -18,16 +18,16 @@ This document outlines the mandatory engineering guidelines, architectural desig
 
 3. **Mandatory Single Source of Truth (`zif_skylint_types`):**
    - All types, structures, and constants for AST analysis **MUST** reference `zif_skylint_types`:
-     - AST: `ty_procedure`, `ty_statement`, `ty_token`, `ty_compiler_reference`.
+     - AST: `ty_code_block`, `ty_statement`, `ty_token`, `ty_compiler_reference`.
      - Findings: `ty_finding`, `ty_findings`, `ty_finding_code`, `severities`.
      - QuickFixes: `ty_quickfix`, `ty_quickfixes`, `ty_quickfix_code`, `quickfix_kinds`.
-     - Constants: `compilation_unit_kinds`, `procedure_kinds`, `compiler_reference_kinds`, `usage_modes`, `usage_grades`, `attribute_kinds`.
+     - Constants: `object_types`, `block_kinds`, `compiler_reference_kinds`, `usage_modes`, `usage_grades`, `attribute_kinds`.
 
 4. **Zero-Boilerplate Base Class (`zcl_skylint_check_base`):**
    - Every check rule **MUST** inherit from `zcl_skylint_check_base` in its own isolated class named `zcl_skylint_check_XXX`.
    - Subclasses only need to implement:
      - `constructor`: Metadata configuration (description, finding codes, severities, pseudo-comments, and attributes).
-     - `check( is_procedure )`: Procedure inspection logic over `is_procedure-statements`.
+     - `check( is_code_block )`: Code block inspection logic over `is_code_block-statements`.
    - Finding creation, token offset mapping, pseudo-comment suppression, and quickfix formatting are automatically handled by the base class.
 
 ---
@@ -53,7 +53,7 @@ Modern ABAP assignments like `lv_val = 10.` or `ls_data-field = 'X'.` do not hav
 - When an assignment operator `=` is found at top level (`paren_depth = 0`), the statement's `keyword` is set to **`COMPUTE`**.
 - **Agent Rule:** To inspect value assignments, computations, or constructor expressions assigned to a variable, filter directly by:
   ```abap
-  LOOP AT is_procedure-statements ASSIGNING <ls_statement>
+  LOOP AT is_code_block-statements ASSIGNING <ls_statement>
        WHERE keyword = 'COMPUTE'.
   ```
 
@@ -111,7 +111,7 @@ Compiler symbol resolution is stored in `is_statement-tokens-references` (of typ
   ```
 
 ### 3. Safe RTTI over String Matching (Class Hierarchies & Types)
-- **Never use string parsing or regex** on `is_procedure-id-name` or `INHERITING FROM` to determine class hierarchies, interfaces, or superclasses.
+- **Never use string parsing or regex** on `is_code_block-block_name` or `INHERITING FROM` to determine class hierarchies, interfaces, or superclasses.
 - **Always use ABAP Run-Time Type Identification (RTTI) via `zcl_skylint_rtti_util`:**
   - Safe wrappers over `cl_abap_typedescr=>describe_by_name( lv_classname )`.
   - Always wrap raw RTTI operations in `TRY ... CATCH cx_root` to safely handle dynamic test types in Open-ABAP transpiler environments.
@@ -128,13 +128,13 @@ Compiler symbol resolution is stored in `is_statement-tokens-references` (of typ
 ### 4. Typed Constants & Enums over Magic Literals
 - **Strictly avoid magic string literals** for statement kinds, object types, reference kinds, severities, or usage modes.
 - **Mandatory Constants from `zif_skylint_types`:**
-  - `compilation_unit_kinds` (e.g. `compilation_unit_kinds-class`, `compilation_unit_kinds-interface`)
-  - `procedure_kinds` (e.g. `procedure_kinds-method`, `procedure_kinds-class_definition`)
+  - `object_types` (e.g. `object_types-class`, `object_types-interface`, `object_types-program`)
+  - `block_kinds` (e.g. `block_kinds-method`, `block_kinds-class_definition`)
   - `compiler_reference_kinds` (e.g. `compiler_reference_kinds-method`, `compiler_reference_kinds-data`, `compiler_reference_kinds-type`)
   - `usage_modes` (e.g. `usage_modes-read`, `usage_modes-write`, `usage_modes-read_database`, `usage_modes-write_database`)
   - `usage_grades` (e.g. `usage_grades-definition`, `usage_grades-direct`, `usage_grades-indirect`)
   - `severities` (e.g. `severities-error`, `severities-warning`, `severities-info`)
-  - `attribute_kinds` (e.g. `attribute_kinds-boolean`, `attribute_kinds-integer`, `attribute_kinds-string`)
+  - `attribute_kinds` (e.g. `attribute_kinds-boolean`, `attribute_kinds-integer`, `attribute_kinds-string`, `attribute_kinds-elementary`)
 
 ### 5. Stateful Block & Control Flow Traversal (Depth Tracking)
 When inspecting multi-statement structures (e.g., `IF ... ENDIF`, `LOOP ... ENDLOOP`, `TRY ... CATCH`, `SELECT ... ENDSELECT`):
@@ -144,7 +144,7 @@ When inspecting multi-statement structures (e.g., `IF ... ENDIF`, `LOOP ... ENDL
   DATA lv_depth TYPE i.
   FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
-  LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+  LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
     CASE <ls_statement>-keyword.
       WHEN 'LOOP' OR 'DO' OR 'WHILE'.
         lv_depth = lv_depth + 1.
@@ -268,7 +268,7 @@ CLASS zcl_skylint_check_XXX IMPLEMENTATION.
       lv_custom_opt = mv_custom_option.
     ENDIF.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
          WHERE keyword = 'TARGET_KEYWORD'.
       " Inspection logic
       report_statement( is_statement    = <ls_statement>

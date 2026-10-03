@@ -35,7 +35,7 @@ CLASS zcl_skylint_check_079 IMPLEMENTATION.
     FIELD-SYMBOLS <ls_stmt> TYPE zif_skylint_types=>ty_statement.
     FIELD-SYMBOLS <ls_tok>  TYPE zif_skylint_types=>ty_token.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_stmt>
+    LOOP AT is_code_block-statements ASSIGNING <ls_stmt>
          WHERE keyword = 'METHODS' OR keyword = 'CLASS-METHODS'.
       LOOP AT <ls_stmt>-tokens ASSIGNING <ls_tok>.
         IF <ls_tok>-lexeme CP '!*'.

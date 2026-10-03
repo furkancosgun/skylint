@@ -44,10 +44,10 @@ CLASS ltcl_test_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_chain_unrolling.
-    DATA ls_proc TYPE zif_skylint_types=>ty_procedure.
+    DATA ls_proc TYPE zif_skylint_types=>ty_code_block.
     DATA ls_stmt TYPE zif_skylint_types=>ty_statement.
 
-    ls_proc = lcl_runner=>build_procedure( `DATA: lv_a TYPE i, lv_b TYPE string.` ).
+    ls_proc = lcl_runner=>build_code_block( `DATA: lv_a TYPE i, lv_b TYPE string.` ).
 
     cl_abap_unit_assert=>assert_equals( exp = 4
                                         act = lines( ls_proc-statements )
@@ -65,10 +65,10 @@ CLASS ltcl_test_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_compiler_assignment.
-    DATA ls_proc TYPE zif_skylint_types=>ty_procedure.
+    DATA ls_proc TYPE zif_skylint_types=>ty_code_block.
     DATA ls_stmt TYPE zif_skylint_types=>ty_statement.
 
-    ls_proc = lcl_runner=>build_procedure( `lv_val = 100.` ).
+    ls_proc = lcl_runner=>build_code_block( `lv_val = 100.` ).
 
     READ TABLE ls_proc-statements INTO ls_stmt INDEX 2.
     cl_abap_unit_assert=>assert_subrc( ).
@@ -78,12 +78,12 @@ CLASS ltcl_test_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_compiler_method_call.
-    DATA ls_proc TYPE zif_skylint_types=>ty_procedure.
+    DATA ls_proc TYPE zif_skylint_types=>ty_code_block.
     DATA ls_stmt TYPE zif_skylint_types=>ty_statement.
     DATA ls_tok  TYPE zif_skylint_types=>ty_token.
     DATA ls_ref  TYPE zif_skylint_types=>ty_compiler_reference.
 
-    ls_proc = lcl_runner=>build_procedure( `lo_worker->do_work( iv_param = 1 ).` ).
+    ls_proc = lcl_runner=>build_code_block( `lo_worker->do_work( iv_param = 1 ).` ).
 
     READ TABLE ls_proc-statements INTO ls_stmt INDEX 2.
     cl_abap_unit_assert=>assert_subrc( ).
@@ -105,12 +105,12 @@ CLASS ltcl_test_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_compiler_db_refs.
-    DATA ls_proc TYPE zif_skylint_types=>ty_procedure.
+    DATA ls_proc TYPE zif_skylint_types=>ty_code_block.
     DATA ls_stmt TYPE zif_skylint_types=>ty_statement.
     DATA ls_tok  TYPE zif_skylint_types=>ty_token.
     DATA ls_ref  TYPE zif_skylint_types=>ty_compiler_reference.
 
-    ls_proc = lcl_runner=>build_procedure( `SELECT * FROM sflight INTO TABLE @DATA(lt_flights).` ).
+    ls_proc = lcl_runner=>build_code_block( `SELECT * FROM sflight INTO TABLE @DATA(lt_flights).` ).
 
     READ TABLE ls_proc-statements INTO ls_stmt INDEX 2.
     cl_abap_unit_assert=>assert_subrc( ).
@@ -129,12 +129,12 @@ CLASS ltcl_test_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_compiler_system_var.
-    DATA ls_proc TYPE zif_skylint_types=>ty_procedure.
+    DATA ls_proc TYPE zif_skylint_types=>ty_code_block.
     DATA ls_stmt TYPE zif_skylint_types=>ty_statement.
     DATA ls_tok  TYPE zif_skylint_types=>ty_token.
     DATA ls_ref  TYPE zif_skylint_types=>ty_compiler_reference.
 
-    ls_proc = lcl_runner=>build_procedure( `sy-subrc = 4.` ).
+    ls_proc = lcl_runner=>build_code_block( `sy-subrc = 4.` ).
 
     READ TABLE ls_proc-statements INTO ls_stmt INDEX 2.
     cl_abap_unit_assert=>assert_subrc( ).
@@ -182,10 +182,10 @@ CLASS ltcl_test_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_statement_types.
-    DATA ls_proc TYPE zif_skylint_types=>ty_procedure.
+    DATA ls_proc TYPE zif_skylint_types=>ty_code_block.
     DATA ls_stmt TYPE zif_skylint_types=>ty_statement.
 
-    ls_proc = lcl_runner=>build_procedure( |DATA lv_x TYPE i.{ cl_abap_char_utilities=>newline }| &&
+    ls_proc = lcl_runner=>build_code_block( |DATA lv_x TYPE i.{ cl_abap_char_utilities=>newline }| &&
                                            |lv_x = 1.{ cl_abap_char_utilities=>newline }| &&
                                            |lo_obj->do_it( ).| ).
 
