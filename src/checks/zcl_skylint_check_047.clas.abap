@@ -20,7 +20,7 @@ CLASS zcl_skylint_check_047 DEFINITION
     DATA mv_max_complexity TYPE i VALUE 5.
 
     METHODS calculate_complexity
-      IMPORTING is_code_block   TYPE zif_skylint_types=>ty_code_block
+      IMPORTING is_code_block  TYPE zif_skylint_types=>ty_code_block
       RETURNING VALUE(rv_comp) TYPE i.
 
 ENDCLASS.
@@ -36,7 +36,7 @@ CLASS zcl_skylint_check_047 IMPLEMENTATION.
                                        text           = 'Procedure cyclomatic complexity exceeds threshold'
                                        pseudo_comment = c_pseudo_comment ) )
                                  attributes        = VALUE #( ( name  = 'MAX_COMPLEXITY'
-                                                                kind  = zif_skylint_types=>attribute_kinds-elementary
+                                                                kind  = zif_skylint_types=>attribute_kinds-integer
                                                                 value = REF #( mv_max_complexity ) ) ) ) ).
   ENDMETHOD.
 

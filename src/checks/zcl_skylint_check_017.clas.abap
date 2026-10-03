@@ -18,9 +18,9 @@ CLASS zcl_skylint_check_017 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'NESTED_IF'.
 
     METHODS is_nested_if_mergeable
-      IMPORTING iv_idx       TYPE i
+      IMPORTING iv_idx        TYPE i
                 is_code_block TYPE zif_skylint_types=>ty_code_block
-      RETURNING VALUE(rv_is) TYPE abap_bool.
+      RETURNING VALUE(rv_is)  TYPE abap_bool.
 
 ENDCLASS.
 
@@ -43,7 +43,7 @@ CLASS zcl_skylint_check_017 IMPLEMENTATION.
     LOOP AT is_code_block-statements ASSIGNING <ls_statement>
          WHERE keyword = 'IF'.
       lv_idx = sy-tabix.
-      IF is_nested_if_mergeable( iv_idx       = lv_idx
+      IF is_nested_if_mergeable( iv_idx        = lv_idx
                                  is_code_block = is_code_block ) = abap_true.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-nested_if ).

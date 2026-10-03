@@ -18,7 +18,7 @@ CLASS zcl_skylint_check_067 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_COMMIT_WORK'.
 
     METHODS is_behavior_implementation
-      IMPORTING is_code_block  TYPE zif_skylint_types=>ty_code_block
+      IMPORTING is_code_block TYPE zif_skylint_types=>ty_code_block
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.

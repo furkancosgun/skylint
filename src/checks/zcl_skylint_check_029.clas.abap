@@ -37,7 +37,7 @@ CLASS zcl_skylint_check_029 IMPLEMENTATION.
                        text           = 'Method signature has too many parameters; consider grouping into structures'
                        pseudo_comment = c_pseudo_comment ) )
                  attributes        = VALUE #( ( name  = 'MAX_PARAMETERS'
-                                                kind  = zif_skylint_types=>attribute_kinds-elementary
+                                                kind  = zif_skylint_types=>attribute_kinds-integer
                                                 value = REF #( mv_max_parameters ) ) ) ) ).
   ENDMETHOD.
 

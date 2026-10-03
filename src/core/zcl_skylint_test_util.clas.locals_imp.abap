@@ -135,8 +135,8 @@ ENDCLASS.
 CLASS lcl_code_block_builder DEFINITION FINAL.
   PUBLIC SECTION.
     CLASS-METHODS slice_code_block
-      IMPORTING it_statements       TYPE zif_skylint_types=>ty_statements
-                iv_class_definition TYPE abap_bool DEFAULT abap_false
+      IMPORTING it_statements        TYPE zif_skylint_types=>ty_statements
+                iv_class_definition  TYPE abap_bool DEFAULT abap_false
       RETURNING VALUE(rs_code_block) TYPE zif_skylint_types=>ty_code_block.
 ENDCLASS.
 
@@ -156,8 +156,8 @@ CLASS lcl_runner DEFINITION FINAL.
       RAISING   cx_static_check.
 
     CLASS-METHODS build_code_block
-      IMPORTING iv_source           TYPE string
-                iv_class_definition TYPE abap_bool DEFAULT abap_false
+      IMPORTING iv_source            TYPE string
+                iv_class_definition  TYPE abap_bool DEFAULT abap_false
       RETURNING VALUE(rs_code_block) TYPE zif_skylint_types=>ty_code_block.
 
     CLASS-METHODS wrap_source
@@ -176,17 +176,17 @@ CLASS lcl_applier DEFINITION FINAL.
   PUBLIC SECTION.
     CLASS-METHODS apply
       IMPORTING it_lines        TYPE string_table
-                is_code_block TYPE zif_skylint_types=>ty_code_block
+                is_code_block   TYPE zif_skylint_types=>ty_code_block
                 is_recorded     TYPE zif_skylint_types=>ty_quickfix
       RETURNING VALUE(rt_lines) TYPE string_table.
 
   PRIVATE SECTION.
     CLASS-METHODS statement_lines
       IMPORTING is_code_block TYPE zif_skylint_types=>ty_code_block
-                iv_index     TYPE i
-      EXPORTING ev_first     TYPE i
-                ev_last      TYPE i
-                ev_found     TYPE abap_bool.
+                iv_index      TYPE i
+      EXPORTING ev_first      TYPE i
+                ev_last       TYPE i
+                ev_found      TYPE abap_bool.
 
     CLASS-METHODS join_code
       IMPORTING it_code        TYPE zif_skylint_types=>ty_code_lines
@@ -194,13 +194,13 @@ CLASS lcl_applier DEFINITION FINAL.
 
     CLASS-METHODS apply_token_replace
       IMPORTING it_lines        TYPE string_table
-                is_code_block TYPE zif_skylint_types=>ty_code_block
+                is_code_block   TYPE zif_skylint_types=>ty_code_block
                 is_recorded     TYPE zif_skylint_types=>ty_quickfix
       RETURNING VALUE(rt_lines) TYPE string_table.
 
     CLASS-METHODS apply_statement_replace
       IMPORTING it_lines        TYPE string_table
-                is_code_block TYPE zif_skylint_types=>ty_code_block
+                is_code_block   TYPE zif_skylint_types=>ty_code_block
                 is_recorded     TYPE zif_skylint_types=>ty_quickfix
       RETURNING VALUE(rt_lines) TYPE string_table.
 
@@ -1065,7 +1065,7 @@ CLASS lcl_runner IMPLEMENTATION.
     DATA ls_proc TYPE zif_skylint_types=>ty_code_block.
 
     ls_proc = build_code_block( iv_source           = iv_source
-                               iv_class_definition = iv_class_definition ).
+                                iv_class_definition = iv_class_definition ).
 
     rt_findings = io_check->run( ls_proc ).
   ENDMETHOD.
@@ -1090,7 +1090,7 @@ CLASS lcl_runner IMPLEMENTATION.
     lt_toks = lo_lexer->run( ).
     lt_stmts = lcl_parser=>build_statements( lt_toks ).
     rs_code_block = lcl_code_block_builder=>slice_code_block( it_statements       = lt_stmts
-                                                             iv_class_definition = iv_class_definition ).
+                                                              iv_class_definition = iv_class_definition ).
   ENDMETHOD.
 ENDCLASS.
 
@@ -1105,19 +1105,19 @@ CLASS lcl_applier IMPLEMENTATION.
     CASE is_recorded-kind.
       WHEN zif_skylint_types=>quickfix_kinds-replace.
         IF is_recorded-token_from > 0.
-          rt_lines = apply_token_replace( it_lines     = rt_lines
+          rt_lines = apply_token_replace( it_lines      = rt_lines
                                           is_code_block = is_code_block
-                                          is_recorded  = is_recorded ).
+                                          is_recorded   = is_recorded ).
         ELSE.
-          rt_lines = apply_statement_replace( it_lines     = rt_lines
+          rt_lines = apply_statement_replace( it_lines      = rt_lines
                                               is_code_block = is_code_block
-                                              is_recorded  = is_recorded ).
+                                              is_recorded   = is_recorded ).
         ENDIF.
       WHEN zif_skylint_types=>quickfix_kinds-insert_before.
         statement_lines( EXPORTING is_code_block = is_code_block
-                                   iv_index     = is_recorded-statement_from
-                         IMPORTING ev_first     = lv_start
-                                   ev_found     = lv_found ).
+                                   iv_index      = is_recorded-statement_from
+                         IMPORTING ev_first      = lv_start
+                                   ev_found      = lv_found ).
         IF lv_found = abap_false.
           RETURN.
         ENDIF.
@@ -1126,9 +1126,9 @@ CLASS lcl_applier IMPLEMENTATION.
                                  it_code  = is_recorded-new_code ).
       WHEN zif_skylint_types=>quickfix_kinds-insert_after.
         statement_lines( EXPORTING is_code_block = is_code_block
-                                   iv_index     = is_recorded-statement_from
-                         IMPORTING ev_last      = lv_end
-                                   ev_found     = lv_found ).
+                                   iv_index      = is_recorded-statement_from
+                         IMPORTING ev_last       = lv_end
+                                   ev_found      = lv_found ).
         IF lv_found = abap_false.
           RETURN.
         ENDIF.
@@ -1137,10 +1137,10 @@ CLASS lcl_applier IMPLEMENTATION.
                                  it_code  = is_recorded-new_code ).
       WHEN zif_skylint_types=>quickfix_kinds-delete.
         statement_lines( EXPORTING is_code_block = is_code_block
-                                   iv_index     = is_recorded-statement_from
-                         IMPORTING ev_first     = lv_start
-                                   ev_last      = lv_end
-                                   ev_found     = lv_found ).
+                                   iv_index      = is_recorded-statement_from
+                         IMPORTING ev_first      = lv_start
+                                   ev_last       = lv_end
+                                   ev_found      = lv_found ).
         IF lv_found = abap_false.
           RETURN.
         ENDIF.
@@ -1221,13 +1221,13 @@ CLASS lcl_applier IMPLEMENTATION.
       lv_stmt_to = is_recorded-statement_from.
     ENDIF.
     statement_lines( EXPORTING is_code_block = is_code_block
-                               iv_index     = is_recorded-statement_from
-                     IMPORTING ev_first     = lv_start
-                               ev_found     = lv_found ).
+                               iv_index      = is_recorded-statement_from
+                     IMPORTING ev_first      = lv_start
+                               ev_found      = lv_found ).
     statement_lines( EXPORTING is_code_block = is_code_block
-                               iv_index     = lv_stmt_to
-                     IMPORTING ev_last      = lv_end
-                               ev_found     = lv_found ).
+                               iv_index      = lv_stmt_to
+                     IMPORTING ev_last       = lv_end
+                               ev_found      = lv_found ).
     IF lv_found = abap_false.
       RETURN.
     ENDIF.

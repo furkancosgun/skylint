@@ -163,10 +163,10 @@ CLASS zcl_skylint_test_util IMPLEMENTATION.
                                           iv_class_definition = iv_class_definition ).
     SPLIT lv_bad_str AT cl_abap_char_utilities=>newline INTO TABLE lt_bad.
     ls_proc = lcl_runner=>build_code_block( iv_source           = lv_bad_str
-                                           iv_class_definition = iv_class_definition ).
-    lt_fixed = lcl_applier=>apply( it_lines     = lt_bad
+                                            iv_class_definition = iv_class_definition ).
+    lt_fixed = lcl_applier=>apply( it_lines      = lt_bad
                                    is_code_block = ls_proc
-                                   is_recorded  = ls_recorded ).
+                                   is_recorded   = ls_recorded ).
 
     assert_no_findings( io_check            = io_check
                         it_source           = lt_fixed

@@ -18,13 +18,13 @@ CLASS zcl_skylint_check_016 DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'IDENTICAL_CONDITIONS'.
 
     METHODS check_duplicate_elseif
-      IMPORTING iv_idx       TYPE i
-                is_statement TYPE zif_skylint_types=>ty_statement
+      IMPORTING iv_idx        TYPE i
+                is_statement  TYPE zif_skylint_types=>ty_statement
                 is_code_block TYPE zif_skylint_types=>ty_code_block.
 
     METHODS check_duplicate_when
-      IMPORTING iv_idx       TYPE i
-                is_statement TYPE zif_skylint_types=>ty_statement
+      IMPORTING iv_idx        TYPE i
+                is_statement  TYPE zif_skylint_types=>ty_statement
                 is_code_block TYPE zif_skylint_types=>ty_code_block.
 
     METHODS get_condition_string
@@ -54,13 +54,13 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
 
       CASE <ls_statement>-keyword.
         WHEN 'ELSEIF'.
-          check_duplicate_elseif( iv_idx       = lv_idx
-                                  is_statement = <ls_statement>
+          check_duplicate_elseif( iv_idx        = lv_idx
+                                  is_statement  = <ls_statement>
                                   is_code_block = is_code_block ).
 
         WHEN 'WHEN'.
-          check_duplicate_when( iv_idx       = lv_idx
-                                is_statement = <ls_statement>
+          check_duplicate_when( iv_idx        = lv_idx
+                                is_statement  = <ls_statement>
                                 is_code_block = is_code_block ).
       ENDCASE.
     ENDLOOP.

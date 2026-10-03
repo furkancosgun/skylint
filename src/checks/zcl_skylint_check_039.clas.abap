@@ -32,7 +32,7 @@ CLASS zcl_skylint_check_039 IMPLEMENTATION.
                                        text           = 'Method length exceeds maximum allowed statement limit'
                                        pseudo_comment = c_pseudo_comment ) )
                                  attributes        = VALUE #( ( name  = 'MAX_STATEMENTS'
-                                                                kind  = zif_skylint_types=>attribute_kinds-elementary
+                                                                kind  = zif_skylint_types=>attribute_kinds-integer
                                                                 value = REF #( mv_max_statements ) ) ) ) ).
   ENDMETHOD.
 

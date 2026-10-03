@@ -60,7 +60,7 @@ CLASS zcl_skylint_check_031 IMPLEMENTATION.
       IF     lv_fae_tab IS NOT INITIAL
          AND has_preceding_check( it_statements  = is_code_block-statements
                                   iv_current_idx = lv_idx
-                                  iv_tab_name    = lv_fae_tab )             = abap_false.
+                                  iv_tab_name    = lv_fae_tab )              = abap_false.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-unsecure_fae ).
       ENDIF.

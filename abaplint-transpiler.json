@@ -8,7 +8,8 @@
   ],
   "exclude_filter": [
     "zcl_skylint_atc_adapter",
-    "zcl_skylint_sci_adapter"
+    "zcl_skylint_sci_adapter",
+    "zcl_skylint_sci_category"
   ],
   "write_unit_tests": true,
   "write_source_map": true,

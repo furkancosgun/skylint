@@ -33,7 +33,7 @@ CLASS zcl_skylint_check_054 IMPLEMENTATION.
                        text           = 'Avoid heavy business logic/loops in constructor; use injection only'
                        pseudo_comment = c_pseudo_comment ) )
                  attributes        = VALUE #( ( name  = 'MAX_STATEMENTS'
-                                                kind  = zif_skylint_types=>attribute_kinds-elementary
+                                                kind  = zif_skylint_types=>attribute_kinds-integer
                                                 value = REF #( mv_max_statements ) ) ) ) ).
   ENDMETHOD.
 

@@ -40,7 +40,7 @@ CLASS zcl_skylint_check_040 IMPLEMENTATION.
                                        text           = 'Control block nesting depth exceeds maximum allowed limit'
                                        pseudo_comment = c_pseudo_comment ) )
                                  attributes        = VALUE #( ( name  = 'MAX_DEPTH'
-                                                                kind  = zif_skylint_types=>attribute_kinds-elementary
+                                                                kind  = zif_skylint_types=>attribute_kinds-integer
                                                                 value = REF #( mv_max_depth ) ) ) ) ).
   ENDMETHOD.
 

@@ -170,7 +170,6 @@ INTERFACE zif_skylint_types
       boolean    TYPE string VALUE 'BOOLEAN',
       string     TYPE string VALUE 'STRING',
       integer    TYPE string VALUE 'INTEGER',
-      elementary TYPE string VALUE 'ELEMENTARY',
     END OF attribute_kinds.
 
   TYPES:
@@ -186,6 +185,7 @@ INTERFACE zif_skylint_types
     BEGIN OF ty_attribute,
       name  TYPE string,
       kind  TYPE string,
+      text  TYPE string,
       value TYPE REF TO data,
     END OF ty_attribute,
     ty_attributes TYPE STANDARD TABLE OF ty_attribute WITH EMPTY KEY.
