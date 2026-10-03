@@ -89,7 +89,7 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
         RETURN.
       ENDIF.
 
-      lv_idx += 1.
+      lv_idx = lv_idx + 1.
     ENDWHILE.
   ENDMETHOD.
 

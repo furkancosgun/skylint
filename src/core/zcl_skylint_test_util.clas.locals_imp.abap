@@ -61,8 +61,7 @@ CLASS lcl_compiler DEFINITION FINAL.
       IMPORTING it_tokens         TYPE zif_skylint_types=>ty_tokens
                 iv_in_chain       TYPE abap_bool
                 iv_header_kw      TYPE string
-      EXPORTING ev_keyword        TYPE zif_skylint_types=>ty_keyword
-                ev_statement_type TYPE zif_skylint_types=>ty_statement_type.
+      RETURNING VALUE(rv_keyword) TYPE zif_skylint_types=>ty_keyword.
 
     CLASS-METHODS is_assignment
       IMPORTING it_tokens     TYPE zif_skylint_types=>ty_tokens
@@ -258,12 +257,12 @@ CLASS lcl_lexer IMPLEMENTATION.
       RETURN.
     ENDIF.
     lv_ch = mv_src+mv_pos(1).
-    mv_pos += 1.
+    mv_pos = mv_pos + 1.
     IF lv_ch = mv_nl.
-      mv_line += 1.
+      mv_line = mv_line + 1.
       mv_col = 1.
     ELSE.
-      mv_col += 1.
+      mv_col = mv_col + 1.
     ENDIF.
     rv_ch = lv_ch.
   ENDMETHOD.
@@ -299,7 +298,7 @@ CLASS lcl_lexer IMPLEMENTATION.
       IF xsdbool( lv_ch CA lv_rest ) = abap_false.
         RETURN.
       ENDIF.
-      lv_idx += 1.
+      lv_idx = lv_idx + 1.
     ENDWHILE.
   ENDMETHOD.
 
@@ -443,10 +442,10 @@ CLASS lcl_lexer IMPLEMENTATION.
           lv_text = lv_text && advance( ).
         ENDIF.
       ELSEIF lv_ch = '{'.
-        lv_depth += 1.
+        lv_depth = lv_depth + 1.
         lv_text = lv_text && advance( ).
       ELSEIF lv_ch = '}' AND lv_depth > 0.
-        lv_depth -= 1.
+        lv_depth = lv_depth - 1.
         lv_text = lv_text && advance( ).
       ELSEIF lv_ch = '|' AND lv_depth = 0.
         lv_text = lv_text && advance( ).
@@ -518,31 +517,26 @@ CLASS lcl_compiler IMPLEMENTATION.
     DATA ls_first TYPE zif_skylint_types=>ty_token.
 
     IF iv_in_chain = abap_true AND iv_header_kw IS NOT INITIAL.
-      ev_keyword = iv_header_kw.
-      ev_statement_type = zif_skylint_types=>statement_types-standard.
+      rv_keyword = iv_header_kw.
       RETURN.
     ENDIF.
 
     IF lines( it_tokens ) = 0.
-      ev_keyword = ''.
-      ev_statement_type = zif_skylint_types=>statement_types-standard.
+      rv_keyword = ''.
       RETURN.
     ENDIF.
 
     IF is_assignment( it_tokens ) = abap_true.
-      ev_keyword = 'COMPUTE'.
-      ev_statement_type = zif_skylint_types=>statement_types-compute.
+      rv_keyword = 'COMPUTE'.
     ELSEIF is_method_call( it_tokens ) = abap_true.
-      ev_keyword = '+CALL_METHOD'.
-      ev_statement_type = zif_skylint_types=>statement_types-method_direct.
+      rv_keyword = '+CALL_METHOD'.
     ELSE.
       READ TABLE it_tokens INTO ls_first INDEX 1.
       IF sy-subrc = 0.
-        ev_keyword = to_upper( ls_first-lexeme ).
+        rv_keyword = to_upper( ls_first-lexeme ).
       ELSE.
-        ev_keyword = ''.
+        rv_keyword = ''.
       ENDIF.
-      ev_statement_type = zif_skylint_types=>statement_types-standard.
     ENDIF.
   ENDMETHOD.
 
@@ -664,7 +658,7 @@ CLASS lcl_compiler IMPLEMENTATION.
     IF iv_upper CP 'DATA(*)' OR iv_upper CP '@DATA(*)' OR iv_upper CP 'FINAL(*)'.
       FIND FIRST OCCURRENCE OF '(' IN iv_upper MATCH OFFSET lv_off.
       IF sy-subrc = 0.
-        lv_off += 1.
+        lv_off = lv_off + 1.
         lv_len = strlen( iv_upper ) - lv_off - 1.
         IF lv_len > 0.
           lv_name = iv_upper+lv_off(lv_len).
@@ -673,7 +667,7 @@ CLASS lcl_compiler IMPLEMENTATION.
     ELSEIF iv_upper CP 'FIELD-SYMBOL(*)' OR iv_upper CP 'FIELD-SYMBOLS(*)'.
       FIND FIRST OCCURRENCE OF '(' IN iv_upper MATCH OFFSET lv_off.
       IF sy-subrc = 0.
-        lv_off += 1.
+        lv_off = lv_off + 1.
         lv_len = strlen( iv_upper ) - lv_off - 1.
         IF lv_len > 0.
           lv_name = iv_upper+lv_off(lv_len).
@@ -848,7 +842,7 @@ CLASS lcl_parser IMPLEMENTATION.
         lv_depth = 0.
       ELSE.
         APPEND ls_tok TO lt_cur.
-        lv_depth += paren_delta( ls_tok-lexeme ).
+        lv_depth = lv_depth + paren_delta( ls_tok-lexeme ).
         IF lv_depth < 0.
           lv_depth = 0.
         ENDIF.
@@ -883,11 +877,9 @@ CLASS lcl_parser IMPLEMENTATION.
       ENDIF.
     ENDLOOP.
 
-    lcl_compiler=>classify_statement( EXPORTING it_tokens         = lt_all
-                                                iv_in_chain       = iv_in_chain
-                                                iv_header_kw      = iv_header_kw
-                                      IMPORTING ev_keyword        = ls_stmt-keyword
-                                                ev_statement_type = ls_stmt-type ).
+    ls_stmt-keyword = lcl_compiler=>classify_statement( it_tokens    = lt_all
+                                                        iv_in_chain  = iv_in_chain
+                                                        iv_header_kw = iv_header_kw ).
 
     lcl_compiler=>enrich_references( CHANGING cs_statement = ls_stmt ).
     APPEND ls_stmt TO ct_statements.
@@ -940,7 +932,7 @@ CLASS lcl_parser IMPLEMENTATION.
     IF sy-subrc <> 0.
       RETURN.
     ENDIF.
-    lv_off += 3.
+    lv_off = lv_off + 3.
     IF lv_off >= strlen( iv_text ).
       RETURN.
     ENDIF.
@@ -975,11 +967,11 @@ CLASS lcl_parser IMPLEMENTATION.
       lv_ch = iv_lexeme+lv_off(1).
       CASE lv_ch.
         WHEN '(' OR '[' OR '{'.
-          rv_delta += 1.
+          rv_delta = rv_delta + 1.
         WHEN ')' OR ']' OR '}'.
-          rv_delta -= 1.
+          rv_delta = rv_delta - 1.
       ENDCASE.
-      lv_off += 1.
+      lv_off = lv_off + 1.
     ENDWHILE.
   ENDMETHOD.
 
@@ -1067,7 +1059,7 @@ CLASS lcl_runner IMPLEMENTATION.
     ls_proc = build_code_block( iv_source           = iv_source
                                 iv_class_definition = iv_class_definition ).
 
-    rt_findings = io_check->run( ls_proc ).
+    rt_findings = io_check->lint( ls_proc ).
   ENDMETHOD.
 
   METHOD wrap_source.
@@ -1247,7 +1239,7 @@ CLASS lcl_applier IMPLEMENTATION.
     lv_ins = iv_at.
     LOOP AT it_code INTO lv_row.
       INSERT lv_row INTO rt_lines INDEX lv_ins.
-      lv_ins += 1.
+      lv_ins = lv_ins + 1.
     ENDLOOP.
   ENDMETHOD.
 

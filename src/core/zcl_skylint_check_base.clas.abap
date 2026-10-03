@@ -1,14 +1,13 @@
 CLASS zcl_skylint_check_base DEFINITION
-  PUBLIC ABSTRACT
+  PUBLIC
+  INHERITING FROM zcl_skylint_open_adapter ABSTRACT
   CREATE PUBLIC.
 
   PUBLIC SECTION.
     METHODS constructor
       IMPORTING is_config TYPE zif_skylint_types=>ty_config OPTIONAL.
 
-    METHODS run
-      IMPORTING is_code_block      TYPE zif_skylint_types=>ty_code_block
-      RETURNING VALUE(rt_findings) TYPE zif_skylint_types=>ty_findings.
+    METHODS lint REDEFINITION.
 
     METHODS get_config
       RETURNING VALUE(rs_config) TYPE zif_skylint_types=>ty_config.
@@ -19,6 +18,10 @@ CLASS zcl_skylint_check_base DEFINITION
   PROTECTED SECTION.
     METHODS check ABSTRACT
       IMPORTING is_code_block TYPE zif_skylint_types=>ty_code_block.
+
+    METHODS get_attribute
+      IMPORTING iv_name  TYPE string
+      EXPORTING ev_value TYPE any.
 
     METHODS report_statement
       IMPORTING is_statement    TYPE zif_skylint_types=>ty_statement
@@ -41,10 +44,6 @@ CLASS zcl_skylint_check_base DEFINITION
                 is_quickfix     TYPE zif_skylint_types=>ty_quickfix   OPTIONAL
                 it_quickfixes   TYPE zif_skylint_types=>ty_quickfixes OPTIONAL.
 
-    METHODS get_attribute
-      IMPORTING iv_name  TYPE string
-      EXPORTING ev_value TYPE any.
-
     METHODS quickfix_replace
       IMPORTING iv_quickfix_code   TYPE zif_skylint_types=>ty_quickfix_code
                 iv_statement_from  TYPE i
@@ -55,7 +54,6 @@ CLASS zcl_skylint_check_base DEFINITION
       RETURNING VALUE(rs_quickfix) TYPE zif_skylint_types=>ty_quickfix.
 
   PRIVATE SECTION.
-    DATA ms_config     TYPE zif_skylint_types=>ty_config.
     DATA mt_findings   TYPE zif_skylint_types=>ty_findings.
     DATA mt_quickfixes TYPE zif_skylint_types=>ty_quickfixes.
 
@@ -80,14 +78,59 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_base IMPLEMENTATION.
   METHOD constructor.
-    ms_config = is_config.
+    super->constructor( is_config ).
   ENDMETHOD.
 
-  METHOD run.
+  METHOD lint.
     CLEAR mt_findings.
     CLEAR mt_quickfixes.
     check( is_code_block ).
     rt_findings = mt_findings.
+  ENDMETHOD.
+
+  METHOD get_attribute.
+    FIELD-SYMBOLS <ls_attr> TYPE zif_skylint_types=>ty_attribute.
+    FIELD-SYMBOLS <lv_src>  TYPE any.
+
+    ASSIGN ms_config-attributes[ name = iv_name ] TO <ls_attr>.
+    IF sy-subrc <> 0.
+      RETURN.
+    ENDIF.
+
+    ASSIGN <ls_attr>-value->* TO <lv_src>.
+    IF sy-subrc <> 0.
+      RETURN.
+    ENDIF.
+
+    ev_value = <lv_src>.
+  ENDMETHOD.
+
+  METHOD format_message.
+    rv_message = iv_template.
+    IF iv_param_1 IS NOT INITIAL.
+      REPLACE FIRST OCCURRENCE OF '&1' IN rv_message WITH iv_param_1.
+      IF sy-subrc <> 0.
+        REPLACE FIRST OCCURRENCE OF '&' IN rv_message WITH iv_param_1.
+      ENDIF.
+    ENDIF.
+    IF iv_param_2 IS NOT INITIAL.
+      REPLACE FIRST OCCURRENCE OF '&2' IN rv_message WITH iv_param_2.
+      IF sy-subrc <> 0.
+        REPLACE FIRST OCCURRENCE OF '&' IN rv_message WITH iv_param_2.
+      ENDIF.
+    ENDIF.
+    IF iv_param_3 IS NOT INITIAL.
+      REPLACE FIRST OCCURRENCE OF '&3' IN rv_message WITH iv_param_3.
+      IF sy-subrc <> 0.
+        REPLACE FIRST OCCURRENCE OF '&' IN rv_message WITH iv_param_3.
+      ENDIF.
+    ENDIF.
+    IF iv_param_4 IS NOT INITIAL.
+      REPLACE FIRST OCCURRENCE OF '&4' IN rv_message WITH iv_param_4.
+      IF sy-subrc <> 0.
+        REPLACE FIRST OCCURRENCE OF '&' IN rv_message WITH iv_param_4.
+      ENDIF.
+    ENDIF.
   ENDMETHOD.
 
   METHOD get_config.
@@ -96,6 +139,45 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
 
   METHOD get_recorded_quickfixes.
     rt_recorded = mt_quickfixes.
+  ENDMETHOD.
+
+  METHOD has_valid_pseudo_comment.
+    FIELD-SYMBOLS <ls_fc> TYPE zif_skylint_types=>ty_finding_code_config.
+
+    rv_has_pseudo_comment = abap_false.
+    ASSIGN ms_config-finding_codes[ code = iv_finding_code ] TO <ls_fc>.
+    IF sy-subrc <> 0 OR <ls_fc>-pseudo_comment IS INITIAL.
+      RETURN.
+    ENDIF.
+
+    IF line_exists( is_statement-pseudo_comments[ table_line = <ls_fc>-pseudo_comment ] ).
+      rv_has_pseudo_comment = abap_true.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD quickfix_replace.
+    DATA ls_qf TYPE zif_skylint_types=>ty_quickfix.
+
+    ls_qf-code           = iv_quickfix_code.
+    ls_qf-kind           = zif_skylint_types=>quickfix_kinds-replace.
+    ls_qf-statement_from = iv_statement_from.
+    ls_qf-statement_to   = iv_statement_to.
+    IF ls_qf-statement_to IS INITIAL.
+      ls_qf-statement_to = iv_statement_from.
+    ENDIF.
+    ls_qf-token_from = iv_token_from.
+    ls_qf-token_to   = iv_token_to.
+    IF ls_qf-token_from IS NOT INITIAL AND ls_qf-token_to IS INITIAL.
+      ls_qf-token_to = iv_token_from.
+    ENDIF.
+    ls_qf-new_code = it_new_code.
+
+    APPEND ls_qf TO mt_quickfixes.
+    rs_quickfix = ls_qf.
+  ENDMETHOD.
+
+  METHOD report_finding.
+    APPEND is_finding TO mt_findings.
   ENDMETHOD.
 
   METHOD report_statement.
@@ -159,85 +241,5 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
     ENDIF.
 
     report_finding( ls_finding ).
-  ENDMETHOD.
-
-  METHOD report_finding.
-    APPEND is_finding TO mt_findings.
-  ENDMETHOD.
-
-  METHOD get_attribute.
-    FIELD-SYMBOLS <ls_attr> TYPE zif_skylint_types=>ty_attribute.
-    FIELD-SYMBOLS <lv_src>  TYPE any.
-
-    ASSIGN ms_config-attributes[ name = iv_name ] TO <ls_attr>.
-    IF sy-subrc = 0 AND <ls_attr>-value IS BOUND.
-      ASSIGN <ls_attr>-value->* TO <lv_src>.
-      IF sy-subrc = 0.
-        ev_value = <lv_src>.
-      ENDIF.
-    ENDIF.
-  ENDMETHOD.
-
-  METHOD quickfix_replace.
-    DATA ls_qf TYPE zif_skylint_types=>ty_quickfix.
-
-    ls_qf-code           = iv_quickfix_code.
-    ls_qf-kind           = zif_skylint_types=>quickfix_kinds-replace.
-    ls_qf-statement_from = iv_statement_from.
-    ls_qf-statement_to   = iv_statement_to.
-    IF ls_qf-statement_to IS INITIAL.
-      ls_qf-statement_to = iv_statement_from.
-    ENDIF.
-    ls_qf-token_from = iv_token_from.
-    ls_qf-token_to   = iv_token_to.
-    IF ls_qf-token_from IS NOT INITIAL AND ls_qf-token_to IS INITIAL.
-      ls_qf-token_to = iv_token_from.
-    ENDIF.
-    ls_qf-new_code = it_new_code.
-
-    APPEND ls_qf TO mt_quickfixes.
-    rs_quickfix = ls_qf.
-  ENDMETHOD.
-
-  METHOD has_valid_pseudo_comment.
-    FIELD-SYMBOLS <ls_fc> TYPE zif_skylint_types=>ty_finding_code_config.
-
-    rv_has_pseudo_comment = abap_false.
-    ASSIGN ms_config-finding_codes[ code = iv_finding_code ] TO <ls_fc>.
-    IF sy-subrc <> 0 OR <ls_fc>-pseudo_comment IS INITIAL.
-      RETURN.
-    ENDIF.
-
-    IF line_exists( is_statement-pseudo_comments[ table_line = <ls_fc>-pseudo_comment ] ).
-      rv_has_pseudo_comment = abap_true.
-    ENDIF.
-  ENDMETHOD.
-
-  METHOD format_message.
-    rv_message = iv_template.
-    IF iv_param_1 IS NOT INITIAL.
-      REPLACE FIRST OCCURRENCE OF '&1' IN rv_message WITH iv_param_1.
-      IF sy-subrc <> 0.
-        REPLACE FIRST OCCURRENCE OF '&' IN rv_message WITH iv_param_1.
-      ENDIF.
-    ENDIF.
-    IF iv_param_2 IS NOT INITIAL.
-      REPLACE FIRST OCCURRENCE OF '&2' IN rv_message WITH iv_param_2.
-      IF sy-subrc <> 0.
-        REPLACE FIRST OCCURRENCE OF '&' IN rv_message WITH iv_param_2.
-      ENDIF.
-    ENDIF.
-    IF iv_param_3 IS NOT INITIAL.
-      REPLACE FIRST OCCURRENCE OF '&3' IN rv_message WITH iv_param_3.
-      IF sy-subrc <> 0.
-        REPLACE FIRST OCCURRENCE OF '&' IN rv_message WITH iv_param_3.
-      ENDIF.
-    ENDIF.
-    IF iv_param_4 IS NOT INITIAL.
-      REPLACE FIRST OCCURRENCE OF '&4' IN rv_message WITH iv_param_4.
-      IF sy-subrc <> 0.
-        REPLACE FIRST OCCURRENCE OF '&' IN rv_message WITH iv_param_4.
-      ENDIF.
-    ENDIF.
   ENDMETHOD.
 ENDCLASS.

@@ -49,7 +49,7 @@ CLASS zcl_skylint_check_077 IMPLEMENTATION.
       LOOP AT is_code_block-statements ASSIGNING <ls_stmt>.
         LOOP AT <ls_stmt>-tokens ASSIGNING <ls_tok>.
           IF to_upper( <ls_tok>-lexeme ) = lv_var_name.
-            lv_uses += 1.
+            lv_uses = lv_uses + 1.
           ENDIF.
         ENDLOOP.
       ENDLOOP.

@@ -86,7 +86,7 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
 
       CASE ls_back_stmt-keyword.
         WHEN 'ENDIF'.
-          lv_depth += 1.
+          lv_depth = lv_depth + 1.
 
         WHEN 'IF'.
           IF lv_depth = 0.
@@ -97,7 +97,7 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
             ENDIF.
             EXIT.
           ELSE.
-            lv_depth -= 1.
+            lv_depth = lv_depth - 1.
           ENDIF.
 
         WHEN 'ELSEIF'.
@@ -111,7 +111,7 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
           ENDIF.
       ENDCASE.
 
-      lv_back_idx -= 1.
+      lv_back_idx = lv_back_idx - 1.
     ENDWHILE.
   ENDMETHOD.
 
@@ -135,13 +135,13 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
 
       CASE ls_back_stmt-keyword.
         WHEN 'ENDCASE'.
-          lv_depth += 1.
+          lv_depth = lv_depth + 1.
 
         WHEN 'CASE'.
           IF lv_depth = 0.
             EXIT.
           ELSE.
-            lv_depth -= 1.
+            lv_depth = lv_depth - 1.
           ENDIF.
 
         WHEN 'WHEN'.
@@ -155,7 +155,7 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
           ENDIF.
       ENDCASE.
 
-      lv_back_idx -= 1.
+      lv_back_idx = lv_back_idx - 1.
     ENDWHILE.
   ENDMETHOD.
 

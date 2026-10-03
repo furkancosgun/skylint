@@ -56,7 +56,7 @@ CLASS zcl_skylint_check_055 IMPLEMENTATION.
 
     LOOP AT lo_class->methods INTO ls_meth.
       IF ls_meth-is_class = abap_true.
-        lv_static_cnt += 1.
+        lv_static_cnt = lv_static_cnt + 1.
       ELSEIF ls_meth-name <> 'CONSTRUCTOR'.
         lv_has_inst = abap_true.
         EXIT.

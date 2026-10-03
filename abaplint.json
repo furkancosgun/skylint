@@ -3,7 +3,8 @@
     "files": "/src/**/*.*",
     "exclude": [],
     "noIssues": [
-      "/deps/*"
+      "zcl_skylint_sci*",
+      "zcl_skylint_atc*"
     ],
     "skipGeneratedBOPFInterfaces": false,
     "skipGeneratedFunctionGroups": false,
@@ -17,15 +18,12 @@
   },
   "dependencies": [
     {
-      "folder": "/deps/*",
+      "folder": "/deps/**",
       "files": "/src/**/*.*"
     }
   ],
   "syntax": {
-    "version": {
-      "release": "Newest",
-      "language": "Normal"
-    },
+    "version": "v752",
     "errorNamespace": "^(Z|Y|LCL_|TY_|LIF_)",
     "globalConstants": [],
     "ambigiousVoids": [],
@@ -59,6 +57,7 @@
       "exclude": [],
       "severity": "Error",
       "allowed": [
+        "DEVC",
         "INTF",
         "CLAS"
       ]
@@ -290,10 +289,7 @@
       "severity": "Error"
     },
     "double_space": false,
-    "downport": {
-      "exclude": [],
-      "severity": "Error"
-    },
+    "downport": true,
     "dynpro_checks": {
       "exclude": [],
       "severity": "Error"

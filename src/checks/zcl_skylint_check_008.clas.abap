@@ -136,8 +136,8 @@ CLASS zcl_skylint_check_008 IMPLEMENTATION.
                                is_second = ls_next ) = abap_false.
         lv_done = abap_true.
       ELSE.
-        rv_count += 1.
-        lv_next_idx += 1.
+        rv_count = rv_count + 1.
+        lv_next_idx = lv_next_idx + 1.
       ENDIF.
     ENDWHILE.
   ENDMETHOD.

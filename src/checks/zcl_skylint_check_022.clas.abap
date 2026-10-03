@@ -87,7 +87,7 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
                                                      iv_expected  = '(' )        = abap_true.
         RETURN.
       ENDIF.
-      lv_idx += 1.
+      lv_idx = lv_idx + 1.
     ENDWHILE.
 
     rv_res = abap_true.

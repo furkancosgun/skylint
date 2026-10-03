@@ -66,14 +66,14 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
     LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'IF' OR 'LOOP' OR 'DO' OR 'WHILE' OR 'CASE' OR 'TRY'.
-          lv_block_counter += 1.
+          lv_block_counter = lv_block_counter + 1.
           INSERT lv_block_counter INTO lt_block_stack INDEX 1.
 
         WHEN 'ELSE' OR 'ELSEIF' OR 'WHEN' OR 'CATCH' OR 'CLEANUP'.
           IF lines( lt_block_stack ) > 0.
             DELETE lt_block_stack INDEX 1.
           ENDIF.
-          lv_block_counter += 1.
+          lv_block_counter = lv_block_counter + 1.
           INSERT lv_block_counter INTO lt_block_stack INDEX 1.
 
         WHEN 'ENDIF' OR 'ENDLOOP' OR 'ENDDO' OR 'ENDWHILE' OR 'ENDCASE' OR 'ENDTRY'.

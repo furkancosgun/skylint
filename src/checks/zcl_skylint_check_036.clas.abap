@@ -58,7 +58,7 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
 
       lv_tok_idx = 0.
       LOOP AT ls_statement-tokens INTO ls_token.
-        lv_tok_idx += 1.
+        lv_tok_idx = lv_tok_idx + 1.
 
         LOOP AT ls_token-references INTO ls_ref
              WHERE kind = zif_skylint_types=>compiler_reference_kinds-method.

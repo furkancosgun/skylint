@@ -60,7 +60,7 @@ CLASS zcl_skylint_check_054 IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      lv_stmt_count += 1.
+      lv_stmt_count = lv_stmt_count + 1.
       IF lv_stmt_count > lv_max_stmts.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-constructor_logic ).

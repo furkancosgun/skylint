@@ -11,7 +11,6 @@ CLASS ltcl_test_util DEFINITION FINAL
     METHODS test_compiler_db_refs     FOR TESTING RAISING cx_static_check.
     METHODS test_compiler_system_var  FOR TESTING RAISING cx_static_check.
     METHODS test_token_types          FOR TESTING RAISING cx_static_check.
-    METHODS test_statement_types      FOR TESTING RAISING cx_static_check.
 ENDCLASS.
 
 
@@ -179,29 +178,5 @@ CLASS ltcl_test_util IMPLEMENTATION.
     cl_abap_unit_assert=>assert_subrc( ).
     cl_abap_unit_assert=>assert_equals( exp = zif_skylint_types=>token_types-comment
                                         act = ls_tok-type ).
-  ENDMETHOD.
-
-  METHOD test_statement_types.
-    DATA ls_proc TYPE zif_skylint_types=>ty_code_block.
-    DATA ls_stmt TYPE zif_skylint_types=>ty_statement.
-
-    ls_proc = lcl_runner=>build_code_block( |DATA lv_x TYPE i.{ cl_abap_char_utilities=>newline }| &&
-                                           |lv_x = 1.{ cl_abap_char_utilities=>newline }| &&
-                                           |lo_obj->do_it( ).| ).
-
-    READ TABLE ls_proc-statements INTO ls_stmt INDEX 2.
-    cl_abap_unit_assert=>assert_subrc( ).
-    cl_abap_unit_assert=>assert_equals( exp = zif_skylint_types=>statement_types-standard
-                                        act = ls_stmt-type ).
-
-    READ TABLE ls_proc-statements INTO ls_stmt INDEX 3.
-    cl_abap_unit_assert=>assert_subrc( ).
-    cl_abap_unit_assert=>assert_equals( exp = zif_skylint_types=>statement_types-compute
-                                        act = ls_stmt-type ).
-
-    READ TABLE ls_proc-statements INTO ls_stmt INDEX 4.
-    cl_abap_unit_assert=>assert_subrc( ).
-    cl_abap_unit_assert=>assert_equals( exp = zif_skylint_types=>statement_types-method_direct
-                                        act = ls_stmt-type ).
   ENDMETHOD.
 ENDCLASS.

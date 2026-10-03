@@ -239,7 +239,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
           RETURN.
         ENDIF.
       ENDIF.
-      lv_idx += 1.
+      lv_idx = lv_idx + 1.
     ENDWHILE.
   ENDMETHOD.
 
@@ -423,11 +423,6 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
 
     rv_has = abap_false.
 
-    IF is_statement-type = zif_skylint_types=>statement_types-method_direct.
-      rv_has = abap_true.
-      RETURN.
-    ENDIF.
-
     CASE is_statement-keyword.
       WHEN '+CALL_METHOD' OR 'CALL'.
         rv_has = abap_true.
@@ -444,8 +439,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_assignment.
-    rv_yes = xsdbool(    is_statement-type    = zif_skylint_types=>statement_types-compute
-                      OR is_statement-keyword = 'COMPUTE' ).
+    rv_yes = xsdbool( is_statement-keyword = 'COMPUTE' ).
   ENDMETHOD.
 
   METHOD has_token_lexeme.

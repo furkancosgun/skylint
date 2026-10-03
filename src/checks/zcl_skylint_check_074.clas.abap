@@ -71,13 +71,13 @@ CLASS zcl_skylint_check_074 IMPLEMENTATION.
 
         CASE ls_stmt-keyword.
           WHEN 'IF'.
-            lv_if_depth += 1.
+            lv_if_depth = lv_if_depth + 1.
           WHEN 'ELSE' OR 'ELSEIF'.
             IF lv_if_depth = 1.
               lv_has_else = abap_true.
             ENDIF.
           WHEN 'ENDIF'.
-            lv_if_depth -= 1.
+            lv_if_depth = lv_if_depth - 1.
             IF lv_if_depth = 0.
               ls_after = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_code_block-statements
                                                                    iv_current_index = lv_scan_idx ).
@@ -89,7 +89,7 @@ CLASS zcl_skylint_check_074 IMPLEMENTATION.
               EXIT.
             ENDIF.
         ENDCASE.
-        lv_scan_idx += 1.
+        lv_scan_idx = lv_scan_idx + 1.
       ENDWHILE.
     ENDLOOP.
   ENDMETHOD.

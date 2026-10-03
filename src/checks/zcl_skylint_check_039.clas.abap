@@ -60,7 +60,7 @@ CLASS zcl_skylint_check_039 IMPLEMENTATION.
          AND <ls_statement>-keyword <> 'ENDFORM'
          AND <ls_statement>-keyword <> 'FUNCTION'
          AND <ls_statement>-keyword <> 'ENDFUNCTION'.
-        lv_count += 1.
+        lv_count = lv_count + 1.
       ENDIF.
     ENDLOOP.
 

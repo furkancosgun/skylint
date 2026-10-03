@@ -210,7 +210,7 @@ CLASS zcl_skylint_rtti_util IMPLEMENTATION.
 
     LOOP AT ls_meth-parameters ASSIGNING <ls_param>.
       IF <ls_param>-parm_kind <> cl_abap_objectdescr=>returning.
-        lv_input_count += 1.
+        lv_input_count = lv_input_count + 1.
         ls_single_param = <ls_param>.
       ENDIF.
     ENDLOOP.

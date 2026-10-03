@@ -7,8 +7,8 @@ CLASS zcl_skylint_sci_adapter DEFINITION
     METHODS constructor
       IMPORTING is_config TYPE zif_skylint_types=>ty_config.
 
-    METHODS lint
-      IMPORTING !is_code_block     TYPE zif_skylint_types=>ty_code_block
+    METHODS lint ABSTRACT
+      IMPORTING is_code_block      TYPE zif_skylint_types=>ty_code_block
       RETURNING VALUE(rt_findings) TYPE zif_skylint_types=>ty_findings.
 
     METHODS get_attributes              REDEFINITION.
@@ -18,15 +18,8 @@ CLASS zcl_skylint_sci_adapter DEFINITION
   PROTECTED SECTION.
     METHODS analyze_proc REDEFINITION.
 
-    METHODS get_attribute
-      IMPORTING iv_name  TYPE string
-      EXPORTING ev_value TYPE any.
-
-    METHODS set_attribute
-      IMPORTING iv_name  TYPE string
-                iv_value TYPE any.
-
     DATA ms_config TYPE zif_skylint_types=>ty_config.
+
   PRIVATE SECTION.
     METHODS build_data.
     METHODS sync_to_data.
@@ -37,6 +30,41 @@ ENDCLASS.
 
 
 CLASS zcl_skylint_sci_adapter IMPLEMENTATION.
+  METHOD constructor.
+    DATA ls_message TYPE scimessage.
+    FIELD-SYMBOLS <ls_code> TYPE zif_skylint_types=>ty_finding_code_config.
+
+    super->constructor( ).
+    ms_config = is_config.
+
+    category       = 'ZCL_SKYLINT_SCI_CATEGORY'.
+    version        = '001'.
+    description    = ms_config-description.
+    has_attributes = xsdbool( ms_config-attributes IS NOT INITIAL ).
+    attributes_ok  = abap_true.
+
+    LOOP AT ms_config-finding_codes ASSIGNING <ls_code>.
+      CLEAR ls_message.
+      ls_message-test = myname.
+      ls_message-code = <ls_code>-code.
+      ls_message-text = <ls_code>-text.
+      ls_message-pcom = <ls_code>-pseudo_comment.
+
+      CASE <ls_code>-severity.
+        WHEN zif_skylint_types=>severities-error.
+          ls_message-kind = c_error.
+        WHEN zif_skylint_types=>severities-warning.
+          ls_message-kind = c_warning.
+        WHEN OTHERS.
+          ls_message-kind = c_note.
+      ENDCASE.
+
+      INSERT ls_message INTO TABLE scimessages.
+    ENDLOOP.
+
+    build_data( ).
+  ENDMETHOD.
+
   METHOD analyze_proc.
     DATA ls_code_block TYPE zif_skylint_types=>ty_code_block.
     DATA ls_statement  TYPE zif_skylint_types=>ty_statement.
@@ -101,75 +129,27 @@ CLASS zcl_skylint_sci_adapter IMPLEMENTATION.
     DATA lo_structdescr TYPE REF TO cl_abap_structdescr.
     FIELD-SYMBOLS <ls_attr> TYPE zif_skylint_types=>ty_attribute.
 
-    IF mr_data IS BOUND OR ms_config-attributes IS INITIAL.
+    IF ms_config-attributes IS INITIAL.
       RETURN.
     ENDIF.
 
     LOOP AT ms_config-attributes ASSIGNING <ls_attr>.
-      INSERT VALUE #( name = <ls_attr>-name
-                      type = CAST #( cl_abap_typedescr=>describe_by_data_ref( <ls_attr>-value ) ) )
-             INTO TABLE lt_component.
-    ENDLOOP.
-
-    IF lt_component IS INITIAL.
-      RETURN.
-    ENDIF.
-
-    TRY.
-        lo_structdescr = cl_abap_structdescr=>create( lt_component ).
-        CREATE DATA mr_data TYPE HANDLE lo_structdescr.
-        sync_to_data( ).
-      CATCH cx_root.
-        CLEAR mr_data.
-    ENDTRY.
-  ENDMETHOD.
-
-  METHOD constructor.
-    DATA ls_message TYPE scimessage.
-    FIELD-SYMBOLS <ls_code> TYPE zif_skylint_types=>ty_finding_code_config.
-
-    super->constructor( ).
-    ms_config = is_config.
-
-    category       = 'ZCL_SKYLINT_SCI_CATEGORY'.
-    version        = '001'.
-    description    = ms_config-description.
-    has_attributes = xsdbool( ms_config-attributes IS NOT INITIAL ).
-    attributes_ok  = abap_true.
-
-    LOOP AT ms_config-finding_codes ASSIGNING <ls_code>.
-      CLEAR ls_message.
-      ls_message-test = myname.
-      ls_message-code = <ls_code>-code.
-      ls_message-text = <ls_code>-text.
-      ls_message-pcom = <ls_code>-pseudo_comment.
-
-      CASE <ls_code>-severity.
-        WHEN zif_skylint_types=>severities-error.
-          ls_message-kind = c_error.
-        WHEN zif_skylint_types=>severities-warning.
-          ls_message-kind = c_warning.
+      CASE <ls_attr>-kind.
+        WHEN zif_skylint_types=>attribute_kinds-boolean.
+          INSERT VALUE #( name = <ls_attr>-name
+                          type = CAST #( cl_abap_typedescr=>describe_by_name( 'XFELD' ) ) )
+                 INTO TABLE lt_component.
         WHEN OTHERS.
-          ls_message-kind = c_note.
+          INSERT VALUE #( name = <ls_attr>-name
+                          type = CAST #( cl_abap_typedescr=>describe_by_data_ref( <ls_attr>-value ) ) )
+                 INTO TABLE lt_component.
       ENDCASE.
-
-      INSERT ls_message INTO TABLE scimessages.
     ENDLOOP.
 
-    build_data( ).
-  ENDMETHOD.
+    lo_structdescr = cl_abap_structdescr=>create( lt_component ).
+    CREATE DATA mr_data TYPE HANDLE lo_structdescr.
 
-  METHOD get_attribute.
-    FIELD-SYMBOLS <ls_attr> TYPE zif_skylint_types=>ty_attribute.
-    FIELD-SYMBOLS <lv_src>  TYPE any.
-
-    ASSIGN ms_config-attributes[ name = iv_name ] TO <ls_attr>.
-    IF sy-subrc = 0 AND <ls_attr>-value IS BOUND.
-      ASSIGN <ls_attr>-value->* TO <lv_src>.
-      IF sy-subrc = 0.
-        ev_value = <lv_src>.
-      ENDIF.
-    ENDIF.
+    sync_to_data( ).
   ENDMETHOD.
 
   METHOD get_attributes.
@@ -177,12 +157,12 @@ CLASS zcl_skylint_sci_adapter IMPLEMENTATION.
 
     sync_to_data( ).
 
-    IF mr_data IS BOUND.
-      ASSIGN mr_data->* TO <lv_data>.
-      IF sy-subrc = 0.
-        EXPORT attributes = <lv_data> TO DATA BUFFER p_attributes.
-      ENDIF.
+    ASSIGN mr_data->* TO <lv_data>.
+    IF sy-subrc <> 0.
+      RETURN.
     ENDIF.
+
+    EXPORT attributes = <lv_data> TO DATA BUFFER p_attributes.
   ENDMETHOD.
 
   METHOD if_ci_test~query_attributes.
@@ -200,10 +180,6 @@ CLASS zcl_skylint_sci_adapter IMPLEMENTATION.
 
     sync_to_data( ).
 
-    IF mr_data IS NOT BOUND.
-      RETURN.
-    ENDIF.
-
     ASSIGN mr_data->* TO <lv_data>.
     IF sy-subrc <> 0.
       RETURN.
@@ -213,7 +189,7 @@ CLASS zcl_skylint_sci_adapter IMPLEMENTATION.
       CLEAR ls_attribute.
 
       CASE <ls_attr>-kind.
-        WHEN zif_skylint_types=>attribute_kinds-boolean OR 'C'.
+        WHEN zif_skylint_types=>attribute_kinds-boolean.
           ls_attribute-kind = 'C'.
         WHEN OTHERS.
           ls_attribute-kind = 'P'.
@@ -241,102 +217,75 @@ CLASS zcl_skylint_sci_adapter IMPLEMENTATION.
     ENDIF.
 
     sync_from_data( ).
+
     attributes_ok = abap_true.
   ENDMETHOD.
 
-  METHOD lint.
-    IF mo_check IS BOUND.
-      rt_findings = mo_check->run( is_code_block ).
-    ENDIF.
-  ENDMETHOD.
-
   METHOD put_attributes.
-    FIELD-SYMBOLS <lv_data> TYPE any.
+    FIELD-SYMBOLS <ls_data> TYPE any.
 
-    IF mr_data IS NOT BOUND.
-      build_data( ).
-    ENDIF.
-
-    IF mr_data IS BOUND.
-      ASSIGN mr_data->* TO <lv_data>.
-      IF sy-subrc = 0.
-        IMPORT attributes = <lv_data> FROM DATA BUFFER p_attributes.
-        IF sy-subrc = 0.
-          sync_from_data( ).
-        ENDIF.
-      ENDIF.
-    ENDIF.
-  ENDMETHOD.
-
-  METHOD set_attribute.
-    FIELD-SYMBOLS <ls_attr> TYPE zif_skylint_types=>ty_attribute.
-    FIELD-SYMBOLS <lv_dest> TYPE any.
-
-    ASSIGN ms_config-attributes[ name = iv_name ] TO <ls_attr>.
-    IF sy-subrc = 0 AND <ls_attr>-value IS BOUND.
-      ASSIGN <ls_attr>-value->* TO <lv_dest>.
-      IF sy-subrc = 0.
-        <lv_dest> = iv_value.
-        sync_to_data( ).
-      ENDIF.
-    ENDIF.
-  ENDMETHOD.
-
-  METHOD sync_from_data.
-    FIELD-SYMBOLS <lv_data> TYPE any.
-    FIELD-SYMBOLS <ls_attr> TYPE zif_skylint_types=>ty_attribute.
-    FIELD-SYMBOLS <lv_src>  TYPE any.
-    FIELD-SYMBOLS <lv_dest> TYPE any.
-
-    IF mr_data IS NOT BOUND.
+    ASSIGN mr_data->* TO <ls_data>.
+    IF sy-subrc <> 0.
       RETURN.
     ENDIF.
 
-    ASSIGN mr_data->* TO <lv_data>.
+    IMPORT attributes = <ls_data> FROM DATA BUFFER p_attributes.
+    IF sy-subrc <> 0.
+      RETURN.
+    ENDIF.
+
+    sync_from_data( ).
+  ENDMETHOD.
+
+  METHOD sync_from_data.
+    FIELD-SYMBOLS <ls_data> TYPE any.
+    FIELD-SYMBOLS <ls_attr> TYPE zif_skylint_types=>ty_attribute.
+    FIELD-SYMBOLS <lv_src>  TYPE any.
+    FIELD-SYMBOLS <lv_dst>  TYPE any.
+
+    ASSIGN mr_data->* TO <ls_data>.
     IF sy-subrc <> 0.
       RETURN.
     ENDIF.
 
     LOOP AT ms_config-attributes ASSIGNING <ls_attr>.
-      IF <ls_attr>-value IS BOUND.
-        ASSIGN COMPONENT <ls_attr>-name OF STRUCTURE <lv_data> TO <lv_src>.
-        IF sy-subrc = 0.
-          ASSIGN <ls_attr>-value->* TO <lv_dest>.
-          IF sy-subrc = 0.
-            <lv_dest> = <lv_src>.
-          ENDIF.
-        ENDIF.
+      ASSIGN COMPONENT <ls_attr>-name OF STRUCTURE <ls_data> TO <lv_src>.
+      IF sy-subrc <> 0.
+        CONTINUE.
       ENDIF.
+
+      ASSIGN <ls_attr>-value->* TO <lv_dst>.
+      IF sy-subrc <> 0.
+        CONTINUE.
+      ENDIF.
+
+      <lv_dst> = <lv_src>.
     ENDLOOP.
   ENDMETHOD.
 
   METHOD sync_to_data.
-    FIELD-SYMBOLS <lv_data> TYPE any.
+    FIELD-SYMBOLS <ls_data> TYPE any.
     FIELD-SYMBOLS <ls_attr> TYPE zif_skylint_types=>ty_attribute.
     FIELD-SYMBOLS <lv_src>  TYPE any.
-    FIELD-SYMBOLS <lv_dest> TYPE any.
+    FIELD-SYMBOLS <lv_dst>  TYPE any.
 
-    IF mr_data IS NOT BOUND.
-      build_data( ).
-    ENDIF.
-
-    IF mr_data IS NOT BOUND.
-      RETURN.
-    ENDIF.
-
-    ASSIGN mr_data->* TO <lv_data>.
+    ASSIGN mr_data->* TO <ls_data>.
     IF sy-subrc <> 0.
       RETURN.
     ENDIF.
 
     LOOP AT ms_config-attributes ASSIGNING <ls_attr>.
-      IF <ls_attr>-value IS BOUND.
-        ASSIGN <ls_attr>-value->* TO <lv_src>.
-        ASSIGN COMPONENT <ls_attr>-name OF STRUCTURE <lv_data> TO <lv_dest>.
-        IF sy-subrc = 0 AND <lv_src> IS ASSIGNED.
-          <lv_dest> = <lv_src>.
-        ENDIF.
+      ASSIGN <ls_attr>-value->* TO <lv_src>.
+      IF sy-subrc <> 0.
+        CONTINUE.
       ENDIF.
+
+      ASSIGN COMPONENT <ls_attr>-name OF STRUCTURE <ls_data> TO <lv_dst>.
+      IF sy-subrc <> 0.
+        CONTINUE.
+      ENDIF.
+
+      <lv_dst> = <lv_src>.
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

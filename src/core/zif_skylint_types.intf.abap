@@ -85,15 +85,6 @@ INTERFACE zif_skylint_types
       pragma     TYPE ty_token_type VALUE 'P',
     END OF token_types.
 
-  TYPES ty_statement_type TYPE c LENGTH 1.
-
-  CONSTANTS:
-    BEGIN OF statement_types,
-      standard      TYPE ty_statement_type VALUE 'K',
-      compute       TYPE ty_statement_type VALUE 'C',
-      method_direct TYPE ty_statement_type VALUE 'A',
-    END OF statement_types.
-
   TYPES:
     BEGIN OF ty_token,
       lexeme     TYPE ty_lexeme,
@@ -108,7 +99,6 @@ INTERFACE zif_skylint_types
   TYPES:
     BEGIN OF ty_statement,
       keyword         TYPE ty_keyword,
-      type            TYPE ty_statement_type,
       tokens          TYPE ty_tokens,
       position        TYPE ty_position,
       pseudo_comments TYPE ty_pseudo_comments,

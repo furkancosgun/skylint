@@ -97,7 +97,7 @@ CLASS zcl_skylint_check_031 IMPLEMENTATION.
       ls_stmt = zcl_skylint_ast_util=>get_statement( it_statements = it_statements
                                                      iv_index      = lv_idx ).
       IF ls_stmt-keyword IS INITIAL.
-        lv_idx -= 1.
+        lv_idx = lv_idx - 1.
         CONTINUE.
       ENDIF.
       IF statement_checks_table( is_statement = ls_stmt
@@ -105,7 +105,7 @@ CLASS zcl_skylint_check_031 IMPLEMENTATION.
         rv_res = abap_true.
         RETURN.
       ENDIF.
-      lv_idx -= 1.
+      lv_idx = lv_idx - 1.
     ENDWHILE.
   ENDMETHOD.
 

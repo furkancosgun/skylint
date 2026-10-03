@@ -59,14 +59,14 @@ CLASS zcl_skylint_check_040 IMPLEMENTATION.
 
     LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
       IF is_block_opener( <ls_statement>-keyword ) = abap_true.
-        lv_depth += 1.
+        lv_depth = lv_depth + 1.
         IF lv_depth > lv_max.
           report_statement( is_statement    = <ls_statement>
                             iv_finding_code = c_finding_codes-nesting_depth ).
         ENDIF.
       ELSEIF is_block_closer( <ls_statement>-keyword ) = abap_true.
         IF lv_depth > 0.
-          lv_depth -= 1.
+          lv_depth = lv_depth - 1.
         ENDIF.
       ENDIF.
     ENDLOOP.

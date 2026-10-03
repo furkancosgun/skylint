@@ -45,10 +45,10 @@ CLASS zcl_skylint_check_030 IMPLEMENTATION.
     LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'LOOP' OR 'DO' OR 'WHILE'.
-          lv_loop_depth += 1.
+          lv_loop_depth = lv_loop_depth + 1.
         WHEN 'ENDLOOP' OR 'ENDDO' OR 'ENDWHILE'.
           IF lv_loop_depth > 0.
-            lv_loop_depth -= 1.
+            lv_loop_depth = lv_loop_depth - 1.
           ENDIF.
         WHEN OTHERS.
           IF lv_loop_depth > 0 AND is_direct_db_access( <ls_statement> ) = abap_true.

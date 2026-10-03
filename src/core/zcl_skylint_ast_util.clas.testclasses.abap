@@ -116,7 +116,6 @@ CLASS ltcl_ast_util IMPLEMENTATION.
     DATA ls_tok  TYPE zif_skylint_types=>ty_token.
 
     ls_stmt = VALUE #( keyword = 'COMPUTE'
-                       type    = zif_skylint_types=>statement_types-compute
                        tokens  = VALUE #( ( lexeme = 'lv_x' type = zif_skylint_types=>token_types-identifier )
                                           ( lexeme = '='    type = zif_skylint_types=>token_types-identifier )
                                           ( lexeme = `'ABC'` type = zif_skylint_types=>token_types-literal ) ) ).

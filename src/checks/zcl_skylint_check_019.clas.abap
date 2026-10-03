@@ -83,22 +83,22 @@ CLASS zcl_skylint_check_019 IMPLEMENTATION.
 
       CASE ls_fwd_stmt-keyword.
         WHEN 'CASE'.
-          lv_depth += 1.
+          lv_depth = lv_depth + 1.
 
         WHEN 'ENDCASE'.
           IF lv_depth = 0.
             RETURN.
           ELSE.
-            lv_depth -= 1.
+            lv_depth = lv_depth - 1.
           ENDIF.
 
         WHEN 'WHEN'.
           IF lv_depth = 0 AND is_when_others( ls_fwd_stmt ) = abap_false.
-            rv_cnt += 1.
+            rv_cnt = rv_cnt + 1.
           ENDIF.
       ENDCASE.
 
-      lv_fwd_idx += 1.
+      lv_fwd_idx = lv_fwd_idx + 1.
     ENDWHILE.
   ENDMETHOD.
 ENDCLASS.
