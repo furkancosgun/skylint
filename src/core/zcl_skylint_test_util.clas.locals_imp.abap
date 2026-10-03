@@ -1089,59 +1089,15 @@ ENDCLASS.
 
 CLASS lcl_applier IMPLEMENTATION.
   METHOD apply.
-    DATA lv_start TYPE i.
-    DATA lv_end   TYPE i.
-    DATA lv_found TYPE abap_bool.
-
-    rt_lines = it_lines.
-    CASE is_recorded-kind.
-      WHEN zif_skylint_types=>quickfix_kinds-replace.
-        IF is_recorded-token_from > 0.
-          rt_lines = apply_token_replace( it_lines      = rt_lines
+    IF is_recorded-token_from > 0.
+      rt_lines = apply_token_replace( it_lines      = it_lines
+                                      is_code_block = is_code_block
+                                      is_recorded   = is_recorded ).
+    ELSE.
+      rt_lines = apply_statement_replace( it_lines      = it_lines
                                           is_code_block = is_code_block
                                           is_recorded   = is_recorded ).
-        ELSE.
-          rt_lines = apply_statement_replace( it_lines      = rt_lines
-                                              is_code_block = is_code_block
-                                              is_recorded   = is_recorded ).
-        ENDIF.
-      WHEN zif_skylint_types=>quickfix_kinds-insert_before.
-        statement_lines( EXPORTING is_code_block = is_code_block
-                                   iv_index      = is_recorded-statement_from
-                         IMPORTING ev_first      = lv_start
-                                   ev_found      = lv_found ).
-        IF lv_found = abap_false.
-          RETURN.
-        ENDIF.
-        rt_lines = insert_lines( it_lines = rt_lines
-                                 iv_at    = lv_start
-                                 it_code  = is_recorded-new_code ).
-      WHEN zif_skylint_types=>quickfix_kinds-insert_after.
-        statement_lines( EXPORTING is_code_block = is_code_block
-                                   iv_index      = is_recorded-statement_from
-                         IMPORTING ev_last       = lv_end
-                                   ev_found      = lv_found ).
-        IF lv_found = abap_false.
-          RETURN.
-        ENDIF.
-        rt_lines = insert_lines( it_lines = rt_lines
-                                 iv_at    = lv_end + 1
-                                 it_code  = is_recorded-new_code ).
-      WHEN zif_skylint_types=>quickfix_kinds-delete.
-        statement_lines( EXPORTING is_code_block = is_code_block
-                                   iv_index      = is_recorded-statement_from
-                         IMPORTING ev_first      = lv_start
-                                   ev_last       = lv_end
-                                   ev_found      = lv_found ).
-        IF lv_found = abap_false.
-          RETURN.
-        ENDIF.
-        rt_lines = delete_lines( it_lines = rt_lines
-                                 iv_from  = lv_start
-                                 iv_to    = lv_end ).
-      WHEN OTHERS.
-        RETURN.
-    ENDCASE.
+    ENDIF.
   ENDMETHOD.
 
   METHOD apply_token_replace.

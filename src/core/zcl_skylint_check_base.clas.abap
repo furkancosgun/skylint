@@ -159,7 +159,6 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
     DATA ls_qf TYPE zif_skylint_types=>ty_quickfix.
 
     ls_qf-code           = iv_quickfix_code.
-    ls_qf-kind           = zif_skylint_types=>quickfix_kinds-replace.
     ls_qf-statement_from = iv_statement_from.
     ls_qf-statement_to   = iv_statement_to.
     IF ls_qf-statement_to IS INITIAL.

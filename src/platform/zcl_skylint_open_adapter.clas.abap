@@ -4,7 +4,7 @@ CLASS zcl_skylint_open_adapter DEFINITION
 
   PUBLIC SECTION.
     METHODS constructor
-      IMPORTING is_config TYPE zif_skylint_types=>ty_config.
+      IMPORTING is_config TYPE zif_skylint_types=>ty_config OPTIONAL.
 
     METHODS lint ABSTRACT
       IMPORTING is_code_block      TYPE zif_skylint_types=>ty_code_block

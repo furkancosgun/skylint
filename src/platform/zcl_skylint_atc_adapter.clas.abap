@@ -28,12 +28,17 @@ CLASS zcl_skylint_atc_adapter IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD if_ci_atc_check~run.
-    DATA ls_code_block TYPE zif_skylint_types=>ty_code_block.
+    DATA ls_code_block  TYPE zif_skylint_types=>ty_code_block.
+    DATA ls_unit        TYPE if_ci_atc_source_code_provider=>ty_compilation_unit.
+    DATA lr_procedures  TYPE REF TO if_ci_atc_source_code_provider=>ty_procedures.
+    DATA lo_provider    TYPE REF TO if_ci_atc_source_code_provider.
+    DATA lt_findings    TYPE zif_skylint_types=>ty_findings.
+    DATA lo_quickfix    TYPE REF TO cl_ci_atc_quickfixes.
+    DATA lo_fix         TYPE REF TO if_ci_atc_quickfix.
 
-    DATA ls_unit       TYPE if_ci_atc_source_code_provider=>ty_compilation_unit.
-    DATA lr_procedures TYPE REF TO if_ci_atc_source_code_provider=>ty_procedures.
-    DATA lo_provider   TYPE REF TO if_ci_atc_source_code_provider.
     FIELD-SYMBOLS <fs_procedure> TYPE if_ci_atc_source_code_provider=>ty_procedure.
+    FIELD-SYMBOLS <fs_finding>   TYPE zif_skylint_types=>ty_finding.
+    FIELD-SYMBOLS <fs_fix>       TYPE zif_skylint_types=>ty_quickfix.
 
     lo_provider = data_provider->get_code_provider( ).
 
@@ -43,8 +48,8 @@ CLASS zcl_skylint_atc_adapter IMPLEMENTATION.
       ls_code_block = VALUE #(
           object_type = ls_unit-kind
           object_name = ls_unit-name
-          block_kind  = <fs_procedure>-id-main_unit-kind
-          block_name  = <fs_procedure>-id-main_unit-name
+          block_kind  = <fs_procedure>-id-kind
+          block_name  = <fs_procedure>-id-name
 
           statements  = VALUE #( FOR statement IN <fs_procedure>-statements
 
@@ -64,23 +69,20 @@ CLASS zcl_skylint_atc_adapter IMPLEMENTATION.
                                                                  usage_grade = ref-usage_grade
                                                                  usage_mode  = ref-usage_mode ) ) ) ) ) ) ).
 
-      DATA(lt_finding) = lint( ls_code_block ).
-      LOOP AT lt_finding ASSIGNING FIELD-SYMBOL(<fs_finding>).
-        DATA(lo_quickfix) = mo_factory->create_quickfixes( ).
-        LOOP AT <fs_finding>-quickfixes ASSIGNING FIELD-SYMBOL(<fs_fix>).
-          DATA(lo_fix) = lo_quickfix->create_quickfix( quickfix_code = <fs_fix>-code ).
-          CASE <fs_fix>-kind.
-            WHEN zif_skylint_types=>quickfix_kinds-replace.
-              lo_fix->replace(
-                  context = mo_factory->create_quickfix_context( VALUE #( procedure_id = <fs_procedure>-id
-                                                                          statements   = VALUE #(
-                                                                              from = <fs_fix>-statement_from
-                                                                              to   = <fs_fix>-statement_to )
-                                                                          tokens       = VALUE #(
-                                                                              from = <fs_fix>-token_from
-                                                                              to   = <fs_fix>-token_to ) ) )
-                  code    = <fs_fix>-new_code ).
-          ENDCASE.
+      lt_findings = lint( ls_code_block ).
+      LOOP AT lt_findings ASSIGNING <fs_finding>.
+        lo_quickfix = mo_factory->create_quickfixes( ).
+        LOOP AT <fs_finding>-quickfixes ASSIGNING <fs_fix>.
+          lo_fix = lo_quickfix->create_quickfix( quickfix_code = <fs_fix>-code ).
+          lo_fix->replace(
+              context = mo_factory->create_quickfix_context( VALUE #( procedure_id = <fs_procedure>-id
+                                                                      statements   = VALUE #(
+                                                                          from = <fs_fix>-statement_from
+                                                                          to   = <fs_fix>-statement_to )
+                                                                      tokens       = VALUE #(
+                                                                          from = <fs_fix>-token_from
+                                                                          to   = <fs_fix>-token_to ) ) )
+              code    = <fs_fix>-new_code ).
         ENDLOOP.
 
         INSERT VALUE #( code     = <fs_finding>-code

@@ -121,22 +121,11 @@ INTERFACE zif_skylint_types
       info    TYPE ty_severity VALUE 'I',
     END OF severities.
 
-  TYPES ty_quickfix_kind TYPE c LENGTH 1.
-
-  CONSTANTS:
-    BEGIN OF quickfix_kinds,
-      replace       TYPE ty_quickfix_kind VALUE 'R',
-      insert_before TYPE ty_quickfix_kind VALUE 'B',
-      insert_after  TYPE ty_quickfix_kind VALUE 'A',
-      delete        TYPE ty_quickfix_kind VALUE 'D',
-    END OF quickfix_kinds.
-
   TYPES ty_code_lines TYPE STANDARD TABLE OF string WITH EMPTY KEY.
 
   TYPES:
     BEGIN OF ty_quickfix,
       code           TYPE ty_quickfix_code,
-      kind           TYPE ty_quickfix_kind,
       statement_from TYPE i,
       statement_to   TYPE i,
       token_from     TYPE i,

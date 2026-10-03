@@ -20,7 +20,7 @@ This document outlines the mandatory engineering guidelines, architectural desig
    - All types, structures, and constants for AST analysis **MUST** reference `zif_skylint_types`:
      - AST: `ty_code_block`, `ty_statement`, `ty_token`, `ty_compiler_reference`.
      - Findings: `ty_finding`, `ty_findings`, `ty_finding_code`, `severities`.
-     - QuickFixes: `ty_quickfix`, `ty_quickfixes`, `ty_quickfix_code`, `quickfix_kinds`.
+     - QuickFixes: `ty_quickfix`, `ty_quickfixes`, `ty_quickfix_code`.
      - Constants: `object_types`, `block_kinds`, `compiler_reference_kinds`, `usage_modes`, `usage_grades`, `attribute_kinds`.
 
 4. **Zero-Boilerplate Base Class (`zcl_skylint_check_base`):**

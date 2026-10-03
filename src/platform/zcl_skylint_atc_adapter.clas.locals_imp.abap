@@ -20,7 +20,7 @@ CLASS lcl_metadata IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD if_ci_atc_check_meta_data~get_description.
-    description = 'Test'.
+    description = ms_config-description.
   ENDMETHOD.
 
   METHOD if_ci_atc_check_meta_data~get_finding_code_infos.
