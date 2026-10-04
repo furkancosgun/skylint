@@ -26,6 +26,11 @@ CLASS zcl_skylint_sci_adapter DEFINITION
     METHODS sync_from_data.
 
     DATA mr_data TYPE REF TO data.
+
+    METHODS build_quickfix_detail
+      IMPORTING is_finding       TYPE zif_skylint_types=>ty_finding
+                is_proc          TYPE cl_abap_comp_procs=>t_proc_def
+      RETURNING VALUE(rv_detail) TYPE xstring.
 ENDCLASS.
 
 
@@ -65,6 +70,7 @@ CLASS zcl_skylint_sci_adapter IMPLEMENTATION.
     DATA lt_findings   TYPE zif_skylint_types=>ty_findings.
     DATA lv_checksum   TYPE int4.
     DATA ls_checksum   TYPE sci_crc64.
+    DATA lv_qf_detail  TYPE xstring.
 
     FIELD-SYMBOLS <ls_stmt>    TYPE cl_abap_comp_procs=>t_stmt.
     FIELD-SYMBOLS <ls_token>   TYPE cl_abap_comp_procs=>t_token.
@@ -117,6 +123,9 @@ CLASS zcl_skylint_sci_adapter IMPLEMENTATION.
         lv_checksum = ls_checksum-i1.
       ENDIF.
 
+      lv_qf_detail = build_quickfix_detail( is_finding = <ls_finding>
+                                            is_proc    = p_proc ).
+
       inform( p_sub_obj_type = c_type_include
               p_sub_obj_name = p_proc-include
               p_line         = <ls_finding>-position-line
@@ -124,8 +133,135 @@ CLASS zcl_skylint_sci_adapter IMPLEMENTATION.
               p_kind         = <ls_finding>-severity
               p_test         = myname
               p_code         = <ls_finding>-code
-              p_checksum_1   = lv_checksum ).
+              p_checksum_1   = lv_checksum
+              p_detail       = lv_qf_detail ).
     ENDLOOP.
+  ENDMETHOD.
+
+  METHOD build_quickfix_detail.
+    DATA lo_quickfixes TYPE REF TO object.
+    DATA lo_context    TYPE REF TO object.
+    DATA lo_quickfix   TYPE REF TO object.
+    DATA lv_code       TYPE c LENGTH 10.
+    DATA lv_new_code   TYPE string.
+    DATA lv_stmt_idx   TYPE i.
+    DATA lv_line_col   TYPE token_col.
+
+    FIELD-SYMBOLS <ls_quickfix> TYPE zif_skylint_types=>ty_quickfix.
+    FIELD-SYMBOLS <ls_stmt>     TYPE cl_abap_comp_procs=>t_stmt.
+    FIELD-SYMBOLS <lv_line>     TYPE string.
+
+    IF is_finding-quickfixes IS INITIAL.
+      RETURN.
+    ENDIF.
+
+    TRY.
+        CALL METHOD ('CL_CI_QUICKFIX_CREATION')=>('CREATE_QUICKFIX_ALTERNATIVES')
+          RECEIVING
+            p_quickfix_alternatives = lo_quickfixes.
+
+        IF lo_quickfixes IS INITIAL.
+          RETURN.
+        ENDIF.
+
+        LOOP AT is_finding-quickfixes ASSIGNING <ls_quickfix>.
+          CLEAR: lo_context, lo_quickfix.
+
+          lv_stmt_idx = <ls_quickfix>-statement_from.
+          IF lv_stmt_idx <= 0.
+            lv_stmt_idx = is_finding-statement_index.
+          ENDIF.
+
+          IF lv_stmt_idx > 0 AND lines( is_proc-stmts ) >= lv_stmt_idx.
+            ASSIGN is_proc-stmts[ lv_stmt_idx ] TO <ls_stmt>.
+            IF sy-subrc = 0.
+              TRY.
+                  CALL METHOD ('CL_CI_QUICKFIX_ABAP_CONTEXT')=>('CREATE_FROM_COMP_PROCS_STMT')
+                    EXPORTING
+                      p_action_stmt    = <ls_stmt>
+                      p_proc_def       = is_proc
+                      p_proc_defs      = procs
+                      p_with_end_point = abap_true
+                    RECEIVING
+                      p_context        = lo_context.
+                CATCH cx_root.
+                  CLEAR lo_context.
+              ENDTRY.
+            ENDIF.
+          ENDIF.
+
+          IF lo_context IS INITIAL.
+            TRY.
+                lv_line_col = CONV #( is_finding-position-column ).
+                CALL METHOD ('CL_CI_QUICKFIX_ABAP_CONTEXT')=>('CREATE_FROM_INCLUDE')
+                  EXPORTING
+                    p_include = is_proc-include
+                    p_line    = is_finding-position-line
+                    p_col     = lv_line_col
+                  RECEIVING
+                    p_context = lo_context.
+              CATCH cx_root.
+                CLEAR lo_context.
+            ENDTRY.
+          ENDIF.
+
+          IF lo_context IS INITIAL.
+            CONTINUE.
+          ENDIF.
+
+          lv_code = <ls_quickfix>-code.
+          IF lv_code IS INITIAL.
+            lv_code = '001'.
+          ENDIF.
+
+          TRY.
+              CALL METHOD lo_quickfixes->('CREATE_QUICKFIX')
+                EXPORTING
+                  p_quickfix_code = lv_code
+                RECEIVING
+                  p_quickfix      = lo_quickfix.
+
+              IF lo_quickfix IS INITIAL.
+                CONTINUE.
+              ENDIF.
+
+              CLEAR lv_new_code.
+              LOOP AT <ls_quickfix>-new_code ASSIGNING <lv_line>.
+                IF lv_new_code IS INITIAL.
+                  lv_new_code = <lv_line>.
+                ELSE.
+                  CONCATENATE lv_new_code cl_abap_char_utilities=>cr_lf <lv_line> INTO lv_new_code.
+                ENDIF.
+              ENDLOOP.
+
+              CALL METHOD lo_quickfix->('IF_CI_QUICKFIX_ABAP_ACTIONS~REPLACE_BY')
+                EXPORTING
+                  p_new_code = lv_new_code
+                  p_context  = lo_context.
+
+              TRY.
+                  CALL METHOD lo_quickfix->('IF_CI_QUICKFIX_SINGLE~ENABLE_AUTOMATIC_EXECUTION').
+                CATCH cx_root.
+                  " Optional in older versions
+              ENDTRY.
+
+            CATCH cx_root.
+              " Skip single quickfix on failure
+          ENDTRY.
+        ENDLOOP.
+
+        TRY.
+            CALL METHOD lo_quickfixes->('EXPORT_TO_XSTRING')
+              RECEIVING
+                p_detail = rv_detail.
+          CATCH cx_root.
+            CLEAR rv_detail.
+        ENDTRY.
+
+      CATCH cx_sy_dyn_call_illegal_class cx_root.
+        " QuickFix framework not available on this NetWeaver release (e.g. 7.52)
+        CLEAR rv_detail.
+    ENDTRY.
   ENDMETHOD.
 
   METHOD build_data.
