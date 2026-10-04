@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_009 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     DATA mv_allow_in_byte_mode TYPE abap_bool VALUE abap_false.
 
     METHODS is_byte_mode
@@ -30,10 +29,9 @@ CLASS zcl_skylint_check_009 IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Prefer string templates over CONCATENATE'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-prefer_template
-                                       severity       = zif_skylint_types=>severities-warning
-                                       text           = 'Use string template |...| instead of CONCATENATE'
-                                       ) )
+                                     ( code     = c_finding_codes-prefer_template
+                                       severity = zif_skylint_types=>severities-warning
+                                       text     = 'Use string template |...| instead of CONCATENATE' ) )
                                  attributes        = VALUE #( ( name  = 'ALLOW_IN_BYTE_MODE'
                                                                 kind  = zif_skylint_types=>attribute_kinds-boolean
                                                                 value = REF #( mv_allow_in_byte_mode ) ) ) ) ).

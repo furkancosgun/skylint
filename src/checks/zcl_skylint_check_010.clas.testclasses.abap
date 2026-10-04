@@ -17,9 +17,8 @@ CLASS ltcl_check_010 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_clean.
-    zcl_skylint_test_util=>assert_no_findings(
-        io_check  = NEW zcl_skylint_check_010( )
-        it_source = VALUE #( ( `IF lo_validator->is_valid( ).` )
-                             ( `IF lv_flag = abap_true.` ) ) ).
+    zcl_skylint_test_util=>assert_no_findings( io_check  = NEW zcl_skylint_check_010( )
+                                               it_source = VALUE #( ( `IF lo_validator->is_valid( ).` )
+                                                                    ( `IF lv_flag = abap_true.` ) ) ).
   ENDMETHOD.
 ENDCLASS.

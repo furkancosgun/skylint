@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_019 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     METHODS is_when_others
       IMPORTING is_statement TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_is) TYPE abap_bool.
@@ -33,10 +32,9 @@ CLASS zcl_skylint_check_019 IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Avoid short CASE constructs with only one WHEN branch; prefer IF'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-short_case
-                                       severity       = zif_skylint_types=>severities-warning
-                                       text           = 'CASE statement has <= 1 WHEN branch; prefer IF'
-                                       ) ) ) ).
+                                     ( code     = c_finding_codes-short_case
+                                       severity = zif_skylint_types=>severities-warning
+                                       text     = 'CASE statement has <= 1 WHEN branch; prefer IF' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

@@ -25,10 +25,9 @@ CLASS zcl_skylint_check_006 IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Omit explicit EXPORTING in method calls'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-omit_exporting
-                                       severity       = zif_skylint_types=>severities-warning
-                                       text           = 'Omit explicit EXPORTING keyword in method invocation'
-                                       ) )
+                                     ( code     = c_finding_codes-omit_exporting
+                                       severity = zif_skylint_types=>severities-warning
+                                       text     = 'Omit explicit EXPORTING keyword in method invocation' ) )
                                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-omit_exporting
                                                                 short_text = 'Remove EXPORTING keyword' ) ) ) ).
   ENDMETHOD.

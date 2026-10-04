@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_031 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     METHODS extract_fae_table
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_tab) TYPE string.
@@ -37,13 +36,13 @@ ENDCLASS.
 CLASS zcl_skylint_check_031 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Unsecure FOR ALL ENTRIES (Missing empty itab check)'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-unsecure_fae
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'FOR ALL ENTRIES without preceding IS NOT INITIAL check causes full table scan'
-                       ) ) ) ).
+        VALUE #(
+            description       = 'Unsecure FOR ALL ENTRIES (Missing empty itab check)'
+            remote_enablement = abap_true
+            finding_codes     = VALUE #(
+                ( code     = c_finding_codes-unsecure_fae
+                  severity = zif_skylint_types=>severities-warning
+                  text     = 'FOR ALL ENTRIES without preceding IS NOT INITIAL check causes full table scan' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_010 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     METHODS has_boolean_comparison
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_has) TYPE abap_bool.
@@ -33,10 +32,9 @@ CLASS zcl_skylint_check_010 IMPLEMENTATION.
         VALUE #( description       = 'Avoid comparing boolean method calls to boolean literals'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-bool_comparison
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Avoid boolean comparison for method calls; call method directly'
-                       ) ) ) ).
+                     ( code     = c_finding_codes-bool_comparison
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Avoid boolean comparison for method calls; call method directly' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

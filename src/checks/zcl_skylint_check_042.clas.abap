@@ -27,10 +27,9 @@ CLASS zcl_skylint_check_042 IMPLEMENTATION.
         VALUE #( description       = 'skylint: Prefer RETURNING over single EXPORTING'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-prefer_returning
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Prefer functional RETURNING parameter over single EXPORTING parameter'
-                       ) ) ) ).
+                     ( code     = c_finding_codes-prefer_returning
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Prefer functional RETURNING parameter over single EXPORTING parameter' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -58,15 +57,15 @@ CLASS zcl_skylint_check_042 IMPLEMENTATION.
     rv_yes = abap_false.
 
     IF    zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                 iv_lexeme    = 'CONSTRUCTOR' ) = abap_true
+                                                  iv_lexeme    = 'CONSTRUCTOR' )  = abap_true
        OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                 iv_lexeme    = 'FOR' ) = abap_true
+                                                  iv_lexeme    = 'FOR' )          = abap_true
        OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                 iv_lexeme    = 'REDEFINITION' ) = abap_true
+                                                  iv_lexeme    = 'REDEFINITION' ) = abap_true
        OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                 iv_lexeme    = 'CHANGING' ) = abap_true
+                                                  iv_lexeme    = 'CHANGING' )     = abap_true
        OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                 iv_lexeme    = 'RETURNING' ) = abap_true.
+                                                  iv_lexeme    = 'RETURNING' )    = abap_true.
       RETURN.
     ENDIF.
 

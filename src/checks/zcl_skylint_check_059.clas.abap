@@ -22,10 +22,9 @@ CLASS zcl_skylint_check_059 IMPLEMENTATION.
         VALUE #( description       = 'Avoid mutable DATA declarations in interfaces; allow only CONSTANTS'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-interface_data
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Avoid mutable DATA in interfaces; declare CONSTANTS or move to class'
-                       ) ) ) ).
+                     ( code     = c_finding_codes-interface_data
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Avoid mutable DATA in interfaces; declare CONSTANTS or move to class' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

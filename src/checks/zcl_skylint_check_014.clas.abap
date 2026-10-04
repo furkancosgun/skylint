@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_014 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     METHODS is_empty_control_block
       IMPORTING iv_current_kw TYPE string
                 iv_next_kw    TYPE string
@@ -30,10 +29,9 @@ CLASS zcl_skylint_check_014 IMPLEMENTATION.
         VALUE #( description       = 'Detect empty control blocks (IF, CASE, LOOP, TRY, etc.)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-empty_control_block
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Empty control block detected; remove redundant control statement'
-                       ) ) ) ).
+                     ( code     = c_finding_codes-empty_control_block
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Empty control block detected; remove redundant control statement' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

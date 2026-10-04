@@ -21,10 +21,9 @@ CLASS zcl_skylint_check_066 IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Avoid USING CLIENT or CLIENT SPECIFIED in ABAP SQL'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-client_spec
-                                       severity       = zif_skylint_types=>severities-warning
-                                       text           = 'Avoid explicit client specification in ABAP SQL'
-                                       ) ) ) ).
+                                     ( code     = c_finding_codes-client_spec
+                                       severity = zif_skylint_types=>severities-warning
+                                       text     = 'Avoid explicit client specification in ABAP SQL' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

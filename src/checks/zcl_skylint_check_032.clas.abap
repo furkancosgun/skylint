@@ -16,7 +16,6 @@ CLASS zcl_skylint_check_032 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     METHODS is_select_star
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -29,7 +28,7 @@ CLASS zcl_skylint_check_032 IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Select performance (Avoid SELECT * and SELECT ... ENDSELECT)'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     severity       = zif_skylint_types=>severities-warning
+                                     severity = zif_skylint_types=>severities-warning
                                      ( code = c_finding_codes-select_star
                                        text = 'Avoid SELECT *; specify required columns explicitly' )
                                      ( code = c_finding_codes-select_endselect

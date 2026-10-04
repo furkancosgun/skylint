@@ -24,13 +24,12 @@ CLASS ltcl_check_055 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_clean.
-    zcl_skylint_test_util=>assert_no_findings(
-        io_check            = NEW zcl_skylint_check_055( )
-        it_source           = VALUE #( ( `CLASS lcl_helper DEFINITION.` )
-                                       ( `PUBLIC SECTION.` )
-                                       ( `CLASS-METHODS run.` )
-                                       ( `METHODS execute.` )
-                                       ( `ENDCLASS.` ) )
-        iv_class_definition = abap_true ).
+    zcl_skylint_test_util=>assert_no_findings( io_check            = NEW zcl_skylint_check_055( )
+                                               it_source           = VALUE #( ( `CLASS lcl_helper DEFINITION.` )
+                                                                              ( `PUBLIC SECTION.` )
+                                                                              ( `CLASS-METHODS run.` )
+                                                                              ( `METHODS execute.` )
+                                                                              ( `ENDCLASS.` ) )
+                                               iv_class_definition = abap_true ).
   ENDMETHOD.
 ENDCLASS.

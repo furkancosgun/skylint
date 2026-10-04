@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_035 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     METHODS is_untyped_constant
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -28,10 +27,9 @@ CLASS zcl_skylint_check_035 IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Enforce fully typed constant declarations'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-fully_typed
-                                       severity       = zif_skylint_types=>severities-warning
-                                       text           = 'Constant declaration should explicitly specify TYPE'
-                                       ) ) ) ).
+                                     ( code     = c_finding_codes-fully_typed
+                                       severity = zif_skylint_types=>severities-warning
+                                       text     = 'Constant declaration should explicitly specify TYPE' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

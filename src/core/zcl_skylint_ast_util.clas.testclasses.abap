@@ -2,9 +2,9 @@ CLASS ltcl_ast_util DEFINITION FINAL
   FOR TESTING RISK LEVEL HARMLESS DURATION SHORT.
 
   PRIVATE SECTION.
-    METHODS test_token_getters         FOR TESTING RAISING cx_static_check.
-    METHODS test_statement_getters     FOR TESTING RAISING cx_static_check.
-    METHODS test_relative_token_search FOR TESTING RAISING cx_static_check.
+    METHODS test_token_getters           FOR TESTING RAISING cx_static_check.
+    METHODS test_statement_getters       FOR TESTING RAISING cx_static_check.
+    METHODS test_relative_token_search   FOR TESTING RAISING cx_static_check.
     METHODS test_semantic_helpers        FOR TESTING RAISING cx_static_check.
     METHODS test_keyword_reference_guard FOR TESTING RAISING cx_static_check.
 ENDCLASS.
@@ -23,7 +23,7 @@ CLASS ltcl_ast_util IMPLEMENTATION.
     " Token 'EXPORTING' with compiler reference (e.g. variable named 'exporting')
     ls_stmt = VALUE #( keyword = 'CALL'
                        tokens  = VALUE #( ( lexeme = 'CALL' )
-                                          ( lexeme = 'exporting'
+                                          ( lexeme     = 'exporting'
                                             references = lt_refs ) ) ).
 
     cl_abap_unit_assert=>assert_false( zcl_skylint_ast_util=>has_token_lexeme( is_statement = ls_stmt

@@ -22,10 +22,9 @@ CLASS zcl_skylint_check_074 IMPLEMENTATION.
         VALUE #( description       = 'Use early CONTINUE guard clause instead of wrapping loop in IF block'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-guard_loop
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Invert IF condition and use CONTINUE to reduce nesting in loop'
-                       ) ) ) ).
+                     ( code     = c_finding_codes-guard_loop
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Invert IF condition and use CONTINUE to reduce nesting in loop' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

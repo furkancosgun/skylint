@@ -18,13 +18,13 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_025 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Omit RECEIVING in method calls'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-omit_receiving
-                                       severity       = zif_skylint_types=>severities-warning
-                                       text           = 'Omit RECEIVING keyword; use functional call or omit parameter'
-                                       ) ) ) ).
+    super->constructor( VALUE #(
+                            description       = 'Omit RECEIVING in method calls'
+                            remote_enablement = abap_true
+                            finding_codes     = VALUE #(
+                                ( code     = c_finding_codes-omit_receiving
+                                  severity = zif_skylint_types=>severities-warning
+                                  text     = 'Omit RECEIVING keyword; use functional call or omit parameter' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

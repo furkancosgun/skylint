@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_024 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     METHODS is_boolean_assignment
       IMPORTING is_statement TYPE zif_skylint_types=>ty_statement
       EXPORTING ev_target    TYPE string
@@ -34,10 +33,9 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
         VALUE #( description       = 'Prefer xsdbool( ) expression over manual IF-ELSE assignment'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-prefer_xsdbool
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Prefer xsdbool( ... ) instead of manual IF-ELSE boolean assignment'
-                       ) ) ) ).
+                     ( code     = c_finding_codes-prefer_xsdbool
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Prefer xsdbool( ... ) instead of manual IF-ELSE boolean assignment' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

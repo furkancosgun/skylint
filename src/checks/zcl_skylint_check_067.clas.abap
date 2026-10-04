@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_067 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     METHODS is_behavior_implementation
       IMPORTING is_code_block TYPE zif_skylint_types=>ty_code_block
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -29,10 +28,9 @@ CLASS zcl_skylint_check_067 IMPLEMENTATION.
         VALUE #( description       = 'Avoid COMMIT WORK / ROLLBACK WORK in behavior implementations'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-no_commit
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Avoid COMMIT/ROLLBACK WORK; transactional control belongs to framework'
-                       ) ) ) ).
+                     ( code     = c_finding_codes-no_commit
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Avoid COMMIT/ROLLBACK WORK; transactional control belongs to framework' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_028 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     METHODS is_obsolete_keyword
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -28,10 +27,9 @@ CLASS zcl_skylint_check_028 IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Avoid obsolete statements (MOVE, REFRESH, etc.)'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-obsolete_statement
-                                       severity       = zif_skylint_types=>severities-warning
-                                       text           = 'Avoid obsolete statement; use modern expressions instead'
-                                       ) ) ) ).
+                                     ( code     = c_finding_codes-obsolete_statement
+                                       severity = zif_skylint_types=>severities-warning
+                                       text     = 'Avoid obsolete statement; use modern expressions instead' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

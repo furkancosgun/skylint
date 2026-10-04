@@ -22,10 +22,9 @@ CLASS zcl_skylint_check_070 IMPLEMENTATION.
         VALUE #( description       = 'Avoid dynamic SQL table or clause names without sanitization'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-dyn_sql
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Avoid dynamic table or clause in SQL; use static SQL or sanitize'
-                       ) ) ) ).
+                     ( code     = c_finding_codes-dyn_sql
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Avoid dynamic table or clause in SQL; use static SQL or sanitize' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_039 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     DATA mv_max_statements TYPE i VALUE 5.
 
 ENDCLASS.
@@ -26,10 +25,9 @@ CLASS zcl_skylint_check_039 IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'skylint: Method Length Limit (excessive statement count)'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-method_length
-                                       severity       = zif_skylint_types=>severities-warning
-                                       text           = 'Method length exceeds maximum allowed statement limit'
-                                       ) )
+                                     ( code     = c_finding_codes-method_length
+                                       severity = zif_skylint_types=>severities-warning
+                                       text     = 'Method length exceeds maximum allowed statement limit' ) )
                                  attributes        = VALUE #( ( name  = 'MAX_STATEMENTS'
                                                                 kind  = zif_skylint_types=>attribute_kinds-integer
                                                                 value = REF #( mv_max_statements ) ) ) ) ).

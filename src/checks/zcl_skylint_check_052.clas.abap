@@ -22,10 +22,9 @@ CLASS zcl_skylint_check_052 IMPLEMENTATION.
         VALUE #( description       = 'Avoid obsolete control statements (ON CHANGE OF, AT NEW, SUM) in LOOP'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-obsolete_loop_control
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Avoid obsolete control statements in LOOP; use modern grouping'
-                       ) ) ) ).
+                     ( code     = c_finding_codes-obsolete_loop_control
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Avoid obsolete control statements in LOOP; use modern grouping' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

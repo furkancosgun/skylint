@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_043 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     METHODS has_classic_exceptions
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -29,10 +28,9 @@ CLASS zcl_skylint_check_043 IMPLEMENTATION.
         VALUE #( description       = 'skylint: Prefer Class-Based Exceptions over Classic EXCEPTIONS'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-class_based_exceptions
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Prefer class-based exceptions (RAISING) over classic EXCEPTIONS'
-                       ) ) ) ).
+                     ( code     = c_finding_codes-class_based_exceptions
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Prefer class-based exceptions (RAISING) over classic EXCEPTIONS' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

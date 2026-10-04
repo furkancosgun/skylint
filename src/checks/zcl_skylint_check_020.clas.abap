@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_020 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     METHODS is_literal
       IMPORTING iv_str       TYPE string
       RETURNING VALUE(rv_is) TYPE abap_bool.
@@ -41,10 +40,9 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
         VALUE #( description       = 'Avoid Yoda conditions in comparison expressions'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-yoda_condition
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Avoid Yoda conditions; place variable before literal in comparison'
-                       ) ) ) ).
+                     ( code     = c_finding_codes-yoda_condition
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Avoid Yoda conditions; place variable before literal in comparison' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

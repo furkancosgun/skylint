@@ -27,10 +27,9 @@ CLASS zcl_skylint_check_056 IMPLEMENTATION.
         VALUE #( description       = 'Enforce predicate naming (IS_, HAS_, CAN_) on boolean methods'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-bool_method_name
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Boolean-returning method should use predicate name (IS_, HAS_, CAN_)'
-                       ) ) ) ).
+                     ( code     = c_finding_codes-bool_method_name
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Boolean-returning method should use predicate name (IS_, HAS_, CAN_)' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -73,8 +72,8 @@ CLASS zcl_skylint_check_056 IMPLEMENTATION.
 
     lv_type = to_upper( ls_type-lexeme ).
     IF     lv_type <> 'ABAP_BOOL' AND lv_type <> 'FLAG'
-       AND lv_type <> 'XSDBOOL' AND lv_type <> 'BOOLEAN'
-       AND lv_type <> 'BOOLE_D' AND lv_type <> 'XFELD'.
+       AND lv_type <> 'XSDBOOL'   AND lv_type <> 'BOOLEAN'
+       AND lv_type <> 'BOOLE_D'   AND lv_type <> 'XFELD'.
       RETURN.
     ENDIF.
 
@@ -82,9 +81,9 @@ CLASS zcl_skylint_check_056 IMPLEMENTATION.
                                                iv_index     = 2 ).
     lv_name = to_upper( ls_name-lexeme ).
 
-    IF     lv_name NP 'IS_*' AND lv_name NP 'HAS_*'
-       AND lv_name NP 'CAN_*' AND lv_name NP 'CHECK_*'
-       AND lv_name NP 'ARE_*' AND lv_name NP 'WAS_*'
+    IF     lv_name NP 'IS_*'     AND lv_name NP 'HAS_*'
+       AND lv_name NP 'CAN_*'    AND lv_name NP 'CHECK_*'
+       AND lv_name NP 'ARE_*'    AND lv_name NP 'WAS_*'
        AND lv_name NP 'SHOULD_*'.
       rv_yes = abap_true.
     ENDIF.

@@ -1,7 +1,7 @@
 CLASS zcl_skylint_atc_adapter DEFINITION
   PUBLIC ABSTRACT
   CREATE PUBLIC.
-  
+
   PUBLIC SECTION.
     METHODS constructor
       IMPORTING is_config TYPE zif_skylint_types=>ty_config.

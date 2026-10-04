@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_005 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     DATA mv_allow_in_constructors TYPE abap_bool VALUE abap_false.
 
 ENDCLASS.
@@ -25,10 +24,9 @@ CLASS zcl_skylint_check_005 IMPLEMENTATION.
   METHOD constructor.
     super->constructor( VALUE #( description       = 'Avoid self-reference ME->'
                                  remote_enablement = abap_true
-                                 finding_codes     = VALUE #( ( code           = c_finding_codes-avoid_me
-                                                                severity       = zif_skylint_types=>severities-warning
-                                                                text           = 'Avoid unnecessary ME-> reference'
-                                                                ) )
+                                 finding_codes     = VALUE #( ( code     = c_finding_codes-avoid_me
+                                                                severity = zif_skylint_types=>severities-warning
+                                                                text     = 'Avoid unnecessary ME-> reference' ) )
                                  attributes        = VALUE #( ( name  = 'ALLOW_IN_CONSTRUCTORS'
                                                                 kind  = zif_skylint_types=>attribute_kinds-boolean
                                                                 value = REF #( mv_allow_in_constructors ) ) ) ) ).

@@ -22,10 +22,9 @@ CLASS zcl_skylint_check_055 IMPLEMENTATION.
         VALUE #( description       = 'Avoid static-only classes; prefer instantiable interface-based design'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-static_class
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Avoid static-only classes; declare instance methods and interfaces'
-                       ) ) ) ).
+                     ( code     = c_finding_codes-static_class
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Avoid static-only classes; declare instance methods and interfaces' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

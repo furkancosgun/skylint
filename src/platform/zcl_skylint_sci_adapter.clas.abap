@@ -79,8 +79,8 @@ CLASS zcl_skylint_sci_adapter IMPLEMENTATION.
     LOOP AT p_proc-stmts ASSIGNING <ls_stmt>.
       CLEAR ls_statement.
 
-      ls_statement-index           = sy-tabix.
-      ls_statement-keyword         = <ls_stmt>-keyword.
+      ls_statement-index   = sy-tabix.
+      ls_statement-keyword = <ls_stmt>-keyword.
       ls_statement-position-line   = <ls_stmt>-line.
       ls_statement-position-column = <ls_stmt>-column.
 

@@ -22,10 +22,9 @@ CLASS zcl_skylint_check_078 IMPLEMENTATION.
         VALUE #( description       = 'Enforce local declaration order (TYPES -> CONSTANTS -> DATA -> FIELD-SYMBOLS)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-decl_order
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Declare local TYPES before CONSTANTS before DATA before FIELD-SYMBOLS'
-                       ) ) ) ).
+                     ( code     = c_finding_codes-decl_order
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Declare local TYPES before CONSTANTS before DATA before FIELD-SYMBOLS' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

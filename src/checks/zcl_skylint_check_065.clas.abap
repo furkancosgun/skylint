@@ -18,13 +18,13 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_065 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Avoid obsolete FORM routines; use modern methods in ABAP Cloud'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-avoid_form
-                                       severity       = zif_skylint_types=>severities-warning
-                                       text           = 'Avoid obsolete FORM/PERFORM subroutines; use methods instead'
-                                       ) ) ) ).
+    super->constructor( VALUE #(
+                            description       = 'Avoid obsolete FORM routines; use modern methods in ABAP Cloud'
+                            remote_enablement = abap_true
+                            finding_codes     = VALUE #(
+                                ( code     = c_finding_codes-avoid_form
+                                  severity = zif_skylint_types=>severities-warning
+                                  text     = 'Avoid obsolete FORM/PERFORM subroutines; use methods instead' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

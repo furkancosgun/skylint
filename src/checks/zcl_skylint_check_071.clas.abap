@@ -18,13 +18,13 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_071 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Prefer marking non-overridden methods as FINAL'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-prefer_final
-                                       severity       = zif_skylint_types=>severities-warning
-                                       text           = 'Declare method as FINAL if it is not intended to be redefined'
-                                       ) ) ) ).
+    super->constructor( VALUE #(
+                            description       = 'Prefer marking non-overridden methods as FINAL'
+                            remote_enablement = abap_true
+                            finding_codes     = VALUE #(
+                                ( code     = c_finding_codes-prefer_final
+                                  severity = zif_skylint_types=>severities-warning
+                                  text     = 'Declare method as FINAL if it is not intended to be redefined' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -45,17 +45,17 @@ CLASS zcl_skylint_check_071 IMPLEMENTATION.
     LOOP AT is_code_block-statements ASSIGNING <ls_statement>
          WHERE keyword = 'METHODS'.
       IF    zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                    iv_lexeme    = 'FINAL' ) = abap_true
+                                                    iv_lexeme    = 'FINAL' )        = abap_true
          OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                    iv_lexeme    = 'ABSTRACT' ) = abap_true
+                                                    iv_lexeme    = 'ABSTRACT' )     = abap_true
          OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
                                                     iv_lexeme    = 'REDEFINITION' ) = abap_true
          OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                    iv_lexeme    = 'FOR' ) = abap_true
+                                                    iv_lexeme    = 'FOR' )          = abap_true
          OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                    iv_lexeme    = 'CONSTRUCTOR' ) = abap_true
+                                                    iv_lexeme    = 'CONSTRUCTOR' )  = abap_true
          OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                    iv_lexeme    = 'DEFAULT' ) = abap_true.
+                                                    iv_lexeme    = 'DEFAULT' )      = abap_true.
         CONTINUE.
       ENDIF.
 

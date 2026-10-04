@@ -21,10 +21,9 @@ CLASS zcl_skylint_check_003 IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Avoid WITH DEFAULT KEY; prefer EMPTY KEY or explicit keys'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-default_key
-                                       severity       = zif_skylint_types=>severities-warning
-                                       text           = 'Avoid WITH DEFAULT KEY; specify EMPTY KEY or explicit key'
-                                       ) ) ) ).
+                                     ( code     = c_finding_codes-default_key
+                                       severity = zif_skylint_types=>severities-warning
+                                       text     = 'Avoid WITH DEFAULT KEY; specify EMPTY KEY or explicit key' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

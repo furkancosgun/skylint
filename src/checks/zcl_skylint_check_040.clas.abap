@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_040 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     DATA mv_max_depth TYPE i VALUE 3.
 
     METHODS is_block_opener
@@ -34,10 +33,9 @@ CLASS zcl_skylint_check_040 IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'skylint: Nesting Depth Limit (excessive control block nesting)'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-nesting_depth
-                                       severity       = zif_skylint_types=>severities-warning
-                                       text           = 'Control block nesting depth exceeds maximum allowed limit'
-                                       ) )
+                                     ( code     = c_finding_codes-nesting_depth
+                                       severity = zif_skylint_types=>severities-warning
+                                       text     = 'Control block nesting depth exceeds maximum allowed limit' ) )
                                  attributes        = VALUE #( ( name  = 'MAX_DEPTH'
                                                                 kind  = zif_skylint_types=>attribute_kinds-integer
                                                                 value = REF #( mv_max_depth ) ) ) ) ).

@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_017 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     METHODS is_nested_if_mergeable
       IMPORTING iv_idx        TYPE i
                 is_code_block TYPE zif_skylint_types=>ty_code_block
@@ -29,10 +28,9 @@ CLASS zcl_skylint_check_017 IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Detect consecutive nested IF blocks that can be merged with AND'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-nested_if
-                                       severity       = zif_skylint_types=>severities-warning
-                                       text           = 'Nested IF block can be merged with outer IF using AND'
-                                       ) ) ) ).
+                                     ( code     = c_finding_codes-nested_if
+                                       severity = zif_skylint_types=>severities-warning
+                                       text     = 'Nested IF block can be merged with outer IF using AND' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

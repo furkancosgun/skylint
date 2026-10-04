@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_007 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     METHODS has_assignment_chain
       IMPORTING is_statement    TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_chain) TYPE abap_bool.
@@ -29,10 +28,9 @@ CLASS zcl_skylint_check_007 IMPLEMENTATION.
         VALUE #( description       = 'Avoid assignment chaining (a = b = c)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-assignment_chaining
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Avoid chained assignments; write separate assignment statements'
-                       ) ) ) ).
+                     ( code     = c_finding_codes-assignment_chaining
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Avoid chained assignments; write separate assignment statements' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

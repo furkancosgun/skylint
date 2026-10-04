@@ -20,11 +20,9 @@ CLASS zcl_skylint_check_051 IMPLEMENTATION.
   METHOD constructor.
     super->constructor( VALUE #( description       = 'Prefer INSERT ... INTO TABLE over APPEND for table safety'
                                  remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-prefer_insert
-                                       severity       = zif_skylint_types=>severities-warning
-                                       text           = 'Prefer INSERT ... INTO TABLE over APPEND'
-                                       ) ) ) ).
+                                 finding_codes     = VALUE #( ( code     = c_finding_codes-prefer_insert
+                                                                severity = zif_skylint_types=>severities-warning
+                                                                text     = 'Prefer INSERT ... INTO TABLE over APPEND' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

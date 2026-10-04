@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_046 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     METHODS is_unorder_select_up_to
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -29,10 +28,9 @@ CLASS zcl_skylint_check_046 IMPLEMENTATION.
         VALUE #( description       = 'skylint: SELECT UP TO 1 ROWS requires ORDER BY'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-missing_order_by
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'SELECT UP TO 1 ROWS requires an explicit ORDER BY clause for determinism'
-                       ) ) ) ).
+                     ( code     = c_finding_codes-missing_order_by
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'SELECT UP TO 1 ROWS requires an explicit ORDER BY clause for determinism' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

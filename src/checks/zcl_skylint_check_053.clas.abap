@@ -21,10 +21,9 @@ CLASS zcl_skylint_check_053 IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Avoid LIKE referencing data objects; use explicit TYPE'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-avoid_like
-                                       severity       = zif_skylint_types=>severities-warning
-                                       text           = 'Avoid LIKE for data declarations; specify TYPE explicitly'
-                                       ) ) ) ).
+                                     ( code     = c_finding_codes-avoid_like
+                                       severity = zif_skylint_types=>severities-warning
+                                       text     = 'Avoid LIKE for data declarations; specify TYPE explicitly' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

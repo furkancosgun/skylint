@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_047 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     DATA mv_max_complexity TYPE i VALUE 5.
 
     METHODS calculate_complexity
@@ -30,10 +29,9 @@ CLASS zcl_skylint_check_047 IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'skylint: Cyclomatic Complexity Threshold'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-cyclomatic_complexity
-                                       severity       = zif_skylint_types=>severities-warning
-                                       text           = 'Procedure cyclomatic complexity exceeds threshold'
-                                       ) )
+                                     ( code     = c_finding_codes-cyclomatic_complexity
+                                       severity = zif_skylint_types=>severities-warning
+                                       text     = 'Procedure cyclomatic complexity exceeds threshold' ) )
                                  attributes        = VALUE #( ( name  = 'MAX_COMPLEXITY'
                                                                 kind  = zif_skylint_types=>attribute_kinds-integer
                                                                 value = REF #( mv_max_complexity ) ) ) ) ).

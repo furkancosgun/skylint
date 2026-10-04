@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_018 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     TYPES:
       BEGIN OF ty_depth_state,
         depth       TYPE i,
@@ -44,10 +43,9 @@ CLASS zcl_skylint_check_018 IMPLEMENTATION.
   METHOD constructor.
     super->constructor( VALUE #( description       = 'Detect unreachable code following unconditional jump statements'
                                  remote_enablement = abap_true
-                                 finding_codes     = VALUE #( ( code           = c_finding_codes-unreachable_code
-                                                                severity       = zif_skylint_types=>severities-warning
-                                                                text           = 'Statement is unreachable'
-                                                                ) ) ) ).
+                                 finding_codes     = VALUE #( ( code     = c_finding_codes-unreachable_code
+                                                                severity = zif_skylint_types=>severities-warning
+                                                                text     = 'Statement is unreachable' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

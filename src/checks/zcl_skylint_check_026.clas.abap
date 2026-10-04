@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_026 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     METHODS is_static_call
       IMPORTING is_token      TYPE zif_skylint_types=>ty_token
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -27,11 +26,9 @@ CLASS zcl_skylint_check_026 IMPLEMENTATION.
   METHOD constructor.
     super->constructor( VALUE #( description       = 'Avoid calling static methods via instance arrow (->)'
                                  remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-static_call_via_instance
-                                       severity       = zif_skylint_types=>severities-warning
-                                       text           = 'Call static method using => instead of ->'
-                                       ) ) ) ).
+                                 finding_codes     = VALUE #( ( code     = c_finding_codes-static_call_via_instance
+                                                                severity = zif_skylint_types=>severities-warning
+                                                                text     = 'Call static method using => instead of ->' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

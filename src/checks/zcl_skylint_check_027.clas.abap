@@ -22,10 +22,9 @@ CLASS zcl_skylint_check_027 IMPLEMENTATION.
         VALUE #( description       = 'Avoid mutable public attributes in classes'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-public_attribute
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Avoid public attributes; use private/protected with getters or READ-ONLY'
-                       ) ) ) ).
+                     ( code     = c_finding_codes-public_attribute
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Avoid public attributes; use private/protected with getters or READ-ONLY' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -51,7 +50,7 @@ CLASS zcl_skylint_check_027 IMPLEMENTATION.
         WHEN 'DATA' OR 'CLASS-DATA'.
           IF     lv_in_public = abap_true
              AND zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                         iv_lexeme    = 'READ-ONLY' ) = abap_false.
+                                                         iv_lexeme    = 'READ-ONLY' )  = abap_false.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-public_attribute ).
           ENDIF.

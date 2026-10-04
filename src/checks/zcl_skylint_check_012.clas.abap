@@ -21,10 +21,9 @@ CLASS zcl_skylint_check_012 IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Prefer RETURN over EXIT outside loop constructs'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-exit_outside_loop
-                                       severity       = zif_skylint_types=>severities-warning
-                                       text           = 'Use RETURN instead of EXIT when leaving a procedure'
-                                       ) ) ) ).
+                                     ( code     = c_finding_codes-exit_outside_loop
+                                       severity = zif_skylint_types=>severities-warning
+                                       text     = 'Use RETURN instead of EXIT when leaving a procedure' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

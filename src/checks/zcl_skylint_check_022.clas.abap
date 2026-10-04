@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_022 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     METHODS is_static_create_object
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -28,10 +27,9 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Prefer NEW #( ) constructor expression over legacy CREATE OBJECT'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-prefer_new
-                                       severity       = zif_skylint_types=>severities-warning
-                                       text           = 'Prefer NEW #( ) expression over CREATE OBJECT'
-                                       ) ) ) ).
+                                     ( code     = c_finding_codes-prefer_new
+                                       severity = zif_skylint_types=>severities-warning
+                                       text     = 'Prefer NEW #( ) expression over CREATE OBJECT' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_057 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     DATA mv_max_depth TYPE i VALUE 1.
 
 ENDCLASS.
@@ -27,10 +26,9 @@ CLASS zcl_skylint_check_057 IMPLEMENTATION.
         VALUE #( description       = 'Avoid deep class inheritance hierarchies'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-deep_inheritance
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Avoid deep class inheritance; prefer composition over inheritance'
-                       ) )
+                     ( code     = c_finding_codes-deep_inheritance
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Avoid deep class inheritance; prefer composition over inheritance' ) )
                  attributes        = VALUE #( ( name  = 'MAX_DEPTH'
                                                 kind  = zif_skylint_types=>attribute_kinds-integer
                                                 value = REF #( mv_max_depth ) ) ) ) ).

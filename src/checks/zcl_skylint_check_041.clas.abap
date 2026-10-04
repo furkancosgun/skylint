@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_041 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     METHODS is_system_variable_mod
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -29,10 +28,9 @@ CLASS zcl_skylint_check_041 IMPLEMENTATION.
         VALUE #( description       = 'skylint: Avoid sy-* System Variable Modification'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-system_var_mod
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Avoid modifying system fields (sy-*); system variables are read-only'
-                       ) ) ) ).
+                     ( code     = c_finding_codes-system_var_mod
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Avoid modifying system fields (sy-*); system variables are read-only' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

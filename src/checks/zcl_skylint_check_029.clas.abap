@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_029 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     DATA mv_max_parameters TYPE i VALUE 8.
 
     METHODS count_parameters
@@ -31,10 +30,9 @@ CLASS zcl_skylint_check_029 IMPLEMENTATION.
         VALUE #( description       = 'Method signature cleanliness (excessive parameter count)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-too_many_parameters
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Method signature has too many parameters; consider grouping into structures'
-                       ) )
+                     ( code     = c_finding_codes-too_many_parameters
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Method signature has too many parameters; consider grouping into structures' ) )
                  attributes        = VALUE #( ( name  = 'MAX_PARAMETERS'
                                                 kind  = zif_skylint_types=>attribute_kinds-integer
                                                 value = REF #( mv_max_parameters ) ) ) ) ).

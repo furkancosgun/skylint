@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_054 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     DATA mv_max_statements TYPE i VALUE 10.
 
 ENDCLASS.
@@ -27,10 +26,9 @@ CLASS zcl_skylint_check_054 IMPLEMENTATION.
         VALUE #( description       = 'Keep constructors clean; avoid heavy business logic/loops/DB access'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-constructor_logic
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Avoid heavy business logic/loops in constructor; use injection only'
-                       ) )
+                     ( code     = c_finding_codes-constructor_logic
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Avoid heavy business logic/loops in constructor; use injection only' ) )
                  attributes        = VALUE #( ( name  = 'MAX_STATEMENTS'
                                                 kind  = zif_skylint_types=>attribute_kinds-integer
                                                 value = REF #( mv_max_statements ) ) ) ) ).

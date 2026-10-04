@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_036 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     METHODS is_exempt_statement
       IMPORTING iv_keyword       TYPE string
       RETURNING VALUE(rv_exempt) TYPE abap_bool.
@@ -31,13 +30,13 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_036 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Omit parameter name in single parameter method call'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-omit_param
-                                       severity       = zif_skylint_types=>severities-warning
-                                       text           = 'Omit explicit parameter name in single parameter method call'
-                                       ) ) ) ).
+    super->constructor( VALUE #(
+                            description       = 'Omit parameter name in single parameter method call'
+                            remote_enablement = abap_true
+                            finding_codes     = VALUE #(
+                                ( code     = c_finding_codes-omit_param
+                                  severity = zif_skylint_types=>severities-warning
+                                  text     = 'Omit explicit parameter name in single parameter method call' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

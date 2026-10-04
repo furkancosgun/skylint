@@ -777,9 +777,9 @@ CLASS lcl_compiler IMPLEMENTATION.
 
     LOOP AT cs_statement-tokens ASSIGNING <ls_tok>.
       lv_up = to_upper( <ls_tok>-lexeme ).
-      IF (    ( lv_prev = 'TYPE' OR lv_prev = 'LIKE' )
-           AND lv_up <> '(' AND lv_up <> ')'
-           AND lv_up <> 'LINE' AND lv_up <> 'REF' AND lv_up <> 'TABLE' )
+      IF    (     ( lv_prev = 'TYPE' OR lv_prev = 'LIKE' )
+              AND lv_up <> '('    AND lv_up <> ')'
+              AND lv_up <> 'LINE' AND lv_up <> 'REF' AND lv_up <> 'TABLE' )
          OR lv_up CP 'CX_SY_*'.
         CLEAR ls_ref.
         ls_ref-kind        = zif_skylint_types=>compiler_reference_kinds-type.

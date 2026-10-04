@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_011 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     METHODS has_transporting_no_fields
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_has) TYPE abap_bool.
@@ -29,10 +28,9 @@ CLASS zcl_skylint_check_011 IMPLEMENTATION.
         VALUE #( description       = 'Prefer line_exists( ) over READ TABLE ... TRANSPORTING NO FIELDS'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-prefer_line_exists
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Prefer line_exists( ... ) instead of READ TABLE ... TRANSPORTING NO FIELDS'
-                       ) ) ) ).
+                     ( code     = c_finding_codes-prefer_line_exists
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Prefer line_exists( ... ) instead of READ TABLE ... TRANSPORTING NO FIELDS' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

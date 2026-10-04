@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_033 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     TYPES: BEGIN OF ty_scoped_var,
              name     TYPE string,
              block_id TYPE i,
@@ -42,10 +41,9 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
         VALUE #( description       = 'Scope of variable (avoid variable leaking outside control blocks)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-scope_leak
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Variable declared in inner block is referenced outside its scope'
-                       ) ) ) ).
+                     ( code     = c_finding_codes-scope_leak
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Variable declared in inner block is referenced outside its scope' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

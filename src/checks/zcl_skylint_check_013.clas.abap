@@ -21,10 +21,9 @@ CLASS zcl_skylint_check_013 IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Avoid CHECK in loop/iteration structures (prefer IF ... CONTINUE)'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-check_in_loop
-                                       severity       = zif_skylint_types=>severities-warning
-                                       text           = 'Avoid CHECK inside loop; use IF ... CONTINUE instead'
-                                       ) ) ) ).
+                                     ( code     = c_finding_codes-check_in_loop
+                                       severity = zif_skylint_types=>severities-warning
+                                       text     = 'Avoid CHECK inside loop; use IF ... CONTINUE instead' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

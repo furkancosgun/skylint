@@ -22,10 +22,9 @@ CLASS zcl_skylint_check_038 IMPLEMENTATION.
         VALUE #( description       = 'skylint: Prefer CORRESPONDING Expression over MOVE-CORRESPONDING'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-prefer_corresponding
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Prefer functional CORRESPONDING #( ... ) over MOVE-CORRESPONDING'
-                       ) ) ) ).
+                     ( code     = c_finding_codes-prefer_corresponding
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Prefer functional CORRESPONDING #( ... ) over MOVE-CORRESPONDING' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

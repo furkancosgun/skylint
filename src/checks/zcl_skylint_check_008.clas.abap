@@ -56,10 +56,9 @@ CLASS zcl_skylint_check_008 IMPLEMENTATION.
         VALUE #( description       = 'Avoid chained declarations (DATA:, TYPES:, etc.)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-chained_declaration
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Avoid chained declarations; declare each entity individually'
-                       ) )
+                     ( code     = c_finding_codes-chained_declaration
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Avoid chained declarations; declare each entity individually' ) )
                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-resolve_chain
                                                 short_text = 'Resolve chain into single declarations' ) )
                  attributes        = VALUE #( ( name  = 'ALLOW_STRUCTURE_CHAINS'

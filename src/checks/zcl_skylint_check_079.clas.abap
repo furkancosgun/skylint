@@ -22,10 +22,9 @@ CLASS zcl_skylint_check_079 IMPLEMENTATION.
         VALUE #( description       = 'Detect unnecessary exclamation mark parameter escape (!iv_param)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-param_escape
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Only escape parameter names with ! if they clash with an ABAP keyword'
-                       ) ) ) ).
+                     ( code     = c_finding_codes-param_escape
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Only escape parameter names with ! if they clash with an ABAP keyword' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

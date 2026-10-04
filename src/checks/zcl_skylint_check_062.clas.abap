@@ -19,12 +19,12 @@ ENDCLASS.
 CLASS zcl_skylint_check_062 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Avoid nested TRY blocks; extract inner error handling to helper methods'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #( ( code           = c_finding_codes-nested_try
-                                                severity       = zif_skylint_types=>severities-warning
-                                                text           = 'Avoid nested TRY blocks; extract to dedicated method'
-                                                ) ) ) ).
+        VALUE #(
+            description       = 'Avoid nested TRY blocks; extract inner error handling to helper methods'
+            remote_enablement = abap_true
+            finding_codes     = VALUE #( ( code     = c_finding_codes-nested_try
+                                           severity = zif_skylint_types=>severities-warning
+                                           text     = 'Avoid nested TRY blocks; extract to dedicated method' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

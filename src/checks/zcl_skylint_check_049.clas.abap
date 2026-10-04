@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_049 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     METHODS is_raise_shortdump
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -25,13 +24,13 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_049 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Avoid RAISE SHORTDUMP (prefer graceful exceptions)'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-raise_shortdump
-                                       severity       = zif_skylint_types=>severities-warning
-                                       text           = 'Avoid RAISE SHORTDUMP; prefer graceful class-based exceptions'
-                                       ) ) ) ).
+    super->constructor( VALUE #(
+                            description       = 'skylint: Avoid RAISE SHORTDUMP (prefer graceful exceptions)'
+                            remote_enablement = abap_true
+                            finding_codes     = VALUE #(
+                                ( code     = c_finding_codes-raise_shortdump
+                                  severity = zif_skylint_types=>severities-warning
+                                  text     = 'Avoid RAISE SHORTDUMP; prefer graceful class-based exceptions' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

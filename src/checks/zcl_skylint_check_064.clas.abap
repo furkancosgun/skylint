@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_064 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     METHODS sets_sy_subrc
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -33,10 +32,9 @@ CLASS zcl_skylint_check_064 IMPLEMENTATION.
         VALUE #( description       = 'Check sy-subrc after DB, table and string operations'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-check_subrc
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Check sy-subrc after SELECT SINGLE, READ, AUTHORITY-CHECK, FIND, SEARCH'
-                       ) ) ) ).
+                     ( code     = c_finding_codes-check_subrc
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Check sy-subrc after SELECT SINGLE, READ, AUTHORITY-CHECK, FIND, SEARCH' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_016 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     METHODS check_duplicate_elseif
       IMPORTING iv_idx        TYPE i
                 is_statement  TYPE zif_skylint_types=>ty_statement
@@ -35,13 +34,13 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_016 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Detect identical branch conditions in IF/ELSEIF and CASE/WHEN'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-identical_condition
-                                       severity       = zif_skylint_types=>severities-warning
-                                       text           = 'Identical condition in branch; duplicate branch is unreachable'
-                                       ) ) ) ).
+    super->constructor( VALUE #(
+                            description       = 'Detect identical branch conditions in IF/ELSEIF and CASE/WHEN'
+                            remote_enablement = abap_true
+                            finding_codes     = VALUE #(
+                                ( code     = c_finding_codes-identical_condition
+                                  severity = zif_skylint_types=>severities-warning
+                                  text     = 'Identical condition in branch; duplicate branch is unreachable' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

@@ -148,9 +148,9 @@ INTERFACE zif_skylint_types
 
   CONSTANTS:
     BEGIN OF attribute_kinds,
-      boolean    TYPE string VALUE 'BOOLEAN',
-      string     TYPE string VALUE 'STRING',
-      integer    TYPE string VALUE 'INTEGER',
+      boolean TYPE string VALUE 'BOOLEAN',
+      string  TYPE string VALUE 'STRING',
+      integer TYPE string VALUE 'INTEGER',
     END OF attribute_kinds.
 
   TYPES:

@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_045 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     METHODS is_call_transaction
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -32,10 +31,9 @@ CLASS zcl_skylint_check_045 IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'skylint: Call Transaction Authority Check'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-missing_auth_check
-                                       severity       = zif_skylint_types=>severities-warning
-                                       text           = 'CALL TRANSACTION must be protected with AUTHORITY-CHECK'
-                                       ) ) ) ).
+                                     ( code     = c_finding_codes-missing_auth_check
+                                       severity = zif_skylint_types=>severities-warning
+                                       text     = 'CALL TRANSACTION must be protected with AUTHORITY-CHECK' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

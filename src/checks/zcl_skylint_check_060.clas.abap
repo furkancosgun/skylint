@@ -22,10 +22,9 @@ CLASS zcl_skylint_check_060 IMPLEMENTATION.
         VALUE #( description       = 'Avoid generic CATCH cx_root; catch specific exception classes'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-catch_root
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Avoid generic CATCH cx_root; catch specific exception classes instead'
-                       ) ) ) ).
+                     ( code     = c_finding_codes-catch_root
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Avoid generic CATCH cx_root; catch specific exception classes instead' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

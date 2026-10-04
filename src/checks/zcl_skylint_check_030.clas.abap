@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_030 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     METHODS is_direct_db_access
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -29,10 +28,9 @@ CLASS zcl_skylint_check_030 IMPLEMENTATION.
         VALUE #( description       = 'Avoid database access inside loop iterations'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-db_in_loop
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Database access inside loop iteration; consider bulk operation or JOIN'
-                       ) ) ) ).
+                     ( code     = c_finding_codes-db_in_loop
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Database access inside loop iteration; consider bulk operation or JOIN' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

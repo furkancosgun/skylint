@@ -21,10 +21,9 @@ CLASS zcl_skylint_check_001 IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Prefer lines( ) built-in function over DESCRIBE TABLE ... LINES'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-describe_lines
-                                       severity       = zif_skylint_types=>severities-warning
-                                       text           = 'Use lines( ) function instead of DESCRIBE TABLE ... LINES'
-                                       ) ) ) ).
+                                     ( code     = c_finding_codes-describe_lines
+                                       severity = zif_skylint_types=>severities-warning
+                                       text     = 'Use lines( ) function instead of DESCRIBE TABLE ... LINES' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

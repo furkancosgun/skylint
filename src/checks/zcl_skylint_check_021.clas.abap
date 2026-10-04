@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_021 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     METHODS is_legacy_operator
       IMPORTING iv_lexeme    TYPE string
       RETURNING VALUE(rv_is) TYPE abap_bool.
@@ -30,13 +29,13 @@ ENDCLASS.
 CLASS zcl_skylint_check_021 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Prefer comparison operators (=, <>, <, >, <=, >=) over legacy textual keywords'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-prefer_operator
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Prefer modern comparison operators (=, <>, <, >, <=, >=) over legacy keywords'
-                       ) ) ) ).
+        VALUE #(
+            description       = 'Prefer comparison operators (=, <>, <, >, <=, >=) over legacy textual keywords'
+            remote_enablement = abap_true
+            finding_codes     = VALUE #(
+                ( code     = c_finding_codes-prefer_operator
+                  severity = zif_skylint_types=>severities-warning
+                  text     = 'Prefer modern comparison operators (=, <>, <, >, <=, >=) over legacy keywords' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

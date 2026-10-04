@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_048 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     METHODS is_class_missing_final
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -29,10 +28,9 @@ CLASS zcl_skylint_check_048 IMPLEMENTATION.
         VALUE #( description       = 'skylint: Prefer FINAL Classes by Default'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-class_not_final
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Classes should be marked FINAL by default unless designed for inheritance'
-                       ) ) ) ).
+                     ( code     = c_finding_codes-class_not_final
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Classes should be marked FINAL by default unless designed for inheritance' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

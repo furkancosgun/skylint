@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_034 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     METHODS is_identical_assignment
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -25,13 +24,13 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_034 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Detect Identical Self Assignments'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-identical_move
-                                       severity       = zif_skylint_types=>severities-warning
-                                       text           = 'Identical assignment has no effect; remove redundant statement'
-                                       ) ) ) ).
+    super->constructor( VALUE #(
+                            description       = 'skylint: Detect Identical Self Assignments'
+                            remote_enablement = abap_true
+                            finding_codes     = VALUE #(
+                                ( code     = c_finding_codes-identical_move
+                                  severity = zif_skylint_types=>severities-warning
+                                  text     = 'Identical assignment has no effect; remove redundant statement' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

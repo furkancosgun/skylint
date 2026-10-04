@@ -23,12 +23,10 @@ CLASS zcl_skylint_check_072 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      severity = zif_skylint_types=>severities-warning
-                                     ( code           = c_finding_codes-condense_stmt
-                                       text           = 'Use modern built-in string function condense( ... ) instead'
-                                       )
-                                     ( code           = c_finding_codes-translate_stmt
-                                       text           = 'Use modern string functions to_upper() or to_lower() instead'
-                                       ) ) ) ).
+                                     ( code = c_finding_codes-condense_stmt
+                                       text = 'Use modern built-in string function condense( ... ) instead' )
+                                     ( code = c_finding_codes-translate_stmt
+                                       text = 'Use modern string functions to_upper() or to_lower() instead' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

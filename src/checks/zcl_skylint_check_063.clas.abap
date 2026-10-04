@@ -22,10 +22,9 @@ CLASS zcl_skylint_check_063 IMPLEMENTATION.
         VALUE #( description       = 'Avoid raising SAP internal system exceptions (cx_sy_*)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-raise_sys
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Avoid raising SAP internal system exceptions; use application exceptions'
-                       ) ) ) ).
+                     ( code     = c_finding_codes-raise_sys
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Avoid raising SAP internal system exceptions; use application exceptions' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

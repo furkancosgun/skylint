@@ -22,10 +22,9 @@ CLASS zcl_skylint_check_073 IMPLEMENTATION.
         VALUE #( description       = 'Prefer calculation assignment operators (+=, -=, *=, /=) over var = var + 1'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-calc_assign
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Use calculation assignment operator (+=, -=) or ADD statement replacement'
-                       ) ) ) ).
+                     ( code     = c_finding_codes-calc_assign
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Use calculation assignment operator (+=, -=) or ADD statement replacement' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

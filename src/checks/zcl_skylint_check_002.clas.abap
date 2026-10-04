@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_002 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     METHODS is_dynamic_call
       IMPORTING is_statement      TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_dynamic) TYPE abap_bool.
@@ -24,13 +23,13 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_002 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Avoid static CALL METHOD statements'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-call_method
-                                       severity       = zif_skylint_types=>severities-warning
-                                       text           = 'Avoid static CALL METHOD; use functional method call instead'
-                                       ) ) ) ).
+    super->constructor( VALUE #(
+                            description       = 'Avoid static CALL METHOD statements'
+                            remote_enablement = abap_true
+                            finding_codes     = VALUE #(
+                                ( code     = c_finding_codes-call_method
+                                  severity = zif_skylint_types=>severities-warning
+                                  text     = 'Avoid static CALL METHOD; use functional method call instead' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

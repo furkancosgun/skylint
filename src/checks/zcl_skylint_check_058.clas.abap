@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_058 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     DATA mv_max_attributes TYPE i VALUE 5.
 
 ENDCLASS.
@@ -27,10 +26,9 @@ CLASS zcl_skylint_check_058 IMPLEMENTATION.
         VALUE #( description       = 'Limit number of member attributes in a class (God Class smell)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-attribute_count
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Class has too many member attributes; split into cohesive components'
-                       ) )
+                     ( code     = c_finding_codes-attribute_count
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Class has too many member attributes; split into cohesive components' ) )
                  attributes        = VALUE #( ( name  = 'MAX_ATTRIBUTES'
                                                 kind  = zif_skylint_types=>attribute_kinds-integer
                                                 value = REF #( mv_max_attributes ) ) ) ) ).

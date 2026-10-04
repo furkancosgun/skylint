@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_044 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     METHODS is_dangerous_statement
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -28,10 +27,9 @@ CLASS zcl_skylint_check_044 IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'skylint: Dangerous / Unmanaged Dynamic Statements'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-dangerous_statement
-                                       severity       = zif_skylint_types=>severities-warning
-                                       text           = 'Dangerous or unmanaged dynamic statement detected'
-                                       ) ) ) ).
+                                     ( code     = c_finding_codes-dangerous_statement
+                                       severity = zif_skylint_types=>severities-warning
+                                       text     = 'Dangerous or unmanaged dynamic statement detected' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

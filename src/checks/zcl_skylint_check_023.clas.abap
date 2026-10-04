@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_023 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     METHODS is_raise_exception_type
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -29,10 +28,9 @@ CLASS zcl_skylint_check_023 IMPLEMENTATION.
         VALUE #( description       = 'Prefer RAISE EXCEPTION NEW over RAISE EXCEPTION TYPE'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-raise_exception_new
-                       severity       = zif_skylint_types=>severities-warning
-                       text           = 'Prefer RAISE EXCEPTION NEW cx_name( ) over RAISE EXCEPTION TYPE'
-                       ) ) ) ).
+                     ( code     = c_finding_codes-raise_exception_new
+                       severity = zif_skylint_types=>severities-warning
+                       text     = 'Prefer RAISE EXCEPTION NEW cx_name( ) over RAISE EXCEPTION TYPE' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
