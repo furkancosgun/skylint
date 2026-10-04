@@ -5,11 +5,48 @@ CLASS ltcl_ast_util DEFINITION FINAL
     METHODS test_token_getters         FOR TESTING RAISING cx_static_check.
     METHODS test_statement_getters     FOR TESTING RAISING cx_static_check.
     METHODS test_relative_token_search FOR TESTING RAISING cx_static_check.
-    METHODS test_semantic_helpers      FOR TESTING RAISING cx_static_check.
+    METHODS test_semantic_helpers        FOR TESTING RAISING cx_static_check.
+    METHODS test_keyword_reference_guard FOR TESTING RAISING cx_static_check.
 ENDCLASS.
 
 
 CLASS ltcl_ast_util IMPLEMENTATION.
+  METHOD test_keyword_reference_guard.
+    DATA ls_stmt TYPE zif_skylint_types=>ty_statement.
+    DATA ls_ref  TYPE zif_skylint_types=>ty_compiler_reference.
+    DATA lt_refs TYPE zif_skylint_types=>ty_compiler_references.
+
+    ls_ref = VALUE #( kind       = zif_skylint_types=>compiler_reference_kinds-data
+                      usage_mode = zif_skylint_types=>usage_modes-read ).
+    lt_refs = VALUE #( ( ls_ref ) ).
+
+    " Token 'EXPORTING' with compiler reference (e.g. variable named 'exporting')
+    ls_stmt = VALUE #( keyword = 'CALL'
+                       tokens  = VALUE #( ( lexeme = 'CALL' )
+                                          ( lexeme = 'exporting'
+                                            references = lt_refs ) ) ).
+
+    cl_abap_unit_assert=>assert_false( zcl_skylint_ast_util=>has_token_lexeme( is_statement = ls_stmt
+                                                                               iv_lexeme    = 'EXPORTING' ) ).
+    cl_abap_unit_assert=>assert_equals( exp = 0
+                                        act = zcl_skylint_ast_util=>find_token( is_statement = ls_stmt
+                                                                                iv_lexeme    = 'EXPORTING' ) ).
+    cl_abap_unit_assert=>assert_false( zcl_skylint_ast_util=>matches_token_at( is_statement = ls_stmt
+                                                                               iv_index     = 2
+                                                                               iv_expected  = 'EXPORTING' ) ).
+
+    " True keyword 'EXPORTING' with empty references IS matched
+    ls_stmt = VALUE #( keyword = 'CALL'
+                       tokens  = VALUE #( ( lexeme = 'CALL' )
+                                          ( lexeme = 'EXPORTING' ) ) ).
+
+    cl_abap_unit_assert=>assert_true( zcl_skylint_ast_util=>has_token_lexeme( is_statement = ls_stmt
+                                                                              iv_lexeme    = 'EXPORTING' ) ).
+    cl_abap_unit_assert=>assert_equals( exp = 2
+                                        act = zcl_skylint_ast_util=>find_token( is_statement = ls_stmt
+                                                                                iv_lexeme    = 'EXPORTING' ) ).
+  ENDMETHOD.
+
   METHOD test_token_getters.
     DATA ls_stmt TYPE zif_skylint_types=>ty_statement.
     DATA ls_tok  TYPE zif_skylint_types=>ty_token.

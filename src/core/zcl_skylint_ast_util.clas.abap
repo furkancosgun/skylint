@@ -228,7 +228,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
     lv_idx = iv_start_index.
     WHILE lv_idx <= lv_count.
       ASSIGN is_statement-tokens[ lv_idx ] TO <ls_tok>.
-      IF sy-subrc = 0.
+      IF sy-subrc = 0 AND <ls_tok>-references IS INITIAL.
         IF iv_case_sensitive = abap_true.
           lv_act = <ls_tok>-lexeme.
         ELSE.
@@ -321,7 +321,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
         ls_exp_token = <ls_exp>.
 
         READ TABLE is_statement-tokens INTO ls_act_token INDEX lv_tok_idx.
-        IF sy-subrc <> 0.
+        IF sy-subrc <> 0 OR ls_act_token-references IS NOT INITIAL.
           lv_all_match = abap_false.
           EXIT.
         ENDIF.
@@ -391,7 +391,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
     ls_token = get_token( is_statement = is_statement
                           iv_index     = iv_index ).
 
-    IF ls_token-lexeme IS INITIAL.
+    IF ls_token-lexeme IS INITIAL OR ls_token-references IS NOT INITIAL.
       RETURN.
     ENDIF.
 
@@ -448,7 +448,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
 
     rv_has = abap_false.
 
-    LOOP AT is_statement-tokens INTO ls_tok.
+    LOOP AT is_statement-tokens INTO ls_tok WHERE references IS INITIAL.
       IF ls_tok-lexeme IS INITIAL.
         CONTINUE.
       ENDIF.
