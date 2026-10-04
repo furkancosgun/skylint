@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_043 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'CLASS_EXCEPTIONS'.
 
     METHODS has_classic_exceptions
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
@@ -33,7 +32,7 @@ CLASS zcl_skylint_check_043 IMPLEMENTATION.
                      ( code           = c_finding_codes-class_based_exceptions
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Prefer class-based exceptions (RAISING) over classic EXCEPTIONS'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

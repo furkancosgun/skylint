@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_019 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'SHORT_CASE'.
 
     METHODS is_when_others
       IMPORTING is_statement TYPE zif_skylint_types=>ty_statement
@@ -37,7 +36,7 @@ CLASS zcl_skylint_check_019 IMPLEMENTATION.
                                      ( code           = c_finding_codes-short_case
                                        severity       = zif_skylint_types=>severities-warning
                                        text           = 'CASE statement has <= 1 WHEN branch; prefer IF'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

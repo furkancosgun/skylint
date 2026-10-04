@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_009 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_STR_TMPL'.
 
     DATA mv_allow_in_byte_mode TYPE abap_bool VALUE abap_false.
 
@@ -34,7 +33,7 @@ CLASS zcl_skylint_check_009 IMPLEMENTATION.
                                      ( code           = c_finding_codes-prefer_template
                                        severity       = zif_skylint_types=>severities-warning
                                        text           = 'Use string template |...| instead of CONCATENATE'
-                                       pseudo_comment = c_pseudo_comment ) )
+                                       ) )
                                  attributes        = VALUE #( ( name  = 'ALLOW_IN_BYTE_MODE'
                                                                 kind  = zif_skylint_types=>attribute_kinds-boolean
                                                                 value = REF #( mv_allow_in_byte_mode ) ) ) ) ).

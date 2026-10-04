@@ -13,9 +13,6 @@ CLASS zcl_skylint_check_075 DEFINITION
 
   PROTECTED SECTION.
     METHODS check REDEFINITION.
-
-  PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'GUARD_IN_METHOD'.
 ENDCLASS.
 
 
@@ -28,7 +25,7 @@ CLASS zcl_skylint_check_075 IMPLEMENTATION.
                      ( code           = c_finding_codes-guard_method
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Invert IF condition and use RETURN to reduce nesting in method'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

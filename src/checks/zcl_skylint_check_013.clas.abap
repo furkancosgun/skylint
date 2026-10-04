@@ -13,10 +13,6 @@ CLASS zcl_skylint_check_013 DEFINITION
 
   PROTECTED SECTION.
     METHODS check REDEFINITION.
-
-  PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'CHECK_IN_LOOP'.
-
 ENDCLASS.
 
 
@@ -28,7 +24,7 @@ CLASS zcl_skylint_check_013 IMPLEMENTATION.
                                      ( code           = c_finding_codes-check_in_loop
                                        severity       = zif_skylint_types=>severities-warning
                                        text           = 'Avoid CHECK inside loop; use IF ... CONTINUE instead'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

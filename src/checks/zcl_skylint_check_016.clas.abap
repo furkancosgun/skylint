@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_016 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'IDENTICAL_CONDITIONS'.
 
     METHODS check_duplicate_elseif
       IMPORTING iv_idx        TYPE i
@@ -42,7 +41,7 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
                                      ( code           = c_finding_codes-identical_condition
                                        severity       = zif_skylint_types=>severities-warning
                                        text           = 'Identical condition in branch; duplicate branch is unreachable'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

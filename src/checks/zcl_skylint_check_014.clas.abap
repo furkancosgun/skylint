@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_014 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'EMPTY_CONTROL_BLOCK'.
 
     METHODS is_empty_control_block
       IMPORTING iv_current_kw TYPE string
@@ -34,7 +33,7 @@ CLASS zcl_skylint_check_014 IMPLEMENTATION.
                      ( code           = c_finding_codes-empty_control_block
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Empty control block detected; remove redundant control statement'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

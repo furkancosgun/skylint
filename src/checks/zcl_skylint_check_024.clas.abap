@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_024 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_XSDBOOL'.
 
     METHODS is_boolean_assignment
       IMPORTING is_statement TYPE zif_skylint_types=>ty_statement
@@ -38,7 +37,7 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
                      ( code           = c_finding_codes-prefer_xsdbool
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Prefer xsdbool( ... ) instead of manual IF-ELSE boolean assignment'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

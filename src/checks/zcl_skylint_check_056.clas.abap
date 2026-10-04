@@ -13,10 +13,6 @@ CLASS zcl_skylint_check_056 DEFINITION
 
   PROTECTED SECTION.
     METHODS check REDEFINITION.
-
-  PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'BOOL_METHOD_NAME'.
-
 ENDCLASS.
 
 
@@ -29,7 +25,7 @@ CLASS zcl_skylint_check_056 IMPLEMENTATION.
                      ( code           = c_finding_codes-bool_method_name
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Boolean-returning method should use predicate name (IS_, HAS_, CAN_)'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

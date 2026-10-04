@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_037 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'TRY_WITHOUT_CATCH'.
 
     TYPES:
       BEGIN OF ty_try_block,
@@ -35,7 +34,7 @@ CLASS zcl_skylint_check_037 IMPLEMENTATION.
                                      ( code           = c_finding_codes-try_without_catch
                                        severity       = zif_skylint_types=>severities-warning
                                        text           = 'TRY block without CATCH is superfluous'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_044 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'DANGEROUS_STMT'.
 
     METHODS is_dangerous_statement
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
@@ -32,7 +31,7 @@ CLASS zcl_skylint_check_044 IMPLEMENTATION.
                                      ( code           = c_finding_codes-dangerous_statement
                                        severity       = zif_skylint_types=>severities-warning
                                        text           = 'Dangerous or unmanaged dynamic statement detected'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

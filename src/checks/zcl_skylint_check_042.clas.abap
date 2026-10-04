@@ -13,10 +13,6 @@ CLASS zcl_skylint_check_042 DEFINITION
 
   PROTECTED SECTION.
     METHODS check REDEFINITION.
-
-  PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_RETURNING'.
-
 ENDCLASS.
 
 
@@ -29,7 +25,7 @@ CLASS zcl_skylint_check_042 IMPLEMENTATION.
                      ( code           = c_finding_codes-prefer_returning
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Prefer functional RETURNING parameter over single EXPORTING parameter'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

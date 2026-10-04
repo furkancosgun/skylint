@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_023 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'RAISE_EXC_NEW'.
 
     METHODS is_raise_exception_type
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
@@ -33,7 +32,7 @@ CLASS zcl_skylint_check_023 IMPLEMENTATION.
                      ( code           = c_finding_codes-raise_exception_new
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Prefer RAISE EXCEPTION NEW cx_name( ) over RAISE EXCEPTION TYPE'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

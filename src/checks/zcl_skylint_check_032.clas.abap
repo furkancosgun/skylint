@@ -16,7 +16,6 @@ CLASS zcl_skylint_check_032 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'SELECT_PERF'.
 
     METHODS is_select_star
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
@@ -31,7 +30,6 @@ CLASS zcl_skylint_check_032 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      severity       = zif_skylint_types=>severities-warning
-                                     pseudo_comment = c_pseudo_comment
                                      ( code = c_finding_codes-select_star
                                        text = 'Avoid SELECT *; specify required columns explicitly' )
                                      ( code = c_finding_codes-select_endselect

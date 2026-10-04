@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_004 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_IS_NOT'.
 
     METHODS has_not_is_pattern
       IMPORTING is_statement      TYPE zif_skylint_types=>ty_statement
@@ -31,7 +30,7 @@ CLASS zcl_skylint_check_004 IMPLEMENTATION.
                                  finding_codes     = VALUE #( ( code           = c_finding_codes-prefer_is_not
                                                                 severity = zif_skylint_types=>severities-warning
                                                                 text           = 'Use IS NOT instead of NOT ... IS'
-                                                                pseudo_comment = c_pseudo_comment ) ) ) ).
+                                                                ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

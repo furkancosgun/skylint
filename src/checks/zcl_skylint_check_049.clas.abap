@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_049 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_SHORTDUMP'.
 
     METHODS is_raise_shortdump
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
@@ -32,7 +31,7 @@ CLASS zcl_skylint_check_049 IMPLEMENTATION.
                                      ( code           = c_finding_codes-raise_shortdump
                                        severity       = zif_skylint_types=>severities-warning
                                        text           = 'Avoid RAISE SHORTDUMP; prefer graceful class-based exceptions'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

@@ -13,10 +13,6 @@ CLASS zcl_skylint_check_025 DEFINITION
 
   PROTECTED SECTION.
     METHODS check REDEFINITION.
-
-  PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'RECEIVING_USAGE'.
-
 ENDCLASS.
 
 
@@ -28,7 +24,7 @@ CLASS zcl_skylint_check_025 IMPLEMENTATION.
                                      ( code           = c_finding_codes-omit_receiving
                                        severity       = zif_skylint_types=>severities-warning
                                        text           = 'Omit RECEIVING keyword; use functional call or omit parameter'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_030 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'DB_IN_LOOP'.
 
     METHODS is_direct_db_access
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
@@ -33,7 +32,7 @@ CLASS zcl_skylint_check_030 IMPLEMENTATION.
                      ( code           = c_finding_codes-db_in_loop
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Database access inside loop iteration; consider bulk operation or JOIN'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

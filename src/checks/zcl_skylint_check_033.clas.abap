@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_033 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'SCOPE_OF_VAR'.
 
     TYPES: BEGIN OF ty_scoped_var,
              name     TYPE string,
@@ -46,7 +45,7 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
                      ( code           = c_finding_codes-scope_leak
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Variable declared in inner block is referenced outside its scope'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

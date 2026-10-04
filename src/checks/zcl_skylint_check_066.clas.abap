@@ -13,9 +13,6 @@ CLASS zcl_skylint_check_066 DEFINITION
 
   PROTECTED SECTION.
     METHODS check REDEFINITION.
-
-  PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_CLIENT_SPEC'.
 ENDCLASS.
 
 
@@ -27,7 +24,7 @@ CLASS zcl_skylint_check_066 IMPLEMENTATION.
                                      ( code           = c_finding_codes-client_spec
                                        severity       = zif_skylint_types=>severities-warning
                                        text           = 'Avoid explicit client specification in ABAP SQL'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

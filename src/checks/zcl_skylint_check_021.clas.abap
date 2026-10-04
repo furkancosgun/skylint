@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_021 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_OPERATORS'.
 
     METHODS is_legacy_operator
       IMPORTING iv_lexeme    TYPE string
@@ -37,7 +36,7 @@ CLASS zcl_skylint_check_021 IMPLEMENTATION.
                      ( code           = c_finding_codes-prefer_operator
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Prefer modern comparison operators (=, <>, <, >, <=, >=) over legacy keywords'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

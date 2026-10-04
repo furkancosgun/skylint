@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_067 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_COMMIT_WORK'.
 
     METHODS is_behavior_implementation
       IMPORTING is_code_block TYPE zif_skylint_types=>ty_code_block
@@ -33,7 +32,7 @@ CLASS zcl_skylint_check_067 IMPLEMENTATION.
                      ( code           = c_finding_codes-no_commit
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Avoid COMMIT/ROLLBACK WORK; transactional control belongs to framework'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

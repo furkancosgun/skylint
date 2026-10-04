@@ -13,9 +13,6 @@ CLASS zcl_skylint_check_061 DEFINITION
 
   PROTECTED SECTION.
     METHODS check REDEFINITION.
-
-  PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_MSG_RAISING'.
 ENDCLASS.
 
 
@@ -28,7 +25,7 @@ CLASS zcl_skylint_check_061 IMPLEMENTATION.
                      ( code           = c_finding_codes-msg_raise
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Avoid obsolete MESSAGE ... RAISING; raise class-based exceptions'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

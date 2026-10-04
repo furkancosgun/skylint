@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_058 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'MAX_CLASS_ATTR'.
 
     DATA mv_max_attributes TYPE i VALUE 5.
 
@@ -31,7 +30,7 @@ CLASS zcl_skylint_check_058 IMPLEMENTATION.
                      ( code           = c_finding_codes-attribute_count
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Class has too many member attributes; split into cohesive components'
-                       pseudo_comment = c_pseudo_comment ) )
+                       ) )
                  attributes        = VALUE #( ( name  = 'MAX_ATTRIBUTES'
                                                 kind  = zif_skylint_types=>attribute_kinds-integer
                                                 value = REF #( mv_max_attributes ) ) ) ) ).

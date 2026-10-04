@@ -13,9 +13,6 @@ CLASS zcl_skylint_check_062 DEFINITION
 
   PROTECTED SECTION.
     METHODS check REDEFINITION.
-
-  PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_NESTED_TRY'.
 ENDCLASS.
 
 
@@ -27,7 +24,7 @@ CLASS zcl_skylint_check_062 IMPLEMENTATION.
                  finding_codes     = VALUE #( ( code           = c_finding_codes-nested_try
                                                 severity       = zif_skylint_types=>severities-warning
                                                 text           = 'Avoid nested TRY blocks; extract to dedicated method'
-                                                pseudo_comment = c_pseudo_comment ) ) ) ).
+                                                ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

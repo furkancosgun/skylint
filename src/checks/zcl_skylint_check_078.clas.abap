@@ -13,9 +13,6 @@ CLASS zcl_skylint_check_078 DEFINITION
 
   PROTECTED SECTION.
     METHODS check REDEFINITION.
-
-  PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'LOCAL_DECL_ORDER'.
 ENDCLASS.
 
 
@@ -28,7 +25,7 @@ CLASS zcl_skylint_check_078 IMPLEMENTATION.
                      ( code           = c_finding_codes-decl_order
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Declare local TYPES before CONSTANTS before DATA before FIELD-SYMBOLS'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

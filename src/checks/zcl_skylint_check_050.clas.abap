@@ -13,10 +13,6 @@ CLASS zcl_skylint_check_050 DEFINITION
 
   PROTECTED SECTION.
     METHODS check REDEFINITION.
-
-  PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'MAGIC_NUMBER'.
-
 ENDCLASS.
 
 
@@ -28,7 +24,7 @@ CLASS zcl_skylint_check_050 IMPLEMENTATION.
                                      ( code           = c_finding_codes-magic_number
                                        severity       = zif_skylint_types=>severities-warning
                                        text           = 'Avoid hardcoded magic numbers; declare a named constant'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

@@ -13,9 +13,6 @@ CLASS zcl_skylint_check_038 DEFINITION
 
   PROTECTED SECTION.
     METHODS check REDEFINITION.
-
-  PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_CORRESPONDING'.
 ENDCLASS.
 
 
@@ -28,7 +25,7 @@ CLASS zcl_skylint_check_038 IMPLEMENTATION.
                      ( code           = c_finding_codes-prefer_corresponding
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Prefer functional CORRESPONDING #( ... ) over MOVE-CORRESPONDING'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

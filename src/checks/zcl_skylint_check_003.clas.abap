@@ -13,10 +13,6 @@ CLASS zcl_skylint_check_003 DEFINITION
 
   PROTECTED SECTION.
     METHODS check REDEFINITION.
-
-  PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'DEFAULT_KEY'.
-
 ENDCLASS.
 
 
@@ -28,7 +24,7 @@ CLASS zcl_skylint_check_003 IMPLEMENTATION.
                                      ( code           = c_finding_codes-default_key
                                        severity       = zif_skylint_types=>severities-warning
                                        text           = 'Avoid WITH DEFAULT KEY; specify EMPTY KEY or explicit key'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

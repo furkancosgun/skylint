@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_057 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'DEEP_INHERITANCE'.
 
     DATA mv_max_depth TYPE i VALUE 1.
 
@@ -31,7 +30,7 @@ CLASS zcl_skylint_check_057 IMPLEMENTATION.
                      ( code           = c_finding_codes-deep_inheritance
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Avoid deep class inheritance; prefer composition over inheritance'
-                       pseudo_comment = c_pseudo_comment ) )
+                       ) )
                  attributes        = VALUE #( ( name  = 'MAX_DEPTH'
                                                 kind  = zif_skylint_types=>attribute_kinds-integer
                                                 value = REF #( mv_max_depth ) ) ) ) ).

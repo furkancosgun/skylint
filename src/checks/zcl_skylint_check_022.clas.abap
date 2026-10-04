@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_022 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_NEW'.
 
     METHODS is_static_create_object
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
@@ -32,7 +31,7 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
                                      ( code           = c_finding_codes-prefer_new
                                        severity       = zif_skylint_types=>severities-warning
                                        text           = 'Prefer NEW #( ) expression over CREATE OBJECT'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

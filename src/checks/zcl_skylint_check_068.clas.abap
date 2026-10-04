@@ -13,9 +13,6 @@ CLASS zcl_skylint_check_068 DEFINITION
 
   PROTECTED SECTION.
     METHODS check REDEFINITION.
-
-  PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_FULL_MODIFY'.
 ENDCLASS.
 
 
@@ -28,7 +25,7 @@ CLASS zcl_skylint_check_068 IMPLEMENTATION.
                      ( code           = c_finding_codes-full_modify
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Specify TRANSPORTING fields in MODIFY itab inside loop for performance'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

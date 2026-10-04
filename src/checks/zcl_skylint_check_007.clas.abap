@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_007 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'ASSIGN_CHAIN'.
 
     METHODS has_assignment_chain
       IMPORTING is_statement    TYPE zif_skylint_types=>ty_statement
@@ -33,7 +32,7 @@ CLASS zcl_skylint_check_007 IMPLEMENTATION.
                      ( code           = c_finding_codes-assignment_chaining
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Avoid chained assignments; write separate assignment statements'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

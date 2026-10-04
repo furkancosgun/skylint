@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_034 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'IDENTICAL_MOVE'.
 
     METHODS is_identical_assignment
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
@@ -32,7 +31,7 @@ CLASS zcl_skylint_check_034 IMPLEMENTATION.
                                      ( code           = c_finding_codes-identical_move
                                        severity       = zif_skylint_types=>severities-warning
                                        text           = 'Identical assignment has no effect; remove redundant statement'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

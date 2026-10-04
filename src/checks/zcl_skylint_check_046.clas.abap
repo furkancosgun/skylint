@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_046 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'SELECT_UP_TO_1'.
 
     METHODS is_unorder_select_up_to
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
@@ -33,7 +32,7 @@ CLASS zcl_skylint_check_046 IMPLEMENTATION.
                      ( code           = c_finding_codes-missing_order_by
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'SELECT UP TO 1 ROWS requires an explicit ORDER BY clause for determinism'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

@@ -15,7 +15,7 @@ CLASS zcl_skylint_check_077 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'UNUSED_VAR'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NEEDED'.
 ENDCLASS.
 
 

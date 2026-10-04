@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_048 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'CLASS_FINAL'.
 
     METHODS is_class_missing_final
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
@@ -33,7 +32,7 @@ CLASS zcl_skylint_check_048 IMPLEMENTATION.
                      ( code           = c_finding_codes-class_not_final
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Classes should be marked FINAL by default unless designed for inheritance'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

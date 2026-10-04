@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_036 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'OMIT_PARAM_NAME'.
 
     METHODS is_exempt_statement
       IMPORTING iv_keyword       TYPE string
@@ -38,7 +37,7 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
                                      ( code           = c_finding_codes-omit_param
                                        severity       = zif_skylint_types=>severities-warning
                                        text           = 'Omit explicit parameter name in single parameter method call'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

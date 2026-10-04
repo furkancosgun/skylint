@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_031 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'FAE_NO_CHECK'.
 
     METHODS extract_fae_table
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
@@ -44,7 +43,7 @@ CLASS zcl_skylint_check_031 IMPLEMENTATION.
                      ( code           = c_finding_codes-unsecure_fae
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'FOR ALL ENTRIES without preceding IS NOT INITIAL check causes full table scan'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

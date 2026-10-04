@@ -13,9 +13,6 @@ CLASS zcl_skylint_check_070 DEFINITION
 
   PROTECTED SECTION.
     METHODS check REDEFINITION.
-
-  PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_DYNAMIC_SQL'.
 ENDCLASS.
 
 
@@ -28,7 +25,7 @@ CLASS zcl_skylint_check_070 IMPLEMENTATION.
                      ( code           = c_finding_codes-dyn_sql
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Avoid dynamic table or clause in SQL; use static SQL or sanitize'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_041 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_SY_MOD'.
 
     METHODS is_system_variable_mod
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
@@ -33,7 +32,7 @@ CLASS zcl_skylint_check_041 IMPLEMENTATION.
                      ( code           = c_finding_codes-system_var_mod
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Avoid modifying system fields (sy-*); system variables are read-only'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

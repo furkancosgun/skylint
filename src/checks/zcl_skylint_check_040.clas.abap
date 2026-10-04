@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_040 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'NESTING_DEPTH'.
 
     DATA mv_max_depth TYPE i VALUE 3.
 
@@ -38,7 +37,7 @@ CLASS zcl_skylint_check_040 IMPLEMENTATION.
                                      ( code           = c_finding_codes-nesting_depth
                                        severity       = zif_skylint_types=>severities-warning
                                        text           = 'Control block nesting depth exceeds maximum allowed limit'
-                                       pseudo_comment = c_pseudo_comment ) )
+                                       ) )
                                  attributes        = VALUE #( ( name  = 'MAX_DEPTH'
                                                                 kind  = zif_skylint_types=>attribute_kinds-integer
                                                                 value = REF #( mv_max_depth ) ) ) ) ).

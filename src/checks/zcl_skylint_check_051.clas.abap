@@ -13,10 +13,6 @@ CLASS zcl_skylint_check_051 DEFINITION
 
   PROTECTED SECTION.
     METHODS check REDEFINITION.
-
-  PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_INSERT'.
-
 ENDCLASS.
 
 
@@ -28,7 +24,7 @@ CLASS zcl_skylint_check_051 IMPLEMENTATION.
                                      ( code           = c_finding_codes-prefer_insert
                                        severity       = zif_skylint_types=>severities-warning
                                        text           = 'Prefer INSERT ... INTO TABLE over APPEND'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

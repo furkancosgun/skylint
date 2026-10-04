@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_039 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'METHOD_LENGTH'.
 
     DATA mv_max_statements TYPE i VALUE 5.
 
@@ -30,7 +29,7 @@ CLASS zcl_skylint_check_039 IMPLEMENTATION.
                                      ( code           = c_finding_codes-method_length
                                        severity       = zif_skylint_types=>severities-warning
                                        text           = 'Method length exceeds maximum allowed statement limit'
-                                       pseudo_comment = c_pseudo_comment ) )
+                                       ) )
                                  attributes        = VALUE #( ( name  = 'MAX_STATEMENTS'
                                                                 kind  = zif_skylint_types=>attribute_kinds-integer
                                                                 value = REF #( mv_max_statements ) ) ) ) ).

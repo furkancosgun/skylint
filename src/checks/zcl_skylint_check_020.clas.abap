@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_020 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_YODA_CONDITIONS'.
 
     METHODS is_literal
       IMPORTING iv_str       TYPE string
@@ -45,7 +44,7 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
                      ( code           = c_finding_codes-yoda_condition
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Avoid Yoda conditions; place variable before literal in comparison'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

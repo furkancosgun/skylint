@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_064 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'CHECK_SUBRC'.
 
     METHODS sets_sy_subrc
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
@@ -37,7 +36,7 @@ CLASS zcl_skylint_check_064 IMPLEMENTATION.
                      ( code           = c_finding_codes-check_subrc
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Check sy-subrc after SELECT SINGLE, READ, AUTHORITY-CHECK, FIND, SEARCH'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

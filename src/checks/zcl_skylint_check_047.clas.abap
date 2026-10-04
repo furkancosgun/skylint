@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_047 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'CYCLOMATIC_COMPLEXITY'.
 
     DATA mv_max_complexity TYPE i VALUE 5.
 
@@ -34,7 +33,7 @@ CLASS zcl_skylint_check_047 IMPLEMENTATION.
                                      ( code           = c_finding_codes-cyclomatic_complexity
                                        severity       = zif_skylint_types=>severities-warning
                                        text           = 'Procedure cyclomatic complexity exceeds threshold'
-                                       pseudo_comment = c_pseudo_comment ) )
+                                       ) )
                                  attributes        = VALUE #( ( name  = 'MAX_COMPLEXITY'
                                                                 kind  = zif_skylint_types=>attribute_kinds-integer
                                                                 value = REF #( mv_max_complexity ) ) ) ) ).

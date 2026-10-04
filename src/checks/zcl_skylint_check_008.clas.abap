@@ -8,7 +8,6 @@ CLASS zcl_skylint_check_008 DEFINITION
       BEGIN OF c_finding_codes,
         chained_declaration TYPE zif_skylint_types=>ty_finding_code VALUE 'CHAINDECL',
       END OF c_finding_codes.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'CHAIN_DECL'.
 
     CONSTANTS:
       BEGIN OF c_quickfix_codes,
@@ -60,7 +59,7 @@ CLASS zcl_skylint_check_008 IMPLEMENTATION.
                      ( code           = c_finding_codes-chained_declaration
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Avoid chained declarations; declare each entity individually'
-                       pseudo_comment = c_pseudo_comment ) )
+                       ) )
                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-resolve_chain
                                                 short_text = 'Resolve chain into single declarations' ) )
                  attributes        = VALUE #( ( name  = 'ALLOW_STRUCTURE_CHAINS'

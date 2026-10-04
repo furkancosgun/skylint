@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_011 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_LINE_EXISTS'.
 
     METHODS has_transporting_no_fields
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
@@ -33,7 +32,7 @@ CLASS zcl_skylint_check_011 IMPLEMENTATION.
                      ( code           = c_finding_codes-prefer_line_exists
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Prefer line_exists( ... ) instead of READ TABLE ... TRANSPORTING NO FIELDS'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

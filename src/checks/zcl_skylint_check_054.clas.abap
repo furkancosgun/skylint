@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_054 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'CONSTRUCTOR_LOGIC'.
 
     DATA mv_max_statements TYPE i VALUE 10.
 
@@ -31,7 +30,7 @@ CLASS zcl_skylint_check_054 IMPLEMENTATION.
                      ( code           = c_finding_codes-constructor_logic
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Avoid heavy business logic/loops in constructor; use injection only'
-                       pseudo_comment = c_pseudo_comment ) )
+                       ) )
                  attributes        = VALUE #( ( name  = 'MAX_STATEMENTS'
                                                 kind  = zif_skylint_types=>attribute_kinds-integer
                                                 value = REF #( mv_max_statements ) ) ) ) ).

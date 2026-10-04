@@ -17,10 +17,6 @@ CLASS zcl_skylint_check_006 DEFINITION
 
   PROTECTED SECTION.
     METHODS check REDEFINITION.
-
-  PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'OMIT_EXPORTING'.
-
 ENDCLASS.
 
 
@@ -32,7 +28,7 @@ CLASS zcl_skylint_check_006 IMPLEMENTATION.
                                      ( code           = c_finding_codes-omit_exporting
                                        severity       = zif_skylint_types=>severities-warning
                                        text           = 'Omit explicit EXPORTING keyword in method invocation'
-                                       pseudo_comment = c_pseudo_comment ) )
+                                       ) )
                                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-omit_exporting
                                                                 short_text = 'Remove EXPORTING keyword' ) ) ) ).
   ENDMETHOD.

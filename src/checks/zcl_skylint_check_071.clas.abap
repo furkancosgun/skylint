@@ -13,9 +13,6 @@ CLASS zcl_skylint_check_071 DEFINITION
 
   PROTECTED SECTION.
     METHODS check REDEFINITION.
-
-  PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_FINAL_METHOD'.
 ENDCLASS.
 
 
@@ -27,7 +24,7 @@ CLASS zcl_skylint_check_071 IMPLEMENTATION.
                                      ( code           = c_finding_codes-prefer_final
                                        severity       = zif_skylint_types=>severities-warning
                                        text           = 'Declare method as FINAL if it is not intended to be redefined'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

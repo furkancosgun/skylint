@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_029 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'PARAM_COUNT'.
 
     DATA mv_max_parameters TYPE i VALUE 8.
 
@@ -35,7 +34,7 @@ CLASS zcl_skylint_check_029 IMPLEMENTATION.
                      ( code           = c_finding_codes-too_many_parameters
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Method signature has too many parameters; consider grouping into structures'
-                       pseudo_comment = c_pseudo_comment ) )
+                       ) )
                  attributes        = VALUE #( ( name  = 'MAX_PARAMETERS'
                                                 kind  = zif_skylint_types=>attribute_kinds-integer
                                                 value = REF #( mv_max_parameters ) ) ) ) ).

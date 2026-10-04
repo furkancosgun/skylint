@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_002 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'CALL_METHOD'.
 
     METHODS is_dynamic_call
       IMPORTING is_statement      TYPE zif_skylint_types=>ty_statement
@@ -31,7 +30,7 @@ CLASS zcl_skylint_check_002 IMPLEMENTATION.
                                      ( code           = c_finding_codes-call_method
                                        severity       = zif_skylint_types=>severities-warning
                                        text           = 'Avoid static CALL METHOD; use functional method call instead'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

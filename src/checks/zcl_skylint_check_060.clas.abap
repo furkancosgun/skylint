@@ -13,9 +13,6 @@ CLASS zcl_skylint_check_060 DEFINITION
 
   PROTECTED SECTION.
     METHODS check REDEFINITION.
-
-  PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_CX_ROOT'.
 ENDCLASS.
 
 
@@ -28,7 +25,7 @@ CLASS zcl_skylint_check_060 IMPLEMENTATION.
                      ( code           = c_finding_codes-catch_root
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Avoid generic CATCH cx_root; catch specific exception classes instead'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

@@ -13,9 +13,6 @@ CLASS zcl_skylint_check_079 DEFINITION
 
   PROTECTED SECTION.
     METHODS check REDEFINITION.
-
-  PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'UNNECESSARY_ESCAPE'.
 ENDCLASS.
 
 
@@ -28,7 +25,7 @@ CLASS zcl_skylint_check_079 IMPLEMENTATION.
                      ( code           = c_finding_codes-param_escape
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Only escape parameter names with ! if they clash with an ABAP keyword'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

@@ -15,7 +15,6 @@ CLASS zcl_skylint_check_028 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'DEPRECATED_KEY'.
 
     METHODS is_obsolete_keyword
       IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
@@ -32,7 +31,7 @@ CLASS zcl_skylint_check_028 IMPLEMENTATION.
                                      ( code           = c_finding_codes-obsolete_statement
                                        severity       = zif_skylint_types=>severities-warning
                                        text           = 'Avoid obsolete statement; use modern expressions instead'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

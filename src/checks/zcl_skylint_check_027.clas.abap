@@ -13,9 +13,6 @@ CLASS zcl_skylint_check_027 DEFINITION
 
   PROTECTED SECTION.
     METHODS check REDEFINITION.
-
-  PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'NUM_PUBLIC_ATTR'.
 ENDCLASS.
 
 
@@ -28,7 +25,7 @@ CLASS zcl_skylint_check_027 IMPLEMENTATION.
                      ( code           = c_finding_codes-public_attribute
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Avoid public attributes; use private/protected with getters or READ-ONLY'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

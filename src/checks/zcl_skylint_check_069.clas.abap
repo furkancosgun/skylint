@@ -13,9 +13,6 @@ CLASS zcl_skylint_check_069 DEFINITION
 
   PROTECTED SECTION.
     METHODS check REDEFINITION.
-
-  PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'TEST_METHOD_NAME'.
 ENDCLASS.
 
 
@@ -27,7 +24,7 @@ CLASS zcl_skylint_check_069 IMPLEMENTATION.
                                      ( code           = c_finding_codes-test_name
                                        severity       = zif_skylint_types=>severities-warning
                                        text           = 'Test methods should start with TEST_ or SHOULD_'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

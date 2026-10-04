@@ -13,10 +13,6 @@ CLASS zcl_skylint_check_059 DEFINITION
 
   PROTECTED SECTION.
     METHODS check REDEFINITION.
-
-  PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'INTERFACE_DATA'.
-
 ENDCLASS.
 
 
@@ -29,7 +25,7 @@ CLASS zcl_skylint_check_059 IMPLEMENTATION.
                      ( code           = c_finding_codes-interface_data
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Avoid mutable DATA in interfaces; declare CONSTANTS or move to class'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

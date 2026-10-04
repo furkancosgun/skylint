@@ -13,9 +13,6 @@ CLASS zcl_skylint_check_063 DEFINITION
 
   PROTECTED SECTION.
     METHODS check REDEFINITION.
-
-  PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'AVOID_RAISE_SY_EXC'.
 ENDCLASS.
 
 
@@ -28,7 +25,7 @@ CLASS zcl_skylint_check_063 IMPLEMENTATION.
                      ( code           = c_finding_codes-raise_sys
                        severity       = zif_skylint_types=>severities-warning
                        text           = 'Avoid raising SAP internal system exceptions; use application exceptions'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                       ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
