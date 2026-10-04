@@ -28,33 +28,39 @@ CLASS zcl_skylint_check_071 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA ls_statement TYPE zif_skylint_types=>ty_statement.
-    DATA lo_class     TYPE REF TO cl_abap_classdescr.
-    DATA ls_meth      TYPE abap_methdescr.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
     IF is_code_block-block_kind <> zif_skylint_types=>block_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    lo_class = zcl_skylint_rtti_util=>describe_class( is_code_block-object_name ).
-    IF lo_class IS NOT BOUND.
-      RETURN.
-    ENDIF.
-
-    ls_statement = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
-                                                        iv_index      = 1 ).
-    IF ls_statement-keyword IS INITIAL.
-      RETURN.
-    ENDIF.
-
-    LOOP AT lo_class->methods INTO ls_meth
-         WHERE     is_final     = abap_false
-               AND is_abstract  = abap_false
-               AND is_redefined = abap_false.
-      IF ls_meth-name <> 'CONSTRUCTOR' AND ls_meth-name <> 'CLASS_CONSTRUCTOR'.
-        report_statement( is_statement    = ls_statement
-                          iv_finding_code = c_finding_codes-prefer_final ).
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
+         WHERE keyword = 'CLASS'.
+      IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                 iv_lexeme    = 'FINAL' ) = abap_true.
+        RETURN.
       ENDIF.
+    ENDLOOP.
+
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
+         WHERE keyword = 'METHODS'.
+      IF    zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                    iv_lexeme    = 'FINAL' ) = abap_true
+         OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                    iv_lexeme    = 'ABSTRACT' ) = abap_true
+         OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                    iv_lexeme    = 'REDEFINITION' ) = abap_true
+         OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                    iv_lexeme    = 'FOR' ) = abap_true
+         OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                    iv_lexeme    = 'CONSTRUCTOR' ) = abap_true
+         OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                    iv_lexeme    = 'DEFAULT' ) = abap_true.
+        CONTINUE.
+      ENDIF.
+
+      report_statement( is_statement    = <ls_statement>
+                        iv_finding_code = c_finding_codes-prefer_final ).
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

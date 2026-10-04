@@ -29,26 +29,32 @@ CLASS zcl_skylint_check_059 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA ls_statement TYPE zif_skylint_types=>ty_statement.
-    DATA lo_obj       TYPE REF TO cl_abap_objectdescr.
+    DATA ls_first_stmt TYPE zif_skylint_types=>ty_statement.
+    DATA lv_is_intf    TYPE abap_bool.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
     IF is_code_block-block_kind <> zif_skylint_types=>block_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    lo_obj = zcl_skylint_rtti_util=>describe_object( is_code_block-object_name ).
-    IF lo_obj IS NOT BOUND.
+    ls_first_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
+                                                         iv_index      = 1 ).
+    IF ls_first_stmt-keyword IS INITIAL.
       RETURN.
     ENDIF.
 
-    ls_statement = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
-                                                        iv_index      = 1 ).
-    IF ls_statement-keyword IS INITIAL.
+    IF    is_code_block-object_type = zif_skylint_types=>object_types-interface
+       OR ls_first_stmt-keyword     = 'INTERFACE'.
+      lv_is_intf = abap_true.
+    ENDIF.
+
+    IF lv_is_intf = abap_false.
       RETURN.
     ENDIF.
 
-    LOOP AT lo_obj->attributes TRANSPORTING NO FIELDS WHERE is_constant = abap_false.
-      report_statement( is_statement    = ls_statement
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
+         WHERE keyword = 'DATA' OR keyword = 'CLASS-DATA'.
+      report_statement( is_statement    = <ls_statement>
                         iv_finding_code = c_finding_codes-interface_data ).
     ENDLOOP.
   ENDMETHOD.

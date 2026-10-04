@@ -12,10 +12,13 @@ ENDCLASS.
 
 CLASS ltcl_check_059 IMPLEMENTATION.
   METHOD test_finding.
-    zcl_skylint_test_util=>assert_no_findings( io_check            = NEW zcl_skylint_check_059( )
-                                               it_source           = VALUE #( ( `INTERFACE lif_test PUBLIC.` )
-                                                                              ( `DATA mv_state TYPE i.` ) )
-                                               iv_class_definition = abap_true ).
+    zcl_skylint_test_util=>assert_findings(
+        io_check            = NEW zcl_skylint_check_059( )
+        it_source           = VALUE #( ( `INTERFACE lif_test PUBLIC.` )
+                                       ( `DATA mv_state TYPE i.` ) )
+        it_expected         = VALUE #( ( line = 2
+                                         code = zcl_skylint_check_059=>c_finding_codes-interface_data ) )
+        iv_class_definition = abap_true ).
   ENDMETHOD.
 
   METHOD test_clean.

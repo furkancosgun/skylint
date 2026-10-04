@@ -12,9 +12,12 @@ ENDCLASS.
 
 CLASS ltcl_check_071 IMPLEMENTATION.
   METHOD test_finding.
-    zcl_skylint_test_util=>assert_no_findings( io_check            = NEW zcl_skylint_check_071( )
-                                               it_source           = VALUE #( ( `METHODS do_work.` ) )
-                                               iv_class_definition = abap_true ).
+    zcl_skylint_test_util=>assert_findings(
+        io_check            = NEW zcl_skylint_check_071( )
+        it_source           = VALUE #( ( `METHODS do_work.` ) )
+        it_expected         = VALUE #( ( line = 1
+                                         code = zcl_skylint_check_071=>c_finding_codes-prefer_final ) )
+        iv_class_definition = abap_true ).
   ENDMETHOD.
 
   METHOD test_clean.

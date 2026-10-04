@@ -12,9 +12,11 @@ ENDCLASS.
 
 CLASS ltcl_check_042 IMPLEMENTATION.
   METHOD test_finding.
-    zcl_skylint_test_util=>assert_no_findings(
+    zcl_skylint_test_util=>assert_findings(
         io_check            = NEW zcl_skylint_check_042( )
         it_source           = VALUE #( ( `METHODS get_value EXPORTING ev_val TYPE i.` ) )
+        it_expected         = VALUE #( ( line = 1
+                                         code = zcl_skylint_check_042=>c_finding_codes-prefer_returning ) )
         iv_class_definition = abap_true ).
   ENDMETHOD.
 

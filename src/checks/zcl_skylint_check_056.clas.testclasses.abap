@@ -12,9 +12,11 @@ ENDCLASS.
 
 CLASS ltcl_check_056 IMPLEMENTATION.
   METHOD test_finding.
-    zcl_skylint_test_util=>assert_no_findings(
+    zcl_skylint_test_util=>assert_findings(
         io_check            = NEW zcl_skylint_check_056( )
-        it_source           = VALUE #( ( `METHODS check_value RETURNING VALUE(rv_flag) TYPE abap_bool.` ) )
+        it_source           = VALUE #( ( `METHODS get_status RETURNING VALUE(rv_flag) TYPE abap_bool.` ) )
+        it_expected         = VALUE #( ( line = 1
+                                         code = zcl_skylint_check_056=>c_finding_codes-bool_method_name ) )
         iv_class_definition = abap_true ).
   ENDMETHOD.
 

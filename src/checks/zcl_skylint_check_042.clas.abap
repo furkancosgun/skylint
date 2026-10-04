@@ -13,6 +13,11 @@ CLASS zcl_skylint_check_042 DEFINITION
 
   PROTECTED SECTION.
     METHODS check REDEFINITION.
+
+  PRIVATE SECTION.
+    METHODS is_single_exporting
+      IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
+      RETURNING VALUE(rv_yes) TYPE abap_bool.
 ENDCLASS.
 
 
@@ -29,54 +34,63 @@ CLASS zcl_skylint_check_042 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lo_class     TYPE REF TO cl_abap_classdescr.
-    DATA ls_statement TYPE zif_skylint_types=>ty_statement.
-    DATA ls_meth      TYPE abap_methdescr.
-    DATA ls_param     TYPE abap_parmdescr.
-    DATA lv_exp_count TYPE i.
-    DATA lv_chg_count TYPE i.
-    DATA lv_ret_count TYPE i.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
     IF is_code_block-block_kind <> zif_skylint_types=>block_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    lo_class = zcl_skylint_rtti_util=>describe_class( is_code_block-object_name ).
-    IF lo_class IS NOT BOUND.
-      RETURN.
-    ENDIF.
-
-    ls_statement = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
-                                                        iv_index      = 1 ).
-    IF ls_statement-keyword IS INITIAL.
-      RETURN.
-    ENDIF.
-
-    LOOP AT lo_class->methods INTO ls_meth
-         WHERE is_redefined = abap_false.
-      IF ls_meth-name = 'CONSTRUCTOR' OR ls_meth-name = 'CLASS_CONSTRUCTOR' OR ls_meth-for_event IS NOT INITIAL.
-        CONTINUE.
-      ENDIF.
-
-      lv_exp_count = 0.
-      lv_chg_count = 0.
-      lv_ret_count = 0.
-
-      LOOP AT ls_meth-parameters INTO ls_param.
-        CASE ls_param-parm_kind.
-          WHEN cl_abap_objectdescr=>exporting.
-            lv_exp_count = lv_exp_count + 1.
-          WHEN cl_abap_objectdescr=>changing.
-            lv_chg_count = lv_chg_count + 1.
-          WHEN cl_abap_objectdescr=>returning.
-            lv_ret_count = lv_ret_count + 1.
-        ENDCASE.
-      ENDLOOP.
-
-      IF lv_exp_count = 1 AND lv_chg_count = 0 AND lv_ret_count = 0.
-        report_statement( is_statement    = ls_statement
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
+         WHERE keyword = 'METHODS' OR keyword = 'CLASS-METHODS'.
+      IF is_single_exporting( <ls_statement> ) = abap_true.
+        report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-prefer_returning ).
       ENDIF.
     ENDLOOP.
+  ENDMETHOD.
+
+  METHOD is_single_exporting.
+    DATA lv_idx     TYPE i.
+    DATA ls_tok     TYPE zif_skylint_types=>ty_token.
+    DATA lv_exp_idx TYPE i.
+    DATA lv_count   TYPE i.
+
+    rv_yes = abap_false.
+
+    IF    zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                 iv_lexeme    = 'CONSTRUCTOR' ) = abap_true
+       OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                 iv_lexeme    = 'FOR' ) = abap_true
+       OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                 iv_lexeme    = 'REDEFINITION' ) = abap_true
+       OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                 iv_lexeme    = 'CHANGING' ) = abap_true
+       OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                 iv_lexeme    = 'RETURNING' ) = abap_true.
+      RETURN.
+    ENDIF.
+
+    lv_exp_idx = zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                                   iv_lexeme    = 'EXPORTING' ).
+    IF lv_exp_idx = 0.
+      RETURN.
+    ENDIF.
+
+    lv_idx = lv_exp_idx + 1.
+    WHILE lv_idx <= lines( is_statement-tokens ).
+      ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                iv_index     = lv_idx ).
+      CASE to_upper( ls_tok-lexeme ).
+        WHEN 'IMPORTING' OR 'RAISING' OR 'EXCEPTIONS'.
+          EXIT.
+        WHEN 'TYPE' OR 'LIKE'.
+          lv_count = lv_count + 1.
+      ENDCASE.
+      lv_idx = lv_idx + 1.
+    ENDWHILE.
+
+    IF lv_count = 1.
+      rv_yes = abap_true.
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.

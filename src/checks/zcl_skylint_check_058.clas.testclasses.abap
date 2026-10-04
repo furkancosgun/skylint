@@ -12,16 +12,19 @@ ENDCLASS.
 
 CLASS ltcl_check_058 IMPLEMENTATION.
   METHOD test_finding.
-    zcl_skylint_test_util=>assert_no_findings( io_check            = NEW zcl_skylint_check_058( )
-                                               it_source           = VALUE #( ( `CLASS lcl_god DEFINITION.` )
-                                                                              ( `PUBLIC SECTION.` )
-                                                                              ( `DATA mv_a1 TYPE i.` )
-                                                                              ( `DATA mv_a2 TYPE i.` )
-                                                                              ( `DATA mv_a3 TYPE i.` )
-                                                                              ( `DATA mv_a4 TYPE i.` )
-                                                                              ( `DATA mv_a5 TYPE i.` )
-                                                                              ( `DATA mv_a6 TYPE i.` ) )
-                                               iv_class_definition = abap_true ).
+    zcl_skylint_test_util=>assert_findings(
+        io_check            = NEW zcl_skylint_check_058( )
+        it_source           = VALUE #( ( `CLASS lcl_god DEFINITION.` )
+                                       ( `PUBLIC SECTION.` )
+                                       ( `DATA mv_a1 TYPE i.` )
+                                       ( `DATA mv_a2 TYPE i.` )
+                                       ( `DATA mv_a3 TYPE i.` )
+                                       ( `DATA mv_a4 TYPE i.` )
+                                       ( `DATA mv_a5 TYPE i.` )
+                                       ( `DATA mv_a6 TYPE i.` ) )
+        it_expected         = VALUE #( ( line = 1
+                                         code = zcl_skylint_check_058=>c_finding_codes-attribute_count ) )
+        iv_class_definition = abap_true ).
   ENDMETHOD.
 
   METHOD test_clean.

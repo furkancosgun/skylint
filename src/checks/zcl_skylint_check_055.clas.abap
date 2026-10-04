@@ -29,42 +29,35 @@ CLASS zcl_skylint_check_055 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lo_class      TYPE REF TO cl_abap_classdescr.
-    DATA ls_meth       TYPE abap_methdescr.
     DATA lv_static_cnt TYPE i.
     DATA lv_has_inst   TYPE abap_bool.
-    DATA ls_statement  TYPE zif_skylint_types=>ty_statement.
+    DATA ls_first_stmt TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
     IF is_code_block-block_kind <> zif_skylint_types=>block_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    lo_class = zcl_skylint_rtti_util=>describe_class( is_code_block-object_name ).
-    IF lo_class IS NOT BOUND.
-      RETURN.
-    ENDIF.
-    IF lines( lo_class->methods ) = 0.
+    ls_first_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
+                                                         iv_index      = 1 ).
+    IF ls_first_stmt-keyword IS INITIAL.
       RETURN.
     ENDIF.
 
-    lv_static_cnt = 0.
-    lv_has_inst = abap_false.
-
-    LOOP AT lo_class->methods INTO ls_meth.
-      IF ls_meth-is_class = abap_true.
-        lv_static_cnt = lv_static_cnt + 1.
-      ELSEIF ls_meth-name <> 'CONSTRUCTOR'.
-        lv_has_inst = abap_true.
-        EXIT.
-      ENDIF.
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
+      CASE <ls_statement>-keyword.
+        WHEN 'CLASS-METHODS'.
+          lv_static_cnt = lv_static_cnt + 1.
+        WHEN 'METHODS'.
+          IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                     iv_lexeme    = 'CONSTRUCTOR' ) = abap_false.
+            lv_has_inst = abap_true.
+          ENDIF.
+      ENDCASE.
     ENDLOOP.
 
-    ls_statement = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
-                                                        iv_index      = 1 ).
-    IF     lv_static_cnt         > 0
-       AND lv_has_inst           = abap_false
-       AND ls_statement-keyword IS NOT INITIAL.
-      report_statement( is_statement    = ls_statement
+    IF lv_static_cnt > 0 AND lv_has_inst = abap_false.
+      report_statement( is_statement    = ls_first_stmt
                         iv_finding_code = c_finding_codes-static_class ).
     ENDIF.
   ENDMETHOD.

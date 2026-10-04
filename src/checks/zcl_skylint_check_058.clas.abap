@@ -37,9 +37,10 @@ CLASS zcl_skylint_check_058 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA ls_statement TYPE zif_skylint_types=>ty_statement.
-    DATA lo_class     TYPE REF TO cl_abap_classdescr.
-    DATA lv_max_attr  TYPE i.
+    DATA ls_first_stmt TYPE zif_skylint_types=>ty_statement.
+    DATA lv_max_attr   TYPE i.
+    DATA lv_count      TYPE i.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
     IF is_code_block-block_kind <> zif_skylint_types=>block_kinds-class_definition.
       RETURN.
@@ -52,16 +53,20 @@ CLASS zcl_skylint_check_058 IMPLEMENTATION.
       lv_max_attr = mv_max_attributes.
     ENDIF.
 
-    lo_class = zcl_skylint_rtti_util=>describe_class( is_code_block-object_name ).
-    IF lo_class IS NOT BOUND.
+    ls_first_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
+                                                         iv_index      = 1 ).
+    IF ls_first_stmt-keyword IS INITIAL.
       RETURN.
     ENDIF.
 
-    ls_statement = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
-                                                        iv_index      = 1 ).
-    IF     lines( lo_class->attributes )  > lv_max_attr
-       AND ls_statement-keyword          IS NOT INITIAL.
-      report_statement( is_statement    = ls_statement
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
+      IF <ls_statement>-keyword = 'DATA' OR <ls_statement>-keyword = 'CLASS-DATA'.
+        lv_count = lv_count + 1.
+      ENDIF.
+    ENDLOOP.
+
+    IF lv_count > lv_max_attr.
+      report_statement( is_statement    = ls_first_stmt
                         iv_finding_code = c_finding_codes-attribute_count ).
     ENDIF.
   ENDMETHOD.

@@ -29,30 +29,33 @@ CLASS zcl_skylint_check_027 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lo_class     TYPE REF TO cl_abap_classdescr.
-    DATA ls_statement TYPE zif_skylint_types=>ty_statement.
+    DATA lv_in_public TYPE abap_bool.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
     IF is_code_block-block_kind <> zif_skylint_types=>block_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    lo_class = zcl_skylint_rtti_util=>describe_class( is_code_block-object_name ).
-    IF lo_class IS NOT BOUND.
-      RETURN.
-    ENDIF.
-
-    ls_statement = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
-                                                        iv_index      = 1 ).
-    IF ls_statement-keyword IS INITIAL.
-      RETURN.
-    ENDIF.
-
-    LOOP AT lo_class->attributes TRANSPORTING NO FIELDS
-         WHERE     visibility   = cl_abap_classdescr=>public
-               AND is_read_only = abap_false
-               AND is_constant  = abap_false.
-      report_statement( is_statement    = ls_statement
-                        iv_finding_code = c_finding_codes-public_attribute ).
+    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
+      CASE <ls_statement>-keyword.
+        WHEN 'PUBLIC'.
+          IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                     iv_lexeme    = 'SECTION' ) = abap_true.
+            lv_in_public = abap_true.
+          ENDIF.
+        WHEN 'PROTECTED' OR 'PRIVATE'.
+          IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                     iv_lexeme    = 'SECTION' ) = abap_true.
+            lv_in_public = abap_false.
+          ENDIF.
+        WHEN 'DATA' OR 'CLASS-DATA'.
+          IF     lv_in_public = abap_true
+             AND zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                         iv_lexeme    = 'READ-ONLY' ) = abap_false.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-public_attribute ).
+          ENDIF.
+      ENDCASE.
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

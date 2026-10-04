@@ -9,14 +9,14 @@ ENDCLASS.
 
 CLASS ltcl_check_027 IMPLEMENTATION.
   METHOD test_finding.
-    " RTTI-blocked (DECL check): finding needs describe_by_name( main_unit ), but
-    " the synthetic unit ZSKYLINT_TEST never resolves, so no finding is reachable.
-    zcl_skylint_test_util=>assert_no_findings(
+    zcl_skylint_test_util=>assert_findings(
         io_check            = NEW zcl_skylint_check_027( )
         it_source           = VALUE #( ( `CLASS zcl_test DEFINITION PUBLIC CREATE PUBLIC.` )
                                        ( `PUBLIC SECTION.` )
                                        ( `DATA mv_attr TYPE i.` )
                                        ( `ENDCLASS.` ) )
+        it_expected         = VALUE #( ( line = 3
+                                         code = zcl_skylint_check_027=>c_finding_codes-public_attribute ) )
         iv_class_definition = abap_true ).
   ENDMETHOD.
 

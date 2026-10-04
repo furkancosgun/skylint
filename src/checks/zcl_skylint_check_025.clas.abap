@@ -30,7 +30,6 @@ CLASS zcl_skylint_check_025 IMPLEMENTATION.
   METHOD check.
     DATA lv_has_receiving  TYPE abap_bool.
     DATA lv_has_exceptions TYPE abap_bool.
-    DATA lv_is_call        TYPE abap_bool.
     DATA ls_next_tok       TYPE zif_skylint_types=>ty_token.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
@@ -40,14 +39,7 @@ CLASS zcl_skylint_check_025 IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      lv_is_call = zcl_skylint_ast_util=>statement_is_method_call( <ls_statement> ).
-      IF lv_is_call = abap_false.
-        lv_is_call = zcl_skylint_rtti_util=>has_compiler_reference(
-                         is_statement = <ls_statement>
-                         iv_kind      = zif_skylint_types=>compiler_reference_kinds-method ).
-      ENDIF.
-
-      IF lv_is_call = abap_false.
+      IF zcl_skylint_ast_util=>statement_is_method_call( <ls_statement> ) = abap_false.
         CONTINUE.
       ENDIF.
 

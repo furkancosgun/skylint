@@ -23,6 +23,15 @@ CLASS lcl_metadata IMPLEMENTATION.
     description = ms_config-description.
   ENDMETHOD.
 
+  METHOD if_ci_atc_check_meta_data~get_attributes.
+    attributes = VALUE #( FOR attr IN ms_config-attributes
+                          ( kind  = COND #( WHEN attr-kind = zif_skylint_types=>attribute_kinds-boolean
+                                            THEN if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                            ELSE if_ci_atc_check_meta_data=>attribute_kinds-elementary )
+                            name  = attr-name
+                            value = attr-value ) ).
+  ENDMETHOD.
+
   METHOD if_ci_atc_check_meta_data~get_finding_code_infos.
     finding_code_infos = VALUE #( FOR finding IN ms_config-finding_codes
                                   ( code           = finding-code
