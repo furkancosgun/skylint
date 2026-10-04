@@ -71,7 +71,7 @@ All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 | **007** | [zcl_skylint_check_007](src/checks/zcl_skylint_check_007.clas.abap) | Avoid assignment chaining (a = b = c) | `ASSIGNCHN` | `"#EC ASSIGN_CHAIN"` | ✅ Done | — |
 | **008** | [zcl_skylint_check_008](src/checks/zcl_skylint_check_008.clas.abap) | Avoid chained declarations (DATA:, TYPES:, etc.) | `CHAINDECL` | `"#EC CHAIN_DECL"` | ✅ Done | ⚡ Ready |
 | **009** | [zcl_skylint_check_009](src/checks/zcl_skylint_check_009.clas.abap) | Prefer string templates over CONCATENATE | `CONCATSTR` | `"#EC PREFER_STR_TMPL"` | ✅ Done | — |
-| **010** | [zcl_skylint_check_010](src/checks/zcl_skylint_check_010.clas.abap) | Avoid direct comparison against boolean literals (abap_true, | `BOOLCOMP` | `"#EC AVOID_BOOL_COMP"` | ✅ Done | — |
+| **010** | [zcl_skylint_check_010](src/checks/zcl_skylint_check_010.clas.abap) | Avoid comparing boolean functions or methods to boolean literals | `BOOLCOMP` | `"#EC AVOID_BOOL_COMP"` | ✅ Done | — |
 | **011** | [zcl_skylint_check_011](src/checks/zcl_skylint_check_011.clas.abap) | Prefer line_exists( ) over READ TABLE ... TRANSPORTING NO FIELDS | `PREFLINEX` | `"#EC PREFER_LINE_EXISTS"` | ✅ Done | — |
 | **012** | [zcl_skylint_check_012](src/checks/zcl_skylint_check_012.clas.abap) | Prefer RETURN over EXIT outside loop constructs | `EXITOUTLP` | `"#EC EXIT_OUTSIDE_LOOP"` | ✅ Done | — |
 | **013** | [zcl_skylint_check_013](src/checks/zcl_skylint_check_013.clas.abap) | Avoid CHECK in loop/iteration structures (prefer IF ... CONTINUE) | `CHKINLOOP` | `"#EC CHECK_IN_LOOP"` | ✅ Done | — |
