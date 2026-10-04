@@ -29,7 +29,7 @@ CLASS zcl_skylint_sci_adapter DEFINITION
 
     METHODS build_quickfix_detail
       IMPORTING is_finding       TYPE zif_skylint_types=>ty_finding
-                is_proc          TYPE cl_abap_comp_procs=>t_proc_def
+                is_proc          TYPE cl_abap_comp_procs=>t_proc_entry
       RETURNING VALUE(rv_detail) TYPE xstring.
 ENDCLASS.
 
@@ -47,7 +47,6 @@ CLASS zcl_skylint_sci_adapter IMPLEMENTATION.
     description    = ms_config-description.
     has_attributes = xsdbool( ms_config-attributes IS NOT INITIAL ).
     attributes_ok  = abap_true.
-    has_checksums  = abap_true.
 
     LOOP AT ms_config-finding_codes ASSIGNING <ls_code>.
       CLEAR ls_message.
@@ -123,6 +122,8 @@ CLASS zcl_skylint_sci_adapter IMPLEMENTATION.
         lv_checksum = ls_checksum-i1.
       ENDIF.
 
+      uses_checksum = xsdbool( lv_checksum <> 0 ).
+
       lv_qf_detail = build_quickfix_detail( is_finding = <ls_finding>
                                             is_proc    = p_proc ).
 
@@ -139,6 +140,7 @@ CLASS zcl_skylint_sci_adapter IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD build_quickfix_detail.
+    DATA lt_procs      TYPE cl_abap_comp_procs=>t_procs.
     DATA lo_quickfixes TYPE REF TO object.
     DATA lo_context    TYPE REF TO object.
     DATA lo_quickfix   TYPE REF TO object.
@@ -157,15 +159,15 @@ CLASS zcl_skylint_sci_adapter IMPLEMENTATION.
 
     TRY.
         CALL METHOD ('CL_CI_QUICKFIX_CREATION')=>('CREATE_QUICKFIX_ALTERNATIVES')
-          RECEIVING
-            p_quickfix_alternatives = lo_quickfixes.
+          RECEIVING p_quickfix_alternatives = lo_quickfixes.
 
         IF lo_quickfixes IS INITIAL.
           RETURN.
         ENDIF.
 
         LOOP AT is_finding-quickfixes ASSIGNING <ls_quickfix>.
-          CLEAR: lo_context, lo_quickfix.
+          CLEAR: lo_context,
+                 lo_quickfix.
 
           lv_stmt_idx = <ls_quickfix>-statement_from.
           IF lv_stmt_idx <= 0.
@@ -177,13 +179,11 @@ CLASS zcl_skylint_sci_adapter IMPLEMENTATION.
             IF sy-subrc = 0.
               TRY.
                   CALL METHOD ('CL_CI_QUICKFIX_ABAP_CONTEXT')=>('CREATE_FROM_COMP_PROCS_STMT')
-                    EXPORTING
-                      p_action_stmt    = <ls_stmt>
-                      p_proc_def       = is_proc
-                      p_proc_defs      = procs
-                      p_with_end_point = abap_true
-                    RECEIVING
-                      p_context        = lo_context.
+                    EXPORTING p_action_stmt    = <ls_stmt>
+                              p_proc_def       = is_proc
+                              p_proc_defs      = lt_procs
+                              p_with_end_point = abap_true
+                    RECEIVING p_context        = lo_context.
                 CATCH cx_root.
                   CLEAR lo_context.
               ENDTRY.
@@ -194,12 +194,10 @@ CLASS zcl_skylint_sci_adapter IMPLEMENTATION.
             TRY.
                 lv_line_col = CONV #( is_finding-position-column ).
                 CALL METHOD ('CL_CI_QUICKFIX_ABAP_CONTEXT')=>('CREATE_FROM_INCLUDE')
-                  EXPORTING
-                    p_include = is_proc-include
-                    p_line    = is_finding-position-line
-                    p_col     = lv_line_col
-                  RECEIVING
-                    p_context = lo_context.
+                  EXPORTING p_include = is_proc-include
+                            p_line    = is_finding-position-line
+                            p_col     = lv_line_col
+                  RECEIVING p_context = lo_context.
               CATCH cx_root.
                 CLEAR lo_context.
             ENDTRY.
@@ -210,16 +208,11 @@ CLASS zcl_skylint_sci_adapter IMPLEMENTATION.
           ENDIF.
 
           lv_code = <ls_quickfix>-code.
-          IF lv_code IS INITIAL.
-            lv_code = '001'.
-          ENDIF.
 
           TRY.
               CALL METHOD lo_quickfixes->('CREATE_QUICKFIX')
-                EXPORTING
-                  p_quickfix_code = lv_code
-                RECEIVING
-                  p_quickfix      = lo_quickfix.
+                EXPORTING p_quickfix_code = lv_code
+                RECEIVING p_quickfix      = lo_quickfix.
 
               IF lo_quickfix IS INITIAL.
                 CONTINUE.
@@ -235,9 +228,8 @@ CLASS zcl_skylint_sci_adapter IMPLEMENTATION.
               ENDLOOP.
 
               CALL METHOD lo_quickfix->('IF_CI_QUICKFIX_ABAP_ACTIONS~REPLACE_BY')
-                EXPORTING
-                  p_new_code = lv_new_code
-                  p_context  = lo_context.
+                EXPORTING p_new_code = lv_new_code
+                          p_context  = lo_context.
 
               TRY.
                   CALL METHOD lo_quickfix->('IF_CI_QUICKFIX_SINGLE~ENABLE_AUTOMATIC_EXECUTION').
@@ -252,14 +244,13 @@ CLASS zcl_skylint_sci_adapter IMPLEMENTATION.
 
         TRY.
             CALL METHOD lo_quickfixes->('EXPORT_TO_XSTRING')
-              RECEIVING
-                p_detail = rv_detail.
+              RECEIVING p_detail = rv_detail.
           CATCH cx_root.
             CLEAR rv_detail.
         ENDTRY.
 
-      CATCH cx_sy_dyn_call_illegal_class cx_root.
-        " QuickFix framework not available on this NetWeaver release (e.g. 7.52)
+      CATCH cx_root.
+        " QuickFix framework not available
         CLEAR rv_detail.
     ENDTRY.
   ENDMETHOD.
