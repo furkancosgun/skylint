@@ -31,6 +31,10 @@ CLASS zcl_skylint_check_010 DEFINITION
                 iv_op_index       TYPE i
       RETURNING VALUE(rv_is_call) TYPE abap_bool.
 
+    METHODS is_method_or_function_token
+      IMPORTING is_token     TYPE zif_skylint_types=>ty_token
+      RETURNING VALUE(rv_is) TYPE abap_bool.
+
     METHODS is_boolean_literal
       IMPORTING iv_lexeme    TYPE string
       RETURNING VALUE(rv_is) TYPE abap_bool.
@@ -126,7 +130,7 @@ CLASS zcl_skylint_check_010 IMPLEMENTATION.
       IF ls_scan_tok-lexeme IS INITIAL.
         EXIT.
       ENDIF.
-      IF ls_scan_tok-lexeme CS '(' OR ls_scan_tok-lexeme = '('.
+      IF is_method_or_function_token( ls_scan_tok ) = abap_true.
         rv_is_call = abap_true.
         EXIT.
       ENDIF.
@@ -139,7 +143,7 @@ CLASS zcl_skylint_check_010 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_call_operand_right.
-    DATA lv_has_open  TYPE abap_bool.
+    DATA lv_has_call  TYPE abap_bool.
     DATA lv_has_close TYPE abap_bool.
     DATA lv_scan_idx  TYPE i.
     DATA ls_scan_tok  TYPE zif_skylint_types=>ty_token.
@@ -156,8 +160,8 @@ CLASS zcl_skylint_check_010 IMPLEMENTATION.
         WHEN 'AND' OR 'OR' OR '.' OR 'THEN'.
           EXIT.
       ENDCASE.
-      IF ls_scan_tok-lexeme CS '(' OR ls_scan_tok-lexeme = '('.
-        lv_has_open = abap_true.
+      IF is_method_or_function_token( ls_scan_tok ) = abap_true.
+        lv_has_call = abap_true.
       ENDIF.
       IF ls_scan_tok-lexeme CS ')' OR ls_scan_tok-lexeme = ')'.
         lv_has_close = abap_true.
@@ -165,8 +169,27 @@ CLASS zcl_skylint_check_010 IMPLEMENTATION.
       lv_scan_idx = lv_scan_idx + 1.
     ENDWHILE.
 
-    IF lv_has_open = abap_true AND lv_has_close = abap_true.
+    IF lv_has_call = abap_true AND lv_has_close = abap_true.
       rv_is_call = abap_true.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD is_method_or_function_token.
+    FIELD-SYMBOLS <ls_ref> TYPE zif_skylint_types=>ty_compiler_reference.
+
+    rv_is = abap_false.
+
+    " 1. Inspect compiler references (compiler_reference_kinds-method)
+    LOOP AT is_token-references ASSIGNING <ls_ref>.
+      IF <ls_ref>-kind = zif_skylint_types=>compiler_reference_kinds-method.
+        rv_is = abap_true.
+        RETURN.
+      ENDIF.
+    ENDLOOP.
+
+    " 2. Also support built-in predicate functions and call tokens
+    IF is_token-lexeme CS '->' OR is_token-lexeme CS '=>' OR is_token-lexeme CP '*('.
+      rv_is = abap_true.
     ENDIF.
   ENDMETHOD.
 
