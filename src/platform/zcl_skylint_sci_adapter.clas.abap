@@ -49,16 +49,7 @@ CLASS zcl_skylint_sci_adapter IMPLEMENTATION.
       ls_message-code = <ls_code>-code.
       ls_message-text = <ls_code>-text.
       ls_message-pcom = <ls_code>-pseudo_comment.
-
-      CASE <ls_code>-severity.
-        WHEN zif_skylint_types=>severities-error.
-          ls_message-kind = c_error.
-        WHEN zif_skylint_types=>severities-warning.
-          ls_message-kind = c_warning.
-        WHEN OTHERS.
-          ls_message-kind = c_note.
-      ENDCASE.
-
+      ls_message-kind = <ls_code>-severity.
       INSERT ls_message INTO TABLE scimessages.
     ENDLOOP.
 
@@ -85,6 +76,7 @@ CLASS zcl_skylint_sci_adapter IMPLEMENTATION.
     LOOP AT p_proc-stmts ASSIGNING <ls_stmt>.
       CLEAR ls_statement.
 
+      ls_statement-index           = sy-tabix.
       ls_statement-keyword         = <ls_stmt>-keyword.
       ls_statement-position-line   = <ls_stmt>-line.
       ls_statement-position-column = <ls_stmt>-column.
@@ -139,10 +131,16 @@ CLASS zcl_skylint_sci_adapter IMPLEMENTATION.
           INSERT VALUE #( name = <ls_attr>-name
                           type = CAST #( cl_abap_typedescr=>describe_by_name( 'XFELD' ) ) )
                  INTO TABLE lt_component.
-        WHEN OTHERS.
+        WHEN zif_skylint_types=>attribute_kinds-integer.
           INSERT VALUE #( name = <ls_attr>-name
-                          type = CAST #( cl_abap_typedescr=>describe_by_data_ref( <ls_attr>-value ) ) )
+                          type = CAST #( cl_abap_typedescr=>describe_by_name( 'I' ) ) )
                  INTO TABLE lt_component.
+        WHEN zif_skylint_types=>attribute_kinds-string.
+          INSERT VALUE #( name = <ls_attr>-name
+                          type = CAST #( cl_abap_typedescr=>describe_by_name( 'TEXT1' ) ) )
+                 INTO TABLE lt_component.
+        WHEN OTHERS.
+          ASSERT 1 = 2.
       ENDCASE.
     ENDLOOP.
 

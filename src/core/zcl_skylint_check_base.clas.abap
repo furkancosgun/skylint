@@ -198,8 +198,9 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
                                             iv_param_4  = iv_param_4 ).
     ENDIF.
 
-    ls_finding-code     = iv_finding_code.
-    ls_finding-position = is_statement-position.
+    ls_finding-code            = iv_finding_code.
+    ls_finding-position        = is_statement-position.
+    ls_finding-statement_index = is_statement-index.
     IF is_quickfix-code IS NOT INITIAL.
       APPEND is_quickfix TO ls_finding-quickfixes.
     ENDIF.
@@ -232,6 +233,7 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
     ls_finding-code            = iv_finding_code.
     ls_finding-position-line   = is_token-position-line.
     ls_finding-position-column = is_token-position-column.
+    ls_finding-statement_index = is_statement-index.
     IF is_quickfix-code IS NOT INITIAL.
       APPEND is_quickfix TO ls_finding-quickfixes.
     ENDIF.

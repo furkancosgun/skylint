@@ -98,6 +98,7 @@ INTERFACE zif_skylint_types
 
   TYPES:
     BEGIN OF ty_statement,
+      index           TYPE i,
       keyword         TYPE ty_keyword,
       tokens          TYPE ty_tokens,
       position        TYPE ty_position,
@@ -118,7 +119,7 @@ INTERFACE zif_skylint_types
     BEGIN OF severities,
       error   TYPE ty_severity VALUE 'E',
       warning TYPE ty_severity VALUE 'W',
-      info    TYPE ty_severity VALUE 'I',
+      note    TYPE ty_severity VALUE 'N',
     END OF severities.
 
   TYPES ty_code_lines TYPE STANDARD TABLE OF string WITH EMPTY KEY.
@@ -136,11 +137,12 @@ INTERFACE zif_skylint_types
 
   TYPES:
     BEGIN OF ty_finding,
-      code       TYPE ty_finding_code,
-      severity   TYPE ty_severity,
-      message    TYPE string,
-      position   TYPE ty_position,
-      quickfixes TYPE ty_quickfixes,
+      code            TYPE ty_finding_code,
+      severity        TYPE ty_severity,
+      message         TYPE string,
+      position        TYPE ty_position,
+      statement_index TYPE i,
+      quickfixes      TYPE ty_quickfixes,
     END OF ty_finding,
     ty_findings TYPE STANDARD TABLE OF ty_finding WITH EMPTY KEY.
 

@@ -1002,7 +1002,10 @@ CLASS lcl_code_block_builder IMPLEMENTATION.
     IF iv_class_definition = abap_true.
       rs_code_block-block_kind = zif_skylint_types=>block_kinds-class_definition.
       rs_code_block-block_name = '0'.
-      APPEND LINES OF it_statements TO rs_code_block-statements.
+      LOOP AT it_statements ASSIGNING <ls_stmt>.
+        <ls_stmt>-index = sy-tabix.
+        APPEND <ls_stmt> TO rs_code_block-statements.
+      ENDLOOP.
       RETURN.
     ENDIF.
     rs_code_block-block_kind = zif_skylint_types=>block_kinds-method.
@@ -1013,6 +1016,7 @@ CLASS lcl_code_block_builder IMPLEMENTATION.
         lv_started = abap_true.
       ENDIF.
       IF lv_started = abap_true.
+        <ls_stmt>-index = lines( rs_code_block-statements ) + 1.
         APPEND <ls_stmt> TO rs_code_block-statements.
       ENDIF.
       IF lv_started = abap_true AND <ls_stmt>-keyword = 'ENDMETHOD'.

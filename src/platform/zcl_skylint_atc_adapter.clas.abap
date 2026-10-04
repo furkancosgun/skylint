@@ -35,8 +35,10 @@ CLASS zcl_skylint_atc_adapter IMPLEMENTATION.
     DATA lt_findings    TYPE zif_skylint_types=>ty_findings.
     DATA lo_quickfix    TYPE REF TO cl_ci_atc_quickfixes.
     DATA lo_fix         TYPE REF TO if_ci_atc_quickfix.
+    DATA lv_checksum    TYPE if_ci_atc_source_code_provider=>ty_statement_checksum.
 
     FIELD-SYMBOLS <fs_procedure> TYPE if_ci_atc_source_code_provider=>ty_procedure.
+    FIELD-SYMBOLS <fs_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <fs_finding>   TYPE zif_skylint_types=>ty_finding.
     FIELD-SYMBOLS <fs_fix>       TYPE zif_skylint_types=>ty_quickfix.
 
@@ -50,10 +52,10 @@ CLASS zcl_skylint_atc_adapter IMPLEMENTATION.
           object_name = ls_unit-name
           block_kind  = <fs_procedure>-id-kind
           block_name  = <fs_procedure>-id-name
+          statements  = VALUE #( FOR statement IN <fs_procedure>-statements INDEX INTO idx
 
-          statements  = VALUE #( FOR statement IN <fs_procedure>-statements
-
-                                 ( keyword         = statement-keyword
+                                 ( index           = idx
+                                   keyword         = statement-keyword
                                    position        = VALUE #( line   = statement-position-line
                                                               column = statement-position-column )
                                    pseudo_comments = statement-pseudo_comments
@@ -71,6 +73,15 @@ CLASS zcl_skylint_atc_adapter IMPLEMENTATION.
 
       lt_findings = lint( ls_code_block ).
       LOOP AT lt_findings ASSIGNING <fs_finding>.
+        CLEAR lv_checksum.
+        IF <fs_finding>-statement_index > 0.
+          READ TABLE <fs_procedure>-statements ASSIGNING <fs_statement>
+            INDEX <fs_finding>-statement_index.
+          IF sy-subrc = 0.
+            lv_checksum = lo_provider->get_statement_checksum( <fs_statement> ).
+          ENDIF.
+        ENDIF.
+
         lo_quickfix = mo_factory->create_quickfixes( ).
         LOOP AT <fs_finding>-quickfixes ASSIGNING <fs_fix>.
           lo_fix = lo_quickfix->create_quickfix( quickfix_code = <fs_fix>-code ).
@@ -88,6 +99,7 @@ CLASS zcl_skylint_atc_adapter IMPLEMENTATION.
         INSERT VALUE #( code     = <fs_finding>-code
                         location = VALUE #( position = VALUE #( line   = <fs_finding>-position-line
                                                                 column = <fs_finding>-position-column ) )
+                        checksum = lv_checksum
                         details  = mo_factory->create_finding_details( )->attach_quickfixes( lo_quickfix ) )
 
                INTO TABLE findings.
