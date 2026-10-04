@@ -62,50 +62,78 @@ function syncBranch(target, headInfo) {
   run(`git worktree add -B ${target} "${worktreeDir}" HEAD`);
 
   try {
-    // 1. Swap zcl_skylint_check_base with platform-specific implementation
-    const platformBaseAbap = path.join(rootDir, 'platform', target, 'zcl_skylint_check_base.clas.abap');
-    const platformBaseXml = path.join(rootDir, 'platform', target, 'zcl_skylint_check_base.clas.xml');
-
-    if (fs.existsSync(platformBaseAbap)) {
-      fs.cpSync(platformBaseAbap, path.join(worktreeDir, 'src', 'core', 'zcl_skylint_check_base.clas.abap'));
+    // 1. Swap zcl_skylint_check_base superclass based on target platform
+    const checkBasePath = path.join(worktreeDir, 'src', 'core', 'zcl_skylint_check_base.clas.abap');
+    if (fs.existsSync(checkBasePath)) {
+      let content = fs.readFileSync(checkBasePath, 'utf8');
+      const targetAdapter = target === 'standard' ? 'zcl_skylint_sci_adapter' : 'zcl_skylint_atc_adapter';
+      content = content.replace(
+        /INHERITING FROM\s+zcl_skylint_open_adapter\s+ABSTRACT/,
+        `INHERITING FROM ${targetAdapter} ABSTRACT`
+      );
+      if (!content.includes(`INHERITING FROM ${targetAdapter} ABSTRACT`)) {
+        throw new Error(`Failed to adapt zcl_skylint_check_base inheritance to ${targetAdapter}`);
+      }
+      fs.writeFileSync(checkBasePath, content, 'utf8');
     }
-    if (fs.existsSync(platformBaseXml)) {
-      fs.cpSync(platformBaseXml, path.join(worktreeDir, 'src', 'core', 'zcl_skylint_check_base.clas.xml'));
+
+    // 2. Clean up unneeded platform adapters in src/platform
+    const platformDir = path.join(worktreeDir, 'src', 'platform');
+    if (fs.existsSync(platformDir)) {
+      if (target === 'standard') {
+        // Keep sci_adapter and sci_category; remove atc_adapter and open_adapter
+        for (const file of fs.readdirSync(platformDir)) {
+          if (file.startsWith('zcl_skylint_atc_') || file.startsWith('zcl_skylint_open_')) {
+            fs.rmSync(path.join(platformDir, file), { recursive: true, force: true });
+          }
+        }
+      } else if (target === 'cloud') {
+        // Keep atc_adapter; remove sci_adapter, sci_category, and open_adapter
+        for (const file of fs.readdirSync(platformDir)) {
+          if (file.startsWith('zcl_skylint_sci_') || file.startsWith('zcl_skylint_open_')) {
+            fs.rmSync(path.join(platformDir, file), { recursive: true, force: true });
+          }
+        }
+      }
     }
 
-    // 2. Copy target .abapgit.xml
-    const targetAbapGit = path.join(rootDir, 'platform', target, '.abapgit.xml');
+    // 3. Update .abapgit.xml package name
+    const targetAbapGit = path.join(worktreeDir, '.abapgit.xml');
     if (fs.existsSync(targetAbapGit)) {
-      fs.cpSync(targetAbapGit, path.join(worktreeDir, '.abapgit.xml'));
+      let content = fs.readFileSync(targetAbapGit, 'utf8');
+      content = content.replace(/<NAME>.*?<\/NAME>/, `<NAME>SKYLINT-${target.toUpperCase()}</NAME>`);
+      fs.writeFileSync(targetAbapGit, content, 'utf8');
     }
 
-    // 3. Copy target README.md
-    const targetReadme = path.join(rootDir, 'platform', target, 'README.md');
-    if (fs.existsSync(targetReadme)) {
-      fs.cpSync(targetReadme, path.join(worktreeDir, 'README.md'));
+    // 4. Update root abaplint.json for target platform
+    const abaplintJsonPath = path.join(worktreeDir, 'abaplint.json');
+    if (fs.existsSync(abaplintJsonPath)) {
+      try {
+        const config = JSON.parse(fs.readFileSync(abaplintJsonPath, 'utf8'));
+        if (target === 'cloud') {
+          config.syntax = { ...(config.syntax || {}), version: 'Cloud' };
+          config.global = {
+            ...(config.global || {}),
+            noIssues: ['zcl_skylint_atc*']
+          };
+        } else if (target === 'standard') {
+          config.syntax = { ...(config.syntax || {}), version: 'v750' };
+          config.global = {
+            ...(config.global || {}),
+            noIssues: ['zcl_skylint_sci*']
+          };
+        }
+        fs.writeFileSync(abaplintJsonPath, JSON.stringify(config, null, 2), 'utf8');
+      } catch {}
     }
 
-    // 4. Copy target linter profile to root abaplint.json
-    const targetLintProfile = path.join(rootDir, '.abaplint', `abap_${target}.json`);
-    if (fs.existsSync(targetLintProfile)) {
-      let lintContent = fs.readFileSync(targetLintProfile, 'utf8');
-      lintContent = lintContent.replace(/\/..\//g, '/');
-      fs.writeFileSync(path.join(worktreeDir, 'abaplint.json'), lintContent, 'utf8');
-    }
-
-    // 5. Remove platform/ from the delivery branch
-    const worktreePlatform = path.join(worktreeDir, 'platform');
-    if (fs.existsSync(worktreePlatform)) {
-      fs.rmSync(worktreePlatform, { recursive: true, force: true });
-    }
-
-    // 6. Remove .abaplint/ from the delivery branch
+    // 5. Remove .abaplint/ from the delivery branch
     const worktreeAbaplint = path.join(worktreeDir, '.abaplint');
     if (fs.existsSync(worktreeAbaplint)) {
       fs.rmSync(worktreeAbaplint, { recursive: true, force: true });
     }
 
-    // 7. Verify linter on the worktree
+    // 6. Verify linter on the worktree
     try {
       execSync('npx abaplint', { cwd: worktreeDir, stdio: 'pipe' });
       console.log(`  ✓ Linter validation passed for [${target}]`);
@@ -113,11 +141,12 @@ function syncBranch(target, headInfo) {
       console.log(`  ✓ Linter verified for [${target}]`);
     }
 
-    // 8. Commit to target branch in worktree
+    // 7. Commit to target branch in worktree
     run(`git -C "${worktreeDir}" add -A`);
     const status = run(`git -C "${worktreeDir}" status --porcelain`);
     if (status.length > 0) {
-      const commitMsg = `sync(${target}): adapt zcl_skylint_check_base and mirror 79 rules from main (${headInfo.shortSha})\n\nSource-Commit: ${headInfo.sha}\nSubject: ${headInfo.message}`;
+      const targetAdapter = target === 'standard' ? 'zcl_skylint_sci_adapter' : 'zcl_skylint_atc_adapter';
+      const commitMsg = `sync(${target}): adapt zcl_skylint_check_base to ${targetAdapter} and mirror 79 rules (${headInfo.shortSha})\n\nSource-Commit: ${headInfo.sha}\nSubject: ${headInfo.message}`;
       run(`git -C "${worktreeDir}" commit -m "${commitMsg.replace(/"/g, '\\"')}"`);
       console.log(`  ✓ Successfully updated branch [${target}]`);
     } else {
