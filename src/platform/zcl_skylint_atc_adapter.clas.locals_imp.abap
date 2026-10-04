@@ -57,6 +57,6 @@ CLASS lcl_metadata IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD if_ci_atc_check_meta_data~uses_checksums.
-    uses_checksums = abap_false.
+    uses_checksums = abap_true.
   ENDMETHOD.
 ENDCLASS.

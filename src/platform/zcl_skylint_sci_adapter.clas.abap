@@ -42,6 +42,7 @@ CLASS zcl_skylint_sci_adapter IMPLEMENTATION.
     description    = ms_config-description.
     has_attributes = xsdbool( ms_config-attributes IS NOT INITIAL ).
     attributes_ok  = abap_true.
+    has_checksums  = abap_true.
 
     LOOP AT ms_config-finding_codes ASSIGNING <ls_code>.
       CLEAR ls_message.
@@ -62,6 +63,8 @@ CLASS zcl_skylint_sci_adapter IMPLEMENTATION.
     DATA ls_token      TYPE zif_skylint_types=>ty_token.
     DATA ls_reference  TYPE zif_skylint_types=>ty_compiler_reference.
     DATA lt_findings   TYPE zif_skylint_types=>ty_findings.
+    DATA lv_checksum   TYPE int4.
+    DATA ls_checksum   TYPE sci_crc64.
 
     FIELD-SYMBOLS <ls_stmt>    TYPE cl_abap_comp_procs=>t_stmt.
     FIELD-SYMBOLS <ls_token>   TYPE cl_abap_comp_procs=>t_token.
@@ -104,15 +107,25 @@ CLASS zcl_skylint_sci_adapter IMPLEMENTATION.
 
     lt_findings = lint( ls_code_block ).
 
-    uses_checksum = abap_false.
+    uses_checksum = abap_true.
     LOOP AT lt_findings ASSIGNING <ls_finding>.
+      CLEAR lv_checksum.
+
+      IF <ls_finding>-statement_index > 0.
+        get_stmt_checksum( EXPORTING p_proc_def   = p_proc
+                                     p_index_stmt = <ls_finding>-statement_index
+                           CHANGING  p_checksum   = ls_checksum ).
+        lv_checksum = ls_checksum-i1.
+      ENDIF.
+
       inform( p_sub_obj_type = c_type_include
               p_sub_obj_name = p_proc-include
               p_line         = <ls_finding>-position-line
               p_column       = CONV #( <ls_finding>-position-column )
               p_kind         = <ls_finding>-severity
               p_test         = myname
-              p_code         = <ls_finding>-code ).
+              p_code         = <ls_finding>-code
+              p_checksum_1   = lv_checksum ).
     ENDLOOP.
   ENDMETHOD.
 
