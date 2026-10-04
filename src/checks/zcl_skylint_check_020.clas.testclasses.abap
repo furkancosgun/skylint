@@ -21,3 +21,24 @@ CLASS ltcl_check_020 IMPLEMENTATION.
                                                it_source = VALUE #( ( `IF lv_code = 'X'.` ) ) ).
   ENDMETHOD.
 ENDCLASS.
+
+*"* --- Local Test Fixture Class ---
+CLASS lcl_test_code DEFINITION FINAL.
+  PUBLIC SECTION.
+    METHODS test_with_finding.
+    METHODS test_clean_code.
+ENDCLASS.
+
+CLASS lcl_test_code IMPLEMENTATION.
+  METHOD test_with_finding.
+    DATA lv_code TYPE c LENGTH 1.
+    IF 'X' = lv_code.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_clean_code.
+    DATA lv_code TYPE c LENGTH 1.
+    IF lv_code = 'X'.
+    ENDIF.
+  ENDMETHOD.
+ENDCLASS.

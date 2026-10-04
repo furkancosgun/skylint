@@ -21,3 +21,20 @@ CLASS ltcl_check_023 IMPLEMENTATION.
                                                it_source = VALUE #( ( `RAISE EXCEPTION NEW cx_static_check( ).` ) ) ).
   ENDMETHOD.
 ENDCLASS.
+
+*"* --- Local Test Fixture Class ---
+CLASS lcl_test_code DEFINITION FINAL.
+  PUBLIC SECTION.
+    METHODS test_with_finding.
+    METHODS test_clean_code.
+ENDCLASS.
+
+CLASS lcl_test_code IMPLEMENTATION.
+  METHOD test_with_finding.
+    RAISE EXCEPTION TYPE cx_sy_zerodivide.
+  ENDMETHOD.
+
+  METHOD test_clean_code.
+    RAISE EXCEPTION NEW cx_sy_zerodivide( ).
+  ENDMETHOD.
+ENDCLASS.

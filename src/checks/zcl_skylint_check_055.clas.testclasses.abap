@@ -33,3 +33,44 @@ CLASS ltcl_check_055 IMPLEMENTATION.
                                                iv_class_definition = abap_true ).
   ENDMETHOD.
 ENDCLASS.
+
+*"* --- Local Test Fixture Class ---
+CLASS lcl_helper DEFINITION.
+  PUBLIC SECTION.
+    CLASS-METHODS run.
+ENDCLASS.
+CLASS lcl_helper IMPLEMENTATION.
+  METHOD run.
+    RETURN.
+  ENDMETHOD.
+ENDCLASS.
+
+CLASS lcl_clean DEFINITION.
+  PUBLIC SECTION.
+    CLASS-METHODS run.
+    METHODS execute.
+ENDCLASS.
+CLASS lcl_clean IMPLEMENTATION.
+  METHOD run.
+    RETURN.
+  ENDMETHOD.
+  METHOD execute.
+    RETURN.
+  ENDMETHOD.
+ENDCLASS.
+
+CLASS lcl_test_code DEFINITION FINAL.
+  PUBLIC SECTION.
+    METHODS test_with_finding.
+    METHODS test_clean_code.
+ENDCLASS.
+
+CLASS lcl_test_code IMPLEMENTATION.
+  METHOD test_with_finding.
+    RETURN.
+  ENDMETHOD.
+
+  METHOD test_clean_code.
+    RETURN.
+  ENDMETHOD.
+ENDCLASS.

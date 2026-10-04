@@ -21,3 +21,29 @@ CLASS ltcl_check_036 IMPLEMENTATION.
                                                it_source = VALUE #( ( `lo_obj->run( lv_val ).` ) ) ).
   ENDMETHOD.
 ENDCLASS.
+
+*"* --- Local Test Fixture Class ---
+CLASS lcl_test_code DEFINITION FINAL.
+  PUBLIC SECTION.
+    METHODS test_with_finding.
+    METHODS test_clean_code.
+    METHODS run IMPORTING iv_param TYPE i.
+ENDCLASS.
+
+CLASS lcl_test_code IMPLEMENTATION.
+  METHOD run.
+    RETURN.
+  ENDMETHOD.
+
+  METHOD test_with_finding.
+    DATA lo_obj TYPE REF TO lcl_test_code.
+    DATA lv_val TYPE i.
+    lo_obj->run( iv_param = lv_val ).
+  ENDMETHOD.
+
+  METHOD test_clean_code.
+    DATA lo_obj TYPE REF TO lcl_test_code.
+    DATA lv_val TYPE i.
+    lo_obj->run( lv_val ).
+  ENDMETHOD.
+ENDCLASS.

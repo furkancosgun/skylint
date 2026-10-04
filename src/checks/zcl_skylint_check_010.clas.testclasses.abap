@@ -22,3 +22,32 @@ CLASS ltcl_check_010 IMPLEMENTATION.
                                                                     ( `IF lv_flag = abap_true.` ) ) ).
   ENDMETHOD.
 ENDCLASS.
+
+*"* --- Local Test Fixture Class ---
+CLASS lcl_test_code DEFINITION FINAL.
+  PUBLIC SECTION.
+    METHODS test_with_finding.
+    METHODS test_clean_code.
+    METHODS is_valid RETURNING VALUE(rv_flag) TYPE abap_bool.
+ENDCLASS.
+
+CLASS lcl_test_code IMPLEMENTATION.
+  METHOD is_valid.
+    rv_flag = abap_true.
+  ENDMETHOD.
+
+  METHOD test_with_finding.
+    DATA lo_validator TYPE REF TO lcl_test_code.
+    IF lo_validator->is_valid( ) = abap_true.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_clean_code.
+    DATA lo_validator TYPE REF TO lcl_test_code.
+    DATA lv_flag TYPE abap_bool.
+    IF lo_validator->is_valid( ).
+    ENDIF.
+    IF lv_flag = abap_true.
+    ENDIF.
+  ENDMETHOD.
+ENDCLASS.

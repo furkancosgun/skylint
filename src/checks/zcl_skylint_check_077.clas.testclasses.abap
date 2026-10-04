@@ -22,3 +22,22 @@ CLASS ltcl_check_077 IMPLEMENTATION.
                                                                     ( `lv_used = 1.` ) ) ).
   ENDMETHOD.
 ENDCLASS.
+
+*"* --- Local Test Fixture Class ---
+CLASS lcl_test_code DEFINITION FINAL.
+  PUBLIC SECTION.
+    METHODS test_with_finding.
+    METHODS test_clean_code.
+ENDCLASS.
+
+
+CLASS lcl_test_code IMPLEMENTATION.
+  METHOD test_with_finding.
+    DATA lv_unused TYPE i.
+  ENDMETHOD.
+
+  METHOD test_clean_code.
+    DATA lv_used TYPE i.
+    lv_used = 1.
+  ENDMETHOD.
+ENDCLASS.

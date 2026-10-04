@@ -25,3 +25,26 @@ CLASS ltcl_check_033 IMPLEMENTATION.
                                                                     ( `lv_val = 1.` ) ) ).
   ENDMETHOD.
 ENDCLASS.
+
+*"* --- Local Test Fixture Class ---
+CLASS lcl_test_code DEFINITION FINAL.
+  PUBLIC SECTION.
+    METHODS test_with_finding.
+    METHODS test_clean_code.
+ENDCLASS.
+
+
+CLASS lcl_test_code IMPLEMENTATION.
+  METHOD test_with_finding.
+    DATA lv_flag TYPE abap_bool.
+    IF lv_flag = abap_true.
+    DATA lv_inner TYPE i.
+    ENDIF.
+    lv_inner = 1.
+  ENDMETHOD.
+
+  METHOD test_clean_code.
+    DATA lv_val TYPE i.
+    lv_val = 1.
+  ENDMETHOD.
+ENDCLASS.

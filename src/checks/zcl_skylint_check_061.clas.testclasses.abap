@@ -21,3 +21,20 @@ CLASS ltcl_check_061 IMPLEMENTATION.
                                                it_source = VALUE #( ( `MESSAGE ID 'Z1' TYPE 'E'.` ) ) ).
   ENDMETHOD.
 ENDCLASS.
+
+*"* --- Local Test Fixture Class ---
+CLASS lcl_test_code DEFINITION FINAL.
+  PUBLIC SECTION.
+    METHODS test_with_finding EXCEPTIONS error.
+    METHODS test_clean_code.
+ENDCLASS.
+
+CLASS lcl_test_code IMPLEMENTATION.
+  METHOD test_with_finding.
+    MESSAGE e001(00) WITH 'test' RAISING error.
+  ENDMETHOD.
+
+  METHOD test_clean_code.
+    MESSAGE 'clean' TYPE 'I'.
+  ENDMETHOD.
+ENDCLASS.

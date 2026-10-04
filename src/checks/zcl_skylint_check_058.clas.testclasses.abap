@@ -33,3 +33,47 @@ CLASS ltcl_check_058 IMPLEMENTATION.
                                                iv_class_definition = abap_true ).
   ENDMETHOD.
 ENDCLASS.
+
+*"* --- Local Test Fixture Class ---
+CLASS lcl_god DEFINITION.
+  PUBLIC SECTION.
+    DATA mv_a1 TYPE i.
+    DATA mv_a2 TYPE i.
+    DATA mv_a3 TYPE i.
+    DATA mv_a4 TYPE i.
+    DATA mv_a5 TYPE i.
+    DATA mv_a6 TYPE i.
+    DATA mv_a7 TYPE i.
+    DATA mv_a8 TYPE i.
+    DATA mv_a9 TYPE i.
+    DATA mv_a10 TYPE i.
+    DATA mv_a11 TYPE i.
+    DATA mv_a12 TYPE i.
+    DATA mv_a13 TYPE i.
+    DATA mv_a14 TYPE i.
+    DATA mv_a15 TYPE i.
+    DATA mv_a16 TYPE i.
+    DATA mv_a17 TYPE i.
+    DATA mv_a18 TYPE i.
+    DATA mv_a19 TYPE i.
+    DATA mv_a20 TYPE i.
+    DATA mv_a21 TYPE i.
+ENDCLASS.
+CLASS lcl_god IMPLEMENTATION.
+ENDCLASS.
+
+CLASS lcl_test_code DEFINITION FINAL.
+  PUBLIC SECTION.
+    METHODS test_with_finding.
+    METHODS test_clean_code.
+ENDCLASS.
+
+CLASS lcl_test_code IMPLEMENTATION.
+  METHOD test_with_finding.
+    RETURN.
+  ENDMETHOD.
+
+  METHOD test_clean_code.
+    RETURN.
+  ENDMETHOD.
+ENDCLASS.

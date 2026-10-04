@@ -23,3 +23,27 @@ CLASS ltcl_check_013 IMPLEMENTATION.
                                                it_source = VALUE #( ( `CHECK lv_flag.` ) ) ).
   ENDMETHOD.
 ENDCLASS.
+
+*"* --- Local Test Fixture Class ---
+CLASS lcl_test_code DEFINITION FINAL.
+  PUBLIC SECTION.
+    METHODS test_with_finding.
+    METHODS test_clean_code.
+ENDCLASS.
+
+
+CLASS lcl_test_code IMPLEMENTATION.
+  METHOD test_with_finding.
+    DATA lv_flag TYPE abap_bool.
+    DATA lt_tab TYPE string_table.
+    DATA ls_row TYPE string.
+    LOOP AT lt_tab INTO ls_row.
+    CHECK lv_flag.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD test_clean_code.
+    DATA lv_flag TYPE abap_bool.
+    CHECK lv_flag.
+  ENDMETHOD.
+ENDCLASS.

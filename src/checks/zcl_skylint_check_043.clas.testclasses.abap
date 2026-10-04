@@ -24,3 +24,32 @@ CLASS ltcl_check_043 IMPLEMENTATION.
         iv_class_definition = abap_true ).
   ENDMETHOD.
 ENDCLASS.
+
+*"* --- Local Test Fixture Class ---
+CLASS lcl_test_code DEFINITION FINAL.
+  PUBLIC SECTION.
+    METHODS test_with_finding.
+    METHODS test_clean_code.
+
+  PRIVATE SECTION.
+    METHODS get_data_classic EXCEPTIONS not_found.
+    METHODS get_data_clean RAISING cx_static_check.
+ENDCLASS.
+
+CLASS lcl_test_code IMPLEMENTATION.
+  METHOD test_with_finding.
+    RETURN.
+  ENDMETHOD.
+
+  METHOD test_clean_code.
+    RETURN.
+  ENDMETHOD.
+
+  METHOD get_data_classic.
+    RETURN.
+  ENDMETHOD.
+
+  METHOD get_data_clean.
+    RETURN.
+  ENDMETHOD.
+ENDCLASS.

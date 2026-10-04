@@ -31,3 +31,36 @@ CLASS ltcl_check_054 IMPLEMENTATION.
                                                it_source = VALUE #( ( `lv_val = 1.` ) ) ).
   ENDMETHOD.
 ENDCLASS.
+
+*"* --- Local Test Fixture Class ---
+CLASS lcl_test_code DEFINITION FINAL.
+  PUBLIC SECTION.
+    METHODS constructor.
+    METHODS test_with_finding.
+    METHODS test_clean_code.
+ENDCLASS.
+
+CLASS lcl_test_code IMPLEMENTATION.
+  METHOD constructor.
+    DATA lv_val TYPE i.
+    lv_val = 1.
+    lv_val = 1.
+    lv_val = 1.
+    lv_val = 1.
+    lv_val = 1.
+    lv_val = 1.
+    lv_val = 1.
+    lv_val = 1.
+    lv_val = 1.
+    lv_val = 1.
+    lv_val = 1.
+  ENDMETHOD.
+
+  METHOD test_with_finding.
+    RETURN.
+  ENDMETHOD.
+
+  METHOD test_clean_code.
+    RETURN.
+  ENDMETHOD.
+ENDCLASS.

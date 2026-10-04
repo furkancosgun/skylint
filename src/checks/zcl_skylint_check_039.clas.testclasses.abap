@@ -28,3 +28,35 @@ CLASS ltcl_check_039 IMPLEMENTATION.
                                                                     ( `lv_b = 2.` ) ) ).
   ENDMETHOD.
 ENDCLASS.
+
+*"* --- Local Test Fixture Class ---
+CLASS lcl_test_code DEFINITION FINAL.
+  PUBLIC SECTION.
+    METHODS test_with_finding.
+    METHODS test_clean_code.
+ENDCLASS.
+
+
+CLASS lcl_test_code IMPLEMENTATION.
+  METHOD test_with_finding.
+    DATA lv_a TYPE i.
+    DATA lv_b TYPE i.
+    DATA lv_c TYPE i.
+    DATA lv_d TYPE i.
+    DATA lv_e TYPE i.
+    DATA lv_f TYPE i.
+    lv_a = 1.
+    lv_b = 2.
+    lv_c = 3.
+    lv_d = 4.
+    lv_e = 5.
+    lv_f = 6.
+  ENDMETHOD.
+
+  METHOD test_clean_code.
+    DATA lv_a TYPE i.
+    DATA lv_b TYPE i.
+    lv_a = 1.
+    lv_b = 2.
+  ENDMETHOD.
+ENDCLASS.

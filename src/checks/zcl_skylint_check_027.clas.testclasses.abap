@@ -30,3 +30,34 @@ CLASS ltcl_check_027 IMPLEMENTATION.
         iv_class_definition = abap_true ).
   ENDMETHOD.
 ENDCLASS.
+
+*"* --- Local Test Fixture Class ---
+CLASS lcl_mutable DEFINITION.
+  PUBLIC SECTION.
+    DATA mv_attr TYPE i.
+ENDCLASS.
+CLASS lcl_mutable IMPLEMENTATION.
+ENDCLASS.
+
+CLASS lcl_clean DEFINITION.
+  PUBLIC SECTION.
+    DATA mv_attr TYPE i READ-ONLY.
+ENDCLASS.
+CLASS lcl_clean IMPLEMENTATION.
+ENDCLASS.
+
+CLASS lcl_test_code DEFINITION FINAL.
+  PUBLIC SECTION.
+    METHODS test_with_finding.
+    METHODS test_clean_code.
+ENDCLASS.
+
+CLASS lcl_test_code IMPLEMENTATION.
+  METHOD test_with_finding.
+    RETURN.
+  ENDMETHOD.
+
+  METHOD test_clean_code.
+    RETURN.
+  ENDMETHOD.
+ENDCLASS.

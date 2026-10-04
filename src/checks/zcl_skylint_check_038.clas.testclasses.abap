@@ -21,3 +21,24 @@ CLASS ltcl_check_038 IMPLEMENTATION.
                                                it_source = VALUE #( ( `ls_dst = CORRESPONDING #( ls_src ).` ) ) ).
   ENDMETHOD.
 ENDCLASS.
+
+*"* --- Local Test Fixture Class ---
+CLASS lcl_test_code DEFINITION FINAL.
+  PUBLIC SECTION.
+    METHODS test_with_finding.
+    METHODS test_clean_code.
+ENDCLASS.
+
+CLASS lcl_test_code IMPLEMENTATION.
+  METHOD test_with_finding.
+    DATA: BEGIN OF ls_src, a TYPE i, END OF ls_src.
+    DATA: BEGIN OF ls_dst, a TYPE i, END OF ls_dst.
+    MOVE-CORRESPONDING ls_src TO ls_dst.
+  ENDMETHOD.
+
+  METHOD test_clean_code.
+    DATA: BEGIN OF ls_src, a TYPE i, END OF ls_src.
+    DATA: BEGIN OF ls_dst, a TYPE i, END OF ls_dst.
+    ls_dst = CORRESPONDING #( ls_src ).
+  ENDMETHOD.
+ENDCLASS.

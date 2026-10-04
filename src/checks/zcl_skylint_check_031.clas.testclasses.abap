@@ -24,3 +24,32 @@ CLASS ltcl_check_031 IMPLEMENTATION.
                              ( `ENDIF.` ) ) ).
   ENDMETHOD.
 ENDCLASS.
+
+*"* --- Local Test Fixture Class ---
+CLASS lcl_test_code DEFINITION FINAL.
+  PUBLIC SECTION.
+    TYPES:
+      BEGIN OF ty_entry,
+        field1 TYPE c LENGTH 10,
+      END OF ty_entry.
+    TYPES tt_entry TYPE STANDARD TABLE OF ty_entry WITH DEFAULT KEY.
+
+    METHODS test_with_finding.
+    METHODS test_clean_code.
+ENDCLASS.
+
+CLASS lcl_test_code IMPLEMENTATION.
+  METHOD test_with_finding.
+    DATA s TYPE tt_entry.
+    DATA r TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
+    SELECT * FROM zskylint_dummy INTO TABLE @r FOR ALL ENTRIES IN s WHERE field1 = s-field1.
+  ENDMETHOD.
+
+  METHOD test_clean_code.
+    DATA s TYPE tt_entry.
+    DATA r TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
+    IF s IS NOT INITIAL.
+      SELECT * FROM zskylint_dummy INTO TABLE @r FOR ALL ENTRIES IN s WHERE field1 = s-field1.
+    ENDIF.
+  ENDMETHOD.
+ENDCLASS.

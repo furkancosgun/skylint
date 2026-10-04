@@ -43,3 +43,22 @@ CLASS ltcl_check_008 IMPLEMENTATION.
                                             iv_quickfix_code  = zcl_skylint_check_008=>c_quickfix_codes-resolve_chain ).
   ENDMETHOD.
 ENDCLASS.
+
+*"* --- Local Test Fixture Class ---
+CLASS lcl_test_code DEFINITION FINAL.
+  PUBLIC SECTION.
+    METHODS test_with_finding.
+    METHODS test_clean_code.
+ENDCLASS.
+
+CLASS lcl_test_code IMPLEMENTATION.
+  METHOD test_with_finding.
+    DATA: lv_a TYPE i,
+          lv_b TYPE i.
+  ENDMETHOD.
+
+  METHOD test_clean_code.
+    DATA lv_a TYPE i.
+    DATA lv_b TYPE i.
+  ENDMETHOD.
+ENDCLASS.

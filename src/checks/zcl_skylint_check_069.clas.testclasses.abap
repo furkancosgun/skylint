@@ -21,3 +21,36 @@ CLASS ltcl_check_069 IMPLEMENTATION.
                                                it_source = VALUE #( ( `METHODS test_something FOR TESTING.` ) ) ).
   ENDMETHOD.
 ENDCLASS.
+
+*"* --- Local Test Fixture Class ---
+CLASS lcl_test_naming DEFINITION FOR TESTING RISK LEVEL HARMLESS DURATION SHORT.
+  PRIVATE SECTION.
+    METHODS bad_name FOR TESTING.
+    METHODS test_clean FOR TESTING.
+ENDCLASS.
+
+CLASS lcl_test_naming IMPLEMENTATION.
+  METHOD bad_name.
+    RETURN.
+  ENDMETHOD.
+
+  METHOD test_clean.
+    RETURN.
+  ENDMETHOD.
+ENDCLASS.
+
+CLASS lcl_test_code DEFINITION FINAL.
+  PUBLIC SECTION.
+    METHODS test_with_finding.
+    METHODS test_clean_code.
+ENDCLASS.
+
+CLASS lcl_test_code IMPLEMENTATION.
+  METHOD test_with_finding.
+    RETURN.
+  ENDMETHOD.
+
+  METHOD test_clean_code.
+    RETURN.
+  ENDMETHOD.
+ENDCLASS.

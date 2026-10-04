@@ -21,3 +21,24 @@ CLASS ltcl_check_011 IMPLEMENTATION.
                                                it_source = VALUE #( ( `READ TABLE lt_tab INTO ls_row INDEX 1.` ) ) ).
   ENDMETHOD.
 ENDCLASS.
+
+*"* --- Local Test Fixture Class ---
+CLASS lcl_test_code DEFINITION FINAL.
+  PUBLIC SECTION.
+    METHODS test_with_finding.
+    METHODS test_clean_code.
+ENDCLASS.
+
+
+CLASS lcl_test_code IMPLEMENTATION.
+  METHOD test_with_finding.
+    DATA lt_tab TYPE string_table.
+    READ TABLE lt_tab TRANSPORTING NO FIELDS.
+  ENDMETHOD.
+
+  METHOD test_clean_code.
+    DATA lt_tab TYPE string_table.
+    DATA ls_row TYPE string.
+    READ TABLE lt_tab INTO ls_row INDEX 1.
+  ENDMETHOD.
+ENDCLASS.

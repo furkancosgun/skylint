@@ -29,3 +29,33 @@ CLASS ltcl_check_019 IMPLEMENTATION.
                                                                     ( `ENDCASE.` ) ) ).
   ENDMETHOD.
 ENDCLASS.
+
+*"* --- Local Test Fixture Class ---
+CLASS lcl_test_code DEFINITION FINAL.
+  PUBLIC SECTION.
+    METHODS test_with_finding.
+    METHODS test_clean_code.
+ENDCLASS.
+
+
+CLASS lcl_test_code IMPLEMENTATION.
+  METHOD test_with_finding.
+    DATA lv_x TYPE i.
+    DATA lv_type TYPE i.
+    CASE lv_type.
+    WHEN 1.
+    lv_x = 1.
+    ENDCASE.
+  ENDMETHOD.
+
+  METHOD test_clean_code.
+    DATA lv_x TYPE i.
+    DATA lv_type TYPE i.
+    CASE lv_type.
+    WHEN 1.
+    lv_x = 1.
+    WHEN 2.
+    lv_x = 2.
+    ENDCASE.
+  ENDMETHOD.
+ENDCLASS.
