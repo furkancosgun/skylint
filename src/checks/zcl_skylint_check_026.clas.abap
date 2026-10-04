@@ -24,11 +24,12 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_026 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Avoid calling static methods via instance arrow (->)'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #( ( code     = c_finding_codes-static_call_via_instance
-                                                                severity = zif_skylint_types=>severities-warning
-                                                                text     = 'Call static method using => instead of ->' ) ) ) ).
+    super->constructor(
+        VALUE #( description       = 'Avoid calling static methods via instance arrow (->)'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #( ( code     = c_finding_codes-static_call_via_instance
+                                                severity = zif_skylint_types=>severities-warning
+                                                text     = 'Call static method using => instead of ->' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

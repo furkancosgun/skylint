@@ -27,11 +27,12 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_037 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Detect TRY without CATCH'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #( ( code     = c_finding_codes-try_without_catch
-                                                                severity = zif_skylint_types=>severities-warning
-                                                                text     = 'TRY block without CATCH is superfluous' ) ) ) ).
+    super->constructor(
+        VALUE #( description       = 'Detect TRY without CATCH'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #( ( code     = c_finding_codes-try_without_catch
+                                                severity = zif_skylint_types=>severities-warning
+                                                text     = 'TRY block without CATCH is superfluous' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
