@@ -1,0 +1,21 @@
+CLASS zcl_skylint_test_031 DEFINITION
+  PUBLIC FINAL
+  CREATE PUBLIC.
+
+  PUBLIC SECTION.
+    METHODS with_finding.
+    METHODS clean_code.
+ENDCLASS.
+
+
+CLASS zcl_skylint_test_031 IMPLEMENTATION.
+  METHOD with_finding.
+    SELECT * FROM t INTO TABLE r FOR ALL ENTRIES IN s WHERE f = s-f.
+  ENDMETHOD.
+
+  METHOD clean_code.
+    IF s IS NOT INITIAL.
+    SELECT * FROM t INTO TABLE r FOR ALL ENTRIES IN s WHERE f = s-f.
+    ENDIF.
+  ENDMETHOD.
+ENDCLASS.

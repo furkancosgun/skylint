@@ -1,0 +1,19 @@
+CLASS zcl_skylint_test_066 DEFINITION
+  PUBLIC FINAL
+  CREATE PUBLIC.
+
+  PUBLIC SECTION.
+    METHODS with_finding.
+    METHODS clean_code.
+ENDCLASS.
+
+
+CLASS zcl_skylint_test_066 IMPLEMENTATION.
+  METHOD with_finding.
+    SELECT * FROM t001 USING CLIENT '100' INTO TABLE lt_tab.
+  ENDMETHOD.
+
+  METHOD clean_code.
+    SELECT * FROM t001 INTO TABLE lt_tab.
+  ENDMETHOD.
+ENDCLASS.

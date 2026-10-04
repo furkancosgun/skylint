@@ -1,0 +1,19 @@
+CLASS zcl_skylint_test_003 DEFINITION
+  PUBLIC FINAL
+  CREATE PUBLIC.
+
+  PUBLIC SECTION.
+    METHODS with_finding.
+    METHODS clean_code.
+ENDCLASS.
+
+
+CLASS zcl_skylint_test_003 IMPLEMENTATION.
+  METHOD with_finding.
+    DATA lt_tab TYPE STANDARD TABLE OF i WITH DEFAULT KEY.
+  ENDMETHOD.
+
+  METHOD clean_code.
+    DATA lt_tab TYPE STANDARD TABLE OF i WITH EMPTY KEY.
+  ENDMETHOD.
+ENDCLASS.

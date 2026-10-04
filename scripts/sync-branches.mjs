@@ -114,13 +114,13 @@ function syncBranch(target, headInfo) {
           config.syntax = { ...(config.syntax || {}), version: 'Cloud' };
           config.global = {
             ...(config.global || {}),
-            noIssues: ['zcl_skylint_atc*']
+            noIssues: ['zcl_skylint_atc*', 'zcl_skylint_test_*']
           };
         } else if (target === 'standard') {
           config.syntax = { ...(config.syntax || {}), version: 'v750' };
           config.global = {
             ...(config.global || {}),
-            noIssues: ['zcl_skylint_sci*']
+            noIssues: ['zcl_skylint_sci*', 'zcl_skylint_test_*']
           };
         }
         fs.writeFileSync(abaplintJsonPath, JSON.stringify(config, null, 2), 'utf8');

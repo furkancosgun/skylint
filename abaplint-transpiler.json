@@ -8,7 +8,8 @@
   ],
   "exclude_filter": [
     "zcl_skylint_sci*",
-    "zcl_skylint_atc*"
+    "zcl_skylint_atc*",
+    "zcl_skylint_test_\\d+"
   ],
   "write_unit_tests": true,
   "write_source_map": true,
