@@ -107,7 +107,6 @@ CLASS zcl_skylint_sci_adapter IMPLEMENTATION.
 
     lt_findings = lint( ls_code_block ).
 
-    uses_checksum = abap_true.
     LOOP AT lt_findings ASSIGNING <ls_finding>.
       CLEAR lv_checksum.
 

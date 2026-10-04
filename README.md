@@ -50,10 +50,6 @@ skylint/
 └── package.json                                  # Build, transpile, lint, and unit test scripts
 ```
 
----         # abaplint validation configuration & rule sets
-└── package.json                                  # Build, transpile, lint, and unit test scripts
-```
-
 ---
 
 ## 📋 Clean ABAP & Cloud Rule Catalog (79 Rules)
@@ -95,22 +91,22 @@ All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 | **031** | [zcl_skylint_check_031](src/checks/zcl_skylint_check_031.clas.abap) | Unsecure FOR ALL ENTRIES (Missing empty itab check) | `FAENOCHECK` | `—` | ✅ Done | — |
 | **032** | [zcl_skylint_check_032](src/checks/zcl_skylint_check_032.clas.abap) | Select performance (Avoid SELECT * and SELECT ... ENDSELECT) | `SELECTSTAR` | `—` | ✅ Done | — |
 | **033** | [zcl_skylint_check_033](src/checks/zcl_skylint_check_033.clas.abap) | Scope of variable (avoid variable leaking outside control blocks) | `SCOPELEAK` | `—` | ✅ Done | — |
-| **034** | [zcl_skylint_check_034](src/checks/zcl_skylint_check_034.clas.abap) | skylint: Detect Identical Self Assignments | `IDENTMOVE` | `—` | ✅ Done | — |
+| **034** | [zcl_skylint_check_034](src/checks/zcl_skylint_check_034.clas.abap) | Detect Identical Self Assignments | `IDENTMOVE` | `—` | ✅ Done | — |
 | **035** | [zcl_skylint_check_035](src/checks/zcl_skylint_check_035.clas.abap) | Enforce fully typed constant declarations | `FULLYTYPED` | `—` | ✅ Done | — |
 | **036** | [zcl_skylint_check_036](src/checks/zcl_skylint_check_036.clas.abap) | Omit parameter name in single parameter method call | `OMITPARM` | `—` | ✅ Done | — |
 | **037** | [zcl_skylint_check_037](src/checks/zcl_skylint_check_037.clas.abap) | Detect TRY without CATCH | `TRYWITHOUTC` | `—` | ✅ Done | — |
-| **038** | [zcl_skylint_check_038](src/checks/zcl_skylint_check_038.clas.abap) | skylint: Prefer CORRESPONDING Expression over MOVE-CORRESPONDING | `PREFER_COR` | `—` | ✅ Done | — |
-| **039** | [zcl_skylint_check_039](src/checks/zcl_skylint_check_039.clas.abap) | skylint: Method Length Limit (excessive statement count) | `METHOD_LEN` | `—` | ✅ Done | — |
-| **040** | [zcl_skylint_check_040](src/checks/zcl_skylint_check_040.clas.abap) | skylint: Nesting Depth Limit (excessive control block nesting) | `NESTING_DP` | `—` | ✅ Done | — |
-| **041** | [zcl_skylint_check_041](src/checks/zcl_skylint_check_041.clas.abap) | skylint: Avoid sy-* System Variable Modification | `SYS_VAR_MD` | `—` | ✅ Done | — |
-| **042** | [zcl_skylint_check_042](src/checks/zcl_skylint_check_042.clas.abap) | skylint: Prefer RETURNING over single EXPORTING | `PREFER_RET` | `—` | ✅ Done | — |
-| **043** | [zcl_skylint_check_043](src/checks/zcl_skylint_check_043.clas.abap) | skylint: Prefer Class-Based Exceptions over Classic EXCEPTIONS | `CLASS_EXC` | `—` | ✅ Done | — |
-| **044** | [zcl_skylint_check_044](src/checks/zcl_skylint_check_044.clas.abap) | skylint: Dangerous / Unmanaged Dynamic Statements | `DANGER_STM` | `—` | ✅ Done | — |
-| **045** | [zcl_skylint_check_045](src/checks/zcl_skylint_check_045.clas.abap) | skylint: Call Transaction Authority Check | `AUTH_CHECK` | `—` | ✅ Done | — |
-| **046** | [zcl_skylint_check_046](src/checks/zcl_skylint_check_046.clas.abap) | skylint: SELECT UP TO 1 ROWS requires ORDER BY | `SELECT_UP` | `—` | ✅ Done | — |
-| **047** | [zcl_skylint_check_047](src/checks/zcl_skylint_check_047.clas.abap) | skylint: Cyclomatic Complexity Threshold | `CYCLO_COMP` | `—` | ✅ Done | — |
-| **048** | [zcl_skylint_check_048](src/checks/zcl_skylint_check_048.clas.abap) | skylint: Prefer FINAL Classes by Default | `NOT_FINAL` | `—` | ✅ Done | — |
-| **049** | [zcl_skylint_check_049](src/checks/zcl_skylint_check_049.clas.abap) | skylint: Avoid RAISE SHORTDUMP (prefer graceful exceptions) | `SHORTDUMP` | `—` | ✅ Done | — |
+| **038** | [zcl_skylint_check_038](src/checks/zcl_skylint_check_038.clas.abap) | Prefer CORRESPONDING Expression over MOVE-CORRESPONDING | `PREFER_COR` | `—` | ✅ Done | — |
+| **039** | [zcl_skylint_check_039](src/checks/zcl_skylint_check_039.clas.abap) | Method Length Limit (excessive statement count) | `METHOD_LEN` | `—` | ✅ Done | — |
+| **040** | [zcl_skylint_check_040](src/checks/zcl_skylint_check_040.clas.abap) | Nesting Depth Limit (excessive control block nesting) | `NESTING_DP` | `—` | ✅ Done | — |
+| **041** | [zcl_skylint_check_041](src/checks/zcl_skylint_check_041.clas.abap) | Avoid sy-* System Variable Modification | `SYS_VAR_MD` | `—` | ✅ Done | — |
+| **042** | [zcl_skylint_check_042](src/checks/zcl_skylint_check_042.clas.abap) | Prefer RETURNING over single EXPORTING | `PREFER_RET` | `—` | ✅ Done | — |
+| **043** | [zcl_skylint_check_043](src/checks/zcl_skylint_check_043.clas.abap) | Prefer Class-Based Exceptions over Classic EXCEPTIONS | `CLASS_EXC` | `—` | ✅ Done | — |
+| **044** | [zcl_skylint_check_044](src/checks/zcl_skylint_check_044.clas.abap) | Dangerous / Unmanaged Dynamic Statements | `DANGER_STM` | `—` | ✅ Done | — |
+| **045** | [zcl_skylint_check_045](src/checks/zcl_skylint_check_045.clas.abap) | Call Transaction Authority Check | `AUTH_CHECK` | `—` | ✅ Done | — |
+| **046** | [zcl_skylint_check_046](src/checks/zcl_skylint_check_046.clas.abap) | SELECT UP TO 1 ROWS requires ORDER BY | `SELECT_UP` | `—` | ✅ Done | — |
+| **047** | [zcl_skylint_check_047](src/checks/zcl_skylint_check_047.clas.abap) | Cyclomatic Complexity Threshold | `CYCLO_COMP` | `—` | ✅ Done | — |
+| **048** | [zcl_skylint_check_048](src/checks/zcl_skylint_check_048.clas.abap) | Prefer FINAL Classes by Default | `NOT_FINAL` | `—` | ✅ Done | — |
+| **049** | [zcl_skylint_check_049](src/checks/zcl_skylint_check_049.clas.abap) | Avoid RAISE SHORTDUMP (prefer graceful exceptions) | `SHORTDUMP` | `—` | ✅ Done | — |
 | **050** | [zcl_skylint_check_050](src/checks/zcl_skylint_check_050.clas.abap) | Avoid magic numbers in code; use named constants | `MAGIC_NUM` | `—` | ✅ Done | — |
 | **051** | [zcl_skylint_check_051](src/checks/zcl_skylint_check_051.clas.abap) | Prefer INSERT ... INTO TABLE over APPEND for table safety | `PREF_INSRT` | `—` | ✅ Done | — |
 | **052** | [zcl_skylint_check_052](src/checks/zcl_skylint_check_052.clas.abap) | Avoid obsolete control statements (ON CHANGE OF, AT NEW, SUM) in LOOP | `OBS_L_CTRL` | `—` | ✅ Done | — |

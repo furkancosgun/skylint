@@ -155,9 +155,9 @@ function extractCheckMetadata(id) {
     ? fs.readFileSync(testclassesFilePath, 'utf8')
     : '';
 
-  // 1. Description
   const descMatch = checkContent.match(/description\s*=\s*'([^']+)'/);
-  const description = descMatch ? descMatch[1].trim() : `Check rule ${id}`;
+  let description = descMatch ? descMatch[1].trim() : `Check rule ${id}`;
+  description = description.replace(/^skylint:\s*/i, '');
 
   // 2. Finding Code
   const codeValMatch = checkContent.match(/c_finding_codes[\s\S]*?VALUE\s*'([A-Za-z0-9_]+)'/);
