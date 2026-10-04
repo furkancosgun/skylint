@@ -16,9 +16,9 @@
     "deps": "git submodule update --init --recursive",
     "check:cloud": "abaplint .abaplint/abap_cloud.json",
     "check:standard": "abaplint .abaplint/abap_standard.json",
-    "sync": "node scripts/sync-branches.mjs all",
-    "sync:cloud": "node scripts/sync-branches.mjs cloud",
-    "sync:standard": "node scripts/sync-branches.mjs standard"
+    "sync": "node scripts/sync-branches.mjs all --push",
+    "sync:cloud": "node scripts/sync-branches.mjs cloud --push",
+    "sync:standard": "node scripts/sync-branches.mjs standard --push"
   },
   "devDependencies": {
     "abap-kit": "latest",
