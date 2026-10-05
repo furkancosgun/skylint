@@ -29,36 +29,3 @@ CLASS ltcl_check_024 IMPLEMENTATION.
                                                                     ( `ENDIF.` ) ) ).
   ENDMETHOD.
 ENDCLASS.
-
-*"* --- Local Test Fixture Class ---
-CLASS lcl_test_code DEFINITION FINAL.
-  PUBLIC SECTION.
-    METHODS test_with_finding.
-    METHODS test_clean_code.
-ENDCLASS.
-
-
-CLASS lcl_test_code IMPLEMENTATION.
-  METHOD test_with_finding.
-    DATA lv_a TYPE i.
-    DATA lv_b TYPE i.
-    DATA lv_flag TYPE abap_bool.
-    IF lv_a = lv_b.
-    lv_flag = abap_true.
-    ELSE.
-    lv_flag = abap_false.
-    ENDIF.
-  ENDMETHOD.
-
-  METHOD test_clean_code.
-    DATA lv_a TYPE i.
-    DATA lv_b TYPE i.
-    DATA lv_x TYPE i.
-    DATA lv_y TYPE i.
-    IF lv_a = lv_b.
-    lv_x = abap_true.
-    ELSE.
-    lv_y = abap_false.
-    ENDIF.
-  ENDMETHOD.
-ENDCLASS.

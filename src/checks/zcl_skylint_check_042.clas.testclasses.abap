@@ -27,32 +27,3 @@ CLASS ltcl_check_042 IMPLEMENTATION.
         iv_class_definition = abap_true ).
   ENDMETHOD.
 ENDCLASS.
-
-*"* --- Local Test Fixture Class ---
-CLASS lcl_test_code DEFINITION FINAL.
-  PUBLIC SECTION.
-    METHODS test_with_finding.
-    METHODS test_clean_code.
-
-  PRIVATE SECTION.
-    METHODS get_value_exporting EXPORTING ev_val TYPE i.
-    METHODS get_value_returning RETURNING VALUE(rv_val) TYPE i.
-ENDCLASS.
-
-CLASS lcl_test_code IMPLEMENTATION.
-  METHOD test_with_finding.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD test_clean_code.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD get_value_exporting.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD get_value_returning.
-    RETURN.
-  ENDMETHOD.
-ENDCLASS.

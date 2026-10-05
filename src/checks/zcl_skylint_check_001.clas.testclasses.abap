@@ -21,25 +21,3 @@ CLASS ltcl_check_001 IMPLEMENTATION.
                                                it_source = VALUE #( ( `lv_cnt = lines( lt_tab ).` ) ) ).
   ENDMETHOD.
 ENDCLASS.
-
-*"* --- Local Test Fixture Class ---
-CLASS lcl_test_code DEFINITION FINAL.
-  PUBLIC SECTION.
-    METHODS test_with_finding.
-    METHODS test_clean_code.
-ENDCLASS.
-
-
-CLASS lcl_test_code IMPLEMENTATION.
-  METHOD test_with_finding.
-    DATA lv_cnt TYPE i.
-    DATA lt_tab TYPE string_table.
-    DESCRIBE TABLE lt_tab LINES lv_cnt.
-  ENDMETHOD.
-
-  METHOD test_clean_code.
-    DATA lv_cnt TYPE i.
-    DATA lt_tab TYPE string_table.
-    lv_cnt = lines( lt_tab ).
-  ENDMETHOD.
-ENDCLASS.

@@ -22,20 +22,3 @@ CLASS ltcl_check_045 IMPLEMENTATION.
         it_source = VALUE #( ( `CALL TRANSACTION 'VA01' WITH AUTHORITY-CHECK OBJECT 'V_VBAK_VKO'.` ) ) ).
   ENDMETHOD.
 ENDCLASS.
-
-*"* --- Local Test Fixture Class ---
-CLASS lcl_test_code DEFINITION FINAL.
-  PUBLIC SECTION.
-    METHODS test_with_finding.
-    METHODS test_clean_code.
-ENDCLASS.
-
-CLASS lcl_test_code IMPLEMENTATION.
-  METHOD test_with_finding.
-    CALL TRANSACTION 'VA01'.
-  ENDMETHOD.
-
-  METHOD test_clean_code.
-    CALL TRANSACTION 'VA01' WITH AUTHORITY-CHECK.
-  ENDMETHOD.
-ENDCLASS.

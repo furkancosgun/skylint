@@ -30,29 +30,3 @@ CLASS ltcl_check_006 IMPLEMENTATION.
         iv_quickfix_code  = zcl_skylint_check_006=>c_quickfix_codes-omit_exporting ).
   ENDMETHOD.
 ENDCLASS.
-
-*"* --- Local Test Fixture Class ---
-CLASS lcl_test_code DEFINITION FINAL.
-  PUBLIC SECTION.
-    METHODS test_with_finding.
-    METHODS test_clean_code.
-    METHODS run IMPORTING iv_in TYPE i OPTIONAL.
-ENDCLASS.
-
-CLASS lcl_test_code IMPLEMENTATION.
-  METHOD run.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD test_with_finding.
-    DATA lo_obj TYPE REF TO lcl_test_code.
-    DATA lv_x TYPE i.
-    lo_obj->run( EXPORTING iv_in = lv_x ).
-  ENDMETHOD.
-
-  METHOD test_clean_code.
-    DATA lo_obj TYPE REF TO lcl_test_code.
-    DATA lv_x TYPE i.
-    lo_obj->run( iv_in = lv_x ).
-  ENDMETHOD.
-ENDCLASS.

@@ -21,26 +21,3 @@ CLASS ltcl_check_026 IMPLEMENTATION.
                                                it_source = VALUE #( ( `cl_useful=>do_work( ).` ) ) ).
   ENDMETHOD.
 ENDCLASS.
-
-*"* --- Local Test Fixture Class ---
-CLASS lcl_test_code DEFINITION FINAL.
-  PUBLIC SECTION.
-    CLASS-METHODS do_work.
-    METHODS test_with_finding.
-    METHODS test_clean_code.
-ENDCLASS.
-
-CLASS lcl_test_code IMPLEMENTATION.
-  METHOD do_work.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD test_with_finding.
-    DATA lo_obj TYPE REF TO lcl_test_code.
-    lo_obj->do_work( ).
-  ENDMETHOD.
-
-  METHOD test_clean_code.
-    lcl_test_code=>do_work( ).
-  ENDMETHOD.
-ENDCLASS.

@@ -21,25 +21,3 @@ CLASS ltcl_check_028 IMPLEMENTATION.
                                                it_source = VALUE #( ( `lv_b = lv_a.` ) ) ).
   ENDMETHOD.
 ENDCLASS.
-
-*"* --- Local Test Fixture Class ---
-CLASS lcl_test_code DEFINITION FINAL.
-  PUBLIC SECTION.
-    METHODS test_with_finding.
-    METHODS test_clean_code.
-ENDCLASS.
-
-
-CLASS lcl_test_code IMPLEMENTATION.
-  METHOD test_with_finding.
-    DATA lv_a TYPE i.
-    DATA lv_b TYPE i.
-    MOVE lv_a TO lv_b.
-  ENDMETHOD.
-
-  METHOD test_clean_code.
-    DATA lv_a TYPE i.
-    DATA lv_b TYPE i.
-    lv_b = lv_a.
-  ENDMETHOD.
-ENDCLASS.

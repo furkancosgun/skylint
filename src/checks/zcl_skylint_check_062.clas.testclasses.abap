@@ -25,27 +25,3 @@ CLASS ltcl_check_062 IMPLEMENTATION.
                                                                     ( `ENDTRY.` ) ) ).
   ENDMETHOD.
 ENDCLASS.
-
-*"* --- Local Test Fixture Class ---
-CLASS lcl_test_code DEFINITION FINAL.
-  PUBLIC SECTION.
-    METHODS test_with_finding.
-    METHODS test_clean_code.
-ENDCLASS.
-
-CLASS lcl_test_code IMPLEMENTATION.
-  METHOD test_with_finding.
-    TRY.
-      TRY.
-      CATCH cx_root.
-      ENDTRY.
-    CATCH cx_root.
-    ENDTRY.
-  ENDMETHOD.
-
-  METHOD test_clean_code.
-    TRY.
-    CATCH cx_root.
-    ENDTRY.
-  ENDMETHOD.
-ENDCLASS.

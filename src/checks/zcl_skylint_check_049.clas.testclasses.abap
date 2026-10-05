@@ -21,20 +21,3 @@ CLASS ltcl_check_049 IMPLEMENTATION.
                                                it_source = VALUE #( ( `RAISE EXCEPTION TYPE cx_demo.` ) ) ).
   ENDMETHOD.
 ENDCLASS.
-
-*"* --- Local Test Fixture Class ---
-CLASS lcl_test_code DEFINITION FINAL.
-  PUBLIC SECTION.
-    METHODS test_with_finding.
-    METHODS test_clean_code.
-ENDCLASS.
-
-CLASS lcl_test_code IMPLEMENTATION.
-  METHOD test_with_finding.
-    RAISE SHORTDUMP TYPE cx_sy_zerodivide.
-  ENDMETHOD.
-
-  METHOD test_clean_code.
-    RAISE EXCEPTION TYPE cx_sy_zerodivide.
-  ENDMETHOD.
-ENDCLASS.

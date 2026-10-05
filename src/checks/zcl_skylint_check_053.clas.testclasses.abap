@@ -21,21 +21,3 @@ CLASS ltcl_check_053 IMPLEMENTATION.
                                                it_source = VALUE #( ( `DATA lv_x TYPE mara-matnr.` ) ) ).
   ENDMETHOD.
 ENDCLASS.
-
-*"* --- Local Test Fixture Class ---
-CLASS lcl_test_code DEFINITION FINAL.
-  PUBLIC SECTION.
-    METHODS test_with_finding.
-    METHODS test_clean_code.
-ENDCLASS.
-
-CLASS lcl_test_code IMPLEMENTATION.
-  METHOD test_with_finding.
-    DATA lv_orig TYPE i.
-    DATA lv_x LIKE lv_orig.
-  ENDMETHOD.
-
-  METHOD test_clean_code.
-    DATA lv_y TYPE i.
-  ENDMETHOD.
-ENDCLASS.

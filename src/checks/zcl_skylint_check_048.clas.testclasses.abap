@@ -23,30 +23,3 @@ CLASS ltcl_check_048 IMPLEMENTATION.
                                                iv_class_definition = abap_true ).
   ENDMETHOD.
 ENDCLASS.
-
-*"* --- Local Test Fixture Class ---
-CLASS lcl_not_final DEFINITION.
-ENDCLASS.
-CLASS lcl_not_final IMPLEMENTATION.
-ENDCLASS.
-
-CLASS lcl_clean DEFINITION FINAL.
-ENDCLASS.
-CLASS lcl_clean IMPLEMENTATION.
-ENDCLASS.
-
-CLASS lcl_test_code DEFINITION FINAL.
-  PUBLIC SECTION.
-    METHODS test_with_finding.
-    METHODS test_clean_code.
-ENDCLASS.
-
-CLASS lcl_test_code IMPLEMENTATION.
-  METHOD test_with_finding.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD test_clean_code.
-    RETURN.
-  ENDMETHOD.
-ENDCLASS.

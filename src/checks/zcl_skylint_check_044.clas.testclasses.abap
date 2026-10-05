@@ -21,26 +21,3 @@ CLASS ltcl_check_044 IMPLEMENTATION.
                                                it_source = VALUE #( ( `CHECK lv_flag = abap_true.` ) ) ).
   ENDMETHOD.
 ENDCLASS.
-
-*"* --- Local Test Fixture Class ---
-CLASS lcl_test_code DEFINITION FINAL.
-  PUBLIC SECTION.
-    METHODS test_with_finding.
-    METHODS test_clean_code.
-ENDCLASS.
-
-
-CLASS lcl_test_code IMPLEMENTATION.
-  METHOD test_with_finding.
-    DATA lv_msg TYPE string.
-    DATA lv_lin TYPE i.
-    DATA lv_wrd TYPE string.
-    DATA lt_prog TYPE string_table.
-    SYNTAX-CHECK FOR lt_prog MESSAGE lv_msg LINE lv_lin WORD lv_wrd.
-  ENDMETHOD.
-
-  METHOD test_clean_code.
-    DATA lv_flag TYPE abap_bool.
-    CHECK lv_flag = abap_true.
-  ENDMETHOD.
-ENDCLASS.

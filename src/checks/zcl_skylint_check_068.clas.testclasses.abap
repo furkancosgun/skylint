@@ -25,33 +25,3 @@ CLASS ltcl_check_068 IMPLEMENTATION.
                                                                     ( `ENDLOOP.` ) ) ).
   ENDMETHOD.
 ENDCLASS.
-
-*"* --- Local Test Fixture Class ---
-CLASS lcl_test_code DEFINITION FINAL.
-  PUBLIC SECTION.
-    TYPES:
-      BEGIN OF ty_row,
-        field1 TYPE i,
-      END OF ty_row.
-
-    METHODS test_with_finding.
-    METHODS test_clean_code.
-ENDCLASS.
-
-CLASS lcl_test_code IMPLEMENTATION.
-  METHOD test_with_finding.
-    DATA lt_tab TYPE STANDARD TABLE OF ty_row WITH DEFAULT KEY.
-    DATA ls_row TYPE ty_row.
-    LOOP AT lt_tab INTO ls_row.
-      MODIFY lt_tab FROM ls_row.
-    ENDLOOP.
-  ENDMETHOD.
-
-  METHOD test_clean_code.
-    DATA lt_tab TYPE STANDARD TABLE OF ty_row WITH DEFAULT KEY.
-    DATA ls_row TYPE ty_row.
-    LOOP AT lt_tab INTO ls_row.
-      MODIFY lt_tab FROM ls_row TRANSPORTING field1.
-    ENDLOOP.
-  ENDMETHOD.
-ENDCLASS.

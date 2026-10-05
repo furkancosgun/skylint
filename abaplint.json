@@ -3,9 +3,9 @@
     "files": "/src/**/*.*",
     "exclude": [],
     "noIssues": [
-      ".*testclasses.*",
       "zcl_skylint_sci*",
-      "zcl_skylint_atc*"
+      "zcl_skylint_atc*",
+      "zcl_skylint_test_*"
     ],
     "skipGeneratedBOPFInterfaces": false,
     "skipGeneratedFunctionGroups": false,
@@ -60,8 +60,7 @@
       "allowed": [
         "DEVC",
         "INTF",
-        "CLAS",
-        "TABL"
+        "CLAS"
       ]
     },
     "ambiguous_statement": {

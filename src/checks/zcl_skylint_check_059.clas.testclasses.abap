@@ -29,28 +29,3 @@ CLASS ltcl_check_059 IMPLEMENTATION.
         iv_class_definition = abap_true ).
   ENDMETHOD.
 ENDCLASS.
-
-*"* --- Local Test Fixture Class ---
-INTERFACE lif_test.
-  DATA mv_state TYPE i.
-ENDINTERFACE.
-
-INTERFACE lif_clean.
-  CONSTANTS c_version TYPE i VALUE 1.
-ENDINTERFACE.
-
-CLASS lcl_test_code DEFINITION FINAL.
-  PUBLIC SECTION.
-    METHODS test_with_finding.
-    METHODS test_clean_code.
-ENDCLASS.
-
-CLASS lcl_test_code IMPLEMENTATION.
-  METHOD test_with_finding.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD test_clean_code.
-    RETURN.
-  ENDMETHOD.
-ENDCLASS.

@@ -27,32 +27,3 @@ CLASS ltcl_check_056 IMPLEMENTATION.
         iv_class_definition = abap_true ).
   ENDMETHOD.
 ENDCLASS.
-
-*"* --- Local Test Fixture Class ---
-CLASS lcl_test_code DEFINITION FINAL.
-  PUBLIC SECTION.
-    METHODS test_with_finding.
-    METHODS test_clean_code.
-
-  PRIVATE SECTION.
-    METHODS get_status RETURNING VALUE(rv_flag) TYPE abap_bool.
-    METHODS is_valid RETURNING VALUE(rv_flag) TYPE abap_bool.
-ENDCLASS.
-
-CLASS lcl_test_code IMPLEMENTATION.
-  METHOD test_with_finding.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD test_clean_code.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD get_status.
-    rv_flag = abap_true.
-  ENDMETHOD.
-
-  METHOD is_valid.
-    rv_flag = abap_true.
-  ENDMETHOD.
-ENDCLASS.

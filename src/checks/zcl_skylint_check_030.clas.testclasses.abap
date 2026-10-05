@@ -24,27 +24,3 @@ CLASS ltcl_check_030 IMPLEMENTATION.
         it_source = VALUE #( ( `SELECT SINGLE * FROM t001 INTO @ls_row WHERE field = @ls_key.` ) ) ).
   ENDMETHOD.
 ENDCLASS.
-
-*"* --- Local Test Fixture Class ---
-CLASS lcl_test_code DEFINITION FINAL.
-  PUBLIC SECTION.
-    METHODS test_with_finding.
-    METHODS test_clean_code.
-ENDCLASS.
-
-CLASS lcl_test_code IMPLEMENTATION.
-  METHOD test_with_finding.
-    DATA lt_tab TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
-    DATA ls_row TYPE zskylint_dummy.
-    DATA ls_key TYPE string.
-    LOOP AT lt_tab INTO ls_row.
-      SELECT SINGLE * FROM zskylint_dummy INTO @ls_row WHERE field1 = @ls_key.
-    ENDLOOP.
-  ENDMETHOD.
-
-  METHOD test_clean_code.
-    DATA ls_row TYPE zskylint_dummy.
-    DATA ls_key TYPE string.
-    SELECT SINGLE * FROM zskylint_dummy INTO @ls_row WHERE field1 = @ls_key.
-  ENDMETHOD.
-ENDCLASS.

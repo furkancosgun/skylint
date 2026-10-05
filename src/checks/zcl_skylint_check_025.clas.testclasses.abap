@@ -22,31 +22,3 @@ CLASS ltcl_check_025 IMPLEMENTATION.
         it_source = VALUE #( ( `CALL METHOD lo_obj->run EXPORTING iv_in = lv_x.` ) ) ).
   ENDMETHOD.
 ENDCLASS.
-
-*"* --- Local Test Fixture Class ---
-CLASS lcl_test_code DEFINITION FINAL.
-  PUBLIC SECTION.
-    METHODS test_with_finding.
-    METHODS test_clean_code.
-    METHODS run
-      IMPORTING iv_in TYPE i OPTIONAL
-      RETURNING VALUE(rv_val) TYPE i.
-ENDCLASS.
-
-CLASS lcl_test_code IMPLEMENTATION.
-  METHOD run.
-    rv_val = iv_in.
-  ENDMETHOD.
-
-  METHOD test_with_finding.
-    DATA lo_obj TYPE REF TO lcl_test_code.
-    DATA lv_x TYPE i.
-    CALL METHOD lo_obj->run RECEIVING rv_val = lv_x.
-  ENDMETHOD.
-
-  METHOD test_clean_code.
-    DATA lo_obj TYPE REF TO lcl_test_code.
-    DATA lv_x TYPE i.
-    CALL METHOD lo_obj->run EXPORTING iv_in = lv_x.
-  ENDMETHOD.
-ENDCLASS.

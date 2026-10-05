@@ -21,25 +21,3 @@ CLASS ltcl_check_051 IMPLEMENTATION.
                                                it_source = VALUE #( ( `INSERT ls_row INTO TABLE lt_tab.` ) ) ).
   ENDMETHOD.
 ENDCLASS.
-
-*"* --- Local Test Fixture Class ---
-CLASS lcl_test_code DEFINITION FINAL.
-  PUBLIC SECTION.
-    METHODS test_with_finding.
-    METHODS test_clean_code.
-ENDCLASS.
-
-
-CLASS lcl_test_code IMPLEMENTATION.
-  METHOD test_with_finding.
-    DATA lt_tab TYPE string_table.
-    DATA ls_row TYPE string.
-    APPEND ls_row TO lt_tab.
-  ENDMETHOD.
-
-  METHOD test_clean_code.
-    DATA lt_tab TYPE string_table.
-    DATA ls_row TYPE string.
-    INSERT ls_row INTO TABLE lt_tab.
-  ENDMETHOD.
-ENDCLASS.

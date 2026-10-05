@@ -21,32 +21,3 @@ CLASS ltcl_check_079 IMPLEMENTATION.
                                                it_source = VALUE #( ( `METHODS meth IMPORTING iv_param TYPE i.` ) ) ).
   ENDMETHOD.
 ENDCLASS.
-
-*"* --- Local Test Fixture Class ---
-CLASS lcl_test_code DEFINITION FINAL.
-  PUBLIC SECTION.
-    METHODS test_with_finding.
-    METHODS test_clean_code.
-
-  PRIVATE SECTION.
-    METHODS meth_escaped IMPORTING !iv_param TYPE i.
-    METHODS meth_clean IMPORTING iv_param TYPE i.
-ENDCLASS.
-
-CLASS lcl_test_code IMPLEMENTATION.
-  METHOD test_with_finding.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD test_clean_code.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD meth_escaped.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD meth_clean.
-    RETURN.
-  ENDMETHOD.
-ENDCLASS.

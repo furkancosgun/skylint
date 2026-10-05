@@ -23,23 +23,3 @@ CLASS ltcl_check_078 IMPLEMENTATION.
                                                                     ( `DATA lv_x TYPE i.` ) ) ).
   ENDMETHOD.
 ENDCLASS.
-
-*"* --- Local Test Fixture Class ---
-CLASS lcl_test_code DEFINITION FINAL.
-  PUBLIC SECTION.
-    METHODS test_with_finding.
-    METHODS test_clean_code.
-ENDCLASS.
-
-
-CLASS lcl_test_code IMPLEMENTATION.
-  METHOD test_with_finding.
-    DATA lv_x TYPE i.
-    TYPES ty_t TYPE i.
-  ENDMETHOD.
-
-  METHOD test_clean_code.
-    TYPES ty_t TYPE i.
-    DATA lv_x TYPE i.
-  ENDMETHOD.
-ENDCLASS.
