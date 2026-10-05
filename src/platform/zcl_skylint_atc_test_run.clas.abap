@@ -5,7 +5,7 @@ CLASS zcl_skylint_atc_test_run DEFINITION
   PUBLIC SECTION.
     METHODS execute
       IMPORTING io_check    TYPE REF TO zcl_skylint_check_base
-                is_object   TYPE zif_skylint_types=>ty_object
+                iv_class    TYPE string
                 it_expected TYPE zif_skylint_types=>ty_test_expecteds
       RAISING   cx_static_check.
 ENDCLASS.
@@ -17,28 +17,18 @@ CLASS zcl_skylint_atc_test_run IMPLEMENTATION.
     DATA lt_atc_expected TYPE cl_ci_atc_unit_asserter=>ty_expected_findings.
     DATA ls_finding      TYPE cl_ci_atc_unit_asserter=>ty_expected_finding.
     DATA ls_exp          TYPE zif_skylint_types=>ty_test_expected.
-    DATA lo_check        TYPE REF TO if_ci_atc_check.
-
-    lo_check ?= io_check.
 
     LOOP AT it_expected INTO ls_exp WHERE code IS NOT INITIAL.
-      CLEAR ls_finding.
       ls_finding-code = ls_exp-code.
-      IF ls_exp-method IS NOT INITIAL.
-        ls_finding-location-object = cl_ci_atc_unit_driver=>get_method_object(
-            VALUE #( class  = is_object-name
-                     method = ls_exp-method ) ).
-      ELSE.
-        ls_finding-location-object = VALUE #( type = is_object-type
-                                              name = is_object-name ).
-      ENDIF.
+      ls_finding-location-object = VALUE #( type = 'CLAS'
+                                            name = iv_class ).
       INSERT ls_finding INTO TABLE lt_atc_expected.
     ENDLOOP.
 
     lo_asserter = cl_ci_atc_unit_driver=>create_asserter( ).
     lo_asserter->check_and_assert(
-        check             = lo_check
-        object            = VALUE #( type = is_object-type name = is_object-name )
+        check             = io_check
+        object            = VALUE #( type = 'CLAS' name = iv_class )
         expected_findings = lt_atc_expected
         asserter_config   = VALUE #( quickfixes = abap_false ) ).
   ENDMETHOD.

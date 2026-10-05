@@ -6,7 +6,7 @@ CLASS zcl_skylint_test_runner DEFINITION
   PUBLIC SECTION.
     CLASS-METHODS run
       IMPORTING io_check    TYPE REF TO zcl_skylint_check_base
-                is_object   TYPE zif_skylint_types=>ty_object
+                iv_class    TYPE string
                 it_expected TYPE zif_skylint_types=>ty_test_expecteds
       RAISING   cx_static_check.
 ENDCLASS.
@@ -17,7 +17,7 @@ CLASS zcl_skylint_test_runner IMPLEMENTATION.
     DATA lo_runner TYPE REF TO zcl_skylint_test_runner.
     CREATE OBJECT lo_runner.
     lo_runner->execute( io_check    = io_check
-                        is_object   = is_object
+                        iv_class    = iv_class
                         it_expected = it_expected ).
   ENDMETHOD.
 ENDCLASS.

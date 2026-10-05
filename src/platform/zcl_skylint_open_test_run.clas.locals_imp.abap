@@ -1004,7 +1004,7 @@ CLASS lcl_code_block_builder IMPLEMENTATION.
     IF iv_object_name IS NOT INITIAL.
       rs_code_block-object_name = iv_object_name.
     ELSE.
-      rs_code_block-object_name = zcl_skylint_test_runner=>c_test_class.
+      rs_code_block-object_name = 'ZSKYLINT_TEST'.
     ENDIF.
     IF iv_class_definition = abap_true.
       rs_code_block-block_kind = zif_skylint_types=>block_kinds-class_definition.

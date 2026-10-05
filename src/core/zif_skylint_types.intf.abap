@@ -17,12 +17,6 @@ INTERFACE zif_skylint_types
     END OF ty_position.
 
   TYPES:
-    BEGIN OF ty_object,
-      type TYPE ty_object_type,
-      name TYPE ty_object_name,
-    END OF ty_object.
-
-  TYPES:
     BEGIN OF ty_test_expected,
       method TYPE string,
       code   TYPE ty_finding_code,

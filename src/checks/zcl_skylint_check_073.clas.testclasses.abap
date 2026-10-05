@@ -10,8 +10,7 @@ CLASS ltcl_check_073 IMPLEMENTATION.
   METHOD test_check.
     zcl_skylint_test_runner=>run(
         io_check    = NEW zcl_skylint_check_073( )
-        is_object   = VALUE #( type = zif_skylint_types=>object_types-class
-                               name = 'ZCL_SKYLINT_TEST_073' )
+        iv_class    = 'ZCL_SKYLINT_TEST_073'
         it_expected = VALUE #(
             ( method = 'TEST_001' code = zcl_skylint_check_073=>c_finding_codes-calc_assign )
             ( method = 'TEST_002' )
