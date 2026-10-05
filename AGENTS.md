@@ -12,7 +12,7 @@ This document outlines the mandatory engineering guidelines, architectural desig
    - The `main` branch is 100% portable and executable via Open-ABAP transpiler in Node.js, SAP NetWeaver 7.40+, S/4HANA On-Premise, and SAP BTP ABAP Environment.
 
 2. **Multi-Platform Branch Architecture:**
-   - **`main`**: Pure check domain logic + universal AST engine + in-memory test runner (`zcl_skylint_test_util`). Zero external platform dependencies.
+   - **`main`**: Pure check domain logic + universal AST engine + in-memory test runner (`zcl_skylint_test_runner`). Zero external platform dependencies.
    - **`cloud`**: Native SAP ATC Cloud adapter branch. Implements `if_ci_atc_check` and translates `if_ci_atc_source_code_provider` procedures into `zif_skylint_types` structures for SAP BTP and S/4HANA Public Cloud.
    - **`standard`**: Classic SAP Code Inspector adapter branch. Integrates with `CL_CI_TEST_SCAN` and `CL_CI_TEST_ROOT` for classic SAP NetWeaver 7.40+ and S/4HANA Private Cloud.
 
@@ -72,7 +72,7 @@ For procedure inspection and unit testing:
 - Satır numaraları (line numbers) metot başlığına göre bağıl (relative) olarak hesaplanır:
   - Line 1: `METHOD <method_name>.`
   - Line 2: First executable line inside the method body.
-- When writing unit test assertions (`it_expected`), **always count line numbers starting from 1 at the `METHOD` statement** (or use `zcl_skylint_test_util=>assert_findings` where Line 2 is the first body statement).
+- When writing unit test assertions (`it_expected`), **always count line numbers starting from 1 at the `METHOD` statement** (or use `zcl_skylint_test_runner=>assert_findings` where Line 2 is the first body statement).
 
 ### 6. Pseudo-Comments & Pragmas
 - Comments containing `"#EC <CODE>"` or pragmas `##<CODE>` are automatically attached to `is_statement-pseudo_comments`.
@@ -302,7 +302,7 @@ Always ensure `<WITH_UNIT_TESTS>X</WITH_UNIT_TESTS>` is present:
 ```
 
 ### 3. In-Memory Unit Test Suite (`src/checks/zcl_skylint_check_XXX.clas.testclasses.abap`)
-Use `zcl_skylint_test_util` to run and assert tests with clean, readable, inline ABAP code snippets:
+Use `zcl_skylint_test_runner` to run and assert tests with clean, readable, inline ABAP code snippets:
 
 ```abap
 CLASS ltcl_check_XXX DEFINITION FINAL
@@ -316,7 +316,7 @@ ENDCLASS.
 
 CLASS ltcl_check_XXX IMPLEMENTATION.
   METHOD test_finding.
-    zcl_skylint_test_util=>assert_findings(
+    zcl_skylint_test_runner=>assert_findings(
         io_check    = NEW zcl_skylint_check_XXX( )
         it_source   = VALUE #( ( `NON_COMPLIANT_STATEMENT.` ) )
         it_expected = VALUE #( ( line = 2
@@ -324,7 +324,7 @@ CLASS ltcl_check_XXX IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_clean.
-    zcl_skylint_test_util=>assert_no_findings(
+    zcl_skylint_test_runner=>assert_no_findings(
         io_check  = NEW zcl_skylint_check_XXX( )
         it_source = VALUE #( ( `COMPLIANT_STATEMENT.` ) ) ).
   ENDMETHOD.
@@ -365,7 +365,7 @@ When automated code replacement or removal is appropriate, use the QuickFix API:
 
 3. **Verify QuickFix Transformation in Unit Tests:**
    ```abap
-   zcl_skylint_test_util=>assert_quickfix(
+   zcl_skylint_test_runner=>assert_quickfix(
        io_check          = NEW zcl_skylint_check_XXX( )
        it_bad_source     = VALUE #( ( `NON_COMPLIANT_STATEMENT.` ) )
        it_expected_fixed = VALUE #( ( `NEW_REPLACEMENT_STATEMENT.` ) )
@@ -405,7 +405,7 @@ Follow this exact procedure when adding or modifying check rules:
 1. **Create the Check Class & Files:**
    - Create `src/checks/zcl_skylint_check_XXX.clas.abap` inheriting from `zcl_skylint_check_base`.
    - Create `src/checks/zcl_skylint_check_XXX.clas.xml` with `<WITH_UNIT_TESTS>X</WITH_UNIT_TESTS>`.
-   - Create `src/checks/zcl_skylint_check_XXX.clas.testclasses.abap` using `zcl_skylint_test_util`.
+   - Create `src/checks/zcl_skylint_check_XXX.clas.testclasses.abap` using `zcl_skylint_test_runner`.
 
 2. **Implement Inspection Logic:**
    - Adhere to the Zero Magic Index and Compiler References standards.

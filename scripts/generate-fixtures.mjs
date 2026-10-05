@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { execSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -367,22 +368,33 @@ CLASS ${cls} IMPLEMENTATION.
   ENDMETHOD.
 ENDCLASS.`,
 
-  '029': (cls) => `CLASS ${cls} DEFINITION
+  '029': (cls) => `CLASS lcl_many_params DEFINITION.
+  PUBLIC SECTION.
+    METHODS run IMPORTING a TYPE i b TYPE i c TYPE i d TYPE i e TYPE i f TYPE i g TYPE i h TYPE i j TYPE i.
+ENDCLASS.
+CLASS lcl_many_params IMPLEMENTATION.
+  METHOD run.
+    RETURN.
+  ENDMETHOD.
+ENDCLASS.
+
+CLASS lcl_clean DEFINITION.
+  PUBLIC SECTION.
+    METHODS run IMPORTING a TYPE i b TYPE i.
+ENDCLASS.
+CLASS lcl_clean IMPLEMENTATION.
+  METHOD run.
+    RETURN.
+  ENDMETHOD.
+ENDCLASS.
+
+CLASS ${cls} DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
   PUBLIC SECTION.
     METHODS test_001.
     METHODS test_002.
-
-  PRIVATE SECTION.
-    METHODS run_with_many_params
-      IMPORTING
-        a TYPE i b TYPE i c TYPE i d TYPE i
-        e TYPE i f TYPE i g TYPE i h TYPE i j TYPE i.
-    METHODS run_clean
-      IMPORTING
-        a TYPE i b TYPE i.
 ENDCLASS.
 
 CLASS ${cls} IMPLEMENTATION.
@@ -391,14 +403,6 @@ CLASS ${cls} IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_002.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD run_with_many_params.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD run_clean.
     RETURN.
   ENDMETHOD.
 ENDCLASS.`,
@@ -477,7 +481,7 @@ CLASS ${cls} IMPLEMENTATION.
 
   METHOD test_002.
     DATA lt_tab TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
-    SELECT * FROM zskylint_dummy INTO TABLE @lt_tab.
+    SELECT field1 FROM zskylint_dummy INTO TABLE @lt_tab.
   ENDMETHOD.
 ENDCLASS.`,
 
@@ -532,17 +536,33 @@ CLASS ${cls} IMPLEMENTATION.
   ENDMETHOD.
 ENDCLASS.`,
 
-  '042': (cls) => `CLASS ${cls} DEFINITION
+  '042': (cls) => `CLASS lcl_bad DEFINITION.
+  PUBLIC SECTION.
+    METHODS get_val EXPORTING ev_val TYPE i.
+ENDCLASS.
+CLASS lcl_bad IMPLEMENTATION.
+  METHOD get_val.
+    RETURN.
+  ENDMETHOD.
+ENDCLASS.
+
+CLASS lcl_clean DEFINITION.
+  PUBLIC SECTION.
+    METHODS get_val RETURNING VALUE(rv_val) TYPE i.
+ENDCLASS.
+CLASS lcl_clean IMPLEMENTATION.
+  METHOD get_val.
+    RETURN.
+  ENDMETHOD.
+ENDCLASS.
+
+CLASS ${cls} DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
   PUBLIC SECTION.
     METHODS test_001.
     METHODS test_002.
-
-  PRIVATE SECTION.
-    METHODS get_value_exporting EXPORTING ev_val TYPE i.
-    METHODS get_value_returning RETURNING VALUE(rv_val) TYPE i.
 ENDCLASS.
 
 CLASS ${cls} IMPLEMENTATION.
@@ -551,29 +571,37 @@ CLASS ${cls} IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_002.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD get_value_exporting.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD get_value_returning.
     RETURN.
   ENDMETHOD.
 ENDCLASS.`,
 
-  '043': (cls) => `CLASS ${cls} DEFINITION
+  '043': (cls) => `CLASS lcl_bad DEFINITION.
+  PUBLIC SECTION.
+    METHODS get_val EXCEPTIONS not_found.
+ENDCLASS.
+CLASS lcl_bad IMPLEMENTATION.
+  METHOD get_val.
+    RETURN.
+  ENDMETHOD.
+ENDCLASS.
+
+CLASS lcl_clean DEFINITION.
+  PUBLIC SECTION.
+    METHODS get_val RAISING cx_static_check.
+ENDCLASS.
+CLASS lcl_clean IMPLEMENTATION.
+  METHOD get_val.
+    RETURN.
+  ENDMETHOD.
+ENDCLASS.
+
+CLASS ${cls} DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
   PUBLIC SECTION.
     METHODS test_001.
     METHODS test_002.
-
-  PRIVATE SECTION.
-    METHODS get_data_classic EXCEPTIONS not_found.
-    METHODS get_data_clean RAISING cx_static_check.
 ENDCLASS.
 
 CLASS ${cls} IMPLEMENTATION.
@@ -582,14 +610,6 @@ CLASS ${cls} IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_002.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD get_data_classic.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD get_data_clean.
     RETURN.
   ENDMETHOD.
 ENDCLASS.`,
@@ -808,17 +828,33 @@ CLASS ${cls} IMPLEMENTATION.
   ENDMETHOD.
 ENDCLASS.`,
 
-  '056': (cls) => `CLASS ${cls} DEFINITION
+  '056': (cls) => `CLASS lcl_bad DEFINITION.
+  PUBLIC SECTION.
+    METHODS get_status RETURNING VALUE(rv_flag) TYPE abap_bool.
+ENDCLASS.
+CLASS lcl_bad IMPLEMENTATION.
+  METHOD get_status.
+    rv_flag = abap_true.
+  ENDMETHOD.
+ENDCLASS.
+
+CLASS lcl_clean DEFINITION.
+  PUBLIC SECTION.
+    METHODS is_valid RETURNING VALUE(rv_flag) TYPE abap_bool.
+ENDCLASS.
+CLASS lcl_clean IMPLEMENTATION.
+  METHOD is_valid.
+    rv_flag = abap_true.
+  ENDMETHOD.
+ENDCLASS.
+
+CLASS ${cls} DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
   PUBLIC SECTION.
     METHODS test_001.
     METHODS test_002.
-
-  PRIVATE SECTION.
-    METHODS get_status RETURNING VALUE(rv_flag) TYPE abap_bool.
-    METHODS is_valid RETURNING VALUE(rv_flag) TYPE abap_bool.
 ENDCLASS.
 
 CLASS ${cls} IMPLEMENTATION.
@@ -828,14 +864,6 @@ CLASS ${cls} IMPLEMENTATION.
 
   METHOD test_002.
     RETURN.
-  ENDMETHOD.
-
-  METHOD get_status.
-    rv_flag = abap_true.
-  ENDMETHOD.
-
-  METHOD is_valid.
-    rv_flag = abap_true.
   ENDMETHOD.
 ENDCLASS.`,
 
@@ -1173,15 +1201,33 @@ CLASS ${cls} IMPLEMENTATION.
   ENDMETHOD.
 ENDCLASS.`,
 
-  '071': (cls) => `CLASS ${cls} DEFINITION
-  PUBLIC
+  '071': (cls) => `CLASS lcl_bad DEFINITION PUBLIC.
+  PUBLIC SECTION.
+    METHODS do_work.
+ENDCLASS.
+CLASS lcl_bad IMPLEMENTATION.
+  METHOD do_work.
+    RETURN.
+  ENDMETHOD.
+ENDCLASS.
+
+CLASS lcl_clean DEFINITION PUBLIC.
+  PUBLIC SECTION.
+    METHODS do_work FINAL.
+ENDCLASS.
+CLASS lcl_clean IMPLEMENTATION.
+  METHOD do_work.
+    RETURN.
+  ENDMETHOD.
+ENDCLASS.
+
+CLASS ${cls} DEFINITION
+  PUBLIC FINAL
   CREATE PUBLIC.
 
   PUBLIC SECTION.
     METHODS test_001.
     METHODS test_002.
-    METHODS do_work.
-    METHODS do_work_clean FINAL.
 ENDCLASS.
 
 CLASS ${cls} IMPLEMENTATION.
@@ -1190,14 +1236,6 @@ CLASS ${cls} IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_002.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD do_work.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD do_work_clean.
     RETURN.
   ENDMETHOD.
 ENDCLASS.`,
@@ -1238,17 +1276,33 @@ CLASS ${cls} IMPLEMENTATION.
   ENDMETHOD.
 ENDCLASS.`,
 
-  '079': (cls) => `CLASS ${cls} DEFINITION
+  '079': (cls) => `CLASS lcl_bad DEFINITION.
+  PUBLIC SECTION.
+    METHODS meth_escaped IMPORTING !iv_param TYPE i.
+ENDCLASS.
+CLASS lcl_bad IMPLEMENTATION.
+  METHOD meth_escaped.
+    RETURN.
+  ENDMETHOD.
+ENDCLASS.
+
+CLASS lcl_clean DEFINITION.
+  PUBLIC SECTION.
+    METHODS meth_clean IMPORTING iv_param TYPE i.
+ENDCLASS.
+CLASS lcl_clean IMPLEMENTATION.
+  METHOD meth_clean.
+    RETURN.
+  ENDMETHOD.
+ENDCLASS.
+
+CLASS ${cls} DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
   PUBLIC SECTION.
     METHODS test_001.
     METHODS test_002.
-
-  PRIVATE SECTION.
-    METHODS meth_escaped IMPORTING !iv_param TYPE i.
-    METHODS meth_clean IMPORTING iv_param TYPE i.
 ENDCLASS.
 
 CLASS ${cls} IMPLEMENTATION.
@@ -1257,14 +1311,6 @@ CLASS ${cls} IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_002.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD meth_escaped.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD meth_clean.
     RETURN.
   ENDMETHOD.
 ENDCLASS.`
@@ -1327,7 +1373,12 @@ for (const f of checkFiles) {
   const num = match[1];
   const className = `zcl_skylint_test_${num}`;
   const filePath = path.join(checksDir, f);
-  const content = fs.readFileSync(filePath, 'utf8');
+  let content = '';
+  try {
+    content = execSync(`git show d646323:src/checks/${f}`, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] });
+  } catch (e) {
+    content = fs.readFileSync(filePath, 'utf8');
+  }
 
   let abapCode = '';
   if (customFixtures[num]) {
@@ -1384,3 +1435,4 @@ ENDCLASS.
 }
 
 console.log(`✓ Successfully generated ${checkFiles.length} fixtures in src/tests/!`);
+

@@ -15,6 +15,6 @@ CLASS zcl_skylint_test_032 IMPLEMENTATION.
 
   METHOD test_002.
     DATA lt_tab TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
-    SELECT * FROM zskylint_dummy INTO TABLE @lt_tab.
+    SELECT field1 FROM zskylint_dummy INTO TABLE @lt_tab.
   ENDMETHOD.
 ENDCLASS.

@@ -15,7 +15,7 @@
 - **Platform-Agnostic Core (`main`):** Zero external platform dependencies. All types, tokens, statements, findings, and quickfixes are modeled cleanly in `zif_skylint_types`.
 - **Zero Boilerplate Architecture:** Base class (`zcl_skylint_check_base`) encapsulates finding registration, statement/token reporting, attribute resolution, and pseudo-comment filtering. Subclasses only require `constructor` and `check`.
 - **Universal Normalized AST:** Normalized statement streams with unrolled chained statements (`DATA: ...`), implicit assignments tagged as `COMPUTE`, functional method calls tagged as `+CALL_METHOD`, and compiler symbol references attached directly to tokens.
-- **Modern In-Memory Testing:** Lightning-fast unit tests using `zcl_skylint_test_util` (`assert_findings`, `assert_no_findings`, `assert_quickfix`) with inline source snippets.
+- **Modern In-Memory Testing:** Lightning-fast unit tests using `zcl_skylint_test_runner` (`assert_findings`, `assert_no_findings`, `assert_quickfix`) with inline source snippets.
 - **QuickFix Ready:** Built-in helper API (`quickfix_replace`) for automated code transformations and refactoring.
 - **Multi-Platform Branch Strategy:**
   - `main`: Platform-agnostic core rules + universal AST engine.
@@ -34,13 +34,13 @@ skylint/
 │   │   ├── zcl_skylint_check_base.clas.abap      # Universal base check class
 │   │   ├── zcl_skylint_ast_util.clas.abap        # AST & token sequence traversal utility
 │   │   ├── zcl_skylint_rtti_util.clas.abap       # Safe ABAP RTTI inspection utility
-│   │   ├── zcl_skylint_test_util.clas.abap       # Universal AST builder & unit test asserter
+│   │   ├── zcl_skylint_test_runner.clas.abap       # Universal AST builder & unit test asserter
 │   │   └── zcx_skylint_error.clas.abap           # Core exception class
 │   │
 │   ├── checks/                                   # 79 Modular Check Implementations (001 - 079)
 │   │   ├── zcl_skylint_check_001.clas.abap       # Check class implementation
 │   │   ├── zcl_skylint_check_001.clas.xml        # abapGit XML metadata (<WITH_UNIT_TESTS>X</WITH_UNIT_TESTS>)
-│   │   └── zcl_skylint_check_001.clas.testclasses.abap # Unit test suite (zcl_skylint_test_util)
+│   │   └── zcl_skylint_check_001.clas.testclasses.abap # Unit test suite (zcl_skylint_test_runner)
 │   │
 │   └── tests/                                    # Target Test Fixtures (Full Class Mocks)
 │       ├── zcl_skylint_test_001.clas.abap        # Test fixture with positive, negative & suppressed cases
@@ -194,7 +194,7 @@ ENDCLASS.
 
 ### Step 2: Implement Unit Tests (`src/checks/zcl_skylint_check_002.clas.testclasses.abap`)
 
-Skylint provides an in-memory test utility (`zcl_skylint_test_util`) that normalizes source code into an AST and asserts expected findings directly:
+Skylint provides an in-memory test utility (`zcl_skylint_test_runner`) that normalizes source code into an AST and asserts expected findings directly:
 
 ```abap
 CLASS ltcl_check_002 DEFINITION FINAL
@@ -208,7 +208,7 @@ ENDCLASS.
 
 CLASS ltcl_check_002 IMPLEMENTATION.
   METHOD test_finding.
-    zcl_skylint_test_util=>assert_findings(
+    zcl_skylint_test_runner=>assert_findings(
         io_check    = NEW zcl_skylint_check_002( )
         it_source   = VALUE #( ( `CHECK NOT lv_val IS INITIAL.` ) )
         it_expected = VALUE #( ( line = 2
@@ -216,7 +216,7 @@ CLASS ltcl_check_002 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_clean.
-    zcl_skylint_test_util=>assert_no_findings(
+    zcl_skylint_test_runner=>assert_no_findings(
         io_check  = NEW zcl_skylint_check_002( )
         it_source = VALUE #( ( `CHECK lv_val IS NOT INITIAL.` ) ) ).
   ENDMETHOD.
@@ -249,7 +249,7 @@ report_statement( is_statement    = <ls_statement>
                   is_quickfix     = ls_quickfix ).
 
 " 3. Verify transformation in unit tests:
-zcl_skylint_test_util=>assert_quickfix(
+zcl_skylint_test_runner=>assert_quickfix(
     io_check          = NEW zcl_skylint_check_002( )
     it_bad_source     = VALUE #( ( `CHECK NOT lv_val IS INITIAL.` ) )
     it_expected_fixed = VALUE #( ( `CHECK lv_val IS NOT INITIAL.` ) )

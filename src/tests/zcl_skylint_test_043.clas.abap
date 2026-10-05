@@ -1,3 +1,23 @@
+CLASS lcl_bad DEFINITION.
+  PUBLIC SECTION.
+    METHODS get_val EXCEPTIONS not_found.
+ENDCLASS.
+CLASS lcl_bad IMPLEMENTATION.
+  METHOD get_val.
+    RETURN.
+  ENDMETHOD.
+ENDCLASS.
+
+CLASS lcl_clean DEFINITION.
+  PUBLIC SECTION.
+    METHODS get_val RAISING cx_static_check.
+ENDCLASS.
+CLASS lcl_clean IMPLEMENTATION.
+  METHOD get_val.
+    RETURN.
+  ENDMETHOD.
+ENDCLASS.
+
 CLASS zcl_skylint_test_043 DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
@@ -5,10 +25,6 @@ CLASS zcl_skylint_test_043 DEFINITION
   PUBLIC SECTION.
     METHODS test_001.
     METHODS test_002.
-
-  PRIVATE SECTION.
-    METHODS get_data_classic EXCEPTIONS not_found.
-    METHODS get_data_clean RAISING cx_static_check.
 ENDCLASS.
 
 CLASS zcl_skylint_test_043 IMPLEMENTATION.
@@ -17,14 +33,6 @@ CLASS zcl_skylint_test_043 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_002.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD get_data_classic.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD get_data_clean.
     RETURN.
   ENDMETHOD.
 ENDCLASS.

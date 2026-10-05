@@ -2,22 +2,19 @@ CLASS ltcl_check_044 DEFINITION FINAL
   FOR TESTING RISK LEVEL HARMLESS DURATION SHORT.
 
   PRIVATE SECTION.
-    METHODS test_finding FOR TESTING RAISING cx_static_check.
-    METHODS test_clean   FOR TESTING RAISING cx_static_check.
+    METHODS test_check FOR TESTING RAISING cx_static_check.
 ENDCLASS.
 
 
 CLASS ltcl_check_044 IMPLEMENTATION.
-  METHOD test_finding.
-    zcl_skylint_test_util=>assert_findings(
+  METHOD test_check.
+    zcl_skylint_test_runner=>run(
         io_check    = NEW zcl_skylint_check_044( )
-        it_source   = VALUE #( ( `SYNTAX-CHECK FOR lt_prog MESSAGE lv_msg LINE lv_lin WORD lv_wrd.` ) )
-        it_expected = VALUE #( ( line = 2
-                                 code = zcl_skylint_check_044=>c_finding_codes-dangerous_statement ) ) ).
-  ENDMETHOD.
-
-  METHOD test_clean.
-    zcl_skylint_test_util=>assert_no_findings( io_check  = NEW zcl_skylint_check_044( )
-                                               it_source = VALUE #( ( `CHECK lv_flag = abap_true.` ) ) ).
+        is_object   = VALUE #( type = zif_skylint_types=>object_types-class
+                               name = 'ZCL_SKYLINT_TEST_044' )
+        it_expected = VALUE #(
+            ( method = 'TEST_001' code = zcl_skylint_check_044=>c_finding_codes-dangerous_statement )
+            ( method = 'TEST_002' )
+        ) ).
   ENDMETHOD.
 ENDCLASS.

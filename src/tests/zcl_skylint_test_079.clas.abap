@@ -1,3 +1,23 @@
+CLASS lcl_bad DEFINITION.
+  PUBLIC SECTION.
+    METHODS meth_escaped IMPORTING !iv_param TYPE i.
+ENDCLASS.
+CLASS lcl_bad IMPLEMENTATION.
+  METHOD meth_escaped.
+    RETURN.
+  ENDMETHOD.
+ENDCLASS.
+
+CLASS lcl_clean DEFINITION.
+  PUBLIC SECTION.
+    METHODS meth_clean IMPORTING iv_param TYPE i.
+ENDCLASS.
+CLASS lcl_clean IMPLEMENTATION.
+  METHOD meth_clean.
+    RETURN.
+  ENDMETHOD.
+ENDCLASS.
+
 CLASS zcl_skylint_test_079 DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
@@ -5,10 +25,6 @@ CLASS zcl_skylint_test_079 DEFINITION
   PUBLIC SECTION.
     METHODS test_001.
     METHODS test_002.
-
-  PRIVATE SECTION.
-    METHODS meth_escaped IMPORTING !iv_param TYPE i.
-    METHODS meth_clean IMPORTING iv_param TYPE i.
 ENDCLASS.
 
 CLASS zcl_skylint_test_079 IMPLEMENTATION.
@@ -17,14 +33,6 @@ CLASS zcl_skylint_test_079 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_002.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD meth_escaped.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD meth_clean.
     RETURN.
   ENDMETHOD.
 ENDCLASS.

@@ -16,6 +16,19 @@ INTERFACE zif_skylint_types
       column TYPE i,
     END OF ty_position.
 
+  TYPES:
+    BEGIN OF ty_object,
+      type TYPE ty_object_type,
+      name TYPE ty_object_name,
+    END OF ty_object.
+
+  TYPES:
+    BEGIN OF ty_test_expected,
+      method TYPE string,
+      code   TYPE ty_finding_code,
+    END OF ty_test_expected,
+    ty_test_expecteds TYPE STANDARD TABLE OF ty_test_expected WITH EMPTY KEY.
+
   CONSTANTS:
     BEGIN OF object_types,
       class          TYPE ty_object_type VALUE 'CLAS',

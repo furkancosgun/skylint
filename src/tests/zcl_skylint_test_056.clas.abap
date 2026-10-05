@@ -1,3 +1,23 @@
+CLASS lcl_bad DEFINITION.
+  PUBLIC SECTION.
+    METHODS get_status RETURNING VALUE(rv_flag) TYPE abap_bool.
+ENDCLASS.
+CLASS lcl_bad IMPLEMENTATION.
+  METHOD get_status.
+    rv_flag = abap_true.
+  ENDMETHOD.
+ENDCLASS.
+
+CLASS lcl_clean DEFINITION.
+  PUBLIC SECTION.
+    METHODS is_valid RETURNING VALUE(rv_flag) TYPE abap_bool.
+ENDCLASS.
+CLASS lcl_clean IMPLEMENTATION.
+  METHOD is_valid.
+    rv_flag = abap_true.
+  ENDMETHOD.
+ENDCLASS.
+
 CLASS zcl_skylint_test_056 DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
@@ -5,10 +25,6 @@ CLASS zcl_skylint_test_056 DEFINITION
   PUBLIC SECTION.
     METHODS test_001.
     METHODS test_002.
-
-  PRIVATE SECTION.
-    METHODS get_status RETURNING VALUE(rv_flag) TYPE abap_bool.
-    METHODS is_valid RETURNING VALUE(rv_flag) TYPE abap_bool.
 ENDCLASS.
 
 CLASS zcl_skylint_test_056 IMPLEMENTATION.
@@ -18,13 +34,5 @@ CLASS zcl_skylint_test_056 IMPLEMENTATION.
 
   METHOD test_002.
     RETURN.
-  ENDMETHOD.
-
-  METHOD get_status.
-    rv_flag = abap_true.
-  ENDMETHOD.
-
-  METHOD is_valid.
-    rv_flag = abap_true.
   ENDMETHOD.
 ENDCLASS.

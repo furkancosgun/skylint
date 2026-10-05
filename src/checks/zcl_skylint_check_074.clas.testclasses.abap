@@ -2,28 +2,19 @@ CLASS ltcl_check_074 DEFINITION FINAL
   FOR TESTING RISK LEVEL HARMLESS DURATION SHORT.
 
   PRIVATE SECTION.
-    METHODS test_finding FOR TESTING RAISING cx_static_check.
-    METHODS test_clean   FOR TESTING RAISING cx_static_check.
+    METHODS test_check FOR TESTING RAISING cx_static_check.
 ENDCLASS.
 
 
 CLASS ltcl_check_074 IMPLEMENTATION.
-  METHOD test_finding.
-    zcl_skylint_test_util=>assert_findings(
+  METHOD test_check.
+    zcl_skylint_test_runner=>run(
         io_check    = NEW zcl_skylint_check_074( )
-        it_source   = VALUE #( ( `LOOP AT lt_tab INTO ls_row.` )
-                               ( `IF ls_row-flag = abap_true.` )
-                               ( `ls_val = 1.` )
-                               ( `ENDIF.` )
-                               ( `ENDLOOP.` ) )
-        it_expected = VALUE #( ( line = 3
-                                 code = zcl_skylint_check_074=>c_finding_codes-guard_loop ) ) ).
-  ENDMETHOD.
-
-  METHOD test_clean.
-    zcl_skylint_test_util=>assert_no_findings( io_check  = NEW zcl_skylint_check_074( )
-                                               it_source = VALUE #( ( `LOOP AT lt_tab INTO ls_row.` )
-                                                                    ( `ls_val = 1.` )
-                                                                    ( `ENDLOOP.` ) ) ).
+        is_object   = VALUE #( type = zif_skylint_types=>object_types-class
+                               name = 'ZCL_SKYLINT_TEST_074' )
+        it_expected = VALUE #(
+            ( method = 'TEST_001' code = zcl_skylint_check_074=>c_finding_codes-guard_loop )
+            ( method = 'TEST_002' )
+        ) ).
   ENDMETHOD.
 ENDCLASS.

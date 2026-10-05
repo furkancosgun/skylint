@@ -136,6 +136,7 @@ CLASS lcl_code_block_builder DEFINITION FINAL.
     CLASS-METHODS slice_code_block
       IMPORTING it_statements        TYPE zif_skylint_types=>ty_statements
                 iv_class_definition  TYPE abap_bool DEFAULT abap_false
+                iv_object_name       TYPE string    OPTIONAL
       RETURNING VALUE(rs_code_block) TYPE zif_skylint_types=>ty_code_block.
 ENDCLASS.
 
@@ -151,12 +152,14 @@ CLASS lcl_runner DEFINITION FINAL.
       IMPORTING io_check            TYPE REF TO zcl_skylint_check_base
                 iv_source           TYPE string
                 iv_class_definition TYPE abap_bool DEFAULT abap_false
+                iv_object_name      TYPE string    OPTIONAL
       RETURNING VALUE(rt_findings)  TYPE zif_skylint_types=>ty_findings
       RAISING   cx_static_check.
 
     CLASS-METHODS build_code_block
       IMPORTING iv_source            TYPE string
                 iv_class_definition  TYPE abap_bool DEFAULT abap_false
+                iv_object_name       TYPE string    OPTIONAL
       RETURNING VALUE(rs_code_block) TYPE zif_skylint_types=>ty_code_block.
 
     CLASS-METHODS wrap_source
@@ -998,7 +1001,11 @@ CLASS lcl_code_block_builder IMPLEMENTATION.
 
     CLEAR rs_code_block.
     rs_code_block-object_type = zif_skylint_types=>object_types-class.
-    rs_code_block-object_name = zcl_skylint_test_util=>c_test_class.
+    IF iv_object_name IS NOT INITIAL.
+      rs_code_block-object_name = iv_object_name.
+    ELSE.
+      rs_code_block-object_name = zcl_skylint_test_runner=>c_test_class.
+    ENDIF.
     IF iv_class_definition = abap_true.
       rs_code_block-block_kind = zif_skylint_types=>block_kinds-class_definition.
       rs_code_block-block_name = '0'.
@@ -1009,7 +1016,7 @@ CLASS lcl_code_block_builder IMPLEMENTATION.
       RETURN.
     ENDIF.
     rs_code_block-block_kind = zif_skylint_types=>block_kinds-method.
-    rs_code_block-block_name = |ZSKYLINT_TEST=>TEST|.
+    rs_code_block-block_name = |{ rs_code_block-object_name }=>TEST|.
 
     LOOP AT it_statements ASSIGNING <ls_stmt>.
       IF lv_started = abap_false AND <ls_stmt>-keyword = 'METHOD'.
@@ -1064,7 +1071,8 @@ CLASS lcl_runner IMPLEMENTATION.
     DATA ls_proc TYPE zif_skylint_types=>ty_code_block.
 
     ls_proc = build_code_block( iv_source           = iv_source
-                                iv_class_definition = iv_class_definition ).
+                                iv_class_definition = iv_class_definition
+                                iv_object_name      = iv_object_name ).
 
     rt_findings = io_check->lint( ls_proc ).
   ENDMETHOD.
@@ -1089,7 +1097,8 @@ CLASS lcl_runner IMPLEMENTATION.
     lt_toks = lo_lexer->run( ).
     lt_stmts = lcl_parser=>build_statements( lt_toks ).
     rs_code_block = lcl_code_block_builder=>slice_code_block( it_statements       = lt_stmts
-                                                              iv_class_definition = iv_class_definition ).
+                                                              iv_class_definition = iv_class_definition
+                                                              iv_object_name      = iv_object_name ).
   ENDMETHOD.
 ENDCLASS.
 

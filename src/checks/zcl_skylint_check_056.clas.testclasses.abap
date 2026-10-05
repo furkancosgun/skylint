@@ -2,28 +2,19 @@ CLASS ltcl_check_056 DEFINITION FINAL
   FOR TESTING RISK LEVEL HARMLESS DURATION SHORT.
 
   PRIVATE SECTION.
-    " Finding unreachable: synthetic unit ZSKYLINT_TEST does not exist, so
-    " describe_by_name always fails and check returns early. Class-definition
-    " procedure mode used for both guards.
-    METHODS test_finding FOR TESTING RAISING cx_static_check.
-    METHODS test_clean   FOR TESTING RAISING cx_static_check.
+    METHODS test_check FOR TESTING RAISING cx_static_check.
 ENDCLASS.
 
 
 CLASS ltcl_check_056 IMPLEMENTATION.
-  METHOD test_finding.
-    zcl_skylint_test_util=>assert_findings(
-        io_check            = NEW zcl_skylint_check_056( )
-        it_source           = VALUE #( ( `METHODS get_status RETURNING VALUE(rv_flag) TYPE abap_bool.` ) )
-        it_expected         = VALUE #( ( line = 1
-                                         code = zcl_skylint_check_056=>c_finding_codes-bool_method_name ) )
-        iv_class_definition = abap_true ).
-  ENDMETHOD.
-
-  METHOD test_clean.
-    zcl_skylint_test_util=>assert_no_findings(
-        io_check            = NEW zcl_skylint_check_056( )
-        it_source           = VALUE #( ( `METHODS is_valid RETURNING VALUE(rv_flag) TYPE abap_bool.` ) )
-        iv_class_definition = abap_true ).
+  METHOD test_check.
+    zcl_skylint_test_runner=>run(
+        io_check    = NEW zcl_skylint_check_056( )
+        is_object   = VALUE #( type = zif_skylint_types=>object_types-class
+                               name = 'ZCL_SKYLINT_TEST_056' )
+        it_expected = VALUE #(
+            ( method = 'TEST_001' code = zcl_skylint_check_056=>c_finding_codes-bool_method_name )
+            ( method = 'TEST_002' )
+        ) ).
   ENDMETHOD.
 ENDCLASS.
