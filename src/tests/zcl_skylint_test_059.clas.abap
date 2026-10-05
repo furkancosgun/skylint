@@ -1,21 +1,26 @@
+INTERFACE lif_test.
+  DATA mv_state TYPE i.
+ENDINTERFACE.
+
+INTERFACE lif_clean.
+  CONSTANTS c_version TYPE i VALUE 1.
+ENDINTERFACE.
+
 CLASS zcl_skylint_test_059 DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS with_finding.
-    METHODS clean_code.
+    METHODS test_001.
+    METHODS test_002.
 ENDCLASS.
 
-
 CLASS zcl_skylint_test_059 IMPLEMENTATION.
-  METHOD with_finding.
-    INTERFACE lif_test PUBLIC.
-    DATA mv_state TYPE i.
+  METHOD test_001.
+    RETURN.
   ENDMETHOD.
 
-  METHOD clean_code.
-    INTERFACE lif_clean PUBLIC.
-    CONSTANTS c_version TYPE i VALUE 1.
+  METHOD test_002.
+    RETURN.
   ENDMETHOD.
 ENDCLASS.

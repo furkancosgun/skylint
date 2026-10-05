@@ -3,17 +3,23 @@ CLASS zcl_skylint_test_002 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS with_finding.
-    METHODS clean_code.
+    METHODS test_001.
+    METHODS test_002.
+    METHODS run.
 ENDCLASS.
 
-
 CLASS zcl_skylint_test_002 IMPLEMENTATION.
-  METHOD with_finding.
+  METHOD run.
+    RETURN.
+  ENDMETHOD.
+
+  METHOD test_001.
+    DATA lo_obj TYPE REF TO zcl_skylint_test_002.
     CALL METHOD lo_obj->run.
   ENDMETHOD.
 
-  METHOD clean_code.
+  METHOD test_002.
+    DATA lo_obj TYPE REF TO zcl_skylint_test_002.
     lo_obj->run( ).
   ENDMETHOD.
 ENDCLASS.

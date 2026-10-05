@@ -1,19 +1,34 @@
+CLASS lcl_test_naming DEFINITION FOR TESTING RISK LEVEL HARMLESS DURATION SHORT.
+  PRIVATE SECTION.
+    METHODS bad_name FOR TESTING.
+    METHODS test_clean FOR TESTING.
+ENDCLASS.
+
+CLASS lcl_test_naming IMPLEMENTATION.
+  METHOD bad_name.
+    RETURN.
+  ENDMETHOD.
+
+  METHOD test_clean.
+    RETURN.
+  ENDMETHOD.
+ENDCLASS.
+
 CLASS zcl_skylint_test_069 DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS with_finding.
-    METHODS clean_code.
+    METHODS test_001.
+    METHODS test_002.
 ENDCLASS.
 
-
 CLASS zcl_skylint_test_069 IMPLEMENTATION.
-  METHOD with_finding.
-    METHODS bad_name FOR TESTING.
+  METHOD test_001.
+    RETURN.
   ENDMETHOD.
 
-  METHOD clean_code.
-    METHODS test_something FOR TESTING.
+  METHOD test_002.
+    RETURN.
   ENDMETHOD.
 ENDCLASS.

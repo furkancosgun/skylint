@@ -1,0 +1,41 @@
+{
+  "global": {
+    "files": "/src/**/*.*",
+    "exclude": [
+      "/src/checks/.*",
+      "/src/platform/.*",
+      "/src/core/zcl_.*",
+      "/src/core/zif_.*",
+      "/src/core/zcx_.*"
+    ],
+    "noIssues": [
+      "zcl_skylint_sci*",
+      "zcl_skylint_atc*"
+    ],
+    "skipGeneratedBOPFInterfaces": false,
+    "skipGeneratedFunctionGroups": false,
+    "skipGeneratedGatewayClasses": false,
+    "skipGeneratedPersistentClasses": false,
+    "skipGeneratedProxyClasses": false,
+    "skipGeneratedProxyInterfaces": false,
+    "useApackDependencies": false,
+    "skipIncludesWithoutMain": false,
+    "errorOnDuplicateFilenames": false
+  },
+  "dependencies": [
+    {
+      "folder": "/deps/**",
+      "files": "/src/**/*.*"
+    }
+  ],
+  "syntax": {
+    "version": "v752",
+    "errorNamespace": "^(Z|Y|LCL_|TY_|LIF_)",
+    "globalConstants": [],
+    "ambigiousVoids": [],
+    "globalMacros": []
+  },
+  "rules": {
+    "check_syntax": true
+  }
+}

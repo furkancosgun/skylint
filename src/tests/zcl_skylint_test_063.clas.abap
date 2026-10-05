@@ -3,17 +3,18 @@ CLASS zcl_skylint_test_063 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS with_finding.
-    METHODS clean_code.
+    METHODS test_001.
+    METHODS test_002.
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_063 IMPLEMENTATION.
-  METHOD with_finding.
+  METHOD test_001.
     RAISE EXCEPTION TYPE cx_sy_zerodivide.
   ENDMETHOD.
 
-  METHOD clean_code.
+  METHOD test_002.
     RAISE EXCEPTION TYPE cx_static_check.
   ENDMETHOD.
 ENDCLASS.
+

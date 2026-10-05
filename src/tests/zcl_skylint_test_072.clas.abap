@@ -3,19 +3,22 @@ CLASS zcl_skylint_test_072 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS with_finding.
-    METHODS clean_code.
+    METHODS test_001.
+    METHODS test_002.
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_072 IMPLEMENTATION.
-  METHOD with_finding.
+  METHOD test_001.
+    DATA lv_text TYPE string.
     CONDENSE lv_text.
     TRANSLATE lv_text TO UPPER CASE.
   ENDMETHOD.
 
-  METHOD clean_code.
+  METHOD test_002.
+    DATA lv_text TYPE string.
     lv_text = condense( lv_text ).
     lv_text = to_upper( lv_text ).
   ENDMETHOD.
 ENDCLASS.
+

@@ -3,17 +3,28 @@ CLASS zcl_skylint_test_043 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS with_finding.
-    METHODS clean_code.
+    METHODS test_001.
+    METHODS test_002.
+
+  PRIVATE SECTION.
+    METHODS get_data_classic EXCEPTIONS not_found.
+    METHODS get_data_clean RAISING cx_static_check.
 ENDCLASS.
 
-
 CLASS zcl_skylint_test_043 IMPLEMENTATION.
-  METHOD with_finding.
-    METHODS get_data EXCEPTIONS not_found.
+  METHOD test_001.
+    RETURN.
   ENDMETHOD.
 
-  METHOD clean_code.
-    METHODS get_data RAISING cx_static_check.
+  METHOD test_002.
+    RETURN.
+  ENDMETHOD.
+
+  METHOD get_data_classic.
+    RETURN.
+  ENDMETHOD.
+
+  METHOD get_data_clean.
+    RETURN.
   ENDMETHOD.
 ENDCLASS.

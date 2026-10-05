@@ -3,17 +3,17 @@ CLASS zcl_skylint_test_053 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS with_finding.
-    METHODS clean_code.
+    METHODS test_001.
+    METHODS test_002.
 ENDCLASS.
 
-
 CLASS zcl_skylint_test_053 IMPLEMENTATION.
-  METHOD with_finding.
-    DATA lv_x LIKE mara-matnr.
+  METHOD test_001.
+    DATA lv_orig TYPE i.
+    DATA lv_x LIKE lv_orig.
   ENDMETHOD.
 
-  METHOD clean_code.
-    DATA lv_x TYPE mara-matnr.
+  METHOD test_002.
+    DATA lv_y TYPE i.
   ENDMETHOD.
 ENDCLASS.

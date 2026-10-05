@@ -1,25 +1,32 @@
+CLASS lcl_mutable DEFINITION.
+  PUBLIC SECTION.
+    DATA mv_attr TYPE i.
+ENDCLASS.
+CLASS lcl_mutable IMPLEMENTATION.
+ENDCLASS.
+
+CLASS lcl_clean DEFINITION.
+  PUBLIC SECTION.
+    DATA mv_attr TYPE i READ-ONLY.
+ENDCLASS.
+CLASS lcl_clean IMPLEMENTATION.
+ENDCLASS.
+
 CLASS zcl_skylint_test_027 DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS with_finding.
-    METHODS clean_code.
+    METHODS test_001.
+    METHODS test_002.
 ENDCLASS.
 
-
 CLASS zcl_skylint_test_027 IMPLEMENTATION.
-  METHOD with_finding.
-    " CLASS zcl_test DEFINITION PUBLIC CREATE PUBLIC.
-    " PUBLIC SECTION.
-    " DATA mv_attr TYPE i.
-    " ENDCLASS.
+  METHOD test_001.
+    RETURN.
   ENDMETHOD.
 
-  METHOD clean_code.
-    " CLASS zcl_test DEFINITION PUBLIC CREATE PUBLIC.
-    " PUBLIC SECTION.
-    " DATA mv_attr TYPE i READ-ONLY.
-    " ENDCLASS.
+  METHOD test_002.
+    RETURN.
   ENDMETHOD.
 ENDCLASS.

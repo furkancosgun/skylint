@@ -3,19 +3,23 @@ CLASS zcl_skylint_test_075 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS with_finding.
-    METHODS clean_code.
+    METHODS test_001.
+    METHODS test_002.
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_075 IMPLEMENTATION.
-  METHOD with_finding.
+  METHOD test_001.
+    DATA lv_flag TYPE abap_bool.
+    DATA ls_val TYPE i.
     IF lv_flag = abap_true.
     ls_val = 1.
     ENDIF.
   ENDMETHOD.
 
-  METHOD clean_code.
+  METHOD test_002.
+    DATA lv_flag TYPE abap_bool.
+    DATA ls_val TYPE i.
     IF lv_flag = abap_true.
     ls_val = 1.
     ELSE.
@@ -23,3 +27,4 @@ CLASS zcl_skylint_test_075 IMPLEMENTATION.
     ENDIF.
   ENDMETHOD.
 ENDCLASS.
+

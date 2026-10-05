@@ -3,21 +3,23 @@ CLASS zcl_skylint_test_062 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS with_finding.
-    METHODS clean_code.
+    METHODS test_001.
+    METHODS test_002.
 ENDCLASS.
 
-
 CLASS zcl_skylint_test_062 IMPLEMENTATION.
-  METHOD with_finding.
+  METHOD test_001.
     TRY.
-    TRY.
-    ENDTRY.
+      TRY.
+      CATCH cx_root.
+      ENDTRY.
+    CATCH cx_root.
     ENDTRY.
   ENDMETHOD.
 
-  METHOD clean_code.
+  METHOD test_002.
     TRY.
+    CATCH cx_root.
     ENDTRY.
   ENDMETHOD.
 ENDCLASS.

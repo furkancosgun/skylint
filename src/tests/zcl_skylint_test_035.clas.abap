@@ -3,17 +3,18 @@ CLASS zcl_skylint_test_035 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS with_finding.
-    METHODS clean_code.
+    METHODS test_001.
+    METHODS test_002.
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_035 IMPLEMENTATION.
-  METHOD with_finding.
+  METHOD test_001.
     CONSTANTS lc_val VALUE 'X'.
   ENDMETHOD.
 
-  METHOD clean_code.
+  METHOD test_002.
     CONSTANTS lc_val TYPE string VALUE 'X'.
   ENDMETHOD.
 ENDCLASS.
+

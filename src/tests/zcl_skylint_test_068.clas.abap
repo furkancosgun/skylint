@@ -3,21 +3,29 @@ CLASS zcl_skylint_test_068 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS with_finding.
-    METHODS clean_code.
+    TYPES:
+      BEGIN OF ty_row,
+        field1 TYPE i,
+      END OF ty_row.
+
+    METHODS test_001.
+    METHODS test_002.
 ENDCLASS.
 
-
 CLASS zcl_skylint_test_068 IMPLEMENTATION.
-  METHOD with_finding.
+  METHOD test_001.
+    DATA lt_tab TYPE STANDARD TABLE OF ty_row WITH DEFAULT KEY.
+    DATA ls_row TYPE ty_row.
     LOOP AT lt_tab INTO ls_row.
-    MODIFY lt_tab FROM ls_row.
+      MODIFY lt_tab FROM ls_row.
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD clean_code.
+  METHOD test_002.
+    DATA lt_tab TYPE STANDARD TABLE OF ty_row WITH DEFAULT KEY.
+    DATA ls_row TYPE ty_row.
     LOOP AT lt_tab INTO ls_row.
-    MODIFY lt_tab FROM ls_row TRANSPORTING field1.
+      MODIFY lt_tab FROM ls_row TRANSPORTING field1.
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

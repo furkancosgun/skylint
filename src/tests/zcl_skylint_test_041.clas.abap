@@ -3,17 +3,19 @@ CLASS zcl_skylint_test_041 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS with_finding.
-    METHODS clean_code.
+    METHODS test_001.
+    METHODS test_002.
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_041 IMPLEMENTATION.
-  METHOD with_finding.
+  METHOD test_001.
     sy-subrc = 0.
   ENDMETHOD.
 
-  METHOD clean_code.
+  METHOD test_002.
+    DATA lv_val TYPE i.
     lv_val = 0.
   ENDMETHOD.
 ENDCLASS.
+

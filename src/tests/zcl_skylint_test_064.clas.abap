@@ -3,18 +3,19 @@ CLASS zcl_skylint_test_064 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS with_finding.
-    METHODS clean_code.
+    METHODS test_001.
+    METHODS test_002.
 ENDCLASS.
 
-
 CLASS zcl_skylint_test_064 IMPLEMENTATION.
-  METHOD with_finding.
-    READ TABLE lt_tab INDEX 1.
+  METHOD test_001.
+    DATA lt_tab TYPE string_table.
+    READ TABLE lt_tab INDEX 1 TRANSPORTING NO FIELDS.
   ENDMETHOD.
 
-  METHOD clean_code.
-    READ TABLE lt_tab INDEX 1.
+  METHOD test_002.
+    DATA lt_tab TYPE string_table.
+    READ TABLE lt_tab INDEX 1 TRANSPORTING NO FIELDS.
     IF sy-subrc = 0.
     ENDIF.
   ENDMETHOD.

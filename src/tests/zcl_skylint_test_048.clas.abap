@@ -1,19 +1,28 @@
+CLASS lcl_not_final DEFINITION.
+ENDCLASS.
+CLASS lcl_not_final IMPLEMENTATION.
+ENDCLASS.
+
+CLASS lcl_clean DEFINITION FINAL.
+ENDCLASS.
+CLASS lcl_clean IMPLEMENTATION.
+ENDCLASS.
+
 CLASS zcl_skylint_test_048 DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS with_finding.
-    METHODS clean_code.
+    METHODS test_001.
+    METHODS test_002.
 ENDCLASS.
 
-
 CLASS zcl_skylint_test_048 IMPLEMENTATION.
-  METHOD with_finding.
-    " CLASS lcl_test DEFINITION.
+  METHOD test_001.
+    RETURN.
   ENDMETHOD.
 
-  METHOD clean_code.
-    " CLASS lcl_test DEFINITION FINAL.
+  METHOD test_002.
+    RETURN.
   ENDMETHOD.
 ENDCLASS.

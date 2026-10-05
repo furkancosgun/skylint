@@ -1,19 +1,28 @@
 CLASS zcl_skylint_test_071 DEFINITION
-  PUBLIC FINAL
+  PUBLIC
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS with_finding.
-    METHODS clean_code.
+    METHODS test_001.
+    METHODS test_002.
+    METHODS do_work.
+    METHODS do_work_clean FINAL.
 ENDCLASS.
 
-
 CLASS zcl_skylint_test_071 IMPLEMENTATION.
-  METHOD with_finding.
-    METHODS do_work.
+  METHOD test_001.
+    RETURN.
   ENDMETHOD.
 
-  METHOD clean_code.
-    METHODS do_work FINAL.
+  METHOD test_002.
+    RETURN.
+  ENDMETHOD.
+
+  METHOD do_work.
+    RETURN.
+  ENDMETHOD.
+
+  METHOD do_work_clean.
+    RETURN.
   ENDMETHOD.
 ENDCLASS.

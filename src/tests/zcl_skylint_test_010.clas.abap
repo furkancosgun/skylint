@@ -3,18 +3,28 @@ CLASS zcl_skylint_test_010 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS with_finding.
-    METHODS clean_code.
+    METHODS test_001.
+    METHODS test_002.
+    METHODS is_valid RETURNING VALUE(rv_flag) TYPE abap_bool.
 ENDCLASS.
 
-
 CLASS zcl_skylint_test_010 IMPLEMENTATION.
-  METHOD with_finding.
-    IF lo_validator->is_valid( ) = abap_true.
+  METHOD is_valid.
+    rv_flag = abap_true.
   ENDMETHOD.
 
-  METHOD clean_code.
+  METHOD test_001.
+    DATA lo_validator TYPE REF TO zcl_skylint_test_010.
+    IF lo_validator->is_valid( ) = abap_true.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_002.
+    DATA lo_validator TYPE REF TO zcl_skylint_test_010.
+    DATA lv_flag TYPE abap_bool.
     IF lo_validator->is_valid( ).
+    ENDIF.
     IF lv_flag = abap_true.
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.

@@ -3,13 +3,16 @@ CLASS zcl_skylint_test_017 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS with_finding.
-    METHODS clean_code.
+    METHODS test_001.
+    METHODS test_002.
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_017 IMPLEMENTATION.
-  METHOD with_finding.
+  METHOD test_001.
+    DATA lv_a TYPE i.
+    DATA lv_b TYPE i.
+    DATA lv_c TYPE i.
     IF lv_a = 1.
     IF lv_b = 2.
     lv_c = 3.
@@ -17,9 +20,12 @@ CLASS zcl_skylint_test_017 IMPLEMENTATION.
     ENDIF.
   ENDMETHOD.
 
-  METHOD clean_code.
+  METHOD test_002.
+    DATA lv_a TYPE i.
+    DATA lv_b TYPE i.
     IF lv_a = 1.
     lv_b = 2.
     ENDIF.
   ENDMETHOD.
 ENDCLASS.
+

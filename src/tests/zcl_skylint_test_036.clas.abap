@@ -3,17 +3,25 @@ CLASS zcl_skylint_test_036 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS with_finding.
-    METHODS clean_code.
+    METHODS test_001.
+    METHODS test_002.
+    METHODS run IMPORTING iv_param TYPE i.
 ENDCLASS.
 
-
 CLASS zcl_skylint_test_036 IMPLEMENTATION.
-  METHOD with_finding.
+  METHOD run.
+    RETURN.
+  ENDMETHOD.
+
+  METHOD test_001.
+    DATA lo_obj TYPE REF TO zcl_skylint_test_036.
+    DATA lv_val TYPE i.
     lo_obj->run( iv_param = lv_val ).
   ENDMETHOD.
 
-  METHOD clean_code.
+  METHOD test_002.
+    DATA lo_obj TYPE REF TO zcl_skylint_test_036.
+    DATA lv_val TYPE i.
     lo_obj->run( lv_val ).
   ENDMETHOD.
 ENDCLASS.

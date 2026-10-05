@@ -60,7 +60,8 @@
       "allowed": [
         "DEVC",
         "INTF",
-        "CLAS"
+        "CLAS",
+        "TABL"
       ]
     },
     "ambiguous_statement": {

@@ -3,17 +3,16 @@ CLASS zcl_skylint_test_061 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS with_finding.
-    METHODS clean_code.
+    METHODS test_001 EXCEPTIONS error.
+    METHODS test_002.
 ENDCLASS.
 
-
 CLASS zcl_skylint_test_061 IMPLEMENTATION.
-  METHOD with_finding.
-    MESSAGE ID 'Z1' TYPE 'E' RAISING cx_static_check.
+  METHOD test_001.
+    MESSAGE e001(00) WITH 'test' RAISING error.
   ENDMETHOD.
 
-  METHOD clean_code.
-    MESSAGE ID 'Z1' TYPE 'E'.
+  METHOD test_002.
+    MESSAGE 'clean' TYPE 'I'.
   ENDMETHOD.
 ENDCLASS.

@@ -3,17 +3,28 @@ CLASS zcl_skylint_test_079 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS with_finding.
-    METHODS clean_code.
+    METHODS test_001.
+    METHODS test_002.
+
+  PRIVATE SECTION.
+    METHODS meth_escaped IMPORTING !iv_param TYPE i.
+    METHODS meth_clean IMPORTING iv_param TYPE i.
 ENDCLASS.
 
-
 CLASS zcl_skylint_test_079 IMPLEMENTATION.
-  METHOD with_finding.
-    METHODS meth IMPORTING !iv_param TYPE i.
+  METHOD test_001.
+    RETURN.
   ENDMETHOD.
 
-  METHOD clean_code.
-    METHODS meth IMPORTING iv_param TYPE i.
+  METHOD test_002.
+    RETURN.
+  ENDMETHOD.
+
+  METHOD meth_escaped.
+    RETURN.
+  ENDMETHOD.
+
+  METHOD meth_clean.
+    RETURN.
   ENDMETHOD.
 ENDCLASS.

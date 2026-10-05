@@ -3,17 +3,16 @@ CLASS zcl_skylint_test_049 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS with_finding.
-    METHODS clean_code.
+    METHODS test_001.
+    METHODS test_002.
 ENDCLASS.
 
-
 CLASS zcl_skylint_test_049 IMPLEMENTATION.
-  METHOD with_finding.
-    RAISE SHORTDUMP TYPE cx_demo.
+  METHOD test_001.
+    RAISE SHORTDUMP TYPE cx_sy_zerodivide.
   ENDMETHOD.
 
-  METHOD clean_code.
-    RAISE EXCEPTION TYPE cx_demo.
+  METHOD test_002.
+    RAISE EXCEPTION TYPE cx_sy_zerodivide.
   ENDMETHOD.
 ENDCLASS.

@@ -3,18 +3,18 @@ CLASS zcl_skylint_test_032 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS with_finding.
-    METHODS clean_code.
+    METHODS test_001.
+    METHODS test_002.
 ENDCLASS.
 
-
 CLASS zcl_skylint_test_032 IMPLEMENTATION.
-  METHOD with_finding.
-    SELECT * FROM t001 INTO @DATA(ls_row).
+  METHOD test_001.
+    SELECT * FROM zskylint_dummy INTO @DATA(ls_row).
     ENDSELECT.
   ENDMETHOD.
 
-  METHOD clean_code.
-    SELECT field1 FROM t001 INTO TABLE lt_tab.
+  METHOD test_002.
+    DATA lt_tab TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
+    SELECT * FROM zskylint_dummy INTO TABLE @lt_tab.
   ENDMETHOD.
 ENDCLASS.

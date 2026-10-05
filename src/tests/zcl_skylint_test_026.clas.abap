@@ -3,17 +3,22 @@ CLASS zcl_skylint_test_026 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS with_finding.
-    METHODS clean_code.
+    CLASS-METHODS do_work.
+    METHODS test_001.
+    METHODS test_002.
 ENDCLASS.
 
-
 CLASS zcl_skylint_test_026 IMPLEMENTATION.
-  METHOD with_finding.
+  METHOD do_work.
+    RETURN.
+  ENDMETHOD.
+
+  METHOD test_001.
+    DATA lo_obj TYPE REF TO zcl_skylint_test_026.
     lo_obj->do_work( ).
   ENDMETHOD.
 
-  METHOD clean_code.
-    cl_useful=>do_work( ).
+  METHOD test_002.
+    zcl_skylint_test_026=>do_work( ).
   ENDMETHOD.
 ENDCLASS.

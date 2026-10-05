@@ -3,18 +3,21 @@ CLASS zcl_skylint_test_076 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS with_finding.
-    METHODS clean_code.
+    METHODS test_001.
+    METHODS test_002.
 ENDCLASS.
 
 
 CLASS zcl_skylint_test_076 IMPLEMENTATION.
-  METHOD with_finding.
+  METHOD test_001.
+    DATA lv_x TYPE i.
     ASSERT lv_x > 0.
   ENDMETHOD.
 
-  METHOD clean_code.
+  METHOD test_002.
+    DATA lv_x TYPE i.
     IF lv_x IS INITIAL.
     ENDIF.
   ENDMETHOD.
 ENDCLASS.
+

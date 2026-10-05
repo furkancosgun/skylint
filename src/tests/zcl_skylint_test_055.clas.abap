@@ -1,26 +1,42 @@
+CLASS lcl_helper DEFINITION.
+  PUBLIC SECTION.
+    CLASS-METHODS run.
+ENDCLASS.
+CLASS lcl_helper IMPLEMENTATION.
+  METHOD run.
+    RETURN.
+  ENDMETHOD.
+ENDCLASS.
+
+CLASS lcl_clean DEFINITION.
+  PUBLIC SECTION.
+    CLASS-METHODS run.
+    METHODS execute.
+ENDCLASS.
+CLASS lcl_clean IMPLEMENTATION.
+  METHOD run.
+    RETURN.
+  ENDMETHOD.
+  METHOD execute.
+    RETURN.
+  ENDMETHOD.
+ENDCLASS.
+
 CLASS zcl_skylint_test_055 DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS with_finding.
-    METHODS clean_code.
+    METHODS test_001.
+    METHODS test_002.
 ENDCLASS.
 
-
 CLASS zcl_skylint_test_055 IMPLEMENTATION.
-  METHOD with_finding.
-    " CLASS lcl_helper DEFINITION.
-    " PUBLIC SECTION.
-    " CLASS-METHODS run.
-    " ENDCLASS.
+  METHOD test_001.
+    RETURN.
   ENDMETHOD.
 
-  METHOD clean_code.
-    " CLASS lcl_helper DEFINITION.
-    " PUBLIC SECTION.
-    " CLASS-METHODS run.
-    " METHODS execute.
-    " ENDCLASS.
+  METHOD test_002.
+    RETURN.
   ENDMETHOD.
 ENDCLASS.
