@@ -1,6 +1,7 @@
 CLASS zcl_skylint_sci_test_run DEFINITION
-  PUBLIC ABSTRACT
-  INHERITING FROM cl_ci_test_verify.
+  PUBLIC FINAL
+  INHERITING FROM cl_ci_test_verify
+  CREATE PUBLIC.
 
   PUBLIC SECTION.
     METHODS execute

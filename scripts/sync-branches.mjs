@@ -77,17 +77,18 @@ function syncBranch(target, headInfo) {
       fs.writeFileSync(checkBasePath, content, 'utf8');
     }
 
-    // 1b. Swap zcl_skylint_test_runner superclass based on target platform
+    // 1b. Point zcl_skylint_test_runner at the branch driver (no inheritance).
+    // Main uses open driver; delivery branches accept the pulled branch driver.
     const testRunnerPath = path.join(worktreeDir, 'src', 'core', 'zcl_skylint_test_runner.clas.abap');
     if (fs.existsSync(testRunnerPath)) {
       let content = fs.readFileSync(testRunnerPath, 'utf8');
-      const targetTestAdapter = target === 'standard' ? 'zcl_skylint_sci_test_run' : 'zcl_skylint_atc_test_run';
+      const targetTestDriver = target === 'standard' ? 'zcl_skylint_sci_test_run' : 'zcl_skylint_atc_test_run';
       content = content.replace(
-        /INHERITING FROM\s+zcl_skylint_open_test_run/,
-        `INHERITING FROM ${targetTestAdapter}`
+        /TYPE REF TO\s+zcl_skylint_open_test_run/,
+        `TYPE REF TO ${targetTestDriver}`
       );
-      if (!content.includes(`INHERITING FROM ${targetTestAdapter}`)) {
-        throw new Error(`Failed to adapt zcl_skylint_test_runner inheritance to ${targetTestAdapter}`);
+      if (!content.includes(`TYPE REF TO ${targetTestDriver}`)) {
+        throw new Error(`Failed to point zcl_skylint_test_runner at ${targetTestDriver}`);
       }
       fs.writeFileSync(testRunnerPath, content, 'utf8');
     }

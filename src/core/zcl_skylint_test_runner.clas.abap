@@ -1,6 +1,5 @@
 CLASS zcl_skylint_test_runner DEFINITION
-  PUBLIC
-  INHERITING FROM zcl_skylint_open_test_run
+  PUBLIC FINAL
   CREATE PUBLIC.
 
   PUBLIC SECTION.
@@ -14,7 +13,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_runner IMPLEMENTATION.
   METHOD run.
-    DATA lo_runner TYPE REF TO zcl_skylint_test_runner.
+    DATA lo_runner TYPE REF TO zcl_skylint_open_test_run.
     CREATE OBJECT lo_runner.
     lo_runner->execute( io_check    = io_check
                         iv_class    = iv_class
