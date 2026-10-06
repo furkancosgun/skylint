@@ -16,15 +16,14 @@ CLASS zcl_skylint_test_063 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_002.
-    RAISE EXCEPTION TYPE cx_static_check.
+    DATA lv_clean TYPE i.
   ENDMETHOD.
 
   METHOD test_003.
-    RAISE EXCEPTION TYPE cx_sy_arithmetic_error.
+    RAISE EXCEPTION TYPE cx_sy_itab_line_not_found.
   ENDMETHOD.
 
   METHOD test_004.
-    RAISE EXCEPTION TYPE cx_root.
+    DATA lv_ok TYPE i.
   ENDMETHOD.
 ENDCLASS.
-

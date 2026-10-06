@@ -16,8 +16,6 @@ CLASS ltcl_check_054 IMPLEMENTATION.
                                ( method = 'TEST_003' )
                                ( method = 'TEST_004' )
                                ( method = 'CONSTRUCTOR'
-                                 code   = zcl_skylint_check_054=>c_finding_codes-constructor_logic
-                                 line   = 12
-                                 column = 5 ) ) ).
+               code = zcl_skylint_check_054=>c_finding_codes-constructor_logic line = 12 column = 4 ) ) ).
   ENDMETHOD.
 ENDCLASS.

@@ -12,9 +12,9 @@ CLASS ltcl_check_032 IMPLEMENTATION.
         io_check    = NEW zcl_skylint_check_032( )
         iv_class    = 'ZCL_SKYLINT_TEST_032'
         it_expected = VALUE #(
-            ( method = 'TEST_001' code = zcl_skylint_check_032=>c_finding_codes-select_star line = 2 column = 5 )
+            ( method = 'TEST_001' code = zcl_skylint_check_032=>c_finding_codes-select_star line = 2 column = 4 )
             ( method = 'TEST_002' )
-            ( method = 'TEST_003' code = zcl_skylint_check_032=>c_finding_codes-select_star line = 4 column = 5 )
+            ( method = 'TEST_003' code = zcl_skylint_check_032=>c_finding_codes-select_star line = 4 column = 4 )
             ( method = 'TEST_004' ) ) ).
   ENDMETHOD.
 ENDCLASS.

@@ -12,9 +12,9 @@ CLASS ltcl_check_077 IMPLEMENTATION.
         io_check    = NEW zcl_skylint_check_077( )
         iv_class    = 'ZCL_SKYLINT_TEST_077'
         it_expected = VALUE #(
-            ( method = 'TEST_001' code = zcl_skylint_check_077=>c_finding_codes-unused_var line = 2 column = 5 )
+            ( method = 'TEST_001' code = zcl_skylint_check_077=>c_finding_codes-unused_var line = 2 column = 4 )
             ( method = 'TEST_002' )
-            ( method = 'TEST_003' code = zcl_skylint_check_077=>c_finding_codes-unused_var line = 2 column = 5 )
+            ( method = 'TEST_003' code = zcl_skylint_check_077=>c_finding_codes-unused_var line = 2 column = 4 )
             ( method = 'TEST_004' ) ) ).
   ENDMETHOD.
 ENDCLASS.

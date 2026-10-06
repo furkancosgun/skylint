@@ -12,14 +12,10 @@ CLASS ltcl_check_043 IMPLEMENTATION.
                                   iv_class    = 'ZCL_SKYLINT_TEST_043'
                                   it_expected = VALUE #(
                                       ( method = 'TEST_001'
-                                        code   = zcl_skylint_check_043=>c_finding_codes-class_based_exceptions
-                                        line   = 3
-                                        column = 5 )
+               code = zcl_skylint_check_043=>c_finding_codes-class_based_exceptions line = 3 column = 4 )
                                       ( method = 'TEST_002' )
                                       ( method = 'TEST_003'
-                                        code   = zcl_skylint_check_043=>c_finding_codes-class_based_exceptions
-                                        line   = 3
-                                        column = 5 )
+               code = zcl_skylint_check_043=>c_finding_codes-class_based_exceptions line = 3 column = 4 )
                                       ( method = 'TEST_004' ) ) ).
   ENDMETHOD.
 ENDCLASS.

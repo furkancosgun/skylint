@@ -12,9 +12,9 @@ CLASS ltcl_check_018 IMPLEMENTATION.
         io_check    = NEW zcl_skylint_check_018( )
         iv_class    = 'ZCL_SKYLINT_TEST_018'
         it_expected = VALUE #(
-            ( method = 'TEST_001' code = zcl_skylint_check_018=>c_finding_codes-unreachable_code line = 4 column = 5 )
+            ( method = 'TEST_001' code = zcl_skylint_check_018=>c_finding_codes-unreachable_code line = 4 column = 4 )
             ( method = 'TEST_002' )
-            ( method = 'TEST_003' code = zcl_skylint_check_018=>c_finding_codes-unreachable_code line = 6 column = 7 )
+            ( method = 'TEST_003' code = zcl_skylint_check_018=>c_finding_codes-unreachable_code line = 6 column = 6 )
             ( method = 'TEST_004' ) ) ).
   ENDMETHOD.
 ENDCLASS.

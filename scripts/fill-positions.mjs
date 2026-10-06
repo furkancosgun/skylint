@@ -235,12 +235,13 @@ for (const [file, fileJobs] of byFile) {
       .replace(/\s+/g, ' ')
       .replace(/\(\s+/, '( ')
       .replace(/\s+\)$/, ` line = ${job.line} column = ${job.column} )`);
-    // Wrap rows exceeding the 120 char abaplint limit, continuation
-    // aligned under `method` like the hand-written constructor calls.
-    const lineStart = content.lastIndexOf('\n', content.indexOf(job.row)) + 1;
-    const indent = content.slice(lineStart, content.indexOf(job.row)).match(/^\s*/)[0];
-    if (indent.length + clean.length > 120) {
-      clean = `( method = '${job.method}'\n${indent}  code = ${job.codeExpr} line = ${job.line} column = ${job.column} )`;
+    const pos = content.indexOf(job.row);
+    const lineStart = content.lastIndexOf('\n', pos) + 1;
+    const prefixOnLine = content.slice(lineStart, pos);
+    if (prefixOnLine.length + clean.length > 120) {
+      const matchParen = prefixOnLine.lastIndexOf('(');
+      const alignSpaces = matchParen >= 0 ? matchParen + 2 : 15;
+      clean = `( method = '${job.method}'\n${' '.repeat(alignSpaces)}code = ${job.codeExpr} line = ${job.line} column = ${job.column} )`;
     }
     if (clean !== job.row) {
       content = content.replace(job.row, clean);

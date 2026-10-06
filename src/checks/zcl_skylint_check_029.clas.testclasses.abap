@@ -12,14 +12,10 @@ CLASS ltcl_check_029 IMPLEMENTATION.
         io_check    = NEW zcl_skylint_check_029( )
         iv_class    = 'ZCL_SKYLINT_TEST_029'
         it_expected = VALUE #( ( method = 'TEST_001'
-                                 code   = zcl_skylint_check_029=>c_finding_codes-too_many_parameters
-                                 line   = 3
-                                 column = 5 )
+                               code = zcl_skylint_check_029=>c_finding_codes-too_many_parameters line = 3 column = 4 )
                                ( method = 'TEST_002' )
                                ( method = 'TEST_003'
-                                 code   = zcl_skylint_check_029=>c_finding_codes-too_many_parameters
-                                 line   = 3
-                                 column = 5 )
+               code = zcl_skylint_check_029=>c_finding_codes-too_many_parameters line = 3 column = 4 )
                                ( method = 'TEST_004' ) ) ).
   ENDMETHOD.
 ENDCLASS.

@@ -35,9 +35,10 @@ CLASS zcl_skylint_sci_test_run IMPLEMENTATION.
     lo_variant->save( lo_variant->variant ).
     lo_variant->leave_change( ).
 
+    lv_objname = iv_class.
     run( p_variant  = lo_variant->chkvinf-checkvname
          p_obj_type = 'CLAS'
-         p_obj_name = iv_class ).
+         p_obj_name = lv_objname ).
 
     LOOP AT it_expected INTO ls_exp.
       ls_method-clsname = iv_class.

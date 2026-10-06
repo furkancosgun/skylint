@@ -16,13 +16,13 @@ CLASS zcl_skylint_test_013 IMPLEMENTATION.
     DATA lt_tab TYPE string_table.
     DATA ls_row TYPE string.
     LOOP AT lt_tab INTO ls_row.
-    CHECK lv_flag.
+      CHECK lv_flag = abap_true.
     ENDLOOP.
   ENDMETHOD.
 
   METHOD test_002.
     DATA lv_flag TYPE abap_bool.
-    CHECK lv_flag.
+    CHECK lv_flag = abap_true.
   ENDMETHOD.
 
   METHOD test_003.
@@ -42,4 +42,3 @@ CLASS zcl_skylint_test_013 IMPLEMENTATION.
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.
-

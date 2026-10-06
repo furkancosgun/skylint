@@ -21,7 +21,7 @@ CLASS zcl_skylint_test_053 IMPLEMENTATION.
 
   METHOD test_003.
     DATA lv_orig TYPE i.
-    STATICS sv_copy LIKE lv_orig.
+    DATA lv_copy LIKE lv_orig.
   ENDMETHOD.
 
   METHOD test_004.

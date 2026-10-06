@@ -13,7 +13,7 @@ ENDCLASS.
 CLASS zcl_skylint_test_011 IMPLEMENTATION.
   METHOD test_001.
     DATA lt_tab TYPE string_table.
-    READ TABLE lt_tab TRANSPORTING NO FIELDS.
+    READ TABLE lt_tab TRANSPORTING NO FIELDS WITH KEY table_line = ''.
   ENDMETHOD.
 
   METHOD test_002.
@@ -34,4 +34,3 @@ CLASS zcl_skylint_test_011 IMPLEMENTATION.
     ENDIF.
   ENDMETHOD.
 ENDCLASS.
-

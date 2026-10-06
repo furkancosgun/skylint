@@ -14,7 +14,7 @@ CLASS zcl_skylint_test_052 IMPLEMENTATION.
     DATA lt_tab TYPE string_table.
     DATA ls_row TYPE string.
     LOOP AT lt_tab INTO ls_row.
-      AT NEW ls_row.
+      AT NEW table_line.
       ENDAT.
     ENDLOOP.
   ENDMETHOD.
@@ -28,9 +28,12 @@ CLASS zcl_skylint_test_052 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_003.
-    DATA lv_a TYPE i.
-    ON CHANGE OF lv_a.
-    ENDON.
+    DATA lt_tab TYPE string_table.
+    DATA ls_row TYPE string.
+    LOOP AT lt_tab INTO ls_row.
+      AT END table_line.
+      ENDAT.
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD test_004.

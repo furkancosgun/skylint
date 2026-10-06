@@ -5,7 +5,7 @@ CLASS zcl_skylint_test_061 DEFINITION
   PUBLIC SECTION.
     METHODS test_001 EXCEPTIONS error.
     METHODS test_002.
-    METHODS test_003.
+    METHODS test_003 EXCEPTIONS error.
     METHODS test_004.
 ENDCLASS.
 

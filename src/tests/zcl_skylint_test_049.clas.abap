@@ -11,7 +11,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_049 IMPLEMENTATION.
   METHOD test_001.
-    RAISE SHORTDUMP TYPE cx_sy_zerodivide.
+    RAISE shortdump TYPE cx_sy_zerodivide.
   ENDMETHOD.
 
   METHOD test_002.
@@ -19,10 +19,10 @@ CLASS zcl_skylint_test_049 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_003.
-    RAISE SHORTDUMP TYPE cx_sy_no_handler.
+    RAISE shortdump TYPE cx_sy_no_handler.
   ENDMETHOD.
 
   METHOD test_004.
-    RAISE EXCEPTION TYPE cx_static_check.
+    RAISE EXCEPTION TYPE cx_sy_no_handler.
   ENDMETHOD.
 ENDCLASS.

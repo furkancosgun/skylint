@@ -12,9 +12,9 @@ CLASS ltcl_check_050 IMPLEMENTATION.
         io_check    = NEW zcl_skylint_check_050( )
         iv_class    = 'ZCL_SKYLINT_TEST_050'
         it_expected = VALUE #(
-            ( method = 'TEST_001' code = zcl_skylint_check_050=>c_finding_codes-magic_number line = 3 column = 5 )
+            ( method = 'TEST_001' code = zcl_skylint_check_050=>c_finding_codes-magic_number line = 3 column = 4 )
             ( method = 'TEST_002' )
-            ( method = 'TEST_003' code = zcl_skylint_check_050=>c_finding_codes-magic_number line = 3 column = 5 )
+            ( method = 'TEST_003' code = zcl_skylint_check_050=>c_finding_codes-magic_number line = 3 column = 4 )
             ( method = 'TEST_004' ) ) ).
   ENDMETHOD.
 ENDCLASS.

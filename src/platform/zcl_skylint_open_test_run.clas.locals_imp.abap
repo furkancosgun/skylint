@@ -174,7 +174,7 @@ CLASS lcl_lexer IMPLEMENTATION.
     mv_len = strlen( mv_src ).
     mv_pos = 0.
     mv_line = 1.
-    mv_col = 1.
+    mv_col = 0.
     mv_nl = lv_nl.
   ENDMETHOD.
 
@@ -207,7 +207,7 @@ CLASS lcl_lexer IMPLEMENTATION.
     mv_pos = mv_pos + 1.
     IF lv_ch = mv_nl.
       mv_line = mv_line + 1.
-      mv_col = 1.
+      mv_col = 0.
     ELSE.
       mv_col = mv_col + 1.
     ENDIF.
@@ -264,7 +264,7 @@ CLASS lcl_lexer IMPLEMENTATION.
         WHEN '"'.
           scan_comment( ).
         WHEN '*'.
-          IF mv_col = 1.
+          IF mv_col = 0.
             scan_comment( ).
           ELSE.
             scan_word( ).
