@@ -35,46 +35,46 @@ CLASS zcl_skylint_sci_test_run IMPLEMENTATION.
     lo_variant->save( lo_variant->variant ).
     lo_variant->leave_change( ).
 
-        LOOP AT it_expected INTO ls_exp.
-          ls_method-clsname = is_object-name.
-          ls_method-cpdname = to_upper( ls_exp-method ).
+    run( p_variant  = lo_variant->chkvinf-checkvname
+         p_obj_type = 'CLAS'
+         p_obj_name = iv_class ).
 
-          lv_objname = cl_oo_classname_service=>get_method_include( mtdkey = ls_method ).
+    LOOP AT it_expected INTO ls_exp.
+      ls_method-clsname = iv_class.
+      ls_method-cpdname = to_upper( ls_exp-method ).
 
-          run( p_variant  = lo_variant->chkvinf-checkvname
-               p_obj_type = is_object-type
-               p_obj_name = is_object-name ).
+      lv_objname = cl_oo_classname_service=>get_method_include( mtdkey = ls_method ).
 
-          lv_found = abap_false.
-          IF ls_exp-code IS INITIAL.
-            LOOP AT result_list TRANSPORTING NO FIELDS
-                WHERE sobjtype = 'PROG'
-                  AND sobjname = lv_objname.
-              lv_found = abap_true.
-              EXIT.
-            ENDLOOP.
-            cl_abap_unit_assert=>assert_true(
-                act = xsdbool( lv_found = abap_false )
-                msg = |Method { ls_exp-method }: expected no findings but found some.| ).
-          ELSE.
-            LOOP AT result_list ASSIGNING <ls_result>
-                WHERE code = ls_exp-code
-                  AND sobjtype = 'PROG'
-                  AND sobjname = lv_objname.
-              IF <ls_result>-line <> ls_exp-line.
-                CONTINUE.
-              ENDIF.
-              IF <ls_result>-col <> ls_exp-column.
-                CONTINUE.
-              ENDIF.
-              lv_found = abap_true.
-              EXIT.
-            ENDLOOP.
-            cl_abap_unit_assert=>assert_true(
-                act = lv_found
-                msg = |Expected finding { ls_exp-code } at { ls_exp-line }:{ ls_exp-column } not found.| ).
-          ENDIF.
+      lv_found = abap_false.
+      IF ls_exp-code IS INITIAL.
+        LOOP AT result_list TRANSPORTING NO FIELDS
+            WHERE sobjtype = 'PROG'
+              AND sobjname = lv_objname.
+          lv_found = abap_true.
+          EXIT.
         ENDLOOP.
+        cl_abap_unit_assert=>assert_true(
+            act = xsdbool( lv_found = abap_false )
+            msg = |Method { ls_exp-method }: expected no findings but found some.| ).
+      ELSE.
+        LOOP AT result_list ASSIGNING <ls_result>
+            WHERE code = ls_exp-code
+              AND sobjtype = 'PROG'
+              AND sobjname = lv_objname.
+          IF <ls_result>-line <> ls_exp-line.
+            CONTINUE.
+          ENDIF.
+          IF <ls_result>-col <> ls_exp-column.
+            CONTINUE.
+          ENDIF.
+          lv_found = abap_true.
+          EXIT.
+        ENDLOOP.
+        cl_abap_unit_assert=>assert_true(
+            act = lv_found
+            msg = |Expected finding { ls_exp-code } at { ls_exp-line }:{ ls_exp-column } not found.| ).
+      ENDIF.
+    ENDLOOP.
 
     lo_variant->delete( ).
   ENDMETHOD.
