@@ -12,7 +12,7 @@ CLASS ltcl_check_040 IMPLEMENTATION.
         io_check    = NEW zcl_skylint_check_040( )
         iv_class    = 'ZCL_SKYLINT_TEST_040'
         it_expected = VALUE #(
-            ( method = 'TEST_001' code = zcl_skylint_check_040=>c_finding_codes-nesting_depth )
+            ( method = 'TEST_001' code = zcl_skylint_check_040=>c_finding_codes-nesting_depth line = 9 column = 5 )
             ( method = 'TEST_002' )
         ) ).
   ENDMETHOD.

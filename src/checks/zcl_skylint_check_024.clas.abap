@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_024 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_xsdbool TYPE zif_skylint_types=>ty_finding_code VALUE 'PREFERXSDBOOL',
+        prefer_xsdbool TYPE zif_skylint_types=>ty_finding_code VALUE 'PREFERXSDB',
       END OF c_finding_codes.
 
     METHODS constructor.

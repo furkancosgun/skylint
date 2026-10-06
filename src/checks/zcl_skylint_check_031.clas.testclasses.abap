@@ -12,7 +12,7 @@ CLASS ltcl_check_031 IMPLEMENTATION.
         io_check    = NEW zcl_skylint_check_031( )
         iv_class    = 'ZCL_SKYLINT_TEST_031'
         it_expected = VALUE #(
-            ( method = 'TEST_001' code = zcl_skylint_check_031=>c_finding_codes-unsecure_fae )
+            ( method = 'TEST_001' code = zcl_skylint_check_031=>c_finding_codes-unsecure_fae line = 4 column = 5 )
             ( method = 'TEST_002' )
         ) ).
   ENDMETHOD.

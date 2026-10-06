@@ -12,7 +12,8 @@ CLASS ltcl_check_047 IMPLEMENTATION.
         io_check    = NEW zcl_skylint_check_047( )
         iv_class    = 'ZCL_SKYLINT_TEST_047'
         it_expected = VALUE #(
-            ( method = 'TEST_001' code = zcl_skylint_check_047=>c_finding_codes-cyclomatic_complexity )
+            ( method = 'TEST_001'
+              code = zcl_skylint_check_047=>c_finding_codes-cyclomatic_complexity line = 1 column = 1 )
             ( method = 'TEST_002' )
         ) ).
   ENDMETHOD.

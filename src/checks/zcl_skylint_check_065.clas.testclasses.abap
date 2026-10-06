@@ -12,7 +12,7 @@ CLASS ltcl_check_065 IMPLEMENTATION.
         io_check    = NEW zcl_skylint_check_065( )
         iv_class    = 'ZCL_SKYLINT_TEST_065'
         it_expected = VALUE #(
-            ( method = 'TEST_001' code = zcl_skylint_check_065=>c_finding_codes-avoid_form )
+            ( method = 'TEST_001' code = zcl_skylint_check_065=>c_finding_codes-avoid_form line = 2 column = 1 )
             ( method = 'TEST_002' )
         ) ).
   ENDMETHOD.

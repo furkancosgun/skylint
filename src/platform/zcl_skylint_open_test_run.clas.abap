@@ -91,10 +91,10 @@ CLASS zcl_skylint_open_test_run IMPLEMENTATION.
       ELSE.
         lv_found = abap_false.
         LOOP AT lt_findings ASSIGNING <ls_finding> WHERE code = ls_exp-code.
-          IF ls_exp-line IS NOT INITIAL AND <ls_finding>-position-line <> ls_exp-line.
+          IF <ls_finding>-position-line <> ls_exp-line.
             CONTINUE.
           ENDIF.
-          IF ls_exp-column IS NOT INITIAL AND <ls_finding>-position-column <> ls_exp-column.
+          IF <ls_finding>-position-column <> ls_exp-column.
             CONTINUE.
           ENDIF.
           lv_found = abap_true.

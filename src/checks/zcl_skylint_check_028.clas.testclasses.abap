@@ -12,7 +12,7 @@ CLASS ltcl_check_028 IMPLEMENTATION.
         io_check    = NEW zcl_skylint_check_028( )
         iv_class    = 'ZCL_SKYLINT_TEST_028'
         it_expected = VALUE #(
-            ( method = 'TEST_001' code = zcl_skylint_check_028=>c_finding_codes-obsolete_statement )
+            ( method = 'TEST_001' code = zcl_skylint_check_028=>c_finding_codes-obsolete_statement line = 4 column = 5 )
             ( method = 'TEST_002' )
         ) ).
   ENDMETHOD.

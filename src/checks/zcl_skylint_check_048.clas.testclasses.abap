@@ -12,7 +12,7 @@ CLASS ltcl_check_048 IMPLEMENTATION.
         io_check    = NEW zcl_skylint_check_048( )
         iv_class    = 'ZCL_SKYLINT_TEST_048'
         it_expected = VALUE #(
-            ( method = 'TEST_001' code = zcl_skylint_check_048=>c_finding_codes-class_not_final )
+            ( method = 'TEST_001' code = zcl_skylint_check_048=>c_finding_codes-class_not_final line = 1 column = 1 )
             ( method = 'TEST_002' )
         ) ).
   ENDMETHOD.

@@ -80,10 +80,10 @@ All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 | **020** | [zcl_skylint_check_020](src/checks/zcl_skylint_check_020.clas.abap) | Avoid Yoda conditions in comparison expressions | `YODACOND` | `—` | ✅ Done | — |
 | **021** | [zcl_skylint_check_021](src/checks/zcl_skylint_check_021.clas.abap) | Prefer comparison operators (=, <>, <, >, <=, >=) over legacy textual keywords | `PREFEROP` | `—` | ✅ Done | — |
 | **022** | [zcl_skylint_check_022](src/checks/zcl_skylint_check_022.clas.abap) | Prefer NEW #( ) constructor expression over legacy CREATE OBJECT | `PREFERNEW` | `—` | ✅ Done | — |
-| **023** | [zcl_skylint_check_023](src/checks/zcl_skylint_check_023.clas.abap) | Prefer RAISE EXCEPTION NEW over RAISE EXCEPTION TYPE | `RAISEEXCNEW` | `—` | ✅ Done | — |
-| **024** | [zcl_skylint_check_024](src/checks/zcl_skylint_check_024.clas.abap) | Prefer xsdbool( ) expression over manual IF-ELSE assignment | `PREFERXSDBOOL` | `—` | ✅ Done | — |
+| **023** | [zcl_skylint_check_023](src/checks/zcl_skylint_check_023.clas.abap) | Prefer RAISE EXCEPTION NEW over RAISE EXCEPTION TYPE | `RAISEEXCNE` | `—` | ✅ Done | — |
+| **024** | [zcl_skylint_check_024](src/checks/zcl_skylint_check_024.clas.abap) | Prefer xsdbool( ) expression over manual IF-ELSE assignment | `PREFERXSDB` | `—` | ✅ Done | — |
 | **025** | [zcl_skylint_check_025](src/checks/zcl_skylint_check_025.clas.abap) | Omit RECEIVING in method calls | `OMITRECEIV` | `—` | ✅ Done | — |
-| **026** | [zcl_skylint_check_026](src/checks/zcl_skylint_check_026.clas.abap) | Avoid calling static methods via instance arrow (->) | `STATICVIAINST` | `—` | ✅ Done | — |
+| **026** | [zcl_skylint_check_026](src/checks/zcl_skylint_check_026.clas.abap) | Avoid calling static methods via instance arrow (->) | `STATICVIAI` | `—` | ✅ Done | — |
 | **027** | [zcl_skylint_check_027](src/checks/zcl_skylint_check_027.clas.abap) | Avoid mutable public attributes in classes | `NOPUBATTR` | `—` | ✅ Done | — |
 | **028** | [zcl_skylint_check_028](src/checks/zcl_skylint_check_028.clas.abap) | Avoid obsolete statements (MOVE, REFRESH, etc.) | `OBSOLETE` | `—` | ✅ Done | — |
 | **029** | [zcl_skylint_check_029](src/checks/zcl_skylint_check_029.clas.abap) | Method signature cleanliness (excessive parameter count) | `PARAMCOUNT` | `—` | ✅ Done | — |
@@ -94,7 +94,7 @@ All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 | **034** | [zcl_skylint_check_034](src/checks/zcl_skylint_check_034.clas.abap) | Detect Identical Self Assignments | `IDENTMOVE` | `—` | ✅ Done | — |
 | **035** | [zcl_skylint_check_035](src/checks/zcl_skylint_check_035.clas.abap) | Enforce fully typed constant declarations | `FULLYTYPED` | `—` | ✅ Done | — |
 | **036** | [zcl_skylint_check_036](src/checks/zcl_skylint_check_036.clas.abap) | Omit parameter name in single parameter method call | `OMITPARM` | `—` | ✅ Done | — |
-| **037** | [zcl_skylint_check_037](src/checks/zcl_skylint_check_037.clas.abap) | Detect TRY without CATCH | `TRYWITHOUTC` | `—` | ✅ Done | — |
+| **037** | [zcl_skylint_check_037](src/checks/zcl_skylint_check_037.clas.abap) | Detect TRY without CATCH | `TRYWITHOUT` | `—` | ✅ Done | — |
 | **038** | [zcl_skylint_check_038](src/checks/zcl_skylint_check_038.clas.abap) | Prefer CORRESPONDING Expression over MOVE-CORRESPONDING | `PREFER_COR` | `—` | ✅ Done | — |
 | **039** | [zcl_skylint_check_039](src/checks/zcl_skylint_check_039.clas.abap) | Method Length Limit (excessive statement count) | `METHOD_LEN` | `—` | ✅ Done | — |
 | **040** | [zcl_skylint_check_040](src/checks/zcl_skylint_check_040.clas.abap) | Nesting Depth Limit (excessive control block nesting) | `NESTING_DP` | `—` | ✅ Done | — |
@@ -123,7 +123,7 @@ All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 | **063** | [zcl_skylint_check_063](src/checks/zcl_skylint_check_063.clas.abap) | Avoid raising SAP internal system exceptions (cx_sy_*) | `RAISE_SYS` | `—` | ✅ Done | — |
 | **064** | [zcl_skylint_check_064](src/checks/zcl_skylint_check_064.clas.abap) | Check sy-subrc after DB, table and string operations | `CHECKSUBRC` | `—` | ✅ Done | — |
 | **065** | [zcl_skylint_check_065](src/checks/zcl_skylint_check_065.clas.abap) | Avoid obsolete FORM routines; use modern methods in ABAP Cloud | `AVOID_FORM` | `—` | ✅ Done | — |
-| **066** | [zcl_skylint_check_066](src/checks/zcl_skylint_check_066.clas.abap) | Avoid USING CLIENT or CLIENT SPECIFIED in ABAP SQL | `CLIENT_SPEC` | `—` | ✅ Done | — |
+| **066** | [zcl_skylint_check_066](src/checks/zcl_skylint_check_066.clas.abap) | Avoid USING CLIENT or CLIENT SPECIFIED in ABAP SQL | `CLIENT_SPE` | `—` | ✅ Done | — |
 | **067** | [zcl_skylint_check_067](src/checks/zcl_skylint_check_067.clas.abap) | Avoid COMMIT WORK / ROLLBACK WORK in behavior implementations | `NO_COMMIT` | `—` | ✅ Done | — |
 | **068** | [zcl_skylint_check_068](src/checks/zcl_skylint_check_068.clas.abap) | Avoid full-line MODIFY itab inside LOOP without TRANSPORTING clause | `FULL_MODIF` | `—` | ✅ Done | — |
 | **069** | [zcl_skylint_check_069](src/checks/zcl_skylint_check_069.clas.abap) | Enforce test method naming convention (TEST_, SHOULD_) in AUnit | `TEST_NAME` | `—` | ✅ Done | — |

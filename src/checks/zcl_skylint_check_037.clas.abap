@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_037 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        try_without_catch TYPE zif_skylint_types=>ty_finding_code VALUE 'TRYWITHOUTC',
+        try_without_catch TYPE zif_skylint_types=>ty_finding_code VALUE 'TRYWITHOUT',
       END OF c_finding_codes.
 
     METHODS constructor.

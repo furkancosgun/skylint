@@ -13,6 +13,7 @@
     "fix": "abaplint --fix",
     "clean": "node scripts/clean.mjs",
     "index": "node scripts/indexer.mjs",
+    "positions": "node scripts/fill-positions.mjs",
     "deps": "git submodule update --init --recursive",
     "check:cloud": "abaplint .abaplint/abap_cloud.json",
     "check:standard": "abaplint .abaplint/abap_standard.json",

@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_023 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        raise_exception_new TYPE zif_skylint_types=>ty_finding_code VALUE 'RAISEEXCNEW',
+        raise_exception_new TYPE zif_skylint_types=>ty_finding_code VALUE 'RAISEEXCNE',
       END OF c_finding_codes.
 
     METHODS constructor.

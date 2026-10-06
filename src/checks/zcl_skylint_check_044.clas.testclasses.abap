@@ -12,7 +12,8 @@ CLASS ltcl_check_044 IMPLEMENTATION.
         io_check    = NEW zcl_skylint_check_044( )
         iv_class    = 'ZCL_SKYLINT_TEST_044'
         it_expected = VALUE #(
-            ( method = 'TEST_001' code = zcl_skylint_check_044=>c_finding_codes-dangerous_statement )
+            ( method = 'TEST_001'
+              code = zcl_skylint_check_044=>c_finding_codes-dangerous_statement line = 6 column = 5 )
             ( method = 'TEST_002' )
         ) ).
   ENDMETHOD.

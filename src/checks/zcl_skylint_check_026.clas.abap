@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_026 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        static_call_via_instance TYPE zif_skylint_types=>ty_finding_code VALUE 'STATICVIAINST',
+        static_call_via_instance TYPE zif_skylint_types=>ty_finding_code VALUE 'STATICVIAI',
       END OF c_finding_codes.
 
     METHODS constructor.

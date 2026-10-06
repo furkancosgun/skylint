@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_066 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        client_spec TYPE zif_skylint_types=>ty_finding_code VALUE 'CLIENT_SPEC',
+        client_spec TYPE zif_skylint_types=>ty_finding_code VALUE 'CLIENT_SPE',
       END OF c_finding_codes.
 
     METHODS constructor.

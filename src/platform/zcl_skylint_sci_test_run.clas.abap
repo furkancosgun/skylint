@@ -23,7 +23,6 @@ CLASS zcl_skylint_sci_test_run IMPLEMENTATION.
     DATA ls_method  TYPE seocpdkey.
     DATA lv_found   TYPE abap_bool.
     FIELD-SYMBOLS <ls_result> LIKE LINE OF result_list.
-    FIELD-SYMBOLS <lv_col>    TYPE any.
 
     lv_name = |SKYLINT_UNIT_{ sy-datum }_{ sy-uzeit }|.
 
@@ -52,10 +51,10 @@ CLASS zcl_skylint_sci_test_run IMPLEMENTATION.
               WHERE code = ls_exp-code
                 AND sobjtype = 'PROG'
                 AND sobjname = lv_objname.
-            IF ls_exp-line IS NOT INITIAL AND <ls_result>-line <> ls_exp-line.
+            IF <ls_result>-line <> ls_exp-line.
               CONTINUE.
             ENDIF.
-            IF ls_exp-column IS NOT INITIAL AND <ls_result>-col <> ls_exp-column.
+            IF <ls_result>-col <> ls_exp-column.
               CONTINUE.
             ENDIF.
             lv_found = abap_true.
