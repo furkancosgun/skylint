@@ -157,23 +157,25 @@ CLASS zcl_skylint_open_test_run IMPLEMENTATION.
     WRITE '@KERNEL     for (const line of lines) {'.
     WRITE '@KERNEL       const tr = line.trim().toUpperCase();'.
     WRITE '@KERNEL       if (!inMethod) {'.
-    WRITE '@KERNEL         if (tr.startsWith("METHOD " + mth + ".")) inMethod = true;'.
+    WRITE '@KERNEL         if (tr.startsWith("METHOD " + mth + ".")) { inMethod = true; methodLines.push(line); }'.
     WRITE '@KERNEL       } else {'.
-    WRITE '@KERNEL         if (tr === "ENDMETHOD.") break;'.
     WRITE '@KERNEL         methodLines.push(line);'.
+    WRITE '@KERNEL         if (tr === "ENDMETHOD.") break;'.
     WRITE '@KERNEL       }'.
     WRITE '@KERNEL     }'.
-    WRITE '@KERNEL     const body = methodLines.join("\n").trim();'.
-    WRITE '@KERNEL     if (body === "RETURN." || body === "") {'.
+    WRITE '@KERNEL     const inner = methodLines.slice(1, -1).join("\n").trim();'.
+    WRITE '@KERNEL     if (methodLines.length === 0) {'.
+    WRITE '@KERNEL       lv_res.set("METHOD " + mth + ".\nENDMETHOD.");'.
+    WRITE '@KERNEL     } else if (inner === "RETURN." || inner === "") {'.
     WRITE '@KERNEL       const defs = getDefs();'.
     WRITE '@KERNEL       if (defs.length > 0) {'.
     WRITE '@KERNEL         const idx = (wantClean && defs.length > 1) ? 1 : 0;'.
     WRITE '@KERNEL         lv_res.set(defs[idx]);'.
     WRITE '@KERNEL       } else {'.
-    WRITE '@KERNEL         lv_res.set("METHOD " + mth + ".\n" + body + "\nENDMETHOD.");'.
+    WRITE '@KERNEL         lv_res.set(methodLines.join("\n"));'.
     WRITE '@KERNEL       }'.
     WRITE '@KERNEL     } else {'.
-    WRITE '@KERNEL       lv_res.set("METHOD " + mth + ".\n" + body + "\nENDMETHOD.");'.
+    WRITE '@KERNEL       lv_res.set(methodLines.join("\n"));'.
     WRITE '@KERNEL     }'.
     WRITE '@KERNEL   } else {'.
     WRITE '@KERNEL     lv_res.set(content);'.

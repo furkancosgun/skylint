@@ -13,10 +13,10 @@ CLASS ltcl_check_047 IMPLEMENTATION.
         iv_class    = 'ZCL_SKYLINT_TEST_047'
         it_expected = VALUE #(
             ( method = 'TEST_001'
-              code = zcl_skylint_check_047=>c_finding_codes-cyclomatic_complexity line = 1 column = 1 )
+              code = zcl_skylint_check_047=>c_finding_codes-cyclomatic_complexity line = 1 column = 3 )
             ( method = 'TEST_002' )
             ( method = 'TEST_003'
-              code = zcl_skylint_check_047=>c_finding_codes-cyclomatic_complexity line = 1 column = 1 )
+              code = zcl_skylint_check_047=>c_finding_codes-cyclomatic_complexity line = 1 column = 3 )
             ( method = 'TEST_004' )
         ) ).
   ENDMETHOD.
