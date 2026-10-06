@@ -14,6 +14,8 @@ CLASS ltcl_check_060 IMPLEMENTATION.
         it_expected = VALUE #(
             ( method = 'TEST_001' code = zcl_skylint_check_060=>c_finding_codes-catch_root line = 3 column = 5 )
             ( method = 'TEST_002' )
+            ( method = 'TEST_003' code = zcl_skylint_check_060=>c_finding_codes-catch_root line = 4 column = 5 )
+            ( method = 'TEST_004' )
         ) ).
   ENDMETHOD.
 ENDCLASS.

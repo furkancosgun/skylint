@@ -5,6 +5,8 @@ CLASS zcl_skylint_test_065 DEFINITION
   PUBLIC SECTION.
     METHODS test_001.
     METHODS test_002.
+    METHODS test_003.
+    METHODS test_004.
 ENDCLASS.
 
 CLASS zcl_skylint_test_065 IMPLEMENTATION.
@@ -16,4 +18,16 @@ CLASS zcl_skylint_test_065 IMPLEMENTATION.
     DATA lo_obj TYPE REF TO zcl_skylint_test_065.
     lo_obj->test_002( ).
   ENDMETHOD.
+
+  METHOD test_003.
+    PERFORM my_other_form.
+  ENDMETHOD.
+
+  METHOD test_004.
+    DATA lv_val TYPE i.
+    lv_val = 1.
+  ENDMETHOD.
 ENDCLASS.
+
+FORM my_other_form.
+ENDFORM.

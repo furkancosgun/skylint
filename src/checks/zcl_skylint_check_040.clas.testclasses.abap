@@ -14,6 +14,8 @@ CLASS ltcl_check_040 IMPLEMENTATION.
         it_expected = VALUE #(
             ( method = 'TEST_001' code = zcl_skylint_check_040=>c_finding_codes-nesting_depth line = 9 column = 5 )
             ( method = 'TEST_002' )
+            ( method = 'TEST_003' code = zcl_skylint_check_040=>c_finding_codes-nesting_depth line = 5 column = 5 )
+            ( method = 'TEST_004' )
         ) ).
   ENDMETHOD.
 ENDCLASS.

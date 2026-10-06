@@ -6,6 +6,14 @@ INTERFACE lif_clean.
   CONSTANTS c_version TYPE i VALUE 1.
 ENDINTERFACE.
 
+INTERFACE lif_state2.
+  CLASS-DATA gv_counter TYPE i.
+ENDINTERFACE.
+
+INTERFACE lif_consts2.
+  CONSTANTS c_max TYPE i VALUE 100.
+ENDINTERFACE.
+
 CLASS zcl_skylint_test_059 DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
@@ -13,6 +21,8 @@ CLASS zcl_skylint_test_059 DEFINITION
   PUBLIC SECTION.
     METHODS test_001.
     METHODS test_002.
+    METHODS test_003.
+    METHODS test_004.
 ENDCLASS.
 
 CLASS zcl_skylint_test_059 IMPLEMENTATION.
@@ -22,5 +32,14 @@ CLASS zcl_skylint_test_059 IMPLEMENTATION.
 
   METHOD test_002.
     RETURN.
+  ENDMETHOD.
+
+  METHOD test_003.
+    RETURN.
+  ENDMETHOD.
+
+  METHOD test_004.
+    DATA lv_val TYPE i.
+    lv_val = 1.
   ENDMETHOD.
 ENDCLASS.

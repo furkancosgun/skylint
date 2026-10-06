@@ -5,6 +5,8 @@ CLASS zcl_skylint_test_044 DEFINITION
   PUBLIC SECTION.
     METHODS test_001.
     METHODS test_002.
+    METHODS test_003.
+    METHODS test_004.
 ENDCLASS.
 
 
@@ -20,6 +22,16 @@ CLASS zcl_skylint_test_044 IMPLEMENTATION.
   METHOD test_002.
     DATA lv_flag TYPE abap_bool.
     CHECK lv_flag = abap_true.
+  ENDMETHOD.
+
+  METHOD test_003.
+    DELETE REPORT 'ZFOO'.
+  ENDMETHOD.
+
+  METHOD test_004.
+    DATA lv_flag TYPE abap_bool.
+    IF lv_flag = abap_true.
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.
 

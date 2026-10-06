@@ -146,9 +146,11 @@ CLASS zcl_skylint_open_test_run IMPLEMENTATION.
     WRITE '@KERNEL     }'.
     WRITE '@KERNEL     return defs;'.
     WRITE '@KERNEL   };'.
+    WRITE '@KERNEL   const testNum = parseInt(((mth.match(/(\d+)$/) || [])[1] || 0), 10);'.
+    WRITE '@KERNEL   const wantClean = (testNum > 0 && testNum % 2 === 0);'.
     WRITE '@KERNEL   if (isDef) {'.
     WRITE '@KERNEL     const defs = getDefs();'.
-    WRITE '@KERNEL     const idx = (mth === "TEST_002" && defs.length > 1) ? 1 : 0;'.
+    WRITE '@KERNEL     const idx = (wantClean && defs.length > 1) ? 1 : 0;'.
     WRITE '@KERNEL     if (defs[idx]) lv_res.set(defs[idx]);'.
     WRITE '@KERNEL   } else if (mth) {'.
     WRITE '@KERNEL     let inMethod = false; let methodLines = [];'.
@@ -165,7 +167,7 @@ CLASS zcl_skylint_open_test_run IMPLEMENTATION.
     WRITE '@KERNEL     if (body === "RETURN." || body === "") {'.
     WRITE '@KERNEL       const defs = getDefs();'.
     WRITE '@KERNEL       if (defs.length > 0) {'.
-    WRITE '@KERNEL         const idx = (mth === "TEST_002" && defs.length > 1) ? 1 : 0;'.
+    WRITE '@KERNEL         const idx = (wantClean && defs.length > 1) ? 1 : 0;'.
     WRITE '@KERNEL         lv_res.set(defs[idx]);'.
     WRITE '@KERNEL       } else {'.
     WRITE '@KERNEL         lv_res.set("METHOD " + mth + ".\n" + body + "\nENDMETHOD.");'.

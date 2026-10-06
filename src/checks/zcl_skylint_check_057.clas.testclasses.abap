@@ -14,6 +14,8 @@ CLASS ltcl_check_057 IMPLEMENTATION.
         it_expected = VALUE #(
             ( method = 'TEST_001' )
             ( method = 'TEST_002' )
+            ( method = 'TEST_003' )
+            ( method = 'TEST_004' )
         ) ).
   ENDMETHOD.
 ENDCLASS.

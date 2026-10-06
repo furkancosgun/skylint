@@ -15,6 +15,9 @@ CLASS ltcl_check_007 IMPLEMENTATION.
             ( method = 'TEST_001'
               code = zcl_skylint_check_007=>c_finding_codes-assignment_chaining line = 5 column = 5 )
             ( method = 'TEST_002' )
+            ( method = 'TEST_003'
+              code = zcl_skylint_check_007=>c_finding_codes-assignment_chaining line = 4 column = 5 )
+            ( method = 'TEST_004' )
         ) ).
   ENDMETHOD.
 ENDCLASS.

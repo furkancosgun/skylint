@@ -5,6 +5,8 @@ CLASS zcl_skylint_test_073 DEFINITION
   PUBLIC SECTION.
     METHODS test_001.
     METHODS test_002.
+    METHODS test_003.
+    METHODS test_004.
 ENDCLASS.
 
 
@@ -17,6 +19,17 @@ CLASS zcl_skylint_test_073 IMPLEMENTATION.
   METHOD test_002.
     DATA lv_x TYPE i.
     lv_x = 10.
+  ENDMETHOD.
+
+  METHOD test_003.
+    DATA lv_num TYPE i.
+    SUBTRACT 1 FROM lv_num.
+  ENDMETHOD.
+
+  METHOD test_004.
+    DATA lv_x TYPE i.
+    DATA lv_y TYPE i.
+    lv_x = lv_y + 1.
   ENDMETHOD.
 ENDCLASS.
 

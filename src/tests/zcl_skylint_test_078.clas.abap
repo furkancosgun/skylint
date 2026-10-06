@@ -5,6 +5,8 @@ CLASS zcl_skylint_test_078 DEFINITION
   PUBLIC SECTION.
     METHODS test_001.
     METHODS test_002.
+    METHODS test_003.
+    METHODS test_004.
 ENDCLASS.
 
 
@@ -16,6 +18,16 @@ CLASS zcl_skylint_test_078 IMPLEMENTATION.
 
   METHOD test_002.
     TYPES ty_t TYPE i.
+    DATA lv_x TYPE i.
+  ENDMETHOD.
+
+  METHOD test_003.
+    FIELD-SYMBOLS <lv_fs> TYPE i.
+    DATA lv_x TYPE i.
+  ENDMETHOD.
+
+  METHOD test_004.
+    CONSTANTS lc_val TYPE i VALUE 1.
     DATA lv_x TYPE i.
   ENDMETHOD.
 ENDCLASS.

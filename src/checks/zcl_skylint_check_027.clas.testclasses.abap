@@ -14,6 +14,8 @@ CLASS ltcl_check_027 IMPLEMENTATION.
         it_expected = VALUE #(
             ( method = 'TEST_001' code = zcl_skylint_check_027=>c_finding_codes-public_attribute line = 3 column = 5 )
             ( method = 'TEST_002' )
+            ( method = 'TEST_003' code = zcl_skylint_check_027=>c_finding_codes-public_attribute line = 3 column = 5 )
+            ( method = 'TEST_004' )
         ) ).
   ENDMETHOD.
 ENDCLASS.

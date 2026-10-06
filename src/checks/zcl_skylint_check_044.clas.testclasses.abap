@@ -15,6 +15,9 @@ CLASS ltcl_check_044 IMPLEMENTATION.
             ( method = 'TEST_001'
               code = zcl_skylint_check_044=>c_finding_codes-dangerous_statement line = 6 column = 5 )
             ( method = 'TEST_002' )
+            ( method = 'TEST_003'
+              code = zcl_skylint_check_044=>c_finding_codes-dangerous_statement line = 2 column = 1 )
+            ( method = 'TEST_004' )
         ) ).
   ENDMETHOD.
 ENDCLASS.

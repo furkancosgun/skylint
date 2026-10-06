@@ -5,6 +5,8 @@ CLASS zcl_skylint_test_061 DEFINITION
   PUBLIC SECTION.
     METHODS test_001 EXCEPTIONS error.
     METHODS test_002.
+    METHODS test_003.
+    METHODS test_004.
 ENDCLASS.
 
 CLASS zcl_skylint_test_061 IMPLEMENTATION.
@@ -14,5 +16,13 @@ CLASS zcl_skylint_test_061 IMPLEMENTATION.
 
   METHOD test_002.
     MESSAGE 'clean' TYPE 'I'.
+  ENDMETHOD.
+
+  METHOD test_003.
+    MESSAGE w001(00) WITH 'warn' RAISING error.
+  ENDMETHOD.
+
+  METHOD test_004.
+    MESSAGE s001(00) WITH 'ok'.
   ENDMETHOD.
 ENDCLASS.

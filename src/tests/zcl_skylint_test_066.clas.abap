@@ -5,6 +5,8 @@ CLASS zcl_skylint_test_066 DEFINITION
   PUBLIC SECTION.
     METHODS test_001.
     METHODS test_002.
+    METHODS test_003.
+    METHODS test_004.
 ENDCLASS.
 
 CLASS zcl_skylint_test_066 IMPLEMENTATION.
@@ -16,5 +18,15 @@ CLASS zcl_skylint_test_066 IMPLEMENTATION.
   METHOD test_002.
     DATA lt_tab TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
     SELECT * FROM zskylint_dummy INTO TABLE @lt_tab.
+  ENDMETHOD.
+
+  METHOD test_003.
+    DATA lt_tab TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
+    SELECT * FROM zskylint_dummy CLIENT SPECIFIED INTO TABLE @lt_tab WHERE mandt = '100'.
+  ENDMETHOD.
+
+  METHOD test_004.
+    DATA ls_row TYPE zskylint_dummy.
+    SELECT SINGLE * FROM zskylint_dummy INTO @ls_row.
   ENDMETHOD.
 ENDCLASS.

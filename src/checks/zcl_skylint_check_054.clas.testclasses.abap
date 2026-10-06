@@ -14,6 +14,10 @@ CLASS ltcl_check_054 IMPLEMENTATION.
         it_expected = VALUE #(
             ( method = 'TEST_001' )
             ( method = 'TEST_002' )
+            ( method = 'TEST_003' )
+            ( method = 'TEST_004' )
+            ( method = 'CONSTRUCTOR'
+              code = zcl_skylint_check_054=>c_finding_codes-constructor_logic line = 12 column = 5 )
         ) ).
   ENDMETHOD.
 ENDCLASS.

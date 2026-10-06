@@ -14,6 +14,8 @@ CLASS ltcl_check_074 IMPLEMENTATION.
         it_expected = VALUE #(
             ( method = 'TEST_001' code = zcl_skylint_check_074=>c_finding_codes-guard_loop line = 6 column = 7 )
             ( method = 'TEST_002' )
+            ( method = 'TEST_003' code = zcl_skylint_check_074=>c_finding_codes-guard_loop line = 5 column = 7 )
+            ( method = 'TEST_004' )
         ) ).
   ENDMETHOD.
 ENDCLASS.

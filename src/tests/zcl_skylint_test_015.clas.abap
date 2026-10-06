@@ -5,6 +5,8 @@ CLASS zcl_skylint_test_015 DEFINITION
   PUBLIC SECTION.
     METHODS test_001.
     METHODS test_002.
+    METHODS test_003.
+    METHODS test_004.
 ENDCLASS.
 
 
@@ -20,6 +22,21 @@ CLASS zcl_skylint_test_015 IMPLEMENTATION.
     TRY.
     CATCH cx_root.
     lv_x = 1.
+    ENDTRY.
+  ENDMETHOD.
+
+  METHOD test_003.
+    TRY.
+    CATCH cx_static_check.
+    CATCH cx_root.
+      MESSAGE 'err' TYPE 'E'.
+    ENDTRY.
+  ENDMETHOD.
+
+  METHOD test_004.
+    TRY.
+    CATCH cx_root.
+      RETURN.
     ENDTRY.
   ENDMETHOD.
 ENDCLASS.

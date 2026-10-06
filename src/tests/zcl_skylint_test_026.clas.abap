@@ -6,6 +6,8 @@ CLASS zcl_skylint_test_026 DEFINITION
     CLASS-METHODS do_work.
     METHODS test_001.
     METHODS test_002.
+    METHODS test_003.
+    METHODS test_004.
 ENDCLASS.
 
 CLASS zcl_skylint_test_026 IMPLEMENTATION.
@@ -20,5 +22,14 @@ CLASS zcl_skylint_test_026 IMPLEMENTATION.
 
   METHOD test_002.
     zcl_skylint_test_026=>do_work( ).
+  ENDMETHOD.
+
+  METHOD test_003.
+    DATA lo_obj TYPE REF TO zcl_skylint_test_026.
+    CALL METHOD lo_obj->do_work.
+  ENDMETHOD.
+
+  METHOD test_004.
+    CALL METHOD zcl_skylint_test_026=>do_work.
   ENDMETHOD.
 ENDCLASS.

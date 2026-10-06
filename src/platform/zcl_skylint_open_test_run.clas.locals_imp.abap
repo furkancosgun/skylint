@@ -89,6 +89,14 @@ CLASS lcl_compiler DEFINITION FINAL.
     CLASS-METHODS add_database_references
       CHANGING cs_statement TYPE zif_skylint_types=>ty_statement.
 
+    CLASS-METHODS find_db_table_index
+      IMPORTING is_statement     TYPE zif_skylint_types=>ty_statement
+      RETURNING VALUE(rv_index) TYPE i.
+
+    CLASS-METHODS is_db_table_name
+      IMPORTING iv_lexeme     TYPE zif_skylint_types=>ty_lexeme
+      RETURNING VALUE(rv_yes) TYPE abap_bool.
+
     CLASS-METHODS add_system_var_references
       CHANGING cs_statement TYPE zif_skylint_types=>ty_statement.
 
@@ -713,31 +721,117 @@ CLASS lcl_compiler IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD add_database_references.
-    DATA ls_ref   TYPE zif_skylint_types=>ty_compiler_reference.
-    DATA lv_mode  TYPE zif_skylint_types=>ty_usage_mode.
-    DATA lv_is_db TYPE abap_bool.
+    DATA ls_ref     TYPE zif_skylint_types=>ty_compiler_reference.
+    DATA lv_mode    TYPE zif_skylint_types=>ty_usage_mode.
+    DATA lv_tab_idx TYPE i.
     FIELD-SYMBOLS <ls_tok> TYPE zif_skylint_types=>ty_token.
 
     CASE cs_statement-keyword.
       WHEN 'SELECT'.
-        lv_is_db = abap_true.
         lv_mode = zif_skylint_types=>usage_modes-read_database.
       WHEN 'UPDATE' OR 'MODIFY' OR 'INSERT' OR 'DELETE'.
-        lv_is_db = abap_true.
         lv_mode = zif_skylint_types=>usage_modes-write_database.
+      WHEN OTHERS.
+        RETURN.
     ENDCASE.
 
-    IF lv_is_db = abap_true AND lines( cs_statement-tokens ) > 0.
-      ASSIGN cs_statement-tokens[ 1 ] TO <ls_tok>.
-      IF sy-subrc = 0.
-        CLEAR ls_ref.
-        ls_ref-kind        = zif_skylint_types=>compiler_reference_kinds-data.
-        ls_ref-usage_grade = zif_skylint_types=>usage_grades-direct.
-        ls_ref-usage_mode  = lv_mode.
-        ls_ref-full_name   = |\\DB:{ cs_statement-keyword }|.
-        INSERT ls_ref INTO TABLE <ls_tok>-references.
+    " Name-based inference: attach the reference to the token carrying the
+    " database table name instead of the statement keyword, so keyword based
+    " helpers (e.g. find_token_sequence) keep matching the verb tokens.
+    lv_tab_idx = find_db_table_index( cs_statement ).
+    IF lv_tab_idx <= 0.
+      RETURN.
+    ENDIF.
+
+    ASSIGN cs_statement-tokens[ lv_tab_idx ] TO <ls_tok>.
+    IF sy-subrc = 0.
+      CLEAR ls_ref.
+      ls_ref-kind        = zif_skylint_types=>compiler_reference_kinds-data.
+      ls_ref-usage_grade = zif_skylint_types=>usage_grades-direct.
+      ls_ref-usage_mode  = lv_mode.
+      ls_ref-full_name   = |\\DB:{ to_upper( <ls_tok>-lexeme ) }|.
+      INSERT ls_ref INTO TABLE <ls_tok>-references.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD find_db_table_index.
+    DATA lv_count  TYPE i.
+    DATA lv_idx    TYPE i.
+    DATA ls_tok    TYPE zif_skylint_types=>ty_token.
+    DATA lv_anchor TYPE string.
+    FIELD-SYMBOLS <ls_t> TYPE zif_skylint_types=>ty_token.
+
+    rv_index = 0.
+    lv_count = lines( is_statement-tokens ).
+    IF lv_count < 2.
+      RETURN.
+    ENDIF.
+
+    CASE is_statement-keyword.
+      WHEN 'SELECT' OR 'DELETE' OR 'MODIFY'.
+        lv_anchor = 'FROM'.
+      WHEN 'INSERT'.
+        lv_anchor = 'INTO'.
+      WHEN 'UPDATE'.
+        lv_anchor = ''.
+      WHEN OTHERS.
+        RETURN.
+    ENDCASE.
+
+    " 1. <ANCHOR> <table>, skipping a TABLE keyword in between.
+    IF lv_anchor IS NOT INITIAL.
+      LOOP AT is_statement-tokens ASSIGNING <ls_t>.
+        IF to_upper( <ls_t>-lexeme ) = lv_anchor.
+          lv_idx = sy-tabix + 1.
+          IF lv_idx <= lv_count.
+            READ TABLE is_statement-tokens INTO ls_tok INDEX lv_idx.
+            IF sy-subrc = 0 AND to_upper( ls_tok-lexeme ) = 'TABLE'.
+              lv_idx = lv_idx + 1.
+            ENDIF.
+          ENDIF.
+          IF lv_idx <= lv_count.
+            READ TABLE is_statement-tokens INTO ls_tok INDEX lv_idx.
+            IF sy-subrc = 0 AND is_db_table_name( ls_tok-lexeme ) = abap_true.
+              rv_index = lv_idx.
+              RETURN.
+            ENDIF.
+          ENDIF.
+        ENDIF.
+      ENDLOOP.
+    ENDIF.
+
+    " 2. <VERB> <table> (DELETE REPORT has no table: REPORT is rejected).
+    IF is_statement-keyword = 'INSERT' OR is_statement-keyword = 'UPDATE'
+        OR is_statement-keyword = 'DELETE' OR is_statement-keyword = 'MODIFY'.
+      READ TABLE is_statement-tokens INTO ls_tok INDEX 2.
+      IF sy-subrc = 0 AND is_db_table_name( ls_tok-lexeme ) = abap_true.
+        rv_index = 2.
       ENDIF.
     ENDIF.
+  ENDMETHOD.
+
+  METHOD is_db_table_name.
+    DATA lv_upper TYPE string.
+
+    rv_yes = abap_false.
+    IF iv_lexeme IS INITIAL.
+      RETURN.
+    ENDIF.
+
+    lv_upper = to_upper( iv_lexeme ).
+    IF lv_upper(1) CA `'@(*0123456789`.
+      RETURN.
+    ENDIF.
+
+    CASE lv_upper.
+      WHEN 'FROM' OR 'INTO' OR 'TABLE' OR 'WHERE' OR 'SET' OR 'SINGLE'
+        OR 'UP' OR 'TO' OR 'ROWS' OR 'BY' OR 'APPENDING' OR 'CORRESPONDING'
+        OR 'FIELDS' OR 'ALL' OR 'DISTINCT' OR 'FOR' OR 'REPORT' OR 'SCREEN'
+        OR 'USING' OR 'CLIENT' OR 'CONNECTION' OR 'AND' OR 'OR'.
+        RETURN.
+      WHEN OTHERS.
+        rv_yes = abap_true.
+    ENDCASE.
   ENDMETHOD.
 
   METHOD add_system_var_references.
@@ -996,7 +1090,9 @@ ENDCLASS.
 
 CLASS lcl_code_block_builder IMPLEMENTATION.
   METHOD slice_code_block.
-    DATA lv_started TYPE abap_bool.
+    DATA lv_started     TYPE abap_bool.
+    DATA lv_method_name TYPE string.
+    DATA ls_name_token  TYPE zif_skylint_types=>ty_token.
     FIELD-SYMBOLS <ls_stmt> TYPE zif_skylint_types=>ty_statement.
 
     CLEAR rs_code_block.
@@ -1021,12 +1117,20 @@ CLASS lcl_code_block_builder IMPLEMENTATION.
     LOOP AT it_statements ASSIGNING <ls_stmt>.
       IF lv_started = abap_false AND <ls_stmt>-keyword = 'METHOD'.
         lv_started = abap_true.
+        IF lines( <ls_stmt>-tokens ) >= 2.
+          ls_name_token = zcl_skylint_ast_util=>get_token( is_statement = <ls_stmt>
+                                                           iv_index     = 2 ).
+          lv_method_name = to_upper( ls_name_token-lexeme ).
+        ENDIF.
       ENDIF.
       IF lv_started = abap_true.
         <ls_stmt>-index = lines( rs_code_block-statements ) + 1.
         APPEND <ls_stmt> TO rs_code_block-statements.
       ENDIF.
       IF lv_started = abap_true AND <ls_stmt>-keyword = 'ENDMETHOD'.
+        IF lv_method_name IS NOT INITIAL.
+          rs_code_block-block_name = |{ rs_code_block-object_name }=>{ lv_method_name }|.
+        ENDIF.
         RETURN.
       ENDIF.
     ENDLOOP.

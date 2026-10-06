@@ -15,6 +15,9 @@ CLASS ltcl_check_047 IMPLEMENTATION.
             ( method = 'TEST_001'
               code = zcl_skylint_check_047=>c_finding_codes-cyclomatic_complexity line = 1 column = 1 )
             ( method = 'TEST_002' )
+            ( method = 'TEST_003'
+              code = zcl_skylint_check_047=>c_finding_codes-cyclomatic_complexity line = 1 column = 1 )
+            ( method = 'TEST_004' )
         ) ).
   ENDMETHOD.
 ENDCLASS.

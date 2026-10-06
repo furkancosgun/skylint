@@ -5,6 +5,8 @@ CLASS zcl_skylint_test_035 DEFINITION
   PUBLIC SECTION.
     METHODS test_001.
     METHODS test_002.
+    METHODS test_003.
+    METHODS test_004.
 ENDCLASS.
 
 
@@ -15,6 +17,14 @@ CLASS zcl_skylint_test_035 IMPLEMENTATION.
 
   METHOD test_002.
     CONSTANTS lc_val TYPE string VALUE 'X'.
+  ENDMETHOD.
+
+  METHOD test_003.
+    CONSTANTS lc_other VALUE 123.
+  ENDMETHOD.
+
+  METHOD test_004.
+    CONSTANTS lc_ok TYPE i VALUE 123.
   ENDMETHOD.
 ENDCLASS.
 

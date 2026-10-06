@@ -25,6 +25,8 @@ CLASS zcl_skylint_test_079 DEFINITION
   PUBLIC SECTION.
     METHODS test_001.
     METHODS test_002.
+    METHODS test_003.
+    METHODS test_004.
 ENDCLASS.
 
 CLASS zcl_skylint_test_079 IMPLEMENTATION.
@@ -34,5 +36,14 @@ CLASS zcl_skylint_test_079 IMPLEMENTATION.
 
   METHOD test_002.
     RETURN.
+  ENDMETHOD.
+
+  METHOD test_003.
+    RETURN.
+  ENDMETHOD.
+
+  METHOD test_004.
+    DATA lv_val TYPE i.
+    lv_val = 1.
   ENDMETHOD.
 ENDCLASS.

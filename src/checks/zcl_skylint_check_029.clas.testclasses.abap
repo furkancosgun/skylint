@@ -15,6 +15,9 @@ CLASS ltcl_check_029 IMPLEMENTATION.
             ( method = 'TEST_001'
               code = zcl_skylint_check_029=>c_finding_codes-too_many_parameters line = 3 column = 5 )
             ( method = 'TEST_002' )
+            ( method = 'TEST_003'
+              code = zcl_skylint_check_029=>c_finding_codes-too_many_parameters line = 3 column = 5 )
+            ( method = 'TEST_004' )
         ) ).
   ENDMETHOD.
 ENDCLASS.
