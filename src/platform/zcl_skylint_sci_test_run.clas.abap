@@ -35,10 +35,9 @@ CLASS zcl_skylint_sci_test_run IMPLEMENTATION.
     lo_variant->save( lo_variant->variant ).
     lo_variant->leave_change( ).
 
-    TRY.
-        LOOP AT it_expected INTO ls_exp WHERE code <> ''.
+        LOOP AT it_expected INTO ls_exp.
           ls_method-clsname = is_object-name.
-          ls_method-cpdname = ls_exp-code.
+          ls_method-cpdname = to_upper( ls_exp-method ).
 
           lv_objname = cl_oo_classname_service=>get_method_include( mtdkey = ls_method ).
 
@@ -47,26 +46,35 @@ CLASS zcl_skylint_sci_test_run IMPLEMENTATION.
                p_obj_name = is_object-name ).
 
           lv_found = abap_false.
-          LOOP AT result_list ASSIGNING <ls_result>
-              WHERE code = ls_exp-code
-                AND sobjtype = 'PROG'
-                AND sobjname = lv_objname.
-            IF <ls_result>-line <> ls_exp-line.
-              CONTINUE.
-            ENDIF.
-            IF <ls_result>-col <> ls_exp-column.
-              CONTINUE.
-            ENDIF.
-            lv_found = abap_true.
-            EXIT.
-          ENDLOOP.
-          cl_abap_unit_assert=>assert_true(
-              act = lv_found
-              msg = |Expected finding { ls_exp-code } at { ls_exp-line }:{ ls_exp-column } not found.| ).
+          IF ls_exp-code IS INITIAL.
+            LOOP AT result_list TRANSPORTING NO FIELDS
+                WHERE sobjtype = 'PROG'
+                  AND sobjname = lv_objname.
+              lv_found = abap_true.
+              EXIT.
+            ENDLOOP.
+            cl_abap_unit_assert=>assert_true(
+                act = xsdbool( lv_found = abap_false )
+                msg = |Method { ls_exp-method }: expected no findings but found some.| ).
+          ELSE.
+            LOOP AT result_list ASSIGNING <ls_result>
+                WHERE code = ls_exp-code
+                  AND sobjtype = 'PROG'
+                  AND sobjname = lv_objname.
+              IF <ls_result>-line <> ls_exp-line.
+                CONTINUE.
+              ENDIF.
+              IF <ls_result>-col <> ls_exp-column.
+                CONTINUE.
+              ENDIF.
+              lv_found = abap_true.
+              EXIT.
+            ENDLOOP.
+            cl_abap_unit_assert=>assert_true(
+                act = lv_found
+                msg = |Expected finding { ls_exp-code } at { ls_exp-line }:{ ls_exp-column } not found.| ).
+          ENDIF.
         ENDLOOP.
-      CLEANUP.
-        lo_variant->delete( ).
-    ENDTRY.
 
     lo_variant->delete( ).
   ENDMETHOD.
