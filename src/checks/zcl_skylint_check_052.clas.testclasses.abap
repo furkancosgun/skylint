@@ -8,16 +8,18 @@ ENDCLASS.
 
 CLASS ltcl_check_052 IMPLEMENTATION.
   METHOD test_check.
-    zcl_skylint_test_runner=>run(
-        io_check    = NEW zcl_skylint_check_052( )
-        iv_class    = 'ZCL_SKYLINT_TEST_052'
-        it_expected = VALUE #(
-            ( method = 'TEST_001'
-              code = zcl_skylint_check_052=>c_finding_codes-obsolete_loop_control line = 5 column = 7 )
-            ( method = 'TEST_002' )
-            ( method = 'TEST_003'
-              code = zcl_skylint_check_052=>c_finding_codes-obsolete_loop_control line = 3 column = 5 )
-            ( method = 'TEST_004' )
-        ) ).
+    zcl_skylint_test_runner=>run( io_check    = NEW zcl_skylint_check_052( )
+                                  iv_class    = 'ZCL_SKYLINT_TEST_052'
+                                  it_expected = VALUE #(
+                                      ( method = 'TEST_001'
+                                        code   = zcl_skylint_check_052=>c_finding_codes-obsolete_loop_control
+                                        line   = 5
+                                        column = 7 )
+                                      ( method = 'TEST_002' )
+                                      ( method = 'TEST_003'
+                                        code   = zcl_skylint_check_052=>c_finding_codes-obsolete_loop_control
+                                        line   = 3
+                                        column = 5 )
+                                      ( method = 'TEST_004' ) ) ).
   ENDMETHOD.
 ENDCLASS.

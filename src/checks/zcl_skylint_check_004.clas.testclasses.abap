@@ -15,7 +15,6 @@ CLASS ltcl_check_004 IMPLEMENTATION.
             ( method = 'TEST_001' code = zcl_skylint_check_004=>c_finding_codes-prefer_is_not line = 3 column = 5 )
             ( method = 'TEST_002' )
             ( method = 'TEST_003' code = zcl_skylint_check_004=>c_finding_codes-prefer_is_not line = 3 column = 5 )
-            ( method = 'TEST_004' )
-        ) ).
+            ( method = 'TEST_004' ) ) ).
   ENDMETHOD.
 ENDCLASS.

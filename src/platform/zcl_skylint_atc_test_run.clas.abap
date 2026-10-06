@@ -23,16 +23,16 @@ CLASS zcl_skylint_atc_test_run IMPLEMENTATION.
       ls_finding-code = ls_exp-code.
       ls_finding-location-object = VALUE #( type = 'CLAS'
                                             name = iv_class ).
-      ls_finding-location-position-line = ls_exp-line.
+      ls_finding-location-position-line   = ls_exp-line.
       ls_finding-location-position-column = ls_exp-column.
       INSERT ls_finding INTO TABLE lt_atc_expected.
     ENDLOOP.
 
     lo_asserter = cl_ci_atc_unit_driver=>create_asserter( ).
-    lo_asserter->check_and_assert(
-        check             = io_check
-        object            = VALUE #( type = 'CLAS' name = iv_class )
-        expected_findings = lt_atc_expected
-        asserter_config   = VALUE #( quickfixes = abap_false ) ).
+    lo_asserter->check_and_assert( check             = io_check
+                                   object            = VALUE #( type = 'CLAS'
+                                                                name = iv_class )
+                                   expected_findings = lt_atc_expected
+                                   asserter_config   = VALUE #( quickfixes = abap_false ) ).
   ENDMETHOD.
 ENDCLASS.

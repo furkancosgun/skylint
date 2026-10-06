@@ -11,13 +11,15 @@ CLASS ltcl_check_008 IMPLEMENTATION.
     zcl_skylint_test_runner=>run(
         io_check    = NEW zcl_skylint_check_008( )
         iv_class    = 'ZCL_SKYLINT_TEST_008'
-        it_expected = VALUE #(
-            ( method = 'TEST_001'
-              code = zcl_skylint_check_008=>c_finding_codes-chained_declaration line = 2 column = 5 )
-            ( method = 'TEST_002' )
-            ( method = 'TEST_003'
-              code = zcl_skylint_check_008=>c_finding_codes-chained_declaration line = 2 column = 5 )
-            ( method = 'TEST_004' )
-        ) ).
+        it_expected = VALUE #( ( method = 'TEST_001'
+                                 code   = zcl_skylint_check_008=>c_finding_codes-chained_declaration
+                                 line   = 2
+                                 column = 5 )
+                               ( method = 'TEST_002' )
+                               ( method = 'TEST_003'
+                                 code   = zcl_skylint_check_008=>c_finding_codes-chained_declaration
+                                 line   = 2
+                                 column = 5 )
+                               ( method = 'TEST_004' ) ) ).
   ENDMETHOD.
 ENDCLASS.

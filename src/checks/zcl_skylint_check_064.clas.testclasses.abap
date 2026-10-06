@@ -15,7 +15,6 @@ CLASS ltcl_check_064 IMPLEMENTATION.
             ( method = 'TEST_001' code = zcl_skylint_check_064=>c_finding_codes-check_subrc line = 3 column = 5 )
             ( method = 'TEST_002' )
             ( method = 'TEST_003' code = zcl_skylint_check_064=>c_finding_codes-check_subrc line = 4 column = 5 )
-            ( method = 'TEST_004' )
-        ) ).
+            ( method = 'TEST_004' ) ) ).
   ENDMETHOD.
 ENDCLASS.

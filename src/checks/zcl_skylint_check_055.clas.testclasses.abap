@@ -15,7 +15,6 @@ CLASS ltcl_check_055 IMPLEMENTATION.
             ( method = 'TEST_001' code = zcl_skylint_check_055=>c_finding_codes-static_class line = 1 column = 1 )
             ( method = 'TEST_002' )
             ( method = 'TEST_003' code = zcl_skylint_check_055=>c_finding_codes-static_class line = 1 column = 1 )
-            ( method = 'TEST_004' )
-        ) ).
+            ( method = 'TEST_004' ) ) ).
   ENDMETHOD.
 ENDCLASS.

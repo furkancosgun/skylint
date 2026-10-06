@@ -15,7 +15,6 @@ CLASS ltcl_check_045 IMPLEMENTATION.
             ( method = 'TEST_001' code = zcl_skylint_check_045=>c_finding_codes-missing_auth_check line = 2 column = 5 )
             ( method = 'TEST_002' )
             ( method = 'TEST_003' code = zcl_skylint_check_045=>c_finding_codes-missing_auth_check line = 2 column = 5 )
-            ( method = 'TEST_004' )
-        ) ).
+            ( method = 'TEST_004' ) ) ).
   ENDMETHOD.
 ENDCLASS.

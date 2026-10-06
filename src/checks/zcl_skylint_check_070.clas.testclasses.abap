@@ -15,7 +15,6 @@ CLASS ltcl_check_070 IMPLEMENTATION.
             ( method = 'TEST_001' code = zcl_skylint_check_070=>c_finding_codes-dyn_sql line = 4 column = 5 )
             ( method = 'TEST_002' )
             ( method = 'TEST_003' code = zcl_skylint_check_070=>c_finding_codes-dyn_sql line = 4 column = 5 )
-            ( method = 'TEST_004' )
-        ) ).
+            ( method = 'TEST_004' ) ) ).
   ENDMETHOD.
 ENDCLASS.

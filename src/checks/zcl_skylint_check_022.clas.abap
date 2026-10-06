@@ -78,7 +78,7 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
     lv_idx = 3.
     WHILE lv_idx <= lv_count.
       IF     zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                     iv_index     = lv_idx ) = 'TYPE'
+                                                     iv_index     = lv_idx )      = 'TYPE'
          AND zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
                                                      iv_index     = lv_idx + 1 ) CP '(*'.
         RETURN.

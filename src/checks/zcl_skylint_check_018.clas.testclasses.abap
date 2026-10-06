@@ -15,7 +15,6 @@ CLASS ltcl_check_018 IMPLEMENTATION.
             ( method = 'TEST_001' code = zcl_skylint_check_018=>c_finding_codes-unreachable_code line = 4 column = 5 )
             ( method = 'TEST_002' )
             ( method = 'TEST_003' code = zcl_skylint_check_018=>c_finding_codes-unreachable_code line = 6 column = 7 )
-            ( method = 'TEST_004' )
-        ) ).
+            ( method = 'TEST_004' ) ) ).
   ENDMETHOD.
 ENDCLASS.

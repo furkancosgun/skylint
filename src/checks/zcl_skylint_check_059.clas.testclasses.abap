@@ -15,7 +15,6 @@ CLASS ltcl_check_059 IMPLEMENTATION.
             ( method = 'TEST_001' code = zcl_skylint_check_059=>c_finding_codes-interface_data line = 2 column = 3 )
             ( method = 'TEST_002' )
             ( method = 'TEST_003' code = zcl_skylint_check_059=>c_finding_codes-interface_data line = 2 column = 3 )
-            ( method = 'TEST_004' )
-        ) ).
+            ( method = 'TEST_004' ) ) ).
   ENDMETHOD.
 ENDCLASS.

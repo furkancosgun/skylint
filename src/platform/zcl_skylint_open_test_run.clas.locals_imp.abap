@@ -86,7 +86,7 @@ CLASS lcl_compiler DEFINITION FINAL.
       CHANGING cs_statement TYPE zif_skylint_types=>ty_statement.
 
     CLASS-METHODS find_db_table_index
-      IMPORTING is_statement     TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement    TYPE zif_skylint_types=>ty_statement
       RETURNING VALUE(rv_index) TYPE i.
 
     CLASS-METHODS is_db_table_name
@@ -645,27 +645,29 @@ CLASS lcl_compiler IMPLEMENTATION.
 
     IF lv_anchor IS NOT INITIAL.
       LOOP AT is_statement-tokens ASSIGNING <ls_t>.
-        IF to_upper( <ls_t>-lexeme ) = lv_anchor.
-          lv_idx = sy-tabix + 1.
-          IF lv_idx <= lv_count.
-            READ TABLE is_statement-tokens INTO ls_tok INDEX lv_idx.
-            IF sy-subrc = 0 AND to_upper( ls_tok-lexeme ) = 'TABLE'.
-              lv_idx = lv_idx + 1.
-            ENDIF.
+        IF to_upper( <ls_t>-lexeme ) <> lv_anchor.
+          CONTINUE.
+        ENDIF.
+
+        lv_idx = sy-tabix + 1.
+        IF lv_idx <= lv_count.
+          READ TABLE is_statement-tokens INTO ls_tok INDEX lv_idx.
+          IF sy-subrc = 0 AND to_upper( ls_tok-lexeme ) = 'TABLE'.
+            lv_idx = lv_idx + 1.
           ENDIF.
-          IF lv_idx <= lv_count.
-            READ TABLE is_statement-tokens INTO ls_tok INDEX lv_idx.
-            IF sy-subrc = 0 AND is_db_table_name( ls_tok-lexeme ) = abap_true.
-              rv_index = lv_idx.
-              RETURN.
-            ENDIF.
+        ENDIF.
+        IF lv_idx <= lv_count.
+          READ TABLE is_statement-tokens INTO ls_tok INDEX lv_idx.
+          IF sy-subrc = 0 AND is_db_table_name( ls_tok-lexeme ) = abap_true.
+            rv_index = lv_idx.
+            RETURN.
           ENDIF.
         ENDIF.
       ENDLOOP.
     ENDIF.
 
-    IF is_statement-keyword = 'INSERT' OR is_statement-keyword = 'UPDATE'
-        OR is_statement-keyword = 'DELETE' OR is_statement-keyword = 'MODIFY'.
+    IF    is_statement-keyword = 'INSERT' OR is_statement-keyword = 'UPDATE'
+       OR is_statement-keyword = 'DELETE' OR is_statement-keyword = 'MODIFY'.
       READ TABLE is_statement-tokens INTO ls_tok INDEX 2.
       IF sy-subrc = 0 AND is_db_table_name( ls_tok-lexeme ) = abap_true.
         rv_index = 2.

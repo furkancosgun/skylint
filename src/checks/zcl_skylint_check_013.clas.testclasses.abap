@@ -15,7 +15,6 @@ CLASS ltcl_check_013 IMPLEMENTATION.
             ( method = 'TEST_001' code = zcl_skylint_check_013=>c_finding_codes-check_in_loop line = 6 column = 5 )
             ( method = 'TEST_002' )
             ( method = 'TEST_003' code = zcl_skylint_check_013=>c_finding_codes-check_in_loop line = 4 column = 7 )
-            ( method = 'TEST_004' )
-        ) ).
+            ( method = 'TEST_004' ) ) ).
   ENDMETHOD.
 ENDCLASS.

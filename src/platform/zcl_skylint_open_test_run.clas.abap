@@ -18,7 +18,7 @@ CLASS zcl_skylint_open_test_run DEFINITION
 
     CLASS-METHODS read_test_source
       IMPORTING iv_class         TYPE string
-                iv_method        TYPE string OPTIONAL
+                iv_method        TYPE string    OPTIONAL
                 iv_class_def     TYPE abap_bool DEFAULT abap_false
       RETURNING VALUE(rv_source) TYPE string.
 
@@ -52,9 +52,8 @@ CLASS zcl_skylint_open_test_run IMPLEMENTATION.
     lv_class = iv_class.
 
     LOOP AT it_expected INTO ls_exp.
-      lv_source = read_test_source(
-          iv_class  = lv_class
-          iv_method = ls_exp-method ).
+      lv_source = read_test_source( iv_class  = lv_class
+                                    iv_method = ls_exp-method ).
 
       IF lv_source IS INITIAL.
         CONTINUE.
@@ -72,9 +71,8 @@ CLASS zcl_skylint_open_test_run IMPLEMENTATION.
       ENDIF.
 
       IF ls_exp-code IS NOT INITIAL AND lines( lt_findings ) = 0.
-        lv_source = read_test_source(
-            iv_class     = lv_class
-            iv_class_def = abap_true ).
+        lv_source = read_test_source( iv_class     = lv_class
+                                      iv_class_def = abap_true ).
         IF lv_source IS NOT INITIAL.
           lt_findings = run_check( io_check            = io_check
                                    iv_source           = lv_source
@@ -84,10 +82,9 @@ CLASS zcl_skylint_open_test_run IMPLEMENTATION.
       ENDIF.
 
       IF ls_exp-code IS INITIAL.
-        cl_abap_unit_assert=>assert_equals(
-            act = lines( lt_findings )
-            exp = 0
-            msg = |Method { ls_exp-method } in { iv_class } expected 0 findings| ).
+        cl_abap_unit_assert=>assert_equals( exp = 0
+                                            act = lines( lt_findings )
+                                            msg = |Method { ls_exp-method } in { iv_class } expected 0 findings| ).
       ELSE.
         lv_found = abap_false.
         LOOP AT lt_findings ASSIGNING <ls_finding> WHERE code = ls_exp-code.
@@ -108,9 +105,12 @@ CLASS zcl_skylint_open_test_run IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD read_test_source.
+    " TODO: variable is assigned but never used (ABAP cleaner)
     DATA lv_cls TYPE string.
+    " TODO: variable is assigned but never used (ABAP cleaner)
     DATA lv_mth TYPE string.
     DATA lv_res TYPE string.
+    " TODO: variable is assigned but never used (ABAP cleaner)
     DATA lv_def TYPE abap_bool.
 
     lv_cls = to_lower( iv_class ).

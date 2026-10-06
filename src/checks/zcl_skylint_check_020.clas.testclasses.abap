@@ -15,7 +15,6 @@ CLASS ltcl_check_020 IMPLEMENTATION.
             ( method = 'TEST_001' code = zcl_skylint_check_020=>c_finding_codes-yoda_condition line = 3 column = 5 )
             ( method = 'TEST_002' )
             ( method = 'TEST_003' code = zcl_skylint_check_020=>c_finding_codes-yoda_condition line = 3 column = 5 )
-            ( method = 'TEST_004' )
-        ) ).
+            ( method = 'TEST_004' ) ) ).
   ENDMETHOD.
 ENDCLASS.

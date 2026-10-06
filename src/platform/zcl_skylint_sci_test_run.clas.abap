@@ -1,6 +1,6 @@
 CLASS zcl_skylint_sci_test_run DEFINITION
-  PUBLIC FINAL
-  INHERITING FROM cl_ci_test_verify
+  PUBLIC
+  INHERITING FROM cl_ci_test_verify FINAL
   CREATE PUBLIC.
 
   PUBLIC SECTION.
@@ -48,19 +48,18 @@ CLASS zcl_skylint_sci_test_run IMPLEMENTATION.
       lv_found = abap_false.
       IF ls_exp-code IS INITIAL.
         LOOP AT result_list TRANSPORTING NO FIELDS
-            WHERE sobjtype = 'PROG'
-              AND sobjname = lv_objname.
+             WHERE     sobjtype = 'PROG'
+                   AND sobjname = lv_objname.
           lv_found = abap_true.
           EXIT.
         ENDLOOP.
-        cl_abap_unit_assert=>assert_true(
-            act = xsdbool( lv_found = abap_false )
-            msg = |Method { ls_exp-method }: expected no findings but found some.| ).
+        cl_abap_unit_assert=>assert_true( act = xsdbool( lv_found = abap_false )
+                                          msg = |Method { ls_exp-method }: expected no findings but found some.| ).
       ELSE.
         LOOP AT result_list ASSIGNING <ls_result>
-            WHERE code = ls_exp-code
-              AND sobjtype = 'PROG'
-              AND sobjname = lv_objname.
+             WHERE     code     = ls_exp-code
+                   AND sobjtype = 'PROG'
+                   AND sobjname = lv_objname.
           IF <ls_result>-line <> ls_exp-line.
             CONTINUE.
           ENDIF.

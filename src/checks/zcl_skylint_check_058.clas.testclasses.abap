@@ -15,7 +15,6 @@ CLASS ltcl_check_058 IMPLEMENTATION.
             ( method = 'TEST_001' code = zcl_skylint_check_058=>c_finding_codes-attribute_count line = 1 column = 1 )
             ( method = 'TEST_002' )
             ( method = 'TEST_003' code = zcl_skylint_check_058=>c_finding_codes-attribute_count line = 1 column = 1 )
-            ( method = 'TEST_004' )
-        ) ).
+            ( method = 'TEST_004' ) ) ).
   ENDMETHOD.
 ENDCLASS.
