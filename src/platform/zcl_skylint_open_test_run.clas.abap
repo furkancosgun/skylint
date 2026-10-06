@@ -47,6 +47,7 @@ CLASS zcl_skylint_open_test_run IMPLEMENTATION.
     DATA ls_exp      TYPE zif_skylint_types=>ty_test_expected.
     DATA lv_found    TYPE abap_bool.
     DATA lv_class    TYPE string.
+    FIELD-SYMBOLS <ls_finding> TYPE zif_skylint_types=>ty_finding.
 
     lv_class = iv_class.
 
@@ -88,10 +89,20 @@ CLASS zcl_skylint_open_test_run IMPLEMENTATION.
             exp = 0
             msg = |Method { ls_exp-method } in { iv_class } expected 0 findings| ).
       ELSE.
-        lv_found = xsdbool( line_exists( lt_findings[ code = ls_exp-code ] ) ).
+        lv_found = abap_false.
+        LOOP AT lt_findings ASSIGNING <ls_finding> WHERE code = ls_exp-code.
+          IF ls_exp-line IS NOT INITIAL AND <ls_finding>-position-line <> ls_exp-line.
+            CONTINUE.
+          ENDIF.
+          IF ls_exp-column IS NOT INITIAL AND <ls_finding>-position-column <> ls_exp-column.
+            CONTINUE.
+          ENDIF.
+          lv_found = abap_true.
+          EXIT.
+        ENDLOOP.
         cl_abap_unit_assert=>assert_true(
             act = lv_found
-            msg = |Method { ls_exp-method } in { iv_class } expected finding { ls_exp-code }| ).
+            msg = |{ iv_class } { ls_exp-method }: expected { ls_exp-code } at { ls_exp-line }:{ ls_exp-column }| ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.

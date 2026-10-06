@@ -21,6 +21,9 @@ CLASS zcl_skylint_sci_test_run IMPLEMENTATION.
     DATA ls_exp     TYPE zif_skylint_types=>ty_test_expected.
     DATA lv_objname TYPE sobj_name.
     DATA ls_method  TYPE seocpdkey.
+    DATA lv_found   TYPE abap_bool.
+    FIELD-SYMBOLS <ls_result> LIKE LINE OF result_list.
+    FIELD-SYMBOLS <lv_col>    TYPE any.
 
     lv_name = |SKYLINT_UNIT_{ sy-datum }_{ sy-uzeit }|.
 
@@ -44,12 +47,23 @@ CLASS zcl_skylint_sci_test_run IMPLEMENTATION.
                p_obj_type = is_object-type
                p_obj_name = is_object-name ).
 
-          LOOP AT result_list TRANSPORTING NO FIELDS WHERE     code     = ls_exp-code
-                                                           AND sobjtype = 'PROG'
-                                                           AND sobjname = lv_objname.
+          lv_found = abap_false.
+          LOOP AT result_list ASSIGNING <ls_result>
+              WHERE code = ls_exp-code
+                AND sobjtype = 'PROG'
+                AND sobjname = lv_objname.
+            IF ls_exp-line IS NOT INITIAL AND <ls_result>-line <> ls_exp-line.
+              CONTINUE.
+            ENDIF.
+            IF ls_exp-column IS NOT INITIAL AND <ls_result>-col <> ls_exp-column.
+              CONTINUE.
+            ENDIF.
+            lv_found = abap_true.
             EXIT.
           ENDLOOP.
-          cl_abap_unit_assert=>assert_subrc( msg = 'Expected finding but not found.' ).
+          cl_abap_unit_assert=>assert_true(
+              act = lv_found
+              msg = |Expected finding { ls_exp-code } at { ls_exp-line }:{ ls_exp-column } not found.| ).
         ENDLOOP.
       CLEANUP.
         lo_variant->delete( ).

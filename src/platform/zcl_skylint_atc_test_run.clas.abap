@@ -19,9 +19,16 @@ CLASS zcl_skylint_atc_test_run IMPLEMENTATION.
     DATA ls_exp          TYPE zif_skylint_types=>ty_test_expected.
 
     LOOP AT it_expected INTO ls_exp WHERE code IS NOT INITIAL.
+      CLEAR ls_finding.
       ls_finding-code = ls_exp-code.
       ls_finding-location-object = VALUE #( type = 'CLAS'
                                             name = iv_class ).
+      IF ls_exp-line IS NOT INITIAL.
+        ls_finding-location-position-line = ls_exp-line.
+      ENDIF.
+      IF ls_exp-column IS NOT INITIAL.
+        ls_finding-location-position-column = ls_exp-column.
+      ENDIF.
       INSERT ls_finding INTO TABLE lt_atc_expected.
     ENDLOOP.
 
