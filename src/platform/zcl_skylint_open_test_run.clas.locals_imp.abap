@@ -888,7 +888,11 @@ CLASS lcl_parser IMPLEMENTATION.
     IF iv_in_chain = abap_true AND iv_chain_idx > 1 AND lines( it_body ) > 0.
       ASSIGN it_body[ 1 ] TO <ls_t>.
       IF sy-subrc = 0.
-        ls_stmt-position = <ls_t>-position.
+        ls_stmt-position-line = <ls_t>-position-line.
+      ENDIF.
+      ASSIGN ls_stmt-tokens[ 1 ] TO <ls_t>.
+      IF sy-subrc = 0.
+        ls_stmt-position-column = <ls_t>-position-column.
       ENDIF.
     ELSE.
       ASSIGN ls_stmt-tokens[ 1 ] TO <ls_t>.

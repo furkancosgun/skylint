@@ -28,6 +28,12 @@
         "class": "ltcl_check_026",
         "method": "test_check",
         "note": "requires compiler reference resolution for instance method calls"
+      },
+      {
+        "object": "ZCL_SKYLINT_CHECK_036",
+        "class": "ltcl_check_036",
+        "method": "test_check",
+        "note": "requires compiler reference and RTTI parameter resolution for instance method calls"
       }
     ]
   }
