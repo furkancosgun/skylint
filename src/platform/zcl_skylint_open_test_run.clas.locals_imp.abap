@@ -118,6 +118,7 @@ CLASS lcl_parser DEFINITION FINAL.
                 it_pseudo     TYPE string_table
                 iv_in_chain   TYPE abap_bool
                 iv_header_kw  TYPE string
+                iv_chain_idx  TYPE i DEFAULT 0
       CHANGING  ct_statements TYPE zif_skylint_types=>ty_statements.
 
     CLASS-METHODS collect_pseudo
@@ -780,6 +781,7 @@ CLASS lcl_parser IMPLEMENTATION.
     DATA lt_prefix    TYPE zif_skylint_types=>ty_tokens.
     DATA lt_pending   TYPE string_table.
     DATA lv_in_chain  TYPE abap_bool.
+    DATA lv_chain_idx TYPE i.
     DATA lv_header_kw TYPE string.
     DATA lv_depth     TYPE i.
     DATA ls_tok       TYPE zif_skylint_types=>ty_token.
@@ -818,12 +820,14 @@ CLASS lcl_parser IMPLEMENTATION.
                                   it_pseudo     = lt_pending
                                   iv_in_chain   = lv_in_chain
                                   iv_header_kw  = lv_header_kw
+                                  iv_chain_idx  = lv_chain_idx
                         CHANGING  ct_statements = rt_statements ).
         CLEAR lt_cur.
         CLEAR lt_prefix.
         CLEAR lt_pending.
         CLEAR lv_header_kw.
         lv_in_chain = abap_false.
+        lv_chain_idx = 0.
         lv_depth = 0.
       ELSEIF lv_last = ':' AND lv_depth = 0 AND lv_in_chain = abap_false.
         IF lv_len > 1.
@@ -836,6 +840,7 @@ CLASS lcl_parser IMPLEMENTATION.
         ENDIF.
         CLEAR lt_cur.
         lv_in_chain = abap_true.
+        lv_chain_idx = 1.
       ELSEIF lv_last = ',' AND lv_depth = 0.
         IF lv_len > 1.
           ls_tok-lexeme = lv_word(lv_off).
@@ -847,9 +852,11 @@ CLASS lcl_parser IMPLEMENTATION.
                                     it_pseudo     = lt_pending
                                     iv_in_chain   = abap_true
                                     iv_header_kw  = lv_header_kw
+                                    iv_chain_idx  = lv_chain_idx
                           CHANGING  ct_statements = rt_statements ).
           CLEAR lt_cur.
           CLEAR lt_pending.
+          lv_chain_idx = lv_chain_idx + 1.
           lv_depth = 0.
         ENDIF.
       ELSE.
@@ -878,9 +885,16 @@ CLASS lcl_parser IMPLEMENTATION.
 
     CLEAR ls_stmt.
     ls_stmt-tokens = lt_all.
-    ASSIGN ls_stmt-tokens[ 1 ] TO <ls_t>.
-    IF sy-subrc = 0.
-      ls_stmt-position = <ls_t>-position.
+    IF iv_in_chain = abap_true AND iv_chain_idx > 1 AND lines( it_body ) > 0.
+      ASSIGN it_body[ 1 ] TO <ls_t>.
+      IF sy-subrc = 0.
+        ls_stmt-position = <ls_t>-position.
+      ENDIF.
+    ELSE.
+      ASSIGN ls_stmt-tokens[ 1 ] TO <ls_t>.
+      IF sy-subrc = 0.
+        ls_stmt-position = <ls_t>-position.
+      ENDIF.
     ENDIF.
 
     LOOP AT it_pseudo INTO lv_word.

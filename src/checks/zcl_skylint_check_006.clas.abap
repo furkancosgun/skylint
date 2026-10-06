@@ -59,7 +59,7 @@ CLASS zcl_skylint_check_006 IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      lv_stmt_idx = sy-tabix.
+      lv_stmt_idx = <ls_statement>-index.
       ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-omit_exporting
                                       iv_statement_from = lv_stmt_idx
                                       iv_token_from     = lv_tok_idx

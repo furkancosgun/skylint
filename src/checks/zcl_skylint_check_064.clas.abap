@@ -47,7 +47,7 @@ CLASS zcl_skylint_check_064 IMPLEMENTATION.
       ENDIF.
 
       ls_next_stmt = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_code_block-statements
-                                                               iv_current_index = sy-tabix ).
+                                                               iv_current_index = <ls_statement>-index ).
 
       IF ls_next_stmt-keyword IS INITIAL OR checks_sy_subrc( ls_next_stmt ) = abap_false.
         report_statement( is_statement    = <ls_statement>
@@ -81,22 +81,20 @@ CLASS zcl_skylint_check_064 IMPLEMENTATION.
 
   METHOD checks_sy_subrc.
     DATA ls_tok TYPE zif_skylint_types=>ty_token.
-    DATA ls_ref TYPE zif_skylint_types=>ty_compiler_reference.
     DATA lv_lex TYPE string.
 
     rv_res = abap_false.
     LOOP AT is_statement-tokens INTO ls_tok.
       lv_lex = to_upper( ls_tok-lexeme ).
-      IF lv_lex = 'SY-SUBRC' OR lv_lex = 'SUBRC'.
+      IF lv_lex = 'SY-SUBRC'.
         rv_res = abap_true.
         RETURN.
       ENDIF.
 
-      LOOP AT ls_tok-references INTO ls_ref.
-        IF to_upper( ls_ref-full_name ) CS 'SY-SUBRC' OR to_upper( ls_ref-full_name ) CS 'SYST-SUBRC'.
-          rv_res = abap_true.
-          RETURN.
-        ENDIF.
+      LOOP AT ls_tok-references TRANSPORTING NO FIELDS WHERE     full_name  CS 'SUBRC'
+                                                             AND usage_mode  = zif_skylint_types=>usage_modes-read.
+        rv_res = abap_true.
+        RETURN.
       ENDLOOP.
     ENDLOOP.
   ENDMETHOD.

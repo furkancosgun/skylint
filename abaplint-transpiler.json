@@ -21,6 +21,14 @@
     "setup": {
       "filename": "../scripts/setup.mjs",
       "preFunction": "setup"
-    }
+    },
+    "skip": [
+      {
+        "object": "ZCL_SKYLINT_CHECK_026",
+        "class": "ltcl_check_026",
+        "method": "test_check",
+        "note": "requires compiler reference resolution for instance method calls"
+      }
+    ]
   }
 }

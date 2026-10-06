@@ -52,7 +52,7 @@ CLASS zcl_skylint_check_031 IMPLEMENTATION.
 
     LOOP AT is_code_block-statements ASSIGNING <ls_statement>
          WHERE keyword = 'SELECT'.
-      lv_idx = sy-tabix.
+      lv_idx = <ls_statement>-index.
       lv_fae_tab = extract_fae_table( <ls_statement> ).
 
       IF     lv_fae_tab IS NOT INITIAL

@@ -39,7 +39,7 @@ CLASS zcl_skylint_check_017 IMPLEMENTATION.
 
     LOOP AT is_code_block-statements ASSIGNING <ls_statement>
          WHERE keyword = 'IF'.
-      lv_idx = sy-tabix.
+      lv_idx = <ls_statement>-index.
       IF is_nested_if_mergeable( iv_idx        = lv_idx
                                  is_code_block = is_code_block ) = abap_true.
         report_statement( is_statement    = <ls_statement>

@@ -43,7 +43,7 @@ CLASS zcl_skylint_check_074 IMPLEMENTATION.
 
     LOOP AT is_code_block-statements ASSIGNING <ls_loop>
          WHERE keyword = 'LOOP' OR keyword = 'DO' OR keyword = 'WHILE'.
-      lv_idx = sy-tabix.
+      lv_idx = <ls_loop>-index.
       IF lv_idx + 3 > lv_max.
         CONTINUE.
       ENDIF.

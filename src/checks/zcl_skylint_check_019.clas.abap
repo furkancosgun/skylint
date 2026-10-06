@@ -44,7 +44,7 @@ CLASS zcl_skylint_check_019 IMPLEMENTATION.
 
     LOOP AT is_code_block-statements ASSIGNING <ls_statement>
          WHERE keyword = 'CASE'.
-      lv_idx = sy-tabix.
+      lv_idx = <ls_statement>-index.
       lv_when_count = count_when_branches( iv_start_idx  = lv_idx
                                            is_code_block = is_code_block ).
       IF lv_when_count <= 1.

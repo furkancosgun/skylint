@@ -48,7 +48,7 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
 
     LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
-      lv_idx = sy-tabix.
+      lv_idx = <ls_statement>-index.
 
       CASE <ls_statement>-keyword.
         WHEN 'ELSEIF'.

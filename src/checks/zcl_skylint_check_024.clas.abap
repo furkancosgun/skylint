@@ -58,7 +58,7 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      lv_idx = sy-tabix.
+      lv_idx = <ls_stmt_if>-index.
       IF lv_idx + 4 > lv_max.
         CONTINUE.
       ENDIF.
