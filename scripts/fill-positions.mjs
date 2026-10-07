@@ -105,6 +105,16 @@ function condense(s) {
   return s.replace(/\s+/g, ' ').trim();
 }
 
+/** Mirror of zcl_skylint_test_runner=>class_name_of_line. */
+function classNameOfLine(line) {
+  const up = condense(line).toUpperCase();
+  const words = up.split(' ');
+  if (words.length < 2) return '';
+  if (words[0] === 'CLASS' && up.includes(' DEFINITION')) return words[1];
+  if (words[0] === 'INTERFACE') return words[1].replace(/\./g, '');
+  return '';
+}
+
 /** Mirror of zcl_skylint_test_runner=>extract_snippet (pure logic). */
 function extractSnippet(fullLines, method) {
   const want = method.toUpperCase();
@@ -125,12 +135,40 @@ function extractSnippet(fullLines, method) {
   if (start >= 0 && end > start) {
     const snippet = fullLines.slice(start, end + 1);
     const inner = snippet.slice(1, -1).join('\n').trim().toUpperCase();
-    if (inner === '' || inner === 'RETURN.') {
-      return extractClassDef(fullLines, method);
+    let object = '';
+    for (let i = start - 1; i >= 0; i--) {
+      const nm = classNameOfLine(fullLines[i]);
+      if (nm) { object = nm; break; }
     }
-    return { snippet, isDef: false, offset: start };
+    if (inner === '' || inner === 'RETURN.') {
+      const def = extractClassDef(fullLines, method);
+      return { ...def, object: object || def.object };
+    }
+    return { snippet, isDef: false, offset: start, object };
+  }
+  const blk = extractClassDefBlock(fullLines, method);
+  if (blk.length > 0) {
+    return { snippet: blk, isDef: true, offset: 0, object: want };
   }
   return extractClassDef(fullLines, method);
+}
+
+/** Mirror of zcl_skylint_test_runner=>extract_class_def_block. */
+function extractClassDefBlock(fullLines, name) {
+  const want = name.toUpperCase();
+  if (!want) return [];
+  const snippet = [];
+  let inside = false;
+  for (const line of fullLines) {
+    if (!inside) {
+      if (classNameOfLine(line) === want) inside = true;
+      else continue;
+    }
+    snippet.push(line);
+    const t = condense(line).toUpperCase();
+    if (t === 'ENDCLASS.' || t === 'ENDINTERFACE.') return snippet;
+  }
+  return [];
 }
 
 function extractClassDef(fullLines, method) {
@@ -152,18 +190,19 @@ function extractClassDef(fullLines, method) {
     }
   }
   if (blocks.length === 0) {
-    return { snippet: [], isDef: true, offset: 0 };
+    return { snippet: [], isDef: true, offset: 0, object: '' };
   }
   const numMatch = method.toUpperCase().match(/(\d+)$/);
   const num = numMatch ? parseInt(numMatch[1], 10) : 0;
   const idx = num > 0 && num % 2 === 0 && blocks.length > 1 ? 1 : 0;
-  return { snippet: blocks[idx], isDef: true, offset: 0 };
+  const chosen = blocks[idx] || [];
+  return { snippet: chosen, isDef: true, offset: 0, object: chosen.length > 0 ? classNameOfLine(chosen[0]) : '' };
 }
 
 /** Run a check on an inline snippet like the test runner does. */
 async function runFindings(checkNum, fullLines, method) {
   const ioCheck = await getCheckInstance(checkNum);
-  const { snippet, isDef, offset } = extractSnippet(fullLines, method);
+  const { snippet, isDef, offset, object } = extractSnippet(fullLines, method);
   if (snippet.length === 0) {
     return [];
   }
@@ -172,6 +211,7 @@ async function runFindings(checkNum, fullLines, method) {
     iv_full_source: S(fullLines.join('\n')),
     iv_class_definition: isDef ? TRUE : FALSE,
     iv_abs_offset: offset,
+    iv_object_name: S(object || ''),
   });
   const findings = await ioCheck.lint({ is_code_block: block });
   const rows = findings.array ? findings.array() : findings.get();

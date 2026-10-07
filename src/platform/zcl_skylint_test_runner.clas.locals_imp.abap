@@ -168,6 +168,9 @@ CLASS lcl_abaplint_bridge DEFINITION FINAL.
     CLASS-METHODS feed_rtti
       IMPORTING iv_full_source TYPE string
                 iv_object_name TYPE string OPTIONAL.
+
+    CLASS-METHODS split_source_files
+      IMPORTING iv_full_source TYPE string.
 ENDCLASS.
 
 
@@ -1320,6 +1323,8 @@ CLASS lcl_abaplint_bridge IMPLEMENTATION.
       RETURN.
     ENDIF.
 
+    split_source_files( iv_full_source ).
+
     lv_full = iv_full_source.
     lv_obj = iv_object_name.
 
@@ -1333,14 +1338,11 @@ CLASS lcl_abaplint_bridge IMPLEMENTATION.
     WRITE '@KERNEL     return "k" + x;'.
     WRITE '@KERNEL   };'.
     WRITE '@KERNEL   const fkey = h(full);'.
-    WRITE '@KERNEL   let det = "";'.
-    WRITE '@KERNEL   const clsRe = /^\s*CLASS\s+(\S+)\s+DEFINITION\b/i;'.
-    WRITE '@KERNEL   for (const ln of full.split(/\r?\n/)) {'.
-    WRITE '@KERNEL     const m = clsRe.exec(ln);'.
-    WRITE '@KERNEL     if (m) { det = m[1].replace(/\.$/, "").toUpperCase(); break; }'.
-    WRITE '@KERNEL   }'.
-    WRITE '@KERNEL   if (det && !globalThis.__skylintFed[fkey]) {'.
-    WRITE '@KERNEL     const files = [{filename: det.toLowerCase() + ".clas.abap", contents: full}];'.
+    WRITE '@KERNEL   const part = globalThis.__skylintParts || {files: [], first: ""};'.
+    WRITE '@KERNEL   const files = part.files;'.
+    WRITE '@KERNEL   const det = part.first;'.
+    WRITE '@KERNEL   const fed = globalThis.__skylintFed[fkey];'.
+    WRITE '@KERNEL   if (det && files.length > 0 && !(fed && fed.length)) {'.
     WRITE '@KERNEL     const {Transpiler} = await import("@abaplint/transpiler");'.
     WRITE '@KERNEL     let tout;'.
     WRITE '@KERNEL     for (let att = 0; att < 4; att++) {'.
@@ -1354,26 +1356,107 @@ CLASS lcl_abaplint_bridge IMPLEMENTATION.
     WRITE '@KERNEL         files.push({filename: sname.toLowerCase() + ".clas.abap", contents: stub'.
     WRITE '@KERNEL           + " PUBLIC SECTION.\nENDCLASS.\nCLASS " + sname + " IMPLEMENTATION.\nENDCLASS."}); }'.
     WRITE '@KERNEL     }'.
+    WRITE '@KERNEL     const parOf = (c) => {'.
+    WRITE '@KERNEL       const pm = /DEFINITION\s+INHERITING\s+FROM\s+(\S+)/i.exec(c || "");'.
+    WRITE '@KERNEL       return pm ? pm[1].replace(/\.$/, "").toLowerCase() + ".clas.abap" : "";'.
+    WRITE '@KERNEL     };'.
+    WRITE '@KERNEL     const byFn = {};'.
+    WRITE '@KERNEL     files.forEach((f) => { byFn[f.filename] = f; });'.
+    WRITE '@KERNEL     const done = new Set(), seq = [];'.
+    WRITE '@KERNEL     let guard = files.length * files.length + 5;'.
+    WRITE '@KERNEL     while (seq.length < files.length && guard-- > 0) {'.
+    WRITE '@KERNEL       let moved = false;'.
+    WRITE '@KERNEL       for (const f of files) {'.
+    WRITE '@KERNEL         if (done.has(f.filename)) { continue; }'.
+    WRITE '@KERNEL         const pf = parOf(f.contents);'.
+    WRITE '@KERNEL         if (!pf || !byFn[pf] || done.has(pf)) {'.
+    WRITE '@KERNEL           done.add(f.filename); seq.push(f); moved = true;'.
+    WRITE '@KERNEL         }'.
+    WRITE '@KERNEL       }'.
+    WRITE '@KERNEL       if (!moved) {'.
+    WRITE '@KERNEL         for (const f of files) {'.
+    WRITE '@KERNEL           if (!done.has(f.filename)) { done.add(f.filename); seq.push(f); }'.
+    WRITE '@KERNEL         }'.
+    WRITE '@KERNEL       }'.
+    WRITE '@KERNEL     }'.
     WRITE '@KERNEL     if (tout) {'.
-    WRITE '@KERNEL       const before = new Set(Object.keys(abap.Classes));'.
-    WRITE '@KERNEL       const mfn = files[0].filename;'.
-    WRITE '@KERNEL       const isMain = (o) => ((o.filename === mfn) ? 1 : 0);'.
-    WRITE '@KERNEL       const ordered = [...tout.objects].sort((a, b) => isMain(a) - isMain(b));'.
-    WRITE '@KERNEL       const codes = ordered.filter((o) => o.chunk).map((o) => o.chunk.getCode());'.
+    WRITE '@KERNEL       const codeByFn = {};'.
+    WRITE '@KERNEL       tout.objects.forEach((o) => {'.
+    WRITE '@KERNEL         if (o.chunk) { codeByFn[o.filename] = o.chunk.getCode(); }'.
+    WRITE '@KERNEL       });'.
+    WRITE '@KERNEL       let joint = seq.map((f) => codeByFn[f.filename] || "").join("\n;\n");'.
+    WRITE '@KERNEL       const rest = tout.objects.filter((o) => o.chunk);'.
+    WRITE '@KERNEL       for (const o of rest) {'.
+    WRITE '@KERNEL         if (!joint.includes(o.chunk.getCode())) { joint = joint + "\n;\n" + o.chunk.getCode(); }'.
+    WRITE '@KERNEL       }'.
     WRITE '@KERNEL       const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;'.
-    WRITE '@KERNEL       await new AsyncFunction("abap", codes.join("\n;\n"))(abap);'.
-    WRITE '@KERNEL       const fresh = Object.keys(abap.Classes).filter((k) => !before.has(k));'.
-    WRITE '@KERNEL       const tgt = fresh.find((k) => k === det)'.
-    WRITE '@KERNEL         || fresh.find((k) => k.endsWith("-" + det))'.
-    WRITE '@KERNEL         || (fresh.length === 1 ? fresh[0] : "");'.
-    WRITE '@KERNEL       if (tgt) { globalThis.__skylintFed[fkey] = tgt; }'.
+    WRITE '@KERNEL       const before = new Set(Object.keys(abap.Classes));'.
+    WRITE '@KERNEL       await new AsyncFunction("abap", joint)(abap);'.
+    WRITE '@KERNEL       const keys = Object.keys(abap.Classes).filter((k) => !before.has(k));'.
+    WRITE '@KERNEL       globalThis.__skylintFed[fkey] = keys;'.
+    WRITE '@KERNEL     } else {'.
+    WRITE '@KERNEL       globalThis.__skylintFed[fkey] = [];'.
     WRITE '@KERNEL     }'.
     WRITE '@KERNEL   }'.
-    WRITE '@KERNEL   const alias = globalThis.__skylintFed[fkey];'.
-    WRITE '@KERNEL   if (det && alias && abap.Classes[alias]) {'.
-    WRITE '@KERNEL     abap.Classes[sn] = abap.Classes[alias];'.
-    WRITE '@KERNEL     abap.Classes[det] = abap.Classes[alias];'.
+    WRITE '@KERNEL   const keys = globalThis.__skylintFed[fkey] || [];'.
+    WRITE '@KERNEL   const pick = (nm) => {'.
+    WRITE '@KERNEL     return keys.find((k) => k === nm) || keys.find((k) => k.endsWith("-" + nm)) || "";'.
+    WRITE '@KERNEL   };'.
+    WRITE '@KERNEL   const forSn = pick(sn) || pick(det);'.
+    WRITE '@KERNEL   if (forSn && abap.Classes[forSn]) { abap.Classes[sn] = abap.Classes[forSn]; }'.
+    WRITE '@KERNEL   const forDet = pick(det);'.
+    WRITE '@KERNEL   if (det && forDet && abap.Classes[forDet]) { abap.Classes[det] = abap.Classes[forDet]; }'.
+    WRITE '@KERNEL   for (const k of keys) {'.
+    WRITE '@KERNEL     const sh = k.split("-").pop();'.
+    WRITE '@KERNEL     if (sh && !abap.Classes[sh] && abap.Classes[k]) { abap.Classes[sh] = abap.Classes[k]; }'.
     WRITE '@KERNEL   }'.
     WRITE '@KERNEL } catch (e) { }'.
+  ENDMETHOD.
+
+
+  METHOD split_source_files.
+    DATA lv_full TYPE string.
+
+    IF iv_full_source IS INITIAL.
+      RETURN.
+    ENDIF.
+
+    lv_full = iv_full_source.
+
+    WRITE '@KERNEL globalThis.__skylintParts = (() => {'.
+    WRITE '@KERNEL   const full = lv_full.get();'.
+    WRITE '@KERNEL   const defs = {}, order = [];'.
+    WRITE '@KERNEL   let cur = null;'.
+    WRITE '@KERNEL   for (const ln of full.split(/\r?\n/)) {'.
+    WRITE '@KERNEL     let m = /^\s*CLASS\s+(\S+)\s+DEFINITION\b/i.exec(ln);'.
+    WRITE '@KERNEL     if (m) {'.
+    WRITE '@KERNEL       const nm = m[1].replace(/\.$/, "").toUpperCase();'.
+    WRITE '@KERNEL       if (!defs[nm]) { defs[nm] = {def: [], impl: []}; order.push(nm); }'.
+    WRITE '@KERNEL       cur = {name: nm, part: "def"};'.
+    WRITE '@KERNEL       defs[nm].def.push(ln);'.
+    WRITE '@KERNEL       continue;'.
+    WRITE '@KERNEL     }'.
+    WRITE '@KERNEL     m = /^\s*CLASS\s+(\S+)\s+IMPLEMENTATION\b/i.exec(ln);'.
+    WRITE '@KERNEL     if (m) {'.
+    WRITE '@KERNEL       const nm = m[1].replace(/\.$/, "").toUpperCase();'.
+    WRITE '@KERNEL       if (!defs[nm]) { defs[nm] = {def: [], impl: []}; order.push(nm); }'.
+    WRITE '@KERNEL       cur = {name: nm, part: "impl"};'.
+    WRITE '@KERNEL       defs[nm].impl.push(ln);'.
+    WRITE '@KERNEL       continue;'.
+    WRITE '@KERNEL     }'.
+    WRITE '@KERNEL     if (/^\s*ENDCLASS\.\s*$/i.test(ln)) {'.
+    WRITE '@KERNEL       if (cur) { defs[cur.name][cur.part].push(ln); cur = null; }'.
+    WRITE '@KERNEL       continue;'.
+    WRITE '@KERNEL     }'.
+    WRITE '@KERNEL     if (cur) { defs[cur.name][cur.part].push(ln); }'.
+    WRITE '@KERNEL   }'.
+    WRITE '@KERNEL   const files = [];'.
+    WRITE '@KERNEL   for (const nm of order) {'.
+    WRITE '@KERNEL     if (defs[nm].def.length === 0) { continue; }'.
+    WRITE '@KERNEL     const body = [...defs[nm].def, ...defs[nm].impl].join("\n");'.
+    WRITE '@KERNEL     files.push({filename: nm.toLowerCase() + ".clas.abap", contents: body});'.
+    WRITE '@KERNEL   }'.
+    WRITE '@KERNEL   return {files: files, first: (order.length > 0 ? order[0] : "")};'.
+    WRITE '@KERNEL })();'.
   ENDMETHOD.
 ENDCLASS.

@@ -38,48 +38,17 @@ CLASS ltcl_check_057 IMPLEMENTATION.
         ( `CLASS lcl_b2 DEFINITION INHERITING FROM lcl_b1.` )
         ( `ENDCLASS.` )
         ( `CLASS lcl_b2 IMPLEMENTATION.` )
-        ( `ENDCLASS.` )
-        ( `CLASS lcl_b3 DEFINITION INHERITING FROM lcl_b2.` )
-        ( `ENDCLASS.` )
-        ( `CLASS lcl_b3 IMPLEMENTATION.` )
-        ( `ENDCLASS.` )
-        ( `` )
-        ( `CLASS zcl_skylint_test_057 DEFINITION` )
-        ( `  PUBLIC FINAL` )
-        ( `  CREATE PUBLIC.` )
-        ( `` )
-        ( `  PUBLIC SECTION.` )
-        ( `    METHODS test_001.` )
-        ( `    METHODS test_002.` )
-        ( `    METHODS test_003.` )
-        ( `    METHODS test_004.` )
-        ( `ENDCLASS.` )
-        ( `` )
-        ( `CLASS zcl_skylint_test_057 IMPLEMENTATION.` )
-        ( `  METHOD test_001.` )
-        ( `    RETURN.` )
-        ( `  ENDMETHOD.` )
-        ( `` )
-        ( `  METHOD test_002.` )
-        ( `    RETURN.` )
-        ( `  ENDMETHOD.` )
-        ( `` )
-        ( `  METHOD test_003.` )
-        ( `    RETURN.` )
-        ( `  ENDMETHOD.` )
-        ( `` )
-        ( `  METHOD test_004.` )
-        ( `    DATA lv_val TYPE i.` )
-        ( `    lv_val = 1.` )
-        ( `  ENDMETHOD.` )
         ( `ENDCLASS.` ) ).
 
     zcl_skylint_test_runner=>run(
         io_check    = NEW zcl_skylint_check_057( )
         it_source   = lt_source
-        it_expected = VALUE #( ( method = 'TEST_001' )
-                                                         ( method = 'TEST_002' )
-                                                         ( method = 'TEST_003' )
-                                                         ( method = 'TEST_004' ) ) ).
+        it_expected = VALUE #(
+            ( method = 'LCL_CHILD'
+              code   = zcl_skylint_check_057=>c_finding_codes-deep_inheritance
+              line   = 1
+              column = 0 )
+            ( method = 'LCL_B2' )
+            ( method = 'LCL_L1' ) ) ).
   ENDMETHOD.
 ENDCLASS.

@@ -349,6 +349,12 @@ ENDCLASS.
 
 Notes:
 - There is exactly ONE test runner. The old `sci/atc/open_test_run` variants are deleted; adapters (`sci/atc_adapter`) stay for production branches.
+- `it_expected` rows target either a `METHOD name` slice or a `CLASS/INTERFACE name` definition block
+  (`method = 'LCL_CHILD'` slices `CLASS lcl_child DEFINITION..ENDCLASS.`). Method rows fall back to a class
+  definition block when the body is empty/`RETURN.` only.
+- The runner derives `object_name` (enclosing class of a method slice, matched name of a definition slice)
+  and passes it to checks and to `feed_rtti`, so hierarchy checks (`get_super_classes`) resolve the tested
+  class instead of a synthetic name.
 - Parser (`lcl_lexer`/`lcl_parser`) is untouched ABAP. Compiler references are hybrid: heuristic first, then `lcl_abaplint_bridge`
   enriches via `@abaplint/core` (`SyntaxLogic.spaghetti`: method refs). RTTI has NO static caches: `lcl_abaplint_bridge=>feed_rtti`
   transpiles the full test source (lenient batch + auto-stubbed unknown superclasses) and evaluates it into the shared `abap.Classes`
