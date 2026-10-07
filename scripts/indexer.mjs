@@ -57,7 +57,7 @@ function renumberChecks(checks) {
 
   const tempPrefix = 'TMP_RENAME_';
 
-  // 1. Move to temporary filenames to avoid overwrite collisions
+  // Temp names avoid overwrite collisions
   for (const r of renames) {
     const files = [
       path.join(checksDir, `zcl_skylint_check_${r.oldId}.clas.abap`),
@@ -80,7 +80,6 @@ function renumberChecks(checks) {
     }
   }
 
-  // 2. Rename from temp to target names and update identifiers in file content
   const fixturesDir = path.join(rootDir, 'tests', 'fixtures');
   for (const r of renames) {
     const mappings = [
@@ -132,10 +131,8 @@ function renumberChecks(checks) {
  * Detect QuickFix support purely by inspecting check source code
  */
 function detectQuickFixStatus(checkContent) {
-  // 1. Checks if check uses base class quickfix helpers or passes details
   const hasQuickFixCall = /quickfix_codes|quickfix_replace|quickfix_insert_before|quickfix_insert_after|quickfix_delete|c_quickfix_codes|io_details/i.test(checkContent);
 
-  // 2. Checks if check has explicit quickfix metadata annotation in comment
   const hasQuickFixComment = /quickfix\s*:\s*(ready|true|enabled|yes)/i.test(checkContent);
 
   return (hasQuickFixCall || hasQuickFixComment) ? '⚡ Ready' : '—';
@@ -157,7 +154,6 @@ function extractCheckMetadata(id) {
   let description = descMatch ? descMatch[1].trim() : `Check rule ${id}`;
   description = description.replace(/^skylint:\s*/i, '');
 
-  // 2. Finding Code
   const codeValMatch = checkContent.match(/c_finding_codes[\s\S]*?VALUE\s*'([A-Za-z0-9_]+)'/);
   let findingCode = codeValMatch ? codeValMatch[1].trim() : '';
   if (!findingCode) {
@@ -165,11 +161,9 @@ function extractCheckMetadata(id) {
     findingCode = codeMatch ? codeMatch[1].toUpperCase() : 'UNKNOWN';
   }
 
-  // 3. Pseudo Comment
   const pcomMatch = checkContent.match(/c_pseudo_comment\s+TYPE\s+string\s+VALUE\s+'([^']+)'/);
   const pseudoComment = pcomMatch ? `"#EC ${pcomMatch[1].trim()}"` : '—';
 
-  // 4. QuickFix Status (read entirely from source code)
   const quickfix = detectQuickFixStatus(checkContent);
 
   return {
@@ -225,16 +219,13 @@ function generateReadmeCatalog(checks) {
 function main() {
   console.log('🔍 Checking rules indexing...');
 
-  // 1. Discover current checks
   let checks = discoverChecks();
 
-  // 2. Renumber if any gaps/non-sequential
   renumberChecks(checks);
 
-  // 3. Re-read discovered checks after renumbering
+  // Re-read after renumbering (ids may have changed)
   checks = discoverChecks();
 
-  // 4. Generate README catalog
   generateReadmeCatalog(checks);
 
   console.log(`\n🎉 Indexer complete! Active checks: ${checks.length}`);

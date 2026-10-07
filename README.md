@@ -216,6 +216,14 @@ Each check has a fixture directory:
   block (line 1 = `METHOD` statement). Regenerate positions after parser
   changes with `npm run build && npm run positions`.
 
+  Fast loop while developing a check (no fixture needed):
+  ```sh
+  npm run build
+  npm run lint:file 002 /tmp/trial.abap
+  ```
+  This lints every `METHOD` in the file with check 002 and prints findings.
+  Method names that match no `METHOD`/`CLASS` block print a `WARN` (typo guard).
+
 ### Step 3: Add Native QuickFix Support (Optional)
 
 Checks can register automated QuickFix transformations:

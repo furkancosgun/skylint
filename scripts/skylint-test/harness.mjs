@@ -13,7 +13,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { Lexer } from './lexer.mjs';
 import { buildStatements } from './parser.mjs';
-import { extractSnippet } from './slicer.mjs';
+import { extractSnippet, describeTarget, hasMethodBodies } from './slicer.mjs';
 import { sliceCodeBlock, joinSource } from './codeblock.mjs';
 import { enrichStatements } from './abaplint-bridge.mjs';
 import { feedRtti } from './rtti.mjs';
@@ -59,7 +59,8 @@ export async function initRuntime(outDir) {
 /** Run one slice through the full JS pipeline and return plain findings. */
 export async function runSlice({ abap, getCheck, checkId, fullLines, method }) {
   const { snippet, isDef, offset, object } = extractSnippet(fullLines, method);
-  if (snippet.length === 0) return { empty: true, findings: [] };
+  if (snippet.length === 0) return { empty: true, findings: [], target: 'empty' };
+  const target = describeTarget(fullLines, method);
   const statements = buildStatements(new Lexer(joinSource(snippet)).run());
   await feedRtti(joinSource(fullLines), object, abap);
   await enrichStatements(statements, joinSource(fullLines), object, offset);
@@ -69,6 +70,7 @@ export async function runSlice({ abap, getCheck, checkId, fullLines, method }) {
   const rows = res.array ? res.array() : res.get();
   return {
     empty: false,
+    target,
     findings: rows.map((r) => {
       const g = r.get();
       return {
@@ -103,17 +105,36 @@ export async function runAll({ rootDir, outDir, filter = null, quiet = false }) 
   if (filter) ids = ids.filter((id) => filter.includes(id));
   let pass = 0;
   let fail = 0;
+  let warnings = 0;
   const failures = [];
   for (const id of ids) {
     const { lines, expected } = loadFixture(fixturesDir, id);
     for (const row of expected) {
       let findings;
+      let empty = false;
       try {
-        ({ findings } = await runSlice({ abap, getCheck, checkId: id, fullLines: lines, method: row.method }));
+        const r = await runSlice({ abap, getCheck, checkId: id, fullLines: lines, method: row.method });
+        findings = r.findings;
+        empty = r.empty;
+        // Typo guard: method-less fixtures use numeric class-def selection
+        // legitimately — warn only when METHOD bodies exist but nothing matched.
+        if (!empty && r.target === 'class-fallback' && hasMethodBodies(lines)) {
+          warnings += 1;
+          const msg = `${id}/${row.method}: matches no METHOD or CLASS block, using class-definition fallback — check for typos`;
+          failures.push(`WARN ${msg}`);
+          if (!quiet) console.log(`warn ${msg}`);
+        }
       } catch (e) {
         fail += 1;
         failures.push(`${id}/${row.method}: harness error: ${e.message}`);
         if (!quiet) console.log(`not ok ${id}/${row.method} — harness error: ${e.message}`);
+        continue;
+      }
+      if (empty) {
+        fail += 1;
+        const msg = `${id}/${row.method}: empty slice, no source block found`;
+        failures.push(msg);
+        if (!quiet) console.log(`not ok ${msg}`);
         continue;
       }
       const r = assertRow(id, row, findings);
@@ -127,5 +148,5 @@ export async function runAll({ rootDir, outDir, filter = null, quiet = false }) 
       }
     }
   }
-  return { pass, fail, failures };
+  return { pass, fail, warnings, failures };
 }

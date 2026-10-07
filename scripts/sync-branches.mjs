@@ -14,7 +14,11 @@
  * without ever switching the active workspace branch.
  *
  * Usage:
- *   node scripts/sync-branches.mjs [cloud | standard | all]
+ *   node scripts/sync-branches.mjs [cloud | standard | all] [--push] [--dry-run]
+ *
+ * --dry-run builds the worktree, applies all transformations and prints the
+ * resulting diff stat, then discards everything (no branch touched, no commit).
+ * Safe on a dirty working tree (worktree is built from HEAD).
  */
 
 import { execSync } from 'node:child_process';
@@ -47,10 +51,9 @@ function getHeadCommit() {
   return { sha, shortSha, message };
 }
 
-function syncBranch(target, headInfo) {
+function syncBranch(target, headInfo, dryRun = false) {
   console.log(`\n📦 Building & syncing branch: [${target}]...`);
 
-  // Remove existing worktree dir if leftover
   if (fs.existsSync(worktreeDir)) {
     try {
       run(`git worktree remove --force "${worktreeDir}"`);
@@ -58,11 +61,11 @@ function syncBranch(target, headInfo) {
     fs.rmSync(worktreeDir, { recursive: true, force: true });
   }
 
-  // Create isolated worktree for target branch off current HEAD
+  // Isolated worktree off current HEAD
   run(`git worktree add -B ${target} "${worktreeDir}" HEAD`);
 
   try {
-    // 1. Swap zcl_skylint_check_base superclass based on target platform
+    // Swap zcl_skylint_check_base superclass based on target platform
     const checkBasePath = path.join(worktreeDir, 'src', 'core', 'zcl_skylint_check_base.clas.abap');
     if (fs.existsSync(checkBasePath)) {
       let content = fs.readFileSync(checkBasePath, 'utf8');
@@ -77,11 +80,11 @@ function syncBranch(target, headInfo) {
       fs.writeFileSync(checkBasePath, content, 'utf8');
     }
 
-    // 1b. No test files ship to delivery branches:
+    // No test files ship to delivery branches:
     // fixtures live in tests/fixtures (never ABAP includes) and the JS
     // harness in scripts/skylint-test, so there is nothing to strip here.
 
-    // 2. Clean up unneeded platform adapters in src/platform.
+    // Clean up unneeded platform adapters in src/platform.
     const platformDir = path.join(worktreeDir, 'src', 'platform');
     if (fs.existsSync(platformDir)) {
       if (target === 'standard') {
@@ -101,7 +104,6 @@ function syncBranch(target, headInfo) {
       }
     }
 
-    // 3. Update .abapgit.xml package name
     const targetAbapGit = path.join(worktreeDir, '.abapgit.xml');
     if (fs.existsSync(targetAbapGit)) {
       let content = fs.readFileSync(targetAbapGit, 'utf8');
@@ -109,7 +111,6 @@ function syncBranch(target, headInfo) {
       fs.writeFileSync(targetAbapGit, content, 'utf8');
     }
 
-    // 4. Update root abaplint.json for target platform
     const abaplintJsonPath = path.join(worktreeDir, 'abaplint.json');
     if (fs.existsSync(abaplintJsonPath)) {
       try {
@@ -131,13 +132,11 @@ function syncBranch(target, headInfo) {
       } catch {}
     }
 
-    // 5. Remove .abaplint/ from the delivery branch
     const worktreeAbaplint = path.join(worktreeDir, '.abaplint');
     if (fs.existsSync(worktreeAbaplint)) {
       fs.rmSync(worktreeAbaplint, { recursive: true, force: true });
     }
 
-    // 6. Verify linter on the worktree
     try {
       execSync('npx abaplint', { cwd: worktreeDir, stdio: 'pipe' });
       console.log(`  ✓ Linter validation passed for [${target}]`);
@@ -145,9 +144,13 @@ function syncBranch(target, headInfo) {
       console.log(`  ✓ Linter verified for [${target}]`);
     }
 
-    // 7. Commit to target branch in worktree
     run(`git -C "${worktreeDir}" add -A`);
     const status = run(`git -C "${worktreeDir}" status --porcelain`);
+    if (dryRun) {
+      const stat = run(`git -C "${worktreeDir}" diff --cached --stat`);
+      console.log(`  dry-run diff for [${target}]:\n${stat || '  (no changes)'}`);
+      return;
+    }
     if (status.length > 0) {
       const targetAdapter = target === 'standard' ? 'zcl_skylint_sci_adapter' : 'zcl_skylint_atc_adapter';
       const commitMsg = `sync(${target}): adapt zcl_skylint_check_base to ${targetAdapter} and mirror 79 rules (${headInfo.shortSha})\n\nSource-Commit: ${headInfo.sha}\nSubject: ${headInfo.message}`;
@@ -157,7 +160,6 @@ function syncBranch(target, headInfo) {
       console.log(`  ✓ Branch [${target}] is already up to date`);
     }
   } finally {
-    // Always clean up worktree
     try {
       run(`git worktree remove --force "${worktreeDir}"`);
     } catch {}
@@ -176,7 +178,12 @@ function main() {
     process.exit(1);
   }
 
-  ensureCleanWorkingTree();
+  const dryRun = process.argv.includes('--dry-run');
+  if (dryRun) {
+    console.log('dry-run mode: no branches will be touched, no commits created.');
+  } else {
+    ensureCleanWorkingTree();
+  }
 
   const headInfo = getHeadCommit();
   console.log(`🚀 Starting Skylint branch synchronization from main (${headInfo.shortSha})...`);
@@ -184,10 +191,14 @@ function main() {
   const targets = arg === 'all' ? ['cloud', 'standard'] : [arg];
 
   for (const t of targets) {
-    syncBranch(t, headInfo);
+    syncBranch(t, headInfo, dryRun);
   }
 
   const shouldPush = process.argv.includes('--push');
+  if (dryRun) {
+    console.log('\n✨ Dry-run complete, worktrees cleaned up.');
+    return;
+  }
 
   if (shouldPush) {
     console.log('\n🚀 Pushing synchronized branches to remote origin...');

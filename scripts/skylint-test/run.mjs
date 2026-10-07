@@ -88,12 +88,12 @@ if (fixPositions) {
   process.exit(0);
 }
 
-const { pass, fail, failures } = await runAll({
+const { pass, fail, warnings, failures } = await runAll({
   rootDir,
   outDir,
   filter: filter.length > 0 ? filter : null,
 });
-console.log(`\n${pass} passed, ${fail} failed`);
+console.log(`\n${pass} passed, ${fail} failed, ${warnings} warnings`);
 if (fail > 0) {
   console.log('failures:');
   for (const f of failures) console.log(` - ${f}`);

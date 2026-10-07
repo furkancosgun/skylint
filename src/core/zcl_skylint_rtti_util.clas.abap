@@ -223,15 +223,13 @@ CLASS zcl_skylint_rtti_util IMPLEMENTATION.
 
   METHOD has_compiler_reference.
     FIELD-SYMBOLS <ls_token> TYPE zif_skylint_types=>ty_token.
-    " TODO: variable is assigned but never used (ABAP cleaner)
-    FIELD-SYMBOLS <ls_ref>   TYPE zif_skylint_types=>ty_compiler_reference.
 
     rv_has = abap_false.
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      LOOP AT <ls_token>-references ASSIGNING <ls_ref> WHERE kind = iv_kind.
+      IF line_exists( <ls_token>-references[ kind = iv_kind ] ).
         rv_has = abap_true.
         RETURN.
-      ENDLOOP.
+      ENDIF.
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

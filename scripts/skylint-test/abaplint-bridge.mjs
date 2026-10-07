@@ -45,7 +45,7 @@ export async function spaghettiRefs(fullSource, objectName = '', absOffset = 0) 
       if (!pos) return;
       emitKind(r, [pos.getRow() - off, pos.getCol()]);
     } catch {
-      // ignore single-ref failures
+      // single-ref failures must not kill the whole overlay
     }
   }
   function emitKind(r, rel) {
@@ -61,17 +61,13 @@ export async function spaghettiRefs(fullSource, objectName = '', absOffset = 0) 
     let isStatic = '';
     try {
       if (typeof (res && res.isStatic) === 'function' && res.isStatic()) isStatic = 'X';
-    } catch {
-      // ignore
-    }
+    } catch { /* best-effort */ }
     let fname = '';
     try {
       let nm = res && res.getName ? res.getName() + '' : '';
       nm = nm.toUpperCase();
       if (nm) fname = tyPre + mePre + nm;
-    } catch {
-      // ignore
-    }
+    } catch { /* best-effort */ }
     if (!fname && kind === 'ME' && id) fname = tyPre + mePre + id.toUpperCase();
     fname = fname || id.toUpperCase();
     if (fname) out.push({ rel: rel[0], col: rel[1], ident: flat(id || fname), kind, fname: flat(fname), grade: '1', mode: '5', isStatic });

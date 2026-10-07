@@ -149,8 +149,7 @@ export function extractSnippet(fullLines, method) {
   }
 
   const meth = extractMethod(fullLines, method);
-  if (meth.found) {
-    const inner = meth.snippet.slice(1, -1).join('\n').trim().toUpperCase();
+  if (meth.found) {    const inner = meth.snippet.slice(1, -1).join('\n').trim().toUpperCase();
     // 1-based line number of the METHOD line for find_enclosing_class
     let start1 = 0;
     for (let i = 0; i < fullLines.length; i++) {
@@ -167,4 +166,30 @@ export function extractSnippet(fullLines, method) {
   }
 
   return extractClassDef(fullLines, method);
+}
+
+/**
+ * Typo guard: reports HOW a method name resolved, so callers can warn when
+ * a fixture row matches neither a METHOD block nor a CLASS/INTERFACE block
+ * (in that case extractSnippet silently falls back to numeric class-def
+ * picking, which masks typos like 'TEST_01').
+ * Returns 'class-block' | 'method' | 'method-fallback-def' | 'class-fallback' | 'empty'.
+ */
+export function describeTarget(fullLines, method) {  const want = method.toUpperCase();
+  const blk = extractClassDefBlock(fullLines, want);
+  if (blk.snippet.length > 0) return 'class-block';
+  const meth = extractMethod(fullLines, method);
+  if (meth.found) {
+    const inner = meth.snippet.slice(1, -1).join('\n').trim().toUpperCase();
+    if (inner === '' || inner === 'RETURN.') return 'method-fallback-def';
+    return 'method';
+  }
+  const def = extractClassDef(fullLines, method);
+  if (def.snippet.length === 0) return 'empty';
+  return 'class-fallback';
+}
+
+/** True when the source contains at least one METHOD..ENDMETHOD body. */
+export function hasMethodBodies(fullLines) {
+  return fullLines.some((ln) => /^\s*METHOD\s+\S+\s*\.\s*$/i.test(ln));
 }

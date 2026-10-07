@@ -120,7 +120,7 @@ async function transpileAndEval(fullSource, abap) {
     } catch {
       return [];
     }
-    // topo-sort parents first
+    // topo-sort: parents first
     const parOf = (c) => {
       const pm = /DEFINITION\s+INHERITING\s+FROM\s+(\S+)/i.exec(c || '');
       return pm ? pm[1].replace(/\.$/, '').toLowerCase() + '.clas.abap' : '';

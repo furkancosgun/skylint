@@ -23,7 +23,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Lexer } from './skylint-test/lexer.mjs';
 import { buildStatements } from './skylint-test/parser.mjs';
-import { extractSnippet, condense } from './skylint-test/slicer.mjs';
+import { extractSnippet, describeTarget, hasMethodBodies, condense } from './skylint-test/slicer.mjs';
 import { sliceCodeBlock, joinSource } from './skylint-test/codeblock.mjs';
 import { enrichStatements } from './skylint-test/abaplint-bridge.mjs';
 import { feedRtti } from './skylint-test/rtti.mjs';
@@ -64,6 +64,9 @@ function methodNames() {
 async function lintMethod(method) {
   const { snippet, isDef, offset, object } = extractSnippet(fullLines, method);
   if (snippet.length === 0) return [];
+  if (describeTarget(fullLines, method) === 'class-fallback' && hasMethodBodies(fullLines)) {
+    console.log(`WARN ${method}: matches no METHOD or CLASS block, using class-definition fallback — check for typos`);
+  }
   const statements = buildStatements(new Lexer(joinSource(snippet)).run());
   await feedRtti(joinSource(fullLines), object, abap);
   await enrichStatements(statements, joinSource(fullLines), object, offset);

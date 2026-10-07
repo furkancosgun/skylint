@@ -10,6 +10,7 @@
     "test": "npm run lint && npm run unit",
     "unit": "npm run build && node scripts/skylint-test/run.mjs && node --expose-gc output/index.mjs",
     "lint": "abaplint",
+    "lint:file": "node scripts/lint-string.mjs",
     "fix": "abaplint --fix",
     "clean": "node scripts/clean.mjs",
     "index": "node scripts/indexer.mjs",
@@ -18,6 +19,7 @@
     "check:cloud": "abaplint .abaplint/abap_cloud.json",
     "check:standard": "abaplint .abaplint/abap_standard.json",
     "sync": "node scripts/sync-branches.mjs all --push",
+    "sync:dry": "node scripts/sync-branches.mjs all --dry-run",
     "sync:cloud": "node scripts/sync-branches.mjs cloud --push",
     "sync:standard": "node scripts/sync-branches.mjs standard --push"
   },

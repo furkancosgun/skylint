@@ -36,7 +36,6 @@ CLASS zcl_skylint_check_074 IMPLEMENTATION.
     DATA ls_stmt     TYPE zif_skylint_types=>ty_statement.
     DATA ls_after    TYPE zif_skylint_types=>ty_statement.
     DATA lv_has_else TYPE abap_bool.
-    " TODO: variable is assigned but never used (ABAP cleaner)
     FIELD-SYMBOLS <ls_loop> TYPE zif_skylint_types=>ty_statement.
 
     lv_max = zcl_skylint_ast_util=>statement_count( is_code_block-statements ).
