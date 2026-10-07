@@ -38,28 +38,12 @@ CLASS zcl_skylint_rtti_util DEFINITION
                 iv_kind       TYPE zif_skylint_types=>ty_reference_kind
       RETURNING VALUE(rv_has) TYPE abap_bool.
 
-    CLASS-METHODS cache_static
-      IMPORTING iv_full_name TYPE clike.
-
-    CLASS-METHODS cache_signature
-      IMPORTING iv_full_name  TYPE clike
-                iv_param_name TYPE clike.
-
-    CLASS-METHODS clear_cache.
-
   PRIVATE SECTION.
     CLASS-METHODS parse_full_name
       IMPORTING iv_full_name    TYPE clike
       EXPORTING ev_program_name TYPE string
                 ev_class_name   TYPE string
                 ev_meth_name    TYPE string.
-
-    CLASS-DATA gt_static_cache TYPE HASHED TABLE OF string WITH UNIQUE KEY table_line.
-    TYPES: BEGIN OF ty_signature,
-             full_name  TYPE string,
-             param_name TYPE string,
-           END OF ty_signature.
-    CLASS-DATA gt_sig_cache TYPE HASHED TABLE OF ty_signature WITH UNIQUE KEY full_name.
 
 ENDCLASS.
 
@@ -184,50 +168,14 @@ CLASS zcl_skylint_rtti_util IMPLEMENTATION.
   METHOD is_static_method.
     DATA ls_meth  TYPE abap_methdescr.
     DATA lv_found TYPE abap_bool.
-    DATA lv_key   TYPE string.
 
     rv_is = abap_false.
-    lv_key = to_upper( iv_full_name ).
-    IF line_exists( gt_static_cache[ table_line = lv_key ] ).
-      rv_is = abap_true.
-      RETURN.
-    ENDIF.
     get_method_descr( EXPORTING iv_full_name = iv_full_name
                       IMPORTING es_method    = ls_meth
                                 ev_found     = lv_found ).
     IF lv_found = abap_true AND ls_meth-is_class = abap_true.
       rv_is = abap_true.
     ENDIF.
-  ENDMETHOD.
-
-  METHOD cache_static.
-    DATA lv_key TYPE string.
-
-    lv_key = to_upper( iv_full_name ).
-    IF lv_key IS INITIAL.
-      RETURN.
-    ENDIF.
-    IF NOT line_exists( gt_static_cache[ table_line = lv_key ] ).
-      INSERT lv_key INTO TABLE gt_static_cache.
-    ENDIF.
-  ENDMETHOD.
-
-  METHOD cache_signature.
-    DATA ls_sig TYPE ty_signature.
-
-    ls_sig-full_name = to_upper( iv_full_name ).
-    ls_sig-param_name = to_upper( iv_param_name ).
-    IF ls_sig-full_name IS INITIAL OR ls_sig-param_name IS INITIAL.
-      RETURN.
-    ENDIF.
-    IF NOT line_exists( gt_sig_cache[ full_name = ls_sig-full_name ] ).
-      INSERT ls_sig INTO TABLE gt_sig_cache.
-    ENDIF.
-  ENDMETHOD.
-
-  METHOD clear_cache.
-    CLEAR gt_static_cache.
-    CLEAR gt_sig_cache.
   ENDMETHOD.
 
   METHOD is_boolean_returning_method.
@@ -248,18 +196,10 @@ CLASS zcl_skylint_rtti_util IMPLEMENTATION.
     DATA lv_found        TYPE abap_bool.
     DATA lv_input_count  TYPE i.
     DATA ls_single_param TYPE abap_parmdescr.
-    DATA ls_sig          TYPE ty_signature.
     FIELD-SYMBOLS <ls_param> TYPE abap_parmdescr.
 
     CLEAR: ev_param_name,
            ev_is_single.
-
-    READ TABLE gt_sig_cache INTO ls_sig WITH KEY full_name = to_upper( iv_full_name ).
-    IF sy-subrc = 0.
-      ev_is_single = abap_true.
-      ev_param_name = ls_sig-param_name.
-      RETURN.
-    ENDIF.
 
     get_method_descr( EXPORTING iv_full_name = iv_full_name
                       IMPORTING es_method    = ls_meth

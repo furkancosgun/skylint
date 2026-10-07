@@ -49,7 +49,6 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_runner IMPLEMENTATION.
   METHOD run.
-    zcl_skylint_rtti_util=>clear_cache( ).
     run_all( io_check    = io_check
              it_source   = it_source
              it_expected = it_expected ).

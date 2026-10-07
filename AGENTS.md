@@ -350,7 +350,10 @@ ENDCLASS.
 Notes:
 - There is exactly ONE test runner. The old `sci/atc/open_test_run` variants are deleted; adapters (`sci/atc_adapter`) stay for production branches.
 - Parser (`lcl_lexer`/`lcl_parser`) is untouched ABAP. Compiler references are hybrid: heuristic first, then `lcl_abaplint_bridge`
-  enriches via `@abaplint/core` (`SyntaxLogic.spaghetti`: method refs + static flags + single-param signatures into `zcl_skylint_rtti_util` caches). No filesystem access in tests.
+  enriches via `@abaplint/core` (`SyntaxLogic.spaghetti`: method refs). RTTI has NO static caches: `lcl_abaplint_bridge=>feed_rtti`
+  transpiles the full test source (lenient batch + auto-stubbed unknown superclasses) and evaluates it into the shared `abap.Classes`
+  registry with a `ZSKYLINT_TEST` alias, so `zcl_skylint_rtti_util` live queries (`describe_*`, `is_static_method`,
+  `get_single_importing_param`, `get_super_classes`) resolve. No filesystem access in tests.
 - `*.testclasses.abap` + `zcl_skylint_test_runner` are stripped by `sync-branches.mjs` and never reach `cloud`/`standard`.
 - `line_length` is disabled for `*testclasses*` (inline 1:1 sources must stay verbatim).
 

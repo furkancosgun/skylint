@@ -22,10 +22,13 @@
     "sync:standard": "node scripts/sync-branches.mjs standard --push"
   },
   "devDependencies": {
-    "abap-kit": "latest",
     "@abaplint/cli": "latest",
+    "@abaplint/database-sqlite": "latest",
     "@abaplint/runtime": "latest",
     "@abaplint/transpiler-cli": "latest",
-    "@abaplint/database-sqlite": "latest"
+    "abap-kit": "latest"
+  },
+  "dependencies": {
+    "@abaplint/transpiler": "^2.13.100"
   }
 }

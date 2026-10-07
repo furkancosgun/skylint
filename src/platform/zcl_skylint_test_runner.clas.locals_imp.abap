@@ -164,6 +164,10 @@ CLASS lcl_abaplint_bridge DEFINITION FINAL.
     CLASS-METHODS apply_ref_line
       IMPORTING iv_line TYPE string
       CHANGING  ct_statements TYPE zif_skylint_types=>ty_statements.
+
+    CLASS-METHODS feed_rtti
+      IMPORTING iv_full_source TYPE string
+                iv_object_name TYPE string OPTIONAL.
 ENDCLASS.
 
 
@@ -1157,6 +1161,9 @@ CLASS lcl_abaplint_bridge IMPLEMENTATION.
 
     apply_payload( EXPORTING iv_payload    = lv_payload
                    CHANGING  ct_statements = ct_statements ).
+
+    feed_rtti( iv_full_source = iv_full_source
+               iv_object_name = iv_object_name ).
   ENDMETHOD.
 
   METHOD build_payload.
@@ -1173,7 +1180,7 @@ CLASS lcl_abaplint_bridge IMPLEMENTATION.
     WRITE '@KERNEL   const core = await import("@abaplint/core");'.
     WRITE '@KERNEL   const full = lv_full.get(), on = (lv_obj.get() || "").trim();'.
     WRITE '@KERNEL   const sn = on || "ZSKYLINT_TEST", off = parseInt(lv_off.get() || "0", 10) || 0;'.
-    WRITE '@KERNEL   const out = [], sigSeen = {}, tyPre = "\\\\TY:" + sn.toUpperCase(), mePre = "\\\\ME:";'.
+    WRITE '@KERNEL   const out = [], tyPre = "\\\\TY:" + sn.toUpperCase(), mePre = "\\\\ME:";'.
     WRITE '@KERNEL   const safe = (s) => (s + "").replace(/[|]/g, " ");'.
     WRITE '@KERNEL   const flat = (s) => safe(s).replace(/[\r\n]+/g, " ");'.
     WRITE '@KERNEL   try {'.
@@ -1210,7 +1217,6 @@ CLASS lcl_abaplint_bridge IMPLEMENTATION.
     WRITE '@KERNEL   function emitResolved(r, rel, kind, id) {'.
     WRITE '@KERNEL     const res = r.resolved;'.
     WRITE '@KERNEL     const stat = isStaticRes(res);'.
-    WRITE '@KERNEL     emitSig(res, fnameOf(res, kind, id), kind);'.
     WRITE '@KERNEL     const fn2 = fnameOf(res, kind, id) || id.toUpperCase();'.
     WRITE '@KERNEL     if (fn2) { pushRef(rel, id || fn2, kind, fn2, stat); }'.
     WRITE '@KERNEL   }'.
@@ -1233,25 +1239,6 @@ CLASS lcl_abaplint_bridge IMPLEMENTATION.
     WRITE '@KERNEL   function pushRef(rel, id, kind, fname, isStatic) {'.
     WRITE '@KERNEL     const cells = [rel[0], rel[1], flat(id), kind, flat(fname), "1", "5", isStatic];'.
     WRITE '@KERNEL     out.push(cells.join("|"));'.
-    WRITE '@KERNEL   }'.
-    WRITE '@KERNEL   function emitSig(res, fname, kind) {'.
-    WRITE '@KERNEL     if (!fname || kind !== "ME" || !res) { return; }'.
-    WRITE '@KERNEL     if (typeof res.getParameters !== "function") { return; }'.
-    WRITE '@KERNEL     try { emitSigTry(res.getParameters(), fname); } catch (e3) { }'.
-    WRITE '@KERNEL   }'.
-    WRITE '@KERNEL   function emitSigTry(pars, fname) {'.
-    WRITE '@KERNEL     const imp = pars.getImporting();'.
-    WRITE '@KERNEL     if (imp.length === 1 && !sigSeen[fname]) { emitSigOne(imp[0], fname); }'.
-    WRITE '@KERNEL   }'.
-    WRITE '@KERNEL   function emitSigOne(param, fname) {'.
-    WRITE '@KERNEL     let pn = "";'.
-    WRITE '@KERNEL     try { pn = param.getName() + ""; } catch (e1) { }'.
-    WRITE '@KERNEL     if (!pn && param.getFirstToken) { pn = tokName(param); }'.
-    WRITE '@KERNEL     pn = flat(pn).toUpperCase();'.
-    WRITE '@KERNEL     if (pn) { sigSeen[fname] = 1; out.push("SIG|" + flat(fname) + "|" + pn); }'.
-    WRITE '@KERNEL   }'.
-    WRITE '@KERNEL   function tokName(param) {'.
-    WRITE '@KERNEL     try { return param.getFirstToken().getStr(); } catch (e2) { return ""; }'.
     WRITE '@KERNEL   }'.
 
     WRITE '@KERNEL   lv_payload.set(out.join("\n"));'.
@@ -1283,18 +1270,12 @@ CLASS lcl_abaplint_bridge IMPLEMENTATION.
     DATA lv_fname TYPE string.
     DATA lv_grade TYPE string.
     DATA lv_mode  TYPE string.
-    DATA lv_static TYPE string.
     DATA ls_ref   TYPE zif_skylint_types=>ty_compiler_reference.
     FIELD-SYMBOLS <ls_stmt> TYPE zif_skylint_types=>ty_statement.
     FIELD-SYMBOLS <ls_tok>  TYPE zif_skylint_types=>ty_token.
 
     CLEAR lt_parts.
     SPLIT iv_line AT '|' INTO TABLE lt_parts.
-    IF lines( lt_parts ) = 3 AND lt_parts[ 1 ] = 'SIG'.
-      zcl_skylint_rtti_util=>cache_signature( iv_full_name  = lt_parts[ 2 ]
-                                              iv_param_name = lt_parts[ 3 ] ).
-      RETURN.
-    ENDIF.
     IF lines( lt_parts ) < 7.
       RETURN.
     ENDIF.
@@ -1305,11 +1286,6 @@ CLASS lcl_abaplint_bridge IMPLEMENTATION.
     lv_fname = lt_parts[ 5 ].
     lv_grade = lt_parts[ 6 ].
     lv_mode = lt_parts[ 7 ].
-    IF lines( lt_parts ) >= 8.
-      lv_static = lt_parts[ 8 ].
-    ELSE.
-      CLEAR lv_static.
-    ENDIF.
     IF lv_kind <> 'ME' AND lv_kind <> 'DA' AND lv_kind <> 'TY'.
       RETURN.
     ENDIF.
@@ -1330,11 +1306,74 @@ CLASS lcl_abaplint_bridge IMPLEMENTATION.
         ls_ref-usage_grade = lv_grade.
         ls_ref-usage_mode = lv_mode.
         INSERT ls_ref INTO TABLE <ls_tok>-references.
-        IF lv_static = 'X'.
-          zcl_skylint_rtti_util=>cache_static( lv_fname ).
-        ENDIF.
         EXIT.
       ENDLOOP.
     ENDLOOP.
+  ENDMETHOD.
+
+
+  METHOD feed_rtti.
+    DATA lv_full TYPE string.
+    DATA lv_obj  TYPE string.
+
+    IF iv_full_source IS INITIAL.
+      RETURN.
+    ENDIF.
+
+    lv_full = iv_full_source.
+    lv_obj = iv_object_name.
+
+    WRITE '@KERNEL try {'.
+    WRITE '@KERNEL   const full = lv_full.get(), on = (lv_obj.get() || "").trim();'.
+    WRITE '@KERNEL   const sn = (on || "ZSKYLINT_TEST").toUpperCase();'.
+    WRITE '@KERNEL   globalThis.__skylintFed = globalThis.__skylintFed || {};'.
+    WRITE '@KERNEL   const h = (s) => {'.
+    WRITE '@KERNEL     let x = 5381;'.
+    WRITE '@KERNEL     for (let i = 0; i < s.length; i++) { x = (((x << 5) + x + s.charCodeAt(i)) >>> 0); }'.
+    WRITE '@KERNEL     return "k" + x;'.
+    WRITE '@KERNEL   };'.
+    WRITE '@KERNEL   const fkey = h(full);'.
+    WRITE '@KERNEL   let det = "";'.
+    WRITE '@KERNEL   const clsRe = /^\s*CLASS\s+(\S+)\s+DEFINITION\b/i;'.
+    WRITE '@KERNEL   for (const ln of full.split(/\r?\n/)) {'.
+    WRITE '@KERNEL     const m = clsRe.exec(ln);'.
+    WRITE '@KERNEL     if (m) { det = m[1].replace(/\.$/, "").toUpperCase(); break; }'.
+    WRITE '@KERNEL   }'.
+    WRITE '@KERNEL   if (det && !globalThis.__skylintFed[fkey]) {'.
+    WRITE '@KERNEL     const files = [{filename: det.toLowerCase() + ".clas.abap", contents: full}];'.
+    WRITE '@KERNEL     const {Transpiler} = await import("@abaplint/transpiler");'.
+    WRITE '@KERNEL     let tout;'.
+    WRITE '@KERNEL     for (let att = 0; att < 4; att++) {'.
+    WRITE '@KERNEL       const topt = {ignoreSyntaxCheck: true, unknownTypes: "runtimeError"};'.
+    WRITE '@KERNEL       try { tout = await new Transpiler(topt).runRaw(files); break; }'.
+    WRITE '@KERNEL       catch (e) { const em = (e && e.message) || "";'.
+    WRITE '@KERNEL         const sm = /Super class "([^"]+)" not found/.exec(em);'.
+    WRITE '@KERNEL         if (!sm || files.length > 6) { tout = undefined; break; }'.
+    WRITE '@KERNEL         const sname = sm[1];'.
+    WRITE '@KERNEL         const stub = "CLASS " + sname + " DEFINITION PUBLIC CREATE PUBLIC.\n";'.
+    WRITE '@KERNEL         files.push({filename: sname.toLowerCase() + ".clas.abap", contents: stub'.
+    WRITE '@KERNEL           + " PUBLIC SECTION.\nENDCLASS.\nCLASS " + sname + " IMPLEMENTATION.\nENDCLASS."}); }'.
+    WRITE '@KERNEL     }'.
+    WRITE '@KERNEL     if (tout) {'.
+    WRITE '@KERNEL       const before = new Set(Object.keys(abap.Classes));'.
+    WRITE '@KERNEL       const mfn = files[0].filename;'.
+    WRITE '@KERNEL       const isMain = (o) => ((o.filename === mfn) ? 1 : 0);'.
+    WRITE '@KERNEL       const ordered = [...tout.objects].sort((a, b) => isMain(a) - isMain(b));'.
+    WRITE '@KERNEL       const codes = ordered.filter((o) => o.chunk).map((o) => o.chunk.getCode());'.
+    WRITE '@KERNEL       const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;'.
+    WRITE '@KERNEL       await new AsyncFunction("abap", codes.join("\n;\n"))(abap);'.
+    WRITE '@KERNEL       const fresh = Object.keys(abap.Classes).filter((k) => !before.has(k));'.
+    WRITE '@KERNEL       const tgt = fresh.find((k) => k === det)'.
+    WRITE '@KERNEL         || fresh.find((k) => k.endsWith("-" + det))'.
+    WRITE '@KERNEL         || (fresh.length === 1 ? fresh[0] : "");'.
+    WRITE '@KERNEL       if (tgt) { globalThis.__skylintFed[fkey] = tgt; }'.
+    WRITE '@KERNEL     }'.
+    WRITE '@KERNEL   }'.
+    WRITE '@KERNEL   const alias = globalThis.__skylintFed[fkey];'.
+    WRITE '@KERNEL   if (det && alias && abap.Classes[alias]) {'.
+    WRITE '@KERNEL     abap.Classes[sn] = abap.Classes[alias];'.
+    WRITE '@KERNEL     abap.Classes[det] = abap.Classes[alias];'.
+    WRITE '@KERNEL   }'.
+    WRITE '@KERNEL } catch (e) { }'.
   ENDMETHOD.
 ENDCLASS.

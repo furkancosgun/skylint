@@ -36,8 +36,6 @@ const toFileUrl = (p) => 'file:///' + p.replace(/\\/g, '/');
 await import(toFileUrl(path.join(outDir, 'init.mjs')));
 const locals = await import(toFileUrl(path.join(outDir, 'zcl_skylint_test_runner.clas.locals.mjs')));
 const { lcl_runner } = locals;
-const rttiMod = await import(toFileUrl(path.join(outDir, 'zcl_skylint_rtti_util.clas.mjs')));
-const { zcl_skylint_rtti_util } = rttiMod;
 const abap = globalThis.abap;
 const S = (v) => new abap.types.String().set(v);
 const TRUE = abap.builtin.abap_true;
@@ -165,7 +163,6 @@ function extractClassDef(fullLines, method) {
 /** Run a check on an inline snippet like the test runner does. */
 async function runFindings(checkNum, fullLines, method) {
   const ioCheck = await getCheckInstance(checkNum);
-  await zcl_skylint_rtti_util.clear_cache();
   const { snippet, isDef, offset } = extractSnippet(fullLines, method);
   if (snippet.length === 0) {
     return [];
