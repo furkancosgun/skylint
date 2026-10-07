@@ -203,7 +203,7 @@ All ABAP code in `src/` **MUST** strictly pass `abaplint` validation with **0 wa
 
 ## 🛠️ Anatomy of a Skylint Check Rule
 
-Each check consists of 3 essential files (plus optional full class fixtures in `src/tests/`):
+Each check consists of 3 essential files. Test sources live inline in the testclasses (1:1 full class text, never shipped to SAP systems):
 
 ```text
 src/
@@ -302,34 +302,57 @@ Always ensure `<WITH_UNIT_TESTS>X</WITH_UNIT_TESTS>` is present:
 ```
 
 ### 3. In-Memory Unit Test Suite (`src/checks/zcl_skylint_check_XXX.clas.testclasses.abap`)
-Use `zcl_skylint_test_runner` to run and assert tests with clean, readable, inline ABAP code snippets:
+Use `zcl_skylint_test_runner` (lives in `src/platform/`, dev-only, never shipped to SAP) with 1:1 inline full class sources.
+The runner slices `METHOD..ENDMETHOD` (or `CLASS DEFINITION`/`INTERFACE`) blocks itself, so `line`/`column`
+in `it_expected` stay relative to the sliced block. Regenerate positions with `npm run build` + `npm run positions`:
 
 ```abap
 CLASS ltcl_check_XXX DEFINITION FINAL
   FOR TESTING RISK LEVEL HARMLESS DURATION SHORT.
 
   PRIVATE SECTION.
-    METHODS test_finding FOR TESTING RAISING cx_static_check.
-    METHODS test_clean   FOR TESTING RAISING cx_static_check.
+    METHODS test_check FOR TESTING RAISING cx_static_check.
 ENDCLASS.
 
 
 CLASS ltcl_check_XXX IMPLEMENTATION.
-  METHOD test_finding.
-    zcl_skylint_test_runner=>assert_findings(
-        io_check    = NEW zcl_skylint_check_XXX( )
-        it_source   = VALUE #( ( `NON_COMPLIANT_STATEMENT.` ) )
-        it_expected = VALUE #( ( line = 2
-                                 code = zcl_skylint_check_XXX=>c_finding_codes-my_finding_code ) ) ).
-  ENDMETHOD.
+  METHOD test_check.
+    DATA lt_source TYPE string_table.
 
-  METHOD test_clean.
-    zcl_skylint_test_runner=>assert_no_findings(
-        io_check  = NEW zcl_skylint_check_XXX( )
-        it_source = VALUE #( ( `COMPLIANT_STATEMENT.` ) ) ).
+    lt_source = VALUE #(
+        ( `CLASS zcl_skylint_test_XXX DEFINITION` )
+        ( `  PUBLIC SECTION.` )
+        ( `    METHODS test_001.` )
+        ( `    METHODS test_002.` )
+        ( `ENDCLASS.` )
+        ( `CLASS zcl_skylint_test_XXX IMPLEMENTATION.` )
+        ( `  METHOD test_001.` )
+        ( `    NON_COMPLIANT_STATEMENT.` )
+        ( `  ENDMETHOD.` )
+        ( `  METHOD test_002.` )
+        ( `    COMPLIANT_STATEMENT.` )
+        ( `  ENDMETHOD.` )
+        ( `ENDCLASS.` ) ).
+
+    zcl_skylint_test_runner=>run(
+        io_check    = NEW zcl_skylint_check_XXX( )
+        it_source   = lt_source
+        it_expected = VALUE #(
+            ( method = 'TEST_001'
+              code   = zcl_skylint_check_XXX=>c_finding_codes-my_finding_code
+              line   = 2
+              column = 4 )
+            ( method = 'TEST_002' ) ) ).
   ENDMETHOD.
 ENDCLASS.
 ```
+
+Notes:
+- There is exactly ONE test runner. The old `sci/atc/open_test_run` variants are deleted; adapters (`sci/atc_adapter`) stay for production branches.
+- Parser (`lcl_lexer`/`lcl_parser`) is untouched ABAP. Compiler references are hybrid: heuristic first, then `lcl_abaplint_bridge`
+  enriches via `@abaplint/core` (`SyntaxLogic.spaghetti`: method refs + static flags + single-param signatures into `zcl_skylint_rtti_util` caches). No filesystem access in tests.
+- `*.testclasses.abap` + `zcl_skylint_test_runner` are stripped by `sync-branches.mjs` and never reach `cloud`/`standard`.
+- `line_length` is disabled for `*testclasses*` (inline 1:1 sources must stay verbatim).
 
 ### 4. QuickFix Implementation & API Pattern
 When automated code replacement or removal is appropriate, use the QuickFix API:

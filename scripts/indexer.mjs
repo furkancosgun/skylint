@@ -6,7 +6,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, '..');
 const checksDir = path.join(rootDir, 'src', 'checks');
-const testsDir = path.join(rootDir, 'src', 'tests');
 const readmePath = path.join(rootDir, 'README.md');
 
 /**
@@ -64,8 +63,6 @@ function renumberChecks(checks) {
       path.join(checksDir, `zcl_skylint_check_${r.oldId}.clas.abap`),
       path.join(checksDir, `zcl_skylint_check_${r.oldId}.clas.testclasses.abap`),
       path.join(checksDir, `zcl_skylint_check_${r.oldId}.clas.xml`),
-      path.join(testsDir, `zcl_skylint_test_${r.oldId}.clas.abap`),
-      path.join(testsDir, `zcl_skylint_test_${r.oldId}.clas.xml`),
     ];
 
     for (const f of files) {
@@ -91,14 +88,6 @@ function renumberChecks(checks) {
       {
         temp: path.join(checksDir, `${tempPrefix}${r.newId}_zcl_skylint_check_${r.oldId}.clas.xml`),
         dest: path.join(checksDir, `zcl_skylint_check_${r.newId}.clas.xml`),
-      },
-      {
-        temp: path.join(testsDir, `${tempPrefix}${r.newId}_zcl_skylint_test_${r.oldId}.clas.abap`),
-        dest: path.join(testsDir, `zcl_skylint_test_${r.newId}.clas.abap`),
-      },
-      {
-        temp: path.join(testsDir, `${tempPrefix}${r.newId}_zcl_skylint_test_${r.oldId}.clas.xml`),
-        dest: path.join(testsDir, `zcl_skylint_test_${r.newId}.clas.xml`),
       },
     ];
 

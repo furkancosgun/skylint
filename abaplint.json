@@ -4,8 +4,7 @@
     "exclude": [],
     "noIssues": [
       "zcl_skylint_sci*",
-      "zcl_skylint_atc*",
-      "zcl_skylint_test_*"
+      "zcl_skylint_atc*"
     ],
     "skipGeneratedBOPFInterfaces": false,
     "skipGeneratedFunctionGroups": false,
@@ -751,7 +750,9 @@
       "severity": "Error"
     },
     "line_length": {
-      "exclude": [],
+      "exclude": [
+        ".*testclasses.*"
+      ],
       "severity": "Error",
       "length": 120,
       "maxIssuesPerFile": 10
@@ -1260,10 +1261,7 @@
       "exclude": [],
       "severity": "Error"
     },
-    "unused_ddic": {
-      "exclude": [],
-      "severity": "Error"
-    },
+    "unused_ddic": false,
     "unused_macros": {
       "exclude": [],
       "severity": "Error",

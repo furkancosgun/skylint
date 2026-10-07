@@ -77,36 +77,32 @@ function syncBranch(target, headInfo) {
       fs.writeFileSync(checkBasePath, content, 'utf8');
     }
 
-    // 1b. Point zcl_skylint_test_runner at the branch driver (no inheritance).
-    // Main uses open driver; delivery branches accept the pulled branch driver.
-    const testRunnerPath = path.join(worktreeDir, 'src', 'core', 'zcl_skylint_test_runner.clas.abap');
-    if (fs.existsSync(testRunnerPath)) {
-      let content = fs.readFileSync(testRunnerPath, 'utf8');
-      const targetTestDriver = target === 'standard' ? 'zcl_skylint_sci_test_run' : 'zcl_skylint_atc_test_run';
-      content = content.replace(
-        /TYPE REF TO\s+zcl_skylint_open_test_run/,
-        `TYPE REF TO ${targetTestDriver}`
-      );
-      if (!content.includes(`TYPE REF TO ${targetTestDriver}`)) {
-        throw new Error(`Failed to point zcl_skylint_test_runner at ${targetTestDriver}`);
+    // 1b. Test infrastructure (test runner + testclasses) is dev-only:
+    // delivery branches never receive them.
+    const checksDir = path.join(worktreeDir, 'src', 'checks');
+    if (fs.existsSync(checksDir)) {
+      for (const file of fs.readdirSync(checksDir)) {
+        if (file.endsWith('.testclasses.abap')) {
+          fs.rmSync(path.join(checksDir, file), { force: true });
+        }
       }
-      fs.writeFileSync(testRunnerPath, content, 'utf8');
     }
 
-    // 2. Clean up unneeded platform adapters in src/platform
+    // 2. Clean up unneeded platform adapters in src/platform.
+    // The test runner is dev-only and never shipped.
     const platformDir = path.join(worktreeDir, 'src', 'platform');
     if (fs.existsSync(platformDir)) {
       if (target === 'standard') {
         // Keep sci_adapter and sci_category; remove atc_adapter and open_adapter
         for (const file of fs.readdirSync(platformDir)) {
-          if (file.startsWith('zcl_skylint_atc_') || file.startsWith('zcl_skylint_open_')) {
+          if (file.startsWith('zcl_skylint_atc_') || file.startsWith('zcl_skylint_open_') || file.startsWith('zcl_skylint_test_runner')) {
             fs.rmSync(path.join(platformDir, file), { recursive: true, force: true });
           }
         }
       } else if (target === 'cloud') {
         // Keep atc_adapter; remove sci_adapter, sci_category, and open_adapter
         for (const file of fs.readdirSync(platformDir)) {
-          if (file.startsWith('zcl_skylint_sci_') || file.startsWith('zcl_skylint_open_')) {
+          if (file.startsWith('zcl_skylint_sci_') || file.startsWith('zcl_skylint_open_') || file.startsWith('zcl_skylint_test_runner')) {
             fs.rmSync(path.join(platformDir, file), { recursive: true, force: true });
           }
         }

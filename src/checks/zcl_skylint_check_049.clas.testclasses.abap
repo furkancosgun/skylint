@@ -8,9 +8,41 @@ ENDCLASS.
 
 CLASS ltcl_check_049 IMPLEMENTATION.
   METHOD test_check.
+    DATA lt_source TYPE string_table.
+
+    lt_source = VALUE #(
+        ( `CLASS zcl_skylint_test_049 DEFINITION` )
+        ( `  PUBLIC FINAL` )
+        ( `  CREATE PUBLIC.` )
+        ( `` )
+        ( `  PUBLIC SECTION.` )
+        ( `    METHODS test_001.` )
+        ( `    METHODS test_002.` )
+        ( `    METHODS test_003.` )
+        ( `    METHODS test_004.` )
+        ( `ENDCLASS.` )
+        ( `` )
+        ( `CLASS zcl_skylint_test_049 IMPLEMENTATION.` )
+        ( `  METHOD test_001.` )
+        ( `    RAISE shortdump TYPE cx_sy_zerodivide.` )
+        ( `  ENDMETHOD.` )
+        ( `` )
+        ( `  METHOD test_002.` )
+        ( `    RAISE EXCEPTION TYPE cx_sy_zerodivide.` )
+        ( `  ENDMETHOD.` )
+        ( `` )
+        ( `  METHOD test_003.` )
+        ( `    RAISE shortdump TYPE cx_sy_no_handler.` )
+        ( `  ENDMETHOD.` )
+        ( `` )
+        ( `  METHOD test_004.` )
+        ( `    RAISE EXCEPTION TYPE cx_sy_no_handler.` )
+        ( `  ENDMETHOD.` )
+        ( `ENDCLASS.` ) ).
+
     zcl_skylint_test_runner=>run(
         io_check    = NEW zcl_skylint_check_049( )
-        iv_class    = 'ZCL_SKYLINT_TEST_049'
+        it_source   = lt_source
         it_expected = VALUE #(
             ( method = 'TEST_001' code = zcl_skylint_check_049=>c_finding_codes-raise_shortdump line = 2 column = 4 )
             ( method = 'TEST_002' )

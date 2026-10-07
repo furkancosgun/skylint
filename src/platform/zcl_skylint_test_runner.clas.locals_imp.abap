@@ -142,6 +142,31 @@ CLASS lcl_code_block_builder DEFINITION FINAL.
 ENDCLASS.
 
 
+CLASS lcl_abaplint_bridge DEFINITION FINAL.
+  PUBLIC SECTION.
+    CLASS-METHODS enrich
+      IMPORTING iv_full_source TYPE string
+                iv_object_name TYPE string OPTIONAL
+                iv_abs_offset  TYPE i DEFAULT 0
+      CHANGING  ct_statements  TYPE zif_skylint_types=>ty_statements.
+
+  PRIVATE SECTION.
+    CLASS-METHODS build_payload
+      IMPORTING iv_full_source    TYPE string
+                iv_object_name    TYPE string OPTIONAL
+                iv_abs_offset     TYPE i DEFAULT 0
+      RETURNING VALUE(rv_payload) TYPE string.
+
+    CLASS-METHODS apply_payload
+      IMPORTING iv_payload TYPE string
+      CHANGING  ct_statements TYPE zif_skylint_types=>ty_statements.
+
+    CLASS-METHODS apply_ref_line
+      IMPORTING iv_line TYPE string
+      CHANGING  ct_statements TYPE zif_skylint_types=>ty_statements.
+ENDCLASS.
+
+
 CLASS lcl_runner DEFINITION FINAL.
   PUBLIC SECTION.
     CLASS-METHODS join_source
@@ -152,14 +177,18 @@ CLASS lcl_runner DEFINITION FINAL.
     CLASS-METHODS execute
       IMPORTING io_check            TYPE REF TO zcl_skylint_check_base
                 iv_source           TYPE string
+                iv_full_source      TYPE string OPTIONAL
                 iv_class_definition TYPE abap_bool DEFAULT abap_false
+                iv_abs_offset       TYPE i DEFAULT 0
                 iv_object_name      TYPE string    OPTIONAL
       RETURNING VALUE(rt_findings)  TYPE zif_skylint_types=>ty_findings
       RAISING   cx_static_check.
 
     CLASS-METHODS build_code_block
       IMPORTING iv_source            TYPE string
+                iv_full_source       TYPE string OPTIONAL
                 iv_class_definition  TYPE abap_bool DEFAULT abap_false
+                iv_abs_offset        TYPE i DEFAULT 0
                 iv_object_name       TYPE string    OPTIONAL
       RETURNING VALUE(rs_code_block) TYPE zif_skylint_types=>ty_code_block.
 ENDCLASS.
@@ -1078,7 +1107,9 @@ CLASS lcl_runner IMPLEMENTATION.
     DATA ls_proc TYPE zif_skylint_types=>ty_code_block.
 
     ls_proc = build_code_block( iv_source           = iv_source
+                                iv_full_source      = iv_full_source
                                 iv_class_definition = iv_class_definition
+                                iv_abs_offset       = iv_abs_offset
                                 iv_object_name      = iv_object_name ).
 
     rt_findings = io_check->lint( ls_proc ).
@@ -1088,12 +1119,222 @@ CLASS lcl_runner IMPLEMENTATION.
     DATA lo_lexer TYPE REF TO lcl_lexer.
     DATA lt_toks  TYPE zif_skylint_types=>ty_tokens.
     DATA lt_stmts TYPE zif_skylint_types=>ty_statements.
+    DATA lv_full  TYPE string.
 
     lo_lexer = NEW #( iv_source ).
     lt_toks = lo_lexer->run( ).
     lt_stmts = lcl_parser=>build_statements( lt_toks ).
+    lv_full = iv_full_source.
+    IF lv_full IS INITIAL.
+      lv_full = iv_source.
+    ENDIF.
+    lcl_abaplint_bridge=>enrich( EXPORTING iv_full_source = lv_full
+                                           iv_object_name = iv_object_name
+                                           iv_abs_offset  = iv_abs_offset
+                                 CHANGING  ct_statements  = lt_stmts ).
     rs_code_block = lcl_code_block_builder=>slice_code_block( it_statements       = lt_stmts
                                                               iv_class_definition = iv_class_definition
                                                               iv_object_name      = iv_object_name ).
+  ENDMETHOD.
+ENDCLASS.
+
+
+CLASS lcl_abaplint_bridge IMPLEMENTATION.
+  METHOD enrich.
+    DATA lv_payload TYPE string.
+
+    IF ct_statements IS INITIAL OR iv_full_source IS INITIAL.
+      RETURN.
+    ENDIF.
+
+    lv_payload = build_payload( iv_full_source = iv_full_source
+                                iv_object_name = iv_object_name
+                                iv_abs_offset  = iv_abs_offset ).
+
+    IF lv_payload IS INITIAL.
+      RETURN.
+    ENDIF.
+
+    apply_payload( EXPORTING iv_payload    = lv_payload
+                   CHANGING  ct_statements = ct_statements ).
+  ENDMETHOD.
+
+  METHOD build_payload.
+    DATA lv_full    TYPE string.
+    DATA lv_obj     TYPE string.
+    DATA lv_off     TYPE i.
+    DATA lv_payload TYPE string.
+
+    lv_full = iv_full_source.
+    lv_obj = iv_object_name.
+    lv_off = iv_abs_offset.
+
+    WRITE '@KERNEL try {'.
+    WRITE '@KERNEL   const core = await import("@abaplint/core");'.
+    WRITE '@KERNEL   const full = lv_full.get(), on = (lv_obj.get() || "").trim();'.
+    WRITE '@KERNEL   const sn = on || "ZSKYLINT_TEST", off = parseInt(lv_off.get() || "0", 10) || 0;'.
+    WRITE '@KERNEL   const out = [], sigSeen = {}, tyPre = "\\\\TY:" + sn.toUpperCase(), mePre = "\\\\ME:";'.
+    WRITE '@KERNEL   const safe = (s) => (s + "").replace(/[|]/g, " ");'.
+    WRITE '@KERNEL   const flat = (s) => safe(s).replace(/[\r\n]+/g, " ");'.
+    WRITE '@KERNEL   try {'.
+    WRITE '@KERNEL     const {Registry, MemoryFile, SyntaxLogic} = core;'.
+    WRITE '@KERNEL     const reg = new Registry();'.
+    WRITE '@KERNEL     reg.addFile(new MemoryFile(sn.toLowerCase() + ".clas.abap", full));'.
+    WRITE '@KERNEL     await reg.parseAsync();'.
+    WRITE '@KERNEL     const obj = reg.getFirstObject();'.
+    WRITE '@KERNEL     if (obj) { walk(new SyntaxLogic(reg, obj).run().spaghetti.getTop()); }'.
+    WRITE '@KERNEL   } catch (e) { }'.
+    WRITE '@KERNEL   function walk(node) {'.
+    WRITE '@KERNEL     const data = node.getData ? node.getData() : null;'.
+    WRITE '@KERNEL     const refs = (data && data.references) || [];'.
+    WRITE '@KERNEL     for (const r of refs) { emitOne(r); }'.
+    WRITE '@KERNEL     const kids = node.getChildren ? node.getChildren() : [];'.
+    WRITE '@KERNEL     for (const ch of kids) { walk(ch); }'.
+    WRITE '@KERNEL   }'.
+    WRITE '@KERNEL   function emitOne(r) { try { emitKind(r, relOf(r)); } catch (e) { } }'.
+    WRITE '@KERNEL   function relOf(r) {'.
+    WRITE '@KERNEL     const pos = r.position ? r.position.getStart() : null;'.
+    WRITE '@KERNEL     if (!pos) { return [0, 0]; }'.
+    WRITE '@KERNEL     return [pos.getRow() - off, pos.getCol()];'.
+    WRITE '@KERNEL   }'.
+    WRITE '@KERNEL   function emitKind(r, rel) {'.
+    WRITE '@KERNEL     if (rel[0] < 1) { return; }'.
+    WRITE '@KERNEL     const rt = (r.referenceType || "").toString();'.
+    WRITE '@KERNEL     const id = (r.identifierName || "") + "";'.
+    WRITE '@KERNEL     let kind = "";'.
+    WRITE '@KERNEL     if (/method/i.test(rt)) { kind = "ME"; }'.
+    WRITE '@KERNEL     else if (/type/i.test(rt)) { kind = "TY"; }'.
+    WRITE '@KERNEL     else if (/data|variable/i.test(rt)) { kind = "DA"; }'.
+    WRITE '@KERNEL     if (kind) { emitResolved(r, rel, kind, id); }'.
+    WRITE '@KERNEL   }'.
+    WRITE '@KERNEL   function emitResolved(r, rel, kind, id) {'.
+    WRITE '@KERNEL     const res = r.resolved;'.
+    WRITE '@KERNEL     const stat = isStaticRes(res);'.
+    WRITE '@KERNEL     emitSig(res, fnameOf(res, kind, id), kind);'.
+    WRITE '@KERNEL     const fn2 = fnameOf(res, kind, id) || id.toUpperCase();'.
+    WRITE '@KERNEL     if (fn2) { pushRef(rel, id || fn2, kind, fn2, stat); }'.
+    WRITE '@KERNEL   }'.
+    WRITE '@KERNEL   function isStaticRes(res) {'.
+    WRITE '@KERNEL     try {'.
+    WRITE '@KERNEL       const fn = res && res.isStatic;'.
+    WRITE '@KERNEL       if (typeof fn === "function" && res.isStatic()) { return "X"; }'.
+    WRITE '@KERNEL     } catch (e) { }'.
+    WRITE '@KERNEL     return "";'.
+    WRITE '@KERNEL   }'.
+    WRITE '@KERNEL   function fnameOf(res, kind, id) {'.
+    WRITE '@KERNEL     try {'.
+    WRITE '@KERNEL       let nm = res && res.getName ? (res.getName() + "") : "";'.
+    WRITE '@KERNEL       nm = nm.toUpperCase();'.
+    WRITE '@KERNEL       if (nm) { return tyPre + mePre + nm; }'.
+    WRITE '@KERNEL     } catch (e) { }'.
+    WRITE '@KERNEL     if (kind === "ME" && id) { return tyPre + mePre + id.toUpperCase(); }'.
+    WRITE '@KERNEL     return "";'.
+    WRITE '@KERNEL   }'.
+    WRITE '@KERNEL   function pushRef(rel, id, kind, fname, isStatic) {'.
+    WRITE '@KERNEL     const cells = [rel[0], rel[1], flat(id), kind, flat(fname), "1", "5", isStatic];'.
+    WRITE '@KERNEL     out.push(cells.join("|"));'.
+    WRITE '@KERNEL   }'.
+    WRITE '@KERNEL   function emitSig(res, fname, kind) {'.
+    WRITE '@KERNEL     if (!fname || kind !== "ME" || !res) { return; }'.
+    WRITE '@KERNEL     if (typeof res.getParameters !== "function") { return; }'.
+    WRITE '@KERNEL     try { emitSigTry(res.getParameters(), fname); } catch (e3) { }'.
+    WRITE '@KERNEL   }'.
+    WRITE '@KERNEL   function emitSigTry(pars, fname) {'.
+    WRITE '@KERNEL     const imp = pars.getImporting();'.
+    WRITE '@KERNEL     if (imp.length === 1 && !sigSeen[fname]) { emitSigOne(imp[0], fname); }'.
+    WRITE '@KERNEL   }'.
+    WRITE '@KERNEL   function emitSigOne(param, fname) {'.
+    WRITE '@KERNEL     let pn = "";'.
+    WRITE '@KERNEL     try { pn = param.getName() + ""; } catch (e1) { }'.
+    WRITE '@KERNEL     if (!pn && param.getFirstToken) { pn = tokName(param); }'.
+    WRITE '@KERNEL     pn = flat(pn).toUpperCase();'.
+    WRITE '@KERNEL     if (pn) { sigSeen[fname] = 1; out.push("SIG|" + flat(fname) + "|" + pn); }'.
+    WRITE '@KERNEL   }'.
+    WRITE '@KERNEL   function tokName(param) {'.
+    WRITE '@KERNEL     try { return param.getFirstToken().getStr(); } catch (e2) { return ""; }'.
+    WRITE '@KERNEL   }'.
+
+    WRITE '@KERNEL   lv_payload.set(out.join("\n"));'.
+    WRITE '@KERNEL } catch (e) { }'.
+
+    rv_payload = lv_payload.
+  ENDMETHOD.
+
+  METHOD apply_payload.
+    DATA lt_lines TYPE string_table.
+    DATA lv_line  TYPE string.
+
+    SPLIT iv_payload AT cl_abap_char_utilities=>newline INTO TABLE lt_lines.
+    LOOP AT lt_lines INTO lv_line.
+      IF lv_line IS INITIAL.
+        CONTINUE.
+      ENDIF.
+      apply_ref_line( EXPORTING iv_line       = lv_line
+                      CHANGING  ct_statements = ct_statements ).
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD apply_ref_line.
+    DATA lt_parts TYPE string_table.
+    DATA lv_rel   TYPE i.
+    DATA lv_col   TYPE i.
+    DATA lv_ident TYPE string.
+    DATA lv_kind  TYPE string.
+    DATA lv_fname TYPE string.
+    DATA lv_grade TYPE string.
+    DATA lv_mode  TYPE string.
+    DATA lv_static TYPE string.
+    DATA ls_ref   TYPE zif_skylint_types=>ty_compiler_reference.
+    FIELD-SYMBOLS <ls_stmt> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_tok>  TYPE zif_skylint_types=>ty_token.
+
+    CLEAR lt_parts.
+    SPLIT iv_line AT '|' INTO TABLE lt_parts.
+    IF lines( lt_parts ) = 3 AND lt_parts[ 1 ] = 'SIG'.
+      zcl_skylint_rtti_util=>cache_signature( iv_full_name  = lt_parts[ 2 ]
+                                              iv_param_name = lt_parts[ 3 ] ).
+      RETURN.
+    ENDIF.
+    IF lines( lt_parts ) < 7.
+      RETURN.
+    ENDIF.
+    lv_rel = lt_parts[ 1 ].
+    lv_col = lt_parts[ 2 ].
+    lv_ident = to_upper( lt_parts[ 3 ] ).
+    lv_kind = lt_parts[ 4 ].
+    lv_fname = lt_parts[ 5 ].
+    lv_grade = lt_parts[ 6 ].
+    lv_mode = lt_parts[ 7 ].
+    IF lines( lt_parts ) >= 8.
+      lv_static = lt_parts[ 8 ].
+    ELSE.
+      CLEAR lv_static.
+    ENDIF.
+    IF lv_kind <> 'ME' AND lv_kind <> 'DA' AND lv_kind <> 'TY'.
+      RETURN.
+    ENDIF.
+    LOOP AT ct_statements ASSIGNING <ls_stmt>.
+      LOOP AT <ls_stmt>-tokens ASSIGNING <ls_tok>.
+        IF <ls_tok>-position-line <> lv_rel.
+          CONTINUE.
+        ENDIF.
+        IF ( lv_col < <ls_tok>-position-column
+             OR lv_col >= <ls_tok>-position-column + strlen( <ls_tok>-lexeme ) )
+           AND to_upper( <ls_tok>-lexeme ) NS lv_ident
+           AND lv_ident NS to_upper( <ls_tok>-lexeme ).
+          CONTINUE.
+        ENDIF.
+        CLEAR ls_ref.
+        ls_ref-kind = lv_kind.
+        ls_ref-full_name = lv_fname.
+        ls_ref-usage_grade = lv_grade.
+        ls_ref-usage_mode = lv_mode.
+        INSERT ls_ref INTO TABLE <ls_tok>-references.
+        IF lv_static = 'X'.
+          zcl_skylint_rtti_util=>cache_static( lv_fname ).
+        ENDIF.
+        EXIT.
+      ENDLOOP.
+    ENDLOOP.
   ENDMETHOD.
 ENDCLASS.
