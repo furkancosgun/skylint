@@ -13,6 +13,12 @@ CLASS zcl_skylint_check_063 DEFINITION
 
   PROTECTED SECTION.
     METHODS check REDEFINITION.
+
+  PRIVATE SECTION.
+    METHODS is_system_exception
+      IMPORTING is_token       TYPE zif_skylint_types=>ty_token
+                it_statements  TYPE zif_skylint_types=>ty_statements
+      RETURNING VALUE(rv_yes) TYPE abap_bool.
 ENDCLASS.
 
 
@@ -30,9 +36,7 @@ CLASS zcl_skylint_check_063 IMPLEMENTATION.
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
     FIELD-SYMBOLS <ls_token>     TYPE zif_skylint_types=>ty_token.
-    FIELD-SYMBOLS <ls_ref>       TYPE zif_skylint_types=>ty_compiler_reference.
     DATA lv_is_raise   TYPE abap_bool.
-    DATA lv_is_sys_exc TYPE abap_bool.
 
     LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
       " Exception raising context: RAISE statement or THROW expression
@@ -47,30 +51,36 @@ CLASS zcl_skylint_check_063 IMPLEMENTATION.
       ENDIF.
 
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-        lv_is_sys_exc = abap_false.
-
-        " 1. Lexeme check (e.g. CX_SY_ZERODIVIDE)
-        IF to_upper( <ls_token>-lexeme ) CP 'CX_SY_*'.
-          lv_is_sys_exc = abap_true.
-        ENDIF.
-
-        " 2. Compiler semantic references (type reference to CX_SY_*)
-        IF lv_is_sys_exc = abap_false.
-          LOOP AT <ls_token>-references ASSIGNING <ls_ref>
-               WHERE kind = zif_skylint_types=>compiler_reference_kinds-type.
-            IF to_upper( <ls_ref>-full_name ) CS 'CX_SY_'.
-              lv_is_sys_exc = abap_true.
-              EXIT.
-            ENDIF.
-          ENDLOOP.
-        ENDIF.
-
-        IF lv_is_sys_exc = abap_true.
+        IF is_system_exception( is_token      = <ls_token>
+                                it_statements = is_code_block-statements ) = abap_true.
           report_statement( is_statement    = <ls_statement>
                             iv_finding_code = c_finding_codes-raise_sys ).
           EXIT.
         ENDIF.
       ENDLOOP.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD is_system_exception.
+    FIELD-SYMBOLS <ls_ref> TYPE zif_skylint_types=>ty_compiler_reference.
+
+    rv_yes = abap_false.
+    IF zcl_skylint_ast_util=>is_declared_data( it_statements = it_statements
+                                               iv_name       = is_token-lexeme ) = abap_true.
+      RETURN.
+    ENDIF.
+
+    IF to_upper( is_token-lexeme ) CP 'CX_SY_*' AND is_token-references IS INITIAL.
+      rv_yes = abap_true.
+      RETURN.
+    ENDIF.
+
+    LOOP AT is_token-references ASSIGNING <ls_ref>
+         WHERE kind = zif_skylint_types=>compiler_reference_kinds-type.
+      IF to_upper( <ls_ref>-full_name ) CS 'CX_SY_'.
+        rv_yes = abap_true.
+        RETURN.
+      ENDIF.
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

@@ -156,7 +156,7 @@ CLASS zcl_skylint_check_008 IMPLEMENTATION.
     rv_is = abap_false.
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
       lv_lexeme = to_upper( <ls_token>-lexeme ).
-      IF lv_lexeme = 'BEGIN'.
+      IF lv_lexeme = 'BEGIN' AND <ls_token>-references IS INITIAL.
         rv_is = abap_true.
         RETURN.
       ENDIF.

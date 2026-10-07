@@ -48,7 +48,8 @@ CLASS zcl_skylint_check_021 IMPLEMENTATION.
       ENDIF.
 
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-        IF is_legacy_operator( <ls_token>-lexeme ) = abap_true.
+        IF <ls_token>-references IS INITIAL
+           AND is_legacy_operator( <ls_token>-lexeme ) = abap_true.
           report_statement( is_statement    = <ls_statement>
                             iv_finding_code = c_finding_codes-prefer_operator ).
           EXIT.

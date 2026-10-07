@@ -7,6 +7,7 @@ CLASS zcl_skylint_test_053 DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
+    METHODS test_005.
 ENDCLASS.
 
 CLASS zcl_skylint_test_053 IMPLEMENTATION.
@@ -26,5 +27,9 @@ CLASS zcl_skylint_test_053 IMPLEMENTATION.
 
   METHOD test_004.
     DATA lv_z TYPE string.
+  ENDMETHOD.
+
+  METHOD test_005.
+    DATA like TYPE i.
   ENDMETHOD.
 ENDCLASS.

@@ -7,6 +7,7 @@ CLASS zcl_skylint_test_063 DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
+    METHODS test_005.
 ENDCLASS.
 
 
@@ -25,5 +26,11 @@ CLASS zcl_skylint_test_063 IMPLEMENTATION.
 
   METHOD test_004.
     DATA lv_ok TYPE i.
+  ENDMETHOD.
+
+  METHOD test_005.
+    DATA cx_sy_help TYPE i.
+    cx_sy_help = 1.
+    RAISE EXCEPTION TYPE zcx_custom WITH cx_sy_help.
   ENDMETHOD.
 ENDCLASS.

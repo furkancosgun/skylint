@@ -7,6 +7,7 @@ CLASS zcl_skylint_test_061 DEFINITION
     METHODS test_002.
     METHODS test_003 EXCEPTIONS error.
     METHODS test_004.
+    METHODS test_005.
 ENDCLASS.
 
 CLASS zcl_skylint_test_061 IMPLEMENTATION.
@@ -24,5 +25,11 @@ CLASS zcl_skylint_test_061 IMPLEMENTATION.
 
   METHOD test_004.
     MESSAGE s001(00) WITH 'ok'.
+  ENDMETHOD.
+
+  METHOD test_005.
+    DATA raising TYPE string.
+    raising = 'x'.
+    MESSAGE s001(00) WITH raising.
   ENDMETHOD.
 ENDCLASS.

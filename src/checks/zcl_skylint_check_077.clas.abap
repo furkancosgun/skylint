@@ -48,7 +48,13 @@ CLASS zcl_skylint_check_077 IMPLEMENTATION.
       lv_uses = 0.
       LOOP AT is_code_block-statements ASSIGNING <ls_stmt>.
         LOOP AT <ls_stmt>-tokens ASSIGNING <ls_tok>.
-          IF to_upper( <ls_tok>-lexeme ) = lv_var_name.
+          IF to_upper( <ls_tok>-lexeme ) = lv_var_name
+             AND zcl_skylint_ast_util=>has_compiler_reference(
+                     is_token = <ls_tok>
+                     iv_kind  = zif_skylint_types=>compiler_reference_kinds-method ) = abap_false
+             AND zcl_skylint_ast_util=>has_compiler_reference(
+                     is_token = <ls_tok>
+                     iv_kind  = zif_skylint_types=>compiler_reference_kinds-type ) = abap_false.
             lv_uses = lv_uses + 1.
           ENDIF.
         ENDLOOP.

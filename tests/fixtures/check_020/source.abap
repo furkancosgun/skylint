@@ -7,6 +7,7 @@ CLASS zcl_skylint_test_020 DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
+    METHODS test_005.
 ENDCLASS.
 
 CLASS zcl_skylint_test_020 IMPLEMENTATION.
@@ -31,6 +32,12 @@ CLASS zcl_skylint_test_020 IMPLEMENTATION.
   METHOD test_004.
     DATA lv_num TYPE i.
     IF lv_num <> 0.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_005.
+    DATA table TYPE i.
+    IF 0 = table.
     ENDIF.
   ENDMETHOD.
 ENDCLASS.

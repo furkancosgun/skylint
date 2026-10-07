@@ -2,21 +2,21 @@
 /**
  * scripts/lint-string.mjs
  *
- * Core'a DOKUNMADAN disaridan string source lint'le + finding eslestir.
- * Yeni JS harness modullerini kullanir (scripts/skylint-test/):
+ * Lints an arbitrary string source from the outside without touching core,
+ * then matches findings. Uses the JS harness modules (scripts/skylint-test/):
  *   lexer -> parser -> abaplint bridge + rtti -> abap-values -> check lint
- * Dilimleme semantiği harness ile birebir aynidir (slicer.mjs).
+ * Slicing semantics are identical to the harness (slicer.mjs).
  *
- * Kullanim:
+ * Usage:
  *   npm run build
  *   node scripts/lint-string.mjs <checkNum> <source.abap> [expected.json]
  *   node scripts/lint-string.mjs <checkNum> - [expected.json]   # stdin
  *
- * expected.json ornegi:
+ * expected.json example:
  *   [ {"method":"TEST_001","code":"STATICVIAI","line":3,"column":4},
  *     {"method":"TEST_002"} ]
- * code yoksa o methodda 0 finding beklenir. line/column verilmezse sadece code eslesir.
- * expected verilmezse tum methodlardaki findingler dokulur (cikis 0).
+ * Without code, 0 findings are expected for that method. Without line/column,
+ * only the code is matched. Without expected, all findings are dumped (exit 0).
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -36,7 +36,7 @@ const outDir = path.join(rootDir, 'output');
 
 const [checkNum, srcArg, expArg] = process.argv.slice(2);
 if (!checkNum || !srcArg) {
-  console.error('kullanim: node scripts/lint-string.mjs <checkNum> <source.abap|-> [expected.json]');
+  console.error('usage: node scripts/lint-string.mjs <checkNum> <source.abap|-> [expected.json]');
   process.exit(2);
 }
 
@@ -82,16 +82,16 @@ let failed = 0;
 if (!expected) {
   for (const m of methodNames()) {
     const found = await lintMethod(m);
-    if (found.length === 0) console.log(`${m}: (finding yok)`);
+    if (found.length === 0) console.log(`${m}: (no findings)`);
     for (const f of found) console.log(`${m}: ${f.code} line=${f.line} column=${f.column}`);
   }
 } else {
   for (const exp of expected) {
     const found = await lintMethod(exp.method);
     if (!exp.code) {
-      if (found.length === 0) console.log(`MATCH ${exp.method}: finding yok (beklendigi gibi)`);
+      if (found.length === 0) console.log(`MATCH ${exp.method}: no findings (as expected)`);
       else {
-        console.log(`MISMATCH ${exp.method}: 0 bekleniyordu, ${found.length} bulundu`);
+        console.log(`MISMATCH ${exp.method}: expected 0, found ${found.length}`);
         failed += 1;
       }
       continue;
@@ -105,7 +105,7 @@ if (!expected) {
     if (hit) console.log(`MATCH ${exp.method}: ${hit.code} line=${hit.line} column=${hit.column}`);
     else {
       console.log(
-        `MISMATCH ${exp.method}: ${exp.code}${exp.line !== undefined ? ` @${exp.line}:${exp.column}` : ''} bulunamadi (bulunanlar: ${found.map((f) => `${f.code}@${f.line}:${f.column}`).join(', ') || 'yok'})`,
+        `MISMATCH ${exp.method}: ${exp.code}${exp.line !== undefined ? ` @${exp.line}:${exp.column}` : ''} not found (found: ${found.map((f) => `${f.code}@${f.line}:${f.column}`).join(', ') || 'none'})`,
       );
       failed += 1;
     }

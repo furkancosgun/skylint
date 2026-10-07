@@ -7,6 +7,7 @@ CLASS zcl_skylint_test_035 DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
+    METHODS test_005.
 ENDCLASS.
 
 
@@ -25,6 +26,11 @@ CLASS zcl_skylint_test_035 IMPLEMENTATION.
 
   METHOD test_004.
     CONSTANTS lc_ok TYPE i VALUE 123.
+  ENDMETHOD.
+
+  METHOD test_005.
+    DATA type TYPE i.
+    CONSTANTS gc_c VALUE type.
   ENDMETHOD.
 ENDCLASS.
 

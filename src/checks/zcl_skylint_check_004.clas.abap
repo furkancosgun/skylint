@@ -50,6 +50,7 @@ CLASS zcl_skylint_check_004 IMPLEMENTATION.
     DATA lv_lexeme      TYPE string.
     DATA lv_next_lexeme TYPE string.
     DATA lv_idx         TYPE i.
+    DATA ls_next        TYPE zif_skylint_types=>ty_token.
     FIELD-SYMBOLS <ls_token> TYPE zif_skylint_types=>ty_token.
 
     rv_matched = abap_false.
@@ -57,6 +58,9 @@ CLASS zcl_skylint_check_004 IMPLEMENTATION.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
       lv_idx = sy-tabix.
+      IF <ls_token>-references IS NOT INITIAL.
+        CONTINUE.
+      ENDIF.
       lv_lexeme = to_upper( <ls_token>-lexeme ).
 
       IF lv_lexeme = 'NOT'.
@@ -64,13 +68,16 @@ CLASS zcl_skylint_check_004 IMPLEMENTATION.
       ELSEIF lv_lexeme = 'AND' OR lv_lexeme = 'OR' OR lv_lexeme = ')' OR lv_lexeme = '('.
         lv_in_not = abap_false.
       ELSEIF lv_in_not = abap_true AND lv_lexeme = 'IS'.
-        lv_next_lexeme = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                                 iv_index     = lv_idx + 1 ).
-        CASE lv_next_lexeme.
-          WHEN 'INITIAL' OR 'BOUND' OR 'ASSIGNED' OR 'SUPPLIED' OR 'REQUESTED' OR 'INSTANCE'.
-            rv_matched = abap_true.
-            RETURN.
-        ENDCASE.
+        ls_next = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                   iv_index     = lv_idx + 1 ).
+        lv_next_lexeme = to_upper( ls_next-lexeme ).
+        IF ls_next-references IS INITIAL.
+          CASE lv_next_lexeme.
+            WHEN 'INITIAL' OR 'BOUND' OR 'ASSIGNED' OR 'SUPPLIED' OR 'REQUESTED' OR 'INSTANCE'.
+              rv_matched = abap_true.
+              RETURN.
+          ENDCASE.
+        ENDIF.
         lv_in_not = abap_false.
       ENDIF.
     ENDLOOP.

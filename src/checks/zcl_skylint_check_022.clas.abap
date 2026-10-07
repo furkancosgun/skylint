@@ -46,6 +46,7 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
 
   METHOD is_static_create_object.
     DATA ls_tok   TYPE zif_skylint_types=>ty_token.
+    DATA ls_type  TYPE zif_skylint_types=>ty_token.
     DATA lv_idx   TYPE i.
     DATA lv_tok   TYPE string.
     DATA lv_count TYPE i.
@@ -77,8 +78,10 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
     lv_count = zcl_skylint_ast_util=>token_count( is_statement ).
     lv_idx = 3.
     WHILE lv_idx <= lv_count.
-      IF     zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                     iv_index     = lv_idx )      = 'TYPE'
+      ls_type = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                  iv_index     = lv_idx ).
+      IF     to_upper( ls_type-lexeme ) = 'TYPE'
+         AND ls_type-references IS INITIAL
          AND zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
                                                      iv_index     = lv_idx + 1 ) CP '(*'.
         RETURN.

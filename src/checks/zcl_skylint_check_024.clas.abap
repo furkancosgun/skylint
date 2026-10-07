@@ -24,6 +24,11 @@ CLASS zcl_skylint_check_024 DEFINITION
       IMPORTING iv_lexeme     TYPE string
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
+    METHODS is_boolean_operand
+      IMPORTING is_token      TYPE zif_skylint_types=>ty_token
+                iv_lexeme     TYPE string
+      RETURNING VALUE(rv_res) TYPE abap_bool.
+
 ENDCLASS.
 
 
@@ -122,7 +127,8 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    IF is_boolean_value( ls_tok_val-lexeme ) = abap_true.
+    IF is_boolean_operand( is_token  = ls_tok_val
+                             iv_lexeme = ls_tok_val-lexeme ) = abap_true.
       ev_target  = to_upper( ls_tok_target-lexeme ).
       ev_is_bool = abap_true.
     ENDIF.
@@ -139,5 +145,18 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
       WHEN OTHERS.
         rv_res = abap_false.
     ENDCASE.
+  ENDMETHOD.
+
+  METHOD is_boolean_operand.
+    DATA lv_upper TYPE string.
+
+    rv_res = abap_false.
+    lv_upper = to_upper( iv_lexeme ).
+    IF is_token-references IS NOT INITIAL
+       AND lv_upper <> 'ABAP_TRUE'
+       AND lv_upper <> 'ABAP_FALSE'.
+      RETURN.
+    ENDIF.
+    rv_res = is_boolean_value( iv_lexeme ).
   ENDMETHOD.
 ENDCLASS.

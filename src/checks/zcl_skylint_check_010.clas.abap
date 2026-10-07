@@ -23,6 +23,11 @@ CLASS zcl_skylint_check_010 DEFINITION
       IMPORTING iv_lexeme    TYPE string
       RETURNING VALUE(rv_is) TYPE abap_bool.
 
+    METHODS is_boolean_operand
+      IMPORTING is_token      TYPE zif_skylint_types=>ty_token
+                iv_lexeme     TYPE string
+      RETURNING VALUE(rv_is) TYPE abap_bool.
+
 ENDCLASS.
 
 
@@ -54,6 +59,7 @@ CLASS zcl_skylint_check_010 IMPLEMENTATION.
 
   METHOD has_boolean_comparison.
     DATA lv_tok_idx   TYPE i.
+    DATA lv_adj       TYPE string.
     DATA ls_token     TYPE zif_skylint_types=>ty_token.
     DATA ls_adj_token TYPE zif_skylint_types=>ty_token.
 
@@ -61,24 +67,42 @@ CLASS zcl_skylint_check_010 IMPLEMENTATION.
 
     LOOP AT is_statement-tokens INTO ls_token.
       lv_tok_idx = sy-tabix.
+      IF ls_token-references IS NOT INITIAL.
+        CONTINUE.
+      ENDIF.
 
       CASE to_upper( ls_token-lexeme ).
         WHEN '=' OR 'EQ' OR '<>' OR 'NE' OR '><'.
           ls_adj_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                           iv_index     = lv_tok_idx - 1 ).
-          IF is_boolean_literal( to_upper( ls_adj_token-lexeme ) ) = abap_true.
+          lv_adj = to_upper( ls_adj_token-lexeme ).
+          IF is_boolean_operand( is_token = ls_adj_token
+                                 iv_lexeme = lv_adj ) = abap_true.
             rv_has = abap_true.
             RETURN.
           ENDIF.
 
           ls_adj_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                           iv_index     = lv_tok_idx + 1 ).
-          IF is_boolean_literal( to_upper( ls_adj_token-lexeme ) ) = abap_true.
+          lv_adj = to_upper( ls_adj_token-lexeme ).
+          IF is_boolean_operand( is_token = ls_adj_token
+                                 iv_lexeme = lv_adj ) = abap_true.
             rv_has = abap_true.
             RETURN.
           ENDIF.
       ENDCASE.
     ENDLOOP.
+  ENDMETHOD.
+
+  METHOD is_boolean_operand.
+    rv_is = abap_false.
+    IF is_token-references IS NOT INITIAL
+       AND iv_lexeme <> 'ABAP_TRUE'
+       AND iv_lexeme <> 'ABAP_FALSE'
+       AND iv_lexeme <> 'ABAP_UNDEFINED'.
+      RETURN.
+    ENDIF.
+    rv_is = is_boolean_literal( iv_lexeme ).
   ENDMETHOD.
 
   METHOD is_boolean_literal.

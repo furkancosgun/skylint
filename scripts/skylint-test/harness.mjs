@@ -77,6 +77,7 @@ export async function runSlice({ abap, getCheck, checkId, fullLines, method }) {
         code: g.code.get().trim(),
         line: g.position.get().line.get(),
         column: g.position.get().column.get(),
+        statement_index: g.statement_index.get(),
       };
     }),
   };
@@ -133,6 +134,15 @@ export async function runAll({ rootDir, outDir, filter = null, quiet = false }) 
       if (empty) {
         fail += 1;
         const msg = `${id}/${row.method}: empty slice, no source block found`;
+        failures.push(msg);
+        if (!quiet) console.log(`not ok ${msg}`);
+        continue;
+      }
+      // T2 enforcement: every reported finding must carry a statement index
+      const missingIdx = findings.filter((f) => !f.statement_index || f.statement_index <= 0);
+      if (missingIdx.length > 0) {
+        fail += 1;
+        const msg = `${id}/${row.method}: ${missingIdx.length} finding(s) without statement_index`;
         failures.push(msg);
         if (!quiet) console.log(`not ok ${msg}`);
         continue;

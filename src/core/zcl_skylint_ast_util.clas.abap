@@ -127,11 +127,20 @@ CLASS zcl_skylint_ast_util DEFINITION
       IMPORTING it_statements   TYPE zif_skylint_types=>ty_statements
       RETURNING VALUE(rv_count) TYPE i.
 
+    CLASS-METHODS is_declared_data
+      IMPORTING it_statements  TYPE zif_skylint_types=>ty_statements
+                iv_name       TYPE string
+      RETURNING VALUE(rv_yes) TYPE abap_bool.
+
   PRIVATE SECTION.
     CLASS-METHODS token_has_ref
       IMPORTING is_token      TYPE zif_skylint_types=>ty_token
                 iv_kind       TYPE zif_skylint_types=>ty_reference_kind
       RETURNING VALUE(rv_has) TYPE abap_bool.
+
+    CLASS-METHODS normalize_identifier_name
+      IMPORTING iv_raw         TYPE string
+      RETURNING VALUE(rv_name) TYPE string.
 
 ENDCLASS.
 
@@ -470,11 +479,6 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
     DATA lv_last  TYPE string.
 
     rv_yes = abap_false.
-    IF is_token-type = zif_skylint_types=>token_types-literal.
-      rv_yes = abap_true.
-      RETURN.
-    ENDIF.
-
     lv_len = strlen( is_token-lexeme ).
     IF lv_len = 0.
       RETURN.
@@ -500,11 +504,6 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
     DATA lv_first TYPE string.
 
     rv_yes = abap_false.
-    IF is_token-type = zif_skylint_types=>token_types-identifier.
-      rv_yes = abap_true.
-      RETURN.
-    ENDIF.
-
     IF is_token-lexeme IS INITIAL.
       RETURN.
     ENDIF.
@@ -544,5 +543,66 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
 
   METHOD statement_count.
     rv_count = lines( it_statements ).
+  ENDMETHOD.
+
+  METHOD is_declared_data.
+    DATA lv_name   TYPE string.
+    DATA lv_suffix TYPE string.
+    DATA lv_off    TYPE i.
+    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_token>     TYPE zif_skylint_types=>ty_token.
+    FIELD-SYMBOLS <ls_ref>       TYPE zif_skylint_types=>ty_compiler_reference.
+
+    rv_yes = abap_false.
+    lv_name = normalize_identifier_name( iv_name ).
+    IF lv_name IS INITIAL.
+      RETURN.
+    ENDIF.
+    lv_suffix = |DA:{ lv_name }|.
+
+    LOOP AT it_statements ASSIGNING <ls_statement>.
+      LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
+        LOOP AT <ls_token>-references ASSIGNING <ls_ref>
+             WHERE kind = zif_skylint_types=>compiler_reference_kinds-data.
+          IF <ls_ref>-usage_mode = zif_skylint_types=>usage_modes-definition
+             OR <ls_ref>-usage_mode = zif_skylint_types=>usage_modes-definition_with_write
+             OR <ls_ref>-usage_mode = zif_skylint_types=>usage_modes-definition_with_assign.
+            lv_off = strlen( <ls_ref>-full_name ) - strlen( lv_suffix ).
+            IF lv_off >= 0 AND <ls_ref>-full_name+lv_off = lv_suffix.
+              rv_yes = abap_true.
+              RETURN.
+            ENDIF.
+          ENDIF.
+        ENDLOOP.
+      ENDLOOP.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD normalize_identifier_name.
+    DATA lv_off TYPE i.
+    DATA lv_len TYPE i.
+
+    rv_name = to_upper( condense( iv_raw ) ).
+    IF rv_name IS INITIAL.
+      RETURN.
+    ENDIF.
+    IF rv_name(1) = '@'.
+      rv_name = rv_name+1.
+    ENDIF.
+    lv_off = strlen( rv_name ) - 1.
+    WHILE lv_off >= 0.
+      IF rv_name+lv_off(1) = '('.
+        lv_off = lv_off + 1.
+        lv_len = strlen( rv_name ) - lv_off.
+        IF lv_len > 0 AND rv_name+lv_off(lv_len) CA ')'.
+          lv_len = lv_len - 1.
+        ENDIF.
+        IF lv_len > 0.
+          rv_name = rv_name+lv_off(lv_len).
+        ENDIF.
+        RETURN.
+      ENDIF.
+      lv_off = lv_off - 1.
+    ENDWHILE.
   ENDMETHOD.
 ENDCLASS.

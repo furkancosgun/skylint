@@ -7,6 +7,7 @@ CLASS zcl_skylint_test_021 DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
+    METHODS test_005.
 ENDCLASS.
 
 
@@ -36,6 +37,13 @@ CLASS zcl_skylint_test_021 IMPLEMENTATION.
     DATA lv_c TYPE i.
     DATA lv_d TYPE i.
     IF lv_c <> lv_d.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_005.
+    DATA lv_x TYPE i.
+    DATA eq TYPE i.
+    IF lv_x = eq.
     ENDIF.
   ENDMETHOD.
 ENDCLASS.

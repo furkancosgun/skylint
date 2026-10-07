@@ -41,10 +41,10 @@ CLASS zcl_skylint_check_005 IMPLEMENTATION.
     get_attribute( EXPORTING iv_name  = 'ALLOW_IN_CONSTRUCTORS'
                    IMPORTING ev_value = lv_allow_ctor ).
 
-    IF is_code_block-block_name = 'CONSTRUCTOR' AND lv_allow_ctor = abap_true.
+    IF is_code_block-block_name CP '*=>CONSTRUCTOR' AND lv_allow_ctor = abap_true.
       RETURN.
     ENDIF.
-
+    
     LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
         lv_lexeme = to_upper( <ls_token>-lexeme ).

@@ -54,7 +54,6 @@ function tokenRowTemplate(abap) {
   return new abap.types.Structure(
     {
       lexeme: new abap.types.String({ qualifiedName: 'ZIF_SKYLINT_TYPES=>TY_LEXEME' }),
-      type: new abap.types.Character(1, { qualifiedName: 'zif_skylint_types=>ty_token_type' }),
       position: newPosition(abap, 0, 0),
       references: abap.types.TableFactory.construct(
         refRowTemplate(abap),
@@ -102,7 +101,6 @@ function appendToken(abap, table, tok) {
   const row = tokenRowTemplate(abap);
   const g = row.get();
   g.lexeme.set(tok.lexeme);
-  g.type.set(tok.type);
   g.position.get().line.set(tok.position.line);
   g.position.get().column.set(tok.position.column);
   for (const r of tok.references) appendRef(abap, g.references, r);

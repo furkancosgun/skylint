@@ -14,5 +14,11 @@
     "code": "FULL_MODIF",
     "line": 5,
     "column": 6
+  },
+  {
+    "method": "TEST_005",
+    "code": "FULL_MODIF",
+    "line": 5,
+    "column": 6
   }
 ]

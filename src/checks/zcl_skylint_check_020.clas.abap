@@ -24,7 +24,7 @@ CLASS zcl_skylint_check_020 DEFINITION
       RETURNING VALUE(rv_is) TYPE abap_bool.
 
     METHODS is_identifier
-      IMPORTING iv_str       TYPE string
+      IMPORTING is_token     TYPE zif_skylint_types=>ty_token
       RETURNING VALUE(rv_is) TYPE abap_bool.
 
     METHODS has_yoda_condition
@@ -79,8 +79,9 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
                                                iv_index     = lv_idx + 2 ).
 
       IF     zcl_skylint_ast_util=>token_is_literal( ls_t1 )              = abap_true
+         AND ls_t2-references IS INITIAL
          AND zcl_skylint_ast_util=>is_comparison_operator( ls_t2-lexeme ) = abap_true
-         AND is_identifier( ls_t3-lexeme ) = abap_true
+         AND is_identifier( ls_t3 ) = abap_true
          AND zcl_skylint_ast_util=>token_is_literal( ls_t3 )              = abap_false.
         rv_has = abap_true.
         RETURN.
@@ -106,11 +107,18 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
     DATA lv_first TYPE c LENGTH 1.
 
     rv_is = abap_false.
-    IF iv_str IS INITIAL.
+    IF zcl_skylint_ast_util=>has_compiler_reference(
+           is_token = is_token
+           iv_kind  = zif_skylint_types=>compiler_reference_kinds-data ) = abap_true.
+      rv_is = abap_true.
       RETURN.
     ENDIF.
 
-    lv_upper = to_upper( iv_str ).
+    IF is_token-lexeme IS INITIAL.
+      RETURN.
+    ENDIF.
+
+    lv_upper = to_upper( is_token-lexeme ).
     lv_first = lv_upper(1).
 
     IF lv_first NA 'ABCDEFGHIJKLMNOPQRSTUVWXYZ_'.

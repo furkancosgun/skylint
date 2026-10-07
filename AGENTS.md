@@ -69,7 +69,7 @@ During tokenization, compiler symbols are attached to each token:
 
 ### 5. Relative Line Numbering in Procedures
 For procedure inspection and unit testing:
-- Satır numaraları (line numbers) metot başlığına göre bağıl (relative) olarak hesaplanır:
+- Statement line numbers are relative to the inspected procedure block:
   - Line 1: `METHOD <method_name>.`
   - Line 2: First executable line inside the method body.
 - When writing fixture assertions (`expected.json`), **always count line numbers starting from 1 at the `METHOD` statement**.
@@ -95,6 +95,10 @@ For procedure inspection and unit testing:
 ### 2. Compiler References over Text Matching (`tokens-references`)
 Compiler symbol resolution is stored in `is_statement-tokens-references` (of type `zif_skylint_types=>ty_compiler_reference`).
 - **Never guess what an identifier represents by matching its text.** Inspect `token-references` to determine whether a token is a method call, variable, type definition, database read, or database write.
+- **Lexemes are untrusted for keywords too:** a user variable can be named `EQ` — a token with text `EQ` is only the operator when its references are empty (a variable `eq` carries a data reference). Always confirm via references.
+- **Reserved builtin exception (only sanctioned case):** `ABAP_TRUE`, `ABAP_FALSE`, `ABAP_UNDEFINED` are matched by closed name set even with references — SAP reserves these names and they always denote the builtin constants. `SPACE` and everything else require empty references.
+- **Shadowing requires declaration scan:** when a user identifier can textually equal a keyword (`ME->`, `CX_SY_*`), a reference on the usage token is not enough — scan the block with `zcl_skylint_ast_util=>is_declared_data( it_statements iv_name )` and skip when a `DA` definition with that name exists.
+- **Every finding must carry a statement index.** `report_statement`/`report_token` set `statement_index` from `is_statement-index` automatically — never construct findings manually and never report synthetic statements without an index. The JS harness fails any finding with `statement_index <= 0`.
 - Traversal pattern:
   ```abap
   FIELD-SYMBOLS <ls_token> TYPE zif_skylint_types=>ty_token.
@@ -127,10 +131,10 @@ Compiler symbol resolution is stored in `is_statement-tokens-references` (of typ
 
 ### 4. Typed Constants & Enums over Magic Literals
 - **Strictly avoid magic string literals** for statement kinds, object types, reference kinds, severities, or usage modes.
-- **Mandatory Constants from `zif_skylint_types`:**
+- **Mandatory Constants from `zif_skylint_types`** (values are 1:1 with `IF_CI_ATC_SOURCE_CODE_PROVIDER` — never invent constant values, complete missing ones from that interface):
   - `object_types` (e.g. `object_types-class`, `object_types-interface`, `object_types-program`)
   - `block_kinds` (e.g. `block_kinds-method`, `block_kinds-class_definition`)
-  - `compiler_reference_kinds` (e.g. `compiler_reference_kinds-method`, `compiler_reference_kinds-data`, `compiler_reference_kinds-type`)
+  - `compiler_reference_kinds` (full ATC `ty_reference_kind` parity: `data`, `method`, `type`, plus `function`, `form`, `event`, `include`, …)
   - `usage_modes` (e.g. `usage_modes-read`, `usage_modes-write`, `usage_modes-read_database`, `usage_modes-write_database`)
   - `usage_grades` (e.g. `usage_grades-definition`, `usage_grades-direct`, `usage_grades-indirect`)
   - `severities` (e.g. `severities-error`, `severities-warning`, `severities-info`)

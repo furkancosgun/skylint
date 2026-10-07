@@ -7,6 +7,7 @@ CLASS zcl_skylint_test_024 DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
+    METHODS test_005.
 ENDCLASS.
 
 
@@ -53,6 +54,18 @@ CLASS zcl_skylint_test_024 IMPLEMENTATION.
     lv_x = 1.
     ELSE.
     lv_x = 2.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_005.
+    DATA lv_a TYPE i.
+    DATA lv_b TYPE i.
+    DATA lv_flag TYPE abap_bool.
+    DATA space TYPE string.
+    IF lv_a = lv_b.
+    lv_flag = space.
+    ELSE.
+    lv_flag = abap_false.
     ENDIF.
   ENDMETHOD.
 ENDCLASS.

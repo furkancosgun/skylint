@@ -7,6 +7,7 @@ CLASS zcl_skylint_test_008 DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
+    METHODS test_005.
 ENDCLASS.
 
 CLASS zcl_skylint_test_008 IMPLEMENTATION.
@@ -28,5 +29,10 @@ CLASS zcl_skylint_test_008 IMPLEMENTATION.
   METHOD test_004.
     CONSTANTS c_one TYPE i VALUE 1.
     CONSTANTS c_two TYPE i VALUE 2.
+  ENDMETHOD.
+
+  METHOD test_005.
+    DATA: begin TYPE string,
+          lv_x TYPE i.
   ENDMETHOD.
 ENDCLASS.

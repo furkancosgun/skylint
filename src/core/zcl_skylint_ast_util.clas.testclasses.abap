@@ -153,9 +153,9 @@ CLASS ltcl_ast_util IMPLEMENTATION.
     DATA ls_tok  TYPE zif_skylint_types=>ty_token.
 
     ls_stmt = VALUE #( keyword = 'COMPUTE'
-                       tokens  = VALUE #( ( lexeme = 'lv_x' type = zif_skylint_types=>token_types-identifier )
-                                          ( lexeme = '='    type = zif_skylint_types=>token_types-identifier )
-                                          ( lexeme = `'ABC'` type = zif_skylint_types=>token_types-literal ) ) ).
+                       tokens  = VALUE #( ( lexeme = 'lv_x' )
+                                          ( lexeme = '=' )
+                                          ( lexeme = `'ABC'` ) ) ).
 
     cl_abap_unit_assert=>assert_true( zcl_skylint_ast_util=>is_assignment( ls_stmt ) ).
 

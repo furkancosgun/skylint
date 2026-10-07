@@ -129,9 +129,10 @@ CLASS zcl_skylint_check_031 IMPLEMENTATION.
         lv_has_tab = abap_true.
       ENDIF.
 
-      IF    lv_clean_tok = 'INITIAL'
-         OR lv_clean_tok = 'LINES('
-         OR lv_clean_tok = 'LINE_EXISTS('.
+      IF ls_tok-references IS INITIAL
+         AND ( lv_clean_tok = 'INITIAL'
+            OR lv_clean_tok = 'LINES('
+            OR lv_clean_tok = 'LINE_EXISTS(' ).
         lv_has_check = abap_true.
       ENDIF.
     ENDLOOP.

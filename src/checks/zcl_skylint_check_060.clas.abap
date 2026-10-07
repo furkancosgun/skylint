@@ -28,13 +28,16 @@ CLASS zcl_skylint_check_060 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
+    DATA lv_idx TYPE i.
     FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
     FIELD-SYMBOLS <ls_token>     TYPE zif_skylint_types=>ty_token.
 
     LOOP AT is_code_block-statements ASSIGNING <ls_statement>
          WHERE keyword = 'CATCH'.
+      lv_idx = 0.
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-        IF to_upper( <ls_token>-lexeme ) = 'CX_ROOT'.
+        lv_idx = sy-tabix.
+        IF lv_idx = 2 AND to_upper( <ls_token>-lexeme ) = 'CX_ROOT'.
           report_statement( is_statement    = <ls_statement>
                             iv_finding_code = c_finding_codes-catch_root ).
           EXIT.

@@ -40,6 +40,9 @@ CLASS zcl_skylint_check_001 IMPLEMENTATION.
       lv_has_other = abap_false.
 
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
+        IF <ls_token>-references IS NOT INITIAL.
+          CONTINUE.
+        ENDIF.
         CASE to_upper( <ls_token>-lexeme ).
           WHEN 'TABLE'.
             lv_has_table = abap_true.

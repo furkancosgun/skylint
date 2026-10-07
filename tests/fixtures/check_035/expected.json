@@ -14,5 +14,11 @@
     "code": "FULLYTYPED",
     "line": 2,
     "column": 4
+  },
+  {
+    "method": "TEST_005",
+    "code": "FULLYTYPED",
+    "line": 3,
+    "column": 4
   }
 ]

@@ -81,9 +81,13 @@ CLASS zcl_skylint_check_042 IMPLEMENTATION.
                                                 iv_index     = lv_idx ).
       CASE to_upper( ls_tok-lexeme ).
         WHEN 'IMPORTING' OR 'RAISING' OR 'EXCEPTIONS'.
-          EXIT.
+          IF ls_tok-references IS INITIAL.
+            EXIT.
+          ENDIF.
         WHEN 'TYPE' OR 'LIKE'.
-          lv_count = lv_count + 1.
+          IF ls_tok-references IS INITIAL.
+            lv_count = lv_count + 1.
+          ENDIF.
       ENDCASE.
       lv_idx = lv_idx + 1.
     ENDWHILE.

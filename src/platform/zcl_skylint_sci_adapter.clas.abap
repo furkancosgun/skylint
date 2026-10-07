@@ -14,6 +14,7 @@ CLASS zcl_skylint_sci_adapter DEFINITION
     METHODS get_attributes              REDEFINITION.
     METHODS put_attributes              REDEFINITION.
     METHODS if_ci_test~query_attributes REDEFINITION.
+    METHODS run                         REDEFINITION.
 
   PROTECTED SECTION.
     METHODS analyze_proc REDEFINITION.
@@ -27,9 +28,14 @@ CLASS zcl_skylint_sci_adapter DEFINITION
 
     DATA mr_data TYPE REF TO data.
 
+    METHODS calc_def_checksum
+      IMPORTING is_scan            TYPE cl_ci_test_abap_comp_procs=>t_scan
+                is_stmt            TYPE sstmnt
+      RETURNING VALUE(rv_checksum) TYPE int4.
+
     METHODS build_quickfix_detail
       IMPORTING is_finding       TYPE zif_skylint_types=>ty_finding
-                is_proc          TYPE cl_abap_comp_procs=>t_proc_entry
+                is_proc          TYPE cl_abap_comp_procs=>t_proc_entry OPTIONAL
       RETURNING VALUE(rv_detail) TYPE xstring.
 ENDCLASS.
 
@@ -40,13 +46,17 @@ CLASS zcl_skylint_sci_adapter IMPLEMENTATION.
     FIELD-SYMBOLS <ls_code> TYPE zif_skylint_types=>ty_finding_code_config.
 
     super->constructor( ).
-    ms_config = is_config.
+    scan_needed        = abap_true.
+    ms_config          = is_config.
 
-    category       = 'ZCL_SKYLINT_SCI_CATEGORY'.
-    version        = '001'.
-    description    = ms_config-description.
-    has_attributes = xsdbool( ms_config-attributes IS NOT INITIAL ).
-    attributes_ok  = abap_true.
+    category           = 'ZCL_SKYLINT_SCI_CATEGORY'.
+    version            = '001'.
+    description        = ms_config-description.
+    has_attributes     = xsdbool( ms_config-attributes IS NOT INITIAL ).
+    attributes_ok      = abap_true.
+    remote_rfc_enabled = abap_true.
+    remote_enabled     = abap_true.
+    uses_checksum      = abap_true.
 
     LOOP AT ms_config-finding_codes ASSIGNING <ls_code>.
       CLEAR ls_message.
@@ -61,15 +71,119 @@ CLASS zcl_skylint_sci_adapter IMPLEMENTATION.
     build_data( ).
   ENDMETHOD.
 
+  METHOD run.
+    DATA ls_code_block TYPE zif_skylint_types=>ty_code_block.
+    DATA ls_statement  TYPE zif_skylint_types=>ty_statement.
+    DATA ls_token      TYPE zif_skylint_types=>ty_token.
+    DATA lt_findings   TYPE zif_skylint_types=>ty_findings.
+    DATA lv_include    TYPE program.
+    DATA lv_idx        TYPE sy-tabix.
+
+    FIELD-SYMBOLS <ls_src_stmt>  TYPE sstmnt.
+    FIELD-SYMBOLS <ls_src_token> TYPE stokesx.
+    FIELD-SYMBOLS <ls_level>     TYPE slevel.
+    FIELD-SYMBOLS <ls_finding>   TYPE zif_skylint_types=>ty_finding.
+
+    super->run( ).
+
+    IF object_type <> 'CLAS'.
+      RETURN.
+    ENDIF.
+
+    LOOP AT scans ASSIGNING FIELD-SYMBOL(<fs_scan>).
+      CLEAR ls_code_block.
+      CLEAR lt_findings.
+
+      ls_code_block-object_type = object_type.
+      ls_code_block-object_name = object_name.
+      ls_code_block-block_kind  = zif_skylint_types=>block_kinds-class_definition.
+      ls_code_block-block_name  = object_name.
+
+      LOOP AT <fs_scan>-statements ASSIGNING <ls_src_stmt>
+           WHERE type <> scan_stmnt_type-comment.
+        lv_idx = sy-tabix.
+
+        ASSIGN <fs_scan>-levels[ <ls_src_stmt>-level ] TO <ls_level>.
+        IF sy-subrc <> 0.
+          CONTINUE.
+        ENDIF.
+
+        IF NOT (    <ls_level>-name CP '*=CU*'
+                 OR <ls_level>-name CP '*=CO*'
+                 OR <ls_level>-name CP '*=CI*'
+                 OR <ls_level>-name CP '*=CCDEF*' ).
+          CONTINUE.
+        ENDIF.
+
+        CLEAR ls_statement.
+        ls_statement-index = lv_idx.
+
+        LOOP AT <fs_scan>-tokens ASSIGNING <ls_src_token>
+             FROM <ls_src_stmt>-from TO <ls_src_stmt>-to.
+          IF <ls_src_token>-type = scan_token_type-comment.
+            CONTINUE.
+          ENDIF.
+
+          IF ls_statement-keyword IS INITIAL.
+            ls_statement-keyword         = <ls_src_token>-str.
+            ls_statement-position-line   = <ls_src_token>-row.
+            ls_statement-position-column = <ls_src_token>-col.
+          ENDIF.
+
+          CLEAR ls_token.
+          ls_token-lexeme          = <ls_src_token>-str.
+          ls_token-position-line   = <ls_src_token>-row.
+          ls_token-position-column = <ls_src_token>-col.
+          APPEND ls_token TO ls_statement-tokens.
+        ENDLOOP.
+
+        APPEND ls_statement TO ls_code_block-statements.
+      ENDLOOP.
+
+      IF ls_code_block-statements IS INITIAL.
+        CONTINUE.
+      ENDIF.
+
+      lt_findings = lint( ls_code_block ).
+
+      LOOP AT lt_findings ASSIGNING <ls_finding>.
+        CLEAR lv_include.
+
+        ASSIGN <fs_scan>-statements[ <ls_finding>-statement_index ] TO <ls_src_stmt>.
+        IF sy-subrc = 0.
+          ASSIGN <fs_scan>-levels[ <ls_src_stmt>-level ] TO <ls_level>.
+          IF sy-subrc = 0.
+            lv_include = <ls_level>-name.
+          ENDIF.
+        ENDIF.
+
+        IF lv_include IS INITIAL.
+          lv_include = program_name.
+        ENDIF.
+
+        inform( p_sub_obj_type = c_type_include
+                p_sub_obj_name = lv_include
+                p_position     = <ls_finding>-statement_index
+                p_line         = <ls_finding>-position-line
+                p_column       = CONV #( <ls_finding>-position-column )
+                p_kind         = <ls_finding>-severity
+                p_test         = myname
+                p_code         = <ls_finding>-code
+                p_checksum_1   = calc_def_checksum( is_scan = <fs_scan>
+                                                    is_stmt = <ls_src_stmt> ) ).
+      ENDLOOP.
+    ENDLOOP.
+  ENDMETHOD.
+
   METHOD analyze_proc.
     DATA ls_code_block TYPE zif_skylint_types=>ty_code_block.
     DATA ls_statement  TYPE zif_skylint_types=>ty_statement.
     DATA ls_token      TYPE zif_skylint_types=>ty_token.
     DATA ls_reference  TYPE zif_skylint_types=>ty_compiler_reference.
     DATA lt_findings   TYPE zif_skylint_types=>ty_findings.
-    DATA lv_checksum   TYPE int4.
-    DATA ls_checksum   TYPE sci_crc64.
     DATA lv_qf_detail  TYPE xstring.
+    DATA ls_checksum   TYPE sci_crc64.
+    DATA lv_checksum   TYPE int4.
 
     FIELD-SYMBOLS <ls_stmt>    TYPE cl_abap_comp_procs=>t_stmt.
     FIELD-SYMBOLS <ls_token>   TYPE cl_abap_comp_procs=>t_token.
@@ -115,20 +229,17 @@ CLASS zcl_skylint_sci_adapter IMPLEMENTATION.
     LOOP AT lt_findings ASSIGNING <ls_finding>.
       CLEAR lv_checksum.
 
-      IF <ls_finding>-statement_index > 0.
-        get_stmt_checksum( EXPORTING p_proc_def   = p_proc
-                                     p_index_stmt = <ls_finding>-statement_index
-                           CHANGING  p_checksum   = ls_checksum ).
-        lv_checksum = ls_checksum-i1.
-      ENDIF.
-
-      uses_checksum = xsdbool( lv_checksum <> 0 ).
+      get_stmt_checksum( EXPORTING p_proc_def   = p_proc
+                                   p_index_stmt = <ls_finding>-statement_index
+                         CHANGING  p_checksum   = ls_checksum ).
+      lv_checksum = ls_checksum-i1.
 
       lv_qf_detail = build_quickfix_detail( is_finding = <ls_finding>
                                             is_proc    = p_proc ).
 
       inform( p_sub_obj_type = c_type_include
               p_sub_obj_name = p_proc-include
+              p_position     = <ls_finding>-statement_index
               p_line         = <ls_finding>-position-line
               p_column       = CONV #( <ls_finding>-position-column )
               p_kind         = <ls_finding>-severity
@@ -174,7 +285,7 @@ CLASS zcl_skylint_sci_adapter IMPLEMENTATION.
             lv_stmt_idx = is_finding-statement_index.
           ENDIF.
 
-          IF lv_stmt_idx > 0 AND lines( is_proc-stmts ) >= lv_stmt_idx.
+          IF is_proc IS NOT INITIAL AND lv_stmt_idx > 0 AND lines( is_proc-stmts ) >= lv_stmt_idx.
             ASSIGN is_proc-stmts[ lv_stmt_idx ] TO <ls_stmt>.
             IF sy-subrc = 0.
               TRY.
@@ -398,6 +509,35 @@ CLASS zcl_skylint_sci_adapter IMPLEMENTATION.
 
       <lv_dst> = <lv_src>.
     ENDLOOP.
+  ENDMETHOD.
+
+  METHOD calc_def_checksum.
+    DATA ls_crc TYPE sci_crc64.
+    FIELD-SYMBOLS <ls_token> LIKE LINE OF is_scan-tokens.
+
+    IF is_stmt-from > is_stmt-to OR lines( is_scan-tokens ) < is_stmt-to.
+      rv_checksum = -1.
+      RETURN.
+    ENDIF.
+
+    LOOP AT is_scan-tokens ASSIGNING <ls_token>
+         FROM is_stmt-from TO is_stmt-to
+         WHERE type <> scan_token_type-comment.
+
+      cl_ci_provide_checksum=>gen_chksum_from_string( EXPORTING  p_param         = <ls_token>-str
+                                                      CHANGING   p_crc_value     = ls_crc
+                                                      EXCEPTIONS parameter_error = 1
+                                                                 OTHERS          = 2 ).
+      IF sy-subrc <> 0.
+        CONTINUE.
+      ENDIF.
+    ENDLOOP.
+
+    IF ls_crc-i1 = 0.
+      rv_checksum = -1.
+    ELSE.
+      rv_checksum = ls_crc-i1.
+    ENDIF.
   ENDMETHOD.
 
   METHOD sync_to_data.

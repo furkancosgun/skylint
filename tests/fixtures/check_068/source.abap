@@ -12,6 +12,7 @@ CLASS zcl_skylint_test_068 DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
+    METHODS test_005.
 ENDCLASS.
 
 CLASS zcl_skylint_test_068 IMPLEMENTATION.
@@ -43,5 +44,13 @@ CLASS zcl_skylint_test_068 IMPLEMENTATION.
     DATA lt_tab TYPE STANDARD TABLE OF ty_row WITH DEFAULT KEY.
     DATA ls_row TYPE ty_row.
     MODIFY lt_tab FROM ls_row.
+  ENDMETHOD.
+
+  METHOD test_005.
+    DATA lt_tab TYPE STANDARD TABLE OF ty_row WITH DEFAULT KEY.
+    DATA transporting TYPE ty_row.
+    LOOP AT lt_tab INTO transporting.
+      MODIFY lt_tab FROM transporting.
+    ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

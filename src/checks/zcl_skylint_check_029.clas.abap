@@ -65,7 +65,7 @@ CLASS zcl_skylint_check_029 IMPLEMENTATION.
     DATA ls_tok TYPE zif_skylint_types=>ty_token.
 
     rv_count = 0.
-    LOOP AT is_statement-tokens INTO ls_tok.
+    LOOP AT is_statement-tokens INTO ls_tok WHERE references IS INITIAL.
       IF ls_tok-lexeme = 'TYPE' OR ls_tok-lexeme = 'LIKE'.
         rv_count = rv_count + 1.
       ENDIF.

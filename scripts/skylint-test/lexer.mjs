@@ -12,21 +12,18 @@
  *   `|...|` templates with `{}` depth and `\` escapes
  *
  * Token shape mirrors zif_skylint_types=>ty_token:
- *   { lexeme, type: 'I'|'S'|'C'|'P', position: { line, column }, references: [] }
+ *   { lexeme, position: { line, column }, references: [] }
+ *
+ * There is intentionally NO type field (matches the ATC ty_token contract).
+ * Trivia (comments/pragmas) is recognizable from (lexeme, column) alone:
+ * a token starting with `"` is a comment, `*` at column 0 is a comment,
+ * `##` is a pragma — the lexer never produces a code token with those shapes.
  */
-
-export const TOKEN_TYPES = {
-  identifier: 'I',
-  literal: 'S',
-  comment: 'C',
-  pragma: 'P',
-};
 
 const HORIZONTAL_TAB = '\t';
 
 export class Lexer {
-  constructor(source) {
-    // ABAP: REPLACE ALL OCCURRENCES OF cr_lf WITH newline (only CRLF, not lone CR)
+  constructor(source) {    // ABAP: REPLACE ALL OCCURRENCES OF cr_lf WITH newline (only CRLF, not lone CR)
     this.src = source.replace(/\r\n/g, '\n');
     this.len = this.src.length;
     this.pos = 0;
@@ -76,10 +73,9 @@ export class Lexer {
     return this.atEnd() || this.peek() === '\n';
   }
 
-  emitToken(text, type) {
+  emitToken(text) {
     this.tokens.push({
       lexeme: text,
-      type,
       position: { line: this.tokLine, column: this.tokCol > 255 ? 255 : this.tokCol },
       references: [],
     });
@@ -119,7 +115,7 @@ export class Lexer {
   scanComment() {
     let text = '';
     while (!this.endsLine()) text += this.advance();
-    this.emitToken(text, TOKEN_TYPES.comment);
+    this.emitToken(text);
   }
 
   scanPragma() {
@@ -128,7 +124,7 @@ export class Lexer {
       if (this.isBlank(this.peek())) break;
       text += this.advance();
     }
-    this.emitToken(text, TOKEN_TYPES.pragma);
+    this.emitToken(text);
   }
 
   scanString(quote) {
@@ -142,7 +138,7 @@ export class Lexer {
         text += this.advance();
       }
     }
-    this.emitToken(text, TOKEN_TYPES.literal);
+    this.emitToken(text);
   }
 
   scanTemplate() {
@@ -166,7 +162,7 @@ export class Lexer {
         text += this.advance();
       }
     }
-    this.emitToken(text, TOKEN_TYPES.literal);
+    this.emitToken(text);
   }
 
   scanWord() {
@@ -175,7 +171,7 @@ export class Lexer {
       if (this.isBlank(this.peek())) break;
       text += this.advance();
     }
-    if (text !== '') this.emitToken(text, TOKEN_TYPES.identifier);
+    if (text !== '') this.emitToken(text);
   }
 }
 

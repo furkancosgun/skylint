@@ -95,11 +95,24 @@ export function pseudoWords(text) {
     .filter((p) => p !== '');
 }
 
+/** Trivia derivation: the lexer never emits a code token starting with `"` or
+ *  `##`, or `*` at column 0 — so (lexeme, column) recovers the class exactly.
+ *  No type field is needed (matches the ATC ty_token contract). */
+export function isCommentToken(tok) {
+  const lex = tok.lexeme;
+  if (!lex) return false;
+  if (lex[0] === '"') return true;
+  return lex[0] === '*' && tok.position.column === 0;
+}
+
+export function isPragmaToken(tok) {
+  return tok.lexeme.startsWith('##');
+}
+
 /** shallow token copy (ABAP APPEND copies the struct) */
 function copyToken(tok) {
   return {
     lexeme: tok.lexeme,
-    type: tok.type,
     position: { line: tok.position.line, column: tok.position.column },
     references: tok.references,
   };
@@ -108,7 +121,7 @@ function copyToken(tok) {
 /** lcl_parser=>collect_pseudo */
 function collectPseudo(token, statements, pending) {
   let words;
-  if (token.type === 'P' && token.lexeme.length > 2) {
+  if (isPragmaToken(token) && token.lexeme.length > 2) {
     words = [token.lexeme.slice(2)];
   } else {
     words = pseudoWords(token.lexeme);
@@ -154,7 +167,7 @@ export function buildStatements(tokens) {
   let depth = 0;
 
   for (const raw of tokens) {
-    if (raw.type === 'C' || raw.type === 'P') {
+    if (isCommentToken(raw) || isPragmaToken(raw)) {
       collectPseudo(raw, statements, pending);
       continue;
     }

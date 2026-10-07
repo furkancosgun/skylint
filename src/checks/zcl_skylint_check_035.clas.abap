@@ -53,7 +53,7 @@ CLASS zcl_skylint_check_035 IMPLEMENTATION.
     lv_has_type = abap_false.
     lv_is_struc = abap_false.
 
-    LOOP AT is_statement-tokens INTO ls_tok.
+    LOOP AT is_statement-tokens INTO ls_tok WHERE references IS INITIAL.
       CASE ls_tok-lexeme.
         WHEN 'BEGIN' OR 'END'.
           lv_is_struc = abap_true.

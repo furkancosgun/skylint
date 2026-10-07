@@ -55,7 +55,7 @@ export async function spaghettiRefs(fullSource, objectName = '', absOffset = 0) 
     let kind = '';
     if (/method/i.test(rt)) kind = 'ME';
     else if (/type/i.test(rt)) kind = 'TY';
-    else if (/data|variable/i.test(rt)) kind = 'DA';
+    else if (/data|variable|read|write|object/i.test(rt)) kind = 'DA';
     if (!kind) return;
     const res = r.resolved;
     let isStatic = '';
@@ -78,27 +78,69 @@ export async function spaghettiRefs(fullSource, objectName = '', absOffset = 0) 
  * lcl_abaplint_bridge=>apply_payload/apply_ref_line.
  * NOTE: ABAP EXITs only the inner token loop, so one payload row can attach
  * to several statements sharing the same line — preserved here.
+ * Two passes: exact column-range hits first, fuzzy lexeme-contains only for
+ * rows no range hit claimed. Otherwise an operand reference (e.g. variable
+ * `table`) would also stick to a same-line keyword token with identical
+ * text (e.g. `TABLE` in `DESCRIBE TABLE table`), hiding the real keyword.
  */
 export function applyRefs(statements, rows) {
+  const pending = [];
   for (const row of rows) {
-    if (row.kind !== 'ME' && row.kind !== 'DA' && row.kind !== 'TY') continue;
-    const identUp = row.ident.toUpperCase();
-    for (const stmt of statements) {
-      for (const tok of stmt.tokens) {
-        if (tok.position.line !== row.rel) continue;
-        const tokUp = tok.lexeme.toUpperCase();
-        const inRange = row.col >= tok.position.column && row.col < tok.position.column + tok.lexeme.length;
-        if (!inRange && !tokUp.includes(identUp) && !identUp.includes(tokUp)) continue;
-        tok.references.push({
-          kind: row.kind,
-          full_name: row.fname,
-          usage_grade: row.grade,
-          usage_mode: row.mode,
-        });
-        break; // EXIT inner loop only
-      }
+    if (!attachRow(statements, row, true)) pending.push(row);
+  }
+  for (const row of pending) attachRow(statements, row, false);
+}
+
+function shortIdent(fname) {
+  const tail = (fname + '').split('\\').pop().split('->').pop();
+  const cut = tail.lastIndexOf(':');
+  return (cut >= 0 ? tail.slice(cut + 1) : tail).toUpperCase();
+}
+
+function rowMatches(tok, row, rangeOnly) {
+  const col = row.col;
+  // abaplint columns may be 0- or 1-based relative to ours: accept both
+  if (
+    (col >= tok.position.column && col < tok.position.column + tok.lexeme.length) ||
+    (col - 1 >= tok.position.column && col - 1 < tok.position.column + tok.lexeme.length)
+  ) {
+    return true;
+  }
+  if (rangeOnly) return false;
+  // fuzzy fallback on the SHORT identifier only (never the full \\TY:.. name,
+  // whose text accidentally contains keywords: 'IN' in 'SKYLINT', ...)
+  const core = tok.lexeme.toUpperCase().replace(/^@/, '');
+  const short = shortIdent(row.fname);
+  if (!short) return false;
+  if (core === short) return true;
+  if (core.startsWith(short)) {
+    const next = core[short.length];
+    if (next !== undefined && !/[A-Z0-9_]/.test(next)) return true;
+  }
+  const arrow = '->' + short;
+  if (core === arrow || core === arrow + '(') return true;
+  if (core.endsWith(arrow) || core.endsWith(arrow + '(')) return true;
+  return false;
+}
+
+function attachRow(statements, row, rangeOnly) {
+  if (row.kind !== 'ME' && row.kind !== 'DA' && row.kind !== 'TY') return false;
+  let attached = false;
+  for (const stmt of statements) {
+    for (const tok of stmt.tokens) {
+      if (tok.position.line !== row.rel) continue;
+      if (!rowMatches(tok, row, rangeOnly)) continue;
+      tok.references.push({
+        kind: row.kind,
+        full_name: row.fname,
+        usage_grade: row.grade,
+        usage_mode: row.mode,
+      });
+      attached = true;
+      break; // EXIT inner loop only
     }
   }
+  return attached;
 }
 
 /** Full enrich step for one snippet's statements (mutates in place). */

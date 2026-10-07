@@ -7,6 +7,7 @@ CLASS zcl_skylint_test_004 DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
+    METHODS test_005.
 ENDCLASS.
 
 CLASS zcl_skylint_test_004 IMPLEMENTATION.
@@ -30,6 +31,15 @@ CLASS zcl_skylint_test_004 IMPLEMENTATION.
   METHOD test_004.
     DATA lo_obj TYPE REF TO zcl_skylint_test_004.
     IF lo_obj IS BOUND.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_005.
+    DATA not TYPE string.
+    DATA initial TYPE i.
+    IF not IS INITIAL.
+    ENDIF.
+    IF not = initial.
     ENDIF.
   ENDMETHOD.
 ENDCLASS.

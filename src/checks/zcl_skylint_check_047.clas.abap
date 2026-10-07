@@ -77,7 +77,7 @@ CLASS zcl_skylint_check_047 IMPLEMENTATION.
           rv_comp = rv_comp + 1.
       ENDCASE.
 
-      LOOP AT <ls_stmt>-tokens INTO ls_tok.
+      LOOP AT <ls_stmt>-tokens INTO ls_tok WHERE references IS INITIAL.
         lv_lex = to_upper( ls_tok-lexeme ).
         CASE lv_lex.
           WHEN 'AND' OR 'OR' OR 'COND' OR 'SWITCH'.
