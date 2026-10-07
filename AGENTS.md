@@ -12,7 +12,7 @@ This document outlines the mandatory engineering guidelines, architectural desig
    - The `main` branch is 100% portable and executable via Open-ABAP transpiler in Node.js, SAP NetWeaver 7.40+, S/4HANA On-Premise, and SAP BTP ABAP Environment.
 
 2. **Multi-Platform Branch Architecture:**
-   - **`main`**: Pure check domain logic + universal AST engine + in-memory test runner (`zcl_skylint_test_runner`). Zero external platform dependencies.
+   - **`main`**: Pure check domain logic + universal AST engine + JS test harness (`scripts/skylint-test/`). Zero external platform dependencies.
    - **`cloud`**: Native SAP ATC Cloud adapter branch. Implements `if_ci_atc_check` and translates `if_ci_atc_source_code_provider` procedures into `zif_skylint_types` structures for SAP BTP and S/4HANA Public Cloud.
    - **`standard`**: Classic SAP Code Inspector adapter branch. Integrates with `CL_CI_TEST_SCAN` and `CL_CI_TEST_ROOT` for classic SAP NetWeaver 7.40+ and S/4HANA Private Cloud.
 
@@ -72,7 +72,7 @@ For procedure inspection and unit testing:
 - Satır numaraları (line numbers) metot başlığına göre bağıl (relative) olarak hesaplanır:
   - Line 1: `METHOD <method_name>.`
   - Line 2: First executable line inside the method body.
-- When writing unit test assertions (`it_expected`), **always count line numbers starting from 1 at the `METHOD` statement** (or use `zcl_skylint_test_runner=>assert_findings` where Line 2 is the first body statement).
+- When writing fixture assertions (`expected.json`), **always count line numbers starting from 1 at the `METHOD` statement**.
 
 ### 6. Pseudo-Comments & Pragmas
 - Comments containing `"#EC <CODE>"` or pragmas `##<CODE>` are automatically attached to `is_statement-pseudo_comments`.
@@ -203,14 +203,17 @@ All ABAP code in `src/` **MUST** strictly pass `abaplint` validation with **0 wa
 
 ## 🛠️ Anatomy of a Skylint Check Rule
 
-Each check consists of 3 essential files. Test sources live inline in the testclasses (1:1 full class text, never shipped to SAP systems):
+Each check consists of 2 ABAP files + 1 fixture directory. Test sources live in `tests/fixtures/` (never shipped to SAP systems):
 
 ```text
 src/
 ├── checks/
 │   ├── zcl_skylint_check_XXX.clas.abap         # 1. Main check implementation
-│   ├── zcl_skylint_check_XXX.clas.xml          # 2. abapGit XML (<WITH_UNIT_TESTS>X</WITH_UNIT_TESTS>)
-│   └── zcl_skylint_check_XXX.clas.testclasses.abap # 3. In-memory unit test suite
+│   └── zcl_skylint_check_XXX.clas.xml          # 2. abapGit XML
+tests/
+└── fixtures/check_XXX/
+    ├── source.abap                             # 3. Full test class source
+    └── expected.json                           # 4. Expected findings
 ```
 
 ### 1. Main Check Implementation Pattern
@@ -279,7 +282,7 @@ ENDCLASS.
 ```
 
 ### 2. Main Check XML (`src/checks/zcl_skylint_check_XXX.clas.xml`)
-Always ensure `<WITH_UNIT_TESTS>X</WITH_UNIT_TESTS>` is present:
+Plain abapGit class XML (no test include — tests live in `tests/fixtures/`, not in ABAP):
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -294,74 +297,57 @@ Always ensure `<WITH_UNIT_TESTS>X</WITH_UNIT_TESTS>` is present:
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>
     <UNICODE>X</UNICODE>
-    <WITH_UNIT_TESTS>X</WITH_UNIT_TESTS>
-   </VSEOCLASS>
+    </VSEOCLASS>
   </asx:values>
  </asx:abap>
 </abapGit>
 ```
 
-### 3. In-Memory Unit Test Suite (`src/checks/zcl_skylint_check_XXX.clas.testclasses.abap`)
-Use `zcl_skylint_test_runner` (lives in `src/platform/`, dev-only, never shipped to SAP) with 1:1 inline full class sources.
-The runner slices `METHOD..ENDMETHOD` (or `CLASS DEFINITION`/`INTERFACE`) blocks itself, so `line`/`column`
-in `it_expected` stay relative to the sliced block. Regenerate positions with `npm run build` + `npm run positions`:
+### 3. Test Fixture (`tests/fixtures/check_XXX/`)
+Tests run in the JS harness (`scripts/skylint-test/run.mjs`), which ports the SAP-identical tokenizer 1:1 to JS
+(`lexer.mjs`) and enriches compiler/RTTI data via abaplint (`abaplint-bridge.mjs`, `rtti.mjs`).
+The harness slices `METHOD..ENDMETHOD` (or `CLASS DEFINITION`/`INTERFACE`) blocks itself, so `line`/`column`
+in `expected.json` stay relative to the sliced block. Regenerate positions with `npm run build` + `npm run positions`:
 
+`source.abap` (full test class source):
 ```abap
-CLASS ltcl_check_XXX DEFINITION FINAL
-  FOR TESTING RISK LEVEL HARMLESS DURATION SHORT.
-
-  PRIVATE SECTION.
-    METHODS test_check FOR TESTING RAISING cx_static_check.
+CLASS zcl_skylint_test_XXX DEFINITION
+  PUBLIC SECTION.
+    METHODS test_001.
+    METHODS test_002.
 ENDCLASS.
-
-
-CLASS ltcl_check_XXX IMPLEMENTATION.
-  METHOD test_check.
-    DATA lt_source TYPE string_table.
-
-    lt_source = VALUE #(
-        ( `CLASS zcl_skylint_test_XXX DEFINITION` )
-        ( `  PUBLIC SECTION.` )
-        ( `    METHODS test_001.` )
-        ( `    METHODS test_002.` )
-        ( `ENDCLASS.` )
-        ( `CLASS zcl_skylint_test_XXX IMPLEMENTATION.` )
-        ( `  METHOD test_001.` )
-        ( `    NON_COMPLIANT_STATEMENT.` )
-        ( `  ENDMETHOD.` )
-        ( `  METHOD test_002.` )
-        ( `    COMPLIANT_STATEMENT.` )
-        ( `  ENDMETHOD.` )
-        ( `ENDCLASS.` ) ).
-
-    zcl_skylint_test_runner=>run(
-        io_check    = NEW zcl_skylint_check_XXX( )
-        it_source   = lt_source
-        it_expected = VALUE #(
-            ( method = 'TEST_001'
-              code   = zcl_skylint_check_XXX=>c_finding_codes-my_finding_code
-              line   = 2
-              column = 4 )
-            ( method = 'TEST_002' ) ) ).
+CLASS zcl_skylint_test_XXX IMPLEMENTATION.
+  METHOD test_001.
+    NON_COMPLIANT_STATEMENT.
+  ENDMETHOD.
+  METHOD test_002.
+    COMPLIANT_STATEMENT.
   ENDMETHOD.
 ENDCLASS.
 ```
 
+`expected.json` (`code: null` asserts zero findings):
+```json
+[
+  { "method": "TEST_001", "code": "FINDINGCD", "line": 2, "column": 4 },
+  { "method": "TEST_002", "code": null }
+]
+```
+
 Notes:
-- There is exactly ONE test runner. The old `sci/atc/open_test_run` variants are deleted; adapters (`sci/atc_adapter`) stay for production branches.
-- `it_expected` rows target either a `METHOD name` slice or a `CLASS/INTERFACE name` definition block
+- There is no ABAP test runner anymore. Adapters (`sci/atc_adapter`) stay for production branches only.
+- `expected.json` rows target either a `METHOD name` slice or a `CLASS/INTERFACE name` definition block
   (`method = 'LCL_CHILD'` slices `CLASS lcl_child DEFINITION..ENDCLASS.`). Method rows fall back to a class
   definition block when the body is empty/`RETURN.` only.
-- The runner derives `object_name` (enclosing class of a method slice, matched name of a definition slice)
-  and passes it to checks and to `feed_rtti`, so hierarchy checks (`get_super_classes`) resolve the tested
+- The harness derives `object_name` (enclosing class of a method slice, matched name of a definition slice)
+  and passes it to checks and to RTTI feeding, so hierarchy checks (`get_super_classes`) resolve the tested
   class instead of a synthetic name.
-- Parser (`lcl_lexer`/`lcl_parser`) is untouched ABAP. Compiler references are hybrid: heuristic first, then `lcl_abaplint_bridge`
-  enriches via `@abaplint/core` (`SyntaxLogic.spaghetti`: method refs). RTTI has NO static caches: `lcl_abaplint_bridge=>feed_rtti`
-  transpiles the full test source (lenient batch + auto-stubbed unknown superclasses) and evaluates it into the shared `abap.Classes`
+- Tokenizer (`lexer.mjs`) is a 1:1 port of the SAP-identical ABAP tokenizer — do NOT replace it with
+  abaplint's tokenizer. Compiler references are hybrid: JS heuristic first, then `abaplint-bridge.mjs`
+  enriches via `@abaplint/core` (`SyntaxLogic.spaghetti`). RTTI has NO static caches: `rtti.mjs`
+  transpiles the full fixture source (lenient batch + auto-stubbed unknown superclasses) and evaluates it into the shared `abap.Classes`
   registry with a `ZSKYLINT_TEST` alias, so `zcl_skylint_rtti_util` live queries (`describe_*`, `is_static_method`,
   `get_single_importing_param`, `get_super_classes`) resolve. No filesystem access in tests.
-- `*.testclasses.abap` + `zcl_skylint_test_runner` are stripped by `sync-branches.mjs` and never reach `cloud`/`standard`.
-- `line_length` is disabled for `*testclasses*` (inline 1:1 sources must stay verbatim).
 
 ### 4. QuickFix Implementation & API Pattern
 When automated code replacement or removal is appropriate, use the QuickFix API:
@@ -395,14 +381,10 @@ When automated code replacement or removal is appropriate, use the QuickFix API:
                      is_quickfix     = ls_quickfix ).
    ```
 
-3. **Verify QuickFix Transformation in Unit Tests:**
-   ```abap
-   zcl_skylint_test_runner=>assert_quickfix(
-       io_check          = NEW zcl_skylint_check_XXX( )
-       it_bad_source     = VALUE #( ( `NON_COMPLIANT_STATEMENT.` ) )
-       it_expected_fixed = VALUE #( ( `NEW_REPLACEMENT_STATEMENT.` ) )
-       iv_quickfix_code  = zcl_skylint_check_XXX=>c_quickfix_codes-replace_syntax ).
-   ```
+3. **Verify QuickFix via fixture:**
+   Add a non-compliant `METHOD` to the fixture `source.abap` and assert the
+   finding in `expected.json`. The harness surfaces `quickfixes` on findings
+   for adapter-level verification.
 
 ---
 
@@ -416,9 +398,9 @@ When automated code replacement or removal is appropriate, use the QuickFix API:
    - *Why:* Line breaks, pragmas, or modifier tokens shift indices, causing test failures or `CX_SY_ITAB_LINE_NOT_FOUND` dumps.
    - *Fix:* Always loop through tokens or verify table boundaries (`IF lines( tokens ) >= N.`).
 
-3. **Missing `<WITH_UNIT_TESTS>X</WITH_UNIT_TESTS>` in XML:**
-   - *Why:* Without this tag, the Open-ABAP transpiler will skip the `.testclasses.abap` include entirely.
-   - *Fix:* Every check class `.clas.xml` must include `<WITH_UNIT_TESTS>X</WITH_UNIT_TESTS>`.
+3. **Replacing the JS tokenizer with abaplint's:**
+   - *Why:* `scripts/skylint-test/lexer.mjs` is a 1:1 port of the SAP-identical tokenizer the checks were written against; abaplint splits punctuation differently and would shift positions/keywords.
+   - *Fix:* Never swap tokenizers. Fix bugs in `lexer.mjs`/`parser.mjs` with 1:1 ABAP-equivalent semantics.
 
 4. **Parsing Chained Statements (`:`, `,`) or Raw Text for Keywords:**
    - *Why:* The AST unrolls chains into individual statements and tags implicit assignments as `'COMPUTE'` and method calls as `'+CALL_METHOD'`.
@@ -436,8 +418,8 @@ Follow this exact procedure when adding or modifying check rules:
 
 1. **Create the Check Class & Files:**
    - Create `src/checks/zcl_skylint_check_XXX.clas.abap` inheriting from `zcl_skylint_check_base`.
-   - Create `src/checks/zcl_skylint_check_XXX.clas.xml` with `<WITH_UNIT_TESTS>X</WITH_UNIT_TESTS>`.
-   - Create `src/checks/zcl_skylint_check_XXX.clas.testclasses.abap` using `zcl_skylint_test_runner`.
+   - Create `src/checks/zcl_skylint_check_XXX.clas.xml` (plain abapGit class XML, no test include).
+   - Create `tests/fixtures/check_XXX/source.abap` + `expected.json` for the JS harness.
 
 2. **Implement Inspection Logic:**
    - Adhere to the Zero Magic Index and Compiler References standards.
@@ -446,7 +428,7 @@ Follow this exact procedure when adding or modifying check rules:
 
 3. **Re-index and Renumber:**
    - Run `npm run index`
-   - The indexer automatically renumbers all checks sequentially (001, 002, ...), updates class names, test bindings, XML tags, and regenerates `README.md` with accurate QuickFix badges.
+   - The indexer automatically renumbers all checks sequentially (001, 002, ...), updates class names, fixture dirs, XML tags, and regenerates `README.md` with accurate QuickFix badges.
 
 4. **Verify Linter and Tests:**
    - Run `npm test`

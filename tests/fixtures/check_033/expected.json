@@ -1,0 +1,18 @@
+[
+  {
+    "method": "TEST_001",
+    "code": "SCOPELEAK",
+    "line": 6,
+    "column": 4
+  },
+  {
+    "method": "TEST_002",
+    "code": null
+  },
+  {
+    "method": "TEST_003",
+    "code": "SCOPELEAK",
+    "line": 7,
+    "column": 4
+  }
+]

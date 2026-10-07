@@ -77,32 +77,24 @@ function syncBranch(target, headInfo) {
       fs.writeFileSync(checkBasePath, content, 'utf8');
     }
 
-    // 1b. Test infrastructure (test runner + testclasses) is dev-only:
-    // delivery branches never receive them.
-    const checksDir = path.join(worktreeDir, 'src', 'checks');
-    if (fs.existsSync(checksDir)) {
-      for (const file of fs.readdirSync(checksDir)) {
-        if (file.endsWith('.testclasses.abap')) {
-          fs.rmSync(path.join(checksDir, file), { force: true });
-        }
-      }
-    }
+    // 1b. No test files ship to delivery branches:
+    // fixtures live in tests/fixtures (never ABAP includes) and the JS
+    // harness in scripts/skylint-test, so there is nothing to strip here.
 
     // 2. Clean up unneeded platform adapters in src/platform.
-    // The test runner is dev-only and never shipped.
     const platformDir = path.join(worktreeDir, 'src', 'platform');
     if (fs.existsSync(platformDir)) {
       if (target === 'standard') {
         // Keep sci_adapter and sci_category; remove atc_adapter and open_adapter
         for (const file of fs.readdirSync(platformDir)) {
-          if (file.startsWith('zcl_skylint_atc_') || file.startsWith('zcl_skylint_open_') || file.startsWith('zcl_skylint_test_runner')) {
+          if (file.startsWith('zcl_skylint_atc_') || file.startsWith('zcl_skylint_open_')) {
             fs.rmSync(path.join(platformDir, file), { recursive: true, force: true });
           }
         }
       } else if (target === 'cloud') {
         // Keep atc_adapter; remove sci_adapter, sci_category, and open_adapter
         for (const file of fs.readdirSync(platformDir)) {
-          if (file.startsWith('zcl_skylint_sci_') || file.startsWith('zcl_skylint_open_') || file.startsWith('zcl_skylint_test_runner')) {
+          if (file.startsWith('zcl_skylint_sci_') || file.startsWith('zcl_skylint_open_')) {
             fs.rmSync(path.join(platformDir, file), { recursive: true, force: true });
           }
         }

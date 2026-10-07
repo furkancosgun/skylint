@@ -1,0 +1,18 @@
+[
+  {
+    "method": "TEST_001",
+    "code": "DANGER_STM",
+    "line": 6,
+    "column": 4
+  },
+  {
+    "method": "TEST_002",
+    "code": null
+  },
+  {
+    "method": "TEST_003",
+    "code": "DANGER_STM",
+    "line": 2,
+    "column": 4
+  }
+]

@@ -1,0 +1,18 @@
+[
+  {
+    "method": "TEST_001",
+    "code": "INTF_DATA",
+    "line": 2,
+    "column": 2
+  },
+  {
+    "method": "TEST_002",
+    "code": null
+  },
+  {
+    "method": "TEST_003",
+    "code": "INTF_DATA",
+    "line": 2,
+    "column": 2
+  }
+]

@@ -1,9 +1,3 @@
 [submodule "deps/open-abap-core"]
 	path = deps/open-abap-core
 	url = https://github.com/open-abap/open-abap-core.git
-[submodule "deps/open-abap-ci"]
-	path = deps/open-abap-ci
-	url = https://github.com/open-abap/open-abap-ci.git
-[submodule "deps/steampunk-2305-api"]
-	path = deps/steampunk-2305-api
-	url = https://github.com/abapedia/steampunk-2305-api.git

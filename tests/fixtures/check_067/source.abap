@@ -1,0 +1,22 @@
+CLASS zcl_beh DEFINITION INHERITING FROM cl_abap_behavior_handler.
+  PUBLIC SECTION.
+    METHODS do_commit.
+    METHODS clean_it.
+ENDCLASS.
+CLASS zcl_beh IMPLEMENTATION.
+  METHOD do_commit.
+    COMMIT WORK.
+  ENDMETHOD.
+  METHOD clean_it.
+    RETURN.
+  ENDMETHOD.
+ENDCLASS.
+CLASS zcl_plain DEFINITION.
+  PUBLIC SECTION.
+    METHODS do_plain.
+ENDCLASS.
+CLASS zcl_plain IMPLEMENTATION.
+  METHOD do_plain.
+    COMMIT WORK.
+  ENDMETHOD.
+ENDCLASS.

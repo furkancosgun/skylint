@@ -750,9 +750,7 @@
       "severity": "Error"
     },
     "line_length": {
-      "exclude": [
-        ".*testclasses.*"
-      ],
+      "exclude": [],
       "severity": "Error",
       "length": 120,
       "maxIssuesPerFile": 10

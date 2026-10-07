@@ -61,7 +61,6 @@ function renumberChecks(checks) {
   for (const r of renames) {
     const files = [
       path.join(checksDir, `zcl_skylint_check_${r.oldId}.clas.abap`),
-      path.join(checksDir, `zcl_skylint_check_${r.oldId}.clas.testclasses.abap`),
       path.join(checksDir, `zcl_skylint_check_${r.oldId}.clas.xml`),
     ];
 
@@ -72,18 +71,22 @@ function renumberChecks(checks) {
         fs.renameSync(f, path.join(dir, `${tempPrefix}${r.newId}_${base}`));
       }
     }
+
+    // Fixture dirs live outside checks/: rename the whole directory
+    const fixturesDir = path.join(rootDir, 'tests', 'fixtures');
+    const oldFixture = path.join(fixturesDir, `check_${r.oldId}`);
+    if (fs.existsSync(oldFixture)) {
+      fs.renameSync(oldFixture, path.join(fixturesDir, `${tempPrefix}${r.newId}_check_${r.oldId}`));
+    }
   }
 
   // 2. Rename from temp to target names and update identifiers in file content
+  const fixturesDir = path.join(rootDir, 'tests', 'fixtures');
   for (const r of renames) {
     const mappings = [
       {
         temp: path.join(checksDir, `${tempPrefix}${r.newId}_zcl_skylint_check_${r.oldId}.clas.abap`),
         dest: path.join(checksDir, `zcl_skylint_check_${r.newId}.clas.abap`),
-      },
-      {
-        temp: path.join(checksDir, `${tempPrefix}${r.newId}_zcl_skylint_check_${r.oldId}.clas.testclasses.abap`),
-        dest: path.join(checksDir, `zcl_skylint_check_${r.newId}.clas.testclasses.abap`),
       },
       {
         temp: path.join(checksDir, `${tempPrefix}${r.newId}_zcl_skylint_check_${r.oldId}.clas.xml`),
@@ -98,8 +101,6 @@ function renumberChecks(checks) {
         content = content
           .replace(new RegExp(`zcl_skylint_check_${r.oldId}`, 'g'), `zcl_skylint_check_${r.newId}`)
           .replace(new RegExp(`ZCL_SKYLINT_CHECK_${r.oldId}`, 'g'), `ZCL_SKYLINT_CHECK_${r.newId}`)
-          .replace(new RegExp(`ltcl_check_${r.oldId}`, 'g'), `ltcl_check_${r.newId}`)
-          .replace(new RegExp(`LTCL_CHECK_${r.oldId}`, 'g'), `LTCL_CHECK_${r.newId}`)
           .replace(new RegExp(`zcl_skylint_test_${r.oldId}`, 'g'), `zcl_skylint_test_${r.newId}`)
           .replace(new RegExp(`ZCL_SKYLINT_TEST_${r.oldId}`, 'g'), `ZCL_SKYLINT_TEST_${r.newId}`)
           .replace(new RegExp(`\\(${r.oldId}\\)`, 'g'), `(${r.newId})`);
@@ -108,24 +109,36 @@ function renumberChecks(checks) {
         fs.unlinkSync(m.temp);
       }
     }
+
+    // Fixture dir: rename + rewrite test-class references inside source.abap
+    const tempFixture = path.join(fixturesDir, `${tempPrefix}${r.newId}_check_${r.oldId}`);
+    if (fs.existsSync(tempFixture)) {
+      const destFixture = path.join(fixturesDir, `check_${r.newId}`);
+      for (const f of fs.readdirSync(tempFixture)) {
+        const p = path.join(tempFixture, f);
+        let content = fs.readFileSync(p, 'utf8');
+        content = content
+          .replace(new RegExp(`zcl_skylint_test_${r.oldId}`, 'g'), `zcl_skylint_test_${r.newId}`)
+          .replace(new RegExp(`ZCL_SKYLINT_TEST_${r.oldId}`, 'g'), `ZCL_SKYLINT_TEST_${r.newId}`);
+        fs.writeFileSync(p, content, 'utf8');
+      }
+      fs.renameSync(tempFixture, destFixture);
+    }
     console.log(`Renumbered: ${r.oldId} -> ${r.newId}`);
   }
 }
 
 /**
- * Detect QuickFix support purely by inspecting check source code and testclasses
+ * Detect QuickFix support purely by inspecting check source code
  */
-function detectQuickFixStatus(checkContent, testclassesContent) {
+function detectQuickFixStatus(checkContent) {
   // 1. Checks if check uses base class quickfix helpers or passes details
   const hasQuickFixCall = /quickfix_codes|quickfix_replace|quickfix_insert_before|quickfix_insert_after|quickfix_delete|c_quickfix_codes|io_details/i.test(checkContent);
 
-  // 2. Checks if unit test asserts quickfixes enabled
-  const hasQuickFixTest = /quickfixes\s*=\s*abap_true|assert_quickfix/i.test(testclassesContent);
-
-  // 3. Checks if check has explicit quickfix metadata annotation in comment
+  // 2. Checks if check has explicit quickfix metadata annotation in comment
   const hasQuickFixComment = /quickfix\s*:\s*(ready|true|enabled|yes)/i.test(checkContent);
 
-  return (hasQuickFixCall || hasQuickFixTest || hasQuickFixComment) ? '⚡ Ready' : '—';
+  return (hasQuickFixCall || hasQuickFixComment) ? '⚡ Ready' : '—';
 }
 
 /**
@@ -133,16 +146,12 @@ function detectQuickFixStatus(checkContent, testclassesContent) {
  */
 function extractCheckMetadata(id) {
   const checkFilePath = path.join(checksDir, `zcl_skylint_check_${id}.clas.abap`);
-  const testclassesFilePath = path.join(checksDir, `zcl_skylint_check_${id}.clas.testclasses.abap`);
 
   if (!fs.existsSync(checkFilePath)) {
     return null;
   }
 
   const checkContent = fs.readFileSync(checkFilePath, 'utf8');
-  const testclassesContent = fs.existsSync(testclassesFilePath)
-    ? fs.readFileSync(testclassesFilePath, 'utf8')
-    : '';
 
   const descMatch = checkContent.match(/description\s*=\s*'([^']+)'/);
   let description = descMatch ? descMatch[1].trim() : `Check rule ${id}`;
@@ -161,7 +170,7 @@ function extractCheckMetadata(id) {
   const pseudoComment = pcomMatch ? `"#EC ${pcomMatch[1].trim()}"` : '—';
 
   // 4. QuickFix Status (read entirely from source code)
-  const quickfix = detectQuickFixStatus(checkContent, testclassesContent);
+  const quickfix = detectQuickFixStatus(checkContent);
 
   return {
     id,

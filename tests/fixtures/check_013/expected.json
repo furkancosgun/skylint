@@ -1,0 +1,18 @@
+[
+  {
+    "method": "TEST_001",
+    "code": "CHKINLOOP",
+    "line": 6,
+    "column": 6
+  },
+  {
+    "method": "TEST_002",
+    "code": null
+  },
+  {
+    "method": "TEST_003",
+    "code": "CHKINLOOP",
+    "line": 4,
+    "column": 6
+  }
+]

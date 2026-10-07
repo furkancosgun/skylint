@@ -1,0 +1,18 @@
+[
+  {
+    "method": "TEST_001",
+    "code": "CYCLO_COMP",
+    "line": 1,
+    "column": 2
+  },
+  {
+    "method": "TEST_002",
+    "code": null
+  },
+  {
+    "method": "TEST_003",
+    "code": "CYCLO_COMP",
+    "line": 1,
+    "column": 2
+  }
+]

@@ -15,7 +15,7 @@
 - **Platform-Agnostic Core (`main`):** Zero external platform dependencies. All types, tokens, statements, findings, and quickfixes are modeled cleanly in `zif_skylint_types`.
 - **Zero Boilerplate Architecture:** Base class (`zcl_skylint_check_base`) encapsulates finding registration, statement/token reporting, attribute resolution, and pseudo-comment filtering. Subclasses only require `constructor` and `check`.
 - **Universal Normalized AST:** Normalized statement streams with unrolled chained statements (`DATA: ...`), implicit assignments tagged as `COMPUTE`, functional method calls tagged as `+CALL_METHOD`, and compiler symbol references attached directly to tokens.
-- **Modern In-Memory Testing:** Lightning-fast unit tests using `zcl_skylint_test_runner` (`assert_findings`, `assert_no_findings`, `assert_quickfix`) with inline source snippets.
+- **JS Test Harness:** Fast unit tests in `scripts/skylint-test/` (1:1 JS port of the SAP-identical tokenizer + abaplint compiler/RTTI enrichment) running transpiled checks against fixtures in `tests/fixtures/check_XXX/`.
 - **QuickFix Ready:** Built-in helper API (`quickfix_replace`) for automated code transformations and refactoring.
 - **Multi-Platform Branch Strategy:**
   - `main`: Platform-agnostic core rules + universal AST engine.
@@ -33,18 +33,23 @@ skylint/
 │   │   ├── zif_skylint_types.intf.abap           # Universal AST, finding & quickfix type definitions
 │   │   ├── zcl_skylint_check_base.clas.abap      # Universal base check class
 │   │   ├── zcl_skylint_ast_util.clas.abap        # AST & token sequence traversal utility
-│   │   ├── zcl_skylint_rtti_util.clas.abap       # Safe ABAP RTTI inspection utility
-│   │   ├── zcl_skylint_test_runner.clas.abap       # Universal AST builder & unit test asserter
-│   │   └── zcx_skylint_error.clas.abap           # Core exception class
+│   │   └── zcl_skylint_rtti_util.clas.abap       # Safe ABAP RTTI inspection utility
 │   │
 │   ├── checks/                                   # 79 Modular Check Implementations (001 - 079)
 │   │   ├── zcl_skylint_check_001.clas.abap       # Check class implementation
-│   │   ├── zcl_skylint_check_001.clas.xml        # abapGit XML metadata (<WITH_UNIT_TESTS>X</WITH_UNIT_TESTS>)
-│   │   └── zcl_skylint_check_001.clas.testclasses.abap # Unit test suite (zcl_skylint_test_runner)
+│   │   └── zcl_skylint_check_001.clas.xml        # abapGit XML metadata
 │   │
-│   └── tests/                                    # Target Test Fixtures (Full Class Mocks)
-│       ├── zcl_skylint_test_001.clas.abap        # Test fixture with positive, negative & suppressed cases
-│       └── zcl_skylint_test_001.clas.xml         # abapGit XML metadata
+├── tests/
+│   └── fixtures/check_001/                       # JS harness fixtures per check
+│       ├── source.abap                           # Full test class source (sliced per method)
+│       └── expected.json                         # Expected findings [{method, code, line, column}]
+│
+├── scripts/skylint-test/                         # JS test harness (tokenizer port + runner)
+│   ├── lexer.mjs                                 # 1:1 port of the SAP-identical tokenizer
+│   ├── parser.mjs                                # Chain/COMPUTE/+CALL_METHOD + heuristic refs
+│   ├── slicer.mjs / codeblock.mjs                # Snippet slicing + code-block building
+│   ├── abaplint-bridge.mjs / rtti.mjs            # abaplint compiler refs + RTTI feed
+│   └── run.mjs                                   # CLI: run all, filter by ID, --fix-positions
 │
 ├── abaplint.json                                 # abaplint validation configuration & rule sets
 └── package.json                                  # Build, transpile, lint, and unit test scripts
@@ -192,36 +197,24 @@ CLASS zcl_skylint_check_002 IMPLEMENTATION.
 ENDCLASS.
 ```
 
-### Step 2: Implement Unit Tests (`src/checks/zcl_skylint_check_002.clas.testclasses.abap`)
+### Step 2: Add Test Fixtures (`tests/fixtures/check_002/`)
 
-Skylint provides an in-memory test utility (`zcl_skylint_test_runner`) that normalizes source code into an AST and asserts expected findings directly:
+Tests run in the JS harness (`scripts/skylint-test/run.mjs`), which ports the
+SAP-identical tokenizer 1:1 to JS and enriches compiler/RTTI data via abaplint.
+Each check has a fixture directory:
 
-```abap
-CLASS ltcl_check_002 DEFINITION FINAL
-  FOR TESTING RISK LEVEL HARMLESS DURATION SHORT.
-
-  PRIVATE SECTION.
-    METHODS test_finding FOR TESTING RAISING cx_static_check.
-    METHODS test_clean   FOR TESTING RAISING cx_static_check.
-ENDCLASS.
-
-
-CLASS ltcl_check_002 IMPLEMENTATION.
-  METHOD test_finding.
-    zcl_skylint_test_runner=>assert_findings(
-        io_check    = NEW zcl_skylint_check_002( )
-        it_source   = VALUE #( ( `CHECK NOT lv_val IS INITIAL.` ) )
-        it_expected = VALUE #( ( line = 2
-                                 code = zcl_skylint_check_002=>c_finding_codes-prefer_is_not ) ) ).
-  ENDMETHOD.
-
-  METHOD test_clean.
-    zcl_skylint_test_runner=>assert_no_findings(
-        io_check  = NEW zcl_skylint_check_002( )
-        it_source = VALUE #( ( `CHECK lv_val IS NOT INITIAL.` ) ) ).
-  ENDMETHOD.
-ENDCLASS.
-```
+* `source.abap` — full test class source; the harness slices it per `METHOD`
+  (or per `CLASS DEFINITION` block) exactly like the old in-memory runner did.
+* `expected.json` — expected findings, e.g.:
+  ```json
+  [
+    { "method": "TEST_001", "code": "PREFERISNT", "line": 2, "column": 4 },
+    { "method": "TEST_002", "code": null }
+  ]
+  ```
+  `code: null` asserts zero findings. Line numbers are relative to the sliced
+  block (line 1 = `METHOD` statement). Regenerate positions after parser
+  changes with `npm run build && npm run positions`.
 
 ### Step 3: Add Native QuickFix Support (Optional)
 
@@ -248,12 +241,7 @@ report_statement( is_statement    = <ls_statement>
                   iv_finding_code = c_finding_codes-prefer_is_not
                   is_quickfix     = ls_quickfix ).
 
-" 3. Verify transformation in unit tests:
-zcl_skylint_test_runner=>assert_quickfix(
-    io_check          = NEW zcl_skylint_check_002( )
-    it_bad_source     = VALUE #( ( `CHECK NOT lv_val IS INITIAL.` ) )
-    it_expected_fixed = VALUE #( ( `CHECK lv_val IS NOT INITIAL.` ) )
-    iv_quickfix_code  = zcl_skylint_check_002=>c_quickfix_codes-prefer_is_not ).
+" 3. Verify findings via the fixture (`tests/fixtures/check_002/expected.json`).
 ```
 
 ---

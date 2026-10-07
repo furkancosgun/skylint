@@ -1,0 +1,18 @@
+[
+  {
+    "method": "TEST_001",
+    "code": "OMITPARM",
+    "line": 4,
+    "column": 4
+  },
+  {
+    "method": "TEST_002",
+    "code": null
+  },
+  {
+    "method": "TEST_003",
+    "code": "OMITPARM",
+    "line": 3,
+    "column": 4
+  }
+]

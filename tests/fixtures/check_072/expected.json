@@ -1,0 +1,18 @@
+[
+  {
+    "method": "TEST_001",
+    "code": "CONDENSE_S",
+    "line": 3,
+    "column": 4
+  },
+  {
+    "method": "TEST_002",
+    "code": null
+  },
+  {
+    "method": "TEST_003",
+    "code": "CONDENSE_S",
+    "line": 3,
+    "column": 4
+  }
+]

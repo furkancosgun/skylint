@@ -1,0 +1,12 @@
+[
+  {
+    "method": "LCL_CHILD",
+    "code": "DEEP_INHRT",
+    "line": 1,
+    "column": 0
+  },
+  {
+    "method": "LCL_B2",
+    "code": null
+  }
+]

@@ -1,0 +1,32 @@
+CLASS zcl_skylint_test_008 DEFINITION
+  PUBLIC FINAL
+  CREATE PUBLIC.
+
+  PUBLIC SECTION.
+    METHODS test_001.
+    METHODS test_002.
+    METHODS test_003.
+    METHODS test_004.
+ENDCLASS.
+
+CLASS zcl_skylint_test_008 IMPLEMENTATION.
+  METHOD test_001.
+    DATA: lv_a TYPE i,
+          lv_b TYPE i.
+  ENDMETHOD.
+
+  METHOD test_002.
+    DATA lv_a TYPE i.
+    DATA lv_b TYPE i.
+  ENDMETHOD.
+
+  METHOD test_003.
+    CONSTANTS: c_one TYPE i VALUE 1,
+               c_two TYPE i VALUE 2.
+  ENDMETHOD.
+
+  METHOD test_004.
+    CONSTANTS c_one TYPE i VALUE 1.
+    CONSTANTS c_two TYPE i VALUE 2.
+  ENDMETHOD.
+ENDCLASS.
