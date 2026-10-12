@@ -24,9 +24,9 @@ CLASS zcl_skylint_check_036 DEFINITION
       RETURNING VALUE(rv_exempt) TYPE abap_bool.
 
     METHODS is_single_named_param_call
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-                iv_tok_idx    TYPE i
-                is_ref        TYPE if_ci_atc_source_code_provider=>ty_compiler_reference
+      IMPORTING is_statement          TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_tok_idx            TYPE i
+                is_ref                TYPE if_ci_atc_source_code_provider=>ty_compiler_reference
       RETURNING VALUE(rv_param_index) TYPE i.
 
 ENDCLASS.
@@ -34,9 +34,8 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_036 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #(
-                            description       = 'Omit parameter name in single parameter method call'
-                            remote_enablement = abap_true
+    super->constructor( VALUE #( description       = 'Omit parameter name in single parameter method call'
+                                 remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code     = c_finding_codes-omit_param
                                        severity = if_ci_atc_check=>finding_severities-warning
@@ -77,12 +76,13 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
                                                      is_ref       = ls_ref ).
           IF lv_param_idx > 0.
             CLEAR ls_quickfix.
-            lt_deletions = VALUE #( ( lv_param_idx ) ( lv_param_idx + 1 ) ).
+            lt_deletions = VALUE #( ( lv_param_idx )
+                                    ( lv_param_idx + 1 ) ).
             lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = ls_statement
-                                         it_deletions = lt_deletions ).
+                                                               it_deletions = lt_deletions ).
             ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-omit_param
                                             iv_statement_from = lv_stmt_idx
-                                            it_new_code       = VALUE #( ( lv_line && '.' ) ) ).
+                                            it_new_code       = VALUE #( ( |{ lv_line }.| ) ) ).
             report_statement( is_statement    = ls_statement
                               iv_finding_code = c_finding_codes-omit_param
                               is_quickfix     = ls_quickfix ).

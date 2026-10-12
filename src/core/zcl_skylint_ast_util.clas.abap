@@ -136,18 +136,18 @@ CLASS zcl_skylint_ast_util DEFINITION
              index  TYPE i,
              lexeme TYPE string,
            END OF ty_token_override,
-           ty_token_overrides TYPE STANDARD TABLE OF ty_token_override WITH EMPTY KEY,
-           ty_token_deletions TYPE STANDARD TABLE OF i WITH EMPTY KEY.
+           ty_token_overrides TYPE STANDARD TABLE OF ty_token_override WITH EMPTY KEY.
+    TYPES ty_token_deletions TYPE STANDARD TABLE OF i WITH EMPTY KEY.
 
     CLASS-METHODS flatten_statement
-      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
-                it_overrides TYPE ty_token_overrides OPTIONAL
-                it_deletions TYPE ty_token_deletions OPTIONAL
-                iv_suffix    TYPE string OPTIONAL
+      IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
+                it_overrides   TYPE ty_token_overrides OPTIONAL
+                it_deletions   TYPE ty_token_deletions OPTIONAL
+                iv_suffix      TYPE string             OPTIONAL
       RETURNING VALUE(rv_line) TYPE string.
 
     CLASS-METHODS build_functional_call
-      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
+      IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_line) TYPE string.
 
   PRIVATE SECTION.
@@ -161,7 +161,7 @@ CLASS zcl_skylint_ast_util DEFINITION
       RETURNING VALUE(rv_name) TYPE string.
 
     CLASS-METHODS is_call_clause_keyword
-      IMPORTING iv_word     TYPE string
+      IMPORTING iv_word      TYPE string
       RETURNING VALUE(rv_is) TYPE abap_bool.
 
 ENDCLASS.
@@ -633,7 +633,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
     DATA lv_lexeme   TYPE string.
     DATA lv_orig_gap TYPE i.
     DATA lv_prev_end TYPE i.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_token>    TYPE if_ci_atc_source_code_provider=>ty_token.
     FIELD-SYMBOLS <ls_override> TYPE ty_token_override.
 
     CLEAR rv_line.
@@ -652,8 +652,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
       ENDIF.
 
       lv_lexeme = <ls_token>-lexeme.
-      READ TABLE it_overrides ASSIGNING <ls_override>
-           WITH KEY index = lv_idx.
+      ASSIGN it_overrides[ index = lv_idx ] TO <ls_override>.
       IF sy-subrc = 0.
         lv_lexeme = <ls_override>-lexeme.
       ENDIF.
@@ -663,7 +662,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
                           occ = lv_orig_gap ).
       ELSEIF lv_orig_gap > 0.
         rv_line = rv_line && repeat( val = ` `
-                                    occ = lv_orig_gap ).
+                                     occ = lv_orig_gap ).
       ENDIF.
       rv_line = rv_line && lv_lexeme.
     ENDLOOP.
@@ -692,7 +691,14 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
     lv_design = get_token_lexeme( is_statement      = is_statement
                                   iv_index          = 3
                                   iv_case_sensitive = abap_true ).
-    IF lv_design IS INITIAL OR lv_design CS '('.
+    IF lv_design IS INITIAL.
+      RETURN.
+    ENDIF.
+
+    IF lv_design CS '('.
+      rv_line = condense( flatten_statement( is_statement = is_statement
+                                             it_deletions = VALUE #( ( 1 ) ( 2 ) )
+                                             iv_suffix    = '.' ) ).
       RETURN.
     ENDIF.
 
@@ -705,32 +711,32 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
       CASE lv_upper.
         WHEN 'EXPORTING'.
           lv_idx += 1.
-          WHILE lv_idx + 2 <= lv_count
-            AND is_call_clause_keyword( get_token_lexeme( is_statement = is_statement
-                                                          iv_index     = lv_idx ) ) = abap_false
-            AND get_token_lexeme( is_statement = is_statement
-                                  iv_index     = lv_idx + 1 ) = '='.
+          WHILE     lv_idx + 2 <= lv_count
+                AND is_call_clause_keyword( get_token_lexeme( is_statement = is_statement
+                                                              iv_index     = lv_idx ) )    = abap_false
+                AND get_token_lexeme( is_statement = is_statement
+                                      iv_index     = lv_idx + 1 ) = '='.
             lv_name = get_token_lexeme( is_statement      = is_statement
                                         iv_index          = lv_idx
                                         iv_case_sensitive = abap_true ).
             lv_value = get_token_lexeme( is_statement      = is_statement
                                          iv_index          = lv_idx + 2
                                          iv_case_sensitive = abap_true ).
-            IF lv_value IS INITIAL
-               OR is_call_clause_keyword( lv_value ) = abap_true.
+            IF    lv_value IS INITIAL
+               OR is_call_clause_keyword( lv_value )  = abap_true.
               RETURN.
             ENDIF.
             IF lv_first = abap_true.
               lv_first = abap_false.
             ELSE.
-              lv_args = lv_args && ` `.
+              lv_args = |{ lv_args } |.
             ENDIF.
-            lv_args = lv_args && |{ lv_name } = { lv_value }|.
+            lv_args = |{ lv_args }{ lv_name } = { lv_value }|.
             lv_idx += 3.
           ENDWHILE.
-          IF lv_idx <= lv_count
+          IF     lv_idx <= lv_count
              AND is_call_clause_keyword( get_token_lexeme( is_statement = is_statement
-                                                           iv_index     = lv_idx ) ) = abap_false.
+                                                           iv_index     = lv_idx ) )    = abap_false.
             RETURN.
           ENDIF.
         WHEN 'RECEIVING'.
@@ -740,8 +746,8 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
           lv_name = get_token_lexeme( is_statement      = is_statement
                                       iv_index          = lv_idx + 1
                                       iv_case_sensitive = abap_true ).
-          IF lv_name IS INITIAL
-             OR is_call_clause_keyword( lv_name ) = abap_true
+          IF    lv_name IS INITIAL
+             OR is_call_clause_keyword( lv_name )              = abap_true
              OR get_token_lexeme( is_statement = is_statement
                                   iv_index     = lv_idx + 2 ) <> '='.
             RETURN.

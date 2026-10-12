@@ -141,7 +141,7 @@ CLASS zcl_skylint_check_008 IMPLEMENTATION.
 
     CLEAR rt_code.
     LOOP AT it_statements INTO ls_member FROM iv_from TO iv_to.
-      APPEND zcl_skylint_ast_util=>flatten_statement( ls_member ) && '.' TO rt_code.
+      APPEND |{ zcl_skylint_ast_util=>flatten_statement( ls_member ) }.| TO rt_code.
     ENDLOOP.
   ENDMETHOD.
 

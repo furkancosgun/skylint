@@ -33,11 +33,11 @@ CLASS zcl_skylint_check_066 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_stmt_idx TYPE i.
-    DATA lv_seq_idx  TYPE i.
-    DATA lv_count    TYPE i.
-    DATA lv_line     TYPE string.
-    DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
+    DATA lv_stmt_idx  TYPE i.
+    DATA lv_seq_idx   TYPE i.
+    DATA lv_count     TYPE i.
+    DATA lv_line      TYPE string.
+    DATA ls_quickfix  TYPE zcl_skylint_check_base=>ty_quickfix.
     DATA lt_deletions TYPE zcl_skylint_ast_util=>ty_token_deletions.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
@@ -52,27 +52,30 @@ CLASS zcl_skylint_check_066 IMPLEMENTATION.
                                                               it_expected  = VALUE #( ( `USING` )
                                                                                       ( `CLIENT` ) ) ).
       IF lv_seq_idx > 0 AND lv_count >= lv_seq_idx + 2.
-        lt_deletions = VALUE #( ( lv_seq_idx ) ( lv_seq_idx + 1 ) ( lv_seq_idx + 2 ) ).
+        lt_deletions = VALUE #( ( lv_seq_idx )
+                                ( lv_seq_idx + 1 )
+                                ( lv_seq_idx + 2 ) ).
       ELSE.
         lv_seq_idx = zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
                                                                 it_expected  = VALUE #( ( `CLIENT` )
                                                                                         ( `SPECIFIED` ) ) ).
         IF lv_seq_idx > 0 AND lv_count >= lv_seq_idx + 1.
-          lt_deletions = VALUE #( ( lv_seq_idx ) ( lv_seq_idx + 1 ) ).
+          lt_deletions = VALUE #( ( lv_seq_idx )
+                                  ( lv_seq_idx + 1 ) ).
         ENDIF.
       ENDIF.
       IF lt_deletions IS NOT INITIAL.
         lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_statement>
-                                     it_deletions = lt_deletions ).
+                                                           it_deletions = lt_deletions ).
         ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-drop_client
                                         iv_statement_from = lv_stmt_idx
-                                        it_new_code       = VALUE #( ( lv_line && '.' ) ) ).
+                                        it_new_code       = VALUE #( ( |{ lv_line }.| ) ) ).
       ENDIF.
       IF    zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
-                                                       it_expected  = VALUE #( ( `USING` ) ( `CLIENT` ) ) )     > 0
+                                                       it_expected  = VALUE #( ( `USING` ) ( `CLIENT` ) ) ) > 0
          OR zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
                                                        it_expected  = VALUE #( ( `CLIENT` )
-                                                                               ( `SPECIFIED` ) ) ) > 0.
+                                                                               ( `SPECIFIED` ) ) )          > 0.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-client_spec
                           is_quickfix     = ls_quickfix ).

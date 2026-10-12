@@ -48,12 +48,11 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
     super->constructor(
         VALUE #( description       = 'Prefer xsdbool( ) expression over manual IF-ELSE assignment'
                  remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code     = c_finding_codes-prefer_xsdbool
-                                       severity = if_ci_atc_check=>finding_severities-warning
-                                       text     = 'Prefer xsdbool( ) over manual IF-ELSE assignment' ) )
-                                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-use_xsdbool
-                                                                short_text = 'Use xsdbool( )' ) ) ) ).
+                 finding_codes     = VALUE #( ( code     = c_finding_codes-prefer_xsdbool
+                                                severity = if_ci_atc_check=>finding_severities-warning
+                                                text     = 'Prefer xsdbool( ) over manual IF-ELSE assignment' ) )
+                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-use_xsdbool
+                                                short_text = 'Use xsdbool( )' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -188,13 +187,14 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD build_xsdbool_line.
-    DATA lv_count     TYPE i.
-    DATA lv_idx       TYPE i.
-    DATA lv_lex       TYPE string.
-    DATA lv_cond      TYPE string.
-    DATA lv_then_val  TYPE string.
-    DATA lv_else_val  TYPE string.
-    DATA lv_indent    TYPE string.
+    DATA lv_count       TYPE i.
+    DATA lv_idx         TYPE i.
+    DATA lv_lex         TYPE string.
+    DATA lv_cond        TYPE string.
+    DATA lv_then_val    TYPE string.
+    DATA lv_else_val    TYPE string.
+    DATA lv_indent      TYPE string.
+    DATA lv_is_inverted TYPE abap_bool.
 
     CLEAR rv_line.
 
@@ -202,8 +202,14 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
                                                                     iv_index     = 3 ) ).
     lv_else_val = to_upper( zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_else
                                                                     iv_index     = 3 ) ).
-    IF NOT ( ( lv_then_val = 'ABAP_TRUE' OR lv_then_val = '''X''' )
-         AND ( lv_else_val = 'ABAP_FALSE' OR lv_else_val = '''''' ) ).
+    lv_is_inverted = abap_false.
+    IF     ( lv_then_val = 'ABAP_TRUE'  OR lv_then_val = '''X''' )
+       AND ( lv_else_val = 'ABAP_FALSE' OR lv_else_val = '''''' ).
+      lv_is_inverted = abap_false.
+    ELSEIF     ( lv_then_val = 'ABAP_FALSE' OR lv_then_val = '''''' )
+           AND ( lv_else_val = 'ABAP_TRUE'  OR lv_else_val = '''X''' ).
+      lv_is_inverted = abap_true.
+    ELSE.
       RETURN.
     ENDIF.
 
@@ -224,13 +230,17 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
       IF lv_cond IS INITIAL.
         lv_cond = lv_lex.
       ELSE.
-        lv_cond = lv_cond && ` ` && lv_lex.
+        lv_cond = |{ lv_cond } { lv_lex }|.
       ENDIF.
       lv_idx += 1.
     ENDWHILE.
 
     lv_indent = repeat( val = ` `
                         occ = is_if_statement-position-column ).
-    rv_line = |{ lv_indent }{ iv_target } = xsdbool( { lv_cond } ).|.
+    IF lv_is_inverted = abap_true.
+      rv_line = |{ lv_indent }{ iv_target } = xsdbool( NOT ( { lv_cond } ) ).|.
+    ELSE.
+      rv_line = |{ lv_indent }{ iv_target } = xsdbool( { lv_cond } ).|.
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.

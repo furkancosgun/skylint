@@ -74,7 +74,7 @@ All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 | **025** | [zcl_skylint_check_025](src/checks/zcl_skylint_check_025.clas.abap) | Omit RECEIVING in method calls | `OMITRECEIV` | `—` | ✅ Done | ⚡ Ready |
 | **026** | [zcl_skylint_check_026](src/checks/zcl_skylint_check_026.clas.abap) | Avoid calling static methods via instance arrow (->) | `STATICVIAI` | `—` | ✅ Done | ⚡ Ready |
 | **027** | [zcl_skylint_check_027](src/checks/zcl_skylint_check_027.clas.abap) | Avoid mutable public attributes in classes | `NOPUBATTR` | `—` | ✅ Done | — |
-| **028** | [zcl_skylint_check_028](src/checks/zcl_skylint_check_028.clas.abap) | Avoid obsolete statements (MOVE, REFRESH, etc.) | `OBSOLETE` | `—` | ✅ Done | — |
+| **028** | [zcl_skylint_check_028](src/checks/zcl_skylint_check_028.clas.abap) | Avoid obsolete statements (MOVE, REFRESH, etc.) | `OBSOLETE` | `—` | ✅ Done | ⚡ Ready |
 | **029** | [zcl_skylint_check_029](src/checks/zcl_skylint_check_029.clas.abap) | Method signature cleanliness (excessive parameter count) | `PARAMCOUNT` | `—` | ✅ Done | — |
 | **030** | [zcl_skylint_check_030](src/checks/zcl_skylint_check_030.clas.abap) | Avoid database access inside loop iterations | `DBINLOOP` | `—` | ✅ Done | — |
 | **031** | [zcl_skylint_check_031](src/checks/zcl_skylint_check_031.clas.abap) | Unsecure FOR ALL ENTRIES (Missing empty itab check) | `FAENOCHECK` | `—` | ✅ Done | ⚡ Ready |

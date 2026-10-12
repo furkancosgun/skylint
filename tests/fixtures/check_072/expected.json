@@ -26,6 +26,8 @@
     "code": "CONDENSE_S",
     "line": 3,
     "column": 4,
-    "quickfixes": []
+    "quickfixes": [
+      "CONDENSE"
+    ]
   }
 ]

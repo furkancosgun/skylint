@@ -28,9 +28,8 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_034 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #(
-                            description       = 'skylint: Detect Identical Self Assignments'
-                            remote_enablement = abap_true
+    super->constructor( VALUE #( description       = 'skylint: Detect Identical Self Assignments'
+                                 remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code     = c_finding_codes-identical_move
                                        severity = if_ci_atc_check=>finding_severities-warning

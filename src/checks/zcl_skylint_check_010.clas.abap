@@ -20,12 +20,12 @@ CLASS zcl_skylint_check_010 DEFINITION
 
   PRIVATE SECTION.
     METHODS has_boolean_comparison
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_index) TYPE i.
 
     METHODS is_droppable
-      IMPORTING iv_operator  TYPE string
-                iv_literal   TYPE string
+      IMPORTING iv_operator   TYPE string
+                iv_literal    TYPE string
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
     METHODS is_boolean_literal
@@ -42,9 +42,8 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_010 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Avoid comparing boolean method calls to boolean literals'
-                 remote_enablement = abap_true
+    super->constructor( VALUE #( description       = 'Avoid comparing boolean method calls to boolean literals'
+                                 remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code     = c_finding_codes-bool_comparison
                                        severity = if_ci_atc_check=>finding_severities-warning
@@ -54,24 +53,25 @@ CLASS zcl_skylint_check_010 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_stmt_idx  TYPE i.
-    DATA lv_op_idx    TYPE i.
-    DATA lv_lit_idx   TYPE i.
+    DATA lv_stmt_idx   TYPE i.
+    DATA lv_op_idx     TYPE i.
+    DATA lv_lit_idx    TYPE i.
+    " TODO: variable is assigned but never used (ABAP cleaner)
     DATA lv_lit_before TYPE abap_bool.
-    DATA lv_op        TYPE string.
-    DATA lv_lit       TYPE string.
-    DATA lv_line      TYPE string.
-    DATA ls_quickfix  TYPE zcl_skylint_check_base=>ty_quickfix.
-    DATA lt_deletions TYPE zcl_skylint_ast_util=>ty_token_deletions.
-    DATA ls_adj       TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_adj       TYPE string.
+    DATA lv_op         TYPE string.
+    DATA lv_lit        TYPE string.
+    DATA lv_line       TYPE string.
+    DATA ls_quickfix   TYPE zcl_skylint_check_base=>ty_quickfix.
+    DATA lt_deletions  TYPE zcl_skylint_ast_util=>ty_token_deletions.
+    DATA ls_adj        TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_adj        TYPE string.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_stmt_idx = sy-tabix.
       CASE <ls_statement>-keyword.
         WHEN 'IF' OR 'ELSEIF' OR 'CHECK' OR 'WHILE'.
-          IF     zcl_skylint_ast_util=>statement_is_method_call( <ls_statement> ) = abap_true.
+          IF zcl_skylint_ast_util=>statement_is_method_call( <ls_statement> ) = abap_true.
             lv_op_idx = has_boolean_comparison( <ls_statement> ).
             IF lv_op_idx > 0.
               CLEAR ls_quickfix.
@@ -96,10 +96,10 @@ CLASS zcl_skylint_check_010 IMPLEMENTATION.
                                iv_literal  = lv_lit ) = abap_true.
                 lt_deletions = VALUE #( ( lv_op_idx ) ( lv_lit_idx ) ).
                 lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_statement>
-                                             it_deletions = lt_deletions ).
+                                                                   it_deletions = lt_deletions ).
                 ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-drop_literal
                                                 iv_statement_from = lv_stmt_idx
-                                                it_new_code       = VALUE #( ( lv_line && '.' ) ) ).
+                                                it_new_code       = VALUE #( ( |{ lv_line }.| ) ) ).
               ENDIF.
               report_statement( is_statement    = <ls_statement>
                                 iv_finding_code = c_finding_codes-bool_comparison

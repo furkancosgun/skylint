@@ -24,7 +24,7 @@ CLASS zcl_skylint_check_021 DEFINITION
       RETURNING VALUE(rv_is) TYPE abap_bool.
 
     METHODS map_to_symbol
-      IMPORTING iv_lexeme   TYPE string
+      IMPORTING iv_lexeme    TYPE string
       RETURNING VALUE(rv_op) TYPE string.
 
     METHODS is_declaration_keyword
@@ -37,22 +37,21 @@ ENDCLASS.
 CLASS zcl_skylint_check_021 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #(
-            description       = 'Prefer comparison operators (=, <>, <, >, <=, >=) over legacy textual keywords'
-            remote_enablement = abap_true
-            finding_codes     = VALUE #(
-                ( code     = c_finding_codes-prefer_operator
-                  severity = if_ci_atc_check=>finding_severities-warning
-                  text     = 'Prefer modern comparison operators (=, <>, <, >, <=, >=) over legacy keywords' ) )
-            quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-prefer_operator
-                                           short_text = 'Replace with symbolic operator' ) ) ) ).
+        VALUE #( description       = 'Prefer comparison operators (=, <>, <, >, <=, >=) over legacy textual keywords'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #(
+                     ( code     = c_finding_codes-prefer_operator
+                       severity = if_ci_atc_check=>finding_severities-warning
+                       text     = 'Prefer modern comparison operators (=, <>, <, >, <=, >=) over legacy keywords' ) )
+                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-prefer_operator
+                                                short_text = 'Replace with symbolic operator' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_stmt_idx TYPE i.
-    DATA lv_tok_idx  TYPE i.
-    DATA lv_line     TYPE string.
-    DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
+    DATA lv_stmt_idx  TYPE i.
+    DATA lv_tok_idx   TYPE i.
+    DATA lv_line      TYPE string.
+    DATA ls_quickfix  TYPE zcl_skylint_check_base=>ty_quickfix.
     DATA lt_overrides TYPE zcl_skylint_ast_util=>ty_token_overrides.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
@@ -70,10 +69,10 @@ CLASS zcl_skylint_check_021 IMPLEMENTATION.
           lt_overrides = VALUE #( ( index  = lv_tok_idx
                                     lexeme = map_to_symbol( <ls_token>-lexeme ) ) ).
           lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_statement>
-                                       it_overrides = lt_overrides ).
+                                                             it_overrides = lt_overrides ).
           ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-prefer_operator
                                           iv_statement_from = lv_stmt_idx
-                                          it_new_code       = VALUE #( ( lv_line && '.' ) ) ).
+                                          it_new_code       = VALUE #( ( |{ lv_line }.| ) ) ).
           report_statement( is_statement    = <ls_statement>
                             iv_finding_code = c_finding_codes-prefer_operator
                             is_quickfix     = ls_quickfix ).

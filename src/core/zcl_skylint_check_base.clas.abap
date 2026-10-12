@@ -50,12 +50,12 @@ CLASS zcl_skylint_check_base DEFINITION
                 it_quickfixes   TYPE ty_quickfixes OPTIONAL.
 
     METHODS quickfix_replace
-      IMPORTING iv_quickfix_code  TYPE cl_ci_atc_quickfixes=>ty_quickfix_code
-                iv_statement_from TYPE i
-                iv_statement_to   TYPE i OPTIONAL
-                iv_token_from     TYPE i OPTIONAL
-                iv_token_to       TYPE i OPTIONAL
-                it_new_code       TYPE ty_code_lines
+      IMPORTING iv_quickfix_code   TYPE cl_ci_atc_quickfixes=>ty_quickfix_code
+                iv_statement_from  TYPE i
+                iv_statement_to    TYPE i OPTIONAL
+                iv_token_from      TYPE i OPTIONAL
+                iv_token_to        TYPE i OPTIONAL
+                it_new_code        TYPE ty_code_lines
       RETURNING VALUE(rs_quickfix) TYPE ty_quickfix.
 
   PRIVATE SECTION.
@@ -166,8 +166,8 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    ls_reported-code               = iv_finding_code.
-    ls_reported-statement          = is_statement.
+    ls_reported-code      = iv_finding_code.
+    ls_reported-statement = is_statement.
     ls_reported-statement-position = is_token-position.
     IF is_quickfix-code IS NOT INITIAL.
       APPEND is_quickfix TO ls_reported-quickfixes.
@@ -196,11 +196,11 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
           lo_fix = lo_quickfixes->create_quickfix( <ls_qf>-code ).
           lo_context = mo_factory->create_quickfix_context( VALUE #( procedure_id = <ls_rep>-procedure_id
                                                                      statements   = VALUE #(
-                                                                                        from = <ls_qf>-statement_from
-                                                                                        to   = <ls_qf>-statement_to )
+                                                                         from = <ls_qf>-statement_from
+                                                                         to   = <ls_qf>-statement_to )
                                                                      tokens       = VALUE #(
-                                                                                        from = <ls_qf>-token_from
-                                                                                        to   = <ls_qf>-token_to ) ) ).
+                                                                         from = <ls_qf>-token_from
+                                                                         to   = <ls_qf>-token_to ) ) ).
           lo_fix->replace( context = lo_context
                            code    = <ls_qf>-new_code ).
         ENDLOOP.

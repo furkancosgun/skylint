@@ -4,7 +4,9 @@
     "code": "OBSOLETE",
     "line": 4,
     "column": 4,
-    "quickfixes": []
+    "quickfixes": [
+      "REPLACE_OB"
+    ]
   },
   {
     "method": "TEST_002",
@@ -15,6 +17,8 @@
     "code": "OBSOLETE",
     "line": 3,
     "column": 4,
-    "quickfixes": []
+    "quickfixes": [
+      "REPLACE_OB"
+    ]
   }
 ]

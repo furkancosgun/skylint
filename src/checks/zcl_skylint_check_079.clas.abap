@@ -22,9 +22,8 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_079 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Detect unnecessary exclamation mark parameter escape (!iv_param)'
-                 remote_enablement = abap_true
+    super->constructor( VALUE #( description       = 'Detect unnecessary exclamation mark parameter escape (!iv_param)'
+                                 remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code     = c_finding_codes-param_escape
                                        severity = if_ci_atc_check=>finding_severities-warning
@@ -34,11 +33,11 @@ CLASS zcl_skylint_check_079 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_stmt_idx TYPE i.
-    DATA lv_tok_idx  TYPE i.
-    DATA lv_lexeme   TYPE string.
-    DATA lv_line     TYPE string.
-    DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
+    DATA lv_stmt_idx  TYPE i.
+    DATA lv_tok_idx   TYPE i.
+    DATA lv_lexeme    TYPE string.
+    DATA lv_line      TYPE string.
+    DATA ls_quickfix  TYPE zcl_skylint_check_base=>ty_quickfix.
     DATA lt_overrides TYPE zcl_skylint_ast_util=>ty_token_overrides.
     DATA lt_deletions TYPE zcl_skylint_ast_util=>ty_token_deletions.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
@@ -61,11 +60,11 @@ CLASS zcl_skylint_check_079 IMPLEMENTATION.
                                       lexeme = lv_lexeme+1 ) ).
           ENDIF.
           lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_stmt>
-                                       it_overrides = lt_overrides
-                                       it_deletions = lt_deletions ).
+                                                             it_overrides = lt_overrides
+                                                             it_deletions = lt_deletions ).
           ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-unescape
                                           iv_statement_from = lv_stmt_idx
-                                          it_new_code       = VALUE #( ( lv_line && '.' ) ) ).
+                                          it_new_code       = VALUE #( ( |{ lv_line }.| ) ) ).
           report_statement( is_statement    = <ls_stmt>
                             iv_finding_code = c_finding_codes-param_escape
                             is_quickfix     = ls_quickfix ).

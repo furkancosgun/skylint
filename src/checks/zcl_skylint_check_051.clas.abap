@@ -48,10 +48,10 @@ CLASS zcl_skylint_check_051 IMPLEMENTATION.
       lv_stmt_idx = sy-tabix.
       CLEAR ls_quickfix.
       lv_count = zcl_skylint_ast_util=>token_count( <ls_statement> ).
-      IF lv_count = 4
+      IF     lv_count = 4
          AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
                                                      iv_index     = 3
-                                                     iv_expected  = `TO` ) = abap_true.
+                                                     iv_expected  = `TO` )         = abap_true.
         lv_wa = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
                                                         iv_index     = 2 ).
         lv_itab = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
@@ -60,21 +60,28 @@ CLASS zcl_skylint_check_051 IMPLEMENTATION.
         ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-prefer_insert
                                         iv_statement_from = lv_stmt_idx
                                         it_new_code       = VALUE #( ( lv_line ) ) ).
-      ELSEIF lv_count = 6
-         AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
-                                                     iv_index     = 2
-                                                     iv_expected  = `LINES` ) = abap_true
-         AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
-                                                     iv_index     = 3
-                                                     iv_expected  = `OF` ) = abap_true
-         AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
-                                                     iv_index     = 5
-                                                     iv_expected  = `TO` ) = abap_true.
+      ELSEIF     lv_count = 6
+             AND zcl_skylint_ast_util=>match_token_sequence( is_statement   = <ls_statement>
+                                                             it_expected    = VALUE #( ( `LINES` ) ( `OF` ) )
+                                                             iv_start_index = 2 ) = abap_true
+             AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
+                                                         iv_index     = 5
+                                                         iv_expected  = `TO` ) = abap_true.
         lv_src = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
                                                          iv_index     = 4 ).
         lv_dst = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
                                                          iv_index     = 6 ).
         lv_line = |INSERT LINES OF { lv_src } INTO TABLE { lv_dst }.|.
+        ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-prefer_insert
+                                        iv_statement_from = lv_stmt_idx
+                                        it_new_code       = VALUE #( ( lv_line ) ) ).
+      ELSEIF     lv_count = 5
+             AND zcl_skylint_ast_util=>match_token_sequence( is_statement   = <ls_statement>
+                                                             it_expected    = VALUE #( ( `INITIAL` ) ( `LINE` ) ( `TO` ) )
+                                                             iv_start_index = 2 ) = abap_true.
+        lv_dst = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
+                                                         iv_index     = 5 ).
+        lv_line = |INSERT INITIAL LINE INTO TABLE { lv_dst }.|.
         ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-prefer_insert
                                         iv_statement_from = lv_stmt_idx
                                         it_new_code       = VALUE #( ( lv_line ) ) ).

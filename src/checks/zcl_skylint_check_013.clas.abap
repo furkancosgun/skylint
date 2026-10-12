@@ -20,7 +20,7 @@ CLASS zcl_skylint_check_013 DEFINITION
 
   PRIVATE SECTION.
     METHODS build_guard_lines
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rt_lines) TYPE zcl_skylint_check_base=>ty_code_lines.
 ENDCLASS.
 
@@ -100,14 +100,14 @@ CLASS zcl_skylint_check_013 IMPLEMENTATION.
       IF lv_cond IS INITIAL.
         lv_cond = lv_lex.
       ELSE.
-        lv_cond = lv_cond && ` ` && lv_lex.
+        lv_cond = |{ lv_cond } { lv_lex }|.
       ENDIF.
       lv_idx += 1.
     ENDWHILE.
 
     lv_indent = repeat( val = ` `
                         occ = is_statement-position-column ).
-    lv_inner = lv_indent && `  `.
+    lv_inner = |{ lv_indent }  |.
     APPEND |{ lv_indent }IF NOT ( { lv_cond } ).| TO rt_lines.
     APPEND |{ lv_inner }CONTINUE.| TO rt_lines.
     APPEND |{ lv_indent }ENDIF.| TO rt_lines.

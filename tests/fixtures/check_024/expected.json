@@ -17,7 +17,9 @@
     "code": "PREFERXSDB",
     "line": 5,
     "column": 4,
-    "quickfixes": []
+    "quickfixes": [
+      "TOXSDBOOL"
+    ]
   },
   {
     "method": "TEST_005",

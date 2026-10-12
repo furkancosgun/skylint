@@ -19,7 +19,6 @@ CLASS zcl_skylint_check_004 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-
     METHODS has_not_is_pattern
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
       EXPORTING ev_not_index TYPE i
@@ -33,60 +32,62 @@ CLASS zcl_skylint_check_004 IMPLEMENTATION.
   METHOD constructor.
     super->constructor( VALUE #( description       = 'Prefer IS NOT over NOT ... IS'
                                  remote_enablement = abap_true
-                                 finding_codes     = VALUE #( ( code           = c_finding_codes-prefer_is_not
-                                                                severity = if_ci_atc_check=>finding_severities-warning
-                                                                text           = 'Use IS NOT instead of NOT ... IS'
-                                                                ) )
-                                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-prefer_is_not
-                                                                short_text = 'Rewrite as IS NOT' ) ) ) ).
+                                 finding_codes     = VALUE #( ( code = c_finding_codes-prefer_is_not
+                                                      severity = if_ci_atc_check=>finding_severities-warning
+                                                                text = 'Use IS NOT instead of NOT ... IS' ) )
+                                 quickfix_codes    = VALUE #( ( code = c_quickfix_codes-prefer_is_not
+                                                          short_text = 'Rewrite as IS NOT' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_stmt_idx TYPE i.
-    DATA lv_not_idx  TYPE i.
-    DATA lv_is_idx   TYPE i.
-    DATA lv_matched  TYPE abap_bool.
-    DATA lv_x_lex    TYPE string.
-    DATA lv_y_lex    TYPE string.
-    DATA lv_line     TYPE string.
-    DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
+    DATA lv_stmt_idx  TYPE i.
+    DATA lv_not_idx   TYPE i.
+    DATA lv_is_idx    TYPE i.
+    DATA lv_matched   TYPE abap_bool.
+    DATA lv_x_lex     TYPE string.
+    DATA lv_y_lex     TYPE string.
+    DATA lv_line      TYPE string.
+    DATA ls_quickfix  TYPE zcl_skylint_check_base=>ty_quickfix.
     DATA lt_overrides TYPE zcl_skylint_ast_util=>ty_token_overrides.
     FIELD-SYMBOLS <ls_statement> LIKE LINE OF is_procedure-statements.
+
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'IF' OR keyword = 'ELSEIF' OR keyword = 'CHECK'
-            OR keyword = 'WHILE'.
+         WHERE    keyword = 'IF' OR keyword = 'ELSEIF' OR keyword = 'CHECK'
+               OR keyword = 'WHILE'.
       lv_stmt_idx = sy-tabix.
       CLEAR ls_quickfix.
 
       has_not_is_pattern( EXPORTING is_statement = <ls_statement>
-                           IMPORTING ev_not_index = lv_not_idx
-                                     ev_is_index  = lv_is_idx
-                                     ev_matched   = lv_matched ).
+                          IMPORTING ev_not_index = lv_not_idx
+                                    ev_is_index  = lv_is_idx
+                                    ev_matched   = lv_matched ).
 
-      IF lv_matched = abap_true.
-        IF lv_is_idx = lv_not_idx + 2.
-          lv_x_lex = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
-                                                             iv_index     = lv_not_idx + 1 ).
-          lv_y_lex = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
-                                                             iv_index     = lv_is_idx + 1 ).
-          lt_overrides = VALUE #( ( index  = lv_not_idx
-                                    lexeme = lv_x_lex )
-                                  ( index  = lv_not_idx + 1
-                                    lexeme = 'IS' )
-                                  ( index  = lv_is_idx
-                                    lexeme = 'NOT' )
-                                  ( index  = lv_is_idx + 1
-                                    lexeme = lv_y_lex ) ).
-          lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_statement>
-                                       it_overrides = lt_overrides ).
-          ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-prefer_is_not
-                                          iv_statement_from = lv_stmt_idx
-                                          it_new_code       = VALUE #( ( lv_line && '.' ) ) ).
-        ENDIF.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-prefer_is_not
-                          is_quickfix     = ls_quickfix ).
+      IF lv_matched = abap_false.
+        CONTINUE.
       ENDIF.
+
+      IF lv_is_idx = lv_not_idx + 2.
+        lv_x_lex = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
+                                                           iv_index     = lv_not_idx + 1 ).
+        lv_y_lex = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
+                                                           iv_index     = lv_is_idx + 1 ).
+        lt_overrides = VALUE #( ( index  = lv_not_idx
+                                  lexeme = lv_x_lex )
+                                ( index  = lv_not_idx + 1
+                                  lexeme = 'IS' )
+                                ( index  = lv_is_idx
+                                  lexeme = 'NOT' )
+                                ( index  = lv_is_idx + 1
+                                  lexeme = lv_y_lex ) ).
+        lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_statement>
+                                                           it_overrides = lt_overrides ).
+        ls_quickfix = quickfix_replace( iv_quickfix_code = c_quickfix_codes-prefer_is_not
+                                       iv_statement_from = lv_stmt_idx
+                                        it_new_code      = VALUE #( ( |{ lv_line }.| ) ) ).
+      ENDIF.
+      report_statement( is_statement    = <ls_statement>
+                        iv_finding_code = c_finding_codes-prefer_is_not
+                        is_quickfix = ls_quickfix ).
     ENDLOOP.
   ENDMETHOD.
 

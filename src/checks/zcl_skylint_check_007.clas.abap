@@ -24,23 +24,22 @@ CLASS zcl_skylint_check_007 DEFINITION
       RETURNING VALUE(rv_chain) TYPE abap_bool.
 
     METHODS split_chain
-      IMPORTING is_statement     TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rt_lines)  TYPE zcl_skylint_check_base=>ty_code_lines.
+      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rt_lines) TYPE zcl_skylint_check_base=>ty_code_lines.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_check_007 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Avoid assignment chaining (a = b = c)'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code     = c_finding_codes-assignment_chaining
-                       severity = if_ci_atc_check=>finding_severities-warning
-                       text     = 'Avoid chained assignments; write separate assignment statements' ) )
-                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-split_assign
-                                                short_text = 'Split into separate assignments' ) ) ) ).
+    super->constructor( VALUE #( description       = 'Avoid assignment chaining (a = b = c)'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code     = c_finding_codes-assignment_chaining
+                                       severity = if_ci_atc_check=>finding_severities-warning
+                                       text     = 'Avoid chained assignments; write separate assignment statements' ) )
+                                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-split_assign
+                                                                short_text = 'Split into separate assignments' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -52,18 +51,20 @@ CLASS zcl_skylint_check_007 IMPLEMENTATION.
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'COMPUTE'.
       lv_stmt_idx = sy-tabix.
-      IF has_assignment_chain( <ls_statement> ) = abap_true.
-        CLEAR ls_quickfix.
-        lt_new_code = split_chain( <ls_statement> ).
-        IF lt_new_code IS NOT INITIAL.
-          ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-split_assign
-                                          iv_statement_from = lv_stmt_idx
-                                          it_new_code       = lt_new_code ).
-        ENDIF.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-assignment_chaining
-                          is_quickfix     = ls_quickfix ).
+      IF has_assignment_chain( <ls_statement> ) = abap_false.
+        CONTINUE.
       ENDIF.
+
+      CLEAR ls_quickfix.
+      lt_new_code = split_chain( <ls_statement> ).
+      IF lt_new_code IS NOT INITIAL.
+        ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-split_assign
+                                        iv_statement_from = lv_stmt_idx
+                                        it_new_code       = lt_new_code ).
+      ENDIF.
+      report_statement( is_statement    = <ls_statement>
+                        iv_finding_code = c_finding_codes-assignment_chaining
+                        is_quickfix     = ls_quickfix ).
     ENDLOOP.
   ENDMETHOD.
 
@@ -126,8 +127,9 @@ CLASS zcl_skylint_check_007 IMPLEMENTATION.
         APPEND condense( lv_segment ) TO lt_segments.
         CLEAR lv_segment.
       ELSE.
-        lv_segment = COND #( WHEN lv_segment IS INITIAL THEN lv_lexeme
-                             ELSE lv_segment && ` ` && lv_lexeme ).
+        lv_segment = COND #( WHEN lv_segment IS INITIAL
+                             THEN lv_lexeme
+                             ELSE |{ lv_segment } { lv_lexeme }| ).
       ENDIF.
 
       IF     (    lv_lexeme CP '*)' OR lv_lexeme CP '*]' OR lv_lexeme CP '*}'

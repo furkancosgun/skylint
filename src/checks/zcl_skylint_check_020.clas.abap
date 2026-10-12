@@ -36,7 +36,7 @@ CLASS zcl_skylint_check_020 DEFINITION
       RETURNING VALUE(rv_op) TYPE string.
 
     METHODS has_yoda_condition
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_index) TYPE i.
 
 ENDCLASS.
@@ -56,14 +56,14 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_stmt_idx TYPE i.
-    DATA lv_match    TYPE i.
-    DATA lv_lit      TYPE string.
-    DATA lv_op       TYPE string.
-    DATA lv_var      TYPE string.
-    DATA lv_mirror   TYPE string.
-    DATA lv_line     TYPE string.
-    DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
+    DATA lv_stmt_idx  TYPE i.
+    DATA lv_match     TYPE i.
+    DATA lv_lit       TYPE string.
+    DATA lv_op        TYPE string.
+    DATA lv_var       TYPE string.
+    DATA lv_mirror    TYPE string.
+    DATA lv_line      TYPE string.
+    DATA ls_quickfix  TYPE zcl_skylint_check_base=>ty_quickfix.
     DATA lt_overrides TYPE zcl_skylint_ast_util=>ty_token_overrides.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
@@ -72,31 +72,33 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
       CLEAR ls_quickfix.
 
       lv_match = has_yoda_condition( <ls_statement> ).
-      IF lv_match > 0.
-        lv_lit = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
-                                                         iv_index     = lv_match ).
-        lv_op = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
-                                                        iv_index     = lv_match + 1 ).
-        lv_var = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
-                                                         iv_index     = lv_match + 2 ).
-        lv_mirror = mirror_operator( lv_op ).
-        IF lv_mirror IS NOT INITIAL.
-          lt_overrides = VALUE #( ( index  = lv_match
-                                    lexeme = lv_var )
-                                  ( index  = lv_match + 1
-                                    lexeme = lv_mirror )
-                                  ( index  = lv_match + 2
-                                    lexeme = lv_lit ) ).
-          lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_statement>
-                                       it_overrides = lt_overrides ).
-          ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-unyoda
-                                          iv_statement_from = lv_stmt_idx
-                                          it_new_code       = VALUE #( ( lv_line && '.' ) ) ).
-        ENDIF.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-yoda_condition
-                          is_quickfix     = ls_quickfix ).
+      IF lv_match <= 0.
+        CONTINUE.
       ENDIF.
+
+      lv_lit = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
+                                                       iv_index     = lv_match ).
+      lv_op = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
+                                                      iv_index     = lv_match + 1 ).
+      lv_var = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
+                                                       iv_index     = lv_match + 2 ).
+      lv_mirror = mirror_operator( lv_op ).
+      IF lv_mirror IS NOT INITIAL.
+        lt_overrides = VALUE #( ( index  = lv_match
+                                  lexeme = lv_var )
+                                ( index  = lv_match + 1
+                                  lexeme = lv_mirror )
+                                ( index  = lv_match + 2
+                                  lexeme = lv_lit ) ).
+        lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_statement>
+                                                           it_overrides = lt_overrides ).
+        ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-unyoda
+                                        iv_statement_from = lv_stmt_idx
+                                        it_new_code       = VALUE #( ( |{ lv_line }.| ) ) ).
+      ENDIF.
+      report_statement( is_statement    = <ls_statement>
+                        iv_finding_code = c_finding_codes-yoda_condition
+                        is_quickfix     = ls_quickfix ).
     ENDLOOP.
   ENDMETHOD.
 

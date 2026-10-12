@@ -22,15 +22,14 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_071 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #(
-                            description       = 'Prefer marking non-overridden methods as FINAL'
-                            remote_enablement = abap_true
-                             finding_codes     = VALUE #(
-                                 ( code     = c_finding_codes-prefer_final
-                                   severity = if_ci_atc_check=>finding_severities-warning
-                                   text     = 'Declare method as FINAL if it is not intended to be redefined' ) )
-                             quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-add_final
-                                                            short_text = 'Add FINAL' ) ) ) ).
+    super->constructor( VALUE #( description       = 'Prefer marking non-overridden methods as FINAL'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code     = c_finding_codes-prefer_final
+                                       severity = if_ci_atc_check=>finding_severities-warning
+                                       text     = 'Declare method as FINAL if it is not intended to be redefined' ) )
+                                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-add_final
+                                                                short_text = 'Add FINAL' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -70,10 +69,10 @@ CLASS zcl_skylint_check_071 IMPLEMENTATION.
       ENDIF.
 
       lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_statement>
-                                   iv_suffix    = ' FINAL' ).
+                                                         iv_suffix    = ' FINAL' ).
       ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-add_final
                                       iv_statement_from = lv_stmt_idx
-                                      it_new_code       = VALUE #( ( lv_line && '.' ) ) ).
+                                      it_new_code       = VALUE #( ( |{ lv_line }.| ) ) ).
       report_statement( is_statement    = <ls_statement>
                         iv_finding_code = c_finding_codes-prefer_final
                         is_quickfix     = ls_quickfix ).

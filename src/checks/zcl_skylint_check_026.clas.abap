@@ -20,7 +20,7 @@ CLASS zcl_skylint_check_026 DEFINITION
 
   PRIVATE SECTION.
     METHODS class_of_static_call
-      IMPORTING is_token     TYPE if_ci_atc_source_code_provider=>ty_token
+      IMPORTING is_token        TYPE if_ci_atc_source_code_provider=>ty_token
       RETURNING VALUE(rv_class) TYPE string.
 
 ENDCLASS.
@@ -32,25 +32,25 @@ CLASS zcl_skylint_check_026 IMPLEMENTATION.
         VALUE #( description       = 'Avoid calling static methods via instance arrow (->)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #( ( code     = c_finding_codes-static_call_via_instance
-                                                 severity = if_ci_atc_check=>finding_severities-warning
-                                                 text     = 'Call static method using => instead of ->' ) )
-                                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-use_class_call
-                                                                short_text = 'Call via class name' ) ) ) ).
+                                                severity = if_ci_atc_check=>finding_severities-warning
+                                                text     = 'Call static method using => instead of ->' ) )
+                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-use_class_call
+                                                short_text = 'Call via class name' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_stmt_idx TYPE i.
-    DATA lv_tok_idx  TYPE i.
-    DATA lv_class    TYPE string.
-    DATA lv_lex      TYPE string.
-    DATA lv_arrow    TYPE i.
-    DATA lv_off      TYPE i.
-    DATA lv_meth     TYPE string.
-    DATA lv_line     TYPE string.
-    DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
+    DATA lv_stmt_idx  TYPE i.
+    DATA lv_tok_idx   TYPE i.
+    DATA lv_class     TYPE string.
+    DATA lv_lex       TYPE string.
+    DATA lv_arrow     TYPE i.
+    DATA lv_off       TYPE i.
+    DATA lv_meth      TYPE string.
+    DATA lv_line      TYPE string.
+    DATA ls_quickfix  TYPE zcl_skylint_check_base=>ty_quickfix.
     DATA lt_overrides TYPE zcl_skylint_ast_util=>ty_token_overrides.
-    DATA ls_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_stmt      TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_tok       TYPE if_ci_atc_source_code_provider=>ty_token.
 
     IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
@@ -75,10 +75,10 @@ CLASS zcl_skylint_check_026 IMPLEMENTATION.
               lt_overrides = VALUE #( ( index  = lv_tok_idx
                                         lexeme = |{ lv_class }=>{ lv_meth }| ) ).
               lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = ls_stmt
-                                           it_overrides = lt_overrides ).
+                                                                 it_overrides = lt_overrides ).
               ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-use_class_call
                                               iv_statement_from = lv_stmt_idx
-                                              it_new_code       = VALUE #( ( lv_line && '.' ) ) ).
+                                              it_new_code       = VALUE #( ( |{ lv_line }.| ) ) ).
             ENDIF.
           ENDIF.
           report_statement( is_statement    = ls_stmt

@@ -17,6 +17,8 @@
     "code": "CALLMETHOD",
     "line": 3,
     "column": 4,
-    "quickfixes": []
+    "quickfixes": [
+      "CALL2FUNC"
+    ]
   }
 ]

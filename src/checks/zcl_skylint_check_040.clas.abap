@@ -35,8 +35,8 @@ CLASS zcl_skylint_check_040 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #( ( code     = c_finding_codes-nesting_depth
                                                 severity = if_ci_atc_check=>finding_severities-warning
-                                                text     = 'Control block nesting depth exceeds '
-                                                         && 'maximum allowed limit' ) )
+                                                text     = |Control block nesting depth exceeds|
+                                                         && |maximum allowed limit| ) )
                  attributes        = VALUE #( ( name  = 'MAX_DEPTH'
                                                 kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
                                                 value = REF #( mv_max_depth ) ) ) ) ).

@@ -24,7 +24,7 @@ CLASS zcl_skylint_check_022 DEFINITION
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
     METHODS build_new_expression
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_line) TYPE string.
 
 ENDCLASS.
@@ -51,18 +51,20 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'CREATE'.
       lv_stmt_idx = sy-tabix.
-      IF is_static_create_object( <ls_statement> ) = abap_true.
-        CLEAR ls_quickfix.
-        lv_line = build_new_expression( <ls_statement> ).
-        IF lv_line IS NOT INITIAL.
-          ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-use_new
-                                          iv_statement_from = lv_stmt_idx
-                                          it_new_code       = VALUE #( ( lv_line ) ) ).
-        ENDIF.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-prefer_new
-                          is_quickfix     = ls_quickfix ).
+      IF is_static_create_object( <ls_statement> ) = abap_false.
+        CONTINUE.
       ENDIF.
+
+      CLEAR ls_quickfix.
+      lv_line = build_new_expression( <ls_statement> ).
+      IF lv_line IS NOT INITIAL.
+        ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-use_new
+                                        iv_statement_from = lv_stmt_idx
+                                        it_new_code       = VALUE #( ( lv_line ) ) ).
+      ENDIF.
+      report_statement( is_statement    = <ls_statement>
+                        iv_finding_code = c_finding_codes-prefer_new
+                        is_quickfix     = ls_quickfix ).
     ENDLOOP.
   ENDMETHOD.
 
@@ -115,15 +117,15 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD build_new_expression.
-    DATA lv_count   TYPE i.
-    DATA lv_idx     TYPE i.
-    DATA lv_target  TYPE string.
-    DATA lv_class   TYPE string.
-    DATA lv_upper   TYPE string.
-    DATA lv_name    TYPE string.
-    DATA lv_value   TYPE string.
-    DATA lv_args    TYPE string.
-    DATA lv_first   TYPE abap_bool.
+    DATA lv_count  TYPE i.
+    DATA lv_idx    TYPE i.
+    DATA lv_target TYPE string.
+    DATA lv_class  TYPE string.
+    DATA lv_upper  TYPE string.
+    DATA lv_name   TYPE string.
+    DATA lv_value  TYPE string.
+    DATA lv_args   TYPE string.
+    DATA lv_first  TYPE abap_bool.
 
     CLEAR rv_line.
     lv_count = zcl_skylint_ast_util=>token_count( is_statement ).
@@ -178,9 +180,9 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
             IF lv_first = abap_true.
               lv_first = abap_false.
             ELSE.
-              lv_args = lv_args && ` `.
+              lv_args = |{ lv_args } |.
             ENDIF.
-            lv_args = lv_args && |{ lv_name } = { lv_value }|.
+            lv_args = |{ lv_args }{ lv_name } = { lv_value }|.
             lv_idx += 3.
           ENDWHILE.
           IF lv_idx <= lv_count.

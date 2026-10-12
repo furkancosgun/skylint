@@ -124,15 +124,15 @@ CLASS zcl_skylint_check_009 IMPLEMENTATION.
     ENDIF.
 
     lv_target = zcl_skylint_ast_util=>get_token_lexeme( is_statement      = is_statement
-                                                             iv_index          = lv_into + 1
-                                                             iv_case_sensitive = abap_true ).
+                                                        iv_index          = lv_into + 1
+                                                        iv_case_sensitive = abap_true ).
     IF lv_target IS INITIAL.
       RETURN.
     ENDIF.
 
     lv_has_sep = abap_false.
     IF lv_into + 1 < lv_count.
-      IF lv_count <> lv_into + 4
+      IF    lv_count <> lv_into + 4
          OR zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
                                                     iv_index     = lv_into + 2 ) <> 'SEPARATED'
          OR zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
@@ -148,7 +148,7 @@ CLASS zcl_skylint_check_009 IMPLEMENTATION.
       lv_has_sep = abap_true.
     ENDIF.
 
-    IF lines( lt_ops ) = 3
+    IF     lines( lt_ops )         = 3
        AND to_upper( lt_ops[ 1 ] ) = 'LINES'
        AND to_upper( lt_ops[ 2 ] ) = 'OF'.
       IF lv_has_sep = abap_false.
@@ -168,9 +168,9 @@ CLASS zcl_skylint_check_009 IMPLEMENTATION.
       IF lv_first = abap_true.
         lv_first = abap_false.
       ELSEIF lv_has_sep = abap_true.
-        lv_tpl = lv_tpl && `{ ` && lv_sep && ` }`.
+        lv_tpl = |{ lv_tpl }\{ { lv_sep } \}|.
       ENDIF.
-      lv_tpl = lv_tpl && `{ ` && <lv_op> && ` }`.
+      lv_tpl = |{ lv_tpl }\{ { <lv_op> } \}|.
     ENDLOOP.
     rv_line = |{ lv_target } = \|{ lv_tpl }\|.|.
   ENDMETHOD.

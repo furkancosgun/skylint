@@ -50,13 +50,13 @@ CLASS zcl_skylint_check_073 IMPLEMENTATION.
       CLEAR lv_line.
       CASE <ls_statement>-keyword.
         WHEN 'ADD' OR 'SUBTRACT' OR 'MULTIPLY' OR 'DIVIDE'.
-          IF zcl_skylint_ast_util=>token_count( <ls_statement> ) = 4
+          IF     zcl_skylint_ast_util=>token_count( <ls_statement> ) = 4
              AND (    zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
                                                               iv_index     = 3
-                                                              iv_expected  = `TO` ) = abap_true
+                                                              iv_expected  = `TO` )         = abap_true
                    OR zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
                                                               iv_index     = 3
-                                                              iv_expected  = `FROM` ) = abap_true ).
+                                                              iv_expected  = `FROM` )       = abap_true ).
             lv_value = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
                                                                iv_index     = 2 ).
             lv_target = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
@@ -110,8 +110,8 @@ CLASS zcl_skylint_check_073 IMPLEMENTATION.
                                                             iv_index     = 4 ).
             lv_value = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
                                                                iv_index     = 5 ).
-            IF lv_value IS NOT INITIAL
-               AND zcl_skylint_ast_util=>token_count( <ls_statement> ) = 5.
+            IF     lv_value IS NOT INITIAL
+               AND zcl_skylint_ast_util=>token_count( <ls_statement> )  = 5.
               lv_line = |{ lv_target } { lv_op }= { lv_value }.|.
             ENDIF.
             IF lv_line IS NOT INITIAL.

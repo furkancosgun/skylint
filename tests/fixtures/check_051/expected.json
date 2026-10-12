@@ -17,6 +17,8 @@
     "code": "PREF_INSRT",
     "line": 3,
     "column": 4,
-    "quickfixes": []
+    "quickfixes": [
+      "TOINSERT"
+    ]
   }
 ]

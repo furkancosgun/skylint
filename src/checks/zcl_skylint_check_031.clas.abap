@@ -24,7 +24,7 @@ CLASS zcl_skylint_check_031 DEFINITION
       RETURNING VALUE(rv_tab) TYPE string.
 
     METHODS fae_source_name
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_name) TYPE string.
 
     METHODS has_preceding_check
@@ -44,23 +44,22 @@ ENDCLASS.
 CLASS zcl_skylint_check_031 IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #(
-            description       = 'Unsecure FOR ALL ENTRIES (Missing empty itab check)'
-            remote_enablement = abap_true
-             finding_codes     = VALUE #(
-                 ( code     = c_finding_codes-unsecure_fae
-                   severity = if_ci_atc_check=>finding_severities-warning
-                   text     = 'FOR ALL ENTRIES without preceding IS NOT INITIAL check causes full table scan' ) )
-             quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-add_guard
-                                            short_text = 'Add empty-check guard' ) ) ) ).
+        VALUE #( description       = 'Unsecure FOR ALL ENTRIES (Missing empty itab check)'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #(
+                     ( code     = c_finding_codes-unsecure_fae
+                       severity = if_ci_atc_check=>finding_severities-warning
+                       text     = 'FOR ALL ENTRIES without preceding IS NOT INITIAL check causes full table scan' ) )
+                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-add_guard
+                                                short_text = 'Add empty-check guard' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_idx     TYPE i.
-    DATA lv_fae_tab TYPE string.
-    DATA lv_src_tab TYPE string.
-    DATA lv_indent  TYPE string.
-    DATA lv_line    TYPE string.
+    DATA lv_idx      TYPE i.
+    DATA lv_fae_tab  TYPE string.
+    DATA lv_src_tab  TYPE string.
+    DATA lv_indent   TYPE string.
+    DATA lv_line     TYPE string.
     DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
     DATA lt_new_code TYPE zcl_skylint_check_base=>ty_code_lines.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
@@ -70,28 +69,30 @@ CLASS zcl_skylint_check_031 IMPLEMENTATION.
       lv_idx = sy-tabix.
       lv_fae_tab = extract_fae_table( <ls_statement> ).
 
-      IF     lv_fae_tab IS NOT INITIAL
-         AND has_preceding_check( it_statements  = is_procedure-statements
-                                  iv_current_idx = lv_idx
-                                  iv_tab_name    = lv_fae_tab )             = abap_false.
-        CLEAR ls_quickfix.
-        CLEAR lt_new_code.
-        lv_src_tab = fae_source_name( <ls_statement> ).
-        IF lv_src_tab IS NOT INITIAL.
-          lv_indent = repeat( val = ` `
-                              occ = <ls_statement>-position-column ).
-          lv_line = zcl_skylint_ast_util=>flatten_statement( <ls_statement> ).
-          APPEND |{ lv_indent }IF { lv_src_tab } IS NOT INITIAL.| TO lt_new_code.
-          APPEND |{ lv_indent }  { lv_line }.| TO lt_new_code.
-          APPEND |{ lv_indent }ENDIF.| TO lt_new_code.
-          ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-add_guard
-                                          iv_statement_from = lv_idx
-                                          it_new_code       = lt_new_code ).
-        ENDIF.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-unsecure_fae
-                          is_quickfix     = ls_quickfix ).
+      IF    lv_fae_tab IS INITIAL
+         OR has_preceding_check( it_statements  = is_procedure-statements
+                                 iv_current_idx = lv_idx
+                                 iv_tab_name    = lv_fae_tab )             = abap_true.
+        CONTINUE.
       ENDIF.
+
+      CLEAR ls_quickfix.
+      CLEAR lt_new_code.
+      lv_src_tab = fae_source_name( <ls_statement> ).
+      IF lv_src_tab IS NOT INITIAL.
+        lv_indent = repeat( val = ` `
+                            occ = <ls_statement>-position-column ).
+        lv_line = zcl_skylint_ast_util=>flatten_statement( <ls_statement> ).
+        APPEND |{ lv_indent }IF { lv_src_tab } IS NOT INITIAL.| TO lt_new_code.
+        APPEND |{ lv_indent }  { lv_line }.| TO lt_new_code.
+        APPEND |{ lv_indent }ENDIF.| TO lt_new_code.
+        ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-add_guard
+                                        iv_statement_from = lv_idx
+                                        it_new_code       = lt_new_code ).
+      ENDIF.
+      report_statement( is_statement    = <ls_statement>
+                        iv_finding_code = c_finding_codes-unsecure_fae
+                        is_quickfix     = ls_quickfix ).
     ENDLOOP.
   ENDMETHOD.
 

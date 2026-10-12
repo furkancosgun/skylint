@@ -22,9 +22,8 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_025 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #(
-                            description       = 'Omit RECEIVING in method calls'
-                            remote_enablement = abap_true
+    super->constructor( VALUE #( description       = 'Omit RECEIVING in method calls'
+                                 remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code     = c_finding_codes-omit_receiving
                                        severity = if_ci_atc_check=>finding_severities-warning
