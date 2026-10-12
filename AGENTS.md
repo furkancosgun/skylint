@@ -365,6 +365,10 @@ Notes:
 - `expected.json` rows target either a `METHOD name` slice or a `CLASS/INTERFACE name` definition block
   (`method = 'LCL_CHILD'` slices `CLASS lcl_child DEFINITION..ENDCLASS.`). Method rows fall back to a class
   definition block when the body is empty/`RETURN.` only.
+- Rows assert `{method, code, line, column}` plus optional `quickfixes: [...]`
+  (created quickfix codes recorded by the fakes). Fill missing `quickfixes`
+  with `node test/run.mjs --fix-quickfixes [XXX]` — it never overwrites
+  existing entries, so stale values fail loudly instead of being masked.
 - Hierarchy checks (`get_super_classes`) resolve the tested class from the
   procedure's `id-main_unit-name`, so fixtures must use realistic class names.
 When automated code replacement or removal is appropriate, use the QuickFix API:
