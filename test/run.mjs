@@ -11,7 +11,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { Lexer } from './lexer.mjs';
 import { buildStatements } from './parser.mjs';
 import { extractSnippet, describeTarget } from './slicer.mjs';
@@ -26,8 +26,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, '..');
 const outDir = path.join(rootDir, 'output');
+const projectDir = fs.existsSync(path.join(outDir, 'project')) ? path.join(outDir, 'project') : outDir;
 const fixturesDir = path.join(rootDir, 'tests', 'fixtures');
-const toFileUrl = (p) => 'file:///' + p.replace(/\\/g, '/');
+const toFileUrl = (p) => pathToFileURL(p).href;
 
 export function loadFixture(id) {
   const dir = path.join(fixturesDir, `check_${id}`);
@@ -55,7 +56,8 @@ function createLoader(abap) {
   const cache = new Map();
   return async function getCheck(checkId) {
     if (!cache.has(checkId)) {
-      const mod = await import(toFileUrl(path.join(outDir, `zcl_skylint_check_${checkId}.clas.mjs`)));
+      const checkPath = path.join(projectDir, `zcl_skylint_check_${checkId}.clas.mjs`);
+      const mod = await import(toFileUrl(checkPath));
       const inst = new mod[`zcl_skylint_check_${checkId}`]();
       await inst.constructor_();
       const factory = { provider: null, factory: null };

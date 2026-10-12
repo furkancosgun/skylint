@@ -76,8 +76,8 @@ Functional calls like `lo_instance->do_work( )` or `cl_helper=>execute( )` do no
 
 ### 4. Compiler References (`token-references`)
 During tokenization, compiler symbols are attached to each token:
-- Method calls (`=>`, `->`) have references of kind `zif_skylint_types=>compiler_reference_kinds-method` with usage mode `READ`.
-- Inline declarations (`DATA(...)`, `FIELD-SYMBOL(...)`) have references of kind `zif_skylint_types=>compiler_reference_kinds-data` with usage mode `DEFINITION_WITH_WRITE`.
+- Method calls (`=>`, `->`) have references of kind `if_ci_atc_source_code_provider=>compiler_reference_kinds-method` with usage mode `READ`.
+- Inline declarations (`DATA(...)`, `FIELD-SYMBOL(...)`) have references of kind `if_ci_atc_source_code_provider=>compiler_reference_kinds-data` with usage mode `DEFINITION_WITH_WRITE`.
 
 ### 5. Relative Line Numbering in Procedures
 For procedure inspection and unit testing:
@@ -331,9 +331,6 @@ with JS test doubles for the SAP boundary).
 `METHOD..ENDMETHOD` (or `CLASS DEFINITION`/`INTERFACE`) blocks map to slices, so `line`/`column`
 in `expected.json` stay relative to the sliced block.
 
-> Fixture-based JS verification is currently parked (the harness still feeds legacy structures).
-> New checks are verified on an ATC-capable SAP system via abapGit import + ATC check variant run.
-
 `source.abap` (full test class source):
 ```abap
 CLASS zcl_skylint_test_XXX DEFINITION
@@ -354,14 +351,16 @@ ENDCLASS.
 `expected.json` (`code: null` asserts zero findings):
 ```json
 [
-  { "method": "TEST_001", "code": "FINDINGCD", "line": 2, "column": 4 },
+  { "method": "TEST_001", "code": "FINDINGCD", "line": 2, "column": 4, "quickfixes": ["REPLACE_ST"] },
   { "method": "TEST_002", "code": null }
 ]
 ```
 
 Notes:
-- Local verification: `npm run build && node test/run.mjs [XXX]` runs fixtures
-  through the real `if_ci_atc_check~run` (JS fakes for provider/factory).
+- Local verification: `npm test` runs full linter, build, and fixture assertions across all checks.
+  Run `node test/run.mjs [XXX]` to test a specific check.
+- **QuickFix Round-Trip Validation:** Every recorded QuickFix is automatically applied and parsed
+  via `@abaplint/core` (`test/roundtrip.mjs`) to ensure it leaves behind valid, parseable ABAP.
 - `expected.json` rows target either a `METHOD name` slice or a `CLASS/INTERFACE name` definition block
   (`method = 'LCL_CHILD'` slices `CLASS lcl_child DEFINITION..ENDCLASS.`). Method rows fall back to a class
   definition block when the body is empty/`RETURN.` only.
@@ -405,7 +404,13 @@ When automated code replacement or removal is appropriate, use the QuickFix API:
 3. **Verify QuickFix via fixture:**
    Add a non-compliant `METHOD` to the fixture `source.abap` and assert the
    finding in `expected.json`. The harness surfaces `quickfixes` on findings
-   for adapter-level verification.
+   and validates that the transformed code is syntactically valid via the roundtrip tester.
+
+4. **Preserve Whitespace in String Templates:**
+   ABAP string templates require spaces around embedded expressions (`|{ expr }|`).
+   Always build template strings using backtick string literals (`` `{ ` `` and `` ` }` ``)
+   rather than character literals (`'{ '`), because trailing spaces in character literals
+   are automatically truncated in ABAP.
 
 ---
 

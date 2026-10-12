@@ -162,15 +162,15 @@ CLASS zcl_skylint_check_009 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    lv_tpl = ''.
+    lv_tpl = ``.
     lv_first = abap_true.
     LOOP AT lt_ops ASSIGNING <lv_op>.
       IF lv_first = abap_true.
         lv_first = abap_false.
       ELSEIF lv_has_sep = abap_true.
-        lv_tpl = lv_tpl && '{ ' && lv_sep && ' }'.
+        lv_tpl = lv_tpl && `{ ` && lv_sep && ` }`.
       ENDIF.
-      lv_tpl = lv_tpl && '{ ' && <lv_op> && ' }'.
+      lv_tpl = lv_tpl && `{ ` && <lv_op> && ` }`.
     ENDLOOP.
     rv_line = |{ lv_target } = \|{ lv_tpl }\|.|.
   ENDMETHOD.

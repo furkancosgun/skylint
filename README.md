@@ -10,7 +10,7 @@
 
 - **ATC-Native (`main` only):** Every check inherits `zcl_skylint_check_base`, which implements `if_ci_atc_check` directly. All types come from the SAP ATC framework (`if_ci_atc_source_code_provider`, `if_ci_atc_check`, `if_ci_atc_check_meta_data`).
 - **Zero Boilerplate Architecture:** Base class encapsulates procedure iteration, finding registration with checksum/location, statement/token reporting, attribute resolution, and pseudo-comment filtering. Subclasses only require `constructor` and `check`.
-- **QuickFix Ready:** Built-in helper API (`quickfix_replace`) for automated code transformations and refactoring.
+- **QuickFix Ready & Validated:** Built-in helper API (`quickfix_replace`) for automated transformations, verified by round-trip syntax testing.
 - **Single-Branch Delivery:** One branch, one syntax (ABAP Cloud), one deployment path via abapGit.
 
 ---
@@ -29,11 +29,14 @@ skylint/
 │   ├── checks/                                   # 79 Modular Check Implementations (001 - 079)
 │   │   ├── zcl_skylint_check_001.clas.abap       # Check class implementation
 │   │   └── zcl_skylint_check_001.clas.xml        # abapGit XML metadata
-│   │
-├── deps/atc/src/                                 # Local-only ATC framework stubs (never shipped)
-│
+│   └── deps/atc/src/                             # Local-only ATC framework stubs (never shipped)
+├── test/                                         # ATC-native JS test runner & doubles
+│   ├── run.mjs                                   # Main test runner (executes checks via transpiled runtime)
+│   ├── roundtrip.mjs                             # QuickFix round-trip syntax validator
+│   └── ...                                       # AST enricher, RTTI feed, fakes
+├── tests/fixtures/                               # Test fixtures per check (source.abap + expected.json)
 ├── abaplint.json                                 # abaplint validation configuration & rule sets
-└── package.json                                  # Lint and build scripts
+└── package.json                                  # Lint, build, and test scripts
 ```
 
 ---
@@ -261,16 +264,24 @@ Single-branch, ATC-native delivery — no adapters, no platform branches:
 ## 🧪 Development & Verification
 
 ```bash
-# Install dependencies
+# 1. Install dependencies & initialize git submodules
 npm install
+npm run deps
 
-# Run abaplint (ABAP Cloud syntax)
+# 2. Run abaplint validation (ABAP Cloud syntax)
 npm run lint
+
+# 3. Transpile and execute all unit tests & QuickFix round-trip validations
+npm test
+
+# Run a specific check fixture
+node test/run.mjs 001
+
+# Re-index check rules and synchronize the rule catalog
+npm run index
 ```
 
-> Node.js test harness (`test/run.mjs`) is ATC-native: fixtures are parsed into
-> `ty_procedure` values and the real `if_ci_atc_check~run` executes with JS
-> test doubles standing in for the SAP provider/factory. Run via `npm test`.
+> **Testing Architecture:** The test harness (`test/run.mjs`) is ATC-native. Fixtures are parsed into `ty_procedure` values and run through the actual transpiled `if_ci_atc_check~run` methods using JS test doubles for the SAP boundary. Every registered QuickFix is re-parsed via `@abaplint/core` (`test/roundtrip.mjs`) to verify syntax validity.
 
 ---
 
