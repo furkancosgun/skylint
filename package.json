@@ -15,11 +15,6 @@
     "check:cloud": "abaplint .abaplint/abap_cloud.json"
   },
   "devDependencies": {
-    "@abaplint/cli": "latest",
-    "@abaplint/database-sqlite": "latest",
-    "@abaplint/runtime": "latest",
-    "@abaplint/transpiler": "latest",
-    "@abaplint/transpiler-cli": "latest",
-    "abap-kit": "latest"
+    "@abaplint/cli": "latest"
   }
 }

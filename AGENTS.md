@@ -325,9 +325,9 @@ Plain abapGit class XML (no test include — tests live in `tests/fixtures/`, no
 ```
 
 ### 3. Test Fixture (`tests/fixtures/check_XXX/`)
-Tests run in the JS harness (`scripts/skylint-test/run.mjs`), which ports the SAP-identical tokenizer 1:1 to JS
-(`lexer.mjs`) and enriches compiler/RTTI data via abaplint (`abaplint-bridge.mjs`, `rtti.mjs`).
-The harness slices `METHOD..ENDMETHOD` (or `CLASS DEFINITION`/`INTERFACE`) blocks itself, so `line`/`column`
+Each check keeps a fixture directory as test data (the JS harness was removed —
+it fed legacy structures incompatible with ATC-native checks).
+`METHOD..ENDMETHOD` (or `CLASS DEFINITION`/`INTERFACE`) blocks map to slices, so `line`/`column`
 in `expected.json` stay relative to the sliced block.
 
 > Fixture-based JS verification is currently parked (the harness still feeds legacy structures).
@@ -359,21 +359,13 @@ ENDCLASS.
 ```
 
 Notes:
-- There is no ABAP test runner anymore. Adapters (`sci/atc_adapter`) stay for production branches only.
+- There is no ABAP test runner anymore. Verification happens on an ATC-capable
+  SAP system via abapGit import + ATC check variant run.
 - `expected.json` rows target either a `METHOD name` slice or a `CLASS/INTERFACE name` definition block
   (`method = 'LCL_CHILD'` slices `CLASS lcl_child DEFINITION..ENDCLASS.`). Method rows fall back to a class
   definition block when the body is empty/`RETURN.` only.
-- The harness derives `object_name` (enclosing class of a method slice, matched name of a definition slice)
-  and passes it to checks and to RTTI feeding, so hierarchy checks (`get_super_classes`) resolve the tested
-  class instead of a synthetic name.
-- Tokenizer (`lexer.mjs`) is a 1:1 port of the SAP-identical ABAP tokenizer — do NOT replace it with
-  abaplint's tokenizer. Compiler references are hybrid: JS heuristic first, then `abaplint-bridge.mjs`
-  enriches via `@abaplint/core` (`SyntaxLogic.spaghetti`). RTTI has NO static caches: `rtti.mjs`
-  transpiles the full fixture source (lenient batch + auto-stubbed unknown superclasses) and evaluates it into the shared `abap.Classes`
-  registry with a `ZSKYLINT_TEST` alias, so `zcl_skylint_rtti_util` live queries (`describe_*`, `is_static_method`,
-  `get_single_importing_param`, `get_super_classes`) resolve. No filesystem access in tests.
-
-### 4. QuickFix Implementation & API Pattern
+- Hierarchy checks (`get_super_classes`) resolve the tested class from the
+  procedure's `id-main_unit-name`, so fixtures must use realistic class names.
 When automated code replacement or removal is appropriate, use the QuickFix API:
 
 1. **Define QuickFix Codes in `c_quickfix_codes` & register in `constructor`:**
@@ -424,9 +416,12 @@ When automated code replacement or removal is appropriate, use the QuickFix API:
    - *Why:* Line breaks, pragmas, or modifier tokens shift indices, causing test failures or `CX_SY_ITAB_LINE_NOT_FOUND` dumps.
    - *Fix:* Always loop through tokens or verify table boundaries (`IF lines( tokens ) >= N.`).
 
-3. **Replacing the JS tokenizer with abaplint's:**
-   - *Why:* `scripts/skylint-test/lexer.mjs` is a 1:1 port of the SAP-identical tokenizer the checks were written against; abaplint splits punctuation differently and would shift positions/keywords.
-   - *Fix:* Never swap tokenizers. Fix bugs in `lexer.mjs`/`parser.mjs` with 1:1 ABAP-equivalent semantics.
+3. **Trusting the ATC tokenizer over your own parsing:**
+   - *Why:* Statement keywords (`COMPUTE`, `+CALL_METHOD`), token boundaries, and compiler
+     references come from the SAP ATC provider. Re-tokenizing source text in a check
+     duplicates the framework and drifts from it.
+   - *Fix:* Consume `is_procedure-statements` as delivered. Normalize only via
+     `zcl_skylint_ast_util` helpers with ATC-equivalent semantics.
 
 4. **Parsing Chained Statements (`:`, `,`) or Raw Text for Keywords:**
    - *Why:* The AST unrolls chains into individual statements and tags implicit assignments as `'COMPUTE'` and method calls as `'+CALL_METHOD'`.

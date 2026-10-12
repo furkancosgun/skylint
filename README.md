@@ -180,12 +180,9 @@ ENDCLASS.
 
 ### Step 2: Add Test Fixtures (`tests/fixtures/check_002/`)
 
-Tests run in the JS harness (`scripts/skylint-test/run.mjs`), which ports the
-SAP-identical tokenizer 1:1 to JS and enriches compiler/RTTI data via abaplint.
-Each check has a fixture directory:
+Each check keeps a fixture directory as test data (JS verification harness removed):
 
-* `source.abap` — full test class source; the harness slices it per `METHOD`
-  (or per `CLASS DEFINITION` block) exactly like the old in-memory runner did.
+* `source.abap` — full test class source (sliced per `METHOD` or per `CLASS DEFINITION` block).
 * `expected.json` — expected findings, e.g.:
   ```json
   [
@@ -270,9 +267,9 @@ npm install
 npm run lint
 ```
 
-> Node.js test harness (`scripts/skylint-test/`, `npm run unit`) is currently parked:
-> it still feeds the legacy harness structures and needs an ATC-native rewrite.
-> Verification happens on an ATC-capable SAP system (abapGit import + ATC check variant run).
+> Node.js test harness (`scripts/skylint-test/`) was removed: it fed legacy
+> structures incompatible with the ATC-native checks. Verification happens on
+> an ATC-capable SAP system (abapGit import + ATC check variant run).
 
 ---
 
