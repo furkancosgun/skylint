@@ -1,20 +1,5 @@
-/**
- * test/roundtrip.mjs
- *
- * QuickFix round-trip validation: applies a recorded fix to the fixture
- * source (statement/token intervals from the ATC quickfix context) and
- * re-parses the patched program with @abaplint/core. A fix fails only when
- * it introduces NEW parser errors versus the unpatched baseline — fixtures
- * themselves may carry pre-existing noise, and semantic rules (unknown
- * types, DDIC) are always ignored.
- *
- * Statement positions are slice-relative (1-based); offset maps them to
- * absolute fixture lines.
- */
-
 import { Registry, MemoryFile } from '@abaplint/core';
 
-// Only hard syntax errors fail a round-trip (never semantic rules).
 const SYNTAX_KEYS = new Set(['parser_error', 'ambiguous_statement']);
 
 function hashSource(s) {
@@ -23,7 +8,6 @@ function hashSource(s) {
   return 'k' + x;
 }
 
-/** Position-faithful single-line flatten of JS tokens (columns are 0-based). */
 export function flattenTokens(tokens) {
   let line = '';
   let prevEnd = 0;
@@ -36,10 +20,6 @@ export function flattenTokens(tokens) {
   return line + '.';
 }
 
-/**
- * Apply one recorded fix. Returns { patched: string[] } or { skipped: true }
- * when the descriptor cannot be modeled (never a failure by itself).
- */
 export function applyFix(fullLines, offset, snippetLineCount, statements, fix) {
   const ctx = fix?.context;
   if (!ctx) return { skipped: true };
@@ -62,14 +42,11 @@ export function applyFix(fullLines, offset, snippetLineCount, statements, fix) {
   if (fix.newCode !== null && fix.newCode !== undefined && !(tf > 0 && fix.newCode.length === 0)) {
     newLines = [...fix.newCode];
   } else if (tf > 0 && sf === st) {
-    // Token-range delete (e.g. drop EXPORTING): rebuild the statement
-    // from the surviving tokens.
     const kept = statements[sf - 1].tokens.filter((_, i) => i + 1 < tf || i + 1 > tt);
     newLines = [flattenTokens(kept)];
   } else if (tf > 0) {
     return { skipped: true };
   } else {
-    // Whole-statement deletion.
     newLines = [];
   }
 
@@ -95,10 +72,6 @@ async function syntaxErrors(source) {
 
 const baselineCache = new Map();
 
-/**
- * Validate one fix against the full fixture source. Returns new parser
- * errors introduced by the fix (empty = round-trip clean).
- */
 export async function validateFix(fullSource, fullLines, offset, snippetLineCount, statements, fix) {
   const applied = applyFix(fullLines, offset, snippetLineCount, statements, fix);
   if (applied.skipped) return [];

@@ -1,21 +1,5 @@
-/**
- * test/atc-values.mjs
- *
- * Builds transpiled-runtime (abap.types) ATC values from JS pipeline results:
- * procedures shaped as if_ci_atc_source_code_provider=>ty_procedure.
- *
- * Field order + qualified names mirror the transpiled layout exactly
- * (see output/zcl_skylint_check_base.clas.mjs).
- */
-
 const SRC = 'IF_CI_ATC_SOURCE_CODE_PROVIDER';
 
-/**
- * The transpiled runtime represents ENUM components as ordinal integers
- * (e.g. procedure_kinds-class_definition === 2), NOT as their VALUE strings.
- * All enum-typed fields must therefore be filled from the runtime's own enum
- * singletons — never with the legacy 'METH'/'DA'/'5' strings.
- */
 function enumOf(abap, prop) {
   return abap.Classes[SRC][prop].get();
 }
@@ -33,15 +17,6 @@ const PROC_KIND_BY_VALUE = {
   ATUC: 'at_user_command', LISE: 'at_line_selection', ATPF: 'at_pf_status', ATSS: 'at_selection_screen',
 };
 const UNIT_KIND_BY_VALUE = { CLAS: 'class', PROG: 'report', FUGR: 'function_group', INTF: 'interface', TYPE: 'type_pool' };
-
-function enumInt(abap, prop, member) {
-  return enumOf(abap, prop)[member];
-}
-
-function newEnumField(abap, prop, member) {
-  // Integer template: enum-typed fields hold ordinals in the transpiled runtime
-  return new abap.types.Integer({ qualifiedName: 'I' }).set(enumInt(abap, prop, member).get());
-}
 
 const STD_OPTS = {
   withHeader: false,
@@ -138,8 +113,9 @@ function statementRowTemplate(abap) {
       position: newPosition(abap, 0, 0),
       is_in_scope: new abap.types.Character(1, { qualifiedName: 'ABAP_BOOL', ddicName: 'ABAP_BOOL' }),
       block: new abap.types.Integer({
-        qualifiedName: 'IF_CI_ATC_SOURCE_CODE_PROVIDER=>TY_STATEMENT-BLOCK',
+        qualifiedName: 'IF_CI_ATC_SOURCE_CODE_PROVIDER=>TY_BLOCK_INDEX',
       }),
+      type: new abap.types.Integer({ qualifiedName: 'I' }),
     },
     'IF_CI_ATC_SOURCE_CODE_PROVIDER=>ty_statement',
     undefined,
@@ -149,32 +125,21 @@ function statementRowTemplate(abap) {
 }
 
 function blockRowTemplate(abap) {
-  const interval = () =>
-    new abap.types.Structure(
-      {
-        from: new abap.types.Integer({
-          qualifiedName: 'IF_CI_ATC_SOURCE_CODE_PROVIDER=>TY_INTERVAL-FROM',
-        }),
-        to: new abap.types.Integer({
-          qualifiedName: 'IF_CI_ATC_SOURCE_CODE_PROVIDER=>TY_INTERVAL-TO',
-        }),
-      },
-      'IF_CI_ATC_SOURCE_CODE_PROVIDER=>ty_interval',
-      undefined,
-      {},
-      {},
-    );
   return new abap.types.Structure(
     {
-      type: new abap.types.String({ qualifiedName: 'IF_CI_ATC_SOURCE_CODE_PROVIDER=>TY_BLOCK_TYPE' }),
-      statement_type: new abap.types.String({
-        qualifiedName: 'IF_CI_ATC_SOURCE_CODE_PROVIDER=>TY_STATEMENT_TYPE',
-      }),
-      statements: interval(),
-      blocks: interval(),
-      parent: new abap.types.Integer({
-        qualifiedName: 'IF_CI_ATC_SOURCE_CODE_PROVIDER=>TY_BLOCK-PARENT',
-      }),
+      type: new abap.types.Integer({ qualifiedName: 'I' }),
+      parent: new abap.types.Integer({ qualifiedName: 'I' }),
+      depth: new abap.types.Integer({ qualifiedName: 'I' }),
+      statements: new abap.types.Structure(
+        {
+          from: new abap.types.Integer({ qualifiedName: 'I' }),
+          to: new abap.types.Integer({ qualifiedName: 'I' }),
+        },
+        'IF_CI_ATC_SOURCE_CODE_PROVIDER=>ty_interval',
+        undefined,
+        {},
+        {},
+      ),
     },
     'IF_CI_ATC_SOURCE_CODE_PROVIDER=>ty_block',
     undefined,
@@ -269,17 +234,11 @@ function appendStatement(abap, table, stmt) {
     const s = new abap.types.String({ qualifiedName: 'STRING' }).set(p);
     try {
       g.pseudo_comments.insert(s);
-    } catch {
-      // hashed-table duplicate — ABAP INSERT would set sy-subrc, ignore
-    }
+    } catch {}
   }
   table.append(row);
 }
 
-/**
- * Build an abap.types ty_procedure value.
- * proc = { kind: 'METH'|'DECL', name, mainKind: 'CLAS', mainName, statements: [...] }
- */
 export function buildProcedureValue(abap, proc) {
   const row = procedureRowTemplate(abap);
   const g = row.get();
@@ -294,7 +253,6 @@ export function buildProcedureValue(abap, proc) {
   return row;
 }
 
-/** Build an empty ty_procedures table holding the given procedure rows. */
 export function buildProceduresTable(abap, procRows) {
   const table = abap.types.TableFactory.construct(
     procedureRowTemplate(abap),
@@ -305,7 +263,6 @@ export function buildProceduresTable(abap, procRows) {
   return table;
 }
 
-/** Build a ty_object value { type: 'CLAS', name }. */
 export function buildObjectValue(abap, name) {
   return new abap.types.Structure(
     {
@@ -317,4 +274,158 @@ export function buildObjectValue(abap, name) {
     {},
     {},
   );
+}
+
+export function newCompUnit(abap, kind, name) {
+  return new abap.types.Structure(
+    {
+      kind: new abap.types.String({
+        qualifiedName: 'IF_CI_ATC_SOURCE_CODE_PROVIDER=>TY_COMPILATION_UNIT_KIND',
+      }).set(kind),
+      name: new abap.types.Character(40, {
+        qualifiedName: 'IF_CI_ATC_SOURCE_CODE_PROVIDER=>ty_compilation_unit_name',
+      }).set(name),
+    },
+    'IF_CI_ATC_SOURCE_CODE_PROVIDER=>ty_compilation_unit',
+    undefined,
+    {},
+    {},
+  );
+}
+
+export function newLocation(abap, objectName, line, column) {
+  return new abap.types.Structure(
+    {
+      object: buildObjectValue(abap, objectName),
+      position: new abap.types.Structure(
+        {
+          line: new abap.types.Integer({ qualifiedName: 'IF_CI_ATC_CHECK=>TY_POSITION-LINE' }).set(line),
+          column: new abap.types.Integer({ qualifiedName: 'INT1' }).set(column),
+        },
+        'if_ci_atc_check=>ty_position',
+        undefined,
+        {},
+        {},
+      ),
+    },
+    'if_ci_atc_check=>ty_location',
+    undefined,
+    {},
+    {},
+  );
+}
+
+function readPosition(statement) {
+  const g = statement.get();
+  return { line: g.position.get().line.get(), column: g.position.get().column.get() };
+}
+
+export function createFakes(abap, proceduresTable, objectName) {
+  let pendingContext = null;
+
+  function readCode(INPUT) {
+    const v = INPUT?.quickfix_code;
+    if (v && typeof v.get === 'function') return String(v.get()).trim();
+    return String(v ?? '');
+  }
+
+  function readStringTable(t) {
+    try {
+      const arr = t && typeof t.array === 'function' ? t.array() : t?.get ? [t.get()].flat() : [];
+      return (Array.isArray(arr) ? arr : []).map((r) => {
+        const v = r && typeof r.get === 'function' ? r.get() : r;
+        return String(v ?? '');
+      });
+    } catch {
+      return [];
+    }
+  }
+
+  function readInterval(s) {
+    try {
+      const g = s && typeof s.get === 'function' ? s.get() : s;
+      const num = (v) => (v && typeof v.get === 'function' ? Number(v.get()) : Number(v));
+      return { from: num(g?.from) || 0, to: num(g?.to) || 0 };
+    } catch {
+      return { from: 0, to: 0 };
+    }
+  }
+
+  function readContext(INPUT) {
+    try {
+      const d = INPUT?.descriptor;
+      const g = d && typeof d.get === 'function' ? d.get() : d;
+      if (!g) return null;
+      return { statements: readInterval(g.statements), tokens: readInterval(g.tokens) };
+    } catch {
+      return null;
+    }
+  }
+
+  const detailsHolder = {
+    get() {
+      return {
+        async attach_quickfixes(INPUT) {
+          const holder = INPUT?.quickfixes;
+          const collector = holder && typeof holder.get === 'function' ? holder.get() : holder;
+          const list = [...((collector && collector.list) || [])];
+          return { codes: list.map((f) => f.code), fixes: list };
+        },
+      };
+    },
+  };
+
+  const factory = {
+    async create_quickfixes() {
+      const collector = {
+        list: [],
+        async create_quickfix(INPUT) {
+          const entry = { code: readCode(INPUT), newCode: null, context: null };
+          collector.list.push(entry);
+          return {
+            async 'if_ci_atc_quickfix$replace'(INPUT2) {
+              entry.newCode = readStringTable(INPUT2?.code);
+              entry.context = pendingContext;
+              pendingContext = null;
+              return this;
+            },
+          };
+        },
+      };
+      return collector;
+    },
+    async create_quickfix_context(INPUT) {
+      pendingContext = readContext(INPUT);
+      return {};
+    },
+    async create_finding_details() {
+      return detailsHolder;
+    },
+  };
+
+  const codeProvider = {
+    async 'if_ci_atc_source_code_provider$object_to_comp_unit'() {
+      return newCompUnit(abap, 'CLAS', objectName);
+    },
+    async 'if_ci_atc_source_code_provider$get_procedures'() {
+      const ref = new abap.types.DataReference(proceduresTable);
+      ref.assign(proceduresTable);
+      return ref;
+    },
+    async 'if_ci_atc_source_code_provider$get_statement_location'(INPUT) {
+      const pos = readPosition(INPUT.statement);
+      return newLocation(abap, objectName, pos.line, pos.column);
+    },
+    async 'if_ci_atc_source_code_provider$get_statement_checksum'() {
+      return new abap.types.Integer({ qualifiedName: 'INT4' }).set(1);
+    },
+  };
+
+  const provider = {
+    async get_code_provider() {
+      return codeProvider;
+    },
+  };
+
+  return { provider, factory };
 }

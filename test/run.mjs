@@ -1,25 +1,21 @@
 #!/usr/bin/env node
-/**
- * test/run.mjs — ATC-native JS test runner.
- *
- * For every tests/fixtures/check_XXX/{source.abap, expected.json} row:
- *   slice -> lex/parse -> abaplint enrich -> RTTI feed -> ty_procedure
- *   -> if_ci_atc_check~run (with JS fakes for the SAP boundary)
- *   -> compare { code, line, column } with expected.json
- *
- * Usage: npm run build && node test/run.mjs [checkId ...]
- */
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { Lexer } from './lexer.mjs';
-import { buildStatements } from './parser.mjs';
-import { extractSnippet, describeTarget } from './slicer.mjs';
-import { joinSource } from './codeblock.mjs';
-import { enrichStatements } from './abaplint-bridge.mjs';
-import { feedRtti } from './rtti.mjs';
-import { buildProcedureValue, buildProceduresTable, buildObjectValue } from './atc-values.mjs';
-import { createFakes } from './fakes.mjs';
+import {
+  Lexer,
+  buildStatements,
+  enrichStatementsWithAbaplint,
+  feedRtti,
+  extractAllProcedures,
+  resolveProcedureForTarget,
+} from './ast.mjs';
+import {
+  buildProcedureValue,
+  buildProceduresTable,
+  buildObjectValue,
+  createFakes,
+} from './harness.mjs';
 import { validateFix } from './roundtrip.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -60,46 +56,64 @@ function createLoader(abap) {
       const mod = await import(toFileUrl(checkPath));
       const inst = new mod[`zcl_skylint_check_${checkId}`]();
       await inst.constructor_();
-      const factory = { provider: null, factory: null };
-      cache.set(checkId, { inst, factory });
+      cache.set(checkId, { inst });
     }
     return cache.get(checkId);
   };
 }
 
-function procedureName(statements, isDef, object) {
-  if (isDef) return object;
-  for (const s of statements) {
-    if (s.keyword === 'METHOD' && s.tokens.length >= 2) {
-      return `${object}=>${s.tokens[1].lexeme.toUpperCase()}`;
-    }
-  }
-  return `${object}=>TEST`;
+function sameCodes(a, b) {
+  if (!Array.isArray(a) || !Array.isArray(b)) return false;
+  if (a.length !== b.length) return false;
+  const sa = [...a].sort();
+  const sb = [...b].sort();
+  return sa.every((val, idx) => val === sb[idx]);
 }
 
-/** Run one expected row; returns { pass, message, findings }. */
+function readFindingDetails(g) {
+  try {
+    const d = g.details;
+    const inner = d && typeof d.get === 'function' ? d.get() : d;
+    if (inner) {
+      return {
+        codes: Array.isArray(inner.codes) ? [...inner.codes] : [],
+        fixes: Array.isArray(inner.fixes) ? [...inner.fixes] : [],
+      };
+    }
+  } catch {}
+  return { codes: [], fixes: [] };
+}
+
 async function runRow({ abap, getCheck, checkId, fullLines, row }) {
-  const { snippet, isDef, offset, object } = extractSnippet(fullLines, row.method);
-  if (snippet.length === 0) return { pass: false, message: `${checkId}/${row.method}: empty slice`, findings: [] };
-  const target = describeTarget(fullLines, row.method);
-  if (target === 'class-fallback' || target === 'empty') {
-    console.log(`WARN ${checkId}/${row.method}: resolved as ${target} (possible typo)`);
+  const procedures = extractAllProcedures(fullLines);
+  const targetProc = resolveProcedureForTarget(procedures, row.method);
+
+  if (!targetProc || targetProc.snippet.length === 0) {
+    return {
+      pass: false,
+      message: `${checkId}/${row.method}: procedure could not be extracted`,
+      findings: [],
+    };
   }
 
-  const objectName = object || 'ZSKYLINT_TEST';
-  const statements = buildStatements(new Lexer(joinSource(snippet)).run());
-  await feedRtti(joinSource(fullLines), objectName, abap);
-  await enrichStatements(statements, joinSource(fullLines), objectName, offset);
+  const objectName = targetProc.mainName || 'ZSKYLINT_TEST';
+  const fullSource = fullLines.join('\n');
+  const snippetSource = targetProc.snippet.join('\n');
+
+  const statements = buildStatements(new Lexer(snippetSource).run());
+  await feedRtti(fullSource, objectName, abap);
+  await enrichStatementsWithAbaplint(statements, fullSource, objectName, targetProc.offset);
 
   const procValue = buildProcedureValue(abap, {
-    kind: isDef ? 'DECL' : 'METH',
-    name: procedureName(statements, isDef, objectName),
-    mainKind: 'CLAS',
+    kind: targetProc.kind,
+    name: targetProc.name,
+    mainKind: targetProc.mainKind,
     mainName: objectName,
     statements,
   });
-  const procedures = buildProceduresTable(abap, [procValue]);
-  const fakes = createFakes(abap, procedures, objectName);
+
+  const proceduresTable = buildProceduresTable(abap, [procValue]);
+  const fakes = createFakes(abap, proceduresTable, objectName);
 
   const { inst } = await getCheck(checkId);
   await inst['if_ci_atc_check$set_assistant_factory']({ factory: fakes.factory });
@@ -122,16 +136,13 @@ async function runRow({ abap, getCheck, checkId, fullLines, row }) {
     };
   });
 
-  // QuickFix round-trip: every recorded fix must leave parseable ABAP behind
-  // (no NEW parser errors versus the unpatched fixture source).
-  const fullSource = joinSource(fullLines);
   for (const f of findings) {
     for (const fix of f.fixes || []) {
       const errors = await validateFix(
         fullSource,
         fullLines,
-        offset,
-        snippet.length,
+        targetProc.offset,
+        targetProc.snippet.length,
         statements,
         fix,
       );
@@ -147,8 +158,13 @@ async function runRow({ abap, getCheck, checkId, fullLines, row }) {
 
   if (!row.code) {
     if (findings.length === 0) return { pass: true, findings };
-    return { pass: false, message: `${checkId}/${row.method}: expected 0 findings, got ${JSON.stringify(findings)}`, findings };
+    return {
+      pass: false,
+      message: `${checkId}/${row.method}: expected 0 findings, got ${JSON.stringify(findings)}`,
+      findings,
+    };
   }
+
   const hit = findings.find((f) => f.code === row.code && f.line === row.line && f.column === row.column);
   if (!hit) {
     return {
@@ -157,6 +173,7 @@ async function runRow({ abap, getCheck, checkId, fullLines, row }) {
       findings,
     };
   }
+
   if (row.quickfixes !== undefined && !sameCodes(hit.quickfixes, row.quickfixes)) {
     return {
       pass: false,
@@ -164,88 +181,85 @@ async function runRow({ abap, getCheck, checkId, fullLines, row }) {
       findings,
     };
   }
+
   return { pass: true, findings };
 }
 
-/** Read quickfix codes + applicable fixes the fakes recorded on details. */
-function readFindingDetails(g) {
-  try {
-    const d = g.details;
-    const inner = d && typeof d.get === 'function' ? d.get() : d;
-    if (inner) {
-      return {
-        codes: Array.isArray(inner.codes) ? [...inner.codes] : [],
-        fixes: Array.isArray(inner.fixes) ? [...inner.fixes] : [],
-      };
-    }
-  } catch {
-    // fall through to empty
-  }
-  return { codes: [], fixes: [] };
-}
+async function runCheck({ abap, getCheck, checkId, verbose = false }) {
+  const { lines, expected } = loadFixture(checkId);
+  const failures = [];
+  let passed = 0;
 
-function sameCodes(a, b) {
-  const x = [...a].sort();
-  const y = [...b].sort();
-  return x.length === y.length && x.every((v, i) => v === y[i]);
+  for (const row of expected) {
+    const res = await runRow({ abap, getCheck, checkId, fullLines: lines, row });
+    if (res.pass) {
+      passed += 1;
+      if (verbose) {
+        console.log(`  PASS ${checkId}/${row.method}`);
+      }
+    } else {
+      failures.push(res.message);
+      if (verbose) {
+        console.log(`  FAIL ${res.message}`);
+      }
+    }
+  }
+
+  return { passed, failed: failures.length, failures };
 }
 
 async function main() {
-  const rawArgs = process.argv.slice(2);
-  const fixQuickfixes = rawArgs.includes('--fix-quickfixes');
-  const args = rawArgs.filter((a) => !a.startsWith('--'));
+  const args = process.argv.slice(2);
+  const verbose = args.includes('--verbose') || args.includes('-v');
+  const bail = args.includes('--bail');
+  const filterArgIdx = args.findIndex((a) => a === '--filter');
+  const filter = filterArgIdx >= 0 ? args[filterArgIdx + 1] : null;
+
+  const explicitIds = args.filter((a) => !a.startsWith('-') && a !== filter);
+
+  let targetIds = explicitIds.length > 0 ? explicitIds : discoverChecks();
+  if (filter) {
+    targetIds = targetIds.filter((id) => id.includes(filter));
+  }
+
   const abap = await initRuntime();
   const getCheck = createLoader(abap);
 
-  let ids = discoverChecks();
-  if (args.length > 0) ids = ids.filter((id) => args.includes(id));
+  let totalPassed = 0;
+  let totalFailed = 0;
+  const allFailures = [];
 
-  let pass = 0;
-  let fail = 0;
-  const failures = [];
-  for (const id of ids) {
-    const { lines, expected } = loadFixture(id);
-    if (global.gc) global.gc();
-    let dirty = false;
-    for (const row of expected) {
-      try {
-        const r = await runRow({ abap, getCheck, checkId: id, fullLines: lines, row });
-        if (fixQuickfixes && row.code && row.quickfixes === undefined && r.findings.length > 0) {
-          const hit = r.findings.find(
-            (f) => f.code === row.code && f.line === row.line && f.column === row.column,
-          );
-          if (hit) {
-            row.quickfixes = [...hit.quickfixes];
-            dirty = true;
-          }
-        }
-        // Re-evaluate after a fill so the file content matches the assertion.
-        const r2 =
-          dirty && row.code && row.quickfixes !== undefined
-            ? await runRow({ abap, getCheck, checkId: id, fullLines: lines, row })
-            : r;
-        if (r2.pass) pass++;
-        else {
-          fail++;
-          failures.push(r2.message);
-        }
-      } catch (e) {
-        fail++;
-        failures.push(`${id}/${row.method}: ERROR ${e.message}`);
+  for (const id of targetIds) {
+    const padId = id.padStart(3, '0');
+    try {
+      const result = await runCheck({ abap, getCheck, checkId: padId, verbose });
+      totalPassed += result.passed;
+      totalFailed += result.failed;
+      allFailures.push(...result.failures);
+
+      if (bail && result.failed > 0) {
+        break;
       }
-    }
-    if (dirty) {
-      fs.writeFileSync(
-        path.join(fixturesDir, `check_${id}`, 'expected.json'),
-        JSON.stringify(expected, null, 2) + '\n',
-      );
-      console.log(`updated tests/fixtures/check_${id}/expected.json`);
+    } catch (err) {
+      totalFailed += 1;
+      allFailures.push(`${padId}: crash - ${err.message}`);
+      if (bail) break;
     }
   }
 
-  for (const f of failures) console.log(`FAIL ${f}`);
-  console.log(`\n${pass} passed, ${fail} failed (${ids.length} checks)`);
-  process.exit(fail === 0 ? 0 : 1);
+  if (allFailures.length > 0) {
+    console.error('\nFAILURES:');
+    for (const f of allFailures) {
+      console.error(`  - ${f}`);
+    }
+    console.error(`\n${totalPassed} passed, ${totalFailed} failed (${targetIds.length} checks)`);
+    process.exit(1);
+  }
+
+  console.log(`\n${totalPassed} passed, 0 failed (${targetIds.length} checks)`);
+  process.exit(0);
 }
 
-await main();
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main();
+}
