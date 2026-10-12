@@ -3,7 +3,8 @@
     "method": "TEST_001",
     "code": "CYCLO_COMP",
     "line": 1,
-    "column": 2
+    "column": 2,
+    "quickfixes": []
   },
   {
     "method": "TEST_002",
@@ -13,7 +14,8 @@
     "method": "TEST_003",
     "code": "CYCLO_COMP",
     "line": 1,
-    "column": 2
+    "column": 2,
+    "quickfixes": []
   },
   {
     "method": "TEST_005",

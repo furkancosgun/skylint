@@ -3,7 +3,10 @@
     "method": "TEST_001",
     "code": "STATICVIAI",
     "line": 3,
-    "column": 4
+    "column": 4,
+    "quickfixes": [
+      "STATICCL"
+    ]
   },
   {
     "method": "TEST_002",
@@ -13,6 +16,9 @@
     "method": "TEST_003",
     "code": "STATICVIAI",
     "line": 3,
-    "column": 4
+    "column": 4,
+    "quickfixes": [
+      "STATICCL"
+    ]
   }
 ]

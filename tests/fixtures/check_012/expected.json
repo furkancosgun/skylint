@@ -3,7 +3,10 @@
     "method": "TEST_001",
     "code": "EXITOUTLP",
     "line": 2,
-    "column": 4
+    "column": 4,
+    "quickfixes": [
+      "EXIT2RET"
+    ]
   },
   {
     "method": "TEST_002",
@@ -13,6 +16,9 @@
     "method": "TEST_003",
     "code": "EXITOUTLP",
     "line": 4,
-    "column": 6
+    "column": 6,
+    "quickfixes": [
+      "EXIT2RET"
+    ]
   }
 ]

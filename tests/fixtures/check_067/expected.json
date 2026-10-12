@@ -3,6 +3,7 @@
     "method": "DO_COMMIT",
     "code": "NO_COMMIT",
     "line": 2,
-    "column": 4
+    "column": 4,
+    "quickfixes": []
   }
 ]

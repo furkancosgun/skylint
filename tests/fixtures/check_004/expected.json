@@ -3,7 +3,10 @@
     "method": "TEST_001",
     "code": "PREFERISNT",
     "line": 3,
-    "column": 4
+    "column": 4,
+    "quickfixes": [
+      "ISNOT"
+    ]
   },
   {
     "method": "TEST_002",
@@ -13,7 +16,10 @@
     "method": "TEST_003",
     "code": "PREFERISNT",
     "line": 3,
-    "column": 4
+    "column": 4,
+    "quickfixes": [
+      "ISNOT"
+    ]
   },
   {
     "method": "TEST_005",

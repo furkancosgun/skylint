@@ -684,8 +684,8 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
 
     CLEAR rv_line.
 
-    IF match_token_sequence( is_statement = is_statement
-                             it_expected  = VALUE #( ( `CALL` ) ( `METHOD` ) ) ) <> 1.
+    IF find_token_sequence( is_statement = is_statement
+                            it_expected  = VALUE #( ( `CALL` ) ( `METHOD` ) ) ) <> 1.
       RETURN.
     ENDIF.
 
@@ -760,10 +760,15 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
       ENDCASE.
     ENDWHILE.
 
-    IF lv_lhs IS INITIAL.
-      rv_line = |{ lv_design }( { lv_args } ).|.
+    IF lv_args IS INITIAL.
+      lv_args = `( )`.
     ELSE.
-      rv_line = |{ lv_lhs } = { lv_design }( { lv_args } ).|.
+      lv_args = |( { lv_args } )|.
+    ENDIF.
+    IF lv_lhs IS INITIAL.
+      rv_line = |{ lv_design }{ lv_args }.|.
+    ELSE.
+      rv_line = |{ lv_lhs } = { lv_design }{ lv_args }.|.
     ENDIF.
   ENDMETHOD.
 

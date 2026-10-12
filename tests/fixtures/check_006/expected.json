@@ -3,7 +3,10 @@
     "method": "TEST_001",
     "code": "OMITEXPORT",
     "line": 4,
-    "column": 4
+    "column": 4,
+    "quickfixes": [
+      "OMIT_EXP"
+    ]
   },
   {
     "method": "TEST_002",
@@ -13,6 +16,9 @@
     "method": "TEST_003",
     "code": "OMITEXPORT",
     "line": 3,
-    "column": 4
+    "column": 4,
+    "quickfixes": [
+      "OMIT_EXP"
+    ]
   }
 ]

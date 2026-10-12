@@ -3,7 +3,10 @@
     "method": "TEST_001",
     "code": "YODACOND",
     "line": 3,
-    "column": 4
+    "column": 4,
+    "quickfixes": [
+      "UNYODA"
+    ]
   },
   {
     "method": "TEST_002",
@@ -13,12 +16,18 @@
     "method": "TEST_003",
     "code": "YODACOND",
     "line": 3,
-    "column": 4
+    "column": 4,
+    "quickfixes": [
+      "UNYODA"
+    ]
   },
   {
     "method": "TEST_005",
     "code": "YODACOND",
     "line": 3,
-    "column": 4
+    "column": 4,
+    "quickfixes": [
+      "UNYODA"
+    ]
   }
 ]

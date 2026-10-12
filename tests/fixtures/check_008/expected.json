@@ -3,7 +3,10 @@
     "method": "TEST_001",
     "code": "CHAINDECL",
     "line": 3,
-    "column": 4
+    "column": 4,
+    "quickfixes": [
+      "PREFINLDCL"
+    ]
   },
   {
     "method": "TEST_002",
@@ -13,12 +16,18 @@
     "method": "TEST_003",
     "code": "CHAINDECL",
     "line": 3,
-    "column": 4
+    "column": 4,
+    "quickfixes": [
+      "PREFINLDCL"
+    ]
   },
   {
     "method": "TEST_005",
     "code": "CHAINDECL",
     "line": 3,
-    "column": 4
+    "column": 4,
+    "quickfixes": [
+      "PREFINLDCL"
+    ]
   }
 ]

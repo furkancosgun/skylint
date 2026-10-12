@@ -3,7 +3,8 @@
     "method": "TEST_001",
     "code": "NESTING_DP",
     "line": 9,
-    "column": 4
+    "column": 4,
+    "quickfixes": []
   },
   {
     "method": "TEST_002",
@@ -13,6 +14,7 @@
     "method": "TEST_003",
     "code": "NESTING_DP",
     "line": 5,
-    "column": 4
+    "column": 4,
+    "quickfixes": []
   }
 ]

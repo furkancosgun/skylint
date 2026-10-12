@@ -3,7 +3,10 @@
     "method": "TEST_001",
     "code": "OMITPARM",
     "line": 4,
-    "column": 4
+    "column": 4,
+    "quickfixes": [
+      "OMITPNAME"
+    ]
   },
   {
     "method": "TEST_002",
@@ -13,6 +16,9 @@
     "method": "TEST_003",
     "code": "OMITPARM",
     "line": 3,
-    "column": 4
+    "column": 4,
+    "quickfixes": [
+      "OMITPNAME"
+    ]
   }
 ]

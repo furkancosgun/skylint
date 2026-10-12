@@ -3,7 +3,19 @@
     "method": "TEST_001",
     "code": "CONDENSE_S",
     "line": 3,
-    "column": 4
+    "column": 4,
+    "quickfixes": [
+      "CONDENSE"
+    ]
+  },
+  {
+    "method": "TEST_001",
+    "code": "TRANSLATE_",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "TRANSLATE"
+    ]
   },
   {
     "method": "TEST_002",
@@ -13,6 +25,7 @@
     "method": "TEST_003",
     "code": "CONDENSE_S",
     "line": 3,
-    "column": 4
+    "column": 4,
+    "quickfixes": []
   }
 ]

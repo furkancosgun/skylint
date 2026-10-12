@@ -3,7 +3,10 @@
     "method": "TEST_001",
     "code": "PREF_FINAL",
     "line": 3,
-    "column": 4
+    "column": 4,
+    "quickfixes": [
+      "ADDFINAL"
+    ]
   },
   {
     "method": "TEST_002",
@@ -13,6 +16,9 @@
     "method": "TEST_003",
     "code": "PREF_FINAL",
     "line": 3,
-    "column": 4
+    "column": 4,
+    "quickfixes": [
+      "ADDFINAL"
+    ]
   }
 ]

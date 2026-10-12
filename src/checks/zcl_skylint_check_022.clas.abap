@@ -193,6 +193,12 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
       ENDCASE.
     ENDWHILE.
 
-    rv_line = |{ lv_target } = NEW { lv_class }( { lv_args } ).|.
+    IF lv_args IS INITIAL.
+      lv_args = `( )`.
+    ELSE.
+      lv_args = |( { lv_args } )|.
+    ENDIF.
+
+    rv_line = |{ lv_target } = NEW { lv_class }{ lv_args }.|.
   ENDMETHOD.
 ENDCLASS.

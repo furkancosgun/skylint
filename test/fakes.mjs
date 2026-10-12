@@ -64,13 +64,6 @@ function newLocation(abap, objectName, line, column) {
   );
 }
 
-function newDetails(abap) {
-  return new abap.types.ABAPObject({
-    qualifiedName: 'CL_CI_ATC_FINDING_DETAILS',
-    RTTIName: '\\CLASS=CL_CI_ATC_FINDING_DETAILS',
-  });
-}
-
 function readPosition(statement) {
   const g = statement.get();
   return { line: g.position.get().line.get(), column: g.position.get().column.get() };
@@ -87,17 +80,22 @@ export function createFakes(abap, proceduresTable, objectName) {
     },
   };
 
-  const fixes = {
-    async create_quickfix() {
-      return fix;
-    },
-  };
+  function readCode(INPUT) {
+    const v = INPUT?.quickfix_code;
+    if (v && typeof v.get === 'function') return String(v.get()).trim();
+    return String(v ?? '');
+  }
 
   const detailsHolder = {
     get() {
       return {
-        async attach_quickfixes() {
-          return newDetails(abap);
+        // The collector flows in via INPUT.quickfixes, wrapped in the
+        // transpiled object holder — unwrap with .get() first.
+        async attach_quickfixes(INPUT) {
+          const holder = INPUT?.quickfixes;
+          const collector = holder && typeof holder.get === 'function' ? holder.get() : holder;
+          const list = [...((collector && collector.list) || [])];
+          return { codes: list };
         },
       };
     },
@@ -105,7 +103,16 @@ export function createFakes(abap, proceduresTable, objectName) {
 
   const factory = {
     async create_quickfixes() {
-      return fixes;
+      // Fresh collector per finding (mirrors convert_reported calling this
+      // once per reported row).
+      const collector = {
+        list: [],
+        async create_quickfix(INPUT) {
+          collector.list.push(readCode(INPUT));
+          return fix;
+        },
+      };
+      return collector;
     },
     async create_quickfix_context() {
       return {};

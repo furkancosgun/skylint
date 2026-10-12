@@ -3,7 +3,8 @@
     "method": "TEST_001",
     "code": "FULL_MODIF",
     "line": 5,
-    "column": 6
+    "column": 6,
+    "quickfixes": []
   },
   {
     "method": "TEST_002",
@@ -13,12 +14,14 @@
     "method": "TEST_003",
     "code": "FULL_MODIF",
     "line": 5,
-    "column": 6
+    "column": 6,
+    "quickfixes": []
   },
   {
     "method": "TEST_005",
     "code": "FULL_MODIF",
     "line": 5,
-    "column": 6
+    "column": 6,
+    "quickfixes": []
   }
 ]

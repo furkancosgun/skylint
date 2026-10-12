@@ -3,7 +3,10 @@
     "method": "TEST_001",
     "code": "PREFERNEW",
     "line": 3,
-    "column": 4
+    "column": 4,
+    "quickfixes": [
+      "TONEW"
+    ]
   },
   {
     "method": "TEST_002",
@@ -13,6 +16,9 @@
     "method": "TEST_003",
     "code": "PREFERNEW",
     "line": 3,
-    "column": 4
+    "column": 4,
+    "quickfixes": [
+      "TONEW"
+    ]
   }
 ]

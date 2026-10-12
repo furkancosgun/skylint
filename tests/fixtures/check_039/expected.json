@@ -3,7 +3,8 @@
     "method": "TEST_001",
     "code": "METHOD_LEN",
     "line": 1,
-    "column": 2
+    "column": 2,
+    "quickfixes": []
   },
   {
     "method": "TEST_002",
@@ -13,6 +14,7 @@
     "method": "TEST_003",
     "code": "METHOD_LEN",
     "line": 1,
-    "column": 2
+    "column": 2,
+    "quickfixes": []
   }
 ]

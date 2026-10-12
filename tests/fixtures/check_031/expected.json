@@ -3,7 +3,10 @@
     "method": "TEST_001",
     "code": "FAENOCHECK",
     "line": 4,
-    "column": 4
+    "column": 4,
+    "quickfixes": [
+      "FAEGUARD"
+    ]
   },
   {
     "method": "TEST_002",
@@ -13,6 +16,9 @@
     "method": "TEST_003",
     "code": "FAENOCHECK",
     "line": 4,
-    "column": 4
+    "column": 4,
+    "quickfixes": [
+      "FAEGUARD"
+    ]
   }
 ]

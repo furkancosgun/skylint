@@ -3,7 +3,10 @@
     "method": "TEST_001",
     "code": "CALLMETHOD",
     "line": 3,
-    "column": 4
+    "column": 4,
+    "quickfixes": [
+      "CALL2FUNC"
+    ]
   },
   {
     "method": "TEST_002",
@@ -13,6 +16,7 @@
     "method": "TEST_003",
     "code": "CALLMETHOD",
     "line": 3,
-    "column": 4
+    "column": 4,
+    "quickfixes": []
   }
 ]

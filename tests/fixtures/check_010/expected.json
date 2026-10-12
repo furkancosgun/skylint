@@ -3,7 +3,10 @@
     "method": "TEST_001",
     "code": "BOOLCOMP",
     "line": 3,
-    "column": 4
+    "column": 4,
+    "quickfixes": [
+      "DROPBOOL"
+    ]
   },
   {
     "method": "TEST_002",
@@ -13,7 +16,10 @@
     "method": "TEST_003",
     "code": "BOOLCOMP",
     "line": 3,
-    "column": 4
+    "column": 4,
+    "quickfixes": [
+      "DROPBOOL"
+    ]
   },
   {
     "method": "TEST_005",

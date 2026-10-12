@@ -109,7 +109,12 @@ async function runRow({ abap, getCheck, checkId, fullLines, row }) {
   const findings = rows.map((r) => {
     const g = r.get();
     const pos = g.location.get().position.get();
-    return { code: g.code.get().trim(), line: pos.line.get(), column: pos.column.get() };
+    return {
+      code: g.code.get().trim(),
+      line: pos.line.get(),
+      column: pos.column.get(),
+      quickfixes: readFindingQuickfixes(g),
+    };
   });
 
   if (!row.code) {
@@ -117,16 +122,45 @@ async function runRow({ abap, getCheck, checkId, fullLines, row }) {
     return { pass: false, message: `${checkId}/${row.method}: expected 0 findings, got ${JSON.stringify(findings)}`, findings };
   }
   const hit = findings.find((f) => f.code === row.code && f.line === row.line && f.column === row.column);
-  if (hit) return { pass: true, findings };
-  return {
-    pass: false,
-    message: `${checkId}/${row.method}: expected ${row.code} at ${row.line}:${row.column}, got ${JSON.stringify(findings)}`,
-    findings,
-  };
+  if (!hit) {
+    return {
+      pass: false,
+      message: `${checkId}/${row.method}: expected ${row.code} at ${row.line}:${row.column}, got ${JSON.stringify(findings)}`,
+      findings,
+    };
+  }
+  if (row.quickfixes !== undefined && !sameCodes(hit.quickfixes, row.quickfixes)) {
+    return {
+      pass: false,
+      message: `${checkId}/${row.method}: expected quickfixes ${JSON.stringify(row.quickfixes)}, got ${JSON.stringify(hit.quickfixes)}`,
+      findings,
+    };
+  }
+  return { pass: true, findings };
+}
+
+/** Read quickfix codes the fakes recorded on a finding's details. */
+function readFindingQuickfixes(g) {
+  try {
+    const d = g.details;
+    const inner = d && typeof d.get === 'function' ? d.get() : d;
+    if (inner && Array.isArray(inner.codes)) return [...inner.codes];
+  } catch {
+    // fall through to empty
+  }
+  return [];
+}
+
+function sameCodes(a, b) {
+  const x = [...a].sort();
+  const y = [...b].sort();
+  return x.length === y.length && x.every((v, i) => v === y[i]);
 }
 
 async function main() {
-  const args = process.argv.slice(2).filter((a) => !a.startsWith('--'));
+  const rawArgs = process.argv.slice(2);
+  const fixQuickfixes = rawArgs.includes('--fix-quickfixes');
+  const args = rawArgs.filter((a) => !a.startsWith('--'));
   const abap = await initRuntime();
   const getCheck = createLoader(abap);
 
@@ -139,18 +173,40 @@ async function main() {
   for (const id of ids) {
     const { lines, expected } = loadFixture(id);
     if (global.gc) global.gc();
+    let dirty = false;
     for (const row of expected) {
       try {
         const r = await runRow({ abap, getCheck, checkId: id, fullLines: lines, row });
-        if (r.pass) pass++;
+        if (fixQuickfixes && row.code && row.quickfixes === undefined && r.findings.length > 0) {
+          const hit = r.findings.find(
+            (f) => f.code === row.code && f.line === row.line && f.column === row.column,
+          );
+          if (hit) {
+            row.quickfixes = [...hit.quickfixes];
+            dirty = true;
+          }
+        }
+        // Re-evaluate after a fill so the file content matches the assertion.
+        const r2 =
+          dirty && row.code && row.quickfixes !== undefined
+            ? await runRow({ abap, getCheck, checkId: id, fullLines: lines, row })
+            : r;
+        if (r2.pass) pass++;
         else {
           fail++;
-          failures.push(r.message);
+          failures.push(r2.message);
         }
       } catch (e) {
         fail++;
         failures.push(`${id}/${row.method}: ERROR ${e.message}`);
       }
+    }
+    if (dirty) {
+      fs.writeFileSync(
+        path.join(fixturesDir, `check_${id}`, 'expected.json'),
+        JSON.stringify(expected, null, 2) + '\n',
+      );
+      console.log(`updated tests/fixtures/check_${id}/expected.json`);
     }
   }
 

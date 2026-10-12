@@ -93,9 +93,9 @@ CLASS zcl_skylint_check_023 IMPLEMENTATION.
     ENDIF.
 
     IF zcl_skylint_ast_util=>match_token_sequence( is_statement = is_statement
-                                                   it_expected  = VALUE #( ( `RAISE` )
-                                                                           ( `EXCEPTION` )
-                                                                           ( `TYPE` ) ) ) <> 1.
+                                                     it_expected  = VALUE #( ( `RAISE` )
+                                                                             ( `EXCEPTION` )
+                                                                             ( `TYPE` ) ) ) = abap_false.
       RETURN.
     ENDIF.
 
@@ -143,6 +143,12 @@ CLASS zcl_skylint_check_023 IMPLEMENTATION.
       ENDIF.
     ENDWHILE.
 
-    rv_line = |RAISE EXCEPTION NEW { lv_class }( { lv_args } ).|.
+    IF lv_args IS INITIAL.
+      lv_args = `( )`.
+    ELSE.
+      lv_args = |( { lv_args } )|.
+    ENDIF.
+
+    rv_line = |RAISE EXCEPTION NEW { lv_class }{ lv_args }.|.
   ENDMETHOD.
 ENDCLASS.

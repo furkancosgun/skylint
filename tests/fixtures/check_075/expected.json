@@ -3,7 +3,8 @@
     "method": "TEST_001",
     "code": "GUARD_METH",
     "line": 4,
-    "column": 4
+    "column": 4,
+    "quickfixes": []
   },
   {
     "method": "TEST_002",
@@ -13,6 +14,7 @@
     "method": "TEST_003",
     "code": "GUARD_METH",
     "line": 4,
-    "column": 4
+    "column": 4,
+    "quickfixes": []
   }
 ]
