@@ -8,6 +8,10 @@ CLASS zcl_skylint_check_018 DEFINITION
       BEGIN OF c_finding_codes,
         unreachable_code TYPE if_ci_atc_check=>ty_finding_code VALUE 'UNREACHCD',
       END OF c_finding_codes.
+    CONSTANTS:
+      BEGIN OF c_quickfix_codes,
+        delete_stmt TYPE cl_ci_atc_quickfixes=>ty_quickfix_code VALUE 'DELSTMT',
+      END OF c_quickfix_codes.
 
     METHODS constructor.
 
@@ -45,12 +49,16 @@ CLASS zcl_skylint_check_018 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #( ( code     = c_finding_codes-unreachable_code
                                                                 severity = if_ci_atc_check=>finding_severities-warning
-                                                                text     = 'Statement is unreachable' ) ) ) ).
+                                                                text     = 'Statement is unreachable' ) )
+                                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-delete_stmt
+                                                                short_text = 'Delete unreachable statement' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_depth  TYPE i.
-    DATA lt_states TYPE ty_depth_states.
+    DATA lv_depth    TYPE i.
+    DATA lv_stmt_idx TYPE i.
+    DATA lt_states   TYPE ty_depth_states.
+    DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     lv_depth = 0.
@@ -59,6 +67,7 @@ CLASS zcl_skylint_check_018 IMPLEMENTATION.
                            CHANGING  ct_states = lt_states ).
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      lv_stmt_idx = sy-tabix.
       CASE <ls_statement>-keyword.
         WHEN 'IF' OR 'CASE' OR 'LOOP' OR 'DO' OR 'WHILE' OR 'TRY'.
           IF is_depth_unreachable( it_states = lt_states
@@ -93,8 +102,14 @@ CLASS zcl_skylint_check_018 IMPLEMENTATION.
         WHEN OTHERS.
           IF is_depth_unreachable( it_states = lt_states
                                    iv_depth  = lv_depth ) = abap_true.
+            " Only single dead statements get a delete fix; block openers
+            " (IF/LOOP/...) need their whole body removed by hand.
+            ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-delete_stmt
+                                            iv_statement_from = lv_stmt_idx
+                                            it_new_code       = VALUE #( ) ).
             report_statement( is_statement    = <ls_statement>
-                              iv_finding_code = c_finding_codes-unreachable_code ).
+                              iv_finding_code = c_finding_codes-unreachable_code
+                              is_quickfix     = ls_quickfix ).
           ELSEIF is_unconditional_jump( <ls_statement> ) = abap_true.
             set_depth_unreachable( EXPORTING iv_depth  = lv_depth
                                              iv_val    = abap_true

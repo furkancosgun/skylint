@@ -8,6 +8,10 @@ CLASS zcl_skylint_check_034 DEFINITION
       BEGIN OF c_finding_codes,
         identical_move TYPE if_ci_atc_check=>ty_finding_code VALUE 'IDENTMOVE',
       END OF c_finding_codes.
+    CONSTANTS:
+      BEGIN OF c_quickfix_codes,
+        delete_self TYPE cl_ci_atc_quickfixes=>ty_quickfix_code VALUE 'DELIDENT',
+      END OF c_quickfix_codes.
 
     METHODS constructor.
 
@@ -27,20 +31,29 @@ CLASS zcl_skylint_check_034 IMPLEMENTATION.
     super->constructor( VALUE #(
                             description       = 'skylint: Detect Identical Self Assignments'
                             remote_enablement = abap_true
-                            finding_codes     = VALUE #(
-                                ( code     = c_finding_codes-identical_move
-                                  severity = if_ci_atc_check=>finding_severities-warning
-                                  text     = 'Identical assignment has no effect; remove redundant statement' ) ) ) ).
+                                 finding_codes     = VALUE #(
+                                     ( code     = c_finding_codes-identical_move
+                                       severity = if_ci_atc_check=>finding_severities-warning
+                                       text     = 'Identical assignment has no effect; remove redundant statement' ) )
+                                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-delete_self
+                                                                short_text = 'Delete self-assignment' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
+    DATA lv_stmt_idx TYPE i.
+    DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'COMPUTE'.
+      lv_stmt_idx = sy-tabix.
       IF is_identical_assignment( <ls_statement> ) = abap_true.
+        ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-delete_self
+                                        iv_statement_from = lv_stmt_idx
+                                        it_new_code       = VALUE #( ) ).
         report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-identical_move ).
+                          iv_finding_code = c_finding_codes-identical_move
+                          is_quickfix     = ls_quickfix ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.

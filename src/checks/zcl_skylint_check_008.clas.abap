@@ -31,10 +31,6 @@ CLASS zcl_skylint_check_008 DEFINITION
                 is_second      TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_same) TYPE abap_bool.
 
-    METHODS flatten_statement
-      IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_line) TYPE string.
-
     METHODS collect_chain_count
       IMPORTING it_statements   TYPE if_ci_atc_source_code_provider=>ty_statements
                 iv_start        TYPE i
@@ -145,7 +141,7 @@ CLASS zcl_skylint_check_008 IMPLEMENTATION.
 
     CLEAR rt_code.
     LOOP AT it_statements INTO ls_member FROM iv_from TO iv_to.
-      APPEND flatten_statement( ls_member ) TO rt_code.
+      APPEND flatten_statement( ls_member ) && '.' TO rt_code.
     ENDLOOP.
   ENDMETHOD.
 
@@ -176,22 +172,5 @@ CLASS zcl_skylint_check_008 IMPLEMENTATION.
     IF ls_first_tok-position = ls_second_tok-position.
       rv_same = abap_true.
     ENDIF.
-  ENDMETHOD.
-
-  METHOD flatten_statement.
-    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
-
-    CLEAR rv_line.
-    LOOP AT is_statement-tokens INTO ls_tok.
-      IF rv_line IS INITIAL.
-        rv_line = ls_tok-lexeme.
-      ELSE.
-        rv_line = |{ rv_line } { ls_tok-lexeme }|.
-      ENDIF.
-    ENDLOOP.
-    rv_line = |{ rv_line }.|.
-    REPLACE ALL OCCURRENCES OF ` ,` IN rv_line WITH `,`.
-    REPLACE ALL OCCURRENCES OF ` .` IN rv_line WITH `.`.
-    REPLACE ALL OCCURRENCES OF ` )` IN rv_line WITH `)`.
   ENDMETHOD.
 ENDCLASS.

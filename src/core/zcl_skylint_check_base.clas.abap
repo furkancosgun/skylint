@@ -15,6 +15,13 @@ CLASS zcl_skylint_check_base DEFINITION
 
     TYPES ty_code_lines TYPE STANDARD TABLE OF string WITH EMPTY KEY.
 
+    TYPES: BEGIN OF ty_token_override,
+             index  TYPE i,
+             lexeme TYPE string,
+           END OF ty_token_override,
+           ty_token_overrides TYPE STANDARD TABLE OF ty_token_override WITH EMPTY KEY,
+           ty_token_deletions TYPE STANDARD TABLE OF i WITH EMPTY KEY.
+
     TYPES: BEGIN OF ty_quickfix,
              code           TYPE cl_ci_atc_quickfixes=>ty_quickfix_code,
              statement_from TYPE i,
@@ -61,13 +68,20 @@ CLASS zcl_skylint_check_base DEFINITION
                 it_quickfixes   TYPE ty_quickfixes OPTIONAL.
 
     METHODS quickfix_replace
-      IMPORTING iv_quickfix_code   TYPE cl_ci_atc_quickfixes=>ty_quickfix_code
-                iv_statement_from  TYPE i
-                iv_statement_to    TYPE i OPTIONAL
-                iv_token_from      TYPE i OPTIONAL
-                iv_token_to        TYPE i OPTIONAL
-                it_new_code        TYPE ty_code_lines
+      IMPORTING iv_quickfix_code  TYPE cl_ci_atc_quickfixes=>ty_quickfix_code
+                iv_statement_from TYPE i
+                iv_statement_to   TYPE i OPTIONAL
+                iv_token_from     TYPE i OPTIONAL
+                iv_token_to       TYPE i OPTIONAL
+                it_new_code       TYPE ty_code_lines
       RETURNING VALUE(rs_quickfix) TYPE ty_quickfix.
+
+    METHODS flatten_statement
+      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
+                it_overrides TYPE ty_token_overrides OPTIONAL
+                it_deletions TYPE ty_token_deletions OPTIONAL
+                iv_suffix    TYPE string OPTIONAL
+      RETURNING VALUE(rv_line) TYPE string.
 
   PRIVATE SECTION.
     TYPES: BEGIN OF ty_reported,
@@ -160,6 +174,49 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
     ls_qf-new_code = it_new_code.
 
     rs_quickfix = ls_qf.
+  ENDMETHOD.
+
+  METHOD flatten_statement.
+    DATA lv_idx      TYPE i.
+    DATA lv_lexeme   TYPE string.
+    DATA lv_orig_gap TYPE i.
+    DATA lv_prev_end TYPE i.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_override> TYPE ty_token_override.
+
+    CLEAR rv_line.
+    lv_prev_end = 0.
+
+    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
+      lv_idx = sy-tabix.
+      lv_orig_gap = <ls_token>-position-column - lv_prev_end.
+      IF lv_orig_gap < 0.
+        lv_orig_gap = 0.
+      ENDIF.
+      lv_prev_end = <ls_token>-position-column + strlen( <ls_token>-lexeme ).
+
+      IF line_exists( it_deletions[ table_line = lv_idx ] ).
+        CONTINUE.
+      ENDIF.
+
+      lv_lexeme = <ls_token>-lexeme.
+      READ TABLE it_overrides ASSIGNING <ls_override>
+           WITH KEY index = lv_idx.
+      IF sy-subrc = 0.
+        lv_lexeme = <ls_override>-lexeme.
+      ENDIF.
+
+      IF rv_line IS INITIAL.
+        rv_line = repeat( val = ` `
+                          occ = lv_orig_gap ).
+      ELSEIF lv_orig_gap > 0.
+        rv_line = rv_line && repeat( val = ` `
+                                    occ = lv_orig_gap ).
+      ENDIF.
+      rv_line = rv_line && lv_lexeme.
+    ENDLOOP.
+
+    rv_line = rv_line && iv_suffix.
   ENDMETHOD.
 
   METHOD report_finding.

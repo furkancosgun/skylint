@@ -138,6 +138,7 @@ async function main() {
   const failures = [];
   for (const id of ids) {
     const { lines, expected } = loadFixture(id);
+    if (global.gc) global.gc();
     for (const row of expected) {
       try {
         const r = await runRow({ abap, getCheck, checkId: id, fullLines: lines, row });

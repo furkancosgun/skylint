@@ -8,7 +8,7 @@
   "scripts": {
     "build": "node scripts/clean.mjs && abap_transpile abaplint-transpiler.json",
     "test": "npm run lint && npm run unit",
-    "unit": "npm run build && node test/run.mjs",
+    "unit": "npm run build && node --expose-gc test/run.mjs",
     "lint": "abaplint",
     "fix": "abaplint --fix",
     "clean": "node scripts/clean.mjs",
