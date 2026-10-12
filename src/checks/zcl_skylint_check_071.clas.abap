@@ -69,7 +69,7 @@ CLASS zcl_skylint_check_071 IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      lv_line = flatten_statement( is_statement = <ls_statement>
+      lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_statement>
                                    iv_suffix    = ' FINAL' ).
       ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-add_final
                                       iv_statement_from = lv_stmt_idx

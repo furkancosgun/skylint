@@ -38,7 +38,7 @@ CLASS zcl_skylint_check_066 IMPLEMENTATION.
     DATA lv_count    TYPE i.
     DATA lv_line     TYPE string.
     DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
-    DATA lt_deletions TYPE zcl_skylint_check_base=>ty_token_deletions.
+    DATA lt_deletions TYPE zcl_skylint_ast_util=>ty_token_deletions.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
@@ -62,7 +62,7 @@ CLASS zcl_skylint_check_066 IMPLEMENTATION.
         ENDIF.
       ENDIF.
       IF lt_deletions IS NOT INITIAL.
-        lv_line = flatten_statement( is_statement = <ls_statement>
+        lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_statement>
                                      it_deletions = lt_deletions ).
         ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-drop_client
                                         iv_statement_from = lv_stmt_idx

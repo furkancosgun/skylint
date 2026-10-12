@@ -64,7 +64,7 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
     DATA lv_mirror   TYPE string.
     DATA lv_line     TYPE string.
     DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
-    DATA lt_overrides TYPE zcl_skylint_check_base=>ty_token_overrides.
+    DATA lt_overrides TYPE zcl_skylint_ast_util=>ty_token_overrides.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
@@ -87,7 +87,7 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
                                     lexeme = lv_mirror )
                                   ( index  = lv_match + 2
                                     lexeme = lv_lit ) ).
-          lv_line = flatten_statement( is_statement = <ls_statement>
+          lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_statement>
                                        it_overrides = lt_overrides ).
           ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-unyoda
                                           iv_statement_from = lv_stmt_idx

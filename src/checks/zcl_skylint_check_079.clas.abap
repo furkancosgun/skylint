@@ -39,8 +39,8 @@ CLASS zcl_skylint_check_079 IMPLEMENTATION.
     DATA lv_lexeme   TYPE string.
     DATA lv_line     TYPE string.
     DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
-    DATA lt_overrides TYPE zcl_skylint_check_base=>ty_token_overrides.
-    DATA lt_deletions TYPE zcl_skylint_check_base=>ty_token_deletions.
+    DATA lt_overrides TYPE zcl_skylint_ast_util=>ty_token_overrides.
+    DATA lt_deletions TYPE zcl_skylint_ast_util=>ty_token_deletions.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_tok>  TYPE if_ci_atc_source_code_provider=>ty_token.
 
@@ -60,7 +60,7 @@ CLASS zcl_skylint_check_079 IMPLEMENTATION.
             lt_overrides = VALUE #( ( index  = lv_tok_idx
                                       lexeme = lv_lexeme+1 ) ).
           ENDIF.
-          lv_line = flatten_statement( is_statement = <ls_stmt>
+          lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_stmt>
                                        it_overrides = lt_overrides
                                        it_deletions = lt_deletions ).
           ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-unescape

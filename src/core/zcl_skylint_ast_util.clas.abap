@@ -132,6 +132,24 @@ CLASS zcl_skylint_ast_util DEFINITION
                 iv_name       TYPE string
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
+    TYPES: BEGIN OF ty_token_override,
+             index  TYPE i,
+             lexeme TYPE string,
+           END OF ty_token_override,
+           ty_token_overrides TYPE STANDARD TABLE OF ty_token_override WITH EMPTY KEY,
+           ty_token_deletions TYPE STANDARD TABLE OF i WITH EMPTY KEY.
+
+    CLASS-METHODS flatten_statement
+      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
+                it_overrides TYPE ty_token_overrides OPTIONAL
+                it_deletions TYPE ty_token_deletions OPTIONAL
+                iv_suffix    TYPE string OPTIONAL
+      RETURNING VALUE(rv_line) TYPE string.
+
+    CLASS-METHODS build_functional_call
+      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_line) TYPE string.
+
   PRIVATE SECTION.
     CLASS-METHODS token_has_ref
       IMPORTING is_token      TYPE if_ci_atc_source_code_provider=>ty_token
@@ -141,6 +159,10 @@ CLASS zcl_skylint_ast_util DEFINITION
     CLASS-METHODS normalize_identifier_name
       IMPORTING iv_raw         TYPE string
       RETURNING VALUE(rv_name) TYPE string.
+
+    CLASS-METHODS is_call_clause_keyword
+      IMPORTING iv_word     TYPE string
+      RETURNING VALUE(rv_is) TYPE abap_bool.
 
 ENDCLASS.
 
@@ -604,5 +626,155 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
       ENDIF.
       lv_off -= 1.
     ENDWHILE.
+  ENDMETHOD.
+
+  METHOD flatten_statement.
+    DATA lv_idx      TYPE i.
+    DATA lv_lexeme   TYPE string.
+    DATA lv_orig_gap TYPE i.
+    DATA lv_prev_end TYPE i.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_override> TYPE ty_token_override.
+
+    CLEAR rv_line.
+    lv_prev_end = 0.
+
+    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
+      lv_idx = sy-tabix.
+      lv_orig_gap = <ls_token>-position-column - lv_prev_end.
+      IF lv_orig_gap < 0.
+        lv_orig_gap = 0.
+      ENDIF.
+      lv_prev_end = <ls_token>-position-column + strlen( <ls_token>-lexeme ).
+
+      IF line_exists( it_deletions[ table_line = lv_idx ] ).
+        CONTINUE.
+      ENDIF.
+
+      lv_lexeme = <ls_token>-lexeme.
+      READ TABLE it_overrides ASSIGNING <ls_override>
+           WITH KEY index = lv_idx.
+      IF sy-subrc = 0.
+        lv_lexeme = <ls_override>-lexeme.
+      ENDIF.
+
+      IF rv_line IS INITIAL.
+        rv_line = repeat( val = ` `
+                          occ = lv_orig_gap ).
+      ELSEIF lv_orig_gap > 0.
+        rv_line = rv_line && repeat( val = ` `
+                                    occ = lv_orig_gap ).
+      ENDIF.
+      rv_line = rv_line && lv_lexeme.
+    ENDLOOP.
+
+    rv_line = rv_line && iv_suffix.
+  ENDMETHOD.
+
+  METHOD build_functional_call.
+    DATA lv_count  TYPE i.
+    DATA lv_idx    TYPE i.
+    DATA lv_design TYPE string.
+    DATA lv_lhs    TYPE string.
+    DATA lv_upper  TYPE string.
+    DATA lv_name   TYPE string.
+    DATA lv_value  TYPE string.
+    DATA lv_args   TYPE string.
+    DATA lv_first  TYPE abap_bool.
+
+    CLEAR rv_line.
+
+    IF match_token_sequence( is_statement = is_statement
+                             it_expected  = VALUE #( ( `CALL` ) ( `METHOD` ) ) ) <> 1.
+      RETURN.
+    ENDIF.
+
+    lv_design = get_token_lexeme( is_statement      = is_statement
+                                  iv_index          = 3
+                                  iv_case_sensitive = abap_true ).
+    IF lv_design IS INITIAL OR lv_design CS '('.
+      RETURN.
+    ENDIF.
+
+    lv_count = token_count( is_statement ).
+    lv_first = abap_true.
+    lv_idx = 4.
+    WHILE lv_idx <= lv_count.
+      lv_upper = to_upper( get_token_lexeme( is_statement = is_statement
+                                             iv_index     = lv_idx ) ).
+      CASE lv_upper.
+        WHEN 'EXPORTING'.
+          lv_idx += 1.
+          WHILE lv_idx + 2 <= lv_count
+            AND is_call_clause_keyword( get_token_lexeme( is_statement = is_statement
+                                                          iv_index     = lv_idx ) ) = abap_false
+            AND get_token_lexeme( is_statement = is_statement
+                                  iv_index     = lv_idx + 1 ) = '='.
+            lv_name = get_token_lexeme( is_statement      = is_statement
+                                        iv_index          = lv_idx
+                                        iv_case_sensitive = abap_true ).
+            lv_value = get_token_lexeme( is_statement      = is_statement
+                                         iv_index          = lv_idx + 2
+                                         iv_case_sensitive = abap_true ).
+            IF lv_value IS INITIAL
+               OR is_call_clause_keyword( lv_value ) = abap_true.
+              RETURN.
+            ENDIF.
+            IF lv_first = abap_true.
+              lv_first = abap_false.
+            ELSE.
+              lv_args = lv_args && ` `.
+            ENDIF.
+            lv_args = lv_args && |{ lv_name } = { lv_value }|.
+            lv_idx += 3.
+          ENDWHILE.
+          IF lv_idx <= lv_count
+             AND is_call_clause_keyword( get_token_lexeme( is_statement = is_statement
+                                                           iv_index     = lv_idx ) ) = abap_false.
+            RETURN.
+          ENDIF.
+        WHEN 'RECEIVING'.
+          IF lv_lhs IS NOT INITIAL.
+            RETURN.
+          ENDIF.
+          lv_name = get_token_lexeme( is_statement      = is_statement
+                                      iv_index          = lv_idx + 1
+                                      iv_case_sensitive = abap_true ).
+          IF lv_name IS INITIAL
+             OR is_call_clause_keyword( lv_name ) = abap_true
+             OR get_token_lexeme( is_statement = is_statement
+                                  iv_index     = lv_idx + 2 ) <> '='.
+            RETURN.
+          ENDIF.
+          lv_lhs = get_token_lexeme( is_statement      = is_statement
+                                     iv_index          = lv_idx + 3
+                                     iv_case_sensitive = abap_true ).
+          IF lv_lhs IS INITIAL.
+            RETURN.
+          ENDIF.
+          lv_idx += 4.
+        WHEN 'IMPORTING' OR 'EXCEPTIONS' OR 'EXCEPTION-TABLE'.
+          RETURN.
+        WHEN OTHERS.
+          RETURN.
+      ENDCASE.
+    ENDWHILE.
+
+    IF lv_lhs IS INITIAL.
+      rv_line = |{ lv_design }( { lv_args } ).|.
+    ELSE.
+      rv_line = |{ lv_lhs } = { lv_design }( { lv_args } ).|.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD is_call_clause_keyword.
+    DATA lv_upper TYPE string.
+
+    rv_is = abap_false.
+    lv_upper = to_upper( iv_word ).
+    CASE lv_upper.
+      WHEN 'EXPORTING' OR 'IMPORTING' OR 'RECEIVING' OR 'EXCEPTIONS' OR 'EXCEPTION-TABLE'.
+        rv_is = abap_true.
+    ENDCASE.
   ENDMETHOD.
 ENDCLASS.

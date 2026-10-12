@@ -54,7 +54,7 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
     DATA lv_param_idx TYPE i.
     DATA lv_line      TYPE string.
     DATA ls_quickfix  TYPE zcl_skylint_check_base=>ty_quickfix.
-    DATA lt_deletions TYPE zcl_skylint_check_base=>ty_token_deletions.
+    DATA lt_deletions TYPE zcl_skylint_ast_util=>ty_token_deletions.
 
     IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
@@ -78,7 +78,7 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
           IF lv_param_idx > 0.
             CLEAR ls_quickfix.
             lt_deletions = VALUE #( ( lv_param_idx ) ( lv_param_idx + 1 ) ).
-            lv_line = flatten_statement( is_statement = ls_statement
+            lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = ls_statement
                                          it_deletions = lt_deletions ).
             ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-omit_param
                                             iv_statement_from = lv_stmt_idx

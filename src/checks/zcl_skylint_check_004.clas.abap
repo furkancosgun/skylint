@@ -50,7 +50,7 @@ CLASS zcl_skylint_check_004 IMPLEMENTATION.
     DATA lv_y_lex    TYPE string.
     DATA lv_line     TYPE string.
     DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
-    DATA lt_overrides TYPE zcl_skylint_check_base=>ty_token_overrides.
+    DATA lt_overrides TYPE zcl_skylint_ast_util=>ty_token_overrides.
     FIELD-SYMBOLS <ls_statement> LIKE LINE OF is_procedure-statements.
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'IF' OR keyword = 'ELSEIF' OR keyword = 'CHECK'
@@ -77,7 +77,7 @@ CLASS zcl_skylint_check_004 IMPLEMENTATION.
                                     lexeme = 'NOT' )
                                   ( index  = lv_is_idx + 1
                                     lexeme = lv_y_lex ) ).
-          lv_line = flatten_statement( is_statement = <ls_statement>
+          lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_statement>
                                        it_overrides = lt_overrides ).
           ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-prefer_is_not
                                           iv_statement_from = lv_stmt_idx

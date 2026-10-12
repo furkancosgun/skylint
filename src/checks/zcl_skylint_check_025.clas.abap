@@ -76,7 +76,7 @@ CLASS zcl_skylint_check_025 IMPLEMENTATION.
 
       IF lv_has_receiving = abap_true AND lv_has_exceptions = abap_false.
         CLEAR ls_quickfix.
-        lv_line = build_functional_call( <ls_statement> ).
+        lv_line = zcl_skylint_ast_util=>build_functional_call( <ls_statement> ).
         IF lv_line IS NOT INITIAL.
           ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-omit_receiving
                                           iv_statement_from = lv_stmt_idx

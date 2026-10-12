@@ -62,7 +62,7 @@ CLASS zcl_skylint_check_010 IMPLEMENTATION.
     DATA lv_lit       TYPE string.
     DATA lv_line      TYPE string.
     DATA ls_quickfix  TYPE zcl_skylint_check_base=>ty_quickfix.
-    DATA lt_deletions TYPE zcl_skylint_check_base=>ty_token_deletions.
+    DATA lt_deletions TYPE zcl_skylint_ast_util=>ty_token_deletions.
     DATA ls_adj       TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_adj       TYPE string.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
@@ -95,7 +95,7 @@ CLASS zcl_skylint_check_010 IMPLEMENTATION.
               IF is_droppable( iv_operator = lv_op
                                iv_literal  = lv_lit ) = abap_true.
                 lt_deletions = VALUE #( ( lv_op_idx ) ( lv_lit_idx ) ).
-                lv_line = flatten_statement( is_statement = <ls_statement>
+                lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_statement>
                                              it_deletions = lt_deletions ).
                 ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-drop_literal
                                                 iv_statement_from = lv_stmt_idx

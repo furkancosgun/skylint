@@ -48,7 +48,7 @@ CLASS zcl_skylint_check_026 IMPLEMENTATION.
     DATA lv_meth     TYPE string.
     DATA lv_line     TYPE string.
     DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
-    DATA lt_overrides TYPE zcl_skylint_check_base=>ty_token_overrides.
+    DATA lt_overrides TYPE zcl_skylint_ast_util=>ty_token_overrides.
     DATA ls_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
 
@@ -78,7 +78,7 @@ CLASS zcl_skylint_check_026 IMPLEMENTATION.
             IF lv_meth IS NOT INITIAL.
               lt_overrides = VALUE #( ( index  = lv_tok_idx
                                         lexeme = |{ lv_class }=>{ lv_meth }| ) ).
-              lv_line = flatten_statement( is_statement = ls_stmt
+              lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = ls_stmt
                                            it_overrides = lt_overrides ).
               ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-use_class_call
                                               iv_statement_from = lv_stmt_idx

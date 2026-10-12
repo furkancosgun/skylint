@@ -53,7 +53,7 @@ CLASS zcl_skylint_check_045 IMPLEMENTATION.
       lv_stmt_idx = sy-tabix.
       IF     is_call_transaction( <ls_statement> )   = abap_true
          AND has_inline_auth_check( <ls_statement> ) = abap_false.
-        lv_line = flatten_statement( is_statement = <ls_statement>
+        lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_statement>
                                      iv_suffix    = ' WITH AUTHORITY-CHECK' ).
         ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-add_auth_check
                                         iv_statement_from = lv_stmt_idx

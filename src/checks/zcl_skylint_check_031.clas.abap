@@ -80,7 +80,7 @@ CLASS zcl_skylint_check_031 IMPLEMENTATION.
         IF lv_src_tab IS NOT INITIAL.
           lv_indent = repeat( val = ` `
                               occ = <ls_statement>-position-column ).
-          lv_line = flatten_statement( <ls_statement> ).
+          lv_line = zcl_skylint_ast_util=>flatten_statement( <ls_statement> ).
           APPEND |{ lv_indent }IF { lv_src_tab } IS NOT INITIAL.| TO lt_new_code.
           APPEND |{ lv_indent }  { lv_line }.| TO lt_new_code.
           APPEND |{ lv_indent }ENDIF.| TO lt_new_code.

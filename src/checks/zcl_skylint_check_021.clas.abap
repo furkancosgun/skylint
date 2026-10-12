@@ -53,7 +53,7 @@ CLASS zcl_skylint_check_021 IMPLEMENTATION.
     DATA lv_tok_idx  TYPE i.
     DATA lv_line     TYPE string.
     DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
-    DATA lt_overrides TYPE zcl_skylint_check_base=>ty_token_overrides.
+    DATA lt_overrides TYPE zcl_skylint_ast_util=>ty_token_overrides.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
@@ -69,7 +69,7 @@ CLASS zcl_skylint_check_021 IMPLEMENTATION.
            AND is_legacy_operator( <ls_token>-lexeme )  = abap_true.
           lt_overrides = VALUE #( ( index  = lv_tok_idx
                                     lexeme = map_to_symbol( <ls_token>-lexeme ) ) ).
-          lv_line = flatten_statement( is_statement = <ls_statement>
+          lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_statement>
                                        it_overrides = lt_overrides ).
           ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-prefer_operator
                                           iv_statement_from = lv_stmt_idx
