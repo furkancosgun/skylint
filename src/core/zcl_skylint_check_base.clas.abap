@@ -28,9 +28,6 @@ CLASS zcl_skylint_check_base DEFINITION
     METHODS constructor
       IMPORTING is_config TYPE ty_check_config OPTIONAL.
 
-    METHODS get_config
-      RETURNING VALUE(rs_config) TYPE ty_check_config.
-
   PROTECTED SECTION.
     METHODS check ABSTRACT
       IMPORTING is_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure.
@@ -42,10 +39,6 @@ CLASS zcl_skylint_check_base DEFINITION
     METHODS report_statement
       IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
                 iv_finding_code TYPE if_ci_atc_check=>ty_finding_code
-                iv_param_1      TYPE string        OPTIONAL
-                iv_param_2      TYPE string        OPTIONAL
-                iv_param_3      TYPE string        OPTIONAL
-                iv_param_4      TYPE string        OPTIONAL
                 is_quickfix     TYPE ty_quickfix   OPTIONAL
                 it_quickfixes   TYPE ty_quickfixes OPTIONAL.
 
@@ -53,10 +46,6 @@ CLASS zcl_skylint_check_base DEFINITION
       IMPORTING is_token        TYPE if_ci_atc_source_code_provider=>ty_token
                 is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
                 iv_finding_code TYPE if_ci_atc_check=>ty_finding_code
-                iv_param_1      TYPE string        OPTIONAL
-                iv_param_2      TYPE string        OPTIONAL
-                iv_param_3      TYPE string        OPTIONAL
-                iv_param_4      TYPE string        OPTIONAL
                 is_quickfix     TYPE ty_quickfix   OPTIONAL
                 it_quickfixes   TYPE ty_quickfixes OPTIONAL.
 
@@ -71,26 +60,17 @@ CLASS zcl_skylint_check_base DEFINITION
 
   PRIVATE SECTION.
     TYPES: BEGIN OF ty_reported,
-             code               TYPE if_ci_atc_check=>ty_finding_code,
-             param_1            TYPE string,
-             param_2            TYPE string,
-             param_3            TYPE string,
-             param_4            TYPE string,
-             statement          TYPE if_ci_atc_source_code_provider=>ty_statement,
-             procedure_id       TYPE if_ci_atc_source_code_provider=>ty_procedure_id,
-             has_pseudo_comment TYPE abap_bool,
-             quickfixes         TYPE ty_quickfixes,
+             code         TYPE if_ci_atc_check=>ty_finding_code,
+             statement    TYPE if_ci_atc_source_code_provider=>ty_statement,
+             procedure_id TYPE if_ci_atc_source_code_provider=>ty_procedure_id,
+             quickfixes   TYPE ty_quickfixes,
            END OF ty_reported,
            ty_reported_tab TYPE STANDARD TABLE OF ty_reported WITH EMPTY KEY.
 
     DATA ms_config        TYPE ty_check_config.
     DATA mt_reported      TYPE ty_reported_tab.
-    DATA mv_object        TYPE if_ci_atc_check=>ty_object.
     DATA mo_factory       TYPE REF TO cl_ci_atc_assistant_factory.
     DATA mo_code_provider TYPE REF TO if_ci_atc_source_code_provider.
-
-    METHODS report_finding
-      IMPORTING is_finding TYPE ty_reported.
 
     METHODS has_valid_pseudo_comment
       IMPORTING is_statement                 TYPE if_ci_atc_source_code_provider=>ty_statement
@@ -106,10 +86,6 @@ ENDCLASS.
 CLASS zcl_skylint_check_base IMPLEMENTATION.
   METHOD constructor.
     ms_config = is_config.
-  ENDMETHOD.
-
-  METHOD get_config.
-    rs_config = ms_config.
   ENDMETHOD.
 
   METHOD get_attribute.
@@ -162,10 +138,6 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
     rs_quickfix = ls_qf.
   ENDMETHOD.
 
-  METHOD report_finding.
-    APPEND is_finding TO mt_reported.
-  ENDMETHOD.
-
   METHOD report_statement.
     DATA ls_reported TYPE ty_reported.
 
@@ -174,13 +146,8 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    ls_reported-code               = iv_finding_code.
-    ls_reported-param_1            = iv_param_1.
-    ls_reported-param_2            = iv_param_2.
-    ls_reported-param_3            = iv_param_3.
-    ls_reported-param_4            = iv_param_4.
-    ls_reported-statement          = is_statement.
-    ls_reported-has_pseudo_comment = abap_false.
+    ls_reported-code      = iv_finding_code.
+    ls_reported-statement = is_statement.
     IF is_quickfix-code IS NOT INITIAL.
       APPEND is_quickfix TO ls_reported-quickfixes.
     ENDIF.
@@ -188,27 +155,20 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
       APPEND LINES OF it_quickfixes TO ls_reported-quickfixes.
     ENDIF.
 
-    report_finding( ls_reported ).
+    APPEND ls_reported TO mt_reported.
   ENDMETHOD.
 
   METHOD report_token.
     DATA ls_reported TYPE ty_reported.
-    DATA ls_position TYPE if_ci_atc_source_code_provider=>ty_source_position.
 
     IF has_valid_pseudo_comment( is_statement    = is_statement
                                  iv_finding_code = iv_finding_code ) = abap_true.
       RETURN.
     ENDIF.
 
-    ls_reported-code      = iv_finding_code.
-    ls_reported-param_1   = iv_param_1.
-    ls_reported-param_2   = iv_param_2.
-    ls_reported-param_3   = iv_param_3.
-    ls_reported-param_4   = iv_param_4.
-    ls_reported-statement = is_statement.
-    ls_position                    = is_token-position.
-    ls_reported-statement-position = ls_position.
-    ls_reported-has_pseudo_comment = abap_false.
+    ls_reported-code               = iv_finding_code.
+    ls_reported-statement          = is_statement.
+    ls_reported-statement-position = is_token-position.
     IF is_quickfix-code IS NOT INITIAL.
       APPEND is_quickfix TO ls_reported-quickfixes.
     ENDIF.
@@ -216,7 +176,7 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
       APPEND LINES OF it_quickfixes TO ls_reported-quickfixes.
     ENDIF.
 
-    report_finding( ls_reported ).
+    APPEND ls_reported TO mt_reported.
   ENDMETHOD.
 
   METHOD convert_reported.
@@ -224,47 +184,33 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
     DATA lo_fix        TYPE REF TO if_ci_atc_quickfix.
     DATA lo_context    TYPE REF TO cl_ci_atc_quickfix_context.
     DATA lo_details    TYPE REF TO cl_ci_atc_finding_details.
-    DATA lv_stmt_to    TYPE i.
-    DATA lv_tok_to     TYPE i.
 
     FIELD-SYMBOLS <ls_rep> TYPE ty_reported.
     FIELD-SYMBOLS <ls_qf>  TYPE ty_quickfix.
 
     LOOP AT mt_reported ASSIGNING <ls_rep>.
-      lo_quickfixes = mo_factory->create_quickfixes( ).
-      LOOP AT <ls_rep>-quickfixes ASSIGNING <ls_qf>.
-        lo_fix = lo_quickfixes->create_quickfix( <ls_qf>-code ).
+      CLEAR lo_details.
+      IF <ls_rep>-quickfixes IS NOT INITIAL.
+        lo_quickfixes = mo_factory->create_quickfixes( ).
+        LOOP AT <ls_rep>-quickfixes ASSIGNING <ls_qf>.
+          lo_fix = lo_quickfixes->create_quickfix( <ls_qf>-code ).
+          lo_context = mo_factory->create_quickfix_context( VALUE #( procedure_id = <ls_rep>-procedure_id
+                                                                     statements   = VALUE #(
+                                                                                        from = <ls_qf>-statement_from
+                                                                                        to   = <ls_qf>-statement_to )
+                                                                     tokens       = VALUE #(
+                                                                                        from = <ls_qf>-token_from
+                                                                                        to   = <ls_qf>-token_to ) ) ).
+          lo_fix->replace( context = lo_context
+                           code    = <ls_qf>-new_code ).
+        ENDLOOP.
+        lo_details = mo_factory->create_finding_details( )->attach_quickfixes( lo_quickfixes ).
+      ENDIF.
 
-        lv_stmt_to = <ls_qf>-statement_to.
-        IF lv_stmt_to IS INITIAL.
-          lv_stmt_to = <ls_qf>-statement_from.
-        ENDIF.
-        lv_tok_to = <ls_qf>-token_to.
-        IF lv_tok_to IS INITIAL.
-          lv_tok_to = <ls_qf>-token_from.
-        ENDIF.
-
-        lo_context = mo_factory->create_quickfix_context( VALUE #( procedure_id = <ls_rep>-procedure_id
-                                                                   statements   = VALUE #( from = <ls_qf>-statement_from
-                                                                                           to   = lv_stmt_to )
-                                                                   tokens       = VALUE #( from = <ls_qf>-token_from
-                                                                                           to   = lv_tok_to ) ) ).
-
-        lo_fix->replace( context = lo_context
-                         code    = <ls_qf>-new_code ).
-      ENDLOOP.
-
-      lo_details = mo_factory->create_finding_details( )->attach_quickfixes( lo_quickfixes ).
-
-      INSERT VALUE #( code               = <ls_rep>-code
-                      location           = mo_code_provider->get_statement_location( <ls_rep>-statement )
-                      parameters         = VALUE #( param_1 = <ls_rep>-param_1
-                                                    param_2 = <ls_rep>-param_2
-                                                    param_3 = <ls_rep>-param_3
-                                                    param_4 = <ls_rep>-param_4 )
-                      checksum           = mo_code_provider->get_statement_checksum( <ls_rep>-statement )
-                      has_pseudo_comment = <ls_rep>-has_pseudo_comment
-                      details            = lo_details )
+      INSERT VALUE #( code     = <ls_rep>-code
+                      location = mo_code_provider->get_statement_location( <ls_rep>-statement )
+                      checksum = mo_code_provider->get_statement_checksum( <ls_rep>-statement )
+                      details  = lo_details )
              INTO TABLE rt_findings.
     ENDLOOP.
   ENDMETHOD.
@@ -285,7 +231,6 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
     FIELD-SYMBOLS <ls_rep>       TYPE ty_reported.
 
     CLEAR mt_reported.
-    mv_object = object.
     mo_code_provider = data_provider->get_code_provider( ).
 
     TRY.
