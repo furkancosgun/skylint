@@ -8,6 +8,10 @@ CLASS zcl_skylint_check_031 DEFINITION
       BEGIN OF c_finding_codes,
         unsecure_fae TYPE if_ci_atc_check=>ty_finding_code VALUE 'FAENOCHECK',
       END OF c_finding_codes.
+    CONSTANTS:
+      BEGIN OF c_quickfix_codes,
+        add_guard TYPE cl_ci_atc_quickfixes=>ty_quickfix_code VALUE 'FAEGUARD',
+      END OF c_quickfix_codes.
 
     METHODS constructor.
 
@@ -18,6 +22,10 @@ CLASS zcl_skylint_check_031 DEFINITION
     METHODS extract_fae_table
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_tab) TYPE string.
+
+    METHODS fae_source_name
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_name) TYPE string.
 
     METHODS has_preceding_check
       IMPORTING it_statements  TYPE if_ci_atc_source_code_provider=>ty_statements
@@ -39,15 +47,22 @@ CLASS zcl_skylint_check_031 IMPLEMENTATION.
         VALUE #(
             description       = 'Unsecure FOR ALL ENTRIES (Missing empty itab check)'
             remote_enablement = abap_true
-            finding_codes     = VALUE #(
-                ( code     = c_finding_codes-unsecure_fae
-                  severity = if_ci_atc_check=>finding_severities-warning
-                  text     = 'FOR ALL ENTRIES without preceding IS NOT INITIAL check causes full table scan' ) ) ) ).
+             finding_codes     = VALUE #(
+                 ( code     = c_finding_codes-unsecure_fae
+                   severity = if_ci_atc_check=>finding_severities-warning
+                   text     = 'FOR ALL ENTRIES without preceding IS NOT INITIAL check causes full table scan' ) )
+             quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-add_guard
+                                            short_text = 'Add empty-check guard' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     DATA lv_idx     TYPE i.
     DATA lv_fae_tab TYPE string.
+    DATA lv_src_tab TYPE string.
+    DATA lv_indent  TYPE string.
+    DATA lv_line    TYPE string.
+    DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
+    DATA lt_new_code TYPE zcl_skylint_check_base=>ty_code_lines.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
@@ -59,8 +74,23 @@ CLASS zcl_skylint_check_031 IMPLEMENTATION.
          AND has_preceding_check( it_statements  = is_procedure-statements
                                   iv_current_idx = lv_idx
                                   iv_tab_name    = lv_fae_tab )             = abap_false.
+        CLEAR ls_quickfix.
+        CLEAR lt_new_code.
+        lv_src_tab = fae_source_name( <ls_statement> ).
+        IF lv_src_tab IS NOT INITIAL.
+          lv_indent = repeat( val = ` `
+                              occ = <ls_statement>-position-column ).
+          lv_line = flatten_statement( <ls_statement> ).
+          APPEND |{ lv_indent }IF { lv_src_tab } IS NOT INITIAL.| TO lt_new_code.
+          APPEND |{ lv_indent }  { lv_line }.| TO lt_new_code.
+          APPEND |{ lv_indent }ENDIF.| TO lt_new_code.
+          ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-add_guard
+                                          iv_statement_from = lv_idx
+                                          it_new_code       = lt_new_code ).
+        ENDIF.
         report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-unsecure_fae ).
+                          iv_finding_code = c_finding_codes-unsecure_fae
+                          is_quickfix     = ls_quickfix ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
@@ -82,6 +112,26 @@ CLASS zcl_skylint_check_031 IMPLEMENTATION.
       lv_name = lv_name+1.
     ENDIF.
     rv_tab = to_upper( lv_name ).
+  ENDMETHOD.
+
+  METHOD fae_source_name.
+    DATA ls_tab_token TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    CLEAR rv_name.
+    ls_tab_token = zcl_skylint_ast_util=>get_token_after_sequence(
+                       is_statement = is_statement
+                       it_expected  = VALUE #( ( `FOR` ) ( `ALL` ) ( `ENTRIES` ) ( `IN` ) ) ).
+    IF ls_tab_token-lexeme IS INITIAL.
+      RETURN.
+    ENDIF.
+
+    rv_name = ls_tab_token-lexeme.
+    IF rv_name(1) = '@'.
+      rv_name = rv_name+1.
+    ENDIF.
+    IF rv_name IS INITIAL.
+      CLEAR rv_name.
+    ENDIF.
   ENDMETHOD.
 
   METHOD has_preceding_check.

@@ -8,6 +8,10 @@ CLASS zcl_skylint_check_024 DEFINITION
       BEGIN OF c_finding_codes,
         prefer_xsdbool TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFERXSDB',
       END OF c_finding_codes.
+    CONSTANTS:
+      BEGIN OF c_quickfix_codes,
+        use_xsdbool TYPE cl_ci_atc_quickfixes=>ty_quickfix_code VALUE 'TOXSDBOOL',
+      END OF c_quickfix_codes.
 
     METHODS constructor.
 
@@ -19,6 +23,13 @@ CLASS zcl_skylint_check_024 DEFINITION
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
       EXPORTING ev_target    TYPE string
                 ev_is_bool   TYPE abap_bool.
+
+    METHODS build_xsdbool_line
+      IMPORTING is_if_statement TYPE if_ci_atc_source_code_provider=>ty_statement
+                is_then         TYPE if_ci_atc_source_code_provider=>ty_statement
+                is_else         TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_target       TYPE string
+      RETURNING VALUE(rv_line)  TYPE string.
 
     METHODS is_boolean_value
       IMPORTING iv_lexeme     TYPE string
@@ -37,10 +48,12 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
     super->constructor(
         VALUE #( description       = 'Prefer xsdbool( ) expression over manual IF-ELSE assignment'
                  remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code     = c_finding_codes-prefer_xsdbool
-                       severity = if_ci_atc_check=>finding_severities-warning
-                       text     = 'Prefer xsdbool( ... ) instead of manual IF-ELSE boolean assignment' ) ) ) ).
+                                 finding_codes     = VALUE #(
+                                     ( code     = c_finding_codes-prefer_xsdbool
+                                       severity = if_ci_atc_check=>finding_severities-warning
+                                       text     = 'Prefer xsdbool( ) over manual IF-ELSE assignment' ) )
+                                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-use_xsdbool
+                                                                short_text = 'Use xsdbool( )' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -54,6 +67,8 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
     DATA lv_target_2       TYPE string.
     DATA lv_is_bool_1      TYPE abap_bool.
     DATA lv_is_bool_2      TYPE abap_bool.
+    DATA lv_line           TYPE string.
+    DATA ls_quickfix       TYPE zcl_skylint_check_base=>ty_quickfix.
     FIELD-SYMBOLS <ls_stmt_if> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     lv_max = zcl_skylint_ast_util=>statement_count( is_procedure-statements ).
@@ -94,8 +109,20 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
                                        ev_is_bool   = lv_is_bool_2 ).
 
       IF lv_is_bool_1 = abap_true AND lv_is_bool_2 = abap_true AND lv_target_1 = lv_target_2.
+        CLEAR ls_quickfix.
+        lv_line = build_xsdbool_line( is_if_statement = <ls_stmt_if>
+                                      is_then         = ls_stmt_then
+                                      is_else         = ls_stmt_else_body
+                                      iv_target       = lv_target_1 ).
+        IF lv_line IS NOT INITIAL.
+          ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-use_xsdbool
+                                          iv_statement_from = lv_idx
+                                          iv_statement_to   = lv_idx + 4
+                                          it_new_code       = VALUE #( ( lv_line ) ) ).
+        ENDIF.
         report_statement( is_statement    = <ls_stmt_if>
-                          iv_finding_code = c_finding_codes-prefer_xsdbool ).
+                          iv_finding_code = c_finding_codes-prefer_xsdbool
+                          is_quickfix     = ls_quickfix ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
@@ -158,5 +185,52 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
       RETURN.
     ENDIF.
     rv_res = is_boolean_value( iv_lexeme ).
+  ENDMETHOD.
+
+  METHOD build_xsdbool_line.
+    DATA lv_count     TYPE i.
+    DATA lv_idx       TYPE i.
+    DATA lv_lex       TYPE string.
+    DATA lv_cond      TYPE string.
+    DATA lv_then_val  TYPE string.
+    DATA lv_else_val  TYPE string.
+    DATA lv_indent    TYPE string.
+
+    CLEAR rv_line.
+
+    lv_then_val = to_upper( zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_then
+                                                                    iv_index     = 3 ) ).
+    lv_else_val = to_upper( zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_else
+                                                                    iv_index     = 3 ) ).
+    IF NOT ( ( lv_then_val = 'ABAP_TRUE' OR lv_then_val = '''X''' )
+         AND ( lv_else_val = 'ABAP_FALSE' OR lv_else_val = '''''' ) ).
+      RETURN.
+    ENDIF.
+
+    lv_count = zcl_skylint_ast_util=>token_count( is_if_statement ).
+    IF lv_count < 2.
+      RETURN.
+    ENDIF.
+
+    lv_cond = ''.
+    lv_idx = 2.
+    WHILE lv_idx <= lv_count.
+      lv_lex = zcl_skylint_ast_util=>get_token_lexeme( is_statement      = is_if_statement
+                                                       iv_index          = lv_idx
+                                                       iv_case_sensitive = abap_true ).
+      IF lv_lex IS INITIAL.
+        RETURN.
+      ENDIF.
+      IF lv_cond IS INITIAL.
+        lv_cond = lv_lex.
+      ELSE.
+        lv_cond = lv_cond && ` ` && lv_lex.
+      ENDIF.
+      lv_idx += 1.
+    ENDWHILE.
+
+    lv_indent = repeat( val = ` `
+                        occ = is_if_statement-position-column ).
+    rv_line = |{ lv_indent }{ iv_target } = xsdbool( { lv_cond } ).|.
   ENDMETHOD.
 ENDCLASS.
