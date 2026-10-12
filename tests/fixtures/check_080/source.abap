@@ -6,6 +6,7 @@ CLASS zcl_skylint_test_080 DEFINITION
     METHODS test_001.
     METHODS test_002.
     METHODS test_003.
+    METHODS test_004.
 ENDCLASS.
 
 CLASS zcl_skylint_test_080 IMPLEMENTATION.
@@ -20,5 +21,10 @@ CLASS zcl_skylint_test_080 IMPLEMENTATION.
 
   METHOD test_003.
     STATICS sv_stat TYPE i.
+  ENDMETHOD.
+
+  METHOD test_004.
+    DATA lv_val TYPE i.
+    EXPORT lv_val TO MEMORY ID 'KEY'.
   ENDMETHOD.
 ENDCLASS.

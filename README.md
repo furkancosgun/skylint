@@ -26,7 +26,7 @@ skylint/
 │   │   ├── zcl_skylint_ast_util.clas.abap        # AST & token sequence traversal utility
 │   │   └── zcl_skylint_rtti_util.clas.abap       # Safe ABAP RTTI inspection utility
 │   │
-│   ├── checks/                                   # 79 Modular Check Implementations (001 - 079)
+│   ├── checks/                                   # 81 Modular Check Implementations (001 - 081)
 │   │   ├── zcl_skylint_check_001.clas.abap       # Check class implementation
 │   │   └── zcl_skylint_check_001.clas.xml        # abapGit XML metadata
 │   └── deps/atc/src/                             # Local-only ATC framework stubs (never shipped)
@@ -126,7 +126,7 @@ All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 | **077** | [zcl_skylint_check_077](src/checks/zcl_skylint_check_077.clas.abap) | Detect unused local variables and field symbols | `UNUSED_VAR` | `"#EC NEEDED"` | ✅ Done | — |
 | **078** | [zcl_skylint_check_078](src/checks/zcl_skylint_check_078.clas.abap) | Enforce local declaration order (TYPES -> CONSTANTS -> DATA -> FIELD-SYMBOLS) | `DECL_ORDER` | `—` | ✅ Done | — |
 | **079** | [zcl_skylint_check_079](src/checks/zcl_skylint_check_079.clas.abap) | Detect unnecessary exclamation mark parameter escape (!iv_param) | `PARAM_ESCP` | `—` | ✅ Done | ⚡ Ready |
-| **080** | [zcl_skylint_check_080](src/checks/zcl_skylint_check_080.clas.abap) | Avoid use of certain statements (BREAK, DEFAULT KEY, STATICS, DEFINE, etc.) | `AVOID_USE` | `—` | ✅ Done | — |
+| **080** | [zcl_skylint_check_080](src/checks/zcl_skylint_check_080.clas.abap) | Avoid use of certain statements (BREAK, STATICS, DEFINE, EXPORT) | `AVOID_USE` | `—` | ✅ Done | — |
 | **081** | [zcl_skylint_check_081](src/checks/zcl_skylint_check_081.clas.abap) | Change IF to CASE when checking the same variable against multiple values | `USE_CASE` | `—` | ✅ Done | — |
 
 ---
@@ -250,14 +250,14 @@ Single-branch, ATC-native delivery — no adapters, no platform branches:
 ```
            ┌──────────────────────────────────────────────┐
            │              main (ATC-Native)               │
-           │  • 79 Rules (if_ci_atc_check)               │
+           │  • 81 Rules (if_ci_atc_check)               │
            │  • Framework Types (if_ci_atc_*)            │
            │  • Shared Base + Metadata (core/)           │
            └──────────────────────────────────────────────┘
 ```
 
 1. **`src/core/`**: `zcl_skylint_check_base` (implements `if_ci_atc_check`: procedure loop, checksum/location, quickfix contexts), `zcl_skylint_check_meta_data` (shared `if_ci_atc_check_meta_data`), AST/RTTI utilities.
-2. **`src/checks/`**: 79 rule classes, each directly selectable in ATC check variants.
+2. **`src/checks/`**: 81 rule classes, each directly selectable in ATC check variants.
 3. **`deps/atc/src/`**: Local-only ATC framework stubs for abaplint resolution — never shipped via abapGit (real SAP systems provide these natively).
 
 ---

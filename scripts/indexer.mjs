@@ -179,6 +179,36 @@ function extractCheckMetadata(id) {
 }
 
 /**
+ * Update global rule counts and statistics across README.md
+ */
+function updateReadmeStats(readme, checks) {
+  const total = checks.length;
+  const firstId = checks.length > 0 ? checks[0].id : '001';
+  const lastId = checks.length > 0 ? checks[checks.length - 1].id : '001';
+
+  // 1. Directory tree comment
+  readme = readme.replace(
+    /(├── checks\/\s+#\s*)\d+(\s+Modular Check Implementations\s*\()[^)]*(\))/,
+    `$1${total}$2${firstId} - ${lastId}$3`
+  );
+
+  // 2. Architecture ASCII box diagram: inner width with bullet char is 45 chars
+  const boxText = `  • ${total} Rules (if_ci_atc_check)`.padEnd(45, ' ');
+  readme = readme.replace(
+    /│\s*•\s*\d+\s*Rules\s*\(if_ci_atc_check\)\s*│/,
+    `│${boxText}│`
+  );
+
+  // 3. Architecture section description
+  readme = readme.replace(
+    /(\*\*`src\/checks\/`\*\*:\s*)\d+(\s+rule classes)/,
+    `$1${total}$2`
+  );
+
+  return readme;
+}
+
+/**
  * Generate README.md check catalog purely from source code without levels
  */
 function generateReadmeCatalog(checks) {
@@ -212,8 +242,10 @@ function generateReadmeCatalog(checks) {
   }
 
   readme = readme.replace(markerRegex, catalogMd);
+  readme = updateReadmeStats(readme, checks);
+
   fs.writeFileSync(readmePath, readme, 'utf8');
-  console.log('✓ README.md catalog generated successfully.');
+  console.log('✓ README.md catalog and architecture statistics generated successfully.');
 }
 
 function main() {

@@ -32,18 +32,17 @@ CLASS zcl_skylint_check_044 IMPLEMENTATION.
                                      ( code     = c_finding_codes-dangerous_statement
                                        severity = if_ci_atc_check=>finding_severities-warning
                                        text     = 'Dangerous or unmanaged dynamic statement detected' ) )
-                                 attributes        = VALUE #(
-                                     kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                                     ( name  = 'CHECK_SYSTEM_CALL'
-                                       value = REF #( mv_check_system_call ) )
-                                     ( name  = 'CHECK_SYNTAX_CHECK'
-                                       value = REF #( mv_check_syntax_check ) )
-                                     ( name  = 'CHECK_GENERATE_SUBROUTINE'
-                                       value = REF #( mv_check_generate_subroutine ) )
-                                     ( name  = 'CHECK_REPORT_MANIPULATION'
-                                       value = REF #( mv_check_report_manipulation ) )
-                                     ( name  = 'CHECK_EXEC_SQL'
-                                       value = REF #( mv_check_exec_sql ) ) ) ) ).
+                                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                                              ( name  = 'CHECK_SYSTEM_CALL'
+                                                                value = REF #( mv_check_system_call ) )
+                                                              ( name  = 'CHECK_SYNTAX_CHECK'
+                                                                value = REF #( mv_check_syntax_check ) )
+                                                              ( name  = 'CHECK_GENERATE_SUBROUTINE'
+                                                                value = REF #( mv_check_generate_subroutine ) )
+                                                              ( name  = 'CHECK_REPORT_MANIPULATION'
+                                                                value = REF #( mv_check_report_manipulation ) )
+                                                              ( name  = 'CHECK_EXEC_SQL'
+                                                                value = REF #( mv_check_exec_sql ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -66,7 +65,7 @@ CLASS zcl_skylint_check_044 IMPLEMENTATION.
          AND <ls_statement>-keyword = 'EXEC'
          AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
                                                      iv_index     = 2
-                                                     iv_expected  = `SQL` ) = abap_true.
+                                                     iv_expected  = `SQL` )        = abap_true.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-dangerous_statement ).
         CONTINUE.
