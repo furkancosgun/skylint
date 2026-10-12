@@ -325,8 +325,9 @@ Plain abapGit class XML (no test include — tests live in `tests/fixtures/`, no
 ```
 
 ### 3. Test Fixture (`tests/fixtures/check_XXX/`)
-Each check keeps a fixture directory as test data (the JS harness was removed —
-it fed legacy structures incompatible with ATC-native checks).
+Each check keeps a fixture directory as test data, executed by the ATC-native
+harness (`test/run.mjs`: fixture → `ty_procedure` → real `if_ci_atc_check~run`
+with JS test doubles for the SAP boundary).
 `METHOD..ENDMETHOD` (or `CLASS DEFINITION`/`INTERFACE`) blocks map to slices, so `line`/`column`
 in `expected.json` stay relative to the sliced block.
 
@@ -359,8 +360,8 @@ ENDCLASS.
 ```
 
 Notes:
-- There is no ABAP test runner anymore. Verification happens on an ATC-capable
-  SAP system via abapGit import + ATC check variant run.
+- Local verification: `npm run build && node test/run.mjs [XXX]` runs fixtures
+  through the real `if_ci_atc_check~run` (JS fakes for provider/factory).
 - `expected.json` rows target either a `METHOD name` slice or a `CLASS/INTERFACE name` definition block
   (`method = 'LCL_CHILD'` slices `CLASS lcl_child DEFINITION..ENDCLASS.`). Method rows fall back to a class
   definition block when the body is empty/`RETURN.` only.

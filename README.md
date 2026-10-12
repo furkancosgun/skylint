@@ -180,7 +180,8 @@ ENDCLASS.
 
 ### Step 2: Add Test Fixtures (`tests/fixtures/check_002/`)
 
-Each check keeps a fixture directory as test data (JS verification harness removed):
+Each check keeps a fixture directory as test data, executed by the
+ATC-native JS harness (`test/run.mjs`):
 
 * `source.abap` — full test class source (sliced per `METHOD` or per `CLASS DEFINITION` block).
 * `expected.json` — expected findings, e.g.:
@@ -193,9 +194,9 @@ Each check keeps a fixture directory as test data (JS verification harness remov
   `code: null` asserts zero findings. Line numbers are relative to the sliced
   block (line 1 = `METHOD` statement).
 
-  > Fixture-based JS verification is currently parked (the harness still feeds
-  > legacy structures). New checks are verified on an ATC-capable SAP system
-  > via abapGit import + ATC check variant run.
+  > Fixture-based verification runs locally: `npm run build && node test/run.mjs`.
+  > The harness parses fixtures into `ty_procedure` values and drives the real
+  > `if_ci_atc_check~run` with JS test doubles for the SAP boundary.
 
 ### Step 3: Add Native QuickFix Support (Optional)
 
@@ -267,9 +268,9 @@ npm install
 npm run lint
 ```
 
-> Node.js test harness (`scripts/skylint-test/`) was removed: it fed legacy
-> structures incompatible with the ATC-native checks. Verification happens on
-> an ATC-capable SAP system (abapGit import + ATC check variant run).
+> Node.js test harness (`test/run.mjs`) is ATC-native: fixtures are parsed into
+> `ty_procedure` values and the real `if_ci_atc_check~run` executes with JS
+> test doubles standing in for the SAP provider/factory. Run via `npm test`.
 
 ---
 
