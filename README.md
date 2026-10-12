@@ -41,7 +41,7 @@ skylint/
 
 ---
 
-## 📋 Clean ABAP & Cloud Rule Catalog (79 Rules)
+## 📋 Clean ABAP & Cloud Rule Catalog (81 Rules)
 
 All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 
@@ -126,6 +126,8 @@ All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 | **077** | [zcl_skylint_check_077](src/checks/zcl_skylint_check_077.clas.abap) | Detect unused local variables and field symbols | `UNUSED_VAR` | `"#EC NEEDED"` | ✅ Done | — |
 | **078** | [zcl_skylint_check_078](src/checks/zcl_skylint_check_078.clas.abap) | Enforce local declaration order (TYPES -> CONSTANTS -> DATA -> FIELD-SYMBOLS) | `DECL_ORDER` | `—` | ✅ Done | — |
 | **079** | [zcl_skylint_check_079](src/checks/zcl_skylint_check_079.clas.abap) | Detect unnecessary exclamation mark parameter escape (!iv_param) | `PARAM_ESCP` | `—` | ✅ Done | ⚡ Ready |
+| **080** | [zcl_skylint_check_080](src/checks/zcl_skylint_check_080.clas.abap) | Avoid use of certain statements (BREAK, DEFAULT KEY, STATICS, DEFINE, etc.) | `AVOID_USE` | `—` | ✅ Done | — |
+| **081** | [zcl_skylint_check_081](src/checks/zcl_skylint_check_081.clas.abap) | Change IF to CASE when checking the same variable against multiple values | `USE_CASE` | `—` | ✅ Done | — |
 
 ---
 

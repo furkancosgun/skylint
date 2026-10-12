@@ -15,6 +15,13 @@ CLASS zcl_skylint_check_014 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
+    DATA mv_check_if    TYPE abap_bool VALUE abap_true.
+    DATA mv_check_loop  TYPE abap_bool VALUE abap_true.
+    DATA mv_check_case  TYPE abap_bool VALUE abap_true.
+    DATA mv_check_try   TYPE abap_bool VALUE abap_true.
+    DATA mv_check_do    TYPE abap_bool VALUE abap_true.
+    DATA mv_check_while TYPE abap_bool VALUE abap_true.
+
     METHODS is_empty_control_block
       IMPORTING iv_current_kw TYPE string
                 iv_next_kw    TYPE string
@@ -25,20 +32,78 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_014 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Detect empty control blocks (IF, CASE, LOOP, TRY, etc.)'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code     = c_finding_codes-empty_control_block
-                       severity = if_ci_atc_check=>finding_severities-warning
-                       text     = 'Empty control block detected; remove redundant control statement' ) ) ) ).
+    super->constructor( VALUE #( description       = 'Detect empty control blocks (IF, CASE, LOOP, TRY, etc.)'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code     = c_finding_codes-empty_control_block
+                                       severity = if_ci_atc_check=>finding_severities-warning
+                                       text     = 'Empty control block detected; remove redundant control statement' ) )
+                                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                                              ( name  = 'CHECK_IF'
+                                                                value = REF #( mv_check_if ) )
+                                                              ( name  = 'CHECK_LOOP'
+                                                                value = REF #( mv_check_loop ) )
+                                                              ( name  = 'CHECK_CASE'
+                                                                value = REF #( mv_check_case ) )
+                                                              ( name  = 'CHECK_TRY'
+                                                                value = REF #( mv_check_try ) )
+                                                              ( name  = 'CHECK_DO'
+                                                                value = REF #( mv_check_do ) )
+                                                              ( name  = 'CHECK_WHILE'
+                                                                value = REF #( mv_check_while ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA ls_next_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_check_if    TYPE abap_bool.
+    DATA lv_check_loop  TYPE abap_bool.
+    DATA lv_check_case  TYPE abap_bool.
+    DATA lv_check_try   TYPE abap_bool.
+    DATA lv_check_do    TYPE abap_bool.
+    DATA lv_check_while TYPE abap_bool.
+    DATA ls_next_stmt   TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    get_attribute( EXPORTING iv_name  = 'CHECK_IF'
+                   IMPORTING ev_value = lv_check_if ).
+    get_attribute( EXPORTING iv_name  = 'CHECK_LOOP'
+                   IMPORTING ev_value = lv_check_loop ).
+    get_attribute( EXPORTING iv_name  = 'CHECK_CASE'
+                   IMPORTING ev_value = lv_check_case ).
+    get_attribute( EXPORTING iv_name  = 'CHECK_TRY'
+                   IMPORTING ev_value = lv_check_try ).
+    get_attribute( EXPORTING iv_name  = 'CHECK_DO'
+                   IMPORTING ev_value = lv_check_do ).
+    get_attribute( EXPORTING iv_name  = 'CHECK_WHILE'
+                   IMPORTING ev_value = lv_check_while ).
+
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      CASE <ls_statement>-keyword.
+        WHEN 'IF' OR 'ELSEIF' OR 'ELSE'.
+          IF lv_check_if = abap_false.
+            CONTINUE.
+          ENDIF.
+        WHEN 'LOOP'.
+          IF lv_check_loop = abap_false.
+            CONTINUE.
+          ENDIF.
+        WHEN 'CASE' OR 'WHEN'.
+          IF lv_check_case = abap_false.
+            CONTINUE.
+          ENDIF.
+        WHEN 'TRY'.
+          IF lv_check_try = abap_false.
+            CONTINUE.
+          ENDIF.
+        WHEN 'DO'.
+          IF lv_check_do = abap_false.
+            CONTINUE.
+          ENDIF.
+        WHEN 'WHILE'.
+          IF lv_check_while = abap_false.
+            CONTINUE.
+          ENDIF.
+      ENDCASE.
+
       ls_next_stmt = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_procedure-statements
                                                                iv_current_index = sy-tabix ).
       IF     ls_next_stmt-keyword IS NOT INITIAL

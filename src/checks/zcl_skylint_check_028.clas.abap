@@ -19,6 +19,13 @@ CLASS zcl_skylint_check_028 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
+    DATA mv_check_move         TYPE abap_bool VALUE abap_true.
+    DATA mv_check_refresh      TYPE abap_bool VALUE abap_true.
+    DATA mv_check_compute      TYPE abap_bool VALUE abap_true.
+    DATA mv_check_tables       TYPE abap_bool VALUE abap_true.
+    DATA mv_check_field_groups TYPE abap_bool VALUE abap_true.
+    DATA mv_check_test_seams   TYPE abap_bool VALUE abap_true.
+
     METHODS is_obsolete_keyword
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -35,28 +42,59 @@ CLASS zcl_skylint_check_028 IMPLEMENTATION.
                                        severity = if_ci_atc_check=>finding_severities-warning
                                        text     = 'Avoid obsolete statement; use modern expressions instead' ) )
                                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-replace_obsolete
-                                                                short_text = 'Replace obsolete statement' ) ) ) ).
+                                                                short_text = 'Replace obsolete statement' ) )
+                                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                                              ( name  = 'CHECK_MOVE'
+                                                                value = REF #( mv_check_move ) )
+                                                              ( name  = 'CHECK_REFRESH'
+                                                                value = REF #( mv_check_refresh ) )
+                                                              ( name  = 'CHECK_COMPUTE'
+                                                                value = REF #( mv_check_compute ) )
+                                                              ( name  = 'CHECK_TABLES'
+                                                                value = REF #( mv_check_tables ) )
+                                                              ( name  = 'CHECK_FIELD_GROUPS'
+                                                                value = REF #( mv_check_field_groups ) )
+                                                              ( name  = 'CHECK_TEST_SEAMS'
+                                                                value = REF #( mv_check_test_seams ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_stmt_idx TYPE i.
-    DATA lv_line     TYPE string.
-    DATA lv_src      TYPE string.
-    DATA lv_dst      TYPE string.
-    DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
+    DATA lv_stmt_idx           TYPE i.
+    DATA lv_line               TYPE string.
+    DATA lv_src                TYPE string.
+    DATA lv_dst                TYPE string.
+    DATA lv_check_move         TYPE abap_bool.
+    DATA lv_check_refresh      TYPE abap_bool.
+    DATA lv_check_compute      TYPE abap_bool.
+    DATA lv_check_tables       TYPE abap_bool.
+    DATA lv_check_field_groups TYPE abap_bool.
+    DATA lv_check_test_seams   TYPE abap_bool.
+    DATA ls_quickfix           TYPE zcl_skylint_check_base=>ty_quickfix.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+
+    get_attribute( EXPORTING iv_name  = 'CHECK_MOVE'
+                   IMPORTING ev_value = lv_check_move ).
+    get_attribute( EXPORTING iv_name  = 'CHECK_REFRESH'
+                   IMPORTING ev_value = lv_check_refresh ).
+    get_attribute( EXPORTING iv_name  = 'CHECK_COMPUTE'
+                   IMPORTING ev_value = lv_check_compute ).
+    get_attribute( EXPORTING iv_name  = 'CHECK_TABLES'
+                   IMPORTING ev_value = lv_check_tables ).
+    get_attribute( EXPORTING iv_name  = 'CHECK_FIELD_GROUPS'
+                   IMPORTING ev_value = lv_check_field_groups ).
+    get_attribute( EXPORTING iv_name  = 'CHECK_TEST_SEAMS'
+                   IMPORTING ev_value = lv_check_test_seams ).
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_stmt_idx = sy-tabix.
       CLEAR ls_quickfix.
       CLEAR lv_line.
 
-      IF is_obsolete_keyword( <ls_statement> ) = abap_false.
-        CONTINUE.
-      ENDIF.
-
       CASE <ls_statement>-keyword.
         WHEN 'MOVE'.
+          IF lv_check_move = abap_false.
+            CONTINUE.
+          ENDIF.
           IF     zcl_skylint_ast_util=>token_count( <ls_statement> )                   = 4
              AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
                                                          iv_index     = 3
@@ -68,19 +106,41 @@ CLASS zcl_skylint_check_028 IMPLEMENTATION.
             lv_line = |{ lv_dst } = { lv_src }.|.
           ENDIF.
         WHEN 'REFRESH'.
+          IF lv_check_refresh = abap_false.
+            CONTINUE.
+          ENDIF.
           IF zcl_skylint_ast_util=>token_count( <ls_statement> ) = 2.
             lv_dst = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
                                                              iv_index     = 2 ).
             lv_line = |CLEAR { lv_dst }.|.
           ENDIF.
         WHEN 'COMPUTE'.
+          IF lv_check_compute = abap_false.
+            CONTINUE.
+          ENDIF.
           IF zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
                                                      iv_index     = 1
                                                      iv_expected  = `COMPUTE` ) = abap_true.
             lv_line = condense( zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_statement>
                                                                          it_deletions = VALUE #( ( 1 ) )
                                                                          iv_suffix    = '.' ) ).
+          ELSE.
+            CONTINUE.
           ENDIF.
+        WHEN 'TABLES'.
+          IF lv_check_tables = abap_false.
+            CONTINUE.
+          ENDIF.
+        WHEN 'FIELD-GROUPS'.
+          IF lv_check_field_groups = abap_false.
+            CONTINUE.
+          ENDIF.
+        WHEN 'TEST-SEAM' OR 'TEST-INJECT'.
+          IF lv_check_test_seams = abap_false.
+            CONTINUE.
+          ENDIF.
+        WHEN OTHERS.
+          CONTINUE.
       ENDCASE.
 
       IF lv_line IS NOT INITIAL.

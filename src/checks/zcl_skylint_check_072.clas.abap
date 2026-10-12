@@ -31,11 +31,11 @@ CLASS zcl_skylint_check_072 IMPLEMENTATION.
                                      ( code = c_finding_codes-condense_stmt
                                        text = 'Use modern built-in string function condense( ... ) instead' )
                                      ( code = c_finding_codes-translate_stmt
-                                       text = 'Use modern string functions ) or to_lower( instead' ) )
+                                       text = 'Use modern string functions to_upper() or to_lower() instead' ) )
                                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-condense_stmt
                                                                 short_text = 'Use condense( ) function' )
                                                               ( code       = c_quickfix_codes-translate_stmt
-                                                                short_text = 'Use  /to_lower( )' ) ) ) ).
+                                                                short_text = 'Use to_upper( )/to_lower( )' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -84,7 +84,7 @@ CLASS zcl_skylint_check_072 IMPLEMENTATION.
             IF zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
                                                        iv_index     = 4
                                                        iv_expected  = `UPPER` ) = abap_true.
-              lv_line = |{ lv_var } =  { lv_var } .|.
+              lv_line = |{ lv_var } = to_upper( { lv_var } ).|.
               lv_fix_code = c_quickfix_codes-translate_stmt.
             ELSEIF zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
                                                            iv_index     = 4

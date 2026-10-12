@@ -1,0 +1,20 @@
+[
+  {
+    "method": "TEST_001",
+    "code": "AVOID_USE",
+    "line": 2,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "method": "TEST_002",
+    "code": null
+  },
+  {
+    "method": "TEST_003",
+    "code": "AVOID_USE",
+    "line": 2,
+    "column": 4,
+    "quickfixes": []
+  }
+]
