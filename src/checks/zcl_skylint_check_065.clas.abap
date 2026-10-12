@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_065 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        avoid_form TYPE zif_skylint_types=>ty_finding_code VALUE 'AVOID_FORM',
+        avoid_form TYPE if_ci_atc_check=>ty_finding_code VALUE 'AVOID_FORM',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -23,14 +23,14 @@ CLASS zcl_skylint_check_065 IMPLEMENTATION.
                             remote_enablement = abap_true
                             finding_codes     = VALUE #(
                                 ( code     = c_finding_codes-avoid_form
-                                  severity = zif_skylint_types=>severities-warning
+                                  severity = if_ci_atc_check=>finding_severities-warning
                                   text     = 'Avoid obsolete FORM/PERFORM subroutines; use methods instead' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'PERFORM' OR keyword = 'FORM'.
       report_statement( is_statement    = <ls_statement>
                         iv_finding_code = c_finding_codes-avoid_form ).

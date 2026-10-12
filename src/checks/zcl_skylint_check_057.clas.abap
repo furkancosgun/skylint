@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_057 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        deep_inheritance TYPE zif_skylint_types=>ty_finding_code VALUE 'DEEP_INHRT',
+        deep_inheritance TYPE if_ci_atc_check=>ty_finding_code VALUE 'DEEP_INHRT',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -27,20 +27,20 @@ CLASS zcl_skylint_check_057 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code     = c_finding_codes-deep_inheritance
-                       severity = zif_skylint_types=>severities-warning
+                       severity = if_ci_atc_check=>finding_severities-warning
                        text     = 'Avoid deep class inheritance; prefer composition over inheritance' ) )
                  attributes        = VALUE #( ( name  = 'MAX_DEPTH'
-                                                kind  = zif_skylint_types=>attribute_kinds-integer
+                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
                                                 value = REF #( mv_max_depth ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA ls_statement TYPE zif_skylint_types=>ty_statement.
+    DATA ls_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA lo_class     TYPE REF TO cl_abap_classdescr.
     DATA lt_supers    TYPE string_table.
     DATA lv_max_depth TYPE i.
 
-    IF is_code_block-block_kind <> zif_skylint_types=>block_kinds-class_definition.
+    IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
@@ -51,14 +51,14 @@ CLASS zcl_skylint_check_057 IMPLEMENTATION.
       lv_max_depth = mv_max_depth.
     ENDIF.
 
-    lo_class = zcl_skylint_rtti_util=>describe_class( is_code_block-object_name ).
+    lo_class = zcl_skylint_rtti_util=>describe_class( is_procedure-id-main_unit-name ).
     IF lo_class IS NOT BOUND.
       RETURN.
     ENDIF.
 
-    lt_supers = zcl_skylint_rtti_util=>get_super_classes( is_code_block-object_name ).
+    lt_supers = zcl_skylint_rtti_util=>get_super_classes( is_procedure-id-main_unit-name ).
 
-    ls_statement = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
+    ls_statement = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
                                                         iv_index      = 1 ).
     IF     lines( lt_supers )    > lv_max_depth
        AND ls_statement-keyword IS NOT INITIAL.

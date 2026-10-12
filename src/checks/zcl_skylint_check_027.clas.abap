@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_027 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        public_attribute TYPE zif_skylint_types=>ty_finding_code VALUE 'NOPUBATTR',
+        public_attribute TYPE if_ci_atc_check=>ty_finding_code VALUE 'NOPUBATTR',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -23,19 +23,19 @@ CLASS zcl_skylint_check_027 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code     = c_finding_codes-public_attribute
-                       severity = zif_skylint_types=>severities-warning
+                       severity = if_ci_atc_check=>finding_severities-warning
                        text     = 'Avoid public attributes; use private/protected with getters or READ-ONLY' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     DATA lv_in_public TYPE abap_bool.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    IF is_code_block-block_kind <> zif_skylint_types=>block_kinds-class_definition.
+    IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'PUBLIC'.
           IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>

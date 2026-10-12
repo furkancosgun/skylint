@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_034 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        identical_move TYPE zif_skylint_types=>ty_finding_code VALUE 'IDENTMOVE',
+        identical_move TYPE if_ci_atc_check=>ty_finding_code VALUE 'IDENTMOVE',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -16,7 +16,7 @@ CLASS zcl_skylint_check_034 DEFINITION
 
   PRIVATE SECTION.
     METHODS is_identical_assignment
-      IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
@@ -29,14 +29,14 @@ CLASS zcl_skylint_check_034 IMPLEMENTATION.
                             remote_enablement = abap_true
                             finding_codes     = VALUE #(
                                 ( code     = c_finding_codes-identical_move
-                                  severity = zif_skylint_types=>severities-warning
+                                  severity = if_ci_atc_check=>finding_severities-warning
                                   text     = 'Identical assignment has no effect; remove redundant statement' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'COMPUTE'.
       IF is_identical_assignment( <ls_statement> ) = abap_true.
         report_statement( is_statement    = <ls_statement>

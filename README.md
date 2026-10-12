@@ -1,26 +1,17 @@
 # ☁️ Skylint
 
-> **Modern, Minimal & Universal ABAP Linter for SAP BTP, S/4HANA & Open-ABAP**
+> **Modern, Minimal ABAP Linter for SAP BTP & S/4HANA (ATC-Native)**
 
-**Skylint** is an extensible, high-performance static code analysis framework for ABAP. Built with a **platform-agnostic core architecture**, Skylint decouples check domain logic from proprietary platform interfaces. The core rules operate on a clean, universal Abstract Syntax Tree (AST) model (`zif_skylint_types`), allowing the exact same Clean ABAP & Security rules to run seamlessly across:
-
-- 🌐 **ABAP Cloud (ATC)**: SAP BTP ABAP Environment & S/4HANA Public Cloud (`if_ci_atc_check`).
-- 🏢 **Classic On-Premise (Code Inspector)**: SAP NetWeaver 7.40+ and S/4HANA Private Cloud (`CL_CI_TEST_SCAN`).
-- ⚡ **Open-ABAP / Node.js**: CI/CD pipelines, pre-commit hooks, and local unit test suites without requiring an SAP system.
+**Skylint** is an extensible, high-performance static code analysis framework for ABAP. Every rule is a **native ATC check** (`if_ci_atc_check`) running on SAP BTP ABAP Environment & S/4HANA — no adapters, no branches, no portability layers.
 
 ---
 
 ## ⚡ Highlights
 
-- **Platform-Agnostic Core (`main`):** Zero external platform dependencies. All types, tokens, statements, findings, and quickfixes are modeled cleanly in `zif_skylint_types`.
-- **Zero Boilerplate Architecture:** Base class (`zcl_skylint_check_base`) encapsulates finding registration, statement/token reporting, attribute resolution, and pseudo-comment filtering. Subclasses only require `constructor` and `check`.
-- **Universal Normalized AST:** Normalized statement streams with unrolled chained statements (`DATA: ...`), implicit assignments tagged as `COMPUTE`, functional method calls tagged as `+CALL_METHOD`, and compiler symbol references attached directly to tokens.
-- **JS Test Harness:** Fast unit tests in `scripts/skylint-test/` (1:1 JS port of the SAP-identical tokenizer + abaplint compiler/RTTI enrichment) running transpiled checks against fixtures in `tests/fixtures/check_XXX/`.
+- **ATC-Native (`main` only):** Every check inherits `zcl_skylint_check_base`, which implements `if_ci_atc_check` directly. All types come from the SAP ATC framework (`if_ci_atc_source_code_provider`, `if_ci_atc_check`, `if_ci_atc_check_meta_data`).
+- **Zero Boilerplate Architecture:** Base class encapsulates procedure iteration, finding registration with checksum/location, statement/token reporting, attribute resolution, and pseudo-comment filtering. Subclasses only require `constructor` and `check`.
 - **QuickFix Ready:** Built-in helper API (`quickfix_replace`) for automated code transformations and refactoring.
-- **Multi-Platform Branch Strategy:**
-  - `main`: Platform-agnostic core rules + universal AST engine.
-  - `cloud`: Native SAP ATC Cloud adapter (`if_ci_atc_check` / Language Version 5).
-  - `standard`: Classic SAP Code Inspector adapter (`CL_CI_TEST_SCAN` / NetWeaver 7.40+).
+- **Single-Branch Delivery:** One branch, one syntax (ABAP Cloud), one deployment path via abapGit.
 
 ---
 
@@ -29,9 +20,9 @@
 ```text
 skylint/
 ├── src/
-│   ├── core/                                     # Platform-Agnostic Core Infrastructure
-│   │   ├── zif_skylint_types.intf.abap           # Universal AST, finding & quickfix type definitions
-│   │   ├── zcl_skylint_check_base.clas.abap      # Universal base check class
+│   ├── core/                                     # ATC-native core infrastructure
+│   │   ├── zcl_skylint_check_base.clas.abap      # Base check class (implements if_ci_atc_check)
+│   │   ├── zcl_skylint_check_meta_data.clas.abap # Shared if_ci_atc_check_meta_data implementation
 │   │   ├── zcl_skylint_ast_util.clas.abap        # AST & token sequence traversal utility
 │   │   └── zcl_skylint_rtti_util.clas.abap       # Safe ABAP RTTI inspection utility
 │   │
@@ -39,20 +30,10 @@ skylint/
 │   │   ├── zcl_skylint_check_001.clas.abap       # Check class implementation
 │   │   └── zcl_skylint_check_001.clas.xml        # abapGit XML metadata
 │   │
-├── tests/
-│   └── fixtures/check_001/                       # JS harness fixtures per check
-│       ├── source.abap                           # Full test class source (sliced per method)
-│       └── expected.json                         # Expected findings [{method, code, line, column}]
-│
-├── scripts/skylint-test/                         # JS test harness (tokenizer port + runner)
-│   ├── lexer.mjs                                 # 1:1 port of the SAP-identical tokenizer
-│   ├── parser.mjs                                # Chain/COMPUTE/+CALL_METHOD + heuristic refs
-│   ├── slicer.mjs / codeblock.mjs                # Snippet slicing + code-block building
-│   ├── abaplint-bridge.mjs / rtti.mjs            # abaplint compiler refs + RTTI feed
-│   └── run.mjs                                   # CLI: run all, filter by ID, --fix-positions
+├── deps/atc/src/                                 # Local-only ATC framework stubs (never shipped)
 │
 ├── abaplint.json                                 # abaplint validation configuration & rule sets
-└── package.json                                  # Build, transpile, lint, and unit test scripts
+└── package.json                                  # Lint and build scripts
 ```
 
 ---
@@ -160,7 +141,7 @@ CLASS zcl_skylint_check_002 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_is_not TYPE zif_skylint_types=>ty_finding_code VALUE 'PREFERISNT',
+        prefer_is_not TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFERISNT',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -180,15 +161,15 @@ CLASS zcl_skylint_check_002 IMPLEMENTATION.
       VALUE #( description       = 'Prefer IS NOT over NOT IS'
                remote_enablement = abap_true
                finding_codes     = VALUE #( ( code           = c_finding_codes-prefer_is_not
-                                              severity       = zif_skylint_types=>severities-warning
+                                              severity       = if_ci_atc_check=>finding_severities-warning
                                               text           = 'Use IS NOT instead of NOT ... IS INITIAL'
                                               pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'CHECK'.
       report_statement( is_statement    = <ls_statement>
                         iv_finding_code = c_finding_codes-prefer_is_not ).
@@ -213,16 +194,11 @@ Each check has a fixture directory:
   ]
   ```
   `code: null` asserts zero findings. Line numbers are relative to the sliced
-  block (line 1 = `METHOD` statement). Regenerate positions after parser
-  changes with `npm run build && npm run positions`.
+  block (line 1 = `METHOD` statement).
 
-  Fast loop while developing a check (no fixture needed):
-  ```sh
-  npm run build
-  npm run lint:file 002 /tmp/trial.abap
-  ```
-  This lints every `METHOD` in the file with check 002 and prints findings.
-  Method names that match no `METHOD`/`CLASS` block print a `WARN` (typo guard).
+  > Fixture-based JS verification is currently parked (the harness still feeds
+  > legacy structures). New checks are verified on an ATC-capable SAP system
+  > via abapGit import + ATC check variant run.
 
 ### Step 3: Add Native QuickFix Support (Optional)
 
@@ -238,7 +214,7 @@ super->constructor(
               short_text = 'Replace with IS NOT' ) ) ) ).
 
 " 2. Generate and attach quickfix in check():
-DATA ls_quickfix TYPE zif_skylint_types=>ty_quickfix.
+DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
 
 ls_quickfix = quickfix_replace(
     iv_quickfix_code  = c_quickfix_codes-prefer_is_not
@@ -258,39 +234,29 @@ report_statement( is_statement    = <ls_statement>
 
 | Method | Description |
 |---|---|
-| `report_statement( is_statement, iv_finding_code, is_quickfix )` | Reports a finding for a statement with auto location, line numbers, and pseudo-comment suppression. |
-| `report_token( is_token, is_statement, iv_finding_code, is_quickfix )` | Reports a finding pinpointing a specific token column and length. |
-| `report_finding( is_finding )` | Directly appends a custom `zif_skylint_types=>ty_finding` structure. |
+| `report_statement( is_statement, iv_finding_code, is_quickfix )` | Reports a finding for a statement with auto checksum/location and pseudo-comment suppression. |
+| `report_token( is_token, is_statement, iv_finding_code, is_quickfix )` | Reports a finding pinpointing a specific token column. |
 | `get_attribute( iv_name, IMPORTING ev_value )` | Safely dereferences and retrieves dynamic check configuration attributes. |
 | `quickfix_replace( iv_quickfix_code, iv_statement_from, it_new_code, ... )` | Constructs a standardized QuickFix replacement descriptor. |
 
 ---
 
-## 🏛️ Multi-Platform Branch Strategy
+## 🏛️ Architecture
 
-Skylint is structured across dedicated branches to maintain a pure, zero-dependency core while delivering first-class integration with all SAP environments:
+Single-branch, ATC-native delivery — no adapters, no platform branches:
 
 ```
-          ┌──────────────────────────────────────────────┐
-          │               main (Core AST)                │
-          │  • Pure Domain Logic (79 Rules)              │
-          │  • Neutral Types (zif_skylint_types)         │
-          │  • Universal Test Runner (Node.js / CI)      │
-          └──────────────────────┬───────────────────────┘
-                                 │
-                 ┌───────────────┴───────────────┐
-                 ▼                               ▼
-  ┌──────────────────────────────┐ ┌──────────────────────────────┐
-  │         cloud Branch         │ │       standard Branch        │
-  │  • ABAP Cloud Native         │ │  • Classic SAP NetWeaver     │
-  │  • if_ci_atc_check Adapter   │ │  • CL_CI_TEST_SCAN Adapter   │
-  │  • BTP & S/4HANA Public ATC  │ │  • On-Prem Code Inspector    │
-  └──────────────────────────────┘ └──────────────────────────────┘
+           ┌──────────────────────────────────────────────┐
+           │              main (ATC-Native)               │
+           │  • 79 Rules (if_ci_atc_check)               │
+           │  • Framework Types (if_ci_atc_*)            │
+           │  • Shared Base + Metadata (core/)           │
+           └──────────────────────────────────────────────┘
 ```
 
-1. **`main` (Agnostic Core):** Contains all lint rules, AST utilities, and testing drivers with zero external SAP dependencies. Fully transpilable with Open-ABAP for Node.js CI/CD pipelines.
-2. **`cloud` (ABAP Cloud / Steampunk / BTP):** Adapter layer implementing standard SAP ATC Cloud interfaces (`if_ci_atc_check`, `if_ci_atc_source_code_provider`). Maps ATC procedures directly to `zif_skylint_types`.
-3. **`standard` (Classic On-Premise):** Adapter layer integrating with SAP Code Inspector (`CL_CI_TEST_SCAN`, `CL_CI_TEST_ROOT`). Converts classic scan tokens into `zif_skylint_types` for execution in NetWeaver 7.40+.
+1. **`src/core/`**: `zcl_skylint_check_base` (implements `if_ci_atc_check`: procedure loop, checksum/location, quickfix contexts), `zcl_skylint_check_meta_data` (shared `if_ci_atc_check_meta_data`), AST/RTTI utilities.
+2. **`src/checks/`**: 79 rule classes, each directly selectable in ATC check variants.
+3. **`deps/atc/src/`**: Local-only ATC framework stubs for abaplint resolution — never shipped via abapGit (real SAP systems provide these natively).
 
 ---
 
@@ -300,23 +266,20 @@ Skylint is structured across dedicated branches to maintain a pure, zero-depende
 # Install dependencies
 npm install
 
-# Run full CI pipeline (abaplint validation + open-abap transpiler unit tests)
-npm test
-
-# Run abaplint separately
+# Run abaplint (ABAP Cloud syntax)
 npm run lint
-
-# Run AUnit tests separately
-npm run unit
 ```
+
+> Node.js test harness (`scripts/skylint-test/`, `npm run unit`) is currently parked:
+> it still feeds the legacy harness structures and needs an ATC-native rewrite.
+> Verification happens on an ATC-capable SAP system (abapGit import + ATC check variant run).
 
 ---
 
 ## 📦 Deployment via abapGit
 
-1. For **ABAP Cloud / BTP**: Clone the `cloud` branch via **abapGit** in your BTP ABAP Environment or S/4HANA Cloud system.
-2. For **On-Premise NetWeaver / S/4HANA**: Clone the `standard` branch via **abapGit**.
-3. Activate all objects and add the check classes to your ATC or Code Inspector Check Variant.
+1. Clone **`main`** via **abapGit** in your BTP ABAP Environment or S/4HANA system.
+2. Activate all objects and add the check classes (`ZCL_SKYLINT_CHECK_*`) to your ATC Check Variant.
 
 ---
 

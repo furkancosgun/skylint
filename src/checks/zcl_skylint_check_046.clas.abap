@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_046 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        missing_order_by TYPE zif_skylint_types=>ty_finding_code VALUE 'SELECT_UP',
+        missing_order_by TYPE if_ci_atc_check=>ty_finding_code VALUE 'SELECT_UP',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -16,7 +16,7 @@ CLASS zcl_skylint_check_046 DEFINITION
 
   PRIVATE SECTION.
     METHODS is_unorder_select_up_to
-      IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
@@ -29,14 +29,14 @@ CLASS zcl_skylint_check_046 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code     = c_finding_codes-missing_order_by
-                       severity = zif_skylint_types=>severities-warning
+                       severity = if_ci_atc_check=>finding_severities-warning
                        text     = 'SELECT UP TO 1 ROWS requires an explicit ORDER BY clause for determinism' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'SELECT'.
       IF is_unorder_select_up_to( <ls_statement> ) = abap_true.
         report_statement( is_statement    = <ls_statement>

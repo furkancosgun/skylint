@@ -34,8 +34,8 @@ CLASS zcl_skylint_rtti_util DEFINITION
                 ev_is_single  TYPE abap_bool.
 
     CLASS-METHODS has_compiler_reference
-      IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
-                iv_kind       TYPE zif_skylint_types=>ty_reference_kind
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_kind       TYPE if_ci_atc_source_code_provider=>ty_reference_kind
       RETURNING VALUE(rv_has) TYPE abap_bool.
 
   PRIVATE SECTION.
@@ -210,7 +210,7 @@ CLASS zcl_skylint_rtti_util IMPLEMENTATION.
 
     LOOP AT ls_meth-parameters ASSIGNING <ls_param>.
       IF <ls_param>-parm_kind <> cl_abap_objectdescr=>returning.
-        lv_input_count = lv_input_count + 1.
+        lv_input_count += 1.
         ls_single_param = <ls_param>.
       ENDIF.
     ENDLOOP.
@@ -222,7 +222,7 @@ CLASS zcl_skylint_rtti_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD has_compiler_reference.
-    FIELD-SYMBOLS <ls_token> TYPE zif_skylint_types=>ty_token.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_has = abap_false.
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.

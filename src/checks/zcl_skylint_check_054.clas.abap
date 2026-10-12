@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_054 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        constructor_logic TYPE zif_skylint_types=>ty_finding_code VALUE 'CTOR_LOGIC',
+        constructor_logic TYPE if_ci_atc_check=>ty_finding_code VALUE 'CTOR_LOGIC',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -27,19 +27,19 @@ CLASS zcl_skylint_check_054 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code     = c_finding_codes-constructor_logic
-                       severity = zif_skylint_types=>severities-warning
+                       severity = if_ci_atc_check=>finding_severities-warning
                        text     = 'Avoid heavy business logic/loops in constructor; use injection only' ) )
                  attributes        = VALUE #( ( name  = 'MAX_STATEMENTS'
-                                                kind  = zif_skylint_types=>attribute_kinds-integer
+                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
                                                 value = REF #( mv_max_statements ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA lv_max_stmts  TYPE i.
     DATA lv_stmt_count TYPE i.
 
-    IF is_code_block-block_name NP '*CONSTRUCTOR*'.
+    IF is_procedure-id-name NP '*CONSTRUCTOR*'.
       RETURN.
     ENDIF.
 
@@ -52,12 +52,12 @@ CLASS zcl_skylint_check_054 IMPLEMENTATION.
 
     lv_stmt_count = 0.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF <ls_statement>-keyword = 'METHOD' OR <ls_statement>-keyword = 'ENDMETHOD'.
         CONTINUE.
       ENDIF.
 
-      lv_stmt_count = lv_stmt_count + 1.
+      lv_stmt_count += 1.
       IF lv_stmt_count > lv_max_stmts.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-constructor_logic ).

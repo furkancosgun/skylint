@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_060 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        catch_root TYPE zif_skylint_types=>ty_finding_code VALUE 'CATCH_ROOT',
+        catch_root TYPE if_ci_atc_check=>ty_finding_code VALUE 'CATCH_ROOT',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -23,16 +23,16 @@ CLASS zcl_skylint_check_060 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code     = c_finding_codes-catch_root
-                       severity = zif_skylint_types=>severities-warning
+                       severity = if_ci_atc_check=>finding_severities-warning
                        text     = 'Avoid generic CATCH cx_root; catch specific exception classes instead' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     DATA lv_idx TYPE i.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE zif_skylint_types=>ty_token.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'CATCH'.
       lv_idx = 0.
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.

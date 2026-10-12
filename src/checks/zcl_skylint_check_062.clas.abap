@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_062 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        nested_try TYPE zif_skylint_types=>ty_finding_code VALUE 'NESTED_TRY',
+        nested_try TYPE if_ci_atc_check=>ty_finding_code VALUE 'NESTED_TRY',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -23,26 +23,26 @@ CLASS zcl_skylint_check_062 IMPLEMENTATION.
             description       = 'Avoid nested TRY blocks; extract inner error handling to helper methods'
             remote_enablement = abap_true
             finding_codes     = VALUE #( ( code     = c_finding_codes-nested_try
-                                           severity = zif_skylint_types=>severities-warning
+                                           severity = if_ci_atc_check=>finding_severities-warning
                                            text     = 'Avoid nested TRY blocks; extract to dedicated method' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     DATA lv_try_depth TYPE i VALUE 0.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'TRY'.
           IF lv_try_depth >= 1.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-nested_try ).
           ENDIF.
-          lv_try_depth = lv_try_depth + 1.
+          lv_try_depth += 1.
 
         WHEN 'ENDTRY'.
           IF lv_try_depth > 0.
-            lv_try_depth = lv_try_depth - 1.
+            lv_try_depth -= 1.
           ENDIF.
       ENDCASE.
     ENDLOOP.

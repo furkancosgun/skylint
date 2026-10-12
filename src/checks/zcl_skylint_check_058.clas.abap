@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_058 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        attribute_count TYPE zif_skylint_types=>ty_finding_code VALUE 'ATTR_COUNT',
+        attribute_count TYPE if_ci_atc_check=>ty_finding_code VALUE 'ATTR_COUNT',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -27,20 +27,20 @@ CLASS zcl_skylint_check_058 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code     = c_finding_codes-attribute_count
-                       severity = zif_skylint_types=>severities-warning
+                       severity = if_ci_atc_check=>finding_severities-warning
                        text     = 'Class has too many member attributes; split into cohesive components' ) )
                  attributes        = VALUE #( ( name  = 'MAX_ATTRIBUTES'
-                                                kind  = zif_skylint_types=>attribute_kinds-integer
+                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
                                                 value = REF #( mv_max_attributes ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA ls_first_stmt TYPE zif_skylint_types=>ty_statement.
+    DATA ls_first_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA lv_max_attr   TYPE i.
     DATA lv_count      TYPE i.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    IF is_code_block-block_kind <> zif_skylint_types=>block_kinds-class_definition.
+    IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
@@ -51,15 +51,15 @@ CLASS zcl_skylint_check_058 IMPLEMENTATION.
       lv_max_attr = mv_max_attributes.
     ENDIF.
 
-    ls_first_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
+    ls_first_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
                                                          iv_index      = 1 ).
     IF ls_first_stmt-keyword IS INITIAL.
       RETURN.
     ENDIF.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF <ls_statement>-keyword = 'DATA' OR <ls_statement>-keyword = 'CLASS-DATA'.
-        lv_count = lv_count + 1.
+        lv_count += 1.
       ENDIF.
     ENDLOOP.
 

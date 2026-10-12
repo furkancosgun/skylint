@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_007 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        assignment_chaining TYPE zif_skylint_types=>ty_finding_code VALUE 'ASSIGNCHN',
+        assignment_chaining TYPE if_ci_atc_check=>ty_finding_code VALUE 'ASSIGNCHN',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -16,7 +16,7 @@ CLASS zcl_skylint_check_007 DEFINITION
 
   PRIVATE SECTION.
     METHODS has_assignment_chain
-      IMPORTING is_statement    TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_chain) TYPE abap_bool.
 
 ENDCLASS.
@@ -29,14 +29,14 @@ CLASS zcl_skylint_check_007 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code     = c_finding_codes-assignment_chaining
-                       severity = zif_skylint_types=>severities-warning
+                       severity = if_ci_atc_check=>finding_severities-warning
                        text     = 'Avoid chained assignments; write separate assignment statements' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'COMPUTE'.
       IF has_assignment_chain( <ls_statement> ) = abap_true.
         report_statement( is_statement    = <ls_statement>
@@ -49,7 +49,7 @@ CLASS zcl_skylint_check_007 IMPLEMENTATION.
     DATA lv_depth        TYPE i.
     DATA lv_equals_count TYPE i.
     DATA lv_lexeme       TYPE string.
-    FIELD-SYMBOLS <ls_token> TYPE zif_skylint_types=>ty_token.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_chain = abap_false.
 
@@ -61,17 +61,17 @@ CLASS zcl_skylint_check_007 IMPLEMENTATION.
 
       IF    lv_lexeme CP '*(' OR lv_lexeme CP '*[' OR lv_lexeme CP '*{'
          OR lv_lexeme  = '('  OR lv_lexeme  = '['  OR lv_lexeme  = '{'.
-        lv_depth = lv_depth + 1.
+        lv_depth += 1.
       ENDIF.
 
       IF lv_depth = 0 AND lv_lexeme = '='.
-        lv_equals_count = lv_equals_count + 1.
+        lv_equals_count += 1.
       ENDIF.
 
       IF     (    lv_lexeme CP '*)' OR lv_lexeme CP '*]' OR lv_lexeme CP '*}'
                OR lv_lexeme  = ')'  OR lv_lexeme  = ']'  OR lv_lexeme  = '}' )
          AND lv_depth > 0.
-        lv_depth = lv_depth - 1.
+        lv_depth -= 1.
       ENDIF.
     ENDLOOP.
 

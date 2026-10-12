@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_005 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        avoid_me TYPE zif_skylint_types=>ty_finding_code VALUE 'AVOIDME',
+        avoid_me TYPE if_ci_atc_check=>ty_finding_code VALUE 'AVOIDME',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -22,30 +22,31 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_005 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Avoid self-reference ME->'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #( ( code     = c_finding_codes-avoid_me
-                                                                severity = zif_skylint_types=>severities-warning
-                                                                text     = 'Avoid unnecessary ME-> reference' ) )
-                                 attributes        = VALUE #( ( name  = 'ALLOW_IN_CONSTRUCTORS'
-                                                                kind  = zif_skylint_types=>attribute_kinds-boolean
-                                                                value = REF #( mv_allow_in_constructors ) ) ) ) ).
+    super->constructor(
+        VALUE #( description       = 'Avoid self-reference ME->'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #( ( code     = c_finding_codes-avoid_me
+                                                severity = if_ci_atc_check=>finding_severities-warning
+                                                text     = 'Avoid unnecessary ME-> reference' ) )
+                 attributes        = VALUE #( ( name  = 'ALLOW_IN_CONSTRUCTORS'
+                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                                value = REF #( mv_allow_in_constructors ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     DATA lv_allow_ctor TYPE abap_bool.
     DATA lv_lexeme     TYPE string.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE zif_skylint_types=>ty_token.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
     get_attribute( EXPORTING iv_name  = 'ALLOW_IN_CONSTRUCTORS'
                    IMPORTING ev_value = lv_allow_ctor ).
 
-    IF is_code_block-block_name CP '*=>CONSTRUCTOR' AND lv_allow_ctor = abap_true.
+    IF is_procedure-id-name CP '*=>CONSTRUCTOR' AND lv_allow_ctor = abap_true.
       RETURN.
     ENDIF.
-    
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
+
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
         lv_lexeme = to_upper( <ls_token>-lexeme ).
         IF lv_lexeme CP 'ME->*'.

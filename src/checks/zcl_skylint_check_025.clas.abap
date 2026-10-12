@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_025 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        omit_receiving TYPE zif_skylint_types=>ty_finding_code VALUE 'OMITRECEIV',
+        omit_receiving TYPE if_ci_atc_check=>ty_finding_code VALUE 'OMITRECEIV',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -23,17 +23,17 @@ CLASS zcl_skylint_check_025 IMPLEMENTATION.
                             remote_enablement = abap_true
                             finding_codes     = VALUE #(
                                 ( code     = c_finding_codes-omit_receiving
-                                  severity = zif_skylint_types=>severities-warning
+                                  severity = if_ci_atc_check=>finding_severities-warning
                                   text     = 'Omit RECEIVING keyword; use functional call or omit parameter' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     DATA lv_has_receiving  TYPE abap_bool.
     DATA lv_has_exceptions TYPE abap_bool.
-    DATA ls_next_tok       TYPE zif_skylint_types=>ty_token.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    DATA ls_next_tok       TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF    <ls_statement>-keyword = 'METHODS' OR <ls_statement>-keyword = 'CLASS-METHODS'
          OR <ls_statement>-keyword = 'INTERFACES'.
         CONTINUE.

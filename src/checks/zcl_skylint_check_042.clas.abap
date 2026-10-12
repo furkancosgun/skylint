@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_042 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_returning TYPE zif_skylint_types=>ty_finding_code VALUE 'PREFER_RET',
+        prefer_returning TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFER_RET',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -16,7 +16,7 @@ CLASS zcl_skylint_check_042 DEFINITION
 
   PRIVATE SECTION.
     METHODS is_single_exporting
-      IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 ENDCLASS.
 
@@ -28,18 +28,18 @@ CLASS zcl_skylint_check_042 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code     = c_finding_codes-prefer_returning
-                       severity = zif_skylint_types=>severities-warning
+                       severity = if_ci_atc_check=>finding_severities-warning
                        text     = 'Prefer functional RETURNING parameter over single EXPORTING parameter' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    IF is_code_block-block_kind <> zif_skylint_types=>block_kinds-class_definition.
+    IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'METHODS' OR keyword = 'CLASS-METHODS'.
       IF is_single_exporting( <ls_statement> ) = abap_true.
         report_statement( is_statement    = <ls_statement>
@@ -50,7 +50,7 @@ CLASS zcl_skylint_check_042 IMPLEMENTATION.
 
   METHOD is_single_exporting.
     DATA lv_idx     TYPE i.
-    DATA ls_tok     TYPE zif_skylint_types=>ty_token.
+    DATA ls_tok     TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_exp_idx TYPE i.
     DATA lv_count   TYPE i.
 
@@ -86,10 +86,10 @@ CLASS zcl_skylint_check_042 IMPLEMENTATION.
           ENDIF.
         WHEN 'TYPE' OR 'LIKE'.
           IF ls_tok-references IS INITIAL.
-            lv_count = lv_count + 1.
+            lv_count += 1.
           ENDIF.
       ENDCASE.
-      lv_idx = lv_idx + 1.
+      lv_idx += 1.
     ENDWHILE.
 
     IF lv_count = 1.

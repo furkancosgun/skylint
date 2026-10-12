@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_020 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        yoda_condition TYPE zif_skylint_types=>ty_finding_code VALUE 'YODACOND',
+        yoda_condition TYPE if_ci_atc_check=>ty_finding_code VALUE 'YODACOND',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -24,11 +24,11 @@ CLASS zcl_skylint_check_020 DEFINITION
       RETURNING VALUE(rv_is) TYPE abap_bool.
 
     METHODS is_identifier
-      IMPORTING is_token     TYPE zif_skylint_types=>ty_token
+      IMPORTING is_token     TYPE if_ci_atc_source_code_provider=>ty_token
       RETURNING VALUE(rv_is) TYPE abap_bool.
 
     METHODS has_yoda_condition
-      IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_has) TYPE abap_bool.
 
 ENDCLASS.
@@ -41,14 +41,14 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code     = c_finding_codes-yoda_condition
-                       severity = zif_skylint_types=>severities-warning
+                       severity = if_ci_atc_check=>finding_severities-warning
                        text     = 'Avoid Yoda conditions; place variable before literal in comparison' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF has_yoda_condition( <ls_statement> ) = abap_true.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-yoda_condition ).
@@ -59,9 +59,9 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
   METHOD has_yoda_condition.
     DATA lv_idx   TYPE i.
     DATA lv_total TYPE i.
-    DATA ls_t1    TYPE zif_skylint_types=>ty_token.
-    DATA ls_t2    TYPE zif_skylint_types=>ty_token.
-    DATA ls_t3    TYPE zif_skylint_types=>ty_token.
+    DATA ls_t1    TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_t2    TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_t3    TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_has = abap_false.
     lv_total = zcl_skylint_ast_util=>token_count( is_statement ).
@@ -78,21 +78,21 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
       ls_t3 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                iv_index     = lv_idx + 2 ).
 
-      IF     zcl_skylint_ast_util=>token_is_literal( ls_t1 )              = abap_true
+      IF     zcl_skylint_ast_util=>token_is_literal( ls_t1 )               = abap_true
          AND ls_t2-references IS INITIAL
-         AND zcl_skylint_ast_util=>is_comparison_operator( ls_t2-lexeme ) = abap_true
+         AND zcl_skylint_ast_util=>is_comparison_operator( ls_t2-lexeme )  = abap_true
          AND is_identifier( ls_t3 ) = abap_true
-         AND zcl_skylint_ast_util=>token_is_literal( ls_t3 )              = abap_false.
+         AND zcl_skylint_ast_util=>token_is_literal( ls_t3 )               = abap_false.
         rv_has = abap_true.
         RETURN.
       ENDIF.
 
-      lv_idx = lv_idx + 1.
+      lv_idx += 1.
     ENDWHILE.
   ENDMETHOD.
 
   METHOD is_literal.
-    DATA ls_dummy TYPE zif_skylint_types=>ty_token.
+    DATA ls_dummy TYPE if_ci_atc_source_code_provider=>ty_token.
 
     ls_dummy-lexeme = iv_str.
     rv_is = zcl_skylint_ast_util=>token_is_literal( ls_dummy ).
@@ -109,7 +109,7 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
     rv_is = abap_false.
     IF zcl_skylint_ast_util=>has_compiler_reference(
            is_token = is_token
-           iv_kind  = zif_skylint_types=>compiler_reference_kinds-data ) = abap_true.
+           iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ) = abap_true.
       rv_is = abap_true.
       RETURN.
     ENDIF.

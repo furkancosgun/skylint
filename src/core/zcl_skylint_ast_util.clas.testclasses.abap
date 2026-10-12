@@ -12,12 +12,12 @@ ENDCLASS.
 
 CLASS ltcl_ast_util IMPLEMENTATION.
   METHOD test_keyword_reference_guard.
-    DATA ls_stmt TYPE zif_skylint_types=>ty_statement.
-    DATA ls_ref  TYPE zif_skylint_types=>ty_compiler_reference.
-    DATA lt_refs TYPE zif_skylint_types=>ty_compiler_references.
+    DATA ls_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_ref  TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    DATA lt_refs TYPE if_ci_atc_source_code_provider=>ty_compiler_references.
 
-    ls_ref = VALUE #( kind       = zif_skylint_types=>compiler_reference_kinds-data
-                      usage_mode = zif_skylint_types=>usage_modes-read ).
+    ls_ref = VALUE #( kind       = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+                      usage_mode = if_ci_atc_source_code_provider=>usage_modes-read ).
     lt_refs = VALUE #( ( ls_ref ) ).
 
     " Token 'EXPORTING' with compiler reference (e.g. variable named 'exporting')
@@ -48,8 +48,8 @@ CLASS ltcl_ast_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_token_getters.
-    DATA ls_stmt TYPE zif_skylint_types=>ty_statement.
-    DATA ls_tok  TYPE zif_skylint_types=>ty_token.
+    DATA ls_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_lex  TYPE string.
 
     ls_stmt = VALUE #( keyword = 'DATA'
@@ -85,10 +85,10 @@ CLASS ltcl_ast_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_statement_getters.
-    DATA lt_stmts TYPE zif_skylint_types=>ty_statements.
-    DATA ls_curr  TYPE zif_skylint_types=>ty_statement.
-    DATA ls_next  TYPE zif_skylint_types=>ty_statement.
-    DATA ls_prev  TYPE zif_skylint_types=>ty_statement.
+    DATA lt_stmts TYPE if_ci_atc_source_code_provider=>ty_statements.
+    DATA ls_curr  TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_next  TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_prev  TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     lt_stmts = VALUE #( ( keyword = 'DATA' )
                         ( keyword = 'COMPUTE' )
@@ -114,8 +114,8 @@ CLASS ltcl_ast_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_relative_token_search.
-    DATA ls_stmt TYPE zif_skylint_types=>ty_statement.
-    DATA ls_tok  TYPE zif_skylint_types=>ty_token.
+    DATA ls_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_idx  TYPE i.
 
     ls_stmt = VALUE #( keyword = 'SELECT'
@@ -149,8 +149,8 @@ CLASS ltcl_ast_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_semantic_helpers.
-    DATA ls_stmt TYPE zif_skylint_types=>ty_statement.
-    DATA ls_tok  TYPE zif_skylint_types=>ty_token.
+    DATA ls_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
 
     ls_stmt = VALUE #( keyword = 'COMPUTE'
                        tokens  = VALUE #( ( lexeme = 'lv_x' )

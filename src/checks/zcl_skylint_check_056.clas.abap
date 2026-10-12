@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_056 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        bool_method_name TYPE zif_skylint_types=>ty_finding_code VALUE 'BOOL_NAME',
+        bool_method_name TYPE if_ci_atc_check=>ty_finding_code VALUE 'BOOL_NAME',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -16,7 +16,7 @@ CLASS zcl_skylint_check_056 DEFINITION
 
   PRIVATE SECTION.
     METHODS is_non_compliant_bool_method
-      IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 ENDCLASS.
 
@@ -28,18 +28,18 @@ CLASS zcl_skylint_check_056 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code     = c_finding_codes-bool_method_name
-                       severity = zif_skylint_types=>severities-warning
+                       severity = if_ci_atc_check=>finding_severities-warning
                        text     = 'Boolean-returning method should use predicate name (IS_, HAS_, CAN_)' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    IF is_code_block-block_kind <> zif_skylint_types=>block_kinds-class_definition.
+    IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'METHODS' OR keyword = 'CLASS-METHODS'.
       IF is_non_compliant_bool_method( <ls_statement> ) = abap_true.
         report_statement( is_statement    = <ls_statement>
@@ -50,8 +50,8 @@ CLASS zcl_skylint_check_056 IMPLEMENTATION.
 
   METHOD is_non_compliant_bool_method.
     DATA lv_ret_idx TYPE i.
-    DATA ls_type    TYPE zif_skylint_types=>ty_token.
-    DATA ls_name    TYPE zif_skylint_types=>ty_token.
+    DATA ls_type    TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_name    TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_type    TYPE string.
     DATA lv_name    TYPE string.
 

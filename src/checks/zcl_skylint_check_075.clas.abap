@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_075 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        guard_method TYPE zif_skylint_types=>ty_finding_code VALUE 'GUARD_METH',
+        guard_method TYPE if_ci_atc_check=>ty_finding_code VALUE 'GUARD_METH',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -23,7 +23,7 @@ CLASS zcl_skylint_check_075 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code     = c_finding_codes-guard_method
-                       severity = zif_skylint_types=>severities-warning
+                       severity = if_ci_atc_check=>finding_severities-warning
                        text     = 'Invert IF condition and use RETURN to reduce nesting in method' ) ) ) ).
   ENDMETHOD.
 
@@ -34,18 +34,18 @@ CLASS zcl_skylint_check_075 IMPLEMENTATION.
     DATA lv_scan_idx  TYPE i.
     DATA lv_if_depth  TYPE i.
     DATA lv_has_else  TYPE abap_bool.
-    DATA ls_first     TYPE zif_skylint_types=>ty_statement.
-    DATA ls_stmt      TYPE zif_skylint_types=>ty_statement.
-    DATA ls_after     TYPE zif_skylint_types=>ty_statement.
+    DATA ls_first     TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_stmt      TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_after     TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    lv_max = zcl_skylint_ast_util=>statement_count( is_code_block-statements ).
+    lv_max = zcl_skylint_ast_util=>statement_count( is_procedure-statements ).
     IF lv_max < 3.
       RETURN.
     ENDIF.
 
     DO lv_max TIMES.
       lv_idx = sy-index.
-      ls_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
+      ls_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
                                                      iv_index      = lv_idx ).
       IF ls_stmt-keyword IS INITIAL.
         CONTINUE.
@@ -70,7 +70,7 @@ CLASS zcl_skylint_check_075 IMPLEMENTATION.
     lv_scan_idx = lv_first_idx + 1.
 
     WHILE lv_scan_idx <= lv_max AND lv_if_depth > 0.
-      ls_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
+      ls_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
                                                      iv_index      = lv_scan_idx ).
       IF ls_stmt-keyword IS INITIAL.
         EXIT.
@@ -78,19 +78,19 @@ CLASS zcl_skylint_check_075 IMPLEMENTATION.
 
       CASE ls_stmt-keyword.
         WHEN 'IF'.
-          lv_if_depth = lv_if_depth + 1.
+          lv_if_depth += 1.
         WHEN 'ELSE' OR 'ELSEIF'.
           IF lv_if_depth = 1.
             lv_has_else = abap_true.
           ENDIF.
         WHEN 'ENDIF'.
-          lv_if_depth = lv_if_depth - 1.
+          lv_if_depth -= 1.
           IF lv_if_depth = 0.
             IF lv_scan_idx = lv_max.
               report_statement( is_statement    = ls_first
                                 iv_finding_code = c_finding_codes-guard_method ).
             ELSE.
-              ls_after = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_code_block-statements
+              ls_after = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_procedure-statements
                                                                    iv_current_index = lv_scan_idx ).
               IF lv_has_else = abap_false AND ls_after-keyword = 'ENDMETHOD'.
                 report_statement( is_statement    = ls_first
@@ -100,7 +100,7 @@ CLASS zcl_skylint_check_075 IMPLEMENTATION.
             EXIT.
           ENDIF.
       ENDCASE.
-      lv_scan_idx = lv_scan_idx + 1.
+      lv_scan_idx += 1.
     ENDWHILE.
   ENDMETHOD.
 ENDCLASS.

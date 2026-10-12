@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_064 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        check_subrc TYPE zif_skylint_types=>ty_finding_code VALUE 'CHECKSUBRC',
+        check_subrc TYPE if_ci_atc_check=>ty_finding_code VALUE 'CHECKSUBRC',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -16,11 +16,11 @@ CLASS zcl_skylint_check_064 DEFINITION
 
   PRIVATE SECTION.
     METHODS sets_sy_subrc
-      IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
     METHODS checks_sy_subrc
-      IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
@@ -33,21 +33,21 @@ CLASS zcl_skylint_check_064 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code     = c_finding_codes-check_subrc
-                       severity = zif_skylint_types=>severities-warning
+                       severity = if_ci_atc_check=>finding_severities-warning
                        text     = 'Check sy-subrc after SELECT SINGLE, READ, AUTHORITY-CHECK, FIND, SEARCH' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA ls_next_stmt TYPE zif_skylint_types=>ty_statement.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    DATA ls_next_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF sets_sy_subrc( <ls_statement> ) = abap_false.
         CONTINUE.
       ENDIF.
 
-      ls_next_stmt = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_code_block-statements
-                                                               iv_current_index = <ls_statement>-index ).
+      ls_next_stmt = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_procedure-statements
+                                                               iv_current_index = sy-tabix ).
 
       IF ls_next_stmt-keyword IS INITIAL OR checks_sy_subrc( ls_next_stmt ) = abap_false.
         report_statement( is_statement    = <ls_statement>
@@ -80,7 +80,7 @@ CLASS zcl_skylint_check_064 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD checks_sy_subrc.
-    DATA ls_tok TYPE zif_skylint_types=>ty_token.
+    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_lex TYPE string.
 
     rv_res = abap_false.
@@ -91,8 +91,9 @@ CLASS zcl_skylint_check_064 IMPLEMENTATION.
         RETURN.
       ENDIF.
 
-      LOOP AT ls_tok-references TRANSPORTING NO FIELDS WHERE     full_name  CS 'SUBRC'
-                                                             AND usage_mode  = zif_skylint_types=>usage_modes-read.
+      LOOP AT ls_tok-references TRANSPORTING NO FIELDS
+           WHERE     full_name  CS 'SUBRC'
+                 AND usage_mode  = if_ci_atc_source_code_provider=>usage_modes-read.
         rv_res = abap_true.
         RETURN.
       ENDLOOP.

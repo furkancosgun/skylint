@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_068 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        full_modify TYPE zif_skylint_types=>ty_finding_code VALUE 'FULL_MODIF',
+        full_modify TYPE if_ci_atc_check=>ty_finding_code VALUE 'FULL_MODIF',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -23,7 +23,7 @@ CLASS zcl_skylint_check_068 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code     = c_finding_codes-full_modify
-                       severity = zif_skylint_types=>severities-warning
+                       severity = if_ci_atc_check=>finding_severities-warning
                        text     = 'Specify TRANSPORTING fields in MODIFY itab inside loop for performance' ) ) ) ).
   ENDMETHOD.
 
@@ -31,17 +31,17 @@ CLASS zcl_skylint_check_068 IMPLEMENTATION.
     DATA lv_in_loop          TYPE i VALUE 0.
     DATA lv_has_transporting TYPE abap_bool.
     DATA lv_is_itab_modify   TYPE abap_bool.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE zif_skylint_types=>ty_token.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'LOOP'.
-          lv_in_loop = lv_in_loop + 1.
+          lv_in_loop += 1.
 
         WHEN 'ENDLOOP'.
           IF lv_in_loop > 0.
-            lv_in_loop = lv_in_loop - 1.
+            lv_in_loop -= 1.
           ENDIF.
 
         WHEN 'MODIFY'.
@@ -53,7 +53,7 @@ CLASS zcl_skylint_check_068 IMPLEMENTATION.
               IF to_upper( <ls_token>-lexeme ) = 'TRANSPORTING' AND <ls_token>-references IS INITIAL.
                 lv_has_transporting = abap_true.
               ENDIF.
-              IF ( to_upper( <ls_token>-lexeme ) = 'FROM' OR to_upper( <ls_token>-lexeme ) = 'INDEX' )
+              IF     ( to_upper( <ls_token>-lexeme ) = 'FROM' OR to_upper( <ls_token>-lexeme ) = 'INDEX' )
                  AND <ls_token>-references IS INITIAL.
                 lv_is_itab_modify = abap_true.
               ENDIF.

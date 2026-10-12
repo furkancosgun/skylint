@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_009 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_template TYPE zif_skylint_types=>ty_finding_code VALUE 'CONCATSTR',
+        prefer_template TYPE if_ci_atc_check=>ty_finding_code VALUE 'CONCATSTR',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -18,7 +18,7 @@ CLASS zcl_skylint_check_009 DEFINITION
     DATA mv_allow_in_byte_mode TYPE abap_bool VALUE abap_false.
 
     METHODS is_byte_mode
-      IMPORTING is_statement        TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement        TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_byte_mode) TYPE abap_bool.
 
 ENDCLASS.
@@ -26,21 +26,21 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_009 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Prefer string templates over CONCATENATE'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code     = c_finding_codes-prefer_template
-                                       severity = zif_skylint_types=>severities-warning
-                                       text     = 'Use string template |...| instead of CONCATENATE' ) )
-                                 attributes        = VALUE #( ( name  = 'ALLOW_IN_BYTE_MODE'
-                                                                kind  = zif_skylint_types=>attribute_kinds-boolean
-                                                                value = REF #( mv_allow_in_byte_mode ) ) ) ) ).
+    super->constructor(
+        VALUE #( description       = 'Prefer string templates over CONCATENATE'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #( ( code     = c_finding_codes-prefer_template
+                                                severity = if_ci_atc_check=>finding_severities-warning
+                                                text     = 'Use string template |...| instead of CONCATENATE' ) )
+                 attributes        = VALUE #( ( name  = 'ALLOW_IN_BYTE_MODE'
+                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                                value = REF #( mv_allow_in_byte_mode ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'CONCATENATE'.
       IF mv_allow_in_byte_mode = abap_true AND is_byte_mode( <ls_statement> ) = abap_true.
         CONTINUE.

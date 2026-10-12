@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_063 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        raise_sys TYPE zif_skylint_types=>ty_finding_code VALUE 'RAISE_SYS',
+        raise_sys TYPE if_ci_atc_check=>ty_finding_code VALUE 'RAISE_SYS',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -16,8 +16,8 @@ CLASS zcl_skylint_check_063 DEFINITION
 
   PRIVATE SECTION.
     METHODS is_system_exception
-      IMPORTING is_token       TYPE zif_skylint_types=>ty_token
-                it_statements  TYPE zif_skylint_types=>ty_statements
+      IMPORTING is_token      TYPE if_ci_atc_source_code_provider=>ty_token
+                it_statements TYPE if_ci_atc_source_code_provider=>ty_statements
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 ENDCLASS.
 
@@ -29,16 +29,16 @@ CLASS zcl_skylint_check_063 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code     = c_finding_codes-raise_sys
-                       severity = zif_skylint_types=>severities-warning
+                       severity = if_ci_atc_check=>finding_severities-warning
                        text     = 'Avoid raising SAP internal system exceptions; use application exceptions' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE zif_skylint_types=>ty_token.
-    DATA lv_is_raise   TYPE abap_bool.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_is_raise TYPE abap_bool.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       " Exception raising context: RAISE statement or THROW expression
       IF <ls_statement>-keyword = 'RAISE'.
         lv_is_raise = abap_true.
@@ -52,7 +52,7 @@ CLASS zcl_skylint_check_063 IMPLEMENTATION.
 
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
         IF is_system_exception( is_token      = <ls_token>
-                                it_statements = is_code_block-statements ) = abap_true.
+                                it_statements = is_procedure-statements ) = abap_true.
           report_statement( is_statement    = <ls_statement>
                             iv_finding_code = c_finding_codes-raise_sys ).
           EXIT.
@@ -62,7 +62,7 @@ CLASS zcl_skylint_check_063 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_system_exception.
-    FIELD-SYMBOLS <ls_ref> TYPE zif_skylint_types=>ty_compiler_reference.
+    FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     rv_yes = abap_false.
     IF zcl_skylint_ast_util=>is_declared_data( it_statements = it_statements
@@ -76,7 +76,7 @@ CLASS zcl_skylint_check_063 IMPLEMENTATION.
     ENDIF.
 
     LOOP AT is_token-references ASSIGNING <ls_ref>
-         WHERE kind = zif_skylint_types=>compiler_reference_kinds-type.
+         WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-type.
       IF to_upper( <ls_ref>-full_name ) CS 'CX_SY_'.
         rv_yes = abap_true.
         RETURN.

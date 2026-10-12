@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_039 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        method_length TYPE zif_skylint_types=>ty_finding_code VALUE 'METHOD_LEN',
+        method_length TYPE if_ci_atc_check=>ty_finding_code VALUE 'METHOD_LEN',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -22,24 +22,24 @@ ENDCLASS.
 
 CLASS zcl_skylint_check_039 IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Method Length Limit (excessive statement count)'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code     = c_finding_codes-method_length
-                                       severity = zif_skylint_types=>severities-warning
-                                       text     = 'Method length exceeds maximum allowed statement limit' ) )
-                                 attributes        = VALUE #( ( name  = 'MAX_STATEMENTS'
-                                                                kind  = zif_skylint_types=>attribute_kinds-integer
-                                                                value = REF #( mv_max_statements ) ) ) ) ).
+    super->constructor(
+        VALUE #( description       = 'skylint: Method Length Limit (excessive statement count)'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #( ( code     = c_finding_codes-method_length
+                                                severity = if_ci_atc_check=>finding_severities-warning
+                                                text     = 'Method length exceeds maximum allowed statement limit' ) )
+                 attributes        = VALUE #( ( name  = 'MAX_STATEMENTS'
+                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                                value = REF #( mv_max_statements ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     DATA lv_max   TYPE i.
     DATA lv_count TYPE i.
-    DATA ls_first TYPE zif_skylint_types=>ty_statement.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    DATA ls_first TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    IF is_code_block-block_kind = zif_skylint_types=>block_kinds-class_definition.
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
@@ -50,21 +50,21 @@ CLASS zcl_skylint_check_039 IMPLEMENTATION.
     ENDIF.
 
     lv_count = 0.
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF     <ls_statement>-keyword <> 'METHOD'
          AND <ls_statement>-keyword <> 'ENDMETHOD'
          AND <ls_statement>-keyword <> 'FORM'
          AND <ls_statement>-keyword <> 'ENDFORM'
          AND <ls_statement>-keyword <> 'FUNCTION'
          AND <ls_statement>-keyword <> 'ENDFUNCTION'.
-        lv_count = lv_count + 1.
+        lv_count += 1.
       ENDIF.
     ENDLOOP.
 
     IF lv_count <= lv_max.
       RETURN.
     ENDIF.
-    ls_first = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
+    ls_first = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
                                                     iv_index      = 1 ).
     IF ls_first-keyword IS INITIAL.
       RETURN.

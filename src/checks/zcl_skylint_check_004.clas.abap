@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_004 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_is_not TYPE zif_skylint_types=>ty_finding_code VALUE 'PREFERISNT',
+        prefer_is_not TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFERISNT',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -17,7 +17,7 @@ CLASS zcl_skylint_check_004 DEFINITION
   PRIVATE SECTION.
 
     METHODS has_not_is_pattern
-      IMPORTING is_statement      TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_matched) TYPE abap_bool.
 
 ENDCLASS.
@@ -28,14 +28,14 @@ CLASS zcl_skylint_check_004 IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Prefer IS NOT over NOT ... IS'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #( ( code           = c_finding_codes-prefer_is_not
-                                                                severity = zif_skylint_types=>severities-warning
+                                                                severity = if_ci_atc_check=>finding_severities-warning
                                                                 text           = 'Use IS NOT instead of NOT ... IS'
                                                                 ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> LIKE LINE OF is_code_block-statements.
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
+    FIELD-SYMBOLS <ls_statement> LIKE LINE OF is_procedure-statements.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'IF' OR keyword = 'ELSEIF' OR keyword = 'CHECK'
             OR keyword = 'WHILE'.
       IF has_not_is_pattern( <ls_statement> ) = abap_true.
@@ -50,8 +50,8 @@ CLASS zcl_skylint_check_004 IMPLEMENTATION.
     DATA lv_lexeme      TYPE string.
     DATA lv_next_lexeme TYPE string.
     DATA lv_idx         TYPE i.
-    DATA ls_next        TYPE zif_skylint_types=>ty_token.
-    FIELD-SYMBOLS <ls_token> TYPE zif_skylint_types=>ty_token.
+    DATA ls_next        TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_matched = abap_false.
     lv_in_not = abap_false.

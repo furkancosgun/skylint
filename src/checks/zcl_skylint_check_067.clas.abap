@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_067 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        no_commit TYPE zif_skylint_types=>ty_finding_code VALUE 'NO_COMMIT',
+        no_commit TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_COMMIT',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -16,7 +16,7 @@ CLASS zcl_skylint_check_067 DEFINITION
 
   PRIVATE SECTION.
     METHODS is_behavior_implementation
-      IMPORTING is_code_block TYPE zif_skylint_types=>ty_code_block
+      IMPORTING is_procedure  TYPE if_ci_atc_source_code_provider=>ty_procedure
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
@@ -29,18 +29,18 @@ CLASS zcl_skylint_check_067 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code     = c_finding_codes-no_commit
-                       severity = zif_skylint_types=>severities-warning
+                       severity = if_ci_atc_check=>finding_severities-warning
                        text     = 'Avoid COMMIT/ROLLBACK WORK; transactional control belongs to framework' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    IF is_behavior_implementation( is_code_block ) = abap_false.
+    IF is_behavior_implementation( is_procedure ) = abap_false.
       RETURN.
     ENDIF.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'COMMIT' OR keyword = 'ROLLBACK'.
       report_statement( is_statement    = <ls_statement>
                         iv_finding_code = c_finding_codes-no_commit ).
@@ -52,7 +52,7 @@ CLASS zcl_skylint_check_067 IMPLEMENTATION.
     DATA lv_unit_name TYPE string.
 
     rv_res = abap_false.
-    lv_unit_name = is_code_block-object_name.
+    lv_unit_name = is_procedure-id-main_unit-name.
 
     lt_supers = zcl_skylint_rtti_util=>get_super_classes( lv_unit_name ).
     IF    line_exists( lt_supers[ table_line = 'CL_ABAP_BEHAVIOR_HANDLER' ] )

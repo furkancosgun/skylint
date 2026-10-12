@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_012 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        exit_outside_loop TYPE zif_skylint_types=>ty_finding_code VALUE 'EXITOUTLP',
+        exit_outside_loop TYPE if_ci_atc_check=>ty_finding_code VALUE 'EXITOUTLP',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -22,24 +22,24 @@ CLASS zcl_skylint_check_012 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code     = c_finding_codes-exit_outside_loop
-                                       severity = zif_skylint_types=>severities-warning
+                                       severity = if_ci_atc_check=>finding_severities-warning
                                        text     = 'Use RETURN instead of EXIT when leaving a procedure' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     DATA lv_loop_depth TYPE i.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     lv_loop_depth = 0.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'LOOP' OR 'DO' OR 'WHILE'.
-          lv_loop_depth = lv_loop_depth + 1.
+          lv_loop_depth += 1.
 
         WHEN 'ENDLOOP' OR 'ENDDO' OR 'ENDWHILE'.
           IF lv_loop_depth > 0.
-            lv_loop_depth = lv_loop_depth - 1.
+            lv_loop_depth -= 1.
           ENDIF.
 
         WHEN 'EXIT'.

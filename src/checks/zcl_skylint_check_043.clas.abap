@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_043 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        class_based_exceptions TYPE zif_skylint_types=>ty_finding_code VALUE 'CLASS_EXC',
+        class_based_exceptions TYPE if_ci_atc_check=>ty_finding_code VALUE 'CLASS_EXC',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -16,7 +16,7 @@ CLASS zcl_skylint_check_043 DEFINITION
 
   PRIVATE SECTION.
     METHODS has_classic_exceptions
-      IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
@@ -29,18 +29,18 @@ CLASS zcl_skylint_check_043 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code     = c_finding_codes-class_based_exceptions
-                       severity = zif_skylint_types=>severities-warning
+                       severity = if_ci_atc_check=>finding_severities-warning
                        text     = 'Prefer class-based exceptions (RAISING) over classic EXCEPTIONS' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    IF is_code_block-block_kind <> zif_skylint_types=>block_kinds-class_definition.
+    IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'METHODS' OR keyword = 'CLASS-METHODS'.
       IF has_classic_exceptions( <ls_statement> ) = abap_true.
         report_statement( is_statement    = <ls_statement>
@@ -50,7 +50,7 @@ CLASS zcl_skylint_check_043 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD has_classic_exceptions.
-    DATA ls_tok TYPE zif_skylint_types=>ty_token.
+    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_res = abap_false.
 

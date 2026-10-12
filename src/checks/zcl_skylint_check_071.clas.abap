@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_071 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_final TYPE zif_skylint_types=>ty_finding_code VALUE 'PREF_FINAL',
+        prefer_final TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_FINAL',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -23,18 +23,18 @@ CLASS zcl_skylint_check_071 IMPLEMENTATION.
                             remote_enablement = abap_true
                             finding_codes     = VALUE #(
                                 ( code     = c_finding_codes-prefer_final
-                                  severity = zif_skylint_types=>severities-warning
+                                  severity = if_ci_atc_check=>finding_severities-warning
                                   text     = 'Declare method as FINAL if it is not intended to be redefined' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    IF is_code_block-block_kind <> zif_skylint_types=>block_kinds-class_definition.
+    IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'CLASS'.
       IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
                                                  iv_lexeme    = 'FINAL' ) = abap_true.
@@ -42,7 +42,7 @@ CLASS zcl_skylint_check_071 IMPLEMENTATION.
       ENDIF.
     ENDLOOP.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'METHODS'.
       IF    zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
                                                     iv_lexeme    = 'FINAL' )        = abap_true

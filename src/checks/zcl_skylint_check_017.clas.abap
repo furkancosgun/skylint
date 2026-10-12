@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_017 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        nested_if TYPE zif_skylint_types=>ty_finding_code VALUE 'NESTEDIF',
+        nested_if TYPE if_ci_atc_check=>ty_finding_code VALUE 'NESTEDIF',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -16,9 +16,9 @@ CLASS zcl_skylint_check_017 DEFINITION
 
   PRIVATE SECTION.
     METHODS is_nested_if_mergeable
-      IMPORTING iv_idx        TYPE i
-                is_code_block TYPE zif_skylint_types=>ty_code_block
-      RETURNING VALUE(rv_is)  TYPE abap_bool.
+      IMPORTING iv_idx       TYPE i
+                is_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure
+      RETURNING VALUE(rv_is) TYPE abap_bool.
 
 ENDCLASS.
 
@@ -29,19 +29,19 @@ CLASS zcl_skylint_check_017 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code     = c_finding_codes-nested_if
-                                       severity = zif_skylint_types=>severities-warning
+                                       severity = if_ci_atc_check=>finding_severities-warning
                                        text     = 'Nested IF block can be merged with outer IF using AND' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     DATA lv_idx TYPE i.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'IF'.
-      lv_idx = <ls_statement>-index.
-      IF is_nested_if_mergeable( iv_idx        = lv_idx
-                                 is_code_block = is_code_block ) = abap_true.
+      lv_idx = sy-tabix.
+      IF is_nested_if_mergeable( iv_idx       = lv_idx
+                                 is_procedure = is_procedure ) = abap_true.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-nested_if ).
       ENDIF.
@@ -52,14 +52,14 @@ CLASS zcl_skylint_check_017 IMPLEMENTATION.
     DATA lv_total     TYPE i.
     DATA lv_fwd_idx   TYPE i.
     DATA lv_depth     TYPE i.
-    DATA ls_next_stmt TYPE zif_skylint_types=>ty_statement.
-    DATA ls_fwd_stmt  TYPE zif_skylint_types=>ty_statement.
-    DATA ls_outer_end TYPE zif_skylint_types=>ty_statement.
+    DATA ls_next_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_fwd_stmt  TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_outer_end TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     rv_is = abap_false.
-    lv_total = zcl_skylint_ast_util=>statement_count( is_code_block-statements ).
+    lv_total = zcl_skylint_ast_util=>statement_count( is_procedure-statements ).
 
-    ls_next_stmt = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_code_block-statements
+    ls_next_stmt = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_procedure-statements
                                                              iv_current_index = iv_idx ).
     IF ls_next_stmt-keyword <> 'IF'.
       RETURN.
@@ -69,7 +69,7 @@ CLASS zcl_skylint_check_017 IMPLEMENTATION.
     lv_fwd_idx = iv_idx + 2.
 
     WHILE lv_fwd_idx <= lv_total.
-      ls_fwd_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
+      ls_fwd_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
                                                          iv_index      = lv_fwd_idx ).
       IF ls_fwd_stmt-keyword IS INITIAL.
         EXIT.
@@ -77,12 +77,12 @@ CLASS zcl_skylint_check_017 IMPLEMENTATION.
 
       CASE ls_fwd_stmt-keyword.
         WHEN 'IF'.
-          lv_depth = lv_depth + 1.
+          lv_depth += 1.
 
         WHEN 'ENDIF'.
-          lv_depth = lv_depth - 1.
+          lv_depth -= 1.
           IF lv_depth = 0.
-            ls_outer_end = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_code_block-statements
+            ls_outer_end = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_procedure-statements
                                                                      iv_current_index = lv_fwd_idx ).
             IF ls_outer_end-keyword = 'ENDIF'.
               rv_is = abap_true.
@@ -91,7 +91,7 @@ CLASS zcl_skylint_check_017 IMPLEMENTATION.
           ENDIF.
       ENDCASE.
 
-      lv_fwd_idx = lv_fwd_idx + 1.
+      lv_fwd_idx += 1.
     ENDWHILE.
   ENDMETHOD.
 ENDCLASS.

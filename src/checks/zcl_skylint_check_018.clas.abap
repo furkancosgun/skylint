@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_018 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        unreachable_code TYPE zif_skylint_types=>ty_finding_code VALUE 'UNREACHCD',
+        unreachable_code TYPE if_ci_atc_check=>ty_finding_code VALUE 'UNREACHCD',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -23,7 +23,7 @@ CLASS zcl_skylint_check_018 DEFINITION
       ty_depth_states TYPE STANDARD TABLE OF ty_depth_state WITH EMPTY KEY.
 
     METHODS is_unconditional_jump
-      IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
     METHODS is_depth_unreachable
@@ -44,21 +44,21 @@ CLASS zcl_skylint_check_018 IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Detect unreachable code following unconditional jump statements'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #( ( code     = c_finding_codes-unreachable_code
-                                                                severity = zif_skylint_types=>severities-warning
+                                                                severity = if_ci_atc_check=>finding_severities-warning
                                                                 text     = 'Statement is unreachable' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     DATA lv_depth  TYPE i.
     DATA lt_states TYPE ty_depth_states.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     lv_depth = 0.
     set_depth_unreachable( EXPORTING iv_depth  = 0
                                      iv_val    = abap_false
                            CHANGING  ct_states = lt_states ).
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'IF' OR 'CASE' OR 'LOOP' OR 'DO' OR 'WHILE' OR 'TRY'.
           IF is_depth_unreachable( it_states = lt_states
@@ -66,7 +66,7 @@ CLASS zcl_skylint_check_018 IMPLEMENTATION.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-unreachable_code ).
           ENDIF.
-          lv_depth = lv_depth + 1.
+          lv_depth += 1.
           set_depth_unreachable( EXPORTING iv_depth  = lv_depth
                                            iv_val    = abap_false
                                  CHANGING  ct_states = lt_states ).
@@ -84,7 +84,7 @@ CLASS zcl_skylint_check_018 IMPLEMENTATION.
                                            iv_val    = abap_false
                                  CHANGING  ct_states = lt_states ).
           IF lv_depth > 0.
-            lv_depth = lv_depth - 1.
+            lv_depth -= 1.
           ENDIF.
 
         WHEN 'ENDMETHOD' OR 'ENDFORM' OR 'ENDFUNCTION' OR 'ENDMODULE'.
@@ -116,7 +116,7 @@ CLASS zcl_skylint_check_018 IMPLEMENTATION.
         rv_res = abap_true.
         RETURN.
       ENDIF.
-      lv_idx = lv_idx + 1.
+      lv_idx += 1.
     ENDWHILE.
   ENDMETHOD.
 

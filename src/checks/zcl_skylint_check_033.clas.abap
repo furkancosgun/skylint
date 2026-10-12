@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_033 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        scope_leak TYPE zif_skylint_types=>ty_finding_code VALUE 'SCOPELEAK',
+        scope_leak TYPE if_ci_atc_check=>ty_finding_code VALUE 'SCOPELEAK',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -23,7 +23,7 @@ CLASS zcl_skylint_check_033 DEFINITION
     TYPES ty_block_ids TYPE STANDARD TABLE OF i WITH EMPTY KEY.
 
     METHODS extract_declared_vars
-      IMPORTING is_statement   TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
                 iv_block_id    TYPE i
       RETURNING VALUE(rt_vars) TYPE ty_scoped_vars.
 
@@ -42,7 +42,7 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code     = c_finding_codes-scope_leak
-                       severity = zif_skylint_types=>severities-warning
+                       severity = if_ci_atc_check=>finding_severities-warning
                        text     = 'Variable declared in inner block is referenced outside its scope' ) ) ) ).
   ENDMETHOD.
 
@@ -54,23 +54,23 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
     DATA lv_current_block_id TYPE i.
     DATA lv_reported         TYPE abap_bool.
     DATA lv_token_str        TYPE string.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE zif_skylint_types=>ty_token.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
     FIELD-SYMBOLS <ls_var>       TYPE ty_scoped_var.
 
     lv_block_counter = 0.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'IF' OR 'LOOP' OR 'DO' OR 'WHILE' OR 'CASE' OR 'TRY'.
-          lv_block_counter = lv_block_counter + 1.
+          lv_block_counter += 1.
           INSERT lv_block_counter INTO lt_block_stack INDEX 1.
 
         WHEN 'ELSE' OR 'ELSEIF' OR 'WHEN' OR 'CATCH' OR 'CLEANUP'.
           IF lines( lt_block_stack ) > 0.
             DELETE lt_block_stack INDEX 1.
           ENDIF.
-          lv_block_counter = lv_block_counter + 1.
+          lv_block_counter += 1.
           INSERT lv_block_counter INTO lt_block_stack INDEX 1.
 
         WHEN 'ENDIF' OR 'ENDLOOP' OR 'ENDDO' OR 'ENDWHILE' OR 'ENDCASE' OR 'ENDTRY'.
@@ -111,21 +111,21 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
 
   METHOD extract_declared_vars.
     DATA ls_var      TYPE ty_scoped_var.
-    DATA ls_tok2     TYPE zif_skylint_types=>ty_token.
+    DATA ls_tok2     TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_var_name TYPE string.
     DATA lt_parts    TYPE string_table.
     DATA lv_part     TYPE string.
     DATA lv_lex      TYPE string.
-    FIELD-SYMBOLS <ls_token> TYPE zif_skylint_types=>ty_token.
-    FIELD-SYMBOLS <ls_ref>   TYPE zif_skylint_types=>ty_compiler_reference.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_ref>   TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     ls_var-block_id = iv_block_id.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
       LOOP AT <ls_token>-references ASSIGNING <ls_ref>
-           WHERE     kind = zif_skylint_types=>compiler_reference_kinds-data
-                 AND (    usage_grade = zif_skylint_types=>usage_grades-definition
-                       OR usage_mode  = zif_skylint_types=>usage_modes-definition_with_write ).
+           WHERE     kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+                 AND (    usage_grade = if_ci_atc_source_code_provider=>usage_grades-definition
+                       OR usage_mode  = if_ci_atc_source_code_provider=>usage_modes-definition_with_write ).
         lv_var_name = ''.
         IF <ls_ref>-full_name CS '\DA:'.
           SPLIT <ls_ref>-full_name AT '\' INTO TABLE lt_parts.

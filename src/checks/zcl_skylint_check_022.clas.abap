@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_022 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_new TYPE zif_skylint_types=>ty_finding_code VALUE 'PREFERNEW',
+        prefer_new TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFERNEW',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -16,7 +16,7 @@ CLASS zcl_skylint_check_022 DEFINITION
 
   PRIVATE SECTION.
     METHODS is_static_create_object
-      IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
@@ -28,14 +28,14 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code     = c_finding_codes-prefer_new
-                                       severity = zif_skylint_types=>severities-warning
+                                       severity = if_ci_atc_check=>finding_severities-warning
                                        text     = 'Prefer NEW #( ) expression over CREATE OBJECT' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'CREATE'.
       IF is_static_create_object( <ls_statement> ) = abap_true.
         report_statement( is_statement    = <ls_statement>
@@ -45,8 +45,8 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_static_create_object.
-    DATA ls_tok   TYPE zif_skylint_types=>ty_token.
-    DATA ls_type  TYPE zif_skylint_types=>ty_token.
+    DATA ls_tok   TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_type  TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_idx   TYPE i.
     DATA lv_tok   TYPE string.
     DATA lv_count TYPE i.
@@ -79,14 +79,14 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
     lv_idx = 3.
     WHILE lv_idx <= lv_count.
       ls_type = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                  iv_index     = lv_idx ).
+                                                 iv_index     = lv_idx ).
       IF     to_upper( ls_type-lexeme ) = 'TYPE'
          AND ls_type-references IS INITIAL
          AND zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
                                                      iv_index     = lv_idx + 1 ) CP '(*'.
         RETURN.
       ENDIF.
-      lv_idx = lv_idx + 1.
+      lv_idx += 1.
     ENDWHILE.
 
     rv_res = abap_true.

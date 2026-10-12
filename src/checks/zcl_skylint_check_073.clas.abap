@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_073 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        calc_assign TYPE zif_skylint_types=>ty_finding_code VALUE 'CALC_ASSGN',
+        calc_assign TYPE if_ci_atc_check=>ty_finding_code VALUE 'CALC_ASSGN',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -23,16 +23,16 @@ CLASS zcl_skylint_check_073 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code     = c_finding_codes-calc_assign
-                       severity = zif_skylint_types=>severities-warning
+                       severity = if_ci_atc_check=>finding_severities-warning
                        text     = 'Use calculation assignment operator (+=, -=) or ADD statement replacement' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     DATA lv_tok1 TYPE string.
     DATA lv_tok3 TYPE string.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'ADD' OR 'SUBTRACT' OR 'MULTIPLY' OR 'DIVIDE'.
           report_statement( is_statement    = <ls_statement>

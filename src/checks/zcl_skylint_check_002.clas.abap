@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_002 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        call_method TYPE zif_skylint_types=>ty_finding_code VALUE 'CALLMETHOD',
+        call_method TYPE if_ci_atc_check=>ty_finding_code VALUE 'CALLMETHOD',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -16,7 +16,7 @@ CLASS zcl_skylint_check_002 DEFINITION
 
   PRIVATE SECTION.
     METHODS is_dynamic_call
-      IMPORTING is_statement      TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_dynamic) TYPE abap_bool.
 ENDCLASS.
 
@@ -28,14 +28,14 @@ CLASS zcl_skylint_check_002 IMPLEMENTATION.
                             remote_enablement = abap_true
                             finding_codes     = VALUE #(
                                 ( code     = c_finding_codes-call_method
-                                  severity = zif_skylint_types=>severities-warning
+                                  severity = if_ci_atc_check=>finding_severities-warning
                                   text     = 'Avoid static CALL METHOD; use functional method call instead' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'CALL'.
       IF zcl_skylint_ast_util=>match_token_sequence( is_statement = <ls_statement>
                                                      it_expected  = VALUE #( ( `CALL` ) ( `METHOD` ) ) ) = abap_false.
@@ -52,7 +52,7 @@ CLASS zcl_skylint_check_002 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_dynamic_call.
-    DATA ls_third TYPE zif_skylint_types=>ty_token.
+    DATA ls_third TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_dynamic = abap_false.
 

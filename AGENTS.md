@@ -6,29 +6,41 @@ This document outlines the mandatory engineering guidelines, architectural desig
 
 ## 🏛️ Core Philosophy & Architecture
 
-1. **Platform-Agnostic Core (`main` branch):**
-   - The core checks in `src/checks/` **MUST NEVER** reference platform-specific APIs or interfaces (neither SAP ATC Cloud `if_ci_atc_*` nor classic Code Inspector `cl_ci_*`).
-   - All AST structures, code block types, token representations, findings, severities, and quickfix types are defined centrally in `zif_skylint_types`.
-   - The `main` branch is 100% portable and executable via Open-ABAP transpiler in Node.js, SAP NetWeaver 7.40+, S/4HANA On-Premise, and SAP BTP ABAP Environment.
+1. **ATC-Native Core (single `main` branch):**
+   - Every check in `src/checks/` is a native ATC check: it inherits from `zcl_skylint_check_base`,
+     which implements `if_ci_atc_check` directly. There are no adapter layers, no platform branches,
+     no portability shims.
+   - All statement/token/reference/finding types come from the SAP ATC framework itself:
+     `if_ci_atc_source_code_provider` (code), `if_ci_atc_check` (findings),
+     `if_ci_atc_check_meta_data` (config), `cl_ci_atc_quickfixes` (quickfix codes).
+     Local stubs under `deps/atc/src/` exist only for abaplint/transpiler resolution —
+     on a real SAP system the framework classes are used natively and `deps/` never ships via abapGit.
+   - Target is ABAP Cloud syntax (`abaplint.json`: `Cloud`). No NetWeaver 7.40 / SCI support.
 
-2. **Multi-Platform Branch Architecture:**
-   - **`main`**: Pure check domain logic + universal AST engine + JS test harness (`scripts/skylint-test/`). Zero external platform dependencies.
-   - **`cloud`**: Native SAP ATC Cloud adapter branch. Implements `if_ci_atc_check` and translates `if_ci_atc_source_code_provider` procedures into `zif_skylint_types` structures for SAP BTP and S/4HANA Public Cloud.
-   - **`standard`**: Classic SAP Code Inspector adapter branch. Integrates with `CL_CI_TEST_SCAN` and `CL_CI_TEST_ROOT` for classic SAP NetWeaver 7.40+ and S/4HANA Private Cloud.
+2. **Shared Base Class (`zcl_skylint_check_base` + `zcl_skylint_check_meta_data`):**
+   - `zcl_skylint_check_base` implements `if_ci_atc_check~run` (procedure loop, checksum, location,
+     quickfix context creation) and exposes the rule API: `check`, `report_statement`, `report_token`,
+     `quickfix_replace`, `get_attribute`.
+   - `zcl_skylint_check_meta_data` is the single shared `if_ci_atc_check_meta_data` implementation,
+     fed from the base config. Do NOT create per-check metadata classes.
 
-3. **Mandatory Single Source of Truth (`zif_skylint_types`):**
-   - All types, structures, and constants for AST analysis **MUST** reference `zif_skylint_types`:
-     - AST: `ty_code_block`, `ty_statement`, `ty_token`, `ty_compiler_reference`.
-     - Findings: `ty_finding`, `ty_findings`, `ty_finding_code`, `severities`.
-     - QuickFixes: `ty_quickfix`, `ty_quickfixes`, `ty_quickfix_code`.
-     - Constants: `object_types`, `block_kinds`, `compiler_reference_kinds`, `usage_modes`, `usage_grades`, `attribute_kinds`.
+3. **Mandatory Type Sources (no custom type interface):**
+   - Code analysis **MUST** use framework types:
+     - Statements/tokens/references: `if_ci_atc_source_code_provider=>ty_statement`, `=>ty_token`,
+       `=>ty_compiler_reference`, `=>ty_procedure` (`-id-kind`, `-id-name`, `-id-main_unit-kind/name`).
+     - Findings: `if_ci_atc_check=>ty_finding_code`, `=>finding_severities-warning/error/note`.
+     - QuickFixes: `zcl_skylint_check_base=>ty_quickfix/ty_quickfixes/ty_code_lines`,
+       `cl_ci_atc_quickfixes=>ty_quickfix_code`.
+     - Attributes: `if_ci_atc_check_meta_data=>attribute_kinds-boolean/elementary`
+       (`string`/`integer` options map to `elementary`).
+   - A `zif_skylint_types`-style common type interface **MUST NOT** be reintroduced.
 
-4. **Zero-Boilerplate Base Class (`zcl_skylint_check_base`):**
+4. **Zero-Boilerplate Rule (`zcl_skylint_check_XXX`):**
    - Every check rule **MUST** inherit from `zcl_skylint_check_base` in its own isolated class named `zcl_skylint_check_XXX`.
    - Subclasses only need to implement:
      - `constructor`: Metadata configuration (description, finding codes, severities, pseudo-comments, and attributes).
-     - `check( is_code_block )`: Code block inspection logic over `is_code_block-statements`.
-   - Finding creation, token offset mapping, pseudo-comment suppression, and quickfix formatting are automatically handled by the base class.
+     - `check( is_procedure )`: Procedure inspection logic over `is_procedure-statements`.
+   - Finding creation, checksum/location mapping, pseudo-comment suppression, and quickfix formatting are automatically handled by the base class.
 
 ---
 
@@ -93,21 +105,21 @@ For procedure inspection and unit testing:
   - Using helper methods from `zcl_skylint_ast_util` (`find_token_sequence`, `statement_is_method_call`).
 
 ### 2. Compiler References over Text Matching (`tokens-references`)
-Compiler symbol resolution is stored in `is_statement-tokens-references` (of type `zif_skylint_types=>ty_compiler_reference`).
+Compiler symbol resolution is stored in `is_statement-tokens-references` (of type `if_ci_atc_source_code_provider=>ty_compiler_reference`).
 - **Never guess what an identifier represents by matching its text.** Inspect `token-references` to determine whether a token is a method call, variable, type definition, database read, or database write.
 - **Lexemes are untrusted for keywords too:** a user variable can be named `EQ` — a token with text `EQ` is only the operator when its references are empty (a variable `eq` carries a data reference). Always confirm via references.
 - **Reserved builtin exception (only sanctioned case):** `ABAP_TRUE`, `ABAP_FALSE`, `ABAP_UNDEFINED` are matched by closed name set even with references — SAP reserves these names and they always denote the builtin constants. `SPACE` and everything else require empty references.
 - **Shadowing requires declaration scan:** when a user identifier can textually equal a keyword (`ME->`, `CX_SY_*`), a reference on the usage token is not enough — scan the block with `zcl_skylint_ast_util=>is_declared_data( it_statements iv_name )` and skip when a `DA` definition with that name exists.
-- **Every finding must carry a statement index.** `report_statement`/`report_token` set `statement_index` from `is_statement-index` automatically — never construct findings manually and never report synthetic statements without an index. The JS harness fails any finding with `statement_index <= 0`.
+- **ATC statements have no index field.** Never rely on `statement-index`; inside a `LOOP AT is_procedure-statements` use `sy-tabix` when a statement position is needed (e.g. `quickfix_replace( iv_statement_from = sy-tabix ... )`). Findings carry checksum + location, computed by the base class.
 - Traversal pattern:
   ```abap
-  FIELD-SYMBOLS <ls_token> TYPE zif_skylint_types=>ty_token.
-  FIELD-SYMBOLS <ls_ref>   TYPE zif_skylint_types=>ty_compiler_reference.
+  FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+  FIELD-SYMBOLS <ls_ref>   TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
   LOOP AT is_statement-tokens ASSIGNING <ls_token>.
     LOOP AT <ls_token>-references ASSIGNING <ls_ref>.
-      IF <ls_ref>-kind = zif_skylint_types=>compiler_reference_kinds-method
-         AND <ls_ref>-usage_mode = zif_skylint_types=>usage_modes-read.
+      IF <ls_ref>-kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-method
+         AND <ls_ref>-usage_mode = if_ci_atc_source_code_provider=>usage_modes-read.
         " Verified method call
       ENDIF.
     ENDLOOP.
@@ -115,10 +127,10 @@ Compiler symbol resolution is stored in `is_statement-tokens-references` (of typ
   ```
 
 ### 3. Safe RTTI over String Matching (Class Hierarchies & Types)
-- **Never use string parsing or regex** on `is_code_block-block_name` or `INHERITING FROM` to determine class hierarchies, interfaces, or superclasses.
+- **Never use string parsing or regex** on `is_procedure-id-name` or `INHERITING FROM` to determine class hierarchies, interfaces, or superclasses.
 - **Always use ABAP Run-Time Type Identification (RTTI) via `zcl_skylint_rtti_util`:**
   - Safe wrappers over `cl_abap_typedescr=>describe_by_name( lv_classname )`.
-  - Always wrap raw RTTI operations in `TRY ... CATCH cx_root` to safely handle dynamic test types in Open-ABAP transpiler environments.
+  - Always wrap raw RTTI operations in `TRY ... CATCH cx_root` to safely handle dynamic or missing types.
 - Example Pattern:
   ```abap
   DATA lt_super_classes TYPE string_table.
@@ -131,14 +143,14 @@ Compiler symbol resolution is stored in `is_statement-tokens-references` (of typ
 
 ### 4. Typed Constants & Enums over Magic Literals
 - **Strictly avoid magic string literals** for statement kinds, object types, reference kinds, severities, or usage modes.
-- **Mandatory Constants from `zif_skylint_types`** (values are 1:1 with `IF_CI_ATC_SOURCE_CODE_PROVIDER` — never invent constant values, complete missing ones from that interface):
-  - `object_types` (e.g. `object_types-class`, `object_types-interface`, `object_types-program`)
-  - `block_kinds` (e.g. `block_kinds-method`, `block_kinds-class_definition`)
-  - `compiler_reference_kinds` (full ATC `ty_reference_kind` parity: `data`, `method`, `type`, plus `function`, `form`, `event`, `include`, …)
-  - `usage_modes` (e.g. `usage_modes-read`, `usage_modes-write`, `usage_modes-read_database`, `usage_modes-write_database`)
-  - `usage_grades` (e.g. `usage_grades-definition`, `usage_grades-direct`, `usage_grades-indirect`)
-  - `severities` (e.g. `severities-error`, `severities-warning`, `severities-info`)
-  - `attribute_kinds` (e.g. `attribute_kinds-boolean`, `attribute_kinds-integer`, `attribute_kinds-string`, `attribute_kinds-elementary`)
+- **Mandatory framework constants (never invent values):**
+  - `if_ci_atc_source_code_provider=>procedure_kinds` (e.g. `method`, `class_definition`, `form_routine`, `function`)
+  - `if_ci_atc_source_code_provider=>compilation_unit_kinds` (e.g. `class`, `interface`, `report`)
+  - `if_ci_atc_source_code_provider=>compiler_reference_kinds` (e.g. `data`, `method`, `type`)
+  - `if_ci_atc_source_code_provider=>usage_modes` (e.g. `read`, `write`, `read_database`, `write_database`)
+  - `if_ci_atc_source_code_provider=>usage_grades` (e.g. `definition`, `direct`, `indirect`)
+  - `if_ci_atc_check=>finding_severities` (`error`, `warning`, `note`)
+  - `if_ci_atc_check_meta_data=>attribute_kinds` (`boolean`, `elementary`)
 
 ### 5. Stateful Block & Control Flow Traversal (Depth Tracking)
 When inspecting multi-statement structures (e.g., `IF ... ENDIF`, `LOOP ... ENDLOOP`, `TRY ... CATCH`, `SELECT ... ENDSELECT`):
@@ -146,9 +158,9 @@ When inspecting multi-statement structures (e.g., `IF ... ENDIF`, `LOOP ... ENDL
 - **Pattern:**
   ```abap
   DATA lv_depth TYPE i.
-  FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+  FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-  LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
+  LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
     CASE <ls_statement>-keyword.
       WHEN 'LOOP' OR 'DO' OR 'WHILE'.
         lv_depth = lv_depth + 1.
@@ -166,19 +178,24 @@ When inspecting multi-statement structures (e.g., `IF ... ENDIF`, `LOOP ... ENDL
 
 ---
 
-## ⚡ Open-ABAP Transpiler & Node.js Runtime Resilience
+## ⚡ ABAP Cloud & ATC Framework Notes
 
-All rules, test drivers, and fixtures run in unit tests via the **open-abap transpiler** in Node.js. Adhere to these runtime safety rules:
+`src/` targets ABAP Cloud (`abaplint.json`: `Cloud`) and runs natively on ATC-capable SAP systems.
+`deps/atc/src/` holds local-only stubs of the ATC framework for abaplint/transpiler resolution —
+they never ship via abapGit. Adhere to these runtime safety rules:
 
 1. **Safe RTTI with `cx_root`:**
    - Always wrap calls to `cl_abap_typedescr=>describe_by_name( ... )` in `TRY ... CATCH cx_root.`
-   - During transpiler execution, dynamic or non-existent test types will raise an exception rather than returning null.
 2. **Safe Internal Table Indexing:**
-   - Unchecked array reads like `tokens[ 3 ]` throw `CX_SY_ITAB_LINE_NOT_FOUND` in Open-ABAP if out of bounds.
+   - Unchecked array reads like `tokens[ 3 ]` dump with `CX_SY_ITAB_LINE_NOT_FOUND` if out of bounds.
    - Always verify table size first (`IF lines( tokens ) >= 3.`) or use `READ TABLE ... INTO ... INDEX ...`.
-3. **Supported Built-in String Functions:**
+3. **Cloud-safe built-ins only:**
    - Favor standard built-ins: `to_upper( )`, `to_lower( )`, `strlen( )`, `contains( )`, `matches( )`.
-   - Avoid complex PCRE regex flags that may differ between the ABAP kernel and the V8 JavaScript regex engine.
+   - No obsolete statements, no `CREATE OBJECT` (prefer `NEW`), no `LIKE` — the code must compile under Cloud syntax.
+4. **No line break after `=>`:**
+   - abaplint cannot parse a line break between `=>` and the component name — keep
+     `if_ci_atc_check=>finding_severities-warning` style references on a single line and
+     re-indent the surrounding `VALUE #( )` block instead when a line exceeds 120 chars.
 
 ---
 
@@ -231,7 +248,7 @@ CLASS zcl_skylint_check_XXX DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        my_finding_code TYPE zif_skylint_types=>ty_finding_code VALUE 'FINDINGCD',
+        my_finding_code TYPE if_ci_atc_check=>ty_finding_code VALUE 'FINDINGCD',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -255,18 +272,18 @@ CLASS zcl_skylint_check_XXX IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-my_finding_code
-                       severity       = zif_skylint_types=>severities-warning
+                       severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Clear finding message explaining why and how to fix'
                        pseudo_comment = c_pseudo_comment ) )
                  attributes        = VALUE #(
                      ( name  = 'CUSTOM_OPTION'
-                       kind  = zif_skylint_types=>attribute_kinds-boolean
+                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
                        value = REF #( mv_custom_option ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     DATA lv_custom_opt TYPE abap_bool.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     get_attribute( EXPORTING iv_name  = 'CUSTOM_OPTION'
                    IMPORTING ev_value = lv_custom_opt ).
@@ -275,7 +292,7 @@ CLASS zcl_skylint_check_XXX IMPLEMENTATION.
       lv_custom_opt = mv_custom_option.
     ENDIF.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'TARGET_KEYWORD'.
       " Inspection logic
       report_statement( is_statement    = <ls_statement>
@@ -311,7 +328,10 @@ Plain abapGit class XML (no test include — tests live in `tests/fixtures/`, no
 Tests run in the JS harness (`scripts/skylint-test/run.mjs`), which ports the SAP-identical tokenizer 1:1 to JS
 (`lexer.mjs`) and enriches compiler/RTTI data via abaplint (`abaplint-bridge.mjs`, `rtti.mjs`).
 The harness slices `METHOD..ENDMETHOD` (or `CLASS DEFINITION`/`INTERFACE`) blocks itself, so `line`/`column`
-in `expected.json` stay relative to the sliced block. Regenerate positions with `npm run build` + `npm run positions`:
+in `expected.json` stay relative to the sliced block.
+
+> Fixture-based JS verification is currently parked (the harness still feeds legacy structures).
+> New checks are verified on an ATC-capable SAP system via abapGit import + ATC check variant run.
 
 `source.abap` (full test class source):
 ```abap
@@ -360,7 +380,7 @@ When automated code replacement or removal is appropriate, use the QuickFix API:
    ```abap
    CONSTANTS:
      BEGIN OF c_quickfix_codes,
-       replace_syntax TYPE zif_skylint_types=>ty_quickfix_code VALUE 'REPLACE_ST',
+       replace_syntax TYPE cl_ci_atc_quickfixes=>ty_quickfix_code VALUE 'REPLACE_ST',
      END OF c_quickfix_codes.
 
    super->constructor(
@@ -373,7 +393,7 @@ When automated code replacement or removal is appropriate, use the QuickFix API:
 
 2. **Generate QuickFix in `check` & attach to findings:**
    ```abap
-   DATA ls_quickfix TYPE zif_skylint_types=>ty_quickfix.
+   DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
 
    ls_quickfix = quickfix_replace(
        iv_quickfix_code  = c_quickfix_codes-replace_syntax
@@ -394,9 +414,11 @@ When automated code replacement or removal is appropriate, use the QuickFix API:
 
 ## 🚫 The 5 Most Critical Anti-Patterns to Avoid
 
-1. **Importing Platform Interfaces into Core Checks:**
-   - *Why:* Referencing `if_ci_atc_*` or `cl_ci_*` breaks portability and prevents running in Open-ABAP or NetWeaver environments without ATC Cloud stubs.
-   - *Fix:* Always and exclusively use `zif_skylint_types`.
+1. **Reintroducing a Custom Type Interface:**
+   - *Why:* A `zif_skylint_types`-style layer duplicates SAP framework types, drifts from them, and forces every
+     check through a lossy mapping. The framework (`if_ci_atc_*`) is the single source of truth.
+   - *Fix:* Always use `if_ci_atc_source_code_provider` / `if_ci_atc_check` / `if_ci_atc_check_meta_data` /
+     `cl_ci_atc_quickfixes` types directly. Never add a parallel type interface.
 
 2. **Assuming Magic Token Indices (`tokens[ 3 ]`):**
    - *Why:* Line breaks, pragmas, or modifier tokens shift indices, causing test failures or `CX_SY_ITAB_LINE_NOT_FOUND` dumps.
@@ -427,6 +449,7 @@ Follow this exact procedure when adding or modifying check rules:
 
 2. **Implement Inspection Logic:**
    - Adhere to the Zero Magic Index and Compiler References standards.
+   - Iterate `is_procedure-statements`; use `sy-tabix` for the statement position (ATC statements carry no index).
    - Use `report_statement( is_statement = <ls_statement> iv_finding_code = ... is_quickfix = ls_quickfix )` or `report_token(...)`.
    - Support optional QuickFixes via `quickfix_replace(...)` when appropriate.
 

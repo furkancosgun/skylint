@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_035 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        fully_typed TYPE zif_skylint_types=>ty_finding_code VALUE 'FULLYTYPED',
+        fully_typed TYPE if_ci_atc_check=>ty_finding_code VALUE 'FULLYTYPED',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -16,7 +16,7 @@ CLASS zcl_skylint_check_035 DEFINITION
 
   PRIVATE SECTION.
     METHODS is_untyped_constant
-      IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
@@ -28,14 +28,14 @@ CLASS zcl_skylint_check_035 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code     = c_finding_codes-fully_typed
-                                       severity = zif_skylint_types=>severities-warning
+                                       severity = if_ci_atc_check=>finding_severities-warning
                                        text     = 'Constant declaration should explicitly specify TYPE' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'CONSTANTS'.
       IF is_untyped_constant( <ls_statement> ) = abap_true.
         report_statement( is_statement    = <ls_statement>
@@ -45,7 +45,7 @@ CLASS zcl_skylint_check_035 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_untyped_constant.
-    DATA ls_tok      TYPE zif_skylint_types=>ty_token.
+    DATA ls_tok      TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_has_type TYPE abap_bool.
     DATA lv_is_struc TYPE abap_bool.
 

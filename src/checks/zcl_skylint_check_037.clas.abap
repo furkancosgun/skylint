@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_037 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        try_without_catch TYPE zif_skylint_types=>ty_finding_code VALUE 'TRYWITHOUT',
+        try_without_catch TYPE if_ci_atc_check=>ty_finding_code VALUE 'TRYWITHOUT',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -17,7 +17,7 @@ CLASS zcl_skylint_check_037 DEFINITION
   PRIVATE SECTION.
     TYPES:
       BEGIN OF ty_try_block,
-        statement TYPE zif_skylint_types=>ty_statement,
+        statement TYPE if_ci_atc_source_code_provider=>ty_statement,
         has_catch TYPE abap_bool,
       END OF ty_try_block,
       ty_try_blocks TYPE STANDARD TABLE OF ty_try_block WITH EMPTY KEY.
@@ -31,7 +31,7 @@ CLASS zcl_skylint_check_037 IMPLEMENTATION.
         VALUE #( description       = 'Detect TRY without CATCH'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #( ( code     = c_finding_codes-try_without_catch
-                                                severity = zif_skylint_types=>severities-warning
+                                                severity = if_ci_atc_check=>finding_severities-warning
                                                 text     = 'TRY block without CATCH is superfluous' ) ) ) ).
   ENDMETHOD.
 
@@ -39,10 +39,10 @@ CLASS zcl_skylint_check_037 IMPLEMENTATION.
     DATA lt_try_stack   TYPE ty_try_blocks.
     DATA ls_try         TYPE ty_try_block.
     DATA lv_stack_lines TYPE i.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_top_try>   TYPE ty_try_block.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'TRY'.
           ls_try-statement = <ls_statement>.

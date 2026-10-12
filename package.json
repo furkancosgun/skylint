@@ -6,22 +6,13 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "build": "node scripts/clean.mjs && abap_transpile abaplint-transpiler.json",
-    "test": "npm run lint && npm run unit",
-    "unit": "npm run build && node scripts/skylint-test/run.mjs && node --expose-gc output/index.mjs",
+    "test": "npm run lint",
     "lint": "abaplint",
-    "lint:file": "node scripts/lint-string.mjs",
     "fix": "abaplint --fix",
     "clean": "node scripts/clean.mjs",
     "index": "node scripts/indexer.mjs",
-    "positions": "node scripts/skylint-test/run.mjs --fix-positions",
     "deps": "git submodule update --init --recursive",
-    "check:cloud": "abaplint .abaplint/abap_cloud.json",
-    "check:standard": "abaplint .abaplint/abap_standard.json",
-    "sync": "node scripts/sync-branches.mjs all --push",
-    "sync:dry": "node scripts/sync-branches.mjs all --dry-run",
-    "sync:cloud": "node scripts/sync-branches.mjs cloud --push",
-    "sync:standard": "node scripts/sync-branches.mjs standard --push"
+    "check:cloud": "abaplint .abaplint/abap_cloud.json"
   },
   "devDependencies": {
     "@abaplint/cli": "latest",

@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_024 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_xsdbool TYPE zif_skylint_types=>ty_finding_code VALUE 'PREFERXSDB',
+        prefer_xsdbool TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFERXSDB',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -16,7 +16,7 @@ CLASS zcl_skylint_check_024 DEFINITION
 
   PRIVATE SECTION.
     METHODS is_boolean_assignment
-      IMPORTING is_statement TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
       EXPORTING ev_target    TYPE string
                 ev_is_bool   TYPE abap_bool.
 
@@ -25,7 +25,7 @@ CLASS zcl_skylint_check_024 DEFINITION
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
     METHODS is_boolean_operand
-      IMPORTING is_token      TYPE zif_skylint_types=>ty_token
+      IMPORTING is_token      TYPE if_ci_atc_source_code_provider=>ty_token
                 iv_lexeme     TYPE string
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
@@ -39,42 +39,42 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code     = c_finding_codes-prefer_xsdbool
-                       severity = zif_skylint_types=>severities-warning
+                       severity = if_ci_atc_check=>finding_severities-warning
                        text     = 'Prefer xsdbool( ... ) instead of manual IF-ELSE boolean assignment' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     DATA lv_max            TYPE i.
     DATA lv_idx            TYPE i.
-    DATA ls_stmt_then      TYPE zif_skylint_types=>ty_statement.
-    DATA ls_stmt_else      TYPE zif_skylint_types=>ty_statement.
-    DATA ls_stmt_else_body TYPE zif_skylint_types=>ty_statement.
-    DATA ls_stmt_endif     TYPE zif_skylint_types=>ty_statement.
+    DATA ls_stmt_then      TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_stmt_else      TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_stmt_else_body TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_stmt_endif     TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA lv_target_1       TYPE string.
     DATA lv_target_2       TYPE string.
     DATA lv_is_bool_1      TYPE abap_bool.
     DATA lv_is_bool_2      TYPE abap_bool.
-    FIELD-SYMBOLS <ls_stmt_if> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_stmt_if> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    lv_max = zcl_skylint_ast_util=>statement_count( is_code_block-statements ).
+    lv_max = zcl_skylint_ast_util=>statement_count( is_procedure-statements ).
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_stmt_if>.
+    LOOP AT is_procedure-statements ASSIGNING <ls_stmt_if>.
       IF <ls_stmt_if>-keyword <> 'IF'.
         CONTINUE.
       ENDIF.
 
-      lv_idx = <ls_stmt_if>-index.
+      lv_idx = sy-tabix.
       IF lv_idx + 4 > lv_max.
         CONTINUE.
       ENDIF.
 
-      ls_stmt_then = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
+      ls_stmt_then = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
                                                           iv_index      = lv_idx + 1 ).
-      ls_stmt_else = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
+      ls_stmt_else = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
                                                           iv_index      = lv_idx + 2 ).
-      ls_stmt_else_body = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
+      ls_stmt_else_body = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
                                                                iv_index      = lv_idx + 3 ).
-      ls_stmt_endif = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
+      ls_stmt_endif = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
                                                            iv_index      = lv_idx + 4 ).
       IF    ls_stmt_then-keyword      IS INITIAL OR ls_stmt_else-keyword  IS INITIAL
          OR ls_stmt_else_body-keyword IS INITIAL OR ls_stmt_endif-keyword IS INITIAL.
@@ -101,9 +101,9 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_boolean_assignment.
-    DATA ls_tok_target TYPE zif_skylint_types=>ty_token.
-    DATA ls_tok_eq     TYPE zif_skylint_types=>ty_token.
-    DATA ls_tok_val    TYPE zif_skylint_types=>ty_token.
+    DATA ls_tok_target TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok_eq     TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok_val    TYPE if_ci_atc_source_code_provider=>ty_token.
 
     ev_is_bool = abap_false.
     CLEAR ev_target.
@@ -128,7 +128,7 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
     ENDIF.
 
     IF is_boolean_operand( is_token  = ls_tok_val
-                             iv_lexeme = ls_tok_val-lexeme ) = abap_true.
+                           iv_lexeme = ls_tok_val-lexeme ) = abap_true.
       ev_target  = to_upper( ls_tok_target-lexeme ).
       ev_is_bool = abap_true.
     ENDIF.
@@ -152,9 +152,9 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
 
     rv_res = abap_false.
     lv_upper = to_upper( iv_lexeme ).
-    IF is_token-references IS NOT INITIAL
-       AND lv_upper <> 'ABAP_TRUE'
-       AND lv_upper <> 'ABAP_FALSE'.
+    IF     is_token-references IS NOT INITIAL
+       AND lv_upper            <> 'ABAP_TRUE'
+       AND lv_upper            <> 'ABAP_FALSE'.
       RETURN.
     ENDIF.
     rv_res = is_boolean_value( iv_lexeme ).

@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_003 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        default_key TYPE zif_skylint_types=>ty_finding_code VALUE 'DEFAULTKEY',
+        default_key TYPE if_ci_atc_check=>ty_finding_code VALUE 'DEFAULTKEY',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -22,18 +22,18 @@ CLASS zcl_skylint_check_003 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code     = c_finding_codes-default_key
-                                       severity = zif_skylint_types=>severities-warning
+                                       severity = if_ci_atc_check=>finding_severities-warning
                                        text     = 'Avoid WITH DEFAULT KEY; specify EMPTY KEY or explicit key' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     DATA lt_expected TYPE zcl_skylint_ast_util=>ty_token_lexemes.
     DATA lv_matched  TYPE abap_bool.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     lt_expected = VALUE #( ( `DEFAULT` ) ( `KEY` ) ).
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'TYPES' OR 'DATA' OR 'STATICS' OR 'CLASS-DATA' OR 'FIELD-SYMBOL'.
           lv_matched = zcl_skylint_ast_util=>match_token_sequence( is_statement = <ls_statement>

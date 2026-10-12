@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_050 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        magic_number TYPE zif_skylint_types=>ty_finding_code VALUE 'MAGIC_NUM',
+        magic_number TYPE if_ci_atc_check=>ty_finding_code VALUE 'MAGIC_NUM',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -22,15 +22,15 @@ CLASS zcl_skylint_check_050 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code     = c_finding_codes-magic_number
-                                       severity = zif_skylint_types=>severities-warning
+                                       severity = if_ci_atc_check=>finding_severities-warning
                                        text     = 'Avoid hardcoded magic numbers; declare a named constant' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE zif_skylint_types=>ty_token.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       " Skip declarations (DATA, CONSTANTS, TYPES, STATICS)
       IF    <ls_statement>-keyword = 'DATA'  OR <ls_statement>-keyword = 'CONSTANTS'
          OR <ls_statement>-keyword = 'TYPES' OR <ls_statement>-keyword = 'STATICS'.

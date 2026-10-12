@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_070 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        dyn_sql TYPE zif_skylint_types=>ty_finding_code VALUE 'DYN_SQL',
+        dyn_sql TYPE if_ci_atc_check=>ty_finding_code VALUE 'DYN_SQL',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -23,19 +23,19 @@ CLASS zcl_skylint_check_070 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code     = c_finding_codes-dyn_sql
-                       severity = zif_skylint_types=>severities-warning
+                       severity = if_ci_atc_check=>finding_severities-warning
                        text     = 'Avoid dynamic table or clause in SQL; use static SQL or sanitize' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     DATA lv_is_dynamic TYPE abap_bool.
-    DATA ls_next       TYPE zif_skylint_types=>ty_token.
+    DATA ls_next       TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_lexeme     TYPE string.
     DATA lv_next_lex   TYPE string.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE zif_skylint_types=>ty_token.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'SELECT' OR keyword = 'UPDATE' OR keyword = 'DELETE' OR keyword = 'MODIFY'.
       lv_is_dynamic = abap_false.
 

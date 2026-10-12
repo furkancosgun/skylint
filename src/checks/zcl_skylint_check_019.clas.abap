@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_019 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        short_case TYPE zif_skylint_types=>ty_finding_code VALUE 'SHORTCASE',
+        short_case TYPE if_ci_atc_check=>ty_finding_code VALUE 'SHORTCASE',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -16,12 +16,12 @@ CLASS zcl_skylint_check_019 DEFINITION
 
   PRIVATE SECTION.
     METHODS is_when_others
-      IMPORTING is_statement TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_is) TYPE abap_bool.
 
     METHODS count_when_branches
       IMPORTING iv_start_idx  TYPE i
-                is_code_block TYPE zif_skylint_types=>ty_code_block
+                is_procedure  TYPE if_ci_atc_source_code_provider=>ty_procedure
       RETURNING VALUE(rv_cnt) TYPE i.
 
 ENDCLASS.
@@ -33,20 +33,20 @@ CLASS zcl_skylint_check_019 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code     = c_finding_codes-short_case
-                                       severity = zif_skylint_types=>severities-warning
+                                       severity = if_ci_atc_check=>finding_severities-warning
                                        text     = 'CASE statement has <= 1 WHEN branch; prefer IF' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     DATA lv_idx        TYPE i.
     DATA lv_when_count TYPE i.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'CASE'.
-      lv_idx = <ls_statement>-index.
-      lv_when_count = count_when_branches( iv_start_idx  = lv_idx
-                                           is_code_block = is_code_block ).
+      lv_idx = sy-tabix.
+      lv_when_count = count_when_branches( iv_start_idx = lv_idx
+                                           is_procedure = is_procedure ).
       IF lv_when_count <= 1.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-short_case ).
@@ -64,15 +64,15 @@ CLASS zcl_skylint_check_019 IMPLEMENTATION.
     DATA lv_total    TYPE i.
     DATA lv_fwd_idx  TYPE i.
     DATA lv_depth    TYPE i.
-    DATA ls_fwd_stmt TYPE zif_skylint_types=>ty_statement.
+    DATA ls_fwd_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     rv_cnt = 0.
-    lv_total = zcl_skylint_ast_util=>statement_count( is_code_block-statements ).
+    lv_total = zcl_skylint_ast_util=>statement_count( is_procedure-statements ).
     lv_depth = 0.
     lv_fwd_idx = iv_start_idx + 1.
 
     WHILE lv_fwd_idx <= lv_total.
-      ls_fwd_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_code_block-statements
+      ls_fwd_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
                                                          iv_index      = lv_fwd_idx ).
       IF ls_fwd_stmt-keyword IS INITIAL.
         EXIT.
@@ -80,22 +80,22 @@ CLASS zcl_skylint_check_019 IMPLEMENTATION.
 
       CASE ls_fwd_stmt-keyword.
         WHEN 'CASE'.
-          lv_depth = lv_depth + 1.
+          lv_depth += 1.
 
         WHEN 'ENDCASE'.
           IF lv_depth = 0.
             RETURN.
           ELSE.
-            lv_depth = lv_depth - 1.
+            lv_depth -= 1.
           ENDIF.
 
         WHEN 'WHEN'.
           IF lv_depth = 0 AND is_when_others( ls_fwd_stmt ) = abap_false.
-            rv_cnt = rv_cnt + 1.
+            rv_cnt += 1.
           ENDIF.
       ENDCASE.
 
-      lv_fwd_idx = lv_fwd_idx + 1.
+      lv_fwd_idx += 1.
     ENDWHILE.
   ENDMETHOD.
 ENDCLASS.

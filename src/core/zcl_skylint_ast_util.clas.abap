@@ -6,107 +6,107 @@ CLASS zcl_skylint_ast_util DEFINITION
     TYPES ty_token_lexemes TYPE STANDARD TABLE OF string WITH EMPTY KEY.
 
     CLASS-METHODS get_token
-      IMPORTING is_statement    TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
                 iv_index        TYPE i
-      RETURNING VALUE(rs_token) TYPE zif_skylint_types=>ty_token.
+      RETURNING VALUE(rs_token) TYPE if_ci_atc_source_code_provider=>ty_token.
 
     CLASS-METHODS get_token_lexeme
-      IMPORTING is_statement      TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
                 iv_index          TYPE i
                 iv_case_sensitive TYPE abap_bool DEFAULT abap_false
       RETURNING VALUE(rv_lexeme)  TYPE string.
 
     CLASS-METHODS get_first_token
-      IMPORTING is_statement    TYPE zif_skylint_types=>ty_statement
-      RETURNING VALUE(rs_token) TYPE zif_skylint_types=>ty_token.
+      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rs_token) TYPE if_ci_atc_source_code_provider=>ty_token.
 
     CLASS-METHODS get_last_token
-      IMPORTING is_statement    TYPE zif_skylint_types=>ty_statement
-      RETURNING VALUE(rs_token) TYPE zif_skylint_types=>ty_token.
+      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rs_token) TYPE if_ci_atc_source_code_provider=>ty_token.
 
     CLASS-METHODS get_statement
-      IMPORTING it_statements       TYPE zif_skylint_types=>ty_statements
+      IMPORTING it_statements       TYPE if_ci_atc_source_code_provider=>ty_statements
                 iv_index            TYPE i
-      RETURNING VALUE(rs_statement) TYPE zif_skylint_types=>ty_statement.
+      RETURNING VALUE(rs_statement) TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     CLASS-METHODS get_next_statement
-      IMPORTING it_statements       TYPE zif_skylint_types=>ty_statements
+      IMPORTING it_statements       TYPE if_ci_atc_source_code_provider=>ty_statements
                 iv_current_index    TYPE i
-      RETURNING VALUE(rs_statement) TYPE zif_skylint_types=>ty_statement.
+      RETURNING VALUE(rs_statement) TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     CLASS-METHODS get_previous_statement
-      IMPORTING it_statements       TYPE zif_skylint_types=>ty_statements
+      IMPORTING it_statements       TYPE if_ci_atc_source_code_provider=>ty_statements
                 iv_current_index    TYPE i
-      RETURNING VALUE(rs_statement) TYPE zif_skylint_types=>ty_statement.
+      RETURNING VALUE(rs_statement) TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     CLASS-METHODS find_token
-      IMPORTING is_statement      TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
                 iv_lexeme         TYPE string
                 iv_start_index    TYPE i         DEFAULT 1
                 iv_case_sensitive TYPE abap_bool DEFAULT abap_false
       RETURNING VALUE(rv_index)   TYPE i.
 
     CLASS-METHODS get_token_after
-      IMPORTING is_statement      TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
                 iv_lexeme         TYPE string
                 iv_start_index    TYPE i         DEFAULT 1
                 iv_case_sensitive TYPE abap_bool DEFAULT abap_false
-      RETURNING VALUE(rs_token)   TYPE zif_skylint_types=>ty_token.
+      RETURNING VALUE(rs_token)   TYPE if_ci_atc_source_code_provider=>ty_token.
 
     CLASS-METHODS get_token_before
-      IMPORTING is_statement      TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
                 iv_lexeme         TYPE string
                 iv_start_index    TYPE i         DEFAULT 1
                 iv_case_sensitive TYPE abap_bool DEFAULT abap_false
-      RETURNING VALUE(rs_token)   TYPE zif_skylint_types=>ty_token.
+      RETURNING VALUE(rs_token)   TYPE if_ci_atc_source_code_provider=>ty_token.
 
     CLASS-METHODS find_token_sequence
-      IMPORTING is_statement      TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
                 it_expected       TYPE ty_token_lexemes
                 iv_start_index    TYPE i         DEFAULT 1
                 iv_case_sensitive TYPE abap_bool DEFAULT abap_false
       RETURNING VALUE(rv_index)   TYPE i.
 
     CLASS-METHODS get_token_after_sequence
-      IMPORTING is_statement      TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
                 it_expected       TYPE ty_token_lexemes
                 iv_start_index    TYPE i         DEFAULT 1
                 iv_case_sensitive TYPE abap_bool DEFAULT abap_false
-      RETURNING VALUE(rs_token)   TYPE zif_skylint_types=>ty_token.
+      RETURNING VALUE(rs_token)   TYPE if_ci_atc_source_code_provider=>ty_token.
 
     CLASS-METHODS match_token_sequence
-      IMPORTING is_statement      TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
                 it_expected       TYPE ty_token_lexemes
                 iv_start_index    TYPE i         DEFAULT 1
                 iv_case_sensitive TYPE abap_bool DEFAULT abap_false
       RETURNING VALUE(rv_matched) TYPE abap_bool.
 
     CLASS-METHODS matches_token_at
-      IMPORTING is_statement      TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
                 iv_index          TYPE i
                 iv_expected       TYPE string
                 iv_case_sensitive TYPE abap_bool DEFAULT abap_false
       RETURNING VALUE(rv_matched) TYPE abap_bool.
 
     CLASS-METHODS statement_is_method_call
-      IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_has) TYPE abap_bool.
 
     CLASS-METHODS is_assignment
-      IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
     CLASS-METHODS has_token_lexeme
-      IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
                 iv_lexeme     TYPE string
       RETURNING VALUE(rv_has) TYPE abap_bool.
 
     CLASS-METHODS token_is_literal
-      IMPORTING is_token      TYPE zif_skylint_types=>ty_token
+      IMPORTING is_token      TYPE if_ci_atc_source_code_provider=>ty_token
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
     CLASS-METHODS token_is_identifier
-      IMPORTING is_token      TYPE zif_skylint_types=>ty_token
+      IMPORTING is_token      TYPE if_ci_atc_source_code_provider=>ty_token
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
     CLASS-METHODS is_comparison_operator
@@ -114,28 +114,28 @@ CLASS zcl_skylint_ast_util DEFINITION
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
     CLASS-METHODS has_compiler_reference
-      IMPORTING is_token      TYPE zif_skylint_types=>ty_token
-                iv_kind       TYPE zif_skylint_types=>ty_reference_kind
-                iv_usage_mode TYPE zif_skylint_types=>ty_usage_mode OPTIONAL
+      IMPORTING is_token      TYPE if_ci_atc_source_code_provider=>ty_token
+                iv_kind       TYPE if_ci_atc_source_code_provider=>ty_reference_kind
+                iv_usage_mode TYPE if_ci_atc_source_code_provider=>ty_usage_mode OPTIONAL
       RETURNING VALUE(rv_has) TYPE abap_bool.
 
     CLASS-METHODS token_count
-      IMPORTING is_statement    TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_count) TYPE i.
 
     CLASS-METHODS statement_count
-      IMPORTING it_statements   TYPE zif_skylint_types=>ty_statements
+      IMPORTING it_statements   TYPE if_ci_atc_source_code_provider=>ty_statements
       RETURNING VALUE(rv_count) TYPE i.
 
     CLASS-METHODS is_declared_data
-      IMPORTING it_statements  TYPE zif_skylint_types=>ty_statements
+      IMPORTING it_statements TYPE if_ci_atc_source_code_provider=>ty_statements
                 iv_name       TYPE string
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
   PRIVATE SECTION.
     CLASS-METHODS token_has_ref
-      IMPORTING is_token      TYPE zif_skylint_types=>ty_token
-                iv_kind       TYPE zif_skylint_types=>ty_reference_kind
+      IMPORTING is_token      TYPE if_ci_atc_source_code_provider=>ty_token
+                iv_kind       TYPE if_ci_atc_source_code_provider=>ty_reference_kind
       RETURNING VALUE(rv_has) TYPE abap_bool.
 
     CLASS-METHODS normalize_identifier_name
@@ -147,7 +147,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_ast_util IMPLEMENTATION.
   METHOD get_token.
-    FIELD-SYMBOLS <ls_token> TYPE zif_skylint_types=>ty_token.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     CLEAR rs_token.
     IF iv_index <= 0 OR iv_index > lines( is_statement-tokens ).
@@ -161,7 +161,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD get_token_lexeme.
-    DATA ls_token TYPE zif_skylint_types=>ty_token.
+    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
 
     CLEAR rv_lexeme.
     ls_token = get_token( is_statement = is_statement
@@ -192,7 +192,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD get_statement.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     CLEAR rs_statement.
     IF iv_index <= 0 OR iv_index > lines( it_statements ).
@@ -220,7 +220,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
     DATA lv_idx   TYPE i.
     DATA lv_act   TYPE string.
     DATA lv_exp   TYPE string.
-    FIELD-SYMBOLS <ls_tok> TYPE zif_skylint_types=>ty_token.
+    FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_index = 0.
     lv_count = lines( is_statement-tokens ).
@@ -248,7 +248,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
           RETURN.
         ENDIF.
       ENDIF.
-      lv_idx = lv_idx + 1.
+      lv_idx += 1.
     ENDWHILE.
   ENDMETHOD.
 
@@ -291,7 +291,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
     DATA lv_actual         TYPE string.
     DATA lv_all_match      TYPE abap_bool.
     DATA ls_exp_token      TYPE string.
-    DATA ls_act_token      TYPE zif_skylint_types=>ty_token.
+    DATA ls_act_token      TYPE if_ci_atc_source_code_provider=>ty_token.
     FIELD-SYMBOLS <ls_exp> TYPE string.
 
     rv_index = 0.
@@ -387,7 +387,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD matches_token_at.
-    DATA ls_token    TYPE zif_skylint_types=>ty_token.
+    DATA ls_token    TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_actual   TYPE string.
     DATA lv_expected TYPE string.
 
@@ -428,7 +428,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD statement_is_method_call.
-    DATA ls_tok TYPE zif_skylint_types=>ty_token.
+    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_has = abap_false.
 
@@ -440,7 +440,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
 
     LOOP AT is_statement-tokens INTO ls_tok.
       IF token_has_ref( is_token = ls_tok
-                        iv_kind  = zif_skylint_types=>compiler_reference_kinds-method ) = abap_true.
+                        iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-method ) = abap_true.
         rv_has = abap_true.
         RETURN.
       ENDIF.
@@ -452,7 +452,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD has_token_lexeme.
-    DATA ls_tok   TYPE zif_skylint_types=>ty_token.
+    DATA ls_tok   TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_first TYPE string.
 
     rv_has = abap_false.
@@ -526,7 +526,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD has_compiler_reference.
-    FIELD-SYMBOLS <ls_ref> TYPE zif_skylint_types=>ty_compiler_reference.
+    FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     rv_has = abap_false.
     LOOP AT is_token-references ASSIGNING <ls_ref> WHERE kind = iv_kind.
@@ -549,9 +549,9 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
     DATA lv_name   TYPE string.
     DATA lv_suffix TYPE string.
     DATA lv_off    TYPE i.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE zif_skylint_types=>ty_token.
-    FIELD-SYMBOLS <ls_ref>       TYPE zif_skylint_types=>ty_compiler_reference.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_ref>       TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     rv_yes = abap_false.
     lv_name = normalize_identifier_name( iv_name ).
@@ -563,10 +563,10 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
     LOOP AT it_statements ASSIGNING <ls_statement>.
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
         LOOP AT <ls_token>-references ASSIGNING <ls_ref>
-             WHERE kind = zif_skylint_types=>compiler_reference_kinds-data.
-          IF <ls_ref>-usage_mode = zif_skylint_types=>usage_modes-definition
-             OR <ls_ref>-usage_mode = zif_skylint_types=>usage_modes-definition_with_write
-             OR <ls_ref>-usage_mode = zif_skylint_types=>usage_modes-definition_with_assign.
+             WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
+          IF    <ls_ref>-usage_mode = if_ci_atc_source_code_provider=>usage_modes-definition
+             OR <ls_ref>-usage_mode = if_ci_atc_source_code_provider=>usage_modes-definition_with_write
+             OR <ls_ref>-usage_mode = if_ci_atc_source_code_provider=>usage_modes-definition_with_assign.
             lv_off = strlen( <ls_ref>-full_name ) - strlen( lv_suffix ).
             IF lv_off >= 0 AND <ls_ref>-full_name+lv_off = lv_suffix.
               rv_yes = abap_true.
@@ -592,17 +592,17 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
     lv_off = strlen( rv_name ) - 1.
     WHILE lv_off >= 0.
       IF rv_name+lv_off(1) = '('.
-        lv_off = lv_off + 1.
+        lv_off += 1.
         lv_len = strlen( rv_name ) - lv_off.
         IF lv_len > 0 AND rv_name+lv_off(lv_len) CA ')'.
-          lv_len = lv_len - 1.
+          lv_len -= 1.
         ENDIF.
         IF lv_len > 0.
           rv_name = rv_name+lv_off(lv_len).
         ENDIF.
         RETURN.
       ENDIF.
-      lv_off = lv_off - 1.
+      lv_off -= 1.
     ENDWHILE.
   ENDMETHOD.
 ENDCLASS.

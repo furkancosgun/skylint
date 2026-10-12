@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_001 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        describe_lines TYPE zif_skylint_types=>ty_finding_code VALUE 'DESCRIBELN',
+        describe_lines TYPE if_ci_atc_check=>ty_finding_code VALUE 'DESCRIBELN',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -22,7 +22,7 @@ CLASS zcl_skylint_check_001 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code     = c_finding_codes-describe_lines
-                                       severity = zif_skylint_types=>severities-warning
+                                       severity = if_ci_atc_check=>finding_severities-warning
                                        text     = 'Use lines( ) function instead of DESCRIBE TABLE ... LINES' ) ) ) ).
   ENDMETHOD.
 
@@ -30,10 +30,10 @@ CLASS zcl_skylint_check_001 IMPLEMENTATION.
     DATA lv_has_table TYPE abap_bool.
     DATA lv_has_lines TYPE abap_bool.
     DATA lv_has_other TYPE abap_bool.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE zif_skylint_types=>ty_token.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'DESCRIBE'.
       lv_has_table = abap_false.
       lv_has_lines = abap_false.

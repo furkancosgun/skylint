@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_030 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        db_in_loop TYPE zif_skylint_types=>ty_finding_code VALUE 'DBINLOOP',
+        db_in_loop TYPE if_ci_atc_check=>ty_finding_code VALUE 'DBINLOOP',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -16,7 +16,7 @@ CLASS zcl_skylint_check_030 DEFINITION
 
   PRIVATE SECTION.
     METHODS is_direct_db_access
-      IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
@@ -29,23 +29,23 @@ CLASS zcl_skylint_check_030 IMPLEMENTATION.
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code     = c_finding_codes-db_in_loop
-                       severity = zif_skylint_types=>severities-warning
+                       severity = if_ci_atc_check=>finding_severities-warning
                        text     = 'Database access inside loop iteration; consider bulk operation or JOIN' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     DATA lv_loop_depth TYPE i.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     lv_loop_depth = 0.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'LOOP' OR 'DO' OR 'WHILE'.
-          lv_loop_depth = lv_loop_depth + 1.
+          lv_loop_depth += 1.
         WHEN 'ENDLOOP' OR 'ENDDO' OR 'ENDWHILE'.
           IF lv_loop_depth > 0.
-            lv_loop_depth = lv_loop_depth - 1.
+            lv_loop_depth -= 1.
           ENDIF.
         WHEN OTHERS.
           IF lv_loop_depth > 0 AND is_direct_db_access( <ls_statement> ) = abap_true.
@@ -57,16 +57,16 @@ CLASS zcl_skylint_check_030 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_direct_db_access.
-    DATA ls_tok TYPE zif_skylint_types=>ty_token.
-    DATA ls_ref TYPE zif_skylint_types=>ty_compiler_reference.
+    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_ref TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     rv_res = abap_false.
 
     " 1. Inspect compiler semantic references (read/write database)
     LOOP AT is_statement-tokens INTO ls_tok.
       LOOP AT ls_tok-references INTO ls_ref.
-        IF    ls_ref-usage_mode = zif_skylint_types=>usage_modes-read_database
-           OR ls_ref-usage_mode = zif_skylint_types=>usage_modes-write_database.
+        IF    ls_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_database
+           OR ls_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-write_database.
           rv_res = abap_true.
           RETURN.
         ENDIF.

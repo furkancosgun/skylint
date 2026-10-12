@@ -6,11 +6,11 @@ CLASS zcl_skylint_check_006 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        omit_exporting TYPE zif_skylint_types=>ty_finding_code VALUE 'OMITEXPORT',
+        omit_exporting TYPE if_ci_atc_check=>ty_finding_code VALUE 'OMITEXPORT',
       END OF c_finding_codes.
     CONSTANTS:
       BEGIN OF c_quickfix_codes,
-        omit_exporting TYPE zif_skylint_types=>ty_quickfix_code VALUE 'OMIT_EXP',
+        omit_exporting TYPE cl_ci_atc_quickfixes=>ty_quickfix_code VALUE 'OMIT_EXP',
       END OF c_quickfix_codes.
 
     METHODS constructor.
@@ -26,7 +26,7 @@ CLASS zcl_skylint_check_006 IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code     = c_finding_codes-omit_exporting
-                                       severity = zif_skylint_types=>severities-warning
+                                       severity = if_ci_atc_check=>finding_severities-warning
                                        text     = 'Omit explicit EXPORTING keyword in method invocation' ) )
                                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-omit_exporting
                                                                 short_text = 'Remove EXPORTING keyword' ) ) ) ).
@@ -36,13 +36,13 @@ CLASS zcl_skylint_check_006 IMPLEMENTATION.
     DATA lv_stmt_idx   TYPE i.
     DATA lv_tok_idx    TYPE i.
     DATA lt_expected   TYPE zcl_skylint_ast_util=>ty_token_lexemes.
-    DATA ls_quickfix   TYPE zif_skylint_types=>ty_quickfix.
-    DATA lt_empty_code TYPE zif_skylint_types=>ty_code_lines.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    DATA ls_quickfix   TYPE zcl_skylint_check_base=>ty_quickfix.
+    DATA lt_empty_code TYPE zcl_skylint_check_base=>ty_code_lines.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     lt_expected = VALUE #( ( `EXPORTING` ) ).
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF    <ls_statement>-keyword = 'METHODS'    OR <ls_statement>-keyword = 'CLASS-METHODS'
          OR <ls_statement>-keyword = 'INTERFACES' OR <ls_statement>-keyword = 'CALL'
          OR <ls_statement>-keyword = 'EVENTS'     OR <ls_statement>-keyword = 'CLASS-EVENTS'.
@@ -59,7 +59,7 @@ CLASS zcl_skylint_check_006 IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      lv_stmt_idx = <ls_statement>-index.
+      lv_stmt_idx = sy-tabix.
       ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-omit_exporting
                                       iv_statement_from = lv_stmt_idx
                                       iv_token_from     = lv_tok_idx

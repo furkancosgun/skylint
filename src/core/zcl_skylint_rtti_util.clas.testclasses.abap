@@ -90,20 +90,21 @@ CLASS ltcl_rtti_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_has_compiler_ref.
-    DATA ls_stmt TYPE zif_skylint_types=>ty_statement.
+    DATA ls_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA lv_has  TYPE abap_bool.
 
-    ls_stmt = VALUE #( tokens = VALUE #( ( references = VALUE #(
-                                               ( kind = zif_skylint_types=>compiler_reference_kinds-method ) ) ) ) ).
+    ls_stmt = VALUE #(
+        tokens = VALUE #( ( references = VALUE #(
+                                ( kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-method ) ) ) ) ).
 
     lv_has = zcl_skylint_rtti_util=>has_compiler_reference(
                  is_statement = ls_stmt
-                 iv_kind      = zif_skylint_types=>compiler_reference_kinds-method ).
+                 iv_kind      = if_ci_atc_source_code_provider=>compiler_reference_kinds-method ).
     cl_abap_unit_assert=>assert_true( lv_has ).
 
     lv_has = zcl_skylint_rtti_util=>has_compiler_reference(
                  is_statement = ls_stmt
-                 iv_kind      = zif_skylint_types=>compiler_reference_kinds-data ).
+                 iv_kind      = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
     cl_abap_unit_assert=>assert_false( lv_has ).
   ENDMETHOD.
 ENDCLASS.

@@ -6,7 +6,7 @@ CLASS zcl_skylint_check_049 DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        raise_shortdump TYPE zif_skylint_types=>ty_finding_code VALUE 'SHORTDUMP',
+        raise_shortdump TYPE if_ci_atc_check=>ty_finding_code VALUE 'SHORTDUMP',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -16,7 +16,7 @@ CLASS zcl_skylint_check_049 DEFINITION
 
   PRIVATE SECTION.
     METHODS is_raise_shortdump
-      IMPORTING is_statement  TYPE zif_skylint_types=>ty_statement
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
@@ -29,14 +29,14 @@ CLASS zcl_skylint_check_049 IMPLEMENTATION.
                             remote_enablement = abap_true
                             finding_codes     = VALUE #(
                                 ( code     = c_finding_codes-raise_shortdump
-                                  severity = zif_skylint_types=>severities-warning
+                                  severity = if_ci_atc_check=>finding_severities-warning
                                   text     = 'Avoid RAISE SHORTDUMP; prefer graceful class-based exceptions' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    FIELD-SYMBOLS <ls_statement> TYPE zif_skylint_types=>ty_statement.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_code_block-statements ASSIGNING <ls_statement>
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'RAISE'.
       IF is_raise_shortdump( <ls_statement> ) = abap_true.
         report_statement( is_statement    = <ls_statement>
