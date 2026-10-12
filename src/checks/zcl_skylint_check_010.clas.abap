@@ -53,18 +53,16 @@ CLASS zcl_skylint_check_010 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_stmt_idx   TYPE i.
-    DATA lv_op_idx     TYPE i.
-    DATA lv_lit_idx    TYPE i.
-    " TODO: variable is assigned but never used (ABAP cleaner)
-    DATA lv_lit_before TYPE abap_bool.
-    DATA lv_op         TYPE string.
-    DATA lv_lit        TYPE string.
-    DATA lv_line       TYPE string.
-    DATA ls_quickfix   TYPE zcl_skylint_check_base=>ty_quickfix.
-    DATA lt_deletions  TYPE zcl_skylint_ast_util=>ty_token_deletions.
-    DATA ls_adj        TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_adj        TYPE string.
+    DATA lv_stmt_idx  TYPE i.
+    DATA lv_op_idx    TYPE i.
+    DATA lv_lit_idx   TYPE i.
+    DATA lv_op        TYPE string.
+    DATA lv_lit       TYPE string.
+    DATA lv_line      TYPE string.
+    DATA ls_quickfix  TYPE zcl_skylint_check_base=>ty_quickfix.
+    DATA lt_deletions TYPE zcl_skylint_ast_util=>ty_token_deletions.
+    DATA ls_adj       TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_adj       TYPE string.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
@@ -78,20 +76,17 @@ CLASS zcl_skylint_check_010 IMPLEMENTATION.
               CLEAR lt_deletions.
               ls_adj = zcl_skylint_ast_util=>get_token( is_statement = <ls_statement>
                                                         iv_index     = lv_op_idx - 1 ).
-              lv_adj = to_upper( ls_adj-lexeme ).
+              lv_adj = ls_adj-lexeme.
               IF is_boolean_operand( is_token  = ls_adj
                                      iv_lexeme = lv_adj ) = abap_true.
-                lv_lit_before = abap_true.
                 lv_lit_idx = lv_op_idx - 1.
               ELSE.
-                lv_lit_before = abap_false.
                 lv_lit_idx = lv_op_idx + 1.
               ENDIF.
               lv_op = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
                                                               iv_index     = lv_op_idx ).
-              lv_lit = zcl_skylint_ast_util=>get_token_lexeme( is_statement      = <ls_statement>
-                                                               iv_index          = lv_lit_idx
-                                                               iv_case_sensitive = abap_true ).
+              lv_lit = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
+                                                               iv_index     = lv_lit_idx ).
               IF is_droppable( iv_operator = lv_op
                                iv_literal  = lv_lit ) = abap_true.
                 lt_deletions = VALUE #( ( lv_op_idx ) ( lv_lit_idx ) ).
@@ -124,11 +119,11 @@ CLASS zcl_skylint_check_010 IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      CASE to_upper( ls_token-lexeme ).
+      CASE ls_token-lexeme.
         WHEN '=' OR 'EQ' OR '<>' OR 'NE' OR '><'.
           ls_adj_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                           iv_index     = lv_tok_idx - 1 ).
-          lv_adj = to_upper( ls_adj_token-lexeme ).
+          lv_adj = ls_adj_token-lexeme.
           IF is_boolean_operand( is_token  = ls_adj_token
                                  iv_lexeme = lv_adj ) = abap_true.
             rv_index = lv_tok_idx.
@@ -137,7 +132,7 @@ CLASS zcl_skylint_check_010 IMPLEMENTATION.
 
           ls_adj_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                           iv_index     = lv_tok_idx + 1 ).
-          lv_adj = to_upper( ls_adj_token-lexeme ).
+          lv_adj = ls_adj_token-lexeme.
           IF is_boolean_operand( is_token  = ls_adj_token
                                  iv_lexeme = lv_adj ) = abap_true.
             rv_index = lv_tok_idx.
@@ -152,8 +147,8 @@ CLASS zcl_skylint_check_010 IMPLEMENTATION.
     DATA lv_lit TYPE string.
 
     rv_yes = abap_false.
-    lv_op = to_upper( iv_operator ).
-    lv_lit = to_upper( iv_literal ).
+    lv_op =  iv_operator.
+    lv_lit = iv_literal.
 
     CASE lv_op.
       WHEN '=' OR 'EQ'.

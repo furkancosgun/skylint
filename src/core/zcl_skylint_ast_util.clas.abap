@@ -11,10 +11,9 @@ CLASS zcl_skylint_ast_util DEFINITION
       RETURNING VALUE(rs_token) TYPE if_ci_atc_source_code_provider=>ty_token.
 
     CLASS-METHODS get_token_lexeme
-      IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
-                iv_index          TYPE i
-                iv_case_sensitive TYPE abap_bool DEFAULT abap_false
-      RETURNING VALUE(rv_lexeme)  TYPE string.
+      IMPORTING is_statement     TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_index         TYPE i
+      RETURNING VALUE(rv_lexeme) TYPE string.
 
     CLASS-METHODS get_first_token
       IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
@@ -40,52 +39,45 @@ CLASS zcl_skylint_ast_util DEFINITION
       RETURNING VALUE(rs_statement) TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     CLASS-METHODS find_token
-      IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
-                iv_lexeme         TYPE string
-                iv_start_index    TYPE i         DEFAULT 1
-                iv_case_sensitive TYPE abap_bool DEFAULT abap_false
-      RETURNING VALUE(rv_index)   TYPE i.
+      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_lexeme       TYPE string
+                iv_start_index  TYPE i DEFAULT 1
+      RETURNING VALUE(rv_index) TYPE i.
 
     CLASS-METHODS get_token_after
-      IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
-                iv_lexeme         TYPE string
-                iv_start_index    TYPE i         DEFAULT 1
-                iv_case_sensitive TYPE abap_bool DEFAULT abap_false
-      RETURNING VALUE(rs_token)   TYPE if_ci_atc_source_code_provider=>ty_token.
+      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_lexeme       TYPE string
+                iv_start_index  TYPE i DEFAULT 1
+      RETURNING VALUE(rs_token) TYPE if_ci_atc_source_code_provider=>ty_token.
 
     CLASS-METHODS get_token_before
-      IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
-                iv_lexeme         TYPE string
-                iv_start_index    TYPE i         DEFAULT 1
-                iv_case_sensitive TYPE abap_bool DEFAULT abap_false
-      RETURNING VALUE(rs_token)   TYPE if_ci_atc_source_code_provider=>ty_token.
+      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_lexeme       TYPE string
+                iv_start_index  TYPE i DEFAULT 1
+      RETURNING VALUE(rs_token) TYPE if_ci_atc_source_code_provider=>ty_token.
 
     CLASS-METHODS find_token_sequence
-      IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
-                it_expected       TYPE ty_token_lexemes
-                iv_start_index    TYPE i         DEFAULT 1
-                iv_case_sensitive TYPE abap_bool DEFAULT abap_false
-      RETURNING VALUE(rv_index)   TYPE i.
+      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
+                it_expected     TYPE ty_token_lexemes
+                iv_start_index  TYPE i DEFAULT 1
+      RETURNING VALUE(rv_index) TYPE i.
 
     CLASS-METHODS get_token_after_sequence
-      IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
-                it_expected       TYPE ty_token_lexemes
-                iv_start_index    TYPE i         DEFAULT 1
-                iv_case_sensitive TYPE abap_bool DEFAULT abap_false
-      RETURNING VALUE(rs_token)   TYPE if_ci_atc_source_code_provider=>ty_token.
+      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
+                it_expected     TYPE ty_token_lexemes
+                iv_start_index  TYPE i DEFAULT 1
+      RETURNING VALUE(rs_token) TYPE if_ci_atc_source_code_provider=>ty_token.
 
     CLASS-METHODS match_token_sequence
       IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
                 it_expected       TYPE ty_token_lexemes
-                iv_start_index    TYPE i         DEFAULT 1
-                iv_case_sensitive TYPE abap_bool DEFAULT abap_false
+                iv_start_index    TYPE i DEFAULT 1
       RETURNING VALUE(rv_matched) TYPE abap_bool.
 
     CLASS-METHODS matches_token_at
       IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
                 iv_index          TYPE i
                 iv_expected       TYPE string
-                iv_case_sensitive TYPE abap_bool DEFAULT abap_false
       RETURNING VALUE(rv_matched) TYPE abap_bool.
 
     CLASS-METHODS statement_is_method_call
@@ -189,11 +181,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
     ls_token = get_token( is_statement = is_statement
                           iv_index     = iv_index ).
     IF ls_token-lexeme IS NOT INITIAL.
-      IF iv_case_sensitive = abap_true.
-        rv_lexeme = ls_token-lexeme.
-      ELSE.
-        rv_lexeme = to_upper( ls_token-lexeme ).
-      ENDIF.
+      rv_lexeme = ls_token-lexeme.
     ENDIF.
   ENDMETHOD.
 
@@ -250,21 +238,13 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    IF iv_case_sensitive = abap_true.
-      lv_exp = iv_lexeme.
-    ELSE.
-      lv_exp = to_upper( iv_lexeme ).
-    ENDIF.
+    lv_exp = iv_lexeme.
 
     lv_idx = iv_start_index.
     WHILE lv_idx <= lv_count.
       ASSIGN is_statement-tokens[ lv_idx ] TO <ls_tok>.
       IF sy-subrc = 0 AND <ls_tok>-references IS INITIAL.
-        IF iv_case_sensitive = abap_true.
-          lv_act = <ls_tok>-lexeme.
-        ELSE.
-          lv_act = to_upper( <ls_tok>-lexeme ).
-        ENDIF.
+        lv_act = <ls_tok>-lexeme.
         IF lv_act = lv_exp.
           rv_index = lv_idx.
           RETURN.
@@ -278,10 +258,9 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
     DATA lv_idx TYPE i.
 
     CLEAR rs_token.
-    lv_idx = find_token( is_statement      = is_statement
-                         iv_lexeme         = iv_lexeme
-                         iv_start_index    = iv_start_index
-                         iv_case_sensitive = iv_case_sensitive ).
+    lv_idx = find_token( is_statement   = is_statement
+                         iv_lexeme      = iv_lexeme
+                         iv_start_index = iv_start_index ).
     IF lv_idx > 0.
       rs_token = get_token( is_statement = is_statement
                             iv_index     = lv_idx + 1 ).
@@ -292,10 +271,9 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
     DATA lv_idx TYPE i.
 
     CLEAR rs_token.
-    lv_idx = find_token( is_statement      = is_statement
-                         iv_lexeme         = iv_lexeme
-                         iv_start_index    = iv_start_index
-                         iv_case_sensitive = iv_case_sensitive ).
+    lv_idx = find_token( is_statement   = is_statement
+                         iv_lexeme      = iv_lexeme
+                         iv_start_index = iv_start_index ).
     IF lv_idx > 1.
       rs_token = get_token( is_statement = is_statement
                             iv_index     = lv_idx - 1 ).
@@ -357,13 +335,8 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
           EXIT.
         ENDIF.
 
-        IF iv_case_sensitive = abap_true.
-          lv_expected = ls_exp_token.
-          lv_actual   = ls_act_token-lexeme.
-        ELSE.
-          lv_expected = to_upper( ls_exp_token ).
-          lv_actual   = to_upper( ls_act_token-lexeme ).
-        ENDIF.
+        lv_expected = ls_exp_token.
+        lv_actual   = ls_act_token-lexeme.
 
         IF lv_expected <> lv_actual.
           lv_all_match = abap_false.
@@ -383,10 +356,9 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
     DATA lv_cnt TYPE i.
 
     CLEAR rs_token.
-    lv_idx = find_token_sequence( is_statement      = is_statement
-                                  it_expected       = it_expected
-                                  iv_start_index    = iv_start_index
-                                  iv_case_sensitive = iv_case_sensitive ).
+    lv_idx = find_token_sequence( is_statement   = is_statement
+                                  it_expected    = it_expected
+                                  iv_start_index = iv_start_index ).
     IF lv_idx > 0.
       lv_cnt = lines( it_expected ).
       rs_token = get_token( is_statement = is_statement
@@ -398,10 +370,9 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
     DATA lv_index TYPE i.
 
     rv_matched = abap_false.
-    lv_index = find_token_sequence( is_statement      = is_statement
-                                    it_expected       = it_expected
-                                    iv_start_index    = iv_start_index
-                                    iv_case_sensitive = iv_case_sensitive ).
+    lv_index = find_token_sequence( is_statement   = is_statement
+                                    it_expected    = it_expected
+                                    iv_start_index = iv_start_index ).
 
     IF lv_index > 0.
       rv_matched = abap_true.
@@ -426,13 +397,8 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    IF iv_case_sensitive = abap_true.
-      lv_actual   = ls_token-lexeme.
-      lv_expected = iv_expected.
-    ELSE.
-      lv_actual   = to_upper( ls_token-lexeme ).
-      lv_expected = to_upper( iv_expected ).
-    ENDIF.
+    lv_actual   = ls_token-lexeme.
+    lv_expected = iv_expected.
 
     IF lv_actual = lv_expected.
       rv_matched = abap_true.
@@ -487,7 +453,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
       IF lv_first = '''' OR lv_first = '`'.
         CONTINUE.
       ENDIF.
-      IF to_upper( ls_tok-lexeme ) = to_upper( iv_lexeme ).
+      IF ls_tok-lexeme = iv_lexeme.
         rv_has = abap_true.
         RETURN.
       ENDIF.
@@ -539,7 +505,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
   METHOD is_comparison_operator.
     DATA lv_op TYPE string.
 
-    lv_op = to_upper( iv_lexeme ).
+    lv_op =  iv_lexeme.
     rv_yes = xsdbool(    lv_op = '='  OR lv_op = '<>' OR lv_op = '<'  OR lv_op = '>'
                       OR lv_op = '<=' OR lv_op = '>=' OR lv_op = 'EQ' OR lv_op = 'NE'
                       OR lv_op = 'LT' OR lv_op = 'GT' OR lv_op = 'LE' OR lv_op = 'GE'
@@ -604,7 +570,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
     DATA lv_off TYPE i.
     DATA lv_len TYPE i.
 
-    rv_name = to_upper( condense( iv_raw ) ).
+    rv_name = condense( iv_raw  ).
     IF rv_name IS INITIAL.
       RETURN.
     ENDIF.
@@ -675,7 +641,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
     DATA lv_idx    TYPE i.
     DATA lv_design TYPE string.
     DATA lv_lhs    TYPE string.
-    DATA lv_upper  TYPE string.
+    DATA lv_token  TYPE string.
     DATA lv_name   TYPE string.
     DATA lv_value  TYPE string.
     DATA lv_args   TYPE string.
@@ -688,9 +654,8 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    lv_design = get_token_lexeme( is_statement      = is_statement
-                                  iv_index          = 3
-                                  iv_case_sensitive = abap_true ).
+    lv_design = get_token_lexeme( is_statement = is_statement
+                                  iv_index     = 3 ).
     IF lv_design IS INITIAL.
       RETURN.
     ENDIF.
@@ -706,9 +671,9 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
     lv_first = abap_true.
     lv_idx = 4.
     WHILE lv_idx <= lv_count.
-      lv_upper = to_upper( get_token_lexeme( is_statement = is_statement
-                                             iv_index     = lv_idx ) ).
-      CASE lv_upper.
+      lv_token = get_token_lexeme( is_statement = is_statement
+                                   iv_index     = lv_idx ).
+      CASE lv_token.
         WHEN 'EXPORTING'.
           lv_idx += 1.
           WHILE     lv_idx + 2 <= lv_count
@@ -716,12 +681,10 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
                                                               iv_index     = lv_idx ) )    = abap_false
                 AND get_token_lexeme( is_statement = is_statement
                                       iv_index     = lv_idx + 1 ) = '='.
-            lv_name = get_token_lexeme( is_statement      = is_statement
-                                        iv_index          = lv_idx
-                                        iv_case_sensitive = abap_true ).
-            lv_value = get_token_lexeme( is_statement      = is_statement
-                                         iv_index          = lv_idx + 2
-                                         iv_case_sensitive = abap_true ).
+            lv_name = get_token_lexeme( is_statement = is_statement
+                                        iv_index     = lv_idx ).
+            lv_value = get_token_lexeme( is_statement = is_statement
+                                         iv_index     = lv_idx + 2 ).
             IF    lv_value IS INITIAL
                OR is_call_clause_keyword( lv_value )  = abap_true.
               RETURN.
@@ -743,18 +706,16 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
           IF lv_lhs IS NOT INITIAL.
             RETURN.
           ENDIF.
-          lv_name = get_token_lexeme( is_statement      = is_statement
-                                      iv_index          = lv_idx + 1
-                                      iv_case_sensitive = abap_true ).
+          lv_name = get_token_lexeme( is_statement = is_statement
+                                      iv_index     = lv_idx + 1 ).
           IF    lv_name IS INITIAL
              OR is_call_clause_keyword( lv_name )              = abap_true
              OR get_token_lexeme( is_statement = is_statement
                                   iv_index     = lv_idx + 2 ) <> '='.
             RETURN.
           ENDIF.
-          lv_lhs = get_token_lexeme( is_statement      = is_statement
-                                     iv_index          = lv_idx + 3
-                                     iv_case_sensitive = abap_true ).
+          lv_lhs = get_token_lexeme( is_statement = is_statement
+                                     iv_index     = lv_idx + 3 ).
           IF lv_lhs IS INITIAL.
             RETURN.
           ENDIF.
@@ -779,11 +740,8 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_call_clause_keyword.
-    DATA lv_upper TYPE string.
-
     rv_is = abap_false.
-    lv_upper = to_upper( iv_word ).
-    CASE lv_upper.
+    CASE iv_word.
       WHEN 'EXPORTING' OR 'IMPORTING' OR 'RECEIVING' OR 'EXCEPTIONS' OR 'EXCEPTION-TABLE'.
         rv_is = abap_true.
     ENDCASE.

@@ -91,9 +91,8 @@ CLASS zcl_skylint_check_013 IMPLEMENTATION.
     lv_cond = ''.
     lv_idx = 2.
     WHILE lv_idx <= lv_count.
-      lv_lex = zcl_skylint_ast_util=>get_token_lexeme( is_statement      = is_statement
-                                                       iv_index          = lv_idx
-                                                       iv_case_sensitive = abap_true ).
+      lv_lex = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
+                                                       iv_index     = lv_idx ).
       IF lv_lex IS INITIAL.
         RETURN.
       ENDIF.

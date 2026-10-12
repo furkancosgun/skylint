@@ -109,7 +109,7 @@ CLASS zcl_skylint_check_004 IMPLEMENTATION.
       IF <ls_token>-references IS NOT INITIAL.
         CONTINUE.
       ENDIF.
-      lv_lexeme = to_upper( <ls_token>-lexeme ).
+      lv_lexeme = <ls_token>-lexeme.
 
       IF lv_lexeme = 'NOT'.
         lv_in_not = abap_true.
@@ -119,7 +119,7 @@ CLASS zcl_skylint_check_004 IMPLEMENTATION.
       ELSEIF lv_in_not = abap_true AND lv_lexeme = 'IS'.
         ls_next = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                    iv_index     = lv_idx + 1 ).
-        lv_next_lexeme = to_upper( ls_next-lexeme ).
+        lv_next_lexeme = ls_next-lexeme.
         IF ls_next-references IS INITIAL.
           CASE lv_next_lexeme.
             WHEN 'INITIAL' OR 'BOUND' OR 'ASSIGNED' OR 'SUPPLIED' OR 'REQUESTED' OR 'INSTANCE'.

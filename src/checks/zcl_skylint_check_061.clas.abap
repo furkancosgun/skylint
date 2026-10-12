@@ -34,7 +34,7 @@ CLASS zcl_skylint_check_061 IMPLEMENTATION.
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'MESSAGE'.
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-        IF to_upper( <ls_token>-lexeme ) = 'RAISING' AND <ls_token>-references IS INITIAL.
+        IF <ls_token>-lexeme = 'RAISING' AND <ls_token>-references IS INITIAL.
           report_statement( is_statement    = <ls_statement>
                             iv_finding_code = c_finding_codes-msg_raise ).
           EXIT.

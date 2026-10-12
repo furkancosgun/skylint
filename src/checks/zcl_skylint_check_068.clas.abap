@@ -50,10 +50,10 @@ CLASS zcl_skylint_check_068 IMPLEMENTATION.
             lv_is_itab_modify = abap_false.
 
             LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-              IF to_upper( <ls_token>-lexeme ) = 'TRANSPORTING' AND <ls_token>-references IS INITIAL.
+              IF <ls_token>-lexeme = 'TRANSPORTING' AND <ls_token>-references IS INITIAL.
                 lv_has_transporting = abap_true.
               ENDIF.
-              IF     ( to_upper( <ls_token>-lexeme ) = 'FROM' OR to_upper( <ls_token>-lexeme ) = 'INDEX' )
+              IF     ( <ls_token>-lexeme = 'FROM' OR <ls_token>-lexeme = 'INDEX' )
                  AND <ls_token>-references IS INITIAL.
                 lv_is_itab_modify = abap_true.
               ENDIF.

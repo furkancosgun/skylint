@@ -61,7 +61,7 @@ CLASS zcl_skylint_check_001 IMPLEMENTATION.
         IF <ls_token>-references IS NOT INITIAL.
           CONTINUE.
         ENDIF.
-        CASE to_upper( <ls_token>-lexeme ).
+        CASE <ls_token>-lexeme.
           WHEN 'TABLE'.
             lv_has_table = abap_true.
             lv_table_idx = lv_tok_idx.

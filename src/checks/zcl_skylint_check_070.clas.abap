@@ -43,7 +43,7 @@ CLASS zcl_skylint_check_070 IMPLEMENTATION.
         IF <ls_token>-references IS NOT INITIAL.
           CONTINUE.
         ENDIF.
-        lv_lexeme = to_upper( <ls_token>-lexeme ).
+        lv_lexeme = <ls_token>-lexeme.
         IF NOT ( lv_lexeme = 'FROM' OR lv_lexeme = 'WHERE' OR lv_lexeme = 'JOIN' ).
           CONTINUE.
         ENDIF.

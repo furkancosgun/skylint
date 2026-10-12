@@ -1,4 +1,4 @@
-﻿/**
+/**
  * scripts/skylint-test/lexer.mjs
  *
  * 1:1 JS port of lcl_lexer
@@ -74,8 +74,12 @@ export class Lexer {
   }
 
   emitToken(text) {
+    let lex = text;
+    if (lex && lex[0] !== "'" && lex[0] !== '`' && lex[0] !== '|' && lex[0] !== '"' && !lex.startsWith('##')) {
+      lex = lex.toUpperCase();
+    }
     this.tokens.push({
-      lexeme: text,
+      lexeme: lex,
       position: { line: this.tokLine, column: this.tokCol > 255 ? 255 : this.tokCol },
       references: [],
     });

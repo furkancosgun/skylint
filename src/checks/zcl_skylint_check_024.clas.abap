@@ -155,17 +155,13 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
 
     IF is_boolean_operand( is_token  = ls_tok_val
                            iv_lexeme = ls_tok_val-lexeme ) = abap_true.
-      ev_target  = to_upper( ls_tok_target-lexeme ).
+      ev_target  = ls_tok_target-lexeme.
       ev_is_bool = abap_true.
     ENDIF.
   ENDMETHOD.
 
   METHOD is_boolean_value.
-    DATA lv_upper TYPE string.
-
-    lv_upper = to_upper( iv_lexeme ).
-
-    CASE lv_upper.
+    CASE iv_lexeme.
       WHEN 'ABAP_TRUE' OR 'ABAP_FALSE' OR '''X''' OR ''' ''' OR '''''' OR 'SPACE'.
         rv_res = abap_true.
       WHEN OTHERS.
@@ -174,13 +170,10 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_boolean_operand.
-    DATA lv_upper TYPE string.
-
     rv_res = abap_false.
-    lv_upper = to_upper( iv_lexeme ).
     IF     is_token-references IS NOT INITIAL
-       AND lv_upper            <> 'ABAP_TRUE'
-       AND lv_upper            <> 'ABAP_FALSE'.
+       AND iv_lexeme           <> 'ABAP_TRUE'
+       AND iv_lexeme           <> 'ABAP_FALSE'.
       RETURN.
     ENDIF.
     rv_res = is_boolean_value( iv_lexeme ).
@@ -198,10 +191,10 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
 
     CLEAR rv_line.
 
-    lv_then_val = to_upper( zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_then
-                                                                    iv_index     = 3 ) ).
-    lv_else_val = to_upper( zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_else
-                                                                    iv_index     = 3 ) ).
+    lv_then_val = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_then
+                                                          iv_index     = 3 ).
+    lv_else_val = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_else
+                                                          iv_index     = 3 ).
     lv_is_inverted = abap_false.
     IF     ( lv_then_val = 'ABAP_TRUE'  OR lv_then_val = '''X''' )
        AND ( lv_else_val = 'ABAP_FALSE' OR lv_else_val = '''''' ).
@@ -221,9 +214,8 @@ CLASS zcl_skylint_check_024 IMPLEMENTATION.
     lv_cond = ''.
     lv_idx = 2.
     WHILE lv_idx <= lv_count.
-      lv_lex = zcl_skylint_ast_util=>get_token_lexeme( is_statement      = is_if_statement
-                                                       iv_index          = lv_idx
-                                                       iv_case_sensitive = abap_true ).
+      lv_lex = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_if_statement
+                                                       iv_index     = lv_idx ).
       IF lv_lex IS INITIAL.
         RETURN.
       ENDIF.

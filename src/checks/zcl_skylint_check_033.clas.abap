@@ -81,7 +81,7 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
 
       lv_reported = abap_false.
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-        lv_token_str = to_upper( <ls_token>-lexeme ).
+        lv_token_str = <ls_token>-lexeme.
         LOOP AT lt_scoped_vars ASSIGNING <ls_var> WHERE name = lv_token_str.
           IF is_block_active( iv_block_id = <ls_var>-block_id
                               it_stack    = lt_block_stack ) = abap_false.
@@ -134,14 +134,14 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
           ENDLOOP.
         ENDIF.
         IF lv_var_name IS NOT INITIAL.
-          ls_var-name = to_upper( lv_var_name ).
+          ls_var-name = lv_var_name.
           IF NOT line_exists( rt_vars[ name = ls_var-name ] ).
             APPEND ls_var TO rt_vars.
           ENDIF.
         ENDIF.
       ENDLOOP.
 
-      lv_lex = to_upper( <ls_token>-lexeme ).
+      lv_lex = <ls_token>-lexeme.
       IF lv_lex CP 'DATA(*)' OR lv_lex CP '@DATA(*)'.
         REPLACE FIRST OCCURRENCE OF '@DATA(' IN lv_lex WITH ''.
         REPLACE FIRST OCCURRENCE OF 'DATA(' IN lv_lex WITH ''.
@@ -159,7 +159,7 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
                                                  iv_index     = 2 ).
       IF     ls_tok2-lexeme IS NOT INITIAL AND ls_tok2-lexeme <> 'BEGIN'
          AND ls_tok2-lexeme <> 'END'.
-        ls_var-name = to_upper( ls_tok2-lexeme ).
+        ls_var-name = ls_tok2-lexeme.
         IF NOT line_exists( rt_vars[ name = ls_var-name ] ).
           APPEND ls_var TO rt_vars.
         ENDIF.

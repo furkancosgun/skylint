@@ -106,7 +106,7 @@ CLASS zcl_skylint_rtti_util IMPLEMENTATION.
     CLEAR: ev_program_name,
            ev_class_name,
            ev_meth_name.
-    lv_str = to_upper( iv_full_name ).
+    lv_str = iv_full_name.
 
     IF lv_str CS '=>'.
       SPLIT lv_str AT '=>' INTO ev_class_name ev_meth_name.
@@ -158,7 +158,7 @@ CLASS zcl_skylint_rtti_util IMPLEMENTATION.
     ENDIF.
 
     IF lo_obj IS BOUND.
-      READ TABLE lo_obj->methods INTO es_method WITH KEY name = to_upper( lv_meth ).
+      READ TABLE lo_obj->methods INTO es_method WITH KEY name = lv_meth.
       IF sy-subrc = 0.
         ev_found = abap_true.
       ENDIF.

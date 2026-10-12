@@ -79,7 +79,7 @@ CLASS zcl_skylint_check_042 IMPLEMENTATION.
     WHILE lv_idx <= lines( is_statement-tokens ).
       ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                 iv_index     = lv_idx ).
-      CASE to_upper( ls_tok-lexeme ).
+      CASE ls_tok-lexeme.
         WHEN 'IMPORTING' OR 'RAISING' OR 'EXCEPTIONS'.
           IF ls_tok-references IS INITIAL.
             EXIT.

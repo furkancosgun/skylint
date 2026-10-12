@@ -76,9 +76,10 @@ CLASS zcl_skylint_check_051 IMPLEMENTATION.
                                         iv_statement_from = lv_stmt_idx
                                         it_new_code       = VALUE #( ( lv_line ) ) ).
       ELSEIF     lv_count = 5
-             AND zcl_skylint_ast_util=>match_token_sequence( is_statement   = <ls_statement>
-                                                             it_expected    = VALUE #( ( `INITIAL` ) ( `LINE` ) ( `TO` ) )
-                                                             iv_start_index = 2 ) = abap_true.
+             AND zcl_skylint_ast_util=>match_token_sequence(
+                     is_statement   = <ls_statement>
+                     it_expected    = VALUE #( ( `INITIAL` ) ( `LINE` ) ( `TO` ) )
+                     iv_start_index = 2 ) = abap_true.
         lv_dst = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
                                                          iv_index     = 5 ).
         lv_line = |INSERT INITIAL LINE INTO TABLE { lv_dst }.|.

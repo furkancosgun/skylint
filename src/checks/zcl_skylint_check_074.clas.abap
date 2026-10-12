@@ -36,12 +36,10 @@ CLASS zcl_skylint_check_074 IMPLEMENTATION.
     DATA ls_stmt     TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA ls_after    TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA lv_has_else TYPE abap_bool.
-    " TODO: variable is assigned but never used (ABAP cleaner)
-    FIELD-SYMBOLS <ls_loop> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     lv_max = zcl_skylint_ast_util=>statement_count( is_procedure-statements ).
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_loop>
+    LOOP AT is_procedure-statements TRANSPORTING NO FIELDS
          WHERE keyword = 'LOOP' OR keyword = 'DO' OR keyword = 'WHILE'.
       lv_idx = sy-tabix.
       IF lv_idx + 3 > lv_max.

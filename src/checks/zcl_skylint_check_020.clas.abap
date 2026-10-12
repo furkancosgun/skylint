@@ -138,13 +138,10 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD mirror_operator.
-    DATA lv_upper TYPE string.
-
     rv_op = ''.
-    lv_upper = to_upper( iv_operator ).
-    CASE lv_upper.
+    CASE iv_operator.
       WHEN '=' OR '<>' OR 'EQ' OR 'NE'.
-        rv_op = lv_upper.
+        rv_op = iv_operator.
       WHEN '<'.
         rv_op = '>'.
       WHEN '>'.
@@ -176,7 +173,6 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_identifier.
-    DATA lv_upper TYPE string.
     DATA lv_first TYPE c LENGTH 1.
 
     rv_is = abap_false.
@@ -191,14 +187,13 @@ CLASS zcl_skylint_check_020 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    lv_upper = to_upper( is_token-lexeme ).
-    lv_first = lv_upper(1).
+    lv_first = is_token-lexeme(1).
 
     IF lv_first NA 'ABCDEFGHIJKLMNOPQRSTUVWXYZ_'.
       RETURN.
     ENDIF.
 
-    CASE lv_upper.
+    CASE is_token-lexeme.
       WHEN 'AND' OR 'OR' OR 'NOT' OR 'EQUIV' OR 'IS' OR 'INITIAL' OR 'BOUND'
         OR 'ASSIGNED' OR 'REQUESTED' OR 'SUPPLIED' OR 'IN' OR 'BETWEEN'
         OR 'LIKE' OR 'LINES' OR 'TABLE' OR 'LINE_EXISTS' OR 'LINE_INDEX'.

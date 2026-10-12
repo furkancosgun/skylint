@@ -100,7 +100,7 @@ CLASS zcl_skylint_check_009 IMPLEMENTATION.
     lv_into = 0.
     LOOP AT is_statement-tokens ASSIGNING <ls_tok>.
       lv_idx = sy-tabix.
-      IF lv_idx > 1 AND to_upper( <ls_tok>-lexeme ) = 'INTO'.
+      IF lv_idx > 1 AND <ls_tok>-lexeme = 'INTO'.
         lv_into = lv_idx.
         EXIT.
       ENDIF.
@@ -123,9 +123,8 @@ CLASS zcl_skylint_check_009 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    lv_target = zcl_skylint_ast_util=>get_token_lexeme( is_statement      = is_statement
-                                                        iv_index          = lv_into + 1
-                                                        iv_case_sensitive = abap_true ).
+    lv_target = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
+                                                        iv_index     = lv_into + 1 ).
     IF lv_target IS INITIAL.
       RETURN.
     ENDIF.
@@ -139,18 +138,17 @@ CLASS zcl_skylint_check_009 IMPLEMENTATION.
                                                     iv_index     = lv_into + 3 ) <> 'BY'.
         RETURN.
       ENDIF.
-      lv_sep = zcl_skylint_ast_util=>get_token_lexeme( is_statement      = is_statement
-                                                       iv_index          = lv_into + 4
-                                                       iv_case_sensitive = abap_true ).
+      lv_sep = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
+                                                       iv_index     = lv_into + 4 ).
       IF lv_sep IS INITIAL.
         RETURN.
       ENDIF.
       lv_has_sep = abap_true.
     ENDIF.
 
-    IF     lines( lt_ops )         = 3
-       AND to_upper( lt_ops[ 1 ] ) = 'LINES'
-       AND to_upper( lt_ops[ 2 ] ) = 'OF'.
+    IF     lines( lt_ops ) = 3
+       AND lt_ops[ 1 ]     = 'LINES'
+       AND lt_ops[ 2 ]     = 'OF'.
       IF lv_has_sep = abap_false.
         RETURN.
       ENDIF.
@@ -158,7 +156,7 @@ CLASS zcl_skylint_check_009 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    IF lines( lt_ops ) >= 1 AND to_upper( lt_ops[ 1 ] ) = 'LINES'.
+    IF lines( lt_ops ) >= 1 AND lt_ops[ 1 ] = 'LINES'.
       RETURN.
     ENDIF.
 

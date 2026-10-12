@@ -70,7 +70,7 @@ CLASS zcl_skylint_check_056 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    lv_type = to_upper( ls_type-lexeme ).
+    lv_type = ls_type-lexeme.
     IF     lv_type <> 'ABAP_BOOL' AND lv_type <> 'FLAG'
        AND lv_type <> 'XSDBOOL'   AND lv_type <> 'BOOLEAN'
        AND lv_type <> 'BOOLE_D'   AND lv_type <> 'XFELD'.
@@ -79,7 +79,7 @@ CLASS zcl_skylint_check_056 IMPLEMENTATION.
 
     ls_name = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                iv_index     = 2 ).
-    lv_name = to_upper( ls_name-lexeme ).
+    lv_name = ls_name-lexeme.
 
     IF     lv_name NP 'IS_*'     AND lv_name NP 'HAS_*'
        AND lv_name NP 'CAN_*'    AND lv_name NP 'CHECK_*'

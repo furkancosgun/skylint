@@ -144,7 +144,7 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    IF to_upper( ls_tok-lexeme ) = lv_param_name.
+    IF ls_tok-lexeme = lv_param_name.
       ls_next_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                      iv_index     = lv_param_idx + 1 ).
       IF ls_next_tok-lexeme = '='.

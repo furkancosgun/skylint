@@ -64,7 +64,7 @@ CLASS zcl_skylint_check_048 IMPLEMENTATION.
     lv_is_test = abap_false.
 
     LOOP AT is_statement-tokens INTO ls_tok WHERE references IS INITIAL.
-      lv_lex = to_upper( ls_tok-lexeme ).
+      lv_lex = ls_tok-lexeme.
       CASE lv_lex.
         WHEN 'DEFINITION'.
           lv_is_def = abap_true.

@@ -55,7 +55,7 @@ CLASS zcl_skylint_check_043 IMPLEMENTATION.
     rv_res = abap_false.
 
     LOOP AT is_statement-tokens INTO ls_tok.
-      IF to_upper( ls_tok-lexeme ) = 'EXCEPTIONS' AND ls_tok-references IS INITIAL.
+      IF ls_tok-lexeme = 'EXCEPTIONS' AND ls_tok-references IS INITIAL.
         rv_res = abap_true.
         RETURN.
       ENDIF.

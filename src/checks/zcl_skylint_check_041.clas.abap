@@ -52,7 +52,7 @@ CLASS zcl_skylint_check_041 IMPLEMENTATION.
     rv_res = abap_false.
 
     LOOP AT is_statement-tokens INTO ls_tok.
-      lv_lex = to_upper( ls_tok-lexeme ).
+      lv_lex = ls_tok-lexeme.
       IF lv_lex CP 'SY-*' OR lv_lex CP 'SYST-*'.
         LOOP AT ls_tok-references INTO ls_ref.
           IF ls_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-write.
@@ -66,7 +66,7 @@ CLASS zcl_skylint_check_041 IMPLEMENTATION.
     CASE is_statement-keyword.
       WHEN 'COMPUTE'.
         ls_tok = zcl_skylint_ast_util=>get_first_token( is_statement ).
-        lv_lex = to_upper( ls_tok-lexeme ).
+        lv_lex = ls_tok-lexeme.
         IF lv_lex CP 'SY-*' OR lv_lex CP 'SYST-*'.
           rv_res = abap_true.
           RETURN.
@@ -75,7 +75,7 @@ CLASS zcl_skylint_check_041 IMPLEMENTATION.
       WHEN 'CLEAR'.
         ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                   iv_index     = 2 ).
-        lv_lex = to_upper( ls_tok-lexeme ).
+        lv_lex = ls_tok-lexeme.
         IF lv_lex CP 'SY-*' OR lv_lex CP 'SYST-*'.
           rv_res = abap_true.
           RETURN.

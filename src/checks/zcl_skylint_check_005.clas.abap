@@ -55,7 +55,7 @@ CLASS zcl_skylint_check_005 IMPLEMENTATION.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-        lv_lexeme = to_upper( <ls_token>-lexeme ).
+        lv_lexeme = <ls_token>-lexeme.
         IF lv_lexeme CP 'ME->*'.
           report_token( is_token        = <ls_token>
                         is_statement    = <ls_statement>

@@ -80,7 +80,7 @@ CLASS zcl_skylint_check_023 IMPLEMENTATION.
     DATA lv_count TYPE i.
     DATA lv_idx   TYPE i.
     DATA lv_class TYPE string.
-    DATA lv_upper TYPE string.
+    DATA lv_token TYPE string.
     DATA lv_name  TYPE string.
     DATA lv_value TYPE string.
     DATA lv_args  TYPE string.
@@ -99,9 +99,8 @@ CLASS zcl_skylint_check_023 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    lv_class = zcl_skylint_ast_util=>get_token_lexeme( is_statement      = is_statement
-                                                       iv_index          = 4
-                                                       iv_case_sensitive = abap_true ).
+    lv_class = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
+                                                       iv_index     = 4 ).
     IF lv_class IS INITIAL OR lv_class CS '('.
       RETURN.
     ENDIF.
@@ -109,24 +108,22 @@ CLASS zcl_skylint_check_023 IMPLEMENTATION.
     lv_idx = 5.
     lv_first = abap_true.
     WHILE lv_idx <= lv_count.
-      lv_upper = to_upper( zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                                   iv_index     = lv_idx ) ).
-      IF lv_upper <> 'EXPORTING'.
+      lv_token = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
+                                                         iv_index     = lv_idx ).
+      IF lv_token <> 'EXPORTING'.
         RETURN.
       ENDIF.
       lv_idx += 1.
       WHILE lv_idx + 2 <= lv_count.
-        lv_name = zcl_skylint_ast_util=>get_token_lexeme( is_statement      = is_statement
-                                                          iv_index          = lv_idx
-                                                          iv_case_sensitive = abap_true ).
+        lv_name = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
+                                                          iv_index     = lv_idx ).
         IF    lv_name IS INITIAL
            OR zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
                                                       iv_index     = lv_idx + 1 ) <> '='.
           RETURN.
         ENDIF.
-        lv_value = zcl_skylint_ast_util=>get_token_lexeme( is_statement      = is_statement
-                                                           iv_index          = lv_idx + 2
-                                                           iv_case_sensitive = abap_true ).
+        lv_value = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
+                                                           iv_index     = lv_idx + 2 ).
         IF lv_value IS INITIAL.
           RETURN.
         ENDIF.

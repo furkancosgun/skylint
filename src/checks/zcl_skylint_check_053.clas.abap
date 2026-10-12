@@ -34,7 +34,7 @@ CLASS zcl_skylint_check_053 IMPLEMENTATION.
       IF    <ls_statement>-keyword = 'DATA'    OR <ls_statement>-keyword = 'TYPES'
          OR <ls_statement>-keyword = 'STATICS' OR <ls_statement>-keyword = 'CONSTANTS'.
         LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-          IF to_upper( <ls_token>-lexeme ) = 'LIKE' AND <ls_token>-references IS INITIAL.
+          IF <ls_token>-lexeme = 'LIKE' AND <ls_token>-references IS INITIAL.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-avoid_like ).
             EXIT.

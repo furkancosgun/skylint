@@ -83,7 +83,7 @@ CLASS zcl_skylint_check_002 IMPLEMENTATION.
 
     ls_third = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                 iv_index     = 3 ).
-    IF to_upper( ls_third-lexeme ) CP '(*)'.
+    IF ls_third-lexeme CP '(*)'.
       rv_dynamic = abap_true.
     ENDIF.
   ENDMETHOD.

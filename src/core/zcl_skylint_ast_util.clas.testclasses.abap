@@ -135,7 +135,7 @@ CLASS ltcl_ast_util IMPLEMENTATION.
     ls_tok = zcl_skylint_ast_util=>get_token_after( is_statement = ls_stmt
                                                     iv_lexeme    = 'FROM' ).
     cl_abap_unit_assert=>assert_equals( exp = 'SFLIGHT'
-                                        act = to_upper( ls_tok-lexeme ) ).
+                                        act = ls_tok-lexeme  ).
 
     ls_tok = zcl_skylint_ast_util=>get_token_before( is_statement = ls_stmt
                                                      iv_lexeme    = 'FROM' ).

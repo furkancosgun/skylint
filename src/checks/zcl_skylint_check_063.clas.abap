@@ -70,14 +70,14 @@ CLASS zcl_skylint_check_063 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    IF to_upper( is_token-lexeme ) CP 'CX_SY_*' AND is_token-references IS INITIAL.
+    IF is_token-lexeme CP 'CX_SY_*' AND is_token-references IS INITIAL.
       rv_yes = abap_true.
       RETURN.
     ENDIF.
 
     LOOP AT is_token-references ASSIGNING <ls_ref>
          WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-type.
-      IF to_upper( <ls_ref>-full_name ) CS 'CX_SY_'.
+      IF <ls_ref>-full_name CS 'CX_SY_'.
         rv_yes = abap_true.
         RETURN.
       ENDIF.

@@ -59,7 +59,7 @@ CLASS zcl_skylint_check_025 IMPLEMENTATION.
                                                  iv_lexeme    = 'RECEIVING' ) = abap_true.
         ls_next_tok = zcl_skylint_ast_util=>get_token_after( is_statement = <ls_statement>
                                                              iv_lexeme    = 'RECEIVING' ).
-        IF ls_next_tok-lexeme IS INITIAL OR to_upper( ls_next_tok-lexeme ) <> '='.
+        IF ls_next_tok-lexeme IS INITIAL OR ls_next_tok-lexeme <> '='.
           lv_has_receiving = abap_true.
         ENDIF.
       ENDIF.
@@ -68,7 +68,7 @@ CLASS zcl_skylint_check_025 IMPLEMENTATION.
                                                  iv_lexeme    = 'EXCEPTIONS' ) = abap_true.
         ls_next_tok = zcl_skylint_ast_util=>get_token_after( is_statement = <ls_statement>
                                                              iv_lexeme    = 'EXCEPTIONS' ).
-        IF ls_next_tok-lexeme IS INITIAL OR to_upper( ls_next_tok-lexeme ) <> '='.
+        IF ls_next_tok-lexeme IS INITIAL OR ls_next_tok-lexeme <> '='.
           lv_has_exceptions = abap_true.
         ENDIF.
       ENDIF.

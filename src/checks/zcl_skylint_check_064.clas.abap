@@ -85,7 +85,7 @@ CLASS zcl_skylint_check_064 IMPLEMENTATION.
 
     rv_res = abap_false.
     LOOP AT is_statement-tokens INTO ls_tok.
-      lv_lex = to_upper( ls_tok-lexeme ).
+      lv_lex = ls_tok-lexeme.
       IF lv_lex = 'SY-SUBRC'.
         rv_res = abap_true.
         RETURN.

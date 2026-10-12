@@ -83,10 +83,7 @@ CLASS zcl_skylint_check_021 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_legacy_operator.
-    DATA lv_upper TYPE string.
-
-    lv_upper = to_upper( iv_lexeme ).
-    CASE lv_upper.
+    CASE iv_lexeme.
       WHEN 'EQ' OR 'NE' OR 'GT' OR 'LT' OR 'GE' OR 'LE'.
         rv_is = abap_true.
       WHEN OTHERS.
@@ -95,11 +92,8 @@ CLASS zcl_skylint_check_021 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD map_to_symbol.
-    DATA lv_upper TYPE string.
-
     rv_op = iv_lexeme.
-    lv_upper = to_upper( iv_lexeme ).
-    CASE lv_upper.
+    CASE iv_lexeme.
       WHEN 'EQ'.
         rv_op = '='.
       WHEN 'NE'.
@@ -116,10 +110,7 @@ CLASS zcl_skylint_check_021 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_declaration_keyword.
-    DATA lv_upper TYPE string.
-
-    lv_upper = to_upper( iv_keyword ).
-    CASE lv_upper.
+    CASE iv_keyword.
       WHEN 'DATA' OR 'TYPES' OR 'CONSTANTS' OR 'STATICS'
         OR 'PARAMETERS' OR 'FIELD-SYMBOLS' OR 'METHODS' OR 'CLASS-METHODS'.
         rv_is = abap_true.

@@ -174,9 +174,9 @@ CLASS zcl_skylint_check_016 IMPLEMENTATION.
                                                   iv_index     = lv_tok_idx ).
       IF ls_token-lexeme IS NOT INITIAL.
         IF rv_cond IS INITIAL.
-          rv_cond = to_upper( ls_token-lexeme ).
+          rv_cond = ls_token-lexeme.
         ELSE.
-          rv_cond = |{ rv_cond } { to_upper( ls_token-lexeme ) }|.
+          rv_cond = |{ rv_cond } { ls_token-lexeme }|.
         ENDIF.
       ENDIF.
     ENDDO.

@@ -91,13 +91,12 @@ CLASS zcl_skylint_check_026 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD class_of_static_call.
-    DATA ls_ref   TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
-    DATA lv_upper TYPE string.
-    DATA lv_head  TYPE string.
-    DATA lv_meth  TYPE string.
-    DATA lv_off   TYPE i.
-    DATA lv_len   TYPE i.
-    DATA lv_char  TYPE c LENGTH 1.
+    DATA ls_ref  TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    DATA lv_head TYPE string.
+    DATA lv_meth TYPE string.
+    DATA lv_off  TYPE i.
+    DATA lv_len  TYPE i.
+    DATA lv_char TYPE c LENGTH 1.
 
     CLEAR rv_class.
 
@@ -110,8 +109,7 @@ CLASS zcl_skylint_check_026 IMPLEMENTATION.
       IF zcl_skylint_rtti_util=>is_static_method( ls_ref-full_name ) = abap_false.
         CONTINUE.
       ENDIF.
-      lv_upper = to_upper( ls_ref-full_name ).
-      SPLIT lv_upper AT '\ME:' INTO lv_head lv_meth.
+      SPLIT ls_ref-full_name AT '\ME:' INTO lv_head lv_meth.
       IF sy-subrc <> 0 OR lv_meth IS INITIAL.
         CONTINUE.
       ENDIF.

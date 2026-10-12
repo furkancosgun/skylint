@@ -37,7 +37,7 @@ CLASS zcl_skylint_check_060 IMPLEMENTATION.
       lv_idx = 0.
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
         lv_idx = sy-tabix.
-        IF lv_idx = 2 AND to_upper( <ls_token>-lexeme ) = 'CX_ROOT'.
+        IF lv_idx = 2 AND <ls_token>-lexeme = 'CX_ROOT'.
           report_statement( is_statement    = <ls_statement>
                             iv_finding_code = c_finding_codes-catch_root ).
           EXIT.

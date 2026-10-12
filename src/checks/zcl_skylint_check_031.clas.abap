@@ -112,7 +112,7 @@ CLASS zcl_skylint_check_031 IMPLEMENTATION.
     IF lv_name(1) = '@'.
       lv_name = lv_name+1.
     ENDIF.
-    rv_tab = to_upper( lv_name ).
+    rv_tab = lv_name.
   ENDMETHOD.
 
   METHOD fae_source_name.
@@ -171,7 +171,7 @@ CLASS zcl_skylint_check_031 IMPLEMENTATION.
     lv_tab_body = |{ iv_tab_name }[]|.
 
     LOOP AT is_statement-tokens INTO ls_tok.
-      lv_clean_tok = to_upper( ls_tok-lexeme ).
+      lv_clean_tok = ls_tok-lexeme.
       IF lv_clean_tok CP '@*'.
         lv_clean_tok = lv_clean_tok+1.
       ENDIF.
