@@ -39,7 +39,6 @@ CLASS zcl_skylint_check_081 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_min_branches TYPE i.
     DATA lv_idx          TYPE i.
     DATA lv_depth        TYPE i.
     DATA lv_total        TYPE i.
@@ -48,13 +47,6 @@ CLASS zcl_skylint_check_081 IMPLEMENTATION.
     DATA lv_branch_count TYPE i.
     DATA ls_stmt         TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-
-    get_attribute( EXPORTING iv_name  = 'MIN_BRANCHES'
-                   IMPORTING ev_value = lv_min_branches ).
-
-    IF lv_min_branches <= 0.
-      lv_min_branches = mv_min_branches.
-    ENDIF.
 
     lv_total = lines( is_procedure-statements ).
 
@@ -88,7 +80,7 @@ CLASS zcl_skylint_check_081 IMPLEMENTATION.
         lv_idx += 1.
       ENDWHILE.
 
-      IF lv_branch_count >= lv_min_branches.
+      IF lv_branch_count >= mv_min_branches.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-change_if_to_case ).
       ENDIF.

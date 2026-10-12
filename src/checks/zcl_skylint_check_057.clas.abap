@@ -38,17 +38,9 @@ CLASS zcl_skylint_check_057 IMPLEMENTATION.
     DATA ls_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA lo_class     TYPE REF TO cl_abap_classdescr.
     DATA lt_supers    TYPE string_table.
-    DATA lv_max_depth TYPE i.
 
     IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
-    ENDIF.
-
-    get_attribute( EXPORTING iv_name  = 'MAX_DEPTH'
-                   IMPORTING ev_value = lv_max_depth ).
-
-    IF lv_max_depth <= 0.
-      lv_max_depth = mv_max_depth.
     ENDIF.
 
     lo_class = zcl_skylint_rtti_util=>describe_class( is_procedure-id-main_unit-name ).
@@ -60,7 +52,7 @@ CLASS zcl_skylint_check_057 IMPLEMENTATION.
 
     ls_statement = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
                                                         iv_index      = 1 ).
-    IF     lines( lt_supers )    > lv_max_depth
+    IF     lines( lt_supers )    > mv_max_depth
        AND ls_statement-keyword IS NOT INITIAL.
       report_statement( is_statement    = ls_statement
                         iv_finding_code = c_finding_codes-deep_inheritance ).

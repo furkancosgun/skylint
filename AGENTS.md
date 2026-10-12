@@ -20,7 +20,7 @@ This document outlines the mandatory engineering guidelines, architectural desig
 2. **Shared Base Class (`zcl_skylint_check_base` + `zcl_skylint_check_meta_data`):**
    - `zcl_skylint_check_base` implements `if_ci_atc_check~run` (procedure loop, checksum, location,
      quickfix context creation) and exposes the rule API: `check`, `report_statement`, `report_token`,
-     `quickfix_replace`, `get_attribute`.
+     `quickfix_replace`. Attributes bound via `REF #( mv_* )` are updated in place by the framework.
    - `zcl_skylint_check_meta_data` is the single shared `if_ci_atc_check_meta_data` implementation,
      fed from the base config. Do NOT create per-check metadata classes.
 
@@ -282,14 +282,10 @@ CLASS zcl_skylint_check_XXX IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_custom_opt TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    get_attribute( EXPORTING iv_name  = 'CUSTOM_OPTION'
-                   IMPORTING ev_value = lv_custom_opt ).
-
-    IF lv_custom_opt IS INITIAL.
-      lv_custom_opt = mv_custom_option.
+    IF mv_custom_option = abap_false.
+      RETURN.
     ENDIF.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>

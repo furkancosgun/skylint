@@ -36,18 +36,10 @@ CLASS zcl_skylint_check_054 IMPLEMENTATION.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lv_max_stmts  TYPE i.
     DATA lv_stmt_count TYPE i.
 
     IF is_procedure-id-name NP '*CONSTRUCTOR*'.
       RETURN.
-    ENDIF.
-
-    get_attribute( EXPORTING iv_name  = 'MAX_STATEMENTS'
-                   IMPORTING ev_value = lv_max_stmts ).
-
-    IF lv_max_stmts <= 0.
-      lv_max_stmts = mv_max_statements.
     ENDIF.
 
     lv_stmt_count = 0.
@@ -58,7 +50,7 @@ CLASS zcl_skylint_check_054 IMPLEMENTATION.
       ENDIF.
 
       lv_stmt_count += 1.
-      IF lv_stmt_count > lv_max_stmts.
+      IF lv_stmt_count > mv_max_statements.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-constructor_logic ).
       ENDIF.

@@ -239,7 +239,6 @@ report_statement( is_statement    = <ls_statement>
 |---|---|
 | `report_statement( is_statement, iv_finding_code, is_quickfix )` | Reports a finding for a statement with auto checksum/location and pseudo-comment suppression. |
 | `report_token( is_token, is_statement, iv_finding_code, is_quickfix )` | Reports a finding pinpointing a specific token column. |
-| `get_attribute( iv_name, IMPORTING ev_value )` | Safely dereferences and retrieves dynamic check configuration attributes. |
 | `quickfix_replace( iv_quickfix_code, iv_statement_from, it_new_code, ... )` | Constructs a standardized QuickFix replacement descriptor. |
 
 ---

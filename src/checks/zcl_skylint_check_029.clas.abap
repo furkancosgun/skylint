@@ -39,22 +39,15 @@ CLASS zcl_skylint_check_029 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_max TYPE i.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    get_attribute( EXPORTING iv_name  = 'MAX_PARAMETERS'
-                   IMPORTING ev_value = lv_max ).
-    IF lv_max <= 0.
-      lv_max = mv_max_parameters.
-    ENDIF.
-
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'METHODS' OR keyword = 'CLASS-METHODS'.
-      IF count_parameters( <ls_statement> ) > lv_max.
+      IF count_parameters( <ls_statement> ) > mv_max_parameters.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-too_many_parameters ).
       ENDIF.

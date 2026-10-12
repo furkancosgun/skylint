@@ -36,19 +36,11 @@ CLASS zcl_skylint_check_058 IMPLEMENTATION.
 
   METHOD check.
     DATA ls_first_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lv_max_attr   TYPE i.
     DATA lv_count      TYPE i.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
-    ENDIF.
-
-    get_attribute( EXPORTING iv_name  = 'MAX_ATTRIBUTES'
-                   IMPORTING ev_value = lv_max_attr ).
-
-    IF lv_max_attr <= 0.
-      lv_max_attr = mv_max_attributes.
     ENDIF.
 
     ls_first_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
@@ -63,7 +55,7 @@ CLASS zcl_skylint_check_058 IMPLEMENTATION.
       ENDIF.
     ENDLOOP.
 
-    IF lv_count > lv_max_attr.
+    IF lv_count > mv_max_attributes.
       report_statement( is_statement    = ls_first_stmt
                         iv_finding_code = c_finding_codes-attribute_count ).
     ENDIF.

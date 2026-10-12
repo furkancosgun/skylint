@@ -51,54 +51,38 @@ CLASS zcl_skylint_check_064 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_check_sel_single TYPE abap_bool.
-    DATA lv_check_read_tab   TYPE abap_bool.
-    DATA lv_check_auth       TYPE abap_bool.
-    DATA lv_check_find       TYPE abap_bool.
-    DATA lv_check_assign     TYPE abap_bool.
-    DATA lv_sets_subrc       TYPE abap_bool.
-    DATA ls_next_stmt        TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_sets_subrc TYPE abap_bool.
+    DATA ls_next_stmt  TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-
-    get_attribute( EXPORTING iv_name  = 'CHECK_SELECT_SINGLE'
-                   IMPORTING ev_value = lv_check_sel_single ).
-    get_attribute( EXPORTING iv_name  = 'CHECK_READ_TABLE'
-                   IMPORTING ev_value = lv_check_read_tab ).
-    get_attribute( EXPORTING iv_name  = 'CHECK_AUTHORITY_CHECK'
-                   IMPORTING ev_value = lv_check_auth ).
-    get_attribute( EXPORTING iv_name  = 'CHECK_FIND_SEARCH'
-                   IMPORTING ev_value = lv_check_find ).
-    get_attribute( EXPORTING iv_name  = 'CHECK_ASSIGN'
-                   IMPORTING ev_value = lv_check_assign ).
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_sets_subrc = abap_false.
 
       CASE <ls_statement>-keyword.
         WHEN 'SELECT'.
-          IF     lv_check_sel_single = abap_true
+          IF     mv_check_select_single = abap_true
              AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
                                                          iv_index     = 2
                                                          iv_expected  = `SINGLE` )     = abap_true.
             lv_sets_subrc = abap_true.
           ENDIF.
         WHEN 'READ'.
-          IF     lv_check_read_tab = abap_true
+          IF     mv_check_read_table = abap_true
              AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
                                                          iv_index     = 2
                                                          iv_expected  = `TABLE` )      = abap_true.
             lv_sets_subrc = abap_true.
           ENDIF.
         WHEN 'AUTHORITY-CHECK'.
-          IF lv_check_auth = abap_true.
+          IF mv_check_authority_check = abap_true.
             lv_sets_subrc = abap_true.
           ENDIF.
         WHEN 'FIND' OR 'SEARCH'.
-          IF lv_check_find = abap_true.
+          IF mv_check_find_search = abap_true.
             lv_sets_subrc = abap_true.
           ENDIF.
         WHEN 'ASSIGN'.
-          IF lv_check_assign = abap_true.
+          IF mv_check_assign = abap_true.
             lv_sets_subrc = abap_true.
           ENDIF.
       ENDCASE.

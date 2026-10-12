@@ -34,15 +34,11 @@ CLASS zcl_skylint_check_005 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_allow_ctor TYPE abap_bool.
-    DATA lv_lexeme     TYPE string.
+    DATA lv_lexeme TYPE string.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    get_attribute( EXPORTING iv_name  = 'ALLOW_IN_CONSTRUCTORS'
-                   IMPORTING ev_value = lv_allow_ctor ).
-
-    IF is_procedure-id-name CP '*=>CONSTRUCTOR' AND lv_allow_ctor = abap_true.
+    IF is_procedure-id-name CP '*=>CONSTRUCTOR' AND mv_allow_in_constructors = abap_true.
       RETURN.
     ENDIF.
 

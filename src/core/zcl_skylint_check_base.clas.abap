@@ -32,10 +32,6 @@ CLASS zcl_skylint_check_base DEFINITION
     METHODS check ABSTRACT
       IMPORTING is_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure.
 
-    METHODS get_attribute
-      IMPORTING iv_name  TYPE string
-      EXPORTING ev_value TYPE any.
-
     METHODS report_statement
       IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
                 iv_finding_code TYPE if_ci_atc_check=>ty_finding_code
@@ -86,23 +82,6 @@ ENDCLASS.
 CLASS zcl_skylint_check_base IMPLEMENTATION.
   METHOD constructor.
     ms_config = is_config.
-  ENDMETHOD.
-
-  METHOD get_attribute.
-    FIELD-SYMBOLS <ls_attr> TYPE if_ci_atc_check_meta_data=>ty_attribute.
-    FIELD-SYMBOLS <lv_src>  TYPE any.
-
-    ASSIGN ms_config-attributes[ name = iv_name ] TO <ls_attr>.
-    IF sy-subrc <> 0.
-      RETURN.
-    ENDIF.
-
-    ASSIGN <ls_attr>-value->* TO <lv_src>.
-    IF sy-subrc <> 0.
-      RETURN.
-    ENDIF.
-
-    ev_value = <lv_src>.
   ENDMETHOD.
 
   METHOD has_valid_pseudo_comment.

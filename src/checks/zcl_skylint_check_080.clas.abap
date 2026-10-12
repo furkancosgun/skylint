@@ -50,55 +50,36 @@ CLASS zcl_skylint_check_080 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_check_default_key    TYPE abap_bool.
-    DATA lv_check_break          TYPE abap_bool.
-    DATA lv_check_statics        TYPE abap_bool.
-    DATA lv_check_define         TYPE abap_bool.
-    DATA lv_check_describe_lines TYPE abap_bool.
-    DATA lv_check_test_seams     TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    get_attribute( EXPORTING iv_name  = 'CHECK_DEFAULT_KEY'
-                   IMPORTING ev_value = lv_check_default_key ).
-    get_attribute( EXPORTING iv_name  = 'CHECK_BREAK'
-                   IMPORTING ev_value = lv_check_break ).
-    get_attribute( EXPORTING iv_name  = 'CHECK_STATICS'
-                   IMPORTING ev_value = lv_check_statics ).
-    get_attribute( EXPORTING iv_name  = 'CHECK_DEFINE'
-                   IMPORTING ev_value = lv_check_define ).
-    get_attribute( EXPORTING iv_name  = 'CHECK_DESCRIBE_LINES'
-                   IMPORTING ev_value = lv_check_describe_lines ).
-    get_attribute( EXPORTING iv_name  = 'CHECK_TEST_SEAMS'
-                   IMPORTING ev_value = lv_check_test_seams ).
-
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF     lv_check_break = abap_true
+      IF     mv_check_break = abap_true
          AND ( <ls_statement>-keyword = 'BREAK-POINT' OR <ls_statement>-keyword = 'BREAK' ).
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-avoid_use ).
         CONTINUE.
       ENDIF.
 
-      IF lv_check_statics = abap_true AND <ls_statement>-keyword = 'STATICS'.
+      IF mv_check_statics = abap_true AND <ls_statement>-keyword = 'STATICS'.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-avoid_use ).
         CONTINUE.
       ENDIF.
 
-      IF lv_check_define = abap_true AND <ls_statement>-keyword = 'DEFINE'.
+      IF mv_check_define = abap_true AND <ls_statement>-keyword = 'DEFINE'.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-avoid_use ).
         CONTINUE.
       ENDIF.
 
-      IF     lv_check_test_seams = abap_true
+      IF     mv_check_test_seams = abap_true
          AND ( <ls_statement>-keyword = 'TEST-SEAM' OR <ls_statement>-keyword = 'TEST-INJECT' ).
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-avoid_use ).
         CONTINUE.
       ENDIF.
 
-      IF     lv_check_describe_lines = abap_true
+      IF     mv_check_describe_lines = abap_true
          AND <ls_statement>-keyword  = 'DESCRIBE'
          AND (    zcl_skylint_ast_util=>match_token_sequence( is_statement   = <ls_statement>
                                                               it_expected    = VALUE #( ( `TABLE` ) ( `LINES` ) )
@@ -113,7 +94,7 @@ CLASS zcl_skylint_check_080 IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      IF     lv_check_default_key = abap_true
+      IF     mv_check_default_key = abap_true
          AND zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
                                                         it_expected  = VALUE #( ( `DEFAULT` ) ( `KEY` ) ) ) > 0.
         report_statement( is_statement    = <ls_statement>

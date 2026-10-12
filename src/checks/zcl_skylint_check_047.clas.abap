@@ -38,7 +38,6 @@ CLASS zcl_skylint_check_047 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_max        TYPE i.
     DATA lv_cc         TYPE i.
     DATA ls_first_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
 
@@ -46,15 +45,9 @@ CLASS zcl_skylint_check_047 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    get_attribute( EXPORTING iv_name  = 'MAX_COMPLEXITY'
-                   IMPORTING ev_value = lv_max ).
-    IF lv_max <= 0.
-      lv_max = mv_max_complexity.
-    ENDIF.
-
     lv_cc = calculate_complexity( is_procedure ).
 
-    IF lv_cc > lv_max.
+    IF lv_cc > mv_max_complexity.
       ls_first_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
                                                            iv_index      = 1 ).
       IF ls_first_stmt-keyword IS NOT INITIAL.

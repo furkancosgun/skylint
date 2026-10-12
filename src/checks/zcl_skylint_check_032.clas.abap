@@ -44,24 +44,17 @@ CLASS zcl_skylint_check_032 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_check_star      TYPE abap_bool.
-    DATA lv_check_endselect TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-
-    get_attribute( EXPORTING iv_name  = 'CHECK_SELECT_STAR'
-                   IMPORTING ev_value = lv_check_star ).
-    get_attribute( EXPORTING iv_name  = 'CHECK_ENDSELECT'
-                   IMPORTING ev_value = lv_check_endselect ).
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'SELECT'.
-          IF lv_check_star = abap_true AND is_select_star( <ls_statement> ) = abap_true.
+          IF mv_check_select_star = abap_true AND is_select_star( <ls_statement> ) = abap_true.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-select_star ).
           ENDIF.
         WHEN 'ENDSELECT'.
-          IF lv_check_endselect = abap_true.
+          IF mv_check_endselect = abap_true.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-select_endselect ).
           ENDIF.

@@ -59,31 +59,12 @@ CLASS zcl_skylint_check_028 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_stmt_idx           TYPE i.
-    DATA lv_line               TYPE string.
-    DATA lv_src                TYPE string.
-    DATA lv_dst                TYPE string.
-    DATA lv_check_move         TYPE abap_bool.
-    DATA lv_check_refresh      TYPE abap_bool.
-    DATA lv_check_compute      TYPE abap_bool.
-    DATA lv_check_tables       TYPE abap_bool.
-    DATA lv_check_field_groups TYPE abap_bool.
-    DATA lv_check_test_seams   TYPE abap_bool.
-    DATA ls_quickfix           TYPE zcl_skylint_check_base=>ty_quickfix.
+    DATA lv_stmt_idx TYPE i.
+    DATA lv_line     TYPE string.
+    DATA lv_src      TYPE string.
+    DATA lv_dst      TYPE string.
+    DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-
-    get_attribute( EXPORTING iv_name  = 'CHECK_MOVE'
-                   IMPORTING ev_value = lv_check_move ).
-    get_attribute( EXPORTING iv_name  = 'CHECK_REFRESH'
-                   IMPORTING ev_value = lv_check_refresh ).
-    get_attribute( EXPORTING iv_name  = 'CHECK_COMPUTE'
-                   IMPORTING ev_value = lv_check_compute ).
-    get_attribute( EXPORTING iv_name  = 'CHECK_TABLES'
-                   IMPORTING ev_value = lv_check_tables ).
-    get_attribute( EXPORTING iv_name  = 'CHECK_FIELD_GROUPS'
-                   IMPORTING ev_value = lv_check_field_groups ).
-    get_attribute( EXPORTING iv_name  = 'CHECK_TEST_SEAMS'
-                   IMPORTING ev_value = lv_check_test_seams ).
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_stmt_idx = sy-tabix.
@@ -92,7 +73,7 @@ CLASS zcl_skylint_check_028 IMPLEMENTATION.
 
       CASE <ls_statement>-keyword.
         WHEN 'MOVE'.
-          IF lv_check_move = abap_false.
+          IF mv_check_move = abap_false.
             CONTINUE.
           ENDIF.
           IF     zcl_skylint_ast_util=>token_count( <ls_statement> )                   = 4
@@ -106,7 +87,7 @@ CLASS zcl_skylint_check_028 IMPLEMENTATION.
             lv_line = |{ lv_dst } = { lv_src }.|.
           ENDIF.
         WHEN 'REFRESH'.
-          IF lv_check_refresh = abap_false.
+          IF mv_check_refresh = abap_false.
             CONTINUE.
           ENDIF.
           IF zcl_skylint_ast_util=>token_count( <ls_statement> ) = 2.
@@ -115,7 +96,7 @@ CLASS zcl_skylint_check_028 IMPLEMENTATION.
             lv_line = |CLEAR { lv_dst }.|.
           ENDIF.
         WHEN 'COMPUTE'.
-          IF lv_check_compute = abap_false.
+          IF mv_check_compute = abap_false.
             CONTINUE.
           ENDIF.
           IF zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
@@ -128,15 +109,15 @@ CLASS zcl_skylint_check_028 IMPLEMENTATION.
             CONTINUE.
           ENDIF.
         WHEN 'TABLES'.
-          IF lv_check_tables = abap_false.
+          IF mv_check_tables = abap_false.
             CONTINUE.
           ENDIF.
         WHEN 'FIELD-GROUPS'.
-          IF lv_check_field_groups = abap_false.
+          IF mv_check_field_groups = abap_false.
             CONTINUE.
           ENDIF.
         WHEN 'TEST-SEAM' OR 'TEST-INJECT'.
-          IF lv_check_test_seams = abap_false.
+          IF mv_check_test_seams = abap_false.
             CONTINUE.
           ENDIF.
         WHEN OTHERS.

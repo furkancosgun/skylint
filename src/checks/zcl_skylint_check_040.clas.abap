@@ -43,22 +43,15 @@ CLASS zcl_skylint_check_040 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_max   TYPE i.
     DATA lv_depth TYPE i.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-
-    get_attribute( EXPORTING iv_name  = 'MAX_DEPTH'
-                   IMPORTING ev_value = lv_max ).
-    IF lv_max <= 0.
-      lv_max = mv_max_depth.
-    ENDIF.
 
     lv_depth = 0.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF is_block_opener( <ls_statement>-keyword ) = abap_true.
         lv_depth += 1.
-        IF lv_depth > lv_max.
+        IF lv_depth > mv_max_depth.
           report_statement( is_statement    = <ls_statement>
                             iv_finding_code = c_finding_codes-nesting_depth ).
         ENDIF.
