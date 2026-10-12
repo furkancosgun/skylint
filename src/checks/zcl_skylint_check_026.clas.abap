@@ -71,10 +71,6 @@ CLASS zcl_skylint_check_026 IMPLEMENTATION.
             lv_off = lv_arrow + 2.
             lv_meth = substring( val = lv_lex
                                  off = lv_off ).
-            IF lv_meth CP '*(' AND strlen( lv_meth ) > 1.
-              lv_meth = substring( val = lv_meth
-                                   len = strlen( lv_meth ) - 1 ).
-            ENDIF.
             IF lv_meth IS NOT INITIAL.
               lt_overrides = VALUE #( ( index  = lv_tok_idx
                                         lexeme = |{ lv_class }=>{ lv_meth }| ) ).

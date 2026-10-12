@@ -20,6 +20,7 @@ import { enrichStatements } from './abaplint-bridge.mjs';
 import { feedRtti } from './rtti.mjs';
 import { buildProcedureValue, buildProceduresTable, buildObjectValue } from './atc-values.mjs';
 import { createFakes } from './fakes.mjs';
+import { validateFix } from './roundtrip.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -109,13 +110,38 @@ async function runRow({ abap, getCheck, checkId, fullLines, row }) {
   const findings = rows.map((r) => {
     const g = r.get();
     const pos = g.location.get().position.get();
+    const det = readFindingDetails(g);
     return {
       code: g.code.get().trim(),
       line: pos.line.get(),
       column: pos.column.get(),
-      quickfixes: readFindingQuickfixes(g),
+      quickfixes: det.codes,
+      fixes: det.fixes,
     };
   });
+
+  // QuickFix round-trip: every recorded fix must leave parseable ABAP behind
+  // (no NEW parser errors versus the unpatched fixture source).
+  const fullSource = joinSource(fullLines);
+  for (const f of findings) {
+    for (const fix of f.fixes || []) {
+      const errors = await validateFix(
+        fullSource,
+        fullLines,
+        offset,
+        snippet.length,
+        statements,
+        fix,
+      );
+      if (errors.length > 0) {
+        return {
+          pass: false,
+          message: `${checkId}/${row.method}: quickfix ${fix.code} breaks syntax: ${errors.join('; ')}`,
+          findings,
+        };
+      }
+    }
+  }
 
   if (!row.code) {
     if (findings.length === 0) return { pass: true, findings };
@@ -139,16 +165,21 @@ async function runRow({ abap, getCheck, checkId, fullLines, row }) {
   return { pass: true, findings };
 }
 
-/** Read quickfix codes the fakes recorded on a finding's details. */
-function readFindingQuickfixes(g) {
+/** Read quickfix codes + applicable fixes the fakes recorded on details. */
+function readFindingDetails(g) {
   try {
     const d = g.details;
     const inner = d && typeof d.get === 'function' ? d.get() : d;
-    if (inner && Array.isArray(inner.codes)) return [...inner.codes];
+    if (inner) {
+      return {
+        codes: Array.isArray(inner.codes) ? [...inner.codes] : [],
+        fixes: Array.isArray(inner.fixes) ? [...inner.fixes] : [],
+      };
+    }
   } catch {
     // fall through to empty
   }
-  return [];
+  return { codes: [], fixes: [] };
 }
 
 function sameCodes(a, b) {

@@ -45,6 +45,8 @@ CLASS zcl_skylint_check_045 IMPLEMENTATION.
   METHOD check.
     DATA lv_stmt_idx TYPE i.
     DATA lv_line     TYPE string.
+    DATA lv_flat     TYPE string.
+    DATA lv_tcode    TYPE string.
     DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
@@ -53,11 +55,20 @@ CLASS zcl_skylint_check_045 IMPLEMENTATION.
       lv_stmt_idx = sy-tabix.
       IF     is_call_transaction( <ls_statement> )   = abap_true
          AND has_inline_auth_check( <ls_statement> ) = abap_false.
-        lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_statement>
-                                     iv_suffix    = ' WITH AUTHORITY-CHECK' ).
-        ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-add_auth_check
-                                        iv_statement_from = lv_stmt_idx
-                                        it_new_code       = VALUE #( ( lv_line && '.' ) ) ).
+        CLEAR ls_quickfix.
+        lv_flat = zcl_skylint_ast_util=>flatten_statement( <ls_statement> ).
+        lv_tcode = zcl_skylint_ast_util=>get_token_lexeme( is_statement      = <ls_statement>
+                                                           iv_index          = 3
+                                                           iv_case_sensitive = abap_true ).
+        IF lv_tcode IS NOT INITIAL.
+          REPLACE FIRST OCCURRENCE OF lv_tcode IN lv_flat WITH lv_tcode && ' WITH AUTHORITY-CHECK'.
+          IF sy-subrc = 0.
+            lv_line = lv_flat && '.'.
+            ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-add_auth_check
+                                            iv_statement_from = lv_stmt_idx
+                                            it_new_code       = VALUE #( ( lv_line ) ) ).
+          ENDIF.
+        ENDIF.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-missing_auth_check
                           is_quickfix     = ls_quickfix ).

@@ -162,7 +162,7 @@ CLASS zcl_skylint_check_009 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    lv_tpl = '|'.
+    lv_tpl = ''.
     lv_first = abap_true.
     LOOP AT lt_ops ASSIGNING <lv_op>.
       IF lv_first = abap_true.

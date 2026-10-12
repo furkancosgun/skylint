@@ -72,13 +72,13 @@ function readPosition(statement) {
 /**
  * Create { provider, factory } doubles.
  * proceduresTable: abap.types ty_procedures table; objectName: main unit name.
+ *
+ * Quickfix visibility for round-trip validation: each created fix records
+ * { code, newCode, context }, and attach_quickfixes surfaces the list on
+ * the details value as { codes, fixes }.
  */
 export function createFakes(abap, proceduresTable, objectName) {
-  const fix = {
-    async 'if_ci_atc_quickfix$replace'() {
-      return fix;
-    },
-  };
+  let pendingContext = null;
 
   function readCode(INPUT) {
     const v = INPUT?.quickfix_code;
@@ -86,16 +86,47 @@ export function createFakes(abap, proceduresTable, objectName) {
     return String(v ?? '');
   }
 
+  function readStringTable(t) {
+    try {
+      const arr = t && typeof t.array === 'function' ? t.array() : t?.get ? [t.get()].flat() : [];
+      return (Array.isArray(arr) ? arr : []).map((r) => {
+        const v = r && typeof r.get === 'function' ? r.get() : r;
+        return String(v ?? '');
+      });
+    } catch {
+      return [];
+    }
+  }
+
+  function readInterval(s) {
+    try {
+      const g = s && typeof s.get === 'function' ? s.get() : s;
+      const num = (v) => (v && typeof v.get === 'function' ? Number(v.get()) : Number(v));
+      return { from: num(g?.from) || 0, to: num(g?.to) || 0 };
+    } catch {
+      return { from: 0, to: 0 };
+    }
+  }
+
+  function readContext(INPUT) {
+    try {
+      const d = INPUT?.descriptor;
+      const g = d && typeof d.get === 'function' ? d.get() : d;
+      if (!g) return null;
+      return { statements: readInterval(g.statements), tokens: readInterval(g.tokens) };
+    } catch {
+      return null;
+    }
+  }
+
   const detailsHolder = {
     get() {
       return {
-        // The collector flows in via INPUT.quickfixes, wrapped in the
-        // transpiled object holder — unwrap with .get() first.
         async attach_quickfixes(INPUT) {
           const holder = INPUT?.quickfixes;
           const collector = holder && typeof holder.get === 'function' ? holder.get() : holder;
           const list = [...((collector && collector.list) || [])];
-          return { codes: list };
+          return { codes: list.map((f) => f.code), fixes: list };
         },
       };
     },
@@ -108,13 +139,22 @@ export function createFakes(abap, proceduresTable, objectName) {
       const collector = {
         list: [],
         async create_quickfix(INPUT) {
-          collector.list.push(readCode(INPUT));
-          return fix;
+          const entry = { code: readCode(INPUT), newCode: null, context: null };
+          collector.list.push(entry);
+          return {
+            async 'if_ci_atc_quickfix$replace'(INPUT2) {
+              entry.newCode = readStringTable(INPUT2?.code);
+              entry.context = pendingContext;
+              pendingContext = null;
+              return this;
+            },
+          };
         },
       };
       return collector;
     },
-    async create_quickfix_context() {
+    async create_quickfix_context(INPUT) {
+      pendingContext = readContext(INPUT);
       return {};
     },
     async create_finding_details() {
