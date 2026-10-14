@@ -252,23 +252,45 @@ function pushRef(refs, kind, fullName, grade, mode) {
   refs.push({ kind, full_name: fullName, usage_grade: grade, usage_mode: mode });
 }
 
-function addMethodReferences(upper, refs) {
+function hasRefKind(refs, kind) {
+  return refs.some((r) => r.kind === kind);
+}
+
+function isStringToken(upper) {
+  const first = upper[0];
+  return first === "'" || first === '`' || first === '|';
+}
+
+function dataScopePrefix(ctx) {
+  if (ctx.methodName) return `\\TY:${ctx.className}\\ME:${ctx.methodName}`;
+  return `\\TY:${ctx.className}`;
+}
+
+function cutAtParen(text) {
+  const off = text.indexOf('(');
+  return off < 0 ? text : text.slice(0, off);
+}
+
+// Gap-filler: only runs when abaplint resolved nothing for this token.
+// Static call to an unknown class (abaplint reports Object/Method as Void
+// with empty resolved names) is the only case abaplint cannot cover.
+function addMethodReferences(upper, refs, ctx) {
+  if (isStringToken(upper) || hasRefKind(refs, 'ME')) return;
   if (upper.includes('=>')) {
     const at = upper.indexOf('=>');
-    const cls = upper.slice(0, at);
-    let meth = upper.slice(at + 2);
-    pushRef(refs, 'TY', `\\TY:${cls}`, '1', undefined);
-    if (meth.includes('(')) {
-      if (meth.endsWith('(')) meth = meth.slice(0, -1);
+    const cls = upper.slice(0, at).replace(/^@/, '');
+    if (!/^[A-Z0-9_/]+$/.test(cls)) return;
+    if (!hasRefKind(refs, 'TY')) pushRef(refs, 'TY', `\\TY:${cls}`, '1', undefined);
+    const meth = cutAtParen(upper.slice(at + 2));
+    if (meth && /^[A-Z0-9_]+$/.test(meth)) {
       pushRef(refs, 'ME', `\\TY:${cls}\\ME:${meth}`, '1', '5');
     }
   } else if (upper.includes('->') && upper.includes('(')) {
     const at = upper.indexOf('->');
-    const cls = upper.slice(0, at);
-    let meth = upper.slice(at + 2);
-    if (meth.endsWith('(')) meth = meth.slice(0, -1);
-    const full = cls === 'ME' ? `\\TY:ZSKYLINT_TEST\\ME:${meth}` : `${cls}->${meth}`;
-    pushRef(refs, 'ME', full, '1', '5');
+    const meth = cutAtParen(upper.slice(at + 2));
+    if (meth && /^[A-Z0-9_]+$/.test(meth)) {
+      pushRef(refs, 'ME', `\\TY:${ctx.className}\\ME:${meth}`, '1', '5');
+    }
   }
 }
 
@@ -280,23 +302,38 @@ function parenName(upper) {
   return len > 0 ? upper.slice(start, start + len) : '';
 }
 
-function addInlineDeclarationRefs(upper, refs) {
-  let name = '';
-  if ((upper.startsWith('DATA(') || upper.startsWith('@DATA(') || upper.startsWith('FINAL(')) && upper.endsWith(')')) {
-    name = parenName(upper);
-  } else if ((upper.startsWith('FIELD-SYMBOL(') || upper.startsWith('FIELD-SYMBOLS(')) && upper.endsWith(')')) {
-    name = parenName(upper);
+function inlineDeclName(upper) {
+  const core = upper.startsWith('@') ? upper.slice(1) : upper;
+  if (core.startsWith('DATA(') || core.startsWith('FINAL(')) return { name: parenName(core), mode: '3' };
+  if (core.startsWith('FIELD-SYMBOL(') || core.startsWith('FIELD-SYMBOLS(')) {
+    return { name: parenName(core), mode: '4' };
   }
-  if (name) {
-    pushRef(refs, 'DA', `\\TY:ZSKYLINT_TEST\\ME:TEST\\DA:${name}`, '0', '3');
-  }
+  return null;
 }
 
-function addExplicitDeclarationRefs(stmt) {
+// Gap-filler: abaplint reports inline DATA()/FIELD-SYMBOL() as plain Write To
+// (mode 6); the definition-shaped DA reference is added unless one with a
+// definition mode (2/3/4) is already attached.
+function addInlineDeclarationRefs(upper, refs, ctx) {
+  const found = inlineDeclName(upper);
+  if (!found || !found.name || !/^[A-Z0-9_]+$/.test(found.name)) return;
+  const hasDef = refs.some((r) => r.kind === 'DA' && (r.usage_mode === '2' || r.usage_mode === '3' || r.usage_mode === '4'));
+  if (hasDef) return;
+  pushRef(refs, 'DA', `${dataScopePrefix(ctx)}\\DA:${found.name}`, '0', found.mode);
+}
+
+// Gap-filler: abaplint spaghetti carries no references for explicit
+// DATA/CONSTANTS/STATICS declarations, so they are synthesized with the real
+// enclosing class/method scope instead of a hardcoded test name.
+function addExplicitDeclarationRefs(stmt, ctx) {
   if (!DECL_KEYWORDS.has(stmt.keyword)) return;
   if (stmt.tokens.length >= 2) {
     const tok = stmt.tokens[1];
-    pushRef(tok.references, 'DA', `\\TY:ZSKYLINT_TEST\\ME:TEST\\DA:${tok.lexeme.toUpperCase()}`, '0', '2');
+    if (hasRefKind(tok.references, 'DA')) return;
+    const name = tok.lexeme.toUpperCase();
+    if (name && /^[A-Z0-9_]+$/.test(name)) {
+      pushRef(tok.references, 'DA', `${dataScopePrefix(ctx)}\\DA:${name}`, '0', '2');
+    }
   }
 }
 
@@ -330,6 +367,8 @@ function findDbTableIndex(stmt) {
   return -1;
 }
 
+// Gap-filler: abaplint reports DB tables as Table (Void) with an empty name,
+// so the database read/write reference is the only signal abaplint never gives.
 function addDatabaseReferences(stmt) {
   let mode;
   if (DB_KEYWORDS_READ.has(stmt.keyword)) mode = 'E';
@@ -338,24 +377,31 @@ function addDatabaseReferences(stmt) {
   const idx = findDbTableIndex(stmt);
   if (idx < 0) return;
   const tok = stmt.tokens[idx];
+  if (hasRefKind(tok.references, 'DA')) return;
   pushRef(tok.references, 'DA', `\\DB:${tok.lexeme.toUpperCase()}`, '1', mode);
 }
 
+// Gap-filler: abaplint only reports the SYST structure itself; the concrete
+// SY-SUBRC style token keeps a precise reference when nothing was attached.
 function addSystemVarReferences(stmt) {
   stmt.tokens.forEach((tok, i) => {
     const up = tok.lexeme.toUpperCase();
     if (!(up.startsWith('SY-') || up.startsWith('SYST-'))) return;
+    const covered = tok.references.some((r) => r.kind === 'DA' && String(r.full_name).toUpperCase().includes(up));
+    if (covered) return;
     const isTgt = i === 0 && stmt.keyword === 'COMPUTE';
-    pushRef(tok.references, 'DA', `\\PR:ZSKYLINT\\DA:${up}`, '1', isTgt ? '6' : '5');
+    pushRef(tok.references, 'DA', `\\PR:SYST\\DA:${up}`, '1', isTgt ? '6' : '5');
   });
 }
 
+// Gap-filler: unknown/DDIC types (abaplint Void) get a TY reference;
+// anything abaplint already resolved is left untouched.
 function addTypeReferences(stmt) {
   let expect = false;
   for (const tok of stmt.tokens) {
     const up = tok.lexeme.toUpperCase();
     if (up.startsWith('CX_SY_')) {
-      pushRef(tok.references, 'TY', `\\TY:${up}`, '1', '5');
+      if (!hasRefKind(tok.references, 'TY')) pushRef(tok.references, 'TY', `\\TY:${up}`, '1', '1');
       expect = false;
       continue;
     }
@@ -365,21 +411,86 @@ function addTypeReferences(stmt) {
     }
     if (!expect) continue;
     if (TYPE_FILLERS.has(up)) continue;
-    pushRef(tok.references, 'TY', `\\TY:${up}`, '1', '5');
+    if (!hasRefKind(tok.references, 'TY')) pushRef(tok.references, 'TY', `\\TY:${up}`, '1', '1');
     expect = false;
   }
 }
 
-function enrichHeuristicReferences(stmt) {
-  for (const tok of stmt.tokens) {
-    const up = tok.lexeme.toUpperCase();
-    addMethodReferences(up, tok.references);
-    addInlineDeclarationRefs(up, tok.references);
+// After abaplint attach: a static call token carries both the Object (TY) and
+// the Method (ME) row, but the ME full name is built with the enclosing class.
+// Rewrite it with the sibling TY class so RTTI resolves the real target.
+function fixStaticCallScopes(statements, className) {
+  const tyRe = /^\\TY:([^\\]+)$/;
+  for (const stmt of statements) {
+    for (const tok of stmt.tokens) {
+      if (!tok.lexeme.toUpperCase().includes('=>')) continue;
+      const tyHit = tok.references.find((r) => r.kind === 'TY' && tyRe.test(r.full_name));
+      if (!tyHit) continue;
+      const realCls = tyHit.full_name.match(tyRe)[1];
+      if (realCls === className) continue;
+      for (const ref of tok.references) {
+        if (ref.kind === 'ME' && ref.full_name.startsWith(`\\TY:${className}\\ME:`)) {
+          ref.full_name = `\\TY:${realCls}${ref.full_name.slice(className.length + 4)}`;
+        }
+      }
+    }
   }
-  addExplicitDeclarationRefs(stmt);
-  addDatabaseReferences(stmt);
-  addSystemVarReferences(stmt);
-  addTypeReferences(stmt);
+}
+
+function collectDeclaredNames(statements) {
+  const names = new Set();
+  for (const stmt of statements) {
+    if (DECL_KEYWORDS.has(stmt.keyword) && stmt.tokens.length >= 2) {
+      const nm = stmt.tokens[1].lexeme.toUpperCase();
+      if (/^[A-Z0-9_]+$/.test(nm)) names.add(nm);
+    }
+    for (const tok of stmt.tokens) {
+      const found = inlineDeclName(tok.lexeme.toUpperCase());
+      if (found && found.name && /^[A-Z0-9_]+$/.test(found.name)) names.add(found.name);
+    }
+  }
+  return names;
+}
+
+// Gap-filler: abaplint yields zero spaghetti rows when a variable shadows a
+// keyword (DATA type ... / VALUE type). A bare identifier that matches a
+// procedure-level declaration is a data read on real SAP, so synthesize it.
+function addShadowedDataReads(stmt, declared, ctx) {
+  if (declared.size === 0) return;
+  stmt.tokens.forEach((tok, i) => {
+    const up = tok.lexeme.toUpperCase();
+    if (!declared.has(up) || !/^[A-Z0-9_]+$/.test(up)) return;
+    if (isStringToken(up)) return;
+    if (hasRefKind(tok.references, 'DA') || hasRefKind(tok.references, 'TY') || hasRefKind(tok.references, 'ME')) return;
+    if (DECL_KEYWORDS.has(stmt.keyword) && i === 1) return;
+    if (i > 0) {
+      const prev = stmt.tokens[i - 1].lexeme.toUpperCase();
+      if (prev === 'TYPE' || prev === 'LIKE') return;
+    }
+    const mode = i === 0 && stmt.keyword === 'COMPUTE' ? '6' : '5';
+    pushRef(tok.references, 'DA', `${dataScopePrefix(ctx)}\\DA:${up}`, '1', mode);
+  });
+}
+
+export function fillMissingReferences(statements, className = '', methodName = '') {
+  const ctx = {
+    className: (className || '').toUpperCase() || 'ZSKYLINT_TEST',
+    methodName: (methodName || '').toUpperCase(),
+  };
+  fixStaticCallScopes(statements, ctx.className);
+  const declared = collectDeclaredNames(statements);
+  for (const stmt of statements) {
+    for (const tok of stmt.tokens) {
+      const up = tok.lexeme.toUpperCase();
+      addMethodReferences(up, tok.references, ctx);
+      addInlineDeclarationRefs(up, tok.references, ctx);
+    }
+    addExplicitDeclarationRefs(stmt, ctx);
+    addDatabaseReferences(stmt);
+    addSystemVarReferences(stmt);
+    addTypeReferences(stmt);
+    addShadowedDataReads(stmt, declared, ctx);
+  }
 }
 
 function emitStatement(prefix, body, pseudo, inChain, headerKw, chainIdx, statements) {
@@ -395,7 +506,6 @@ function emitStatement(prefix, body, pseudo, inChain, headerKw, chainIdx, statem
   }
   for (const w of pseudo) if (!stmt.pseudo_comments.includes(w)) stmt.pseudo_comments.push(w);
   stmt.keyword = classifyStatement(all, inChain, headerKw);
-  enrichHeuristicReferences(stmt);
   statements.push(stmt);
 }
 
@@ -517,21 +627,35 @@ function attachRow(statements, row, rangeOnly) {
   return attached;
 }
 
-export async function enrichStatementsWithAbaplint(statements, fullSource, objectName = '', absOffset = 0) {
-  if (!fullSource || statements.length === 0) return;
-  const sn = (objectName || '').trim() || 'ZSKYLINT_TEST';
+export async function enrichStatementsWithAbaplint(statements, fullSource, objectName = '', methodName = '', absOffset = 0) {
+  if (statements.length === 0) return;
+  if (typeof methodName !== 'string') methodName = '';
+  if (/^\d+$/.test(methodName.trim())) {
+    absOffset = methodName;
+    methodName = '';
+  }
+  const sn = ((objectName || '').trim() || 'ZSKYLINT_TEST').toUpperCase();
   const off = parseInt(absOffset || '0', 10) || 0;
-  const tyPre = '\\\\TY:' + sn.toUpperCase();
-  const mePre = '\\\\ME:';
+  const tyPre = '\\TY:' + sn;
+  const mePre = '\\ME:';
   const rows = [];
 
-  try {
-    const reg = new Registry();
-    reg.addFile(new MemoryFile(sn.toLowerCase() + '.clas.abap', fullSource));
-    await reg.parseAsync();
-    const obj = reg.getFirstObject();
-    if (obj) walk(new SyntaxLogic(reg, obj).run().spaghetti.getTop());
-  } catch {}
+  function stmtKeywordAt(rel) {
+    for (const stmt of statements) {
+      if (stmt.position.line === rel) return stmt.keyword;
+    }
+    return '';
+  }
+
+  if (fullSource) {
+    try {
+      const reg = new Registry();
+      reg.addFile(new MemoryFile(sn.toLowerCase() + '.clas.abap', fullSource));
+      await reg.parseAsync();
+      const obj = reg.getFirstObject();
+      if (obj) walk(new SyntaxLogic(reg, obj).run().spaghetti.getTop());
+    } catch {}
+  }
 
   function walk(node) {
     const data = node.getData ? node.getData() : null;
@@ -547,40 +671,70 @@ export async function enrichStatementsWithAbaplint(statements, fullSource, objec
     } catch {}
   }
 
+  function resolvedName(r) {
+    try {
+      const nm = r.resolved && r.resolved.getName ? '' + r.resolved.getName() : '';
+      if (!nm || nm === 'undefined') return '';
+      return nm.toUpperCase();
+    } catch {
+      return '';
+    }
+  }
+
   function emitKind(r, rel) {
     if (rel[0] < 1) return;
     const rt = (r.referenceType || '').toString();
-    const id = (r.identifierName || '') + '';
+    const nm = resolvedName(r);
     let kind = '';
-    if (/method/i.test(rt)) kind = 'ME';
-    else if (/type/i.test(rt)) kind = 'TY';
-    else if (/data|variable|read|write|object/i.test(rt)) kind = 'DA';
-    if (!kind) return;
-    const res = r.resolved;
-    let isStatic = '';
-    try {
-      if (typeof (res && res.isStatic) === 'function' && res.isStatic()) isStatic = 'X';
-    } catch {}
+    let grade = '1';
+    let mode = '5';
     let fname = '';
-    try {
-      let nm = res && res.getName ? res.getName() + '' : '';
-      nm = nm.toUpperCase();
-      if (nm) fname = tyPre + mePre + nm;
-    } catch {}
-    if (!fname && kind === 'ME' && id) fname = tyPre + mePre + id.toUpperCase();
-    fname = fname || id.toUpperCase();
-    if (fname) {
-      rows.push({
-        rel: rel[0],
-        col: rel[1],
-        ident: flatString(id || fname),
-        kind,
-        fname: flatString(fname),
-        grade: '1',
-        mode: '5',
-        isStatic,
-      });
+    if (/method implementation/i.test(rt)) {
+      if (!nm) return;
+      kind = 'ME';
+      grade = '0';
+      mode = undefined;
+      fname = tyPre + mePre + nm;
+    } else if (/method/i.test(rt)) {
+      if (!nm) return;
+      kind = 'ME';
+      fname = tyPre + mePre + nm;
+    } else if (/type/i.test(rt)) {
+      if (!nm) return;
+      kind = 'TY';
+      mode = '1';
+      fname = `\\TY:${nm}`;
+    } else if (/table/i.test(rt)) {
+      if (!nm) return;
+      kind = 'DA';
+      mode = stmtKeywordAt(rel[0]) === 'SELECT' ? 'E' : 'F';
+      fname = `\\DB:${nm}`;
+    } else if (/object/i.test(rt)) {
+      if (!nm) return;
+      kind = 'TY';
+      mode = undefined;
+      fname = `\\TY:${nm}`;
+    } else if (/write/i.test(rt)) {
+      if (!nm) return;
+      kind = 'DA';
+      mode = '6';
+      fname = `${tyPre}\\DA:${nm}`;
+    } else if (/data|variable|read/i.test(rt)) {
+      if (!nm) return;
+      kind = 'DA';
+      fname = `${tyPre}\\DA:${nm}`;
+    } else {
+      return;
     }
+    rows.push({
+      rel: rel[0],
+      col: rel[1],
+      ident: flatString(fname),
+      kind,
+      fname: flatString(fname),
+      grade,
+      mode,
+    });
   }
 
   const pending = [];
@@ -590,6 +744,7 @@ export async function enrichStatementsWithAbaplint(statements, fullSource, objec
   for (const row of pending) {
     attachRow(statements, row, false);
   }
+  fillMissingReferences(statements, sn, methodName);
 }
 
 const fedByHash = new Map();

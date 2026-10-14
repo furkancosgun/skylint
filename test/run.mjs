@@ -43,12 +43,12 @@ export function discoverChecks() {
     .sort();
 }
 
-async function initRuntime() {
+export async function initRuntime() {
   await import(toFileUrl(path.join(outDir, 'init.mjs')));
   return globalThis.abap;
 }
 
-function createLoader(abap) {
+export function createLoader(abap) {
   const cache = new Map();
   return async function getCheck(checkId) {
     if (!cache.has(checkId)) {
@@ -102,7 +102,8 @@ async function runRow({ abap, getCheck, checkId, fullLines, row }) {
 
   const statements = buildStatements(new Lexer(snippetSource).run());
   await feedRtti(fullSource, objectName, abap);
-  await enrichStatementsWithAbaplint(statements, fullSource, objectName, targetProc.offset);
+  const methodName = targetProc.kind === 'METH' ? targetProc.methodName || '' : '';
+  await enrichStatementsWithAbaplint(statements, fullSource, objectName, methodName, targetProc.offset);
 
   const procValue = buildProcedureValue(abap, {
     kind: targetProc.kind,
