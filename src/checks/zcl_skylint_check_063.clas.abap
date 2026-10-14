@@ -39,7 +39,6 @@ CLASS zcl_skylint_check_063 IMPLEMENTATION.
     DATA lv_is_raise TYPE abap_bool.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      " Exception raising context: RAISE statement or THROW expression
       IF <ls_statement>-keyword = 'RAISE'.
         lv_is_raise = abap_true.
       ELSE.

@@ -81,7 +81,6 @@ CLASS zcl_skylint_check_022 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    " Exclude RAP FOR TESTING and dynamic calls
     IF zcl_skylint_ast_util=>match_token_sequence( is_statement = is_statement
                                                    it_expected  = VALUE #( ( `FOR` ) ( `TESTING` ) ) ) = abap_true.
       RETURN.

@@ -62,7 +62,6 @@ CLASS zcl_skylint_check_030 IMPLEMENTATION.
 
     rv_res = abap_false.
 
-    " 1. Inspect compiler semantic references (read/write database)
     LOOP AT is_statement-tokens INTO ls_tok.
       LOOP AT ls_tok-references INTO ls_ref.
         IF    ls_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_database
@@ -73,7 +72,6 @@ CLASS zcl_skylint_check_030 IMPLEMENTATION.
       ENDLOOP.
     ENDLOOP.
 
-    " 2. Open SQL statements
     CASE is_statement-keyword.
       WHEN 'SELECT' OR 'UPDATE'.
         rv_res = abap_true.

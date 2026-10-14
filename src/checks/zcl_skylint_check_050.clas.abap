@@ -49,7 +49,6 @@ CLASS zcl_skylint_check_050 IMPLEMENTATION.
           CONTINUE.
         ENDIF.
 
-        " Detect hardcoded numeric literals (excluding standard 0 and 1 indices)
         IF <ls_token>-lexeme CO '0123456789' AND <ls_token>-lexeme <> '0' AND <ls_token>-lexeme <> '1'.
           report_statement( is_statement    = <ls_statement>
                             iv_finding_code = c_finding_codes-magic_number ).

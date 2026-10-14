@@ -271,9 +271,6 @@ function cutAtParen(text) {
   return off < 0 ? text : text.slice(0, off);
 }
 
-// Gap-filler: only runs when abaplint resolved nothing for this token.
-// Static call to an unknown class (abaplint reports Object/Method as Void
-// with empty resolved names) is the only case abaplint cannot cover.
 function addMethodReferences(upper, refs, ctx) {
   if (isStringToken(upper) || hasRefKind(refs, 'ME')) return;
   if (upper.includes('=>')) {
@@ -311,9 +308,6 @@ function inlineDeclName(upper) {
   return null;
 }
 
-// Gap-filler: abaplint reports inline DATA()/FIELD-SYMBOL() as plain Write To
-// (mode 6); the definition-shaped DA reference is added unless one with a
-// definition mode (2/3/4) is already attached.
 function addInlineDeclarationRefs(upper, refs, ctx) {
   const found = inlineDeclName(upper);
   if (!found || !found.name || !/^[A-Z0-9_]+$/.test(found.name)) return;
@@ -322,9 +316,6 @@ function addInlineDeclarationRefs(upper, refs, ctx) {
   pushRef(refs, 'DA', `${dataScopePrefix(ctx)}\\DA:${found.name}`, '0', found.mode);
 }
 
-// Gap-filler: abaplint spaghetti carries no references for explicit
-// DATA/CONSTANTS/STATICS declarations, so they are synthesized with the real
-// enclosing class/method scope instead of a hardcoded test name.
 function addExplicitDeclarationRefs(stmt, ctx) {
   if (!DECL_KEYWORDS.has(stmt.keyword)) return;
   if (stmt.tokens.length >= 2) {
@@ -367,8 +358,6 @@ function findDbTableIndex(stmt) {
   return -1;
 }
 
-// Gap-filler: abaplint reports DB tables as Table (Void) with an empty name,
-// so the database read/write reference is the only signal abaplint never gives.
 function addDatabaseReferences(stmt) {
   let mode;
   if (DB_KEYWORDS_READ.has(stmt.keyword)) mode = 'E';
@@ -381,8 +370,6 @@ function addDatabaseReferences(stmt) {
   pushRef(tok.references, 'DA', `\\DB:${tok.lexeme.toUpperCase()}`, '1', mode);
 }
 
-// Gap-filler: abaplint only reports the SYST structure itself; the concrete
-// SY-SUBRC style token keeps a precise reference when nothing was attached.
 function addSystemVarReferences(stmt) {
   stmt.tokens.forEach((tok, i) => {
     const up = tok.lexeme.toUpperCase();
@@ -394,8 +381,6 @@ function addSystemVarReferences(stmt) {
   });
 }
 
-// Gap-filler: unknown/DDIC types (abaplint Void) get a TY reference;
-// anything abaplint already resolved is left untouched.
 function addTypeReferences(stmt) {
   let expect = false;
   for (const tok of stmt.tokens) {
@@ -416,9 +401,6 @@ function addTypeReferences(stmt) {
   }
 }
 
-// After abaplint attach: a static call token carries both the Object (TY) and
-// the Method (ME) row, but the ME full name is built with the enclosing class.
-// Rewrite it with the sibling TY class so RTTI resolves the real target.
 function fixStaticCallScopes(statements, className) {
   const tyRe = /^\\TY:([^\\]+)$/;
   for (const stmt of statements) {
@@ -452,9 +434,6 @@ function collectDeclaredNames(statements) {
   return names;
 }
 
-// Gap-filler: abaplint yields zero spaghetti rows when a variable shadows a
-// keyword (DATA type ... / VALUE type). A bare identifier that matches a
-// procedure-level declaration is a data read on real SAP, so synthesize it.
 function addShadowedDataReads(stmt, declared, ctx) {
   if (declared.size === 0) return;
   stmt.tokens.forEach((tok, i) => {

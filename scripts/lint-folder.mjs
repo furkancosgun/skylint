@@ -1,6 +1,4 @@
 #!/usr/bin/env node
-// Scans an arbitrary folder for *.abap files and lists skylint issues.
-// Usage: node scripts/lint-folder.mjs <folder> [--filter <id>] [--json]
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -111,6 +109,18 @@ function readFindingDetails(g) {
   return { codes: [] };
 }
 
+function matchSpan(statements, line, col) {
+  for (const st of statements) {
+    if (st.position.line === line && st.position.column === col) return 0;
+  }
+  for (const st of statements) {
+    for (const t of st.tokens) {
+      if (t.position.line === line && t.position.column === col) return t.lexeme.length;
+    }
+  }
+  return 0;
+}
+
 function toProcedures(fullLines, fallbackName) {
   const procs = extractAllProcedures(fullLines);
   if (procs.length > 0) return procs;
@@ -172,10 +182,13 @@ async function scanFile({ abap, getCheck, checkIds, metaByCheck, file }) {
         const g = r.get();
         const pos = g.location.get().position.get();
         const code = strOf(g.code);
+        const relLine = pos.line.get();
+        const col = pos.column.get();
         findings.push({
           file,
-          line: proc.offset + pos.line.get(),
-          column: pos.column.get(),
+          line: proc.offset + relLine,
+          column: col,
+          span: matchSpan(statements, relLine, col),
           check: checkId,
           code,
           severity: (metaByCheck[checkId] && metaByCheck[checkId][code] && metaByCheck[checkId][code].severity) || '',
@@ -186,6 +199,66 @@ async function scanFile({ abap, getCheck, checkIds, metaByCheck, file }) {
     }
   }
   return findings;
+}
+
+const ANSI = {
+  reset: '\x1b[0m',
+  bold: '\x1b[1m',
+  red: '\x1b[31m',
+  yellow: '\x1b[33m',
+  green: '\x1b[32m',
+  blue: '\x1b[34m',
+};
+const USE_COLOR = Boolean(process.stdout.isTTY) && !process.env.NO_COLOR;
+
+function paint(style, s) {
+  return USE_COLOR ? ANSI[style] + s + ANSI.reset : s;
+}
+
+function expandTabs(s) {
+  let out = '';
+  let col = 0;
+  for (const ch of s) {
+    if (ch === '\t') {
+      const n = 4 - (col % 4);
+      out += ' '.repeat(n);
+      col += n;
+    } else {
+      out += ch;
+      col += 1;
+    }
+  }
+  return out;
+}
+
+function renderFinding(f, getLines) {
+  const sev = f.severity || 'warning';
+  const sevStyle = sev === 'error' ? 'red' : sev === 'note' ? 'green' : 'yellow';
+  const lines = [];
+  lines.push(`${paint(sevStyle, paint('bold', sev))}: ${f.text || f.code}`);
+  lines.push(`${paint('blue', paint('bold', ' -->'))} ${f.file}:${f.line}:${f.column + 1}`);
+  const src = getLines(f.file);
+  const raw = src && src[f.line - 1] !== undefined ? src[f.line - 1].replace(/\r$/, '') : null;
+  const w = String(f.line).length;
+  const pad = ' '.repeat(w);
+  if (raw !== null) {
+    const disp = expandTabs(raw);
+    const caret = expandTabs(raw.slice(0, Math.min(f.column, raw.length))).length;
+    let len;
+    if (f.span > 0) {
+      len = Math.max(1, expandTabs(raw.slice(f.column, f.column + f.span)).length);
+    } else {
+      len = Math.max(1, disp.replace(/\s+$/, '').length - caret);
+    }
+    lines.push(paint('blue', `${pad} |`));
+    lines.push(`${paint('blue', `${String(f.line).padStart(w)} |`)} ${disp}`);
+    lines.push(`${paint('blue', `${pad} |`)} ${' '.repeat(caret)}${paint(sevStyle, '^'.repeat(len))}`);
+  }
+  const note = `[${f.code} check_${f.check}]`
+    + (f.quickfixes.length > 0 ? ` quickfix: ${f.quickfixes.join(',')}` : '');
+  lines.push(paint('blue', `${pad} |`));
+  lines.push(`  ${paint('bold', '=')} ${paint('bold', 'note:')} ${note}`);
+  return lines.join('\n');
 }
 
 async function main() {
@@ -228,12 +301,19 @@ async function main() {
   } else if (all.length === 0) {
     console.log(`OK: no issues in ${files.length} .abap file(s), ${checkIds.length} check(s).`);
   } else {
-    for (const f of all) {
-      const sev = f.severity ? f.severity + '/' : '';
-      const qf = f.quickfixes.length > 0 ? ` [quickfix: ${f.quickfixes.join(',')}]` : '';
-      console.log(`${f.file}:${f.line}:${f.column}: [${sev}${f.code} check_${f.check}] ${f.text}${qf}`);
-    }
-    console.log(`\n${all.length} issue(s) in ${files.length} .abap file(s), ${checkIds.length} check(s).`);
+    const cache = new Map();
+    const getLines = (file) => {
+      if (!cache.has(file)) {
+        try {
+          cache.set(file, fs.readFileSync(file, 'utf8').split('\n'));
+        } catch {
+          cache.set(file, null);
+        }
+      }
+      return cache.get(file);
+    };
+    for (const f of all) console.log(renderFinding(f, getLines) + '\n');
+    console.log(`${all.length} issue(s) in ${files.length} .abap file(s), ${checkIds.length} check(s).`);
   }
   process.exit(all.length > 0 ? 1 : 0);
 }
