@@ -7,6 +7,7 @@ CLASS zcl_skylint_test_050 DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
+    METHODS test_005.
 ENDCLASS.
 
 
@@ -31,6 +32,17 @@ CLASS zcl_skylint_test_050 IMPLEMENTATION.
     CONSTANTS c_limit TYPE i VALUE 10.
     DATA lv_val TYPE i.
     lv_val = c_limit.
+  ENDMETHOD.
+
+  METHOD test_005.
+    language_sap1_to_sap2(
+      EXPORTING
+        im_lang_sap1  = iv_spras
+      RECEIVING
+        re_lang_sap2  = rv_spras
+      EXCEPTIONS
+        no_assignment = 1
+        OTHERS        = 2 ).
   ENDMETHOD.
 ENDCLASS.
 

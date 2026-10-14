@@ -3,6 +3,8 @@ CLASS zcl_skylint_test_077 DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
+    DATA mt_diff TYPE string_table.
+    DATA mt_patch TYPE string_table.
     METHODS test_001.
     METHODS test_002.
     METHODS test_003.

@@ -31,14 +31,16 @@ CLASS zcl_skylint_check_050 IMPLEMENTATION.
     FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      " Skip declarations (DATA, CONSTANTS, TYPES, STATICS)
       IF    <ls_statement>-keyword = 'DATA'  OR <ls_statement>-keyword = 'CONSTANTS'
          OR <ls_statement>-keyword = 'TYPES' OR <ls_statement>-keyword = 'STATICS'.
         CONTINUE.
       ENDIF.
 
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-        " Semantic identifiers resolved by compiler are not raw numeric literals
+        IF <ls_token>-lexeme = 'EXCEPTIONS'.
+          EXIT.
+        ENDIF.
+
         IF <ls_token>-references IS NOT INITIAL.
           CONTINUE.
         ENDIF.

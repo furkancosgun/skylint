@@ -16,5 +16,9 @@
     "line": 2,
     "column": 4,
     "quickfixes": []
+  },
+  {
+    "method": "ZCL_SKYLINT_TEST_077",
+    "code": null
   }
 ]
