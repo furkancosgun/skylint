@@ -26,7 +26,7 @@ skylint/
 │   │   ├── zcl_skylint_ast_util.clas.abap        # AST & token sequence traversal utility
 │   │   └── zcl_skylint_rtti_util.clas.abap       # Safe ABAP RTTI inspection utility
 │   │
-│   ├── checks/                                   # 81 Modular Check Implementations (001 - 081)
+│   ├── checks/                                   # 82 Modular Check Implementations (001 - 082)
 │   │   ├── zcl_skylint_check_001.clas.abap       # Check class implementation
 │   │   └── zcl_skylint_check_001.clas.xml        # abapGit XML metadata
 │   └── deps/atc/src/                             # Local-only ATC framework stubs (never shipped)
@@ -41,7 +41,7 @@ skylint/
 
 ---
 
-## 📋 Clean ABAP & Cloud Rule Catalog (81 Rules)
+## 📋 Clean ABAP & Cloud Rule Catalog (82 Rules)
 
 All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 
@@ -128,6 +128,7 @@ All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 | **079** | [zcl_skylint_check_079](src/checks/zcl_skylint_check_079.clas.abap) | Detect unnecessary exclamation mark parameter escape (!iv_param) | `PARAM_ESCP` | `—` | ✅ Done | ⚡ Ready |
 | **080** | [zcl_skylint_check_080](src/checks/zcl_skylint_check_080.clas.abap) | Avoid use of certain statements (BREAK, STATICS, DEFINE, EXPORT) | `AVOID_USE` | `—` | ✅ Done | — |
 | **081** | [zcl_skylint_check_081](src/checks/zcl_skylint_check_081.clas.abap) | Change IF to CASE when checking the same variable against multiple values | `USE_CASE` | `—` | ✅ Done | — |
+| **082** | [zcl_skylint_check_082](src/checks/zcl_skylint_check_082.clas.abap) | Avoid inline length specification in declarations | `PAREN_LEN` | `"#EC PAREN_LEN"` | ✅ Done | — |
 
 ---
 
@@ -250,14 +251,14 @@ Single-branch, ATC-native delivery — no adapters, no platform branches:
 ```
            ┌──────────────────────────────────────────────┐
            │              main (ATC-Native)               │
-           │  • 81 Rules (if_ci_atc_check)               │
+           │  • 82 Rules (if_ci_atc_check)               │
            │  • Framework Types (if_ci_atc_*)            │
            │  • Shared Base + Metadata (core/)           │
            └──────────────────────────────────────────────┘
 ```
 
 1. **`src/core/`**: `zcl_skylint_check_base` (implements `if_ci_atc_check`: procedure loop, checksum/location, quickfix contexts), `zcl_skylint_check_meta_data` (shared `if_ci_atc_check_meta_data`), AST/RTTI utilities.
-2. **`src/checks/`**: 81 rule classes, each directly selectable in ATC check variants.
+2. **`src/checks/`**: 82 rule classes, each directly selectable in ATC check variants.
 3. **`deps/atc/src/`**: Local-only ATC framework stubs for abaplint resolution — never shipped via abapGit (real SAP systems provide these natively).
 
 ---
@@ -283,6 +284,55 @@ npm run index
 ```
 
 > **Testing Architecture:** The test harness (`test/run.mjs`) is ATC-native. Fixtures are parsed into `ty_procedure` values and run through the actual transpiled `if_ci_atc_check~run` methods using JS test doubles for the SAP boundary. Every registered QuickFix is re-parsed via `@abaplint/core` (`test/roundtrip.mjs`) to verify syntax validity.
+
+---
+
+## Scanner (CLI)
+
+Scan any folder for `*.abap` files with rust-style diagnostics. Requires a prior `npm run build` (checks run transpiled, exactly as tested):
+
+```powershell
+# List issues
+npm run scan -- C:\projects\customer\src
+
+# Only some checks, JSON output, explicit config
+node scripts/lint-folder.mjs C:\projects\customer\src --filter 026 --json --config skylint.yaml
+
+# Apply QuickFixes (writes files; each fix is syntax re-validated, overlapping
+# fixes are skipped, a file that would break is reverted untouched)
+node scripts/lint-folder.mjs C:\projects\customer\src --fix
+node scripts/lint-folder.mjs C:\projects\customer\src --fix --dry-run
+
+# Write a default skylint.yaml into the folder (never overwrites)
+node scripts/lint-folder.mjs C:\projects\customer\src -d
+```
+
+```text
+warning: Avoid chained declarations; declare each entity individually
+ --> C:\projects\customer\src\zcl_demo.clas.abap:16:5
+   |
+16 |     DATA: lv_a TYPE i,
+   |     ^^^^^^^^^^^^^^^^^
+   |
+  = note: [CHAINDECL check_008] quickfix: PREFINLDCL
+```
+
+Exit codes: `0` clean, `1` issues remain, `2` usage/build error.
+
+### skylint.yaml
+
+Optional project config, auto-discovered as `skylint.yaml` / `.skylint.yaml` / `skylint.yml` in the scanned folder or cwd (or `--config <file>`):
+
+```yaml
+minSeverity: warning      # hide notes (error | warning | note)
+exclude:
+  - "**/*.testclasses.abap"
+checks:
+  "039":
+    enabled: false
+  "005":
+    severity: note        # error | warning | note
+```
 
 ---
 

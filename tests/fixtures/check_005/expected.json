@@ -20,5 +20,9 @@
   {
     "method": "TEST_005",
     "code": null
+  },
+  {
+    "method": "CONSTRUCTOR",
+    "code": null
   }
 ]

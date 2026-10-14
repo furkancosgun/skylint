@@ -1,0 +1,52 @@
+[
+  {
+    "method": "TEST_001",
+    "code": "PAREN_LEN",
+    "line": 2,
+    "column": 4,
+    "quickfixes": ["USELENGTH"]
+  },
+  {
+    "method": "TEST_002",
+    "code": null
+  },
+  {
+    "method": "TEST_003",
+    "code": "PAREN_LEN",
+    "line": 2,
+    "column": 4,
+    "quickfixes": ["USELENGTH"]
+  },
+  {
+    "method": "TEST_004",
+    "code": null
+  },
+  {
+    "method": "TEST_005",
+    "code": "PAREN_LEN",
+    "line": 3,
+    "column": 4,
+    "quickfixes": ["USELENGTH"]
+  },
+  {
+    "method": "TEST_006",
+    "code": "PAREN_LEN",
+    "line": 2,
+    "column": 4,
+    "quickfixes": ["USELENGTH"]
+  },
+  {
+    "method": "TEST_007",
+    "code": "PAREN_LEN",
+    "line": 2,
+    "column": 4,
+    "quickfixes": ["USELENGTH"]
+  },
+  {
+    "method": "TEST_008",
+    "code": "PAREN_LEN",
+    "line": 3,
+    "column": 4,
+    "quickfixes": ["USELENGTH"]
+  }
+]

@@ -15,7 +15,7 @@ CLASS zcl_skylint_check_005 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    DATA mv_allow_in_constructors TYPE abap_bool VALUE abap_false.
+    DATA mv_allow_in_constructors TYPE abap_bool VALUE abap_true.
 
 ENDCLASS.
 

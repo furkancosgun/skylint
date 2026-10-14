@@ -21,5 +21,8 @@
     "@abaplint/runtime": "latest",
     "@abaplint/transpiler": "latest",
     "@abaplint/transpiler-cli": "latest"
+  },
+  "dependencies": {
+    "yaml": "^2.9.1"
   }
 }

@@ -9,6 +9,7 @@ CLASS zcl_skylint_test_005 DEFINITION
     METHODS test_004.
     METHODS test_005.
     METHODS run.
+    METHODS constructor.
 ENDCLASS.
 
 CLASS zcl_skylint_test_005 IMPLEMENTATION.
@@ -36,6 +37,10 @@ CLASS zcl_skylint_test_005 IMPLEMENTATION.
 
   METHOD test_005.
     DATA me TYPE REF TO zcl_skylint_test_005.
+    me->run( ).
+  ENDMETHOD.
+
+  METHOD constructor.
     me->run( ).
   ENDMETHOD.
 ENDCLASS.

@@ -9,6 +9,7 @@ CLASS zcl_skylint_test_077 DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
+    METHODS test_005.
 ENDCLASS.
 
 
@@ -29,6 +30,16 @@ CLASS zcl_skylint_test_077 IMPLEMENTATION.
   METHOD test_004.
     DATA lv_val TYPE string.
     lv_val = 'a'.
+  ENDMETHOD.
+
+  METHOD test_005.
+    DATA: BEGIN OF ls_outer,
+            comp_a TYPE i,
+            BEGIN OF ls_inner,
+              comp_x TYPE i,
+            END OF ls_inner,
+          END OF ls_outer.
+    ls_outer-comp_a = 1.
   ENDMETHOD.
 ENDCLASS.
 

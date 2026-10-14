@@ -20,5 +20,9 @@
   {
     "method": "ZCL_SKYLINT_TEST_077",
     "code": null
+  },
+  {
+    "method": "TEST_005",
+    "code": null
   }
 ]

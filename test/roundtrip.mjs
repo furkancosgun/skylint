@@ -53,7 +53,7 @@ export function applyFix(fullLines, offset, snippetLineCount, statements, fix) {
   return { patched: [...fullLines.slice(0, startAbs), ...newLines, ...fullLines.slice(endAbs)] };
 }
 
-async function syntaxErrors(source) {
+export async function syntaxErrors(source) {
   try {
     const reg = new Registry();
     reg.addFile(new MemoryFile('zcl_qf_roundtrip.clas.abap', source));

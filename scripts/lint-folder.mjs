@@ -15,7 +15,17 @@ import {
   buildObjectValue,
   createFakes,
 } from '../test/harness.mjs';
+import { applyFix, syntaxErrors } from '../test/roundtrip.mjs';
 import { initRuntime, createLoader } from '../test/run.mjs';
+import {
+  findConfigFile,
+  loadConfig,
+  defaultConfigText,
+  isEnabled,
+  severityOverride,
+  matchesExclude,
+  SEV_RANK,
+} from './config.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,15 +34,21 @@ const outDir = path.join(rootDir, 'output');
 const projectDir = fs.existsSync(path.join(outDir, 'project')) ? path.join(outDir, 'project') : outDir;
 
 function usage() {
-  console.log('Usage: node scripts/lint-folder.mjs <folder> [--filter <id>] [--json]');
+  console.log('Usage: node scripts/lint-folder.mjs <folder> [--filter <id>] [--json] [--config <file>] [--fix] [--dry-run] [-d [file]]');
 }
 
 function parseArgs(argv) {
-  const opts = { folder: null, filter: null, json: false };
+  const opts = { folder: null, filter: null, json: false, config: null, fix: false, dryRun: false, init: null };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--filter' && i + 1 < argv.length) opts.filter = argv[++i];
-    else if (a === '--json') opts.json = true;
+    else if (a === '--config' && i + 1 < argv.length) opts.config = argv[++i];
+    else if (a === '-d' || a === '--init') {
+      if (i + 1 < argv.length && !argv[i + 1].startsWith('-')) opts.init = argv[++i];
+      else opts.init = true;
+    } else if (a === '--json') opts.json = true;
+    else if (a === '--fix') opts.fix = true;
+    else if (a === '--dry-run') opts.dryRun = true;
     else if (a === '--help' || a === '-h') {
       usage();
       process.exit(0);
@@ -50,11 +66,15 @@ function parseArgs(argv) {
   return opts;
 }
 
-function collectAbapFiles(dir, out = []) {
+function collectAbapFiles(dir, root, exclude, out = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) collectAbapFiles(full, out);
-    else if (entry.isFile() && entry.name.toLowerCase().endsWith('.abap')) out.push(full);
+    if (entry.isDirectory()) {
+      collectAbapFiles(full, root, exclude, out);
+    } else if (entry.isFile() && entry.name.toLowerCase().endsWith('.abap')) {
+      const rel = path.relative(root, full).split(path.sep).join('/');
+      if (!matchesExclude(rel, exclude)) out.push(full);
+    }
   }
   return out.sort();
 }
@@ -104,9 +124,63 @@ function readFindingDetails(g) {
   try {
     const d = g.details;
     const inner = d && typeof d.get === 'function' ? d.get() : d;
-    if (inner) return { codes: Array.isArray(inner.codes) ? [...inner.codes] : [] };
+    if (inner) {
+      return {
+        codes: Array.isArray(inner.codes) ? [...inner.codes] : [],
+        fixes: Array.isArray(inner.fixes) ? [...inner.fixes] : [],
+      };
+    }
   } catch {}
-  return { codes: [] };
+  return { codes: [], fixes: [] };
+}
+
+function fixRange(proc, fix) {
+  const ctx = fix && fix.context;
+  if (!ctx) return null;
+  let sf = Number(ctx.statements && ctx.statements.from) || 0;
+  let st = Number(ctx.statements && ctx.statements.to) || 0;
+  if (sf < 1) return null;
+  if (st < sf) st = sf;
+  const n = proc.statements.length;
+  if (sf > n) return null;
+  if (st > n) st = n;
+  return {
+    startAbs: proc.offset + proc.statements[sf - 1].position.line - 1,
+    endAbs: st < n ? proc.offset + proc.statements[st].position.line - 1 : proc.offset + proc.count,
+  };
+}
+
+function rangesOverlap(a, b) {
+  return a.startAbs < b.endAbs && b.startAbs < a.endAbs;
+}
+
+async function applyFileFixes(fileCtx, visible) {
+  const entries = [];
+  for (const proc of fileCtx.procs) {
+    for (const p of proc.plans) {
+      if (!visible.has(p.finding)) continue;
+      const range = fixRange(proc, p.fix);
+      if (range) entries.push({ ...range, proc, fix: p.fix, finding: p.finding });
+    }
+  }
+  entries.sort((a, b) => b.startAbs - a.startAbs || b.endAbs - a.endAbs);
+  const taken = [];
+  const applied = [];
+  let lines = [...fileCtx.fullLines];
+  for (const e of entries) {
+    if (taken.some((r) => rangesOverlap(e, r))) continue;
+    const res = applyFix(lines, e.proc.offset, e.proc.count, e.proc.statements, e.fix);
+    if (!res.patched) continue;
+    lines = res.patched;
+    taken.push({ startAbs: e.startAbs, endAbs: e.endAbs });
+    applied.push(e);
+  }
+  if (applied.length === 0) return { applied, lines: null, errors: [] };
+  const baseline = await syntaxErrors(fileCtx.fullLines.join('\n'));
+  const known = new Set(baseline);
+  const fresh = (await syntaxErrors(lines.join('\n'))).filter((x) => !known.has(x));
+  if (fresh.length > 0) return { applied: [], lines: null, errors: fresh };
+  return { applied, lines, errors: [] };
 }
 
 function matchSpan(statements, line, col) {
@@ -137,14 +211,16 @@ function toProcedures(fullLines, fallbackName) {
   ];
 }
 
-async function scanFile({ abap, getCheck, checkIds, metaByCheck, file }) {
+async function scanFile({ abap, getCheck, checkIds, metaByCheck, cfg, file }) {
   const text = fs.readFileSync(file, 'utf8');
-  const fullLines = text.split('\n');
+  const eol = text.includes('\r\n') ? '\r\n' : '\n';
+  const fullLines = text.split('\n').map((l) => (l.endsWith('\r') ? l.slice(0, -1) : l));
   if (fullLines.length > 0 && fullLines[fullLines.length - 1] === '') fullLines.pop();
-  if (fullLines.length === 0) return [];
+  if (fullLines.length === 0) return { findings: [], ctx: null };
   const fallbackName = objectNameFromFile(file);
   const fullSource = fullLines.join('\n');
   const findings = [];
+  const ctx = { file, fullLines, eol, trailingNewline: text.endsWith('\n'), procs: [] };
 
   for (const proc of toProcedures(fullLines, fallbackName)) {
     if (!proc.snippet || proc.snippet.length === 0) continue;
@@ -152,6 +228,8 @@ async function scanFile({ abap, getCheck, checkIds, metaByCheck, file }) {
     const methodName = proc.kind === 'METH' ? proc.methodName || '' : '';
     const statements = buildStatements(new Lexer(proc.snippet.join('\n')).run());
     if (statements.length === 0) continue;
+    const procCtx = { offset: proc.offset, count: proc.snippet.length, statements, plans: [] };
+    ctx.procs.push(procCtx);
     await feedRtti(fullSource, objectName, abap);
     await enrichStatementsWithAbaplint(statements, fullSource, objectName, methodName, proc.offset);
 
@@ -184,21 +262,28 @@ async function scanFile({ abap, getCheck, checkIds, metaByCheck, file }) {
         const code = strOf(g.code);
         const relLine = pos.line.get();
         const col = pos.column.get();
-        findings.push({
+        const meta = (metaByCheck[checkId] && metaByCheck[checkId][code]) || {};
+        const det = readFindingDetails(g);
+        const finding = {
           file,
           line: proc.offset + relLine,
           column: col,
           span: matchSpan(statements, relLine, col),
           check: checkId,
           code,
-          severity: (metaByCheck[checkId] && metaByCheck[checkId][code] && metaByCheck[checkId][code].severity) || '',
-          text: (metaByCheck[checkId] && metaByCheck[checkId][code] && metaByCheck[checkId][code].text) || '',
-          quickfixes: readFindingDetails(g).codes,
-        });
+          severity: severityOverride(cfg, checkId) || meta.severity || '',
+          text: meta.text || '',
+          quickfixes: det.codes,
+          fixes: det.fixes.map((fx) => ({ code: fx.code, newCode: fx.newCode || null })),
+        };
+        findings.push(finding);
+        for (const fx of det.fixes) {
+          if (fx && fx.context) procCtx.plans.push({ finding, fix: fx });
+        }
       }
     }
   }
-  return findings;
+  return { findings, ctx };
 }
 
 const ANSI = {
@@ -268,19 +353,52 @@ async function main() {
     console.error(`Not a directory: ${opts.folder}`);
     process.exit(2);
   }
+  if (opts.init) {
+    const target = opts.init === true ? path.join(folder, 'skylint.yaml') : path.resolve(opts.init);
+    if (fs.existsSync(target)) {
+      console.error(`Refusing to overwrite existing file: ${target}`);
+      process.exit(2);
+    }
+    fs.writeFileSync(target, defaultConfigText());
+    console.log(`Wrote default config: ${target}`);
+    process.exit(0);
+  }
   if (!fs.existsSync(path.join(outDir, 'init.mjs'))) {
     console.error('Transpiled runtime not found. Run `npm run build` first.');
     process.exit(2);
   }
 
+  let cfgFile = null;
+  try {
+    cfgFile = findConfigFile(folder, opts.config);
+  } catch (e) {
+    console.error(e.message);
+    process.exit(2);
+  }
+  let cfg;
+  try {
+    cfg = loadConfig(cfgFile);
+  } catch (e) {
+    console.error(e.message);
+    process.exit(2);
+  }
+  if (cfgFile) console.error(`Using config: ${cfgFile}`);
+
   let checkIds = discoverBuiltChecks();
   if (opts.filter) checkIds = checkIds.filter((id) => id.includes(opts.filter));
+  checkIds = checkIds.filter((id) => {
+    if (!isEnabled(cfg, id)) {
+      console.error(`note: check_${id} disabled by config`);
+      return false;
+    }
+    return true;
+  });
   if (checkIds.length === 0) {
-    console.error('No built checks found. Run `npm run build` first.');
+    console.error('No checks selected (none built, or all filtered or disabled).');
     process.exit(2);
   }
 
-  const files = collectAbapFiles(folder);
+  const files = collectAbapFiles(folder, folder, cfg.exclude);
   const abap = await initRuntime();
   const getCheck = createLoader(abap);
   const metaByCheck = {};
@@ -290,11 +408,38 @@ async function main() {
   }
 
   let all = [];
+  const ctxByFile = new Map();
   for (const file of files) {
-    const found = await scanFile({ abap, getCheck, checkIds, metaByCheck, file });
-    all = all.concat(found);
+    const { findings, ctx } = await scanFile({ abap, getCheck, checkIds, metaByCheck, cfg, file });
+    all = all.concat(findings);
+    if (ctx) ctxByFile.set(file, ctx);
   }
   all.sort((a, b) => (a.file < b.file ? -1 : a.file > b.file ? 1 : a.line - b.line || a.column - b.column));
+  if (cfg.minSeverity) {
+    const maxRank = SEV_RANK[cfg.minSeverity];
+    all = all.filter((f) => (SEV_RANK[f.severity] ?? 2) <= maxRank);
+  }
+
+  const wantFix = opts.fix || opts.dryRun;
+  let fixedCount = 0;
+  if (wantFix && all.length > 0) {
+    const visible = new Set(all);
+    for (const [file, ctx] of ctxByFile) {
+      const res = await applyFileFixes(ctx, visible);
+      if (res.errors.length > 0) {
+        console.error(`note: ${file}: fix reverted, would break syntax: ${res.errors.join('; ')}`);
+        continue;
+      }
+      for (const e of res.applied) {
+        e.finding.fixed = true;
+        fixedCount += 1;
+      }
+      if (res.applied.length > 0 && opts.fix && !opts.dryRun) {
+        fs.writeFileSync(file, res.lines.join(ctx.eol) + (ctx.trailingNewline ? ctx.eol : ''));
+      }
+    }
+  }
+  const remaining = all.filter((f) => !f.fixed);
 
   if (opts.json) {
     console.log(JSON.stringify(all, null, 2));
@@ -302,6 +447,7 @@ async function main() {
     console.log(`OK: no issues in ${files.length} .abap file(s), ${checkIds.length} check(s).`);
   } else {
     const cache = new Map();
+    for (const [file, ctx] of ctxByFile) cache.set(file, ctx.fullLines);
     const getLines = (file) => {
       if (!cache.has(file)) {
         try {
@@ -312,10 +458,22 @@ async function main() {
       }
       return cache.get(file);
     };
-    for (const f of all) console.log(renderFinding(f, getLines) + '\n');
-    console.log(`${all.length} issue(s) in ${files.length} .abap file(s), ${checkIds.length} check(s).`);
+    for (const f of all) {
+      if (f.fixed && opts.fix && !opts.dryRun) continue;
+      console.log(renderFinding(f, getLines) + '\n');
+    }
+    if (wantFix) {
+      const verb = opts.dryRun ? 'would fix' : 'fixed';
+      for (const f of all) {
+        if (!f.fixed) continue;
+        const qf = f.quickfixes.length > 0 ? ` ${f.quickfixes.join(',')}` : '';
+        console.log(`${verb} ${f.file}:${f.line}:${f.column + 1} [${f.code} check_${f.check}]${qf}`);
+      }
+    }
+    const fixInfo = wantFix ? `, ${fixedCount} ${opts.dryRun ? 'would be fixed' : 'fixed'}` : '';
+    console.log(`${remaining.length} remaining issue(s)${fixInfo} in ${files.length} .abap file(s), ${checkIds.length} check(s).`);
   }
-  process.exit(all.length > 0 ? 1 : 0);
+  process.exit(remaining.length > 0 ? 1 : 0);
 }
 
 main();
