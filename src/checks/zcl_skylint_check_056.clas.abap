@@ -15,9 +15,21 @@ CLASS zcl_skylint_check_056 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    METHODS is_non_compliant_bool_method
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_yes) TYPE abap_bool.
+    METHODS has_boolean_return
+      IMPORTING is_statement       TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_has_bool) TYPE abap_bool.
+
+    METHODS is_boolean_type
+      IMPORTING iv_type           TYPE string
+      RETURNING VALUE(rv_is_bool) TYPE abap_bool.
+
+    METHODS get_method_name
+      IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_name) TYPE string.
+
+    METHODS is_predicate_name
+      IMPORTING iv_method_name TYPE string
+      RETURNING VALUE(rv_yes)  TYPE abap_bool.
 ENDCLASS.
 
 
@@ -33,6 +45,7 @@ CLASS zcl_skylint_check_056 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
+    DATA lv_method_name TYPE string.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
@@ -41,21 +54,23 @@ CLASS zcl_skylint_check_056 IMPLEMENTATION.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'METHODS' OR keyword = 'CLASS-METHODS'.
-      IF is_non_compliant_bool_method( <ls_statement> ) = abap_true.
+      IF has_boolean_return( <ls_statement> ) = abap_false.
+        CONTINUE.
+      ENDIF.
+
+      lv_method_name = get_method_name( <ls_statement> ).
+      IF is_predicate_name( lv_method_name ) = abap_false.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-bool_method_name ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD is_non_compliant_bool_method.
-    DATA lv_ret_idx TYPE i.
-    DATA ls_type    TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_name    TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_type    TYPE string.
-    DATA lv_name    TYPE string.
+  METHOD has_boolean_return.
+    DATA lv_ret_idx  TYPE i.
+    DATA ls_type_tok TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    rv_yes = abap_false.
+    rv_has_bool = abap_false.
 
     lv_ret_idx = zcl_skylint_ast_util=>find_token( is_statement = is_statement
                                                    iv_lexeme    = 'RETURNING' ).
@@ -63,29 +78,48 @@ CLASS zcl_skylint_check_056 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    ls_type = zcl_skylint_ast_util=>get_token_after( is_statement   = is_statement
-                                                     iv_lexeme      = 'TYPE'
-                                                     iv_start_index = lv_ret_idx ).
-    IF ls_type-lexeme IS INITIAL.
+    ls_type_tok = zcl_skylint_ast_util=>get_token_after( is_statement   = is_statement
+                                                         iv_lexeme      = 'TYPE'
+                                                         iv_start_index = lv_ret_idx ).
+    IF ls_type_tok-lexeme IS INITIAL.
       RETURN.
     ENDIF.
 
-    lv_type = ls_type-lexeme.
-    IF     lv_type <> 'ABAP_BOOL' AND lv_type <> 'FLAG'
-       AND lv_type <> 'XSDBOOL'   AND lv_type <> 'BOOLEAN'
-       AND lv_type <> 'BOOLE_D'   AND lv_type <> 'XFELD'.
-      RETURN.
-    ENDIF.
+    rv_has_bool = is_boolean_type( ls_type_tok-lexeme ).
+  ENDMETHOD.
 
-    ls_name = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                               iv_index     = 2 ).
-    lv_name = ls_name-lexeme.
+  METHOD is_boolean_type.
+    CASE iv_type.
+      WHEN 'ABAP_BOOL' OR 'ABAP_BOOLEAN' OR 'XSDBOOL'
+        OR 'FLAG' OR 'XFELD' OR 'BOOLEAN' OR 'BOOLE_D'.
+        rv_is_bool = abap_true.
+      WHEN OTHERS.
+        rv_is_bool = abap_false.
+    ENDCASE.
+  ENDMETHOD.
 
-    IF     lv_name NP 'IS_*'     AND lv_name NP 'HAS_*'
-       AND lv_name NP 'CAN_*'    AND lv_name NP 'CHECK_*'
-       AND lv_name NP 'ARE_*'    AND lv_name NP 'WAS_*'
-       AND lv_name NP 'SHOULD_*'.
-      rv_yes = abap_true.
-    ENDIF.
+  METHOD get_method_name.
+    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                              iv_index     = 2 ).
+    rv_name = ls_tok-lexeme.
+  ENDMETHOD.
+
+  METHOD is_predicate_name.
+    rv_yes = xsdbool(
+         iv_method_name CP 'IS_*'      OR iv_method_name = 'IS'
+      OR iv_method_name CP 'HAS_*'     OR iv_method_name = 'HAS'
+      OR iv_method_name CP 'CAN_*'
+      OR iv_method_name CP 'ARE_*'
+      OR iv_method_name CP 'WAS_*'
+      OR iv_method_name CP 'WERE_*'
+      OR iv_method_name CP 'SHOULD_*'
+      OR iv_method_name CP 'MUST_*'
+      OR iv_method_name CP 'EXISTS*'
+      OR iv_method_name CP 'CONTAINS*'
+      OR iv_method_name CP 'SUPPORTS*'
+      OR iv_method_name CP 'MATCHES*'
+      OR iv_method_name CP 'EQUALS*' ).
   ENDMETHOD.
 ENDCLASS.

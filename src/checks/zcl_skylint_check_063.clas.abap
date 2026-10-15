@@ -15,7 +15,12 @@ CLASS zcl_skylint_check_063 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    METHODS is_system_exception
+    METHODS raises_system_exception
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+                it_statements TYPE if_ci_atc_source_code_provider=>ty_statements
+      RETURNING VALUE(rv_yes) TYPE abap_bool.
+
+    METHODS is_system_exception_token
       IMPORTING is_token      TYPE if_ci_atc_source_code_provider=>ty_token
                 it_statements TYPE if_ci_atc_source_code_provider=>ty_statements
       RETURNING VALUE(rv_yes) TYPE abap_bool.
@@ -35,35 +40,35 @@ CLASS zcl_skylint_check_063 IMPLEMENTATION.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_is_raise TYPE abap_bool.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF <ls_statement>-keyword = 'RAISE'.
-        lv_is_raise = abap_true.
-      ELSE.
-        lv_is_raise = zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                              iv_lexeme    = 'THROW' ).
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement> WHERE keyword = 'RAISE'.
+      IF raises_system_exception( is_statement  = <ls_statement>
+                                  it_statements = is_procedure-statements ) = abap_true.
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-raise_sys ).
       ENDIF.
-      IF lv_is_raise = abap_false.
-        CONTINUE.
-      ENDIF.
-
-      LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-        IF is_system_exception( is_token      = <ls_token>
-                                it_statements = is_procedure-statements ) = abap_true.
-          report_statement( is_statement    = <ls_statement>
-                            iv_finding_code = c_finding_codes-raise_sys ).
-          EXIT.
-        ENDIF.
-      ENDLOOP.
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD is_system_exception.
+  METHOD raises_system_exception.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    rv_yes = abap_false.
+
+    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
+      IF is_system_exception_token( is_token      = <ls_token>
+                                    it_statements = it_statements ) = abap_true.
+        rv_yes = abap_true.
+        RETURN.
+      ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD is_system_exception_token.
     FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     rv_yes = abap_false.
+
     IF zcl_skylint_ast_util=>is_declared_data( it_statements = it_statements
                                                iv_name       = is_token-lexeme ) = abap_true.
       RETURN.

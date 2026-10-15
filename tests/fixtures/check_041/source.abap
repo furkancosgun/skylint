@@ -7,6 +7,8 @@ CLASS zcl_skylint_test_041 DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
+    METHODS test_005.
+    METHODS test_006.
 ENDCLASS.
 
 
@@ -27,6 +29,15 @@ CLASS zcl_skylint_test_041 IMPLEMENTATION.
   METHOD test_004.
     DATA lv_rc TYPE i.
     lv_rc = sy-subrc.
+  ENDMETHOD.
+
+  METHOD test_005.
+    syst-subrc = 0.
+  ENDMETHOD.
+
+  METHOD test_006.
+    DATA lv_rc TYPE i.
+    lv_rc = syst-subrc.
   ENDMETHOD.
 ENDCLASS.
 

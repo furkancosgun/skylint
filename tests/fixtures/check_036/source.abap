@@ -7,6 +7,8 @@ CLASS zcl_skylint_test_036 DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
+    METHODS test_005.
+    METHODS test_006.
     METHODS run IMPORTING iv_param TYPE i.
 ENDCLASS.
 
@@ -35,5 +37,15 @@ CLASS zcl_skylint_test_036 IMPLEMENTATION.
   METHOD test_004.
     DATA lo_obj TYPE REF TO zcl_skylint_test_036.
     lo_obj->run( 5 ).
+  ENDMETHOD.
+
+  METHOD test_005.
+    DATA lo_obj TYPE REF TO zcl_skylint_test_036.
+    CALL METHOD lo_obj->run( iv_param = 5 ).
+  ENDMETHOD.
+
+  METHOD test_006.
+    DATA lo_obj TYPE REF TO zcl_skylint_test_036.
+    lo_obj->run( EXPORTING iv_param = 5 ).
   ENDMETHOD.
 ENDCLASS.

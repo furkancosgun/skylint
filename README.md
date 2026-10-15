@@ -295,8 +295,9 @@ Scan any folder for `*.abap` files with rust-style diagnostics. Requires a prior
 # List issues
 npm run scan -- C:\projects\customer\src
 
-# Only some checks, JSON output, explicit config
+# Only some checks, JSON / SARIF output, explicit config
 node scripts/lint-folder.mjs C:\projects\customer\src --filter 026 --json --config skylint.yaml
+node scripts/lint-folder.mjs C:\projects\customer\src --sarif > results.sarif
 
 # Apply QuickFixes (writes files; each fix is syntax re-validated, overlapping
 # fixes are skipped, a file that would break is reverted untouched)

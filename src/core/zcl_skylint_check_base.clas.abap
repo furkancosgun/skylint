@@ -13,10 +13,18 @@ CLASS zcl_skylint_check_base DEFINITION
              attributes        TYPE if_ci_atc_check_meta_data=>ty_attributes,
            END OF ty_check_config.
 
+    CONSTANTS:
+      BEGIN OF c_quickfix_modes,
+        replace       TYPE string VALUE 'REPLACE',
+        insert_before TYPE string VALUE 'INSERT_BEFORE',
+        insert_after  TYPE string VALUE 'INSERT_AFTER',
+      END OF c_quickfix_modes.
+
     TYPES ty_code_lines TYPE STANDARD TABLE OF string WITH EMPTY KEY.
 
     TYPES: BEGIN OF ty_quickfix,
              code           TYPE cl_ci_atc_quickfixes=>ty_quickfix_code,
+             mode           TYPE string,
              statement_from TYPE i,
              statement_to   TYPE i,
              token_from     TYPE i,
@@ -46,6 +54,24 @@ CLASS zcl_skylint_check_base DEFINITION
                 it_quickfixes   TYPE ty_quickfixes OPTIONAL.
 
     METHODS quickfix_replace
+      IMPORTING iv_quickfix_code   TYPE cl_ci_atc_quickfixes=>ty_quickfix_code
+                iv_statement_from  TYPE i
+                iv_statement_to    TYPE i OPTIONAL
+                iv_token_from      TYPE i OPTIONAL
+                iv_token_to        TYPE i OPTIONAL
+                it_new_code        TYPE ty_code_lines
+      RETURNING VALUE(rs_quickfix) TYPE ty_quickfix.
+
+    METHODS quickfix_insert_before
+      IMPORTING iv_quickfix_code   TYPE cl_ci_atc_quickfixes=>ty_quickfix_code
+                iv_statement_from  TYPE i
+                iv_statement_to    TYPE i OPTIONAL
+                iv_token_from      TYPE i OPTIONAL
+                iv_token_to        TYPE i OPTIONAL
+                it_new_code        TYPE ty_code_lines
+      RETURNING VALUE(rs_quickfix) TYPE ty_quickfix.
+
+    METHODS quickfix_insert_after
       IMPORTING iv_quickfix_code   TYPE cl_ci_atc_quickfixes=>ty_quickfix_code
                 iv_statement_from  TYPE i
                 iv_statement_to    TYPE i OPTIONAL
@@ -102,6 +128,47 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
     DATA ls_qf TYPE ty_quickfix.
 
     ls_qf-code           = iv_quickfix_code.
+    ls_qf-mode           = c_quickfix_modes-replace.
+    ls_qf-statement_from = iv_statement_from.
+    ls_qf-statement_to   = iv_statement_to.
+    IF ls_qf-statement_to IS INITIAL.
+      ls_qf-statement_to = iv_statement_from.
+    ENDIF.
+    ls_qf-token_from = iv_token_from.
+    ls_qf-token_to   = iv_token_to.
+    IF ls_qf-token_from IS NOT INITIAL AND ls_qf-token_to IS INITIAL.
+      ls_qf-token_to = iv_token_from.
+    ENDIF.
+    ls_qf-new_code = it_new_code.
+
+    rs_quickfix = ls_qf.
+  ENDMETHOD.
+
+  METHOD quickfix_insert_before.
+    DATA ls_qf TYPE ty_quickfix.
+
+    ls_qf-code           = iv_quickfix_code.
+    ls_qf-mode           = c_quickfix_modes-insert_before.
+    ls_qf-statement_from = iv_statement_from.
+    ls_qf-statement_to   = iv_statement_to.
+    IF ls_qf-statement_to IS INITIAL.
+      ls_qf-statement_to = iv_statement_from.
+    ENDIF.
+    ls_qf-token_from = iv_token_from.
+    ls_qf-token_to   = iv_token_to.
+    IF ls_qf-token_from IS NOT INITIAL AND ls_qf-token_to IS INITIAL.
+      ls_qf-token_to = iv_token_from.
+    ENDIF.
+    ls_qf-new_code = it_new_code.
+
+    rs_quickfix = ls_qf.
+  ENDMETHOD.
+
+  METHOD quickfix_insert_after.
+    DATA ls_qf TYPE ty_quickfix.
+
+    ls_qf-code           = iv_quickfix_code.
+    ls_qf-mode           = c_quickfix_modes-insert_after.
     ls_qf-statement_from = iv_statement_from.
     ls_qf-statement_to   = iv_statement_to.
     IF ls_qf-statement_to IS INITIAL.
@@ -180,8 +247,17 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
                                                                      tokens       = VALUE #(
                                                                          from = <ls_qf>-token_from
                                                                          to   = <ls_qf>-token_to ) ) ).
-          lo_fix->replace( context = lo_context
-                           code    = <ls_qf>-new_code ).
+          CASE <ls_qf>-mode.
+            WHEN c_quickfix_modes-insert_before.
+              lo_fix->insert_before( context = lo_context
+                                     code    = <ls_qf>-new_code ).
+            WHEN c_quickfix_modes-insert_after.
+              lo_fix->insert_after( context = lo_context
+                                    code    = <ls_qf>-new_code ).
+            WHEN OTHERS.
+              lo_fix->replace( context = lo_context
+                               code    = <ls_qf>-new_code ).
+          ENDCASE.
         ENDLOOP.
         lo_details = mo_factory->create_finding_details( )->attach_quickfixes( lo_quickfixes ).
       ENDIF.
@@ -211,15 +287,8 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
 
     CLEAR mt_reported.
     mo_code_provider = data_provider->get_code_provider( ).
-
-    TRY.
-        ls_comp_unit = mo_code_provider->object_to_comp_unit( object ).
-        lr_procedures = mo_code_provider->get_procedures( ls_comp_unit ).
-      CATCH cx_ci_atc_invalid_comp_unit.
-        RETURN.
-      CATCH cx_root.
-        RETURN.
-    ENDTRY.
+    ls_comp_unit = mo_code_provider->object_to_comp_unit( object ).
+    lr_procedures = mo_code_provider->get_procedures( ls_comp_unit ).
 
     LOOP AT lr_procedures->* ASSIGNING <ls_procedure>.
       check( <ls_procedure> ).
@@ -250,11 +319,7 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      TRY.
-          <lv_own> = <lv_new>.
-        CATCH cx_root.
-          RAISE EXCEPTION NEW cx_ci_atc_check_invalid_attr( ).
-      ENDTRY.
+      <lv_own> = <lv_new>.
     ENDLOOP.
   ENDMETHOD.
 

@@ -7,6 +7,7 @@ CLASS zcl_skylint_test_033 DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
+    METHODS test_005.
 ENDCLASS.
 
 
@@ -39,6 +40,14 @@ CLASS zcl_skylint_test_033 IMPLEMENTATION.
       DATA lv_tmp TYPE i.
       lv_tmp = 1.
     ENDIF.
+  ENDMETHOD.
+
+  METHOD test_005.
+    DATA lv_flag TYPE abap_bool.
+    IF lv_flag = abap_true.
+      DATA(lv_inline) = 1.
+    ENDIF.
+    lv_inline = 2.
   ENDMETHOD.
 ENDCLASS.
 

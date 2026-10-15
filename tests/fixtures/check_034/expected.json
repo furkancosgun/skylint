@@ -20,5 +20,22 @@
     "quickfixes": [
       "DELIDENT"
     ]
+  },
+  {
+    "method": "TEST_004",
+    "code": null
+  },
+  {
+    "method": "TEST_005",
+    "code": "IDENTMOVE",
+    "line": 7,
+    "column": 4,
+    "quickfixes": [
+      "DELIDENT"
+    ]
+  },
+  {
+    "method": "TEST_006",
+    "code": null
   }
 ]

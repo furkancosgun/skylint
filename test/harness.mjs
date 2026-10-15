@@ -380,13 +380,31 @@ export function createFakes(abap, proceduresTable, objectName) {
       const collector = {
         list: [],
         async create_quickfix(INPUT) {
-          const entry = { code: readCode(INPUT), newCode: null, context: null };
-          collector.list.push(entry);
+          const code = readCode(INPUT);
+          let entry = collector.list.find((e) => e.code === code);
+          if (!entry) {
+            entry = { code, operations: [], newCode: null, context: null };
+            collector.list.push(entry);
+          }
+          const addOp = (op, INPUT2) => {
+            const ctx = pendingContext;
+            pendingContext = null;
+            const newCode = readStringTable(INPUT2?.code);
+            entry.operations.push({ op, context: ctx, newCode });
+            if (!entry.context) entry.context = ctx;
+            if (!entry.newCode) entry.newCode = newCode;
+          };
           return {
             async 'if_ci_atc_quickfix$replace'(INPUT2) {
-              entry.newCode = readStringTable(INPUT2?.code);
-              entry.context = pendingContext;
-              pendingContext = null;
+              addOp('replace', INPUT2);
+              return this;
+            },
+            async 'if_ci_atc_quickfix$insert_before'(INPUT2) {
+              addOp('insert_before', INPUT2);
+              return this;
+            },
+            async 'if_ci_atc_quickfix$insert_after'(INPUT2) {
+              addOp('insert_after', INPUT2);
               return this;
             },
           };

@@ -1,12 +1,7 @@
 [
   {
     "method": "TEST_001",
-    "code": "OMITRECEIV",
-    "line": 4,
-    "column": 4,
-    "quickfixes": [
-      "OMITRECV"
-    ]
+    "code": null
   },
   {
     "method": "TEST_002",
@@ -14,11 +9,28 @@
   },
   {
     "method": "TEST_003",
+    "code": null
+  },
+  {
+    "method": "TEST_005",
     "code": "OMITRECEIV",
     "line": 4,
     "column": 4,
     "quickfixes": [
       "OMITRECV"
     ]
+  },
+  {
+    "method": "TEST_006",
+    "code": "OMITRECEIV",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "OMITRECV"
+    ]
+  },
+  {
+    "method": "TEST_007",
+    "code": null
   }
 ]

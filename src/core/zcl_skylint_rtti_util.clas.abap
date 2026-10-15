@@ -38,7 +38,6 @@ CLASS zcl_skylint_rtti_util DEFINITION
                 iv_kind       TYPE if_ci_atc_source_code_provider=>ty_reference_kind
       RETURNING VALUE(rv_has) TYPE abap_bool.
 
-  PRIVATE SECTION.
     CLASS-METHODS parse_full_name
       IMPORTING iv_full_name    TYPE clike
       EXPORTING ev_program_name TYPE string
@@ -52,18 +51,15 @@ CLASS zcl_skylint_rtti_util IMPLEMENTATION.
   METHOD describe_object.
     DATA lo_descr TYPE REF TO cl_abap_typedescr.
 
-    TRY.
-        cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = iv_name
-                                             RECEIVING  p_descr_ref    = lo_descr
-                                             EXCEPTIONS type_not_found = 1
-                                                        OTHERS         = 2 ).
-        IF     sy-subrc = 0 AND lo_descr IS BOUND
-           AND ( lo_descr->kind = cl_abap_typedescr=>kind_class OR lo_descr->kind = cl_abap_typedescr=>kind_intf ).
-          ro_objdescr ?= lo_descr.
-        ENDIF.
-      CATCH cx_root.
-        CLEAR ro_objdescr.
-    ENDTRY.
+    cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = iv_name
+                                         RECEIVING  p_descr_ref    = lo_descr
+                                         EXCEPTIONS type_not_found = 1
+                                                    OTHERS         = 2 ).
+    IF sy-subrc <> 0 OR (     lo_descr->kind <> cl_abap_typedescr=>kind_class
+                          AND lo_descr->kind <> cl_abap_typedescr=>kind_intf ).
+      RETURN.
+    ENDIF.
+    ro_objdescr ?= lo_descr.
   ENDMETHOD.
 
   METHOD describe_class.

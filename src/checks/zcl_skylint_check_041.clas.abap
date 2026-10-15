@@ -19,6 +19,14 @@ CLASS zcl_skylint_check_041 DEFINITION
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
+    METHODS is_system_field
+      IMPORTING is_ref       TYPE if_ci_atc_source_code_provider=>ty_compiler_reference
+      RETURNING VALUE(rv_is) TYPE abap_bool.
+
+    METHODS is_write_access
+      IMPORTING is_ref       TYPE if_ci_atc_source_code_provider=>ty_compiler_reference
+      RETURNING VALUE(rv_is) TYPE abap_bool.
+
 ENDCLASS.
 
 
@@ -45,41 +53,36 @@ CLASS zcl_skylint_check_041 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_system_variable_mod.
-    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_ref TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
-    DATA lv_lex TYPE string.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_ref>   TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     rv_res = abap_false.
 
-    LOOP AT is_statement-tokens INTO ls_tok.
-      lv_lex = ls_tok-lexeme.
-      IF lv_lex CP 'SY-*' OR lv_lex CP 'SYST-*'.
-        LOOP AT ls_tok-references INTO ls_ref.
-          IF ls_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-write.
-            rv_res = abap_true.
-            RETURN.
-          ENDIF.
-        ENDLOOP.
-      ENDIF.
+    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
+      LOOP AT <ls_token>-references ASSIGNING <ls_ref>.
+        IF     is_system_field( <ls_ref> ) = abap_true
+           AND is_write_access( <ls_ref> ) = abap_true.
+          rv_res = abap_true.
+          RETURN.
+        ENDIF.
+      ENDLOOP.
     ENDLOOP.
+  ENDMETHOD.
 
-    CASE is_statement-keyword.
-      WHEN 'COMPUTE'.
-        ls_tok = zcl_skylint_ast_util=>get_first_token( is_statement ).
-        lv_lex = ls_tok-lexeme.
-        IF lv_lex CP 'SY-*' OR lv_lex CP 'SYST-*'.
-          rv_res = abap_true.
-          RETURN.
-        ENDIF.
+  METHOD is_system_field.
+    rv_is = xsdbool(
+          is_ref-kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+      AND (    is_ref-full_name CS '\DA:SY\'
+            OR is_ref-full_name CS '\DA:SYST\'
+            OR is_ref-full_name CS '\PR:SYST\'
+            OR is_ref-full_name  = '\DA:SY'
+            OR is_ref-full_name  = '\DA:SYST' ) ).
+  ENDMETHOD.
 
-      WHEN 'CLEAR'.
-        ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                  iv_index     = 2 ).
-        lv_lex = ls_tok-lexeme.
-        IF lv_lex CP 'SY-*' OR lv_lex CP 'SYST-*'.
-          rv_res = abap_true.
-          RETURN.
-        ENDIF.
-    ENDCASE.
+  METHOD is_write_access.
+    rv_is = xsdbool(
+         is_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-write
+      OR is_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-write_partial
+      OR is_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_and_write ).
   ENDMETHOD.
 ENDCLASS.

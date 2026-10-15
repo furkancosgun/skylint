@@ -52,7 +52,7 @@ CLASS zcl_skylint_check_070 IMPLEMENTATION.
                                                          iv_lexeme      = lv_lexeme
                                                          iv_start_index = sy-tabix ).
         lv_next_lex = ls_next-lexeme.
-        IF lv_next_lex IS NOT INITIAL AND ( lv_next_lex CP '(*' OR lv_next_lex = '(' ).
+        IF lv_next_lex IS NOT INITIAL AND lv_next_lex CP '(*)'.
           lv_is_dynamic = abap_true.
           EXIT.
         ENDIF.

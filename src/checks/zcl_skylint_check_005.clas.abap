@@ -42,13 +42,6 @@ CLASS zcl_skylint_check_005 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    " A local DATA object named ME shadows the builtin self-reference;
-    " ME-> on such an object is not a self-reference finding.
-    IF zcl_skylint_ast_util=>is_declared_data( it_statements = is_procedure-statements
-                                               iv_name       = 'ME' ) = abap_true.
-      RETURN.
-    ENDIF.
-
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
         lv_lexeme = <ls_token>-lexeme.

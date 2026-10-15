@@ -29,5 +29,30 @@
     "quickfixes": [
       "UNYODA"
     ]
+  },
+  {
+    "method": "TEST_006",
+    "code": null
+  },
+  {
+    "method": "TEST_007",
+    "code": "YODACOND",
+    "line": 3,
+    "column": 4
+  },
+  {
+    "method": "TEST_008",
+    "code": "YODACOND",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "UNYODA"
+    ]
+  },
+  {
+    "method": "TEST_009",
+    "code": "YODACOND",
+    "line": 3,
+    "column": 4
   }
 ]

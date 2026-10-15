@@ -8,6 +8,10 @@ CLASS zcl_skylint_test_020 DEFINITION
     METHODS test_003.
     METHODS test_004.
     METHODS test_005.
+    METHODS test_006.
+    METHODS test_007.
+    METHODS test_008.
+    METHODS test_009.
 ENDCLASS.
 
 CLASS zcl_skylint_test_020 IMPLEMENTATION.
@@ -38,6 +42,29 @@ CLASS zcl_skylint_test_020 IMPLEMENTATION.
   METHOD test_005.
     DATA table TYPE i.
     IF 0 = table.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_006.
+    IF 'A' = 'B'.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_007.
+    DATA lt_tab TYPE string_table.
+    IF 0 = lines( lt_tab ).
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_008.
+    DATA lv_str TYPE string.
+    IF '-1' = lv_str.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_009.
+    DATA lv_str TYPE string.
+    IF 'foo' CS lv_str.
     ENDIF.
   ENDMETHOD.
 ENDCLASS.

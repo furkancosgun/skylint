@@ -13,6 +13,11 @@ CLASS zcl_skylint_check_059 DEFINITION
 
   PROTECTED SECTION.
     METHODS check REDEFINITION.
+
+  PRIVATE SECTION.
+    METHODS is_interface
+      IMPORTING is_procedure      TYPE if_ci_atc_source_code_provider=>ty_procedure
+      RETURNING VALUE(rv_is_intf) TYPE abap_bool.
 ENDCLASS.
 
 
@@ -28,26 +33,13 @@ CLASS zcl_skylint_check_059 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA ls_first_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lv_is_intf    TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    ls_first_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                         iv_index      = 1 ).
-    IF ls_first_stmt-keyword IS INITIAL.
-      RETURN.
-    ENDIF.
-
-    IF    is_procedure-id-main_unit-kind = if_ci_atc_source_code_provider=>compilation_unit_kinds-interface
-       OR ls_first_stmt-keyword          = 'INTERFACE'.
-      lv_is_intf = abap_true.
-    ENDIF.
-
-    IF lv_is_intf = abap_false.
+    IF is_interface( is_procedure ) = abap_false.
       RETURN.
     ENDIF.
 
@@ -56,5 +48,18 @@ CLASS zcl_skylint_check_059 IMPLEMENTATION.
       report_statement( is_statement    = <ls_statement>
                         iv_finding_code = c_finding_codes-interface_data ).
     ENDLOOP.
+  ENDMETHOD.
+
+  METHOD is_interface.
+    DATA ls_first_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+
+    IF is_procedure-id-main_unit-kind = if_ci_atc_source_code_provider=>compilation_unit_kinds-interface.
+      rv_is_intf = abap_true.
+      RETURN.
+    ENDIF.
+
+    ls_first_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+                                                         iv_index      = 1 ).
+    rv_is_intf = xsdbool( ls_first_stmt-keyword = 'INTERFACE' ).
   ENDMETHOD.
 ENDCLASS.

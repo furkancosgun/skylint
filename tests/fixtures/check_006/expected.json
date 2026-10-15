@@ -20,5 +20,17 @@
     "quickfixes": [
       "OMIT_EXP"
     ]
+  },
+  {
+    "method": "TEST_005",
+    "code": null
+  },
+  {
+    "method": "TEST_006",
+    "code": null
+  },
+  {
+    "method": "TEST_007",
+    "code": null
   }
 ]

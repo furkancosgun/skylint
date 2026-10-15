@@ -58,8 +58,9 @@ CLASS zcl_skylint_check_034 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_identical_assignment.
-    DATA lv_left  TYPE string.
-    DATA lv_right TYPE string.
+    DATA ls_tok_left  TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok_right TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_ref_write> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     rv_res = abap_false.
 
@@ -69,14 +70,31 @@ CLASS zcl_skylint_check_034 IMPLEMENTATION.
 
     IF zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
                                                iv_index     = 2
-                                               iv_expected  = '=' ) = abap_true.
-      lv_left = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                        iv_index     = 1 ).
-      lv_right = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                         iv_index     = 3 ).
-      IF lv_left = lv_right.
-        rv_res = abap_true.
-      ENDIF.
+                                               iv_expected  = '=' ) = abap_false.
+      RETURN.
     ENDIF.
+
+    ls_tok_left = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                   iv_index     = 1 ).
+    ls_tok_right = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                    iv_index     = 3 ).
+
+    IF ls_tok_left-lexeme = ls_tok_right-lexeme.
+      rv_res = abap_true.
+      RETURN.
+    ENDIF.
+
+    LOOP AT ls_tok_left-references ASSIGNING <ls_ref_write>
+         WHERE     kind       = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+               AND usage_mode = if_ci_atc_source_code_provider=>usage_modes-write.
+      IF     <ls_ref_write>-full_name IS NOT INITIAL
+         AND line_exists( ls_tok_right-references[
+                              kind       = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+                              usage_mode = if_ci_atc_source_code_provider=>usage_modes-read
+                              full_name  = <ls_ref_write>-full_name ] ).
+        rv_res = abap_true.
+        RETURN.
+      ENDIF.
+    ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

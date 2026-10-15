@@ -1,7 +1,10 @@
-import { Registry, MemoryFile, SyntaxLogic } from '@abaplint/core';
+import { Registry, MemoryFile, SyntaxLogic, Expressions, Statements } from '@abaplint/core';
 
 const HORIZONTAL_TAB = '\t';
 
+// ---------------------------------------------------------------------------
+// Lexer
+// ---------------------------------------------------------------------------
 export class Lexer {
   constructor(source) {
     this.src = source.replace(/\r\n/g, '\n');
@@ -156,6 +159,9 @@ export class Lexer {
   }
 }
 
+// ---------------------------------------------------------------------------
+// Syntax Constants & Helpers
+// ---------------------------------------------------------------------------
 export function parenDelta(lexeme) {
   if (!lexeme) return 0;
   const first = lexeme[0];
@@ -177,13 +183,6 @@ const METHOD_CALL_BLACKLIST = new Set([
 const DECL_KEYWORDS = new Set(['DATA', 'CONSTANTS', 'FIELD-SYMBOLS', 'STATICS']);
 const DB_KEYWORDS_READ = new Set(['SELECT']);
 const DB_KEYWORDS_WRITE = new Set(['UPDATE', 'MODIFY', 'INSERT', 'DELETE']);
-const DB_STOPLIST = new Set([
-  'FROM', 'INTO', 'TABLE', 'WHERE', 'SET', 'SINGLE', 'UP', 'TO', 'ROWS', 'BY',
-  'APPENDING', 'CORRESPONDING', 'FIELDS', 'ALL', 'DISTINCT', 'FOR', 'REPORT',
-  'SCREEN', 'USING', 'CLIENT', 'CONNECTION', 'AND', 'OR', 'ORDER', 'GROUP',
-  'HAVING', 'JOIN', 'INNER', 'LEFT', 'RIGHT', 'OUTER', 'ON', 'AS',
-]);
-const TYPE_FILLERS = new Set(['REF', 'TO', 'TABLE', 'OF', 'LINE']);
 
 function isCommentToken(tok) {
   const lex = tok.lexeme;
@@ -271,207 +270,9 @@ function cutAtParen(text) {
   return off < 0 ? text : text.slice(0, off);
 }
 
-function addMethodReferences(upper, refs, ctx) {
-  if (isStringToken(upper) || hasRefKind(refs, 'ME')) return;
-  if (upper.includes('=>')) {
-    const at = upper.indexOf('=>');
-    const cls = upper.slice(0, at).replace(/^@/, '');
-    if (!/^[A-Z0-9_/]+$/.test(cls)) return;
-    if (!hasRefKind(refs, 'TY')) pushRef(refs, 'TY', `\\TY:${cls}`, '1', undefined);
-    const meth = cutAtParen(upper.slice(at + 2));
-    if (meth && /^[A-Z0-9_]+$/.test(meth)) {
-      pushRef(refs, 'ME', `\\TY:${cls}\\ME:${meth}`, '1', '5');
-    }
-  } else if (upper.includes('->') && upper.includes('(')) {
-    const at = upper.indexOf('->');
-    const meth = cutAtParen(upper.slice(at + 2));
-    if (meth && /^[A-Z0-9_]+$/.test(meth)) {
-      pushRef(refs, 'ME', `\\TY:${ctx.className}\\ME:${meth}`, '1', '5');
-    }
-  }
-}
-
-function parenName(upper) {
-  const off = upper.indexOf('(');
-  if (off < 0) return '';
-  const start = off + 1;
-  const len = upper.length - start - 1;
-  return len > 0 ? upper.slice(start, start + len) : '';
-}
-
-function inlineDeclName(upper) {
-  const core = upper.startsWith('@') ? upper.slice(1) : upper;
-  if (core.startsWith('DATA(') || core.startsWith('FINAL(')) return { name: parenName(core), mode: '3' };
-  if (core.startsWith('FIELD-SYMBOL(') || core.startsWith('FIELD-SYMBOLS(')) {
-    return { name: parenName(core), mode: '4' };
-  }
-  return null;
-}
-
-function addInlineDeclarationRefs(upper, refs, ctx) {
-  const found = inlineDeclName(upper);
-  if (!found || !found.name || !/^[A-Z0-9_]+$/.test(found.name)) return;
-  const hasDef = refs.some((r) => r.kind === 'DA' && (r.usage_mode === '2' || r.usage_mode === '3' || r.usage_mode === '4'));
-  if (hasDef) return;
-  pushRef(refs, 'DA', `${dataScopePrefix(ctx)}\\DA:${found.name}`, '0', found.mode);
-}
-
-function addExplicitDeclarationRefs(stmt, ctx) {
-  if (!DECL_KEYWORDS.has(stmt.keyword)) return;
-  if (stmt.tokens.length >= 2) {
-    const tok = stmt.tokens[1];
-    if (hasRefKind(tok.references, 'DA')) return;
-    const name = tok.lexeme.toUpperCase();
-    if (name && /^[A-Z0-9_]+$/.test(name)) {
-      pushRef(tok.references, 'DA', `${dataScopePrefix(ctx)}\\DA:${name}`, '0', '2');
-    }
-  }
-}
-
-function isDbTableName(lexeme) {
-  if (!lexeme) return false;
-  const upper = lexeme.toUpperCase();
-  if ([...`'@(*0123456789`].some((c) => upper[0] === c)) return false;
-  return !DB_STOPLIST.has(upper);
-}
-
-function findDbTableIndex(stmt) {
-  const toks = stmt.tokens;
-  if (toks.length < 2) return -1;
-  let anchor = null;
-  if (['SELECT', 'DELETE', 'MODIFY'].includes(stmt.keyword)) anchor = 'FROM';
-  else if (stmt.keyword === 'INSERT') anchor = 'INTO';
-  else if (stmt.keyword === 'UPDATE') anchor = '';
-  else return -1;
-
-  if (anchor) {
-    for (let i = 0; i < toks.length; i++) {
-      if (toks[i].lexeme.toUpperCase() !== anchor) continue;
-      let idx = i + 1;
-      if (idx < toks.length && toks[idx].lexeme.toUpperCase() === 'TABLE') idx += 1;
-      if (idx < toks.length && isDbTableName(toks[idx].lexeme)) return idx;
-    }
-  }
-  if (['INSERT', 'UPDATE', 'DELETE', 'MODIFY'].includes(stmt.keyword) && isDbTableName(toks[1].lexeme)) {
-    return 1;
-  }
-  return -1;
-}
-
-function addDatabaseReferences(stmt) {
-  let mode;
-  if (DB_KEYWORDS_READ.has(stmt.keyword)) mode = 'E';
-  else if (DB_KEYWORDS_WRITE.has(stmt.keyword)) mode = 'F';
-  else return;
-  const idx = findDbTableIndex(stmt);
-  if (idx < 0) return;
-  const tok = stmt.tokens[idx];
-  if (hasRefKind(tok.references, 'DA')) return;
-  pushRef(tok.references, 'DA', `\\DB:${tok.lexeme.toUpperCase()}`, '1', mode);
-}
-
-function addSystemVarReferences(stmt) {
-  stmt.tokens.forEach((tok, i) => {
-    const up = tok.lexeme.toUpperCase();
-    if (!(up.startsWith('SY-') || up.startsWith('SYST-'))) return;
-    const covered = tok.references.some((r) => r.kind === 'DA' && String(r.full_name).toUpperCase().includes(up));
-    if (covered) return;
-    const isTgt = i === 0 && stmt.keyword === 'COMPUTE';
-    pushRef(tok.references, 'DA', `\\PR:SYST\\DA:${up}`, '1', isTgt ? '6' : '5');
-  });
-}
-
-function addTypeReferences(stmt) {
-  let expect = false;
-  for (const tok of stmt.tokens) {
-    const up = tok.lexeme.toUpperCase();
-    if (up.startsWith('CX_SY_')) {
-      if (!hasRefKind(tok.references, 'TY')) pushRef(tok.references, 'TY', `\\TY:${up}`, '1', '1');
-      expect = false;
-      continue;
-    }
-    if (up === 'TYPE' || up === 'LIKE') {
-      expect = true;
-      continue;
-    }
-    if (!expect) continue;
-    if (TYPE_FILLERS.has(up)) continue;
-    if (!hasRefKind(tok.references, 'TY')) pushRef(tok.references, 'TY', `\\TY:${up}`, '1', '1');
-    expect = false;
-  }
-}
-
-function fixStaticCallScopes(statements, className) {
-  const tyRe = /^\\TY:([^\\]+)$/;
-  for (const stmt of statements) {
-    for (const tok of stmt.tokens) {
-      if (!tok.lexeme.toUpperCase().includes('=>')) continue;
-      const tyHit = tok.references.find((r) => r.kind === 'TY' && tyRe.test(r.full_name));
-      if (!tyHit) continue;
-      const realCls = tyHit.full_name.match(tyRe)[1];
-      if (realCls === className) continue;
-      for (const ref of tok.references) {
-        if (ref.kind === 'ME' && ref.full_name.startsWith(`\\TY:${className}\\ME:`)) {
-          ref.full_name = `\\TY:${realCls}${ref.full_name.slice(className.length + 4)}`;
-        }
-      }
-    }
-  }
-}
-
-function collectDeclaredNames(statements) {
-  const names = new Set();
-  for (const stmt of statements) {
-    if (DECL_KEYWORDS.has(stmt.keyword) && stmt.tokens.length >= 2) {
-      const nm = stmt.tokens[1].lexeme.toUpperCase();
-      if (/^[A-Z0-9_]+$/.test(nm)) names.add(nm);
-    }
-    for (const tok of stmt.tokens) {
-      const found = inlineDeclName(tok.lexeme.toUpperCase());
-      if (found && found.name && /^[A-Z0-9_]+$/.test(found.name)) names.add(found.name);
-    }
-  }
-  return names;
-}
-
-function addShadowedDataReads(stmt, declared, ctx) {
-  if (declared.size === 0) return;
-  stmt.tokens.forEach((tok, i) => {
-    const up = tok.lexeme.toUpperCase();
-    if (!declared.has(up) || !/^[A-Z0-9_]+$/.test(up)) return;
-    if (isStringToken(up)) return;
-    if (hasRefKind(tok.references, 'DA') || hasRefKind(tok.references, 'TY') || hasRefKind(tok.references, 'ME')) return;
-    if (DECL_KEYWORDS.has(stmt.keyword) && i === 1) return;
-    if (i > 0) {
-      const prev = stmt.tokens[i - 1].lexeme.toUpperCase();
-      if (prev === 'TYPE' || prev === 'LIKE') return;
-    }
-    const mode = i === 0 && stmt.keyword === 'COMPUTE' ? '6' : '5';
-    pushRef(tok.references, 'DA', `${dataScopePrefix(ctx)}\\DA:${up}`, '1', mode);
-  });
-}
-
-export function fillMissingReferences(statements, className = '', methodName = '') {
-  const ctx = {
-    className: (className || '').toUpperCase() || 'ZSKYLINT_TEST',
-    methodName: (methodName || '').toUpperCase(),
-  };
-  fixStaticCallScopes(statements, ctx.className);
-  const declared = collectDeclaredNames(statements);
-  for (const stmt of statements) {
-    for (const tok of stmt.tokens) {
-      const up = tok.lexeme.toUpperCase();
-      addMethodReferences(up, tok.references, ctx);
-      addInlineDeclarationRefs(up, tok.references, ctx);
-    }
-    addExplicitDeclarationRefs(stmt, ctx);
-    addDatabaseReferences(stmt);
-    addSystemVarReferences(stmt);
-    addTypeReferences(stmt);
-    addShadowedDataReads(stmt, declared, ctx);
-  }
-}
-
+// ---------------------------------------------------------------------------
+// Statement Builder
+// ---------------------------------------------------------------------------
 function emitStatement(prefix, body, pseudo, inChain, headerKw, chainIdx, statements) {
   const all = inChain ? [...prefix, ...body] : [...body];
   if (all.length === 0) return;
@@ -553,6 +354,251 @@ export function buildStatements(tokens) {
   return statements;
 }
 
+// ---------------------------------------------------------------------------
+// Semantic Analyzers (Powered by @abaplint/core AST & SyntaxLogic)
+// ---------------------------------------------------------------------------
+
+/**
+ * Resolves database tables via abaplint Expressions.DatabaseTable
+ * Replaces manual string searching (findDbTableIndex, DB_STOPLIST).
+ */
+function resolveDatabaseTables(abapFile, statements, offset) {
+  for (const stmt of abapFile.getStatements()) {
+    const dbExpr = stmt.findFirstExpression(Expressions.DatabaseTable);
+    if (!dbExpr) continue;
+
+    const firstTok = dbExpr.getFirstToken();
+    const relLine = firstTok.getRow() - offset;
+    const dbName = dbExpr.concatTokens().toUpperCase().replace(/^@/, '');
+
+    for (const s of statements) {
+      if (s.position.line !== relLine) continue;
+      const isRead = DB_KEYWORDS_READ.has(s.keyword);
+      const isWrite = DB_KEYWORDS_WRITE.has(s.keyword);
+      if (!isRead && !isWrite) continue;
+
+      const mode = isRead ? 'E' : 'F';
+      for (const tok of s.tokens) {
+        if (tok.lexeme.toUpperCase().replace(/^@/, '') === dbName && !hasRefKind(tok.references, 'DA')) {
+          pushRef(tok.references, 'DA', `\\DB:${dbName}`, '1', mode);
+          break;
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Resolves inline data & field-symbol declarations via abaplint AST
+ */
+function resolveInlineDeclarations(abapFile, statements, offset, ctx) {
+  for (const stmt of abapFile.getStatements()) {
+    const inlineDataList = stmt.findAllExpressions(Expressions.InlineData);
+    for (const inData of inlineDataList) {
+      const tgt = inData.findFirstExpression(Expressions.TargetField) || inData;
+      const tokName = tgt.concatTokens().toUpperCase().replace(/^DATA\(/i, '').replace(/\)$/, '').trim();
+      const firstTok = inData.getFirstToken();
+      const relLine = firstTok.getRow() - offset;
+
+      for (const s of statements) {
+        if (s.position.line !== relLine) continue;
+        for (const tok of s.tokens) {
+          const up = tok.lexeme.toUpperCase().replace(/^@/, '');
+          if (up.startsWith('DATA(') && up.endsWith(')')) {
+            const inner = up.slice(5, -1);
+            if (inner === tokName && !hasRefKind(tok.references, 'DA')) {
+              pushRef(tok.references, 'DA', `${dataScopePrefix(ctx)}\\DA:${tokName}`, '0', '3');
+            }
+          }
+        }
+      }
+    }
+
+    const inlineFsList = stmt.findAllExpressions(Expressions.InlineFS);
+    for (const inFs of inlineFsList) {
+      const fsTok = inFs.findFirstExpression(Expressions.FieldSymbol) || inFs;
+      const fsName = fsTok.concatTokens().toUpperCase().replace(/^FIELD-SYMBOL\(/i, '').replace(/\)$/, '').trim();
+      const firstTok = inFs.getFirstToken();
+      const relLine = firstTok.getRow() - offset;
+
+      for (const s of statements) {
+        if (s.position.line !== relLine) continue;
+        for (const tok of s.tokens) {
+          const up = tok.lexeme.toUpperCase().replace(/^@/, '');
+          if (up.startsWith('FIELD-SYMBOL(') && up.endsWith(')')) {
+            const inner = up.slice(13, -1);
+            if (inner === fsName && !hasRefKind(tok.references, 'DA')) {
+              pushRef(tok.references, 'DA', `${dataScopePrefix(ctx)}\\DA:${fsName}`, '0', '4');
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Resolves type references (TYPE, LIKE, TYPE REF TO, CX_SY_*) via abaplint AST
+ */
+function resolveTypeReferences(abapFile, statements, offset) {
+  for (const stmt of abapFile.getStatements()) {
+    const typeNames = stmt.findAllExpressions(Expressions.TypeName);
+    for (const tn of typeNames) {
+      const name = tn.concatTokens().toUpperCase();
+      const firstTok = tn.getFirstToken();
+      const relLine = firstTok.getRow() - offset;
+
+      for (const s of statements) {
+        if (s.position.line !== relLine) continue;
+        for (const tok of s.tokens) {
+          if (tok.lexeme.toUpperCase() === name && !hasRefKind(tok.references, 'TY')) {
+            pushRef(tok.references, 'TY', `\\TY:${name}`, '1', '1');
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Resolves method calls and static class invocations via abaplint AST
+ */
+function resolveMethodCalls(abapFile, statements, offset, ctx) {
+  for (const stmt of abapFile.getStatements()) {
+    const chains = stmt.findAllExpressions(Expressions.MethodCallChain);
+    for (const chain of chains) {
+      const text = chain.concatTokens().toUpperCase();
+      const firstTok = chain.getFirstToken();
+      const relLine = firstTok.getRow() - offset;
+
+      for (const s of statements) {
+        if (s.position.line !== relLine) continue;
+        for (const tok of s.tokens) {
+          const up = tok.lexeme.toUpperCase();
+          if (isStringToken(up) || hasRefKind(tok.references, 'ME')) continue;
+
+          if (up.includes('=>')) {
+            const at = up.indexOf('=>');
+            const cls = up.slice(0, at).replace(/^@/, '');
+            if (/^[A-Z0-9_/]+$/.test(cls)) {
+              if (!hasRefKind(tok.references, 'TY')) pushRef(tok.references, 'TY', `\\TY:${cls}`, '1', undefined);
+              const meth = cutAtParen(up.slice(at + 2));
+              if (meth && /^[A-Z0-9_]+$/.test(meth)) {
+                pushRef(tok.references, 'ME', `\\TY:${cls}\\ME:${meth}`, '1', '5');
+              }
+            }
+          } else if (up.includes('->') && up.includes('(')) {
+            const at = up.indexOf('->');
+            const meth = cutAtParen(up.slice(at + 2));
+            if (meth && /^[A-Z0-9_]+$/.test(meth)) {
+              pushRef(tok.references, 'ME', `\\TY:${ctx.className}\\ME:${meth}`, '1', '5');
+            }
+        }
+      }
+    }
+  }
+}
+}
+
+/**
+ * Resolves explicit data declarations via abaplint Expressions.DefinitionName
+ */
+function resolveExplicitDeclarations(abapFile, statements, offset, ctx) {
+  for (const stmt of abapFile.getStatements()) {
+    const def = stmt.findFirstExpression(Expressions.DefinitionName);
+    if (!def) continue;
+    const name = def.concatTokens().toUpperCase();
+    const firstTok = def.getFirstToken();
+    const relLine = firstTok.getRow() - offset;
+
+    for (const s of statements) {
+      if (s.position.line !== relLine) continue;
+      for (const tok of s.tokens) {
+        if (tok.lexeme.toUpperCase() === name && !hasRefKind(tok.references, 'DA')) {
+          pushRef(tok.references, 'DA', `${dataScopePrefix(ctx)}\\DA:${name}`, '0', '2');
+          break;
+        }
+      }
+    }
+  }
+}
+
+function addExplicitDeclarationRefs(stmt, ctx) {
+  if (!DECL_KEYWORDS.has(stmt.keyword)) return;
+  if (stmt.tokens.length >= 2) {
+    let tokIdx = 1;
+    if (stmt.tokens[1].lexeme === 'BEGIN' || stmt.tokens[1].lexeme === 'END') {
+      if (stmt.tokens.length >= 4 && stmt.tokens[2].lexeme === 'OF') {
+        tokIdx = 3;
+      }
+    }
+    const tok = stmt.tokens[tokIdx];
+    if (!tok || hasRefKind(tok.references, 'DA')) return;
+    const name = tok.lexeme.toUpperCase();
+    if (name && /^[A-Z0-9_]+$/.test(name)) {
+      pushRef(tok.references, 'DA', `${dataScopePrefix(ctx)}\\DA:${name}`, '0', '2');
+    }
+  }
+}
+
+function addSystemVarReferences(stmt) {
+  stmt.tokens.forEach((tok, i) => {
+    const up = tok.lexeme.toUpperCase();
+    if (!(up.startsWith('SY-') || up.startsWith('SYST-'))) return;
+    const covered = tok.references.some((r) => r.kind === 'DA' && String(r.full_name).toUpperCase().includes(up));
+    if (covered) return;
+    const isTgt = (i === 0 && stmt.keyword === 'COMPUTE') || (stmt.keyword === 'CLEAR' && i >= 1);
+    pushRef(tok.references, 'DA', `\\PR:SYST\\DA:${up}`, '1', isTgt ? '6' : '5');
+  });
+}
+
+function addFallbackTypeReferences(stmt) {
+  for (const tok of stmt.tokens) {
+    const up = tok.lexeme.toUpperCase();
+    if (up.startsWith('CX_SY_') && !hasRefKind(tok.references, 'TY')) {
+      pushRef(tok.references, 'TY', `\\TY:${up}`, '1', '1');
+    }
+  }
+}
+
+function collectDeclaredNames(statements) {
+  const names = new Set();
+  for (const stmt of statements) {
+    if (DECL_KEYWORDS.has(stmt.keyword) && stmt.tokens.length >= 2) {
+      const nm = stmt.tokens[1].lexeme.toUpperCase();
+      if (/^[A-Z0-9_]+$/.test(nm)) names.add(nm);
+    }
+    for (const tok of stmt.tokens) {
+      const up = tok.lexeme.toUpperCase().replace(/^@/, '');
+      if (up.startsWith('DATA(') && up.endsWith(')')) {
+        const nm = up.slice(5, -1);
+        if (/^[A-Z0-9_]+$/.test(nm)) names.add(nm);
+      } else if (up.startsWith('FIELD-SYMBOL(') && up.endsWith(')')) {
+        const nm = up.slice(13, -1);
+        if (/^[A-Z0-9_]+$/.test(nm)) names.add(nm);
+      }
+    }
+  }
+  return names;
+}
+
+function addShadowedDataReads(stmt, declared, ctx) {
+  if (declared.size === 0) return;
+  stmt.tokens.forEach((tok, i) => {
+    const up = tok.lexeme.toUpperCase();
+    if (!declared.has(up) || !/^[A-Z0-9_]+$/.test(up)) return;
+    if (isStringToken(up)) return;
+    if (hasRefKind(tok.references, 'DA') || hasRefKind(tok.references, 'TY') || hasRefKind(tok.references, 'ME')) return;
+    if (DECL_KEYWORDS.has(stmt.keyword) && i === 1) return;
+    if (i > 0) {
+      const prev = stmt.tokens[i - 1].lexeme.toUpperCase();
+      if (prev === 'TYPE' || prev === 'LIKE') return;
+    }
+    const mode = i === 0 && stmt.keyword === 'COMPUTE' ? '6' : '5';
+    pushRef(tok.references, 'DA', `${dataScopePrefix(ctx)}\\DA:${up}`, '1', mode);
+  });
+}
+
 function flatString(s) {
   return (s + '').replace(/[|]/g, ' ').replace(/[\r\n]+/g, ' ');
 }
@@ -606,7 +652,16 @@ function attachRow(statements, row, rangeOnly) {
   return attached;
 }
 
-export async function enrichStatementsWithAbaplint(statements, fullSource, objectName = '', methodName = '', absOffset = 0) {
+// ---------------------------------------------------------------------------
+// Main Semantic Enrichment Pipeline
+// ---------------------------------------------------------------------------
+export async function enrichStatementsWithAbaplint(
+  statements,
+  fullSource,
+  objectName = '',
+  methodName = '',
+  absOffset = 0,
+) {
   if (statements.length === 0) return;
   if (typeof methodName !== 'string') methodName = '';
   if (/^\d+$/.test(methodName.trim())) {
@@ -619,12 +674,12 @@ export async function enrichStatementsWithAbaplint(statements, fullSource, objec
   const mePre = '\\ME:';
   const rows = [];
 
-  function stmtKeywordAt(rel) {
-    for (const stmt of statements) {
-      if (stmt.position.line === rel) return stmt.keyword;
-    }
-    return '';
-  }
+  const ctx = {
+    className: sn,
+    methodName: (methodName || '').toUpperCase(),
+  };
+
+  let abapFile = null;
 
   if (fullSource) {
     try {
@@ -632,7 +687,10 @@ export async function enrichStatementsWithAbaplint(statements, fullSource, objec
       reg.addFile(new MemoryFile(sn.toLowerCase() + '.clas.abap', fullSource));
       await reg.parseAsync();
       const obj = reg.getFirstObject();
-      if (obj) walk(new SyntaxLogic(reg, obj).run().spaghetti.getTop());
+      if (obj) {
+        abapFile = obj.getABAPFiles()[0];
+        walk(new SyntaxLogic(reg, obj).run().spaghetti.getTop());
+      }
     } catch {}
   }
 
@@ -658,6 +716,15 @@ export async function enrichStatementsWithAbaplint(statements, fullSource, objec
     } catch {
       return '';
     }
+  }
+
+  const declared = collectDeclaredNames(statements);
+
+  function stmtKeywordAt(rel) {
+    for (const stmt of statements) {
+      if (stmt.position.line === rel) return stmt.keyword;
+    }
+    return '';
   }
 
   function emitKind(r, rel) {
@@ -697,11 +764,13 @@ export async function enrichStatementsWithAbaplint(statements, fullSource, objec
       if (!nm) return;
       kind = 'DA';
       mode = '6';
-      fname = `${tyPre}\\DA:${nm}`;
+      const daPre = declared.has(nm) ? dataScopePrefix(ctx) : tyPre;
+      fname = `${daPre}\\DA:${nm}`;
     } else if (/data|variable|read/i.test(rt)) {
       if (!nm) return;
       kind = 'DA';
-      fname = `${tyPre}\\DA:${nm}`;
+      const daPre = declared.has(nm) ? dataScopePrefix(ctx) : tyPre;
+      fname = `${daPre}\\DA:${nm}`;
     } else {
       return;
     }
@@ -723,9 +792,28 @@ export async function enrichStatementsWithAbaplint(statements, fullSource, objec
   for (const row of pending) {
     attachRow(statements, row, false);
   }
-  fillMissingReferences(statements, sn, methodName);
+
+  // Abaplint AST Expression Analysis
+  if (abapFile) {
+    resolveDatabaseTables(abapFile, statements, off);
+    resolveExplicitDeclarations(abapFile, statements, off, ctx);
+    resolveInlineDeclarations(abapFile, statements, off, ctx);
+    resolveTypeReferences(abapFile, statements, off);
+    resolveMethodCalls(abapFile, statements, off, ctx);
+  }
+
+  // Explicit declarations, system variables and shadowed reads
+  for (const stmt of statements) {
+    addExplicitDeclarationRefs(stmt, ctx);
+    addSystemVarReferences(stmt);
+    addFallbackTypeReferences(stmt);
+    addShadowedDataReads(stmt, declared, ctx);
+  }
 }
 
+// ---------------------------------------------------------------------------
+// RTTI Feeder (@abaplint/transpiler)
+// ---------------------------------------------------------------------------
 const fedByHash = new Map();
 
 function hashSource(s) {
@@ -877,6 +965,9 @@ export async function feedRtti(fullSource, objectName, abap) {
   }
 }
 
+// ---------------------------------------------------------------------------
+// Procedure Extraction & Target Resolution
+// ---------------------------------------------------------------------------
 function parseClassDefName(line) {
   const m = /^\s*CLASS\s+(\S+)\s+DEFINITION\b/i.exec(line);
   return m ? m[1].replace(/\.$/, '').toUpperCase() : '';
@@ -1030,3 +1121,19 @@ export function resolveProcedureForTarget(procedures, targetMethod) {
 
   return procedures[0] || null;
 }
+
+/**
+ * Connects directly to the live SAP Compiler API endpoint to fetch native AST & references
+ */
+export async function fetchSapCompilerStatements(source, endpointUrl = 'http://localhost:8000/api?sap-client=001') {
+  const response = await fetch(endpointUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ source }),
+  });
+  if (!response.ok) {
+    throw new Error(`SAP Compiler API error: ${response.status} ${response.statusText}`);
+  }
+  return await response.json();
+}
+

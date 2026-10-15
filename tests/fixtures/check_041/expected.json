@@ -16,5 +16,20 @@
     "line": 2,
     "column": 4,
     "quickfixes": []
+  },
+  {
+    "method": "TEST_004",
+    "code": null
+  },
+  {
+    "method": "TEST_005",
+    "code": "SYS_VAR_MD",
+    "line": 2,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "method": "TEST_006",
+    "code": null
   }
 ]

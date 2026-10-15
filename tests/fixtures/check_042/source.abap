@@ -1,9 +1,13 @@
 CLASS lcl_bad DEFINITION.
   PUBLIC SECTION.
     METHODS get_val EXPORTING ev_val TYPE i.
+    METHODS calc IMPORTING iv_p TYPE i EXPORTING ev_res TYPE i RAISING cx_static_check.
 ENDCLASS.
 CLASS lcl_bad IMPLEMENTATION.
   METHOD get_val.
+    RETURN.
+  ENDMETHOD.
+  METHOD calc.
     RETURN.
   ENDMETHOD.
 ENDCLASS.

@@ -17,6 +17,21 @@ CLASS zcl_skylint_check_025 DEFINITION
 
   PROTECTED SECTION.
     METHODS check REDEFINITION.
+
+  PRIVATE SECTION.
+    METHODS has_receiving
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_has) TYPE abap_bool.
+
+    METHODS has_exceptions
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_has) TYPE abap_bool.
+
+    METHODS build_quickfix
+      IMPORTING is_statement       TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_stmt_idx        TYPE i
+      RETURNING VALUE(rs_quickfix) TYPE zcl_skylint_check_base=>ty_quickfix.
+
 ENDCLASS.
 
 
@@ -33,58 +48,77 @@ CLASS zcl_skylint_check_025 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_has_receiving  TYPE abap_bool.
-    DATA lv_has_exceptions TYPE abap_bool.
-    DATA ls_next_tok       TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_stmt_idx       TYPE i.
-    DATA lv_line           TYPE string.
-    DATA ls_quickfix       TYPE zcl_skylint_check_base=>ty_quickfix.
+    DATA lv_stmt_idx TYPE i.
+    DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_stmt_idx = sy-tabix.
-      IF    <ls_statement>-keyword = 'METHODS' OR <ls_statement>-keyword = 'CLASS-METHODS'
-         OR <ls_statement>-keyword = 'INTERFACES'.
-        CONTINUE.
-      ENDIF.
 
       IF zcl_skylint_ast_util=>statement_is_method_call( <ls_statement> ) = abap_false.
         CONTINUE.
       ENDIF.
 
-      lv_has_receiving  = abap_false.
-      lv_has_exceptions = abap_false.
-
-      IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                 iv_lexeme    = 'RECEIVING' ) = abap_true.
-        ls_next_tok = zcl_skylint_ast_util=>get_token_after( is_statement = <ls_statement>
-                                                             iv_lexeme    = 'RECEIVING' ).
-        IF ls_next_tok-lexeme IS INITIAL OR ls_next_tok-lexeme <> '='.
-          lv_has_receiving = abap_true.
-        ENDIF.
+      IF zcl_skylint_ast_util=>match_token_sequence( is_statement = <ls_statement>
+                                                     it_expected  = VALUE #( ( `CALL` ) ( `METHOD` ) ) ) = abap_true.
+        CONTINUE.
       ENDIF.
 
-      IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                 iv_lexeme    = 'EXCEPTIONS' ) = abap_true.
-        ls_next_tok = zcl_skylint_ast_util=>get_token_after( is_statement = <ls_statement>
-                                                             iv_lexeme    = 'EXCEPTIONS' ).
-        IF ls_next_tok-lexeme IS INITIAL OR ls_next_tok-lexeme <> '='.
-          lv_has_exceptions = abap_true.
-        ENDIF.
+      IF has_exceptions( <ls_statement> ) = abap_true.
+        CONTINUE.
       ENDIF.
 
-      IF lv_has_receiving = abap_true AND lv_has_exceptions = abap_false.
-        CLEAR ls_quickfix.
-        lv_line = zcl_skylint_ast_util=>build_functional_call( <ls_statement> ).
-        IF lv_line IS NOT INITIAL.
-          ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-omit_receiving
-                                          iv_statement_from = lv_stmt_idx
-                                          it_new_code       = VALUE #( ( lv_line ) ) ).
-        ENDIF.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-omit_receiving
-                          is_quickfix     = ls_quickfix ).
+      IF has_receiving( <ls_statement> ) = abap_false.
+        CONTINUE.
       ENDIF.
+
+      ls_quickfix = build_quickfix( is_statement = <ls_statement>
+                                    iv_stmt_idx  = lv_stmt_idx ).
+
+      report_statement( is_statement    = <ls_statement>
+                        iv_finding_code = c_finding_codes-omit_receiving
+                        is_quickfix     = ls_quickfix ).
     ENDLOOP.
+  ENDMETHOD.
+
+  METHOD has_receiving.
+    rv_has = zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                     iv_lexeme    = 'RECEIVING' ).
+  ENDMETHOD.
+
+  METHOD has_exceptions.
+    rv_has = zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                     iv_lexeme    = 'EXCEPTIONS' ).
+  ENDMETHOD.
+
+  METHOD build_quickfix.
+    DATA lv_recv_idx  TYPE i.
+    DATA lv_target    TYPE string.
+    DATA lv_code      TYPE string.
+    DATA lt_deletions TYPE zcl_skylint_ast_util=>ty_token_deletions.
+
+    lv_recv_idx = zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                                    iv_lexeme    = 'RECEIVING' ).
+    IF lv_recv_idx = 0 OR lv_recv_idx + 3 > lines( is_statement-tokens ).
+      RETURN.
+    ENDIF.
+
+    lv_target = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
+                                                        iv_index     = lv_recv_idx + 3 ).
+    IF lv_target IS INITIAL.
+      RETURN.
+    ENDIF.
+
+    lt_deletions = VALUE #( ( lv_recv_idx )
+                            ( lv_recv_idx + 1 )
+                            ( lv_recv_idx + 2 )
+                            ( lv_recv_idx + 3 ) ).
+
+    lv_code = zcl_skylint_ast_util=>flatten_statement( is_statement = is_statement
+                                                       it_deletions = lt_deletions ).
+
+    rs_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-omit_receiving
+                                    iv_statement_from = iv_stmt_idx
+                                    it_new_code       = VALUE #( ( |{ lv_target } = { lv_code }.| ) ) ).
   ENDMETHOD.
 ENDCLASS.

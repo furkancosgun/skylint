@@ -23,6 +23,14 @@ CLASS zcl_skylint_check_026 DEFINITION
       IMPORTING is_token        TYPE if_ci_atc_source_code_provider=>ty_token
       RETURNING VALUE(rv_class) TYPE string.
 
+    METHODS build_quickfix
+      IMPORTING is_statement       TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_stmt_idx        TYPE i
+                is_token           TYPE if_ci_atc_source_code_provider=>ty_token
+                iv_tok_idx         TYPE i
+                iv_class           TYPE string
+      RETURNING VALUE(rs_quickfix) TYPE zcl_skylint_check_base=>ty_quickfix.
+
 ENDCLASS.
 
 
@@ -39,106 +47,86 @@ CLASS zcl_skylint_check_026 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_stmt_idx  TYPE i.
-    DATA lv_tok_idx   TYPE i.
-    DATA lv_class     TYPE string.
-    DATA lv_lex       TYPE string.
-    DATA lv_arrow     TYPE i.
-    DATA lv_off       TYPE i.
-    DATA lv_meth      TYPE string.
-    DATA lv_line      TYPE string.
-    DATA ls_quickfix  TYPE zcl_skylint_check_base=>ty_quickfix.
-    DATA lt_overrides TYPE zcl_skylint_ast_util=>ty_token_overrides.
-    DATA ls_stmt      TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_tok       TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_stmt_idx TYPE i.
+    DATA lv_tok_idx  TYPE i.
+    DATA lv_class    TYPE string.
+    DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
     IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    LOOP AT is_procedure-statements INTO ls_stmt.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_stmt_idx = sy-tabix.
-      lv_tok_idx = 0.
-      LOOP AT ls_stmt-tokens INTO ls_tok.
-        lv_tok_idx += 1.
-        lv_class = class_of_static_call( ls_tok ).
-        IF lv_class IS NOT INITIAL.
-          CLEAR ls_quickfix.
-          CLEAR lt_overrides.
-          lv_lex = ls_tok-lexeme.
-          FIND FIRST OCCURRENCE OF '->' IN lv_lex MATCH OFFSET lv_arrow.
-          IF sy-subrc = 0.
-            lv_off = lv_arrow + 2.
-            lv_meth = substring( val = lv_lex
-                                 off = lv_off ).
-            IF lv_meth IS NOT INITIAL.
-              lt_overrides = VALUE #( ( index  = lv_tok_idx
-                                        lexeme = |{ lv_class }=>{ lv_meth }| ) ).
-              lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = ls_stmt
-                                                                 it_overrides = lt_overrides ).
-              ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-use_class_call
-                                              iv_statement_from = lv_stmt_idx
-                                              it_new_code       = VALUE #( ( |{ lv_line }.| ) ) ).
-            ENDIF.
-          ENDIF.
-          report_statement( is_statement    = ls_stmt
-                            iv_finding_code = c_finding_codes-static_call_via_instance
-                            is_quickfix     = ls_quickfix ).
-          EXIT.
+
+      LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
+        lv_tok_idx = sy-tabix.
+        lv_class = class_of_static_call( <ls_token> ).
+        IF lv_class IS INITIAL.
+          CONTINUE.
         ENDIF.
+
+        ls_quickfix = build_quickfix( is_statement = <ls_statement>
+                                      iv_stmt_idx  = lv_stmt_idx
+                                      is_token     = <ls_token>
+                                      iv_tok_idx   = lv_tok_idx
+                                      iv_class     = lv_class ).
+
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-static_call_via_instance
+                          is_quickfix     = ls_quickfix ).
+        EXIT.
       ENDLOOP.
     ENDLOOP.
   ENDMETHOD.
 
   METHOD class_of_static_call.
-    DATA ls_ref  TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
-    DATA lv_head TYPE string.
-    DATA lv_meth TYPE string.
-    DATA lv_off  TYPE i.
-    DATA lv_len  TYPE i.
-    DATA lv_char TYPE c LENGTH 1.
+    FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     CLEAR rv_class.
-
     IF is_token-lexeme NS '->'.
       RETURN.
     ENDIF.
 
-    LOOP AT is_token-references INTO ls_ref
+    LOOP AT is_token-references ASSIGNING <ls_ref>
          WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-method.
-      IF zcl_skylint_rtti_util=>is_static_method( ls_ref-full_name ) = abap_false.
-        CONTINUE.
-      ENDIF.
-      SPLIT ls_ref-full_name AT '\ME:' INTO lv_head lv_meth.
-      IF sy-subrc <> 0 OR lv_meth IS INITIAL.
-        CONTINUE.
-      ENDIF.
-      WHILE strlen( lv_head ) > 0 AND lv_head CP '*\'.
-        lv_len = strlen( lv_head ) - 1.
-        lv_head = lv_head(lv_len).
-      ENDWHILE.
-      IF lv_head CA '\'.
-        lv_off = strlen( lv_head ) - 1.
-        WHILE lv_off >= 0.
-          lv_char = lv_head+lv_off(1).
-          IF lv_char = '\'.
-            EXIT.
-          ENDIF.
-          lv_off -= 1.
-        ENDWHILE.
-        IF lv_off >= 0.
-          lv_off += 1.
-          lv_head = substring( val = lv_head
-                               off = lv_off ).
-        ENDIF.
-      ENDIF.
-      IF lv_head CP '*TY:*'.
-        SPLIT lv_head AT 'TY:' INTO lv_meth lv_head.
-      ENDIF.
-      IF lv_head IS NOT INITIAL AND lv_head CO 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_/'.
-        rv_class = lv_head.
+      IF zcl_skylint_rtti_util=>is_static_method( <ls_ref>-full_name ) = abap_true.
+        zcl_skylint_rtti_util=>parse_full_name( EXPORTING iv_full_name  = <ls_ref>-full_name
+                                                IMPORTING ev_class_name = rv_class ).
         RETURN.
       ENDIF.
     ENDLOOP.
+  ENDMETHOD.
+
+  METHOD build_quickfix.
+    DATA lv_lex       TYPE string.
+    DATA lv_arrow     TYPE i.
+    DATA lv_meth      TYPE string.
+    DATA lv_line      TYPE string.
+    DATA lt_overrides TYPE zcl_skylint_ast_util=>ty_token_overrides.
+
+    lv_lex = is_token-lexeme.
+    FIND FIRST OCCURRENCE OF '->' IN lv_lex MATCH OFFSET lv_arrow.
+    IF sy-subrc <> 0.
+      RETURN.
+    ENDIF.
+
+    lv_meth = substring( val = lv_lex
+                         off = lv_arrow + 2 ).
+    IF lv_meth IS INITIAL.
+      RETURN.
+    ENDIF.
+
+    lt_overrides = VALUE #( ( index  = iv_tok_idx
+                              lexeme = |{ iv_class }=>{ lv_meth }| ) ).
+
+    lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = is_statement
+                                                       it_overrides = lt_overrides ).
+
+    rs_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-use_class_call
+                                    iv_statement_from = iv_stmt_idx
+                                    it_new_code       = VALUE #( ( |{ lv_line }.| ) ) ).
   ENDMETHOD.
 ENDCLASS.

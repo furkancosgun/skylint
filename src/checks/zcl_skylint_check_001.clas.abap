@@ -17,6 +17,14 @@ CLASS zcl_skylint_check_001 DEFINITION
 
   PROTECTED SECTION.
     METHODS check REDEFINITION.
+
+  PRIVATE SECTION.
+    METHODS build_lines_quickfix
+      IMPORTING iv_stmt_idx        TYPE i
+                iv_table           TYPE string
+                iv_target          TYPE string
+      RETURNING VALUE(rs_quickfix) TYPE zcl_skylint_check_base=>ty_quickfix.
+
 ENDCLASS.
 
 
@@ -33,62 +41,58 @@ CLASS zcl_skylint_check_001 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_has_table TYPE abap_bool.
-    DATA lv_has_lines TYPE abap_bool.
-    DATA lv_has_other TYPE abap_bool.
     DATA lv_stmt_idx  TYPE i.
-    DATA lv_tok_idx   TYPE i.
     DATA lv_table_idx TYPE i.
     DATA lv_lines_idx TYPE i.
     DATA lv_table     TYPE string.
     DATA lv_target    TYPE string.
-    DATA lv_line      TYPE string.
     DATA ls_quickfix  TYPE zcl_skylint_check_base=>ty_quickfix.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'DESCRIBE'.
       lv_stmt_idx = sy-tabix.
-      lv_has_table = abap_false.
-      lv_has_lines = abap_false.
-      lv_has_other = abap_false.
-      lv_table_idx = 0.
-      lv_lines_idx = 0.
 
-      LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-        lv_tok_idx = sy-tabix.
-        IF <ls_token>-references IS NOT INITIAL.
-          CONTINUE.
-        ENDIF.
-        CASE <ls_token>-lexeme.
-          WHEN 'TABLE'.
-            lv_has_table = abap_true.
-            lv_table_idx = lv_tok_idx.
-          WHEN 'LINES'.
-            lv_has_lines = abap_true.
-            lv_lines_idx = lv_tok_idx.
-          WHEN 'KIND' OR 'OCCURS'.
-            lv_has_other = abap_true.
-        ENDCASE.
-      ENDLOOP.
-
-      IF lv_has_table = abap_true AND lv_has_lines = abap_true AND lv_has_other = abap_false.
-        CLEAR ls_quickfix.
-        lv_table = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
-                                                           iv_index     = lv_table_idx + 1 ).
-        lv_target = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
-                                                            iv_index     = lv_lines_idx + 1 ).
-        IF lv_table IS NOT INITIAL AND lv_target IS NOT INITIAL.
-          lv_line = |{ lv_target } = lines( { lv_table } ).|.
-          ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-use_lines
-                                          iv_statement_from = lv_stmt_idx
-                                          it_new_code       = VALUE #( ( lv_line ) ) ).
-        ENDIF.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-describe_lines
-                          is_quickfix     = ls_quickfix ).
+      IF    zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                    iv_lexeme    = 'KIND' )       = abap_true
+         OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                    iv_lexeme    = 'OCCURS' )     = abap_true.
+        CONTINUE.
       ENDIF.
+
+      lv_table_idx = zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
+                                                       iv_lexeme    = 'TABLE' ).
+      lv_lines_idx = zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
+                                                       iv_lexeme    = 'LINES' ).
+
+      IF lv_table_idx = 0 OR lv_lines_idx = 0.
+        CONTINUE.
+      ENDIF.
+
+      lv_table = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
+                                                         iv_index     = lv_table_idx + 1 ).
+      lv_target = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
+                                                          iv_index     = lv_lines_idx + 1 ).
+      IF lv_table IS INITIAL OR lv_target IS INITIAL.
+        CONTINUE.
+      ENDIF.
+
+      ls_quickfix = build_lines_quickfix( iv_stmt_idx = lv_stmt_idx
+                                          iv_table    = lv_table
+                                          iv_target   = lv_target ).
+
+      report_statement( is_statement    = <ls_statement>
+                        iv_finding_code = c_finding_codes-describe_lines
+                        is_quickfix     = ls_quickfix ).
     ENDLOOP.
+  ENDMETHOD.
+
+  METHOD build_lines_quickfix.
+    DATA lv_line TYPE string.
+
+    lv_line = |{ iv_target } = lines( { iv_table } ).|.
+    rs_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-use_lines
+                                    iv_statement_from = iv_stmt_idx
+                                    it_new_code       = VALUE #( ( lv_line ) ) ).
   ENDMETHOD.
 ENDCLASS.

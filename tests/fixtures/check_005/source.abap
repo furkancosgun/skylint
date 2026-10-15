@@ -35,11 +35,6 @@ CLASS zcl_skylint_test_005 IMPLEMENTATION.
     lo_runner->run( ).
   ENDMETHOD.
 
-  METHOD test_005.
-    DATA me TYPE REF TO zcl_skylint_test_005.
-    me->run( ).
-  ENDMETHOD.
-
   METHOD constructor.
     me->run( ).
   ENDMETHOD.

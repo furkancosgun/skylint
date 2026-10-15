@@ -21,6 +21,47 @@ export function flattenTokens(tokens) {
 }
 
 export function applyFix(fullLines, offset, snippetLineCount, statements, fix) {
+  if (fix?.operations && fix.operations.length > 0) {
+    const ops = [...fix.operations].map((op, idx) => {
+      const sf = Number(op.context?.statements?.from) || 0;
+      const st = Number(op.context?.statements?.to) || sf;
+      const tf = Number(op.context?.tokens?.from) || 0;
+      const tt = Number(op.context?.tokens?.to) || tf;
+      const startAbs = sf > 0 && sf <= statements.length ? offset + statements[sf - 1].position.line - 1 : -1;
+      const endAbs = st > 0 && st < statements.length ? offset + statements[st].position.line - 1 : offset + snippetLineCount;
+      return { ...op, sf, st, tf, tt, startAbs, endAbs, originalIdx: idx };
+    });
+
+    if (ops.some((o) => o.startAbs < 0)) return { skipped: true };
+
+    ops.sort((a, b) => {
+      const posA = a.op === 'insert_after' ? a.endAbs + 0.5 : a.startAbs;
+      const posB = b.op === 'insert_after' ? b.endAbs + 0.5 : b.startAbs;
+      return posB - posA;
+    });
+
+    let currentLines = [...fullLines];
+    for (const op of ops) {
+      if (op.op === 'insert_before') {
+        currentLines.splice(op.startAbs, 0, ...op.newCode);
+      } else if (op.op === 'insert_after') {
+        currentLines.splice(op.endAbs, 0, ...op.newCode);
+      } else {
+        let newLines;
+        if (op.newCode !== null && op.newCode !== undefined && !(op.tf > 0 && op.newCode.length === 0)) {
+          newLines = [...op.newCode];
+        } else if (op.tf > 0 && op.sf === op.st) {
+          const kept = statements[op.sf - 1].tokens.filter((_, i) => i + 1 < op.tf || i + 1 > op.tt);
+          newLines = [flattenTokens(kept)];
+        } else {
+          newLines = [];
+        }
+        currentLines.splice(op.startAbs, op.endAbs - op.startAbs, ...newLines);
+      }
+    }
+    return { patched: currentLines };
+  }
+
   const ctx = fix?.context;
   if (!ctx) return { skipped: true };
   let sf = Number(ctx.statements?.from) || 0;

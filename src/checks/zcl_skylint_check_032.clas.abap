@@ -63,22 +63,13 @@ CLASS zcl_skylint_check_032 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_select_star.
-    rv_res = abap_false.
+    FIELD-SYMBOLS <ls_token> LIKE LINE OF is_statement-tokens.
 
-    IF zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                                               iv_index     = 2
-                                               iv_expected  = `*` ) = abap_true.
-      rv_res = abap_true.
-      RETURN.
-    ENDIF.
-
-    IF     zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                                                   iv_index     = 2
-                                                   iv_expected  = `SINGLE` )   = abap_true
-       AND zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                                                   iv_index     = 3
-                                                   iv_expected  = `*` )        = abap_true.
-      rv_res = abap_true.
-    ENDIF.
+    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
+      IF <ls_token>-lexeme = '*' OR <ls_token>-lexeme CP '~#**'.
+        rv_res = abap_true.
+        RETURN.
+      ENDIF.
+    ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

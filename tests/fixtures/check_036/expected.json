@@ -20,5 +20,17 @@
     "quickfixes": [
       "OMITPNAME"
     ]
+  },
+  {
+    "method": "TEST_004",
+    "code": null
+  },
+  {
+    "method": "TEST_005",
+    "code": null
+  },
+  {
+    "method": "TEST_006",
+    "code": null
   }
 ]

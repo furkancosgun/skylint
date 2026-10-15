@@ -7,11 +7,26 @@ CLASS zcl_skylint_test_006 DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
+    METHODS test_007.
     METHODS run IMPORTING iv_in TYPE i OPTIONAL.
+    METHODS calc
+      IMPORTING iv_in TYPE i
+      EXPORTING ev_out TYPE i.
+    METHODS modify
+      IMPORTING iv_in TYPE i
+      CHANGING cv_val TYPE i.
 ENDCLASS.
 
 CLASS zcl_skylint_test_006 IMPLEMENTATION.
   METHOD run.
+    RETURN.
+  ENDMETHOD.
+
+  METHOD calc.
+    RETURN.
+  ENDMETHOD.
+
+  METHOD modify.
     RETURN.
   ENDMETHOD.
 
@@ -36,5 +51,23 @@ CLASS zcl_skylint_test_006 IMPLEMENTATION.
     DATA lo_obj TYPE REF TO zcl_skylint_test_006.
     DATA lv_x TYPE i.
     lo_obj->run( lv_x ).
+  ENDMETHOD.
+
+  METHOD test_005.
+    DATA lo_obj TYPE REF TO zcl_skylint_test_006.
+    DATA lv_res TYPE i.
+    lo_obj->calc( EXPORTING iv_in = 1 IMPORTING ev_out = lv_res ).
+  ENDMETHOD.
+
+  METHOD test_006.
+    DATA lo_obj TYPE REF TO zcl_skylint_test_006.
+    DATA lv_res TYPE i.
+    lo_obj->modify( EXPORTING iv_in = 1 CHANGING cv_val = lv_res ).
+  ENDMETHOD.
+
+  METHOD test_007.
+    DATA lo_obj TYPE REF TO zcl_skylint_test_006.
+    DATA lv_m TYPE string VALUE 'RUN'.
+    CALL METHOD lo_obj->(lv_m) EXPORTING iv_in = 1.
   ENDMETHOD.
 ENDCLASS.

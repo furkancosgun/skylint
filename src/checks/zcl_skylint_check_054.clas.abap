@@ -38,7 +38,7 @@ CLASS zcl_skylint_check_054 IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA lv_stmt_count TYPE i.
 
-    IF is_procedure-id-name NP '*CONSTRUCTOR*'.
+    IF is_procedure-id-name NP '*=>CONSTRUCTOR'.
       RETURN.
     ENDIF.
 

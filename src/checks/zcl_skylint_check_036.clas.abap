@@ -19,9 +19,9 @@ CLASS zcl_skylint_check_036 DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    METHODS is_exempt_statement
-      IMPORTING iv_keyword       TYPE string
-      RETURNING VALUE(rv_exempt) TYPE abap_bool.
+    METHODS has_other_sections
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_has) TYPE abap_bool.
 
     METHODS is_single_named_param_call
       IMPORTING is_statement          TYPE if_ci_atc_source_code_provider=>ty_statement
@@ -45,45 +45,55 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA ls_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_token     TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_ref       TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
-    DATA lv_tok_idx   TYPE i.
     DATA lv_stmt_idx  TYPE i.
+    DATA lv_tok_idx   TYPE i.
     DATA lv_param_idx TYPE i.
     DATA lv_line      TYPE string.
     DATA ls_quickfix  TYPE zcl_skylint_check_base=>ty_quickfix.
     DATA lt_deletions TYPE zcl_skylint_ast_util=>ty_token_deletions.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_ref>       TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    LOOP AT is_procedure-statements INTO ls_statement.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_stmt_idx = sy-tabix.
-      IF is_exempt_statement( ls_statement-keyword ) = abap_true.
+
+      IF zcl_skylint_ast_util=>statement_is_method_call( <ls_statement> ) = abap_false.
+        CONTINUE.
+      ENDIF.
+
+      IF zcl_skylint_ast_util=>match_token_sequence( is_statement = <ls_statement>
+                                                     it_expected  = VALUE #( ( `CALL` ) ( `METHOD` ) ) ) = abap_true.
+        CONTINUE.
+      ENDIF.
+
+      IF has_other_sections( <ls_statement> ) = abap_true.
         CONTINUE.
       ENDIF.
 
       lv_tok_idx = 0.
-      LOOP AT ls_statement-tokens INTO ls_token.
+      LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
         lv_tok_idx += 1.
 
-        LOOP AT ls_token-references INTO ls_ref
+        LOOP AT <ls_token>-references ASSIGNING <ls_ref>
              WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-method.
-          lv_param_idx = is_single_named_param_call( is_statement = ls_statement
+          lv_param_idx = is_single_named_param_call( is_statement = <ls_statement>
                                                      iv_tok_idx   = lv_tok_idx
-                                                     is_ref       = ls_ref ).
+                                                     is_ref       = <ls_ref> ).
           IF lv_param_idx > 0.
             CLEAR ls_quickfix.
             lt_deletions = VALUE #( ( lv_param_idx )
                                     ( lv_param_idx + 1 ) ).
-            lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = ls_statement
+            lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_statement>
                                                                it_deletions = lt_deletions ).
             ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-omit_param
                                             iv_statement_from = lv_stmt_idx
                                             it_new_code       = VALUE #( ( |{ lv_line }.| ) ) ).
-            report_statement( is_statement    = ls_statement
+            report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-omit_param
                               is_quickfix     = ls_quickfix ).
             EXIT.
@@ -93,15 +103,18 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD is_exempt_statement.
-    CASE iv_keyword.
-      WHEN 'CALL' OR 'EXPORT' OR 'METHODS' OR 'CLASS-METHODS'
-        OR 'EVENTS' OR 'CLASS-EVENTS' OR 'INTERFACES' OR 'SUBMIT'
-        OR 'FORM' OR 'FUNCTION' OR 'MODULE'.
-        rv_exempt = abap_true.
-      WHEN OTHERS.
-        rv_exempt = abap_false.
-    ENDCASE.
+  METHOD has_other_sections.
+    rv_has = xsdbool(
+         zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                 iv_lexeme    = 'EXPORTING' )  = abap_true
+      OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                 iv_lexeme    = 'IMPORTING' )  = abap_true
+      OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                 iv_lexeme    = 'CHANGING' )   = abap_true
+      OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                 iv_lexeme    = 'RECEIVING' )  = abap_true
+      OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                 iv_lexeme    = 'EXCEPTIONS' ) = abap_true ).
   ENDMETHOD.
 
   METHOD is_single_named_param_call.
@@ -140,10 +153,6 @@ CLASS zcl_skylint_check_036 IMPLEMENTATION.
 
     ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                               iv_index     = lv_param_idx ).
-    IF ls_tok-lexeme IS INITIAL.
-      RETURN.
-    ENDIF.
-
     IF ls_tok-lexeme = lv_param_name.
       ls_next_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                      iv_index     = lv_param_idx + 1 ).

@@ -34,11 +34,11 @@ const outDir = path.join(rootDir, 'output');
 const projectDir = fs.existsSync(path.join(outDir, 'project')) ? path.join(outDir, 'project') : outDir;
 
 function usage() {
-  console.log('Usage: node scripts/lint-folder.mjs <folder> [--filter <id>] [--json] [--config <file>] [--fix] [--dry-run] [-d [file]]');
+  console.log('Usage: node scripts/lint-folder.mjs <folder> [--filter <id>] [--json] [--sarif] [--config <file>] [--fix] [--dry-run] [-d [file]]');
 }
 
 function parseArgs(argv) {
-  const opts = { folder: null, filter: null, json: false, config: null, fix: false, dryRun: false, init: null };
+  const opts = { folder: null, filter: null, json: false, sarif: false, config: null, fix: false, dryRun: false, init: null };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--filter' && i + 1 < argv.length) opts.filter = argv[++i];
@@ -47,6 +47,7 @@ function parseArgs(argv) {
       if (i + 1 < argv.length && !argv[i + 1].startsWith('-')) opts.init = argv[++i];
       else opts.init = true;
     } else if (a === '--json') opts.json = true;
+    else if (a === '--sarif') opts.sarif = true;
     else if (a === '--fix') opts.fix = true;
     else if (a === '--dry-run') opts.dryRun = true;
     else if (a === '--help' || a === '-h') {
@@ -346,6 +347,83 @@ function renderFinding(f, getLines) {
   return lines.join('\n');
 }
 
+function generateSarif(all, rootFolder, metaByCheck) {
+  const rulesMap = new Map();
+  const results = [];
+
+  for (const f of all) {
+    const ruleId = `skylint_${f.check}_${f.code}`;
+    if (!rulesMap.has(ruleId)) {
+      const meta = (metaByCheck[f.check] && metaByCheck[f.check][f.code]) || {};
+      rulesMap.set(ruleId, {
+        id: ruleId,
+        name: `Check${f.check}_${f.code}`,
+        shortDescription: {
+          text: f.text || meta.text || `Check ${f.check} rule ${f.code}`,
+        },
+        defaultConfiguration: {
+          level: f.severity === 'error' ? 'error' : f.severity === 'note' ? 'note' : 'warning',
+        },
+        helpUri: 'https://github.com/furkancosgun/skylint',
+      });
+    }
+
+    const relPath = path.relative(rootFolder, f.file).split(path.sep).join('/');
+    const level = f.severity === 'error' ? 'error' : f.severity === 'note' ? 'note' : 'warning';
+    const spanLen = f.span > 0 ? f.span : 1;
+
+    const resItem = {
+      ruleId,
+      level,
+      message: {
+        text: f.text || f.code,
+      },
+      locations: [
+        {
+          physicalLocation: {
+            artifactLocation: {
+              uri: relPath,
+              uriBaseId: '%SRCROOT%',
+            },
+            region: {
+              startLine: f.line,
+              startColumn: f.column + 1,
+              endLine: f.line,
+              endColumn: f.column + 1 + spanLen,
+            },
+          },
+        },
+      ],
+    };
+
+    if (f.quickfixes && f.quickfixes.length > 0) {
+      resItem.properties = {
+        quickfixes: f.quickfixes,
+      };
+    }
+
+    results.push(resItem);
+  }
+
+  return {
+    $schema: 'https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json',
+    version: '2.1.0',
+    runs: [
+      {
+        tool: {
+          driver: {
+            name: 'Skylint',
+            version: '1.0.0',
+            informationUri: 'https://github.com/furkancosgun/skylint',
+            rules: Array.from(rulesMap.values()),
+          },
+        },
+        results,
+      },
+    ],
+  };
+}
+
 async function main() {
   const opts = parseArgs(process.argv.slice(2));
   const folder = path.resolve(opts.folder);
@@ -441,7 +519,9 @@ async function main() {
   }
   const remaining = all.filter((f) => !f.fixed);
 
-  if (opts.json) {
+  if (opts.sarif) {
+    console.log(JSON.stringify(generateSarif(all, folder, metaByCheck), null, 2));
+  } else if (opts.json) {
     console.log(JSON.stringify(all, null, 2));
   } else if (all.length === 0) {
     console.log(`OK: no issues in ${files.length} .abap file(s), ${checkIds.length} check(s).`);

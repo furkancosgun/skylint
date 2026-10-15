@@ -80,7 +80,7 @@ CLASS zcl_skylint_check_042 IMPLEMENTATION.
       ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                 iv_index     = lv_idx ).
       CASE ls_tok-lexeme.
-        WHEN 'IMPORTING' OR 'RAISING' OR 'EXCEPTIONS'.
+        WHEN 'EXCEPTIONS' OR 'RAISING'.
           IF ls_tok-references IS INITIAL.
             EXIT.
           ENDIF.
@@ -92,8 +92,6 @@ CLASS zcl_skylint_check_042 IMPLEMENTATION.
       lv_idx += 1.
     ENDWHILE.
 
-    IF lv_count = 1.
-      rv_yes = abap_true.
-    ENDIF.
+    rv_yes = xsdbool( lv_count = 1 ).
   ENDMETHOD.
 ENDCLASS.

@@ -21,9 +21,17 @@ CLASS zcl_skylint_check_064 DEFINITION
     DATA mv_check_find_search     TYPE abap_bool VALUE abap_true.
     DATA mv_check_assign          TYPE abap_bool VALUE abap_true.
 
+    METHODS statement_sets_subrc
+      IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_sets) TYPE abap_bool.
+
     METHODS checks_sy_subrc
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
+
+    METHODS is_subrc_token
+      IMPORTING is_token     TYPE if_ci_atc_source_code_provider=>ty_token
+      RETURNING VALUE(rv_is) TYPE abap_bool.
 
 ENDCLASS.
 
@@ -51,43 +59,11 @@ CLASS zcl_skylint_check_064 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_sets_subrc TYPE abap_bool.
-    DATA ls_next_stmt  TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_next_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      lv_sets_subrc = abap_false.
-
-      CASE <ls_statement>-keyword.
-        WHEN 'SELECT'.
-          IF     mv_check_select_single = abap_true
-             AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
-                                                         iv_index     = 2
-                                                         iv_expected  = `SINGLE` )     = abap_true.
-            lv_sets_subrc = abap_true.
-          ENDIF.
-        WHEN 'READ'.
-          IF     mv_check_read_table = abap_true
-             AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
-                                                         iv_index     = 2
-                                                         iv_expected  = `TABLE` )      = abap_true.
-            lv_sets_subrc = abap_true.
-          ENDIF.
-        WHEN 'AUTHORITY-CHECK'.
-          IF mv_check_authority_check = abap_true.
-            lv_sets_subrc = abap_true.
-          ENDIF.
-        WHEN 'FIND' OR 'SEARCH'.
-          IF mv_check_find_search = abap_true.
-            lv_sets_subrc = abap_true.
-          ENDIF.
-        WHEN 'ASSIGN'.
-          IF mv_check_assign = abap_true.
-            lv_sets_subrc = abap_true.
-          ENDIF.
-      ENDCASE.
-
-      IF lv_sets_subrc = abap_false.
+      IF statement_sets_subrc( <ls_statement> ) = abap_false.
         CONTINUE.
       ENDIF.
 
@@ -101,24 +77,64 @@ CLASS zcl_skylint_check_064 IMPLEMENTATION.
     ENDLOOP.
   ENDMETHOD.
 
+  METHOD statement_sets_subrc.
+    rv_sets = abap_false.
+
+    CASE is_statement-keyword.
+      WHEN 'SELECT'.
+        IF     mv_check_select_single = abap_true
+           AND zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
+                                                       iv_index     = 2
+                                                       iv_expected  = `SINGLE` )   = abap_true.
+          rv_sets = abap_true.
+        ENDIF.
+      WHEN 'READ'.
+        IF     mv_check_read_table = abap_true
+           AND zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
+                                                       iv_index     = 2
+                                                       iv_expected  = `TABLE` )    = abap_true.
+          rv_sets = abap_true.
+        ENDIF.
+      WHEN 'AUTHORITY-CHECK'.
+        rv_sets = mv_check_authority_check.
+      WHEN 'FIND' OR 'SEARCH'.
+        rv_sets = mv_check_find_search.
+      WHEN 'ASSIGN'.
+        rv_sets = mv_check_assign.
+    ENDCASE.
+  ENDMETHOD.
+
   METHOD checks_sy_subrc.
-    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_lex TYPE string.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_res = abap_false.
-    LOOP AT is_statement-tokens INTO ls_tok.
-      lv_lex = ls_tok-lexeme.
-      IF lv_lex = 'SY-SUBRC'.
+
+    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
+      IF is_subrc_token( <ls_token> ) = abap_true.
         rv_res = abap_true.
         RETURN.
       ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
 
-      LOOP AT ls_tok-references TRANSPORTING NO FIELDS
-           WHERE     full_name  CS 'SUBRC'
-                 AND usage_mode  = if_ci_atc_source_code_provider=>usage_modes-read.
-        rv_res = abap_true.
+  METHOD is_subrc_token.
+    DATA lv_lex TYPE string.
+    FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+
+    rv_is = abap_false.
+    lv_lex = to_upper( is_token-lexeme ).
+
+    IF lv_lex = 'SY-SUBRC' OR lv_lex = 'SYST-SUBRC'.
+      rv_is = abap_true.
+      RETURN.
+    ENDIF.
+
+    LOOP AT is_token-references ASSIGNING <ls_ref>
+         WHERE usage_mode = if_ci_atc_source_code_provider=>usage_modes-read.
+      IF <ls_ref>-full_name CS 'SUBRC'.
+        rv_is = abap_true.
         RETURN.
-      ENDLOOP.
+      ENDIF.
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

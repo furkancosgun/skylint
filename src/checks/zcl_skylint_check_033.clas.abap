@@ -16,11 +16,22 @@ CLASS zcl_skylint_check_033 DEFINITION
 
   PRIVATE SECTION.
     TYPES: BEGIN OF ty_scoped_var,
-             name     TYPE string,
-             block_id TYPE i,
+             full_name TYPE if_ci_atc_source_code_provider=>ty_full_name,
+             block_id  TYPE i,
            END OF ty_scoped_var,
            ty_scoped_vars TYPE STANDARD TABLE OF ty_scoped_var WITH EMPTY KEY.
     TYPES ty_block_ids TYPE STANDARD TABLE OF i WITH EMPTY KEY.
+
+    METHODS update_block_stack
+      IMPORTING is_statement     TYPE if_ci_atc_source_code_provider=>ty_statement
+      CHANGING  cv_block_counter TYPE i
+                ct_block_stack   TYPE ty_block_ids.
+
+    METHODS has_scope_leak
+      IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
+                it_scoped_vars TYPE ty_scoped_vars
+                it_block_stack TYPE ty_block_ids
+      RETURNING VALUE(rv_leak) TYPE abap_bool.
 
     METHODS extract_declared_vars
       IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
@@ -31,6 +42,14 @@ CLASS zcl_skylint_check_033 DEFINITION
       IMPORTING iv_block_id   TYPE i
                 it_stack      TYPE ty_block_ids
       RETURNING VALUE(rv_res) TYPE abap_bool.
+
+    METHODS is_data_definition
+      IMPORTING is_ref        TYPE if_ci_atc_source_code_provider=>ty_compiler_reference
+      RETURNING VALUE(rv_yes) TYPE abap_bool.
+
+    METHODS is_data_usage
+      IMPORTING is_ref        TYPE if_ci_atc_source_code_provider=>ty_compiler_reference
+      RETURNING VALUE(rv_yes) TYPE abap_bool.
 
 ENDCLASS.
 
@@ -47,127 +66,111 @@ CLASS zcl_skylint_check_033 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_block_counter    TYPE i.
-    DATA lt_block_stack      TYPE ty_block_ids.
-    DATA lt_scoped_vars      TYPE ty_scoped_vars.
-    DATA lt_new_vars         TYPE ty_scoped_vars.
-    DATA lv_current_block_id TYPE i.
-    DATA lv_reported         TYPE abap_bool.
-    DATA lv_token_str        TYPE string.
+    DATA lv_block_counter TYPE i.
+    DATA lt_block_stack   TYPE ty_block_ids.
+    DATA lt_scoped_vars   TYPE ty_scoped_vars.
+    DATA lt_new_vars      TYPE ty_scoped_vars.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_var>       TYPE ty_scoped_var.
-
-    lv_block_counter = 0.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      CASE <ls_statement>-keyword.
-        WHEN 'IF' OR 'LOOP' OR 'DO' OR 'WHILE' OR 'CASE' OR 'TRY'.
-          lv_block_counter += 1.
-          INSERT lv_block_counter INTO lt_block_stack INDEX 1.
+      update_block_stack( EXPORTING is_statement     = <ls_statement>
+                          CHANGING  cv_block_counter = lv_block_counter
+                                    ct_block_stack   = lt_block_stack ).
 
-        WHEN 'ELSE' OR 'ELSEIF' OR 'WHEN' OR 'CATCH' OR 'CLEANUP'.
-          IF lines( lt_block_stack ) > 0.
-            DELETE lt_block_stack INDEX 1.
-          ENDIF.
-          lv_block_counter += 1.
-          INSERT lv_block_counter INTO lt_block_stack INDEX 1.
+      IF has_scope_leak( is_statement   = <ls_statement>
+                         it_scoped_vars = lt_scoped_vars
+                         it_block_stack = lt_block_stack ) = abap_true.
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-scope_leak ).
+      ENDIF.
 
-        WHEN 'ENDIF' OR 'ENDLOOP' OR 'ENDDO' OR 'ENDWHILE' OR 'ENDCASE' OR 'ENDTRY'.
-          IF lines( lt_block_stack ) > 0.
-            DELETE lt_block_stack INDEX 1.
-          ENDIF.
-      ENDCASE.
+      IF lines( lt_block_stack ) > 0.
+        lt_new_vars = extract_declared_vars( is_statement = <ls_statement>
+                                             iv_block_id  = lt_block_stack[ 1 ] ).
+        APPEND LINES OF lt_new_vars TO lt_scoped_vars.
+      ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
 
-      lv_reported = abap_false.
-      LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-        lv_token_str = <ls_token>-lexeme.
-        LOOP AT lt_scoped_vars ASSIGNING <ls_var> WHERE name = lv_token_str.
-          IF is_block_active( iv_block_id = <ls_var>-block_id
-                              it_stack    = lt_block_stack ) = abap_false.
-            report_statement( is_statement    = <ls_statement>
-                              iv_finding_code = c_finding_codes-scope_leak ).
-            lv_reported = abap_true.
-            EXIT.
-          ENDIF.
-        ENDLOOP.
-        IF lv_reported = abap_true.
-          EXIT.
+  METHOD update_block_stack.
+    CASE is_statement-keyword.
+      WHEN 'IF' OR 'LOOP' OR 'DO' OR 'WHILE' OR 'CASE' OR 'TRY'.
+        cv_block_counter += 1.
+        INSERT cv_block_counter INTO ct_block_stack INDEX 1.
+
+      WHEN 'ELSE' OR 'ELSEIF' OR 'WHEN' OR 'CATCH' OR 'CLEANUP'.
+        IF lines( ct_block_stack ) > 0.
+          DELETE ct_block_stack INDEX 1.
+        ENDIF.
+        cv_block_counter += 1.
+        INSERT cv_block_counter INTO ct_block_stack INDEX 1.
+
+      WHEN 'ENDIF' OR 'ENDLOOP' OR 'ENDDO' OR 'ENDWHILE' OR 'ENDCASE' OR 'ENDTRY'.
+        IF lines( ct_block_stack ) > 0.
+          DELETE ct_block_stack INDEX 1.
+        ENDIF.
+    ENDCASE.
+  ENDMETHOD.
+
+  METHOD has_scope_leak.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_ref>   TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    FIELD-SYMBOLS <ls_var>   TYPE ty_scoped_var.
+
+    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
+      LOOP AT <ls_token>-references ASSIGNING <ls_ref>.
+        IF is_data_usage( <ls_ref> ) = abap_false.
+          CONTINUE.
+        ENDIF.
+
+        ASSIGN it_scoped_vars[ full_name = <ls_ref>-full_name ] TO <ls_var>.
+        IF     sy-subrc = 0
+           AND is_block_active( iv_block_id = <ls_var>-block_id
+                                it_stack    = it_block_stack )  = abap_false.
+          rv_leak = abap_true.
+          RETURN.
         ENDIF.
       ENDLOOP.
-
-      IF lines( lt_block_stack ) = 0.
-        CONTINUE.
-      ENDIF.
-      READ TABLE lt_block_stack INTO lv_current_block_id INDEX 1.
-      IF sy-subrc <> 0.
-        CONTINUE.
-      ENDIF.
-      lt_new_vars = extract_declared_vars( is_statement = <ls_statement>
-                                           iv_block_id  = lv_current_block_id ).
-      APPEND LINES OF lt_new_vars TO lt_scoped_vars.
     ENDLOOP.
   ENDMETHOD.
 
   METHOD extract_declared_vars.
-    DATA ls_var      TYPE ty_scoped_var.
-    DATA ls_tok2     TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_var_name TYPE string.
-    DATA lt_parts    TYPE string_table.
-    DATA lv_part     TYPE string.
-    DATA lv_lex      TYPE string.
+    DATA ls_var TYPE ty_scoped_var.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
     FIELD-SYMBOLS <ls_ref>   TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     ls_var-block_id = iv_block_id.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      LOOP AT <ls_token>-references ASSIGNING <ls_ref>
-           WHERE     kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-                 AND (    usage_grade = if_ci_atc_source_code_provider=>usage_grades-definition
-                       OR usage_mode  = if_ci_atc_source_code_provider=>usage_modes-definition_with_write ).
-        lv_var_name = ''.
-        IF <ls_ref>-full_name CS '\DA:'.
-          SPLIT <ls_ref>-full_name AT '\' INTO TABLE lt_parts.
-          LOOP AT lt_parts INTO lv_part WHERE table_line CP 'DA:*'.
-            lv_var_name = lv_part+3.
-          ENDLOOP.
+      LOOP AT <ls_token>-references ASSIGNING <ls_ref>.
+        IF is_data_definition( <ls_ref> ) = abap_false OR <ls_ref>-full_name IS INITIAL.
+          CONTINUE.
         ENDIF.
-        IF lv_var_name IS NOT INITIAL.
-          ls_var-name = lv_var_name.
-          IF NOT line_exists( rt_vars[ name = ls_var-name ] ).
-            APPEND ls_var TO rt_vars.
-          ENDIF.
+
+        IF NOT line_exists( rt_vars[ full_name = <ls_ref>-full_name ] ).
+          ls_var-full_name = <ls_ref>-full_name.
+          APPEND ls_var TO rt_vars.
         ENDIF.
       ENDLOOP.
-
-      lv_lex = <ls_token>-lexeme.
-      IF lv_lex CP 'DATA(*)' OR lv_lex CP '@DATA(*)'.
-        REPLACE FIRST OCCURRENCE OF '@DATA(' IN lv_lex WITH ''.
-        REPLACE FIRST OCCURRENCE OF 'DATA(' IN lv_lex WITH ''.
-        REPLACE FIRST OCCURRENCE OF ')' IN lv_lex WITH ''.
-        lv_lex = condense( lv_lex ).
-        IF lv_lex IS NOT INITIAL AND NOT line_exists( rt_vars[ name = lv_lex ] ).
-          ls_var-name = lv_lex.
-          APPEND ls_var TO rt_vars.
-        ENDIF.
-      ENDIF.
     ENDLOOP.
-
-    IF is_statement-keyword = 'DATA' OR is_statement-keyword = 'FIELD-SYMBOLS'.
-      ls_tok2 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                 iv_index     = 2 ).
-      IF     ls_tok2-lexeme IS NOT INITIAL AND ls_tok2-lexeme <> 'BEGIN'
-         AND ls_tok2-lexeme <> 'END'.
-        ls_var-name = ls_tok2-lexeme.
-        IF NOT line_exists( rt_vars[ name = ls_var-name ] ).
-          APPEND ls_var TO rt_vars.
-        ENDIF.
-      ENDIF.
-    ENDIF.
   ENDMETHOD.
 
   METHOD is_block_active.
     rv_res = xsdbool( line_exists( it_stack[ table_line = iv_block_id ] ) ).
+  ENDMETHOD.
+
+  METHOD is_data_definition.
+    rv_yes = xsdbool(
+          is_ref-kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+      AND (    is_ref-usage_grade = if_ci_atc_source_code_provider=>usage_grades-definition
+            OR is_ref-usage_mode  = if_ci_atc_source_code_provider=>usage_modes-definition
+            OR is_ref-usage_mode  = if_ci_atc_source_code_provider=>usage_modes-definition_with_write
+            OR is_ref-usage_mode  = if_ci_atc_source_code_provider=>usage_modes-definition_with_assign ) ).
+  ENDMETHOD.
+
+  METHOD is_data_usage.
+    rv_yes = xsdbool(
+          is_ref-kind                  = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+      AND is_data_definition( is_ref ) = abap_false ).
   ENDMETHOD.
 ENDCLASS.
