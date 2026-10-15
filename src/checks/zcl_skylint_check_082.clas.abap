@@ -116,47 +116,40 @@ CLASS zcl_skylint_check_082 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD build_length_fix.
-    DATA lv_type_pos  TYPE i.
-    DATA lv_next_idx  TYPE i.
-    DATA lv_indent    TYPE i.
-    DATA lv_idx       TYPE i.
-    DATA lv_type_kw   TYPE string.
-    DATA lv_type_name TYPE string.
-    DATA lv_line      TYPE string.
-    DATA lt_parts     TYPE STANDARD TABLE OF string WITH EMPTY KEY.
-    DATA ls_next      TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_type_pos TYPE i.
+    DATA lv_next_idx TYPE i.
+    DATA lv_indent   TYPE i.
+    DATA lv_idx      TYPE i.
+    DATA lv_line     TYPE string.
+    DATA lt_parts    TYPE STANDARD TABLE OF string WITH EMPTY KEY.
+    DATA ls_next     TYPE if_ci_atc_source_code_provider=>ty_token.
     FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     CLEAR rs_quickfix.
     LOOP AT is_statement-tokens ASSIGNING <ls_tok> WHERE references IS INITIAL.
       IF <ls_tok>-lexeme = 'TYPE' OR <ls_tok>-lexeme = 'LIKE'.
         lv_type_pos = sy-tabix.
-        lv_type_kw = <ls_tok>-lexeme.
+        lv_next_idx = lv_type_pos + 1.
         EXIT.
       ENDIF.
     ENDLOOP.
-    IF lv_type_pos > 0.
-      lv_next_idx = lv_type_pos + 1.
-      READ TABLE is_statement-tokens INTO ls_next INDEX lv_next_idx.
-      IF sy-subrc <> 0.
-        RETURN.
-      ENDIF.
-      lv_type_name = ls_next-lexeme.
-    ELSE.
-      lv_type_name = 'C'.
-      lv_type_kw = 'TYPE'.
-    ENDIF.
     LOOP AT is_statement-tokens INTO ls_next.
       lv_idx = sy-tabix.
       IF lv_idx = 2.
         APPEND iv_name TO lt_parts.
-        APPEND lv_type_kw TO lt_parts.
-        APPEND lv_type_name TO lt_parts.
-        APPEND 'LENGTH' TO lt_parts.
-        APPEND iv_inner TO lt_parts.
+        IF lv_type_pos = 0.
+          APPEND 'TYPE' TO lt_parts.
+          APPEND 'c' TO lt_parts.
+          APPEND 'LENGTH' TO lt_parts.
+          APPEND iv_inner TO lt_parts.
+        ENDIF.
         CONTINUE.
       ENDIF.
       APPEND ls_next-lexeme TO lt_parts.
+      IF lv_type_pos > 0 AND lv_idx = lv_next_idx.
+        APPEND 'LENGTH' TO lt_parts.
+        APPEND iv_inner TO lt_parts.
+      ENDIF.
     ENDLOOP.
     lv_indent = is_statement-position-column.
     lv_line = repeat( val = ` `
