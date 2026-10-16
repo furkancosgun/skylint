@@ -184,16 +184,73 @@ async function applyFileFixes(fileCtx, visible) {
   return { applied, lines, errors: [] };
 }
 
-function matchSpan(statements, line, col) {
+function matchStatementInfo(statements, snippet, line, col) {
+  let matchedStmt = null;
+  let span = 0;
+
   for (const st of statements) {
-    if (st.position.line === line && st.position.column === col) return 0;
-  }
-  for (const st of statements) {
-    for (const t of st.tokens) {
-      if (t.position.line === line && t.position.column === col) return t.lexeme.length;
+    if (st.position.line === line && st.position.column === col) {
+      matchedStmt = st;
+      span = 0;
+      break;
     }
   }
-  return 0;
+  if (!matchedStmt) {
+    for (const st of statements) {
+      for (const t of st.tokens) {
+        if (t.position.line === line && t.position.column === col) {
+          matchedStmt = st;
+          span = t.lexeme.length;
+          break;
+        }
+      }
+      if (matchedStmt) break;
+    }
+  }
+  if (!matchedStmt) {
+    for (const st of statements) {
+      if (st.tokens && st.tokens.length > 0) {
+        const firstLine = st.position.line || st.tokens[0].position.line;
+        const lastLine = st.tokens[st.tokens.length - 1].position.line;
+        if (line >= firstLine && line <= lastLine) {
+          matchedStmt = st;
+          span = 0;
+          break;
+        }
+      }
+    }
+  }
+
+  if (!matchedStmt) {
+    return { startLine: line, endLine: line, span: 0 };
+  }
+
+  const startLine = matchedStmt.position.line || (matchedStmt.tokens && matchedStmt.tokens.length > 0 ? matchedStmt.tokens[0].position.line : line);
+  let endLine = startLine;
+  if (matchedStmt.tokens && matchedStmt.tokens.length > 0) {
+    for (const t of matchedStmt.tokens) {
+      if (t.position.line > endLine) endLine = t.position.line;
+    }
+  }
+
+  if (snippet) {
+    let cur = endLine - 1;
+    const curLine = snippet[cur] || '';
+    if (!/[.,]\s*(?:".*)?$/.test(curLine.trim())) {
+      for (let next = cur + 1; next < Math.min(snippet.length, cur + 5); next++) {
+        const text = (snippet[next] || '').trim();
+        if (text.startsWith('.') || text.startsWith(',')) {
+          endLine = next + 1;
+          break;
+        }
+        if (text !== '' && !text.startsWith('"') && !text.startsWith('*')) {
+          break;
+        }
+      }
+    }
+  }
+
+  return { startLine, endLine, span };
 }
 
 function toProcedures(fullLines, fallbackName) {
@@ -265,11 +322,14 @@ async function scanFile({ abap, getCheck, checkIds, metaByCheck, cfg, file }) {
         const col = pos.column.get();
         const meta = (metaByCheck[checkId] && metaByCheck[checkId][code]) || {};
         const det = readFindingDetails(g);
+        const info = matchStatementInfo(statements, proc.snippet, relLine, col);
         const finding = {
           file,
           line: proc.offset + relLine,
+          startLine: proc.offset + info.startLine,
+          endLine: proc.offset + info.endLine,
           column: col,
-          span: matchSpan(statements, relLine, col),
+          span: info.span,
           check: checkId,
           code,
           severity: severityOverride(cfg, checkId) || meta.severity || '',
@@ -324,21 +384,57 @@ function renderFinding(f, getLines) {
   lines.push(`${paint(sevStyle, paint('bold', sev))}: ${f.text || f.code}`);
   lines.push(`${paint('blue', paint('bold', ' -->'))} ${f.file}:${f.line}:${f.column + 1}`);
   const src = getLines(f.file);
-  const raw = src && src[f.line - 1] !== undefined ? src[f.line - 1].replace(/\r$/, '') : null;
-  const w = String(f.line).length;
+  const startLine = f.startLine || f.line;
+  const endLine = f.endLine || f.line;
+  const maxLine = Math.max(f.line, endLine);
+  const w = String(maxLine).length;
   const pad = ' '.repeat(w);
-  if (raw !== null) {
-    const disp = expandTabs(raw);
-    const caret = expandTabs(raw.slice(0, Math.min(f.column, raw.length))).length;
-    let len;
-    if (f.span > 0) {
-      len = Math.max(1, expandTabs(raw.slice(f.column, f.column + f.span)).length);
-    } else {
-      len = Math.max(1, disp.replace(/\s+$/, '').length - caret);
-    }
+
+  if (src && startLine <= endLine && src[startLine - 1] !== undefined) {
     lines.push(paint('blue', `${pad} |`));
-    lines.push(`${paint('blue', `${String(f.line).padStart(w)} |`)} ${disp}`);
-    lines.push(`${paint('blue', `${pad} |`)} ${' '.repeat(caret)}${paint(sevStyle, '^'.repeat(len))}`);
+
+    if (startLine === endLine) {
+      const raw = src[f.line - 1] !== undefined ? src[f.line - 1].replace(/\r$/, '') : '';
+      const disp = expandTabs(raw);
+      const caret = expandTabs(raw.slice(0, Math.min(f.column, raw.length))).length;
+      let len;
+      if (f.span > 0) {
+        len = Math.max(1, expandTabs(raw.slice(f.column, f.column + f.span)).length);
+      } else {
+        len = Math.max(1, disp.replace(/\s+$/, '').length - caret);
+      }
+      lines.push(`${paint('blue', `${String(f.line).padStart(w)} |`)} ${disp}`);
+      lines.push(`${paint('blue', `${pad} |`)} ${' '.repeat(caret)}${paint(sevStyle, '^'.repeat(len))}`);
+    } else {
+      const MAX_LINES = 25;
+      if (endLine - startLine + 1 <= MAX_LINES) {
+        for (let ln = startLine; ln <= endLine; ln++) {
+          const raw = src[ln - 1] !== undefined ? src[ln - 1].replace(/\r$/, '') : '';
+          const disp = expandTabs(raw);
+          lines.push(`${paint('blue', `${String(ln).padStart(w)} |`)} ${disp}`);
+          if (ln === f.line) {
+            const caret = expandTabs(raw.slice(0, Math.min(f.column, raw.length))).length;
+            let len;
+            if (f.span > 0) {
+              len = Math.max(1, expandTabs(raw.slice(f.column, f.column + f.span)).length);
+            } else {
+              len = Math.max(1, disp.replace(/\s+$/, '').length - caret);
+            }
+            lines.push(`${paint('blue', `${pad} |`)} ${' '.repeat(caret)}${paint(sevStyle, '^'.repeat(len))}`);
+          }
+        }
+      } else {
+        for (let ln = startLine; ln <= startLine + 4; ln++) {
+          const raw = src[ln - 1] !== undefined ? src[ln - 1].replace(/\r$/, '') : '';
+          lines.push(`${paint('blue', `${String(ln).padStart(w)} |`)} ${expandTabs(raw)}`);
+        }
+        lines.push(paint('blue', `${pad} ...`));
+        for (let ln = endLine - 4; ln <= endLine; ln++) {
+          const raw = src[ln - 1] !== undefined ? src[ln - 1].replace(/\r$/, '') : '';
+          lines.push(`${paint('blue', `${String(ln).padStart(w)} |`)} ${expandTabs(raw)}`);
+        }
+      }
+    }
   }
   const note = `[${f.code} check_${f.check}]`
     + (f.quickfixes.length > 0 ? ` quickfix: ${f.quickfixes.join(',')}` : '');

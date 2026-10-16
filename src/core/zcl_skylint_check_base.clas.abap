@@ -288,7 +288,11 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
     CLEAR mt_reported.
     mo_code_provider = data_provider->get_code_provider( ).
     ls_comp_unit = mo_code_provider->object_to_comp_unit( object ).
-    lr_procedures = mo_code_provider->get_procedures( ls_comp_unit ).
+    TRY.
+        lr_procedures = mo_code_provider->get_procedures( ls_comp_unit ).
+      CATCH cx_ci_atc_invalid_comp_unit.
+        RETURN.
+    ENDTRY.
 
     LOOP AT lr_procedures->* ASSIGNING <ls_procedure>.
       check( <ls_procedure> ).
