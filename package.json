@@ -15,7 +15,7 @@
     "lint": "abaplint",
     "fix": "abaplint --fix",
     "clean": "node --eval \"fs.rmSync('output', { recursive: true, force: true })\"",
-    "index": "node scripts/indexer.mjs",
+    "index": "node scripts/indexer.mjs && node scripts/generate-atc.mjs",
     "scan": "node bin/skylint.mjs scan",
     "docs:dev": "vitepress dev docs",
     "docs:build": "node scripts/generate-docs.mjs && vitepress build docs",

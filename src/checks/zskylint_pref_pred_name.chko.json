@@ -1,0 +1,11 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Enforce predicate naming (IS_, HAS_, CAN_) on boolean methods",
+    "originalLanguage": "en",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "category": "ZSKYLINT",
+  "implementingClass": "ZCL_SKYLINT_PREF_PRED_NAME",
+  "checkType": "remoteEnabled"
+}

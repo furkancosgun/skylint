@@ -1,0 +1,11 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Detect empty control blocks (IF, CASE, LOOP, TRY, etc.)",
+    "originalLanguage": "en",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "category": "ZSKYLINT",
+  "implementingClass": "ZCL_SKYLINT_NO_EMPTY_BLOCK",
+  "checkType": "remoteEnabled"
+}

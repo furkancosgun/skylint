@@ -1,0 +1,11 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Select performance (Avoid SELECT * and SELECT ... ENDSELECT)",
+    "originalLanguage": "en",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "category": "ZSKYLINT",
+  "implementingClass": "ZCL_SKYLINT_NO_SELECT_STAR",
+  "checkType": "remoteEnabled"
+}

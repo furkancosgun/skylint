@@ -1,0 +1,256 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Skylint Default Variant (All Rules)",
+    "originalLanguage": "en",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "selectedChecks": [
+    {
+      "checkName": "ZSKYLINT_PREF_LINES"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_CALL_METHOD"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_DEFAULT_KEY"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_IS_NOT"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_ME_REFERENCE"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_EXPORTING"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_CHAIN_ASSIGN"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_CHAIN_DECL"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_STR_TMPL"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_BOOL_COMPARE"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_LINE_EXISTS"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_RETURN"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_CHECK_IN_LOOP"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_EMPTY_BLOCK"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_EMPTY_CATCH"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_DUP_COND"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_MERGE_IFS"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_UNREACHABLE"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_SINGLE_WHEN"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_YODA_COND"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_SYMBOL_OP"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_NEW_OP"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_RAISE_NEW"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_XSDBOOL"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_RECEIVING"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_STATIC_ARROW"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_PUBLIC_ATTR"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_OBSOLETE"
+    },
+    {
+      "checkName": "ZSKYLINT_MAX_PARAMS"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_DB_IN_LOOP"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_EMPTY_FAE"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_SELECT_STAR"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_SCOPE_LEAK"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_SELF_ASSIGN"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_FULL_TYPED"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_PARAM_NAME"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_TRY_NO_CATCH"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_CORRESP"
+    },
+    {
+      "checkName": "ZSKYLINT_MAX_METHOD_LEN"
+    },
+    {
+      "checkName": "ZSKYLINT_MAX_NESTING"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_SY_MODIFY"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_RETURNING"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_CLASS_EXC"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_DYNAMIC_STMT"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_AUTH_CHECK"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_ORDER_BY"
+    },
+    {
+      "checkName": "ZSKYLINT_MAX_CYCLO_COMP"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_FINAL_CLS"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_SHORTDUMP"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_MAGIC_NUMBERS"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_INSERT"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_OBS_LOOP_CTL"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_LIKE_OBJECTS"
+    },
+    {
+      "checkName": "ZSKYLINT_CLEAN_CTOR"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_STATIC_CLS"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_PRED_NAME"
+    },
+    {
+      "checkName": "ZSKYLINT_MAX_INHERIT"
+    },
+    {
+      "checkName": "ZSKYLINT_MAX_ATTRIBUTES"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_INTF_DATA"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_CATCH_ROOT"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_MSG_RAISING"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_NESTED_TRY"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_RAISE_CX_SY"
+    },
+    {
+      "checkName": "ZSKYLINT_CHECK_SUBRC"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_FORM"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_CLIENT_SPEC"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_COMMIT_WORK"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_TRANSPORT"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_TEST_NAME"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_RAW_DYN_SQL"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_FINAL_METH"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_STR_FUNC"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_CALC_OP"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_EARLY_CONT"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_EARLY_RET"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_PROD_ASSERT"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_UNUSED_VARS"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_DECL_ORDER"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_PARAM_ESCAPE"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_FORBIDDEN"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_CASE"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_INLINE_LEN"
+    }
+  ]
+}

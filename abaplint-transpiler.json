@@ -9,7 +9,9 @@
       "folder": "/test/stubs"
     }
   ],
-  "exclude_filter": [],
+  "exclude_filter": [
+    "\\.chk[ovc]\\.json$"
+  ],
   "write_unit_tests": true,
   "write_source_map": true,
   "options": {
