@@ -210,13 +210,13 @@ function pseudoWords(text) {
   return rest
     .replace(/,/g, ' ')
     .split(' ')
-    .map((p) => p.replace(/\s+/g, ' ').trim())
+    .map((p) => p.replace(/\s+/g, ' ').trim().toUpperCase())
     .filter((p) => p !== '');
 }
 
 function collectPseudo(token, statements, pending) {
   const words = isPragmaToken(token) && token.lexeme.length > 2
-    ? [token.lexeme.slice(2)]
+    ? [token.lexeme.slice(2).toUpperCase()]
     : pseudoWords(token.lexeme);
   if (words.length === 0) return;
   if (statements.length > 0) {

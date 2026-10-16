@@ -80,13 +80,10 @@ function collectAbapFiles(dir, root, exclude, out = []) {
   return out.sort();
 }
 
+import { RULES, resolveRule } from './rules-data.mjs';
+
 function discoverBuiltChecks() {
-  if (!fs.existsSync(projectDir)) return [];
-  return fs
-    .readdirSync(projectDir)
-    .filter((f) => /^zcl_skylint_check_\d+\.clas\.mjs$/.test(f))
-    .map((f) => f.slice('zcl_skylint_check_'.length, -'.clas.mjs'.length))
-    .sort();
+  return RULES.map((r) => r.ruleId);
 }
 
 function objectNameFromFile(file) {

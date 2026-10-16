@@ -1,0 +1,46 @@
+# `no-like-objects`
+
+> **Category:** [Anti-Patterns & Bad Practices](/rules/#anti-patterns) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `AVOID_LIKE` &nbsp;|&nbsp; **QuickFix:** No
+
+## Description
+
+Avoid LIKE referencing data objects; use explicit TYPE.
+
+## ❌ Non-Compliant Code
+
+```abap
+DATA lv_orig TYPE i.
+DATA lv_x LIKE lv_orig.
+```
+
+## ✅ Compliant Code
+
+```abap
+DATA lv_y TYPE i.
+```
+
+## 🤫 Suppression & Pseudo-Comments
+
+To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+
+```abap
+" Using pseudo-comment:
+... "#EC LIKE_OBJECTS
+
+" Using pragma:
+... ##LIKE_OBJECTS.
+```
+
+## Configuration (`skylint.yaml`)
+
+```yaml
+checks:
+  no-like-objects:
+    enabled: true
+    severity: warning
+```
+
+## ABAP Class Details
+
+* **Native ATC Class:** `ZCL_SKYLINT_NO_LIKE_OBJECTS`
+* **Implementation File:** [zcl_skylint_no_like_objects.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_like_objects.clas.abap)

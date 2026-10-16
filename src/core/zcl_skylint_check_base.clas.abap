@@ -111,6 +111,8 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD has_valid_pseudo_comment.
+    DATA lv_ci_tag    TYPE string.
+    DATA lv_plain_tag TYPE string.
     FIELD-SYMBOLS <ls_fc> TYPE if_ci_atc_check_meta_data=>ty_finding_code_info.
 
     rv_has_pseudo_comment = abap_false.
@@ -119,7 +121,16 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    IF line_exists( is_statement-pseudo_comments[ table_line = <ls_fc>-pseudo_comment ] ).
+    IF strlen( <ls_fc>-pseudo_comment ) >= 3 AND <ls_fc>-pseudo_comment(3) = 'CI_'.
+      lv_ci_tag    = <ls_fc>-pseudo_comment.
+      lv_plain_tag = <ls_fc>-pseudo_comment+3.
+    ELSE.
+      lv_ci_tag    = |CI_{ <ls_fc>-pseudo_comment }|.
+      lv_plain_tag = <ls_fc>-pseudo_comment.
+    ENDIF.
+
+    IF line_exists( is_statement-pseudo_comments[ table_line = lv_plain_tag ] )
+       OR line_exists( is_statement-pseudo_comments[ table_line = lv_ci_tag ] ).
       rv_has_pseudo_comment = abap_true.
     ENDIF.
   ENDMETHOD.

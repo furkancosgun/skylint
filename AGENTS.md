@@ -35,8 +35,8 @@ This document outlines the mandatory engineering guidelines, architectural desig
        (`string`/`integer` options map to `elementary`).
    - A `zif_skylint_types`-style common type interface **MUST NOT** be reintroduced.
 
-4. **Zero-Boilerplate Rule (`zcl_skylint_check_XXX`):**
-   - Every check rule **MUST** inherit from `zcl_skylint_check_base` in its own isolated class named `zcl_skylint_check_XXX`.
+4. **Zero-Boilerplate Rule (`zcl_skylint_XXX`):**
+   - Every check rule **MUST** inherit from `zcl_skylint_check_base` in its own isolated class named `zcl_skylint_XXX` (e.g. `zcl_skylint_pref_lines`, `zcl_skylint_no_call_method`, maximum 30 characters).
    - Subclasses only need to implement:
      - `constructor`: Metadata configuration (description, finding codes, severities, pseudo-comments, and attributes).
      - `check( is_procedure )`: Procedure inspection logic over `is_procedure-statements`.
@@ -229,18 +229,18 @@ Each check consists of 2 ABAP files + 1 fixture directory. Test sources live in 
 ```text
 src/
 ├── checks/
-│   ├── zcl_skylint_check_XXX.clas.abap         # 1. Main check implementation
-│   └── zcl_skylint_check_XXX.clas.xml          # 2. abapGit XML
+│   ├── zcl_skylint_XXX.clas.abap         # 1. Main check implementation
+│   └── zcl_skylint_XXX.clas.xml          # 2. abapGit XML
 tests/
-└── fixtures/check_XXX/
-    ├── source.abap                             # 3. Full test class source
-    └── expected.json                           # 4. Expected findings
+└── fixtures/<rule-id>/
+    ├── source.abap                       # 3. Full test class source
+    └── expected.json                     # 4. Expected findings
 ```
 
 ### 1. Main Check Implementation Pattern
 
 ```abap
-CLASS zcl_skylint_check_XXX DEFINITION
+CLASS zcl_skylint_XXX DEFINITION
   PUBLIC
   INHERITING FROM zcl_skylint_check_base
   CREATE PUBLIC.
@@ -265,7 +265,7 @@ CLASS zcl_skylint_check_XXX DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_check_XXX IMPLEMENTATION.
+CLASS zcl_skylint_XXX IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
         VALUE #( description       = 'Detailed rule description'
@@ -298,7 +298,7 @@ CLASS zcl_skylint_check_XXX IMPLEMENTATION.
 ENDCLASS.
 ```
 
-### 2. Main Check XML (`src/checks/zcl_skylint_check_XXX.clas.xml`)
+### 2. Main Check XML (`src/checks/zcl_skylint_XXX.clas.xml`)
 Plain abapGit class XML (no test include — tests live in `tests/fixtures/`, not in ABAP):
 
 ```xml
@@ -307,7 +307,7 @@ Plain abapGit class XML (no test include — tests live in `tests/fixtures/`, no
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <VSEOCLASS>
-    <CLSNAME>ZCL_SKYLINT_CHECK_XXX</CLSNAME>
+    <CLSNAME>ZCL_SKYLINT_XXX</CLSNAME>
     <LANGU>E</LANGU>
     <DESCRIPT>skylint: Rule Description (XXX)</DESCRIPT>
     <STATE>1</STATE>
@@ -320,7 +320,7 @@ Plain abapGit class XML (no test include — tests live in `tests/fixtures/`, no
 </abapGit>
 ```
 
-### 3. Test Fixture (`tests/fixtures/check_XXX/`)
+### 3. Test Fixture (`tests/fixtures/<rule-id>/`)
 Each check keeps a fixture directory as test data, executed by the ATC-native
 harness (`test/run.mjs`: fixture → `ty_procedure` → real `if_ci_atc_check~run`
 with JS test doubles for the SAP boundary).
@@ -443,22 +443,25 @@ When automated code replacement or removal is appropriate, use the QuickFix API:
 
 Follow this exact procedure when adding or modifying check rules:
 
-1. **Create the Check Class & Files:**
-   - Create `src/checks/zcl_skylint_check_XXX.clas.abap` inheriting from `zcl_skylint_check_base`.
-   - Create `src/checks/zcl_skylint_check_XXX.clas.xml` (plain abapGit class XML, no test include).
-   - Create `tests/fixtures/check_XXX/source.abap` + `expected.json` for the JS harness.
+1. **Register the Rule in Registry:**
+   - Add rule metadata to `scripts/rules-data.mjs` (ID, ruleId in kebab-case, className <= 30 chars, pseudoComment, category).
 
-2. **Implement Inspection Logic:**
+2. **Create the Check Class & Files:**
+   - Create `src/checks/zcl_skylint_XXX.clas.abap` inheriting from `zcl_skylint_check_base`.
+   - Create `src/checks/zcl_skylint_XXX.clas.xml` (plain abapGit class XML, no test include).
+   - Create `tests/fixtures/<rule-id>/source.abap` + `expected.json` for the JS harness.
+
+3. **Implement Inspection Logic:**
    - Adhere to the Zero Magic Index and Compiler References standards.
    - Iterate `is_procedure-statements`; use `sy-tabix` for the statement position (ATC statements carry no index).
    - Use `report_statement( is_statement = <ls_statement> iv_finding_code = ... is_quickfix = ls_quickfix )` or `report_token(...)`.
    - Support optional QuickFixes via `quickfix_replace(...)` when appropriate.
 
-3. **Re-index and Renumber:**
+4. **Re-index and Regenerate Catalog:**
    - Run `npm run index`
-   - The indexer automatically renumbers all checks sequentially (001, 002, ...), updates class names, fixture dirs, XML tags, and regenerates `README.md` with accurate QuickFix badges.
+   - The indexer verifies all checks and regenerates `README.md` with accurate QuickFix badges and metadata.
 
-4. **Verify Linter and Tests:**
+5. **Verify Linter and Tests:**
    - Run `npm test`
    - Ensure `npm run lint` yields `0 issue(s) found`.
    - Ensure all unit tests pass with `Exit code 0`.

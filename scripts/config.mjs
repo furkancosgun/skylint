@@ -2,6 +2,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { parse as parseYaml } from 'yaml';
 
+import { resolveRule } from './rules-data.mjs';
+
 const SEVERITIES = ['error', 'warning', 'note'];
 export const SEV_RANK = { error: 0, warning: 1, note: 2 };
 
@@ -15,10 +17,11 @@ minSeverity: warning
 # Skip files (glob patterns, relative to the scanned folder)
 exclude:
   - "**/*.testclasses.abap"
-# Per-check overrides, by zero-padded id
+# Per-check overrides by rule id
 checks:
-  # "039": { enabled: false }
-  # "005": { severity: note }
+  # prefer-lines: { enabled: false }
+  # no-empty-block: { severity: note }
+  # max-method-length: { enabled: false }
 `;
 }
 
@@ -44,8 +47,8 @@ function warn(msg) {
 }
 
 function normId(raw) {
-  const id = String(raw).padStart(3, '0');
-  return /^\d{3}$/.test(id) ? id : null;
+  const rule = resolveRule(raw);
+  return rule ? rule.ruleId : null;
 }
 
 export function loadConfig(file) {
@@ -101,13 +104,17 @@ export function loadConfig(file) {
   return cfg;
 }
 
-export function isEnabled(cfg, checkId) {
-  const conf = cfg.checks.get(checkId);
+export function isEnabled(cfg, target) {
+  const rule = resolveRule(target);
+  const key = rule ? rule.ruleId : target;
+  const conf = cfg.checks.get(key);
   return !conf || conf.enabled;
 }
 
-export function severityOverride(cfg, checkId) {
-  const conf = cfg.checks.get(checkId);
+export function severityOverride(cfg, target) {
+  const rule = resolveRule(target);
+  const key = rule ? rule.ruleId : target;
+  const conf = cfg.checks.get(key);
   return (conf && conf.severity) || null;
 }
 

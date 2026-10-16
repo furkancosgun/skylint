@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { RULES, CATEGORIES } from './rules-data.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -9,140 +10,19 @@ const checksDir = path.join(rootDir, 'src', 'checks');
 const readmePath = path.join(rootDir, 'README.md');
 
 /**
- * Discover all existing check files sorted by their numeric value
- */
-function discoverChecks() {
-  const files = fs.readdirSync(checksDir);
-  const checks = [];
-
-  for (const file of files) {
-    const match = file.match(/^zcl_skylint_check_(\d+)\.clas\.abap$/);
-    if (match) {
-      checks.push({
-        num: parseInt(match[1], 10),
-        id: match[1],
-      });
-    }
-  }
-
-  checks.sort((a, b) => a.num - b.num);
-  return checks;
-}
-
-/**
- * Renumber checks to be strictly sequential (001, 002, ...)
- */
-function renumberChecks(checks) {
-  const renames = [];
-
-  checks.forEach((item, index) => {
-    const newNum = index + 1;
-    const newId = String(newNum).padStart(3, '0');
-    if (item.id !== newId) {
-      renames.push({
-        oldId: item.id,
-        newId: newId,
-        oldNum: item.num,
-        newNum: newNum,
-      });
-    }
-  });
-
-  if (renames.length === 0) {
-    console.log('✓ All checks are already sequentially indexed.');
-    return;
-  }
-
-  console.log(`Found ${renames.length} check(s) out of order. Renumbering...`);
-
-  const tempPrefix = 'TMP_RENAME_';
-
-  // Temp names avoid overwrite collisions
-  for (const r of renames) {
-    const files = [
-      path.join(checksDir, `zcl_skylint_check_${r.oldId}.clas.abap`),
-      path.join(checksDir, `zcl_skylint_check_${r.oldId}.clas.xml`),
-    ];
-
-    for (const f of files) {
-      if (fs.existsSync(f)) {
-        const dir = path.dirname(f);
-        const base = path.basename(f);
-        fs.renameSync(f, path.join(dir, `${tempPrefix}${r.newId}_${base}`));
-      }
-    }
-
-    // Fixture dirs live outside checks/: rename the whole directory
-    const fixturesDir = path.join(rootDir, 'tests', 'fixtures');
-    const oldFixture = path.join(fixturesDir, `check_${r.oldId}`);
-    if (fs.existsSync(oldFixture)) {
-      fs.renameSync(oldFixture, path.join(fixturesDir, `${tempPrefix}${r.newId}_check_${r.oldId}`));
-    }
-  }
-
-  const fixturesDir = path.join(rootDir, 'tests', 'fixtures');
-  for (const r of renames) {
-    const mappings = [
-      {
-        temp: path.join(checksDir, `${tempPrefix}${r.newId}_zcl_skylint_check_${r.oldId}.clas.abap`),
-        dest: path.join(checksDir, `zcl_skylint_check_${r.newId}.clas.abap`),
-      },
-      {
-        temp: path.join(checksDir, `${tempPrefix}${r.newId}_zcl_skylint_check_${r.oldId}.clas.xml`),
-        dest: path.join(checksDir, `zcl_skylint_check_${r.newId}.clas.xml`),
-      },
-    ];
-
-    for (const m of mappings) {
-      if (fs.existsSync(m.temp)) {
-        let content = fs.readFileSync(m.temp, 'utf8');
-
-        content = content
-          .replace(new RegExp(`zcl_skylint_check_${r.oldId}`, 'g'), `zcl_skylint_check_${r.newId}`)
-          .replace(new RegExp(`ZCL_SKYLINT_CHECK_${r.oldId}`, 'g'), `ZCL_SKYLINT_CHECK_${r.newId}`)
-          .replace(new RegExp(`zcl_skylint_test_${r.oldId}`, 'g'), `zcl_skylint_test_${r.newId}`)
-          .replace(new RegExp(`ZCL_SKYLINT_TEST_${r.oldId}`, 'g'), `ZCL_SKYLINT_TEST_${r.newId}`)
-          .replace(new RegExp(`\\(${r.oldId}\\)`, 'g'), `(${r.newId})`);
-
-        fs.writeFileSync(m.dest, content, 'utf8');
-        fs.unlinkSync(m.temp);
-      }
-    }
-
-    // Fixture dir: rename + rewrite test-class references inside source.abap
-    const tempFixture = path.join(fixturesDir, `${tempPrefix}${r.newId}_check_${r.oldId}`);
-    if (fs.existsSync(tempFixture)) {
-      const destFixture = path.join(fixturesDir, `check_${r.newId}`);
-      for (const f of fs.readdirSync(tempFixture)) {
-        const p = path.join(tempFixture, f);
-        let content = fs.readFileSync(p, 'utf8');
-        content = content
-          .replace(new RegExp(`zcl_skylint_test_${r.oldId}`, 'g'), `zcl_skylint_test_${r.newId}`)
-          .replace(new RegExp(`ZCL_SKYLINT_TEST_${r.oldId}`, 'g'), `ZCL_SKYLINT_TEST_${r.newId}`);
-        fs.writeFileSync(p, content, 'utf8');
-      }
-      fs.renameSync(tempFixture, destFixture);
-    }
-    console.log(`Renumbered: ${r.oldId} -> ${r.newId}`);
-  }
-}
-
-/**
  * Detect QuickFix support purely by inspecting check source code
  */
 function detectQuickFixStatus(checkContent) {
   const hasQuickFixCall = /quickfix_codes|quickfix_replace|quickfix_insert_before|quickfix_insert_after|quickfix_delete|c_quickfix_codes|io_details/i.test(checkContent);
-
   const hasQuickFixComment = /quickfix\s*:\s*(ready|true|enabled|yes)/i.test(checkContent);
-
   return (hasQuickFixCall || hasQuickFixComment) ? '⚡ Ready' : '—';
 }
 
 /**
- * Extract metadata directly from the ABAP check class and test class
+ * Extract metadata directly from the ABAP check class
  */
-function extractCheckMetadata(id) {
-  const checkFilePath = path.join(checksDir, `zcl_skylint_check_${id}.clas.abap`);
+function extractCheckMetadata(rule) {
+  const checkFilePath = path.join(checksDir, `${rule.className.toLowerCase()}.clas.abap`);
 
   if (!fs.existsSync(checkFilePath)) {
     return null;
@@ -151,7 +31,7 @@ function extractCheckMetadata(id) {
   const checkContent = fs.readFileSync(checkFilePath, 'utf8');
 
   const descMatch = checkContent.match(/description\s*=\s*'([^']+)'/);
-  let description = descMatch ? descMatch[1].trim() : `Check rule ${id}`;
+  let description = descMatch ? descMatch[1].trim() : `Check rule ${rule.ruleId}`;
   description = description.replace(/^skylint:\s*/i, '');
 
   const codeValMatch = checkContent.match(/c_finding_codes[\s\S]*?VALUE\s*'([A-Za-z0-9_]+)'/);
@@ -162,17 +42,18 @@ function extractCheckMetadata(id) {
   }
 
   const pcomMatch = checkContent.match(/c_pseudo_comment\s+TYPE\s+string\s+VALUE\s+'([^']+)'/);
-  const pseudoComment = pcomMatch ? `"#EC ${pcomMatch[1].trim()}"` : '—';
+  const pseudoComment = pcomMatch ? `"#EC ${pcomMatch[1].trim()}"` : `"#EC ${rule.pseudoComment}"`;
 
   const quickfix = detectQuickFixStatus(checkContent);
 
   return {
-    id,
-    name: `zcl_skylint_check_${id}`,
-    path: `src/checks/zcl_skylint_check_${id}.clas.abap`,
+    ruleId: rule.ruleId,
+    className: rule.className,
+    path: `src/checks/${rule.className.toLowerCase()}.clas.abap`,
     description,
     findingCode,
     pseudoComment,
+    category: rule.category,
     status: '✅ Done',
     quickfix,
   };
@@ -181,19 +62,15 @@ function extractCheckMetadata(id) {
 /**
  * Update global rule counts and statistics across README.md
  */
-function updateReadmeStats(readme, checks) {
-  const total = checks.length;
-  const firstId = checks.length > 0 ? checks[0].id : '001';
-  const lastId = checks.length > 0 ? checks[checks.length - 1].id : '001';
-
+function updateReadmeStats(readme, count) {
   // 1. Directory tree comment
   readme = readme.replace(
-    /(├── checks\/\s+#\s*)\d+(\s+Modular Check Implementations\s*\()[^)]*(\))/,
-    `$1${total}$2${firstId} - ${lastId}$3`
+    /(├── checks\/\s+#\s*)\d+(\s+Modular Check Implementations)(?:[^\n]*)/,
+    `$1${count}$2`
   );
 
-  // 2. Architecture ASCII box diagram: inner width with bullet char is 45 chars
-  const boxText = `  • ${total} Rules (if_ci_atc_check)`.padEnd(45, ' ');
+  // 2. Architecture ASCII box diagram
+  const boxText = `  • ${count} Rules (if_ci_atc_check)`.padEnd(45, ' ');
   readme = readme.replace(
     /│\s*•\s*\d+\s*Rules\s*\(if_ci_atc_check\)\s*│/,
     `│${boxText}│`
@@ -202,36 +79,36 @@ function updateReadmeStats(readme, checks) {
   // 3. Architecture section description
   readme = readme.replace(
     /(\*\*`src\/checks\/`\*\*:\s*)\d+(\s+rule classes)/,
-    `$1${total}$2`
+    `$1${count}$2`
   );
 
   return readme;
 }
 
 /**
- * Generate README.md check catalog purely from source code without levels
+ * Generate README.md check catalog
  */
-function generateReadmeCatalog(checks) {
+function generateReadmeCatalog() {
   if (!fs.existsSync(readmePath)) {
     console.error('README.md not found!');
     return;
   }
 
   let readme = fs.readFileSync(readmePath, 'utf8');
-  const total = checks.length;
+  const total = RULES.length;
 
   console.log(`Generating README catalog for ${total} rules...`);
 
   let catalogMd = `## 📋 Clean ABAP & Cloud Rule Catalog (${total} Rules)\n\n`;
   catalogMd += `All Clean ABAP, security, and cloud-native rules implemented in Skylint:\n\n`;
-  catalogMd += `| ID | Rule Name & Class | Description | Finding Code | Pseudo-Comment | Status | QuickFix |\n`;
-  catalogMd += `|:---:|---|---|:---:|:---:|:---:|:---:|\n`;
+  catalogMd += `| Rule ID | ABAP Class | Description | Finding Code | Pseudo-Comment | QuickFix |\n`;
+  catalogMd += `|---|---|---|:---:|:---:|:---:|\n`;
 
-  for (const c of checks) {
-    const meta = extractCheckMetadata(c.id);
+  for (const rule of RULES) {
+    const meta = extractCheckMetadata(rule);
     if (!meta) continue;
 
-    catalogMd += `| **${meta.id}** | [${meta.name}](${meta.path}) | ${meta.description} | \`${meta.findingCode}\` | \`${meta.pseudoComment}\` | ${meta.status} | ${meta.quickfix} |\n`;
+    catalogMd += `| \`${meta.ruleId}\` | [${meta.className}](${meta.path}) | ${meta.description} | \`${meta.findingCode}\` | \`${meta.pseudoComment}\` | ${meta.quickfix} |\n`;
   }
   catalogMd += `\n---\n\n`;
 
@@ -242,26 +119,29 @@ function generateReadmeCatalog(checks) {
   }
 
   readme = readme.replace(markerRegex, catalogMd);
-  readme = updateReadmeStats(readme, checks);
+  readme = updateReadmeStats(readme, total);
 
   fs.writeFileSync(readmePath, readme, 'utf8');
-  console.log('✓ README.md catalog and architecture statistics generated successfully.');
+  console.log('✓ README.md catalog generated successfully.');
 }
 
 function main() {
-  console.log('🔍 Checking rules indexing...');
+  let missing = 0;
+  for (const rule of RULES) {
+    const abapFile = path.join(checksDir, `${rule.className.toLowerCase()}.clas.abap`);
+    if (!fs.existsSync(abapFile)) {
+      console.error(`Missing ABAP class: ${abapFile}`);
+      missing++;
+    }
+  }
 
-  let checks = discoverChecks();
+  if (missing > 0) {
+    console.error(`Found ${missing} missing checks!`);
+    process.exit(1);
+  }
 
-  renumberChecks(checks);
-
-  // Re-read after renumbering (ids may have changed)
-  checks = discoverChecks();
-
-  generateReadmeCatalog(checks);
-
-  console.log(`\n🎉 Indexer complete! Active checks: ${checks.length}`);
+  console.log(`✓ All ${RULES.length} check classes verified.`);
+  generateReadmeCatalog();
 }
 
 main();
-

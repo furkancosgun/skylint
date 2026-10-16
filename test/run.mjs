@@ -17,6 +17,7 @@ import {
   createFakes,
 } from './harness.mjs';
 import { validateFix } from './roundtrip.mjs';
+import { RULES, resolveRule } from '../scripts/rules-data.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,8 +27,17 @@ const projectDir = fs.existsSync(path.join(outDir, 'project')) ? path.join(outDi
 const fixturesDir = path.join(rootDir, 'tests', 'fixtures');
 const toFileUrl = (p) => pathToFileURL(p).href;
 
-export function loadFixture(id) {
-  const dir = path.join(fixturesDir, `check_${id}`);
+export function loadFixture(key) {
+  const rule = typeof key === 'object' && key !== null ? key : resolveRule(key);
+  if (!rule) {
+    throw new Error(`Rule not found for key: ${JSON.stringify(key)}`);
+  }
+
+  const dir = path.join(fixturesDir, rule.ruleId);
+  if (!fs.existsSync(dir)) {
+    throw new Error(`Fixture not found for rule: ${rule.ruleId} at ${dir}`);
+  }
+
   const text = fs.readFileSync(path.join(dir, 'source.abap'), 'utf8');
   const lines = text.split('\n');
   if (lines.length > 0 && lines[lines.length - 1] === '') lines.pop();
@@ -36,11 +46,7 @@ export function loadFixture(id) {
 }
 
 export function discoverChecks() {
-  return fs
-    .readdirSync(fixturesDir)
-    .filter((f) => f.startsWith('check_'))
-    .map((f) => f.slice('check_'.length))
-    .sort();
+  return RULES.map((r) => r.ruleId);
 }
 
 export async function initRuntime() {
@@ -50,15 +56,29 @@ export async function initRuntime() {
 
 export function createLoader(abap) {
   const cache = new Map();
-  return async function getCheck(checkId) {
-    if (!cache.has(checkId)) {
-      const checkPath = path.join(projectDir, `zcl_skylint_check_${checkId}.clas.mjs`);
-      const mod = await import(toFileUrl(checkPath));
-      const inst = new mod[`zcl_skylint_check_${checkId}`]();
-      await inst.constructor_();
-      cache.set(checkId, { inst });
+  return async function getCheck(target) {
+    const rule = typeof target === 'object' && target !== null ? target : resolveRule(target);
+    if (!rule) {
+      throw new Error(`Rule not found for: ${JSON.stringify(target)}`);
     }
-    return cache.get(checkId);
+    const key = rule.ruleId;
+
+    if (!cache.has(key)) {
+      const clsName = rule.className.toLowerCase();
+      const checkPath = path.join(projectDir, `${clsName}.clas.mjs`);
+      if (!fs.existsSync(checkPath)) {
+        throw new Error(`Compiled check not found: ${checkPath}`);
+      }
+      const mod = await import(toFileUrl(checkPath));
+      const CheckClass = mod[clsName];
+      if (!CheckClass) {
+        throw new Error(`Class ${clsName} not exported from ${checkPath}`);
+      }
+      const inst = new CheckClass();
+      await inst.constructor_();
+      cache.set(key, { inst, rule });
+    }
+    return cache.get(key);
   };
 }
 
@@ -84,9 +104,10 @@ function readFindingDetails(g) {
   return { codes: [], fixes: [] };
 }
 
-async function runRow({ abap, getCheck, checkId, fullLines, row }) {
+async function runRow({ abap, getCheck, rule, fullLines, row }) {
   const procedures = extractAllProcedures(fullLines);
   const targetProc = resolveProcedureForTarget(procedures, row.method);
+  const checkId = rule.ruleId;
 
   if (!targetProc || targetProc.snippet.length === 0) {
     return {
@@ -116,7 +137,7 @@ async function runRow({ abap, getCheck, checkId, fullLines, row }) {
   const proceduresTable = buildProceduresTable(abap, [procValue]);
   const fakes = createFakes(abap, proceduresTable, objectName);
 
-  const { inst } = await getCheck(checkId);
+  const { inst } = await getCheck(rule);
   await inst['if_ci_atc_check$set_assistant_factory']({ factory: fakes.factory });
   const res = await inst['if_ci_atc_check$run']({
     object: buildObjectValue(abap, objectName),
@@ -186,17 +207,17 @@ async function runRow({ abap, getCheck, checkId, fullLines, row }) {
   return { pass: true, findings };
 }
 
-async function runCheck({ abap, getCheck, checkId, verbose = false }) {
-  const { lines, expected } = loadFixture(checkId);
+async function runCheck({ abap, getCheck, rule, verbose = false }) {
+  const { lines, expected } = loadFixture(rule);
   const failures = [];
   let passed = 0;
 
   for (const row of expected) {
-    const res = await runRow({ abap, getCheck, checkId, fullLines: lines, row });
+    const res = await runRow({ abap, getCheck, rule, fullLines: lines, row });
     if (res.pass) {
       passed += 1;
       if (verbose) {
-        console.log(`  PASS ${checkId}/${row.method}`);
+        console.log(`  PASS ${rule.ruleId}/${row.method}`);
       }
     } else {
       failures.push(res.message);
@@ -216,11 +237,23 @@ async function main() {
   const filterArgIdx = args.findIndex((a) => a === '--filter');
   const filter = filterArgIdx >= 0 ? args[filterArgIdx + 1] : null;
 
-  const explicitIds = args.filter((a) => !a.startsWith('-') && a !== filter);
+  const explicitKeys = args.filter((a) => !a.startsWith('-') && a !== filter);
 
-  let targetIds = explicitIds.length > 0 ? explicitIds : discoverChecks();
+  let targetRules = [];
+  if (explicitKeys.length > 0) {
+    for (const k of explicitKeys) {
+      const r = resolveRule(k);
+      if (r) targetRules.push(r);
+      else console.warn(`Warning: Rule not recognized: ${k}`);
+    }
+  } else {
+    targetRules = [...RULES];
+  }
+
   if (filter) {
-    targetIds = targetIds.filter((id) => id.includes(filter));
+    targetRules = targetRules.filter(
+      (r) => r.ruleId.includes(filter) || r.className.toLowerCase().includes(filter.toLowerCase())
+    );
   }
 
   const abap = await initRuntime();
@@ -230,10 +263,9 @@ async function main() {
   let totalFailed = 0;
   const allFailures = [];
 
-  for (const id of targetIds) {
-    const padId = id.padStart(3, '0');
+  for (const rule of targetRules) {
     try {
-      const result = await runCheck({ abap, getCheck, checkId: padId, verbose });
+      const result = await runCheck({ abap, getCheck, rule, verbose });
       totalPassed += result.passed;
       totalFailed += result.failed;
       allFailures.push(...result.failures);
@@ -243,7 +275,7 @@ async function main() {
       }
     } catch (err) {
       totalFailed += 1;
-      allFailures.push(`${padId}: crash - ${err.message}`);
+      allFailures.push(`${rule.ruleId}: crash - ${err.message}`);
       if (bail) break;
     }
   }
@@ -253,11 +285,11 @@ async function main() {
     for (const f of allFailures) {
       console.error(`  - ${f}`);
     }
-    console.error(`\n${totalPassed} passed, ${totalFailed} failed (${targetIds.length} checks)`);
+    console.error(`\n${totalPassed} passed, ${totalFailed} failed (${targetRules.length} checks)`);
     process.exit(1);
   }
 
-  console.log(`\n${totalPassed} passed, 0 failed (${targetIds.length} checks)`);
+  console.log(`\n${totalPassed} passed, 0 failed (${targetRules.length} checks)`);
   process.exit(0);
 }
 
