@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_050 DEFINITION
+CLASS zcl_test_no_magic_numbers DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -11,7 +11,7 @@ CLASS zcl_skylint_test_050 DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_test_050 IMPLEMENTATION.
+CLASS zcl_test_no_magic_numbers IMPLEMENTATION.
   METHOD test_001.
     DATA lv_val TYPE i.
     lv_val = 42.

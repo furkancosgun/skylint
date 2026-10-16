@@ -9,13 +9,13 @@ Enforce predicate naming (IS_, HAS_, CAN_) on boolean methods.
 ## ❌ Non-Compliant Code
 
 ```abap
-METHODS validate_customer RETURNING VALUE(rv_valid) TYPE abap_bool.
+METHODS check_active RETURNING VALUE(rv_active) TYPE abap_bool.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-METHODS is_customer_valid RETURNING VALUE(rv_valid) TYPE abap_bool.
+METHODS is_active RETURNING VALUE(rv_active) TYPE abap_bool.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments

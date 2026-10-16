@@ -1098,7 +1098,7 @@ export function resolveProcedureForTarget(procedures, targetMethod) {
   if (directMethod) {
     const innerStatements = directMethod.snippet.slice(1, -1).join(' ').trim().toUpperCase();
     if (innerStatements === '' || innerStatements === 'RETURN.') {
-      const userDefs = procedures.filter((p) => p.kind === 'DECL' && !p.name.startsWith('ZCL_SKYLINT_TEST_') && !p.name.startsWith('LTCL_'));
+      const userDefs = procedures.filter((p) => p.kind === 'DECL' && !p.name.startsWith('ZCL_SKYLINT_TEST_') && !p.name.startsWith('ZCL_TEST_') && !p.name.startsWith('LTCL_'));
       const candidates = userDefs.length >= 2 ? userDefs : procedures.filter((p) => p.kind === 'DECL');
       const numMatch = want.match(/(\d+)$/);
       if (numMatch && candidates.length > 0) {
@@ -1110,7 +1110,7 @@ export function resolveProcedureForTarget(procedures, targetMethod) {
     return directMethod;
   }
 
-  const userDefs = procedures.filter((p) => p.kind === 'DECL' && !p.name.startsWith('ZCL_SKYLINT_TEST_') && !p.name.startsWith('LTCL_'));
+  const userDefs = procedures.filter((p) => p.kind === 'DECL' && !p.name.startsWith('ZCL_SKYLINT_TEST_') && !p.name.startsWith('ZCL_TEST_') && !p.name.startsWith('LTCL_'));
   const candidates = userDefs.length >= 2 ? userDefs : procedures.filter((p) => p.kind === 'DECL');
   const numMatch = want.match(/(\d+)$/);
   if (numMatch && candidates.length > 0) {

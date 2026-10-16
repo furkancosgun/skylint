@@ -9,13 +9,19 @@ Avoid full-line MODIFY itab inside LOOP without TRANSPORTING clause.
 ## ❌ Non-Compliant Code
 
 ```abap
-READ TABLE lt_items WITH KEY id = lv_id TRANSPORTING ALL FIELDS INTO ls_item.
+LOOP AT lt_items INTO ls_item.
+  ls_item-status = 'DONE'.
+  MODIFY lt_items FROM ls_item. " Full line copy without specifying TRANSPORTING
+ENDLOOP.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-READ TABLE lt_items WITH KEY id = lv_id TRANSPORTING NO FIELDS.
+LOOP AT lt_items INTO ls_item.
+  ls_item-status = 'DONE'.
+  MODIFY lt_items FROM ls_item TRANSPORTING status.
+ENDLOOP.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments

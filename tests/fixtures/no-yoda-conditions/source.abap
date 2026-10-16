@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_020 DEFINITION
+CLASS zcl_test_no_yoda_conditions DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -14,7 +14,7 @@ CLASS zcl_skylint_test_020 DEFINITION
     METHODS test_009.
 ENDCLASS.
 
-CLASS zcl_skylint_test_020 IMPLEMENTATION.
+CLASS zcl_test_no_yoda_conditions IMPLEMENTATION.
   METHOD test_001.
     DATA lv_code TYPE c LENGTH 1.
     IF 'X' = lv_code.

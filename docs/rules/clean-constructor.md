@@ -11,7 +11,7 @@ Keep constructors clean; avoid heavy business logic/loops/DB access.
 ```abap
 METHOD constructor.
   super->constructor( ).
-  SELECT * FROM /dmo/customer INTO TABLE @mt_customers. " Heavy I/O in constructor
+  " 15+ statements initializing complex states and reading DB...
 ENDMETHOD.
 ```
 
@@ -20,7 +20,7 @@ ENDMETHOD.
 ```abap
 METHOD constructor.
   super->constructor( ).
-  " Keep constructor lightweight; defer heavy database reads to an explicit load() method
+  mo_gateway = io_gateway. " Simple dependency assignment only
 ENDMETHOD.
 ```
 

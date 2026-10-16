@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_044 DEFINITION
+CLASS zcl_test_no_dangerous_dynamic DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -10,7 +10,7 @@ CLASS zcl_skylint_test_044 DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_test_044 IMPLEMENTATION.
+CLASS zcl_test_no_dangerous_dynamic IMPLEMENTATION.
   METHOD test_001.
     DATA lv_msg TYPE string.
     DATA lv_lin TYPE i.

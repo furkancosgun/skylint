@@ -9,13 +9,13 @@ SELECT UP TO 1 ROWS requires ORDER BY.
 ## ❌ Non-Compliant Code
 
 ```abap
-SELECT * FROM /dmo/customer UP TO 10 ROWS INTO TABLE @lt_customers.
+SELECT * FROM /dmo/customer UP TO 1 ROWS INTO @ls_customer.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-SELECT * FROM /dmo/customer ORDER BY customer_id UP TO 10 ROWS INTO TABLE @lt_customers.
+SELECT * FROM /dmo/customer ORDER BY customer_id UP TO 1 ROWS INTO @ls_customer.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments

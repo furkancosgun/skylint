@@ -9,25 +9,21 @@ Enforce local declaration order (TYPES -> CONSTANTS -> DATA -> FIELD-SYMBOLS).
 ## ❌ Non-Compliant Code
 
 ```abap
-CLASS cl_service DEFINITION.
-  PRIVATE SECTION.
-    METHODS helper.
-  PUBLIC SECTION.
-    METHODS execute.
-ENDCLASS.
+METHOD execute.
+  DATA lv_count TYPE i.
+  TYPES ty_status TYPE c LENGTH 1. " TYPES declared after DATA
+  CONSTANTS c_init TYPE ty_status VALUE 'I'.
+ENDMETHOD.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-CLASS cl_service DEFINITION.
-  PUBLIC SECTION.
-    METHODS execute.
-  PROTECTED SECTION.
-    " ...
-  PRIVATE SECTION.
-    METHODS helper.
-ENDCLASS.
+METHOD execute.
+  TYPES ty_status TYPE c LENGTH 1.
+  CONSTANTS c_init TYPE ty_status VALUE 'I'.
+  DATA lv_count TYPE i.
+ENDMETHOD.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments

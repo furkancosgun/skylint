@@ -18,7 +18,7 @@ CLASS lcl_clean IMPLEMENTATION.
   ENDMETHOD.
 ENDCLASS.
 
-CLASS zcl_skylint_test_079 DEFINITION
+CLASS zcl_test_no_param_escape DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -29,7 +29,7 @@ CLASS zcl_skylint_test_079 DEFINITION
     METHODS test_004.
 ENDCLASS.
 
-CLASS zcl_skylint_test_079 IMPLEMENTATION.
+CLASS zcl_test_no_param_escape IMPLEMENTATION.
   METHOD test_001.
     RETURN.
   ENDMETHOD.

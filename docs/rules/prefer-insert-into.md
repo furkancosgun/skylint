@@ -9,13 +9,13 @@ Prefer INSERT ... INTO TABLE over APPEND for table safety.
 ## ❌ Non-Compliant Code
 
 ```abap
-APPEND ls_item TO lt_hashed_items.
+APPEND ls_item TO lt_items.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-INSERT ls_item INTO TABLE lt_hashed_items.
+INSERT ls_item INTO TABLE lt_items.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments

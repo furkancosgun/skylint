@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_075 DEFINITION
+CLASS zcl_test_prefer_early_return DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -10,7 +10,7 @@ CLASS zcl_skylint_test_075 DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_test_075 IMPLEMENTATION.
+CLASS zcl_test_prefer_early_return IMPLEMENTATION.
   METHOD test_001.
     DATA lv_flag TYPE abap_bool.
     DATA ls_val TYPE i.

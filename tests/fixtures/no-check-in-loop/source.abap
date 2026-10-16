@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_013 DEFINITION
+CLASS zcl_test_no_check_in_loop DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -10,7 +10,7 @@ CLASS zcl_skylint_test_013 DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_test_013 IMPLEMENTATION.
+CLASS zcl_test_no_check_in_loop IMPLEMENTATION.
   METHOD test_001.
     DATA lv_flag TYPE abap_bool.
     DATA lt_tab TYPE string_table.

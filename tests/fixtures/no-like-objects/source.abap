@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_053 DEFINITION
+CLASS zcl_test_no_like_objects DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -10,7 +10,7 @@ CLASS zcl_skylint_test_053 DEFINITION
     METHODS test_005.
 ENDCLASS.
 
-CLASS zcl_skylint_test_053 IMPLEMENTATION.
+CLASS zcl_test_no_like_objects IMPLEMENTATION.
   METHOD test_001.
     DATA lv_orig TYPE i.
     DATA lv_x LIKE lv_orig.

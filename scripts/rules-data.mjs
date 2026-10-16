@@ -401,10 +401,8 @@ ENDCLASS.`,
     pseudoComment: 'OBSOLETE',
     category: 'anti-patterns',
     example: {
-      bad: `MOVE lv_src TO lv_dst.
-TRANSLATE lv_str TO UPPER CASE.`,
-      good: `lv_dst = lv_src.
-lv_str = to_upper( lv_str ).`,
+      bad: `MOVE lv_src TO lv_dst.`,
+      good: `lv_dst = lv_src.`,
     },
   },
   {
@@ -499,8 +497,8 @@ use_value( lv_value ).`,
     pseudoComment: 'FULL_TYPED',
     category: 'clean-abap',
     example: {
-      bad: `METHODS process IMPORTING it_data TYPE table.`,
-      good: `METHODS process IMPORTING it_data TYPE string_table.`,
+      bad: `CONSTANTS c_status VALUE 'A'. " TYPE is omitted; implicitly typed as c length 1`,
+      good: `CONSTANTS c_status TYPE c LENGTH 1 VALUE 'A'.`,
     },
   },
   {
@@ -539,10 +537,8 @@ ENDTRY.`,
     pseudoComment: 'CORRESP',
     category: 'clean-abap',
     example: {
-      bad: `ls_dst-id   = ls_src-id.
-ls_dst-name = ls_src-name.
-ls_dst-city = ls_src-city.`,
-      good: `ls_dst = CORRESPONDING #( ls_src ).`,
+      bad: `MOVE-CORRESPONDING ls_source TO ls_target.`,
+      good: `ls_target = CORRESPONDING #( ls_source ).`,
     },
   },
   {
@@ -592,7 +588,7 @@ execute( ).`,
     example: {
       bad: `sy-subrc = 0.
 sy-tabix = 1.`,
-      good: `" Return an explicit status code or result variable instead
+      good: `" Pass explicit return values or flags instead of modifying system variables (sy-*)
 rv_success = abap_true.`,
     },
   },
@@ -624,8 +620,10 @@ rv_success = abap_true.`,
     pseudoComment: 'DYNAMIC_STMT',
     category: 'security',
     example: {
-      bad: `CALL 'SYSTEM' ID 'COMMAND' FIELD lv_cmd.`,
-      good: `cl_gui_frontend_services=>execute( ... ).`,
+      bad: `EXEC SQL.
+  SELECT * FROM /dmo/customer INTO :wa
+ENDEXEC.`,
+      good: `SELECT * FROM /dmo/customer INTO TABLE @lt_customers.`,
     },
   },
   {
@@ -634,11 +632,8 @@ rv_success = abap_true.`,
     pseudoComment: 'AUTH_CHECK',
     category: 'security',
     example: {
-      bad: `SELECT * FROM /dmo/customer WHERE customer_id = @iv_id INTO TABLE @lt_customers.`,
-      good: `AUTHORITY-CHECK OBJECT 'S_CUSTOMER' ID 'ACTVT' FIELD '03'.
-IF sy-subrc = 0.
-  SELECT * FROM /dmo/customer WHERE customer_id = @iv_id INTO TABLE @lt_customers.
-ENDIF.`,
+      bad: `CALL TRANSACTION 'VA01'.`,
+      good: `CALL TRANSACTION 'VA01' WITH AUTHORITY-CHECK.`,
     },
   },
   {
@@ -647,8 +642,8 @@ ENDIF.`,
     pseudoComment: 'ORDER_BY',
     category: 'performance',
     example: {
-      bad: `SELECT * FROM /dmo/customer UP TO 10 ROWS INTO TABLE @lt_customers.`,
-      good: `SELECT * FROM /dmo/customer ORDER BY customer_id UP TO 10 ROWS INTO TABLE @lt_customers.`,
+      bad: `SELECT * FROM /dmo/customer UP TO 1 ROWS INTO @ls_customer.`,
+      good: `SELECT * FROM /dmo/customer ORDER BY customer_id UP TO 1 ROWS INTO @ls_customer.`,
     },
   },
   {
@@ -712,8 +707,8 @@ ENDIF.`,
     pseudoComment: 'INSERT_INTO',
     category: 'clean-abap',
     example: {
-      bad: `APPEND ls_item TO lt_hashed_items.`,
-      good: `INSERT ls_item INTO TABLE lt_hashed_items.`,
+      bad: `APPEND ls_item TO lt_items.`,
+      good: `INSERT ls_item INTO TABLE lt_items.`,
     },
   },
   {
@@ -724,7 +719,7 @@ ENDIF.`,
     example: {
       bad: `LOOP AT lt_items INTO ls_item.
   AT NEW id.
-    " Obsolete control block inside LOOP
+    " Obsolete control statement in loop
   ENDAT.
 ENDLOOP.`,
       good: `LOOP AT lt_items INTO ls_item GROUP BY ( id = ls_item-id ) INTO DATA(group).
@@ -738,8 +733,8 @@ ENDLOOP.`,
     pseudoComment: 'LIKE_OBJECTS',
     category: 'anti-patterns',
     example: {
-      bad: `DATA lv_customer LIKE ls_customer.`,
-      good: `DATA lv_customer TYPE ty_customer.`,
+      bad: `DATA lv_copy LIKE lv_original.`,
+      good: `DATA lv_copy TYPE string.`,
     },
   },
   {
@@ -750,11 +745,11 @@ ENDLOOP.`,
     example: {
       bad: `METHOD constructor.
   super->constructor( ).
-  SELECT * FROM /dmo/customer INTO TABLE @mt_customers. " Heavy I/O in constructor
+  " 15+ statements initializing complex states and reading DB...
 ENDMETHOD.`,
       good: `METHOD constructor.
   super->constructor( ).
-  " Keep constructor lightweight; defer heavy database reads to an explicit load() method
+  mo_gateway = io_gateway. " Simple dependency assignment only
 ENDMETHOD.`,
     },
   },
@@ -772,7 +767,7 @@ ENDCLASS.`,
       good: `CLASS cl_math_util DEFINITION PUBLIC FINAL CREATE PUBLIC.
   PUBLIC SECTION.
     INTERFACES if_math_util.
-    METHODS add ...
+    METHODS add IMPORTING a TYPE i b TYPE i RETURNING VALUE(r) TYPE i.
 ENDCLASS.`,
     },
   },
@@ -782,8 +777,8 @@ ENDCLASS.`,
     pseudoComment: 'PRED_NAME',
     category: 'clean-abap',
     example: {
-      bad: `METHODS validate_customer RETURNING VALUE(rv_valid) TYPE abap_bool.`,
-      good: `METHODS is_customer_valid RETURNING VALUE(rv_valid) TYPE abap_bool.`,
+      bad: `METHODS check_active RETURNING VALUE(rv_active) TYPE abap_bool.`,
+      good: `METHODS is_active RETURNING VALUE(rv_active) TYPE abap_bool.`,
     },
   },
   {
@@ -825,10 +820,11 @@ ENDCLASS.`,
     category: 'anti-patterns',
     example: {
       bad: `INTERFACE if_customer.
-  DATA mv_id TYPE string.
+  DATA mv_state TYPE i. " Mutable DATA in interface
 ENDINTERFACE.`,
       good: `INTERFACE if_customer.
-  METHODS get_id RETURNING VALUE(rv_id) TYPE string.
+  CONSTANTS c_default_status TYPE i VALUE 1.
+  METHODS get_state RETURNING VALUE(rv_state) TYPE i.
 ENDINTERFACE.`,
     },
   },
@@ -891,8 +887,8 @@ ENDTRY.`,
     pseudoComment: 'RAISE_CX_SY',
     category: 'security',
     example: {
-      bad: `RAISE EXCEPTION TYPE cx_sy_arithmetic_overflow.`,
-      good: `RAISE EXCEPTION NEW cx_my_calculation_error( ).`,
+      bad: `RAISE EXCEPTION NEW cx_sy_itab_line_not_found( ).`,
+      good: `RAISE EXCEPTION NEW cx_item_not_found( ).`,
     },
   },
   {
@@ -901,11 +897,11 @@ ENDTRY.`,
     pseudoComment: 'CHECK_SUBRC',
     category: 'security',
     example: {
-      bad: `READ TABLE lt_items INTO ls_item WITH KEY id = lv_id.
-process( ls_item ). " sy-subrc is never evaluated`,
-      good: `READ TABLE lt_items INTO ls_item WITH KEY id = lv_id.
+      bad: `SELECT SINGLE * FROM /dmo/customer WHERE customer_id = @lv_id INTO @ls_customer.
+process_customer( ls_customer ). " sy-subrc is never checked`,
+      good: `SELECT SINGLE * FROM /dmo/customer WHERE customer_id = @lv_id INTO @ls_customer.
 IF sy-subrc = 0.
-  process( ls_item ).
+  process_customer( ls_customer ).
 ENDIF.`,
     },
   },
@@ -929,7 +925,7 @@ ENDFORM.`,
     pseudoComment: 'CLIENT_SPEC',
     category: 'security',
     example: {
-      bad: `SELECT * FROM /dmo/customer CLIENT SPECIFIED INTO TABLE @lt_customers.`,
+      bad: `SELECT * FROM /dmo/customer USING CLIENT '100' INTO TABLE @lt_customers.`,
       good: `SELECT * FROM /dmo/customer INTO TABLE @lt_customers.`,
     },
   },
@@ -939,9 +935,15 @@ ENDFORM.`,
     pseudoComment: 'COMMIT_WORK',
     category: 'security',
     example: {
-      bad: `COMMIT WORK AND WAIT.`,
-      good: `" In ABAP Cloud / RAP, transactions are committed via RAP Save Sequence / COMMIT ENTITIES
-MODIFY ENTITIES OF ...`,
+      bad: `" Inside a RAP behavior implementation (CL_ABAP_BEHAVIOR_HANDLER)
+METHOD update.
+  MODIFY ENTITIES OF ...
+  COMMIT WORK.
+ENDMETHOD.`,
+      good: `" In RAP, commits are managed automatically by the framework save sequence
+METHOD update.
+  MODIFY ENTITIES OF ...
+ENDMETHOD.`,
     },
   },
   {
@@ -950,8 +952,14 @@ MODIFY ENTITIES OF ...`,
     pseudoComment: 'TRANSPORTING',
     category: 'performance',
     example: {
-      bad: `READ TABLE lt_items WITH KEY id = lv_id TRANSPORTING ALL FIELDS INTO ls_item.`,
-      good: `READ TABLE lt_items WITH KEY id = lv_id TRANSPORTING NO FIELDS.`,
+      bad: `LOOP AT lt_items INTO ls_item.
+  ls_item-status = 'DONE'.
+  MODIFY lt_items FROM ls_item. " Full line copy without specifying TRANSPORTING
+ENDLOOP.`,
+      good: `LOOP AT lt_items INTO ls_item.
+  ls_item-status = 'DONE'.
+  MODIFY lt_items FROM ls_item TRANSPORTING status.
+ENDLOOP.`,
     },
   },
   {
@@ -960,8 +968,10 @@ MODIFY ENTITIES OF ...`,
     pseudoComment: 'TEST_NAME',
     category: 'clean-abap',
     example: {
-      bad: `METHODS test1 FOR TESTING.`,
-      good: `METHODS calculate_tax_for_discount FOR TESTING.`,
+      bad: `METHODS calculate_discount FOR TESTING.`,
+      good: `METHODS test_calculate_discount FOR TESTING.
+" Or:
+METHODS should_calculate_discount FOR TESTING.`,
     },
   },
   {
@@ -970,8 +980,8 @@ MODIFY ENTITIES OF ...`,
     pseudoComment: 'RAW_DYN_SQL',
     category: 'security',
     example: {
-      bad: `SELECT * FROM (lv_table) WHERE (lv_where) INTO TABLE @<lt_out>.`,
-      good: `SELECT * FROM /dmo/customer WHERE customer_id = @lv_id INTO TABLE @lt_customers.`,
+      bad: `SELECT * FROM (lv_table) INTO TABLE @lt_customers.`,
+      good: `SELECT * FROM /dmo/customer INTO TABLE @lt_customers.`,
     },
   },
   {
@@ -982,7 +992,7 @@ MODIFY ENTITIES OF ...`,
     example: {
       bad: `CLASS cl_service DEFINITION PUBLIC.
   PUBLIC SECTION.
-    METHODS process. " In class not intended for polymorphic overriding
+    METHODS process. " Non-final method in class not designed for inheritance
 ENDCLASS.`,
       good: `CLASS cl_service DEFINITION PUBLIC.
   PUBLIC SECTION.
@@ -996,12 +1006,10 @@ ENDCLASS.`,
     pseudoComment: 'STR_FUNC',
     category: 'clean-abap',
     example: {
-      bad: `IF lv_str CS 'ABAP'.
-  process( ).
-ENDIF.`,
-      good: `IF contains( val = lv_str sub = 'ABAP' ).
-  process( ).
-ENDIF.`,
+      bad: `CONDENSE lv_text.
+TRANSLATE lv_code TO UPPER CASE.`,
+      good: `lv_text = condense( lv_text ).
+lv_code = to_upper( lv_code ).`,
     },
   },
   {
@@ -1084,20 +1092,16 @@ ENDIF.`,
     pseudoComment: 'DECL_ORDER',
     category: 'clean-abap',
     example: {
-      bad: `CLASS cl_service DEFINITION.
-  PRIVATE SECTION.
-    METHODS helper.
-  PUBLIC SECTION.
-    METHODS execute.
-ENDCLASS.`,
-      good: `CLASS cl_service DEFINITION.
-  PUBLIC SECTION.
-    METHODS execute.
-  PROTECTED SECTION.
-    " ...
-  PRIVATE SECTION.
-    METHODS helper.
-ENDCLASS.`,
+      bad: `METHOD execute.
+  DATA lv_count TYPE i.
+  TYPES ty_status TYPE c LENGTH 1. " TYPES declared after DATA
+  CONSTANTS c_init TYPE ty_status VALUE 'I'.
+ENDMETHOD.`,
+      good: `METHOD execute.
+  TYPES ty_status TYPE c LENGTH 1.
+  CONSTANTS c_init TYPE ty_status VALUE 'I'.
+  DATA lv_count TYPE i.
+ENDMETHOD.`,
     },
   },
   {
@@ -1106,8 +1110,8 @@ ENDCLASS.`,
     pseudoComment: 'PARAM_ESCAPE',
     category: 'clean-abap',
     example: {
-      bad: `lo_calc->compute( !iv_val = 10 ). " Unnecessary ! prefix`,
-      good: `lo_calc->compute( iv_val = 10 ).`,
+      bad: `METHODS process IMPORTING !iv_data TYPE string.`,
+      good: `METHODS process IMPORTING iv_data TYPE string.`,
     },
   },
   {
@@ -1116,9 +1120,11 @@ ENDCLASS.`,
     pseudoComment: 'FORBIDDEN',
     category: 'security',
     example: {
-      bad: `CALL TRANSACTION 'VA01'.
-LEAVE PROGRAM.`,
-      good: `" In ABAP Cloud, invoke released APIs or RAP business objects instead`,
+      bad: `BREAK-POINT.
+DEFINE append_item.
+  append &1 to &2.
+END-OF-DEFINITION.`,
+      good: `" Remove hardcoded break-points and replace DEFINE macros with methods`,
     },
   },
   {
@@ -1150,8 +1156,8 @@ ENDCASE.`,
     pseudoComment: 'PAREN_LEN',
     category: 'anti-patterns',
     example: {
-      bad: `DATA lv_text TYPE c(20).`,
-      good: `DATA lv_text TYPE c LENGTH 20.`,
+      bad: `DATA lv_code(10) TYPE c.`,
+      good: `DATA lv_code TYPE c LENGTH 10.`,
     },
   },
 ];

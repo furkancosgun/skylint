@@ -50,7 +50,7 @@ CLASS lcl_mixed2 IMPLEMENTATION.
   ENDMETHOD.
 ENDCLASS.
 
-CLASS zcl_skylint_test_055 DEFINITION
+CLASS zcl_test_no_static_classes DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -61,7 +61,7 @@ CLASS zcl_skylint_test_055 DEFINITION
     METHODS test_004.
 ENDCLASS.
 
-CLASS zcl_skylint_test_055 IMPLEMENTATION.
+CLASS zcl_test_no_static_classes IMPLEMENTATION.
   METHOD test_001.
     RETURN.
   ENDMETHOD.

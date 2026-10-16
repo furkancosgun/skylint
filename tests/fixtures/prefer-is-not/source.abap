@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_004 DEFINITION
+CLASS zcl_test_prefer_is_not DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -10,7 +10,7 @@ CLASS zcl_skylint_test_004 DEFINITION
     METHODS test_005.
 ENDCLASS.
 
-CLASS zcl_skylint_test_004 IMPLEMENTATION.
+CLASS zcl_test_prefer_is_not IMPLEMENTATION.
   METHOD test_001.
     DATA lv_x TYPE i.
     IF NOT lv_x IS INITIAL.
@@ -24,12 +24,12 @@ CLASS zcl_skylint_test_004 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_003.
-    DATA lo_obj TYPE REF TO zcl_skylint_test_004.
+    DATA lo_obj TYPE REF TO zcl_test_prefer_is_not.
     CHECK NOT lo_obj IS BOUND.
   ENDMETHOD.
 
   METHOD test_004.
-    DATA lo_obj TYPE REF TO zcl_skylint_test_004.
+    DATA lo_obj TYPE REF TO zcl_test_prefer_is_not.
     IF lo_obj IS BOUND.
     ENDIF.
   ENDMETHOD.

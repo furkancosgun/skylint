@@ -10,14 +10,12 @@ Avoid obsolete statements (MOVE, REFRESH, etc.).
 
 ```abap
 MOVE lv_src TO lv_dst.
-TRANSLATE lv_str TO UPPER CASE.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
 lv_dst = lv_src.
-lv_str = to_upper( lv_str ).
 ```
 
 ## 🤫 Suppression & Pseudo-Comments

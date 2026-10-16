@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_011 DEFINITION
+CLASS zcl_test_prefer_line_exists DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -10,7 +10,7 @@ CLASS zcl_skylint_test_011 DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_test_011 IMPLEMENTATION.
+CLASS zcl_test_prefer_line_exists IMPLEMENTATION.
   METHOD test_001.
     DATA lt_tab TYPE string_table.
     READ TABLE lt_tab TRANSPORTING NO FIELDS WITH KEY table_line = ''.

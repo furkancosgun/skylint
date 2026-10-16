@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_065 DEFINITION
+CLASS zcl_test_no_form_routines DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -9,13 +9,13 @@ CLASS zcl_skylint_test_065 DEFINITION
     METHODS test_004.
 ENDCLASS.
 
-CLASS zcl_skylint_test_065 IMPLEMENTATION.
+CLASS zcl_test_no_form_routines IMPLEMENTATION.
   METHOD test_001.
     PERFORM my_form IN PROGRAM (sy-repid) IF FOUND.
   ENDMETHOD.
 
   METHOD test_002.
-    DATA lo_obj TYPE REF TO zcl_skylint_test_065.
+    DATA lo_obj TYPE REF TO zcl_test_no_form_routines.
     lo_obj->test_002( ).
   ENDMETHOD.
 

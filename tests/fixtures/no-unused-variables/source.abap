@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_077 DEFINITION
+CLASS zcl_test_no_unused_variables DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -13,7 +13,7 @@ CLASS zcl_skylint_test_077 DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_test_077 IMPLEMENTATION.
+CLASS zcl_test_no_unused_variables IMPLEMENTATION.
   METHOD test_001.
     DATA lv_unused TYPE i.
   ENDMETHOD.

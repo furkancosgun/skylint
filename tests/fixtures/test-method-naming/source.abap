@@ -14,7 +14,7 @@ CLASS lcl_test_naming IMPLEMENTATION.
   ENDMETHOD.
 ENDCLASS.
 
-CLASS zcl_skylint_test_069 DEFINITION
+CLASS zcl_test_test_method_naming DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -25,7 +25,7 @@ CLASS zcl_skylint_test_069 DEFINITION
     METHODS test_004.
 ENDCLASS.
 
-CLASS zcl_skylint_test_069 IMPLEMENTATION.
+CLASS zcl_test_test_method_naming IMPLEMENTATION.
   METHOD test_001.
     RETURN.
   ENDMETHOD.

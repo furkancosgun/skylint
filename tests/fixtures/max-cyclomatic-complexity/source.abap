@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_047 DEFINITION
+CLASS zcl_test_max_cyclomatic_comple DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -11,7 +11,7 @@ CLASS zcl_skylint_test_047 DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_test_047 IMPLEMENTATION.
+CLASS zcl_test_max_cyclomatic_comple IMPLEMENTATION.
   METHOD test_001.
     DATA lv_a TYPE i.
     DATA lv_b TYPE i.

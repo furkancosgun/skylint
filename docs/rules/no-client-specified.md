@@ -9,7 +9,7 @@ Avoid USING CLIENT or CLIENT SPECIFIED in ABAP SQL.
 ## ❌ Non-Compliant Code
 
 ```abap
-SELECT * FROM /dmo/customer CLIENT SPECIFIED INTO TABLE @lt_customers.
+SELECT * FROM /dmo/customer USING CLIENT '100' INTO TABLE @lt_customers.
 ```
 
 ## ✅ Compliant Code

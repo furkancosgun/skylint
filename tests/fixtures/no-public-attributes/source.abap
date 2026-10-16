@@ -26,7 +26,7 @@ ENDCLASS.
 CLASS lcl_extra_clean IMPLEMENTATION.
 ENDCLASS.
 
-CLASS zcl_skylint_test_027 DEFINITION
+CLASS zcl_test_no_public_attributes DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -37,7 +37,7 @@ CLASS zcl_skylint_test_027 DEFINITION
     METHODS test_004.
 ENDCLASS.
 
-CLASS zcl_skylint_test_027 IMPLEMENTATION.
+CLASS zcl_test_no_public_attributes IMPLEMENTATION.
   METHOD test_001.
     RETURN.
   ENDMETHOD.

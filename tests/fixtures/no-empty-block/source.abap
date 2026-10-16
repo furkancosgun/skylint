@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_014 DEFINITION
+CLASS zcl_test_no_empty_block DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -10,7 +10,7 @@ CLASS zcl_skylint_test_014 DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_test_014 IMPLEMENTATION.
+CLASS zcl_test_no_empty_block IMPLEMENTATION.
   METHOD test_001.
     DATA lv_x TYPE i.
     IF lv_x = 1.

@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_008 DEFINITION
+CLASS zcl_test_no_chained_decl DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -10,7 +10,7 @@ CLASS zcl_skylint_test_008 DEFINITION
     METHODS test_005.
 ENDCLASS.
 
-CLASS zcl_skylint_test_008 IMPLEMENTATION.
+CLASS zcl_test_no_chained_decl IMPLEMENTATION.
   METHOD test_001.
     DATA: lv_a TYPE i,
           lv_b TYPE i.

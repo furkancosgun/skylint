@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_038 DEFINITION
+CLASS zcl_test_prefer_corresponding DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -9,7 +9,7 @@ CLASS zcl_skylint_test_038 DEFINITION
     METHODS test_004.
 ENDCLASS.
 
-CLASS zcl_skylint_test_038 IMPLEMENTATION.
+CLASS zcl_test_prefer_corresponding IMPLEMENTATION.
   METHOD test_001.
     DATA: BEGIN OF ls_src, a TYPE i, END OF ls_src.
     DATA: BEGIN OF ls_dst, a TYPE i, END OF ls_dst.

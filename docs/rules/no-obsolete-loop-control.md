@@ -11,7 +11,7 @@ Avoid obsolete control statements (ON CHANGE OF, AT NEW, SUM) in LOOP.
 ```abap
 LOOP AT lt_items INTO ls_item.
   AT NEW id.
-    " Obsolete control block inside LOOP
+    " Obsolete control statement in loop
   ENDAT.
 ENDLOOP.
 ```

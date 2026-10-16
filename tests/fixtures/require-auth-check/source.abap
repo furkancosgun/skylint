@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_045 DEFINITION
+CLASS zcl_test_require_auth_check DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -9,7 +9,7 @@ CLASS zcl_skylint_test_045 DEFINITION
     METHODS test_004.
 ENDCLASS.
 
-CLASS zcl_skylint_test_045 IMPLEMENTATION.
+CLASS zcl_test_require_auth_check IMPLEMENTATION.
   METHOD test_001.
     CALL TRANSACTION 'VA01'.
   ENDMETHOD.

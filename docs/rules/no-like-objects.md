@@ -9,13 +9,13 @@ Avoid LIKE referencing data objects; use explicit TYPE.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lv_customer LIKE ls_customer.
+DATA lv_copy LIKE lv_original.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_customer TYPE ty_customer.
+DATA lv_copy TYPE string.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments

@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_052 DEFINITION
+CLASS zcl_test_no_obsolete_loop_cont DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -9,7 +9,7 @@ CLASS zcl_skylint_test_052 DEFINITION
     METHODS test_004.
 ENDCLASS.
 
-CLASS zcl_skylint_test_052 IMPLEMENTATION.
+CLASS zcl_test_no_obsolete_loop_cont IMPLEMENTATION.
   METHOD test_001.
     DATA lt_tab TYPE string_table.
     DATA ls_row TYPE string.

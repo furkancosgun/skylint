@@ -9,13 +9,13 @@ Enforce fully typed constant declarations.
 ## ❌ Non-Compliant Code
 
 ```abap
-METHODS process IMPORTING it_data TYPE table.
+CONSTANTS c_status VALUE 'A'. " TYPE is omitted; implicitly typed as c length 1
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-METHODS process IMPORTING it_data TYPE string_table.
+CONSTANTS c_status TYPE c LENGTH 1 VALUE 'A'.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments

@@ -5,6 +5,9 @@
   "engines": {
     "node": ">=20.0.0"
   },
+  "bin": {
+    "skylint": "./bin/skylint.mjs"
+  },
   "scripts": {
     "build": "node scripts/clean.mjs && abap_transpile abaplint-transpiler.json",
     "test": "npm run lint && npm run unit",

@@ -9,16 +9,13 @@ Call Transaction Authority Check.
 ## ❌ Non-Compliant Code
 
 ```abap
-SELECT * FROM /dmo/customer WHERE customer_id = @iv_id INTO TABLE @lt_customers.
+CALL TRANSACTION 'VA01'.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-AUTHORITY-CHECK OBJECT 'S_CUSTOMER' ID 'ACTVT' FIELD '03'.
-IF sy-subrc = 0.
-  SELECT * FROM /dmo/customer WHERE customer_id = @iv_id INTO TABLE @lt_customers.
-ENDIF.
+CALL TRANSACTION 'VA01' WITH AUTHORITY-CHECK.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments

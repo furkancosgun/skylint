@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_034 DEFINITION
+CLASS zcl_test_no_self_assignment DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -12,7 +12,7 @@ CLASS zcl_skylint_test_034 DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_test_034 IMPLEMENTATION.
+CLASS zcl_test_no_self_assignment IMPLEMENTATION.
   METHOD test_001.
     DATA lv_a TYPE i.
     lv_a = lv_a.

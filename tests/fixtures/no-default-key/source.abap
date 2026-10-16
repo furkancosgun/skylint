@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_003 DEFINITION
+CLASS zcl_test_no_default_key DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -10,7 +10,7 @@ CLASS zcl_skylint_test_003 DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_test_003 IMPLEMENTATION.
+CLASS zcl_test_no_default_key IMPLEMENTATION.
   METHOD test_001.
     DATA lt_tab TYPE STANDARD TABLE OF i WITH DEFAULT KEY.
   ENDMETHOD.

@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_026 DEFINITION
+CLASS zcl_test_no_static_via_instanc DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -10,26 +10,26 @@ CLASS zcl_skylint_test_026 DEFINITION
     METHODS test_004.
 ENDCLASS.
 
-CLASS zcl_skylint_test_026 IMPLEMENTATION.
+CLASS zcl_test_no_static_via_instanc IMPLEMENTATION.
   METHOD do_work.
     RETURN.
   ENDMETHOD.
 
   METHOD test_001.
-    DATA lo_obj TYPE REF TO zcl_skylint_test_026.
+    DATA lo_obj TYPE REF TO zcl_test_no_static_via_instanc.
     lo_obj->do_work( ).
   ENDMETHOD.
 
   METHOD test_002.
-    zcl_skylint_test_026=>do_work( ).
+    zcl_test_no_static_via_instanc=>do_work( ).
   ENDMETHOD.
 
   METHOD test_003.
-    DATA lo_obj TYPE REF TO zcl_skylint_test_026.
+    DATA lo_obj TYPE REF TO zcl_test_no_static_via_instanc.
     CALL METHOD lo_obj->do_work.
   ENDMETHOD.
 
   METHOD test_004.
-    CALL METHOD zcl_skylint_test_026=>do_work.
+    CALL METHOD zcl_test_no_static_via_instanc=>do_work.
   ENDMETHOD.
 ENDCLASS.

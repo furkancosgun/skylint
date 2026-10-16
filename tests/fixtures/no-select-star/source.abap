@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_032 DEFINITION
+CLASS zcl_test_no_select_star DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -9,7 +9,7 @@ CLASS zcl_skylint_test_032 DEFINITION
     METHODS test_004.
 ENDCLASS.
 
-CLASS zcl_skylint_test_032 IMPLEMENTATION.
+CLASS zcl_test_no_select_star IMPLEMENTATION.
   METHOD test_001.
     SELECT * FROM zskylint_dummy INTO @DATA(ls_row).
     ENDSELECT.

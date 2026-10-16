@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_070 DEFINITION
+CLASS zcl_test_no_raw_dynamic_sql DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -9,7 +9,7 @@ CLASS zcl_skylint_test_070 DEFINITION
     METHODS test_004.
 ENDCLASS.
 
-CLASS zcl_skylint_test_070 IMPLEMENTATION.
+CLASS zcl_test_no_raw_dynamic_sql IMPLEMENTATION.
   METHOD test_001.
     DATA lv_tab TYPE string.
     DATA lt_tab TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.

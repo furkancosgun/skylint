@@ -11,7 +11,7 @@ Prefer marking non-overridden methods as FINAL.
 ```abap
 CLASS cl_service DEFINITION PUBLIC.
   PUBLIC SECTION.
-    METHODS process. " In class not intended for polymorphic overriding
+    METHODS process. " Non-final method in class not designed for inheritance
 ENDCLASS.
 ```
 

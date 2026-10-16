@@ -9,13 +9,15 @@ Dangerous / Unmanaged Dynamic Statements.
 ## ❌ Non-Compliant Code
 
 ```abap
-CALL 'SYSTEM' ID 'COMMAND' FIELD lv_cmd.
+EXEC SQL.
+  SELECT * FROM /dmo/customer INTO :wa
+ENDEXEC.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-cl_gui_frontend_services=>execute( ... ).
+SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments

@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_072 DEFINITION
+CLASS zcl_test_prefer_string_functio DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -10,7 +10,7 @@ CLASS zcl_skylint_test_072 DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_test_072 IMPLEMENTATION.
+CLASS zcl_test_prefer_string_functio IMPLEMENTATION.
   METHOD test_001.
     DATA lv_text TYPE string.
     CONDENSE lv_text.

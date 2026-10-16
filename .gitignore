@@ -6,3 +6,5 @@ node_modules/
 *.swo
 *~
 .vscode/
+docs/.vitepress/dist/
+docs/.vitepress/cache/

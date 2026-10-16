@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_066 DEFINITION
+CLASS zcl_test_no_client_specified DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -9,7 +9,7 @@ CLASS zcl_skylint_test_066 DEFINITION
     METHODS test_004.
 ENDCLASS.
 
-CLASS zcl_skylint_test_066 IMPLEMENTATION.
+CLASS zcl_test_no_client_specified IMPLEMENTATION.
   METHOD test_001.
     DATA lt_tab TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
     SELECT * FROM zskylint_dummy USING CLIENT '100' INTO TABLE @lt_tab.

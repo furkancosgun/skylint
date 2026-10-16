@@ -10,7 +10,7 @@ Avoid mutable DATA declarations in interfaces; allow only CONSTANTS.
 
 ```abap
 INTERFACE if_customer.
-  DATA mv_id TYPE string.
+  DATA mv_state TYPE i. " Mutable DATA in interface
 ENDINTERFACE.
 ```
 
@@ -18,7 +18,8 @@ ENDINTERFACE.
 
 ```abap
 INTERFACE if_customer.
-  METHODS get_id RETURNING VALUE(rv_id) TYPE string.
+  CONSTANTS c_default_status TYPE i VALUE 1.
+  METHODS get_state RETURNING VALUE(rv_state) TYPE i.
 ENDINTERFACE.
 ```
 

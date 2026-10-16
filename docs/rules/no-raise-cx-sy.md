@@ -9,13 +9,13 @@ Avoid raising SAP internal system exceptions (cx_sy_*).
 ## ❌ Non-Compliant Code
 
 ```abap
-RAISE EXCEPTION TYPE cx_sy_arithmetic_overflow.
+RAISE EXCEPTION NEW cx_sy_itab_line_not_found( ).
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-RAISE EXCEPTION NEW cx_my_calculation_error( ).
+RAISE EXCEPTION NEW cx_item_not_found( ).
 ```
 
 ## 🤫 Suppression & Pseudo-Comments

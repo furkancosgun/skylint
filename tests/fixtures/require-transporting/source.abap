@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_068 DEFINITION
+CLASS zcl_test_require_transporting DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -15,7 +15,7 @@ CLASS zcl_skylint_test_068 DEFINITION
     METHODS test_005.
 ENDCLASS.
 
-CLASS zcl_skylint_test_068 IMPLEMENTATION.
+CLASS zcl_test_require_transporting IMPLEMENTATION.
   METHOD test_001.
     DATA lt_tab TYPE STANDARD TABLE OF ty_row WITH DEFAULT KEY.
     DATA ls_row TYPE ty_row.

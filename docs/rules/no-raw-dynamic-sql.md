@@ -9,13 +9,13 @@ Avoid dynamic SQL table or clause names without sanitization.
 ## ❌ Non-Compliant Code
 
 ```abap
-SELECT * FROM (lv_table) WHERE (lv_where) INTO TABLE @<lt_out>.
+SELECT * FROM (lv_table) INTO TABLE @lt_customers.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-SELECT * FROM /dmo/customer WHERE customer_id = @lv_id INTO TABLE @lt_customers.
+SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments

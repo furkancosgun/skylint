@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_061 DEFINITION
+CLASS zcl_test_no_message_raising DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -10,7 +10,7 @@ CLASS zcl_skylint_test_061 DEFINITION
     METHODS test_005.
 ENDCLASS.
 
-CLASS zcl_skylint_test_061 IMPLEMENTATION.
+CLASS zcl_test_no_message_raising IMPLEMENTATION.
   METHOD test_001.
     MESSAGE e001(00) WITH 'test' RAISING error.
   ENDMETHOD.

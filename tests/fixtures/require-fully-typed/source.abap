@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_035 DEFINITION
+CLASS zcl_test_require_fully_typed DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -11,7 +11,7 @@ CLASS zcl_skylint_test_035 DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_test_035 IMPLEMENTATION.
+CLASS zcl_test_require_fully_typed IMPLEMENTATION.
   METHOD test_001.
     CONSTANTS lc_val VALUE 'X'.
   ENDMETHOD.

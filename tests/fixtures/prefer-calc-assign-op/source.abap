@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_073 DEFINITION
+CLASS zcl_test_prefer_calc_assign_op DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -10,7 +10,7 @@ CLASS zcl_skylint_test_073 DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_test_073 IMPLEMENTATION.
+CLASS zcl_test_prefer_calc_assign_op IMPLEMENTATION.
   METHOD test_001.
     DATA lv_x TYPE i.
     lv_x = lv_x + 1.

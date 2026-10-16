@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_081 DEFINITION
+CLASS zcl_test_prefer_case DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -7,7 +7,7 @@ CLASS zcl_skylint_test_081 DEFINITION
     METHODS test_002.
 ENDCLASS.
 
-CLASS zcl_skylint_test_081 IMPLEMENTATION.
+CLASS zcl_test_prefer_case IMPLEMENTATION.
   METHOD test_001.
     DATA lv_val TYPE i.
     IF lv_val = 1.

@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_076 DEFINITION
+CLASS zcl_test_no_production_assert DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -10,7 +10,7 @@ CLASS zcl_skylint_test_076 DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_test_076 IMPLEMENTATION.
+CLASS zcl_test_no_production_assert IMPLEMENTATION.
   METHOD test_001.
     DATA lv_x TYPE i.
     ASSERT lv_x > 0.

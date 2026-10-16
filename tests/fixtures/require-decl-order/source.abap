@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_078 DEFINITION
+CLASS zcl_test_require_decl_order DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -10,7 +10,7 @@ CLASS zcl_skylint_test_078 DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_test_078 IMPLEMENTATION.
+CLASS zcl_test_require_decl_order IMPLEMENTATION.
   METHOD test_001.
     DATA lv_x TYPE i.
     TYPES ty_t TYPE i.

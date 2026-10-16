@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_023 DEFINITION
+CLASS zcl_test_prefer_raise_new DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -9,7 +9,7 @@ CLASS zcl_skylint_test_023 DEFINITION
     METHODS test_004.
 ENDCLASS.
 
-CLASS zcl_skylint_test_023 IMPLEMENTATION.
+CLASS zcl_test_prefer_raise_new IMPLEMENTATION.
   METHOD test_001.
     RAISE EXCEPTION TYPE cx_sy_zerodivide.
   ENDMETHOD.

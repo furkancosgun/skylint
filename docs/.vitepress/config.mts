@@ -3,7 +3,7 @@ import { defineConfig } from 'vitepress';
 export default defineConfig({
   title: 'Skylint',
   description: 'Enterprise Clean ABAP & Cloud ATC Linter Engine',
-  base: '/',
+  base: process.env.VITEPRESS_BASE || '/',
   themeConfig: {
     logo: '/logo.svg',
     nav: [

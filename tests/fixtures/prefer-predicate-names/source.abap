@@ -38,7 +38,7 @@ CLASS lcl_state IMPLEMENTATION.
   ENDMETHOD.
 ENDCLASS.
 
-CLASS zcl_skylint_test_056 DEFINITION
+CLASS zcl_test_prefer_predicate_name DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -49,7 +49,7 @@ CLASS zcl_skylint_test_056 DEFINITION
     METHODS test_004.
 ENDCLASS.
 
-CLASS zcl_skylint_test_056 IMPLEMENTATION.
+CLASS zcl_test_prefer_predicate_name IMPLEMENTATION.
   METHOD test_001.
     RETURN.
   ENDMETHOD.

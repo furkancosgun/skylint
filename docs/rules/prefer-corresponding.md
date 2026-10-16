@@ -9,15 +9,13 @@ Prefer CORRESPONDING Expression over MOVE-CORRESPONDING.
 ## ❌ Non-Compliant Code
 
 ```abap
-ls_dst-id   = ls_src-id.
-ls_dst-name = ls_src-name.
-ls_dst-city = ls_src-city.
+MOVE-CORRESPONDING ls_source TO ls_target.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-ls_dst = CORRESPONDING #( ls_src ).
+ls_target = CORRESPONDING #( ls_source ).
 ```
 
 ## 🤫 Suppression & Pseudo-Comments

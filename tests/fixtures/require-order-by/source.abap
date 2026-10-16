@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_046 DEFINITION
+CLASS zcl_test_require_order_by DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -9,7 +9,7 @@ CLASS zcl_skylint_test_046 DEFINITION
     METHODS test_004.
 ENDCLASS.
 
-CLASS zcl_skylint_test_046 IMPLEMENTATION.
+CLASS zcl_test_require_order_by IMPLEMENTATION.
   METHOD test_001.
     DATA lt_tab TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
     SELECT * FROM zskylint_dummy UP TO 1 ROWS INTO TABLE @lt_tab.

@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_018 DEFINITION
+CLASS zcl_test_no_unreachable_code DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -10,7 +10,7 @@ CLASS zcl_skylint_test_018 DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_test_018 IMPLEMENTATION.
+CLASS zcl_test_no_unreachable_code IMPLEMENTATION.
   METHOD test_001.
     DATA lv_x TYPE i.
     RETURN.

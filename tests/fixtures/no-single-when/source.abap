@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_019 DEFINITION
+CLASS zcl_test_no_single_when DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -10,7 +10,7 @@ CLASS zcl_skylint_test_019 DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_test_019 IMPLEMENTATION.
+CLASS zcl_test_no_single_when IMPLEMENTATION.
   METHOD test_001.
     DATA lv_x TYPE i.
     DATA lv_type TYPE i.

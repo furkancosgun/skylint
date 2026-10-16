@@ -16,7 +16,7 @@ sy-tabix = 1.
 ## ✅ Compliant Code
 
 ```abap
-" Return an explicit status code or result variable instead
+" Pass explicit return values or flags instead of modifying system variables (sy-*)
 rv_success = abap_true.
 ```
 

@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_080 DEFINITION
+CLASS zcl_test_no_forbidden_statemen DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -9,7 +9,7 @@ CLASS zcl_skylint_test_080 DEFINITION
     METHODS test_004.
 ENDCLASS.
 
-CLASS zcl_skylint_test_080 IMPLEMENTATION.
+CLASS zcl_test_no_forbidden_statemen IMPLEMENTATION.
   METHOD test_001.
     BREAK-POINT.
   ENDMETHOD.

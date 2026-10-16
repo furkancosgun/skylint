@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_074 DEFINITION
+CLASS zcl_test_prefer_early_continue DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -14,7 +14,7 @@ CLASS zcl_skylint_test_074 DEFINITION
     METHODS test_004.
 ENDCLASS.
 
-CLASS zcl_skylint_test_074 IMPLEMENTATION.
+CLASS zcl_test_prefer_early_continue IMPLEMENTATION.
   METHOD test_001.
     DATA lt_tab TYPE STANDARD TABLE OF ty_row WITH DEFAULT KEY.
     DATA ls_row TYPE ty_row.

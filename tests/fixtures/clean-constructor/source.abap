@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_054 DEFINITION
+CLASS zcl_test_clean_constructor DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -10,7 +10,7 @@ CLASS zcl_skylint_test_054 DEFINITION
     METHODS test_004.
 ENDCLASS.
 
-CLASS zcl_skylint_test_054 IMPLEMENTATION.
+CLASS zcl_test_clean_constructor IMPLEMENTATION.
   METHOD constructor.
     DATA lv_val TYPE i.
     lv_val = 1.

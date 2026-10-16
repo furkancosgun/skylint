@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_037 DEFINITION
+CLASS zcl_test_no_try_without_catch DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -10,7 +10,7 @@ CLASS zcl_skylint_test_037 DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_test_037 IMPLEMENTATION.
+CLASS zcl_test_no_try_without_catch IMPLEMENTATION.
   METHOD test_001.
     TRY.
     ENDTRY.

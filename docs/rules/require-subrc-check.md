@@ -9,16 +9,16 @@ Check sy-subrc after DB, table and string operations.
 ## ❌ Non-Compliant Code
 
 ```abap
-READ TABLE lt_items INTO ls_item WITH KEY id = lv_id.
-process( ls_item ). " sy-subrc is never evaluated
+SELECT SINGLE * FROM /dmo/customer WHERE customer_id = @lv_id INTO @ls_customer.
+process_customer( ls_customer ). " sy-subrc is never checked
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-READ TABLE lt_items INTO ls_item WITH KEY id = lv_id.
+SELECT SINGLE * FROM /dmo/customer WHERE customer_id = @lv_id INTO @ls_customer.
 IF sy-subrc = 0.
-  process( ls_item ).
+  process_customer( ls_customer ).
 ENDIF.
 ```
 

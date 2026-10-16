@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_031 DEFINITION
+CLASS zcl_test_no_empty_fae DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -15,7 +15,7 @@ CLASS zcl_skylint_test_031 DEFINITION
     METHODS test_004.
 ENDCLASS.
 
-CLASS zcl_skylint_test_031 IMPLEMENTATION.
+CLASS zcl_test_no_empty_fae IMPLEMENTATION.
   METHOD test_001.
     DATA s TYPE tt_entry.
     DATA r TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.

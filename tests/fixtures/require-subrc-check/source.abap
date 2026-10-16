@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_064 DEFINITION
+CLASS zcl_test_require_subrc_check DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -9,7 +9,7 @@ CLASS zcl_skylint_test_064 DEFINITION
     METHODS test_004.
 ENDCLASS.
 
-CLASS zcl_skylint_test_064 IMPLEMENTATION.
+CLASS zcl_test_require_subrc_check IMPLEMENTATION.
   METHOD test_001.
     DATA lt_tab TYPE string_table.
     READ TABLE lt_tab INDEX 1 TRANSPORTING NO FIELDS.

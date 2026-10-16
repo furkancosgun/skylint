@@ -9,13 +9,13 @@ Avoid inline length specification in declarations.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lv_text TYPE c(20).
+DATA lv_code(10) TYPE c.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_text TYPE c LENGTH 20.
+DATA lv_code TYPE c LENGTH 10.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments

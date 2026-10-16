@@ -9,17 +9,15 @@ Detect obsolete string statements; prefer built-in functions.
 ## ❌ Non-Compliant Code
 
 ```abap
-IF lv_str CS 'ABAP'.
-  process( ).
-ENDIF.
+CONDENSE lv_text.
+TRANSLATE lv_code TO UPPER CASE.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-IF contains( val = lv_str sub = 'ABAP' ).
-  process( ).
-ENDIF.
+lv_text = condense( lv_text ).
+lv_code = to_upper( lv_code ).
 ```
 
 ## 🤫 Suppression & Pseudo-Comments

@@ -18,7 +18,7 @@ CLASS lcl_clean IMPLEMENTATION.
   ENDMETHOD.
 ENDCLASS.
 
-CLASS zcl_skylint_test_071 DEFINITION
+CLASS zcl_test_prefer_final_method DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -29,7 +29,7 @@ CLASS zcl_skylint_test_071 DEFINITION
     METHODS test_004.
 ENDCLASS.
 
-CLASS zcl_skylint_test_071 IMPLEMENTATION.
+CLASS zcl_test_prefer_final_method IMPLEMENTATION.
   METHOD test_001.
     RETURN.
   ENDMETHOD.

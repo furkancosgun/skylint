@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_049 DEFINITION
+CLASS zcl_test_no_raise_shortdump DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -9,7 +9,7 @@ CLASS zcl_skylint_test_049 DEFINITION
     METHODS test_004.
 ENDCLASS.
 
-CLASS zcl_skylint_test_049 IMPLEMENTATION.
+CLASS zcl_test_no_raise_shortdump IMPLEMENTATION.
   METHOD test_001.
     RAISE shortdump TYPE cx_sy_zerodivide.
   ENDMETHOD.

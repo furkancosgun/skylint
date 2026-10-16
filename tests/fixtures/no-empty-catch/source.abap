@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_015 DEFINITION
+CLASS zcl_test_no_empty_catch DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -10,7 +10,7 @@ CLASS zcl_skylint_test_015 DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_test_015 IMPLEMENTATION.
+CLASS zcl_test_no_empty_catch IMPLEMENTATION.
   METHOD test_001.
     TRY.
     CATCH cx_root.

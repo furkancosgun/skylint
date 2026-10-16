@@ -9,13 +9,15 @@ Enforce test method naming convention (TEST_, SHOULD_) in AUnit.
 ## ❌ Non-Compliant Code
 
 ```abap
-METHODS test1 FOR TESTING.
+METHODS calculate_discount FOR TESTING.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-METHODS calculate_tax_for_discount FOR TESTING.
+METHODS test_calculate_discount FOR TESTING.
+" Or:
+METHODS should_calculate_discount FOR TESTING.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments

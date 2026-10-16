@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_041 DEFINITION
+CLASS zcl_test_no_sy_modify DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -12,7 +12,7 @@ CLASS zcl_skylint_test_041 DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_test_041 IMPLEMENTATION.
+CLASS zcl_test_no_sy_modify IMPLEMENTATION.
   METHOD test_001.
     sy-subrc = 0.
   ENDMETHOD.

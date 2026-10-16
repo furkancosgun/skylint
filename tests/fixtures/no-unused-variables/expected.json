@@ -18,7 +18,7 @@
     "quickfixes": []
   },
   {
-    "method": "ZCL_SKYLINT_TEST_077",
+    "method": "ZCL_TEST_NO_UNUSED_VARIABLES",
     "code": null
   },
   {

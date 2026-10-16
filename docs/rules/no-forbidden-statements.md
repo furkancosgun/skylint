@@ -9,14 +9,16 @@ Avoid use of certain statements (BREAK, STATICS, DEFINE, EXPORT).
 ## ❌ Non-Compliant Code
 
 ```abap
-CALL TRANSACTION 'VA01'.
-LEAVE PROGRAM.
+BREAK-POINT.
+DEFINE append_item.
+  append &1 to &2.
+END-OF-DEFINITION.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-" In ABAP Cloud, invoke released APIs or RAP business objects instead
+" Remove hardcoded break-points and replace DEFINE macros with methods
 ```
 
 ## 🤫 Suppression & Pseudo-Comments

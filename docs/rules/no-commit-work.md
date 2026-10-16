@@ -9,14 +9,20 @@ Avoid COMMIT WORK / ROLLBACK WORK in behavior implementations.
 ## ❌ Non-Compliant Code
 
 ```abap
-COMMIT WORK AND WAIT.
+" Inside a RAP behavior implementation (CL_ABAP_BEHAVIOR_HANDLER)
+METHOD update.
+  MODIFY ENTITIES OF ...
+  COMMIT WORK.
+ENDMETHOD.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-" In ABAP Cloud / RAP, transactions are committed via RAP Save Sequence / COMMIT ENTITIES
-MODIFY ENTITIES OF ...
+" In RAP, commits are managed automatically by the framework save sequence
+METHOD update.
+  MODIFY ENTITIES OF ...
+ENDMETHOD.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments

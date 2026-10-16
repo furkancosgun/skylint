@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_082 DEFINITION
+CLASS zcl_test_no_inline_length DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -14,7 +14,7 @@ CLASS zcl_skylint_test_082 DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_test_082 IMPLEMENTATION.
+CLASS zcl_test_no_inline_length IMPLEMENTATION.
   METHOD test_001.
     DATA lv_text(30) TYPE c.
   ENDMETHOD.

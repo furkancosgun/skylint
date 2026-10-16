@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_005 DEFINITION
+CLASS zcl_test_no_me_reference DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -12,7 +12,7 @@ CLASS zcl_skylint_test_005 DEFINITION
     METHODS constructor.
 ENDCLASS.
 
-CLASS zcl_skylint_test_005 IMPLEMENTATION.
+CLASS zcl_test_no_me_reference IMPLEMENTATION.
   METHOD run.
     RETURN.
   ENDMETHOD.
@@ -22,7 +22,7 @@ CLASS zcl_skylint_test_005 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_002.
-    DATA lo_obj TYPE REF TO zcl_skylint_test_005.
+    DATA lo_obj TYPE REF TO zcl_test_no_me_reference.
     lo_obj->run( ).
   ENDMETHOD.
 
@@ -31,7 +31,7 @@ CLASS zcl_skylint_test_005 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_004.
-    DATA lo_runner TYPE REF TO zcl_skylint_test_005.
+    DATA lo_runner TYPE REF TO zcl_test_no_me_reference.
     lo_runner->run( ).
   ENDMETHOD.
 

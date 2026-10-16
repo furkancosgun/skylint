@@ -9,13 +9,13 @@ Detect unnecessary exclamation mark parameter escape (!iv_param).
 ## ❌ Non-Compliant Code
 
 ```abap
-lo_calc->compute( !iv_val = 10 ). " Unnecessary ! prefix
+METHODS process IMPORTING !iv_data TYPE string.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-lo_calc->compute( iv_val = 10 ).
+METHODS process IMPORTING iv_data TYPE string.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments

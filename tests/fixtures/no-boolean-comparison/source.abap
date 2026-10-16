@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_010 DEFINITION
+CLASS zcl_test_no_boolean_comparison DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -11,19 +11,19 @@ CLASS zcl_skylint_test_010 DEFINITION
     METHODS is_valid RETURNING VALUE(rv_flag) TYPE abap_bool.
 ENDCLASS.
 
-CLASS zcl_skylint_test_010 IMPLEMENTATION.
+CLASS zcl_test_no_boolean_comparison IMPLEMENTATION.
   METHOD is_valid.
     rv_flag = abap_true.
   ENDMETHOD.
 
   METHOD test_001.
-    DATA lo_validator TYPE REF TO zcl_skylint_test_010.
+    DATA lo_validator TYPE REF TO zcl_test_no_boolean_comparison.
     IF lo_validator->is_valid( ) = abap_true.
     ENDIF.
   ENDMETHOD.
 
   METHOD test_002.
-    DATA lo_validator TYPE REF TO zcl_skylint_test_010.
+    DATA lo_validator TYPE REF TO zcl_test_no_boolean_comparison.
     DATA lv_flag TYPE abap_bool.
     IF lo_validator->is_valid( ).
     ENDIF.
@@ -32,13 +32,13 @@ CLASS zcl_skylint_test_010 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_003.
-    DATA lo_validator TYPE REF TO zcl_skylint_test_010.
+    DATA lo_validator TYPE REF TO zcl_test_no_boolean_comparison.
     WHILE lo_validator->is_valid( ) <> abap_false.
     ENDWHILE.
   ENDMETHOD.
 
   METHOD test_004.
-    DATA lo_validator TYPE REF TO zcl_skylint_test_010.
+    DATA lo_validator TYPE REF TO zcl_test_no_boolean_comparison.
     WHILE lo_validator->is_valid( ).
     ENDWHILE.
   ENDMETHOD.

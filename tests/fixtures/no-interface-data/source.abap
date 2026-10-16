@@ -14,7 +14,7 @@ INTERFACE lif_consts2.
   CONSTANTS c_max TYPE i VALUE 100.
 ENDINTERFACE.
 
-CLASS zcl_skylint_test_059 DEFINITION
+CLASS zcl_test_no_interface_data DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -25,7 +25,7 @@ CLASS zcl_skylint_test_059 DEFINITION
     METHODS test_004.
 ENDCLASS.
 
-CLASS zcl_skylint_test_059 IMPLEMENTATION.
+CLASS zcl_test_no_interface_data IMPLEMENTATION.
   METHOD test_001.
     RETURN.
   ENDMETHOD.

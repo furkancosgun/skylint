@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_063 DEFINITION
+CLASS zcl_test_no_raise_cx_sy DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
@@ -11,7 +11,7 @@ CLASS zcl_skylint_test_063 DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_test_063 IMPLEMENTATION.
+CLASS zcl_test_no_raise_cx_sy IMPLEMENTATION.
   METHOD test_001.
     RAISE EXCEPTION TYPE cx_sy_zerodivide.
   ENDMETHOD.
