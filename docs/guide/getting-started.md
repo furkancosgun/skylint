@@ -59,16 +59,17 @@ Scan any ABAP source repository or folder:
 
 ```bash
 # Scan a directory against all 80+ Clean ABAP rules
-node scripts/lint-folder.mjs ./src
+skylint scan ./src
 
 # Scan with automatic QuickFix code transformation
-node scripts/lint-folder.mjs ./src --fix
+skylint scan ./src --fix
 
 # Scan filtering by a specific rule
-node scripts/lint-folder.mjs ./src --filter prefer-lines
+skylint scan ./src --filter prefer-lines
 
-# Output findings in JSON for pipeline ingestion
-node scripts/lint-folder.mjs ./src --json
+# Output findings in JSON or SARIF for pipeline ingestion
+skylint scan ./src --json
+skylint scan ./src --sarif > results.sarif
 ```
 
 ---

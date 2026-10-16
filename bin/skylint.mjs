@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 
-import { RULES, CATEGORIES, resolveRule } from '../scripts/rules-data.mjs';
-import { spawn } from 'node:child_process';
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { RULES, CATEGORIES, resolveRule } from '../scripts/rules-data.mjs';
+import { runScanner } from './scanner.mjs';
+import { defaultConfigText } from './config.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -11,6 +13,38 @@ const rootDir = path.resolve(__dirname, '..');
 
 const args = process.argv.slice(2);
 const command = args[0] || 'help';
+
+function printHelp() {
+  console.log(`
+\x1b[1m\x1b[36mSkylint\x1b[0m - Modern ABAP Cloud Clean Code Linter & ATC Check Suite
+
+\x1b[1mUSAGE:\x1b[0m
+  skylint <command> [arguments] [options]
+
+\x1b[1mCOMMANDS:\x1b[0m
+  \x1b[36mscan <folder>\x1b[0m         Scan ABAP files for Clean ABAP rule violations
+  \x1b[36mexplain <rule-id>\x1b[0m     Display rule documentation, rationale, and code examples
+  \x1b[36mlist\x1b[0m                  List all available Skylint rules categorized
+  \x1b[36minit [path]\x1b[0m           Generate default skylint.yaml configuration file
+  \x1b[36mhelp\x1b[0m                  Display this help message
+
+\x1b[1mSCAN OPTIONS:\x1b[0m
+  \x1b[33m--filter <text>\x1b[0m       Only run checks matching the filter
+  \x1b[33m--fix\x1b[0m                 Automatically apply safe QuickFixes
+  \x1b[33m--dry-run\x1b[0m             Preview QuickFixes without modifying files
+  \x1b[33m--config <file>\x1b[0m       Specify custom skylint.yaml path
+  \x1b[33m--json\x1b[0m                Output findings as JSON
+  \x1b[33m--sarif\x1b[0m               Output findings as SARIF for GitHub Code Scanning
+
+\x1b[1mEXAMPLES:\x1b[0m
+  skylint scan ./src
+  skylint scan ./src --fix
+  skylint scan ./src --filter prefer-lines
+  skylint explain prefer-lines
+  skylint list
+  skylint init
+`);
+}
 
 switch (command) {
   case 'explain':
@@ -62,12 +96,33 @@ switch (command) {
   case 'scan':
   case 'lint': {
     const scanArgs = args.slice(1);
-    const lintScript = path.join(rootDir, 'scripts', 'lint-folder.mjs');
-    const child = spawn(process.execPath, [lintScript, ...scanArgs], {
-      stdio: 'inherit',
-      cwd: process.cwd(),
+    runScanner(scanArgs).catch((err) => {
+      console.error(err);
+      process.exit(1);
     });
-    child.on('exit', (code) => process.exit(code || 0));
+    break;
+  }
+
+  case 'init': {
+    const targetPath = args[1] ? path.resolve(args[1]) : path.join(process.cwd(), 'skylint.yaml');
+    if (fs.existsSync(targetPath)) {
+      console.error(`Error: Refusing to overwrite existing file: ${targetPath}`);
+      process.exit(2);
+    }
+    fs.writeFileSync(targetPath, defaultConfigText(), 'utf8');
+    console.log(`\x1b[32m✓ Wrote default configuration:\x1b[0m ${targetPath}`);
+    break;
+  }
+
+  case '-v':
+  case '--version':
+  case 'version': {
+    try {
+      const pkg = JSON.parse(fs.readFileSync(path.join(rootDir, 'package.json'), 'utf8'));
+      console.log(`Skylint v${pkg.version}`);
+    } catch {
+      console.log('Skylint v1.0.0');
+    }
     break;
   }
 
@@ -75,28 +130,13 @@ switch (command) {
   case '--help':
   case '-h':
   default: {
-    console.log(`
-\x1b[1m\x1b[36mSkylint\x1b[0m - Enterprise Clean ABAP & Cloud ATC Linter Engine
-
-\x1b[1mUsage:\x1b[0m
-  skylint scan <directory> [options]    Scan ABAP source files
-  skylint explain <ruleId>              Show rule details with Clean ABAP Bad/Good code
-  skylint list                          List all 82 Clean ABAP rules
-  skylint help                          Show this help message
-
-\x1b[1mScan Options:\x1b[0m
-  --fix                                 Automatically apply QuickFixes to source files
-  --filter <ruleId>                     Run only the specified rule
-  --min-severity <error|warning|note>   Filter findings by minimum severity
-  --json                                Output results as JSON
-
-\x1b[1mExamples:\x1b[0m
-  skylint scan ./src
-  skylint scan ./src --fix
-  skylint explain prefer-new-operator
-  skylint explain require-auth-check
-  skylint list
-`);
+    if (command !== 'help' && command !== '--help' && command !== '-h') {
+      console.error(`Unknown command: ${command}\n`);
+    }
+    printHelp();
+    if (command !== 'help' && command !== '--help' && command !== '-h') {
+      process.exit(2);
+    }
     break;
   }
 }

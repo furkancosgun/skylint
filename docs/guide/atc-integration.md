@@ -148,5 +148,6 @@ jobs:
         with:
           node-version: 20
       - run: npm ci
-      - run: node scripts/lint-folder.mjs ./src --min-severity warning
+      - run: npm run build
+      - run: npx skylint scan ./src --config skylint.yaml
 ```

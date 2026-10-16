@@ -224,14 +224,14 @@ All ABAP code in `src/` **MUST** strictly pass `abaplint` validation with **0 wa
 
 ## 🛠️ Anatomy of a Skylint Check Rule
 
-Each check consists of 2 ABAP files + 1 fixture directory. Test sources live in `tests/fixtures/` (never shipped to SAP systems):
+Each check consists of 2 ABAP files + 1 fixture directory. Test sources live in `test/fixtures/` (never shipped to SAP systems):
 
 ```text
 src/
 ├── checks/
 │   ├── zcl_skylint_XXX.clas.abap         # 1. Main check implementation
 │   └── zcl_skylint_XXX.clas.xml          # 2. abapGit XML
-tests/
+test/
 └── fixtures/<rule-id>/
     ├── source.abap                       # 3. Full test class source
     └── expected.json                     # 4. Expected findings
@@ -299,7 +299,7 @@ ENDCLASS.
 ```
 
 ### 2. Main Check XML (`src/checks/zcl_skylint_XXX.clas.xml`)
-Plain abapGit class XML (no test include — tests live in `tests/fixtures/`, not in ABAP):
+Plain abapGit class XML (no test include — tests live in `test/fixtures/`, not in ABAP):
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -320,7 +320,7 @@ Plain abapGit class XML (no test include — tests live in `tests/fixtures/`, no
 </abapGit>
 ```
 
-### 3. Test Fixture (`tests/fixtures/<rule-id>/`)
+### 3. Test Fixture (`test/fixtures/<rule-id>/`)
 Each check keeps a fixture directory as test data, executed by the ATC-native
 harness (`test/run.mjs`: fixture → `ty_procedure` → real `if_ci_atc_check~run`
 with JS test doubles for the SAP boundary).
@@ -449,7 +449,7 @@ Follow this exact procedure when adding or modifying check rules:
 2. **Create the Check Class & Files:**
    - Create `src/checks/zcl_skylint_XXX.clas.abap` inheriting from `zcl_skylint_check_base`.
    - Create `src/checks/zcl_skylint_XXX.clas.xml` (plain abapGit class XML, no test include).
-   - Create `tests/fixtures/<rule-id>/source.abap` + `expected.json` for the JS harness.
+   - Create `test/fixtures/<rule-id>/source.abap` + `expected.json` for the JS harness.
 
 3. **Implement Inspection Logic:**
    - Adhere to the Zero Magic Index and Compiler References standards.

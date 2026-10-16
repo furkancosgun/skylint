@@ -30,11 +30,12 @@ skylint/
 │   │   ├── zcl_skylint_pref_lines.clas.abap      # Check class implementation
 │   │   └── zcl_skylint_pref_lines.clas.xml       # abapGit XML metadata
 │   └── deps/atc/src/                             # Local-only ATC framework stubs (never shipped)
-├── test/                                         # ATC-native JS test runner & doubles
+├── bin/                                          # Executable CLI (skylint scan, explain, list, init)
+├── lib/                                          # Core JS engine (ast parser, atc doubles, quickfix roundtrip)
+├── test/                                         # Test suite
+│   ├── fixtures/                                 # Test fixtures per check (source.abap + expected.json)
 │   ├── run.mjs                                   # Main test runner (executes checks via transpiled runtime)
-│   ├── roundtrip.mjs                             # QuickFix round-trip syntax validator
-│   └── ...                                       # AST enricher, RTTI feed, fakes
-├── tests/fixtures/                               # Test fixtures per check (source.abap + expected.json)
+│   └── stubs/                                    # Transpiler stubs
 ├── abaplint.json                                 # abaplint validation configuration & rule sets
 └── package.json                                  # Lint, build, and test scripts
 ```
@@ -184,7 +185,7 @@ CLASS zcl_skylint_pref_is_not IMPLEMENTATION.
 ENDCLASS.
 ```
 
-### Step 2: Add Test Fixtures (`tests/fixtures/prefer-is-not/`)
+### Step 2: Add Test Fixtures (`test/fixtures/prefer-is-not/`)
 
 Each check keeps a fixture directory as test data, executed by the
 ATC-native JS harness (`test/run.mjs`):
@@ -229,7 +230,7 @@ report_statement( is_statement    = <ls_statement>
                   iv_finding_code = c_finding_codes-prefer_is_not
                   is_quickfix     = ls_quickfix ).
 
-" 3. Verify findings via the fixture (`tests/fixtures/prefer-is-not/expected.json`).
+" 3. Verify findings via the fixture (`test/fixtures/prefer-is-not/expected.json`).
 ```
 
 ---
@@ -291,21 +292,24 @@ npm run index
 
 Scan any folder for `*.abap` files with rust-style diagnostics. Requires a prior `npm run build` (checks run transpiled, exactly as tested):
 
-```powershell
-# List issues
-npm run scan -- C:\projects\customer\src
+```bash
+# Scan folder with rust-style diagnostics
+npx skylint scan ./src
 
 # Only some checks, JSON / SARIF output, explicit config
-node scripts/lint-folder.mjs C:\projects\customer\src --filter prefer-lines --json --config skylint.yaml
-node scripts/lint-folder.mjs C:\projects\customer\src --sarif > results.sarif
+npx skylint scan ./src --filter prefer-lines --json --config skylint.yaml
+npx skylint scan ./src --sarif > results.sarif
 
 # Apply QuickFixes (writes files; each fix is syntax re-validated, overlapping
 # fixes are skipped, a file that would break is reverted untouched)
-node scripts/lint-folder.mjs C:\projects\customer\src --fix
-node scripts/lint-folder.mjs C:\projects\customer\src --fix --dry-run
+npx skylint scan ./src --fix
+npx skylint scan ./src --fix --dry-run
 
-# Write a default skylint.yaml into the folder (never overwrites)
-node scripts/lint-folder.mjs C:\projects\customer\src -d
+# Explain a specific rule with Bad vs Good examples
+npx skylint explain prefer-lines
+
+# Write a default skylint.yaml configuration (never overwrites)
+npx skylint init
 ```
 
 ```text

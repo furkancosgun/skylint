@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { parse as parseYaml } from 'yaml';
 
-import { resolveRule } from './rules-data.mjs';
+import { RULES, CATEGORIES, resolveRule } from '../scripts/rules-data.mjs';
 
 const SEVERITIES = ['error', 'warning', 'note'];
 export const SEV_RANK = { error: 0, warning: 1, note: 2 };
@@ -10,19 +10,36 @@ export const SEV_RANK = { error: 0, warning: 1, note: 2 };
 const CANDIDATE_NAMES = ['skylint.yaml', '.skylint.yaml', 'skylint.yml'];
 
 export function defaultConfigText() {
-  return `# skylint configuration. Auto-discovered as skylint.yaml, .skylint.yaml
-# or skylint.yml in the scanned folder or the working directory.
-# Hide findings below this severity: error | warning | note
+  let yaml = `# ==============================================================================
+# Skylint Configuration File (skylint.yaml)
+# Auto-discovered in the scanned folder or the current working directory.
+# Documentation: https://furkancosgun.github.io/skylint/guide/configuration
+# ==============================================================================
+
+# Minimum finding severity reported to console and exit code
+# Supported values: error | warning | note
 minSeverity: warning
-# Skip files (glob patterns, relative to the scanned folder)
+
+# File and folder exclusion patterns (standard glob syntax)
 exclude:
   - "**/*.testclasses.abap"
-# Per-check overrides by rule id
+
+# Rule configurations (all ${RULES.length} rules enabled by default)
 checks:
-  # prefer-lines: { enabled: false }
-  # no-empty-block: { severity: note }
-  # max-method-length: { enabled: false }
 `;
+
+  for (const [catKey, catInfo] of Object.entries(CATEGORIES)) {
+    const catRules = RULES.filter((r) => r.category === catKey);
+    if (catRules.length === 0) continue;
+    yaml += `\n  # ----------------------------------------------------------------------------\n`;
+    yaml += `  # ${catInfo.title} (${catRules.length} rules)\n`;
+    yaml += `  # ----------------------------------------------------------------------------\n`;
+    for (const r of catRules) {
+      yaml += `  ${r.ruleId}:\n    enabled: true\n`;
+    }
+  }
+
+  return yaml;
 }
 
 export function findConfigFile(folder, explicit) {

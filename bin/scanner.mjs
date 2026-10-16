@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -8,15 +7,15 @@ import {
   enrichStatementsWithAbaplint,
   feedRtti,
   extractAllProcedures,
-} from '../test/ast.mjs';
+} from '../lib/ast.mjs';
 import {
   buildProcedureValue,
   buildProceduresTable,
   buildObjectValue,
   createFakes,
-} from '../test/harness.mjs';
-import { applyFix, syntaxErrors } from '../test/roundtrip.mjs';
-import { initRuntime, createLoader } from '../test/run.mjs';
+} from '../lib/harness.mjs';
+import { applyFix, syntaxErrors } from '../lib/roundtrip.mjs';
+import { initRuntime, createLoader } from '../lib/runtime.mjs';
 import {
   findConfigFile,
   loadConfig,
@@ -26,27 +25,24 @@ import {
   matchesExclude,
   SEV_RANK,
 } from './config.mjs';
+import { RULES, resolveRule } from '../scripts/rules-data.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, '..');
 const outDir = path.join(rootDir, 'output');
-const projectDir = fs.existsSync(path.join(outDir, 'project')) ? path.join(outDir, 'project') : outDir;
 
 function usage() {
-  console.log('Usage: node scripts/lint-folder.mjs <folder> [--filter <id>] [--json] [--sarif] [--config <file>] [--fix] [--dry-run] [-d [file]]');
+  console.log('Usage: skylint scan <folder> [--filter <id>] [--json] [--sarif] [--config <file>] [--fix] [--dry-run]');
 }
 
-function parseArgs(argv) {
-  const opts = { folder: null, filter: null, json: false, sarif: false, config: null, fix: false, dryRun: false, init: null };
+export function parseScanArgs(argv) {
+  const opts = { folder: null, filter: null, json: false, sarif: false, config: null, fix: false, dryRun: false };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--filter' && i + 1 < argv.length) opts.filter = argv[++i];
     else if (a === '--config' && i + 1 < argv.length) opts.config = argv[++i];
-    else if (a === '-d' || a === '--init') {
-      if (i + 1 < argv.length && !argv[i + 1].startsWith('-')) opts.init = argv[++i];
-      else opts.init = true;
-    } else if (a === '--json') opts.json = true;
+    else if (a === '--json') opts.json = true;
     else if (a === '--sarif') opts.sarif = true;
     else if (a === '--fix') opts.fix = true;
     else if (a === '--dry-run') opts.dryRun = true;
@@ -59,10 +55,6 @@ function parseArgs(argv) {
       usage();
       process.exit(2);
     }
-  }
-  if (!opts.folder) {
-    usage();
-    process.exit(2);
   }
   return opts;
 }
@@ -79,8 +71,6 @@ function collectAbapFiles(dir, root, exclude, out = []) {
   }
   return out.sort();
 }
-
-import { RULES, resolveRule } from './rules-data.mjs';
 
 function discoverBuiltChecks() {
   return RULES.map((r) => r.ruleId);
@@ -517,23 +507,19 @@ function generateSarif(all, rootFolder, metaByCheck) {
   };
 }
 
-async function main() {
-  const opts = parseArgs(process.argv.slice(2));
+export async function runScanner(argv = []) {
+  const opts = parseScanArgs(argv);
+  if (!opts.folder) {
+    usage();
+    process.exit(2);
+  }
+
   const folder = path.resolve(opts.folder);
   if (!fs.existsSync(folder) || !fs.statSync(folder).isDirectory()) {
     console.error(`Not a directory: ${opts.folder}`);
     process.exit(2);
   }
-  if (opts.init) {
-    const target = opts.init === true ? path.join(folder, 'skylint.yaml') : path.resolve(opts.init);
-    if (fs.existsSync(target)) {
-      console.error(`Refusing to overwrite existing file: ${target}`);
-      process.exit(2);
-    }
-    fs.writeFileSync(target, defaultConfigText());
-    console.log(`Wrote default config: ${target}`);
-    process.exit(0);
-  }
+
   if (!fs.existsSync(path.join(outDir, 'init.mjs'))) {
     console.error('Transpiled runtime not found. Run `npm run build` first.');
     process.exit(2);
@@ -648,5 +634,3 @@ async function main() {
   }
   process.exit(remaining.length > 0 ? 1 : 0);
 }
-
-main();
