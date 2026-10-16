@@ -9,13 +9,20 @@ Limit number of member attributes in a class (God Class smell).
 ## ❌ Non-Compliant Code
 
 ```abap
-RETURN.
+CLASS cl_order DEFINITION.
+  PRIVATE SECTION.
+    " 30+ individual scalar member variables
+ENDCLASS.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-RETURN.
+CLASS cl_order DEFINITION.
+  PRIVATE SECTION.
+    DATA ms_header TYPE ty_order_header.
+    DATA mt_items  TYPE ty_order_items.
+ENDCLASS.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -25,9 +32,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC ATTRIBUTES
+" Or with SAP CI_ prefix:
+... "#EC CI_ATTRIBUTES
 
 " Using pragma:
 ... ##ATTRIBUTES.
+" Or with SAP CI_ prefix:
+... ##CI_ATTRIBUTES.
 ```
 
 ## Configuration (`skylint.yaml`)

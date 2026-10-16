@@ -9,16 +9,14 @@ Detect unreachable code following unconditional jump statements.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lv_x TYPE i.
 RETURN.
-lv_x = 1.
+lv_count = lv_count + 1. " Unreachable statement
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_x TYPE i.
-lv_x = 1.
+lv_count = lv_count + 1.
 RETURN.
 ```
 
@@ -29,9 +27,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC UNREACHABLE
+" Or with SAP CI_ prefix:
+... "#EC CI_UNREACHABLE
 
 " Using pragma:
 ... ##UNREACHABLE.
+" Or with SAP CI_ prefix:
+... ##CI_UNREACHABLE.
 ```
 
 ## Configuration (`skylint.yaml`)

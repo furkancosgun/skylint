@@ -9,26 +9,26 @@ Change IF to CASE when checking the same variable against multiple values.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lv_val TYPE i.
-IF lv_val = 1.
-  lv_val = 10.
-ELSEIF lv_val = 2.
-  lv_val = 20.
-ELSEIF lv_val = 3.
-  lv_val = 30.
+IF lv_type = 'A'.
+  process_a( ).
+ELSEIF lv_type = 'B'.
+  process_b( ).
+ELSEIF lv_type = 'C'.
+  process_c( ).
 ENDIF.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_a TYPE i.
-DATA lv_b TYPE i.
-IF lv_a = 1.
-  lv_a = 10.
-ELSEIF lv_b = 2.
-  lv_b = 20.
-ENDIF.
+CASE lv_type.
+  WHEN 'A'.
+    process_a( ).
+  WHEN 'B'.
+    process_b( ).
+  WHEN 'C'.
+    process_c( ).
+ENDCASE.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -38,9 +38,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC PREF_CASE
+" Or with SAP CI_ prefix:
+... "#EC CI_PREF_CASE
 
 " Using pragma:
 ... ##PREF_CASE.
+" Or with SAP CI_ prefix:
+... ##CI_PREF_CASE.
 ```
 
 ## Configuration (`skylint.yaml`)

@@ -9,17 +9,13 @@ Prefer INSERT ... INTO TABLE over APPEND for table safety.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lt_tab TYPE string_table.
-DATA ls_row TYPE string.
-APPEND ls_row TO lt_tab.
+APPEND ls_item TO lt_hashed_items.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lt_tab TYPE string_table.
-DATA ls_row TYPE string.
-INSERT ls_row INTO TABLE lt_tab.
+INSERT ls_item INTO TABLE lt_hashed_items.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -29,9 +25,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC INSERT_INTO
+" Or with SAP CI_ prefix:
+... "#EC CI_INSERT_INTO
 
 " Using pragma:
 ... ##INSERT_INTO.
+" Or with SAP CI_ prefix:
+... ##CI_INSERT_INTO.
 ```
 
 ## Configuration (`skylint.yaml`)

@@ -9,13 +9,13 @@ Avoid inline length specification in declarations.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lv_text(30) TYPE c.
+DATA lv_text TYPE c(20).
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_text TYPE c LENGTH 30.
+DATA lv_text TYPE c LENGTH 20.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -25,9 +25,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC PAREN_LEN
+" Or with SAP CI_ prefix:
+... "#EC CI_PAREN_LEN
 
 " Using pragma:
 ... ##PAREN_LEN.
+" Or with SAP CI_ prefix:
+... ##CI_PAREN_LEN.
 ```
 
 ## Configuration (`skylint.yaml`)

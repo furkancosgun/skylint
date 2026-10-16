@@ -9,19 +9,13 @@ Prefer string templates over CONCATENATE.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lv_a TYPE string.
-DATA lv_b TYPE string.
-DATA lv_c TYPE string.
-CONCATENATE lv_a lv_b INTO lv_c.
+CONCATENATE 'Hello' iv_name INTO lv_greeting SEPARATED BY space.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_a TYPE string.
-DATA lv_b TYPE string.
-DATA lv_c TYPE string.
-lv_c = |{ lv_a }{ lv_b }|.
+lv_greeting = |Hello { iv_name }|.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -31,9 +25,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC STR_TMPL
+" Or with SAP CI_ prefix:
+... "#EC CI_STR_TMPL
 
 " Using pragma:
 ... ##STR_TMPL.
+" Or with SAP CI_ prefix:
+... ##CI_STR_TMPL.
 ```
 
 ## Configuration (`skylint.yaml`)

@@ -9,14 +9,14 @@ Avoid calling static methods via instance arrow (->).
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lo_obj TYPE REF TO zcl_skylint_test_026.
-lo_obj->do_work( ).
+DATA lo_instance TYPE REF TO cl_helper.
+lo_instance->static_method( ).
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-zcl_skylint_test_026=>do_work( ).
+cl_helper=>static_method( ).
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -26,9 +26,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC STATIC_ARROW
+" Or with SAP CI_ prefix:
+... "#EC CI_STATIC_ARROW
 
 " Using pragma:
 ... ##STATIC_ARROW.
+" Or with SAP CI_ prefix:
+... ##CI_STATIC_ARROW.
 ```
 
 ## Configuration (`skylint.yaml`)

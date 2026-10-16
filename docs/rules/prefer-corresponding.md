@@ -9,16 +9,14 @@ Prefer CORRESPONDING Expression over MOVE-CORRESPONDING.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA: BEGIN OF ls_src, a TYPE i, END OF ls_src.
-DATA: BEGIN OF ls_dst, a TYPE i, END OF ls_dst.
-MOVE-CORRESPONDING ls_src TO ls_dst.
+ls_dst-id   = ls_src-id.
+ls_dst-name = ls_src-name.
+ls_dst-city = ls_src-city.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA: BEGIN OF ls_src, a TYPE i, END OF ls_src.
-DATA: BEGIN OF ls_dst, a TYPE i, END OF ls_dst.
 ls_dst = CORRESPONDING #( ls_src ).
 ```
 
@@ -29,9 +27,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC CORRESP
+" Or with SAP CI_ prefix:
+... "#EC CI_CORRESP
 
 " Using pragma:
 ... ##CORRESP.
+" Or with SAP CI_ prefix:
+... ##CI_CORRESP.
 ```
 
 ## Configuration (`skylint.yaml`)

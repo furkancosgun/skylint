@@ -9,13 +9,17 @@ Avoid mutable DATA declarations in interfaces; allow only CONSTANTS.
 ## ❌ Non-Compliant Code
 
 ```abap
-RETURN.
+INTERFACE if_customer.
+  DATA mv_id TYPE string.
+ENDINTERFACE.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-RETURN.
+INTERFACE if_customer.
+  METHODS get_id RETURNING VALUE(rv_id) TYPE string.
+ENDINTERFACE.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -25,9 +29,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC INTF_DATA
+" Or with SAP CI_ prefix:
+... "#EC CI_INTF_DATA
 
 " Using pragma:
 ... ##INTF_DATA.
+" Or with SAP CI_ prefix:
+... ##CI_INTF_DATA.
 ```
 
 ## Configuration (`skylint.yaml`)

@@ -9,7 +9,14 @@ Avoid COMMIT WORK / ROLLBACK WORK in behavior implementations.
 ## ❌ Non-Compliant Code
 
 ```abap
-COMMIT WORK.
+COMMIT WORK AND WAIT.
+```
+
+## ✅ Compliant Code
+
+```abap
+" In ABAP Cloud / RAP, transactions are committed via RAP Save Sequence / COMMIT ENTITIES
+MODIFY ENTITIES OF ...
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -19,9 +26,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC COMMIT_WORK
+" Or with SAP CI_ prefix:
+... "#EC CI_COMMIT_WORK
 
 " Using pragma:
 ... ##COMMIT_WORK.
+" Or with SAP CI_ prefix:
+... ##CI_COMMIT_WORK.
 ```
 
 ## Configuration (`skylint.yaml`)

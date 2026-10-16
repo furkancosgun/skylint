@@ -9,10 +9,9 @@ Avoid obsolete control statements (ON CHANGE OF, AT NEW, SUM) in LOOP.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lt_tab TYPE string_table.
-DATA ls_row TYPE string.
-LOOP AT lt_tab INTO ls_row.
-  AT NEW table_line.
+LOOP AT lt_items INTO ls_item.
+  AT NEW id.
+    " Obsolete control block inside LOOP
   ENDAT.
 ENDLOOP.
 ```
@@ -20,10 +19,8 @@ ENDLOOP.
 ## ✅ Compliant Code
 
 ```abap
-DATA lt_tab TYPE string_table.
-DATA ls_row TYPE string.
-LOOP AT lt_tab INTO ls_row.
-  CONTINUE.
+LOOP AT lt_items INTO ls_item GROUP BY ( id = ls_item-id ) INTO DATA(group).
+  " Modern ABAP GROUP BY
 ENDLOOP.
 ```
 
@@ -34,9 +31,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC OBS_LOOP_CTL
+" Or with SAP CI_ prefix:
+... "#EC CI_OBS_LOOP_CTL
 
 " Using pragma:
 ... ##OBS_LOOP_CTL.
+" Or with SAP CI_ prefix:
+... ##CI_OBS_LOOP_CTL.
 ```
 
 ## Configuration (`skylint.yaml`)

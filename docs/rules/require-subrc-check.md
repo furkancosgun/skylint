@@ -9,16 +9,16 @@ Check sy-subrc after DB, table and string operations.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lt_tab TYPE string_table.
-READ TABLE lt_tab INDEX 1 TRANSPORTING NO FIELDS.
+READ TABLE lt_items INTO ls_item WITH KEY id = lv_id.
+process( ls_item ). " sy-subrc is never evaluated
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lt_tab TYPE string_table.
-READ TABLE lt_tab INDEX 1 TRANSPORTING NO FIELDS.
+READ TABLE lt_items INTO ls_item WITH KEY id = lv_id.
 IF sy-subrc = 0.
+  process( ls_item ).
 ENDIF.
 ```
 
@@ -29,9 +29,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC CHECK_SUBRC
+" Or with SAP CI_ prefix:
+... "#EC CI_CHECK_SUBRC
 
 " Using pragma:
 ... ##CHECK_SUBRC.
+" Or with SAP CI_ prefix:
+... ##CI_CHECK_SUBRC.
 ```
 
 ## Configuration (`skylint.yaml`)

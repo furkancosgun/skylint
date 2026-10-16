@@ -9,19 +9,21 @@ Avoid CHECK in loop/iteration structures (prefer IF ... CONTINUE).
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lv_flag TYPE abap_bool.
-DATA lt_tab TYPE string_table.
-DATA ls_row TYPE string.
-LOOP AT lt_tab INTO ls_row.
-  CHECK lv_flag = abap_true.
+LOOP AT lt_items INTO ls_item.
+  CHECK ls_item-status = 'ACTIVE'.
+  process( ls_item ).
 ENDLOOP.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_flag TYPE abap_bool.
-CHECK lv_flag = abap_true.
+LOOP AT lt_items INTO ls_item.
+  IF ls_item-status <> 'ACTIVE'.
+    CONTINUE.
+  ENDIF.
+  process( ls_item ).
+ENDLOOP.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -31,9 +33,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC CHECK_IN_LOOP
+" Or with SAP CI_ prefix:
+... "#EC CI_CHECK_IN_LOOP
 
 " Using pragma:
 ... ##CHECK_IN_LOOP.
+" Or with SAP CI_ prefix:
+... ##CI_CHECK_IN_LOOP.
 ```
 
 ## Configuration (`skylint.yaml`)

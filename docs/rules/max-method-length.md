@@ -9,27 +9,21 @@ Method Length Limit (excessive statement count).
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lv_a TYPE i.
-DATA lv_b TYPE i.
-DATA lv_c TYPE i.
-DATA lv_d TYPE i.
-DATA lv_e TYPE i.
-DATA lv_f TYPE i.
-lv_a = 1.
-lv_b = 2.
-lv_c = 3.
-lv_d = 4.
-lv_e = 5.
-lv_f = 6.
+" Large method exceeding configured statement threshold (> 50 statements)
+METHOD execute.
+  " 60+ statements in a single procedure...
+ENDMETHOD.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_a TYPE i.
-DATA lv_b TYPE i.
-lv_a = 1.
-lv_b = 2.
+" Split into smaller, single-responsibility helper methods
+METHOD execute.
+  prepare_data( ).
+  process_records( ).
+  finalize_result( ).
+ENDMETHOD.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -39,9 +33,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC METHOD_LEN
+" Or with SAP CI_ prefix:
+... "#EC CI_METHOD_LEN
 
 " Using pragma:
 ... ##METHOD_LEN.
+" Or with SAP CI_ prefix:
+... ##CI_METHOD_LEN.
 ```
 
 ## Configuration (`skylint.yaml`)

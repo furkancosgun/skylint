@@ -9,15 +9,15 @@ Select performance (Avoid SELECT * and SELECT ... ENDSELECT).
 ## ❌ Non-Compliant Code
 
 ```abap
-SELECT * FROM zskylint_dummy INTO @DATA(ls_row).
-ENDSELECT.
+SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lt_tab TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
-SELECT field1 FROM zskylint_dummy INTO TABLE @lt_tab.
+SELECT customer_id, first_name, last_name
+  FROM /dmo/customer
+  INTO TABLE @lt_customers.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -27,9 +27,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC SELECT_STAR
+" Or with SAP CI_ prefix:
+... "#EC CI_SELECT_STAR
 
 " Using pragma:
 ... ##SELECT_STAR.
+" Or with SAP CI_ prefix:
+... ##CI_SELECT_STAR.
 ```
 
 ## Configuration (`skylint.yaml`)

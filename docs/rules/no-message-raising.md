@@ -9,13 +9,13 @@ Avoid obsolete MESSAGE ... RAISING; use class-based exceptions.
 ## ❌ Non-Compliant Code
 
 ```abap
-MESSAGE e001(00) WITH 'test' RAISING error.
+MESSAGE e001(zmsg) RAISING not_found.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-MESSAGE 'clean' TYPE 'I'.
+RAISE EXCEPTION NEW cx_not_found( textid = cx_not_found=>c_item_missing ).
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -25,9 +25,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC MSG_RAISING
+" Or with SAP CI_ prefix:
+... "#EC CI_MSG_RAISING
 
 " Using pragma:
 ... ##MSG_RAISING.
+" Or with SAP CI_ prefix:
+... ##CI_MSG_RAISING.
 ```
 
 ## Configuration (`skylint.yaml`)

@@ -9,13 +9,13 @@ Enforce fully typed constant declarations.
 ## ❌ Non-Compliant Code
 
 ```abap
-CONSTANTS lc_val VALUE 'X'.
+METHODS process IMPORTING it_data TYPE table.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-CONSTANTS lc_val TYPE string VALUE 'X'.
+METHODS process IMPORTING it_data TYPE string_table.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -25,9 +25,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC FULL_TYPED
+" Or with SAP CI_ prefix:
+... "#EC CI_FULL_TYPED
 
 " Using pragma:
 ... ##FULL_TYPED.
+" Or with SAP CI_ prefix:
+... ##CI_FULL_TYPED.
 ```
 
 ## Configuration (`skylint.yaml`)

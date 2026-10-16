@@ -9,13 +9,19 @@ Prefer marking non-overridden methods as FINAL.
 ## ❌ Non-Compliant Code
 
 ```abap
-RETURN.
+CLASS cl_service DEFINITION PUBLIC.
+  PUBLIC SECTION.
+    METHODS process. " In class not intended for polymorphic overriding
+ENDCLASS.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-RETURN.
+CLASS cl_service DEFINITION PUBLIC.
+  PUBLIC SECTION.
+    METHODS process FINAL.
+ENDCLASS.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -25,9 +31,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC FINAL_METHOD
+" Or with SAP CI_ prefix:
+... "#EC CI_FINAL_METHOD
 
 " Using pragma:
 ... ##FINAL_METHOD.
+" Or with SAP CI_ prefix:
+... ##CI_FINAL_METHOD.
 ```
 
 ## Configuration (`skylint.yaml`)

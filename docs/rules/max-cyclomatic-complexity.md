@@ -9,29 +9,20 @@ Cyclomatic Complexity Threshold.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lv_a TYPE i.
-DATA lv_b TYPE i.
-DATA lv_c TYPE i.
-DATA lv_d TYPE i.
-DATA lv_e TYPE i.
-IF lv_a = 1.
-ENDIF.
-IF lv_b = 2.
-ENDIF.
-IF lv_c = 3.
-ENDIF.
-IF lv_d = 4.
-ENDIF.
-IF lv_e = 5.
-ENDIF.
+" Complex method containing excessive branches (> 10 cyclomatic complexity)
+METHOD compute.
+  IF c1. ... ELSEIF c2. ... ELSEIF c3. ...
+ENDMETHOD.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_a TYPE i.
-IF lv_a = 1.
-ENDIF.
+" Decompose into strategy classes or cohesive helper methods
+METHOD compute.
+  ro_strategy = mo_factory->get_strategy( mv_type ).
+  ro_strategy->execute( ).
+ENDMETHOD.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -41,9 +32,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC CYCLO_COMP
+" Or with SAP CI_ prefix:
+... "#EC CI_CYCLO_COMP
 
 " Using pragma:
 ... ##CYCLO_COMP.
+" Or with SAP CI_ prefix:
+... ##CI_CYCLO_COMP.
 ```
 
 ## Configuration (`skylint.yaml`)

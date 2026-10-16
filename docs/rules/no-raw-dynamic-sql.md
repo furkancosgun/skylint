@@ -9,16 +9,13 @@ Avoid dynamic SQL table or clause names without sanitization.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lv_tab TYPE string.
-DATA lt_tab TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
-SELECT * FROM (lv_tab) INTO TABLE @lt_tab.
+SELECT * FROM (lv_table) WHERE (lv_where) INTO TABLE @<lt_out>.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lt_tab TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
-SELECT * FROM zskylint_dummy INTO TABLE @lt_tab.
+SELECT * FROM /dmo/customer WHERE customer_id = @lv_id INTO TABLE @lt_customers.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -28,9 +25,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC RAW_DYN_SQL
+" Or with SAP CI_ prefix:
+... "#EC CI_RAW_DYN_SQL
 
 " Using pragma:
 ... ##RAW_DYN_SQL.
+" Or with SAP CI_ prefix:
+... ##CI_RAW_DYN_SQL.
 ```
 
 ## Configuration (`skylint.yaml`)

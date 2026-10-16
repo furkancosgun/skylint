@@ -9,13 +9,13 @@ Enforce test method naming convention (TEST_, SHOULD_) in AUnit.
 ## ❌ Non-Compliant Code
 
 ```abap
-RETURN.
+METHODS test1 FOR TESTING.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-RETURN.
+METHODS calculate_tax_for_discount FOR TESTING.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -25,9 +25,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC TEST_NAME
+" Or with SAP CI_ prefix:
+... "#EC CI_TEST_NAME
 
 " Using pragma:
 ... ##TEST_NAME.
+" Or with SAP CI_ prefix:
+... ##CI_TEST_NAME.
 ```
 
 ## Configuration (`skylint.yaml`)

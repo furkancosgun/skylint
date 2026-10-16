@@ -9,13 +9,16 @@ Call Transaction Authority Check.
 ## ❌ Non-Compliant Code
 
 ```abap
-CALL TRANSACTION 'VA01'.
+SELECT * FROM /dmo/customer WHERE customer_id = @iv_id INTO TABLE @lt_customers.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-CALL TRANSACTION 'VA01' WITH AUTHORITY-CHECK.
+AUTHORITY-CHECK OBJECT 'S_CUSTOMER' ID 'ACTVT' FIELD '03'.
+IF sy-subrc = 0.
+  SELECT * FROM /dmo/customer WHERE customer_id = @iv_id INTO TABLE @lt_customers.
+ENDIF.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -25,9 +28,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC AUTH_CHECK
+" Or with SAP CI_ prefix:
+... "#EC CI_AUTH_CHECK
 
 " Using pragma:
 ... ##AUTH_CHECK.
+" Or with SAP CI_ prefix:
+... ##CI_AUTH_CHECK.
 ```
 
 ## Configuration (`skylint.yaml`)

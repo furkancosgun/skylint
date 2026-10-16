@@ -9,17 +9,13 @@ Omit explicit EXPORTING in method calls.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lo_obj TYPE REF TO zcl_skylint_test_006.
-DATA lv_x TYPE i.
-lo_obj->run( EXPORTING iv_in = lv_x ).
+lo_calc->compute( EXPORTING iv_val = 10 ).
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lo_obj TYPE REF TO zcl_skylint_test_006.
-DATA lv_x TYPE i.
-lo_obj->run( iv_in = lv_x ).
+lo_calc->compute( iv_val = 10 ).
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -29,9 +25,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC EXPORTING
+" Or with SAP CI_ prefix:
+... "#EC CI_EXPORTING
 
 " Using pragma:
 ... ##EXPORTING.
+" Or with SAP CI_ prefix:
+... ##CI_EXPORTING.
 ```
 
 ## Configuration (`skylint.yaml`)

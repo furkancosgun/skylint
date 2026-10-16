@@ -9,14 +9,15 @@ Avoid self-reference ME->.
 ## ❌ Non-Compliant Code
 
 ```abap
-me->run( ).
+me->mv_status = c_active.
+me->process_order( ).
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lo_obj TYPE REF TO zcl_skylint_test_005.
-lo_obj->run( ).
+mv_status = c_active.
+process_order( ).
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -26,9 +27,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC ME
+" Or with SAP CI_ prefix:
+... "#EC CI_ME
 
 " Using pragma:
 ... ##ME.
+" Or with SAP CI_ prefix:
+... ##CI_ME.
 ```
 
 ## Configuration (`skylint.yaml`)

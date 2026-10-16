@@ -9,18 +9,20 @@ Unsecure FOR ALL ENTRIES (Missing empty itab check).
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA s TYPE tt_entry.
-DATA r TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
-SELECT * FROM zskylint_dummy INTO TABLE @r FOR ALL ENTRIES IN @s WHERE field1 = @s-field1.
+SELECT * FROM /dmo/customer
+  FOR ALL ENTRIES IN @lt_orders
+  WHERE customer_id = @lt_orders-customer_id
+  INTO TABLE @lt_customers.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA s TYPE tt_entry.
-DATA r TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
-IF s IS NOT INITIAL.
-  SELECT * FROM zskylint_dummy INTO TABLE @r FOR ALL ENTRIES IN @s WHERE field1 = @s-field1.
+IF lt_orders IS NOT INITIAL.
+  SELECT * FROM /dmo/customer
+    FOR ALL ENTRIES IN @lt_orders
+    WHERE customer_id = @lt_orders-customer_id
+    INTO TABLE @lt_customers.
 ENDIF.
 ```
 
@@ -31,9 +33,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC EMPTY_FAE
+" Or with SAP CI_ prefix:
+... "#EC CI_EMPTY_FAE
 
 " Using pragma:
 ... ##EMPTY_FAE.
+" Or with SAP CI_ prefix:
+... ##CI_EMPTY_FAE.
 ```
 
 ## Configuration (`skylint.yaml`)

@@ -9,13 +9,21 @@ Avoid mutable public attributes in classes.
 ## ❌ Non-Compliant Code
 
 ```abap
-RETURN.
+CLASS cl_model DEFINITION PUBLIC.
+  PUBLIC SECTION.
+    DATA mv_state TYPE i.
+ENDCLASS.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-RETURN.
+CLASS cl_model DEFINITION PUBLIC.
+  PUBLIC SECTION.
+    METHODS get_state RETURNING VALUE(rv_state) TYPE i.
+  PRIVATE SECTION.
+    DATA mv_state TYPE i.
+ENDCLASS.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -25,9 +33,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC PUBLIC_ATTR
+" Or with SAP CI_ prefix:
+... "#EC CI_PUBLIC_ATTR
 
 " Using pragma:
 ... ##PUBLIC_ATTR.
+" Or with SAP CI_ prefix:
+... ##CI_PUBLIC_ATTR.
 ```
 
 ## Configuration (`skylint.yaml`)

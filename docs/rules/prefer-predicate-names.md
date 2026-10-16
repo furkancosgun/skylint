@@ -9,13 +9,13 @@ Enforce predicate naming (IS_, HAS_, CAN_) on boolean methods.
 ## ❌ Non-Compliant Code
 
 ```abap
-RETURN.
+METHODS validate_customer RETURNING VALUE(rv_valid) TYPE abap_bool.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-RETURN.
+METHODS is_customer_valid RETURNING VALUE(rv_valid) TYPE abap_bool.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -25,9 +25,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC PRED_NAME
+" Or with SAP CI_ prefix:
+... "#EC CI_PRED_NAME
 
 " Using pragma:
 ... ##PRED_NAME.
+" Or with SAP CI_ prefix:
+... ##CI_PRED_NAME.
 ```
 
 ## Configuration (`skylint.yaml`)

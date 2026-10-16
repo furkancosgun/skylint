@@ -10,6 +10,9 @@ Detect TRY without CATCH.
 
 ```abap
 TRY.
+    do_work( ).
+  CLEANUP.
+    cleanup( ).
 ENDTRY.
 ```
 
@@ -17,7 +20,11 @@ ENDTRY.
 
 ```abap
 TRY.
-CATCH cx_root.
+    do_work( ).
+  CATCH cx_failed INTO DATA(lx_err).
+    handle( lx_err ).
+  CLEANUP.
+    cleanup( ).
 ENDTRY.
 ```
 
@@ -28,9 +35,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC TRY_NO_CATCH
+" Or with SAP CI_ prefix:
+... "#EC CI_TRY_NO_CATCH
 
 " Using pragma:
 ... ##TRY_NO_CATCH.
+" Or with SAP CI_ prefix:
+... ##CI_TRY_NO_CATCH.
 ```
 
 ## Configuration (`skylint.yaml`)

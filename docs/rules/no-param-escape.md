@@ -9,13 +9,13 @@ Detect unnecessary exclamation mark parameter escape (!iv_param).
 ## ❌ Non-Compliant Code
 
 ```abap
-RETURN.
+lo_calc->compute( !iv_val = 10 ). " Unnecessary ! prefix
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-RETURN.
+lo_calc->compute( iv_val = 10 ).
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -25,9 +25,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC PARAM_ESCAPE
+" Or with SAP CI_ prefix:
+... "#EC CI_PARAM_ESCAPE
 
 " Using pragma:
 ... ##PARAM_ESCAPE.
+" Or with SAP CI_ prefix:
+... ##CI_PARAM_ESCAPE.
 ```
 
 ## Configuration (`skylint.yaml`)

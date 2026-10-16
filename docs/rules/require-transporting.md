@@ -9,21 +9,13 @@ Avoid full-line MODIFY itab inside LOOP without TRANSPORTING clause.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lt_tab TYPE STANDARD TABLE OF ty_row WITH DEFAULT KEY.
-DATA ls_row TYPE ty_row.
-LOOP AT lt_tab INTO ls_row.
-  MODIFY lt_tab FROM ls_row.
-ENDLOOP.
+READ TABLE lt_items WITH KEY id = lv_id TRANSPORTING ALL FIELDS INTO ls_item.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lt_tab TYPE STANDARD TABLE OF ty_row WITH DEFAULT KEY.
-DATA ls_row TYPE ty_row.
-LOOP AT lt_tab INTO ls_row.
-  MODIFY lt_tab FROM ls_row TRANSPORTING field1.
-ENDLOOP.
+READ TABLE lt_items WITH KEY id = lv_id TRANSPORTING NO FIELDS.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -33,9 +25,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC TRANSPORTING
+" Or with SAP CI_ prefix:
+... "#EC CI_TRANSPORTING
 
 " Using pragma:
 ... ##TRANSPORTING.
+" Or with SAP CI_ prefix:
+... ##CI_TRANSPORTING.
 ```
 
 ## Configuration (`skylint.yaml`)

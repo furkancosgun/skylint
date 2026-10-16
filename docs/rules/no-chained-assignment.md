@@ -9,18 +9,15 @@ Avoid assignment chaining (a = b = c).
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lv_a TYPE i.
-DATA lv_b TYPE i.
-DATA lv_c TYPE i.
-lv_a = lv_b = lv_c.
+lv_a = lv_b = lv_c = 0.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_a TYPE i.
-DATA lv_b TYPE i.
-lv_a = lv_b.
+lv_a = 0.
+lv_b = 0.
+lv_c = 0.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -30,9 +27,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC CHAIN_ASSIGN
+" Or with SAP CI_ prefix:
+... "#EC CI_CHAIN_ASSIGN
 
 " Using pragma:
 ... ##CHAIN_ASSIGN.
+" Or with SAP CI_ prefix:
+... ##CI_CHAIN_ASSIGN.
 ```
 
 ## Configuration (`skylint.yaml`)

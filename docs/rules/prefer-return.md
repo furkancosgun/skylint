@@ -9,17 +9,23 @@ Prefer RETURN over EXIT outside loop constructs.
 ## ❌ Non-Compliant Code
 
 ```abap
-EXIT.
+METHOD execute.
+  IF is_invalid( ).
+    EXIT.
+  ENDIF.
+  process( ).
+ENDMETHOD.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lt_tab TYPE string_table.
-DATA ls_row TYPE string.
-LOOP AT lt_tab INTO ls_row.
-EXIT.
-ENDLOOP.
+METHOD execute.
+  IF is_invalid( ).
+    RETURN.
+  ENDIF.
+  process( ).
+ENDMETHOD.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -29,9 +35,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC RETURN
+" Or with SAP CI_ prefix:
+... "#EC CI_RETURN
 
 " Using pragma:
 ... ##RETURN.
+" Or with SAP CI_ prefix:
+... ##CI_RETURN.
 ```
 
 ## Configuration (`skylint.yaml`)

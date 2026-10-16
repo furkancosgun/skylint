@@ -9,15 +9,13 @@ SELECT UP TO 1 ROWS requires ORDER BY.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lt_tab TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
-SELECT * FROM zskylint_dummy UP TO 1 ROWS INTO TABLE @lt_tab.
+SELECT * FROM /dmo/customer UP TO 10 ROWS INTO TABLE @lt_customers.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lt_tab TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
-SELECT * FROM zskylint_dummy UP TO 1 ROWS INTO TABLE @lt_tab ORDER BY field1.
+SELECT * FROM /dmo/customer ORDER BY customer_id UP TO 10 ROWS INTO TABLE @lt_customers.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -27,9 +25,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC ORDER_BY
+" Or with SAP CI_ prefix:
+... "#EC CI_ORDER_BY
 
 " Using pragma:
 ... ##ORDER_BY.
+" Or with SAP CI_ prefix:
+... ##CI_ORDER_BY.
 ```
 
 ## Configuration (`skylint.yaml`)

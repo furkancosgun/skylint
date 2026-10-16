@@ -10,17 +10,19 @@ Detect empty CATCH blocks swallowing exceptions.
 
 ```abap
 TRY.
-CATCH cx_root.
+    lo_calc->compute( ).
+  CATCH cx_sy_zerodivide.
+    " Silently ignored exception
 ENDTRY.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_x TYPE i.
 TRY.
-CATCH cx_root.
-lv_x = 1.
+    lo_calc->compute( ).
+  CATCH cx_sy_zerodivide INTO DATA(lx_error).
+    logger->record( lx_error ).
 ENDTRY.
 ```
 
@@ -31,9 +33,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC NO_HANDLER
+" Or with SAP CI_ prefix:
+... "#EC CI_NO_HANDLER
 
 " Using pragma:
 ... ##NO_HANDLER.
+" Or with SAP CI_ prefix:
+... ##CI_NO_HANDLER.
 ```
 
 ## Configuration (`skylint.yaml`)

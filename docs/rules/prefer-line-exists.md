@@ -9,16 +9,18 @@ Prefer line_exists( ) over READ TABLE ... TRANSPORTING NO FIELDS.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lt_tab TYPE string_table.
-READ TABLE lt_tab TRANSPORTING NO FIELDS WITH KEY table_line = ''.
+READ TABLE lt_items TRANSPORTING NO FIELDS WITH KEY id = lv_id.
+IF sy-subrc = 0.
+  process( ).
+ENDIF.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lt_tab TYPE string_table.
-DATA ls_row TYPE string.
-READ TABLE lt_tab INTO ls_row INDEX 1.
+IF line_exists( lt_items[ id = lv_id ] ).
+  process( ).
+ENDIF.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -28,9 +30,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC LINE_EXISTS
+" Or with SAP CI_ prefix:
+... "#EC CI_LINE_EXISTS
 
 " Using pragma:
 ... ##LINE_EXISTS.
+" Or with SAP CI_ prefix:
+... ##CI_LINE_EXISTS.
 ```
 
 ## Configuration (`skylint.yaml`)

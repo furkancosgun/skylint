@@ -10,7 +10,9 @@ Avoid generic CATCH cx_root; catch specific exception classes.
 
 ```abap
 TRY.
-CATCH cx_root.
+    process_order( ).
+  CATCH cx_root.
+    " Indiscriminately catches all exceptions, masking unexpected bugs
 ENDTRY.
 ```
 
@@ -18,7 +20,9 @@ ENDTRY.
 
 ```abap
 TRY.
-CATCH cx_static_check.
+    process_order( ).
+  CATCH cx_order_failed INTO DATA(lx_order).
+    logger->record( lx_order ).
 ENDTRY.
 ```
 
@@ -29,9 +33,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC CATCH_ROOT
+" Or with SAP CI_ prefix:
+... "#EC CI_CATCH_ROOT
 
 " Using pragma:
 ... ##CATCH_ROOT.
+" Or with SAP CI_ prefix:
+... ##CI_CATCH_ROOT.
 ```
 
 ## Configuration (`skylint.yaml`)

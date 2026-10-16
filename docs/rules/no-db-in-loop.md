@@ -9,20 +9,20 @@ Avoid database access inside loop iterations.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lt_tab TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
-DATA ls_row TYPE zskylint_dummy.
-DATA ls_key TYPE string.
-LOOP AT lt_tab INTO ls_row.
-  SELECT SINGLE * FROM zskylint_dummy INTO @ls_row WHERE field1 = @ls_key.
+LOOP AT lt_orders INTO ls_order.
+  SELECT SINGLE * FROM /dmo/customer
+    WHERE customer_id = @ls_order-customer_id
+    INTO @ls_customer.
 ENDLOOP.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA ls_row TYPE zskylint_dummy.
-DATA ls_key TYPE string.
-SELECT SINGLE * FROM zskylint_dummy INTO @ls_row WHERE field1 = @ls_key.
+SELECT * FROM /dmo/customer
+  FOR ALL ENTRIES IN @lt_orders
+  WHERE customer_id = @lt_orders-customer_id
+  INTO TABLE @lt_customers.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -32,9 +32,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC DB_IN_LOOP
+" Or with SAP CI_ prefix:
+... "#EC CI_DB_IN_LOOP
 
 " Using pragma:
 ... ##DB_IN_LOOP.
+" Or with SAP CI_ prefix:
+... ##CI_DB_IN_LOOP.
 ```
 
 ## Configuration (`skylint.yaml`)

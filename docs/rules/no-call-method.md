@@ -9,15 +9,15 @@ Avoid static CALL METHOD statements.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lo_obj TYPE REF TO zcl_skylint_test_002.
-CALL METHOD lo_obj->run.
+CALL METHOD lo_service->calculate_tax(
+  EXPORTING
+    iv_amount = lv_amount ).
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lo_obj TYPE REF TO zcl_skylint_test_002.
-lo_obj->run( ).
+lo_service->calculate_tax( iv_amount = lv_amount ).
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -27,9 +27,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC CALL_METH
+" Or with SAP CI_ prefix:
+... "#EC CI_CALL_METH
 
 " Using pragma:
 ... ##CALL_METH.
+" Or with SAP CI_ prefix:
+... ##CI_CALL_METH.
 ```
 
 ## Configuration (`skylint.yaml`)

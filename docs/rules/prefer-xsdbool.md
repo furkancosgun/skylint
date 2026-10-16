@@ -9,28 +9,17 @@ Prefer xsdbool( ) expression over manual IF-ELSE assignment.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lv_a TYPE i.
-DATA lv_b TYPE i.
-DATA lv_flag TYPE abap_bool.
-IF lv_a = lv_b.
-lv_flag = abap_true.
+IF lv_count > 0.
+  lv_has_items = abap_true.
 ELSE.
-lv_flag = abap_false.
+  lv_has_items = abap_false.
 ENDIF.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_a TYPE i.
-DATA lv_b TYPE i.
-DATA lv_x TYPE i.
-DATA lv_y TYPE i.
-IF lv_a = lv_b.
-lv_x = abap_true.
-ELSE.
-lv_y = abap_false.
-ENDIF.
+lv_has_items = xsdbool( lv_count > 0 ).
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -40,9 +29,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC XSDBOOL
+" Or with SAP CI_ prefix:
+... "#EC CI_XSDBOOL
 
 " Using pragma:
 ... ##XSDBOOL.
+" Or with SAP CI_ prefix:
+... ##CI_XSDBOOL.
 ```
 
 ## Configuration (`skylint.yaml`)

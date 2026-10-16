@@ -6,10 +6,22 @@
 
 Keep constructors clean; avoid heavy business logic/loops/DB access.
 
+## ❌ Non-Compliant Code
+
+```abap
+METHOD constructor.
+  super->constructor( ).
+  SELECT * FROM /dmo/customer INTO TABLE @mt_customers. " Heavy I/O in constructor
+ENDMETHOD.
+```
+
 ## ✅ Compliant Code
 
 ```abap
-RETURN.
+METHOD constructor.
+  super->constructor( ).
+  " Keep constructor lightweight; defer heavy database reads to an explicit load() method
+ENDMETHOD.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -19,9 +31,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC CLEAN_CTOR
+" Or with SAP CI_ prefix:
+... "#EC CI_CLEAN_CTOR
 
 " Using pragma:
 ... ##CLEAN_CTOR.
+" Or with SAP CI_ prefix:
+... ##CI_CLEAN_CTOR.
 ```
 
 ## Configuration (`skylint.yaml`)

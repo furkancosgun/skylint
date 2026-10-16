@@ -9,14 +9,14 @@ Avoid use of certain statements (BREAK, STATICS, DEFINE, EXPORT).
 ## ❌ Non-Compliant Code
 
 ```abap
-BREAK-POINT.
+CALL TRANSACTION 'VA01'.
+LEAVE PROGRAM.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_val TYPE i.
-lv_val = 1.
+" In ABAP Cloud, invoke released APIs or RAP business objects instead
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -26,9 +26,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC FORBIDDEN
+" Or with SAP CI_ prefix:
+... "#EC CI_FORBIDDEN
 
 " Using pragma:
 ... ##FORBIDDEN.
+" Or with SAP CI_ prefix:
+... ##CI_FORBIDDEN.
 ```
 
 ## Configuration (`skylint.yaml`)

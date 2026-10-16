@@ -9,13 +9,13 @@ Avoid RAISE SHORTDUMP (prefer graceful exceptions).
 ## ❌ Non-Compliant Code
 
 ```abap
-RAISE shortdump TYPE cx_sy_zerodivide.
+RAISE SHORTDUMP TYPE cx_fatal.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-RAISE EXCEPTION TYPE cx_sy_zerodivide.
+RAISE EXCEPTION NEW cx_fatal( ).
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -25,9 +25,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC SHORTDUMP
+" Or with SAP CI_ prefix:
+... "#EC CI_SHORTDUMP
 
 " Using pragma:
 ... ##SHORTDUMP.
+" Or with SAP CI_ prefix:
+... ##CI_SHORTDUMP.
 ```
 
 ## Configuration (`skylint.yaml`)

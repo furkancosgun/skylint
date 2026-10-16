@@ -9,13 +9,13 @@ Avoid WITH DEFAULT KEY; prefer EMPTY KEY or explicit keys.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lt_tab TYPE STANDARD TABLE OF i WITH DEFAULT KEY.
+DATA lt_customers TYPE STANDARD TABLE OF ty_customer WITH DEFAULT KEY.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lt_tab TYPE STANDARD TABLE OF i WITH EMPTY KEY.
+DATA lt_customers TYPE STANDARD TABLE OF ty_customer WITH EMPTY KEY.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -25,9 +25,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC DEFAULT_KEY
+" Or with SAP CI_ prefix:
+... "#EC CI_DEFAULT_KEY
 
 " Using pragma:
 ... ##DEFAULT_KEY.
+" Or with SAP CI_ prefix:
+... ##CI_DEFAULT_KEY.
 ```
 
 ## Configuration (`skylint.yaml`)

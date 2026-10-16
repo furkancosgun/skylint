@@ -9,15 +9,13 @@ Avoid USING CLIENT or CLIENT SPECIFIED in ABAP SQL.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lt_tab TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
-SELECT * FROM zskylint_dummy USING CLIENT '100' INTO TABLE @lt_tab.
+SELECT * FROM /dmo/customer CLIENT SPECIFIED INTO TABLE @lt_customers.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lt_tab TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
-SELECT * FROM zskylint_dummy INTO TABLE @lt_tab.
+SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -27,9 +25,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC CLIENT_SPEC
+" Or with SAP CI_ prefix:
+... "#EC CI_CLIENT_SPEC
 
 " Using pragma:
 ... ##CLIENT_SPEC.
+" Or with SAP CI_ prefix:
+... ##CI_CLIENT_SPEC.
 ```
 
 ## Configuration (`skylint.yaml`)

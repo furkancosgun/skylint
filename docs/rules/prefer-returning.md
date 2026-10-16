@@ -9,13 +9,15 @@ Prefer RETURNING over single EXPORTING.
 ## ❌ Non-Compliant Code
 
 ```abap
-RETURN.
+METHODS calculate
+  EXPORTING ev_result TYPE i.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-RETURN.
+METHODS calculate
+  RETURNING VALUE(rv_result) TYPE i.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -25,9 +27,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC RETURNING
+" Or with SAP CI_ prefix:
+... "#EC CI_RETURNING
 
 " Using pragma:
 ... ##RETURNING.
+" Or with SAP CI_ prefix:
+... ##CI_RETURNING.
 ```
 
 ## Configuration (`skylint.yaml`)

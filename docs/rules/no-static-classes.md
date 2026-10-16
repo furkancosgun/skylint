@@ -9,13 +9,21 @@ Avoid static-only classes; prefer instantiable interface-based design.
 ## ❌ Non-Compliant Code
 
 ```abap
-RETURN.
+CLASS cl_math_util DEFINITION PUBLIC FINAL CREATE PUBLIC.
+  PUBLIC SECTION.
+    CLASS-METHODS add IMPORTING a TYPE i b TYPE i RETURNING VALUE(r) TYPE i.
+    CLASS-METHODS sub IMPORTING a TYPE i b TYPE i RETURNING VALUE(r) TYPE i.
+ENDCLASS.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-RETURN.
+CLASS cl_math_util DEFINITION PUBLIC FINAL CREATE PUBLIC.
+  PUBLIC SECTION.
+    INTERFACES if_math_util.
+    METHODS add ...
+ENDCLASS.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -25,9 +33,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC STATIC_CLS
+" Or with SAP CI_ prefix:
+... "#EC CI_STATIC_CLS
 
 " Using pragma:
 ... ##STATIC_CLS.
+" Or with SAP CI_ prefix:
+... ##CI_STATIC_CLS.
 ```
 
 ## Configuration (`skylint.yaml`)

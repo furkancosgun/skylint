@@ -9,13 +9,13 @@ Avoid raising SAP internal system exceptions (cx_sy_*).
 ## ❌ Non-Compliant Code
 
 ```abap
-RAISE EXCEPTION TYPE cx_sy_zerodivide.
+RAISE EXCEPTION TYPE cx_sy_arithmetic_overflow.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_clean TYPE i.
+RAISE EXCEPTION NEW cx_my_calculation_error( ).
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -25,9 +25,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC RAISE_CX_SY
+" Or with SAP CI_ prefix:
+... "#EC CI_RAISE_CX_SY
 
 " Using pragma:
 ... ##RAISE_CX_SY.
+" Or with SAP CI_ prefix:
+... ##CI_RAISE_CX_SY.
 ```
 
 ## Configuration (`skylint.yaml`)

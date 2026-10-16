@@ -9,15 +9,25 @@ Enforce local declaration order (TYPES -> CONSTANTS -> DATA -> FIELD-SYMBOLS).
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lv_x TYPE i.
-TYPES ty_t TYPE i.
+CLASS cl_service DEFINITION.
+  PRIVATE SECTION.
+    METHODS helper.
+  PUBLIC SECTION.
+    METHODS execute.
+ENDCLASS.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-TYPES ty_t TYPE i.
-DATA lv_x TYPE i.
+CLASS cl_service DEFINITION.
+  PUBLIC SECTION.
+    METHODS execute.
+  PROTECTED SECTION.
+    " ...
+  PRIVATE SECTION.
+    METHODS helper.
+ENDCLASS.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -27,9 +37,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC DECL_ORDER
+" Or with SAP CI_ prefix:
+... "#EC CI_DECL_ORDER
 
 " Using pragma:
 ... ##DECL_ORDER.
+" Or with SAP CI_ prefix:
+... ##CI_DECL_ORDER.
 ```
 
 ## Configuration (`skylint.yaml`)

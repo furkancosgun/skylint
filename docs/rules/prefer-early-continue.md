@@ -9,12 +9,10 @@ Use early CONTINUE guard clause instead of wrapping loop in IF block.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lt_tab TYPE STANDARD TABLE OF ty_row WITH DEFAULT KEY.
-DATA ls_row TYPE ty_row.
-DATA ls_val TYPE i.
-LOOP AT lt_tab INTO ls_row.
-  IF ls_row-flag = abap_true.
-    ls_val = 1.
+LOOP AT lt_items INTO ls_item.
+  IF ls_item-is_active = abap_true.
+    " Long nested loop body
+    process_item( ls_item ).
   ENDIF.
 ENDLOOP.
 ```
@@ -22,11 +20,11 @@ ENDLOOP.
 ## ✅ Compliant Code
 
 ```abap
-DATA lt_tab TYPE STANDARD TABLE OF ty_row WITH DEFAULT KEY.
-DATA ls_row TYPE ty_row.
-DATA ls_val TYPE i.
-LOOP AT lt_tab INTO ls_row.
-  ls_val = 1.
+LOOP AT lt_items INTO ls_item.
+  IF ls_item-is_active = abap_false.
+    CONTINUE.
+  ENDIF.
+  process_item( ls_item ).
 ENDLOOP.
 ```
 
@@ -37,9 +35,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC EARLY_CONTINUE
+" Or with SAP CI_ prefix:
+... "#EC CI_EARLY_CONTINUE
 
 " Using pragma:
 ... ##EARLY_CONTINUE.
+" Or with SAP CI_ prefix:
+... ##CI_EARLY_CONTINUE.
 ```
 
 ## Configuration (`skylint.yaml`)

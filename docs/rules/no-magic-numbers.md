@@ -9,15 +9,18 @@ Avoid magic numbers in code; use named constants.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lv_val TYPE i.
-lv_val = 42.
+IF lv_status = 3.
+  process( ).
+ENDIF.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_val TYPE i.
-lv_val = 1.
+CONSTANTS c_status_completed TYPE i VALUE 3.
+IF lv_status = c_status_completed.
+  process( ).
+ENDIF.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -27,9 +30,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC MAGIC_NUMBERS
+" Or with SAP CI_ prefix:
+... "#EC CI_MAGIC_NUMBERS
 
 " Using pragma:
 ... ##MAGIC_NUMBERS.
+" Or with SAP CI_ prefix:
+... ##CI_MAGIC_NUMBERS.
 ```
 
 ## Configuration (`skylint.yaml`)

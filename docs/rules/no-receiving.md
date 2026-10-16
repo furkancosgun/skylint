@@ -9,17 +9,13 @@ Omit RECEIVING in method calls.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lo_obj TYPE REF TO zcl_skylint_test_025.
-DATA lv_x TYPE i.
-lo_obj->run( RECEIVING rv_val = lv_x ).
+lo_calc->compute( RECEIVING rv_result = lv_result ).
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lo_obj TYPE REF TO zcl_skylint_test_025.
-DATA lv_x TYPE i.
-CALL METHOD lo_obj->run RECEIVING rv_val = lv_x.
+lv_result = lo_calc->compute( ).
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -29,9 +25,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC RECEIVING
+" Or with SAP CI_ prefix:
+... "#EC CI_RECEIVING
 
 " Using pragma:
 ... ##RECEIVING.
+" Or with SAP CI_ prefix:
+... ##CI_RECEIVING.
 ```
 
 ## Configuration (`skylint.yaml`)

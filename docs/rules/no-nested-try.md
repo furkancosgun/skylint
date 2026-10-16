@@ -10,18 +10,26 @@ Avoid nested TRY blocks; extract inner error handling to helper methods.
 
 ```abap
 TRY.
-  TRY.
-  CATCH cx_root.
-  ENDTRY.
-CATCH cx_root.
+    step1( ).
+    TRY.
+        step2( ).
+      CATCH cx_step2_err.
+        handle_step2( ).
+    ENDTRY.
+  CATCH cx_step1_err.
+    handle_step1( ).
 ENDTRY.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
+" Extract inner operations into focused helper methods
 TRY.
-CATCH cx_root.
+    step1( ).
+    execute_step2( ).
+  CATCH cx_step1_err.
+    handle_step1( ).
 ENDTRY.
 ```
 
@@ -32,9 +40,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC NESTED_TRY
+" Or with SAP CI_ prefix:
+... "#EC CI_NESTED_TRY
 
 " Using pragma:
 ... ##NESTED_TRY.
+" Or with SAP CI_ prefix:
+... ##CI_NESTED_TRY.
 ```
 
 ## Configuration (`skylint.yaml`)

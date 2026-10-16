@@ -9,14 +9,13 @@ Detect unused local variables and field symbols.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lv_unused TYPE i.
+DATA lv_temp TYPE string. " Declared but never referenced
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_used TYPE i.
-lv_used = 1.
+" Remove unused declarations or add ##NEEDED pragma if required by interface
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -26,9 +25,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC NEEDED
+" Or with SAP CI_ prefix:
+... "#EC CI_NEEDED
 
 " Using pragma:
 ... ##NEEDED.
+" Or with SAP CI_ prefix:
+... ##CI_NEEDED.
 ```
 
 ## Configuration (`skylint.yaml`)

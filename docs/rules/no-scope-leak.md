@@ -9,18 +9,20 @@ Scope of variable (avoid variable leaking outside control blocks).
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lv_flag TYPE abap_bool.
-IF lv_flag = abap_true.
-DATA lv_inner TYPE i.
+IF lv_condition = abap_true.
+  DATA(lv_value) = 10.
 ENDIF.
-lv_inner = 1.
+use_value( lv_value ). " Leaked outside block
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_val TYPE i.
-lv_val = 1.
+DATA lv_value TYPE i.
+IF lv_condition = abap_true.
+  lv_value = 10.
+ENDIF.
+use_value( lv_value ).
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -30,9 +32,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC SCOPE_LEAK
+" Or with SAP CI_ prefix:
+... "#EC CI_SCOPE_LEAK
 
 " Using pragma:
 ... ##SCOPE_LEAK.
+" Or with SAP CI_ prefix:
+... ##CI_SCOPE_LEAK.
 ```
 
 ## Configuration (`skylint.yaml`)

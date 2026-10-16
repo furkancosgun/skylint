@@ -9,16 +9,16 @@ Avoid Yoda conditions in comparison expressions.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lv_code TYPE c LENGTH 1.
-IF 'X' = lv_code.
+IF 0 = lv_count.
+  process( ).
 ENDIF.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_code TYPE c LENGTH 1.
-IF lv_code = 'X'.
+IF lv_count = 0.
+  process( ).
 ENDIF.
 ```
 
@@ -29,9 +29,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC YODA_COND
+" Or with SAP CI_ prefix:
+... "#EC CI_YODA_COND
 
 " Using pragma:
 ... ##YODA_COND.
+" Or with SAP CI_ prefix:
+... ##CI_YODA_COND.
 ```
 
 ## Configuration (`skylint.yaml`)

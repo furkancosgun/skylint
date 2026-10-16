@@ -9,23 +9,23 @@ Use early RETURN guard clause instead of wrapping method in IF block.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lv_flag TYPE abap_bool.
-DATA ls_val TYPE i.
-IF lv_flag = abap_true.
-ls_val = 1.
-ENDIF.
+METHOD process_order.
+  IF is_valid( ).
+    " Entire method logic deeply nested
+    execute_order( ).
+  ENDIF.
+ENDMETHOD.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_flag TYPE abap_bool.
-DATA ls_val TYPE i.
-IF lv_flag = abap_true.
-ls_val = 1.
-ELSE.
-ls_val = 2.
-ENDIF.
+METHOD process_order.
+  IF NOT is_valid( ).
+    RETURN.
+  ENDIF.
+  execute_order( ).
+ENDMETHOD.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -35,9 +35,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC EARLY_RETURN
+" Or with SAP CI_ prefix:
+... "#EC CI_EARLY_RETURN
 
 " Using pragma:
 ... ##EARLY_RETURN.
+" Or with SAP CI_ prefix:
+... ##CI_EARLY_RETURN.
 ```
 
 ## Configuration (`skylint.yaml`)

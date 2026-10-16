@@ -9,13 +9,13 @@ Prefer RAISE EXCEPTION NEW over RAISE EXCEPTION TYPE.
 ## ❌ Non-Compliant Code
 
 ```abap
-RAISE EXCEPTION TYPE cx_sy_zerodivide.
+RAISE EXCEPTION TYPE cx_failed.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-RAISE EXCEPTION NEW cx_sy_zerodivide( ).
+RAISE EXCEPTION NEW cx_failed( ).
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -25,9 +25,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC RAISE_NEW
+" Or with SAP CI_ prefix:
+... "#EC CI_RAISE_NEW
 
 " Using pragma:
 ... ##RAISE_NEW.
+" Or with SAP CI_ prefix:
+... ##CI_RAISE_NEW.
 ```
 
 ## Configuration (`skylint.yaml`)

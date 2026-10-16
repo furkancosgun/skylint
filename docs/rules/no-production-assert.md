@@ -9,15 +9,14 @@ Detect native ASSERT in production code; use exceptions instead.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lv_x TYPE i.
-ASSERT lv_x > 0.
+ASSERT lv_amount >= 0. " Triggers runtime shortdump in production if false
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_x TYPE i.
-IF lv_x IS INITIAL.
+IF lv_amount < 0.
+  RAISE EXCEPTION NEW cx_invalid_amount( ).
 ENDIF.
 ```
 
@@ -28,9 +27,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC PROD_ASSERT
+" Or with SAP CI_ prefix:
+... "#EC CI_PROD_ASSERT
 
 " Using pragma:
 ... ##PROD_ASSERT.
+" Or with SAP CI_ prefix:
+... ##CI_PROD_ASSERT.
 ```
 
 ## Configuration (`skylint.yaml`)

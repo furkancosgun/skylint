@@ -67,27 +67,29 @@ for (const rule of RULES) {
     hasQuickfix = /quickfix_codes|quickfix_replace|quickfix_delete/i.test(content);
   }
 
-  // Load fixture for examples
-  let nonCompliantCode = '';
-  let compliantCode = '';
-  const fixtureDir = path.join(fixturesDir, rule.ruleId);
+  // Prioritize canonical Clean ABAP example from RULES, fallback to fixture
+  let nonCompliantCode = rule.example?.bad || '';
+  let compliantCode = rule.example?.good || '';
 
-  if (fs.existsSync(fixtureDir)) {
-    const sourcePath = path.join(fixtureDir, 'source.abap');
-    const expectedPath = path.join(fixtureDir, 'expected.json');
+  if (!nonCompliantCode || !compliantCode) {
+    const fixtureDir = path.join(fixturesDir, rule.ruleId);
+    if (fs.existsSync(fixtureDir)) {
+      const sourcePath = path.join(fixtureDir, 'source.abap');
+      const expectedPath = path.join(fixtureDir, 'expected.json');
 
-    if (fs.existsSync(sourcePath) && fs.existsSync(expectedPath)) {
-      const sourceLines = fs.readFileSync(sourcePath, 'utf8').split('\n');
-      const expected = JSON.parse(fs.readFileSync(expectedPath, 'utf8'));
+      if (fs.existsSync(sourcePath) && fs.existsSync(expectedPath)) {
+        const sourceLines = fs.readFileSync(sourcePath, 'utf8').split('\n');
+        const expected = JSON.parse(fs.readFileSync(expectedPath, 'utf8'));
 
-      const failRow = expected.find((r) => r.code !== null);
-      const passRow = expected.find((r) => r.code === null);
+        const failRow = expected.find((r) => r.code !== null);
+        const passRow = expected.find((r) => r.code === null);
 
-      if (failRow && failRow.method) {
-        nonCompliantCode = extractSnippet(sourceLines, failRow.method);
-      }
-      if (passRow && passRow.method) {
-        compliantCode = extractSnippet(sourceLines, passRow.method);
+        if (!nonCompliantCode && failRow && failRow.method) {
+          nonCompliantCode = extractSnippet(sourceLines, failRow.method);
+        }
+        if (!compliantCode && passRow && passRow.method) {
+          compliantCode = extractSnippet(sourceLines, passRow.method);
+        }
       }
     }
   }
@@ -112,7 +114,7 @@ for (const rule of RULES) {
 
   ruleDoc += `## 🤫 Suppression & Pseudo-Comments\n\n`;
   ruleDoc += `To suppress findings for this rule, append the pseudo-comment or pragma to the statement:\n\n`;
-  ruleDoc += `\`\`\`abap\n" Using pseudo-comment:\n... "#EC ${rule.pseudoComment}\n\n" Using pragma:\n... ##${rule.pseudoComment}.\n\`\`\`\n\n`;
+  ruleDoc += `\`\`\`abap\n" Using pseudo-comment:\n... "#EC ${rule.pseudoComment}\n" Or with SAP CI_ prefix:\n... "#EC CI_${rule.pseudoComment}\n\n" Using pragma:\n... ##${rule.pseudoComment}.\n" Or with SAP CI_ prefix:\n... ##CI_${rule.pseudoComment}.\n\`\`\`\n\n`;
 
   ruleDoc += `## Configuration (\`skylint.yaml\`)\n\n`;
   ruleDoc += `\`\`\`yaml\nchecks:\n  ${rule.ruleId}:\n    enabled: true\n    severity: ${severity}\n\`\`\`\n\n`;
@@ -246,108 +248,5 @@ features:
 `;
 
 fs.writeFileSync(path.join(docsDir, 'index.md'), indexMd, 'utf8');
-
-// Generate Guide pages
-const gettingStartedMd = `# 🚀 Getting Started with Skylint
-
-Skylint is a modern, high-performance static analysis and ATC (ABAP Test Cockpit) linter for ABAP Cloud and Clean ABAP.
-
-## Quick Installation
-
-### As CLI in your Node.js / CI pipeline
-\`\`\`bash
-npm install -g skylint
-# or run directly with npx
-npx skylint scan ./src
-\`\`\`
-
-### In SAP System via abapGit
-1. Open **abapGit** in your SAP development system (SAP BTP ABAP Environment or S/4HANA Cloud / On-Premise).
-2. Clone repository: \`https://github.com/furkancosgun/skylint.git\`
-3. Pull into package \`ZSKYLINT\`.
-4. Add check classes into your **ATC Check Variant** in transaction \`SCI\` or Eclipse ADT.
-
-## Scanning Code
-
-\`\`\`bash
-# Scan a directory
-node scripts/lint-folder.mjs ./src
-
-# Scan with automatic QuickFixes
-node scripts/lint-folder.mjs ./src --fix
-
-# Filter by a single rule
-node scripts/lint-folder.mjs ./src --filter prefer-lines
-\`\`\`
-`;
-fs.writeFileSync(path.join(guideDocsDir, 'getting-started.md'), gettingStartedMd, 'utf8');
-
-const configMd = `# ⚙️ Configuration (\`skylint.yaml\`)
-
-Skylint is configured using a \`skylint.yaml\` file in the root of your project or scanned folder.
-
-## Example \`skylint.yaml\`
-
-\`\`\`yaml
-# Hide findings below this severity: error | warning | note
-minSeverity: warning
-
-# Skip files using glob patterns
-exclude:
-  - "**/*.testclasses.abap"
-  - "**/generated/**"
-
-# Per-rule overrides by rule id
-checks:
-  prefer-lines:
-    enabled: true
-    severity: warning
-
-  no-call-method:
-    enabled: true
-    severity: error
-
-  max-method-length:
-    enabled: false
-\`\`\`
-`;
-fs.writeFileSync(path.join(guideDocsDir, 'configuration.md'), configMd, 'utf8');
-
-const atcMd = `# 🏛️ SAP ATC Integration
-
-Skylint rules natively implement the SAP ATC framework interface \`if_ci_atc_check\`.
-
-## Adding Rules to ATC Variant
-
-1. Go to transaction **SCI** or **ATC Administration** in Eclipse ADT.
-2. Select or create your ATC Check Variant (e.g. \`ZCLEAN_ABAP\`).
-3. Expand **Skylint Rules** or search for classes prefixed with \`ZCL_SKYLINT_\`.
-4. Enable the desired rules and save your variant.
-`;
-fs.writeFileSync(path.join(guideDocsDir, 'atc-integration.md'), atcMd, 'utf8');
-
-const suppressionMd = `# 🤫 Suppressions & Pragmas
-
-When non-compliant code is intentional, Skylint supports line-level suppressions.
-
-## Using Pseudo-Comments
-
-Append \`"#EC <CODE>"\` to the flagged statement:
-
-\`\`\`abap
-DESCRIBE TABLE lt_data LINES lv_count. "#EC LINES
-\`\`\`
-
-## Using Pragmas
-
-Alternatively, modern ABAP pragmas \`##<CODE>\` are supported:
-
-\`\`\`abap
-DESCRIBE TABLE lt_data LINES lv_count ##LINES.
-\`\`\`
-
-Refer to individual rule documentation in the [Rules Catalog](/rules/) for each rule's specific suppression code.
-`;
-fs.writeFileSync(path.join(guideDocsDir, 'suppressions.md'), suppressionMd, 'utf8');
 
 console.log('✓ All documentation and VitePress configuration generated successfully.');

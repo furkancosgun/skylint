@@ -9,19 +9,16 @@ Avoid comparing boolean method calls to boolean literals.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lo_validator TYPE REF TO zcl_skylint_test_010.
-IF lo_validator->is_valid( ) = abap_true.
+IF is_valid( ) = abap_true.
+  execute( ).
 ENDIF.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lo_validator TYPE REF TO zcl_skylint_test_010.
-DATA lv_flag TYPE abap_bool.
-IF lo_validator->is_valid( ).
-ENDIF.
-IF lv_flag = abap_true.
+IF is_valid( ).
+  execute( ).
 ENDIF.
 ```
 
@@ -32,9 +29,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC BOOL_COMPARE
+" Or with SAP CI_ prefix:
+... "#EC CI_BOOL_COMPARE
 
 " Using pragma:
 ... ##BOOL_COMPARE.
+" Or with SAP CI_ prefix:
+... ##CI_BOOL_COMPARE.
 ```
 
 ## Configuration (`skylint.yaml`)

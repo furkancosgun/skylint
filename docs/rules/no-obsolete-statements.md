@@ -9,17 +9,15 @@ Avoid obsolete statements (MOVE, REFRESH, etc.).
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lv_a TYPE i.
-DATA lv_b TYPE i.
-MOVE lv_a TO lv_b.
+MOVE lv_src TO lv_dst.
+TRANSLATE lv_str TO UPPER CASE.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_a TYPE i.
-DATA lv_b TYPE i.
-lv_b = lv_a.
+lv_dst = lv_src.
+lv_str = to_upper( lv_str ).
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -29,9 +27,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC OBSOLETE
+" Or with SAP CI_ prefix:
+... "#EC CI_OBSOLETE
 
 " Using pragma:
 ... ##OBSOLETE.
+" Or with SAP CI_ prefix:
+... ##CI_OBSOLETE.
 ```
 
 ## Configuration (`skylint.yaml`)

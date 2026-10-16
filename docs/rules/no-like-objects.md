@@ -9,14 +9,13 @@ Avoid LIKE referencing data objects; use explicit TYPE.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lv_orig TYPE i.
-DATA lv_x LIKE lv_orig.
+DATA lv_customer LIKE ls_customer.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_y TYPE i.
+DATA lv_customer TYPE ty_customer.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -26,9 +25,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC LIKE_OBJECTS
+" Or with SAP CI_ prefix:
+... "#EC CI_LIKE_OBJECTS
 
 " Using pragma:
 ... ##LIKE_OBJECTS.
+" Or with SAP CI_ prefix:
+... ##CI_LIKE_OBJECTS.
 ```
 
 ## Configuration (`skylint.yaml`)

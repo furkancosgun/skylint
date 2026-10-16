@@ -9,25 +9,18 @@ Avoid short CASE constructs with only one WHEN branch; prefer IF.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lv_x TYPE i.
-DATA lv_type TYPE i.
-CASE lv_type.
-WHEN 1.
-lv_x = 1.
+CASE lv_status.
+  WHEN 'A'.
+    process_a( ).
 ENDCASE.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_x TYPE i.
-DATA lv_type TYPE i.
-CASE lv_type.
-WHEN 1.
-lv_x = 1.
-WHEN 2.
-lv_x = 2.
-ENDCASE.
+IF lv_status = 'A'.
+  process_a( ).
+ENDIF.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -37,9 +30,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC SINGLE_WHEN
+" Or with SAP CI_ prefix:
+... "#EC CI_SINGLE_WHEN
 
 " Using pragma:
 ... ##SINGLE_WHEN.
+" Or with SAP CI_ prefix:
+... ##CI_SINGLE_WHEN.
 ```
 
 ## Configuration (`skylint.yaml`)

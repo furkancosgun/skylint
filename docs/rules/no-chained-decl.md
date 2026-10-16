@@ -9,15 +9,15 @@ Avoid chained declarations (DATA:, TYPES:, etc.).
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA: lv_a TYPE i,
-      lv_b TYPE i.
+DATA: lv_id   TYPE string,
+      lv_name TYPE string.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_a TYPE i.
-DATA lv_b TYPE i.
+DATA lv_id   TYPE string.
+DATA lv_name TYPE string.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -27,9 +27,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC CHAIN_DECL
+" Or with SAP CI_ prefix:
+... "#EC CI_CHAIN_DECL
 
 " Using pragma:
 ... ##CHAIN_DECL.
+" Or with SAP CI_ prefix:
+... ##CI_CHAIN_DECL.
 ```
 
 ## Configuration (`skylint.yaml`)

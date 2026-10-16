@@ -9,13 +9,16 @@ Prefer FINAL Classes by Default.
 ## ❌ Non-Compliant Code
 
 ```abap
-RETURN.
+CLASS cl_customer_service DEFINITION PUBLIC CREATE PUBLIC.
+  " Class not intended for inheritance
+ENDCLASS.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-RETURN.
+CLASS cl_customer_service DEFINITION PUBLIC FINAL CREATE PUBLIC.
+ENDCLASS.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -25,9 +28,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC FINAL_CLS
+" Or with SAP CI_ prefix:
+... "#EC CI_FINAL_CLS
 
 " Using pragma:
 ... ##FINAL_CLS.
+" Or with SAP CI_ prefix:
+... ##CI_FINAL_CLS.
 ```
 
 ## Configuration (`skylint.yaml`)

@@ -9,17 +9,17 @@ Detect obsolete string statements; prefer built-in functions.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lv_text TYPE string.
-CONDENSE lv_text.
-TRANSLATE lv_text TO UPPER CASE.
+IF lv_str CS 'ABAP'.
+  process( ).
+ENDIF.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_text TYPE string.
-lv_text = condense( lv_text ).
-lv_text = to_upper( lv_text ).
+IF contains( val = lv_str sub = 'ABAP' ).
+  process( ).
+ENDIF.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -29,9 +29,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC STR_FUNC
+" Or with SAP CI_ prefix:
+... "#EC CI_STR_FUNC
 
 " Using pragma:
 ... ##STR_FUNC.
+" Or with SAP CI_ prefix:
+... ##CI_STR_FUNC.
 ```
 
 ## Configuration (`skylint.yaml`)

@@ -9,15 +9,15 @@ Prefer calculation assignment operators (+=, -=, *=, /=) over var = var + 1.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lv_x TYPE i.
-lv_x = lv_x + 1.
+lv_count = lv_count + 1.
+lv_total = lv_total * 2.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_x TYPE i.
-lv_x = 10.
+lv_count += 1.
+lv_total *= 2.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -27,9 +27,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC CALC_ASSIGN
+" Or with SAP CI_ prefix:
+... "#EC CI_CALC_ASSIGN
 
 " Using pragma:
 ... ##CALC_ASSIGN.
+" Or with SAP CI_ prefix:
+... ##CI_CALC_ASSIGN.
 ```
 
 ## Configuration (`skylint.yaml`)

@@ -9,17 +9,13 @@ Omit parameter name in single parameter method call.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lo_obj TYPE REF TO zcl_skylint_test_036.
-DATA lv_val TYPE i.
-lo_obj->run( iv_param = lv_val ).
+cl_helper=>execute( iv_data = lv_data ).
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lo_obj TYPE REF TO zcl_skylint_test_036.
-DATA lv_val TYPE i.
-lo_obj->run( lv_val ).
+cl_helper=>execute( lv_data ).
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -29,9 +25,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC PARAM_NAME
+" Or with SAP CI_ prefix:
+... "#EC CI_PARAM_NAME
 
 " Using pragma:
 ... ##PARAM_NAME.
+" Or with SAP CI_ prefix:
+... ##CI_PARAM_NAME.
 ```
 
 ## Configuration (`skylint.yaml`)

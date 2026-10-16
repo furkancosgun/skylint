@@ -9,18 +9,13 @@ Dangerous / Unmanaged Dynamic Statements.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lv_msg TYPE string.
-DATA lv_lin TYPE i.
-DATA lv_wrd TYPE string.
-DATA lt_prog TYPE string_table.
-SYNTAX-CHECK FOR lt_prog MESSAGE lv_msg LINE lv_lin WORD lv_wrd.
+CALL 'SYSTEM' ID 'COMMAND' FIELD lv_cmd.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_flag TYPE abap_bool.
-CHECK lv_flag = abap_true.
+cl_gui_frontend_services=>execute( ... ).
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -30,9 +25,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC DYNAMIC_STMT
+" Or with SAP CI_ prefix:
+... "#EC CI_DYNAMIC_STMT
 
 " Using pragma:
 ... ##DYNAMIC_STMT.
+" Or with SAP CI_ prefix:
+... ##CI_DYNAMIC_STMT.
 ```
 
 ## Configuration (`skylint.yaml`)

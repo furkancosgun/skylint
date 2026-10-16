@@ -9,13 +9,15 @@ Method signature cleanliness (excessive parameter count).
 ## ❌ Non-Compliant Code
 
 ```abap
-RETURN.
+METHODS execute
+  IMPORTING p1 TYPE i p2 TYPE i p3 TYPE i p4 TYPE i p5 TYPE i p6 TYPE i.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-RETURN.
+METHODS execute
+  IMPORTING is_options TYPE ty_options.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -25,9 +27,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC MAX_PARAMS
+" Or with SAP CI_ prefix:
+... "#EC CI_MAX_PARAMS
 
 " Using pragma:
 ... ##MAX_PARAMS.
+" Or with SAP CI_ prefix:
+... ##CI_MAX_PARAMS.
 ```
 
 ## Configuration (`skylint.yaml`)

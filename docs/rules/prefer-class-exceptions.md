@@ -9,13 +9,13 @@ Prefer Class-Based Exceptions over Classic EXCEPTIONS.
 ## ❌ Non-Compliant Code
 
 ```abap
-RETURN.
+METHODS execute EXCEPTIONS not_found failed.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-RETURN.
+METHODS execute RAISING cx_not_found cx_failed.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -25,9 +25,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC CLASS_EXC
+" Or with SAP CI_ prefix:
+... "#EC CI_CLASS_EXC
 
 " Using pragma:
 ... ##CLASS_EXC.
+" Or with SAP CI_ prefix:
+... ##CI_CLASS_EXC.
 ```
 
 ## Configuration (`skylint.yaml`)

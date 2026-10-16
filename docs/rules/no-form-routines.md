@@ -9,14 +9,17 @@ Avoid obsolete FORM routines; use modern methods in ABAP Cloud.
 ## ❌ Non-Compliant Code
 
 ```abap
-PERFORM my_form IN PROGRAM (sy-repid) IF FOUND.
+PERFORM calculate_total USING lv_qty CHANGING lv_total.
+FORM calculate_total ...
+ENDFORM.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lo_obj TYPE REF TO zcl_skylint_test_065.
-lo_obj->test_002( ).
+lo_calculator->calculate_total(
+  EXPORTING iv_qty   = lv_qty
+  IMPORTING ev_total = lv_total ).
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -26,9 +29,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC NO_FORM
+" Or with SAP CI_ prefix:
+... "#EC CI_NO_FORM
 
 " Using pragma:
 ... ##NO_FORM.
+" Or with SAP CI_ prefix:
+... ##CI_NO_FORM.
 ```
 
 ## Configuration (`skylint.yaml`)

@@ -9,16 +9,15 @@ Prefer NEW #( ) constructor expression over legacy CREATE OBJECT.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lo_obj TYPE REF TO zcl_skylint_test_022.
-CREATE OBJECT lo_obj.
+DATA lo_customer TYPE REF TO cl_customer.
+CREATE OBJECT lo_customer.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lo_obj TYPE REF TO zcl_skylint_test_022.
-DATA lv_cls TYPE string.
-CREATE OBJECT lo_obj TYPE (lv_cls).
+DATA lo_customer TYPE REF TO cl_customer.
+lo_customer = NEW #( ).
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -28,9 +27,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC NEW_OP
+" Or with SAP CI_ prefix:
+... "#EC CI_NEW_OP
 
 " Using pragma:
 ... ##NEW_OP.
+" Or with SAP CI_ prefix:
+... ##CI_NEW_OP.
 ```
 
 ## Configuration (`skylint.yaml`)

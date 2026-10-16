@@ -9,26 +9,16 @@ Detect identical branch conditions in IF/ELSEIF and CASE/WHEN.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lv_a TYPE i.
-DATA lv_b TYPE i.
-DATA lv_c TYPE i.
-IF lv_a = 1.
-lv_b = 2.
-ELSEIF lv_a = 1.
-lv_c = 3.
+IF lv_type = 'A' OR lv_type = 'A'.
+  process( ).
 ENDIF.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_a TYPE i.
-DATA lv_b TYPE i.
-DATA lv_c TYPE i.
-IF lv_a = 1.
-lv_b = 2.
-ELSEIF lv_a = 2.
-lv_c = 3.
+IF lv_type = 'A'.
+  process( ).
 ENDIF.
 ```
 
@@ -39,9 +29,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC DUP_COND
+" Or with SAP CI_ prefix:
+... "#EC CI_DUP_COND
 
 " Using pragma:
 ... ##DUP_COND.
+" Or with SAP CI_ prefix:
+... ##CI_DUP_COND.
 ```
 
 ## Configuration (`skylint.yaml`)

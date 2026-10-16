@@ -9,23 +9,18 @@ Detect consecutive nested IF blocks that can be merged with AND.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lv_a TYPE i.
-DATA lv_b TYPE i.
-DATA lv_c TYPE i.
-IF lv_a = 1.
-IF lv_b = 2.
-lv_c = 3.
-ENDIF.
+IF is_connected( ).
+  IF has_permission( ).
+    execute( ).
+  ENDIF.
 ENDIF.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_a TYPE i.
-DATA lv_b TYPE i.
-IF lv_a = 1.
-lv_b = 2.
+IF is_connected( ) AND has_permission( ).
+  execute( ).
 ENDIF.
 ```
 
@@ -36,9 +31,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC MERGE_IFS
+" Or with SAP CI_ prefix:
+... "#EC CI_MERGE_IFS
 
 " Using pragma:
 ... ##MERGE_IFS.
+" Or with SAP CI_ prefix:
+... ##CI_MERGE_IFS.
 ```
 
 ## Configuration (`skylint.yaml`)

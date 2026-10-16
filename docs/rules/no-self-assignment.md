@@ -9,16 +9,13 @@ Detect Identical Self Assignments.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lv_a TYPE i.
-lv_a = lv_a.
+lv_name = lv_name.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_a TYPE i.
-DATA lv_b TYPE i.
-lv_a = lv_b.
+lv_name = iv_new_name.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -28,9 +25,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC SELF_ASSIGN
+" Or with SAP CI_ prefix:
+... "#EC CI_SELF_ASSIGN
 
 " Using pragma:
 ... ##SELF_ASSIGN.
+" Or with SAP CI_ prefix:
+... ##CI_SELF_ASSIGN.
 ```
 
 ## Configuration (`skylint.yaml`)

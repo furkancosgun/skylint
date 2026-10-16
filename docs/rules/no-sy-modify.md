@@ -10,13 +10,14 @@ Avoid sy-* System Variable Modification.
 
 ```abap
 sy-subrc = 0.
+sy-tabix = 1.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_val TYPE i.
-lv_val = 0.
+" Return an explicit status code or result variable instead
+rv_success = abap_true.
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -26,9 +27,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC SY_MODIFY
+" Or with SAP CI_ prefix:
+... "#EC CI_SY_MODIFY
 
 " Using pragma:
 ... ##SY_MODIFY.
+" Or with SAP CI_ prefix:
+... ##CI_SY_MODIFY.
 ```
 
 ## Configuration (`skylint.yaml`)

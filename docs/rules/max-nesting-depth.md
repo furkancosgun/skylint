@@ -9,29 +9,24 @@ Nesting Depth Limit (excessive control block nesting).
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lv_a TYPE i.
-DATA lv_b TYPE i.
-DATA lv_c TYPE i.
-DATA lv_d TYPE i.
-IF lv_a = 1.
-IF lv_b = 2.
-IF lv_c = 3.
-IF lv_d = 4.
-ENDIF.
-ENDIF.
-ENDIF.
+IF cond1.
+  IF cond2.
+    IF cond3.
+      IF cond4.
+        execute( ).
+      ENDIF.
+    ENDIF.
+  ENDIF.
 ENDIF.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_a TYPE i.
-DATA lv_b TYPE i.
-IF lv_a = 1.
-IF lv_b = 2.
+IF NOT cond1 OR NOT cond2 OR NOT cond3 OR NOT cond4.
+  RETURN.
 ENDIF.
-ENDIF.
+execute( ).
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -41,9 +36,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC NESTING
+" Or with SAP CI_ prefix:
+... "#EC CI_NESTING
 
 " Using pragma:
 ... ##NESTING.
+" Or with SAP CI_ prefix:
+... ##CI_NESTING.
 ```
 
 ## Configuration (`skylint.yaml`)

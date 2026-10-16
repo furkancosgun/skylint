@@ -9,17 +9,13 @@ Prefer lines( ) built-in function over DESCRIBE TABLE ... LINES.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lv_cnt TYPE i.
-DATA lt_tab TYPE string_table.
-DESCRIBE TABLE lt_tab LINES lv_cnt.
+DESCRIBE TABLE lt_customers LINES lv_count.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_cnt TYPE i.
-DATA lt_tab TYPE string_table.
-lv_cnt = lines( lt_tab ).
+lv_count = lines( lt_customers ).
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -29,9 +25,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC LINES
+" Or with SAP CI_ prefix:
+... "#EC CI_LINES
 
 " Using pragma:
 ... ##LINES.
+" Or with SAP CI_ prefix:
+... ##CI_LINES.
 ```
 
 ## Configuration (`skylint.yaml`)

@@ -9,16 +9,16 @@ Prefer IS NOT over NOT ... IS.
 ## ❌ Non-Compliant Code
 
 ```abap
-DATA lv_x TYPE i.
-IF NOT lv_x IS INITIAL.
+IF NOT lo_instance IS BOUND.
+  RETURN.
 ENDIF.
 ```
 
 ## ✅ Compliant Code
 
 ```abap
-DATA lv_x TYPE i.
-IF lv_x IS NOT INITIAL.
+IF lo_instance IS NOT BOUND.
+  RETURN.
 ENDIF.
 ```
 
@@ -29,9 +29,13 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ```abap
 " Using pseudo-comment:
 ... "#EC IS_NOT
+" Or with SAP CI_ prefix:
+... "#EC CI_IS_NOT
 
 " Using pragma:
 ... ##IS_NOT.
+" Or with SAP CI_ prefix:
+... ##CI_IS_NOT.
 ```
 
 ## Configuration (`skylint.yaml`)
