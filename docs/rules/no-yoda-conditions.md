@@ -6,17 +6,28 @@
   <Badge type="danger" text="Finding: YODACOND" />
 </div>
 
-## 📖 Description
+## Overview
 
 Avoid Yoda conditions in comparison expressions.
 
 > **ATC Finding Message:** `Avoid Yoda conditions; place variable before literal in comparison`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Placing constants or literals on the left side of comparisons (`IF 42 = lv_value`) impairs readability. ABAP natural reading flow expects the variable or subject on the left (`IF lv_value = 42`).
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- IF 0 = lv_count.
+-   process( ).
+- ENDIF.
++ IF lv_count = 0.
++   process( ).
++ ENDIF.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 IF 0 = lv_count.
@@ -24,7 +35,7 @@ IF 0 = lv_count.
 ENDIF.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 IF lv_count = 0.
@@ -32,14 +43,14 @@ IF lv_count = 0.
 ENDIF.
 ```
 
-## ⚡ Automated QuickFix
+## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
 1. Position the cursor on the flagged statement.
 2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
 3. Select the automated refactoring to apply the clean syntax immediately.
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -48,7 +59,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -64,7 +75,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_YODA_COND.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_YODA_COND`
 * **Finding Code:** `YODACOND`

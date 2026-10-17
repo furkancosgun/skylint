@@ -5,17 +5,32 @@
   <Badge type="danger" text="Finding: CATCH_ROOT" />
 </div>
 
-## 📖 Description
+## Overview
 
 Avoid generic CATCH cx_root; catch specific exception classes.
 
 > **ATC Finding Message:** `Avoid generic CATCH cx_root; catch specific exception classes instead`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Catching `cx_root` indiscriminately swallows system runtime errors, resource exhaustion errors, and programming bugs, masking critical defects from developers.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- TRY.
+-     process_order( ).
+-   CATCH cx_root.
+-     " Indiscriminately catches all exceptions, masking unexpected bugs
+- ENDTRY.
++ TRY.
++     process_order( ).
++   CATCH cx_order_failed INTO DATA(lx_order).
++     logger->record( lx_order ).
++ ENDTRY.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 TRY.
@@ -25,7 +40,7 @@ TRY.
 ENDTRY.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 TRY.
@@ -35,7 +50,7 @@ TRY.
 ENDTRY.
 ```
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -44,7 +59,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -60,7 +75,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_CATCH_ROOT.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_CATCH_ROOT`
 * **Finding Code:** `CATCH_ROOT`

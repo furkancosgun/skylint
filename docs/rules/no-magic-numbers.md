@@ -5,17 +5,29 @@
   <Badge type="danger" text="Finding: MAGIC_NUM" />
 </div>
 
-## 📖 Description
+## Overview
 
 Avoid magic numbers in code; use named constants.
 
 > **ATC Finding Message:** `Avoid hardcoded magic numbers; declare a named constant`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Hardcoded numeric literals scattered in logic obscure business rules and make updates error-prone. Give numbers meaningful names by declaring structured constants.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- IF lv_status = 3.
+-   process( ).
+- ENDIF.
++ CONSTANTS c_status_completed TYPE i VALUE 3.
++ IF lv_status = c_status_completed.
++   process( ).
++ ENDIF.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 IF lv_status = 3.
@@ -23,7 +35,7 @@ IF lv_status = 3.
 ENDIF.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 CONSTANTS c_status_completed TYPE i VALUE 3.
@@ -32,7 +44,7 @@ IF lv_status = c_status_completed.
 ENDIF.
 ```
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -41,7 +53,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -57,7 +69,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_MAGIC_NUMBERS.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_MAGIC_NUMBERS`
 * **Finding Code:** `MAGIC_NUM`

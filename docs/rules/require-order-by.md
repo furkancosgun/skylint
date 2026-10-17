@@ -5,29 +5,36 @@
   <Badge type="danger" text="Finding: SELECT_UP" />
 </div>
 
-## 📖 Description
+## Overview
 
 SELECT UP TO 1 ROWS requires ORDER BY.
 
 > **ATC Finding Message:** `SELECT UP TO 1 ROWS requires an explicit ORDER BY clause for determinism`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Selecting rows from a relational database without an explicit `ORDER BY` clause yields non-deterministic ordering that can change unpredictably between DB executions and updates.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- SELECT * FROM /dmo/customer UP TO 1 ROWS INTO @ls_customer.
++ SELECT * FROM /dmo/customer ORDER BY customer_id UP TO 1 ROWS INTO @ls_customer.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 SELECT * FROM /dmo/customer UP TO 1 ROWS INTO @ls_customer.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 SELECT * FROM /dmo/customer ORDER BY customer_id UP TO 1 ROWS INTO @ls_customer.
 ```
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -36,7 +43,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -52,7 +59,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_ORDER_BY.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_ORDER_BY`
 * **Finding Code:** `SELECT_UP`

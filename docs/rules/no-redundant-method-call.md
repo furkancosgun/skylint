@@ -6,36 +6,43 @@
   <Badge type="danger" text="Finding: OMITEXPORT" />
 </div>
 
-## 📖 Description
+## Overview
 
 Omit redundant EXPORTING, RECEIVING, and single parameter names in method calls.
 
 > **ATC Finding Message:** `Omit explicit EXPORTING keyword in method invocation`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Modern ABAP allows omitting the `EXPORTING` and `RECEIVING` keywords in functional method calls. Furthermore, when calling a method with a single importing parameter, the parameter name can be omitted entirely to make code clean and concise.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- lo_calc->compute( EXPORTING iv_val = 10 ).
++ lo_calc->compute( 10 ).
+```
+
+### ✕ Non-Compliant
 
 ```abap
 lo_calc->compute( EXPORTING iv_val = 10 ).
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 lo_calc->compute( 10 ).
 ```
 
-## ⚡ Automated QuickFix
+## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
 1. Position the cursor on the flagged statement.
 2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
 3. Select the automated refactoring to apply the clean syntax immediately.
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -44,7 +51,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -60,7 +67,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_EXPORTING.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_REDUNDANT_CALL`
 * **Finding Code:** `OMITEXPORT`

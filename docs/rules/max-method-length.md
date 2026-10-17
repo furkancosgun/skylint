@@ -5,17 +5,32 @@
   <Badge type="danger" text="Finding: METHOD_LEN" />
 </div>
 
-## 📖 Description
+## Overview
 
 Method Length Limit (excessive statement count).
 
 > **ATC Finding Message:** `Method length exceeds maximum allowed statement limit`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Long methods violate the Single Responsibility Principle, accumulate side effects, and are notoriously difficult to unit test. Split large methods into small, focused sub-methods.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- " Large method exceeding configured statement threshold (> 50 statements)
+- METHOD execute.
+-   " 60+ statements in a single procedure...
+- ENDMETHOD.
++ " Split into smaller, single-responsibility helper methods
++ METHOD execute.
++   prepare_data( ).
++   process_records( ).
++   finalize_result( ).
++ ENDMETHOD.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 " Large method exceeding configured statement threshold (> 50 statements)
@@ -24,7 +39,7 @@ METHOD execute.
 ENDMETHOD.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 " Split into smaller, single-responsibility helper methods
@@ -35,7 +50,7 @@ METHOD execute.
 ENDMETHOD.
 ```
 
-## ⚙️ Configurable Parameters (ATC Variant / Profile)
+## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
@@ -43,7 +58,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 |---|---|:---:|---|
 | `MAX_STATEMENTS` | `Integer / String` | `5` | Configurable attribute for max-method-length |
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -54,7 +69,7 @@ checks:
       MAX_STATEMENTS: 5
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -70,7 +85,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_METHOD_LEN.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_MAX_METHOD_LEN`
 * **Finding Code:** `METHOD_LEN`

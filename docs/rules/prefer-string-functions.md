@@ -6,38 +6,47 @@
   <Badge type="danger" text="Finding: CONDENSE_S" />
 </div>
 
-## 📖 Description
+## Overview
 
 Detect obsolete string statements; prefer built-in functions.
 
 > **ATC Finding Message:** `Use modern built-in string function condense( ... ) instead`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Procedural string statements (`SEARCH`, `SHIFT`, `TRANSLATE`) are legacy ABAP. Replace them with functional built-in string functions (`find`, `to_upper`, `substring`, `shift_left`).
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- CONDENSE lv_text.
+- TRANSLATE lv_code TO UPPER CASE.
++ lv_text = condense( lv_text ).
++ lv_code = to_upper( lv_code ).
+```
+
+### ✕ Non-Compliant
 
 ```abap
 CONDENSE lv_text.
 TRANSLATE lv_code TO UPPER CASE.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 lv_text = condense( lv_text ).
 lv_code = to_upper( lv_code ).
 ```
 
-## ⚡ Automated QuickFix
+## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
 1. Position the cursor on the flagged statement.
 2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
 3. Select the automated refactoring to apply the clean syntax immediately.
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -46,7 +55,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -62,7 +71,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_STR_FUNC.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_STR_FUNC`
 * **Finding Code:** `CONDENSE_S`

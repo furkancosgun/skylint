@@ -5,17 +5,29 @@
   <Badge type="danger" text="Finding: SHORTCASE" />
 </div>
 
-## 📖 Description
+## Overview
 
 Avoid short CASE constructs with only one WHEN branch; prefer IF.
 
 > **ATC Finding Message:** `CASE statement has <= 1 WHEN branch; prefer IF`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 A `CASE` statement containing only one `WHEN` branch is unnecessarily verbose. An `IF ... ENDIF` is more concise and idiomatic.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- CASE lv_status.
+-   WHEN 'A'.
+-     process_a( ).
+- ENDCASE.
++ IF lv_status = 'A'.
++   process_a( ).
++ ENDIF.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 CASE lv_status.
@@ -24,7 +36,7 @@ CASE lv_status.
 ENDCASE.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 IF lv_status = 'A'.
@@ -32,7 +44,7 @@ IF lv_status = 'A'.
 ENDIF.
 ```
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -41,7 +53,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -57,7 +69,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_SINGLE_WHEN.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_SINGLE_WHEN`
 * **Finding Code:** `SHORTCASE`

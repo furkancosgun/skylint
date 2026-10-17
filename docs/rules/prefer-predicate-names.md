@@ -5,29 +5,36 @@
   <Badge type="danger" text="Finding: BOOL_NAME" />
 </div>
 
-## 📖 Description
+## Overview
 
 Enforce predicate naming (IS_, HAS_, CAN_) on boolean methods.
 
 > **ATC Finding Message:** `Boolean-returning method should use predicate name (IS_, HAS_, CAN_)`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Methods returning boolean status should read like questions (`is_valid`, `has_children`, `can_execute`) so conditionals read naturally like plain English.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- METHODS check_active RETURNING VALUE(rv_active) TYPE abap_bool.
++ METHODS is_active RETURNING VALUE(rv_active) TYPE abap_bool.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 METHODS check_active RETURNING VALUE(rv_active) TYPE abap_bool.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 METHODS is_active RETURNING VALUE(rv_active) TYPE abap_bool.
 ```
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -36,7 +43,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -52,7 +59,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_PRED_NAME.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_PRED_NAME`
 * **Finding Code:** `BOOL_NAME`

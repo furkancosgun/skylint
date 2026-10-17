@@ -6,36 +6,43 @@
   <Badge type="danger" text="Finding: IDENTMOVE" />
 </div>
 
-## 📖 Description
+## Overview
 
 Detect Identical Self Assignments.
 
 > **ATC Finding Message:** `Identical assignment has no effect; remove redundant statement`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Assigning a variable or structure field to itself (`lv_x = lv_x`) is a redundant no-op and frequently hides a typo where another source field was intended.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- lv_name = lv_name.
++ lv_name = iv_new_name.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 lv_name = lv_name.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 lv_name = iv_new_name.
 ```
 
-## ⚡ Automated QuickFix
+## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
 1. Position the cursor on the flagged statement.
 2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
 3. Select the automated refactoring to apply the clean syntax immediately.
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -44,7 +51,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -60,7 +67,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_SELF_ASSIGN.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_SELF_ASSIGN`
 * **Finding Code:** `IDENTMOVE`

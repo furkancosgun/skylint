@@ -5,17 +5,32 @@
   <Badge type="danger" text="Finding: DECL_ORDER" />
 </div>
 
-## 📖 Description
+## Overview
 
 Enforce local declaration order (TYPES -> CONSTANTS -> DATA -> FIELD-SYMBOLS).
 
 > **ATC Finding Message:** `Declare local TYPES before CONSTANTS before DATA before FIELD-SYMBOLS`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Declaring types first, then constants, then data variables creates a logical reading flow where subsequent definitions can safely depend on preceding ones.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- METHOD execute.
+-   DATA lv_count TYPE i.
+-   TYPES ty_status TYPE c LENGTH 1. " TYPES declared after DATA
+-   CONSTANTS c_init TYPE ty_status VALUE 'I'.
+- ENDMETHOD.
++ METHOD execute.
++   TYPES ty_status TYPE c LENGTH 1.
++   CONSTANTS c_init TYPE ty_status VALUE 'I'.
++   DATA lv_count TYPE i.
++ ENDMETHOD.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 METHOD execute.
@@ -25,7 +40,7 @@ METHOD execute.
 ENDMETHOD.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 METHOD execute.
@@ -35,7 +50,7 @@ METHOD execute.
 ENDMETHOD.
 ```
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -44,7 +59,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -60,7 +75,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_DECL_ORDER.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_DECL_ORDER`
 * **Finding Code:** `DECL_ORDER`

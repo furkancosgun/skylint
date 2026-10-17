@@ -6,36 +6,43 @@
   <Badge type="danger" text="Finding: OBSOLETE" />
 </div>
 
-## 📖 Description
+## Overview
 
 Avoid obsolete or deprecated statements (MOVE, REFRESH, FORM, AT NEW, etc.).
 
 > **ATC Finding Message:** `Avoid obsolete or deprecated statement; use modern Clean ABAP construct`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Legacy statements such as `MOVE`, `COMPUTE`, `REFRESH`, `TABLES`, `STATICS`, `FORM`, and `LEAVE` are prohibited in ABAP Cloud and discouraged in Clean ABAP. Replace them with modern value assignments and object-oriented constructs.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- MOVE lv_src TO lv_dst.
++ lv_dst = lv_src.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 MOVE lv_src TO lv_dst.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 lv_dst = lv_src.
 ```
 
-## ⚡ Automated QuickFix
+## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
 1. Position the cursor on the flagged statement.
 2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
 3. Select the automated refactoring to apply the clean syntax immediately.
 
-## ⚙️ Configurable Parameters (ATC Variant / Profile)
+## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
@@ -54,7 +61,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | `CHECK_FORM` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
 | `CHECK_LOOP_CTL` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -76,7 +83,7 @@ checks:
       CHECK_LOOP_CTL: true
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -92,7 +99,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_OBSOLETE.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_OBSOLETE`
 * **Finding Code:** `OBSOLETE`

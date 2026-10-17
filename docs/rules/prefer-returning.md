@@ -5,31 +5,40 @@
   <Badge type="danger" text="Finding: PREFER_RET" />
 </div>
 
-## 📖 Description
+## Overview
 
 Prefer RETURNING over single EXPORTING.
 
 > **ATC Finding Message:** `Prefer functional RETURNING parameter over single EXPORTING parameter`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Methods with a `RETURNING` parameter can be used directly within expressions, assignments, and assertions. Prefer `RETURNING` over a single `EXPORTING` parameter.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- METHODS calculate
+-   EXPORTING ev_result TYPE i.
++ METHODS calculate
++   RETURNING VALUE(rv_result) TYPE i.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 METHODS calculate
   EXPORTING ev_result TYPE i.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 METHODS calculate
   RETURNING VALUE(rv_result) TYPE i.
 ```
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -38,7 +47,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -54,7 +63,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_RETURNING.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_RETURNING`
 * **Finding Code:** `PREFER_RET`

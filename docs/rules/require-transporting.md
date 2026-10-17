@@ -5,17 +5,30 @@
   <Badge type="danger" text="Finding: FULL_MODIF" />
 </div>
 
-## 📖 Description
+## Overview
 
 Avoid full-line MODIFY itab inside LOOP without TRANSPORTING clause.
 
 > **ATC Finding Message:** `Specify TRANSPORTING fields in MODIFY itab inside loop for performance`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Modifying internal tables without specifying `TRANSPORTING` copies all table fields across the buffer. Specify only the modified fields to optimize execution speed.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- LOOP AT lt_items INTO ls_item.
+-   ls_item-status = 'DONE'.
+-   MODIFY lt_items FROM ls_item. " Full line copy without specifying TRANSPORTING
+- ENDLOOP.
++ LOOP AT lt_items INTO ls_item.
++   ls_item-status = 'DONE'.
++   MODIFY lt_items FROM ls_item TRANSPORTING status.
++ ENDLOOP.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 LOOP AT lt_items INTO ls_item.
@@ -24,7 +37,7 @@ LOOP AT lt_items INTO ls_item.
 ENDLOOP.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 LOOP AT lt_items INTO ls_item.
@@ -33,7 +46,7 @@ LOOP AT lt_items INTO ls_item.
 ENDLOOP.
 ```
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -42,7 +55,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -58,7 +71,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_TRANSPORTING.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_TRANSPORT`
 * **Finding Code:** `FULL_MODIF`

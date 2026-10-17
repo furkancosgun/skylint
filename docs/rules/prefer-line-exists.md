@@ -5,17 +5,29 @@
   <Badge type="danger" text="Finding: PREFLINEX" />
 </div>
 
-## 📖 Description
+## Overview
 
 Prefer line_exists( ) over READ TABLE ... TRANSPORTING NO FIELDS.
 
 > **ATC Finding Message:** `Prefer line_exists( ... ) instead of READ TABLE ... TRANSPORTING NO FIELDS`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 `line_exists( )` clearly communicates the intent of checking table membership in a single functional expression, eliminating the boilerplate of `READ TABLE ... TRANSPORTING NO FIELDS` followed by `sy-subrc = 0`.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- READ TABLE lt_items TRANSPORTING NO FIELDS WITH KEY id = lv_id.
+- IF sy-subrc = 0.
+-   process( ).
+- ENDIF.
++ IF line_exists( lt_items[ id = lv_id ] ).
++   process( ).
++ ENDIF.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 READ TABLE lt_items TRANSPORTING NO FIELDS WITH KEY id = lv_id.
@@ -24,7 +36,7 @@ IF sy-subrc = 0.
 ENDIF.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 IF line_exists( lt_items[ id = lv_id ] ).
@@ -32,7 +44,7 @@ IF line_exists( lt_items[ id = lv_id ] ).
 ENDIF.
 ```
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -41,7 +53,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -57,7 +69,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_LINE_EXISTS.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_LINE_EXISTS`
 * **Finding Code:** `PREFLINEX`

@@ -5,29 +5,36 @@
   <Badge type="danger" text="Finding: SLOW_PASS" />
 </div>
 
-## 📖 Description
+## Overview
 
 Slow Parameter Passing.
 
 > **ATC Finding Message:** `Avoid pass-by-value for importing method parameters`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Passing large internal tables by value creates an in-memory deep copy on every method invocation. Use pass-by-reference (`REFERENCE(it_data)`) or read-only references.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- METHODS process IMPORTING VALUE(iv_text) TYPE string.
++ METHODS process IMPORTING iv_text TYPE string.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 METHODS process IMPORTING VALUE(iv_text) TYPE string.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 METHODS process IMPORTING iv_text TYPE string.
 ```
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -36,7 +43,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -52,7 +59,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_SLOW_PARAM.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_SLOW_PARAM_PASS`
 * **Finding Code:** `SLOW_PASS`

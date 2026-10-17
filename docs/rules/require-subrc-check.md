@@ -5,24 +5,35 @@
   <Badge type="danger" text="Finding: CHECKSUBRC" />
 </div>
 
-## 📖 Description
+## Overview
 
 Check sy-subrc after DB, table and string operations.
 
 > **ATC Finding Message:** `Check sy-subrc after SELECT SINGLE, READ, AUTHORITY-CHECK, FIND, SEARCH`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Statements that set `sy-subrc` (such as `SELECT SINGLE`, `READ TABLE`, `AUTHORITY-CHECK`, `ASSIGN`) must have their return code verified immediately before invoking unrelated statements.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- SELECT SINGLE * FROM /dmo/customer WHERE customer_id = @lv_id INTO @ls_customer.
+- process_customer( ls_customer ). " sy-subrc is never checked
++ SELECT SINGLE * FROM /dmo/customer WHERE customer_id = @lv_id INTO @ls_customer.
++ IF sy-subrc = 0.
++   process_customer( ls_customer ).
++ ENDIF.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 SELECT SINGLE * FROM /dmo/customer WHERE customer_id = @lv_id INTO @ls_customer.
 process_customer( ls_customer ). " sy-subrc is never checked
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 SELECT SINGLE * FROM /dmo/customer WHERE customer_id = @lv_id INTO @ls_customer.
@@ -31,7 +42,7 @@ IF sy-subrc = 0.
 ENDIF.
 ```
 
-## ⚙️ Configurable Parameters (ATC Variant / Profile)
+## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
@@ -43,7 +54,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | `CHECK_FIND_SEARCH` | `Boolean` | `true` | Configurable attribute for require-subrc-check |
 | `CHECK_ASSIGN` | `Boolean` | `true` | Configurable attribute for require-subrc-check |
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -58,7 +69,7 @@ checks:
       CHECK_ASSIGN: true
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -74,7 +85,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_CHECK_SUBRC.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_CHECK_SUBRC`
 * **Finding Code:** `CHECKSUBRC`

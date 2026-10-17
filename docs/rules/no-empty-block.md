@@ -5,17 +5,30 @@
   <Badge type="danger" text="Finding: EMPTYCTRL" />
 </div>
 
-## 📖 Description
+## Overview
 
 Detect empty control blocks (IF, CASE, LOOP, TRY, CATCH, etc.).
 
 > **ATC Finding Message:** `Empty control block detected; remove redundant control statement`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Empty blocks (such as `IF ... ELSEIF ... ENDIF` with no executable statements) confuse readers and usually represent unfinished business logic or forgotten debug code.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- IF lv_condition = abap_true.
+-   " Empty block
+- ELSE.
+-   process( ).
+- ENDIF.
++ IF lv_condition = abap_false.
++   process( ).
++ ENDIF.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 IF lv_condition = abap_true.
@@ -25,7 +38,7 @@ ELSE.
 ENDIF.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 IF lv_condition = abap_false.
@@ -33,7 +46,7 @@ IF lv_condition = abap_false.
 ENDIF.
 ```
 
-## ⚙️ Configurable Parameters (ATC Variant / Profile)
+## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
@@ -48,7 +61,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | `CHECK_DO` | `Boolean` | `true` | Configurable attribute for no-empty-block |
 | `CHECK_WHILE` | `Boolean` | `true` | Configurable attribute for no-empty-block |
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -66,7 +79,7 @@ checks:
       CHECK_WHILE: true
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -82,7 +95,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_EMPTY_BLOCK.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_EMPTY_BLOCK`
 * **Finding Code:** `EMPTYCTRL`

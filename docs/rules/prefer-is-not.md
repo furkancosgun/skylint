@@ -6,17 +6,28 @@
   <Badge type="danger" text="Finding: PREFERISNT" />
 </div>
 
-## 📖 Description
+## Overview
 
 Prefer IS NOT over NOT ... IS.
 
 > **ATC Finding Message:** `Use IS NOT instead of NOT ... IS`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Writing `IF lo_ref IS NOT BOUND` or `IF lt_tab IS NOT INITIAL` mirrors natural language reading order and avoids misreading inverted expressions that start with `NOT`.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- IF NOT lo_instance IS BOUND.
+-   RETURN.
+- ENDIF.
++ IF lo_instance IS NOT BOUND.
++   RETURN.
++ ENDIF.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 IF NOT lo_instance IS BOUND.
@@ -24,7 +35,7 @@ IF NOT lo_instance IS BOUND.
 ENDIF.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 IF lo_instance IS NOT BOUND.
@@ -32,14 +43,14 @@ IF lo_instance IS NOT BOUND.
 ENDIF.
 ```
 
-## ⚡ Automated QuickFix
+## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
 1. Position the cursor on the flagged statement.
 2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
 3. Select the automated refactoring to apply the clean syntax immediately.
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -48,7 +59,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -64,7 +75,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_IS_NOT.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_IS_NOT`
 * **Finding Code:** `PREFERISNT`

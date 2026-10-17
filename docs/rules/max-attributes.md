@@ -5,17 +5,31 @@
   <Badge type="danger" text="Finding: ATTR_COUNT" />
 </div>
 
-## 📖 Description
+## Overview
 
 Limit number of member attributes in a class (God Class smell).
 
 > **ATC Finding Message:** `Class has too many member attributes; split into cohesive components`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Classes with dozens of member variables are almost always God Objects that handle multiple unrelated responsibilities. Split them into smaller, focused domain classes.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- CLASS cl_order DEFINITION.
+-   PRIVATE SECTION.
+-     " 30+ individual scalar member variables
+- ENDCLASS.
++ CLASS cl_order DEFINITION.
++   PRIVATE SECTION.
++     DATA ms_header TYPE ty_order_header.
++     DATA mt_items  TYPE ty_order_items.
++ ENDCLASS.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 CLASS cl_order DEFINITION.
@@ -24,7 +38,7 @@ CLASS cl_order DEFINITION.
 ENDCLASS.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 CLASS cl_order DEFINITION.
@@ -34,7 +48,7 @@ CLASS cl_order DEFINITION.
 ENDCLASS.
 ```
 
-## ⚙️ Configurable Parameters (ATC Variant / Profile)
+## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
@@ -42,7 +56,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 |---|---|:---:|---|
 | `MAX_ATTRIBUTES` | `Integer / String` | `5` | Configurable attribute for max-attributes |
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -53,7 +67,7 @@ checks:
       MAX_ATTRIBUTES: 5
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -69,7 +83,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_ATTRIBUTES.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_MAX_ATTRIBUTES`
 * **Finding Code:** `ATTR_COUNT`

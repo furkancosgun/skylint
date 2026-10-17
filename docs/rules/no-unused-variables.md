@@ -5,29 +5,36 @@
   <Badge type="danger" text="Finding: UNUSED_VAR" />
 </div>
 
-## 📖 Description
+## Overview
 
 Detect unused local variables and field symbols.
 
 > **ATC Finding Message:** `Local variable or field symbol is declared but never used`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Unused variables clutter code, confuse developers reviewing changes, and increase compilation and execution memory overhead without providing any benefit.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- DATA lv_temp TYPE string. " Declared but never referenced
++ " Remove unused declarations or add ##NEEDED pragma if required by interface
+```
+
+### ✕ Non-Compliant
 
 ```abap
 DATA lv_temp TYPE string. " Declared but never referenced
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 " Remove unused declarations or add ##NEEDED pragma if required by interface
 ```
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -36,7 +43,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -52,7 +59,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_NEEDED.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_UNUSED_VARS`
 * **Finding Code:** `UNUSED_VAR`

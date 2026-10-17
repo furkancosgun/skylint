@@ -5,17 +5,31 @@
   <Badge type="danger" text="Finding: NO_COMMIT" />
 </div>
 
-## 📖 Description
+## Overview
 
 Avoid COMMIT WORK / ROLLBACK WORK in behavior implementations.
 
 > **ATC Finding Message:** `Avoid COMMIT/ROLLBACK WORK; transactional control belongs to framework`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Transactional business logic should rely on the persistence framework or framework save sequence (e.g. RAP) rather than triggering premature or uncoordinated database commits.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- " Inside a RAP behavior implementation (CL_ABAP_BEHAVIOR_HANDLER)
+- METHOD update.
+-   MODIFY ENTITIES OF ...
+-   COMMIT WORK.
+- ENDMETHOD.
++ " In RAP, commits are managed automatically by the framework save sequence
++ METHOD update.
++   MODIFY ENTITIES OF ...
++ ENDMETHOD.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 " Inside a RAP behavior implementation (CL_ABAP_BEHAVIOR_HANDLER)
@@ -25,7 +39,7 @@ METHOD update.
 ENDMETHOD.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 " In RAP, commits are managed automatically by the framework save sequence
@@ -34,7 +48,7 @@ METHOD update.
 ENDMETHOD.
 ```
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -43,7 +57,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -59,7 +73,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_COMMIT_WORK.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_COMMIT_WORK`
 * **Finding Code:** `NO_COMMIT`

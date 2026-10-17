@@ -6,38 +6,47 @@
   <Badge type="danger" text="Finding: PREFERNEW" />
 </div>
 
-## 📖 Description
+## Overview
 
 Prefer NEW #( ) constructor over CREATE OBJECT and RAISE EXCEPTION TYPE.
 
 > **ATC Finding Message:** `Prefer NEW #( ) expression over CREATE OBJECT`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 The constructor expression `NEW #( )` is type-inferred, expression-capable, and avoids the archaic procedural `CREATE OBJECT` statement.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- DATA lo_customer TYPE REF TO cl_customer.
+- CREATE OBJECT lo_customer.
++ DATA lo_customer TYPE REF TO cl_customer.
++ lo_customer = NEW #( ).
+```
+
+### ✕ Non-Compliant
 
 ```abap
 DATA lo_customer TYPE REF TO cl_customer.
 CREATE OBJECT lo_customer.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 DATA lo_customer TYPE REF TO cl_customer.
 lo_customer = NEW #( ).
 ```
 
-## ⚡ Automated QuickFix
+## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
 1. Position the cursor on the flagged statement.
 2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
 3. Select the automated refactoring to apply the clean syntax immediately.
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -46,7 +55,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -62,7 +71,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_NEW_OP.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_NEW_OP`
 * **Finding Code:** `PREFERNEW`

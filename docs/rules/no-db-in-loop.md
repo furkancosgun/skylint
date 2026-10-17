@@ -5,17 +5,31 @@
   <Badge type="danger" text="Finding: DBINLOOP" />
 </div>
 
-## 📖 Description
+## Overview
 
 Avoid database access inside loop iterations.
 
 > **ATC Finding Message:** `Database access inside loop iteration; consider bulk operation or JOIN`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Executing SQL queries (`SELECT`, `UPDATE`, `DELETE`) inside a `LOOP` generates an N+1 query performance anti-pattern. Fetch data in bulk using `FOR ALL ENTRIES` or SQL Joins outside the loop.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- LOOP AT lt_orders INTO ls_order.
+-   SELECT SINGLE * FROM /dmo/customer
+-     WHERE customer_id = @ls_order-customer_id
+-     INTO @ls_customer.
+- ENDLOOP.
++ SELECT * FROM /dmo/customer
++   FOR ALL ENTRIES IN @lt_orders
++   WHERE customer_id = @lt_orders-customer_id
++   INTO TABLE @lt_customers.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 LOOP AT lt_orders INTO ls_order.
@@ -25,7 +39,7 @@ LOOP AT lt_orders INTO ls_order.
 ENDLOOP.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 SELECT * FROM /dmo/customer
@@ -34,7 +48,7 @@ SELECT * FROM /dmo/customer
   INTO TABLE @lt_customers.
 ```
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -43,7 +57,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -59,7 +73,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_DB_IN_LOOP.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_DB_IN_LOOP`
 * **Finding Code:** `DBINLOOP`

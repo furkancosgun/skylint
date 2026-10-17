@@ -6,17 +6,27 @@
   <Badge type="danger" text="Finding: NOT_FINAL" />
 </div>
 
-## 📖 Description
+## Overview
 
 Prefer FINAL classes and methods by default.
 
 > **ATC Finding Message:** `Classes should be marked FINAL by default unless designed for inheritance`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Classes not explicitly designed and documented for inheritance should be declared `FINAL`. This prevents subclassing that relies on fragile base-class implementation details.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- CLASS cl_customer_service DEFINITION PUBLIC CREATE PUBLIC.
+-   " Class not intended for inheritance
+- ENDCLASS.
++ CLASS cl_customer_service DEFINITION PUBLIC FINAL CREATE PUBLIC.
++ ENDCLASS.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 CLASS cl_customer_service DEFINITION PUBLIC CREATE PUBLIC.
@@ -24,21 +34,21 @@ CLASS cl_customer_service DEFINITION PUBLIC CREATE PUBLIC.
 ENDCLASS.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 CLASS cl_customer_service DEFINITION PUBLIC FINAL CREATE PUBLIC.
 ENDCLASS.
 ```
 
-## ⚡ Automated QuickFix
+## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
 1. Position the cursor on the flagged statement.
 2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
 3. Select the automated refactoring to apply the clean syntax immediately.
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -47,7 +57,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -63,7 +73,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_FINAL_CLS.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_FINAL_CLS`
 * **Finding Code:** `NOT_FINAL`

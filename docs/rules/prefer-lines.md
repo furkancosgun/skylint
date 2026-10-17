@@ -6,36 +6,43 @@
   <Badge type="danger" text="Finding: DESCRIBELN" />
 </div>
 
-## 📖 Description
+## Overview
 
 Prefer lines( ) built-in function over DESCRIBE TABLE ... LINES.
 
 > **ATC Finding Message:** `Use lines( ) function instead of DESCRIBE TABLE ... LINES`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 The built-in `lines( )` function is modern, functional, and can be embedded directly into expressions and conditionals without requiring a temporary variable or the cumbersome procedural `DESCRIBE TABLE ... LINES` statement.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- DESCRIBE TABLE lt_customers LINES lv_count.
++ lv_count = lines( lt_customers ).
+```
+
+### ✕ Non-Compliant
 
 ```abap
 DESCRIBE TABLE lt_customers LINES lv_count.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 lv_count = lines( lt_customers ).
 ```
 
-## ⚡ Automated QuickFix
+## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
 1. Position the cursor on the flagged statement.
 2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
 3. Select the automated refactoring to apply the clean syntax immediately.
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -44,7 +51,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -60,7 +67,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_LINES.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_LINES`
 * **Finding Code:** `DESCRIBELN`

@@ -5,17 +5,32 @@
   <Badge type="danger" text="Finding: STAT_CLASS" />
 </div>
 
-## 📖 Description
+## Overview
 
 Avoid static-only classes; prefer instantiable interface-based design.
 
 > **ATC Finding Message:** `Avoid static-only classes; declare instance methods and interfaces`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Classes consisting entirely of static methods cannot be mocked via interfaces or subclassing during unit tests, creating rigid coupling throughout the application.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- CLASS cl_math_util DEFINITION PUBLIC FINAL CREATE PUBLIC.
+-   PUBLIC SECTION.
+-     CLASS-METHODS add IMPORTING a TYPE i b TYPE i RETURNING VALUE(r) TYPE i.
+-     CLASS-METHODS sub IMPORTING a TYPE i b TYPE i RETURNING VALUE(r) TYPE i.
+- ENDCLASS.
++ CLASS cl_math_util DEFINITION PUBLIC FINAL CREATE PUBLIC.
++   PUBLIC SECTION.
++     INTERFACES if_math_util.
++     METHODS add IMPORTING a TYPE i b TYPE i RETURNING VALUE(r) TYPE i.
++ ENDCLASS.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 CLASS cl_math_util DEFINITION PUBLIC FINAL CREATE PUBLIC.
@@ -25,7 +40,7 @@ CLASS cl_math_util DEFINITION PUBLIC FINAL CREATE PUBLIC.
 ENDCLASS.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 CLASS cl_math_util DEFINITION PUBLIC FINAL CREATE PUBLIC.
@@ -35,7 +50,7 @@ CLASS cl_math_util DEFINITION PUBLIC FINAL CREATE PUBLIC.
 ENDCLASS.
 ```
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -44,7 +59,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -60,7 +75,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_STATIC_CLS.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_STATIC_CLS`
 * **Finding Code:** `STAT_CLASS`

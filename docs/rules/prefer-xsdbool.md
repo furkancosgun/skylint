@@ -6,17 +6,28 @@
   <Badge type="danger" text="Finding: PREFERXSDB" />
 </div>
 
-## 📖 Description
+## Overview
 
 Prefer xsdbool( ) expression over manual IF-ELSE assignment.
 
 > **ATC Finding Message:** `Prefer xsdbool( ) over manual IF-ELSE assignment`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Writing `IF cond. lv_flag = abap_true. ELSE. lv_flag = abap_false. ENDIF.` is 5 lines of boilerplate. `lv_flag = xsdbool( cond )` expresses the same logic cleanly in one readable line.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- IF lv_count > 0.
+-   lv_has_items = abap_true.
+- ELSE.
+-   lv_has_items = abap_false.
+- ENDIF.
++ lv_has_items = xsdbool( lv_count > 0 ).
+```
+
+### ✕ Non-Compliant
 
 ```abap
 IF lv_count > 0.
@@ -26,20 +37,20 @@ ELSE.
 ENDIF.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 lv_has_items = xsdbool( lv_count > 0 ).
 ```
 
-## ⚡ Automated QuickFix
+## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
 1. Position the cursor on the flagged statement.
 2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
 3. Select the automated refactoring to apply the clean syntax immediately.
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -48,7 +59,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -64,7 +75,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_XSDBOOL.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_XSDBOOL`
 * **Finding Code:** `PREFERXSDB`

@@ -5,17 +5,39 @@
   <Badge type="danger" text="Finding: NESTED_TRY" />
 </div>
 
-## 📖 Description
+## Overview
 
 Avoid nested TRY blocks; extract inner error handling to helper methods.
 
 > **ATC Finding Message:** `Avoid nested TRY blocks; extract to dedicated method`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Nesting `TRY` blocks inside other `TRY` blocks obfuscates error handling flow. Extract inner protected operations into distinct methods.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- TRY.
+-     step1( ).
+-     TRY.
+-         step2( ).
+-       CATCH cx_step2_err.
+-         handle_step2( ).
+-     ENDTRY.
+-   CATCH cx_step1_err.
+-     handle_step1( ).
+- ENDTRY.
++ " Extract inner operations into focused helper methods
++ TRY.
++     step1( ).
++     execute_step2( ).
++   CATCH cx_step1_err.
++     handle_step1( ).
++ ENDTRY.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 TRY.
@@ -30,7 +52,7 @@ TRY.
 ENDTRY.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 " Extract inner operations into focused helper methods
@@ -42,7 +64,7 @@ TRY.
 ENDTRY.
 ```
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -51,7 +73,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -67,7 +89,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_NESTED_TRY.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_NESTED_TRY`
 * **Finding Code:** `NESTED_TRY`

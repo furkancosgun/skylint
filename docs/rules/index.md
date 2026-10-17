@@ -1,8 +1,12 @@
-# 📋 Skylint Rules Catalog (74 Rules)
+# Rules Catalog (74 Rules)
 
 Comprehensive reference for all **74** Clean ABAP, security, performance, and architecture rules in Skylint.
 
-Every rule runs natively inside the **ABAP Test Cockpit (ATC)** and supports automated refactorings via Eclipse ADT QuickFixes.
+::: tip Skylint at a Glance
+- **74 Native ATC Rules:** 100% ABAP Cloud (Contract C1) & Steampunk Ready.
+- **28 Automated QuickFixes:** Instant one-click refactoring with <kbd>Ctrl</kbd> + <kbd>1</kbd> in Eclipse ADT.
+- **Zero Legacy Overhead:** Built exclusively on `IF_CI_ATC_CHECK` (no obsolete Code Inspector / SCI dependency).
+:::
 
 ## Clean ABAP & Modern Syntax (28)
 

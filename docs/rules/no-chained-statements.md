@@ -6,38 +6,47 @@
   <Badge type="danger" text="Finding: CHAINDECL" />
 </div>
 
-## 📖 Description
+## Overview
 
 Avoid chained declarations and chained assignments.
 
 > **ATC Finding Message:** `Avoid chained declarations; declare each entity individually`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Chained statements (`DATA: ... , ... .`) create formatting headaches, merge conflicts in Git diffs, and frequently confuse developers regarding where a type or modifier applies. Each statement should stand independently on its own line.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- DATA: lv_id   TYPE string,
+-       lv_name TYPE string.
++ DATA lv_id   TYPE string.
++ DATA lv_name TYPE string.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 DATA: lv_id   TYPE string,
       lv_name TYPE string.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 DATA lv_id   TYPE string.
 DATA lv_name TYPE string.
 ```
 
-## ⚡ Automated QuickFix
+## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
 1. Position the cursor on the flagged statement.
 2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
 3. Select the automated refactoring to apply the clean syntax immediately.
 
-## ⚙️ Configurable Parameters (ATC Variant / Profile)
+## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
@@ -45,7 +54,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 |---|---|:---:|---|
 | `ALLOW_STRUCTURE_CHAINS` | `Boolean` | `true` | Configurable attribute for no-chained-statements |
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -56,7 +65,7 @@ checks:
       ALLOW_STRUCTURE_CHAINS: true
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -72,7 +81,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_CHAIN_DECL.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_CHAINED_STMT`
 * **Finding Code:** `CHAINDECL`

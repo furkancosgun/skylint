@@ -5,29 +5,36 @@
   <Badge type="danger" text="Finding: DYN_STUFF" />
 </div>
 
-## 📖 Description
+## Overview
 
 No Dynamic Constructs (CALL, ASSIGN, CREATE, etc.).
 
 > **ATC Finding Message:** `Avoid dynamic calls and language constructs`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Dynamic programming (`ASSIGN (lv_var)`, `CALL METHOD (lv_method)`) disables compile-time type checking, hampers automated refactoring, and opens security vulnerabilities.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- CALL FUNCTION lv_func_name.
++ CALL FUNCTION 'BAPI_USER_GET_DETAIL'.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 CALL FUNCTION lv_func_name.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 CALL FUNCTION 'BAPI_USER_GET_DETAIL'.
 ```
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -36,7 +43,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -52,7 +59,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_NO_DYNAMIC.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_DYNAMIC_STMT`
 * **Finding Code:** `DYN_STUFF`

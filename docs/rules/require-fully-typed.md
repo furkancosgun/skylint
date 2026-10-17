@@ -5,29 +5,36 @@
   <Badge type="danger" text="Finding: FULLYTYPED" />
 </div>
 
-## 📖 Description
+## Overview
 
 Enforce fully typed constant declarations.
 
 > **ATC Finding Message:** `Constant declaration should explicitly specify TYPE`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Generic types (`ANY`, `DATA`, `TABLE`) bypass compiler type checking and hide runtime type mismatches. Always declare concrete, specific types unless writing truly generic frameworks.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- CONSTANTS c_status VALUE 'A'. " TYPE is omitted; implicitly typed as c length 1
++ CONSTANTS c_status TYPE c LENGTH 1 VALUE 'A'.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 CONSTANTS c_status VALUE 'A'. " TYPE is omitted; implicitly typed as c length 1
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 CONSTANTS c_status TYPE c LENGTH 1 VALUE 'A'.
 ```
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -36,7 +43,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -52,7 +59,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_FULL_TYPED.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_FULL_TYPED`
 * **Finding Code:** `FULLYTYPED`

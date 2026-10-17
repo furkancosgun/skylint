@@ -5,17 +5,31 @@
   <Badge type="danger" text="Finding: SCOPELEAK" />
 </div>
 
-## 📖 Description
+## Overview
 
 Scope of variable (avoid variable leaking outside control blocks).
 
 > **ATC Finding Message:** `Variable declared in inner block is referenced outside its scope`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 In ABAP, variable declarations inside control blocks (`IF`, `LOOP`) have procedure-wide scope. Using an inner-declared variable outside its originating block creates confusing temporal dependencies.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- IF lv_condition = abap_true.
+-   DATA(lv_value) = 10.
+- ENDIF.
+- use_value( lv_value ). " Leaked outside block
++ DATA lv_value TYPE i.
++ IF lv_condition = abap_true.
++   lv_value = 10.
++ ENDIF.
++ use_value( lv_value ).
+```
+
+### ✕ Non-Compliant
 
 ```abap
 IF lv_condition = abap_true.
@@ -24,7 +38,7 @@ ENDIF.
 use_value( lv_value ). " Leaked outside block
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 DATA lv_value TYPE i.
@@ -34,7 +48,7 @@ ENDIF.
 use_value( lv_value ).
 ```
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -43,7 +57,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -59,7 +73,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_SCOPE_LEAK.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_SCOPE_LEAK`
 * **Finding Code:** `SCOPELEAK`

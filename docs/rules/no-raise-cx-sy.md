@@ -5,29 +5,36 @@
   <Badge type="danger" text="Finding: RAISE_SYS" />
 </div>
 
-## 📖 Description
+## Overview
 
 Avoid raising SAP internal system exceptions (cx_sy_*).
 
 > **ATC Finding Message:** `Avoid raising SAP internal system exceptions; use application exceptions`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 `cx_sy_*` exceptions are reserved exclusively for the ABAP runtime engine (e.g., divide by zero, null reference). Applications must define and raise their own custom exception hierarchies.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- RAISE EXCEPTION NEW cx_sy_itab_line_not_found( ).
++ RAISE EXCEPTION NEW cx_item_not_found( ).
+```
+
+### ✕ Non-Compliant
 
 ```abap
 RAISE EXCEPTION NEW cx_sy_itab_line_not_found( ).
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 RAISE EXCEPTION NEW cx_item_not_found( ).
 ```
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -36,7 +43,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -52,7 +59,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_RAISE_CX_SY.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_RAISE_CX_SY`
 * **Finding Code:** `RAISE_SYS`

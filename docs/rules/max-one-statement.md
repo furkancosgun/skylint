@@ -5,30 +5,38 @@
   <Badge type="danger" text="Finding: ONE_STMT" />
 </div>
 
-## 📖 Description
+## Overview
 
 Max One Statement Per Line.
 
 > **ATC Finding Message:** `Only one statement is allowed per line`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Placing multiple statements on a single line hinders debugger stepping, breaks Git line diffs, and hurts overall code scannability.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- lv_a = 1. lv_b = 2.
++ lv_a = 1.
++ lv_b = 2.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 lv_a = 1. lv_b = 2.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 lv_a = 1.
 lv_b = 2.
 ```
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -37,7 +45,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -53,7 +61,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_ONE_STMT.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_MAX_ONE_STMT`
 * **Finding Code:** `ONE_STMT`

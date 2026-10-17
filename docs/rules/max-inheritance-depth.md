@@ -5,24 +5,36 @@
   <Badge type="danger" text="Finding: DEEP_INHRT" />
 </div>
 
-## 📖 Description
+## Overview
 
 Avoid deep class inheritance hierarchies.
 
 > **ATC Finding Message:** `Avoid deep class inheritance; prefer composition over inheritance`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Deep class inheritance hierarchies create the fragile base class problem and tight coupling. Favor composition over inheritance (`HAS-A` instead of `IS-A`).
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- CLASS lcl_child DEFINITION INHERITING FROM lcl_sub_parent. " Depth > 3
+- ENDCLASS.
++ " Favor composition over deep class inheritance hierarchies
++ CLASS lcl_worker DEFINITION.
++   PRIVATE SECTION.
++     DATA mo_engine TYPE REF TO if_engine.
++ ENDCLASS.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 CLASS lcl_child DEFINITION INHERITING FROM lcl_sub_parent. " Depth > 3
 ENDCLASS.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 " Favor composition over deep class inheritance hierarchies
@@ -32,7 +44,7 @@ CLASS lcl_worker DEFINITION.
 ENDCLASS.
 ```
 
-## ⚙️ Configurable Parameters (ATC Variant / Profile)
+## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
@@ -40,7 +52,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 |---|---|:---:|---|
 | `MAX_DEPTH` | `Integer / String` | `1` | Configurable attribute for max-inheritance-depth |
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -51,7 +63,7 @@ checks:
       MAX_DEPTH: 1
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -67,7 +79,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_INHERIT_DEPTH.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_MAX_INHERIT`
 * **Finding Code:** `DEEP_INHRT`

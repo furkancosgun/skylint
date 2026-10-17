@@ -5,17 +5,35 @@
   <Badge type="danger" text="Finding: NESTING_DP" />
 </div>
 
-## 📖 Description
+## Overview
 
 Nesting Depth Limit (excessive control block nesting).
 
 > **ATC Finding Message:** `Control block nesting depth exceeds`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Deeply nested blocks (`IF`, `LOOP`, `TRY`, `CASE`) cause cognitive overload ("arrow antipattern"). Flatten nested code using early exits (`RETURN`), guard clauses, and extracted methods.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- IF cond1.
+-   IF cond2.
+-     IF cond3.
+-       IF cond4.
+-         execute( ).
+-       ENDIF.
+-     ENDIF.
+-   ENDIF.
+- ENDIF.
++ IF NOT cond1 OR NOT cond2 OR NOT cond3 OR NOT cond4.
++   RETURN.
++ ENDIF.
++ execute( ).
+```
+
+### ✕ Non-Compliant
 
 ```abap
 IF cond1.
@@ -29,7 +47,7 @@ IF cond1.
 ENDIF.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 IF NOT cond1 OR NOT cond2 OR NOT cond3 OR NOT cond4.
@@ -38,7 +56,7 @@ ENDIF.
 execute( ).
 ```
 
-## ⚙️ Configurable Parameters (ATC Variant / Profile)
+## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
@@ -46,7 +64,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 |---|---|:---:|---|
 | `MAX_DEPTH` | `Integer / String` | `3` | Configurable attribute for max-nesting-depth |
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -57,7 +75,7 @@ checks:
       MAX_DEPTH: 3
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -73,7 +91,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_NESTING.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_MAX_NESTING`
 * **Finding Code:** `NESTING_DP`

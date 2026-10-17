@@ -6,17 +6,28 @@
   <Badge type="danger" text="Finding: PREFEROP" />
 </div>
 
-## 📖 Description
+## Overview
 
 Prefer comparison operators (=, <>, <, >, <=, >=) over legacy textual keywords.
 
 > **ATC Finding Message:** `Prefer modern comparison operators (=, <>, <, >, <=, >=) over legacy keywords`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Text comparison operators (`EQ`, `NE`, `LT`, `GT`, `LE`, `GE`) are legacy syntax. Modern programming and Clean ABAP universally standardize on mathematical symbols (`=`, `<>`, `<`, `>`, `<=`, `>=`).
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- IF lv_a EQ lv_b AND lv_c NE lv_d.
+-   process( ).
+- ENDIF.
++ IF lv_a = lv_b AND lv_c <> lv_d.
++   process( ).
++ ENDIF.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 IF lv_a EQ lv_b AND lv_c NE lv_d.
@@ -24,7 +35,7 @@ IF lv_a EQ lv_b AND lv_c NE lv_d.
 ENDIF.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 IF lv_a = lv_b AND lv_c <> lv_d.
@@ -32,14 +43,14 @@ IF lv_a = lv_b AND lv_c <> lv_d.
 ENDIF.
 ```
 
-## ⚡ Automated QuickFix
+## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
 1. Position the cursor on the flagged statement.
 2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
 3. Select the automated refactoring to apply the clean syntax immediately.
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -48,7 +59,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -64,7 +75,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_SYMBOL_OP.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_SYMBOL_OP`
 * **Finding Code:** `PREFEROP`

@@ -6,17 +6,28 @@
   <Badge type="danger" text="Finding: BOOLCOMP" />
 </div>
 
-## 📖 Description
+## Overview
 
 Avoid comparing boolean method calls to boolean literals.
 
 > **ATC Finding Message:** `Avoid boolean comparison for method calls; call method directly`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Predicate methods and boolean expressions evaluate directly to true or false. Comparing them explicitly (`IF is_valid( ) = abap_true`) is redundant, noisy, and unidiomatic.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- IF is_valid( ) = abap_true.
+-   execute( ).
+- ENDIF.
++ IF is_valid( ).
++   execute( ).
++ ENDIF.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 IF is_valid( ) = abap_true.
@@ -24,7 +35,7 @@ IF is_valid( ) = abap_true.
 ENDIF.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 IF is_valid( ).
@@ -32,14 +43,14 @@ IF is_valid( ).
 ENDIF.
 ```
 
-## ⚡ Automated QuickFix
+## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
 1. Position the cursor on the flagged statement.
 2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
 3. Select the automated refactoring to apply the clean syntax immediately.
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -48,7 +59,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -64,7 +75,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_BOOL_COMPARE.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_BOOL_COMPARE`
 * **Finding Code:** `BOOLCOMP`

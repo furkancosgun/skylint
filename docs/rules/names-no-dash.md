@@ -5,29 +5,36 @@
   <Badge type="danger" text="Finding: NO_DASH" />
 </div>
 
-## 📖 Description
+## Overview
 
 No Dashes in Variable and Form Names.
 
 > **ATC Finding Message:** `Avoid dashes in variable, constant, and field-symbol names`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Using a hyphen/dash in structure component references is archaic. Modern ABAP standardizes on the arrow notation `->` or hyphen only where mandatory.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- DATA foo-bar TYPE i.
++ DATA foobar TYPE i.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 DATA foo-bar TYPE i.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 DATA foobar TYPE i.
 ```
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -36,7 +43,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -52,7 +59,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_NO_DASH.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NAMES_NO_DASH`
 * **Finding Code:** `NO_DASH`

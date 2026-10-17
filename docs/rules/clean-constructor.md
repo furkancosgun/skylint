@@ -5,17 +5,30 @@
   <Badge type="danger" text="Finding: CTOR_LOGIC" />
 </div>
 
-## 📖 Description
+## Overview
 
 Keep constructors clean; avoid heavy business logic/loops/DB access.
 
 > **ATC Finding Message:** `Avoid heavy business logic/loops in constructor; use injection only`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Constructors should only initialize state and inject dependencies. Heavy business logic, database queries, or network I/O in constructors make test mocking and instantiation brittle.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- METHOD constructor.
+-   super->constructor( ).
+-   " 15+ statements initializing complex states and reading DB...
+- ENDMETHOD.
++ METHOD constructor.
++   super->constructor( ).
++   mo_gateway = io_gateway. " Simple dependency assignment only
++ ENDMETHOD.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 METHOD constructor.
@@ -24,7 +37,7 @@ METHOD constructor.
 ENDMETHOD.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 METHOD constructor.
@@ -33,7 +46,7 @@ METHOD constructor.
 ENDMETHOD.
 ```
 
-## ⚙️ Configurable Parameters (ATC Variant / Profile)
+## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
@@ -41,7 +54,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 |---|---|:---:|---|
 | `MAX_STATEMENTS` | `Integer / String` | `10` | Configurable attribute for clean-constructor |
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -52,7 +65,7 @@ checks:
       MAX_STATEMENTS: 10
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -68,7 +81,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_CLEAN_CTOR.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_CLEAN_CTOR`
 * **Finding Code:** `CTOR_LOGIC`

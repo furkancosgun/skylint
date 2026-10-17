@@ -5,31 +5,40 @@
   <Badge type="danger" text="Finding: AVOIDME" />
 </div>
 
-## 📖 Description
+## Overview
 
 Avoid self-reference ME->.
 
 > **ATC Finding Message:** `Avoid unnecessary ME-> reference`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 In ABAP, member variables and methods are automatically accessible within the instance context. Prefixing every member access with `me->` creates visual noise, except when disambiguating parameter shadowing in constructors.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- me->mv_status = c_active.
+- me->process_order( ).
++ mv_status = c_active.
++ process_order( ).
+```
+
+### ✕ Non-Compliant
 
 ```abap
 me->mv_status = c_active.
 me->process_order( ).
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 mv_status = c_active.
 process_order( ).
 ```
 
-## ⚙️ Configurable Parameters (ATC Variant / Profile)
+## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
@@ -37,7 +46,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 |---|---|:---:|---|
 | `ALLOW_IN_CONSTRUCTORS` | `Boolean` | `true` | Configurable attribute for no-me-reference |
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -48,7 +57,7 @@ checks:
       ALLOW_IN_CONSTRUCTORS: true
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -64,7 +73,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_ME.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_ME_REFERENCE`
 * **Finding Code:** `AVOIDME`

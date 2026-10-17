@@ -5,29 +5,36 @@
   <Badge type="danger" text="Finding: AVOID_LIKE" />
 </div>
 
-## 📖 Description
+## Overview
 
 Avoid LIKE referencing data objects; use explicit TYPE.
 
 > **ATC Finding Message:** `Avoid LIKE for data declarations; specify TYPE explicitly`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Typing dictionary objects with `LIKE` is obsolete. Use `TYPE` to refer to data types and reserve `LIKE` solely for referencing local data objects in the same procedure.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- DATA lv_copy LIKE lv_original.
++ DATA lv_copy TYPE string.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 DATA lv_copy LIKE lv_original.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 DATA lv_copy TYPE string.
 ```
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -36,7 +43,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -52,7 +59,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_LIKE_OBJECTS.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_LIKE_OBJECTS`
 * **Finding Code:** `AVOID_LIKE`

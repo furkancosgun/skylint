@@ -6,38 +6,47 @@
   <Badge type="danger" text="Finding: UNREACHCD" />
 </div>
 
-## 📖 Description
+## Overview
 
 Detect unreachable code following unconditional jump statements.
 
 > **ATC Finding Message:** `Statement is unreachable`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Statements appearing immediately after an unconditional `RETURN`, `RAISE EXCEPTION`, `EXIT`, or `LEAVE PROGRAM` can never execute, cluttering the codebase and misleading maintainers.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- RETURN.
+- lv_count = lv_count + 1. " Unreachable statement
++ lv_count = lv_count + 1.
++ RETURN.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 RETURN.
 lv_count = lv_count + 1. " Unreachable statement
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 lv_count = lv_count + 1.
 RETURN.
 ```
 
-## ⚡ Automated QuickFix
+## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
 1. Position the cursor on the flagged statement.
 2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
 3. Select the automated refactoring to apply the clean syntax immediately.
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -46,7 +55,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -62,7 +71,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_UNREACHABLE.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_UNREACHABLE`
 * **Finding Code:** `UNREACHCD`

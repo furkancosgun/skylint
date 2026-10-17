@@ -5,17 +5,29 @@
   <Badge type="danger" text="Finding: INTF_DATA" />
 </div>
 
-## 📖 Description
+## Overview
 
 Avoid mutable DATA declarations in interfaces; allow only CONSTANTS.
 
 > **ATC Finding Message:** `Avoid mutable DATA in interfaces; declare CONSTANTS or move to class`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Interfaces should declare behavior (methods) and immutable contracts (constants). Mutable data in interfaces creates hidden global state across all implementers.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- INTERFACE if_customer.
+-   DATA mv_state TYPE i. " Mutable DATA in interface
+- ENDINTERFACE.
++ INTERFACE if_customer.
++   CONSTANTS c_default_status TYPE i VALUE 1.
++   METHODS get_state RETURNING VALUE(rv_state) TYPE i.
++ ENDINTERFACE.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 INTERFACE if_customer.
@@ -23,7 +35,7 @@ INTERFACE if_customer.
 ENDINTERFACE.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 INTERFACE if_customer.
@@ -32,7 +44,7 @@ INTERFACE if_customer.
 ENDINTERFACE.
 ```
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -41,7 +53,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -57,7 +69,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_INTF_DATA.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_INTF_DATA`
 * **Finding Code:** `INTF_DATA`

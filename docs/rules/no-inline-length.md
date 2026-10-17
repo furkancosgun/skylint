@@ -6,36 +6,43 @@
   <Badge type="danger" text="Finding: PAREN_LEN" />
 </div>
 
-## 📖 Description
+## Overview
 
 Avoid inline length specification in declarations.
 
 > **ATC Finding Message:** `Avoid length in parentheses; use TYPE ... LENGTH ...`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Specifying length in parentheses directly after a variable name (`lv_str(10) TYPE c`) is legacy syntax. Use modern explicit typing: `TYPE c LENGTH 10`.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- DATA lv_code(10) TYPE c.
++ DATA lv_code TYPE c LENGTH 10.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 DATA lv_code(10) TYPE c.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 DATA lv_code TYPE c LENGTH 10.
 ```
 
-## ⚡ Automated QuickFix
+## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
 1. Position the cursor on the flagged statement.
 2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
 3. Select the automated refactoring to apply the clean syntax immediately.
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -44,7 +51,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -60,7 +67,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_PAREN_LEN.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_INLINE_LEN`
 * **Finding Code:** `PAREN_LEN`

@@ -6,36 +6,43 @@
   <Badge type="danger" text="Finding: CONCATSTR" />
 </div>
 
-## 📖 Description
+## Overview
 
 Prefer string templates over CONCATENATE.
 
 > **ATC Finding Message:** `Use string template |...| instead of CONCATENATE`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 String templates (`|Hello { lv_name }|`) provide type-safe, readable string interpolation with built-in formatting options. They eliminate procedural `CONCATENATE` and `SEPARATED BY` statements.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- CONCATENATE 'Hello' iv_name INTO lv_greeting SEPARATED BY space.
++ lv_greeting = |Hello { iv_name }|.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 CONCATENATE 'Hello' iv_name INTO lv_greeting SEPARATED BY space.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 lv_greeting = |Hello { iv_name }|.
 ```
 
-## ⚡ Automated QuickFix
+## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
 1. Position the cursor on the flagged statement.
 2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
 3. Select the automated refactoring to apply the clean syntax immediately.
 
-## ⚙️ Configurable Parameters (ATC Variant / Profile)
+## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
@@ -43,7 +50,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 |---|---|:---:|---|
 | `ALLOW_IN_BYTE_MODE` | `Boolean` | `false` | Configurable attribute for prefer-string-template |
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -54,7 +61,7 @@ checks:
       ALLOW_IN_BYTE_MODE: false
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -70,7 +77,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_STR_TMPL.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_STR_TMPL`
 * **Finding Code:** `CONCATSTR`

@@ -6,37 +6,45 @@
   <Badge type="danger" text="Finding: STATICVIAI" />
 </div>
 
-## 📖 Description
+## Overview
 
 Avoid calling static methods via instance arrow (->).
 
 > **ATC Finding Message:** `Call static method using => instead of ->`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Calling a static method via an object reference arrow `lo_instance->static_method( )` gives the false impression that polymorphic instance dispatch is occurring. Use `cl_class=>static_method( )`.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- DATA lo_instance TYPE REF TO cl_helper.
+- lo_instance->static_method( ).
++ cl_helper=>static_method( ).
+```
+
+### ✕ Non-Compliant
 
 ```abap
 DATA lo_instance TYPE REF TO cl_helper.
 lo_instance->static_method( ).
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 cl_helper=>static_method( ).
 ```
 
-## ⚡ Automated QuickFix
+## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
 1. Position the cursor on the flagged statement.
 2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
 3. Select the automated refactoring to apply the clean syntax immediately.
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -45,7 +53,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -61,7 +69,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_STATIC_ARROW.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_STATIC_ARROW`
 * **Finding Code:** `STATICVIAI`

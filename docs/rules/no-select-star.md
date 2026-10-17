@@ -5,23 +5,32 @@
   <Badge type="danger" text="Finding: SELECTSTAR" />
 </div>
 
-## 📖 Description
+## Overview
 
 Select performance (Avoid SELECT * and SELECT ... ENDSELECT).
 
 > **ATC Finding Message:** `Avoid SELECT *; specify required columns explicitly`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Selecting all database columns transfers unnecessary data across the network, bypasses secondary indexes, and breaks table buffering. Always specify the explicit columns required.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
++ SELECT customer_id, first_name, last_name
++   FROM /dmo/customer
++   INTO TABLE @lt_customers.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 SELECT customer_id, first_name, last_name
@@ -29,7 +38,7 @@ SELECT customer_id, first_name, last_name
   INTO TABLE @lt_customers.
 ```
 
-## ⚙️ Configurable Parameters (ATC Variant / Profile)
+## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
@@ -38,7 +47,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | `CHECK_SELECT_STAR` | `Boolean` | `true` | Configurable attribute for no-select-star |
 | `CHECK_ENDSELECT` | `Boolean` | `true` | Configurable attribute for no-select-star |
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -50,7 +59,7 @@ checks:
       CHECK_ENDSELECT: true
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -66,7 +75,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_SELECT_STAR.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_SELECT_STAR`
 * **Finding Code:** `SELECTSTAR`

@@ -76,7 +76,16 @@ function extractAttributes(content) {
   return results;
 }
 
+function buildDiffSnippet(bad, good) {
+  if (!bad || !good) return '';
+  const badLines = bad.split('\n').map((l) => `- ${l}`);
+  const goodLines = good.split('\n').map((l) => `+ ${l}`);
+  return [...badLines, ...goodLines].join('\n');
+}
+
 console.log(`Generating rich enterprise documentation for ${RULES.length} rules...`);
+
+let totalQuickFixes = 0;
 
 for (const rule of RULES) {
   const checkFile = path.join(checksDir, `${rule.className.toLowerCase()}.clas.abap`);
@@ -99,6 +108,8 @@ for (const rule of RULES) {
     if (sevMatch) severity = sevMatch[1];
 
     hasQuickfix = /quickfix_codes|quickfix_replace|quickfix_delete/i.test(content);
+    if (hasQuickfix) totalQuickFixes++;
+
     attributes = extractAttributes(content);
 
     const fMatches = [...content.matchAll(/text\s*=\s*(?:'([^']+)'|\|([^|]+)\|)/g)].map((x) => (x[1] || x[2]).trim());
@@ -154,27 +165,34 @@ for (const rule of RULES) {
   ruleDoc += `</div>\n\n`;
 
   // Meaningful Description: Include check purpose & specific finding text
-  ruleDoc += `## 📖 Description\n\n`;
+  ruleDoc += `## Overview\n\n`;
   ruleDoc += `${classDesc}.\n\n`;
   if (findingTexts.length > 0 && findingTexts[0] !== classDesc) {
     ruleDoc += `> **ATC Finding Message:** \`${findingTexts[0]}\`\n\n`;
   }
 
-  // Rationale & Best Practices (No broken external link)
-  ruleDoc += `## 🧠 Rationale & Best Practices\n\n${meta.rationale}\n\n`;
+  // Rationale & Best Practices
+  ruleDoc += `## Rationale\n\n${meta.rationale}\n\n`;
+
+  // Quick Visual Transformation Diff
+  const diffSnippet = buildDiffSnippet(nonCompliantCode, compliantCode);
+  if (diffSnippet) {
+    ruleDoc += `## Transformation\n\n`;
+    ruleDoc += `\`\`\`diff\n${diffSnippet}\n\`\`\`\n\n`;
+  }
 
   // Code Examples
   if (nonCompliantCode) {
-    ruleDoc += `## ❌ Non-Compliant Code\n\n\`\`\`abap\n${nonCompliantCode}\n\`\`\`\n\n`;
+    ruleDoc += `### ✕ Non-Compliant\n\n\`\`\`abap\n${nonCompliantCode}\n\`\`\`\n\n`;
   }
 
   if (compliantCode) {
-    ruleDoc += `## ✅ Compliant Code\n\n\`\`\`abap\n${compliantCode}\n\`\`\`\n\n`;
+    ruleDoc += `### ✓ Compliant\n\n\`\`\`abap\n${compliantCode}\n\`\`\`\n\n`;
   }
 
   // QuickFix section if available
   if (hasQuickfix) {
-    ruleDoc += `## ⚡ Automated QuickFix\n\n`;
+    ruleDoc += `## Automated QuickFix\n\n`;
     ruleDoc += `This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):\n`;
     ruleDoc += `1. Position the cursor on the flagged statement.\n`;
     ruleDoc += `2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).\n`;
@@ -183,7 +201,7 @@ for (const rule of RULES) {
 
   // Configuration Table & Attributes
   if (attributes.length > 0) {
-    ruleDoc += `## ⚙️ Configurable Parameters (ATC Variant / Profile)\n\n`;
+    ruleDoc += `## Configuration & Thresholds\n\n`;
     ruleDoc += `This check can be fine-tuned directly in the ATC Check Variant Editor (\`CHKV\`) in Eclipse ADT:\n\n`;
     ruleDoc += `| Parameter Name | Data Type | Default Value | Description |\n`;
     ruleDoc += `|---|---|:---:|---|\n`;
@@ -194,7 +212,7 @@ for (const rule of RULES) {
   }
 
   // CLI Configuration
-  ruleDoc += `## 🛠️ CLI / CI Configuration (\`skylint.yaml\`)\n\n`;
+  ruleDoc += `## CLI & CI/CD Configuration\n\n`;
   ruleDoc += `\`\`\`yaml\nchecks:\n  ${rule.ruleId}:\n    enabled: true\n    severity: ${severity}\n`;
   if (attributes.length > 0) {
     ruleDoc += `    attributes:\n`;
@@ -205,12 +223,12 @@ for (const rule of RULES) {
   ruleDoc += `\`\`\`\n\n`;
 
   // Suppression
-  ruleDoc += `## 🤫 Suppression & Pseudo-Comments\n\n`;
+  ruleDoc += `## Suppression\n\n`;
   ruleDoc += `To suppress findings for this rule, append the pseudo-comment or pragma to the statement:\n\n`;
   ruleDoc += `\`\`\`abap\n" Using pseudo-comment:\n... "#EC ${rule.pseudoComment}\n" Or with SAP CI_ prefix:\n... "#EC CI_${rule.pseudoComment}\n\n" Using pragma:\n... ##${rule.pseudoComment}.\n" Or with SAP CI_ prefix:\n... ##CI_${rule.pseudoComment}.\n\`\`\`\n\n`;
 
   // ABAP Class Details
-  ruleDoc += `## 🔍 ABAP Implementation Details\n\n`;
+  ruleDoc += `## Technical Details\n\n`;
   ruleDoc += `* **Native ATC Class:** \`${rule.className}\`\n`;
   ruleDoc += `* **Finding Code:** \`${findingCode}\`\n`;
   ruleDoc += `* **Implementation File:** [${rule.className.toLowerCase()}.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/${rule.className.toLowerCase()}.clas.abap)\n`;
@@ -218,10 +236,15 @@ for (const rule of RULES) {
   fs.writeFileSync(path.join(rulesDocsDir, `${rule.ruleId}.md`), ruleDoc, 'utf8');
 }
 
-// Generate rules/index.md
-let catalogMd = `# 📋 Skylint Rules Catalog (${RULES.length} Rules)\n\n`;
+// Generate rules/index.md with At a Glance statistics card
+let catalogMd = `# Rules Catalog (${RULES.length} Rules)\n\n`;
 catalogMd += `Comprehensive reference for all **${RULES.length}** Clean ABAP, security, performance, and architecture rules in Skylint.\n\n`;
-catalogMd += `Every rule runs natively inside the **ABAP Test Cockpit (ATC)** and supports automated refactorings via Eclipse ADT QuickFixes.\n\n`;
+
+catalogMd += `::: tip Skylint at a Glance\n`;
+catalogMd += `- **${RULES.length} Native ATC Rules:** 100% ABAP Cloud (Contract C1) & Steampunk Ready.\n`;
+catalogMd += `- **${totalQuickFixes} Automated QuickFixes:** Instant one-click refactoring with <kbd>Ctrl</kbd> + <kbd>1</kbd> in Eclipse ADT.\n`;
+catalogMd += `- **Zero Legacy Overhead:** Built exclusively on \`IF_CI_ATC_CHECK\` (no obsolete Code Inspector / SCI dependency).\n`;
+catalogMd += `:::\n\n`;
 
 for (const [catKey, catInfo] of Object.entries(CATEGORIES)) {
   const catRules = RULES.filter((r) => r.category === catKey);

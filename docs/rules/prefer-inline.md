@@ -5,30 +5,38 @@
   <Badge type="danger" text="Finding: PREF_INL" />
 </div>
 
-## 📖 Description
+## Overview
 
 Prefer Inline Declarations.
 
 > **ATC Finding Message:** `Prefer inline declaration over separate DATA and assignment`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 In versions supporting inline declarations, declaring variables at the point of first use reduces variable lifetime scope and removes top-of-method variable clutter.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- DATA lv_count TYPE i.
+- lv_count = 10.
++ DATA(lv_count) = 10.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 DATA lv_count TYPE i.
 lv_count = 10.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 DATA(lv_count) = 10.
 ```
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -37,7 +45,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -53,7 +61,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_PREFER_INLINE.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_INLINE`
 * **Finding Code:** `PREF_INL`

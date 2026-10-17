@@ -5,31 +5,40 @@
   <Badge type="danger" text="Finding: PARAMCOUNT" />
 </div>
 
-## 📖 Description
+## Overview
 
 Method signature cleanliness (excessive parameter count).
 
 > **ATC Finding Message:** `Method signature has too many parameters; consider grouping into structures`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Methods with excessive parameters are difficult to comprehend, call, and test. When a method needs more than 5-8 parameters, bundle related fields into a structured type or parameter object.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- METHODS execute
+-   IMPORTING p1 TYPE i p2 TYPE i p3 TYPE i p4 TYPE i p5 TYPE i p6 TYPE i.
++ METHODS execute
++   IMPORTING is_options TYPE ty_options.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 METHODS execute
   IMPORTING p1 TYPE i p2 TYPE i p3 TYPE i p4 TYPE i p5 TYPE i p6 TYPE i.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 METHODS execute
   IMPORTING is_options TYPE ty_options.
 ```
 
-## ⚙️ Configurable Parameters (ATC Variant / Profile)
+## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
@@ -37,7 +46,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 |---|---|:---:|---|
 | `MAX_PARAMETERS` | `Integer / String` | `8` | Configurable attribute for max-params |
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -48,7 +57,7 @@ checks:
       MAX_PARAMETERS: 8
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -64,7 +73,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_MAX_PARAMS.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_MAX_PARAMS`
 * **Finding Code:** `PARAMCOUNT`

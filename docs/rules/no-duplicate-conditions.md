@@ -5,17 +5,28 @@
   <Badge type="danger" text="Finding: DUPCOND" />
 </div>
 
-## 📖 Description
+## Overview
 
 Detect identical branch conditions in IF/ELSEIF and CASE/WHEN.
 
 > **ATC Finding Message:** `Identical condition in branch; duplicate branch is unreachable`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Repeating the exact same condition across `IF / ELSEIF` or `WHEN` branches means subsequent duplicate branches can never be reached, indicating a copy-paste error or broken logic.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- IF lv_type = 'A' OR lv_type = 'A'.
+-   process( ).
+- ENDIF.
++ IF lv_type = 'A'.
++   process( ).
++ ENDIF.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 IF lv_type = 'A' OR lv_type = 'A'.
@@ -23,7 +34,7 @@ IF lv_type = 'A' OR lv_type = 'A'.
 ENDIF.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 IF lv_type = 'A'.
@@ -31,7 +42,7 @@ IF lv_type = 'A'.
 ENDIF.
 ```
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -40,7 +51,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -56,7 +67,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_DUP_COND.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_DUP_COND`
 * **Finding Code:** `DUPCOND`

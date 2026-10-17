@@ -5,29 +5,36 @@
   <Badge type="danger" text="Finding: CLASS_EXC" />
 </div>
 
-## 📖 Description
+## Overview
 
 Prefer Class-Based Exceptions over Classic EXCEPTIONS.
 
 > **ATC Finding Message:** `Prefer class-based exceptions (RAISING) over classic EXCEPTIONS`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Classic non-class exceptions (set via `sy-subrc`) lack stack traces, cannot carry context data, and cannot be propagated up call stacks cleanly. Use class-based exceptions (`CX_ROOT` subclasses).
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- METHODS execute EXCEPTIONS not_found failed.
++ METHODS execute RAISING cx_not_found cx_failed.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 METHODS execute EXCEPTIONS not_found failed.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 METHODS execute RAISING cx_not_found cx_failed.
 ```
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -36,7 +43,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -52,7 +59,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_CLASS_EXC.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_CLASS_EXC`
 * **Finding Code:** `CLASS_EXC`

@@ -5,29 +5,36 @@
   <Badge type="danger" text="Finding: MSG_RAISE" />
 </div>
 
-## 📖 Description
+## Overview
 
 Avoid obsolete MESSAGE ... RAISING; use class-based exceptions.
 
 > **ATC Finding Message:** `Avoid obsolete MESSAGE ... RAISING; raise class-based exceptions`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 `MESSAGE ... RAISING` combines procedural exception handling with UI messaging, preventing proper separation of concerns. Raise modern class-based exceptions instead.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- MESSAGE e001(zmsg) RAISING not_found.
++ RAISE EXCEPTION NEW cx_not_found( textid = cx_not_found=>c_item_missing ).
+```
+
+### ✕ Non-Compliant
 
 ```abap
 MESSAGE e001(zmsg) RAISING not_found.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 RAISE EXCEPTION NEW cx_not_found( textid = cx_not_found=>c_item_missing ).
 ```
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -36,7 +43,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -52,7 +59,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_MSG_RAISING.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_MSG_RAISING`
 * **Finding Code:** `MSG_RAISE`

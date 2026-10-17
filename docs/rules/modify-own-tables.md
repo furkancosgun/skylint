@@ -5,29 +5,36 @@
   <Badge type="danger" text="Finding: NOT_OWN_TB" />
 </div>
 
-## 📖 Description
+## Overview
 
 Modify Only Own Database Tables.
 
 > **ATC Finding Message:** `Modify only customer-owned (Z/Y or /.../) database tables`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Directly inserting, updating, or deleting tables belonging to another application component bypasses business validation logic and violates modular architecture.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- DELETE FROM mara WHERE matnr = '100'.
++ DELETE FROM zmara WHERE matnr = '100'.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 DELETE FROM mara WHERE matnr = '100'.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 DELETE FROM zmara WHERE matnr = '100'.
 ```
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -36,7 +43,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -52,7 +59,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_OWN_TABLES.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_MODIFY_OWN_TAB`
 * **Finding Code:** `NOT_OWN_TB`

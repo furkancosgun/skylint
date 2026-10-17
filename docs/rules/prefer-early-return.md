@@ -5,17 +5,34 @@
   <Badge type="danger" text="Finding: GUARD_METH" />
 </div>
 
-## 📖 Description
+## Overview
 
 Prefer early exit (RETURN or CONTINUE) instead of nested IF blocks.
 
 > **ATC Finding Message:** `Invert IF condition and use RETURN to reduce nesting in method`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Check preconditions and invalid states at the start of the method and return immediately. This eliminates deeply nested `IF ... ELSE` ladders.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- METHOD process_order.
+-   IF is_valid( ).
+-     " Entire method logic deeply nested
+-     execute_order( ).
+-   ENDIF.
+- ENDMETHOD.
++ METHOD process_order.
++   IF NOT is_valid( ).
++     RETURN.
++   ENDIF.
++   execute_order( ).
++ ENDMETHOD.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 METHOD process_order.
@@ -26,7 +43,7 @@ METHOD process_order.
 ENDMETHOD.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 METHOD process_order.
@@ -37,7 +54,7 @@ METHOD process_order.
 ENDMETHOD.
 ```
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -46,7 +63,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -62,7 +79,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_EARLY_RETURN.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_EARLY_RET`
 * **Finding Code:** `GUARD_METH`

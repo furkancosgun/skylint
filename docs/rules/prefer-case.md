@@ -5,17 +5,37 @@
   <Badge type="danger" text="Finding: USE_CASE" />
 </div>
 
-## 📖 Description
+## Overview
 
 Change IF to CASE when checking the same variable against multiple values.
 
 > **ATC Finding Message:** `Multiple ELSEIF branches check the same variable; use CASE instead`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 When branching on multiple values of a single variable, `CASE ... WHEN` is more readable, structured, and performant than a chain of `ELSEIF` statements.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- IF lv_type = 'A'.
+-   process_a( ).
+- ELSEIF lv_type = 'B'.
+-   process_b( ).
+- ELSEIF lv_type = 'C'.
+-   process_c( ).
+- ENDIF.
++ CASE lv_type.
++   WHEN 'A'.
++     process_a( ).
++   WHEN 'B'.
++     process_b( ).
++   WHEN 'C'.
++     process_c( ).
++ ENDCASE.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 IF lv_type = 'A'.
@@ -27,7 +47,7 @@ ELSEIF lv_type = 'C'.
 ENDIF.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 CASE lv_type.
@@ -40,7 +60,7 @@ CASE lv_type.
 ENDCASE.
 ```
 
-## ⚙️ Configurable Parameters (ATC Variant / Profile)
+## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
@@ -48,7 +68,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 |---|---|:---:|---|
 | `MIN_BRANCHES` | `Integer / String` | `3` | Configurable attribute for prefer-case |
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -59,7 +79,7 @@ checks:
       MIN_BRANCHES: 3
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -75,7 +95,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_PREF_CASE.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_CASE`
 * **Finding Code:** `USE_CASE`

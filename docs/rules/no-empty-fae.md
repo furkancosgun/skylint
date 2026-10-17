@@ -6,17 +6,32 @@
   <Badge type="danger" text="Finding: FAENOCHECK" />
 </div>
 
-## 📖 Description
+## Overview
 
 Unsecure FOR ALL ENTRIES (Missing empty itab check).
 
 > **ATC Finding Message:** `FOR ALL ENTRIES without preceding IS NOT INITIAL check causes full table scan`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 In ABAP SQL, executing `FOR ALL ENTRIES IN @lt_table` when `lt_table` is empty drops the `WHERE` clause entirely and performs a full table scan, causing severe system performance degradation and data leaks.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- SELECT * FROM /dmo/customer
+-   FOR ALL ENTRIES IN @lt_orders
+-   WHERE customer_id = @lt_orders-customer_id
+-   INTO TABLE @lt_customers.
++ IF lt_orders IS NOT INITIAL.
++   SELECT * FROM /dmo/customer
++     FOR ALL ENTRIES IN @lt_orders
++     WHERE customer_id = @lt_orders-customer_id
++     INTO TABLE @lt_customers.
++ ENDIF.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 SELECT * FROM /dmo/customer
@@ -25,7 +40,7 @@ SELECT * FROM /dmo/customer
   INTO TABLE @lt_customers.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 IF lt_orders IS NOT INITIAL.
@@ -36,14 +51,14 @@ IF lt_orders IS NOT INITIAL.
 ENDIF.
 ```
 
-## ⚡ Automated QuickFix
+## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
 1. Position the cursor on the flagged statement.
 2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
 3. Select the automated refactoring to apply the clean syntax immediately.
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -52,7 +67,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -68,7 +83,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_EMPTY_FAE.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_EMPTY_FAE`
 * **Finding Code:** `FAENOCHECK`

@@ -6,36 +6,43 @@
   <Badge type="danger" text="Finding: PARAM_ESCP" />
 </div>
 
-## 📖 Description
+## Overview
 
 Detect unnecessary exclamation mark parameter escape (!iv_param).
 
 > **ATC Finding Message:** `Escape params with ! only on keyword clash`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Importing parameters should be treated as immutable inputs. Modifying them inside the method leads to unexpected side effects and debugging difficulties.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- METHODS process IMPORTING !iv_data TYPE string.
++ METHODS process IMPORTING iv_data TYPE string.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 METHODS process IMPORTING !iv_data TYPE string.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 METHODS process IMPORTING iv_data TYPE string.
 ```
 
-## ⚡ Automated QuickFix
+## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
 1. Position the cursor on the flagged statement.
 2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
 3. Select the automated refactoring to apply the clean syntax immediately.
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -44,7 +51,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -60,7 +67,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_PARAM_ESCAPE.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_PARAM_ESCAPE`
 * **Finding Code:** `PARAM_ESCP`

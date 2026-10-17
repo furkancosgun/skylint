@@ -6,36 +6,43 @@
   <Badge type="danger" text="Finding: PREFER_COR" />
 </div>
 
-## 📖 Description
+## Overview
 
 Prefer CORRESPONDING Expression over MOVE-CORRESPONDING.
 
 > **ATC Finding Message:** `Prefer functional CORRESPONDING #( ... ) over MOVE-CORRESPONDING`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 The constructor expression `CORRESPONDING #( )` is type-safe, expression-capable, and supports modern features like `EXCEPT` and `MAPPING`. It replaces the archaic `MOVE-CORRESPONDING` statement.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- MOVE-CORRESPONDING ls_source TO ls_target.
++ ls_target = CORRESPONDING #( ls_source ).
+```
+
+### ✕ Non-Compliant
 
 ```abap
 MOVE-CORRESPONDING ls_source TO ls_target.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 ls_target = CORRESPONDING #( ls_source ).
 ```
 
-## ⚡ Automated QuickFix
+## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
 1. Position the cursor on the flagged statement.
 2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
 3. Select the automated refactoring to apply the clean syntax immediately.
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -44,7 +51,7 @@ checks:
     severity: warning
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -60,7 +67,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_CORRESP.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_CORRESP`
 * **Finding Code:** `PREFER_COR`

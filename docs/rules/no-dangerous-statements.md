@@ -5,17 +5,26 @@
   <Badge type="danger" text="Finding: DANGER_STM" />
 </div>
 
-## 📖 Description
+## Overview
 
 Dangerous Statements (abaplint dangerous_statement).
 
 > **ATC Finding Message:** `Dangerous statement detected; avoid dynamic/unmanaged language construct`
 
-## 🧠 Rationale & Best Practices
+## Rationale
 
 Dynamic code generation (`GENERATE SUBROUTINE POOL`, `INSERT REPORT`), kernel calls (`SYSTEM-CALL`), and production `ASSERT` or `RAISE SHORTDUMP` jeopardize cloud compliance, security, and stability.
 
-## ❌ Non-Compliant Code
+## Transformation
+
+```diff
+- EXEC SQL.
+-   SELECT * FROM /dmo/customer INTO :wa
+- ENDEXEC.
++ SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
+```
+
+### ✕ Non-Compliant
 
 ```abap
 EXEC SQL.
@@ -23,13 +32,13 @@ EXEC SQL.
 ENDEXEC.
 ```
 
-## ✅ Compliant Code
+### ✓ Compliant
 
 ```abap
 SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
 ```
 
-## ⚙️ Configurable Parameters (ATC Variant / Profile)
+## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
@@ -54,7 +63,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | `CHECK_PROD_ASSERT` | `Boolean` | `true` | Configurable attribute for no-dangerous-statements |
 | `IGNORE_RAP_QUERY_PROVIDER` | `Boolean` | `true` | Configurable attribute for no-dangerous-statements |
 
-## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+## CLI & CI/CD Configuration
 
 ```yaml
 checks:
@@ -82,7 +91,7 @@ checks:
       IGNORE_RAP_QUERY_PROVIDER: true
 ```
 
-## 🤫 Suppression & Pseudo-Comments
+## Suppression
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
 
@@ -98,7 +107,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_DANGEROUS_STMT.
 ```
 
-## 🔍 ABAP Implementation Details
+## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_DANGEROUS_STMT`
 * **Finding Code:** `DANGER_STM`
