@@ -52,7 +52,7 @@ In modern ABAP systems (SAP BTP ABAP Environment, S/4HANA Cloud, and S/4HANA 202
    ```
    ZCL_SKYLINT_*
    ```
-4. Select all desired Skylint rules (or select all 80+ rules for complete Clean ABAP coverage).
+4. Select all desired Skylint rules (or select all rules for complete Clean ABAP coverage).
 5. For each rule, you can customize:
    - **Default Severity:** Error, Warning, or Note.
    - **Check-Specific Parameters:** For rules with configurable thresholds (such as `MAX_METHOD_LENGTH` or `MAX_NESTING_DEPTH`), configure the numeric bounds directly in the attribute pane.
