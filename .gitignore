@@ -8,3 +8,4 @@ node_modules/
 .vscode/
 docs/.vitepress/dist/
 docs/.vitepress/cache/
+deps/open-abap-core/

@@ -1,3 +1,0 @@
-[submodule "deps/open-abap-core"]
-	path = deps/open-abap-core
-	url = https://github.com/open-abap/open-abap-core.git
