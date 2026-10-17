@@ -20,5 +20,9 @@
     "quickfixes": [
       "TOTEMPLATE"
     ]
+  },
+  {
+    "method": "TEST_005",
+    "code": null
   }
 ]

@@ -7,6 +7,7 @@ CLASS zcl_test_prefer_string_functio DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
+    METHODS test_005.
 ENDCLASS.
 
 
@@ -31,6 +32,11 @@ CLASS zcl_test_prefer_string_functio IMPLEMENTATION.
   METHOD test_004.
     DATA lv_text TYPE string.
     lv_text = to_lower( lv_text ).
+  ENDMETHOD.
+
+  METHOD test_005.
+    DATA lv_text TYPE string.
+    TRANSLATE lv_text USING 'abxy'.
   ENDMETHOD.
 ENDCLASS.
 

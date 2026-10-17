@@ -7,10 +7,5 @@
   },
   "category": "ZSKYLINT",
   "implementingClass": "ZCL_SKYLINT_PREF_STR_TMPL",
-  "checkType": "remoteEnabled",
-  "parameters": [
-    {
-      "name": "ALLOW_IN_BYTE_MODE"
-    }
-  ]
+  "checkType": "remoteEnabled"
 }

@@ -44,22 +44,21 @@ ENDCLASS.
 
 CLASS zcl_skylint_pref_early_ret IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Prefer early return or continue over nested IF blocks'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     severity = if_ci_atc_check=>finding_severities-warning
-                     ( code           = c_finding_codes-guard_method
-                       text           = 'Invert IF condition and use RETURN to reduce nesting in method'
-                       pseudo_comment = c_pseudo_comments-early_return )
-                     ( code           = c_finding_codes-guard_loop
-                       text           = 'Invert IF condition and use CONTINUE to reduce nesting in loop'
-                       pseudo_comment = c_pseudo_comments-early_continue ) )
-                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                                              ( name  = 'CHECK_METHOD_RETURN'
-                                                value = REF #( mv_check_method_return ) )
-                                              ( name  = 'CHECK_LOOP_CONTINUE'
-                                                value = REF #( mv_check_loop_continue ) ) ) ) ).
+    super->constructor( VALUE #( description       = 'Prefer early return or continue over nested IF blocks'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     severity = if_ci_atc_check=>finding_severities-warning
+                                     ( code           = c_finding_codes-guard_method
+                                       text           = 'Invert IF condition and use RETURN to reduce nesting in method'
+                                       pseudo_comment = c_pseudo_comments-early_return )
+                                     ( code           = c_finding_codes-guard_loop
+                                       text           = 'Invert IF condition and use CONTINUE to reduce nesting in loop'
+                                       pseudo_comment = c_pseudo_comments-early_continue ) )
+                                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                                              ( name  = 'CHECK_METHOD_RETURN'
+                                                                value = REF #( mv_check_method_return ) )
+                                                              ( name  = 'CHECK_LOOP_CONTINUE'
+                                                                value = REF #( mv_check_loop_continue ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

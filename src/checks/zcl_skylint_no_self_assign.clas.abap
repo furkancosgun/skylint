@@ -68,8 +68,6 @@ CLASS zcl_skylint_no_self_assign IMPLEMENTATION.
     DATA ls_tok_right TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA ls_tok_after TYPE if_ci_atc_source_code_provider=>ty_token.
     FIELD-SYMBOLS <ls_ref_w> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
-    " TODO: variable is assigned but never used (ABAP cleaner)
-    FIELD-SYMBOLS <ls_ref_r> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     rv_res = abap_false.
 
@@ -103,7 +101,7 @@ CLASS zcl_skylint_no_self_assign IMPLEMENTATION.
     " 1. Compiler reference check: same symbol on LHS and RHS
     LOOP AT ls_tok_left-references ASSIGNING <ls_ref_w>
          WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
-      LOOP AT ls_tok_right-references ASSIGNING <ls_ref_r>
+      LOOP AT ls_tok_right-references TRANSPORTING NO FIELDS
            WHERE     kind       = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
                  AND full_name  = <ls_ref_w>-full_name
                  AND full_name IS NOT INITIAL.

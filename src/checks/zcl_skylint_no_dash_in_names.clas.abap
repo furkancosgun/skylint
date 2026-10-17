@@ -32,8 +32,6 @@ CLASS zcl_skylint_no_dash_in_names IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    " TODO: variable is assigned but never used (ABAP cleaner)
-    DATA lv_idx  TYPE i.
     DATA lv_name TYPE string.
 
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
@@ -45,11 +43,9 @@ CLASS zcl_skylint_no_dash_in_names IMPLEMENTATION.
             CONTINUE.
           ENDIF.
 
-          lv_idx = 2.
           lv_name = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
                                                             iv_index     = 2 ).
           IF ( lv_name = 'BEGIN' OR lv_name = 'END' ) AND lines( <ls_statement>-tokens ) >= 4.
-            lv_idx = 4.
             lv_name = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
                                                               iv_index     = 4 ).
           ENDIF.

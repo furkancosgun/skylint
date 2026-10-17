@@ -153,10 +153,9 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
       WHEN 'MOVE'.
         IF mv_check_move = abap_true.
           ev_is_match = abap_true.
-          IF     zcl_skylint_ast_util=>token_count( is_statement )                   = 4
-             AND zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                                                         iv_index     = 3
-                                                         iv_expected  = `TO` )       = abap_true.
+          IF     zcl_skylint_ast_util=>token_count( is_statement )             = 4
+             AND zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                                   iv_lexeme    = 'TO' )       > 0.
             lv_src = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
                                                              iv_index     = 2 ).
             lv_dst = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
@@ -177,9 +176,8 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
 
       WHEN 'COMPUTE'.
         IF     mv_check_compute = abap_true
-           AND zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                                                       iv_index     = 1
-                                                       iv_expected  = `COMPUTE` )  = abap_true.
+           AND zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                                 iv_lexeme    = 'COMPUTE' )  > 0.
           ev_line = condense( zcl_skylint_ast_util=>flatten_statement( is_statement = is_statement
                                                                        it_deletions = VALUE #( ( 1 ) )
                                                                        iv_suffix    = '.' ) ).
@@ -189,10 +187,9 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
       WHEN 'ADD'.
         IF mv_check_add = abap_true.
           ev_is_match = abap_true.
-          IF     zcl_skylint_ast_util=>token_count( is_statement )                   = 4
-             AND zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                                                         iv_index     = 3
-                                                         iv_expected  = `TO` )       = abap_true.
+          IF     zcl_skylint_ast_util=>token_count( is_statement )             = 4
+             AND zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                                   iv_lexeme    = 'TO' )       > 0.
             lv_src = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
                                                              iv_index     = 2 ).
             lv_dst = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
@@ -204,10 +201,9 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
       WHEN 'SUBTRACT'.
         IF mv_check_add = abap_true.
           ev_is_match = abap_true.
-          IF     zcl_skylint_ast_util=>token_count( is_statement )                   = 4
-             AND zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                                                         iv_index     = 3
-                                                         iv_expected  = `FROM` )     = abap_true.
+          IF     zcl_skylint_ast_util=>token_count( is_statement )             = 4
+             AND zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                                   iv_lexeme    = 'FROM' )     > 0.
             lv_src = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
                                                              iv_index     = 2 ).
             lv_dst = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
@@ -219,10 +215,9 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
       WHEN 'MULTIPLY'.
         IF mv_check_add = abap_true.
           ev_is_match = abap_true.
-          IF     zcl_skylint_ast_util=>token_count( is_statement )                   = 4
-             AND zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                                                         iv_index     = 3
-                                                         iv_expected  = `BY` )       = abap_true.
+          IF     zcl_skylint_ast_util=>token_count( is_statement )             = 4
+             AND zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                                   iv_lexeme    = 'BY' )       > 0.
             lv_dst = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
                                                              iv_index     = 2 ).
             lv_src = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
@@ -234,10 +229,9 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
       WHEN 'DIVIDE'.
         IF mv_check_add = abap_true.
           ev_is_match = abap_true.
-          IF     zcl_skylint_ast_util=>token_count( is_statement )                   = 4
-             AND zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                                                         iv_index     = 3
-                                                         iv_expected  = `BY` )       = abap_true.
+          IF     zcl_skylint_ast_util=>token_count( is_statement )             = 4
+             AND zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                                   iv_lexeme    = 'BY' )       > 0.
             lv_dst = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
                                                              iv_index     = 2 ).
             lv_src = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
@@ -297,17 +291,15 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
            AND (    zcl_skylint_ast_util=>find_token_sequence(
                         is_statement = is_statement
                         it_expected  = VALUE #( ( `WITH` ) ( `HEADER` ) ( `LINE` ) ) ) > 0
-                 OR zcl_skylint_ast_util=>find_token(
-                        is_statement = is_statement
-                        iv_lexeme    = 'OCCURS' ) > 0 ).
+                 OR zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                                      iv_lexeme    = 'OCCURS' )        > 0 ).
           rv_is = abap_true.
         ENDIF.
 
       WHEN 'CLASS' OR 'INTERFACE'.
         IF     mv_check_load = abap_true
-           AND zcl_skylint_ast_util=>find_token(
-                   is_statement = is_statement
-                   iv_lexeme    = 'LOAD' ) > 0.
+           AND zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                                 iv_lexeme    = 'LOAD' )     > 0.
           rv_is = abap_true.
         ENDIF.
     ENDCASE.
@@ -324,23 +316,20 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
         rv_is = abap_true.
 
       WHEN 'ON'.
-        rv_is = zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                                                        iv_index     = 2
-                                                        iv_expected  = `CHANGE` ).
+        IF zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                             iv_lexeme    = 'CHANGE' ) > 0.
+          rv_is = abap_true.
+        ENDIF.
 
       WHEN 'AT'.
-        IF    zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                                                      iv_index     = 2
-                                                      iv_expected  = `NEW` )      = abap_true
-           OR zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                                                      iv_index     = 2
-                                                      iv_expected  = `END` )      = abap_true
-           OR zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                                                      iv_index     = 2
-                                                      iv_expected  = `FIRST` )    = abap_true
-           OR zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                                                      iv_index     = 2
-                                                      iv_expected  = `LAST` )     = abap_true.
+        IF    zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                                iv_lexeme    = 'NEW' )      > 0
+           OR zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                                iv_lexeme    = 'END' )      > 0
+           OR zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                                iv_lexeme    = 'FIRST' )    > 0
+           OR zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                                iv_lexeme    = 'LAST' )     > 0.
           rv_is = abap_true.
         ENDIF.
     ENDCASE.

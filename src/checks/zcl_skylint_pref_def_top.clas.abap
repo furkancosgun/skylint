@@ -40,10 +40,6 @@ CLASS zcl_skylint_pref_def_top IMPLEMENTATION.
     ENDIF.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_stmt>.
-      IF <ls_stmt>-keyword IS INITIAL.
-        CONTINUE.
-      ENDIF.
-
       CASE <ls_stmt>-keyword.
         WHEN 'METHOD' OR 'FORM' OR 'FUNCTION' OR 'ENDMETHOD' OR 'ENDFORM' OR 'ENDFUNCTION'.
           CONTINUE.
@@ -53,7 +49,6 @@ CLASS zcl_skylint_pref_def_top IMPLEMENTATION.
             report_statement( is_statement    = <ls_stmt>
                               iv_finding_code = c_finding_codes-definitions_top ).
           ENDIF.
-
         WHEN OTHERS.
           lv_seen_executable = abap_true.
       ENDCASE.

@@ -18,7 +18,7 @@ CLASS zcl_skylint_no_mix_returning DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_MIX_RETURNING'.
 
     METHODS is_mix_returning
-      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
 ENDCLASS.

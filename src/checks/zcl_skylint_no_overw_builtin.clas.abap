@@ -10,6 +10,7 @@ CLASS zcl_skylint_no_overw_builtin DEFINITION
       END OF c_finding_codes.
 
     CLASS-METHODS class_constructor.
+
     METHODS constructor.
 
   PROTECTED SECTION.
@@ -19,6 +20,7 @@ CLASS zcl_skylint_no_overw_builtin DEFINITION
     TYPES ty_builtin_names TYPE HASHED TABLE OF string WITH UNIQUE KEY table_line.
 
     CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_OVERW_BUILTIN'.
+
     CLASS-DATA gt_builtin TYPE ty_builtin_names.
 
     METHODS is_builtin_name
@@ -34,34 +36,90 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_overw_builtin IMPLEMENTATION.
   METHOD class_constructor.
-    gt_builtin = VALUE #(
-      ( `ABS` ) ( `ACOS` ) ( `ASIN` ) ( `ATAN` ) ( `BOOLC` ) ( `BOOLX` )
-      ( `CEIL` ) ( `CHAR_OFF` ) ( `CHARLEN` ) ( `CMAX` ) ( `CMIN` )
-      ( `CONCAT_LINES_OF` ) ( `CONDENSE` ) ( `CONTAINS` )
-      ( `CONTAINS_ANY_NOT_OF` ) ( `CONTAINS_ANY_OF` ) ( `COS` ) ( `COSH` )
-      ( `COUNT` ) ( `COUNT_ANY_NOT_OF` ) ( `COUNT_ANY_OF` ) ( `DBMAXLEN` )
-      ( `DISTANCE` ) ( `ESCAPE` ) ( `EXP` ) ( `FIND` ) ( `FIND_ANY_NOT_OF` )
-      ( `FIND_ANY_OF` ) ( `FIND_END` ) ( `FLOOR` ) ( `FRAC` ) ( `FROM_MIXED` )
-      ( `INSERT` ) ( `IPOW` ) ( `LINE_EXISTS` ) ( `LINE_INDEX` ) ( `LINES` )
-      ( `LOG` ) ( `LOG10` ) ( `MATCH` ) ( `MATCHES` ) ( `NMAX` ) ( `NMIN` )
-      ( `NUMOFCHAR` ) ( `REPEAT` ) ( `REPLACE` ) ( `RESCALE` ) ( `REVERSE` )
-      ( `ROUND` ) ( `SEGMENT` ) ( `SHIFT_LEFT` ) ( `SHIFT_RIGHT` ) ( `SIGN` )
-      ( `SIN` ) ( `SINH` ) ( `SQRT` ) ( `STRLEN` ) ( `SUBSTRING` )
-      ( `SUBSTRING_AFTER` ) ( `SUBSTRING_BEFORE` ) ( `SUBSTRING_FROM` )
-      ( `SUBSTRING_TO` ) ( `TAN` ) ( `TANH` ) ( `TO_LOWER` ) ( `TO_MIXED` )
-      ( `TO_UPPER` ) ( `TRANSLATE` ) ( `TRUNC` ) ( `UTCLONG_ADD` )
-      ( `UTCLONG_CURRENT` ) ( `UTCLONG_DIFF` ) ( `XSDBOOL` ) ( `XSTRLEN` ) ).
+    gt_builtin = VALUE #( ( `ABS` )
+                          ( `ACOS` )
+                          ( `ASIN` )
+                          ( `ATAN` )
+                          ( `BOOLC` )
+                          ( `BOOLX` )
+                          ( `CEIL` )
+                          ( `CHAR_OFF` )
+                          ( `CHARLEN` )
+                          ( `CMAX` )
+                          ( `CMIN` )
+                          ( `CONCAT_LINES_OF` )
+                          ( `CONDENSE` )
+                          ( `CONTAINS` )
+                          ( `CONTAINS_ANY_NOT_OF` )
+                          ( `CONTAINS_ANY_OF` )
+                          ( `COS` )
+                          ( `COSH` )
+                          ( `COUNT` )
+                          ( `COUNT_ANY_NOT_OF` )
+                          ( `COUNT_ANY_OF` )
+                          ( `DBMAXLEN` )
+                          ( `DISTANCE` )
+                          ( `ESCAPE` )
+                          ( `EXP` )
+                          ( `FIND` )
+                          ( `FIND_ANY_NOT_OF` )
+                          ( `FIND_ANY_OF` )
+                          ( `FIND_END` )
+                          ( `FLOOR` )
+                          ( `FRAC` )
+                          ( `FROM_MIXED` )
+                          ( `INSERT` )
+                          ( `IPOW` )
+                          ( `LINE_EXISTS` )
+                          ( `LINE_INDEX` )
+                          ( `LINES` )
+                          ( `LOG` )
+                          ( `LOG10` )
+                          ( `MATCH` )
+                          ( `MATCHES` )
+                          ( `NMAX` )
+                          ( `NMIN` )
+                          ( `NUMOFCHAR` )
+                          ( `REPEAT` )
+                          ( `REPLACE` )
+                          ( `RESCALE` )
+                          ( `REVERSE` )
+                          ( `ROUND` )
+                          ( `SEGMENT` )
+                          ( `SHIFT_LEFT` )
+                          ( `SHIFT_RIGHT` )
+                          ( `SIGN` )
+                          ( `SIN` )
+                          ( `SINH` )
+                          ( `SQRT` )
+                          ( `STRLEN` )
+                          ( `SUBSTRING` )
+                          ( `SUBSTRING_AFTER` )
+                          ( `SUBSTRING_BEFORE` )
+                          ( `SUBSTRING_FROM` )
+                          ( `SUBSTRING_TO` )
+                          ( `TAN` )
+                          ( `TANH` )
+                          ( `TO_LOWER` )
+                          ( `TO_MIXED` )
+                          ( `TO_UPPER` )
+                          ( `TRANSLATE` )
+                          ( `TRUNC` )
+                          ( `UTCLONG_ADD` )
+                          ( `UTCLONG_CURRENT` )
+                          ( `UTCLONG_DIFF` )
+                          ( `XSDBOOL` )
+                          ( `XSTRLEN` ) ).
   ENDMETHOD.
 
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'skylint: Method name overwrites built-in SAP function'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-overwrites_builtin
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Method name overwrites built-in SAP function name'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'skylint: Method name overwrites built-in SAP function'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-overwrites_builtin
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Method name overwrites built-in SAP function name'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -74,13 +132,6 @@ CLASS zcl_skylint_no_overw_builtin IMPLEMENTATION.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF <ls_statement>-keyword <> 'METHODS' AND <ls_statement>-keyword <> 'CLASS-METHODS'.
-        CONTINUE.
-      ENDIF.
-
-      IF    zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                    iv_lexeme    = 'REDEFINITION' ) = abap_true
-         OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                    iv_lexeme    = 'FOR' )          = abap_true.
         CONTINUE.
       ENDIF.
 

@@ -21,8 +21,6 @@ CLASS zcl_skylint_pref_str_tmpl DEFINITION
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'STR_TMPL'.
 
-    DATA mv_allow_in_byte_mode TYPE abap_bool VALUE abap_false.
-
     METHODS is_byte_mode
       IMPORTING is_statement        TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_byte_mode) TYPE abap_bool.
@@ -43,9 +41,6 @@ CLASS zcl_skylint_pref_str_tmpl IMPLEMENTATION.
                                                 severity       = if_ci_atc_check=>finding_severities-warning
                                                 text           = 'Use string template |...| instead of CONCATENATE'
                                                 pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #( ( name  = 'ALLOW_IN_BYTE_MODE'
-                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                                                value = REF #( mv_allow_in_byte_mode ) ) )
                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-use_template
                                                 short_text = 'Use |...| template' ) ) ) ).
   ENDMETHOD.
@@ -57,11 +52,11 @@ CLASS zcl_skylint_pref_str_tmpl IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      lv_stmt_idx = sy-tabix.
       IF <ls_statement>-keyword <> 'CONCATENATE'.
         CONTINUE.
       ENDIF.
-      lv_stmt_idx = sy-tabix.
-      IF mv_allow_in_byte_mode = abap_true AND is_byte_mode( <ls_statement> ) = abap_true.
+      IF is_byte_mode( <ls_statement> ) = abap_true.
         CONTINUE.
       ENDIF.
 
@@ -84,97 +79,66 @@ CLASS zcl_skylint_pref_str_tmpl IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD build_template.
-    DATA lv_count   TYPE i.
-    DATA lv_idx     TYPE i.
-    DATA lv_into    TYPE i.
-    DATA lv_target  TYPE string.
-    DATA lv_sep     TYPE string.
-    DATA lv_has_sep TYPE abap_bool.
-    DATA lv_tpl     TYPE string.
-    DATA lv_first   TYPE abap_bool.
-    DATA lt_ops     TYPE string_table.
-    FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <lv_op>  TYPE string.
+    DATA ls_target TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_target TYPE string.
+    DATA ls_sep    TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_sep    TYPE string.
+    DATA ls_table  TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_into   TYPE i.
+    DATA lv_idx    TYPE i.
+    DATA lt_ops    TYPE string_table.
+    DATA lv_tpl    TYPE string.
+    FIELD-SYMBOLS <lv_op> TYPE string.
 
     CLEAR rv_line.
-    lv_count = zcl_skylint_ast_util=>token_count( is_statement ).
-    IF lv_count < 4.
-      RETURN.
-    ENDIF.
-
-    lv_into = 0.
-    LOOP AT is_statement-tokens ASSIGNING <ls_tok>.
-      lv_idx = sy-tabix.
-      IF lv_idx > 1 AND <ls_tok>-lexeme = 'INTO'.
-        lv_into = lv_idx.
-        EXIT.
-      ENDIF.
-    ENDLOOP.
-    IF lv_into = 0 OR lv_into + 1 > lv_count.
-      RETURN.
-    ENDIF.
-
-    lt_ops = VALUE #( ).
-    LOOP AT is_statement-tokens ASSIGNING <ls_tok>.
-      lv_idx = sy-tabix.
-      IF lv_idx > 1 AND lv_idx < lv_into.
-        IF <ls_tok>-lexeme IS INITIAL.
-          RETURN.
-        ENDIF.
-        APPEND <ls_tok>-lexeme TO lt_ops.
-      ENDIF.
-    ENDLOOP.
-    IF lt_ops IS INITIAL.
-      RETURN.
-    ENDIF.
-
-    lv_target = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                        iv_index     = lv_into + 1 ).
+    ls_target = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                       iv_lexeme    = 'INTO' ).
+    lv_target = ls_target-lexeme.
     IF lv_target IS INITIAL.
       RETURN.
     ENDIF.
 
-    lv_has_sep = abap_false.
-    IF lv_into + 1 < lv_count.
-      IF    lv_count <> lv_into + 4
-         OR zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                    iv_index     = lv_into + 2 ) <> 'SEPARATED'
-         OR zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                    iv_index     = lv_into + 3 ) <> 'BY'.
-        RETURN.
-      ENDIF.
-      lv_sep = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                       iv_index     = lv_into + 4 ).
+    ls_sep = zcl_skylint_ast_util=>get_token_after_sequence( is_statement = is_statement
+                                                             it_expected  = VALUE #( ( `SEPARATED` ) ( `BY` ) ) ).
+    lv_sep = ls_sep-lexeme.
+
+    IF zcl_skylint_ast_util=>match_token_sequence( is_statement = is_statement
+                                                   it_expected  = VALUE #( ( `LINES` ) ( `OF` ) ) ) = abap_true.
+      ls_table = zcl_skylint_ast_util=>get_token_after_sequence( is_statement = is_statement
+                                                                 it_expected  = VALUE #( ( `LINES` ) ( `OF` ) ) ).
       IF lv_sep IS INITIAL.
-        RETURN.
+        rv_line = |{ lv_target } = concat_lines_of( table = { ls_table-lexeme } ).|.
+      ELSE.
+        rv_line = |{ lv_target } = concat_lines_of( table = { ls_table-lexeme } sep = { lv_sep } ).|.
       ENDIF.
-      lv_has_sep = abap_true.
-    ENDIF.
-
-    IF     lines( lt_ops ) = 3
-       AND lt_ops[ 1 ]     = 'LINES'
-       AND lt_ops[ 2 ]     = 'OF'.
-      IF lv_has_sep = abap_false.
-        RETURN.
-      ENDIF.
-      rv_line = |{ lv_target } = concat_lines_of( table = { lt_ops[ 3 ] } sep = { lv_sep } ).|.
       RETURN.
     ENDIF.
 
-    IF lines( lt_ops ) >= 1 AND lt_ops[ 1 ] = 'LINES'.
+    lv_into = zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                                iv_lexeme    = 'INTO' ).
+    IF lv_into <= 2.
       RETURN.
     ENDIF.
 
-    lv_tpl = ``.
-    lv_first = abap_true.
+    lv_idx = 2.
+    WHILE lv_idx < lv_into.
+      APPEND zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
+                                                     iv_index     = lv_idx ) TO lt_ops.
+      lv_idx += 1.
+    ENDWHILE.
+
+    IF lt_ops IS INITIAL.
+      RETURN.
+    ENDIF.
+
+    CLEAR lv_tpl.
     LOOP AT lt_ops ASSIGNING <lv_op>.
-      IF lv_first = abap_true.
-        lv_first = abap_false.
-      ELSEIF lv_has_sep = abap_true.
+      IF sy-tabix > 1 AND lv_sep IS NOT INITIAL.
         lv_tpl = |{ lv_tpl }\{ { lv_sep } \}|.
       ENDIF.
       lv_tpl = |{ lv_tpl }\{ { <lv_op> } \}|.
     ENDLOOP.
+
     rv_line = |{ lv_target } = \|{ lv_tpl }\|.|.
   ENDMETHOD.
 ENDCLASS.

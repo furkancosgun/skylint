@@ -54,8 +54,8 @@ CLASS zcl_skylint_no_select_star IMPLEMENTATION.
       CASE <ls_statement>-keyword.
         WHEN 'SELECT'.
           lv_has_package_size = zcl_skylint_ast_util=>match_token_sequence(
-              is_statement = <ls_statement>
-              it_expected  = VALUE #( ( `PACKAGE` ) ( `SIZE` ) ) ).
+                                    is_statement = <ls_statement>
+                                    it_expected  = VALUE #( ( `PACKAGE` ) ( `SIZE` ) ) ).
 
           IF mv_check_select_star = abap_true AND is_select_star( <ls_statement> ) = abap_true.
             report_statement( is_statement    = <ls_statement>

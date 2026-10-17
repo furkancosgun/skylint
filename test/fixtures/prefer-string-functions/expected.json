@@ -29,5 +29,14 @@
     "quickfixes": [
       "CONDENSE"
     ]
+  },
+  {
+    "method": "TEST_005",
+    "code": "TRANSLATE_",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "TRANSLATE"
+    ]
   }
 ]

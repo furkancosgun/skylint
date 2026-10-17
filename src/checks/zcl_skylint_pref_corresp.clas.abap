@@ -52,9 +52,9 @@ CLASS zcl_skylint_pref_corresp IMPLEMENTATION.
       ENDIF.
 
       IF    zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                    iv_lexeme    = 'EXPANDING' ) = abap_true
+                                                    iv_lexeme    = 'EXPANDING' )  = abap_true
          OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                    iv_lexeme    = 'KEEPING' )   = abap_true.
+                                                    iv_lexeme    = 'KEEPING' )    = abap_true.
         CONTINUE.
       ENDIF.
 

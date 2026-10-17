@@ -41,7 +41,8 @@ CLASS zcl_skylint_no_magic_numbers IMPLEMENTATION.
       ENDIF.
 
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-        IF <ls_token>-lexeme = 'EXCEPTIONS'.
+        IF     <ls_token>-lexeme      = 'EXCEPTIONS'
+           AND <ls_token>-references IS INITIAL.
           EXIT.
         ENDIF.
 

@@ -48,7 +48,8 @@ CLASS zcl_skylint_max_inherit IMPLEMENTATION.
 
     ls_statement = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
                                                         iv_index      = 1 ).
-    IF NOT line_exists( ls_statement-tokens[ lexeme = 'INHERITING' ] ).
+    IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = ls_statement
+                                               iv_lexeme    = 'INHERITING' ) = abap_false.
       RETURN.
     ENDIF.
 

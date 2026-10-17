@@ -42,14 +42,6 @@ This rule provides an **automated QuickFix** directly in Eclipse ABAP Developmen
 2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
 3. Select the automated refactoring to apply the clean syntax immediately.
 
-## Configuration & Thresholds
-
-This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
-
-| Parameter Name | Data Type | Default Value | Description |
-|---|---|:---:|---|
-| `ALLOW_IN_BYTE_MODE` | `Boolean` | `false` | Configurable attribute for prefer-string-template |
-
 ## CLI & CI/CD Configuration
 
 ```yaml
@@ -57,8 +49,6 @@ checks:
   prefer-string-template:
     enabled: true
     severity: warning
-    attributes:
-      allowInByteMode: false
 ```
 
 ## Suppression

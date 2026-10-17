@@ -62,33 +62,32 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_redundant_call IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Omit redundant EXPORTING and RECEIVING in method calls'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     severity = if_ci_atc_check=>finding_severities-warning
-                     ( code           = c_finding_codes-omit_exporting
-                       text           = 'Omit explicit EXPORTING keyword in method invocation'
-                       pseudo_comment = c_pseudo_comments-exporting )
-                     ( code           = c_finding_codes-omit_receiving
-                       text           = 'Omit RECEIVING keyword; use functional call or omit parameter'
-                       pseudo_comment = c_pseudo_comments-receiving )
-                     ( code           = c_finding_codes-omit_param
-                       text           = 'Omit explicit parameter name in single parameter method call'
-                       pseudo_comment = c_pseudo_comments-param_name ) )
-                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-omit_exporting
-                                                short_text = 'Remove EXPORTING keyword' )
-                                              ( code       = c_quickfix_codes-omit_receiving
-                                                short_text = 'Hoist RECEIVING to LHS' )
-                                              ( code       = c_quickfix_codes-omit_param
-                                                short_text = 'Drop parameter name' ) )
-                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                                              ( name  = 'CHECK_EXPORTING'
-                                                value = REF #( mv_check_exporting ) )
-                                              ( name  = 'CHECK_RECEIVING'
-                                                value = REF #( mv_check_receiving ) )
-                                              ( name  = 'CHECK_PARAM_NAME'
-                                                value = REF #( mv_check_param_name ) ) ) ) ).
+    super->constructor( VALUE #( description       = 'Omit redundant EXPORTING and RECEIVING in method calls'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     severity = if_ci_atc_check=>finding_severities-warning
+                                     ( code           = c_finding_codes-omit_exporting
+                                       text           = 'Omit explicit EXPORTING keyword in method invocation'
+                                       pseudo_comment = c_pseudo_comments-exporting )
+                                     ( code           = c_finding_codes-omit_receiving
+                                       text           = 'Omit RECEIVING keyword; use functional call or omit parameter'
+                                       pseudo_comment = c_pseudo_comments-receiving )
+                                     ( code           = c_finding_codes-omit_param
+                                       text           = 'Omit explicit parameter name in single parameter method call'
+                                       pseudo_comment = c_pseudo_comments-param_name ) )
+                                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-omit_exporting
+                                                                short_text = 'Remove EXPORTING keyword' )
+                                                              ( code       = c_quickfix_codes-omit_receiving
+                                                                short_text = 'Hoist RECEIVING to LHS' )
+                                                              ( code       = c_quickfix_codes-omit_param
+                                                                short_text = 'Drop parameter name' ) )
+                                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                                              ( name  = 'CHECK_EXPORTING'
+                                                                value = REF #( mv_check_exporting ) )
+                                                              ( name  = 'CHECK_RECEIVING'
+                                                                value = REF #( mv_check_receiving ) )
+                                                              ( name  = 'CHECK_PARAM_NAME'
+                                                                value = REF #( mv_check_param_name ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

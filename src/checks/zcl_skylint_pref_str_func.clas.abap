@@ -25,6 +25,11 @@ CLASS zcl_skylint_pref_str_func DEFINITION
 
     DATA mv_check_condense  TYPE abap_bool VALUE abap_true.
     DATA mv_check_translate TYPE abap_bool VALUE abap_true.
+
+    METHODS quickfix_translate_using
+      IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_var         TYPE string
+      RETURNING VALUE(rv_line) TYPE string.
 ENDCLASS.
 
 
@@ -70,46 +75,33 @@ CLASS zcl_skylint_pref_str_func IMPLEMENTATION.
           IF mv_check_condense = abap_false.
             CONTINUE.
           ENDIF.
+          lv_var = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
+                                                           iv_index     = 2 ).
           lv_code = c_finding_codes-condense_stmt.
-          IF zcl_skylint_ast_util=>token_count( <ls_statement> ) = 2.
-            lv_var = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
-                                                             iv_index     = 2 ).
-            lv_line = |{ lv_var } = condense( { lv_var } ).|.
-            lv_fix_code = c_quickfix_codes-condense_stmt.
-          ELSEIF     zcl_skylint_ast_util=>token_count( <ls_statement> )                   = 3
-                 AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
-                                                             iv_index     = 3
-                                                             iv_expected  = `NO-GAPS` )    = abap_true.
-            lv_var = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
-                                                             iv_index     = 2 ).
+          lv_fix_code = c_quickfix_codes-condense_stmt.
+          IF zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
+                                               iv_lexeme    = 'NO-GAPS' ) > 0.
             lv_line = |{ lv_var } = condense( val = { lv_var } from = ` ` to = `` ).|.
-            lv_fix_code = c_quickfix_codes-condense_stmt.
+          ELSE.
+            lv_line = |{ lv_var } = condense( { lv_var } ).|.
           ENDIF.
         WHEN 'TRANSLATE'.
           IF mv_check_translate = abap_false.
             CONTINUE.
           ENDIF.
+          lv_var = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
+                                                           iv_index     = 2 ).
           lv_code = c_finding_codes-translate_stmt.
-          IF     zcl_skylint_ast_util=>token_count( <ls_statement> )                   = 5
-             AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
-                                                         iv_index     = 3
-                                                         iv_expected  = `TO` )         = abap_true
-             AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
-                                                         iv_index     = 5
-                                                         iv_expected  = `CASE` )       = abap_true.
-            lv_var = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
-                                                             iv_index     = 2 ).
-            IF zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
-                                                       iv_index     = 4
-                                                       iv_expected  = `UPPER` ) = abap_true.
-              lv_line = |{ lv_var } = to_upper( { lv_var } ).|.
-              lv_fix_code = c_quickfix_codes-translate_stmt.
-            ELSEIF zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
-                                                           iv_index     = 4
-                                                           iv_expected  = `LOWER` ) = abap_true.
-              lv_line = |{ lv_var } = to_lower( { lv_var } ).|.
-              lv_fix_code = c_quickfix_codes-translate_stmt.
-            ENDIF.
+          lv_fix_code = c_quickfix_codes-translate_stmt.
+          IF zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
+                                               iv_lexeme    = 'UPPER' ) > 0.
+            lv_line = |{ lv_var } = to_upper( { lv_var } ).|.
+          ELSEIF zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
+                                                   iv_lexeme    = 'LOWER' ) > 0.
+            lv_line = |{ lv_var } = to_lower( { lv_var } ).|.
+          ELSE.
+            lv_line = quickfix_translate_using( is_statement = <ls_statement>
+                                                iv_var       = lv_var ).
           ENDIF.
         WHEN OTHERS.
           CONTINUE.
@@ -124,5 +116,43 @@ CLASS zcl_skylint_pref_str_func IMPLEMENTATION.
                         iv_finding_code = lv_code
                         is_quickfix     = ls_quickfix ).
     ENDLOOP.
+  ENDMETHOD.
+
+  METHOD quickfix_translate_using.
+    DATA ls_mask TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_raw  TYPE string.
+    DATA lv_len  TYPE i.
+    DATA lv_from TYPE string.
+    DATA lv_to   TYPE string.
+    DATA lv_idx  TYPE i VALUE 1.
+
+    CLEAR rv_line.
+    ls_mask = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                     iv_lexeme    = 'USING' ).
+    IF zcl_skylint_ast_util=>token_is_literal( ls_mask ) = abap_false.
+      RETURN.
+    ENDIF.
+
+    lv_raw = ls_mask-lexeme.
+    lv_len = strlen( lv_raw ) - 2.
+    IF lv_len <= 0 OR lv_len MOD 2 <> 0.
+      RETURN.
+    ENDIF.
+
+    WHILE lv_idx <= lv_len.
+      lv_from = |{ lv_from }{ lv_raw+lv_idx(1) }|.
+      lv_idx += 1.
+      lv_to   = |{ lv_to }{ lv_raw+lv_idx(1) }|.
+      lv_idx += 1.
+    ENDWHILE.
+
+    IF    contains( val = lv_from
+                    sub = '`' )
+       OR contains( val = lv_to
+                    sub = '`' ).
+      RETURN.
+    ENDIF.
+
+    rv_line = |{ iv_var } = translate( val = { iv_var } from = `{ lv_from }` to = `{ lv_to }` ).|.
   ENDMETHOD.
 ENDCLASS.

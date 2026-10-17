@@ -101,8 +101,6 @@ CLASS zcl_skylint_no_unused_vars IMPLEMENTATION.
   METHOD is_variable_used.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_tok>  TYPE if_ci_atc_source_code_provider=>ty_token.
-    " TODO: variable is assigned but never used (ABAP cleaner)
-    FIELD-SYMBOLS <ls_ref>  TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     rv_used = abap_false.
 
@@ -114,7 +112,7 @@ CLASS zcl_skylint_no_unused_vars IMPLEMENTATION.
       LOOP AT <ls_stmt>-tokens ASSIGNING <ls_tok>.
         " 1. Compiler reference matching symbol full_name (usage access)
         IF is_def_ref-full_name IS NOT INITIAL.
-          LOOP AT <ls_tok>-references ASSIGNING <ls_ref>
+          LOOP AT <ls_tok>-references TRANSPORTING NO FIELDS
                WHERE     kind         = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
                      AND full_name    = is_def_ref-full_name
                      AND usage_grade <> if_ci_atc_source_code_provider=>usage_grades-definition.

@@ -18,7 +18,7 @@ CLASS zcl_skylint_max_param_line DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'MAX_PARAM_LINE'.
 
     METHODS has_multiple_params_per_line
-      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
 ENDCLASS.
@@ -26,14 +26,13 @@ ENDCLASS.
 
 CLASS zcl_skylint_max_param_line IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'skylint: Max one method parameter definition per line'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-multiple_params
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Keep max one method parameter definition per line'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'skylint: Max one method parameter definition per line'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-multiple_params
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Keep max one method parameter definition per line'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
