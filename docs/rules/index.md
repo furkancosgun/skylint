@@ -1,14 +1,14 @@
-# Rules Catalog (75 Rules)
+# Rules Catalog (76 Rules)
 
-Comprehensive reference for all **75** Clean ABAP, security, performance, and architecture rules in Skylint.
+Comprehensive reference for all **76** Clean ABAP, security, performance, and architecture rules in Skylint.
 
 ::: tip Skylint at a Glance
-- **75 Native ATC Rules:** 100% ABAP Cloud (Contract C1) & Steampunk Ready.
+- **76 Native ATC Rules:** 100% ABAP Cloud (Contract C1) & Steampunk Ready.
 - **28 Automated QuickFixes:** Instant one-click refactoring with <kbd>Ctrl</kbd> + <kbd>1</kbd> in Eclipse ADT.
 - **Zero Legacy Overhead:** Built exclusively on `IF_CI_ATC_CHECK` (no obsolete Code Inspector / SCI dependency).
 :::
 
-## Clean ABAP & Modern Syntax (29)
+## Clean ABAP & Modern Syntax (30)
 
 Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.
 
@@ -43,6 +43,7 @@ Modern language features, expression-oriented coding, and idiomatic Clean ABAP p
 | [`max-one-statement`](/rules/max-one-statement) | `ZCL_SKYLINT_MAX_ONE_STMT` | Max One Statement Per Line | `ONE_STMT` | `#EC ONE_STMT` | — |
 | [`prefer-inline`](/rules/prefer-inline) | `ZCL_SKYLINT_PREF_INLINE` | Prefer Inline Declarations | `PREF_INL` | `#EC PREFER_INLINE` | — |
 | [`prefer-public-constructor`](/rules/prefer-public-constructor) | `ZCL_SKYLINT_PREF_PUB_CTOR` | Declare Constructor in PUBLIC SECTION | `CTOR_PUB` | `#EC PUB_CTOR` | — |
+| [`prefer-definitions-top`](/rules/prefer-definitions-top) | `ZCL_SKYLINT_PREF_DEF_TOP` | Place definitions at beginning of routine | `DEF_TOP` | `#EC DEF_TOP` | — |
 
 ## Anti-Patterns & Bad Practices (25)
 

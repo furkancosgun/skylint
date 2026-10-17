@@ -546,6 +546,9 @@
     },
     {
       "checkName": "ZSKYLINT_PREF_PUB_CTOR"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_DEF_TOP"
     }
   ]
 }

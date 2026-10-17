@@ -303,4 +303,8 @@ export const RULES_METADATA = {
     title: 'Declare Constructor in PUBLIC SECTION',
     rationale: 'Instance constructors must always be declared in the PUBLIC SECTION, even for classes with CREATE PRIVATE or CREATE PROTECTED, ensuring standard reflection, factory instantiation, and Clean ABAP compliance.',
   },
+  'prefer-definitions-top': {
+    title: 'Place Definitions at Top of Routine',
+    rationale: 'Explicit local definitions (DATA, TYPES, CONSTANTS, FIELD-SYMBOLS) should be placed at the very beginning of the routine rather than scattered in the middle of executable code.',
+  },
 };

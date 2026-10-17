@@ -1045,6 +1045,16 @@ ENDCASE.`,
       good: `CLASS zcl_service DEFINITION PUBLIC CREATE PRIVATE.\n  PUBLIC SECTION.\n    METHODS constructor.\nENDCLASS.`,
     },
   },
+  {
+    ruleId: 'prefer-definitions-top',
+    className: 'ZCL_SKYLINT_PREF_DEF_TOP',
+    pseudoComment: 'DEF_TOP',
+    category: 'clean-abap',
+    example: {
+      bad: `METHOD calculate.\n  lv_total = 100.\n  DATA lv_tax TYPE i.\nENDMETHOD.`,
+      good: `METHOD calculate.\n  DATA lv_tax TYPE i.\n  lv_total = 100.\nENDMETHOD.`,
+    },
+  },
 ];
 
 export const RULE_BY_RULE_ID = new Map(RULES.map(r => [r.ruleId, r]));

@@ -48,7 +48,7 @@ skylint/
 
 ---
 
-## 📋 Clean ABAP & Cloud Rule Catalog (75 Rules)
+## 📋 Clean ABAP & Cloud Rule Catalog (76 Rules)
 
 All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 
@@ -129,6 +129,7 @@ All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 | `no-modify-standard-tables` | [ZCL_SKYLINT_NO_MOD_STD_TABLE](src/checks/zcl_skylint_no_mod_std_table.clas.abap) | Modify Only Own Database Tables | `NOT_OWN_TB` | `"#EC OWN_TABLES"` | — |
 | `no-dynamic-stuff` | [ZCL_SKYLINT_NO_DYNAMIC_STMT](src/checks/zcl_skylint_no_dynamic_stmt.clas.abap) | No Dynamic Constructs (CALL, ASSIGN, CREATE, etc.) | `DYN_STUFF` | `"#EC NO_DYNAMIC"` | — |
 | `prefer-public-constructor` | [ZCL_SKYLINT_PREF_PUB_CTOR](src/checks/zcl_skylint_pref_pub_ctor.clas.abap) | Declare Constructor in PUBLIC SECTION | `CTOR_PUB` | `"#EC PUB_CTOR"` | — |
+| `prefer-definitions-top` | [ZCL_SKYLINT_PREF_DEF_TOP](src/checks/zcl_skylint_pref_def_top.clas.abap) | Place definitions at beginning of routine | `DEF_TOP` | `"#EC DEF_TOP"` | — |
 
 ---
 
