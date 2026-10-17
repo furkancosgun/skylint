@@ -48,7 +48,7 @@ skylint/
 
 ---
 
-## 📋 Clean ABAP & Cloud Rule Catalog (77 Rules)
+## 📋 Clean ABAP & Cloud Rule Catalog (80 Rules)
 
 All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 
@@ -131,6 +131,9 @@ All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 | `prefer-public-constructor` | [ZCL_SKYLINT_PREF_PUB_CTOR](src/checks/zcl_skylint_pref_pub_ctor.clas.abap) | Declare Constructor in PUBLIC SECTION | `CTOR_PUB` | `"#EC PUB_CTOR"` | — |
 | `prefer-definitions-top` | [ZCL_SKYLINT_PREF_DEF_TOP](src/checks/zcl_skylint_pref_def_top.clas.abap) | Place definitions at beginning of routine | `DEF_TOP` | `"#EC DEF_TOP"` | — |
 | `no-unnecessary-return` | [ZCL_SKYLINT_NO_UNNEC_RETURN](src/checks/zcl_skylint_no_unnec_return.clas.abap) | Omit unnecessary RETURN at end of routine | `UNNEC_RET` | `"#EC NO_UNNEC_RETURN"` | ⚡ Ready |
+| `mix-returning` | [ZCL_SKYLINT_NO_MIX_RETURNING](src/checks/zcl_skylint_no_mix_returning.clas.abap) | Do not mix RETURNING with EXPORTING or CHANGING | `MIX_RET` | `"#EC NO_MIX_RETURNING"` | — |
+| `method-overwrites-builtin` | [ZCL_SKYLINT_NO_OVERW_BUILTIN](src/checks/zcl_skylint_no_overw_builtin.clas.abap) | Method name overwrites built-in SAP function | `BUILTIN` | `"#EC NO_OVERW_BUILTIN"` | — |
+| `max-one-method-parameter-per-line` | [ZCL_SKYLINT_MAX_PARAM_LINE](src/checks/zcl_skylint_max_param_line.clas.abap) | Max one method parameter definition per line | `PARAM_LINE` | `"#EC MAX_PARAM_LINE"` | — |
 
 ---
 

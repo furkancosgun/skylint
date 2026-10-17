@@ -1,0 +1,54 @@
+CLASS lcl_bad DEFINITION.
+  PUBLIC SECTION.
+    METHODS bad_001
+      EXPORTING ev_foo TYPE i
+      RETURNING VALUE(rv_bar) TYPE string.
+    CLASS-METHODS bad_002
+      CHANGING cv_foo TYPE i
+      RETURNING VALUE(rv_bar) TYPE string.
+ENDCLASS.
+CLASS lcl_bad IMPLEMENTATION.
+  METHOD bad_001.
+    RETURN.
+  ENDMETHOD.
+  METHOD bad_002.
+    RETURN.
+  ENDMETHOD.
+ENDCLASS.
+
+CLASS lcl_good DEFINITION.
+  PUBLIC SECTION.
+    METHODS good_001
+      IMPORTING iv_foo TYPE i
+      RETURNING VALUE(rv_bar) TYPE string.
+    CLASS-METHODS good_002
+      IMPORTING iv_foo TYPE i
+      EXPORTING ev_bar TYPE string.
+ENDCLASS.
+CLASS lcl_good IMPLEMENTATION.
+  METHOD good_001.
+    RETURN.
+  ENDMETHOD.
+  METHOD good_002.
+    RETURN.
+  ENDMETHOD.
+ENDCLASS.
+
+CLASS zcl_skylint_test_mix_ret DEFINITION
+  PUBLIC FINAL
+  CREATE PUBLIC.
+
+  PUBLIC SECTION.
+    METHODS test_001.
+    METHODS test_002.
+ENDCLASS.
+
+CLASS zcl_skylint_test_mix_ret IMPLEMENTATION.
+  METHOD test_001.
+    RETURN.
+  ENDMETHOD.
+
+  METHOD test_002.
+    RETURN.
+  ENDMETHOD.
+ENDCLASS.

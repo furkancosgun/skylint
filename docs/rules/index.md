@@ -1,14 +1,14 @@
-# Rules Catalog (77 Rules)
+# Rules Catalog (80 Rules)
 
-Comprehensive reference for all **77** Clean ABAP, security, performance, and architecture rules in Skylint.
+Comprehensive reference for all **80** Clean ABAP, security, performance, and architecture rules in Skylint.
 
 ::: tip Skylint at a Glance
-- **77 Native ATC Rules:** 100% ABAP Cloud (Contract C1) & Steampunk Ready.
+- **80 Native ATC Rules:** 100% ABAP Cloud (Contract C1) & Steampunk Ready.
 - **29 Automated QuickFixes:** Instant one-click refactoring with <kbd>Ctrl</kbd> + <kbd>1</kbd> in Eclipse ADT.
 - **Zero Legacy Overhead:** Built exclusively on `IF_CI_ATC_CHECK` (no obsolete Code Inspector / SCI dependency).
 :::
 
-## Clean ABAP & Modern Syntax (31)
+## Clean ABAP & Modern Syntax (33)
 
 Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.
 
@@ -45,6 +45,8 @@ Modern language features, expression-oriented coding, and idiomatic Clean ABAP p
 | [`prefer-public-constructor`](/rules/prefer-public-constructor) | `ZCL_SKYLINT_PREF_PUB_CTOR` | Declare Constructor in PUBLIC SECTION | `CTOR_PUB` | `#EC PUB_CTOR` | — |
 | [`prefer-definitions-top`](/rules/prefer-definitions-top) | `ZCL_SKYLINT_PREF_DEF_TOP` | Place definitions at beginning of routine | `DEF_TOP` | `#EC DEF_TOP` | — |
 | [`no-unnecessary-return`](/rules/no-unnecessary-return) | `ZCL_SKYLINT_NO_UNNEC_RETURN` | Omit unnecessary RETURN at end of routine | `UNNEC_RET` | `#EC NO_UNNEC_RETURN` | ⚡ Ready |
+| [`mix-returning`](/rules/mix-returning) | `ZCL_SKYLINT_NO_MIX_RETURNING` | Do not mix RETURNING with EXPORTING or CHANGING | `MIX_RET` | `#EC NO_MIX_RETURNING` | — |
+| [`max-one-method-parameter-per-line`](/rules/max-one-method-parameter-per-line) | `ZCL_SKYLINT_MAX_PARAM_LINE` | Max one method parameter definition per line | `PARAM_LINE` | `#EC MAX_PARAM_LINE` | — |
 
 ## Anti-Patterns & Bad Practices (25)
 

@@ -11,7 +11,7 @@ export default defineConfig({
     logo: '/logo.svg',
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
-      { text: 'Rules (77)', link: '/rules/' },
+      { text: 'Rules (80)', link: '/rules/' },
       { text: 'GitHub', link: 'https://github.com/furkancosgun/skylint' },
     ],
     sidebar: {
@@ -156,6 +156,14 @@ export default defineConfig({
       {
         "text": "no-unnecessary-return",
         "link": "/rules/no-unnecessary-return"
+      },
+      {
+        "text": "mix-returning",
+        "link": "/rules/mix-returning"
+      },
+      {
+        "text": "max-one-method-parameter-per-line",
+        "link": "/rules/max-one-method-parameter-per-line"
       }
     ]
   },

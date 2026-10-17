@@ -572,6 +572,15 @@
     },
     {
       "checkName": "ZSKYLINT_NO_UNNEC_RETURN"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_MIX_RETURNING"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_OVERW_BUILTIN"
+    },
+    {
+      "checkName": "ZSKYLINT_MAX_PARAM_LINE"
     }
   ]
 }

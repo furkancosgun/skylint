@@ -311,4 +311,16 @@ export const RULES_METADATA = {
     title: 'Omit Unnecessary RETURN Statement',
     rationale: 'Routines automatically return upon reaching ENDMETHOD, ENDFORM, or ENDFUNCTION. An explicit RETURN statement at the very end of the routine body is redundant and clutters the code.',
   },
+  'mix-returning': {
+    title: 'Do Not Mix RETURNING with EXPORTING or CHANGING',
+    rationale: 'Clean ABAP methods should either be pure functional (RETURNING a single result) or procedures (using EXPORTING/CHANGING). Mixing both in the same signature creates confusing APIs.',
+  },
+  'method-overwrites-builtin': {
+    title: 'Avoid Method Names That Overwrite Built-in Functions',
+    rationale: 'Naming a method after a built-in ABAP function (e.g., LINES, STRLEN, MATCHES, XSDBOOL) obscures the standard SAP built-in and makes expressions ambiguous and difficult to read.',
+  },
+  'max-one-method-parameter-per-line': {
+    title: 'Max One Method Parameter Definition Per Line',
+    rationale: 'Defining multiple parameters on the same line hampers readability and produces noisy version control diffs. Each parameter in a signature should be declared on its own dedicated line.',
+  },
 };

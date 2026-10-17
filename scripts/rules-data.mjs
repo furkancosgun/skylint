@@ -1065,6 +1065,36 @@ ENDCASE.`,
       good: `METHOD calculate.\n  lv_total = 100.\nENDMETHOD.`,
     },
   },
+  {
+    ruleId: 'mix-returning',
+    className: 'ZCL_SKYLINT_NO_MIX_RETURNING',
+    pseudoComment: 'NO_MIX_RETURNING',
+    category: 'clean-abap',
+    example: {
+      bad: `METHODS get_data\n  EXPORTING ev_val TYPE i\n  RETURNING VALUE(rv_res) TYPE string.`,
+      good: `METHODS get_data\n  RETURNING VALUE(rv_res) TYPE string.`,
+    },
+  },
+  {
+    ruleId: 'method-overwrites-builtin',
+    className: 'ZCL_SKYLINT_NO_OVERW_BUILTIN',
+    pseudoComment: 'NO_OVERW_BUILTIN',
+    category: 'naming',
+    example: {
+      bad: `METHODS matches RETURNING VALUE(rv_res) TYPE abap_bool.`,
+      good: `METHODS do_match RETURNING VALUE(rv_res) TYPE abap_bool.`,
+    },
+  },
+  {
+    ruleId: 'max-one-method-parameter-per-line',
+    className: 'ZCL_SKYLINT_MAX_PARAM_LINE',
+    pseudoComment: 'MAX_PARAM_LINE',
+    category: 'clean-abap',
+    example: {
+      bad: `METHODS foo IMPORTING iv_a TYPE i iv_b TYPE string.`,
+      good: `METHODS foo\n  IMPORTING\n    iv_a TYPE i\n    iv_b TYPE string.`,
+    },
+  },
 ];
 
 export const RULE_BY_RULE_ID = new Map(RULES.map(r => [r.ruleId, r]));

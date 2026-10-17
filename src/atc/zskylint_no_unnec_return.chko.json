@@ -7,10 +7,5 @@
   },
   "category": "ZSKYLINT",
   "implementingClass": "ZCL_SKYLINT_NO_UNNEC_RETURN",
-  "checkType": "remoteEnabled",
-  "parameters": [
-    {
-      "name": "ALLOW_EMPTY"
-    }
-  ]
+  "checkType": "remoteEnabled"
 }
