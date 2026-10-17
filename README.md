@@ -48,7 +48,7 @@ skylint/
 
 ---
 
-## 📋 Clean ABAP & Cloud Rule Catalog (76 Rules)
+## 📋 Clean ABAP & Cloud Rule Catalog (77 Rules)
 
 All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 
@@ -130,6 +130,7 @@ All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 | `no-dynamic-stuff` | [ZCL_SKYLINT_NO_DYNAMIC_STMT](src/checks/zcl_skylint_no_dynamic_stmt.clas.abap) | No Dynamic Constructs (CALL, ASSIGN, CREATE, etc.) | `DYN_STUFF` | `"#EC NO_DYNAMIC"` | — |
 | `prefer-public-constructor` | [ZCL_SKYLINT_PREF_PUB_CTOR](src/checks/zcl_skylint_pref_pub_ctor.clas.abap) | Declare Constructor in PUBLIC SECTION | `CTOR_PUB` | `"#EC PUB_CTOR"` | — |
 | `prefer-definitions-top` | [ZCL_SKYLINT_PREF_DEF_TOP](src/checks/zcl_skylint_pref_def_top.clas.abap) | Place definitions at beginning of routine | `DEF_TOP` | `"#EC DEF_TOP"` | — |
+| `no-unnecessary-return` | [ZCL_SKYLINT_NO_UNNEC_RETURN](src/checks/zcl_skylint_no_unnec_return.clas.abap) | Omit unnecessary RETURN at end of routine | `UNNEC_RET` | `"#EC NO_UNNEC_RETURN"` | ⚡ Ready |
 
 ---
 

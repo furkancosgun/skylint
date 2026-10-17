@@ -1,0 +1,28 @@
+[
+  {
+    "method": "TEST_001",
+    "code": "UNNEC_RET",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "REMOVE_RET"
+    ]
+  },
+  {
+    "method": "TEST_002",
+    "code": null
+  },
+  {
+    "method": "TEST_003",
+    "code": null
+  },
+  {
+    "method": "TEST_004",
+    "code": "UNNEC_RET",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "REMOVE_RET"
+    ]
+  }
+]

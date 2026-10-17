@@ -307,4 +307,8 @@ export const RULES_METADATA = {
     title: 'Place Definitions at Top of Routine',
     rationale: 'Explicit local definitions (DATA, TYPES, CONSTANTS, FIELD-SYMBOLS) should be placed at the very beginning of the routine rather than scattered in the middle of executable code.',
   },
+  'no-unnecessary-return': {
+    title: 'Omit Unnecessary RETURN Statement',
+    rationale: 'Routines automatically return upon reaching ENDMETHOD, ENDFORM, or ENDFUNCTION. An explicit RETURN statement at the very end of the routine body is redundant and clutters the code.',
+  },
 };

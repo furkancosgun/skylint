@@ -1,14 +1,14 @@
-# Rules Catalog (76 Rules)
+# Rules Catalog (77 Rules)
 
-Comprehensive reference for all **76** Clean ABAP, security, performance, and architecture rules in Skylint.
+Comprehensive reference for all **77** Clean ABAP, security, performance, and architecture rules in Skylint.
 
 ::: tip Skylint at a Glance
-- **76 Native ATC Rules:** 100% ABAP Cloud (Contract C1) & Steampunk Ready.
-- **28 Automated QuickFixes:** Instant one-click refactoring with <kbd>Ctrl</kbd> + <kbd>1</kbd> in Eclipse ADT.
+- **77 Native ATC Rules:** 100% ABAP Cloud (Contract C1) & Steampunk Ready.
+- **29 Automated QuickFixes:** Instant one-click refactoring with <kbd>Ctrl</kbd> + <kbd>1</kbd> in Eclipse ADT.
 - **Zero Legacy Overhead:** Built exclusively on `IF_CI_ATC_CHECK` (no obsolete Code Inspector / SCI dependency).
 :::
 
-## Clean ABAP & Modern Syntax (30)
+## Clean ABAP & Modern Syntax (31)
 
 Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.
 
@@ -44,6 +44,7 @@ Modern language features, expression-oriented coding, and idiomatic Clean ABAP p
 | [`prefer-inline`](/rules/prefer-inline) | `ZCL_SKYLINT_PREF_INLINE` | Prefer Inline Declarations | `PREF_INL` | `#EC PREFER_INLINE` | — |
 | [`prefer-public-constructor`](/rules/prefer-public-constructor) | `ZCL_SKYLINT_PREF_PUB_CTOR` | Declare Constructor in PUBLIC SECTION | `CTOR_PUB` | `#EC PUB_CTOR` | — |
 | [`prefer-definitions-top`](/rules/prefer-definitions-top) | `ZCL_SKYLINT_PREF_DEF_TOP` | Place definitions at beginning of routine | `DEF_TOP` | `#EC DEF_TOP` | — |
+| [`no-unnecessary-return`](/rules/no-unnecessary-return) | `ZCL_SKYLINT_NO_UNNEC_RETURN` | Omit unnecessary RETURN at end of routine | `UNNEC_RET` | `#EC NO_UNNEC_RETURN` | ⚡ Ready |
 
 ## Anti-Patterns & Bad Practices (25)
 

@@ -1055,6 +1055,16 @@ ENDCASE.`,
       good: `METHOD calculate.\n  DATA lv_tax TYPE i.\n  lv_total = 100.\nENDMETHOD.`,
     },
   },
+  {
+    ruleId: 'no-unnecessary-return',
+    className: 'ZCL_SKYLINT_NO_UNNEC_RETURN',
+    pseudoComment: 'NO_UNNEC_RETURN',
+    category: 'clean-abap',
+    example: {
+      bad: `METHOD calculate.\n  lv_total = 100.\n  RETURN.\nENDMETHOD.`,
+      good: `METHOD calculate.\n  lv_total = 100.\nENDMETHOD.`,
+    },
+  },
 ];
 
 export const RULE_BY_RULE_ID = new Map(RULES.map(r => [r.ruleId, r]));

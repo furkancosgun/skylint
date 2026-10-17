@@ -569,6 +569,9 @@
     },
     {
       "checkName": "ZSKYLINT_PREF_DEF_TOP"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_UNNEC_RETURN"
     }
   ]
 }
