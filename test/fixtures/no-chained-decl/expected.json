@@ -22,6 +22,10 @@
     ]
   },
   {
+    "method": "TEST_004",
+    "code": null
+  },
+  {
     "method": "TEST_005",
     "code": "CHAINDECL",
     "line": 3,
@@ -29,5 +33,18 @@
     "quickfixes": [
       "PREFINLDCL"
     ]
+  },
+  {
+    "method": "TEST_006",
+    "code": "ASSIGNCHN",
+    "line": 5,
+    "column": 4,
+    "quickfixes": [
+      "SPLITASG"
+    ]
+  },
+  {
+    "method": "TEST_007",
+    "code": null
   }
 ]

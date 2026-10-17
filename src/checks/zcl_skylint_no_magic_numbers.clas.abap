@@ -45,14 +45,6 @@ CLASS zcl_skylint_no_magic_numbers IMPLEMENTATION.
           EXIT.
         ENDIF.
 
-        IF <ls_token>-references IS NOT INITIAL.
-          CONTINUE.
-        ENDIF.
-
-        IF <ls_token>-lexeme IS INITIAL.
-          CONTINUE.
-        ENDIF.
-
         IF <ls_token>-lexeme CO '0123456789' AND <ls_token>-lexeme <> '0' AND <ls_token>-lexeme <> '1'.
           report_statement( is_statement    = <ls_statement>
                             iv_finding_code = c_finding_codes-magic_number ).

@@ -4,7 +4,7 @@
 
 ## Description
 
-Prefer NEW #( ) constructor expression over legacy CREATE OBJECT.
+Prefer NEW #( ) constructor over CREATE OBJECT and RAISE EXCEPTION TYPE.
 
 ## ❌ Non-Compliant Code
 

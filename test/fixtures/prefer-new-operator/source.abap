@@ -7,6 +7,8 @@ CLASS zcl_test_prefer_new_operator DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
+    METHODS test_005.
+    METHODS test_006.
 ENDCLASS.
 
 CLASS zcl_test_prefer_new_operator IMPLEMENTATION.
@@ -29,5 +31,13 @@ CLASS zcl_test_prefer_new_operator IMPLEMENTATION.
   METHOD test_004.
     DATA lo_obj TYPE REF TO zcl_test_prefer_new_operator.
     lo_obj = NEW #( ).
+  ENDMETHOD.
+
+  METHOD test_005.
+    RAISE EXCEPTION TYPE cx_sy_zerodivide.
+  ENDMETHOD.
+
+  METHOD test_006.
+    RAISE EXCEPTION NEW cx_sy_zerodivide( ).
   ENDMETHOD.
 ENDCLASS.

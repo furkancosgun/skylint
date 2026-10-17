@@ -45,5 +45,26 @@
     "line": 3,
     "column": 4,
     "quickfixes": []
+  },
+  {
+    "method": "TEST_008",
+    "code": "OBSOLETE",
+    "line": 2,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "method": "TEST_009",
+    "code": "OBSOLETE",
+    "line": 5,
+    "column": 6,
+    "quickfixes": []
+  },
+  {
+    "method": "TEST_010",
+    "code": "OBSOLETE",
+    "line": 5,
+    "column": 6,
+    "quickfixes": []
   }
 ]

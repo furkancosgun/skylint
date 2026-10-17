@@ -1,8 +1,8 @@
-# 📋 Skylint Rules Catalog (84 Rules)
+# 📋 Skylint Rules Catalog (77 Rules)
 
-Comprehensive reference for all 84 Clean ABAP, security, performance, and architecture rules in Skylint.
+Comprehensive reference for all 77 Clean ABAP, security, performance, and architecture rules in Skylint.
 
-## Clean ABAP & Modern Syntax (31)
+## Clean ABAP & Modern Syntax (28)
 
 Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.
 
@@ -15,32 +15,29 @@ Modern language features, expression-oriented coding, and idiomatic Clean ABAP p
 | [`prefer-return`](/rules/prefer-return) | `ZCL_SKYLINT_PREF_RETURN` | Prefer RETURN over EXIT outside loop constructs | `EXITOUTLP` | `#EC RETURN` | ⚡ Ready |
 | [`merge-nested-ifs`](/rules/merge-nested-ifs) | `ZCL_SKYLINT_PREF_MERGE_IFS` | Detect consecutive nested IF blocks that can be merged with AND | `NESTEDIF` | `#EC MERGE_IFS` | — |
 | [`prefer-symbol-operators`](/rules/prefer-symbol-operators) | `ZCL_SKYLINT_PREF_SYMBOL_OP` | Prefer comparison operators (=, <>, <, >, <=, >=) over legacy textual keywords | `PREFEROP` | `#EC SYMBOL_OP` | ⚡ Ready |
-| [`prefer-new-operator`](/rules/prefer-new-operator) | `ZCL_SKYLINT_PREF_NEW_OP` | Prefer NEW #( ) constructor expression over legacy CREATE OBJECT | `PREFERNEW` | `#EC NEW_OP` | ⚡ Ready |
-| [`prefer-raise-new`](/rules/prefer-raise-new) | `ZCL_SKYLINT_PREF_RAISE_NEW` | Prefer RAISE EXCEPTION NEW over RAISE EXCEPTION TYPE | `RAISEEXCNE` | `#EC RAISE_NEW` | ⚡ Ready |
+| [`prefer-new-operator`](/rules/prefer-new-operator) | `ZCL_SKYLINT_PREF_NEW_OP` | Prefer NEW #( ) constructor over CREATE OBJECT and RAISE EXCEPTION TYPE | `PREFERNEW` | `#EC NEW_OP` | ⚡ Ready |
 | [`prefer-xsdbool`](/rules/prefer-xsdbool) | `ZCL_SKYLINT_PREF_XSDBOOL` | Prefer xsdbool( ) expression over manual IF-ELSE assignment | `PREFERXSDB` | `#EC XSDBOOL` | ⚡ Ready |
 | [`require-fully-typed`](/rules/require-fully-typed) | `ZCL_SKYLINT_PREF_FULL_TYPED` | Enforce fully typed constant declarations | `FULLYTYPED` | `#EC FULL_TYPED` | — |
 | [`prefer-corresponding`](/rules/prefer-corresponding) | `ZCL_SKYLINT_PREF_CORRESP` | Prefer CORRESPONDING Expression over MOVE-CORRESPONDING | `PREFER_COR` | `#EC CORRESP` | ⚡ Ready |
 | [`prefer-returning`](/rules/prefer-returning) | `ZCL_SKYLINT_PREF_RETURNING` | Prefer RETURNING over single EXPORTING | `PREFER_RET` | `#EC RETURNING` | — |
 | [`prefer-class-exceptions`](/rules/prefer-class-exceptions) | `ZCL_SKYLINT_PREF_CLASS_EXC` | Prefer Class-Based Exceptions over Classic EXCEPTIONS | `CLASS_EXC` | `#EC CLASS_EXC` | — |
-| [`prefer-final-class`](/rules/prefer-final-class) | `ZCL_SKYLINT_PREF_FINAL_CLS` | Prefer FINAL Classes by Default | `NOT_FINAL` | `#EC FINAL_CLS` | — |
+| [`prefer-final-class`](/rules/prefer-final-class) | `ZCL_SKYLINT_PREF_FINAL_CLS` | Prefer FINAL classes and methods by default | `NOT_FINAL` | `#EC FINAL_CLS` | ⚡ Ready |
 | [`prefer-insert-into`](/rules/prefer-insert-into) | `ZCL_SKYLINT_PREF_INSERT` | Prefer INSERT ... INTO TABLE over APPEND for table safety | `PREF_INSRT` | `#EC INSERT_INTO` | ⚡ Ready |
 | [`clean-constructor`](/rules/clean-constructor) | `ZCL_SKYLINT_CLEAN_CTOR` | Keep constructors clean; avoid heavy business logic/loops/DB access | `CTOR_LOGIC` | `#EC CLEAN_CTOR` | — |
 | [`no-static-classes`](/rules/no-static-classes) | `ZCL_SKYLINT_NO_STATIC_CLS` | Avoid static-only classes; prefer instantiable interface-based design | `STAT_CLASS` | `#EC STATIC_CLS` | — |
 | [`prefer-predicate-names`](/rules/prefer-predicate-names) | `ZCL_SKYLINT_PREF_PRED_NAME` | Enforce predicate naming (IS_, HAS_, CAN_) on boolean methods | `BOOL_NAME` | `#EC PRED_NAME` | — |
 | [`no-nested-try`](/rules/no-nested-try) | `ZCL_SKYLINT_NO_NESTED_TRY` | Avoid nested TRY blocks; extract inner error handling to helper methods | `NESTED_TRY` | `#EC NESTED_TRY` | — |
 | [`test-method-naming`](/rules/test-method-naming) | `ZCL_SKYLINT_PREF_TEST_NAME` | Enforce test method naming convention (TEST_, SHOULD_) in AUnit | `TEST_NAME` | `#EC TEST_NAME` | — |
-| [`prefer-final-method`](/rules/prefer-final-method) | `ZCL_SKYLINT_PREF_FINAL_METH` | Prefer marking non-overridden methods as FINAL | `PREF_FINAL` | `#EC FINAL_METHOD` | ⚡ Ready |
 | [`prefer-string-functions`](/rules/prefer-string-functions) | `ZCL_SKYLINT_PREF_STR_FUNC` | Detect obsolete string statements; prefer built-in functions | `CONDENSE_S` | `#EC STR_FUNC` | ⚡ Ready |
 | [`prefer-calc-assign-op`](/rules/prefer-calc-assign-op) | `ZCL_SKYLINT_PREF_CALC_OP` | Prefer calculation assignment operators (+=, -=, *=, /=) over var = var + 1 | `CALC_ASSGN` | `#EC CALC_ASSIGN` | ⚡ Ready |
-| [`prefer-early-continue`](/rules/prefer-early-continue) | `ZCL_SKYLINT_PREF_EARLY_CONT` | Use early CONTINUE guard clause instead of wrapping loop in IF block | `GUARD_LOOP` | `#EC EARLY_CONTINUE` | — |
-| [`prefer-early-return`](/rules/prefer-early-return) | `ZCL_SKYLINT_PREF_EARLY_RET` | Use early RETURN guard clause instead of wrapping method in IF block | `GUARD_METH` | `#EC EARLY_RETURN` | — |
+| [`prefer-early-return`](/rules/prefer-early-return) | `ZCL_SKYLINT_PREF_EARLY_RET` | Prefer early exit (RETURN or CONTINUE) instead of nested IF blocks | `GUARD_METH` | `#EC EARLY_RETURN` | — |
 | [`require-decl-order`](/rules/require-decl-order) | `ZCL_SKYLINT_PREF_DECL_ORDER` | Enforce local declaration order (TYPES -> CONSTANTS -> DATA -> FIELD-SYMBOLS) | `DECL_ORDER` | `#EC DECL_ORDER` | — |
 | [`no-param-escape`](/rules/no-param-escape) | `ZCL_SKYLINT_NO_PARAM_ESCAPE` | Detect unnecessary exclamation mark parameter escape (!iv_param) | `PARAM_ESCP` | `#EC PARAM_ESCAPE` | ⚡ Ready |
 | [`prefer-case`](/rules/prefer-case) | `ZCL_SKYLINT_PREF_CASE` | Change IF to CASE when checking the same variable against multiple values | `USE_CASE` | `#EC PREF_CASE` | — |
 | [`max-one-statement`](/rules/max-one-statement) | `ZCL_SKYLINT_MAX_ONE_STMT` | Max One Statement Per Line | `ONE_STMT` | `#EC ONE_STMT` | — |
 | [`prefer-inline`](/rules/prefer-inline) | `ZCL_SKYLINT_PREF_INLINE` | Prefer Inline Declarations | `PREF_INL` | `#EC PREFER_INLINE` | — |
 
-## Anti-Patterns & Bad Practices (31)
+## Anti-Patterns & Bad Practices (27)
 
 Discouraged language constructs, legacy statements, and redundant syntax.
 
@@ -49,9 +46,8 @@ Discouraged language constructs, legacy statements, and redundant syntax.
 | [`no-call-method`](/rules/no-call-method) | `ZCL_SKYLINT_NO_CALL_METHOD` | Avoid static CALL METHOD statements | `CALLMETHOD` | `#EC CALL_METH` | ⚡ Ready |
 | [`no-default-key`](/rules/no-default-key) | `ZCL_SKYLINT_NO_DEFAULT_KEY` | Avoid WITH DEFAULT KEY; prefer EMPTY KEY or explicit keys | `DEFAULTKEY` | `#EC DEFAULT_KEY` | ⚡ Ready |
 | [`no-me-reference`](/rules/no-me-reference) | `ZCL_SKYLINT_NO_ME_REFERENCE` | Avoid self-reference ME-> | `AVOIDME` | `#EC ME` | — |
-| [`no-exporting`](/rules/no-exporting) | `ZCL_SKYLINT_NO_EXPORTING` | Omit explicit EXPORTING in method calls | `OMITEXPORT` | `#EC EXPORTING` | ⚡ Ready |
-| [`no-chained-assignment`](/rules/no-chained-assignment) | `ZCL_SKYLINT_NO_CHAIN_ASSIGN` | Avoid assignment chaining (a = b = c) | `ASSIGNCHN` | `#EC CHAIN_ASSIGN` | ⚡ Ready |
-| [`no-chained-decl`](/rules/no-chained-decl) | `ZCL_SKYLINT_NO_CHAIN_DECL` | Avoid chained declarations (DATA:, TYPES:, etc.) | `CHAINDECL` | `#EC CHAIN_DECL` | ⚡ Ready |
+| [`no-exporting`](/rules/no-exporting) | `ZCL_SKYLINT_NO_EXPORTING` | Omit redundant EXPORTING and RECEIVING in method calls | `OMITEXPORT` | `#EC EXPORTING` | ⚡ Ready |
+| [`no-chained-decl`](/rules/no-chained-decl) | `ZCL_SKYLINT_NO_CHAIN_DECL` | Avoid chained declarations and chained assignments | `CHAINDECL` | `#EC CHAIN_DECL` | ⚡ Ready |
 | [`no-boolean-comparison`](/rules/no-boolean-comparison) | `ZCL_SKYLINT_NO_BOOL_COMPARE` | Avoid comparing boolean method calls to boolean literals | `BOOLCOMP` | `#EC BOOL_COMPARE` | ⚡ Ready |
 | [`no-check-in-loop`](/rules/no-check-in-loop) | `ZCL_SKYLINT_NO_CHECK_IN_LOOP` | Avoid CHECK in loop/iteration structures (prefer IF ... CONTINUE) | `CHKINLOOP` | `#EC CHECK_IN_LOOP` | ⚡ Ready |
 | [`no-empty-block`](/rules/no-empty-block) | `ZCL_SKYLINT_NO_EMPTY_BLOCK` | Detect empty control blocks (IF, CASE, LOOP, TRY, CATCH, etc.) | `EMPTYCTRL` | `#EC EMPTY_BLOCK` | — |
@@ -59,21 +55,18 @@ Discouraged language constructs, legacy statements, and redundant syntax.
 | [`no-unreachable-code`](/rules/no-unreachable-code) | `ZCL_SKYLINT_NO_UNREACHABLE` | Detect unreachable code following unconditional jump statements | `UNREACHCD` | `#EC UNREACHABLE` | ⚡ Ready |
 | [`no-single-when`](/rules/no-single-when) | `ZCL_SKYLINT_NO_SINGLE_WHEN` | Avoid short CASE constructs with only one WHEN branch; prefer IF | `SHORTCASE` | `#EC SINGLE_WHEN` | — |
 | [`no-yoda-conditions`](/rules/no-yoda-conditions) | `ZCL_SKYLINT_NO_YODA_COND` | Avoid Yoda conditions in comparison expressions | `YODACOND` | `#EC YODA_COND` | ⚡ Ready |
-| [`no-receiving`](/rules/no-receiving) | `ZCL_SKYLINT_NO_RECEIVING` | Omit RECEIVING in method calls | `OMITRECEIV` | `#EC RECEIVING` | ⚡ Ready |
 | [`no-static-via-instance`](/rules/no-static-via-instance) | `ZCL_SKYLINT_NO_STATIC_ARROW` | Avoid calling static methods via instance arrow (->) | `STATICVIAI` | `#EC STATIC_ARROW` | ⚡ Ready |
 | [`no-public-attributes`](/rules/no-public-attributes) | `ZCL_SKYLINT_NO_PUBLIC_ATTR` | Avoid mutable public attributes in classes | `NOPUBATTR` | `#EC PUBLIC_ATTR` | — |
-| [`no-obsolete-statements`](/rules/no-obsolete-statements) | `ZCL_SKYLINT_NO_OBSOLETE` | Avoid obsolete or deprecated statements (MOVE, REFRESH, BREAK, STATICS, etc.) | `OBSOLETE` | `#EC OBSOLETE` | ⚡ Ready |
+| [`no-obsolete-statements`](/rules/no-obsolete-statements) | `ZCL_SKYLINT_NO_OBSOLETE` | Avoid obsolete or deprecated statements (MOVE, REFRESH, FORM, AT NEW, etc.) | `OBSOLETE` | `#EC OBSOLETE` | ⚡ Ready |
 | [`no-scope-leak`](/rules/no-scope-leak) | `ZCL_SKYLINT_NO_SCOPE_LEAK` | Scope of variable (avoid variable leaking outside control blocks) | `SCOPELEAK` | `#EC SCOPE_LEAK` | — |
 | [`no-self-assignment`](/rules/no-self-assignment) | `ZCL_SKYLINT_NO_SELF_ASSIGN` | Detect Identical Self Assignments | `IDENTMOVE` | `#EC SELF_ASSIGN` | ⚡ Ready |
 | [`no-single-param-name`](/rules/no-single-param-name) | `ZCL_SKYLINT_NO_PARAM_NAME` | Omit parameter name in single parameter method call | `OMITPARM` | `#EC PARAM_NAME` | ⚡ Ready |
 | [`no-sy-modify`](/rules/no-sy-modify) | `ZCL_SKYLINT_NO_SY_MODIFY` | Avoid sy-* System Variable Modification | `SYS_VAR_MD` | `#EC SY_MODIFY` | — |
 | [`no-raise-shortdump`](/rules/no-raise-shortdump) | `ZCL_SKYLINT_NO_SHORTDUMP` | Avoid RAISE SHORTDUMP (prefer graceful exceptions) | `SHORTDUMP` | `#EC SHORTDUMP` | — |
 | [`no-magic-numbers`](/rules/no-magic-numbers) | `ZCL_SKYLINT_NO_MAGIC_NUMBERS` | Avoid magic numbers in code; use named constants | `MAGIC_NUM` | `#EC MAGIC_NUMBERS` | — |
-| [`no-obsolete-loop-control`](/rules/no-obsolete-loop-control) | `ZCL_SKYLINT_NO_OBS_LOOP_CTL` | Avoid obsolete control statements (ON CHANGE OF, AT NEW, SUM) in LOOP | `OBS_L_CTRL` | `#EC OBS_LOOP_CTL` | — |
 | [`no-like-objects`](/rules/no-like-objects) | `ZCL_SKYLINT_NO_LIKE_OBJECTS` | Avoid LIKE referencing data objects; use explicit TYPE | `AVOID_LIKE` | `#EC LIKE_OBJECTS` | — |
 | [`no-interface-data`](/rules/no-interface-data) | `ZCL_SKYLINT_NO_INTF_DATA` | Avoid mutable DATA declarations in interfaces; allow only CONSTANTS | `INTF_DATA` | `#EC INTF_DATA` | — |
 | [`no-message-raising`](/rules/no-message-raising) | `ZCL_SKYLINT_NO_MSG_RAISING` | Avoid obsolete MESSAGE ... RAISING; use class-based exceptions | `MSG_RAISE` | `#EC MSG_RAISING` | — |
-| [`no-form-routines`](/rules/no-form-routines) | `ZCL_SKYLINT_NO_FORM` | Avoid obsolete FORM routines; use modern methods in ABAP Cloud | `AVOID_FORM` | `#EC NO_FORM` | — |
 | [`no-unused-variables`](/rules/no-unused-variables) | `ZCL_SKYLINT_NO_UNUSED_VARS` | Detect unused local variables and field symbols | `UNUSED_VAR` | `#EC NEEDED` | — |
 | [`no-inline-length`](/rules/no-inline-length) | `ZCL_SKYLINT_NO_INLINE_LEN` | Avoid inline length specification in declarations | `PAREN_LEN` | `#EC PAREN_LEN` | ⚡ Ready |
 | [`names-no-dash`](/rules/names-no-dash) | `ZCL_SKYLINT_NAMES_NO_DASH` | No Dashes in Variable and Form Names | `NO_DASH` | `#EC NO_DASH` | — |

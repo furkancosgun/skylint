@@ -101,18 +101,6 @@ process_order( ).`,
     },
   },
   {
-    ruleId: 'no-chained-assignment',
-    className: 'ZCL_SKYLINT_NO_CHAIN_ASSIGN',
-    pseudoComment: 'CHAIN_ASSIGN',
-    category: 'anti-patterns',
-    example: {
-      bad: `lv_a = lv_b = lv_c = 0.`,
-      good: `lv_a = 0.
-lv_b = 0.
-lv_c = 0.`,
-    },
-  },
-  {
     ruleId: 'no-chained-decl',
     className: 'ZCL_SKYLINT_NO_CHAIN_DECL',
     pseudoComment: 'CHAIN_DECL',
@@ -316,16 +304,6 @@ lo_customer = NEW #( ).`,
     },
   },
   {
-    ruleId: 'prefer-raise-new',
-    className: 'ZCL_SKYLINT_PREF_RAISE_NEW',
-    pseudoComment: 'RAISE_NEW',
-    category: 'clean-abap',
-    example: {
-      bad: `RAISE EXCEPTION TYPE cx_failed.`,
-      good: `RAISE EXCEPTION NEW cx_failed( ).`,
-    },
-  },
-  {
     ruleId: 'prefer-xsdbool',
     className: 'ZCL_SKYLINT_PREF_XSDBOOL',
     pseudoComment: 'XSDBOOL',
@@ -337,16 +315,6 @@ ELSE.
   lv_has_items = abap_false.
 ENDIF.`,
       good: `lv_has_items = xsdbool( lv_count > 0 ).`,
-    },
-  },
-  {
-    ruleId: 'no-receiving',
-    className: 'ZCL_SKYLINT_NO_RECEIVING',
-    pseudoComment: 'RECEIVING',
-    category: 'anti-patterns',
-    example: {
-      bad: `lo_calc->compute( RECEIVING rv_result = lv_result ).`,
-      good: `lv_result = lo_calc->compute( ).`,
     },
   },
   {
@@ -482,16 +450,6 @@ use_value( lv_value ).`,
     example: {
       bad: `CONSTANTS c_status VALUE 'A'. " TYPE is omitted; implicitly typed as c length 1`,
       good: `CONSTANTS c_status TYPE c LENGTH 1 VALUE 'A'.`,
-    },
-  },
-  {
-    ruleId: 'no-single-param-name',
-    className: 'ZCL_SKYLINT_NO_PARAM_NAME',
-    pseudoComment: 'PARAM_NAME',
-    category: 'anti-patterns',
-    example: {
-      bad: `cl_helper=>execute( iv_data = lv_data ).`,
-      good: `cl_helper=>execute( lv_data ).`,
     },
   },
 
@@ -676,22 +634,6 @@ ENDIF.`,
     },
   },
   {
-    ruleId: 'no-obsolete-loop-control',
-    className: 'ZCL_SKYLINT_NO_OBS_LOOP_CTL',
-    pseudoComment: 'OBS_LOOP_CTL',
-    category: 'anti-patterns',
-    example: {
-      bad: `LOOP AT lt_items INTO ls_item.
-  AT NEW id.
-    " Obsolete control statement in loop
-  ENDAT.
-ENDLOOP.`,
-      good: `LOOP AT lt_items INTO ls_item GROUP BY ( id = ls_item-id ) INTO DATA(group).
-  " Modern ABAP GROUP BY
-ENDLOOP.`,
-    },
-  },
-  {
     ruleId: 'no-like-objects',
     className: 'ZCL_SKYLINT_NO_LIKE_OBJECTS',
     pseudoComment: 'LIKE_OBJECTS',
@@ -870,20 +812,6 @@ ENDIF.`,
     },
   },
   {
-    ruleId: 'no-form-routines',
-    className: 'ZCL_SKYLINT_NO_FORM',
-    pseudoComment: 'NO_FORM',
-    category: 'anti-patterns',
-    example: {
-      bad: `PERFORM calculate_total USING lv_qty CHANGING lv_total.
-FORM calculate_total ...
-ENDFORM.`,
-      good: `lo_calculator->calculate_total(
-  EXPORTING iv_qty   = lv_qty
-  IMPORTING ev_total = lv_total ).`,
-    },
-  },
-  {
     ruleId: 'no-client-specified',
     className: 'ZCL_SKYLINT_NO_CLIENT_SPEC',
     pseudoComment: 'CLIENT_SPEC',
@@ -940,22 +868,6 @@ METHODS should_calculate_discount FOR TESTING.`,
   },
 
   {
-    ruleId: 'prefer-final-method',
-    className: 'ZCL_SKYLINT_PREF_FINAL_METH',
-    pseudoComment: 'FINAL_METHOD',
-    category: 'clean-abap',
-    example: {
-      bad: `CLASS cl_service DEFINITION PUBLIC.
-  PUBLIC SECTION.
-    METHODS process. " Non-final method in class not designed for inheritance
-ENDCLASS.`,
-      good: `CLASS cl_service DEFINITION PUBLIC.
-  PUBLIC SECTION.
-    METHODS process FINAL.
-ENDCLASS.`,
-    },
-  },
-  {
     ruleId: 'prefer-string-functions',
     className: 'ZCL_SKYLINT_PREF_STR_FUNC',
     pseudoComment: 'STR_FUNC',
@@ -977,26 +889,6 @@ lv_code = to_upper( lv_code ).`,
 lv_total = lv_total * 2.`,
       good: `lv_count += 1.
 lv_total *= 2.`,
-    },
-  },
-  {
-    ruleId: 'prefer-early-continue',
-    className: 'ZCL_SKYLINT_PREF_EARLY_CONT',
-    pseudoComment: 'EARLY_CONTINUE',
-    category: 'clean-abap',
-    example: {
-      bad: `LOOP AT lt_items INTO ls_item.
-  IF ls_item-is_active = abap_true.
-    " Long nested loop body
-    process_item( ls_item ).
-  ENDIF.
-ENDLOOP.`,
-      good: `LOOP AT lt_items INTO ls_item.
-  IF ls_item-is_active = abap_false.
-    CONTINUE.
-  ENDIF.
-  process_item( ls_item ).
-ENDLOOP.`,
     },
   },
   {

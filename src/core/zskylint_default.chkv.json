@@ -25,9 +25,6 @@
       "checkName": "ZSKYLINT_NO_EXPORTING"
     },
     {
-      "checkName": "ZSKYLINT_NO_CHAIN_ASSIGN"
-    },
-    {
       "checkName": "ZSKYLINT_NO_CHAIN_DECL"
     },
     {
@@ -70,13 +67,7 @@
       "checkName": "ZSKYLINT_PREF_NEW_OP"
     },
     {
-      "checkName": "ZSKYLINT_PREF_RAISE_NEW"
-    },
-    {
       "checkName": "ZSKYLINT_PREF_XSDBOOL"
-    },
-    {
-      "checkName": "ZSKYLINT_NO_RECEIVING"
     },
     {
       "checkName": "ZSKYLINT_NO_STATIC_ARROW"
@@ -154,9 +145,6 @@
       "checkName": "ZSKYLINT_PREF_INSERT"
     },
     {
-      "checkName": "ZSKYLINT_NO_OBS_LOOP_CTL"
-    },
-    {
       "checkName": "ZSKYLINT_NO_LIKE_OBJECTS"
     },
     {
@@ -193,9 +181,6 @@
       "checkName": "ZSKYLINT_CHECK_SUBRC"
     },
     {
-      "checkName": "ZSKYLINT_NO_FORM"
-    },
-    {
       "checkName": "ZSKYLINT_NO_CLIENT_SPEC"
     },
     {
@@ -208,16 +193,10 @@
       "checkName": "ZSKYLINT_PREF_TEST_NAME"
     },
     {
-      "checkName": "ZSKYLINT_PREF_FINAL_METH"
-    },
-    {
       "checkName": "ZSKYLINT_PREF_STR_FUNC"
     },
     {
       "checkName": "ZSKYLINT_PREF_CALC_OP"
-    },
-    {
-      "checkName": "ZSKYLINT_PREF_EARLY_CONT"
     },
     {
       "checkName": "ZSKYLINT_PREF_EARLY_RET"

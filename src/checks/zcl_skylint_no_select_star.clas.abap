@@ -69,7 +69,7 @@ CLASS zcl_skylint_no_select_star IMPLEMENTATION.
     FIELD-SYMBOLS <ls_token> LIKE LINE OF is_statement-tokens.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      IF <ls_token>-lexeme = '*' OR <ls_token>-lexeme CP '~#**'.
+      IF <ls_token>-lexeme = '*' OR <ls_token>-lexeme CP '*~#**'.
         rv_res = abap_true.
         RETURN.
       ENDIF.

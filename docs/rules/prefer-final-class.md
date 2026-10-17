@@ -1,10 +1,10 @@
 # `prefer-final-class`
 
-> **Category:** [Clean ABAP & Modern Syntax](/rules/#clean-abap) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `NOT_FINAL` &nbsp;|&nbsp; **QuickFix:** No
+> **Category:** [Clean ABAP & Modern Syntax](/rules/#clean-abap) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `NOT_FINAL` &nbsp;|&nbsp; **QuickFix:** ⚡ Yes
 
 ## Description
 
-Prefer FINAL Classes by Default.
+Prefer FINAL classes and methods by default.
 
 ## ❌ Non-Compliant Code
 

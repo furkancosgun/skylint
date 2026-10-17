@@ -8,6 +8,8 @@ CLASS zcl_test_no_chained_decl DEFINITION
     METHODS test_003.
     METHODS test_004.
     METHODS test_005.
+    METHODS test_006.
+    METHODS test_007.
 ENDCLASS.
 
 CLASS zcl_test_no_chained_decl IMPLEMENTATION.
@@ -34,5 +36,18 @@ CLASS zcl_test_no_chained_decl IMPLEMENTATION.
   METHOD test_005.
     DATA: begin TYPE string,
           lv_x TYPE i.
+  ENDMETHOD.
+
+  METHOD test_006.
+    DATA lv_a TYPE i.
+    DATA lv_b TYPE i.
+    DATA lv_c TYPE i.
+    lv_a = lv_b = lv_c.
+  ENDMETHOD.
+
+  METHOD test_007.
+    DATA lv_a TYPE i.
+    DATA lv_b TYPE i.
+    lv_a = lv_b.
   ENDMETHOD.
 ENDCLASS.

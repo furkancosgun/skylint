@@ -10,7 +10,12 @@
   },
   {
     "method": "TEST_002",
-    "code": null
+    "code": "OMITPARM",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "OMITPNAME"
+    ]
   },
   {
     "method": "TEST_003",
@@ -22,6 +27,10 @@
     ]
   },
   {
+    "method": "TEST_004",
+    "code": null
+  },
+  {
     "method": "TEST_005",
     "code": null
   },
@@ -31,6 +40,37 @@
   },
   {
     "method": "TEST_007",
+    "code": null
+  },
+  {
+    "method": "TEST_008",
+    "code": "OMITRECEIV",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "OMITRECV"
+    ]
+  },
+  {
+    "method": "TEST_009",
+    "code": "OMITRECEIV",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "OMITRECV"
+    ]
+  },
+  {
+    "method": "TEST_010",
+    "code": "OMITPARM",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "OMITPNAME"
+    ]
+  },
+  {
+    "method": "TEST_011",
     "code": null
   }
 ]

@@ -4,7 +4,7 @@
 
 ## Description
 
-Use early RETURN guard clause instead of wrapping method in IF block.
+Prefer early exit (RETURN or CONTINUE) instead of nested IF blocks.
 
 ## ❌ Non-Compliant Code
 

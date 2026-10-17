@@ -63,10 +63,6 @@ export default defineConfig({
         "link": "/rules/prefer-new-operator"
       },
       {
-        "text": "prefer-raise-new",
-        "link": "/rules/prefer-raise-new"
-      },
-      {
         "text": "prefer-xsdbool",
         "link": "/rules/prefer-xsdbool"
       },
@@ -115,20 +111,12 @@ export default defineConfig({
         "link": "/rules/test-method-naming"
       },
       {
-        "text": "prefer-final-method",
-        "link": "/rules/prefer-final-method"
-      },
-      {
         "text": "prefer-string-functions",
         "link": "/rules/prefer-string-functions"
       },
       {
         "text": "prefer-calc-assign-op",
         "link": "/rules/prefer-calc-assign-op"
-      },
-      {
-        "text": "prefer-early-continue",
-        "link": "/rules/prefer-early-continue"
       },
       {
         "text": "prefer-early-return",
@@ -177,10 +165,6 @@ export default defineConfig({
         "link": "/rules/no-exporting"
       },
       {
-        "text": "no-chained-assignment",
-        "link": "/rules/no-chained-assignment"
-      },
-      {
         "text": "no-chained-decl",
         "link": "/rules/no-chained-decl"
       },
@@ -211,10 +195,6 @@ export default defineConfig({
       {
         "text": "no-yoda-conditions",
         "link": "/rules/no-yoda-conditions"
-      },
-      {
-        "text": "no-receiving",
-        "link": "/rules/no-receiving"
       },
       {
         "text": "no-static-via-instance",
@@ -253,10 +233,6 @@ export default defineConfig({
         "link": "/rules/no-magic-numbers"
       },
       {
-        "text": "no-obsolete-loop-control",
-        "link": "/rules/no-obsolete-loop-control"
-      },
-      {
         "text": "no-like-objects",
         "link": "/rules/no-like-objects"
       },
@@ -267,10 +243,6 @@ export default defineConfig({
       {
         "text": "no-message-raising",
         "link": "/rules/no-message-raising"
-      },
-      {
-        "text": "no-form-routines",
-        "link": "/rules/no-form-routines"
       },
       {
         "text": "no-unused-variables",

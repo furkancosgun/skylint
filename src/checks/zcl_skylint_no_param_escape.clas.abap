@@ -76,12 +76,8 @@ CLASS zcl_skylint_no_param_escape IMPLEMENTATION.
 
     lv_lexeme = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
                                                         iv_index     = lv_tok_idx ).
-    IF lv_lexeme = '!'.
-      lt_deletions = VALUE #( ( lv_tok_idx ) ).
-    ELSE.
-      lt_overrides = VALUE #( ( index  = lv_tok_idx
-                                lexeme = lv_lexeme+1 ) ).
-    ENDIF.
+    lt_overrides = VALUE #( ( index  = lv_tok_idx
+                              lexeme = lv_lexeme+1 ) ).
 
     lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = is_statement
                                                        it_overrides = lt_overrides

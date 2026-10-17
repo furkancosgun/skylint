@@ -20,5 +20,22 @@
     "quickfixes": [
       "TONEW"
     ]
+  },
+  {
+    "method": "TEST_004",
+    "code": null
+  },
+  {
+    "method": "TEST_005",
+    "code": "RAISEEXCNE",
+    "line": 2,
+    "column": 4,
+    "quickfixes": [
+      "RAISENEW"
+    ]
+  },
+  {
+    "method": "TEST_006",
+    "code": null
   }
 ]

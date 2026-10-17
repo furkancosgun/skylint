@@ -4,7 +4,7 @@
 
 ## Description
 
-Avoid chained declarations (DATA:, TYPES:, etc.).
+Avoid chained declarations and chained assignments.
 
 ## ❌ Non-Compliant Code
 

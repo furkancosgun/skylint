@@ -1,7 +1,7 @@
 {
   "formatVersion": "1",
   "header": {
-    "description": "Use early RETURN guard clause instead of wrapping method in IF block",
+    "description": "Prefer early exit (RETURN or CONTINUE) instead of nested IF blocks",
     "originalLanguage": "en",
     "abapLanguageVersion": "cloudDevelopment"
   },
