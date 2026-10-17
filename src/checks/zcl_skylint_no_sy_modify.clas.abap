@@ -75,9 +75,8 @@ CLASS zcl_skylint_no_sy_modify IMPLEMENTATION.
   METHOD is_system_field.
     rv_is = xsdbool(
           is_ref-kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-      AND (    is_ref-full_name CS '\DA:SY\'
-            OR is_ref-full_name CS '\DA:SYST\'
-            OR is_ref-full_name CS '\PR:SYST\'
+      AND (    is_ref-full_name CP '\DA:SY\*'
+            OR is_ref-full_name CP '\DA:SYST\*'
             OR is_ref-full_name  = '\DA:SY'
             OR is_ref-full_name  = '\DA:SYST' ) ).
   ENDMETHOD.

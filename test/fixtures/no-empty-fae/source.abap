@@ -13,6 +13,10 @@ CLASS zcl_test_no_empty_fae DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
+    METHODS test_005.
+    METHODS test_006.
+    METHODS test_007.
+    METHODS test_008.
 ENDCLASS.
 
 CLASS zcl_test_no_empty_fae IMPLEMENTATION.
@@ -40,6 +44,39 @@ CLASS zcl_test_no_empty_fae IMPLEMENTATION.
     DATA s TYPE tt_entry.
     DATA r TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
     IF lines( s ) > 0.
+      SELECT * FROM zskylint_dummy INTO TABLE @r FOR ALL ENTRIES IN @s WHERE field1 = @s-field1.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_005.
+    DATA s TYPE tt_entry.
+    DATA r TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
+    CHECK s IS NOT INITIAL.
+    SELECT * FROM zskylint_dummy INTO TABLE @r FOR ALL ENTRIES IN @s WHERE field1 = @s-field1.
+  ENDMETHOD.
+
+  METHOD test_006.
+    DATA s TYPE tt_entry.
+    DATA r TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
+    IF s IS INITIAL.
+      RETURN.
+    ENDIF.
+    SELECT * FROM zskylint_dummy INTO TABLE @r FOR ALL ENTRIES IN @s WHERE field1 = @s-field1.
+  ENDMETHOD.
+
+  METHOD test_007.
+    DATA s TYPE tt_entry.
+    DATA r TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
+    IF s IS NOT INITIAL.
+      " closed block
+    ENDIF.
+    SELECT * FROM zskylint_dummy INTO TABLE @r FOR ALL ENTRIES IN @s WHERE field1 = @s-field1.
+  ENDMETHOD.
+
+  METHOD test_008.
+    DATA s TYPE tt_entry.
+    DATA r TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
+    IF s IS INITIAL.
       SELECT * FROM zskylint_dummy INTO TABLE @r FOR ALL ENTRIES IN @s WHERE field1 = @s-field1.
     ENDIF.
   ENDMETHOD.

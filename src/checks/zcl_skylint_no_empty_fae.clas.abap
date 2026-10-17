@@ -21,20 +21,49 @@ CLASS zcl_skylint_no_empty_fae DEFINITION
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'EMPTY_FAE'.
 
+    TYPES:
+      BEGIN OF ty_block_frame,
+        keyword      TYPE string,
+        is_protected TYPE abap_bool,
+        is_negative  TYPE abap_bool,
+        has_exit     TYPE abap_bool,
+        is_guarded   TYPE abap_bool,
+      END OF ty_block_frame,
+      ty_block_stack TYPE STANDARD TABLE OF ty_block_frame WITH EMPTY KEY.
+
     METHODS extract_fae_table
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_tab) TYPE string.
 
-    METHODS has_preceding_check
-      IMPORTING it_statements  TYPE if_ci_atc_source_code_provider=>ty_statements
-                iv_current_idx TYPE i
-                iv_tab_name    TYPE string
-      RETURNING VALUE(rv_res)  TYPE abap_bool.
+    METHODS is_fae_protected
+      IMPORTING it_statements TYPE if_ci_atc_source_code_provider=>ty_statements
+                iv_select_idx TYPE i
+                iv_tab_name   TYPE string
+      RETURNING VALUE(rv_yes) TYPE abap_bool.
 
-    METHODS statement_checks_table
+    METHODS is_positive_check
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
                 iv_tab_name   TYPE string
       RETURNING VALUE(rv_res) TYPE abap_bool.
+
+    METHODS is_negative_check
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_tab_name   TYPE string
+      RETURNING VALUE(rv_res) TYPE abap_bool.
+
+    METHODS find_table_token_index
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_tab_name   TYPE string
+      RETURNING VALUE(rv_idx) TYPE i.
+
+    METHODS token_matches_table
+      IMPORTING is_token          TYPE if_ci_atc_source_code_provider=>ty_token
+                iv_tab_name       TYPE string
+      RETURNING VALUE(rv_matches) TYPE abap_bool.
+
+    METHODS clean_table_name
+      IMPORTING iv_lexeme      TYPE string
+      RETURNING VALUE(rv_name) TYPE string.
 
     METHODS build_quickfix
       IMPORTING is_statement         TYPE if_ci_atc_source_code_provider=>ty_statement
@@ -74,9 +103,9 @@ CLASS zcl_skylint_no_empty_fae IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      IF has_preceding_check( it_statements  = is_procedure-statements
-                              iv_current_idx = lv_idx
-                              iv_tab_name    = lv_fae_tab ) = abap_true.
+      IF is_fae_protected( it_statements = is_procedure-statements
+                           iv_select_idx = lv_idx
+                           iv_tab_name   = lv_fae_tab ) = abap_true.
         CONTINUE.
       ENDIF.
 
@@ -119,62 +148,288 @@ CLASS zcl_skylint_no_empty_fae IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    rv_tab = ls_tab_token-lexeme.
-    IF rv_tab(1) = '@'.
-      rv_tab = rv_tab+1.
+    rv_tab = clean_table_name( ls_tab_token-lexeme ).
+  ENDMETHOD.
+
+  METHOD clean_table_name.
+    DATA lv_len TYPE i.
+
+    rv_name = to_upper( iv_lexeme ).
+    IF rv_name CP '@*'.
+      rv_name = rv_name+1.
+    ENDIF.
+    IF rv_name CP '*[]'.
+      lv_len = strlen( rv_name ) - 2.
+      rv_name = rv_name(lv_len).
     ENDIF.
   ENDMETHOD.
 
-  METHOD has_preceding_check.
-    DATA lv_idx  TYPE i.
-    DATA ls_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+  METHOD token_matches_table.
+    DATA lv_clean TYPE string.
+    FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+
+    rv_matches = abap_false.
+    lv_clean = clean_table_name( is_token-lexeme ).
+    IF lv_clean = iv_tab_name.
+      rv_matches = abap_true.
+      RETURN.
+    ENDIF.
+
+    LOOP AT is_token-references ASSIGNING <ls_ref>
+         WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
+      IF <ls_ref>-full_name CS |\\DA:{ iv_tab_name }|.
+        rv_matches = abap_true.
+        RETURN.
+      ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD find_table_token_index.
+    FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    rv_idx = 0.
+    LOOP AT is_statement-tokens ASSIGNING <ls_tok>.
+      IF token_matches_table( is_token    = <ls_tok>
+                              iv_tab_name = iv_tab_name ) = abap_true.
+        rv_idx = sy-tabix.
+        RETURN.
+      ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD is_fae_protected.
+    DATA lt_stack         TYPE ty_block_stack.
+    DATA ls_frame         TYPE ty_block_frame.
+    DATA lv_outer_guarded TYPE abap_bool VALUE abap_false.
+    DATA lv_idx           TYPE i.
+    DATA ls_stmt          TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_stack_len     TYPE i.
+    FIELD-SYMBOLS <ls_top> TYPE ty_block_frame.
+
+    rv_yes = abap_false.
+
+    DO iv_select_idx - 1 TIMES.
+      lv_idx = sy-index.
+      ls_stmt = zcl_skylint_ast_util=>get_statement(
+                    it_statements = it_statements
+                    iv_index      = lv_idx ).
+      lv_stack_len = lines( lt_stack ).
+
+      CASE ls_stmt-keyword.
+        WHEN 'IF'.
+          CLEAR ls_frame.
+          ls_frame-keyword      = 'IF'.
+          ls_frame-is_protected = is_positive_check( is_statement = ls_stmt
+                                                     iv_tab_name  = iv_tab_name ).
+          ls_frame-is_negative  = is_negative_check( is_statement = ls_stmt
+                                                     iv_tab_name  = iv_tab_name ).
+          INSERT ls_frame INTO TABLE lt_stack.
+
+        WHEN 'ELSEIF'.
+          IF lv_stack_len > 0.
+            ASSIGN lt_stack[ lv_stack_len ] TO <ls_top>.
+            <ls_top>-is_protected = is_positive_check( is_statement = ls_stmt
+                                                       iv_tab_name  = iv_tab_name ).
+            <ls_top>-is_negative  = is_negative_check( is_statement = ls_stmt
+                                                       iv_tab_name  = iv_tab_name ).
+            <ls_top>-has_exit     = abap_false.
+          ENDIF.
+
+        WHEN 'ELSE'.
+          IF lv_stack_len > 0.
+            ASSIGN lt_stack[ lv_stack_len ] TO <ls_top>.
+            <ls_top>-is_protected = abap_false.
+            <ls_top>-is_negative  = abap_false.
+            <ls_top>-has_exit     = abap_false.
+          ENDIF.
+
+        WHEN 'ENDIF'.
+          IF lv_stack_len > 0.
+            ASSIGN lt_stack[ lv_stack_len ] TO <ls_top>.
+            IF <ls_top>-is_negative = abap_true AND <ls_top>-has_exit = abap_true.
+              IF lv_stack_len = 1.
+                lv_outer_guarded = abap_true.
+              ELSE.
+                ASSIGN lt_stack[ lv_stack_len - 1 ] TO <ls_top>.
+                <ls_top>-is_guarded = abap_true.
+              ENDIF.
+            ENDIF.
+            DELETE lt_stack INDEX lv_stack_len.
+          ENDIF.
+
+        WHEN 'LOOP' OR 'WHILE' OR 'DO' OR 'CASE' OR 'TRY'.
+          CLEAR ls_frame.
+          ls_frame-keyword = ls_stmt-keyword.
+          INSERT ls_frame INTO TABLE lt_stack.
+
+        WHEN 'ENDLOOP' OR 'ENDWHILE' OR 'ENDDO' OR 'ENDCASE' OR 'ENDTRY'.
+          IF lv_stack_len > 0.
+            DELETE lt_stack INDEX lv_stack_len.
+          ENDIF.
+
+        WHEN 'CHECK'.
+          IF is_positive_check( is_statement = ls_stmt
+                                iv_tab_name  = iv_tab_name ) = abap_true.
+            IF lv_stack_len = 0.
+              lv_outer_guarded = abap_true.
+            ELSE.
+              ASSIGN lt_stack[ lv_stack_len ] TO <ls_top>.
+              <ls_top>-is_guarded = abap_true.
+            ENDIF.
+          ENDIF.
+
+        WHEN 'RETURN' OR 'RAISE' OR 'EXIT'.
+          IF lv_stack_len > 0.
+            ASSIGN lt_stack[ lv_stack_len ] TO <ls_top>.
+            <ls_top>-has_exit = abap_true.
+          ENDIF.
+      ENDCASE.
+    ENDDO.
+
+    IF lv_outer_guarded = abap_true.
+      rv_yes = abap_true.
+      RETURN.
+    ENDIF.
+
+    LOOP AT lt_stack ASSIGNING <ls_top>.
+      IF <ls_top>-is_protected = abap_true OR <ls_top>-is_guarded = abap_true.
+        rv_yes = abap_true.
+        RETURN.
+      ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD is_positive_check.
+    DATA lv_tab_idx   TYPE i.
+    DATA lv_init_idx  TYPE i.
+    DATA lv_tok_count TYPE i.
+    DATA lv_not_count TYPE i.
+    DATA ls_next      TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_comp      TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_prev      TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_res = abap_false.
-    lv_idx = iv_current_idx - 1.
 
-    WHILE lv_idx >= 1.
-      ls_stmt = zcl_skylint_ast_util=>get_statement( it_statements = it_statements
-                                                     iv_index      = lv_idx ).
-      IF     ls_stmt-keyword IS NOT INITIAL
-         AND statement_checks_table( is_statement = ls_stmt
-                                     iv_tab_name  = iv_tab_name )  = abap_true.
+    IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                               iv_lexeme    = 'OR' ) = abap_true.
+      RETURN.
+    ENDIF.
+
+    lv_tab_idx = find_table_token_index( is_statement = is_statement
+                                         iv_tab_name  = iv_tab_name ).
+    IF lv_tab_idx = 0.
+      RETURN.
+    ENDIF.
+
+    lv_tok_count = lines( is_statement-tokens ).
+
+    lv_init_idx = zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                                    iv_lexeme    = 'INITIAL' ).
+    IF lv_init_idx > 0.
+      IF lv_init_idx > 1.
+        READ TABLE is_statement-tokens INTO ls_prev INDEX lv_init_idx - 1.
+        IF sy-subrc = 0 AND ls_prev-lexeme = 'NOT'.
+          lv_not_count += 1.
+        ENDIF.
+      ENDIF.
+      IF lv_tab_idx > 1.
+        READ TABLE is_statement-tokens INTO ls_prev INDEX lv_tab_idx - 1.
+        IF sy-subrc = 0 AND ls_prev-lexeme = 'NOT'.
+          lv_not_count += 1.
+        ENDIF.
+      ENDIF.
+
+      IF lv_not_count = 1.
         rv_res = abap_true.
         RETURN.
       ENDIF.
-      lv_idx -= 1.
-    ENDWHILE.
+    ENDIF.
+
+    IF lv_tab_idx > 1.
+      READ TABLE is_statement-tokens INTO ls_prev INDEX lv_tab_idx - 1.
+      IF sy-subrc = 0 AND ls_prev-lexeme = 'LINES('.
+        IF lv_tab_idx + 2 <= lv_tok_count.
+          READ TABLE is_statement-tokens INTO ls_next INDEX lv_tab_idx + 1.
+          IF sy-subrc = 0 AND ls_next-lexeme = ')'.
+            READ TABLE is_statement-tokens INTO ls_comp INDEX lv_tab_idx + 2.
+            IF sy-subrc = 0 AND ( ls_comp-lexeme = '>' OR ls_comp-lexeme = '>=' OR ls_comp-lexeme = '<>' ).
+              rv_res = abap_true.
+              RETURN.
+            ENDIF.
+          ENDIF.
+        ENDIF.
+      ENDIF.
+    ENDIF.
+
+    IF lv_tab_idx > 1.
+      READ TABLE is_statement-tokens INTO ls_prev INDEX lv_tab_idx - 1.
+      IF sy-subrc = 0 AND ls_prev-lexeme = 'LINE_EXISTS('.
+        rv_res = abap_true.
+        RETURN.
+      ENDIF.
+    ENDIF.
   ENDMETHOD.
 
-  METHOD statement_checks_table.
-    DATA lv_clean_tok TYPE string.
-    DATA lv_tab_body  TYPE string.
-    DATA lv_has_tab   TYPE abap_bool.
-    DATA lv_has_check TYPE abap_bool.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+  METHOD is_negative_check.
+    DATA lv_tab_idx   TYPE i.
+    DATA lv_init_idx  TYPE i.
+    DATA lv_tok_count TYPE i.
+    DATA lv_not_count TYPE i.
+    DATA ls_next      TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_comp      TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_prev      TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_res = abap_false.
-    lv_tab_body = |{ iv_tab_name }[]|.
 
-    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      lv_clean_tok = <ls_token>-lexeme.
-      IF lv_clean_tok CP '@*'.
-        lv_clean_tok = lv_clean_tok+1.
+    IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                               iv_lexeme    = 'OR' ) = abap_true.
+      RETURN.
+    ENDIF.
+
+    lv_tab_idx = find_table_token_index( is_statement = is_statement
+                                         iv_tab_name  = iv_tab_name ).
+    IF lv_tab_idx = 0.
+      RETURN.
+    ENDIF.
+
+    lv_tok_count = lines( is_statement-tokens ).
+
+    lv_init_idx = zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                                    iv_lexeme    = 'INITIAL' ).
+    IF lv_init_idx > 0.
+      IF lv_init_idx > 1.
+        READ TABLE is_statement-tokens INTO ls_prev INDEX lv_init_idx - 1.
+        IF sy-subrc = 0 AND ls_prev-lexeme = 'NOT'.
+          lv_not_count += 1.
+        ENDIF.
+      ENDIF.
+      IF lv_tab_idx > 1.
+        READ TABLE is_statement-tokens INTO ls_prev INDEX lv_tab_idx - 1.
+        IF sy-subrc = 0 AND ls_prev-lexeme = 'NOT'.
+          lv_not_count += 1.
+        ENDIF.
       ENDIF.
 
-      IF lv_clean_tok = iv_tab_name OR lv_clean_tok = lv_tab_body.
-        lv_has_tab = abap_true.
+      IF lv_not_count = 0.
+        rv_res = abap_true.
+        RETURN.
       ENDIF.
+    ENDIF.
 
-      IF     <ls_token>-references IS INITIAL
-         AND (    lv_clean_tok = 'INITIAL'
-               OR lv_clean_tok = 'LINES('
-               OR lv_clean_tok = 'LINE_EXISTS(' ).
-        lv_has_check = abap_true.
+    IF lv_tab_idx > 1.
+      READ TABLE is_statement-tokens INTO ls_prev INDEX lv_tab_idx - 1.
+      IF sy-subrc = 0 AND ls_prev-lexeme = 'LINES('.
+        IF lv_tab_idx + 2 <= lv_tok_count.
+          READ TABLE is_statement-tokens INTO ls_next INDEX lv_tab_idx + 1.
+          IF sy-subrc = 0 AND ls_next-lexeme = ')'.
+            READ TABLE is_statement-tokens INTO ls_comp INDEX lv_tab_idx + 2.
+            IF sy-subrc = 0 AND ( ls_comp-lexeme = '=' OR ls_comp-lexeme = '<=' ).
+              rv_res = abap_true.
+              RETURN.
+            ENDIF.
+          ENDIF.
+        ENDIF.
       ENDIF.
-    ENDLOOP.
-
-    IF lv_has_tab = abap_true AND lv_has_check = abap_true.
-      rv_res = abap_true.
     ENDIF.
   ENDMETHOD.
 ENDCLASS.

@@ -1,6 +1,6 @@
 # `no-default-key`
 
-> **Category:** [Anti-Patterns & Bad Practices](/rules/#anti-patterns) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `DEFAULTKEY` &nbsp;|&nbsp; **QuickFix:** No
+> **Category:** [Anti-Patterns & Bad Practices](/rules/#anti-patterns) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `DEFAULTKEY` &nbsp;|&nbsp; **QuickFix:** ⚡ Yes
 
 ## Description
 

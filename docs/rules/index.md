@@ -47,7 +47,7 @@ Discouraged language constructs, legacy statements, and redundant syntax.
 | Rule ID | ABAP Class | Description | Finding Code | Pseudo-Comment | QuickFix |
 |---|---|---|:---:|:---:|:---:|
 | [`no-call-method`](/rules/no-call-method) | `ZCL_SKYLINT_NO_CALL_METHOD` | Avoid static CALL METHOD statements | `CALLMETHOD` | `#EC CALL_METH` | ⚡ Ready |
-| [`no-default-key`](/rules/no-default-key) | `ZCL_SKYLINT_NO_DEFAULT_KEY` | Avoid WITH DEFAULT KEY; prefer EMPTY KEY or explicit keys | `DEFAULTKEY` | `#EC DEFAULT_KEY` | — |
+| [`no-default-key`](/rules/no-default-key) | `ZCL_SKYLINT_NO_DEFAULT_KEY` | Avoid WITH DEFAULT KEY; prefer EMPTY KEY or explicit keys | `DEFAULTKEY` | `#EC DEFAULT_KEY` | ⚡ Ready |
 | [`no-me-reference`](/rules/no-me-reference) | `ZCL_SKYLINT_NO_ME_REFERENCE` | Avoid self-reference ME-> | `AVOIDME` | `#EC ME` | — |
 | [`no-exporting`](/rules/no-exporting) | `ZCL_SKYLINT_NO_EXPORTING` | Omit explicit EXPORTING in method calls | `OMITEXPORT` | `#EC EXPORTING` | ⚡ Ready |
 | [`no-chained-assignment`](/rules/no-chained-assignment) | `ZCL_SKYLINT_NO_CHAIN_ASSIGN` | Avoid assignment chaining (a = b = c) | `ASSIGNCHN` | `#EC CHAIN_ASSIGN` | ⚡ Ready |

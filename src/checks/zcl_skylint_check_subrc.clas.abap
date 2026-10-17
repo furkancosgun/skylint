@@ -121,20 +121,14 @@ CLASS zcl_skylint_check_subrc IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_subrc_token.
-    DATA lv_lex TYPE string.
     FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     rv_is = abap_false.
-    lv_lex = to_upper( is_token-lexeme ).
-
-    IF lv_lex = 'SY-SUBRC' OR lv_lex = 'SYST-SUBRC'.
-      rv_is = abap_true.
-      RETURN.
-    ENDIF.
 
     LOOP AT is_token-references ASSIGNING <ls_ref>
-         WHERE usage_mode = if_ci_atc_source_code_provider=>usage_modes-read.
-      IF <ls_ref>-full_name CS 'SUBRC'.
+         WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+           AND usage_mode = if_ci_atc_source_code_provider=>usage_modes-read.
+      IF <ls_ref>-full_name = '\DA:SY\DA:SUBRC' OR <ls_ref>-full_name = '\DA:SYST\DA:SUBRC'.
         rv_is = abap_true.
         RETURN.
       ENDIF.

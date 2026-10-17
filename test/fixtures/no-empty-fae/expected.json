@@ -20,5 +20,35 @@
     "quickfixes": [
       "FAEGUARD"
     ]
+  },
+  {
+    "method": "TEST_004",
+    "code": null
+  },
+  {
+    "method": "TEST_005",
+    "code": null
+  },
+  {
+    "method": "TEST_006",
+    "code": null
+  },
+  {
+    "method": "TEST_007",
+    "code": "FAENOCHECK",
+    "line": 7,
+    "column": 4,
+    "quickfixes": [
+      "FAEGUARD"
+    ]
+  },
+  {
+    "method": "TEST_008",
+    "code": "FAENOCHECK",
+    "line": 5,
+    "column": 6,
+    "quickfixes": [
+      "FAEGUARD"
+    ]
   }
 ]

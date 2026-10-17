@@ -32,18 +32,22 @@ CLASS zcl_skylint_no_catch_root IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_idx TYPE i.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_ref>       TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
          WHERE keyword = 'CATCH'.
-      lv_idx = 0.
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-        lv_idx = sy-tabix.
-        IF lv_idx = 2 AND <ls_token>-lexeme = 'CX_ROOT'.
-          report_statement( is_statement    = <ls_statement>
-                            iv_finding_code = c_finding_codes-catch_root ).
+        LOOP AT <ls_token>-references ASSIGNING <ls_ref>
+             WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-type.
+          IF <ls_ref>-full_name = '\TY:CX_ROOT'.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-catch_root ).
+            EXIT.
+          ENDIF.
+        ENDLOOP.
+        IF sy-subrc = 0.
           EXIT.
         ENDIF.
       ENDLOOP.

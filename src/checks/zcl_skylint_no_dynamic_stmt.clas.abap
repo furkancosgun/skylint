@@ -49,7 +49,6 @@ CLASS zcl_skylint_no_dynamic_stmt IMPLEMENTATION.
   METHOD is_dynamic_construct.
     DATA ls_tok2  TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA ls_after TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_yes = abap_false.
 
@@ -67,10 +66,15 @@ CLASS zcl_skylint_no_dynamic_stmt IMPLEMENTATION.
             rv_yes = abap_true.
             RETURN.
           ENDIF.
-        ENDIF.
-
-        IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                   iv_lexeme    = 'METHOD' ) = abap_true.
+        ELSEIF is_statement-keyword = '+CALL_METHOD'.
+          ls_after = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                      iv_index     = 1 ).
+          IF ls_after-lexeme CP '*->(*)*' OR ls_after-lexeme CP '*=>(*)*'.
+            rv_yes = abap_true.
+            RETURN.
+          ENDIF.
+        ELSEIF zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                       iv_lexeme    = 'METHOD' ) = abap_true.
           ls_after = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
                                                             iv_lexeme    = 'METHOD' ).
           IF ls_after-lexeme CP '(*)' OR ls_after-lexeme CP '*->(*)*' OR ls_after-lexeme CP '*=>(*)*'.
@@ -78,13 +82,6 @@ CLASS zcl_skylint_no_dynamic_stmt IMPLEMENTATION.
             RETURN.
           ENDIF.
         ENDIF.
-
-        LOOP AT is_statement-tokens ASSIGNING <ls_tok>.
-          IF <ls_tok>-lexeme CP '*->(*)*' OR <ls_tok>-lexeme CP '*=>(*)*'.
-            rv_yes = abap_true.
-            RETURN.
-          ENDIF.
-        ENDLOOP.
 
       WHEN 'ASSIGN'.
         IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement

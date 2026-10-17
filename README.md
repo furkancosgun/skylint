@@ -50,7 +50,7 @@ All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 |---|---|---|:---:|:---:|:---:|
 | `prefer-lines` | [ZCL_SKYLINT_PREF_LINES](src/checks/zcl_skylint_pref_lines.clas.abap) | Prefer lines( ) built-in function over DESCRIBE TABLE ... LINES | `DESCRIBELN` | `"#EC LINES"` | ⚡ Ready |
 | `no-call-method` | [ZCL_SKYLINT_NO_CALL_METHOD](src/checks/zcl_skylint_no_call_method.clas.abap) | Avoid static CALL METHOD statements | `CALLMETHOD` | `"#EC CALL_METH"` | ⚡ Ready |
-| `no-default-key` | [ZCL_SKYLINT_NO_DEFAULT_KEY](src/checks/zcl_skylint_no_default_key.clas.abap) | Avoid WITH DEFAULT KEY; prefer EMPTY KEY or explicit keys | `DEFAULTKEY` | `"#EC DEFAULT_KEY"` | — |
+| `no-default-key` | [ZCL_SKYLINT_NO_DEFAULT_KEY](src/checks/zcl_skylint_no_default_key.clas.abap) | Avoid WITH DEFAULT KEY; prefer EMPTY KEY or explicit keys | `DEFAULTKEY` | `"#EC DEFAULT_KEY"` | ⚡ Ready |
 | `prefer-is-not` | [ZCL_SKYLINT_PREF_IS_NOT](src/checks/zcl_skylint_pref_is_not.clas.abap) | Prefer IS NOT over NOT ... IS | `PREFERISNT` | `"#EC IS_NOT"` | ⚡ Ready |
 | `no-me-reference` | [ZCL_SKYLINT_NO_ME_REFERENCE](src/checks/zcl_skylint_no_me_reference.clas.abap) | Avoid self-reference ME-> | `AVOIDME` | `"#EC ME"` | — |
 | `no-exporting` | [ZCL_SKYLINT_NO_EXPORTING](src/checks/zcl_skylint_no_exporting.clas.abap) | Omit explicit EXPORTING in method calls | `OMITEXPORT` | `"#EC EXPORTING"` | ⚡ Ready |

@@ -19,24 +19,21 @@ CLASS zcl_skylint_no_bool_compare DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
+    TYPES:
+      BEGIN OF ty_bool_comp,
+        op_idx   TYPE i,
+        lit_idx  TYPE i,
+        can_drop TYPE abap_bool,
+      END OF ty_bool_comp.
+
     CONSTANTS c_pseudo_comment TYPE string VALUE 'BOOL_COMPARE'.
 
-    METHODS has_boolean_comparison
-      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_index) TYPE i.
+    METHODS find_boolean_comparison
+      IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rs_comp) TYPE ty_bool_comp.
 
-    METHODS is_droppable
-      IMPORTING iv_operator   TYPE string
-                iv_literal    TYPE string
-      RETURNING VALUE(rv_yes) TYPE abap_bool.
-
-    METHODS is_boolean_literal
-      IMPORTING iv_lexeme    TYPE string
-      RETURNING VALUE(rv_is) TYPE abap_bool.
-
-    METHODS is_boolean_operand
+    METHODS is_boolean_literal_token
       IMPORTING is_token     TYPE if_ci_atc_source_code_provider=>ty_token
-                iv_lexeme    TYPE string
       RETURNING VALUE(rv_is) TYPE abap_bool.
 
 ENDCLASS.
@@ -57,16 +54,10 @@ CLASS zcl_skylint_no_bool_compare IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_stmt_idx  TYPE i.
-    DATA lv_op_idx    TYPE i.
-    DATA lv_lit_idx   TYPE i.
-    DATA lv_op        TYPE string.
-    DATA lv_lit       TYPE string.
-    DATA lv_line      TYPE string.
-    DATA ls_quickfix  TYPE zcl_skylint_check_base=>ty_quickfix.
-    DATA lt_deletions TYPE zcl_skylint_ast_util=>ty_token_deletions.
-    DATA ls_adj       TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_adj       TYPE string.
+    DATA lv_stmt_idx TYPE i.
+    DATA ls_comp     TYPE ty_bool_comp.
+    DATA lv_line     TYPE string.
+    DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
@@ -74,32 +65,19 @@ CLASS zcl_skylint_no_bool_compare IMPLEMENTATION.
       CASE <ls_statement>-keyword.
         WHEN 'IF' OR 'ELSEIF' OR 'CHECK' OR 'WHILE'.
           IF zcl_skylint_ast_util=>statement_is_method_call( <ls_statement> ) = abap_true.
-            lv_op_idx = has_boolean_comparison( <ls_statement> ).
-            IF lv_op_idx > 0.
+            ls_comp = find_boolean_comparison( <ls_statement> ).
+            IF ls_comp-op_idx > 0.
               CLEAR ls_quickfix.
-              CLEAR lt_deletions.
-              ls_adj = zcl_skylint_ast_util=>get_token( is_statement = <ls_statement>
-                                                        iv_index     = lv_op_idx - 1 ).
-              lv_adj = ls_adj-lexeme.
-              IF is_boolean_operand( is_token  = ls_adj
-                                     iv_lexeme = lv_adj ) = abap_true.
-                lv_lit_idx = lv_op_idx - 1.
-              ELSE.
-                lv_lit_idx = lv_op_idx + 1.
+              IF ls_comp-can_drop = abap_true.
+                lv_line = zcl_skylint_ast_util=>flatten_statement(
+                    is_statement = <ls_statement>
+                    it_deletions = VALUE #( ( ls_comp-op_idx ) ( ls_comp-lit_idx ) ) ).
+                ls_quickfix = quickfix_replace(
+                    iv_quickfix_code  = c_quickfix_codes-drop_literal
+                    iv_statement_from = lv_stmt_idx
+                    it_new_code       = VALUE #( ( |{ lv_line }.| ) ) ).
               ENDIF.
-              lv_op = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
-                                                              iv_index     = lv_op_idx ).
-              lv_lit = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
-                                                               iv_index     = lv_lit_idx ).
-              IF is_droppable( iv_operator = lv_op
-                               iv_literal  = lv_lit ) = abap_true.
-                lt_deletions = VALUE #( ( lv_op_idx ) ( lv_lit_idx ) ).
-                lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_statement>
-                                                                   it_deletions = lt_deletions ).
-                ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-drop_literal
-                                                iv_statement_from = lv_stmt_idx
-                                                it_new_code       = VALUE #( ( |{ lv_line }.| ) ) ).
-              ENDIF.
+
               report_statement( is_statement    = <ls_statement>
                                 iv_finding_code = c_finding_codes-bool_comparison
                                 is_quickfix     = ls_quickfix ).
@@ -109,81 +87,77 @@ CLASS zcl_skylint_no_bool_compare IMPLEMENTATION.
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD has_boolean_comparison.
-    DATA lv_tok_idx   TYPE i.
-    DATA lv_adj       TYPE string.
-    DATA ls_token     TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_adj_token TYPE if_ci_atc_source_code_provider=>ty_token.
+  METHOD find_boolean_comparison.
+    DATA lv_tok_idx TYPE i.
+    DATA ls_tok     TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_prev    TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_next    TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_lit_lex TYPE string.
 
-    rv_index = 0.
+    CLEAR rs_comp.
 
-    LOOP AT is_statement-tokens INTO ls_token.
+    LOOP AT is_statement-tokens INTO ls_tok.
       lv_tok_idx = sy-tabix.
-      IF ls_token-references IS NOT INITIAL.
+      IF ls_tok-references IS NOT INITIAL.
         CONTINUE.
       ENDIF.
 
-      CASE ls_token-lexeme.
+      CASE ls_tok-lexeme.
         WHEN '=' OR 'EQ' OR '<>' OR 'NE' OR '><'.
-          ls_adj_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                          iv_index     = lv_tok_idx - 1 ).
-          lv_adj = ls_adj_token-lexeme.
-          IF is_boolean_operand( is_token  = ls_adj_token
-                                 iv_lexeme = lv_adj ) = abap_true.
-            rv_index = lv_tok_idx.
-            RETURN.
+          ls_prev = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                     iv_index     = lv_tok_idx - 1 ).
+          IF is_boolean_literal_token( ls_prev ) = abap_true.
+            rs_comp-op_idx  = lv_tok_idx.
+            rs_comp-lit_idx = lv_tok_idx - 1.
+            lv_lit_lex      = ls_prev-lexeme.
+          ELSE.
+            ls_next = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                       iv_index     = lv_tok_idx + 1 ).
+            IF is_boolean_literal_token( ls_next ) = abap_true.
+              rs_comp-op_idx  = lv_tok_idx.
+              rs_comp-lit_idx = lv_tok_idx + 1.
+              lv_lit_lex      = ls_next-lexeme.
+            ENDIF.
           ENDIF.
 
-          ls_adj_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                          iv_index     = lv_tok_idx + 1 ).
-          lv_adj = ls_adj_token-lexeme.
-          IF is_boolean_operand( is_token  = ls_adj_token
-                                 iv_lexeme = lv_adj ) = abap_true.
-            rv_index = lv_tok_idx.
+          IF rs_comp-op_idx > 0.
+            CASE ls_tok-lexeme.
+              WHEN '=' OR 'EQ'.
+                IF lv_lit_lex = 'ABAP_TRUE' OR lv_lit_lex = '''X''' OR lv_lit_lex = '`X`'.
+                  rs_comp-can_drop = abap_true.
+                ENDIF.
+              WHEN '<>' OR 'NE' OR '><'.
+                IF lv_lit_lex = 'ABAP_FALSE' OR lv_lit_lex = '''''' OR lv_lit_lex = '``'.
+                  rs_comp-can_drop = abap_true.
+                ENDIF.
+            ENDCASE.
             RETURN.
           ENDIF.
       ENDCASE.
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD is_droppable.
-    DATA lv_op  TYPE string.
-    DATA lv_lit TYPE string.
+  METHOD is_boolean_literal_token.
+    FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
-    rv_yes = abap_false.
-    lv_op =  iv_operator.
-    lv_lit = iv_literal.
-
-    CASE lv_op.
-      WHEN '=' OR 'EQ'.
-        IF lv_lit = 'ABAP_TRUE' OR lv_lit = '''X''' OR lv_lit = '`X`'.
-          rv_yes = abap_true.
-        ENDIF.
-      WHEN '<>' OR 'NE' OR '><'.
-        IF lv_lit = 'ABAP_FALSE' OR lv_lit = '''''' OR lv_lit = '``'.
-          rv_yes = abap_true.
-        ENDIF.
-    ENDCASE.
-  ENDMETHOD.
-
-  METHOD is_boolean_operand.
-    rv_is = abap_false.
-    IF     is_token-references IS NOT INITIAL
-       AND iv_lexeme           <> 'ABAP_TRUE'
-       AND iv_lexeme           <> 'ABAP_FALSE'
-       AND iv_lexeme           <> 'ABAP_UNDEFINED'.
-      RETURN.
-    ENDIF.
-    rv_is = is_boolean_literal( iv_lexeme ).
-  ENDMETHOD.
-
-  METHOD is_boolean_literal.
     rv_is = abap_false.
 
-    CASE iv_lexeme.
-      WHEN 'ABAP_TRUE' OR 'ABAP_FALSE' OR 'ABAP_UNDEFINED' OR 'SPACE'
-        OR '''X''' OR '`X`' OR '''''' OR '``'.
+    LOOP AT is_token-references ASSIGNING <ls_ref>
+         WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
+      IF <ls_ref>-full_name = '\DA:ABAP_TRUE'
+         OR <ls_ref>-full_name = '\DA:ABAP_FALSE'
+         OR <ls_ref>-full_name = '\DA:ABAP_UNDEFINED'.
         rv_is = abap_true.
-    ENDCASE.
+        RETURN.
+      ENDIF.
+    ENDLOOP.
+
+    IF is_token-references IS INITIAL.
+      CASE is_token-lexeme.
+        WHEN 'ABAP_TRUE' OR 'ABAP_FALSE' OR 'ABAP_UNDEFINED' OR 'SPACE'
+          OR '''X''' OR '`X`' OR '''''' OR '``'.
+          rv_is = abap_true.
+      ENDCASE.
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.

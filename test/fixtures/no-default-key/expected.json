@@ -4,7 +4,9 @@
     "code": "DEFAULTKEY",
     "line": 2,
     "column": 4,
-    "quickfixes": []
+    "quickfixes": [
+      "USEEMPTY"
+    ]
   },
   {
     "method": "TEST_002",
@@ -15,6 +17,8 @@
     "code": "DEFAULTKEY",
     "line": 2,
     "column": 4,
-    "quickfixes": []
+    "quickfixes": [
+      "USEEMPTY"
+    ]
   }
 ]
