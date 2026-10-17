@@ -6,16 +6,12 @@ This document outlines the mandatory engineering guidelines, architectural desig
 
 ## 🏛️ Core Philosophy & Architecture
 
-1. **ATC-Native Core (single `main` branch):**
-   - Every check in `src/checks/` is a native ATC check: it inherits from `zcl_skylint_check_base`,
-     which implements `if_ci_atc_check` directly. There are no adapter layers, no platform branches,
-     no portability shims.
-   - All statement/token/reference/finding types come from the SAP ATC framework itself:
+1. **ATC-Native Core:**
+   - Every check inherits `zcl_skylint_check_base` and implements `if_ci_atc_check` directly.
+   - All statement, token, reference, and finding types come from the standard SAP ATC framework:
      `if_ci_atc_source_code_provider` (code), `if_ci_atc_check` (findings),
      `if_ci_atc_check_meta_data` (config), `cl_ci_atc_quickfixes` (quickfix codes).
-     Local stubs under `deps/atc/src/` exist only for abaplint/transpiler resolution —
-     on a real SAP system the framework classes are used natively and `deps/` never ships via abapGit.
-   - Target is ABAP Cloud syntax (`abaplint.json`: `Cloud`). No NetWeaver 7.40 / SCI support.
+   - Target language version is ABAP Cloud (`abaplint.json`: `Cloud`).
 
 2. **Shared Base Class (`zcl_skylint_check_base` + `zcl_skylint_check_meta_data`):**
    - `zcl_skylint_check_base` implements `if_ci_atc_check~run` (procedure loop, checksum, location,
@@ -33,7 +29,7 @@ This document outlines the mandatory engineering guidelines, architectural desig
        `cl_ci_atc_quickfixes=>ty_quickfix_code`.
      - Attributes: `if_ci_atc_check_meta_data=>attribute_kinds-boolean/elementary`
        (`string`/`integer` options map to `elementary`).
-   - A `zif_skylint_types`-style common type interface **MUST NOT** be reintroduced.
+   - Custom type wrapper interfaces must not be used; rely directly on standard `if_ci_atc_*` framework types.
 
 4. **Zero-Boilerplate Rule (`zcl_skylint_XXX`):**
    - Every check rule **MUST** inherit from `zcl_skylint_check_base` in its own isolated class named `zcl_skylint_XXX` (e.g. `zcl_skylint_pref_lines`, `zcl_skylint_no_call_method`, maximum 30 characters).
@@ -417,11 +413,9 @@ When automated code replacement or removal is appropriate, use the QuickFix API:
 
 ## 🚫 The 5 Most Critical Anti-Patterns to Avoid
 
-1. **Reintroducing a Custom Type Interface:**
-   - *Why:* A `zif_skylint_types`-style layer duplicates SAP framework types, drifts from them, and forces every
-     check through a lossy mapping. The framework (`if_ci_atc_*`) is the single source of truth.
-   - *Fix:* Always use `if_ci_atc_source_code_provider` / `if_ci_atc_check` / `if_ci_atc_check_meta_data` /
-     `cl_ci_atc_quickfixes` types directly. Never add a parallel type interface.
+1. **Custom Type Wrappers / Parallel Interfaces:**
+   - *Why:* Wrapping SAP framework types causes drift, lossy mappings, and unnecessary boilerplate. The SAP ATC framework (`if_ci_atc_*`) is the single source of truth.
+   - *Fix:* Use `if_ci_atc_source_code_provider`, `if_ci_atc_check`, `if_ci_atc_check_meta_data`, and `cl_ci_atc_quickfixes` types directly.
 
 2. **Assuming Magic Token Indices (`tokens[ 3 ]`):**
    - *Why:* Line breaks, pragmas, or modifier tokens shift indices, causing test failures or `CX_SY_ITAB_LINE_NOT_FOUND` dumps.

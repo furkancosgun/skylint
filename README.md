@@ -17,16 +17,17 @@
 
 > 📖 **Full Documentation & Interactive Rule Guide:** [https://furkancosgun.github.io/skylint/](https://furkancosgun.github.io/skylint/)
 
-**Skylint** is an extensible, high-performance static code analysis framework for ABAP. Every rule is a **native ATC check** (`if_ci_atc_check`) running on SAP BTP ABAP Environment & S/4HANA — no adapters, no branches, no portability layers.
+**Skylint** is an extensible, high-performance static code analysis framework for ABAP. Every rule is a **native ATC check** (`if_ci_atc_check`) running directly on SAP BTP ABAP Environment & S/4HANA (ABAP Cloud).
 
 ---
 
 ## ⚡ Highlights
 
-- **ATC-Native (`main` only):** Every check inherits `zcl_skylint_check_base`, which implements `if_ci_atc_check` directly. All types come from the SAP ATC framework (`if_ci_atc_source_code_provider`, `if_ci_atc_check`, `if_ci_atc_check_meta_data`).
-- **Zero Boilerplate Architecture:** Base class encapsulates procedure iteration, finding registration with checksum/location, statement/token reporting, attribute resolution, and pseudo-comment filtering. Subclasses only require `constructor` and `check`.
-- **QuickFix Ready & Validated:** Built-in helper API (`quickfix_replace`) for automated transformations, verified by round-trip syntax testing.
-- **Single-Branch Delivery:** One branch, one syntax (ABAP Cloud), one deployment path via abapGit.
+- **Native SAP ATC:** Every check implements `if_ci_atc_check` directly and runs natively in Eclipse ADT and SAP GUI.
+- **74 Clean ABAP Rules:** Comprehensive checks for modern syntax, expressions, safety, and performance.
+- **Automated QuickFixes:** Built-in QuickFix engine for instant refactoring via `Ctrl + 1`.
+- **Zero Boilerplate:** Base class encapsulates statement traversal, finding reporting, and pseudo-comment handling.
+- **CLI & CI/CD Ready:** Fast local CLI (`npx skylint scan`) and automated GitHub Actions CI & Pages deployment.
 
 ---
 
@@ -35,24 +36,14 @@
 ```text
 skylint/
 ├── src/
-│   ├── core/                                     # ATC-native core infrastructure
-│   │   ├── zcl_skylint_check_base.clas.abap      # Base check class (implements if_ci_atc_check)
-│   │   ├── zcl_skylint_check_meta_data.clas.abap # Shared if_ci_atc_check_meta_data implementation
-│   │   ├── zcl_skylint_ast_util.clas.abap        # AST & token sequence traversal utility
-│   │   └── zcl_skylint_rtti_util.clas.abap       # Safe ABAP RTTI inspection utility
-│   │
-│   ├── checks/                                   # 74 Modular Check Implementations
-│   │   ├── zcl_skylint_pref_lines.clas.abap      # Check class implementation
-│   │   └── zcl_skylint_pref_lines.clas.xml       # abapGit XML metadata
-│   └── deps/atc/src/                             # Local-only ATC framework stubs (never shipped)
-├── bin/                                          # Executable CLI (skylint scan, explain, list, init)
-├── lib/                                          # Core JS engine (ast parser, atc doubles, quickfix roundtrip)
-├── test/                                         # Test suite
-│   ├── fixtures/                                 # Test fixtures per check (source.abap + expected.json)
-│   ├── run.mjs                                   # Main test runner (executes checks via transpiled runtime)
-│   └── stubs/                                    # Transpiler stubs
-├── abaplint.json                                 # abaplint validation configuration & rule sets
-└── package.json                                  # Lint, build, and test scripts
+│   ├── core/         # Base check class, metadata, AST & RTTI utilities
+│   ├── checks/       # 74 modular check implementations
+│   └── atc/          # Generated ATC objects (CHKC, CHKO, CHKV)
+├── bin/              # Executable CLI (skylint scan, explain, init)
+├── docs/             # VitePress enterprise documentation source
+├── test/             # Test fixtures and ATC-native runner
+├── abaplint.json     # Linter configuration (ABAP Cloud)
+└── package.json      # Build, test, and indexing scripts
 ```
 
 ---
@@ -257,20 +248,12 @@ report_statement( is_statement    = <ls_statement>
 
 ## 🏛️ Architecture
 
-Single-branch, ATC-native delivery — no adapters, no platform branches:
+Skylint is built directly on the native SAP ATC framework:
 
-```
-           ┌──────────────────────────────────────────────┐
-           │              main (ATC-Native)               │
-           │  • 74 Rules (if_ci_atc_check)               │
-           │  • Framework Types (if_ci_atc_*)            │
-           │  • Shared Base + Metadata (core/)           │
-           └──────────────────────────────────────────────┘
-```
-
-1. **`src/core/`**: `zcl_skylint_check_base` (implements `if_ci_atc_check`: procedure loop, checksum/location, quickfix contexts), `zcl_skylint_check_meta_data` (shared `if_ci_atc_check_meta_data`), AST/RTTI utilities.
-2. **`src/checks/`**: 74 rule classes, each directly selectable in ATC check variants.
-3. **`deps/atc/src/`**: Local-only ATC framework stubs for abaplint resolution — never shipped via abapGit (real SAP systems provide these natively).
+1. **`src/core/`**: Base check engine (`zcl_skylint_check_base` implementing `if_ci_atc_check`), shared metadata (`zcl_skylint_check_meta_data`), and AST/RTTI traversal utilities.
+2. **`src/checks/`**: 74 modular check classes, each directly selectable in ATC Check Variants (`CHKV`).
+3. **`src/atc/`**: Standard ATC category (`CHKC`), check (`CHKO`), and variant (`CHKV`) definitions.
+4. **`deps/atc/src/`**: Local ATC framework stubs for offline abaplint validation (excluded from abapGit transports).
 
 ---
 
