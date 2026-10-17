@@ -203,6 +203,10 @@
         {
           "name": "CHECK_LOOP_CTL",
           "value": "X"
+        },
+        {
+          "name": "CHECK_ADD",
+          "value": "X"
         }
       ]
     },

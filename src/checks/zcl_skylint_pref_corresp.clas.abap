@@ -51,6 +51,13 @@ CLASS zcl_skylint_pref_corresp IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
+      IF    zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                    iv_lexeme    = 'EXPANDING' ) = abap_true
+         OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                    iv_lexeme    = 'KEEPING' )   = abap_true.
+        CONTINUE.
+      ENDIF.
+
       CLEAR ls_quickfix.
       IF     zcl_skylint_ast_util=>token_count( <ls_statement> )                   = 4
          AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>

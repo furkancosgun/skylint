@@ -20,5 +20,9 @@
     "quickfixes": [
       "CORRESP"
     ]
+  },
+  {
+    "method": "TEST_005",
+    "code": null
   }
 ]

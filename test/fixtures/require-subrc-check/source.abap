@@ -7,6 +7,7 @@ CLASS zcl_test_require_subrc_check DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
+    METHODS test_005.
 ENDCLASS.
 
 CLASS zcl_test_require_subrc_check IMPLEMENTATION.
@@ -34,5 +35,9 @@ CLASS zcl_test_require_subrc_check IMPLEMENTATION.
     FIND 'abc' IN lv_text MATCH OFFSET lv_off.
     IF sy-subrc = 0.
     ENDIF.
+  ENDMETHOD.
+
+  METHOD test_005.
+    UPDATE zskylint_dummy SET field1 = 'A'.
   ENDMETHOD.
 ENDCLASS.

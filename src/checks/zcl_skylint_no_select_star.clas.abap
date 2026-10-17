@@ -47,16 +47,26 @@ CLASS zcl_skylint_no_select_star IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
+    DATA lv_has_package_size TYPE abap_bool VALUE abap_false.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'SELECT'.
+          lv_has_package_size = zcl_skylint_ast_util=>match_token_sequence(
+              is_statement = <ls_statement>
+              it_expected  = VALUE #( ( `PACKAGE` ) ( `SIZE` ) ) ).
+
           IF mv_check_select_star = abap_true AND is_select_star( <ls_statement> ) = abap_true.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-select_star ).
           ENDIF.
         WHEN 'ENDSELECT'.
+          IF lv_has_package_size = abap_true.
+            lv_has_package_size = abap_false.
+            CONTINUE.
+          ENDIF.
+
           IF mv_check_endselect = abap_true.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-select_endselect ).

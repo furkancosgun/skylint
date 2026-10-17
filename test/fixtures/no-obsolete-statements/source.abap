@@ -13,6 +13,7 @@ CLASS zcl_test_no_obsolete_statement DEFINITION
     METHODS test_008.
     METHODS test_009.
     METHODS test_010.
+    METHODS test_011.
 ENDCLASS.
 
 CLASS zcl_test_no_obsolete_statement IMPLEMENTATION.
@@ -70,5 +71,11 @@ CLASS zcl_test_no_obsolete_statement IMPLEMENTATION.
     LOOP AT lt_tab INTO lv_i.
       SUM.
     ENDLOOP.
+  ENDMETHOD.
+
+  METHOD test_011.
+    DATA lv_x TYPE i.
+    DATA lv_y TYPE i.
+    ADD lv_x TO lv_y.
   ENDMETHOD.
 ENDCLASS.

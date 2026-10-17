@@ -66,5 +66,14 @@
     "line": 5,
     "column": 6,
     "quickfixes": []
+  },
+  {
+    "method": "TEST_011",
+    "code": "OBSOLETE",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "REPLACE_OB"
+    ]
   }
 ]

@@ -60,6 +60,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | `CHECK_EXPORT_MEMORY` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
 | `CHECK_FORM` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
 | `CHECK_LOOP_CTL` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
+| `CHECK_ADD` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
 
 ## CLI & CI/CD Configuration
 
@@ -81,6 +82,7 @@ checks:
       checkExportMemory: true
       checkForm: true
       checkLoopCtl: true
+      checkAdd: true
 ```
 
 ## Suppression

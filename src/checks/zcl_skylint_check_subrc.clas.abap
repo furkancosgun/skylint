@@ -104,6 +104,23 @@ CLASS zcl_skylint_check_subrc IMPLEMENTATION.
         rv_sets = mv_check_find_search.
       WHEN 'ASSIGN'.
         rv_sets = mv_check_assign.
+      WHEN 'OPEN'.
+        IF zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
+                                                   iv_index     = 2
+                                                   iv_expected  = `DATASET` ) = abap_true.
+          rv_sets = abap_true.
+        ENDIF.
+      WHEN 'UPDATE'.
+        IF zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                             iv_lexeme    = 'SET' ) > 0.
+          rv_sets = abap_true.
+        ENDIF.
+      WHEN 'DELETE'.
+        IF zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
+                                                   iv_index     = 2
+                                                   iv_expected  = `FROM` ) = abap_true.
+          rv_sets = abap_true.
+        ENDIF.
     ENDCASE.
   ENDMETHOD.
 

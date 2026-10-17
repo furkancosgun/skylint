@@ -7,6 +7,7 @@ CLASS zcl_test_prefer_corresponding DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
+    METHODS test_005.
 ENDCLASS.
 
 CLASS zcl_test_prefer_corresponding IMPLEMENTATION.
@@ -32,5 +33,11 @@ CLASS zcl_test_prefer_corresponding IMPLEMENTATION.
     DATA: BEGIN OF ls_a, b TYPE i, END OF ls_a.
     DATA: BEGIN OF ls_b, b TYPE i, END OF ls_b.
     ls_b = CORRESPONDING #( ls_a ).
+  ENDMETHOD.
+
+  METHOD test_005.
+    DATA: BEGIN OF ls_src, a TYPE i, END OF ls_src.
+    DATA: BEGIN OF ls_dst, a TYPE i, END OF ls_dst.
+    MOVE-CORRESPONDING ls_src TO ls_dst EXPANDING NESTED TABLES.
   ENDMETHOD.
 ENDCLASS.

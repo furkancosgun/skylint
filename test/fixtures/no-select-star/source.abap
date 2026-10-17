@@ -7,6 +7,7 @@ CLASS zcl_test_no_select_star DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
+    METHODS test_005.
 ENDCLASS.
 
 CLASS zcl_test_no_select_star IMPLEMENTATION.
@@ -30,5 +31,11 @@ CLASS zcl_test_no_select_star IMPLEMENTATION.
     DATA ls_row TYPE zskylint_dummy.
     DATA ls_key TYPE string.
     SELECT SINGLE field1 FROM zskylint_dummy INTO @ls_row WHERE field1 = @ls_key.
+  ENDMETHOD.
+
+  METHOD test_005.
+    DATA lt_tab TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
+    SELECT field1 FROM zskylint_dummy INTO TABLE @lt_tab PACKAGE SIZE 100.
+    ENDSELECT.
   ENDMETHOD.
 ENDCLASS.
