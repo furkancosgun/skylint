@@ -217,24 +217,7 @@ ENDIF.`,
 ENDIF.`,
     },
   },
-  {
-    ruleId: 'no-empty-catch',
-    className: 'ZCL_SKYLINT_NO_EMPTY_CATCH',
-    pseudoComment: 'NO_HANDLER',
-    category: 'anti-patterns',
-    example: {
-      bad: `TRY.
-    lo_calc->compute( ).
-  CATCH cx_sy_zerodivide.
-    " Silently ignored exception
-ENDTRY.`,
-      good: `TRY.
-    lo_calc->compute( ).
-  CATCH cx_sy_zerodivide INTO DATA(lx_error).
-    logger->record( lx_error ).
-ENDTRY.`,
-    },
-  },
+
   {
     ruleId: 'no-duplicate-conditions',
     className: 'ZCL_SKYLINT_NO_DUP_COND',
@@ -511,26 +494,7 @@ use_value( lv_value ).`,
       good: `cl_helper=>execute( lv_data ).`,
     },
   },
-  {
-    ruleId: 'no-try-without-catch',
-    className: 'ZCL_SKYLINT_NO_TRY_NO_CATCH',
-    pseudoComment: 'TRY_NO_CATCH',
-    category: 'anti-patterns',
-    example: {
-      bad: `TRY.
-    do_work( ).
-  CLEANUP.
-    cleanup( ).
-ENDTRY.`,
-      good: `TRY.
-    do_work( ).
-  CATCH cx_failed INTO DATA(lx_err).
-    handle( lx_err ).
-  CLEANUP.
-    cleanup( ).
-ENDTRY.`,
-    },
-  },
+
   {
     ruleId: 'prefer-corresponding',
     className: 'ZCL_SKYLINT_PREF_CORRESP',
@@ -615,9 +579,9 @@ rv_success = abap_true.`,
     },
   },
   {
-    ruleId: 'no-dangerous-dynamic',
-    className: 'ZCL_SKYLINT_NO_DYNAMIC_STMT',
-    pseudoComment: 'DYNAMIC_STMT',
+    ruleId: 'dangerous-statement',
+    className: 'ZCL_SKYLINT_NO_DANGEROUS_STMT',
+    pseudoComment: 'DANGEROUS_STMT',
     category: 'security',
     example: {
       bad: `EXEC SQL.
@@ -974,16 +938,7 @@ ENDLOOP.`,
 METHODS should_calculate_discount FOR TESTING.`,
     },
   },
-  {
-    ruleId: 'no-raw-dynamic-sql',
-    className: 'ZCL_SKYLINT_NO_RAW_DYN_SQL',
-    pseudoComment: 'RAW_DYN_SQL',
-    category: 'security',
-    example: {
-      bad: `SELECT * FROM (lv_table) INTO TABLE @lt_customers.`,
-      good: `SELECT * FROM /dmo/customer INTO TABLE @lt_customers.`,
-    },
-  },
+
   {
     ruleId: 'prefer-final-method',
     className: 'ZCL_SKYLINT_PREF_FINAL_METH',
@@ -1114,19 +1069,7 @@ ENDMETHOD.`,
       good: `METHODS process IMPORTING iv_data TYPE string.`,
     },
   },
-  {
-    ruleId: 'no-forbidden-statements',
-    className: 'ZCL_SKYLINT_NO_FORBIDDEN',
-    pseudoComment: 'FORBIDDEN',
-    category: 'security',
-    example: {
-      bad: `BREAK-POINT.
-DEFINE append_item.
-  append &1 to &2.
-END-OF-DEFINITION.`,
-      good: `" Remove hardcoded break-points and replace DEFINE macros with methods`,
-    },
-  },
+
   {
     ruleId: 'prefer-case',
     className: 'ZCL_SKYLINT_PREF_CASE',
@@ -1158,6 +1101,66 @@ ENDCASE.`,
     example: {
       bad: `DATA lv_code(10) TYPE c.`,
       good: `DATA lv_code TYPE c LENGTH 10.`,
+    },
+  },
+  {
+    ruleId: 'max-one-statement',
+    className: 'ZCL_SKYLINT_MAX_ONE_STMT',
+    pseudoComment: 'ONE_STMT',
+    category: 'clean-abap',
+    example: {
+      bad: `lv_a = 1. lv_b = 2.`,
+      good: `lv_a = 1.\nlv_b = 2.`,
+    },
+  },
+  {
+    ruleId: 'names-no-dash',
+    className: 'ZCL_SKYLINT_NAMES_NO_DASH',
+    pseudoComment: 'NO_DASH',
+    category: 'anti-patterns',
+    example: {
+      bad: `DATA foo-bar TYPE i.`,
+      good: `DATA foobar TYPE i.`,
+    },
+  },
+  {
+    ruleId: 'prefer-inline',
+    className: 'ZCL_SKYLINT_PREF_INLINE',
+    pseudoComment: 'PREFER_INLINE',
+    category: 'clean-abap',
+    example: {
+      bad: `DATA lv_count TYPE i.\nlv_count = 10.`,
+      good: `DATA(lv_count) = 10.`,
+    },
+  },
+  {
+    ruleId: 'slow-param-passing',
+    className: 'ZCL_SKYLINT_SLOW_PARAM_PASS',
+    pseudoComment: 'SLOW_PARAM',
+    category: 'performance',
+    example: {
+      bad: `METHODS process IMPORTING VALUE(iv_text) TYPE string.`,
+      good: `METHODS process IMPORTING iv_text TYPE string.`,
+    },
+  },
+  {
+    ruleId: 'modify-own-tables',
+    className: 'ZCL_SKYLINT_MODIFY_OWN_TAB',
+    pseudoComment: 'OWN_TABLES',
+    category: 'security',
+    example: {
+      bad: `DELETE FROM mara WHERE matnr = '100'.`,
+      good: `DELETE FROM zmara WHERE matnr = '100'.`,
+    },
+  },
+  {
+    ruleId: 'no-dynamic-stuff',
+    className: 'ZCL_SKYLINT_NO_DYNAMIC_STMT',
+    pseudoComment: 'NO_DYNAMIC',
+    category: 'security',
+    example: {
+      bad: `CALL FUNCTION lv_func_name.`,
+      good: `CALL FUNCTION 'BAPI_USER_GET_DETAIL'.`,
     },
   },
 ];

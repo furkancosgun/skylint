@@ -20,6 +20,7 @@ CLASS zcl_skylint_no_param_escape DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'PARAM_ESCAPE'.
+
     METHODS build_unescape_quickfix
       IMPORTING is_statement       TYPE if_ci_atc_source_code_provider=>ty_statement
                 iv_stmt_idx        TYPE i
@@ -33,15 +34,15 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_param_escape IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Detect unnecessary exclamation mark parameter escape (!iv_param)'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code     = c_finding_codes-param_escape
-                                       severity = if_ci_atc_check=>finding_severities-warning
-                                       text     = 'Escape params with ! only on keyword clash'
-                                       pseudo_comment = c_pseudo_comment ) )
-                                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-unescape
-                                                                short_text = 'Remove ! escape' ) ) ) ).
+    super->constructor(
+        VALUE #( description       = 'Detect unnecessary exclamation mark parameter escape (!iv_param)'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #( ( code           = c_finding_codes-param_escape
+                                                severity       = if_ci_atc_check=>finding_severities-warning
+                                                text           = 'Escape params with ! only on keyword clash'
+                                                pseudo_comment = c_pseudo_comment ) )
+                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-unescape
+                                                short_text = 'Remove ! escape' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

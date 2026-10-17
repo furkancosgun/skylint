@@ -28,9 +28,9 @@ CLASS zcl_skylint_no_client_spec IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Avoid USING CLIENT or CLIENT SPECIFIED in ABAP SQL'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code     = c_finding_codes-client_spec
-                                       severity = if_ci_atc_check=>finding_severities-warning
-                                       text     = 'Avoid explicit client specification in ABAP SQL'
+                                     ( code           = c_finding_codes-client_spec
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Avoid explicit client specification in ABAP SQL'
                                        pseudo_comment = c_pseudo_comment ) )
                                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-drop_client
                                                                 short_text = 'Remove client specification' ) ) ) ).

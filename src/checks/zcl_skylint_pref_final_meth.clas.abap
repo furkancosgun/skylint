@@ -28,9 +28,9 @@ CLASS zcl_skylint_pref_final_meth IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Prefer marking non-overridden methods as FINAL'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code     = c_finding_codes-prefer_final
-                                       severity = if_ci_atc_check=>finding_severities-warning
-                                       text     = 'Declare method as FINAL if it is not intended to be redefined'
+                                     ( code           = c_finding_codes-prefer_final
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Declare method as FINAL if it is not intended to be redefined'
                                        pseudo_comment = c_pseudo_comment ) )
                                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-add_final
                                                                 short_text = 'Add FINAL' ) ) ) ).

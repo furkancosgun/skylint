@@ -7,6 +7,9 @@ CLASS zcl_test_no_obsolete_statement DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
+    METHODS test_005.
+    METHODS test_006.
+    METHODS test_007.
 ENDCLASS.
 
 
@@ -32,5 +35,17 @@ CLASS zcl_test_no_obsolete_statement IMPLEMENTATION.
     DATA lt_tab TYPE STANDARD TABLE OF i WITH DEFAULT KEY.
     CLEAR lt_tab.
   ENDMETHOD.
-ENDCLASS.
 
+  METHOD test_005.
+    BREAK-POINT.
+  ENDMETHOD.
+
+  METHOD test_006.
+    STATICS sv_stat TYPE i.
+  ENDMETHOD.
+
+  METHOD test_007.
+    DATA lv_val TYPE i.
+    EXPORT lv_val TO MEMORY ID 'KEY'.
+  ENDMETHOD.
+ENDCLASS.

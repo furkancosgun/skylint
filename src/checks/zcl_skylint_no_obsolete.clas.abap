@@ -20,44 +20,54 @@ CLASS zcl_skylint_no_obsolete DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'OBSOLETE'.
-    DATA mv_check_move         TYPE abap_bool VALUE abap_true.
-    DATA mv_check_refresh      TYPE abap_bool VALUE abap_true.
-    DATA mv_check_compute      TYPE abap_bool VALUE abap_true.
-    DATA mv_check_tables       TYPE abap_bool VALUE abap_true.
-    DATA mv_check_field_groups TYPE abap_bool VALUE abap_true.
-    DATA mv_check_test_seams   TYPE abap_bool VALUE abap_true.
 
-    METHODS is_obsolete_keyword
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_res) TYPE abap_bool.
+    DATA mv_check_move          TYPE abap_bool VALUE abap_true.
+    DATA mv_check_refresh       TYPE abap_bool VALUE abap_true.
+    DATA mv_check_compute       TYPE abap_bool VALUE abap_true.
+    DATA mv_check_tables        TYPE abap_bool VALUE abap_true.
+    DATA mv_check_field_groups  TYPE abap_bool VALUE abap_true.
+    DATA mv_check_test_seams    TYPE abap_bool VALUE abap_true.
+    DATA mv_check_break         TYPE abap_bool VALUE abap_true.
+    DATA mv_check_statics       TYPE abap_bool VALUE abap_true.
+    DATA mv_check_define        TYPE abap_bool VALUE abap_true.
+    DATA mv_check_export_memory TYPE abap_bool VALUE abap_true.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Avoid obsolete statements (MOVE, REFRESH, etc.)'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code     = c_finding_codes-obsolete_statement
-                                       severity = if_ci_atc_check=>finding_severities-warning
-                                       text     = 'Avoid obsolete statement; use modern expressions instead'
-                                       pseudo_comment = c_pseudo_comment ) )
-                                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-replace_obsolete
-                                                                short_text = 'Replace obsolete statement' ) )
-                                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                                                              ( name  = 'CHECK_MOVE'
-                                                                value = REF #( mv_check_move ) )
-                                                              ( name  = 'CHECK_REFRESH'
-                                                                value = REF #( mv_check_refresh ) )
-                                                              ( name  = 'CHECK_COMPUTE'
-                                                                value = REF #( mv_check_compute ) )
-                                                              ( name  = 'CHECK_TABLES'
-                                                                value = REF #( mv_check_tables ) )
-                                                              ( name  = 'CHECK_FIELD_GROUPS'
-                                                                value = REF #( mv_check_field_groups ) )
-                                                              ( name  = 'CHECK_TEST_SEAMS'
-                                                                value = REF #( mv_check_test_seams ) ) ) ) ).
+    super->constructor(
+        VALUE #( description       = 'Avoid obsolete or deprecated statements (MOVE, REFRESH, BREAK, STATICS, etc.)'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #(
+                     ( code           = c_finding_codes-obsolete_statement
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Avoid obsolete or deprecated statement; use modern Clean ABAP construct'
+                       pseudo_comment = c_pseudo_comment ) )
+                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-replace_obsolete
+                                                short_text = 'Replace obsolete statement' ) )
+                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                              ( name  = 'CHECK_MOVE'
+                                                value = REF #( mv_check_move ) )
+                                              ( name  = 'CHECK_REFRESH'
+                                                value = REF #( mv_check_refresh ) )
+                                              ( name  = 'CHECK_COMPUTE'
+                                                value = REF #( mv_check_compute ) )
+                                              ( name  = 'CHECK_TABLES'
+                                                value = REF #( mv_check_tables ) )
+                                              ( name  = 'CHECK_FIELD_GROUPS'
+                                                value = REF #( mv_check_field_groups ) )
+                                              ( name  = 'CHECK_TEST_SEAMS'
+                                                value = REF #( mv_check_test_seams ) )
+                                              ( name  = 'CHECK_BREAK'
+                                                value = REF #( mv_check_break ) )
+                                              ( name  = 'CHECK_STATICS'
+                                                value = REF #( mv_check_statics ) )
+                                              ( name  = 'CHECK_DEFINE'
+                                                value = REF #( mv_check_define ) )
+                                              ( name  = 'CHECK_EXPORT_MEMORY'
+                                                value = REF #( mv_check_export_memory ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -88,6 +98,7 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
                                                              iv_index     = 4 ).
             lv_line = |{ lv_dst } = { lv_src }.|.
           ENDIF.
+
         WHEN 'REFRESH'.
           IF mv_check_refresh = abap_false.
             CONTINUE.
@@ -97,6 +108,7 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
                                                              iv_index     = 2 ).
             lv_line = |CLEAR { lv_dst }.|.
           ENDIF.
+
         WHEN 'COMPUTE'.
           IF mv_check_compute = abap_false.
             CONTINUE.
@@ -110,18 +122,48 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
           ELSE.
             CONTINUE.
           ENDIF.
+
         WHEN 'TABLES'.
           IF mv_check_tables = abap_false.
             CONTINUE.
           ENDIF.
+
         WHEN 'FIELD-GROUPS'.
           IF mv_check_field_groups = abap_false.
             CONTINUE.
           ENDIF.
+
         WHEN 'TEST-SEAM' OR 'TEST-INJECT'.
           IF mv_check_test_seams = abap_false.
             CONTINUE.
           ENDIF.
+
+        WHEN 'BREAK-POINT' OR 'BREAK'.
+          IF mv_check_break = abap_false.
+            CONTINUE.
+          ENDIF.
+
+        WHEN 'STATICS'.
+          IF mv_check_statics = abap_false.
+            CONTINUE.
+          ENDIF.
+
+        WHEN 'DEFINE'.
+          IF mv_check_define = abap_false.
+            CONTINUE.
+          ENDIF.
+
+        WHEN 'EXPORT'.
+          IF mv_check_export_memory = abap_false.
+            CONTINUE.
+          ENDIF.
+          IF     zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                         iv_lexeme    = 'MEMORY' )     = abap_false
+             AND zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                         iv_lexeme    = 'DATABASE' )   = abap_false.
+            CONTINUE.
+          ENDIF.
+
         WHEN OTHERS.
           CONTINUE.
       ENDCASE.
@@ -136,20 +178,5 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
                         iv_finding_code = c_finding_codes-obsolete_statement
                         is_quickfix     = ls_quickfix ).
     ENDLOOP.
-  ENDMETHOD.
-
-  METHOD is_obsolete_keyword.
-    rv_res = abap_false.
-
-    CASE is_statement-keyword.
-      WHEN 'MOVE' OR 'REFRESH' OR 'TEST-SEAM' OR 'TEST-INJECT' OR 'TABLES' OR 'FIELD-GROUPS'.
-        rv_res = abap_true.
-      WHEN 'COMPUTE'.
-        IF zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                                                   iv_index     = 1
-                                                   iv_expected  = `COMPUTE` ) = abap_true.
-          rv_res = abap_true.
-        ENDIF.
-    ENDCASE.
   ENDMETHOD.
 ENDCLASS.

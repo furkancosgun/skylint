@@ -16,6 +16,7 @@ CLASS zcl_skylint_no_shortdump DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'SHORTDUMP'.
+
     METHODS is_raise_shortdump
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -25,13 +26,12 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_shortdump IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #(
-                            description       = 'skylint: Avoid RAISE SHORTDUMP (prefer graceful exceptions)'
-                            remote_enablement = abap_true
-                            finding_codes     = VALUE #(
-                                ( code     = c_finding_codes-raise_shortdump
-                                  severity = if_ci_atc_check=>finding_severities-warning
-                                  text     = 'Avoid RAISE SHORTDUMP; prefer graceful class-based exceptions'
+    super->constructor( VALUE #( description       = 'skylint: Avoid RAISE SHORTDUMP (prefer graceful exceptions)'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-raise_shortdump
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Avoid RAISE SHORTDUMP; prefer graceful class-based exceptions'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 

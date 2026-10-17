@@ -16,6 +16,7 @@ CLASS zcl_skylint_max_params DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'MAX_PARAMS'.
+
     DATA mv_max_parameters TYPE i VALUE 8.
 
     METHODS count_parameters
@@ -31,10 +32,10 @@ CLASS zcl_skylint_max_params IMPLEMENTATION.
         VALUE #( description       = 'Method signature cleanliness (excessive parameter count)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code     = c_finding_codes-too_many_parameters
-                       severity = if_ci_atc_check=>finding_severities-warning
-                       text     = 'Method signature has too many parameters; consider grouping into structures'
-                                       pseudo_comment = c_pseudo_comment ) )
+                     ( code           = c_finding_codes-too_many_parameters
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Method signature has too many parameters; consider grouping into structures'
+                       pseudo_comment = c_pseudo_comment ) )
                  attributes        = VALUE #( ( name  = 'MAX_PARAMETERS'
                                                 kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
                                                 value = REF #( mv_max_parameters ) ) ) ) ).

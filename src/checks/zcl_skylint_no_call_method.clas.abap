@@ -20,6 +20,7 @@ CLASS zcl_skylint_no_call_method DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'CALL_METH'.
+
     METHODS is_dynamic_call
       IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_dynamic) TYPE abap_bool.
@@ -31,9 +32,9 @@ CLASS zcl_skylint_no_call_method IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Avoid static CALL METHOD statements'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code     = c_finding_codes-call_method
-                                       severity = if_ci_atc_check=>finding_severities-warning
-                                       text     = 'Avoid static CALL METHOD; use functional method call instead'
+                                     ( code           = c_finding_codes-call_method
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Avoid static CALL METHOD; use functional method call instead'
                                        pseudo_comment = c_pseudo_comment ) )
                                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-functional_call
                                                                 short_text = 'Use functional call' ) ) ) ).

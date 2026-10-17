@@ -16,6 +16,7 @@ CLASS zcl_skylint_max_method_len DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'METHOD_LEN'.
+
     DATA mv_max_statements TYPE i VALUE 5.
 
 ENDCLASS.
@@ -26,10 +27,10 @@ CLASS zcl_skylint_max_method_len IMPLEMENTATION.
     super->constructor(
         VALUE #( description       = 'skylint: Method Length Limit (excessive statement count)'
                  remote_enablement = abap_true
-                 finding_codes     = VALUE #( ( code     = c_finding_codes-method_length
-                                                severity = if_ci_atc_check=>finding_severities-warning
-                                                text     = 'Method length exceeds maximum allowed statement limit'
-                                       pseudo_comment = c_pseudo_comment ) )
+                 finding_codes     = VALUE #( ( code           = c_finding_codes-method_length
+                                                severity       = if_ci_atc_check=>finding_severities-warning
+                                                text           = 'Method length exceeds maximum allowed statement limit'
+                                                pseudo_comment = c_pseudo_comment ) )
                  attributes        = VALUE #( ( name  = 'MAX_STATEMENTS'
                                                 kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
                                                 value = REF #( mv_max_statements ) ) ) ) ).

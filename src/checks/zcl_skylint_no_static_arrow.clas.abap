@@ -20,6 +20,7 @@ CLASS zcl_skylint_no_static_arrow DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'STATIC_ARROW'.
+
     METHODS class_of_static_call
       IMPORTING is_token        TYPE if_ci_atc_source_code_provider=>ty_token
       RETURNING VALUE(rv_class) TYPE string.
@@ -40,10 +41,10 @@ CLASS zcl_skylint_no_static_arrow IMPLEMENTATION.
     super->constructor(
         VALUE #( description       = 'Avoid calling static methods via instance arrow (->)'
                  remote_enablement = abap_true
-                 finding_codes     = VALUE #( ( code     = c_finding_codes-static_call_via_instance
-                                                severity = if_ci_atc_check=>finding_severities-warning
-                                                text     = 'Call static method using => instead of ->'
-                                       pseudo_comment = c_pseudo_comment ) )
+                 finding_codes     = VALUE #( ( code           = c_finding_codes-static_call_via_instance
+                                                severity       = if_ci_atc_check=>finding_severities-warning
+                                                text           = 'Call static method using => instead of ->'
+                                                pseudo_comment = c_pseudo_comment ) )
                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-use_class_call
                                                 short_text = 'Call via class name' ) ) ) ).
   ENDMETHOD.

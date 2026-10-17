@@ -16,6 +16,7 @@ CLASS zcl_skylint_pref_early_ret DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'EARLY_RETURN'.
+
     METHODS get_first_executable_stmt
       IMPORTING it_statements TYPE if_ci_atc_source_code_provider=>ty_statements
       EXPORTING ev_index      TYPE i
@@ -34,10 +35,10 @@ CLASS zcl_skylint_pref_early_ret IMPLEMENTATION.
         VALUE #( description       = 'Use early RETURN guard clause instead of wrapping method in IF block'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code     = c_finding_codes-guard_method
-                       severity = if_ci_atc_check=>finding_severities-warning
-                       text     = 'Invert IF condition and use RETURN to reduce nesting in method'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                     ( code           = c_finding_codes-guard_method
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Invert IF condition and use RETURN to reduce nesting in method'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

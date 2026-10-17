@@ -7,6 +7,9 @@ CLASS zcl_test_no_empty_block DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
+    METHODS test_005.
+    METHODS test_006.
+    METHODS test_007.
 ENDCLASS.
 
 
@@ -20,7 +23,7 @@ CLASS zcl_test_no_empty_block IMPLEMENTATION.
   METHOD test_002.
     DATA lv_x TYPE i.
     IF lv_x = 1.
-    lv_x = 2.
+      lv_x = 2.
     ENDIF.
   ENDMETHOD.
 
@@ -39,5 +42,26 @@ CLASS zcl_test_no_empty_block IMPLEMENTATION.
       lv_n = lv_n + 1.
     ENDLOOP.
   ENDMETHOD.
-ENDCLASS.
 
+  METHOD test_005.
+    TRY.
+      DATA(lv_val) = 1.
+    CATCH cx_root.
+    ENDTRY.
+  ENDMETHOD.
+
+  METHOD test_006.
+    TRY.
+      DATA(lv_v) = 2.
+    CLEANUP.
+    ENDTRY.
+  ENDMETHOD.
+
+  METHOD test_007.
+    TRY.
+      DATA(lv_k) = 3.
+    CATCH cx_root.
+      RETURN.
+    ENDTRY.
+  ENDMETHOD.
+ENDCLASS.

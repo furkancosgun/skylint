@@ -7,6 +7,7 @@ CLASS zcl_skylint_no_empty_block DEFINITION
     CONSTANTS:
       BEGIN OF c_finding_codes,
         empty_control_block TYPE if_ci_atc_check=>ty_finding_code VALUE 'EMPTYCTRL',
+        try_without_catch   TYPE if_ci_atc_check=>ty_finding_code VALUE 'TRYWITHOUT',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -16,30 +17,40 @@ CLASS zcl_skylint_no_empty_block DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'EMPTY_BLOCK'.
-    DATA mv_check_if    TYPE abap_bool VALUE abap_true.
-    DATA mv_check_loop  TYPE abap_bool VALUE abap_true.
-    DATA mv_check_case  TYPE abap_bool VALUE abap_true.
-    DATA mv_check_try   TYPE abap_bool VALUE abap_true.
-    DATA mv_check_do    TYPE abap_bool VALUE abap_true.
-    DATA mv_check_while TYPE abap_bool VALUE abap_true.
+
+    DATA mv_check_if           TYPE abap_bool VALUE abap_true.
+    DATA mv_check_loop         TYPE abap_bool VALUE abap_true.
+    DATA mv_check_case         TYPE abap_bool VALUE abap_true.
+    DATA mv_check_try          TYPE abap_bool VALUE abap_true.
+    DATA mv_check_catch        TYPE abap_bool VALUE abap_true.
+    DATA mv_check_try_no_catch TYPE abap_bool VALUE abap_true.
+    DATA mv_check_do           TYPE abap_bool VALUE abap_true.
+    DATA mv_check_while        TYPE abap_bool VALUE abap_true.
 
     METHODS is_empty_control_block
       IMPORTING iv_current_kw TYPE string
                 iv_next_kw    TYPE string
       RETURNING VALUE(rv_is)  TYPE abap_bool.
 
+    METHODS try_has_catch
+      IMPORTING it_statements TYPE if_ci_atc_source_code_provider=>ty_statements
+                iv_start_idx  TYPE i
+      RETURNING VALUE(rv_has) TYPE abap_bool.
+
 ENDCLASS.
 
 
 CLASS zcl_skylint_no_empty_block IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Detect empty control blocks (IF, CASE, LOOP, TRY, etc.)'
+    super->constructor( VALUE #( description       = 'Detect empty control blocks (IF, CASE, LOOP, TRY, CATCH, etc.)'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code     = c_finding_codes-empty_control_block
-                                       severity = if_ci_atc_check=>finding_severities-warning
-                                       text     = 'Empty control block detected; remove redundant control statement'
-                                       pseudo_comment = c_pseudo_comment ) )
+                                     severity       = if_ci_atc_check=>finding_severities-warning
+                                     pseudo_comment = c_pseudo_comment
+                                     ( code = c_finding_codes-empty_control_block
+                                       text = 'Empty control block detected; remove redundant control statement' )
+                                     ( code = c_finding_codes-try_without_catch
+                                       text = 'TRY block without CATCH is superfluous' ) )
                                  attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
                                                               ( name  = 'CHECK_IF'
                                                                 value = REF #( mv_check_if ) )
@@ -49,6 +60,10 @@ CLASS zcl_skylint_no_empty_block IMPLEMENTATION.
                                                                 value = REF #( mv_check_case ) )
                                                               ( name  = 'CHECK_TRY'
                                                                 value = REF #( mv_check_try ) )
+                                                              ( name  = 'CHECK_CATCH'
+                                                                value = REF #( mv_check_catch ) )
+                                                              ( name  = 'CHECK_TRY_NO_CATCH'
+                                                                value = REF #( mv_check_try_no_catch ) )
                                                               ( name  = 'CHECK_DO'
                                                                 value = REF #( mv_check_do ) )
                                                               ( name  = 'CHECK_WHILE'
@@ -77,6 +92,17 @@ CLASS zcl_skylint_no_empty_block IMPLEMENTATION.
           IF mv_check_try = abap_false.
             CONTINUE.
           ENDIF.
+          IF     mv_check_try_no_catch = abap_true
+             AND try_has_catch( it_statements = is_procedure-statements
+                                iv_start_idx  = sy-tabix )              = abap_false.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-try_without_catch ).
+            CONTINUE.
+          ENDIF.
+        WHEN 'CATCH'.
+          IF mv_check_catch = abap_false.
+            CONTINUE.
+          ENDIF.
         WHEN 'DO'.
           IF mv_check_do = abap_false.
             CONTINUE.
@@ -85,6 +111,8 @@ CLASS zcl_skylint_no_empty_block IMPLEMENTATION.
           IF mv_check_while = abap_false.
             CONTINUE.
           ENDIF.
+        WHEN OTHERS.
+          CONTINUE.
       ENDCASE.
 
       ls_next_stmt = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_procedure-statements
@@ -96,6 +124,34 @@ CLASS zcl_skylint_no_empty_block IMPLEMENTATION.
                           iv_finding_code = c_finding_codes-empty_control_block ).
       ENDIF.
     ENDLOOP.
+  ENDMETHOD.
+
+  METHOD try_has_catch.
+    DATA lv_depth TYPE i.
+    DATA lv_idx   TYPE i.
+    DATA ls_stmt  TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_total TYPE i.
+
+    rv_has = abap_false.
+    lv_depth = 1.
+    lv_idx = iv_start_idx + 1.
+    lv_total = lines( it_statements ).
+
+    WHILE lv_idx <= lv_total AND lv_depth > 0.
+      ls_stmt = it_statements[ lv_idx ].
+      CASE ls_stmt-keyword.
+        WHEN 'TRY'.
+          lv_depth += 1.
+        WHEN 'ENDTRY'.
+          lv_depth -= 1.
+        WHEN 'CATCH'.
+          IF lv_depth = 1.
+            rv_has = abap_true.
+            RETURN.
+          ENDIF.
+      ENDCASE.
+      lv_idx += 1.
+    ENDWHILE.
   ENDMETHOD.
 
   METHOD is_empty_control_block.
@@ -129,6 +185,11 @@ CLASS zcl_skylint_no_empty_block IMPLEMENTATION.
 
       WHEN 'TRY'.
         IF iv_next_kw = 'CATCH' OR iv_next_kw = 'CLEANUP' OR iv_next_kw = 'ENDTRY'.
+          rv_is = abap_true.
+        ENDIF.
+
+      WHEN 'CATCH'.
+        IF iv_next_kw = 'CATCH' OR iv_next_kw = 'CLEANUP' OR iv_next_kw = 'ENDTRY' OR iv_next_kw = 'ENDCATCH'.
           rv_is = abap_true.
         ENDIF.
 

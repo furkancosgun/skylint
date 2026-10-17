@@ -20,6 +20,7 @@ CLASS zcl_skylint_no_yoda_cond DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'YODA_COND'.
+
     METHODS is_literal
       IMPORTING is_token     TYPE if_ci_atc_source_code_provider=>ty_token
       RETURNING VALUE(rv_is) TYPE abap_bool.
@@ -50,16 +51,16 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_yoda_cond IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Avoid Yoda conditions in comparison expressions'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code     = c_finding_codes-yoda_condition
-                       severity = if_ci_atc_check=>finding_severities-warning
-                       text     = 'Avoid Yoda conditions; place variable before literal in comparison'
-                                       pseudo_comment = c_pseudo_comment ) )
-                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-unyoda
-                                                short_text = 'Swap to variable-first comparison' ) ) ) ).
+    super->constructor( VALUE #(
+                            description       = 'Avoid Yoda conditions in comparison expressions'
+                            remote_enablement = abap_true
+                            finding_codes     = VALUE #(
+                                ( code           = c_finding_codes-yoda_condition
+                                  severity       = if_ci_atc_check=>finding_severities-warning
+                                  text           = 'Avoid Yoda conditions; place variable before literal in comparison'
+                                  pseudo_comment = c_pseudo_comment ) )
+                            quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-unyoda
+                                                           short_text = 'Swap to variable-first comparison' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

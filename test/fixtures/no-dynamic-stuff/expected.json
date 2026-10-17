@@ -1,0 +1,4 @@
+[
+  { "method": "TEST_001", "code": "DYN_STUFF", "line": 3, "column": 4 },
+  { "method": "TEST_002", "code": null }
+]

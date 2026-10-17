@@ -16,6 +16,7 @@ CLASS zcl_skylint_max_nesting DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'NESTING'.
+
     DATA mv_max_depth TYPE i VALUE 3.
 
     METHODS is_block_opener
@@ -34,11 +35,11 @@ CLASS zcl_skylint_max_nesting IMPLEMENTATION.
     super->constructor(
         VALUE #( description       = 'skylint: Nesting Depth Limit (excessive control block nesting)'
                  remote_enablement = abap_true
-                 finding_codes     = VALUE #( ( code     = c_finding_codes-nesting_depth
-                                                severity = if_ci_atc_check=>finding_severities-warning
-                                                text     = |Control block nesting depth exceeds|
-                                                         && |maximum allowed limit|
-                                       pseudo_comment = c_pseudo_comment ) )
+                 finding_codes     = VALUE #( ( code           = c_finding_codes-nesting_depth
+                                                severity       = if_ci_atc_check=>finding_severities-warning
+                                                text           = |Control block nesting depth exceeds|
+                                                               && |maximum allowed limit|
+                                                pseudo_comment = c_pseudo_comment ) )
                  attributes        = VALUE #( ( name  = 'MAX_DEPTH'
                                                 kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
                                                 value = REF #( mv_max_depth ) ) ) ) ).

@@ -24,9 +24,9 @@ CLASS zcl_skylint_no_like_objects IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Avoid LIKE referencing data objects; use explicit TYPE'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code     = c_finding_codes-avoid_like
-                                       severity = if_ci_atc_check=>finding_severities-warning
-                                       text     = 'Avoid LIKE for data declarations; specify TYPE explicitly'
+                                     ( code           = c_finding_codes-avoid_like
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Avoid LIKE for data declarations; specify TYPE explicitly'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 

@@ -28,9 +28,9 @@ CLASS zcl_skylint_pref_return IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Prefer RETURN over EXIT outside loop constructs'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code     = c_finding_codes-exit_outside_loop
-                                       severity = if_ci_atc_check=>finding_severities-warning
-                                       text     = 'Use RETURN instead of EXIT when leaving a procedure'
+                                     ( code           = c_finding_codes-exit_outside_loop
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Use RETURN instead of EXIT when leaving a procedure'
                                        pseudo_comment = c_pseudo_comment ) )
                                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-prefer_return
                                                                 short_text = 'Replace EXIT with RETURN' ) ) ) ).

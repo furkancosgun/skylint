@@ -16,6 +16,7 @@ CLASS zcl_skylint_pref_early_cont DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'EARLY_CONTINUE'.
+
     METHODS find_wrapping_if
       IMPORTING it_statements TYPE if_ci_atc_source_code_provider=>ty_statements
                 iv_loop_idx   TYPE i
@@ -29,10 +30,10 @@ CLASS zcl_skylint_pref_early_cont IMPLEMENTATION.
         VALUE #( description       = 'Use early CONTINUE guard clause instead of wrapping loop in IF block'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code     = c_finding_codes-guard_loop
-                       severity = if_ci_atc_check=>finding_severities-warning
-                       text     = 'Invert IF condition and use CONTINUE to reduce nesting in loop'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                     ( code           = c_finding_codes-guard_loop
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Invert IF condition and use CONTINUE to reduce nesting in loop'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

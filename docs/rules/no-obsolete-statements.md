@@ -4,7 +4,7 @@
 
 ## Description
 
-Avoid obsolete statements (MOVE, REFRESH, etc.).
+Avoid obsolete or deprecated statements (MOVE, REFRESH, BREAK, STATICS, etc.).
 
 ## ❌ Non-Compliant Code
 

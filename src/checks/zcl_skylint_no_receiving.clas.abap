@@ -20,6 +20,7 @@ CLASS zcl_skylint_no_receiving DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'RECEIVING'.
+
     METHODS has_receiving
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_has) TYPE abap_bool.
@@ -41,9 +42,9 @@ CLASS zcl_skylint_no_receiving IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Omit RECEIVING in method calls'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code     = c_finding_codes-omit_receiving
-                                       severity = if_ci_atc_check=>finding_severities-warning
-                                       text     = 'Omit RECEIVING keyword; use functional call or omit parameter'
+                                     ( code           = c_finding_codes-omit_receiving
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Omit RECEIVING keyword; use functional call or omit parameter'
                                        pseudo_comment = c_pseudo_comment ) )
                                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-omit_receiving
                                                                 short_text = 'Hoist RECEIVING to LHS' ) ) ) ).

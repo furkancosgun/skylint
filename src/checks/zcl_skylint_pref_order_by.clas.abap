@@ -16,6 +16,7 @@ CLASS zcl_skylint_pref_order_by DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'ORDER_BY'.
+
     METHODS is_unorder_select_up_to
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -29,10 +30,10 @@ CLASS zcl_skylint_pref_order_by IMPLEMENTATION.
         VALUE #( description       = 'skylint: SELECT UP TO 1 ROWS requires ORDER BY'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code     = c_finding_codes-missing_order_by
-                       severity = if_ci_atc_check=>finding_severities-warning
-                       text     = 'SELECT UP TO 1 ROWS requires an explicit ORDER BY clause for determinism'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                     ( code           = c_finding_codes-missing_order_by
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'SELECT UP TO 1 ROWS requires an explicit ORDER BY clause for determinism'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

@@ -17,6 +17,7 @@ CLASS zcl_skylint_no_select_star DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'SELECT_STAR'.
+
     DATA mv_check_select_star TYPE abap_bool VALUE abap_true.
     DATA mv_check_endselect   TYPE abap_bool VALUE abap_true.
 
@@ -33,10 +34,10 @@ CLASS zcl_skylint_no_select_star IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      severity = if_ci_atc_check=>finding_severities-warning
-                                     ( code = c_finding_codes-select_star
-                                       text = 'Avoid SELECT *; specify required columns explicitly' )
-                                     ( code = c_finding_codes-select_endselect
-                                       text = 'Avoid SELECT ... ENDSELECT loop; use array fetch INTO TABLE'
+                                     ( code           = c_finding_codes-select_star
+                                       text           = 'Avoid SELECT *; specify required columns explicitly' )
+                                     ( code           = c_finding_codes-select_endselect
+                                       text           = 'Avoid SELECT ... ENDSELECT loop; use array fetch INTO TABLE'
                                        pseudo_comment = c_pseudo_comment ) )
                                  attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
                                                               ( name  = 'CHECK_SELECT_STAR'

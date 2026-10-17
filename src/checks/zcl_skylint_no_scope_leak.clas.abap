@@ -16,6 +16,7 @@ CLASS zcl_skylint_no_scope_leak DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'SCOPE_LEAK'.
+
     TYPES: BEGIN OF ty_scoped_var,
              full_name TYPE if_ci_atc_source_code_provider=>ty_full_name,
              block_id  TYPE i,
@@ -61,10 +62,10 @@ CLASS zcl_skylint_no_scope_leak IMPLEMENTATION.
         VALUE #( description       = 'Scope of variable (avoid variable leaking outside control blocks)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code     = c_finding_codes-scope_leak
-                       severity = if_ci_atc_check=>finding_severities-warning
-                       text     = 'Variable declared in inner block is referenced outside its scope'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                     ( code           = c_finding_codes-scope_leak
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Variable declared in inner block is referenced outside its scope'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

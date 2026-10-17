@@ -145,6 +145,14 @@ export default defineConfig({
       {
         "text": "prefer-case",
         "link": "/rules/prefer-case"
+      },
+      {
+        "text": "max-one-statement",
+        "link": "/rules/max-one-statement"
+      },
+      {
+        "text": "prefer-inline",
+        "link": "/rules/prefer-inline"
       }
     ]
   },
@@ -187,10 +195,6 @@ export default defineConfig({
       {
         "text": "no-empty-block",
         "link": "/rules/no-empty-block"
-      },
-      {
-        "text": "no-empty-catch",
-        "link": "/rules/no-empty-catch"
       },
       {
         "text": "no-duplicate-conditions",
@@ -237,10 +241,6 @@ export default defineConfig({
         "link": "/rules/no-single-param-name"
       },
       {
-        "text": "no-try-without-catch",
-        "link": "/rules/no-try-without-catch"
-      },
-      {
         "text": "no-sy-modify",
         "link": "/rules/no-sy-modify"
       },
@@ -279,6 +279,10 @@ export default defineConfig({
       {
         "text": "no-inline-length",
         "link": "/rules/no-inline-length"
+      },
+      {
+        "text": "names-no-dash",
+        "link": "/rules/names-no-dash"
       }
     ]
   },
@@ -305,6 +309,10 @@ export default defineConfig({
       {
         "text": "require-transporting",
         "link": "/rules/require-transporting"
+      },
+      {
+        "text": "slow-param-passing",
+        "link": "/rules/slow-param-passing"
       }
     ]
   },
@@ -313,8 +321,8 @@ export default defineConfig({
     "collapsed": false,
     "items": [
       {
-        "text": "no-dangerous-dynamic",
-        "link": "/rules/no-dangerous-dynamic"
+        "text": "dangerous-statement",
+        "link": "/rules/dangerous-statement"
       },
       {
         "text": "require-auth-check",
@@ -341,16 +349,16 @@ export default defineConfig({
         "link": "/rules/no-commit-work"
       },
       {
-        "text": "no-raw-dynamic-sql",
-        "link": "/rules/no-raw-dynamic-sql"
-      },
-      {
         "text": "no-production-assert",
         "link": "/rules/no-production-assert"
       },
       {
-        "text": "no-forbidden-statements",
-        "link": "/rules/no-forbidden-statements"
+        "text": "modify-own-tables",
+        "link": "/rules/modify-own-tables"
+      },
+      {
+        "text": "no-dynamic-stuff",
+        "link": "/rules/no-dynamic-stuff"
       }
     ]
   },

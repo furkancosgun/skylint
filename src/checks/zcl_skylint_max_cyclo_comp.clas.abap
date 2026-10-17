@@ -16,6 +16,7 @@ CLASS zcl_skylint_max_cyclo_comp DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'CYCLO_COMP'.
+
     DATA mv_max_complexity TYPE i VALUE 5.
 
     METHODS calculate_complexity
@@ -30,10 +31,10 @@ CLASS zcl_skylint_max_cyclo_comp IMPLEMENTATION.
     super->constructor(
         VALUE #( description       = 'skylint: Cyclomatic Complexity Threshold'
                  remote_enablement = abap_true
-                 finding_codes     = VALUE #( ( code     = c_finding_codes-cyclomatic_complexity
-                                                severity = if_ci_atc_check=>finding_severities-warning
-                                                text     = 'Procedure cyclomatic complexity exceeds threshold'
-                                       pseudo_comment = c_pseudo_comment ) )
+                 finding_codes     = VALUE #( ( code           = c_finding_codes-cyclomatic_complexity
+                                                severity       = if_ci_atc_check=>finding_severities-warning
+                                                text           = 'Procedure cyclomatic complexity exceeds threshold'
+                                                pseudo_comment = c_pseudo_comment ) )
                  attributes        = VALUE #( ( name  = 'MAX_COMPLEXITY'
                                                 kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
                                                 value = REF #( mv_max_complexity ) ) ) ) ).

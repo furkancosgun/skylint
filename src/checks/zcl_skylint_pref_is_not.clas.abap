@@ -20,6 +20,7 @@ CLASS zcl_skylint_pref_is_not DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'IS_NOT'.
+
     METHODS has_not_is_pattern
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
       EXPORTING ev_not_index TYPE i
@@ -33,10 +34,10 @@ CLASS zcl_skylint_pref_is_not IMPLEMENTATION.
   METHOD constructor.
     super->constructor( VALUE #( description       = 'Prefer IS NOT over NOT ... IS'
                                  remote_enablement = abap_true
-                                 finding_codes     = VALUE #( ( code = c_finding_codes-prefer_is_not
-                                                      severity = if_ci_atc_check=>finding_severities-warning
-                                                                text = 'Use IS NOT instead of NOT ... IS'
-                                       pseudo_comment = c_pseudo_comment ) )
+                                 finding_codes     = VALUE #( ( code           = c_finding_codes-prefer_is_not
+                                                                severity = if_ci_atc_check=>finding_severities-warning
+                                                                text           = 'Use IS NOT instead of NOT ... IS'
+                                                                pseudo_comment = c_pseudo_comment ) )
                                  quickfix_codes    = VALUE #( ( code = c_quickfix_codes-prefer_is_not
                                                           short_text = 'Rewrite as IS NOT' ) ) ) ).
   ENDMETHOD.

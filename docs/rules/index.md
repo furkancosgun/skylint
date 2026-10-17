@@ -1,8 +1,8 @@
-# 📋 Skylint Rules Catalog (82 Rules)
+# 📋 Skylint Rules Catalog (84 Rules)
 
-Comprehensive reference for all 82 Clean ABAP, security, performance, and architecture rules in Skylint.
+Comprehensive reference for all 84 Clean ABAP, security, performance, and architecture rules in Skylint.
 
-## Clean ABAP & Modern Syntax (29)
+## Clean ABAP & Modern Syntax (31)
 
 Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.
 
@@ -37,8 +37,10 @@ Modern language features, expression-oriented coding, and idiomatic Clean ABAP p
 | [`require-decl-order`](/rules/require-decl-order) | `ZCL_SKYLINT_PREF_DECL_ORDER` | Enforce local declaration order (TYPES -> CONSTANTS -> DATA -> FIELD-SYMBOLS) | `DECL_ORDER` | `#EC DECL_ORDER` | — |
 | [`no-param-escape`](/rules/no-param-escape) | `ZCL_SKYLINT_NO_PARAM_ESCAPE` | Detect unnecessary exclamation mark parameter escape (!iv_param) | `PARAM_ESCP` | `#EC PARAM_ESCAPE` | ⚡ Ready |
 | [`prefer-case`](/rules/prefer-case) | `ZCL_SKYLINT_PREF_CASE` | Change IF to CASE when checking the same variable against multiple values | `USE_CASE` | `#EC PREF_CASE` | — |
+| [`max-one-statement`](/rules/max-one-statement) | `ZCL_SKYLINT_MAX_ONE_STMT` | Max One Statement Per Line | `ONE_STMT` | `#EC ONE_STMT` | — |
+| [`prefer-inline`](/rules/prefer-inline) | `ZCL_SKYLINT_PREF_INLINE` | Prefer Inline Declarations | `PREF_INL` | `#EC PREFER_INLINE` | — |
 
-## Anti-Patterns & Bad Practices (32)
+## Anti-Patterns & Bad Practices (31)
 
 Discouraged language constructs, legacy statements, and redundant syntax.
 
@@ -52,8 +54,7 @@ Discouraged language constructs, legacy statements, and redundant syntax.
 | [`no-chained-decl`](/rules/no-chained-decl) | `ZCL_SKYLINT_NO_CHAIN_DECL` | Avoid chained declarations (DATA:, TYPES:, etc.) | `CHAINDECL` | `#EC CHAIN_DECL` | ⚡ Ready |
 | [`no-boolean-comparison`](/rules/no-boolean-comparison) | `ZCL_SKYLINT_NO_BOOL_COMPARE` | Avoid comparing boolean method calls to boolean literals | `BOOLCOMP` | `#EC BOOL_COMPARE` | ⚡ Ready |
 | [`no-check-in-loop`](/rules/no-check-in-loop) | `ZCL_SKYLINT_NO_CHECK_IN_LOOP` | Avoid CHECK in loop/iteration structures (prefer IF ... CONTINUE) | `CHKINLOOP` | `#EC CHECK_IN_LOOP` | ⚡ Ready |
-| [`no-empty-block`](/rules/no-empty-block) | `ZCL_SKYLINT_NO_EMPTY_BLOCK` | Detect empty control blocks (IF, CASE, LOOP, TRY, etc.) | `EMPTYCTRL` | `#EC EMPTY_BLOCK` | — |
-| [`no-empty-catch`](/rules/no-empty-catch) | `ZCL_SKYLINT_NO_EMPTY_CATCH` | Detect empty CATCH blocks swallowing exceptions | `EMPTYCATCH` | `#EC NO_HANDLER` | — |
+| [`no-empty-block`](/rules/no-empty-block) | `ZCL_SKYLINT_NO_EMPTY_BLOCK` | Detect empty control blocks (IF, CASE, LOOP, TRY, CATCH, etc.) | `EMPTYCTRL` | `#EC EMPTY_BLOCK` | — |
 | [`no-duplicate-conditions`](/rules/no-duplicate-conditions) | `ZCL_SKYLINT_NO_DUP_COND` | Detect identical branch conditions in IF/ELSEIF and CASE/WHEN | `DUPCOND` | `#EC DUP_COND` | — |
 | [`no-unreachable-code`](/rules/no-unreachable-code) | `ZCL_SKYLINT_NO_UNREACHABLE` | Detect unreachable code following unconditional jump statements | `UNREACHCD` | `#EC UNREACHABLE` | ⚡ Ready |
 | [`no-single-when`](/rules/no-single-when) | `ZCL_SKYLINT_NO_SINGLE_WHEN` | Avoid short CASE constructs with only one WHEN branch; prefer IF | `SHORTCASE` | `#EC SINGLE_WHEN` | — |
@@ -61,11 +62,10 @@ Discouraged language constructs, legacy statements, and redundant syntax.
 | [`no-receiving`](/rules/no-receiving) | `ZCL_SKYLINT_NO_RECEIVING` | Omit RECEIVING in method calls | `OMITRECEIV` | `#EC RECEIVING` | ⚡ Ready |
 | [`no-static-via-instance`](/rules/no-static-via-instance) | `ZCL_SKYLINT_NO_STATIC_ARROW` | Avoid calling static methods via instance arrow (->) | `STATICVIAI` | `#EC STATIC_ARROW` | ⚡ Ready |
 | [`no-public-attributes`](/rules/no-public-attributes) | `ZCL_SKYLINT_NO_PUBLIC_ATTR` | Avoid mutable public attributes in classes | `NOPUBATTR` | `#EC PUBLIC_ATTR` | — |
-| [`no-obsolete-statements`](/rules/no-obsolete-statements) | `ZCL_SKYLINT_NO_OBSOLETE` | Avoid obsolete statements (MOVE, REFRESH, etc.) | `OBSOLETE` | `#EC OBSOLETE` | ⚡ Ready |
+| [`no-obsolete-statements`](/rules/no-obsolete-statements) | `ZCL_SKYLINT_NO_OBSOLETE` | Avoid obsolete or deprecated statements (MOVE, REFRESH, BREAK, STATICS, etc.) | `OBSOLETE` | `#EC OBSOLETE` | ⚡ Ready |
 | [`no-scope-leak`](/rules/no-scope-leak) | `ZCL_SKYLINT_NO_SCOPE_LEAK` | Scope of variable (avoid variable leaking outside control blocks) | `SCOPELEAK` | `#EC SCOPE_LEAK` | — |
 | [`no-self-assignment`](/rules/no-self-assignment) | `ZCL_SKYLINT_NO_SELF_ASSIGN` | Detect Identical Self Assignments | `IDENTMOVE` | `#EC SELF_ASSIGN` | ⚡ Ready |
 | [`no-single-param-name`](/rules/no-single-param-name) | `ZCL_SKYLINT_NO_PARAM_NAME` | Omit parameter name in single parameter method call | `OMITPARM` | `#EC PARAM_NAME` | ⚡ Ready |
-| [`no-try-without-catch`](/rules/no-try-without-catch) | `ZCL_SKYLINT_NO_TRY_NO_CATCH` | Detect TRY without CATCH | `TRYWITHOUT` | `#EC TRY_NO_CATCH` | — |
 | [`no-sy-modify`](/rules/no-sy-modify) | `ZCL_SKYLINT_NO_SY_MODIFY` | Avoid sy-* System Variable Modification | `SYS_VAR_MD` | `#EC SY_MODIFY` | — |
 | [`no-raise-shortdump`](/rules/no-raise-shortdump) | `ZCL_SKYLINT_NO_SHORTDUMP` | Avoid RAISE SHORTDUMP (prefer graceful exceptions) | `SHORTDUMP` | `#EC SHORTDUMP` | — |
 | [`no-magic-numbers`](/rules/no-magic-numbers) | `ZCL_SKYLINT_NO_MAGIC_NUMBERS` | Avoid magic numbers in code; use named constants | `MAGIC_NUM` | `#EC MAGIC_NUMBERS` | — |
@@ -76,8 +76,9 @@ Discouraged language constructs, legacy statements, and redundant syntax.
 | [`no-form-routines`](/rules/no-form-routines) | `ZCL_SKYLINT_NO_FORM` | Avoid obsolete FORM routines; use modern methods in ABAP Cloud | `AVOID_FORM` | `#EC NO_FORM` | — |
 | [`no-unused-variables`](/rules/no-unused-variables) | `ZCL_SKYLINT_NO_UNUSED_VARS` | Detect unused local variables and field symbols | `UNUSED_VAR` | `#EC NEEDED` | — |
 | [`no-inline-length`](/rules/no-inline-length) | `ZCL_SKYLINT_NO_INLINE_LEN` | Avoid inline length specification in declarations | `PAREN_LEN` | `#EC PAREN_LEN` | ⚡ Ready |
+| [`names-no-dash`](/rules/names-no-dash) | `ZCL_SKYLINT_NAMES_NO_DASH` | No Dashes in Variable and Form Names | `NO_DASH` | `#EC NO_DASH` | — |
 
-## Performance & Database (5)
+## Performance & Database (6)
 
 Database query efficiency, buffer protection, and internal table operation guidelines.
 
@@ -88,6 +89,7 @@ Database query efficiency, buffer protection, and internal table operation guide
 | [`no-select-star`](/rules/no-select-star) | `ZCL_SKYLINT_NO_SELECT_STAR` | Select performance (Avoid SELECT * and SELECT ... ENDSELECT) | `SELECTSTAR` | `#EC SELECT_STAR` | — |
 | [`require-order-by`](/rules/require-order-by) | `ZCL_SKYLINT_PREF_ORDER_BY` | SELECT UP TO 1 ROWS requires ORDER BY | `SELECT_UP` | `#EC ORDER_BY` | — |
 | [`require-transporting`](/rules/require-transporting) | `ZCL_SKYLINT_PREF_TRANSPORT` | Avoid full-line MODIFY itab inside LOOP without TRANSPORTING clause | `FULL_MODIF` | `#EC TRANSPORTING` | — |
+| [`slow-param-passing`](/rules/slow-param-passing) | `ZCL_SKYLINT_SLOW_PARAM_PASS` | Slow Parameter Passing | `SLOW_PASS` | `#EC SLOW_PARAM` | — |
 
 ## Security & Robustness (10)
 
@@ -95,16 +97,16 @@ Authorizations, dynamic execution sanitation, error handling, and runtime safety
 
 | Rule ID | ABAP Class | Description | Finding Code | Pseudo-Comment | QuickFix |
 |---|---|---|:---:|:---:|:---:|
-| [`no-dangerous-dynamic`](/rules/no-dangerous-dynamic) | `ZCL_SKYLINT_NO_DYNAMIC_STMT` | Dangerous / Unmanaged Dynamic Statements | `DANGER_STM` | `#EC DYNAMIC_STMT` | — |
+| [`dangerous-statement`](/rules/dangerous-statement) | `ZCL_SKYLINT_NO_DANGEROUS_STMT` | Dangerous Statements (abaplint dangerous_statement) | `DANGER_STM` | `#EC DANGEROUS_STMT` | — |
 | [`require-auth-check`](/rules/require-auth-check) | `ZCL_SKYLINT_PREF_AUTH_CHECK` | Call Transaction Authority Check | `AUTH_CHECK` | `#EC AUTH_CHECK` | ⚡ Ready |
 | [`no-catch-cx-root`](/rules/no-catch-cx-root) | `ZCL_SKYLINT_NO_CATCH_ROOT` | Avoid generic CATCH cx_root; catch specific exception classes | `CATCH_ROOT` | `#EC CATCH_ROOT` | — |
 | [`no-raise-cx-sy`](/rules/no-raise-cx-sy) | `ZCL_SKYLINT_NO_RAISE_CX_SY` | Avoid raising SAP internal system exceptions (cx_sy_*) | `RAISE_SYS` | `#EC RAISE_CX_SY` | — |
 | [`require-subrc-check`](/rules/require-subrc-check) | `ZCL_SKYLINT_CHECK_SUBRC` | Check sy-subrc after DB, table and string operations | `CHECKSUBRC` | `#EC CHECK_SUBRC` | — |
 | [`no-client-specified`](/rules/no-client-specified) | `ZCL_SKYLINT_NO_CLIENT_SPEC` | Avoid USING CLIENT or CLIENT SPECIFIED in ABAP SQL | `CLIENT_SPE` | `#EC CLIENT_SPEC` | ⚡ Ready |
 | [`no-commit-work`](/rules/no-commit-work) | `ZCL_SKYLINT_NO_COMMIT_WORK` | Avoid COMMIT WORK / ROLLBACK WORK in behavior implementations | `NO_COMMIT` | `#EC COMMIT_WORK` | — |
-| [`no-raw-dynamic-sql`](/rules/no-raw-dynamic-sql) | `ZCL_SKYLINT_NO_RAW_DYN_SQL` | Avoid dynamic SQL table or clause names without sanitization | `DYN_SQL` | `#EC RAW_DYN_SQL` | — |
 | [`no-production-assert`](/rules/no-production-assert) | `ZCL_SKYLINT_NO_PROD_ASSERT` | Detect native ASSERT in production code; use exceptions instead | `PROD_ASSRT` | `#EC PROD_ASSERT` | — |
-| [`no-forbidden-statements`](/rules/no-forbidden-statements) | `ZCL_SKYLINT_NO_FORBIDDEN` | Avoid use of certain statements (BREAK, STATICS, DEFINE, EXPORT) | `AVOID_USE` | `#EC FORBIDDEN` | — |
+| [`modify-own-tables`](/rules/modify-own-tables) | `ZCL_SKYLINT_MODIFY_OWN_TAB` | Modify Only Own Database Tables | `NOT_OWN_TB` | `#EC OWN_TABLES` | — |
+| [`no-dynamic-stuff`](/rules/no-dynamic-stuff) | `ZCL_SKYLINT_NO_DYNAMIC_STMT` | No Dynamic Constructs (CALL, ASSIGN, CREATE, etc.) | `DYN_STUFF` | `#EC NO_DYNAMIC` | — |
 
 ## Metrics & Complexity Limits (6)
 

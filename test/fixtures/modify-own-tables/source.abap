@@ -1,0 +1,15 @@
+CLASS zcl_test_modify_own_tab DEFINITION PUBLIC FINAL CREATE PUBLIC.
+  PUBLIC SECTION.
+    METHODS test_001.
+    METHODS test_002.
+ENDCLASS.
+
+CLASS zcl_test_modify_own_tab IMPLEMENTATION.
+  METHOD test_001.
+    DELETE FROM mara WHERE matnr = '100'.
+  ENDMETHOD.
+
+  METHOD test_002.
+    DELETE FROM zmara WHERE matnr = '100'.
+  ENDMETHOD.
+ENDCLASS.

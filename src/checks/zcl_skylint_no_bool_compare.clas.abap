@@ -20,6 +20,7 @@ CLASS zcl_skylint_no_bool_compare DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'BOOL_COMPARE'.
+
     METHODS has_boolean_comparison
       IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_index) TYPE i.
@@ -43,15 +44,16 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_bool_compare IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Avoid comparing boolean method calls to boolean literals'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code     = c_finding_codes-bool_comparison
-                                       severity = if_ci_atc_check=>finding_severities-warning
-                                       text     = 'Avoid boolean comparison for method calls; call method directly'
-                                       pseudo_comment = c_pseudo_comment ) )
-                                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-drop_literal
-                                                                short_text = 'Drop boolean literal' ) ) ) ).
+    super->constructor(
+        VALUE #( description       = 'Avoid comparing boolean method calls to boolean literals'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #(
+                     ( code           = c_finding_codes-bool_comparison
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Avoid boolean comparison for method calls; call method directly'
+                       pseudo_comment = c_pseudo_comment ) )
+                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-drop_literal
+                                                short_text = 'Drop boolean literal' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

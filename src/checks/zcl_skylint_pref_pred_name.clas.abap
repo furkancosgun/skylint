@@ -16,6 +16,7 @@ CLASS zcl_skylint_pref_pred_name DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'PRED_NAME'.
+
     METHODS has_boolean_return
       IMPORTING is_statement       TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_has_bool) TYPE abap_bool.
@@ -40,10 +41,10 @@ CLASS zcl_skylint_pref_pred_name IMPLEMENTATION.
         VALUE #( description       = 'Enforce predicate naming (IS_, HAS_, CAN_) on boolean methods'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code     = c_finding_codes-bool_method_name
-                       severity = if_ci_atc_check=>finding_severities-warning
-                       text     = 'Boolean-returning method should use predicate name (IS_, HAS_, CAN_)'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                     ( code           = c_finding_codes-bool_method_name
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Boolean-returning method should use predicate name (IS_, HAS_, CAN_)'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

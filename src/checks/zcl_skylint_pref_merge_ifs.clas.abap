@@ -16,6 +16,7 @@ CLASS zcl_skylint_pref_merge_ifs DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'MERGE_IFS'.
+
     METHODS is_nested_if_mergeable
       IMPORTING iv_idx       TYPE i
                 is_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure
@@ -29,9 +30,9 @@ CLASS zcl_skylint_pref_merge_ifs IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Detect consecutive nested IF blocks that can be merged with AND'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code     = c_finding_codes-nested_if
-                                       severity = if_ci_atc_check=>finding_severities-warning
-                                       text     = 'Nested IF block can be merged with outer IF using AND'
+                                     ( code           = c_finding_codes-nested_if
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Nested IF block can be merged with outer IF using AND'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 

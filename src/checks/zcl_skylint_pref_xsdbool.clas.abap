@@ -20,6 +20,7 @@ CLASS zcl_skylint_pref_xsdbool DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'XSDBOOL'.
+
     METHODS is_boolean_assignment
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
       EXPORTING ev_target    TYPE string
@@ -49,10 +50,10 @@ CLASS zcl_skylint_pref_xsdbool IMPLEMENTATION.
     super->constructor(
         VALUE #( description       = 'Prefer xsdbool( ) expression over manual IF-ELSE assignment'
                  remote_enablement = abap_true
-                 finding_codes     = VALUE #( ( code     = c_finding_codes-prefer_xsdbool
-                                                severity = if_ci_atc_check=>finding_severities-warning
-                                                text     = 'Prefer xsdbool( ) over manual IF-ELSE assignment'
-                                       pseudo_comment = c_pseudo_comment ) )
+                 finding_codes     = VALUE #( ( code           = c_finding_codes-prefer_xsdbool
+                                                severity       = if_ci_atc_check=>finding_severities-warning
+                                                text           = 'Prefer xsdbool( ) over manual IF-ELSE assignment'
+                                                pseudo_comment = c_pseudo_comment ) )
                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-use_xsdbool
                                                 short_text = 'Use xsdbool( )' ) ) ) ).
   ENDMETHOD.

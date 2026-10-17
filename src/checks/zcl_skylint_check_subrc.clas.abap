@@ -16,6 +16,7 @@ CLASS zcl_skylint_check_subrc DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'CHECK_SUBRC'.
+
     DATA mv_check_select_single   TYPE abap_bool VALUE abap_true.
     DATA mv_check_read_table      TYPE abap_bool VALUE abap_true.
     DATA mv_check_authority_check TYPE abap_bool VALUE abap_true.
@@ -43,10 +44,10 @@ CLASS zcl_skylint_check_subrc IMPLEMENTATION.
         VALUE #( description       = 'Check sy-subrc after DB, table and string operations'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code     = c_finding_codes-check_subrc
-                       severity = if_ci_atc_check=>finding_severities-warning
-                       text     = 'Check sy-subrc after SELECT SINGLE, READ, AUTHORITY-CHECK, FIND, SEARCH'
-                                       pseudo_comment = c_pseudo_comment ) )
+                     ( code           = c_finding_codes-check_subrc
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Check sy-subrc after SELECT SINGLE, READ, AUTHORITY-CHECK, FIND, SEARCH'
+                       pseudo_comment = c_pseudo_comment ) )
                  attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
                                               ( name  = 'CHECK_SELECT_SINGLE'
                                                 value = REF #( mv_check_select_single ) )

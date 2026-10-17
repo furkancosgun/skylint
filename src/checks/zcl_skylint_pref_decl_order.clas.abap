@@ -25,10 +25,10 @@ CLASS zcl_skylint_pref_decl_order IMPLEMENTATION.
         VALUE #( description       = 'Enforce local declaration order (TYPES -> CONSTANTS -> DATA -> FIELD-SYMBOLS)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code     = c_finding_codes-decl_order
-                       severity = if_ci_atc_check=>finding_severities-warning
-                       text     = 'Declare local TYPES before CONSTANTS before DATA before FIELD-SYMBOLS'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                     ( code           = c_finding_codes-decl_order
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Declare local TYPES before CONSTANTS before DATA before FIELD-SYMBOLS'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

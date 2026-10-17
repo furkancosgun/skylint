@@ -24,9 +24,9 @@ CLASS zcl_skylint_no_magic_numbers IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Avoid magic numbers in code; use named constants'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code     = c_finding_codes-magic_number
-                                       severity = if_ci_atc_check=>finding_severities-warning
-                                       text     = 'Avoid hardcoded magic numbers; declare a named constant'
+                                     ( code           = c_finding_codes-magic_number
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Avoid hardcoded magic numbers; declare a named constant'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 

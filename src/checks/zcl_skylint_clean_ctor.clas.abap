@@ -16,6 +16,7 @@ CLASS zcl_skylint_clean_ctor DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'CLEAN_CTOR'.
+
     DATA mv_max_statements TYPE i VALUE 10.
 
 ENDCLASS.
@@ -27,10 +28,10 @@ CLASS zcl_skylint_clean_ctor IMPLEMENTATION.
         VALUE #( description       = 'Keep constructors clean; avoid heavy business logic/loops/DB access'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code     = c_finding_codes-constructor_logic
-                       severity = if_ci_atc_check=>finding_severities-warning
-                       text     = 'Avoid heavy business logic/loops in constructor; use injection only'
-                                       pseudo_comment = c_pseudo_comment ) )
+                     ( code           = c_finding_codes-constructor_logic
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Avoid heavy business logic/loops in constructor; use injection only'
+                       pseudo_comment = c_pseudo_comment ) )
                  attributes        = VALUE #( ( name  = 'MAX_STATEMENTS'
                                                 kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
                                                 value = REF #( mv_max_statements ) ) ) ) ).

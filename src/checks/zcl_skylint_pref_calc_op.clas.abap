@@ -20,6 +20,7 @@ CLASS zcl_skylint_pref_calc_op DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'CALC_ASSIGN'.
+
     METHODS build_replacement_code
       IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_code) TYPE string.
@@ -44,10 +45,10 @@ CLASS zcl_skylint_pref_calc_op IMPLEMENTATION.
         VALUE #( description       = 'Prefer calculation assignment operators (+=, -=, *=, /=) over var = var + 1'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code     = c_finding_codes-calc_assign
-                       severity = if_ci_atc_check=>finding_severities-warning
-                       text     = 'Use calculation assignment operator (+=, -=) or ADD statement replacement'
-                                       pseudo_comment = c_pseudo_comment ) )
+                     ( code           = c_finding_codes-calc_assign
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Use calculation assignment operator (+=, -=) or ADD statement replacement'
+                       pseudo_comment = c_pseudo_comment ) )
                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-calc_assign
                                                 short_text = 'Use += style assignment' ) ) ) ).
   ENDMETHOD.

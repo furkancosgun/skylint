@@ -1,0 +1,16 @@
+CLASS zcl_test_no_dynamic_stuff DEFINITION PUBLIC FINAL CREATE PUBLIC.
+  PUBLIC SECTION.
+    METHODS test_001.
+    METHODS test_002.
+ENDCLASS.
+
+CLASS zcl_test_no_dynamic_stuff IMPLEMENTATION.
+  METHOD test_001.
+    DATA lv_func TYPE string VALUE 'FM_NAME'.
+    CALL FUNCTION lv_func.
+  ENDMETHOD.
+
+  METHOD test_002.
+    CALL FUNCTION 'FM_NAME'.
+  ENDMETHOD.
+ENDCLASS.

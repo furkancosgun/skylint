@@ -25,10 +25,10 @@ CLASS zcl_skylint_no_msg_raising IMPLEMENTATION.
         VALUE #( description       = 'Avoid obsolete MESSAGE ... RAISING; use class-based exceptions'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code     = c_finding_codes-msg_raise
-                       severity = if_ci_atc_check=>finding_severities-warning
-                       text     = 'Avoid obsolete MESSAGE ... RAISING; raise class-based exceptions'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                     ( code           = c_finding_codes-msg_raise
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Avoid obsolete MESSAGE ... RAISING; raise class-based exceptions'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

@@ -20,6 +20,7 @@ CLASS zcl_skylint_pref_lines DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'LINES'.
+
     METHODS build_lines_quickfix
       IMPORTING iv_stmt_idx        TYPE i
                 iv_table           TYPE string
@@ -34,9 +35,9 @@ CLASS zcl_skylint_pref_lines IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Prefer lines( ) built-in function over DESCRIBE TABLE ... LINES'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code     = c_finding_codes-describe_lines
-                                       severity = if_ci_atc_check=>finding_severities-warning
-                                       text     = 'Use lines( ) function instead of DESCRIBE TABLE ... LINES'
+                                     ( code           = c_finding_codes-describe_lines
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Use lines( ) function instead of DESCRIBE TABLE ... LINES'
                                        pseudo_comment = c_pseudo_comment ) )
                                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-use_lines
                                                                 short_text = 'Use lines( ) function' ) ) ) ).

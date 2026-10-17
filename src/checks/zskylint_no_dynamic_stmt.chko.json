@@ -1,7 +1,7 @@
 {
   "formatVersion": "1",
   "header": {
-    "description": "Dangerous / Unmanaged Dynamic Statements",
+    "description": "No Dynamic Constructs (CALL, ASSIGN, CREATE, etc.)",
     "originalLanguage": "en",
     "abapLanguageVersion": "cloudDevelopment"
   },

@@ -20,6 +20,7 @@ CLASS zcl_skylint_pref_new_op DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'NEW_OP'.
+
     METHODS is_static_create_object
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -36,9 +37,9 @@ CLASS zcl_skylint_pref_new_op IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Prefer NEW #( ) constructor expression over legacy CREATE OBJECT'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code     = c_finding_codes-prefer_new
-                                       severity = if_ci_atc_check=>finding_severities-warning
-                                       text     = 'Prefer NEW #( ) expression over CREATE OBJECT'
+                                     ( code           = c_finding_codes-prefer_new
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Prefer NEW #( ) expression over CREATE OBJECT'
                                        pseudo_comment = c_pseudo_comment ) )
                                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-use_new
                                                                 short_text = 'Use NEW constructor' ) ) ) ).

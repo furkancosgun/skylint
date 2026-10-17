@@ -20,6 +20,7 @@ CLASS zcl_skylint_pref_raise_new DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'RAISE_NEW'.
+
     METHODS is_raise_exception_type
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -33,15 +34,16 @@ ENDCLASS.
 
 CLASS zcl_skylint_pref_raise_new IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Prefer RAISE EXCEPTION NEW over RAISE EXCEPTION TYPE'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code     = c_finding_codes-raise_exception_new
-                                       severity = if_ci_atc_check=>finding_severities-warning
-                                       text     = 'Prefer RAISE EXCEPTION NEW cx_name( ) over RAISE EXCEPTION TYPE'
-                                       pseudo_comment = c_pseudo_comment ) )
-                                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-raise_new
-                                                                short_text = 'Use RAISE EXCEPTION NEW' ) ) ) ).
+    super->constructor(
+        VALUE #( description       = 'Prefer RAISE EXCEPTION NEW over RAISE EXCEPTION TYPE'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #(
+                     ( code           = c_finding_codes-raise_exception_new
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Prefer RAISE EXCEPTION NEW cx_name( ) over RAISE EXCEPTION TYPE'
+                       pseudo_comment = c_pseudo_comment ) )
+                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-raise_new
+                                                short_text = 'Use RAISE EXCEPTION NEW' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

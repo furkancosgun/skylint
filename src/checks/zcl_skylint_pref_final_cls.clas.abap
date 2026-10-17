@@ -16,6 +16,7 @@ CLASS zcl_skylint_pref_final_cls DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'FINAL_CLS'.
+
     METHODS is_class_missing_final
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -29,10 +30,10 @@ CLASS zcl_skylint_pref_final_cls IMPLEMENTATION.
         VALUE #( description       = 'skylint: Prefer FINAL Classes by Default'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code     = c_finding_codes-class_not_final
-                       severity = if_ci_atc_check=>finding_severities-warning
-                       text     = 'Classes should be marked FINAL by default unless designed for inheritance'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                     ( code           = c_finding_codes-class_not_final
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Classes should be marked FINAL by default unless designed for inheritance'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

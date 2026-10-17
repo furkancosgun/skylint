@@ -4,7 +4,7 @@
 
 ## Description
 
-Detect empty control blocks (IF, CASE, LOOP, TRY, etc.).
+Detect empty control blocks (IF, CASE, LOOP, TRY, CATCH, etc.).
 
 ## ❌ Non-Compliant Code
 

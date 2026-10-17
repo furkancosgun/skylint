@@ -16,6 +16,7 @@ CLASS zcl_skylint_no_me_reference DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'ME'.
+
     DATA mv_allow_in_constructors TYPE abap_bool VALUE abap_true.
 
 ENDCLASS.
@@ -26,10 +27,10 @@ CLASS zcl_skylint_no_me_reference IMPLEMENTATION.
     super->constructor(
         VALUE #( description       = 'Avoid self-reference ME->'
                  remote_enablement = abap_true
-                 finding_codes     = VALUE #( ( code     = c_finding_codes-avoid_me
-                                                severity = if_ci_atc_check=>finding_severities-warning
-                                                text     = 'Avoid unnecessary ME-> reference'
-                                       pseudo_comment = c_pseudo_comment ) )
+                 finding_codes     = VALUE #( ( code           = c_finding_codes-avoid_me
+                                                severity       = if_ci_atc_check=>finding_severities-warning
+                                                text           = 'Avoid unnecessary ME-> reference'
+                                                pseudo_comment = c_pseudo_comment ) )
                  attributes        = VALUE #( ( name  = 'ALLOW_IN_CONSTRUCTORS'
                                                 kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
                                                 value = REF #( mv_allow_in_constructors ) ) ) ) ).

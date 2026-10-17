@@ -31,10 +31,10 @@ CLASS zcl_skylint_pref_str_func IMPLEMENTATION.
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      severity = if_ci_atc_check=>finding_severities-warning
-                                     ( code = c_finding_codes-condense_stmt
-                                       text = 'Use modern built-in string function condense( ... ) instead' )
-                                     ( code = c_finding_codes-translate_stmt
-                                       text = 'Use modern string functions to_upper() or to_lower() instead'
+                                     ( code           = c_finding_codes-condense_stmt
+                                       text           = 'Use modern built-in string function condense( ... ) instead' )
+                                     ( code           = c_finding_codes-translate_stmt
+                                       text           = 'Use modern string functions to_upper() or to_lower() instead'
                                        pseudo_comment = c_pseudo_comment ) )
                                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-condense_stmt
                                                                 short_text = 'Use condense( ) function' )

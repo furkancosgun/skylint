@@ -84,6 +84,10 @@ CLASS zcl_skylint_ast_util DEFINITION
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_has) TYPE abap_bool.
 
+    CLASS-METHODS statement_is_db_access
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_yes) TYPE abap_bool.
+
     CLASS-METHODS is_assignment
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_yes) TYPE abap_bool.
@@ -432,6 +436,23 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
         rv_has = abap_true.
         RETURN.
       ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD statement_is_db_access.
+    FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+
+    rv_yes = abap_false.
+
+    LOOP AT is_statement-tokens ASSIGNING <ls_tok>.
+      LOOP AT <ls_tok>-references ASSIGNING <ls_ref>.
+        IF    <ls_ref>-usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_database
+           OR <ls_ref>-usage_mode = if_ci_atc_source_code_provider=>usage_modes-write_database.
+          rv_yes = abap_true.
+          RETURN.
+        ENDIF.
+      ENDLOOP.
     ENDLOOP.
   ENDMETHOD.
 

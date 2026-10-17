@@ -25,10 +25,10 @@ CLASS zcl_skylint_no_catch_root IMPLEMENTATION.
         VALUE #( description       = 'Avoid generic CATCH cx_root; catch specific exception classes'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code     = c_finding_codes-catch_root
-                       severity = if_ci_atc_check=>finding_severities-warning
-                       text     = 'Avoid generic CATCH cx_root; catch specific exception classes instead'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                     ( code           = c_finding_codes-catch_root
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Avoid generic CATCH cx_root; catch specific exception classes instead'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

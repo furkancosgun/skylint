@@ -16,6 +16,7 @@ CLASS zcl_skylint_pref_full_typed DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'FULL_TYPED'.
+
     METHODS is_untyped_constant
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -28,9 +29,9 @@ CLASS zcl_skylint_pref_full_typed IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Enforce fully typed constant declarations'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code     = c_finding_codes-fully_typed
-                                       severity = if_ci_atc_check=>finding_severities-warning
-                                       text     = 'Constant declaration should explicitly specify TYPE'
+                                     ( code           = c_finding_codes-fully_typed
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Constant declaration should explicitly specify TYPE'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 

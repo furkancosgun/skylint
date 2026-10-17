@@ -1,0 +1,15 @@
+CLASS zcl_test_names_no_dash DEFINITION PUBLIC FINAL CREATE PUBLIC.
+  PUBLIC SECTION.
+    METHODS test_001.
+    METHODS test_002.
+ENDCLASS.
+
+CLASS zcl_test_names_no_dash IMPLEMENTATION.
+  METHOD test_001.
+    DATA foo-bar TYPE i.
+  ENDMETHOD.
+
+  METHOD test_002.
+    DATA foobar TYPE i.
+  ENDMETHOD.
+ENDCLASS.

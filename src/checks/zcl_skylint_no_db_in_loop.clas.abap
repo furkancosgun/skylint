@@ -16,9 +16,6 @@ CLASS zcl_skylint_no_db_in_loop DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'DB_IN_LOOP'.
-    METHODS is_direct_db_access
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ENDCLASS.
 
@@ -29,10 +26,10 @@ CLASS zcl_skylint_no_db_in_loop IMPLEMENTATION.
         VALUE #( description       = 'Avoid database access inside loop iterations'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code     = c_finding_codes-db_in_loop
-                       severity = if_ci_atc_check=>finding_severities-warning
-                       text     = 'Database access inside loop iteration; consider bulk operation or JOIN'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                     ( code           = c_finding_codes-db_in_loop
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Database access inside loop iteration; consider bulk operation or JOIN'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -50,28 +47,11 @@ CLASS zcl_skylint_no_db_in_loop IMPLEMENTATION.
             lv_loop_depth -= 1.
           ENDIF.
         WHEN OTHERS.
-          IF lv_loop_depth > 0 AND is_direct_db_access( <ls_statement> ) = abap_true.
+          IF lv_loop_depth > 0 AND zcl_skylint_ast_util=>statement_is_db_access( <ls_statement> ) = abap_true.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-db_in_loop ).
           ENDIF.
       ENDCASE.
-    ENDLOOP.
-  ENDMETHOD.
-
-  METHOD is_direct_db_access.
-    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_ref TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
-
-    rv_res = abap_false.
-
-    LOOP AT is_statement-tokens INTO ls_tok.
-      LOOP AT ls_tok-references INTO ls_ref.
-        IF    ls_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_database
-           OR ls_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-write_database.
-          rv_res = abap_true.
-          RETURN.
-        ENDIF.
-      ENDLOOP.
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

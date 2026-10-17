@@ -16,6 +16,7 @@ CLASS zcl_skylint_no_commit_work DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'COMMIT_WORK'.
+
     METHODS is_behavior_implementation
       IMPORTING is_procedure  TYPE if_ci_atc_source_code_provider=>ty_procedure
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -29,10 +30,10 @@ CLASS zcl_skylint_no_commit_work IMPLEMENTATION.
         VALUE #( description       = 'Avoid COMMIT WORK / ROLLBACK WORK in behavior implementations'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code     = c_finding_codes-no_commit
-                       severity = if_ci_atc_check=>finding_severities-warning
-                       text     = 'Avoid COMMIT/ROLLBACK WORK; transactional control belongs to framework'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                     ( code           = c_finding_codes-no_commit
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Avoid COMMIT/ROLLBACK WORK; transactional control belongs to framework'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

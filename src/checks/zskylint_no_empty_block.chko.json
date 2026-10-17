@@ -1,7 +1,7 @@
 {
   "formatVersion": "1",
   "header": {
-    "description": "Detect empty control blocks (IF, CASE, LOOP, TRY, etc.)",
+    "description": "Detect empty control blocks (IF, CASE, LOOP, TRY, CATCH, etc.)",
     "originalLanguage": "en",
     "abapLanguageVersion": "cloudDevelopment"
   },

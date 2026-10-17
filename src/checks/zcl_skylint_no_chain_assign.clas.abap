@@ -20,6 +20,7 @@ CLASS zcl_skylint_no_chain_assign DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'CHAIN_ASSIGN'.
+
     METHODS has_assignment_chain
       IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_chain) TYPE abap_bool.
@@ -33,15 +34,16 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_chain_assign IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Avoid assignment chaining (a = b = c)'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code     = c_finding_codes-assignment_chaining
-                                       severity = if_ci_atc_check=>finding_severities-warning
-                                       text     = 'Avoid chained assignments; write separate assignment statements'
-                                       pseudo_comment = c_pseudo_comment ) )
-                                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-split_assign
-                                                                short_text = 'Split into separate assignments' ) ) ) ).
+    super->constructor(
+        VALUE #( description       = 'Avoid assignment chaining (a = b = c)'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #(
+                     ( code           = c_finding_codes-assignment_chaining
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Avoid chained assignments; write separate assignment statements'
+                       pseudo_comment = c_pseudo_comment ) )
+                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-split_assign
+                                                short_text = 'Split into separate assignments' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

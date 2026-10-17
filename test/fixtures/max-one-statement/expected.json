@@ -1,0 +1,4 @@
+[
+  { "method": "TEST_001", "code": "ONE_STMT", "line": 2, "column": 22 },
+  { "method": "TEST_002", "code": null }
+]

@@ -20,6 +20,7 @@ CLASS zcl_skylint_pref_symbol_op DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'SYMBOL_OP'.
+
     METHODS is_legacy_operator
       IMPORTING iv_lexeme    TYPE string
       RETURNING VALUE(rv_is) TYPE abap_bool.
@@ -41,10 +42,10 @@ CLASS zcl_skylint_pref_symbol_op IMPLEMENTATION.
         VALUE #( description       = 'Prefer comparison operators (=, <>, <, >, <=, >=) over legacy textual keywords'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code     = c_finding_codes-prefer_operator
-                       severity = if_ci_atc_check=>finding_severities-warning
-                       text     = 'Prefer modern comparison operators (=, <>, <, >, <=, >=) over legacy keywords'
-                                       pseudo_comment = c_pseudo_comment ) )
+                     ( code           = c_finding_codes-prefer_operator
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Prefer modern comparison operators (=, <>, <, >, <=, >=) over legacy keywords'
+                       pseudo_comment = c_pseudo_comment ) )
                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-prefer_operator
                                                 short_text = 'Replace with symbolic operator' ) ) ) ).
   ENDMETHOD.

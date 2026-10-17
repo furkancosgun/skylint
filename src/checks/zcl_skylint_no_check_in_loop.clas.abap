@@ -20,6 +20,7 @@ CLASS zcl_skylint_no_check_in_loop DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'CHECK_IN_LOOP'.
+
     METHODS build_guard_lines
       IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rt_lines) TYPE zcl_skylint_check_base=>ty_code_lines.
@@ -31,9 +32,9 @@ CLASS zcl_skylint_no_check_in_loop IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Avoid CHECK in loop/iteration structures (prefer IF ... CONTINUE)'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code     = c_finding_codes-check_in_loop
-                                       severity = if_ci_atc_check=>finding_severities-warning
-                                       text     = 'Avoid CHECK inside loop; use IF ... CONTINUE instead'
+                                     ( code           = c_finding_codes-check_in_loop
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Avoid CHECK inside loop; use IF ... CONTINUE instead'
                                        pseudo_comment = c_pseudo_comment ) )
                                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-use_guard
                                                                 short_text = 'Use IF NOT ... CONTINUE' ) ) ) ).

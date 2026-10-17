@@ -25,10 +25,10 @@ CLASS zcl_skylint_no_prod_assert IMPLEMENTATION.
         VALUE #( description       = 'Detect native ASSERT in production code; use exceptions instead'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code     = c_finding_codes-prod_assert
-                       severity = if_ci_atc_check=>finding_severities-warning
-                       text     = 'Avoid native ASSERT in production logic; raise an exception instead'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                     ( code           = c_finding_codes-prod_assert
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Avoid native ASSERT in production logic; raise an exception instead'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

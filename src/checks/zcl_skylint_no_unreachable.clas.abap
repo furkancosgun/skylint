@@ -20,6 +20,7 @@ CLASS zcl_skylint_no_unreachable DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'UNREACHABLE'.
+
     TYPES:
       BEGIN OF ty_depth_state,
         depth       TYPE i,
@@ -46,14 +47,15 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_unreachable IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Detect unreachable code following unconditional jump statements'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #( ( code     = c_finding_codes-unreachable_code
-                                                                severity = if_ci_atc_check=>finding_severities-warning
-                                                                text     = 'Statement is unreachable'
-                                       pseudo_comment = c_pseudo_comment ) )
-                                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-delete_stmt
-                                                                short_text = 'Delete unreachable statement' ) ) ) ).
+    super->constructor(
+        VALUE #( description       = 'Detect unreachable code following unconditional jump statements'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #( ( code           = c_finding_codes-unreachable_code
+                                                severity       = if_ci_atc_check=>finding_severities-warning
+                                                text           = 'Statement is unreachable'
+                                                pseudo_comment = c_pseudo_comment ) )
+                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-delete_stmt
+                                                short_text = 'Delete unreachable statement' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

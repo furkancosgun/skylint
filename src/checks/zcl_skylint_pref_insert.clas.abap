@@ -28,10 +28,10 @@ CLASS zcl_skylint_pref_insert IMPLEMENTATION.
     super->constructor(
         VALUE #( description       = 'Prefer INSERT ... INTO TABLE over APPEND for table safety'
                  remote_enablement = abap_true
-                 finding_codes     = VALUE #( ( code     = c_finding_codes-prefer_insert
-                                                severity = if_ci_atc_check=>finding_severities-warning
-                                                text     = 'Prefer INSERT ... INTO TABLE over APPEND'
-                                       pseudo_comment = c_pseudo_comment ) )
+                 finding_codes     = VALUE #( ( code           = c_finding_codes-prefer_insert
+                                                severity       = if_ci_atc_check=>finding_severities-warning
+                                                text           = 'Prefer INSERT ... INTO TABLE over APPEND'
+                                                pseudo_comment = c_pseudo_comment ) )
                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-prefer_insert
                                                 short_text = 'Use INSERT INTO TABLE' ) ) ) ).
   ENDMETHOD.

@@ -16,6 +16,7 @@ CLASS zcl_skylint_no_raise_cx_sy DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'RAISE_CX_SY'.
+
     METHODS raises_system_exception
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
                 it_statements TYPE if_ci_atc_source_code_provider=>ty_statements
@@ -34,10 +35,10 @@ CLASS zcl_skylint_no_raise_cx_sy IMPLEMENTATION.
         VALUE #( description       = 'Avoid raising SAP internal system exceptions (cx_sy_*)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code     = c_finding_codes-raise_sys
-                       severity = if_ci_atc_check=>finding_severities-warning
-                       text     = 'Avoid raising SAP internal system exceptions; use application exceptions'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                     ( code           = c_finding_codes-raise_sys
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Avoid raising SAP internal system exceptions; use application exceptions'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

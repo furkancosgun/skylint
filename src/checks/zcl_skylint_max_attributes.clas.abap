@@ -16,6 +16,7 @@ CLASS zcl_skylint_max_attributes DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'ATTRIBUTES'.
+
     DATA mv_max_attributes TYPE i VALUE 5.
 
 ENDCLASS.
@@ -27,10 +28,10 @@ CLASS zcl_skylint_max_attributes IMPLEMENTATION.
         VALUE #( description       = 'Limit number of member attributes in a class (God Class smell)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code     = c_finding_codes-attribute_count
-                       severity = if_ci_atc_check=>finding_severities-warning
-                       text     = 'Class has too many member attributes; split into cohesive components'
-                                       pseudo_comment = c_pseudo_comment ) )
+                     ( code           = c_finding_codes-attribute_count
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Class has too many member attributes; split into cohesive components'
+                       pseudo_comment = c_pseudo_comment ) )
                  attributes        = VALUE #( ( name  = 'MAX_ATTRIBUTES'
                                                 kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
                                                 value = REF #( mv_max_attributes ) ) ) ) ).

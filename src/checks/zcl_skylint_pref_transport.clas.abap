@@ -25,10 +25,10 @@ CLASS zcl_skylint_pref_transport IMPLEMENTATION.
         VALUE #( description       = 'Avoid full-line MODIFY itab inside LOOP without TRANSPORTING clause'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code     = c_finding_codes-full_modify
-                       severity = if_ci_atc_check=>finding_severities-warning
-                       text     = 'Specify TRANSPORTING fields in MODIFY itab inside loop for performance'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                     ( code           = c_finding_codes-full_modify
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Specify TRANSPORTING fields in MODIFY itab inside loop for performance'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

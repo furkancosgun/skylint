@@ -16,6 +16,7 @@ CLASS zcl_skylint_pref_class_exc DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'CLASS_EXC'.
+
     METHODS has_classic_exceptions
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -29,10 +30,10 @@ CLASS zcl_skylint_pref_class_exc IMPLEMENTATION.
         VALUE #( description       = 'skylint: Prefer Class-Based Exceptions over Classic EXCEPTIONS'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code     = c_finding_codes-class_based_exceptions
-                       severity = if_ci_atc_check=>finding_severities-warning
-                       text     = 'Prefer class-based exceptions (RAISING) over classic EXCEPTIONS'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                     ( code           = c_finding_codes-class_based_exceptions
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Prefer class-based exceptions (RAISING) over classic EXCEPTIONS'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

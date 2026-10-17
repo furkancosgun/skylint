@@ -20,6 +20,7 @@ CLASS zcl_skylint_no_empty_fae DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'EMPTY_FAE'.
+
     METHODS extract_fae_table
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_tab) TYPE string.
@@ -50,10 +51,10 @@ CLASS zcl_skylint_no_empty_fae IMPLEMENTATION.
         VALUE #( description       = 'Unsecure FOR ALL ENTRIES (Missing empty itab check)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code     = c_finding_codes-unsecure_fae
-                       severity = if_ci_atc_check=>finding_severities-warning
-                       text     = 'FOR ALL ENTRIES without preceding IS NOT INITIAL check causes full table scan'
-                                       pseudo_comment = c_pseudo_comment ) )
+                     ( code           = c_finding_codes-unsecure_fae
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'FOR ALL ENTRIES without preceding IS NOT INITIAL check causes full table scan'
+                       pseudo_comment = c_pseudo_comment ) )
                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-add_guard
                                                 short_text = 'Add empty-check guard' ) ) ) ).
   ENDMETHOD.

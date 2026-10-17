@@ -129,7 +129,7 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
       lv_plain_tag = <ls_fc>-pseudo_comment.
     ENDIF.
 
-    IF line_exists( is_statement-pseudo_comments[ table_line = lv_plain_tag ] )
+    IF    line_exists( is_statement-pseudo_comments[ table_line = lv_plain_tag ] )
        OR line_exists( is_statement-pseudo_comments[ table_line = lv_ci_tag ] ).
       rv_has_pseudo_comment = abap_true.
     ENDIF.

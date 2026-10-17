@@ -16,6 +16,7 @@ CLASS zcl_skylint_pref_line_exists DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'LINE_EXISTS'.
+
     METHODS has_transporting_no_fields
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_has) TYPE abap_bool.
@@ -29,10 +30,10 @@ CLASS zcl_skylint_pref_line_exists IMPLEMENTATION.
         VALUE #( description       = 'Prefer line_exists( ) over READ TABLE ... TRANSPORTING NO FIELDS'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code     = c_finding_codes-prefer_line_exists
-                       severity = if_ci_atc_check=>finding_severities-warning
-                       text     = 'Prefer line_exists( ... ) instead of READ TABLE ... TRANSPORTING NO FIELDS'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                     ( code           = c_finding_codes-prefer_line_exists
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Prefer line_exists( ... ) instead of READ TABLE ... TRANSPORTING NO FIELDS'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

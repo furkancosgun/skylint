@@ -24,9 +24,9 @@ CLASS zcl_skylint_pref_test_name IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Enforce test method naming convention (TEST_, SHOULD_) in AUnit'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code     = c_finding_codes-test_name
-                                       severity = if_ci_atc_check=>finding_severities-warning
-                                       text     = 'Test methods should start with TEST_ or SHOULD_'
+                                     ( code           = c_finding_codes-test_name
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Test methods should start with TEST_ or SHOULD_'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 

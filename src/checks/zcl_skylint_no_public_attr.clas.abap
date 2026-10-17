@@ -25,10 +25,10 @@ CLASS zcl_skylint_no_public_attr IMPLEMENTATION.
         VALUE #( description       = 'Avoid mutable public attributes in classes'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code     = c_finding_codes-public_attribute
-                       severity = if_ci_atc_check=>finding_severities-warning
-                       text     = 'Avoid public attributes; use private/protected with getters or READ-ONLY'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                     ( code           = c_finding_codes-public_attribute
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Avoid public attributes; use private/protected with getters or READ-ONLY'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

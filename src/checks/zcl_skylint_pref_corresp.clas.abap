@@ -25,15 +25,16 @@ ENDCLASS.
 
 CLASS zcl_skylint_pref_corresp IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Prefer CORRESPONDING Expression over MOVE-CORRESPONDING'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code     = c_finding_codes-prefer_corresponding
-                                       severity = if_ci_atc_check=>finding_severities-warning
-                                       text     = 'Prefer functional CORRESPONDING #( ... ) over MOVE-CORRESPONDING'
-                                       pseudo_comment = c_pseudo_comment ) )
-                                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-prefer_corresponding
-                                                                short_text = 'Use CORRESPONDING expression' ) ) ) ).
+    super->constructor(
+        VALUE #( description       = 'skylint: Prefer CORRESPONDING Expression over MOVE-CORRESPONDING'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #(
+                     ( code           = c_finding_codes-prefer_corresponding
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Prefer functional CORRESPONDING #( ... ) over MOVE-CORRESPONDING'
+                       pseudo_comment = c_pseudo_comment ) )
+                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-prefer_corresponding
+                                                short_text = 'Use CORRESPONDING expression' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

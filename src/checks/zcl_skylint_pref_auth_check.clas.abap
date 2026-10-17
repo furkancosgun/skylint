@@ -20,6 +20,7 @@ CLASS zcl_skylint_pref_auth_check DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'AUTH_CHECK'.
+
     METHODS is_call_transaction
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -36,9 +37,9 @@ CLASS zcl_skylint_pref_auth_check IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'skylint: Call Transaction Authority Check'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code     = c_finding_codes-missing_auth_check
-                                       severity = if_ci_atc_check=>finding_severities-warning
-                                       text     = 'CALL TRANSACTION must be protected with AUTHORITY-CHECK'
+                                     ( code           = c_finding_codes-missing_auth_check
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'CALL TRANSACTION must be protected with AUTHORITY-CHECK'
                                        pseudo_comment = c_pseudo_comment ) )
                                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-add_auth_check
                                                                 short_text = 'Add WITH AUTHORITY-CHECK' ) ) ) ).

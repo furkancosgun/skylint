@@ -49,9 +49,6 @@
       "checkName": "ZSKYLINT_NO_EMPTY_BLOCK"
     },
     {
-      "checkName": "ZSKYLINT_NO_EMPTY_CATCH"
-    },
-    {
       "checkName": "ZSKYLINT_NO_DUP_COND"
     },
     {
@@ -115,9 +112,6 @@
       "checkName": "ZSKYLINT_NO_PARAM_NAME"
     },
     {
-      "checkName": "ZSKYLINT_NO_TRY_NO_CATCH"
-    },
-    {
       "checkName": "ZSKYLINT_PREF_CORRESP"
     },
     {
@@ -136,7 +130,7 @@
       "checkName": "ZSKYLINT_PREF_CLASS_EXC"
     },
     {
-      "checkName": "ZSKYLINT_NO_DYNAMIC_STMT"
+      "checkName": "ZSKYLINT_NO_DANGEROUS_STMT"
     },
     {
       "checkName": "ZSKYLINT_PREF_AUTH_CHECK"
@@ -214,9 +208,6 @@
       "checkName": "ZSKYLINT_PREF_TEST_NAME"
     },
     {
-      "checkName": "ZSKYLINT_NO_RAW_DYN_SQL"
-    },
-    {
       "checkName": "ZSKYLINT_PREF_FINAL_METH"
     },
     {
@@ -244,13 +235,28 @@
       "checkName": "ZSKYLINT_NO_PARAM_ESCAPE"
     },
     {
-      "checkName": "ZSKYLINT_NO_FORBIDDEN"
-    },
-    {
       "checkName": "ZSKYLINT_PREF_CASE"
     },
     {
       "checkName": "ZSKYLINT_NO_INLINE_LEN"
+    },
+    {
+      "checkName": "ZSKYLINT_MAX_ONE_STMT"
+    },
+    {
+      "checkName": "ZSKYLINT_NAMES_NO_DASH"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_INLINE"
+    },
+    {
+      "checkName": "ZSKYLINT_SLOW_PARAM_PASS"
+    },
+    {
+      "checkName": "ZSKYLINT_MODIFY_OWN_TAB"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_DYNAMIC_STMT"
     }
   ]
 }

@@ -9,8 +9,8 @@ const rootDir = path.resolve(__dirname, '..');
 const docsDir = path.join(rootDir, 'docs');
 const rulesDocsDir = path.join(docsDir, 'rules');
 const guideDocsDir = path.join(docsDir, 'guide');
+const fixturesDir = path.join(rootDir, 'test', 'fixtures');
 const checksDir = path.join(rootDir, 'src', 'checks');
-const fixturesDir = path.join(rootDir, 'tests', 'fixtures');
 
 // Ensure directories exist
 fs.mkdirSync(rulesDocsDir, { recursive: true });
@@ -47,7 +47,7 @@ function extractSnippet(lines, methodName) {
   return buffer.map((l) => (l.length >= minIndent ? l.slice(minIndent) : l)).join('\n').trim();
 }
 
-console.log('Generating documentation for 82 rules...');
+console.log(`Generating documentation for ${RULES.length} rules...`);
 
 for (const rule of RULES) {
   const checkFile = path.join(checksDir, `${rule.className.toLowerCase()}.clas.abap`);
@@ -222,13 +222,13 @@ layout: home
 hero:
   name: "Skylint"
   text: "Enterprise Clean ABAP Linter"
-  tagline: "82 Native ATC Rules for Clean ABAP & Cloud-Ready Systems. Blazing fast CLI & SAP-native integration."
+  tagline: "${RULES.length} Native ATC Rules for Clean ABAP & Cloud-Ready Systems. Blazing fast CLI & SAP-native integration."
   actions:
     - theme: brand
       text: Get Started
       link: /guide/getting-started
     - theme: alt
-      text: Explore 82 Rules
+      text: Explore ${RULES.length} Rules
       link: /rules/
 
 features:
@@ -236,7 +236,7 @@ features:
     title: Native SAP ATC Integration
     details: Zero adapter layers. Runs directly inside SAP GUI and ADT via if_ci_atc_check with abapGit transport.
   - icon: 🌿
-    title: 82 Clean ABAP Rules
+    title: ${RULES.length} Clean ABAP Rules
     details: Enforcing modern syntax, expression-based ABAP, safety boundaries, and object-oriented cleanliness.
   - icon: 🛠️
     title: Automated QuickFixes

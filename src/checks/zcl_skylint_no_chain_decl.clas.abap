@@ -21,6 +21,7 @@ CLASS zcl_skylint_no_chain_decl DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'CHAIN_DECL'.
+
     DATA mv_allow_structure_chains TYPE abap_bool VALUE abap_true.
 
     METHODS is_structure_start
@@ -53,10 +54,10 @@ CLASS zcl_skylint_no_chain_decl IMPLEMENTATION.
         VALUE #( description       = 'Avoid chained declarations (DATA:, TYPES:, etc.)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code     = c_finding_codes-chained_declaration
-                       severity = if_ci_atc_check=>finding_severities-warning
-                       text     = 'Avoid chained declarations; declare each entity individually'
-                                       pseudo_comment = c_pseudo_comment ) )
+                     ( code           = c_finding_codes-chained_declaration
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Avoid chained declarations; declare each entity individually'
+                       pseudo_comment = c_pseudo_comment ) )
                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-resolve_chain
                                                 short_text = 'Resolve chain into single declarations' ) )
                  attributes        = VALUE #( ( name  = 'ALLOW_STRUCTURE_CHAINS'

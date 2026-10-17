@@ -1,0 +1,4 @@
+[
+  { "method": "TEST_001", "code": "NOT_OWN_TB", "line": 2, "column": 4 },
+  { "method": "TEST_002", "code": null }
+]

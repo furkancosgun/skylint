@@ -16,6 +16,7 @@ CLASS zcl_skylint_no_single_when DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'SINGLE_WHEN'.
+
     METHODS is_when_others
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_is) TYPE abap_bool.
@@ -33,9 +34,9 @@ CLASS zcl_skylint_no_single_when IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Avoid short CASE constructs with only one WHEN branch; prefer IF'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code     = c_finding_codes-short_case
-                                       severity = if_ci_atc_check=>finding_severities-warning
-                                       text     = 'CASE statement has <= 1 WHEN branch; prefer IF'
+                                     ( code           = c_finding_codes-short_case
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'CASE statement has <= 1 WHEN branch; prefer IF'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 

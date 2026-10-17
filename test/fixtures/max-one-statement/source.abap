@@ -1,0 +1,16 @@
+CLASS zcl_test_max_one_stmt DEFINITION PUBLIC FINAL CREATE PUBLIC.
+  PUBLIC SECTION.
+    METHODS test_001.
+    METHODS test_002.
+ENDCLASS.
+
+CLASS zcl_test_max_one_stmt IMPLEMENTATION.
+  METHOD test_001.
+    DATA lv_a TYPE i. DATA lv_b TYPE i.
+  ENDMETHOD.
+
+  METHOD test_002.
+    DATA lv_x TYPE i.
+    DATA lv_y TYPE i.
+  ENDMETHOD.
+ENDCLASS.

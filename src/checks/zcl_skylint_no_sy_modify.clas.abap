@@ -16,6 +16,7 @@ CLASS zcl_skylint_no_sy_modify DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'SY_MODIFY'.
+
     METHODS is_system_variable_mod
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -37,10 +38,10 @@ CLASS zcl_skylint_no_sy_modify IMPLEMENTATION.
         VALUE #( description       = 'skylint: Avoid sy-* System Variable Modification'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code     = c_finding_codes-system_var_mod
-                       severity = if_ci_atc_check=>finding_severities-warning
-                       text     = 'Avoid modifying system fields (sy-*); system variables are read-only'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                     ( code           = c_finding_codes-system_var_mod
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Avoid modifying system fields (sy-*); system variables are read-only'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

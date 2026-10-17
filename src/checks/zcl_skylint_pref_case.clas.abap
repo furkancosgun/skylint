@@ -16,6 +16,7 @@ CLASS zcl_skylint_pref_case DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_CASE'.
+
     DATA mv_min_branches TYPE i VALUE 3.
 
     METHODS get_compared_variable
@@ -31,10 +32,10 @@ CLASS zcl_skylint_pref_case IMPLEMENTATION.
         VALUE #( description       = 'Change IF to CASE when checking the same variable against multiple values'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code     = c_finding_codes-change_if_to_case
-                       severity = if_ci_atc_check=>finding_severities-warning
-                       text     = 'Multiple ELSEIF branches check the same variable; use CASE instead'
-                                       pseudo_comment = c_pseudo_comment ) )
+                     ( code           = c_finding_codes-change_if_to_case
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Multiple ELSEIF branches check the same variable; use CASE instead'
+                       pseudo_comment = c_pseudo_comment ) )
                  attributes        = VALUE #( ( name  = 'MIN_BRANCHES'
                                                 kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
                                                 value = REF #( mv_min_branches ) ) ) ) ).

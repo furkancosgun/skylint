@@ -1,0 +1,11 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "No Dashes in Variable and Form Names",
+    "originalLanguage": "en",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "category": "ZSKYLINT",
+  "implementingClass": "ZCL_SKYLINT_NAMES_NO_DASH",
+  "checkType": "remoteEnabled"
+}
