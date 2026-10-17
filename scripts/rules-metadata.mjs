@@ -299,4 +299,8 @@ export const RULES_METADATA = {
     title: 'Avoid Unnecessary Dynamic Programming Constructs',
     rationale: 'Dynamic programming (`ASSIGN (lv_var)`, `CALL METHOD (lv_method)`) disables compile-time type checking, hampers automated refactoring, and opens security vulnerabilities.',
   },
+  'prefer-public-constructor': {
+    title: 'Declare Constructor in PUBLIC SECTION',
+    rationale: 'Instance constructors must always be declared in the PUBLIC SECTION, even for classes with CREATE PRIVATE or CREATE PROTECTED, ensuring standard reflection, factory instantiation, and Clean ABAP compliance.',
+  },
 };

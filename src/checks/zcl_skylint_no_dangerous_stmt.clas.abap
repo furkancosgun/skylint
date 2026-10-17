@@ -110,8 +110,7 @@ CLASS zcl_skylint_no_dangerous_stmt IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     lv_ignore_dyn_sql = abap_false.
-    IF     mv_ignore_rap_query_provider = abap_true
-       AND is_procedure-id-name         = 'IF_RAP_QUERY_PROVIDER~SELECT'.
+    IF mv_ignore_rap_query_provider = abap_true AND is_procedure-id-name CP '*IF_RAP_QUERY_PROVIDER~SELECT'.
       lv_ignore_dyn_sql = abap_true.
     ENDIF.
 

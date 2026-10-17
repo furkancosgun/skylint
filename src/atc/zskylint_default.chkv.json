@@ -543,6 +543,9 @@
     },
     {
       "checkName": "ZSKYLINT_NO_DYNAMIC_STMT"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_PUB_CTOR"
     }
   ]
 }

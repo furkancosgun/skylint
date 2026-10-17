@@ -11,7 +11,7 @@ export default defineConfig({
     logo: '/logo.svg',
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
-      { text: 'Rules (74)', link: '/rules/' },
+      { text: 'Rules (75)', link: '/rules/' },
       { text: 'GitHub', link: 'https://github.com/furkancosgun/skylint' },
     ],
     sidebar: {
@@ -144,6 +144,10 @@ export default defineConfig({
       {
         "text": "prefer-inline",
         "link": "/rules/prefer-inline"
+      },
+      {
+        "text": "prefer-public-constructor",
+        "link": "/rules/prefer-public-constructor"
       }
     ]
   },

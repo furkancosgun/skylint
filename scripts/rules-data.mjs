@@ -1035,6 +1035,16 @@ ENDCASE.`,
       good: `CALL FUNCTION 'BAPI_USER_GET_DETAIL'.`,
     },
   },
+  {
+    ruleId: 'prefer-public-constructor',
+    className: 'ZCL_SKYLINT_PREF_PUB_CTOR',
+    pseudoComment: 'PUB_CTOR',
+    category: 'clean-abap',
+    example: {
+      bad: `CLASS zcl_service DEFINITION PUBLIC CREATE PRIVATE.\n  PRIVATE SECTION.\n    METHODS constructor.\nENDCLASS.`,
+      good: `CLASS zcl_service DEFINITION PUBLIC CREATE PRIVATE.\n  PUBLIC SECTION.\n    METHODS constructor.\nENDCLASS.`,
+    },
+  },
 ];
 
 export const RULE_BY_RULE_ID = new Map(RULES.map(r => [r.ruleId, r]));
