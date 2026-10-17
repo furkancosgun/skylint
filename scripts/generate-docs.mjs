@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { RULES, CATEGORIES } from './rules-data.mjs';
+import { RULES_METADATA } from './rules-metadata.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -36,7 +37,6 @@ function extractSnippet(lines, methodName) {
     }
   }
 
-  // De-indent snippet
   if (buffer.length === 0) return '';
   const minIndent = buffer.reduce((min, l) => {
     if (l.trim() === '') return min;
@@ -47,25 +47,70 @@ function extractSnippet(lines, methodName) {
   return buffer.map((l) => (l.length >= minIndent ? l.slice(minIndent) : l)).join('\n').trim();
 }
 
-console.log(`Generating documentation for ${RULES.length} rules...`);
+function extractAttributes(content) {
+  const attrBlockMatch = content.match(/attributes\s*=\s*VALUE\s*#\(([\s\S]*?)\)\s*\)\s*\./);
+  if (!attrBlockMatch) return [];
+  const block = attrBlockMatch[1];
+  const defaultKindMatch = block.match(/kind\s*=\s*if_ci_atc_check_meta_data=>attribute_kinds-([a-z]+)/);
+  const defaultKind = defaultKindMatch ? defaultKindMatch[1] : 'elementary';
+
+  const results = [];
+  const entries = [...block.matchAll(/\(\s*name\s*=\s*'([A-Za-z0-9_]+)'[\s\S]*?value\s*=\s*REF\s*#\(\s*([a-zA-Z0-9_]+)\s*\)/g)];
+  for (const e of entries) {
+    const name = e[1];
+    const varName = e[2];
+    const kindMatch = e[0].match(/kind\s*=\s*if_ci_atc_check_meta_data=>attribute_kinds-([a-z]+)/);
+    const kind = kindMatch ? kindMatch[1] : defaultKind;
+    const valRegex = new RegExp(`DATA\\s+${varName}\\s+TYPE\\s+\\S+\\s+VALUE\\s+([^.\\n\\r]+)\\.`, 'i');
+    const valM = content.match(valRegex);
+    let defVal = valM ? valM[1].trim() : '';
+    if (defVal.toLowerCase() === 'abap_true') defVal = 'true';
+    if (defVal.toLowerCase() === 'abap_false') defVal = 'false';
+
+    results.push({
+      name,
+      kind: kind === 'boolean' ? 'Boolean' : 'Integer / String',
+      defaultValue: defVal,
+    });
+  }
+  return results;
+}
+
+console.log(`Generating rich enterprise documentation for ${RULES.length} rules...`);
 
 for (const rule of RULES) {
   const checkFile = path.join(checksDir, `${rule.className.toLowerCase()}.clas.abap`);
-  let description = rule.ruleId;
+  let classDesc = rule.ruleId;
   let findingCode = 'UNKNOWN';
   let severity = 'warning';
   let hasQuickfix = false;
+  let attributes = [];
+  let findingTexts = [];
 
   if (fs.existsSync(checkFile)) {
     const content = fs.readFileSync(checkFile, 'utf8');
     const descMatch = content.match(/description\s*=\s*'([^']+)'/);
-    if (descMatch) description = descMatch[1].replace(/^skylint:\s*/i, '');
+    if (descMatch) classDesc = descMatch[1].replace(/^skylint:\s*/i, '').trim();
 
     const codeMatch = content.match(/c_finding_codes[\s\S]*?VALUE\s*'([A-Za-z0-9_]+)'/);
     if (codeMatch) findingCode = codeMatch[1];
 
+    const sevMatch = content.match(/severity\s*=\s*if_ci_atc_check=>finding_severities-([a-z]+)/);
+    if (sevMatch) severity = sevMatch[1];
+
     hasQuickfix = /quickfix_codes|quickfix_replace|quickfix_delete/i.test(content);
+    attributes = extractAttributes(content);
+
+    const fMatches = [...content.matchAll(/text\s*=\s*(?:'([^']+)'|\|([^|]+)\|)/g)].map((x) => (x[1] || x[2]).trim());
+    if (fMatches.length > 0) {
+      findingTexts = fMatches;
+    }
   }
+
+  const meta = RULES_METADATA[rule.ruleId] || {
+    title: rule.ruleId,
+    rationale: classDesc,
+  };
 
   // Prioritize canonical Clean ABAP example from RULES, fallback to fixture
   let nonCompliantCode = rule.example?.bad || '';
@@ -96,14 +141,29 @@ for (const rule of RULES) {
 
   const categoryInfo = CATEGORIES[rule.category] || { title: rule.category };
 
-  let ruleDoc = `# \`${rule.ruleId}\`\n\n`;
-  ruleDoc += `> **Category:** [${categoryInfo.title}](/rules/#${rule.category}) &nbsp;|&nbsp; `;
-  ruleDoc += `**Severity:** \`${severity}\` &nbsp;|&nbsp; `;
-  ruleDoc += `**Finding Code:** \`${findingCode}\` &nbsp;|&nbsp; `;
-  ruleDoc += `**QuickFix:** ${hasQuickfix ? '⚡ Yes' : 'No'}\n\n`;
+  // Rule Page Title
+  let ruleDoc = `# ${meta.title}\n\n`;
 
-  ruleDoc += `## Description\n\n${description}.\n\n`;
+  // Badge bar wrapper with inline margin
+  ruleDoc += `<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">\n`;
+  ruleDoc += `  <Badge type="tip" text="${categoryInfo.title}" />\n`;
+  if (hasQuickfix) {
+    ruleDoc += `  <Badge type="warning" text="⚡ QuickFix Ready" />\n`;
+  }
+  ruleDoc += `  <Badge type="danger" text="Finding: ${findingCode}" />\n`;
+  ruleDoc += `</div>\n\n`;
 
+  // Meaningful Description: Include check purpose & specific finding text
+  ruleDoc += `## 📖 Description\n\n`;
+  ruleDoc += `${classDesc}.\n\n`;
+  if (findingTexts.length > 0 && findingTexts[0] !== classDesc) {
+    ruleDoc += `> **ATC Finding Message:** \`${findingTexts[0]}\`\n\n`;
+  }
+
+  // Rationale & Best Practices (No broken external link)
+  ruleDoc += `## 🧠 Rationale & Best Practices\n\n${meta.rationale}\n\n`;
+
+  // Code Examples
   if (nonCompliantCode) {
     ruleDoc += `## ❌ Non-Compliant Code\n\n\`\`\`abap\n${nonCompliantCode}\n\`\`\`\n\n`;
   }
@@ -112,15 +172,47 @@ for (const rule of RULES) {
     ruleDoc += `## ✅ Compliant Code\n\n\`\`\`abap\n${compliantCode}\n\`\`\`\n\n`;
   }
 
+  // QuickFix section if available
+  if (hasQuickfix) {
+    ruleDoc += `## ⚡ Automated QuickFix\n\n`;
+    ruleDoc += `This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):\n`;
+    ruleDoc += `1. Position the cursor on the flagged statement.\n`;
+    ruleDoc += `2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).\n`;
+    ruleDoc += `3. Select the automated refactoring to apply the clean syntax immediately.\n\n`;
+  }
+
+  // Configuration Table & Attributes
+  if (attributes.length > 0) {
+    ruleDoc += `## ⚙️ Configurable Parameters (ATC Variant / Profile)\n\n`;
+    ruleDoc += `This check can be fine-tuned directly in the ATC Check Variant Editor (\`CHKV\`) in Eclipse ADT:\n\n`;
+    ruleDoc += `| Parameter Name | Data Type | Default Value | Description |\n`;
+    ruleDoc += `|---|---|:---:|---|\n`;
+    for (const attr of attributes) {
+      ruleDoc += `| \`${attr.name}\` | \`${attr.kind}\` | \`${attr.defaultValue}\` | Configurable attribute for ${rule.ruleId} |\n`;
+    }
+    ruleDoc += `\n`;
+  }
+
+  // CLI Configuration
+  ruleDoc += `## 🛠️ CLI / CI Configuration (\`skylint.yaml\`)\n\n`;
+  ruleDoc += `\`\`\`yaml\nchecks:\n  ${rule.ruleId}:\n    enabled: true\n    severity: ${severity}\n`;
+  if (attributes.length > 0) {
+    ruleDoc += `    attributes:\n`;
+    for (const attr of attributes) {
+      ruleDoc += `      ${attr.name}: ${attr.defaultValue}\n`;
+    }
+  }
+  ruleDoc += `\`\`\`\n\n`;
+
+  // Suppression
   ruleDoc += `## 🤫 Suppression & Pseudo-Comments\n\n`;
   ruleDoc += `To suppress findings for this rule, append the pseudo-comment or pragma to the statement:\n\n`;
   ruleDoc += `\`\`\`abap\n" Using pseudo-comment:\n... "#EC ${rule.pseudoComment}\n" Or with SAP CI_ prefix:\n... "#EC CI_${rule.pseudoComment}\n\n" Using pragma:\n... ##${rule.pseudoComment}.\n" Or with SAP CI_ prefix:\n... ##CI_${rule.pseudoComment}.\n\`\`\`\n\n`;
 
-  ruleDoc += `## Configuration (\`skylint.yaml\`)\n\n`;
-  ruleDoc += `\`\`\`yaml\nchecks:\n  ${rule.ruleId}:\n    enabled: true\n    severity: ${severity}\n\`\`\`\n\n`;
-
-  ruleDoc += `## ABAP Class Details\n\n`;
+  // ABAP Class Details
+  ruleDoc += `## 🔍 ABAP Implementation Details\n\n`;
   ruleDoc += `* **Native ATC Class:** \`${rule.className}\`\n`;
+  ruleDoc += `* **Finding Code:** \`${findingCode}\`\n`;
   ruleDoc += `* **Implementation File:** [${rule.className.toLowerCase()}.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/${rule.className.toLowerCase()}.clas.abap)\n`;
 
   fs.writeFileSync(path.join(rulesDocsDir, `${rule.ruleId}.md`), ruleDoc, 'utf8');
@@ -128,7 +220,8 @@ for (const rule of RULES) {
 
 // Generate rules/index.md
 let catalogMd = `# 📋 Skylint Rules Catalog (${RULES.length} Rules)\n\n`;
-catalogMd += `Comprehensive reference for all ${RULES.length} Clean ABAP, security, performance, and architecture rules in Skylint.\n\n`;
+catalogMd += `Comprehensive reference for all **${RULES.length}** Clean ABAP, security, performance, and architecture rules in Skylint.\n\n`;
+catalogMd += `Every rule runs natively inside the **ABAP Test Cockpit (ATC)** and supports automated refactorings via Eclipse ADT QuickFixes.\n\n`;
 
 for (const [catKey, catInfo] of Object.entries(CATEGORIES)) {
   const catRules = RULES.filter((r) => r.category === catKey);
@@ -175,17 +268,20 @@ export default defineConfig({
   title: 'Skylint',
   description: 'Enterprise Clean ABAP & Cloud ATC Linter Engine',
   base: process.env.VITEPRESS_BASE || '/',
+  head: [
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }],
+  ],
   themeConfig: {
     logo: '/logo.svg',
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
-      { text: 'Rules', link: '/rules/' },
+      { text: 'Rules (${RULES.length})', link: '/rules/' },
       { text: 'GitHub', link: 'https://github.com/furkancosgun/skylint' },
     ],
     sidebar: {
       '/guide/': [
         {
-          text: 'Introduction',
+          text: 'Architecture & Guides',
           items: [
             { text: 'Getting Started', link: '/guide/getting-started' },
             { text: 'Configuration (skylint.yaml)', link: '/guide/configuration' },
@@ -222,7 +318,10 @@ layout: home
 hero:
   name: "Skylint"
   text: "Enterprise Clean ABAP Linter"
-  tagline: "${RULES.length} Native ATC Rules for Clean ABAP & Cloud-Ready Systems. Blazing fast CLI & SAP-native integration."
+  tagline: "${RULES.length} Native ATC Rules for Clean ABAP & Cloud-Ready Systems. 100% ABAP Cloud, zero legacy baggage, instant QuickFixes."
+  image:
+    src: /logo.svg
+    alt: Skylint Cloud Logo
   actions:
     - theme: brand
       text: Get Started
@@ -234,19 +333,19 @@ hero:
 features:
   - icon: ⚡
     title: Native SAP ATC Integration
-    details: Zero adapter layers. Runs directly inside SAP GUI and ADT via if_ci_atc_check with abapGit transport.
+    details: Zero adapter layers. Runs directly inside SAP GUI and Eclipse ADT via if_ci_atc_check with abapGit transport.
   - icon: 🌿
     title: ${RULES.length} Clean ABAP Rules
     details: Enforcing modern syntax, expression-based ABAP, safety boundaries, and object-oriented cleanliness.
   - icon: 🛠️
     title: Automated QuickFixes
-    details: Built-in automated refactoring for modern syntax upgrades (lines, string templates, NEW #, etc.).
+    details: Built-in automated refactoring for modern syntax upgrades (lines, string templates, NEW #, etc.) with Ctrl + 1.
   - icon: 🚀
-    title: High-Performance CLI
+    title: High-Performance CLI & CI/CD
     details: Fast local scanning, Git pre-commit hooks, and CI/CD SARIF reports powered by transpile engine.
 ---
 `;
 
 fs.writeFileSync(path.join(docsDir, 'index.md'), indexMd, 'utf8');
 
-console.log('✓ All documentation and VitePress configuration generated successfully.');
+console.log('✓ All enterprise documentation and VitePress configuration generated successfully.');

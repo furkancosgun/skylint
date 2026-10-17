@@ -1,10 +1,20 @@
-# `no-yoda-conditions`
+# Avoid Yoda Conditions
 
-> **Category:** [Anti-Patterns & Bad Practices](/rules/#anti-patterns) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `YODACOND` &nbsp;|&nbsp; **QuickFix:** ⚡ Yes
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="tip" text="Anti-Patterns & Bad Practices" />
+  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="danger" text="Finding: YODACOND" />
+</div>
 
-## Description
+## 📖 Description
 
 Avoid Yoda conditions in comparison expressions.
+
+> **ATC Finding Message:** `Avoid Yoda conditions; place variable before literal in comparison`
+
+## 🧠 Rationale & Best Practices
+
+Placing constants or literals on the left side of comparisons (`IF 42 = lv_value`) impairs readability. ABAP natural reading flow expects the variable or subject on the left (`IF lv_value = 42`).
 
 ## ❌ Non-Compliant Code
 
@@ -20,6 +30,22 @@ ENDIF.
 IF lv_count = 0.
   process( ).
 ENDIF.
+```
+
+## ⚡ Automated QuickFix
+
+This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
+1. Position the cursor on the flagged statement.
+2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
+3. Select the automated refactoring to apply the clean syntax immediately.
+
+## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+
+```yaml
+checks:
+  no-yoda-conditions:
+    enabled: true
+    severity: warning
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -38,16 +64,8 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_YODA_COND.
 ```
 
-## Configuration (`skylint.yaml`)
-
-```yaml
-checks:
-  no-yoda-conditions:
-    enabled: true
-    severity: warning
-```
-
-## ABAP Class Details
+## 🔍 ABAP Implementation Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_YODA_COND`
+* **Finding Code:** `YODACOND`
 * **Implementation File:** [zcl_skylint_no_yoda_cond.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_yoda_cond.clas.abap)

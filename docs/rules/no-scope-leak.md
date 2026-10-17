@@ -1,10 +1,19 @@
-# `no-scope-leak`
+# Avoid Variable Scope Leaking from Inner Blocks
 
-> **Category:** [Anti-Patterns & Bad Practices](/rules/#anti-patterns) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `SCOPELEAK` &nbsp;|&nbsp; **QuickFix:** No
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="tip" text="Anti-Patterns & Bad Practices" />
+  <Badge type="danger" text="Finding: SCOPELEAK" />
+</div>
 
-## Description
+## 📖 Description
 
 Scope of variable (avoid variable leaking outside control blocks).
+
+> **ATC Finding Message:** `Variable declared in inner block is referenced outside its scope`
+
+## 🧠 Rationale & Best Practices
+
+In ABAP, variable declarations inside control blocks (`IF`, `LOOP`) have procedure-wide scope. Using an inner-declared variable outside its originating block creates confusing temporal dependencies.
 
 ## ❌ Non-Compliant Code
 
@@ -25,6 +34,15 @@ ENDIF.
 use_value( lv_value ).
 ```
 
+## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+
+```yaml
+checks:
+  no-scope-leak:
+    enabled: true
+    severity: warning
+```
+
 ## 🤫 Suppression & Pseudo-Comments
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
@@ -41,16 +59,8 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_SCOPE_LEAK.
 ```
 
-## Configuration (`skylint.yaml`)
-
-```yaml
-checks:
-  no-scope-leak:
-    enabled: true
-    severity: warning
-```
-
-## ABAP Class Details
+## 🔍 ABAP Implementation Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_SCOPE_LEAK`
+* **Finding Code:** `SCOPELEAK`
 * **Implementation File:** [zcl_skylint_no_scope_leak.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_scope_leak.clas.abap)

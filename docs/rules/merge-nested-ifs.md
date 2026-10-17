@@ -1,10 +1,19 @@
-# `merge-nested-ifs`
+# Merge Nested IF Statements
 
-> **Category:** [Clean ABAP & Modern Syntax](/rules/#clean-abap) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `NESTEDIF` &nbsp;|&nbsp; **QuickFix:** No
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="tip" text="Clean ABAP & Modern Syntax" />
+  <Badge type="danger" text="Finding: NESTEDIF" />
+</div>
 
-## Description
+## 📖 Description
 
 Detect consecutive nested IF blocks that can be merged with AND.
+
+> **ATC Finding Message:** `Nested IF block can be merged with outer IF using AND`
+
+## 🧠 Rationale & Best Practices
+
+Consecutive nested `IF` statements without intermediate statements can be combined with `AND`. This reduces nesting depth, flattens control flow, and simplifies cyclomatic complexity.
 
 ## ❌ Non-Compliant Code
 
@@ -24,6 +33,15 @@ IF is_connected( ) AND has_permission( ).
 ENDIF.
 ```
 
+## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+
+```yaml
+checks:
+  merge-nested-ifs:
+    enabled: true
+    severity: warning
+```
+
 ## 🤫 Suppression & Pseudo-Comments
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
@@ -40,16 +58,8 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_MERGE_IFS.
 ```
 
-## Configuration (`skylint.yaml`)
-
-```yaml
-checks:
-  merge-nested-ifs:
-    enabled: true
-    severity: warning
-```
-
-## ABAP Class Details
+## 🔍 ABAP Implementation Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_MERGE_IFS`
+* **Finding Code:** `NESTEDIF`
 * **Implementation File:** [zcl_skylint_pref_merge_ifs.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_pref_merge_ifs.clas.abap)

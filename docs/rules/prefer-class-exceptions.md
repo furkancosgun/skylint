@@ -1,10 +1,19 @@
-# `prefer-class-exceptions`
+# Prefer Class-Based Exceptions over Classic EXCEPTIONS
 
-> **Category:** [Clean ABAP & Modern Syntax](/rules/#clean-abap) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `CLASS_EXC` &nbsp;|&nbsp; **QuickFix:** No
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="tip" text="Clean ABAP & Modern Syntax" />
+  <Badge type="danger" text="Finding: CLASS_EXC" />
+</div>
 
-## Description
+## 📖 Description
 
 Prefer Class-Based Exceptions over Classic EXCEPTIONS.
+
+> **ATC Finding Message:** `Prefer class-based exceptions (RAISING) over classic EXCEPTIONS`
+
+## 🧠 Rationale & Best Practices
+
+Classic non-class exceptions (set via `sy-subrc`) lack stack traces, cannot carry context data, and cannot be propagated up call stacks cleanly. Use class-based exceptions (`CX_ROOT` subclasses).
 
 ## ❌ Non-Compliant Code
 
@@ -16,6 +25,15 @@ METHODS execute EXCEPTIONS not_found failed.
 
 ```abap
 METHODS execute RAISING cx_not_found cx_failed.
+```
+
+## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+
+```yaml
+checks:
+  prefer-class-exceptions:
+    enabled: true
+    severity: warning
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -34,16 +52,8 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_CLASS_EXC.
 ```
 
-## Configuration (`skylint.yaml`)
-
-```yaml
-checks:
-  prefer-class-exceptions:
-    enabled: true
-    severity: warning
-```
-
-## ABAP Class Details
+## 🔍 ABAP Implementation Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_CLASS_EXC`
+* **Finding Code:** `CLASS_EXC`
 * **Implementation File:** [zcl_skylint_pref_class_exc.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_pref_class_exc.clas.abap)

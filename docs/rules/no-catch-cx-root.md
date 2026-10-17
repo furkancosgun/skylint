@@ -1,10 +1,19 @@
-# `no-catch-cx-root`
+# Avoid Catching Generic CX_ROOT
 
-> **Category:** [Security & Robustness](/rules/#security) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `CATCH_ROOT` &nbsp;|&nbsp; **QuickFix:** No
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="tip" text="Security & Robustness" />
+  <Badge type="danger" text="Finding: CATCH_ROOT" />
+</div>
 
-## Description
+## 📖 Description
 
 Avoid generic CATCH cx_root; catch specific exception classes.
+
+> **ATC Finding Message:** `Avoid generic CATCH cx_root; catch specific exception classes instead`
+
+## 🧠 Rationale & Best Practices
+
+Catching `cx_root` indiscriminately swallows system runtime errors, resource exhaustion errors, and programming bugs, masking critical defects from developers.
 
 ## ❌ Non-Compliant Code
 
@@ -26,6 +35,15 @@ TRY.
 ENDTRY.
 ```
 
+## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+
+```yaml
+checks:
+  no-catch-cx-root:
+    enabled: true
+    severity: warning
+```
+
 ## 🤫 Suppression & Pseudo-Comments
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
@@ -42,16 +60,8 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_CATCH_ROOT.
 ```
 
-## Configuration (`skylint.yaml`)
-
-```yaml
-checks:
-  no-catch-cx-root:
-    enabled: true
-    severity: warning
-```
-
-## ABAP Class Details
+## 🔍 ABAP Implementation Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_CATCH_ROOT`
+* **Finding Code:** `CATCH_ROOT`
 * **Implementation File:** [zcl_skylint_no_catch_root.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_catch_root.clas.abap)

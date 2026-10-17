@@ -1,10 +1,19 @@
-# `no-select-star`
+# Avoid SELECT * Queries
 
-> **Category:** [Performance & Database](/rules/#performance) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `SELECTSTAR` &nbsp;|&nbsp; **QuickFix:** No
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="tip" text="Performance & Database" />
+  <Badge type="danger" text="Finding: SELECTSTAR" />
+</div>
 
-## Description
+## 📖 Description
 
 Select performance (Avoid SELECT * and SELECT ... ENDSELECT).
+
+> **ATC Finding Message:** `Avoid SELECT *; specify required columns explicitly`
+
+## 🧠 Rationale & Best Practices
+
+Selecting all database columns transfers unnecessary data across the network, bypasses secondary indexes, and breaks table buffering. Always specify the explicit columns required.
 
 ## ❌ Non-Compliant Code
 
@@ -18,6 +27,27 @@ SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
 SELECT customer_id, first_name, last_name
   FROM /dmo/customer
   INTO TABLE @lt_customers.
+```
+
+## ⚙️ Configurable Parameters (ATC Variant / Profile)
+
+This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
+
+| Parameter Name | Data Type | Default Value | Description |
+|---|---|:---:|---|
+| `CHECK_SELECT_STAR` | `Boolean` | `true` | Configurable attribute for no-select-star |
+| `CHECK_ENDSELECT` | `Boolean` | `true` | Configurable attribute for no-select-star |
+
+## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+
+```yaml
+checks:
+  no-select-star:
+    enabled: true
+    severity: warning
+    attributes:
+      CHECK_SELECT_STAR: true
+      CHECK_ENDSELECT: true
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -36,16 +66,8 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_SELECT_STAR.
 ```
 
-## Configuration (`skylint.yaml`)
-
-```yaml
-checks:
-  no-select-star:
-    enabled: true
-    severity: warning
-```
-
-## ABAP Class Details
+## 🔍 ABAP Implementation Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_SELECT_STAR`
+* **Finding Code:** `SELECTSTAR`
 * **Implementation File:** [zcl_skylint_no_select_star.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_select_star.clas.abap)

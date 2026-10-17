@@ -1,10 +1,19 @@
-# `max-attributes`
+# Limit Member Attributes per Class
 
-> **Category:** [Metrics & Complexity Limits](/rules/#metrics) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `ATTR_COUNT` &nbsp;|&nbsp; **QuickFix:** No
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="tip" text="Metrics & Complexity Limits" />
+  <Badge type="danger" text="Finding: ATTR_COUNT" />
+</div>
 
-## Description
+## 📖 Description
 
 Limit number of member attributes in a class (God Class smell).
+
+> **ATC Finding Message:** `Class has too many member attributes; split into cohesive components`
+
+## 🧠 Rationale & Best Practices
+
+Classes with dozens of member variables are almost always God Objects that handle multiple unrelated responsibilities. Split them into smaller, focused domain classes.
 
 ## ❌ Non-Compliant Code
 
@@ -25,6 +34,25 @@ CLASS cl_order DEFINITION.
 ENDCLASS.
 ```
 
+## ⚙️ Configurable Parameters (ATC Variant / Profile)
+
+This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
+
+| Parameter Name | Data Type | Default Value | Description |
+|---|---|:---:|---|
+| `MAX_ATTRIBUTES` | `Integer / String` | `5` | Configurable attribute for max-attributes |
+
+## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+
+```yaml
+checks:
+  max-attributes:
+    enabled: true
+    severity: warning
+    attributes:
+      MAX_ATTRIBUTES: 5
+```
+
 ## 🤫 Suppression & Pseudo-Comments
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
@@ -41,16 +69,8 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_ATTRIBUTES.
 ```
 
-## Configuration (`skylint.yaml`)
-
-```yaml
-checks:
-  max-attributes:
-    enabled: true
-    severity: warning
-```
-
-## ABAP Class Details
+## 🔍 ABAP Implementation Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_MAX_ATTRIBUTES`
+* **Finding Code:** `ATTR_COUNT`
 * **Implementation File:** [zcl_skylint_max_attributes.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_max_attributes.clas.abap)

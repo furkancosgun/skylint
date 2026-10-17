@@ -1,10 +1,20 @@
-# `prefer-calc-assign-op`
+# Prefer Calculation Assignment Operators (+=, -=, *=)
 
-> **Category:** [Clean ABAP & Modern Syntax](/rules/#clean-abap) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `CALC_ASSGN` &nbsp;|&nbsp; **QuickFix:** ⚡ Yes
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="tip" text="Clean ABAP & Modern Syntax" />
+  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="danger" text="Finding: CALC_ASSGN" />
+</div>
 
-## Description
+## 📖 Description
 
 Prefer calculation assignment operators (+=, -=, *=, /=) over var = var + 1.
+
+> **ATC Finding Message:** `Use calculation assignment operator (+=, -=) or ADD statement replacement`
+
+## 🧠 Rationale & Best Practices
+
+Modern ABAP supports arithmetic assignment operators (`lv_count += 1.`), which are cleaner and more expressive than verbose legacy assignments (`lv_count = lv_count + 1.`).
 
 ## ❌ Non-Compliant Code
 
@@ -18,6 +28,22 @@ lv_total = lv_total * 2.
 ```abap
 lv_count += 1.
 lv_total *= 2.
+```
+
+## ⚡ Automated QuickFix
+
+This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
+1. Position the cursor on the flagged statement.
+2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
+3. Select the automated refactoring to apply the clean syntax immediately.
+
+## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+
+```yaml
+checks:
+  prefer-calc-assign-op:
+    enabled: true
+    severity: warning
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -36,16 +62,8 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_CALC_ASSIGN.
 ```
 
-## Configuration (`skylint.yaml`)
-
-```yaml
-checks:
-  prefer-calc-assign-op:
-    enabled: true
-    severity: warning
-```
-
-## ABAP Class Details
+## 🔍 ABAP Implementation Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_CALC_OP`
+* **Finding Code:** `CALC_ASSGN`
 * **Implementation File:** [zcl_skylint_pref_calc_op.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_pref_calc_op.clas.abap)

@@ -1,10 +1,19 @@
-# `require-transporting`
+# Specify TRANSPORTING in MODIFY / READ TABLE
 
-> **Category:** [Performance & Database](/rules/#performance) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `FULL_MODIF` &nbsp;|&nbsp; **QuickFix:** No
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="tip" text="Performance & Database" />
+  <Badge type="danger" text="Finding: FULL_MODIF" />
+</div>
 
-## Description
+## 📖 Description
 
 Avoid full-line MODIFY itab inside LOOP without TRANSPORTING clause.
+
+> **ATC Finding Message:** `Specify TRANSPORTING fields in MODIFY itab inside loop for performance`
+
+## 🧠 Rationale & Best Practices
+
+Modifying internal tables without specifying `TRANSPORTING` copies all table fields across the buffer. Specify only the modified fields to optimize execution speed.
 
 ## ❌ Non-Compliant Code
 
@@ -24,6 +33,15 @@ LOOP AT lt_items INTO ls_item.
 ENDLOOP.
 ```
 
+## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+
+```yaml
+checks:
+  require-transporting:
+    enabled: true
+    severity: warning
+```
+
 ## 🤫 Suppression & Pseudo-Comments
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
@@ -40,16 +58,8 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_TRANSPORTING.
 ```
 
-## Configuration (`skylint.yaml`)
-
-```yaml
-checks:
-  require-transporting:
-    enabled: true
-    severity: warning
-```
-
-## ABAP Class Details
+## 🔍 ABAP Implementation Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_TRANSPORT`
+* **Finding Code:** `FULL_MODIF`
 * **Implementation File:** [zcl_skylint_pref_transport.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_pref_transport.clas.abap)

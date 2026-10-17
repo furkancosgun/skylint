@@ -1,10 +1,19 @@
-# `max-inheritance-depth`
+# Limit Inheritance Depth
 
-> **Category:** [Metrics & Complexity Limits](/rules/#metrics) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `DEEP_INHRT` &nbsp;|&nbsp; **QuickFix:** No
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="tip" text="Metrics & Complexity Limits" />
+  <Badge type="danger" text="Finding: DEEP_INHRT" />
+</div>
 
-## Description
+## 📖 Description
 
 Avoid deep class inheritance hierarchies.
+
+> **ATC Finding Message:** `Avoid deep class inheritance; prefer composition over inheritance`
+
+## 🧠 Rationale & Best Practices
+
+Deep class inheritance hierarchies create the fragile base class problem and tight coupling. Favor composition over inheritance (`HAS-A` instead of `IS-A`).
 
 ## ❌ Non-Compliant Code
 
@@ -23,6 +32,25 @@ CLASS lcl_worker DEFINITION.
 ENDCLASS.
 ```
 
+## ⚙️ Configurable Parameters (ATC Variant / Profile)
+
+This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
+
+| Parameter Name | Data Type | Default Value | Description |
+|---|---|:---:|---|
+| `MAX_DEPTH` | `Integer / String` | `1` | Configurable attribute for max-inheritance-depth |
+
+## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+
+```yaml
+checks:
+  max-inheritance-depth:
+    enabled: true
+    severity: warning
+    attributes:
+      MAX_DEPTH: 1
+```
+
 ## 🤫 Suppression & Pseudo-Comments
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
@@ -39,16 +67,8 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_INHERIT_DEPTH.
 ```
 
-## Configuration (`skylint.yaml`)
-
-```yaml
-checks:
-  max-inheritance-depth:
-    enabled: true
-    severity: warning
-```
-
-## ABAP Class Details
+## 🔍 ABAP Implementation Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_MAX_INHERIT`
+* **Finding Code:** `DEEP_INHRT`
 * **Implementation File:** [zcl_skylint_max_inherit.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_max_inherit.clas.abap)

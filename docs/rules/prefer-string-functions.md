@@ -1,10 +1,20 @@
-# `prefer-string-functions`
+# Prefer Built-in String Functions over SEARCH/SHIFT
 
-> **Category:** [Clean ABAP & Modern Syntax](/rules/#clean-abap) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `CONDENSE_S` &nbsp;|&nbsp; **QuickFix:** ⚡ Yes
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="tip" text="Clean ABAP & Modern Syntax" />
+  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="danger" text="Finding: CONDENSE_S" />
+</div>
 
-## Description
+## 📖 Description
 
 Detect obsolete string statements; prefer built-in functions.
+
+> **ATC Finding Message:** `Use modern built-in string function condense( ... ) instead`
+
+## 🧠 Rationale & Best Practices
+
+Procedural string statements (`SEARCH`, `SHIFT`, `TRANSLATE`) are legacy ABAP. Replace them with functional built-in string functions (`find`, `to_upper`, `substring`, `shift_left`).
 
 ## ❌ Non-Compliant Code
 
@@ -18,6 +28,22 @@ TRANSLATE lv_code TO UPPER CASE.
 ```abap
 lv_text = condense( lv_text ).
 lv_code = to_upper( lv_code ).
+```
+
+## ⚡ Automated QuickFix
+
+This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
+1. Position the cursor on the flagged statement.
+2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
+3. Select the automated refactoring to apply the clean syntax immediately.
+
+## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+
+```yaml
+checks:
+  prefer-string-functions:
+    enabled: true
+    severity: warning
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -36,16 +62,8 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_STR_FUNC.
 ```
 
-## Configuration (`skylint.yaml`)
-
-```yaml
-checks:
-  prefer-string-functions:
-    enabled: true
-    severity: warning
-```
-
-## ABAP Class Details
+## 🔍 ABAP Implementation Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_STR_FUNC`
+* **Finding Code:** `CONDENSE_S`
 * **Implementation File:** [zcl_skylint_pref_str_func.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_pref_str_func.clas.abap)

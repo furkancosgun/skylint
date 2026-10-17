@@ -1,10 +1,19 @@
-# `max-nesting-depth`
+# Limit Control Flow Nesting Depth
 
-> **Category:** [Metrics & Complexity Limits](/rules/#metrics) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `NESTING_DP` &nbsp;|&nbsp; **QuickFix:** No
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="tip" text="Metrics & Complexity Limits" />
+  <Badge type="danger" text="Finding: NESTING_DP" />
+</div>
 
-## Description
+## 📖 Description
 
 Nesting Depth Limit (excessive control block nesting).
+
+> **ATC Finding Message:** `Control block nesting depth exceeds`
+
+## 🧠 Rationale & Best Practices
+
+Deeply nested blocks (`IF`, `LOOP`, `TRY`, `CASE`) cause cognitive overload ("arrow antipattern"). Flatten nested code using early exits (`RETURN`), guard clauses, and extracted methods.
 
 ## ❌ Non-Compliant Code
 
@@ -29,6 +38,25 @@ ENDIF.
 execute( ).
 ```
 
+## ⚙️ Configurable Parameters (ATC Variant / Profile)
+
+This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
+
+| Parameter Name | Data Type | Default Value | Description |
+|---|---|:---:|---|
+| `MAX_DEPTH` | `Integer / String` | `3` | Configurable attribute for max-nesting-depth |
+
+## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+
+```yaml
+checks:
+  max-nesting-depth:
+    enabled: true
+    severity: warning
+    attributes:
+      MAX_DEPTH: 3
+```
+
 ## 🤫 Suppression & Pseudo-Comments
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
@@ -45,16 +73,8 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_NESTING.
 ```
 
-## Configuration (`skylint.yaml`)
-
-```yaml
-checks:
-  max-nesting-depth:
-    enabled: true
-    severity: warning
-```
-
-## ABAP Class Details
+## 🔍 ABAP Implementation Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_MAX_NESTING`
+* **Finding Code:** `NESTING_DP`
 * **Implementation File:** [zcl_skylint_max_nesting.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_max_nesting.clas.abap)

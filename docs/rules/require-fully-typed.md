@@ -1,10 +1,19 @@
-# `require-fully-typed`
+# Require Fully Typed Variables and Parameters
 
-> **Category:** [Clean ABAP & Modern Syntax](/rules/#clean-abap) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `FULLYTYPED` &nbsp;|&nbsp; **QuickFix:** No
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="tip" text="Clean ABAP & Modern Syntax" />
+  <Badge type="danger" text="Finding: FULLYTYPED" />
+</div>
 
-## Description
+## 📖 Description
 
 Enforce fully typed constant declarations.
+
+> **ATC Finding Message:** `Constant declaration should explicitly specify TYPE`
+
+## 🧠 Rationale & Best Practices
+
+Generic types (`ANY`, `DATA`, `TABLE`) bypass compiler type checking and hide runtime type mismatches. Always declare concrete, specific types unless writing truly generic frameworks.
 
 ## ❌ Non-Compliant Code
 
@@ -16,6 +25,15 @@ CONSTANTS c_status VALUE 'A'. " TYPE is omitted; implicitly typed as c length 1
 
 ```abap
 CONSTANTS c_status TYPE c LENGTH 1 VALUE 'A'.
+```
+
+## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+
+```yaml
+checks:
+  require-fully-typed:
+    enabled: true
+    severity: warning
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -34,16 +52,8 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_FULL_TYPED.
 ```
 
-## Configuration (`skylint.yaml`)
-
-```yaml
-checks:
-  require-fully-typed:
-    enabled: true
-    severity: warning
-```
-
-## ABAP Class Details
+## 🔍 ABAP Implementation Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_FULL_TYPED`
+* **Finding Code:** `FULLYTYPED`
 * **Implementation File:** [zcl_skylint_pref_full_typed.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_pref_full_typed.clas.abap)

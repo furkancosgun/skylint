@@ -1,10 +1,20 @@
-# `prefer-new-operator`
+# Prefer NEW #( ) over CREATE OBJECT
 
-> **Category:** [Clean ABAP & Modern Syntax](/rules/#clean-abap) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `PREFERNEW` &nbsp;|&nbsp; **QuickFix:** ⚡ Yes
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="tip" text="Clean ABAP & Modern Syntax" />
+  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="danger" text="Finding: PREFERNEW" />
+</div>
 
-## Description
+## 📖 Description
 
 Prefer NEW #( ) constructor over CREATE OBJECT and RAISE EXCEPTION TYPE.
+
+> **ATC Finding Message:** `Prefer NEW #( ) expression over CREATE OBJECT`
+
+## 🧠 Rationale & Best Practices
+
+The constructor expression `NEW #( )` is type-inferred, expression-capable, and avoids the archaic procedural `CREATE OBJECT` statement.
 
 ## ❌ Non-Compliant Code
 
@@ -18,6 +28,22 @@ CREATE OBJECT lo_customer.
 ```abap
 DATA lo_customer TYPE REF TO cl_customer.
 lo_customer = NEW #( ).
+```
+
+## ⚡ Automated QuickFix
+
+This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
+1. Position the cursor on the flagged statement.
+2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
+3. Select the automated refactoring to apply the clean syntax immediately.
+
+## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+
+```yaml
+checks:
+  prefer-new-operator:
+    enabled: true
+    severity: warning
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -36,16 +62,8 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_NEW_OP.
 ```
 
-## Configuration (`skylint.yaml`)
-
-```yaml
-checks:
-  prefer-new-operator:
-    enabled: true
-    severity: warning
-```
-
-## ABAP Class Details
+## 🔍 ABAP Implementation Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_NEW_OP`
+* **Finding Code:** `PREFERNEW`
 * **Implementation File:** [zcl_skylint_pref_new_op.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_pref_new_op.clas.abap)

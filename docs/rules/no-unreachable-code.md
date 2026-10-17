@@ -1,10 +1,20 @@
-# `no-unreachable-code`
+# Avoid Dead / Unreachable Code
 
-> **Category:** [Anti-Patterns & Bad Practices](/rules/#anti-patterns) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `UNREACHCD` &nbsp;|&nbsp; **QuickFix:** ⚡ Yes
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="tip" text="Anti-Patterns & Bad Practices" />
+  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="danger" text="Finding: UNREACHCD" />
+</div>
 
-## Description
+## 📖 Description
 
 Detect unreachable code following unconditional jump statements.
+
+> **ATC Finding Message:** `Statement is unreachable`
+
+## 🧠 Rationale & Best Practices
+
+Statements appearing immediately after an unconditional `RETURN`, `RAISE EXCEPTION`, `EXIT`, or `LEAVE PROGRAM` can never execute, cluttering the codebase and misleading maintainers.
 
 ## ❌ Non-Compliant Code
 
@@ -18,6 +28,22 @@ lv_count = lv_count + 1. " Unreachable statement
 ```abap
 lv_count = lv_count + 1.
 RETURN.
+```
+
+## ⚡ Automated QuickFix
+
+This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
+1. Position the cursor on the flagged statement.
+2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
+3. Select the automated refactoring to apply the clean syntax immediately.
+
+## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+
+```yaml
+checks:
+  no-unreachable-code:
+    enabled: true
+    severity: warning
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -36,16 +62,8 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_UNREACHABLE.
 ```
 
-## Configuration (`skylint.yaml`)
-
-```yaml
-checks:
-  no-unreachable-code:
-    enabled: true
-    severity: warning
-```
-
-## ABAP Class Details
+## 🔍 ABAP Implementation Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_UNREACHABLE`
+* **Finding Code:** `UNREACHCD`
 * **Implementation File:** [zcl_skylint_no_unreachable.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_unreachable.clas.abap)

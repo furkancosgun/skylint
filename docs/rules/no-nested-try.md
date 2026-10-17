@@ -1,10 +1,19 @@
-# `no-nested-try`
+# Avoid Deeply Nested TRY ... CATCH Blocks
 
-> **Category:** [Clean ABAP & Modern Syntax](/rules/#clean-abap) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `NESTED_TRY` &nbsp;|&nbsp; **QuickFix:** No
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="tip" text="Clean ABAP & Modern Syntax" />
+  <Badge type="danger" text="Finding: NESTED_TRY" />
+</div>
 
-## Description
+## 📖 Description
 
 Avoid nested TRY blocks; extract inner error handling to helper methods.
+
+> **ATC Finding Message:** `Avoid nested TRY blocks; extract to dedicated method`
+
+## 🧠 Rationale & Best Practices
+
+Nesting `TRY` blocks inside other `TRY` blocks obfuscates error handling flow. Extract inner protected operations into distinct methods.
 
 ## ❌ Non-Compliant Code
 
@@ -33,6 +42,15 @@ TRY.
 ENDTRY.
 ```
 
+## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+
+```yaml
+checks:
+  no-nested-try:
+    enabled: true
+    severity: warning
+```
+
 ## 🤫 Suppression & Pseudo-Comments
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
@@ -49,16 +67,8 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_NESTED_TRY.
 ```
 
-## Configuration (`skylint.yaml`)
-
-```yaml
-checks:
-  no-nested-try:
-    enabled: true
-    severity: warning
-```
-
-## ABAP Class Details
+## 🔍 ABAP Implementation Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_NESTED_TRY`
+* **Finding Code:** `NESTED_TRY`
 * **Implementation File:** [zcl_skylint_no_nested_try.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_nested_try.clas.abap)

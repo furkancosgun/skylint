@@ -1,10 +1,19 @@
-# `no-me-reference`
+# Avoid Redundant ME-> Self Reference
 
-> **Category:** [Anti-Patterns & Bad Practices](/rules/#anti-patterns) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `AVOIDME` &nbsp;|&nbsp; **QuickFix:** No
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="tip" text="Anti-Patterns & Bad Practices" />
+  <Badge type="danger" text="Finding: AVOIDME" />
+</div>
 
-## Description
+## 📖 Description
 
 Avoid self-reference ME->.
+
+> **ATC Finding Message:** `Avoid unnecessary ME-> reference`
+
+## 🧠 Rationale & Best Practices
+
+In ABAP, member variables and methods are automatically accessible within the instance context. Prefixing every member access with `me->` creates visual noise, except when disambiguating parameter shadowing in constructors.
 
 ## ❌ Non-Compliant Code
 
@@ -18,6 +27,25 @@ me->process_order( ).
 ```abap
 mv_status = c_active.
 process_order( ).
+```
+
+## ⚙️ Configurable Parameters (ATC Variant / Profile)
+
+This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
+
+| Parameter Name | Data Type | Default Value | Description |
+|---|---|:---:|---|
+| `ALLOW_IN_CONSTRUCTORS` | `Boolean` | `true` | Configurable attribute for no-me-reference |
+
+## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+
+```yaml
+checks:
+  no-me-reference:
+    enabled: true
+    severity: warning
+    attributes:
+      ALLOW_IN_CONSTRUCTORS: true
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -36,16 +64,8 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_ME.
 ```
 
-## Configuration (`skylint.yaml`)
-
-```yaml
-checks:
-  no-me-reference:
-    enabled: true
-    severity: warning
-```
-
-## ABAP Class Details
+## 🔍 ABAP Implementation Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_ME_REFERENCE`
+* **Finding Code:** `AVOIDME`
 * **Implementation File:** [zcl_skylint_no_me_reference.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_me_reference.clas.abap)

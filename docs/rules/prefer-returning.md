@@ -1,10 +1,19 @@
-# `prefer-returning`
+# Prefer Functional RETURNING Parameters
 
-> **Category:** [Clean ABAP & Modern Syntax](/rules/#clean-abap) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `PREFER_RET` &nbsp;|&nbsp; **QuickFix:** No
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="tip" text="Clean ABAP & Modern Syntax" />
+  <Badge type="danger" text="Finding: PREFER_RET" />
+</div>
 
-## Description
+## 📖 Description
 
 Prefer RETURNING over single EXPORTING.
+
+> **ATC Finding Message:** `Prefer functional RETURNING parameter over single EXPORTING parameter`
+
+## 🧠 Rationale & Best Practices
+
+Methods with a `RETURNING` parameter can be used directly within expressions, assignments, and assertions. Prefer `RETURNING` over a single `EXPORTING` parameter.
 
 ## ❌ Non-Compliant Code
 
@@ -18,6 +27,15 @@ METHODS calculate
 ```abap
 METHODS calculate
   RETURNING VALUE(rv_result) TYPE i.
+```
+
+## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+
+```yaml
+checks:
+  prefer-returning:
+    enabled: true
+    severity: warning
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -36,16 +54,8 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_RETURNING.
 ```
 
-## Configuration (`skylint.yaml`)
-
-```yaml
-checks:
-  prefer-returning:
-    enabled: true
-    severity: warning
-```
-
-## ABAP Class Details
+## 🔍 ABAP Implementation Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_RETURNING`
+* **Finding Code:** `PREFER_RET`
 * **Implementation File:** [zcl_skylint_pref_returning.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_pref_returning.clas.abap)

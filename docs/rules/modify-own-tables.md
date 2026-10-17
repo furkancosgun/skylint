@@ -1,10 +1,19 @@
-# `modify-own-tables`
+# Only Modify Tables Defined in Your Own Package/Component
 
-> **Category:** [Security & Robustness](/rules/#security) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `NOT_OWN_TB` &nbsp;|&nbsp; **QuickFix:** No
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="tip" text="Security & Robustness" />
+  <Badge type="danger" text="Finding: NOT_OWN_TB" />
+</div>
 
-## Description
+## 📖 Description
 
 Modify Only Own Database Tables.
+
+> **ATC Finding Message:** `Modify only customer-owned (Z/Y or /.../) database tables`
+
+## 🧠 Rationale & Best Practices
+
+Directly inserting, updating, or deleting tables belonging to another application component bypasses business validation logic and violates modular architecture.
 
 ## ❌ Non-Compliant Code
 
@@ -16,6 +25,15 @@ DELETE FROM mara WHERE matnr = '100'.
 
 ```abap
 DELETE FROM zmara WHERE matnr = '100'.
+```
+
+## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+
+```yaml
+checks:
+  modify-own-tables:
+    enabled: true
+    severity: warning
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -34,16 +52,8 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_OWN_TABLES.
 ```
 
-## Configuration (`skylint.yaml`)
-
-```yaml
-checks:
-  modify-own-tables:
-    enabled: true
-    severity: warning
-```
-
-## ABAP Class Details
+## 🔍 ABAP Implementation Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_MODIFY_OWN_TAB`
+* **Finding Code:** `NOT_OWN_TB`
 * **Implementation File:** [zcl_skylint_modify_own_tab.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_modify_own_tab.clas.abap)

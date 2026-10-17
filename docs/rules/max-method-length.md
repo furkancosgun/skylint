@@ -1,10 +1,19 @@
-# `max-method-length`
+# Limit Method Length (Statements)
 
-> **Category:** [Metrics & Complexity Limits](/rules/#metrics) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `METHOD_LEN` &nbsp;|&nbsp; **QuickFix:** No
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="tip" text="Metrics & Complexity Limits" />
+  <Badge type="danger" text="Finding: METHOD_LEN" />
+</div>
 
-## Description
+## 📖 Description
 
 Method Length Limit (excessive statement count).
+
+> **ATC Finding Message:** `Method length exceeds maximum allowed statement limit`
+
+## 🧠 Rationale & Best Practices
+
+Long methods violate the Single Responsibility Principle, accumulate side effects, and are notoriously difficult to unit test. Split large methods into small, focused sub-methods.
 
 ## ❌ Non-Compliant Code
 
@@ -26,6 +35,25 @@ METHOD execute.
 ENDMETHOD.
 ```
 
+## ⚙️ Configurable Parameters (ATC Variant / Profile)
+
+This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
+
+| Parameter Name | Data Type | Default Value | Description |
+|---|---|:---:|---|
+| `MAX_STATEMENTS` | `Integer / String` | `5` | Configurable attribute for max-method-length |
+
+## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+
+```yaml
+checks:
+  max-method-length:
+    enabled: true
+    severity: warning
+    attributes:
+      MAX_STATEMENTS: 5
+```
+
 ## 🤫 Suppression & Pseudo-Comments
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
@@ -42,16 +70,8 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_METHOD_LEN.
 ```
 
-## Configuration (`skylint.yaml`)
-
-```yaml
-checks:
-  max-method-length:
-    enabled: true
-    severity: warning
-```
-
-## ABAP Class Details
+## 🔍 ABAP Implementation Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_MAX_METHOD_LEN`
+* **Finding Code:** `METHOD_LEN`
 * **Implementation File:** [zcl_skylint_max_method_len.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_max_method_len.clas.abap)

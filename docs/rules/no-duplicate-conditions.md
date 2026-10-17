@@ -1,10 +1,19 @@
-# `no-duplicate-conditions`
+# Avoid Duplicate Branch Conditions
 
-> **Category:** [Anti-Patterns & Bad Practices](/rules/#anti-patterns) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `DUPCOND` &nbsp;|&nbsp; **QuickFix:** No
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="tip" text="Anti-Patterns & Bad Practices" />
+  <Badge type="danger" text="Finding: DUPCOND" />
+</div>
 
-## Description
+## 📖 Description
 
 Detect identical branch conditions in IF/ELSEIF and CASE/WHEN.
+
+> **ATC Finding Message:** `Identical condition in branch; duplicate branch is unreachable`
+
+## 🧠 Rationale & Best Practices
+
+Repeating the exact same condition across `IF / ELSEIF` or `WHEN` branches means subsequent duplicate branches can never be reached, indicating a copy-paste error or broken logic.
 
 ## ❌ Non-Compliant Code
 
@@ -20,6 +29,15 @@ ENDIF.
 IF lv_type = 'A'.
   process( ).
 ENDIF.
+```
+
+## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+
+```yaml
+checks:
+  no-duplicate-conditions:
+    enabled: true
+    severity: warning
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -38,16 +56,8 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_DUP_COND.
 ```
 
-## Configuration (`skylint.yaml`)
-
-```yaml
-checks:
-  no-duplicate-conditions:
-    enabled: true
-    severity: warning
-```
-
-## ABAP Class Details
+## 🔍 ABAP Implementation Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_DUP_COND`
+* **Finding Code:** `DUPCOND`
 * **Implementation File:** [zcl_skylint_no_dup_cond.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_dup_cond.clas.abap)

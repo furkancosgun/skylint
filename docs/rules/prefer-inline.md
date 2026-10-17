@@ -1,10 +1,19 @@
-# `prefer-inline`
+# Prefer Modern Inline Declarations in ABAP 7.40+
 
-> **Category:** [Clean ABAP & Modern Syntax](/rules/#clean-abap) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `PREF_INL` &nbsp;|&nbsp; **QuickFix:** No
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="tip" text="Clean ABAP & Modern Syntax" />
+  <Badge type="danger" text="Finding: PREF_INL" />
+</div>
 
-## Description
+## 📖 Description
 
 Prefer Inline Declarations.
+
+> **ATC Finding Message:** `Prefer inline declaration over separate DATA and assignment`
+
+## 🧠 Rationale & Best Practices
+
+In versions supporting inline declarations, declaring variables at the point of first use reduces variable lifetime scope and removes top-of-method variable clutter.
 
 ## ❌ Non-Compliant Code
 
@@ -17,6 +26,15 @@ lv_count = 10.
 
 ```abap
 DATA(lv_count) = 10.
+```
+
+## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+
+```yaml
+checks:
+  prefer-inline:
+    enabled: true
+    severity: warning
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -35,16 +53,8 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_PREFER_INLINE.
 ```
 
-## Configuration (`skylint.yaml`)
-
-```yaml
-checks:
-  prefer-inline:
-    enabled: true
-    severity: warning
-```
-
-## ABAP Class Details
+## 🔍 ABAP Implementation Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_INLINE`
+* **Finding Code:** `PREF_INL`
 * **Implementation File:** [zcl_skylint_pref_inline.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_pref_inline.clas.abap)

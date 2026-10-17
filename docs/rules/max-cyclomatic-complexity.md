@@ -1,10 +1,19 @@
-# `max-cyclomatic-complexity`
+# Limit Cyclomatic Complexity
 
-> **Category:** [Metrics & Complexity Limits](/rules/#metrics) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `CYCLO_COMP` &nbsp;|&nbsp; **QuickFix:** No
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="tip" text="Metrics & Complexity Limits" />
+  <Badge type="danger" text="Finding: CYCLO_COMP" />
+</div>
 
-## Description
+## 📖 Description
 
 Cyclomatic Complexity Threshold.
+
+> **ATC Finding Message:** `Procedure cyclomatic complexity exceeds threshold`
+
+## 🧠 Rationale & Best Practices
+
+High cyclomatic complexity means a method contains too many decision points (branches, loops, catches), making comprehensive unit test branch coverage nearly impossible.
 
 ## ❌ Non-Compliant Code
 
@@ -25,6 +34,25 @@ METHOD compute.
 ENDMETHOD.
 ```
 
+## ⚙️ Configurable Parameters (ATC Variant / Profile)
+
+This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
+
+| Parameter Name | Data Type | Default Value | Description |
+|---|---|:---:|---|
+| `MAX_COMPLEXITY` | `Integer / String` | `5` | Configurable attribute for max-cyclomatic-complexity |
+
+## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+
+```yaml
+checks:
+  max-cyclomatic-complexity:
+    enabled: true
+    severity: warning
+    attributes:
+      MAX_COMPLEXITY: 5
+```
+
 ## 🤫 Suppression & Pseudo-Comments
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
@@ -41,16 +69,8 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_CYCLO_COMP.
 ```
 
-## Configuration (`skylint.yaml`)
-
-```yaml
-checks:
-  max-cyclomatic-complexity:
-    enabled: true
-    severity: warning
-```
-
-## ABAP Class Details
+## 🔍 ABAP Implementation Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_MAX_CYCLO_COMP`
+* **Finding Code:** `CYCLO_COMP`
 * **Implementation File:** [zcl_skylint_max_cyclo_comp.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_max_cyclo_comp.clas.abap)

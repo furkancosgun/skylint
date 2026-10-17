@@ -1,10 +1,19 @@
-# `no-db-in-loop`
+# Avoid Database Access Inside Loops
 
-> **Category:** [Performance & Database](/rules/#performance) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `DBINLOOP` &nbsp;|&nbsp; **QuickFix:** No
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="tip" text="Performance & Database" />
+  <Badge type="danger" text="Finding: DBINLOOP" />
+</div>
 
-## Description
+## 📖 Description
 
 Avoid database access inside loop iterations.
+
+> **ATC Finding Message:** `Database access inside loop iteration; consider bulk operation or JOIN`
+
+## 🧠 Rationale & Best Practices
+
+Executing SQL queries (`SELECT`, `UPDATE`, `DELETE`) inside a `LOOP` generates an N+1 query performance anti-pattern. Fetch data in bulk using `FOR ALL ENTRIES` or SQL Joins outside the loop.
 
 ## ❌ Non-Compliant Code
 
@@ -25,6 +34,15 @@ SELECT * FROM /dmo/customer
   INTO TABLE @lt_customers.
 ```
 
+## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+
+```yaml
+checks:
+  no-db-in-loop:
+    enabled: true
+    severity: warning
+```
+
 ## 🤫 Suppression & Pseudo-Comments
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
@@ -41,16 +59,8 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_DB_IN_LOOP.
 ```
 
-## Configuration (`skylint.yaml`)
-
-```yaml
-checks:
-  no-db-in-loop:
-    enabled: true
-    severity: warning
-```
-
-## ABAP Class Details
+## 🔍 ABAP Implementation Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_DB_IN_LOOP`
+* **Finding Code:** `DBINLOOP`
 * **Implementation File:** [zcl_skylint_no_db_in_loop.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_db_in_loop.clas.abap)

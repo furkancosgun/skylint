@@ -1,10 +1,19 @@
-# `require-subrc-check`
+# Verify sy-subrc Promptly After System Calls
 
-> **Category:** [Security & Robustness](/rules/#security) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `CHECKSUBRC` &nbsp;|&nbsp; **QuickFix:** No
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="tip" text="Security & Robustness" />
+  <Badge type="danger" text="Finding: CHECKSUBRC" />
+</div>
 
-## Description
+## 📖 Description
 
 Check sy-subrc after DB, table and string operations.
+
+> **ATC Finding Message:** `Check sy-subrc after SELECT SINGLE, READ, AUTHORITY-CHECK, FIND, SEARCH`
+
+## 🧠 Rationale & Best Practices
+
+Statements that set `sy-subrc` (such as `SELECT SINGLE`, `READ TABLE`, `AUTHORITY-CHECK`, `ASSIGN`) must have their return code verified immediately before invoking unrelated statements.
 
 ## ❌ Non-Compliant Code
 
@@ -20,6 +29,33 @@ SELECT SINGLE * FROM /dmo/customer WHERE customer_id = @lv_id INTO @ls_customer.
 IF sy-subrc = 0.
   process_customer( ls_customer ).
 ENDIF.
+```
+
+## ⚙️ Configurable Parameters (ATC Variant / Profile)
+
+This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
+
+| Parameter Name | Data Type | Default Value | Description |
+|---|---|:---:|---|
+| `CHECK_SELECT_SINGLE` | `Boolean` | `true` | Configurable attribute for require-subrc-check |
+| `CHECK_READ_TABLE` | `Boolean` | `true` | Configurable attribute for require-subrc-check |
+| `CHECK_AUTHORITY_CHECK` | `Boolean` | `true` | Configurable attribute for require-subrc-check |
+| `CHECK_FIND_SEARCH` | `Boolean` | `true` | Configurable attribute for require-subrc-check |
+| `CHECK_ASSIGN` | `Boolean` | `true` | Configurable attribute for require-subrc-check |
+
+## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+
+```yaml
+checks:
+  require-subrc-check:
+    enabled: true
+    severity: warning
+    attributes:
+      CHECK_SELECT_SINGLE: true
+      CHECK_READ_TABLE: true
+      CHECK_AUTHORITY_CHECK: true
+      CHECK_FIND_SEARCH: true
+      CHECK_ASSIGN: true
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -38,16 +74,8 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_CHECK_SUBRC.
 ```
 
-## Configuration (`skylint.yaml`)
-
-```yaml
-checks:
-  require-subrc-check:
-    enabled: true
-    severity: warning
-```
-
-## ABAP Class Details
+## 🔍 ABAP Implementation Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_CHECK_SUBRC`
+* **Finding Code:** `CHECKSUBRC`
 * **Implementation File:** [zcl_skylint_check_subrc.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_check_subrc.clas.abap)

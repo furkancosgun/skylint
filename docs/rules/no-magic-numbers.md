@@ -1,10 +1,19 @@
-# `no-magic-numbers`
+# Avoid Magic Numbers; Use Named Constants
 
-> **Category:** [Anti-Patterns & Bad Practices](/rules/#anti-patterns) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `MAGIC_NUM` &nbsp;|&nbsp; **QuickFix:** No
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="tip" text="Anti-Patterns & Bad Practices" />
+  <Badge type="danger" text="Finding: MAGIC_NUM" />
+</div>
 
-## Description
+## 📖 Description
 
 Avoid magic numbers in code; use named constants.
+
+> **ATC Finding Message:** `Avoid hardcoded magic numbers; declare a named constant`
+
+## 🧠 Rationale & Best Practices
+
+Hardcoded numeric literals scattered in logic obscure business rules and make updates error-prone. Give numbers meaningful names by declaring structured constants.
 
 ## ❌ Non-Compliant Code
 
@@ -23,6 +32,15 @@ IF lv_status = c_status_completed.
 ENDIF.
 ```
 
+## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+
+```yaml
+checks:
+  no-magic-numbers:
+    enabled: true
+    severity: warning
+```
+
 ## 🤫 Suppression & Pseudo-Comments
 
 To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
@@ -39,16 +57,8 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_MAGIC_NUMBERS.
 ```
 
-## Configuration (`skylint.yaml`)
-
-```yaml
-checks:
-  no-magic-numbers:
-    enabled: true
-    severity: warning
-```
-
-## ABAP Class Details
+## 🔍 ABAP Implementation Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_MAGIC_NUMBERS`
+* **Finding Code:** `MAGIC_NUM`
 * **Implementation File:** [zcl_skylint_no_magic_numbers.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_magic_numbers.clas.abap)

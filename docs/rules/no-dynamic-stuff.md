@@ -1,10 +1,19 @@
-# `no-dynamic-stuff`
+# Avoid Unnecessary Dynamic Programming Constructs
 
-> **Category:** [Security & Robustness](/rules/#security) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `DYN_STUFF` &nbsp;|&nbsp; **QuickFix:** No
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="tip" text="Security & Robustness" />
+  <Badge type="danger" text="Finding: DYN_STUFF" />
+</div>
 
-## Description
+## 📖 Description
 
 No Dynamic Constructs (CALL, ASSIGN, CREATE, etc.).
+
+> **ATC Finding Message:** `Avoid dynamic calls and language constructs`
+
+## 🧠 Rationale & Best Practices
+
+Dynamic programming (`ASSIGN (lv_var)`, `CALL METHOD (lv_method)`) disables compile-time type checking, hampers automated refactoring, and opens security vulnerabilities.
 
 ## ❌ Non-Compliant Code
 
@@ -16,6 +25,15 @@ CALL FUNCTION lv_func_name.
 
 ```abap
 CALL FUNCTION 'BAPI_USER_GET_DETAIL'.
+```
+
+## 🛠️ CLI / CI Configuration (`skylint.yaml`)
+
+```yaml
+checks:
+  no-dynamic-stuff:
+    enabled: true
+    severity: warning
 ```
 
 ## 🤫 Suppression & Pseudo-Comments
@@ -34,16 +52,8 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 ... ##CI_NO_DYNAMIC.
 ```
 
-## Configuration (`skylint.yaml`)
-
-```yaml
-checks:
-  no-dynamic-stuff:
-    enabled: true
-    severity: warning
-```
-
-## ABAP Class Details
+## 🔍 ABAP Implementation Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_DYNAMIC_STMT`
+* **Finding Code:** `DYN_STUFF`
 * **Implementation File:** [zcl_skylint_no_dynamic_stmt.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_dynamic_stmt.clas.abap)

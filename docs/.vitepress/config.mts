@@ -4,17 +4,20 @@ export default defineConfig({
   title: 'Skylint',
   description: 'Enterprise Clean ABAP & Cloud ATC Linter Engine',
   base: process.env.VITEPRESS_BASE || '/',
+  head: [
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }],
+  ],
   themeConfig: {
     logo: '/logo.svg',
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
-      { text: 'Rules', link: '/rules/' },
+      { text: 'Rules (74)', link: '/rules/' },
       { text: 'GitHub', link: 'https://github.com/furkancosgun/skylint' },
     ],
     sidebar: {
       '/guide/': [
         {
-          text: 'Introduction',
+          text: 'Architecture & Guides',
           items: [
             { text: 'Getting Started', link: '/guide/getting-started' },
             { text: 'Configuration (skylint.yaml)', link: '/guide/configuration' },
