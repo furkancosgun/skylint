@@ -19,13 +19,47 @@
       "checkName": "ZSKYLINT_PREF_IS_NOT"
     },
     {
-      "checkName": "ZSKYLINT_NO_ME_REFERENCE"
+      "checkName": "ZSKYLINT_NO_ME_REFERENCE",
+      "parameters": [
+        {
+          "name": "ALLOW_IN_CONSTRUCTORS",
+          "value": "X"
+        }
+      ]
     },
     {
-      "checkName": "ZSKYLINT_NO_REDUNDANT_CALL"
+      "checkName": "ZSKYLINT_NO_REDUNDANT_CALL",
+      "parameters": [
+        {
+          "name": "CHECK_EXPORTING",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_RECEIVING",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_PARAM_NAME",
+          "value": "X"
+        }
+      ]
     },
     {
-      "checkName": "ZSKYLINT_NO_CHAINED_STMT"
+      "checkName": "ZSKYLINT_NO_CHAINED_STMT",
+      "parameters": [
+        {
+          "name": "ALLOW_STRUCTURE_CHAINS",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_CHAINED_DECL",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_CHAINED_ASSIGN",
+          "value": "X"
+        }
+      ]
     },
     {
       "checkName": "ZSKYLINT_PREF_STR_TMPL"
@@ -43,7 +77,41 @@
       "checkName": "ZSKYLINT_NO_CHECK_IN_LOOP"
     },
     {
-      "checkName": "ZSKYLINT_NO_EMPTY_BLOCK"
+      "checkName": "ZSKYLINT_NO_EMPTY_BLOCK",
+      "parameters": [
+        {
+          "name": "CHECK_IF",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_LOOP",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_CASE",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_TRY",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_CATCH",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_TRY_NO_CATCH",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_DO",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_WHILE",
+          "value": "X"
+        }
+      ]
     },
     {
       "checkName": "ZSKYLINT_NO_DUP_COND"
@@ -64,7 +132,17 @@
       "checkName": "ZSKYLINT_PREF_SYMBOL_OP"
     },
     {
-      "checkName": "ZSKYLINT_PREF_NEW_OP"
+      "checkName": "ZSKYLINT_PREF_NEW_OP",
+      "parameters": [
+        {
+          "name": "CHECK_CREATE_OBJECT",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_RAISE_EXCEPTION",
+          "value": "X"
+        }
+      ]
     },
     {
       "checkName": "ZSKYLINT_PREF_XSDBOOL"
@@ -76,10 +154,66 @@
       "checkName": "ZSKYLINT_NO_PUBLIC_ATTR"
     },
     {
-      "checkName": "ZSKYLINT_NO_OBSOLETE"
+      "checkName": "ZSKYLINT_NO_OBSOLETE",
+      "parameters": [
+        {
+          "name": "CHECK_MOVE",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_REFRESH",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_COMPUTE",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_TABLES",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_FIELD_GROUPS",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_TEST_SEAMS",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_BREAK",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_STATICS",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_DEFINE",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_EXPORT_MEMORY",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_FORM",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_LOOP_CTL",
+          "value": "X"
+        }
+      ]
     },
     {
-      "checkName": "ZSKYLINT_MAX_PARAMS"
+      "checkName": "ZSKYLINT_MAX_PARAMS",
+      "parameters": [
+        {
+          "name": "MAX_PARAMETERS",
+          "value": "8"
+        }
+      ]
     },
     {
       "checkName": "ZSKYLINT_NO_DB_IN_LOOP"
@@ -88,7 +222,17 @@
       "checkName": "ZSKYLINT_NO_EMPTY_FAE"
     },
     {
-      "checkName": "ZSKYLINT_NO_SELECT_STAR"
+      "checkName": "ZSKYLINT_NO_SELECT_STAR",
+      "parameters": [
+        {
+          "name": "CHECK_SELECT_STAR",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_ENDSELECT",
+          "value": "X"
+        }
+      ]
     },
     {
       "checkName": "ZSKYLINT_NO_SCOPE_LEAK"
@@ -103,10 +247,22 @@
       "checkName": "ZSKYLINT_PREF_CORRESP"
     },
     {
-      "checkName": "ZSKYLINT_MAX_METHOD_LEN"
+      "checkName": "ZSKYLINT_MAX_METHOD_LEN",
+      "parameters": [
+        {
+          "name": "MAX_STATEMENTS",
+          "value": "5"
+        }
+      ]
     },
     {
-      "checkName": "ZSKYLINT_MAX_NESTING"
+      "checkName": "ZSKYLINT_MAX_NESTING",
+      "parameters": [
+        {
+          "name": "MAX_DEPTH",
+          "value": "3"
+        }
+      ]
     },
     {
       "checkName": "ZSKYLINT_NO_SY_MODIFY"
@@ -118,7 +274,81 @@
       "checkName": "ZSKYLINT_PREF_CLASS_EXC"
     },
     {
-      "checkName": "ZSKYLINT_NO_DANGEROUS_STMT"
+      "checkName": "ZSKYLINT_NO_DANGEROUS_STMT",
+      "parameters": [
+        {
+          "name": "CHECK_EXEC_SQL",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_KERNEL_CALL",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_SYSTEM_CALL",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_SYNTAX_CHECK",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_INSERT_REPORT",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_GENERATE_DYNPRO",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_GENERATE_REPORT",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_GENERATE_SUBROUTINE",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_DELETE_REPORT",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_DELETE_TEXTPOOL",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_INSERT_TEXTPOOL",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_DELETE_DYNPRO",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_EXPORT_DYNPRO",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_EDITOR_CALL",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_DYNAMIC_SQL",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_RAISE_SHORTDUMP",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_PROD_ASSERT",
+          "value": "X"
+        },
+        {
+          "name": "IGNORE_RAP_QUERY_PROVIDER",
+          "value": "X"
+        }
+      ]
     },
     {
       "checkName": "ZSKYLINT_PREF_AUTH_CHECK"
@@ -127,10 +357,26 @@
       "checkName": "ZSKYLINT_PREF_ORDER_BY"
     },
     {
-      "checkName": "ZSKYLINT_MAX_CYCLO_COMP"
+      "checkName": "ZSKYLINT_MAX_CYCLO_COMP",
+      "parameters": [
+        {
+          "name": "MAX_COMPLEXITY",
+          "value": "5"
+        }
+      ]
     },
     {
-      "checkName": "ZSKYLINT_PREF_FINAL_CLS"
+      "checkName": "ZSKYLINT_PREF_FINAL_CLS",
+      "parameters": [
+        {
+          "name": "CHECK_CLASSES",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_METHODS",
+          "value": "X"
+        }
+      ]
     },
     {
       "checkName": "ZSKYLINT_NO_MAGIC_NUMBERS"
@@ -142,7 +388,13 @@
       "checkName": "ZSKYLINT_NO_LIKE_OBJECTS"
     },
     {
-      "checkName": "ZSKYLINT_CLEAN_CTOR"
+      "checkName": "ZSKYLINT_CLEAN_CTOR",
+      "parameters": [
+        {
+          "name": "MAX_STATEMENTS",
+          "value": "10"
+        }
+      ]
     },
     {
       "checkName": "ZSKYLINT_NO_STATIC_CLS"
@@ -151,10 +403,22 @@
       "checkName": "ZSKYLINT_PREF_PRED_NAME"
     },
     {
-      "checkName": "ZSKYLINT_MAX_INHERIT"
+      "checkName": "ZSKYLINT_MAX_INHERIT",
+      "parameters": [
+        {
+          "name": "MAX_DEPTH",
+          "value": "1"
+        }
+      ]
     },
     {
-      "checkName": "ZSKYLINT_MAX_ATTRIBUTES"
+      "checkName": "ZSKYLINT_MAX_ATTRIBUTES",
+      "parameters": [
+        {
+          "name": "MAX_ATTRIBUTES",
+          "value": "5"
+        }
+      ]
     },
     {
       "checkName": "ZSKYLINT_NO_INTF_DATA"
@@ -172,7 +436,29 @@
       "checkName": "ZSKYLINT_NO_RAISE_CX_SY"
     },
     {
-      "checkName": "ZSKYLINT_CHECK_SUBRC"
+      "checkName": "ZSKYLINT_CHECK_SUBRC",
+      "parameters": [
+        {
+          "name": "CHECK_SELECT_SINGLE",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_READ_TABLE",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_AUTHORITY_CHECK",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_FIND_SEARCH",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_ASSIGN",
+          "value": "X"
+        }
+      ]
     },
     {
       "checkName": "ZSKYLINT_NO_CLIENT_SPEC"
@@ -187,13 +473,33 @@
       "checkName": "ZSKYLINT_PREF_TEST_NAME"
     },
     {
-      "checkName": "ZSKYLINT_PREF_STR_FUNC"
+      "checkName": "ZSKYLINT_PREF_STR_FUNC",
+      "parameters": [
+        {
+          "name": "CHECK_CONDENSE",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_TRANSLATE",
+          "value": "X"
+        }
+      ]
     },
     {
       "checkName": "ZSKYLINT_PREF_CALC_OP"
     },
     {
-      "checkName": "ZSKYLINT_PREF_EARLY_RET"
+      "checkName": "ZSKYLINT_PREF_EARLY_RET",
+      "parameters": [
+        {
+          "name": "CHECK_METHOD_RETURN",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_LOOP_CONTINUE",
+          "value": "X"
+        }
+      ]
     },
     {
       "checkName": "ZSKYLINT_NO_UNUSED_VARS"
@@ -205,7 +511,13 @@
       "checkName": "ZSKYLINT_NO_PARAM_ESCAPE"
     },
     {
-      "checkName": "ZSKYLINT_PREF_CASE"
+      "checkName": "ZSKYLINT_PREF_CASE",
+      "parameters": [
+        {
+          "name": "MIN_BRANCHES",
+          "value": "3"
+        }
+      ]
     },
     {
       "checkName": "ZSKYLINT_NO_INLINE_LEN"

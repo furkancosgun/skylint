@@ -46,6 +46,12 @@ CLASS zcl_skylint_max_inherit IMPLEMENTATION.
       RETURN.
     ENDIF.
 
+    ls_statement = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+                                                        iv_index      = 1 ).
+    IF NOT line_exists( ls_statement-tokens[ lexeme = 'INHERITING' ] ).
+      RETURN.
+    ENDIF.
+
     lo_class = zcl_skylint_rtti_util=>describe_class( is_procedure-id-main_unit-name ).
     IF lo_class IS NOT BOUND.
       RETURN.

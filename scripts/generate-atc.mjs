@@ -35,10 +35,21 @@ function getCheckParameters(rule) {
   const attrMatch = content.match(/attributes\s*=\s*VALUE #\([\s\S]*?\)\s*\)\s*\)/);
   if (!attrMatch) return undefined;
 
-  const attrNames = [...attrMatch[0].matchAll(/name\s*=\s*[\x27"]([^"\x27]+)[\x27"]/g)].map(m => m[1]);
-  if (attrNames.length === 0) return undefined;
+  const bound = [...attrMatch[0].matchAll(/name\s*=\s*['"]([^'"\s]+)['"][\s\S]*?REF #\(\s*([a-zA-Z0-9_]+)\s*\)/g)];
+  if (bound.length === 0) return undefined;
 
-  return attrNames.map(name => ({ name }));
+  return bound.map(([_, name, varName]) => {
+    let value = '';
+    const varDecl = content.match(new RegExp('DATA\\s+' + varName + '\\s+TYPE\\s+([^\\.\\n]+)\\.', 'i'));
+    if (varDecl) {
+      const valMatch = varDecl[1].match(/VALUE\s+([a-zA-Z0-9_]+)/i);
+      if (valMatch) {
+        const raw = valMatch[1];
+        value = raw.toLowerCase() === 'abap_true' ? 'X' : (raw.toLowerCase() === 'abap_false' ? '' : raw);
+      }
+    }
+    return { name, value };
+  });
 }
 
 export function generateAtcObjects() {
@@ -100,13 +111,22 @@ export function generateAtcObjects() {
       checkType: 'remoteEnabled',
     };
 
+    const checkEntry = { checkName };
+
     if (params && params.length > 0) {
-      chko.parameters = params;
+      chko.parameters = params.map(p => ({ name: p.name }));
       checksWithParams++;
+
+      const configuredParams = params
+        .filter(p => p.value !== '')
+        .map(p => ({ name: p.name, value: p.value }));
+      if (configuredParams.length > 0) {
+        checkEntry.parameters = configuredParams;
+      }
     }
 
     fs.writeFileSync(path.join(atcDir, fileName), JSON.stringify(chko, null, 2) + '\n', 'utf8');
-    selectedChecks.push({ checkName });
+    selectedChecks.push(checkEntry);
   }
 
   // 3. Generate Variant (CHKV): src/atc/zskylint_default.chkv.json
