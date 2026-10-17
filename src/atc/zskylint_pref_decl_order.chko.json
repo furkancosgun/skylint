@@ -1,7 +1,7 @@
 {
   "formatVersion": "1",
   "header": {
-    "description": "Enforce local declaration order (TYPES -> CONSTANTS -> DATA -> FIELD-SYMBOLS)",
+    "description": "Enforce declaration order (TYPES, CONSTANTS, DATA, FS)",
     "originalLanguage": "en",
     "abapLanguageVersion": "cloudDevelopment"
   },

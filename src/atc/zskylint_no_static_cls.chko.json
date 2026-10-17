@@ -1,7 +1,7 @@
 {
   "formatVersion": "1",
   "header": {
-    "description": "Avoid static-only classes; prefer instantiable interface-based design",
+    "description": "Avoid static-only classes; use instantiable classes",
     "originalLanguage": "en",
     "abapLanguageVersion": "cloudDevelopment"
   },

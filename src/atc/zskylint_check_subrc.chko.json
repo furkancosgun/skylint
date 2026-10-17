@@ -7,5 +7,22 @@
   },
   "category": "ZSKYLINT",
   "implementingClass": "ZCL_SKYLINT_CHECK_SUBRC",
-  "checkType": "remoteEnabled"
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "CHECK_SELECT_SINGLE"
+    },
+    {
+      "name": "CHECK_READ_TABLE"
+    },
+    {
+      "name": "CHECK_AUTHORITY_CHECK"
+    },
+    {
+      "name": "CHECK_FIND_SEARCH"
+    },
+    {
+      "name": "CHECK_ASSIGN"
+    }
+  ]
 }

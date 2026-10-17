@@ -7,7 +7,7 @@
 
 ## Overview
 
-Enforce predicate naming (IS_, HAS_, CAN_) on boolean methods.
+Enforce predicate naming (IS_, HAS_) on boolean methods.
 
 > **ATC Finding Message:** `Boolean-returning method should use predicate name (IS_, HAS_, CAN_)`
 

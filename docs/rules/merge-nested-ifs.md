@@ -7,7 +7,7 @@
 
 ## Overview
 
-Detect consecutive nested IF blocks that can be merged with AND.
+Merge consecutive nested IF blocks using boolean AND.
 
 > **ATC Finding Message:** `Nested IF block can be merged with outer IF using AND`
 

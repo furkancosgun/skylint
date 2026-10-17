@@ -42,7 +42,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_empty_block IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Detect empty control blocks (IF, CASE, LOOP, TRY, CATCH, etc.)'
+    super->constructor( VALUE #( description       = 'Avoid empty control blocks (IF, CASE, LOOP, TRY, etc.)'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      severity       = if_ci_atc_check=>finding_severities-warning

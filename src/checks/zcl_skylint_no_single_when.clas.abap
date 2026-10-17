@@ -31,7 +31,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_single_when IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Avoid short CASE constructs with only one WHEN branch; prefer IF'
+    super->constructor( VALUE #( description       = 'Avoid CASE statements with only one WHEN branch'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-short_case

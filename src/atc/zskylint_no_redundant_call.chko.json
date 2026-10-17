@@ -1,11 +1,22 @@
 {
   "formatVersion": "1",
   "header": {
-    "description": "Omit redundant EXPORTING, RECEIVING, and single parameter names in method calls",
+    "description": "Omit redundant EXPORTING and RECEIVING in method calls",
     "originalLanguage": "en",
     "abapLanguageVersion": "cloudDevelopment"
   },
   "category": "ZSKYLINT",
   "implementingClass": "ZCL_SKYLINT_NO_REDUNDANT_CALL",
-  "checkType": "remoteEnabled"
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "CHECK_EXPORTING"
+    },
+    {
+      "name": "CHECK_RECEIVING"
+    },
+    {
+      "name": "CHECK_PARAM_NAME"
+    }
+  ]
 }

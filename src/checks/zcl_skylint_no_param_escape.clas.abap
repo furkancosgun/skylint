@@ -35,7 +35,7 @@ ENDCLASS.
 CLASS zcl_skylint_no_param_escape IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Detect unnecessary exclamation mark parameter escape (!iv_param)'
+        VALUE #( description       = 'Avoid unnecessary parameter escape (!param)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #( ( code           = c_finding_codes-param_escape
                                                 severity       = if_ci_atc_check=>finding_severities-warning

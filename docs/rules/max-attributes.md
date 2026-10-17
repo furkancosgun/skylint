@@ -7,7 +7,7 @@
 
 ## Overview
 
-Limit number of member attributes in a class (God Class smell).
+Limit class member attributes to prevent God Classes.
 
 > **ATC Finding Message:** `Class has too many member attributes; split into cohesive components`
 

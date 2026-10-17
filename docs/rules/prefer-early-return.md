@@ -7,7 +7,7 @@
 
 ## Overview
 
-Prefer early exit (RETURN or CONTINUE) instead of nested IF blocks.
+Prefer early return or continue over nested IF blocks.
 
 > **ATC Finding Message:** `Invert IF condition and use RETURN to reduce nesting in method`
 

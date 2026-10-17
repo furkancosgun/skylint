@@ -1,7 +1,7 @@
 {
   "formatVersion": "1",
   "header": {
-    "description": "Avoid generic CATCH cx_root; catch specific exception classes",
+    "description": "Catch specific exceptions instead of generic cx_root",
     "originalLanguage": "en",
     "abapLanguageVersion": "cloudDevelopment"
   },

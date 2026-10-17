@@ -1,7 +1,7 @@
 {
   "formatVersion": "1",
   "header": {
-    "description": "Avoid obsolete MESSAGE ... RAISING; use class-based exceptions",
+    "description": "Avoid MESSAGE ... RAISING; use class-based exceptions",
     "originalLanguage": "en",
     "abapLanguageVersion": "cloudDevelopment"
   },

@@ -52,7 +52,7 @@ ENDCLASS.
 CLASS zcl_skylint_pref_new_op IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Prefer NEW #( ) constructor over CREATE OBJECT and RAISE EXCEPTION TYPE'
+        VALUE #( description       = 'Prefer NEW operator over CREATE OBJECT and RAISE EXCEPTION'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      severity = if_ci_atc_check=>finding_severities-warning

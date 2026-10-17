@@ -1,7 +1,7 @@
 {
   "formatVersion": "1",
   "header": {
-    "description": "Detect consecutive nested IF blocks that can be merged with AND",
+    "description": "Merge consecutive nested IF blocks using boolean AND",
     "originalLanguage": "en",
     "abapLanguageVersion": "cloudDevelopment"
   },

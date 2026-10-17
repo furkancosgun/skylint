@@ -27,7 +27,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_pref_merge_ifs IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Detect consecutive nested IF blocks that can be merged with AND'
+    super->constructor( VALUE #( description       = 'Merge consecutive nested IF blocks using boolean AND'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-nested_if

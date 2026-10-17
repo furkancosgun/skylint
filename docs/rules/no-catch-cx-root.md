@@ -7,7 +7,7 @@
 
 ## Overview
 
-Avoid generic CATCH cx_root; catch specific exception classes.
+Catch specific exceptions instead of generic cx_root.
 
 > **ATC Finding Message:** `Avoid generic CATCH cx_root; catch specific exception classes instead`
 

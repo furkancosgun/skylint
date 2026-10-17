@@ -22,7 +22,7 @@ ENDCLASS.
 CLASS zcl_skylint_pref_transport IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Avoid full-line MODIFY itab inside LOOP without TRANSPORTING clause'
+        VALUE #( description       = 'Avoid MODIFY itab in LOOP without TRANSPORTING clause'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-full_modify

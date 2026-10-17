@@ -38,7 +38,7 @@ ENDCLASS.
 CLASS zcl_skylint_pref_pred_name IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Enforce predicate naming (IS_, HAS_, CAN_) on boolean methods'
+        VALUE #( description       = 'Enforce predicate naming (IS_, HAS_) on boolean methods'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-bool_method_name

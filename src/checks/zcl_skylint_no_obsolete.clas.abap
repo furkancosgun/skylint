@@ -53,7 +53,7 @@ ENDCLASS.
 CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Avoid obsolete or deprecated statements (MOVE, REFRESH, FORM, AT NEW, etc.)'
+        VALUE #( description       = 'Avoid obsolete statements (MOVE, REFRESH, FORM, etc.)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-obsolete_statement

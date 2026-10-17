@@ -1,7 +1,7 @@
 {
   "formatVersion": "1",
   "header": {
-    "description": "Enforce predicate naming (IS_, HAS_, CAN_) on boolean methods",
+    "description": "Enforce predicate naming (IS_, HAS_) on boolean methods",
     "originalLanguage": "en",
     "abapLanguageVersion": "cloudDevelopment"
   },

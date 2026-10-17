@@ -8,7 +8,7 @@
 
 ## Overview
 
-Prefer calculation assignment operators (+=, -=, *=, /=) over var = var + 1.
+Prefer calculation assignment operators (+=, -=, *=, /=).
 
 > **ATC Finding Message:** `Use calculation assignment operator (+=, -=) or ADD statement replacement`
 

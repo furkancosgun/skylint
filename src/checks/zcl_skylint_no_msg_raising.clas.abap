@@ -22,7 +22,7 @@ ENDCLASS.
 CLASS zcl_skylint_no_msg_raising IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Avoid obsolete MESSAGE ... RAISING; use class-based exceptions'
+        VALUE #( description       = 'Avoid MESSAGE ... RAISING; use class-based exceptions'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-msg_raise

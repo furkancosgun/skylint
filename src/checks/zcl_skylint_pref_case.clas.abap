@@ -29,7 +29,7 @@ ENDCLASS.
 CLASS zcl_skylint_pref_case IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Change IF to CASE when checking the same variable against multiple values'
+        VALUE #( description       = 'Use CASE instead of IF when checking multiple values'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-change_if_to_case

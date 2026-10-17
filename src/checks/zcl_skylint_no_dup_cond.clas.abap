@@ -36,7 +36,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_dup_cond IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Detect identical branch conditions in IF/ELSEIF and CASE/WHEN'
+    super->constructor( VALUE #( description       = 'Avoid duplicate branch conditions in IF and CASE'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-identical_condition

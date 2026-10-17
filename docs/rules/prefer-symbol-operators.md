@@ -8,7 +8,7 @@
 
 ## Overview
 
-Prefer comparison operators (=, <>, <, >, <=, >=) over legacy textual keywords.
+Prefer symbolic operators over textual EQ, NE, LT, GT.
 
 > **ATC Finding Message:** `Prefer modern comparison operators (=, <>, <, >, <=, >=) over legacy keywords`
 

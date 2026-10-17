@@ -7,5 +7,13 @@
   },
   "category": "ZSKYLINT",
   "implementingClass": "ZCL_SKYLINT_PREF_FINAL_CLS",
-  "checkType": "remoteEnabled"
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "CHECK_CLASSES"
+    },
+    {
+      "name": "CHECK_METHODS"
+    }
+  ]
 }

@@ -8,7 +8,7 @@
 
 ## Overview
 
-Detect unnecessary exclamation mark parameter escape (!iv_param).
+Avoid unnecessary parameter escape (!param).
 
 > **ATC Finding Message:** `Escape params with ! only on keyword clash`
 

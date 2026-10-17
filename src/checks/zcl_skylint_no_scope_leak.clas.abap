@@ -59,7 +59,7 @@ ENDCLASS.
 CLASS zcl_skylint_no_scope_leak IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Scope of variable (avoid variable leaking outside control blocks)'
+        VALUE #( description       = 'Avoid variable usage outside its declaring control block'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-scope_leak

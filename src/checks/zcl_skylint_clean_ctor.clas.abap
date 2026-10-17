@@ -25,7 +25,7 @@ ENDCLASS.
 CLASS zcl_skylint_clean_ctor IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Keep constructors clean; avoid heavy business logic/loops/DB access'
+        VALUE #( description       = 'Keep constructors clean; avoid heavy logic and DB'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-constructor_logic

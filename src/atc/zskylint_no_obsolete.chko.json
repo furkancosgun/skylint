@@ -1,11 +1,49 @@
 {
   "formatVersion": "1",
   "header": {
-    "description": "Avoid obsolete or deprecated statements (MOVE, REFRESH, FORM, AT NEW, etc.)",
+    "description": "Avoid obsolete statements (MOVE, REFRESH, FORM, etc.)",
     "originalLanguage": "en",
     "abapLanguageVersion": "cloudDevelopment"
   },
   "category": "ZSKYLINT",
   "implementingClass": "ZCL_SKYLINT_NO_OBSOLETE",
-  "checkType": "remoteEnabled"
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "CHECK_MOVE"
+    },
+    {
+      "name": "CHECK_REFRESH"
+    },
+    {
+      "name": "CHECK_COMPUTE"
+    },
+    {
+      "name": "CHECK_TABLES"
+    },
+    {
+      "name": "CHECK_FIELD_GROUPS"
+    },
+    {
+      "name": "CHECK_TEST_SEAMS"
+    },
+    {
+      "name": "CHECK_BREAK"
+    },
+    {
+      "name": "CHECK_STATICS"
+    },
+    {
+      "name": "CHECK_DEFINE"
+    },
+    {
+      "name": "CHECK_EXPORT_MEMORY"
+    },
+    {
+      "name": "CHECK_FORM"
+    },
+    {
+      "name": "CHECK_LOOP_CTL"
+    }
+  ]
 }

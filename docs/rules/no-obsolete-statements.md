@@ -8,7 +8,7 @@
 
 ## Overview
 
-Avoid obsolete or deprecated statements (MOVE, REFRESH, FORM, AT NEW, etc.).
+Avoid obsolete statements (MOVE, REFRESH, FORM, etc.).
 
 > **ATC Finding Message:** `Avoid obsolete or deprecated statement; use modern Clean ABAP construct`
 

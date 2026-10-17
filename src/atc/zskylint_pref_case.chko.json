@@ -1,11 +1,16 @@
 {
   "formatVersion": "1",
   "header": {
-    "description": "Change IF to CASE when checking the same variable against multiple values",
+    "description": "Use CASE instead of IF when checking multiple values",
     "originalLanguage": "en",
     "abapLanguageVersion": "cloudDevelopment"
   },
   "category": "ZSKYLINT",
   "implementingClass": "ZCL_SKYLINT_PREF_CASE",
-  "checkType": "remoteEnabled"
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "MIN_BRANCHES"
+    }
+  ]
 }

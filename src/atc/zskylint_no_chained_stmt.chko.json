@@ -7,5 +7,16 @@
   },
   "category": "ZSKYLINT",
   "implementingClass": "ZCL_SKYLINT_NO_CHAINED_STMT",
-  "checkType": "remoteEnabled"
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "ALLOW_STRUCTURE_CHAINS"
+    },
+    {
+      "name": "CHECK_CHAINED_DECL"
+    },
+    {
+      "name": "CHECK_CHAINED_ASSIGN"
+    }
+  ]
 }

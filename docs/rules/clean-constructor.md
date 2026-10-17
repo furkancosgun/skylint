@@ -7,7 +7,7 @@
 
 ## Overview
 
-Keep constructors clean; avoid heavy business logic/loops/DB access.
+Keep constructors clean; avoid heavy logic and DB.
 
 > **ATC Finding Message:** `Avoid heavy business logic/loops in constructor; use injection only`
 

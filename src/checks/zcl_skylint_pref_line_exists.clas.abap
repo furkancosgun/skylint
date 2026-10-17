@@ -27,7 +27,7 @@ ENDCLASS.
 CLASS zcl_skylint_pref_line_exists IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Prefer line_exists( ) over READ TABLE ... TRANSPORTING NO FIELDS'
+        VALUE #( description       = 'Prefer line_exists( ) over READ TABLE with NO FIELDS'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-prefer_line_exists

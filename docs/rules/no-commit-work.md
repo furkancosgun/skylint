@@ -7,7 +7,7 @@
 
 ## Overview
 
-Avoid COMMIT WORK / ROLLBACK WORK in behavior implementations.
+Avoid COMMIT and ROLLBACK in application logic.
 
 > **ATC Finding Message:** `Avoid COMMIT/ROLLBACK WORK; transactional control belongs to framework`
 

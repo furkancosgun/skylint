@@ -42,7 +42,7 @@ ENDCLASS.
 CLASS zcl_skylint_pref_calc_op IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Prefer calculation assignment operators (+=, -=, *=, /=) over var = var + 1'
+        VALUE #( description       = 'Prefer calculation assignment operators (+=, -=, *=, /=)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-calc_assign

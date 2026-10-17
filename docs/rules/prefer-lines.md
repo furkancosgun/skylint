@@ -8,7 +8,7 @@
 
 ## Overview
 
-Prefer lines( ) built-in function over DESCRIBE TABLE ... LINES.
+Prefer lines( ) over DESCRIBE TABLE ... LINES.
 
 > **ATC Finding Message:** `Use lines( ) function instead of DESCRIBE TABLE ... LINES`
 

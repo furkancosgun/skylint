@@ -7,7 +7,7 @@
 
 ## Overview
 
-Detect empty control blocks (IF, CASE, LOOP, TRY, CATCH, etc.).
+Avoid empty control blocks (IF, CASE, LOOP, TRY, etc.).
 
 > **ATC Finding Message:** `Empty control block detected; remove redundant control statement`
 

@@ -7,7 +7,7 @@
 
 ## Overview
 
-Enforce local declaration order (TYPES -> CONSTANTS -> DATA -> FIELD-SYMBOLS).
+Enforce declaration order (TYPES, CONSTANTS, DATA, FS).
 
 > **ATC Finding Message:** `Declare local TYPES before CONSTANTS before DATA before FIELD-SYMBOLS`
 

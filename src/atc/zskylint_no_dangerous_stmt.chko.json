@@ -7,5 +7,61 @@
   },
   "category": "ZSKYLINT",
   "implementingClass": "ZCL_SKYLINT_NO_DANGEROUS_STMT",
-  "checkType": "remoteEnabled"
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "CHECK_EXEC_SQL"
+    },
+    {
+      "name": "CHECK_KERNEL_CALL"
+    },
+    {
+      "name": "CHECK_SYSTEM_CALL"
+    },
+    {
+      "name": "CHECK_SYNTAX_CHECK"
+    },
+    {
+      "name": "CHECK_INSERT_REPORT"
+    },
+    {
+      "name": "CHECK_GENERATE_DYNPRO"
+    },
+    {
+      "name": "CHECK_GENERATE_REPORT"
+    },
+    {
+      "name": "CHECK_GENERATE_SUBROUTINE"
+    },
+    {
+      "name": "CHECK_DELETE_REPORT"
+    },
+    {
+      "name": "CHECK_DELETE_TEXTPOOL"
+    },
+    {
+      "name": "CHECK_INSERT_TEXTPOOL"
+    },
+    {
+      "name": "CHECK_DELETE_DYNPRO"
+    },
+    {
+      "name": "CHECK_EXPORT_DYNPRO"
+    },
+    {
+      "name": "CHECK_EDITOR_CALL"
+    },
+    {
+      "name": "CHECK_DYNAMIC_SQL"
+    },
+    {
+      "name": "CHECK_RAISE_SHORTDUMP"
+    },
+    {
+      "name": "CHECK_PROD_ASSERT"
+    },
+    {
+      "name": "IGNORE_RAP_QUERY_PROVIDER"
+    }
+  ]
 }

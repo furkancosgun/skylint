@@ -7,7 +7,7 @@
 
 ## Overview
 
-Avoid mutable DATA declarations in interfaces; allow only CONSTANTS.
+Avoid mutable DATA in interfaces; allow only CONSTANTS.
 
 > **ATC Finding Message:** `Avoid mutable DATA in interfaces; declare CONSTANTS or move to class`
 

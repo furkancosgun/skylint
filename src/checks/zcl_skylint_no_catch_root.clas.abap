@@ -22,7 +22,7 @@ ENDCLASS.
 CLASS zcl_skylint_no_catch_root IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Avoid generic CATCH cx_root; catch specific exception classes'
+        VALUE #( description       = 'Catch specific exceptions instead of generic cx_root'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-catch_root

@@ -7,7 +7,7 @@
 
 ## Overview
 
-Avoid nested TRY blocks; extract inner error handling to helper methods.
+Avoid nested TRY blocks; extract to helper methods.
 
 > **ATC Finding Message:** `Avoid nested TRY blocks; extract to dedicated method`
 

@@ -7,7 +7,7 @@
 
 ## Overview
 
-Avoid obsolete MESSAGE ... RAISING; use class-based exceptions.
+Avoid MESSAGE ... RAISING; use class-based exceptions.
 
 > **ATC Finding Message:** `Avoid obsolete MESSAGE ... RAISING; raise class-based exceptions`
 

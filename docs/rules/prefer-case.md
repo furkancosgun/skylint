@@ -7,7 +7,7 @@
 
 ## Overview
 
-Change IF to CASE when checking the same variable against multiple values.
+Use CASE instead of IF when checking multiple values.
 
 > **ATC Finding Message:** `Multiple ELSEIF branches check the same variable; use CASE instead`
 

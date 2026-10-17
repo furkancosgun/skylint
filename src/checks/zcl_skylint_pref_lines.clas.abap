@@ -32,7 +32,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_pref_lines IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Prefer lines( ) built-in function over DESCRIBE TABLE ... LINES'
+    super->constructor( VALUE #( description       = 'Prefer lines( ) over DESCRIBE TABLE ... LINES'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-describe_lines

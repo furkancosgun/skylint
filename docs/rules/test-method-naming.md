@@ -7,7 +7,7 @@
 
 ## Overview
 
-Enforce test method naming convention (TEST_, SHOULD_) in AUnit.
+Enforce test method naming (TEST_, SHOULD_) in AUnit.
 
 > **ATC Finding Message:** `Test methods should start with TEST_ or SHOULD_`
 

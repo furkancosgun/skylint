@@ -7,7 +7,7 @@
 
 ## Overview
 
-Detect identical branch conditions in IF/ELSEIF and CASE/WHEN.
+Avoid duplicate branch conditions in IF and CASE.
 
 > **ATC Finding Message:** `Identical condition in branch; duplicate branch is unreachable`
 

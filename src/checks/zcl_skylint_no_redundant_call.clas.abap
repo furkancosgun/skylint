@@ -63,7 +63,7 @@ ENDCLASS.
 CLASS zcl_skylint_no_redundant_call IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Omit redundant EXPORTING, RECEIVING, and single parameter names in method calls'
+        VALUE #( description       = 'Omit redundant EXPORTING and RECEIVING in method calls'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      severity = if_ci_atc_check=>finding_severities-warning

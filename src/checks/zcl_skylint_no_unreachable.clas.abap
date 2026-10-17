@@ -48,7 +48,7 @@ ENDCLASS.
 CLASS zcl_skylint_no_unreachable IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Detect unreachable code following unconditional jump statements'
+        VALUE #( description       = 'Detect unreachable code after jump or exit statements'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #( ( code           = c_finding_codes-unreachable_code
                                                 severity       = if_ci_atc_check=>finding_severities-warning

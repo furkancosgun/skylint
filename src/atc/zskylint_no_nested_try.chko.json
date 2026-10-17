@@ -1,7 +1,7 @@
 {
   "formatVersion": "1",
   "header": {
-    "description": "Avoid nested TRY blocks; extract inner error handling to helper methods",
+    "description": "Avoid nested TRY blocks; extract to helper methods",
     "originalLanguage": "en",
     "abapLanguageVersion": "cloudDevelopment"
   },

@@ -8,7 +8,7 @@
 
 ## Overview
 
-Prefer NEW #( ) constructor over CREATE OBJECT and RAISE EXCEPTION TYPE.
+Prefer NEW operator over CREATE OBJECT and RAISE EXCEPTION.
 
 > **ATC Finding Message:** `Prefer NEW #( ) expression over CREATE OBJECT`
 

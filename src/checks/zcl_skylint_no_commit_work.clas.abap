@@ -27,7 +27,7 @@ ENDCLASS.
 CLASS zcl_skylint_no_commit_work IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Avoid COMMIT WORK / ROLLBACK WORK in behavior implementations'
+        VALUE #( description       = 'Avoid COMMIT and ROLLBACK in application logic'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-no_commit

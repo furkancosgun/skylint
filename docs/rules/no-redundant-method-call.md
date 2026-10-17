@@ -8,7 +8,7 @@
 
 ## Overview
 
-Omit redundant EXPORTING, RECEIVING, and single parameter names in method calls.
+Omit redundant EXPORTING and RECEIVING in method calls.
 
 > **ATC Finding Message:** `Omit explicit EXPORTING keyword in method invocation`
 

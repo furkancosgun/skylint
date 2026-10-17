@@ -1,7 +1,7 @@
 {
   "formatVersion": "1",
   "header": {
-    "description": "Prefer line_exists( ) over READ TABLE ... TRANSPORTING NO FIELDS",
+    "description": "Prefer line_exists( ) over READ TABLE with NO FIELDS",
     "originalLanguage": "en",
     "abapLanguageVersion": "cloudDevelopment"
   },

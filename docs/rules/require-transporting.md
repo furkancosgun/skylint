@@ -7,7 +7,7 @@
 
 ## Overview
 
-Avoid full-line MODIFY itab inside LOOP without TRANSPORTING clause.
+Avoid MODIFY itab in LOOP without TRANSPORTING clause.
 
 > **ATC Finding Message:** `Specify TRANSPORTING fields in MODIFY itab inside loop for performance`
 

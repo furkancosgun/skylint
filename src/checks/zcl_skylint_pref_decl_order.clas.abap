@@ -22,7 +22,7 @@ ENDCLASS.
 CLASS zcl_skylint_pref_decl_order IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Enforce local declaration order (TYPES -> CONSTANTS -> DATA -> FIELD-SYMBOLS)'
+        VALUE #( description       = 'Enforce declaration order (TYPES, CONSTANTS, DATA, FS)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-decl_order

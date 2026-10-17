@@ -17,10 +17,28 @@ function getCheckDescription(rule) {
     const content = fs.readFileSync(checkFile, 'utf8');
     const match = content.match(/description\s*=\s*'([^']+)'/);
     if (match) {
-      return match[1].replace(/^skylint:\s*/i, '').trim();
+      let desc = match[1].replace(/^skylint:\s*/i, '').trim();
+      if (desc.length > 60) {
+        throw new Error(`ABAP class ${rule.className} description exceeds 60 characters (${desc.length}): "${desc}"`);
+      }
+      return desc;
     }
   }
-  return `Check rule ${rule.ruleId}`;
+  return `Check rule ${rule.ruleId}`.slice(0, 60);
+}
+
+function getCheckParameters(rule) {
+  const checkFile = path.join(checksDir, `${rule.className.toLowerCase()}.clas.abap`);
+  if (!fs.existsSync(checkFile)) return undefined;
+
+  const content = fs.readFileSync(checkFile, 'utf8');
+  const attrMatch = content.match(/attributes\s*=\s*VALUE #\([\s\S]*?\)\s*\)\s*\)/);
+  if (!attrMatch) return undefined;
+
+  const attrNames = [...attrMatch[0].matchAll(/name\s*=\s*[\x27"]([^"\x27]+)[\x27"]/g)].map(m => m[1]);
+  if (attrNames.length === 0) return undefined;
+
+  return attrNames.map(name => ({ name }));
 }
 
 export function generateAtcObjects() {
@@ -62,11 +80,13 @@ export function generateAtcObjects() {
 
   // 2. Generate Check Objects (CHKO) in src/atc/
   const selectedChecks = [];
+  let checksWithParams = 0;
   for (const rule of RULES) {
     const suffix = rule.className.replace(/^ZCL_SKYLINT_/, '');
     const checkName = `ZSKYLINT_${suffix}`;
     const fileName = `zskylint_${suffix.toLowerCase()}.chko.json`;
     const desc = getCheckDescription(rule);
+    const params = getCheckParameters(rule);
 
     const chko = {
       formatVersion: '1',
@@ -79,6 +99,11 @@ export function generateAtcObjects() {
       implementingClass: rule.className,
       checkType: 'remoteEnabled',
     };
+
+    if (params && params.length > 0) {
+      chko.parameters = params;
+      checksWithParams++;
+    }
 
     fs.writeFileSync(path.join(atcDir, fileName), JSON.stringify(chko, null, 2) + '\n', 'utf8');
     selectedChecks.push({ checkName });
@@ -96,7 +121,7 @@ export function generateAtcObjects() {
   };
   fs.writeFileSync(path.join(atcDir, 'zskylint_default.chkv.json'), JSON.stringify(variantJson, null, 2) + '\n', 'utf8');
 
-  console.log(`✓ Created 1 CHKC (category), ${RULES.length} CHKO (checks), and 1 CHKV (variant) in src/atc/.`);
+  console.log(`✓ Created 1 CHKC (category), ${RULES.length} CHKO (checks - ${checksWithParams} with parameters), and 1 CHKV (variant) in src/atc/.`);
 }
 
 generateAtcObjects();

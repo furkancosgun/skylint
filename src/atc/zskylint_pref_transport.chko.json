@@ -1,7 +1,7 @@
 {
   "formatVersion": "1",
   "header": {
-    "description": "Avoid full-line MODIFY itab inside LOOP without TRANSPORTING clause",
+    "description": "Avoid MODIFY itab in LOOP without TRANSPORTING clause",
     "originalLanguage": "en",
     "abapLanguageVersion": "cloudDevelopment"
   },

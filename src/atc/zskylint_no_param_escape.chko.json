@@ -1,7 +1,7 @@
 {
   "formatVersion": "1",
   "header": {
-    "description": "Detect unnecessary exclamation mark parameter escape (!iv_param)",
+    "description": "Avoid unnecessary parameter escape (!param)",
     "originalLanguage": "en",
     "abapLanguageVersion": "cloudDevelopment"
   },

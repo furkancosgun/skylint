@@ -26,7 +26,7 @@ ENDCLASS.
 CLASS zcl_skylint_no_intf_data IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Avoid mutable DATA declarations in interfaces; allow only CONSTANTS'
+        VALUE #( description       = 'Avoid mutable DATA in interfaces; allow only CONSTANTS'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-interface_data

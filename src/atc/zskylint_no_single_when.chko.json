@@ -1,7 +1,7 @@
 {
   "formatVersion": "1",
   "header": {
-    "description": "Avoid short CASE constructs with only one WHEN branch; prefer IF",
+    "description": "Avoid CASE statements with only one WHEN branch",
     "originalLanguage": "en",
     "abapLanguageVersion": "cloudDevelopment"
   },

@@ -22,7 +22,7 @@ ENDCLASS.
 CLASS zcl_skylint_no_static_cls IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Avoid static-only classes; prefer instantiable interface-based design'
+        VALUE #( description       = 'Avoid static-only classes; use instantiable classes'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-static_class

@@ -8,7 +8,7 @@
 
 ## Overview
 
-Avoid CHECK in loop/iteration structures (prefer IF ... CONTINUE).
+Avoid CHECK in loops; prefer IF with CONTINUE.
 
 > **ATC Finding Message:** `Avoid CHECK inside loop; use IF ... CONTINUE instead`
 

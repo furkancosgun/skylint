@@ -7,7 +7,7 @@
 
 ## Overview
 
-Avoid short CASE constructs with only one WHEN branch; prefer IF.
+Avoid CASE statements with only one WHEN branch.
 
 > **ATC Finding Message:** `CASE statement has <= 1 WHEN branch; prefer IF`
 

@@ -7,5 +7,10 @@
   },
   "category": "ZSKYLINT",
   "implementingClass": "ZCL_SKYLINT_MAX_INHERIT",
-  "checkType": "remoteEnabled"
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "MAX_DEPTH"
+    }
+  ]
 }

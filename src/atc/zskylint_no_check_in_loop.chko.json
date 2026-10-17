@@ -1,7 +1,7 @@
 {
   "formatVersion": "1",
   "header": {
-    "description": "Avoid CHECK in loop/iteration structures (prefer IF ... CONTINUE)",
+    "description": "Avoid CHECK in loops; prefer IF with CONTINUE",
     "originalLanguage": "en",
     "abapLanguageVersion": "cloudDevelopment"
   },

@@ -7,7 +7,7 @@
 
 ## Overview
 
-Scope of variable (avoid variable leaking outside control blocks).
+Avoid variable usage outside its declaring control block.
 
 > **ATC Finding Message:** `Variable declared in inner block is referenced outside its scope`
 

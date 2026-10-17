@@ -39,7 +39,7 @@ ENDCLASS.
 CLASS zcl_skylint_pref_symbol_op IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Prefer comparison operators (=, <>, <, >, <=, >=) over legacy textual keywords'
+        VALUE #( description       = 'Prefer symbolic operators over textual EQ, NE, LT, GT'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-prefer_operator

@@ -29,7 +29,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_check_in_loop IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Avoid CHECK in loop/iteration structures (prefer IF ... CONTINUE)'
+    super->constructor( VALUE #( description       = 'Avoid CHECK in loops; prefer IF with CONTINUE'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-check_in_loop

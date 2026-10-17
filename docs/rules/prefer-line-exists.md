@@ -7,7 +7,7 @@
 
 ## Overview
 
-Prefer line_exists( ) over READ TABLE ... TRANSPORTING NO FIELDS.
+Prefer line_exists( ) over READ TABLE with NO FIELDS.
 
 > **ATC Finding Message:** `Prefer line_exists( ... ) instead of READ TABLE ... TRANSPORTING NO FIELDS`
 

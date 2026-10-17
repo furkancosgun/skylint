@@ -8,7 +8,7 @@
 
 ## Overview
 
-Detect unreachable code following unconditional jump statements.
+Detect unreachable code after jump or exit statements.
 
 > **ATC Finding Message:** `Statement is unreachable`
 

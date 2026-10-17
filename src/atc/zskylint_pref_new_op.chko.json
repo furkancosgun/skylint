@@ -1,11 +1,19 @@
 {
   "formatVersion": "1",
   "header": {
-    "description": "Prefer NEW #( ) constructor over CREATE OBJECT and RAISE EXCEPTION TYPE",
+    "description": "Prefer NEW operator over CREATE OBJECT and RAISE EXCEPTION",
     "originalLanguage": "en",
     "abapLanguageVersion": "cloudDevelopment"
   },
   "category": "ZSKYLINT",
   "implementingClass": "ZCL_SKYLINT_PREF_NEW_OP",
-  "checkType": "remoteEnabled"
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "CHECK_CREATE_OBJECT"
+    },
+    {
+      "name": "CHECK_RAISE_EXCEPTION"
+    }
+  ]
 }

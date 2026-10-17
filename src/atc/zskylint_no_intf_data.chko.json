@@ -1,7 +1,7 @@
 {
   "formatVersion": "1",
   "header": {
-    "description": "Avoid mutable DATA declarations in interfaces; allow only CONSTANTS",
+    "description": "Avoid mutable DATA in interfaces; allow only CONSTANTS",
     "originalLanguage": "en",
     "abapLanguageVersion": "cloudDevelopment"
   },

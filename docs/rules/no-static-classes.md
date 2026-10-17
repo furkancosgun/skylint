@@ -7,7 +7,7 @@
 
 ## Overview
 
-Avoid static-only classes; prefer instantiable interface-based design.
+Avoid static-only classes; use instantiable classes.
 
 > **ATC Finding Message:** `Avoid static-only classes; declare instance methods and interfaces`
 
