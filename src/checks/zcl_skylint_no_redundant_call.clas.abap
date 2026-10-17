@@ -66,16 +66,14 @@ CLASS zcl_skylint_no_redundant_call IMPLEMENTATION.
         VALUE #( description       = 'Omit redundant EXPORTING, RECEIVING, and single parameter names in method calls'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
+                     severity = if_ci_atc_check=>finding_severities-warning
                      ( code           = c_finding_codes-omit_exporting
-                       severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Omit explicit EXPORTING keyword in method invocation'
                        pseudo_comment = c_pseudo_comments-exporting )
                      ( code           = c_finding_codes-omit_receiving
-                       severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Omit RECEIVING keyword; use functional call or omit parameter'
                        pseudo_comment = c_pseudo_comments-receiving )
                      ( code           = c_finding_codes-omit_param
-                       severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Omit explicit parameter name in single parameter method call'
                        pseudo_comment = c_pseudo_comments-param_name ) )
                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-omit_exporting
@@ -122,9 +120,9 @@ CLASS zcl_skylint_no_redundant_call IMPLEMENTATION.
       ENDIF.
 
       " 1. Check RECEIVING
-      IF     mv_check_receiving = abap_true
+      IF     mv_check_receiving               = abap_true
          AND has_exceptions( <ls_statement> ) = abap_false
-         AND has_receiving( <ls_statement> ) = abap_true.
+         AND has_receiving( <ls_statement> )  = abap_true.
         ls_quickfix = build_receiving_quickfix( is_statement = <ls_statement>
                                                 iv_stmt_idx  = lv_stmt_idx ).
         report_statement( is_statement    = <ls_statement>

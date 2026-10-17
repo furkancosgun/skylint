@@ -126,8 +126,8 @@ CLASS zcl_skylint_check_subrc IMPLEMENTATION.
     rv_is = abap_false.
 
     LOOP AT is_token-references ASSIGNING <ls_ref>
-         WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-           AND usage_mode = if_ci_atc_source_code_provider=>usage_modes-read.
+         WHERE     kind       = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+               AND usage_mode = if_ci_atc_source_code_provider=>usage_modes-read.
       IF <ls_ref>-full_name = '\DA:SY\DA:SUBRC' OR <ls_ref>-full_name = '\DA:SYST\DA:SUBRC'.
         rv_is = abap_true.
         RETURN.

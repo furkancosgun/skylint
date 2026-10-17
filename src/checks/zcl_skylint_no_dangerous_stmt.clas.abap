@@ -56,16 +56,14 @@ CLASS zcl_skylint_no_dangerous_stmt IMPLEMENTATION.
         VALUE #( description       = 'skylint: Dangerous Statements (abaplint dangerous_statement)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
+                     severity = if_ci_atc_check=>finding_severities-warning
                      ( code           = c_finding_codes-dangerous_statement
-                       severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Dangerous statement detected; avoid dynamic/unmanaged language construct'
                        pseudo_comment = c_pseudo_comments-dangerous_statement )
                      ( code           = c_finding_codes-raise_shortdump
-                       severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Avoid RAISE SHORTDUMP; prefer graceful class-based exceptions'
                        pseudo_comment = c_pseudo_comments-raise_shortdump )
                      ( code           = c_finding_codes-prod_assert
-                       severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Avoid native ASSERT in production logic; raise an exception instead'
                        pseudo_comment = c_pseudo_comments-prod_assert ) )
                  attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
@@ -119,9 +117,9 @@ CLASS zcl_skylint_no_dangerous_stmt IMPLEMENTATION.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF     mv_check_raise_shortdump = abap_true
-         AND <ls_statement>-keyword   = 'RAISE'
+         AND <ls_statement>-keyword = 'RAISE'
          AND zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                     iv_lexeme    = 'SHORTDUMP' ) = abap_true.
+                                                     iv_lexeme    = 'SHORTDUMP' )  = abap_true.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-raise_shortdump ).
         CONTINUE.

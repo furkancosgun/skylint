@@ -18,7 +18,7 @@ CLASS zcl_skylint_no_sy_modify DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'SY_MODIFY'.
 
     METHODS modifies_system_field
-      IMPORTING is_statement        TYPE if_ci_atc_source_code_provider=>ty_statement
+      IMPORTING is_statement       TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_modifies) TYPE abap_bool.
 
     METHODS is_system_write_token
@@ -71,14 +71,14 @@ CLASS zcl_skylint_no_sy_modify IMPLEMENTATION.
 
     LOOP AT is_token-references ASSIGNING <ls_ref>
          WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
-      IF (    <ls_ref>-full_name CP '\DA:SY\*'
-           OR <ls_ref>-full_name CP '\DA:SYST\*'
-           OR <ls_ref>-full_name  = '\DA:SY'
-           OR <ls_ref>-full_name  = '\DA:SYST' )
-         AND (    <ls_ref>-usage_mode  = if_ci_atc_source_code_provider=>usage_modes-write
-               OR <ls_ref>-usage_mode  = if_ci_atc_source_code_provider=>usage_modes-write_partial
-               OR <ls_ref>-usage_mode  = if_ci_atc_source_code_provider=>usage_modes-read_and_write
-               OR <ls_ref>-usage_grade = if_ci_atc_source_code_provider=>usage_grades-definition ).
+      IF     (    <ls_ref>-full_name   CP '\DA:SY\*'
+               OR <ls_ref>-full_name   CP '\DA:SYST\*'
+               OR <ls_ref>-full_name    = '\DA:SY'
+               OR <ls_ref>-full_name    = '\DA:SYST' )
+         AND (    <ls_ref>-usage_mode   = if_ci_atc_source_code_provider=>usage_modes-write
+               OR <ls_ref>-usage_mode   = if_ci_atc_source_code_provider=>usage_modes-write_partial
+               OR <ls_ref>-usage_mode   = if_ci_atc_source_code_provider=>usage_modes-read_and_write
+               OR <ls_ref>-usage_grade  = if_ci_atc_source_code_provider=>usage_grades-definition ).
         rv_is = abap_true.
         RETURN.
       ENDIF.

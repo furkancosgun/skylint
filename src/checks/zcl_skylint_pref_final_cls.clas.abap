@@ -42,12 +42,11 @@ CLASS zcl_skylint_pref_final_cls IMPLEMENTATION.
         VALUE #( description       = 'skylint: Prefer FINAL classes and methods by default'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
+                     severity = if_ci_atc_check=>finding_severities-warning
                      ( code           = c_finding_codes-class_not_final
-                       severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Classes should be marked FINAL by default unless designed for inheritance'
                        pseudo_comment = c_pseudo_comments-final_cls )
                      ( code           = c_finding_codes-method_not_final
-                       severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Declare method as FINAL if it is not intended to be redefined'
                        pseudo_comment = c_pseudo_comments-final_meth ) )
                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-add_final

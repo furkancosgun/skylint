@@ -70,12 +70,11 @@ CLASS zcl_skylint_no_bool_compare IMPLEMENTATION.
               CLEAR ls_quickfix.
               IF ls_comp-can_drop = abap_true.
                 lv_line = zcl_skylint_ast_util=>flatten_statement(
-                    is_statement = <ls_statement>
-                    it_deletions = VALUE #( ( ls_comp-op_idx ) ( ls_comp-lit_idx ) ) ).
-                ls_quickfix = quickfix_replace(
-                    iv_quickfix_code  = c_quickfix_codes-drop_literal
-                    iv_statement_from = lv_stmt_idx
-                    it_new_code       = VALUE #( ( |{ lv_line }.| ) ) ).
+                              is_statement = <ls_statement>
+                              it_deletions = VALUE #( ( ls_comp-op_idx ) ( ls_comp-lit_idx ) ) ).
+                ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-drop_literal
+                                                iv_statement_from = lv_stmt_idx
+                                                it_new_code       = VALUE #( ( |{ lv_line }.| ) ) ).
               ENDIF.
 
               report_statement( is_statement    = <ls_statement>
@@ -144,7 +143,7 @@ CLASS zcl_skylint_no_bool_compare IMPLEMENTATION.
 
     LOOP AT is_token-references ASSIGNING <ls_ref>
          WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
-      IF <ls_ref>-full_name = '\DA:ABAP_TRUE'
+      IF    <ls_ref>-full_name = '\DA:ABAP_TRUE'
          OR <ls_ref>-full_name = '\DA:ABAP_FALSE'
          OR <ls_ref>-full_name = '\DA:ABAP_UNDEFINED'.
         rv_is = abap_true.

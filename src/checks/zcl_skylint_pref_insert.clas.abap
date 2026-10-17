@@ -42,11 +42,11 @@ CLASS zcl_skylint_pref_insert IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_stmt_idx   TYPE i.
-    DATA lv_to_idx     TYPE i.
-    DATA lv_line       TYPE string.
-    DATA ls_quickfix   TYPE zcl_skylint_check_base=>ty_quickfix.
-    DATA lt_overrides  TYPE zcl_skylint_ast_util=>ty_token_overrides.
+    DATA lv_stmt_idx  TYPE i.
+    DATA lv_to_idx    TYPE i.
+    DATA lv_line      TYPE string.
+    DATA ls_quickfix  TYPE zcl_skylint_check_base=>ty_quickfix.
+    DATA lt_overrides TYPE zcl_skylint_ast_util=>ty_token_overrides.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
@@ -54,12 +54,13 @@ CLASS zcl_skylint_pref_insert IMPLEMENTATION.
         CONTINUE.
       ENDIF.
       lv_stmt_idx = sy-tabix.
-      CLEAR: ls_quickfix, lt_overrides.
+      CLEAR: ls_quickfix,
+             lt_overrides.
 
       lv_to_idx = find_top_level_to( <ls_statement> ).
       IF     lv_to_idx > 1
          AND zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                     iv_lexeme    = 'SORTED' ) = abap_false.
+                                                     iv_lexeme    = 'SORTED' )     = abap_false.
         lt_overrides = VALUE #( ( index  = 1
                                   lexeme = 'INSERT' )
                                 ( index  = lv_to_idx

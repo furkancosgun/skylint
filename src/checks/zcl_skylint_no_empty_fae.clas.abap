@@ -212,9 +212,8 @@ CLASS zcl_skylint_no_empty_fae IMPLEMENTATION.
 
     DO iv_select_idx - 1 TIMES.
       lv_idx = sy-index.
-      ls_stmt = zcl_skylint_ast_util=>get_statement(
-                    it_statements = it_statements
-                    iv_index      = lv_idx ).
+      ls_stmt = zcl_skylint_ast_util=>get_statement( it_statements = it_statements
+                                                     iv_index      = lv_idx ).
       lv_stack_len = lines( lt_stack ).
 
       CASE ls_stmt-keyword.

@@ -55,12 +55,11 @@ CLASS zcl_skylint_pref_new_op IMPLEMENTATION.
         VALUE #( description       = 'Prefer NEW #( ) constructor over CREATE OBJECT and RAISE EXCEPTION TYPE'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
+                     severity = if_ci_atc_check=>finding_severities-warning
                      ( code           = c_finding_codes-prefer_new
-                       severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Prefer NEW #( ) expression over CREATE OBJECT'
                        pseudo_comment = c_pseudo_comments-new_op )
                      ( code           = c_finding_codes-raise_exception_new
-                       severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Prefer RAISE EXCEPTION NEW cx_name( ) over RAISE EXCEPTION TYPE'
                        pseudo_comment = c_pseudo_comments-raise_new ) )
                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-use_new

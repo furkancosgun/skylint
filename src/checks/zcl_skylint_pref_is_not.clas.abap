@@ -55,10 +55,10 @@ CLASS zcl_skylint_pref_is_not IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> LIKE LINE OF is_procedure-statements.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF    <ls_statement>-keyword <> 'IF'
-        AND <ls_statement>-keyword <> 'ELSEIF'
-        AND <ls_statement>-keyword <> 'CHECK'
-        AND <ls_statement>-keyword <> 'WHILE'.
+      IF     <ls_statement>-keyword <> 'IF'
+         AND <ls_statement>-keyword <> 'ELSEIF'
+         AND <ls_statement>-keyword <> 'CHECK'
+         AND <ls_statement>-keyword <> 'WHILE'.
         CONTINUE.
       ENDIF.
       lv_stmt_idx = sy-tabix.

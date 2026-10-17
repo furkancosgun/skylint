@@ -65,8 +65,10 @@ Modern ABAP assignments like `lv_val = 10.` or `ls_data-field = 'X'.` do not hav
 - When an assignment operator `=` is found at top level (`paren_depth = 0`), the statement's `keyword` is set to **`COMPUTE`**.
 - **Agent Rule:** To inspect value assignments, computations, or constructor expressions assigned to a variable, filter directly by:
   ```abap
-  LOOP AT is_code_block-statements ASSIGNING <ls_statement>
-       WHERE keyword = 'COMPUTE'.
+  LOOP AT is_code_block-statements ASSIGNING <ls_statement>.
+    IF <ls_statement>-keyword <> 'COMPUTE'.
+      CONTINUE.
+    ENDIF.
   ```
 
 ### 3. Functional Method Calls Become `+CALL_METHOD`
@@ -288,8 +290,11 @@ CLASS zcl_skylint_XXX IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'TARGET_KEYWORD'.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF <ls_statement>-keyword <> 'TARGET_KEYWORD'.
+        CONTINUE.
+      ENDIF.
+
       " Inspection logic
       report_statement( is_statement    = <ls_statement>
                         iv_finding_code = c_finding_codes-my_finding_code ).

@@ -46,11 +46,11 @@ CLASS zcl_skylint_no_client_spec IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF    <ls_statement>-keyword <> 'SELECT'
-        AND <ls_statement>-keyword <> 'UPDATE'
-        AND <ls_statement>-keyword <> 'MODIFY'
-        AND <ls_statement>-keyword <> 'DELETE'
-        AND <ls_statement>-keyword <> 'INSERT'.
+      IF     <ls_statement>-keyword <> 'SELECT'
+         AND <ls_statement>-keyword <> 'UPDATE'
+         AND <ls_statement>-keyword <> 'MODIFY'
+         AND <ls_statement>-keyword <> 'DELETE'
+         AND <ls_statement>-keyword <> 'INSERT'.
         CONTINUE.
       ENDIF.
       lv_stmt_idx = sy-tabix.

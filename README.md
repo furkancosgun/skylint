@@ -1,6 +1,21 @@
-# ☁️ Skylint
+<p align="center">
+  <img src="docs/public/logo.svg" width="120" height="120" alt="Skylint Logo" />
+</p>
 
-> **Modern, Minimal ABAP Linter for SAP BTP & S/4HANA (ATC-Native)**
+<h1 align="center">Skylint</h1>
+
+<p align="center">
+  <strong>Enterprise Clean ABAP & Cloud ATC Linter Engine</strong>
+</p>
+
+<p align="center">
+  <a href="https://github.com/furkancosgun/skylint/actions/workflows/ci.yml"><img src="https://github.com/furkancosgun/skylint/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
+  <a href="https://furkancosgun.github.io/skylint/"><img src="https://img.shields.io/badge/docs-online-blue.svg" alt="Docs" /></a>
+  <a href="#-clean-abap--cloud-rule-catalog-74-rules"><img src="https://img.shields.io/badge/rules-74-brightgreen.svg" alt="Rules" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-yellow.svg" alt="License" /></a>
+</p>
+
+> 📖 **Full Documentation & Interactive Rule Guide:** [https://furkancosgun.github.io/skylint/](https://furkancosgun.github.io/skylint/)
 
 **Skylint** is an extensible, high-performance static code analysis framework for ABAP. Every rule is a **native ATC check** (`if_ci_atc_check`) running on SAP BTP ABAP Environment & S/4HANA — no adapters, no branches, no portability layers.
 
@@ -168,8 +183,11 @@ CLASS zcl_skylint_pref_is_not IMPLEMENTATION.
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'CHECK'.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF <ls_statement>-keyword <> 'CHECK'.
+        CONTINUE.
+      ENDIF.
+
       report_statement( is_statement    = <ls_statement>
                         iv_finding_code = c_finding_codes-prefer_is_not ).
     ENDLOOP.

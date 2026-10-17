@@ -115,10 +115,10 @@ CLASS zcl_skylint_no_yoda_cond IMPLEMENTATION.
     ls_t3 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                              iv_index     = iv_index + 2 ).
 
-    IF     zcl_skylint_ast_util=>token_is_literal( ls_t1 ) = abap_true
+    IF     zcl_skylint_ast_util=>token_is_literal( ls_t1 )               = abap_true
        AND ls_t2-references IS INITIAL
-       AND zcl_skylint_ast_util=>is_comparison_operator( ls_t2-lexeme ) = abap_true
-       AND zcl_skylint_ast_util=>token_is_literal( ls_t3 ) = abap_false.
+       AND zcl_skylint_ast_util=>is_comparison_operator( ls_t2-lexeme )  = abap_true
+       AND zcl_skylint_ast_util=>token_is_literal( ls_t3 )               = abap_false.
       rv_is = abap_true.
     ENDIF.
   ENDMETHOD.

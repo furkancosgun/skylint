@@ -63,11 +63,12 @@ CLASS zcl_skylint_no_self_assign IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_identical_assignment.
-    DATA lv_eq_idx      TYPE i.
-    DATA ls_tok_left    TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_tok_right   TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_tok_after   TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_eq_idx    TYPE i.
+    DATA ls_tok_left  TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok_right TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok_after TYPE if_ci_atc_source_code_provider=>ty_token.
     FIELD-SYMBOLS <ls_ref_w> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    " TODO: variable is assigned but never used (ABAP cleaner)
     FIELD-SYMBOLS <ls_ref_r> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     rv_res = abap_false.
@@ -103,9 +104,9 @@ CLASS zcl_skylint_no_self_assign IMPLEMENTATION.
     LOOP AT ls_tok_left-references ASSIGNING <ls_ref_w>
          WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
       LOOP AT ls_tok_right-references ASSIGNING <ls_ref_r>
-           WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-             AND full_name = <ls_ref_w>-full_name
-             AND full_name IS NOT INITIAL.
+           WHERE     kind       = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+                 AND full_name  = <ls_ref_w>-full_name
+                 AND full_name IS NOT INITIAL.
         rv_res = abap_true.
         RETURN.
       ENDLOOP.

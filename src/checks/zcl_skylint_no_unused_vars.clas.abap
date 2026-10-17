@@ -71,11 +71,12 @@ CLASS zcl_skylint_no_unused_vars IMPLEMENTATION.
       ENDIF.
 
       " Resolve the defined variable and compiler definition reference
-      CLEAR: lv_var_name, ls_def_ref.
+      CLEAR: lv_var_name,
+             ls_def_ref.
       LOOP AT <ls_decl>-tokens ASSIGNING <ls_token>.
         LOOP AT <ls_token>-references INTO ls_def_ref
-             WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-               AND usage_grade = if_ci_atc_source_code_provider=>usage_grades-definition.
+             WHERE     kind        = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+                   AND usage_grade = if_ci_atc_source_code_provider=>usage_grades-definition.
           lv_var_name = <ls_token>-lexeme.
           EXIT.
         ENDLOOP.
@@ -100,6 +101,7 @@ CLASS zcl_skylint_no_unused_vars IMPLEMENTATION.
   METHOD is_variable_used.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_tok>  TYPE if_ci_atc_source_code_provider=>ty_token.
+    " TODO: variable is assigned but never used (ABAP cleaner)
     FIELD-SYMBOLS <ls_ref>  TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     rv_used = abap_false.
@@ -113,16 +115,16 @@ CLASS zcl_skylint_no_unused_vars IMPLEMENTATION.
         " 1. Compiler reference matching symbol full_name (usage access)
         IF is_def_ref-full_name IS NOT INITIAL.
           LOOP AT <ls_tok>-references ASSIGNING <ls_ref>
-               WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-                 AND full_name = is_def_ref-full_name
-                 AND usage_grade <> if_ci_atc_source_code_provider=>usage_grades-definition.
+               WHERE     kind         = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+                     AND full_name    = is_def_ref-full_name
+                     AND usage_grade <> if_ci_atc_source_code_provider=>usage_grades-definition.
             rv_used = abap_true.
             RETURN.
           ENDLOOP.
         ENDIF.
 
         " 2. Direct identifier or component access (e.g. ls_data-comp1)
-        IF ( <ls_tok>-lexeme = iv_var_name OR <ls_tok>-lexeme CP |{ iv_var_name }-*| )
+        IF     ( <ls_tok>-lexeme = iv_var_name OR <ls_tok>-lexeme CP |{ iv_var_name }-*| )
            AND zcl_skylint_ast_util=>has_compiler_reference(
                    is_token = <ls_tok>
                    iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-method ) = abap_false

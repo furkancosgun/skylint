@@ -72,8 +72,8 @@ CLASS zcl_skylint_modify_own_tab IMPLEMENTATION.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_tok>.
       LOOP AT <ls_tok>-references ASSIGNING <ls_ref>.
-        IF <ls_ref>-usage_mode = if_ci_atc_source_code_provider=>usage_modes-write_database
-          OR <ls_ref>-full_name CP '\DB:*'.
+        IF    <ls_ref>-usage_mode  = if_ci_atc_source_code_provider=>usage_modes-write_database
+           OR <ls_ref>-full_name  CP '\DB:*'.
           IF <ls_ref>-full_name CP '\DB:*'.
             rv_table = substring( val = <ls_ref>-full_name
                                   off = 4 ).
@@ -81,9 +81,9 @@ CLASS zcl_skylint_modify_own_tab IMPLEMENTATION.
             rv_table = <ls_tok>-lexeme.
           ENDIF.
           RETURN.
-        ELSEIF <ls_ref>-kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-type
-           AND <ls_ref>-full_name CP '\TY:*'
-           AND <ls_ref>-full_name NP '\TY:*\TY:*'.
+        ELSEIF     <ls_ref>-kind       = if_ci_atc_source_code_provider=>compiler_reference_kinds-type
+               AND <ls_ref>-full_name CP '\TY:*'
+               AND <ls_ref>-full_name NP '\TY:*\TY:*'.
           rv_table = substring( val = <ls_ref>-full_name
                                 off = 4 ).
           RETURN.

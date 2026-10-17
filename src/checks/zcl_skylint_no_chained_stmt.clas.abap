@@ -70,12 +70,11 @@ CLASS zcl_skylint_no_chained_stmt IMPLEMENTATION.
         VALUE #( description       = 'Avoid chained declarations and chained assignments'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
+                     severity = if_ci_atc_check=>finding_severities-warning
                      ( code           = c_finding_codes-chained_declaration
-                       severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Avoid chained declarations; declare each entity individually'
                        pseudo_comment = c_pseudo_comments-chain_decl )
                      ( code           = c_finding_codes-assignment_chaining
-                       severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Avoid chained assignments; write separate assignment statements'
                        pseudo_comment = c_pseudo_comments-chain_assign ) )
                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-resolve_chain

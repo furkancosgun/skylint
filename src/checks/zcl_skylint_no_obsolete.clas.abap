@@ -117,7 +117,7 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
       ENDIF.
 
       IF    check_obsolete_constructs( <ls_statement> ) = abap_true
-         OR check_loop_controls( <ls_statement> )        = abap_true.
+         OR check_loop_controls( <ls_statement> )       = abap_true.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-obsolete_statement ).
       ENDIF.
@@ -135,10 +135,10 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
       WHEN 'MOVE'.
         IF mv_check_move = abap_true.
           ev_is_match = abap_true.
-          IF     zcl_skylint_ast_util=>token_count( is_statement )                     = 4
+          IF     zcl_skylint_ast_util=>token_count( is_statement )                   = 4
              AND zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
                                                          iv_index     = 3
-                                                         iv_expected  = `TO` )         = abap_true.
+                                                         iv_expected  = `TO` )       = abap_true.
             lv_src = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
                                                              iv_index     = 2 ).
             lv_dst = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
@@ -161,7 +161,7 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
         IF     mv_check_compute = abap_true
            AND zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
                                                        iv_index     = 1
-                                                       iv_expected  = `COMPUTE` ) = abap_true.
+                                                       iv_expected  = `COMPUTE` )  = abap_true.
           ev_line = condense( zcl_skylint_ast_util=>flatten_statement( is_statement = is_statement
                                                                        it_deletions = VALUE #( ( 1 ) )
                                                                        iv_suffix    = '.' ) ).
@@ -224,16 +224,16 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
       WHEN 'AT'.
         IF    zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
                                                       iv_index     = 2
-                                                      iv_expected  = `NEW` )   = abap_true
+                                                      iv_expected  = `NEW` )      = abap_true
            OR zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
                                                       iv_index     = 2
-                                                      iv_expected  = `END` )   = abap_true
+                                                      iv_expected  = `END` )      = abap_true
            OR zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
                                                       iv_index     = 2
-                                                      iv_expected  = `FIRST` ) = abap_true
+                                                      iv_expected  = `FIRST` )    = abap_true
            OR zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
                                                       iv_index     = 2
-                                                      iv_expected  = `LAST` )  = abap_true.
+                                                      iv_expected  = `LAST` )     = abap_true.
           rv_is = abap_true.
         ENDIF.
     ENDCASE.

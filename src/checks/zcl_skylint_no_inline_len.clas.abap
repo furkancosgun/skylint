@@ -60,9 +60,9 @@ CLASS zcl_skylint_no_inline_len IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF    <ls_statement>-keyword <> 'DATA'
-        AND <ls_statement>-keyword <> 'CONSTANTS'
-        AND <ls_statement>-keyword <> 'STATICS'.
+      IF     <ls_statement>-keyword <> 'DATA'
+         AND <ls_statement>-keyword <> 'CONSTANTS'
+         AND <ls_statement>-keyword <> 'STATICS'.
         CONTINUE.
       ENDIF.
       lv_stmt_idx = sy-tabix.

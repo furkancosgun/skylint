@@ -48,12 +48,11 @@ CLASS zcl_skylint_pref_early_ret IMPLEMENTATION.
         VALUE #( description       = 'Prefer early exit (RETURN or CONTINUE) instead of nested IF blocks'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
+                     severity = if_ci_atc_check=>finding_severities-warning
                      ( code           = c_finding_codes-guard_method
-                       severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Invert IF condition and use RETURN to reduce nesting in method'
                        pseudo_comment = c_pseudo_comments-early_return )
                      ( code           = c_finding_codes-guard_loop
-                       severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Invert IF condition and use CONTINUE to reduce nesting in loop'
                        pseudo_comment = c_pseudo_comments-early_continue ) )
                  attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
@@ -78,7 +77,7 @@ CLASS zcl_skylint_pref_early_ret IMPLEMENTATION.
       IF     ls_first_stmt-keyword = 'IF'
          AND lv_first_idx > 0
          AND if_wraps_method_end( it_statements = is_procedure-statements
-                                  iv_if_idx     = lv_first_idx ) = abap_true.
+                                  iv_if_idx     = lv_first_idx )          = abap_true.
         report_statement( is_statement    = ls_first_stmt
                           iv_finding_code = c_finding_codes-guard_method ).
       ENDIF.
@@ -86,9 +85,9 @@ CLASS zcl_skylint_pref_early_ret IMPLEMENTATION.
 
     IF mv_check_loop_continue = abap_true.
       LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-        IF    <ls_statement>-keyword <> 'LOOP'
-          AND <ls_statement>-keyword <> 'DO'
-          AND <ls_statement>-keyword <> 'WHILE'.
+        IF     <ls_statement>-keyword <> 'LOOP'
+           AND <ls_statement>-keyword <> 'DO'
+           AND <ls_statement>-keyword <> 'WHILE'.
           CONTINUE.
         ENDIF.
         ls_if = find_wrapping_if( it_statements = is_procedure-statements
