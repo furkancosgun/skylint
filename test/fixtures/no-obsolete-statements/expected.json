@@ -75,5 +75,19 @@
     "quickfixes": [
       "REPLACE_OB"
     ]
+  },
+  {
+    "method": "TEST_012",
+    "code": "OBSOLETE",
+    "line": 2,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "method": "TEST_013",
+    "code": "OBSOLETE",
+    "line": 2,
+    "column": 4,
+    "quickfixes": []
   }
 ]

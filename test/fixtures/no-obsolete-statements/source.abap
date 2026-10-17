@@ -14,6 +14,8 @@ CLASS zcl_test_no_obsolete_statement DEFINITION
     METHODS test_009.
     METHODS test_010.
     METHODS test_011.
+    METHODS test_012.
+    METHODS test_013.
 ENDCLASS.
 
 CLASS zcl_test_no_obsolete_statement IMPLEMENTATION.
@@ -77,5 +79,15 @@ CLASS zcl_test_no_obsolete_statement IMPLEMENTATION.
     DATA lv_x TYPE i.
     DATA lv_y TYPE i.
     ADD lv_x TO lv_y.
+  ENDMETHOD.
+
+  METHOD test_012.
+    TABLES spfli.
+  ENDMETHOD.
+
+  METHOD test_013.
+    DEFINE my_macro.
+      DATA lv_dummy TYPE i.
+    END-OF-DEFINITION.
   ENDMETHOD.
 ENDCLASS.
