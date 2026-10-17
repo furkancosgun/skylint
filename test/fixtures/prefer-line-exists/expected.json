@@ -16,5 +16,13 @@
     "line": 4,
     "column": 4,
     "quickfixes": []
+  },
+  {
+    "method": "TEST_004",
+    "code": null
+  },
+  {
+    "method": "TEST_005",
+    "code": null
   }
 ]

@@ -1,4 +1,4 @@
-CLASS zcl_skylint_no_chain_decl DEFINITION
+CLASS zcl_skylint_no_chained_stmt DEFINITION
   PUBLIC
   INHERITING FROM zcl_skylint_check_base
   CREATE PUBLIC.
@@ -62,7 +62,7 @@ CLASS zcl_skylint_no_chain_decl DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_no_chain_decl IMPLEMENTATION.
+CLASS zcl_skylint_no_chained_stmt IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
         VALUE #( description       = 'Avoid chained declarations and chained assignments'

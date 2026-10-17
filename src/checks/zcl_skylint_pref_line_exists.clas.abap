@@ -40,7 +40,7 @@ CLASS zcl_skylint_pref_line_exists IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'READ'.
+         WHERE keyword = 'READ' OR keyword = 'LOOP'.
       IF has_transporting_no_fields( <ls_statement> ) = abap_true.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-prefer_line_exists ).
@@ -55,6 +55,11 @@ CLASS zcl_skylint_pref_line_exists IMPLEMENTATION.
 
     IF zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
                                                   it_expected  = VALUE #( ( `BINARY` ) ( `SEARCH` ) ) ) > 0.
+      RETURN.
+    ENDIF.
+
+    IF zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                         iv_lexeme    = 'WHERE' ) > 0.
       RETURN.
     ENDIF.
 

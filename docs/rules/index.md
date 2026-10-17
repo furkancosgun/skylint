@@ -46,8 +46,8 @@ Discouraged language constructs, legacy statements, and redundant syntax.
 | [`no-call-method`](/rules/no-call-method) | `ZCL_SKYLINT_NO_CALL_METHOD` | Avoid static CALL METHOD statements | `CALLMETHOD` | `#EC CALL_METH` | ⚡ Ready |
 | [`no-default-key`](/rules/no-default-key) | `ZCL_SKYLINT_NO_DEFAULT_KEY` | Avoid WITH DEFAULT KEY; prefer EMPTY KEY or explicit keys | `DEFAULTKEY` | `#EC DEFAULT_KEY` | ⚡ Ready |
 | [`no-me-reference`](/rules/no-me-reference) | `ZCL_SKYLINT_NO_ME_REFERENCE` | Avoid self-reference ME-> | `AVOIDME` | `#EC ME` | — |
-| [`no-exporting`](/rules/no-exporting) | `ZCL_SKYLINT_NO_EXPORTING` | Omit redundant EXPORTING, RECEIVING, and single parameter names in method calls | `OMITEXPORT` | `#EC EXPORTING` | ⚡ Ready |
-| [`no-chained-decl`](/rules/no-chained-decl) | `ZCL_SKYLINT_NO_CHAIN_DECL` | Avoid chained declarations and chained assignments | `CHAINDECL` | `#EC CHAIN_DECL` | ⚡ Ready |
+| [`no-redundant-method-call`](/rules/no-redundant-method-call) | `ZCL_SKYLINT_NO_REDUNDANT_CALL` | Omit redundant EXPORTING, RECEIVING, and single parameter names in method calls | `OMITEXPORT` | `#EC EXPORTING` | ⚡ Ready |
+| [`no-chained-statements`](/rules/no-chained-statements) | `ZCL_SKYLINT_NO_CHAINED_STMT` | Avoid chained declarations and chained assignments | `CHAINDECL` | `#EC CHAIN_DECL` | ⚡ Ready |
 | [`no-boolean-comparison`](/rules/no-boolean-comparison) | `ZCL_SKYLINT_NO_BOOL_COMPARE` | Avoid comparing boolean method calls to boolean literals | `BOOLCOMP` | `#EC BOOL_COMPARE` | ⚡ Ready |
 | [`no-check-in-loop`](/rules/no-check-in-loop) | `ZCL_SKYLINT_NO_CHECK_IN_LOOP` | Avoid CHECK in loop/iteration structures (prefer IF ... CONTINUE) | `CHKINLOOP` | `#EC CHECK_IN_LOOP` | ⚡ Ready |
 | [`no-empty-block`](/rules/no-empty-block) | `ZCL_SKYLINT_NO_EMPTY_BLOCK` | Detect empty control blocks (IF, CASE, LOOP, TRY, CATCH, etc.) | `EMPTYCTRL` | `#EC EMPTY_BLOCK` | — |
@@ -88,7 +88,7 @@ Authorizations, dynamic execution sanitation, error handling, and runtime safety
 
 | Rule ID | ABAP Class | Description | Finding Code | Pseudo-Comment | QuickFix |
 |---|---|---|:---:|:---:|:---:|
-| [`dangerous-statement`](/rules/dangerous-statement) | `ZCL_SKYLINT_NO_DANGEROUS_STMT` | Dangerous Statements (abaplint dangerous_statement) | `DANGER_STM` | `#EC DANGEROUS_STMT` | — |
+| [`no-dangerous-statements`](/rules/no-dangerous-statements) | `ZCL_SKYLINT_NO_DANGEROUS_STMT` | Dangerous Statements (abaplint dangerous_statement) | `DANGER_STM` | `#EC DANGEROUS_STMT` | — |
 | [`require-auth-check`](/rules/require-auth-check) | `ZCL_SKYLINT_PREF_AUTH_CHECK` | Call Transaction Authority Check | `AUTH_CHECK` | `#EC AUTH_CHECK` | ⚡ Ready |
 | [`no-catch-cx-root`](/rules/no-catch-cx-root) | `ZCL_SKYLINT_NO_CATCH_ROOT` | Avoid generic CATCH cx_root; catch specific exception classes | `CATCH_ROOT` | `#EC CATCH_ROOT` | — |
 | [`no-raise-cx-sy`](/rules/no-raise-cx-sy) | `ZCL_SKYLINT_NO_RAISE_CX_SY` | Avoid raising SAP internal system exceptions (cx_sy_*) | `RAISE_SYS` | `#EC RAISE_CX_SY` | — |

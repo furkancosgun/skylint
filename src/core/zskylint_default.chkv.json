@@ -22,10 +22,10 @@
       "checkName": "ZSKYLINT_NO_ME_REFERENCE"
     },
     {
-      "checkName": "ZSKYLINT_NO_EXPORTING"
+      "checkName": "ZSKYLINT_NO_REDUNDANT_CALL"
     },
     {
-      "checkName": "ZSKYLINT_NO_CHAIN_DECL"
+      "checkName": "ZSKYLINT_NO_CHAINED_STMT"
     },
     {
       "checkName": "ZSKYLINT_PREF_STR_TMPL"

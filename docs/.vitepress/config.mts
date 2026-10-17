@@ -161,12 +161,12 @@ export default defineConfig({
         "link": "/rules/no-me-reference"
       },
       {
-        "text": "no-exporting",
-        "link": "/rules/no-exporting"
+        "text": "no-redundant-method-call",
+        "link": "/rules/no-redundant-method-call"
       },
       {
-        "text": "no-chained-decl",
-        "link": "/rules/no-chained-decl"
+        "text": "no-chained-statements",
+        "link": "/rules/no-chained-statements"
       },
       {
         "text": "no-boolean-comparison",
@@ -285,8 +285,8 @@ export default defineConfig({
     "collapsed": false,
     "items": [
       {
-        "text": "dangerous-statement",
-        "link": "/rules/dangerous-statement"
+        "text": "no-dangerous-statements",
+        "link": "/rules/no-dangerous-statements"
       },
       {
         "text": "require-auth-check",

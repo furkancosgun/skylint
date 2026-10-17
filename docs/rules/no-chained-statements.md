@@ -1,4 +1,4 @@
-# `no-chained-decl`
+# `no-chained-statements`
 
 > **Category:** [Anti-Patterns & Bad Practices](/rules/#anti-patterns) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `CHAINDECL` &nbsp;|&nbsp; **QuickFix:** ⚡ Yes
 
@@ -40,12 +40,12 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 
 ```yaml
 checks:
-  no-chained-decl:
+  no-chained-statements:
     enabled: true
     severity: warning
 ```
 
 ## ABAP Class Details
 
-* **Native ATC Class:** `ZCL_SKYLINT_NO_CHAIN_DECL`
-* **Implementation File:** [zcl_skylint_no_chain_decl.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_chain_decl.clas.abap)
+* **Native ATC Class:** `ZCL_SKYLINT_NO_CHAINED_STMT`
+* **Implementation File:** [zcl_skylint_no_chained_stmt.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_chained_stmt.clas.abap)

@@ -1,4 +1,4 @@
-# `dangerous-statement`
+# `no-dangerous-statements`
 
 > **Category:** [Security & Robustness](/rules/#security) &nbsp;|&nbsp; **Severity:** `warning` &nbsp;|&nbsp; **Finding Code:** `DANGER_STM` &nbsp;|&nbsp; **QuickFix:** No
 
@@ -40,7 +40,7 @@ To suppress findings for this rule, append the pseudo-comment or pragma to the s
 
 ```yaml
 checks:
-  dangerous-statement:
+  no-dangerous-statements:
     enabled: true
     severity: warning
 ```

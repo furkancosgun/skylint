@@ -1,4 +1,4 @@
-CLASS zcl_skylint_no_exporting DEFINITION
+CLASS zcl_skylint_no_redundant_call DEFINITION
   PUBLIC
   INHERITING FROM zcl_skylint_check_base
   CREATE PUBLIC.
@@ -56,7 +56,7 @@ CLASS zcl_skylint_no_exporting DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_no_exporting IMPLEMENTATION.
+CLASS zcl_skylint_no_redundant_call IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
         VALUE #( description       = 'Omit redundant EXPORTING, RECEIVING, and single parameter names in method calls'

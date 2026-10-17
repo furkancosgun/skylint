@@ -7,6 +7,7 @@ CLASS zcl_test_prefer_line_exists DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
+    METHODS test_005.
 ENDCLASS.
 
 
@@ -32,5 +33,11 @@ CLASS zcl_test_prefer_line_exists IMPLEMENTATION.
     DATA lt_tab TYPE string_table.
     IF line_exists( lt_tab[ 1 ] ).
     ENDIF.
+  ENDMETHOD.
+
+  METHOD test_005.
+    DATA lt_tab TYPE string_table.
+    LOOP AT lt_tab TRANSPORTING NO FIELDS WHERE table_line = 'A'.
+    ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

@@ -53,8 +53,8 @@ All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 | `no-default-key` | [ZCL_SKYLINT_NO_DEFAULT_KEY](src/checks/zcl_skylint_no_default_key.clas.abap) | Avoid WITH DEFAULT KEY; prefer EMPTY KEY or explicit keys | `DEFAULTKEY` | `"#EC DEFAULT_KEY"` | ⚡ Ready |
 | `prefer-is-not` | [ZCL_SKYLINT_PREF_IS_NOT](src/checks/zcl_skylint_pref_is_not.clas.abap) | Prefer IS NOT over NOT ... IS | `PREFERISNT` | `"#EC IS_NOT"` | ⚡ Ready |
 | `no-me-reference` | [ZCL_SKYLINT_NO_ME_REFERENCE](src/checks/zcl_skylint_no_me_reference.clas.abap) | Avoid self-reference ME-> | `AVOIDME` | `"#EC ME"` | — |
-| `no-exporting` | [ZCL_SKYLINT_NO_EXPORTING](src/checks/zcl_skylint_no_exporting.clas.abap) | Omit redundant EXPORTING, RECEIVING, and single parameter names in method calls | `OMITEXPORT` | `"#EC EXPORTING"` | ⚡ Ready |
-| `no-chained-decl` | [ZCL_SKYLINT_NO_CHAIN_DECL](src/checks/zcl_skylint_no_chain_decl.clas.abap) | Avoid chained declarations and chained assignments | `CHAINDECL` | `"#EC CHAIN_DECL"` | ⚡ Ready |
+| `no-redundant-method-call` | [ZCL_SKYLINT_NO_REDUNDANT_CALL](src/checks/zcl_skylint_no_redundant_call.clas.abap) | Omit redundant EXPORTING, RECEIVING, and single parameter names in method calls | `OMITEXPORT` | `"#EC EXPORTING"` | ⚡ Ready |
+| `no-chained-statements` | [ZCL_SKYLINT_NO_CHAINED_STMT](src/checks/zcl_skylint_no_chained_stmt.clas.abap) | Avoid chained declarations and chained assignments | `CHAINDECL` | `"#EC CHAIN_DECL"` | ⚡ Ready |
 | `prefer-string-template` | [ZCL_SKYLINT_PREF_STR_TMPL](src/checks/zcl_skylint_pref_str_tmpl.clas.abap) | Prefer string templates over CONCATENATE | `CONCATSTR` | `"#EC STR_TMPL"` | ⚡ Ready |
 | `no-boolean-comparison` | [ZCL_SKYLINT_NO_BOOL_COMPARE](src/checks/zcl_skylint_no_bool_compare.clas.abap) | Avoid comparing boolean method calls to boolean literals | `BOOLCOMP` | `"#EC BOOL_COMPARE"` | ⚡ Ready |
 | `prefer-line-exists` | [ZCL_SKYLINT_PREF_LINE_EXISTS](src/checks/zcl_skylint_pref_line_exists.clas.abap) | Prefer line_exists( ) over READ TABLE ... TRANSPORTING NO FIELDS | `PREFLINEX` | `"#EC LINE_EXISTS"` | — |
@@ -85,7 +85,7 @@ All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 | `no-sy-modify` | [ZCL_SKYLINT_NO_SY_MODIFY](src/checks/zcl_skylint_no_sy_modify.clas.abap) | Avoid sy-* System Variable Modification | `SYS_VAR_MD` | `"#EC SY_MODIFY"` | — |
 | `prefer-returning` | [ZCL_SKYLINT_PREF_RETURNING](src/checks/zcl_skylint_pref_returning.clas.abap) | Prefer RETURNING over single EXPORTING | `PREFER_RET` | `"#EC RETURNING"` | — |
 | `prefer-class-exceptions` | [ZCL_SKYLINT_PREF_CLASS_EXC](src/checks/zcl_skylint_pref_class_exc.clas.abap) | Prefer Class-Based Exceptions over Classic EXCEPTIONS | `CLASS_EXC` | `"#EC CLASS_EXC"` | — |
-| `dangerous-statement` | [ZCL_SKYLINT_NO_DANGEROUS_STMT](src/checks/zcl_skylint_no_dangerous_stmt.clas.abap) | Dangerous Statements (abaplint dangerous_statement) | `DANGER_STM` | `"#EC DANGEROUS_STMT"` | — |
+| `no-dangerous-statements` | [ZCL_SKYLINT_NO_DANGEROUS_STMT](src/checks/zcl_skylint_no_dangerous_stmt.clas.abap) | Dangerous Statements (abaplint dangerous_statement) | `DANGER_STM` | `"#EC DANGEROUS_STMT"` | — |
 | `require-auth-check` | [ZCL_SKYLINT_PREF_AUTH_CHECK](src/checks/zcl_skylint_pref_auth_check.clas.abap) | Call Transaction Authority Check | `AUTH_CHECK` | `"#EC AUTH_CHECK"` | ⚡ Ready |
 | `require-order-by` | [ZCL_SKYLINT_PREF_ORDER_BY](src/checks/zcl_skylint_pref_order_by.clas.abap) | SELECT UP TO 1 ROWS requires ORDER BY | `SELECT_UP` | `"#EC ORDER_BY"` | — |
 | `max-cyclomatic-complexity` | [ZCL_SKYLINT_MAX_CYCLO_COMP](src/checks/zcl_skylint_max_cyclo_comp.clas.abap) | Cyclomatic Complexity Threshold | `CYCLO_COMP` | `"#EC CYCLO_COMP"` | — |

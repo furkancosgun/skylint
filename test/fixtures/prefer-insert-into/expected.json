@@ -20,5 +20,23 @@
     "quickfixes": [
       "TOINSERT"
     ]
+  },
+  {
+    "method": "TEST_005",
+    "code": "PREF_INSRT",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "TOINSERT"
+    ]
+  },
+  {
+    "method": "TEST_006",
+    "code": "PREF_INSRT",
+    "line": 6,
+    "column": 4,
+    "quickfixes": [
+      "TOINSERT"
+    ]
   }
 ]
