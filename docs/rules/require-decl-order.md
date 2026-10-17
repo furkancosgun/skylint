@@ -30,7 +30,7 @@ Declaring types first, then constants, then data variables creates a logical rea
 + ENDMETHOD.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 METHOD execute.
@@ -40,7 +40,7 @@ METHOD execute.
 ENDMETHOD.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 METHOD execute.
@@ -61,18 +61,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC DECL_ORDER
-" Or with SAP CI_ prefix:
-... "#EC CI_DECL_ORDER
 
-" Using pragma:
-... ##DECL_ORDER.
-" Or with SAP CI_ prefix:
-... ##CI_DECL_ORDER.
+" SAP CI_ prefix format:
+... "#EC CI_DECL_ORDER
 ```
 
 ## Technical Details

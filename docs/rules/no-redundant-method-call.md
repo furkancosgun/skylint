@@ -23,13 +23,13 @@ Modern ABAP allows omitting the `EXPORTING` and `RECEIVING` keywords in function
 + lo_calc->compute( 10 ).
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 lo_calc->compute( EXPORTING iv_val = 10 ).
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 lo_calc->compute( 10 ).
@@ -42,6 +42,16 @@ This rule provides an **automated QuickFix** directly in Eclipse ABAP Developmen
 2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
 3. Select the automated refactoring to apply the clean syntax immediately.
 
+## Configuration & Thresholds
+
+This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
+
+| Parameter Name | Data Type | Default Value | Description |
+|---|---|:---:|---|
+| `CHECK_EXPORTING` | `Boolean` | `true` | Configurable attribute for no-redundant-method-call |
+| `CHECK_RECEIVING` | `Boolean` | `true` | Configurable attribute for no-redundant-method-call |
+| `CHECK_PARAM_NAME` | `Boolean` | `true` | Configurable attribute for no-redundant-method-call |
+
 ## CLI & CI/CD Configuration
 
 ```yaml
@@ -49,22 +59,22 @@ checks:
   no-redundant-method-call:
     enabled: true
     severity: warning
+    attributes:
+      checkExporting: true
+      checkReceiving: true
+      checkParamName: true
 ```
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC EXPORTING
-" Or with SAP CI_ prefix:
-... "#EC CI_EXPORTING
 
-" Using pragma:
-... ##EXPORTING.
-" Or with SAP CI_ prefix:
-... ##CI_EXPORTING.
+" SAP CI_ prefix format:
+... "#EC CI_EXPORTING
 ```
 
 ## Technical Details

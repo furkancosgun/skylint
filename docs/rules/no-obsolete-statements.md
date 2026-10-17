@@ -23,13 +23,13 @@ Legacy statements such as `MOVE`, `COMPUTE`, `REFRESH`, `TABLES`, `STATICS`, `FO
 + lv_dst = lv_src.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 MOVE lv_src TO lv_dst.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 lv_dst = lv_src.
@@ -69,34 +69,30 @@ checks:
     enabled: true
     severity: warning
     attributes:
-      CHECK_MOVE: true
-      CHECK_REFRESH: true
-      CHECK_COMPUTE: true
-      CHECK_TABLES: true
-      CHECK_FIELD_GROUPS: true
-      CHECK_TEST_SEAMS: true
-      CHECK_BREAK: true
-      CHECK_STATICS: true
-      CHECK_DEFINE: true
-      CHECK_EXPORT_MEMORY: true
-      CHECK_FORM: true
-      CHECK_LOOP_CTL: true
+      checkMove: true
+      checkRefresh: true
+      checkCompute: true
+      checkTables: true
+      checkFieldGroups: true
+      checkTestSeams: true
+      checkBreak: true
+      checkStatics: true
+      checkDefine: true
+      checkExportMemory: true
+      checkForm: true
+      checkLoopCtl: true
 ```
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC OBSOLETE
-" Or with SAP CI_ prefix:
-... "#EC CI_OBSOLETE
 
-" Using pragma:
-... ##OBSOLETE.
-" Or with SAP CI_ prefix:
-... ##CI_OBSOLETE.
+" SAP CI_ prefix format:
+... "#EC CI_OBSOLETE
 ```
 
 ## Technical Details

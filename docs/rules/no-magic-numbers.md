@@ -27,7 +27,7 @@ Hardcoded numeric literals scattered in logic obscure business rules and make up
 + ENDIF.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 IF lv_status = 3.
@@ -35,7 +35,7 @@ IF lv_status = 3.
 ENDIF.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 CONSTANTS c_status_completed TYPE i VALUE 3.
@@ -55,18 +55,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC MAGIC_NUMBERS
-" Or with SAP CI_ prefix:
-... "#EC CI_MAGIC_NUMBERS
 
-" Using pragma:
-... ##MAGIC_NUMBERS.
-" Or with SAP CI_ prefix:
-... ##CI_MAGIC_NUMBERS.
+" SAP CI_ prefix format:
+... "#EC CI_MAGIC_NUMBERS
 ```
 
 ## Technical Details

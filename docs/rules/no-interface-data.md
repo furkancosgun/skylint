@@ -27,7 +27,7 @@ Interfaces should declare behavior (methods) and immutable contracts (constants)
 + ENDINTERFACE.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 INTERFACE if_customer.
@@ -35,7 +35,7 @@ INTERFACE if_customer.
 ENDINTERFACE.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 INTERFACE if_customer.
@@ -55,18 +55,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC INTF_DATA
-" Or with SAP CI_ prefix:
-... "#EC CI_INTF_DATA
 
-" Using pragma:
-... ##INTF_DATA.
-" Or with SAP CI_ prefix:
-... ##CI_INTF_DATA.
+" SAP CI_ prefix format:
+... "#EC CI_INTF_DATA
 ```
 
 ## Technical Details

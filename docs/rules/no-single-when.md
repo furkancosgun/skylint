@@ -27,7 +27,7 @@ A `CASE` statement containing only one `WHEN` branch is unnecessarily verbose. A
 + ENDIF.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 CASE lv_status.
@@ -36,7 +36,7 @@ CASE lv_status.
 ENDCASE.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 IF lv_status = 'A'.
@@ -55,18 +55,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC SINGLE_WHEN
-" Or with SAP CI_ prefix:
-... "#EC CI_SINGLE_WHEN
 
-" Using pragma:
-... ##SINGLE_WHEN.
-" Or with SAP CI_ prefix:
-... ##CI_SINGLE_WHEN.
+" SAP CI_ prefix format:
+... "#EC CI_SINGLE_WHEN
 ```
 
 ## Technical Details

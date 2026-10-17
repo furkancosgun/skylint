@@ -23,13 +23,13 @@ Prefer INSERT ... INTO TABLE over APPEND for table safety.
 + INSERT ls_item INTO TABLE lt_items.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 APPEND ls_item TO lt_items.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 INSERT ls_item INTO TABLE lt_items.
@@ -53,18 +53,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC INSERT_INTO
-" Or with SAP CI_ prefix:
-... "#EC CI_INSERT_INTO
 
-" Using pragma:
-... ##INSERT_INTO.
-" Or with SAP CI_ prefix:
-... ##CI_INSERT_INTO.
+" SAP CI_ prefix format:
+... "#EC CI_INSERT_INTO
 ```
 
 ## Technical Details

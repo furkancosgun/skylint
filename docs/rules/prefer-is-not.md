@@ -27,7 +27,7 @@ Writing `IF lo_ref IS NOT BOUND` or `IF lt_tab IS NOT INITIAL` mirrors natural l
 + ENDIF.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 IF NOT lo_instance IS BOUND.
@@ -35,7 +35,7 @@ IF NOT lo_instance IS BOUND.
 ENDIF.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 IF lo_instance IS NOT BOUND.
@@ -61,18 +61,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC IS_NOT
-" Or with SAP CI_ prefix:
-... "#EC CI_IS_NOT
 
-" Using pragma:
-... ##IS_NOT.
-" Or with SAP CI_ prefix:
-... ##CI_IS_NOT.
+" SAP CI_ prefix format:
+... "#EC CI_IS_NOT
 ```
 
 ## Technical Details

@@ -35,7 +35,7 @@ When branching on multiple values of a single variable, `CASE ... WHEN` is more 
 + ENDCASE.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 IF lv_type = 'A'.
@@ -47,7 +47,7 @@ ELSEIF lv_type = 'C'.
 ENDIF.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 CASE lv_type.
@@ -76,23 +76,19 @@ checks:
     enabled: true
     severity: warning
     attributes:
-      MIN_BRANCHES: 3
+      minBranches: 3
 ```
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC PREF_CASE
-" Or with SAP CI_ prefix:
-... "#EC CI_PREF_CASE
 
-" Using pragma:
-... ##PREF_CASE.
-" Or with SAP CI_ prefix:
-... ##CI_PREF_CASE.
+" SAP CI_ prefix format:
+... "#EC CI_PREF_CASE
 ```
 
 ## Technical Details

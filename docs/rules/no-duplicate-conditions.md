@@ -26,7 +26,7 @@ Repeating the exact same condition across `IF / ELSEIF` or `WHEN` branches means
 + ENDIF.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 IF lv_type = 'A' OR lv_type = 'A'.
@@ -34,7 +34,7 @@ IF lv_type = 'A' OR lv_type = 'A'.
 ENDIF.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 IF lv_type = 'A'.
@@ -53,18 +53,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC DUP_COND
-" Or with SAP CI_ prefix:
-... "#EC CI_DUP_COND
 
-" Using pragma:
-... ##DUP_COND.
-" Or with SAP CI_ prefix:
-... ##CI_DUP_COND.
+" SAP CI_ prefix format:
+... "#EC CI_DUP_COND
 ```
 
 ## Technical Details

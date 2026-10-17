@@ -28,7 +28,7 @@ Consecutive nested `IF` statements without intermediate statements can be combin
 + ENDIF.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 IF is_connected( ).
@@ -38,7 +38,7 @@ IF is_connected( ).
 ENDIF.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 IF is_connected( ) AND has_permission( ).
@@ -57,18 +57,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC MERGE_IFS
-" Or with SAP CI_ prefix:
-... "#EC CI_MERGE_IFS
 
-" Using pragma:
-... ##MERGE_IFS.
-" Or with SAP CI_ prefix:
-... ##CI_MERGE_IFS.
+" SAP CI_ prefix format:
+... "#EC CI_MERGE_IFS
 ```
 
 ## Technical Details

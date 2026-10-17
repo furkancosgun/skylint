@@ -24,14 +24,14 @@ Methods with excessive parameters are difficult to comprehend, call, and test. W
 +   IMPORTING is_options TYPE ty_options.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 METHODS execute
   IMPORTING p1 TYPE i p2 TYPE i p3 TYPE i p4 TYPE i p5 TYPE i p6 TYPE i.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 METHODS execute
@@ -54,23 +54,19 @@ checks:
     enabled: true
     severity: warning
     attributes:
-      MAX_PARAMETERS: 8
+      maxParameters: 8
 ```
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC MAX_PARAMS
-" Or with SAP CI_ prefix:
-... "#EC CI_MAX_PARAMS
 
-" Using pragma:
-... ##MAX_PARAMS.
-" Or with SAP CI_ prefix:
-... ##CI_MAX_PARAMS.
+" SAP CI_ prefix format:
+... "#EC CI_MAX_PARAMS
 ```
 
 ## Technical Details

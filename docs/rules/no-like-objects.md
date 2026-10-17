@@ -22,13 +22,13 @@ Typing dictionary objects with `LIKE` is obsolete. Use `TYPE` to refer to data t
 + DATA lv_copy TYPE string.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 DATA lv_copy LIKE lv_original.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 DATA lv_copy TYPE string.
@@ -45,18 +45,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC LIKE_OBJECTS
-" Or with SAP CI_ prefix:
-... "#EC CI_LIKE_OBJECTS
 
-" Using pragma:
-... ##LIKE_OBJECTS.
-" Or with SAP CI_ prefix:
-... ##CI_LIKE_OBJECTS.
+" SAP CI_ prefix format:
+... "#EC CI_LIKE_OBJECTS
 ```
 
 ## Technical Details

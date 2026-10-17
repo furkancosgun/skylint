@@ -32,7 +32,7 @@ Check preconditions and invalid states at the start of the method and return imm
 + ENDMETHOD.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 METHOD process_order.
@@ -43,7 +43,7 @@ METHOD process_order.
 ENDMETHOD.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 METHOD process_order.
@@ -54,6 +54,15 @@ METHOD process_order.
 ENDMETHOD.
 ```
 
+## Configuration & Thresholds
+
+This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
+
+| Parameter Name | Data Type | Default Value | Description |
+|---|---|:---:|---|
+| `CHECK_METHOD_RETURN` | `Boolean` | `true` | Configurable attribute for prefer-early-return |
+| `CHECK_LOOP_CONTINUE` | `Boolean` | `true` | Configurable attribute for prefer-early-return |
+
 ## CLI & CI/CD Configuration
 
 ```yaml
@@ -61,22 +70,21 @@ checks:
   prefer-early-return:
     enabled: true
     severity: warning
+    attributes:
+      checkMethodReturn: true
+      checkLoopContinue: true
 ```
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC EARLY_RETURN
-" Or with SAP CI_ prefix:
-... "#EC CI_EARLY_RETURN
 
-" Using pragma:
-... ##EARLY_RETURN.
-" Or with SAP CI_ prefix:
-... ##CI_EARLY_RETURN.
+" SAP CI_ prefix format:
+... "#EC CI_EARLY_RETURN
 ```
 
 ## Technical Details

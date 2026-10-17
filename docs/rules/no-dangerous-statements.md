@@ -24,7 +24,7 @@ Dynamic code generation (`GENERATE SUBROUTINE POOL`, `INSERT REPORT`), kernel ca
 + SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 EXEC SQL.
@@ -32,7 +32,7 @@ EXEC SQL.
 ENDEXEC.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
@@ -71,40 +71,36 @@ checks:
     enabled: true
     severity: warning
     attributes:
-      CHECK_EXEC_SQL: true
-      CHECK_KERNEL_CALL: true
-      CHECK_SYSTEM_CALL: true
-      CHECK_SYNTAX_CHECK: true
-      CHECK_INSERT_REPORT: true
-      CHECK_GENERATE_DYNPRO: true
-      CHECK_GENERATE_REPORT: true
-      CHECK_GENERATE_SUBROUTINE: true
-      CHECK_DELETE_REPORT: true
-      CHECK_DELETE_TEXTPOOL: true
-      CHECK_INSERT_TEXTPOOL: true
-      CHECK_DELETE_DYNPRO: true
-      CHECK_EXPORT_DYNPRO: true
-      CHECK_EDITOR_CALL: true
-      CHECK_DYNAMIC_SQL: true
-      CHECK_RAISE_SHORTDUMP: true
-      CHECK_PROD_ASSERT: true
-      IGNORE_RAP_QUERY_PROVIDER: true
+      checkExecSql: true
+      checkKernelCall: true
+      checkSystemCall: true
+      checkSyntaxCheck: true
+      checkInsertReport: true
+      checkGenerateDynpro: true
+      checkGenerateReport: true
+      checkGenerateSubroutine: true
+      checkDeleteReport: true
+      checkDeleteTextpool: true
+      checkInsertTextpool: true
+      checkDeleteDynpro: true
+      checkExportDynpro: true
+      checkEditorCall: true
+      checkDynamicSql: true
+      checkRaiseShortdump: true
+      checkProdAssert: true
+      ignoreRapQueryProvider: true
 ```
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC DANGEROUS_STMT
-" Or with SAP CI_ prefix:
-... "#EC CI_DANGEROUS_STMT
 
-" Using pragma:
-... ##DANGEROUS_STMT.
-" Or with SAP CI_ prefix:
-... ##CI_DANGEROUS_STMT.
+" SAP CI_ prefix format:
+... "#EC CI_DANGEROUS_STMT
 ```
 
 ## Technical Details

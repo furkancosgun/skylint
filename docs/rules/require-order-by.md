@@ -22,13 +22,13 @@ Selecting rows from a relational database without an explicit `ORDER BY` clause 
 + SELECT * FROM /dmo/customer ORDER BY customer_id UP TO 1 ROWS INTO @ls_customer.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 SELECT * FROM /dmo/customer UP TO 1 ROWS INTO @ls_customer.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 SELECT * FROM /dmo/customer ORDER BY customer_id UP TO 1 ROWS INTO @ls_customer.
@@ -45,18 +45,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC ORDER_BY
-" Or with SAP CI_ prefix:
-... "#EC CI_ORDER_BY
 
-" Using pragma:
-... ##ORDER_BY.
-" Or with SAP CI_ prefix:
-... ##CI_ORDER_BY.
+" SAP CI_ prefix format:
+... "#EC CI_ORDER_BY
 ```
 
 ## Technical Details

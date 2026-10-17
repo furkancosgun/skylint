@@ -29,7 +29,7 @@ Classes with dozens of member variables are almost always God Objects that handl
 + ENDCLASS.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 CLASS cl_order DEFINITION.
@@ -38,7 +38,7 @@ CLASS cl_order DEFINITION.
 ENDCLASS.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 CLASS cl_order DEFINITION.
@@ -64,23 +64,19 @@ checks:
     enabled: true
     severity: warning
     attributes:
-      MAX_ATTRIBUTES: 5
+      maxAttributes: 5
 ```
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC ATTRIBUTES
-" Or with SAP CI_ prefix:
-... "#EC CI_ATTRIBUTES
 
-" Using pragma:
-... ##ATTRIBUTES.
-" Or with SAP CI_ prefix:
-... ##CI_ATTRIBUTES.
+" SAP CI_ prefix format:
+... "#EC CI_ATTRIBUTES
 ```
 
 ## Technical Details

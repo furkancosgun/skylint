@@ -31,7 +31,7 @@ In ABAP SQL, executing `FOR ALL ENTRIES IN @lt_table` when `lt_table` is empty d
 + ENDIF.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 SELECT * FROM /dmo/customer
@@ -40,7 +40,7 @@ SELECT * FROM /dmo/customer
   INTO TABLE @lt_customers.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 IF lt_orders IS NOT INITIAL.
@@ -69,18 +69,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC EMPTY_FAE
-" Or with SAP CI_ prefix:
-... "#EC CI_EMPTY_FAE
 
-" Using pragma:
-... ##EMPTY_FAE.
-" Or with SAP CI_ prefix:
-... ##CI_EMPTY_FAE.
+" SAP CI_ prefix format:
+... "#EC CI_EMPTY_FAE
 ```
 
 ## Technical Details

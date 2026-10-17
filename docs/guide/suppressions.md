@@ -1,19 +1,19 @@
-# 🤫 Suppressions & Pragmas Guide
+# Suppressions Guide
 
 In Clean ABAP development, static analysis rules guide quality and readability. However, in certain scenarios—such as interfacing with external legacy APIs or performance-critical micro-optimizations—deviating from a rule is intentional and necessary.
 
-Skylint supports full **statement-level suppression** using standard ABAP pseudo-comments and modern compiler pragmas, fully compliant with **SAP ATC and Code Pal standards**.
+Skylint supports full **statement-level suppression** using standard ABAP pseudo-comments (`"#EC ..."`), fully compliant with the **SAP ATC framework and SAP Code Pal standards**.
 
 ---
 
 ## 🎯 Dual-Match Compatibility (`TAG` & `CI_TAG`)
 
-In adherence to SAP's ATC framework design (as seen in SAP Code Pal for ABAP Cloud), Skylint check rules support **both** modern concise tags and traditional SAP `CI_` prefixed tags:
+In adherence to SAP's ATC framework design (as seen in SAP Code Pal for ABAP Cloud), Skylint check rules support **both** concise tags and traditional SAP `CI_` prefixed tags:
 
-- **Concise Format:** `"#EC <TAG>"` or `##<TAG>`
-- **Official SAP ATC Format:** `"#EC CI_<TAG>"` or `##CI_<TAG>`
+- **Concise Format:** `"#EC <TAG>"`
+- **Official SAP ATC Format:** `"#EC CI_<TAG>"`
 
-Both formats are 100% equivalent and recognized by Skylint.
+Both formats are 100% equivalent and recognized natively by Skylint's base framework.
 
 ---
 
@@ -38,22 +38,12 @@ DESCRIBE TABLE lt_data LINES lv_count. "#EC LINES, NO_DESCRIBE
 
 ---
 
-## 2. Using Modern Pragmas (`##...`)
+## 2. Pragmas vs. Pseudo-Comments in Custom ATC Checks
 
-Modern ABAP introduces pragmas (`##`) which are recognized directly by the ABAP compiler and placed before the statement's terminating period `.`:
+In SAP NetWeaver and ABAP Cloud, compiler pragmas (`##...`) are defined in the SAP Kernel repository (table `ROPTAG` / transaction `SE38`). Custom customer pragmas cannot be declared arbitrarily by custom check engines without SAP system-level registration.
 
-```abap
-" Flagged by rule 'no-call-method'
-CALL METHOD lo_service->process_item ##CALL_METH.
-
-" Using the CI_ prefix
-CALL METHOD lo_service->process_item ##CI_CALL_METH.
-```
-
-### Advantages of Pragmas over Pseudo-Comments
-1. **Compiler Validated:** The ABAP compiler verifies pragma syntax during compilation.
-2. **Refactoring Safe:** Moving or reformatting lines preserves pragmas more reliably than trailing text comments.
-3. **Clean ABAP Recommended:** Clean ABAP guidelines favor compiler pragmas (`##`) over legacy pseudo-comments (`"#EC`).
+Therefore, for all custom ATC check suites including Skylint:
+- **Pseudo-comments (`"#EC <TAG>"`)** are the **standard, official, and guaranteed mechanism** for suppressing findings across both Eclipse ADT, SAP GUI, and CI/CD CLI scans.
 
 ---
 

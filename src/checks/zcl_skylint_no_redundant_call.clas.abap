@@ -30,6 +30,10 @@ CLASS zcl_skylint_no_redundant_call DEFINITION
         param_name TYPE string VALUE 'PARAM_NAME',
       END OF c_pseudo_comments.
 
+    DATA mv_check_exporting  TYPE abap_bool VALUE abap_true.
+    DATA mv_check_receiving  TYPE abap_bool VALUE abap_true.
+    DATA mv_check_param_name TYPE abap_bool VALUE abap_true.
+
     METHODS has_other_sections
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_has) TYPE abap_bool.
@@ -79,7 +83,14 @@ CLASS zcl_skylint_no_redundant_call IMPLEMENTATION.
                                               ( code       = c_quickfix_codes-omit_receiving
                                                 short_text = 'Hoist RECEIVING to LHS' )
                                               ( code       = c_quickfix_codes-omit_param
-                                                short_text = 'Drop parameter name' ) ) ) ).
+                                                short_text = 'Drop parameter name' ) )
+                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                              ( name  = 'CHECK_EXPORTING'
+                                                value = REF #( mv_check_exporting ) )
+                                              ( name  = 'CHECK_RECEIVING'
+                                                value = REF #( mv_check_receiving ) )
+                                              ( name  = 'CHECK_PARAM_NAME'
+                                                value = REF #( mv_check_param_name ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -111,7 +122,9 @@ CLASS zcl_skylint_no_redundant_call IMPLEMENTATION.
       ENDIF.
 
       " 1. Check RECEIVING
-      IF has_exceptions( <ls_statement> ) = abap_false AND has_receiving( <ls_statement> ) = abap_true.
+      IF     mv_check_receiving = abap_true
+         AND has_exceptions( <ls_statement> ) = abap_false
+         AND has_receiving( <ls_statement> ) = abap_true.
         ls_quickfix = build_receiving_quickfix( is_statement = <ls_statement>
                                                 iv_stmt_idx  = lv_stmt_idx ).
         report_statement( is_statement    = <ls_statement>
@@ -121,7 +134,7 @@ CLASS zcl_skylint_no_redundant_call IMPLEMENTATION.
       ENDIF.
 
       " 2. Check EXPORTING
-      IF has_other_sections( <ls_statement> ) = abap_false.
+      IF mv_check_exporting = abap_true AND has_other_sections( <ls_statement> ) = abap_false.
         lv_tok_idx = zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
                                                        iv_lexeme    = 'EXPORTING' ).
         IF lv_tok_idx > 0.
@@ -136,8 +149,10 @@ CLASS zcl_skylint_no_redundant_call IMPLEMENTATION.
                             is_quickfix     = ls_quickfix ).
           CONTINUE.
         ENDIF.
+      ENDIF.
 
-        " 3. Check single parameter name (no EXPORTING, no other sections)
+      " 3. Check single parameter name (no EXPORTING, no other sections)
+      IF mv_check_param_name = abap_true AND has_other_sections( <ls_statement> ) = abap_false.
         lv_tok_idx = 0.
         LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
           lv_tok_idx += 1.

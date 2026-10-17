@@ -27,14 +27,14 @@ Deep class inheritance hierarchies create the fragile base class problem and tig
 + ENDCLASS.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 CLASS lcl_child DEFINITION INHERITING FROM lcl_sub_parent. " Depth > 3
 ENDCLASS.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 " Favor composition over deep class inheritance hierarchies
@@ -60,23 +60,19 @@ checks:
     enabled: true
     severity: warning
     attributes:
-      MAX_DEPTH: 1
+      maxDepth: 1
 ```
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC INHERIT_DEPTH
-" Or with SAP CI_ prefix:
-... "#EC CI_INHERIT_DEPTH
 
-" Using pragma:
-... ##INHERIT_DEPTH.
-" Or with SAP CI_ prefix:
-... ##CI_INHERIT_DEPTH.
+" SAP CI_ prefix format:
+... "#EC CI_INHERIT_DEPTH
 ```
 
 ## Technical Details

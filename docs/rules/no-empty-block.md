@@ -28,7 +28,7 @@ Empty blocks (such as `IF ... ELSEIF ... ENDIF` with no executable statements) c
 + ENDIF.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 IF lv_condition = abap_true.
@@ -38,7 +38,7 @@ ELSE.
 ENDIF.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 IF lv_condition = abap_false.
@@ -69,30 +69,26 @@ checks:
     enabled: true
     severity: warning
     attributes:
-      CHECK_IF: true
-      CHECK_LOOP: true
-      CHECK_CASE: true
-      CHECK_TRY: true
-      CHECK_CATCH: true
-      CHECK_TRY_NO_CATCH: true
-      CHECK_DO: true
-      CHECK_WHILE: true
+      checkIf: true
+      checkLoop: true
+      checkCase: true
+      checkTry: true
+      checkCatch: true
+      checkTryNoCatch: true
+      checkDo: true
+      checkWhile: true
 ```
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC EMPTY_BLOCK
-" Or with SAP CI_ prefix:
-... "#EC CI_EMPTY_BLOCK
 
-" Using pragma:
-... ##EMPTY_BLOCK.
-" Or with SAP CI_ prefix:
-... ##CI_EMPTY_BLOCK.
+" SAP CI_ prefix format:
+... "#EC CI_EMPTY_BLOCK
 ```
 
 ## Technical Details

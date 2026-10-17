@@ -22,13 +22,13 @@ Passing large internal tables by value creates an in-memory deep copy on every m
 + METHODS process IMPORTING iv_text TYPE string.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 METHODS process IMPORTING VALUE(iv_text) TYPE string.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 METHODS process IMPORTING iv_text TYPE string.
@@ -45,18 +45,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC SLOW_PARAM
-" Or with SAP CI_ prefix:
-... "#EC CI_SLOW_PARAM
 
-" Using pragma:
-... ##SLOW_PARAM.
-" Or with SAP CI_ prefix:
-... ##CI_SLOW_PARAM.
+" SAP CI_ prefix format:
+... "#EC CI_SLOW_PARAM
 ```
 
 ## Technical Details

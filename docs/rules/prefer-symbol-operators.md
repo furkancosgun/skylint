@@ -27,7 +27,7 @@ Text comparison operators (`EQ`, `NE`, `LT`, `GT`, `LE`, `GE`) are legacy syntax
 + ENDIF.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 IF lv_a EQ lv_b AND lv_c NE lv_d.
@@ -35,7 +35,7 @@ IF lv_a EQ lv_b AND lv_c NE lv_d.
 ENDIF.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 IF lv_a = lv_b AND lv_c <> lv_d.
@@ -61,18 +61,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC SYMBOL_OP
-" Or with SAP CI_ prefix:
-... "#EC CI_SYMBOL_OP
 
-" Using pragma:
-... ##SYMBOL_OP.
-" Or with SAP CI_ prefix:
-... ##CI_SYMBOL_OP.
+" SAP CI_ prefix format:
+... "#EC CI_SYMBOL_OP
 ```
 
 ## Technical Details

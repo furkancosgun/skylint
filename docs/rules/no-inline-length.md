@@ -23,13 +23,13 @@ Specifying length in parentheses directly after a variable name (`lv_str(10) TYP
 + DATA lv_code TYPE c LENGTH 10.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 DATA lv_code(10) TYPE c.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 DATA lv_code TYPE c LENGTH 10.
@@ -53,18 +53,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC PAREN_LEN
-" Or with SAP CI_ prefix:
-... "#EC CI_PAREN_LEN
 
-" Using pragma:
-... ##PAREN_LEN.
-" Or with SAP CI_ prefix:
-... ##CI_PAREN_LEN.
+" SAP CI_ prefix format:
+... "#EC CI_PAREN_LEN
 ```
 
 ## Technical Details

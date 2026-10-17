@@ -23,13 +23,13 @@ The constructor expression `CORRESPONDING #( )` is type-safe, expression-capable
 + ls_target = CORRESPONDING #( ls_source ).
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 MOVE-CORRESPONDING ls_source TO ls_target.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 ls_target = CORRESPONDING #( ls_source ).
@@ -53,18 +53,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC CORRESP
-" Or with SAP CI_ prefix:
-... "#EC CI_CORRESP
 
-" Using pragma:
-... ##CORRESP.
-" Or with SAP CI_ prefix:
-... ##CI_CORRESP.
+" SAP CI_ prefix format:
+... "#EC CI_CORRESP
 ```
 
 ## Technical Details

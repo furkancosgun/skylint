@@ -22,13 +22,13 @@ Avoid raising SAP internal system exceptions (cx_sy_*).
 + RAISE EXCEPTION NEW cx_item_not_found( ).
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 RAISE EXCEPTION NEW cx_sy_itab_line_not_found( ).
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 RAISE EXCEPTION NEW cx_item_not_found( ).
@@ -45,18 +45,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC RAISE_CX_SY
-" Or with SAP CI_ prefix:
-... "#EC CI_RAISE_CX_SY
 
-" Using pragma:
-... ##RAISE_CX_SY.
-" Or with SAP CI_ prefix:
-... ##CI_RAISE_CX_SY.
+" SAP CI_ prefix format:
+... "#EC CI_RAISE_CX_SY
 ```
 
 ## Technical Details

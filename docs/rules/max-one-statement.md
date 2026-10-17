@@ -23,13 +23,13 @@ Placing multiple statements on a single line hinders debugger stepping, breaks G
 + lv_b = 2.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 lv_a = 1. lv_b = 2.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 lv_a = 1.
@@ -47,18 +47,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC ONE_STMT
-" Or with SAP CI_ prefix:
-... "#EC CI_ONE_STMT
 
-" Using pragma:
-... ##ONE_STMT.
-" Or with SAP CI_ prefix:
-... ##CI_ONE_STMT.
+" SAP CI_ prefix format:
+... "#EC CI_ONE_STMT
 ```
 
 ## Technical Details

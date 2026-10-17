@@ -23,13 +23,13 @@ Importing parameters should be treated as immutable inputs. Modifying them insid
 + METHODS process IMPORTING iv_data TYPE string.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 METHODS process IMPORTING !iv_data TYPE string.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 METHODS process IMPORTING iv_data TYPE string.
@@ -53,18 +53,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC PARAM_ESCAPE
-" Or with SAP CI_ prefix:
-... "#EC CI_PARAM_ESCAPE
 
-" Using pragma:
-... ##PARAM_ESCAPE.
-" Or with SAP CI_ prefix:
-... ##CI_PARAM_ESCAPE.
+" SAP CI_ prefix format:
+... "#EC CI_PARAM_ESCAPE
 ```
 
 ## Technical Details

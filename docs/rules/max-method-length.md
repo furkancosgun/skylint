@@ -30,7 +30,7 @@ Long methods violate the Single Responsibility Principle, accumulate side effect
 + ENDMETHOD.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 " Large method exceeding configured statement threshold (> 50 statements)
@@ -39,7 +39,7 @@ METHOD execute.
 ENDMETHOD.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 " Split into smaller, single-responsibility helper methods
@@ -66,23 +66,19 @@ checks:
     enabled: true
     severity: warning
     attributes:
-      MAX_STATEMENTS: 5
+      maxStatements: 5
 ```
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC METHOD_LEN
-" Or with SAP CI_ prefix:
-... "#EC CI_METHOD_LEN
 
-" Using pragma:
-... ##METHOD_LEN.
-" Or with SAP CI_ prefix:
-... ##CI_METHOD_LEN.
+" SAP CI_ prefix format:
+... "#EC CI_METHOD_LEN
 ```
 
 ## Technical Details

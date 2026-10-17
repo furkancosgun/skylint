@@ -28,7 +28,7 @@ Constructors should only initialize state and inject dependencies. Heavy busines
 + ENDMETHOD.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 METHOD constructor.
@@ -37,7 +37,7 @@ METHOD constructor.
 ENDMETHOD.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 METHOD constructor.
@@ -62,23 +62,19 @@ checks:
     enabled: true
     severity: warning
     attributes:
-      MAX_STATEMENTS: 10
+      maxStatements: 10
 ```
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC CLEAN_CTOR
-" Or with SAP CI_ prefix:
-... "#EC CI_CLEAN_CTOR
 
-" Using pragma:
-... ##CLEAN_CTOR.
-" Or with SAP CI_ prefix:
-... ##CI_CLEAN_CTOR.
+" SAP CI_ prefix format:
+... "#EC CI_CLEAN_CTOR
 ```
 
 ## Technical Details

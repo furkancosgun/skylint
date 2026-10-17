@@ -23,13 +23,13 @@ Assigning a variable or structure field to itself (`lv_x = lv_x`) is a redundant
 + lv_name = iv_new_name.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 lv_name = lv_name.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 lv_name = iv_new_name.
@@ -53,18 +53,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC SELF_ASSIGN
-" Or with SAP CI_ prefix:
-... "#EC CI_SELF_ASSIGN
 
-" Using pragma:
-... ##SELF_ASSIGN.
-" Or with SAP CI_ prefix:
-... ##CI_SELF_ASSIGN.
+" SAP CI_ prefix format:
+... "#EC CI_SELF_ASSIGN
 ```
 
 ## Technical Details

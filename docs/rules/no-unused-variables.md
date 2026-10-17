@@ -22,13 +22,13 @@ Unused variables clutter code, confuse developers reviewing changes, and increas
 + " Remove unused declarations or add ##NEEDED pragma if required by interface
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 DATA lv_temp TYPE string. " Declared but never referenced
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 " Remove unused declarations or add ##NEEDED pragma if required by interface
@@ -45,18 +45,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC NEEDED
-" Or with SAP CI_ prefix:
-... "#EC CI_NEEDED
 
-" Using pragma:
-... ##NEEDED.
-" Or with SAP CI_ prefix:
-... ##CI_NEEDED.
+" SAP CI_ prefix format:
+... "#EC CI_NEEDED
 ```
 
 ## Technical Details

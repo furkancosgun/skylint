@@ -22,13 +22,13 @@ Methods returning boolean status should read like questions (`is_valid`, `has_ch
 + METHODS is_active RETURNING VALUE(rv_active) TYPE abap_bool.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 METHODS check_active RETURNING VALUE(rv_active) TYPE abap_bool.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 METHODS is_active RETURNING VALUE(rv_active) TYPE abap_bool.
@@ -45,18 +45,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC PRED_NAME
-" Or with SAP CI_ prefix:
-... "#EC CI_PRED_NAME
 
-" Using pragma:
-... ##PRED_NAME.
-" Or with SAP CI_ prefix:
-... ##CI_PRED_NAME.
+" SAP CI_ prefix format:
+... "#EC CI_PRED_NAME
 ```
 
 ## Technical Details

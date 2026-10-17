@@ -25,7 +25,7 @@ Procedural `CALL METHOD` is legacy syntax from early ABAP Objects. Modern ABAP e
 + lo_service->calculate_tax( iv_amount = lv_amount ).
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 CALL METHOD lo_service->calculate_tax(
@@ -33,7 +33,7 @@ CALL METHOD lo_service->calculate_tax(
     iv_amount = lv_amount ).
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 lo_service->calculate_tax( iv_amount = lv_amount ).
@@ -57,18 +57,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC CALL_METH
-" Or with SAP CI_ prefix:
-... "#EC CI_CALL_METH
 
-" Using pragma:
-... ##CALL_METH.
-" Or with SAP CI_ prefix:
-... ##CI_CALL_METH.
+" SAP CI_ prefix format:
+... "#EC CI_CALL_METH
 ```
 
 ## Technical Details

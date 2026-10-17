@@ -25,14 +25,14 @@ Statements appearing immediately after an unconditional `RETURN`, `RAISE EXCEPTI
 + RETURN.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 RETURN.
 lv_count = lv_count + 1. " Unreachable statement
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 lv_count = lv_count + 1.
@@ -57,18 +57,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC UNREACHABLE
-" Or with SAP CI_ prefix:
-... "#EC CI_UNREACHABLE
 
-" Using pragma:
-... ##UNREACHABLE.
-" Or with SAP CI_ prefix:
-... ##CI_UNREACHABLE.
+" SAP CI_ prefix format:
+... "#EC CI_UNREACHABLE
 ```
 
 ## Technical Details

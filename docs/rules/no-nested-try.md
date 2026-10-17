@@ -37,7 +37,7 @@ Nesting `TRY` blocks inside other `TRY` blocks obfuscates error handling flow. E
 + ENDTRY.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 TRY.
@@ -52,7 +52,7 @@ TRY.
 ENDTRY.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 " Extract inner operations into focused helper methods
@@ -75,18 +75,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC NESTED_TRY
-" Or with SAP CI_ prefix:
-... "#EC CI_NESTED_TRY
 
-" Using pragma:
-... ##NESTED_TRY.
-" Or with SAP CI_ prefix:
-... ##CI_NESTED_TRY.
+" SAP CI_ prefix format:
+... "#EC CI_NESTED_TRY
 ```
 
 ## Technical Details

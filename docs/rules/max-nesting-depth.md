@@ -33,7 +33,7 @@ Deeply nested blocks (`IF`, `LOOP`, `TRY`, `CASE`) cause cognitive overload ("ar
 + execute( ).
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 IF cond1.
@@ -47,7 +47,7 @@ IF cond1.
 ENDIF.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 IF NOT cond1 OR NOT cond2 OR NOT cond3 OR NOT cond4.
@@ -72,23 +72,19 @@ checks:
     enabled: true
     severity: warning
     attributes:
-      MAX_DEPTH: 3
+      maxDepth: 3
 ```
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC NESTING
-" Or with SAP CI_ prefix:
-... "#EC CI_NESTING
 
-" Using pragma:
-... ##NESTING.
-" Or with SAP CI_ prefix:
-... ##CI_NESTING.
+" SAP CI_ prefix format:
+... "#EC CI_NESTING
 ```
 
 ## Technical Details

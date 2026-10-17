@@ -29,7 +29,7 @@ Transactional business logic should rely on the persistence framework or framewo
 + ENDMETHOD.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 " Inside a RAP behavior implementation (CL_ABAP_BEHAVIOR_HANDLER)
@@ -39,7 +39,7 @@ METHOD update.
 ENDMETHOD.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 " In RAP, commits are managed automatically by the framework save sequence
@@ -59,18 +59,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC COMMIT_WORK
-" Or with SAP CI_ prefix:
-... "#EC CI_COMMIT_WORK
 
-" Using pragma:
-... ##COMMIT_WORK.
-" Or with SAP CI_ prefix:
-... ##CI_COMMIT_WORK.
+" SAP CI_ prefix format:
+... "#EC CI_COMMIT_WORK
 ```
 
 ## Technical Details

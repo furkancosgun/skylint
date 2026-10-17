@@ -26,7 +26,7 @@ Classes not explicitly designed and documented for inheritance should be declare
 + ENDCLASS.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 CLASS cl_customer_service DEFINITION PUBLIC CREATE PUBLIC.
@@ -34,7 +34,7 @@ CLASS cl_customer_service DEFINITION PUBLIC CREATE PUBLIC.
 ENDCLASS.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 CLASS cl_customer_service DEFINITION PUBLIC FINAL CREATE PUBLIC.
@@ -48,6 +48,15 @@ This rule provides an **automated QuickFix** directly in Eclipse ABAP Developmen
 2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
 3. Select the automated refactoring to apply the clean syntax immediately.
 
+## Configuration & Thresholds
+
+This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
+
+| Parameter Name | Data Type | Default Value | Description |
+|---|---|:---:|---|
+| `CHECK_CLASSES` | `Boolean` | `true` | Configurable attribute for prefer-final-class |
+| `CHECK_METHODS` | `Boolean` | `true` | Configurable attribute for prefer-final-class |
+
 ## CLI & CI/CD Configuration
 
 ```yaml
@@ -55,22 +64,21 @@ checks:
   prefer-final-class:
     enabled: true
     severity: warning
+    attributes:
+      checkClasses: true
+      checkMethods: true
 ```
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC FINAL_CLS
-" Or with SAP CI_ prefix:
-... "#EC CI_FINAL_CLS
 
-" Using pragma:
-... ##FINAL_CLS.
-" Or with SAP CI_ prefix:
-... ##CI_FINAL_CLS.
+" SAP CI_ prefix format:
+... "#EC CI_FINAL_CLS
 ```
 
 ## Technical Details

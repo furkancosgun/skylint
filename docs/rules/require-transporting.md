@@ -28,7 +28,7 @@ Modifying internal tables without specifying `TRANSPORTING` copies all table fie
 + ENDLOOP.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 LOOP AT lt_items INTO ls_item.
@@ -37,7 +37,7 @@ LOOP AT lt_items INTO ls_item.
 ENDLOOP.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 LOOP AT lt_items INTO ls_item.
@@ -57,18 +57,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC TRANSPORTING
-" Or with SAP CI_ prefix:
-... "#EC CI_TRANSPORTING
 
-" Using pragma:
-... ##TRANSPORTING.
-" Or with SAP CI_ prefix:
-... ##CI_TRANSPORTING.
+" SAP CI_ prefix format:
+... "#EC CI_TRANSPORTING
 ```
 
 ## Technical Details

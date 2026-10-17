@@ -24,14 +24,14 @@ Calling a static method via an object reference arrow `lo_instance->static_metho
 + cl_helper=>static_method( ).
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 DATA lo_instance TYPE REF TO cl_helper.
 lo_instance->static_method( ).
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 cl_helper=>static_method( ).
@@ -55,18 +55,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC STATIC_ARROW
-" Or with SAP CI_ prefix:
-... "#EC CI_STATIC_ARROW
 
-" Using pragma:
-... ##STATIC_ARROW.
-" Or with SAP CI_ prefix:
-... ##CI_STATIC_ARROW.
+" SAP CI_ prefix format:
+... "#EC CI_STATIC_ARROW
 ```
 
 ## Technical Details

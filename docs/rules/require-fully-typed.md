@@ -22,13 +22,13 @@ Generic types (`ANY`, `DATA`, `TABLE`) bypass compiler type checking and hide ru
 + CONSTANTS c_status TYPE c LENGTH 1 VALUE 'A'.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 CONSTANTS c_status VALUE 'A'. " TYPE is omitted; implicitly typed as c length 1
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 CONSTANTS c_status TYPE c LENGTH 1 VALUE 'A'.
@@ -45,18 +45,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC FULL_TYPED
-" Or with SAP CI_ prefix:
-... "#EC CI_FULL_TYPED
 
-" Using pragma:
-... ##FULL_TYPED.
-" Or with SAP CI_ prefix:
-... ##CI_FULL_TYPED.
+" SAP CI_ prefix format:
+... "#EC CI_FULL_TYPED
 ```
 
 ## Technical Details

@@ -25,14 +25,14 @@ Modern ABAP supports arithmetic assignment operators (`lv_count += 1.`), which a
 + lv_total *= 2.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 lv_count = lv_count + 1.
 lv_total = lv_total * 2.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 lv_count += 1.
@@ -57,18 +57,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC CALC_ASSIGN
-" Or with SAP CI_ prefix:
-... "#EC CI_CALC_ASSIGN
 
-" Using pragma:
-... ##CALC_ASSIGN.
-" Or with SAP CI_ prefix:
-... ##CI_CALC_ASSIGN.
+" SAP CI_ prefix format:
+... "#EC CI_CALC_ASSIGN
 ```
 
 ## Technical Details

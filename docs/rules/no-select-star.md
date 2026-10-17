@@ -24,13 +24,13 @@ Selecting all database columns transfers unnecessary data across the network, by
 +   INTO TABLE @lt_customers.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 SELECT customer_id, first_name, last_name
@@ -55,24 +55,20 @@ checks:
     enabled: true
     severity: warning
     attributes:
-      CHECK_SELECT_STAR: true
-      CHECK_ENDSELECT: true
+      checkSelectStar: true
+      checkEndselect: true
 ```
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC SELECT_STAR
-" Or with SAP CI_ prefix:
-... "#EC CI_SELECT_STAR
 
-" Using pragma:
-... ##SELECT_STAR.
-" Or with SAP CI_ prefix:
-... ##CI_SELECT_STAR.
+" SAP CI_ prefix format:
+... "#EC CI_SELECT_STAR
 ```
 
 ## Technical Details

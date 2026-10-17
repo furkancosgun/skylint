@@ -31,7 +31,7 @@ Avoid CHECK in loop/iteration structures (prefer IF ... CONTINUE).
 + ENDLOOP.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 LOOP AT lt_items INTO ls_item.
@@ -40,7 +40,7 @@ LOOP AT lt_items INTO ls_item.
 ENDLOOP.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 LOOP AT lt_items INTO ls_item.
@@ -69,18 +69,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC CHECK_IN_LOOP
-" Or with SAP CI_ prefix:
-... "#EC CI_CHECK_IN_LOOP
 
-" Using pragma:
-... ##CHECK_IN_LOOP.
-" Or with SAP CI_ prefix:
-... ##CI_CHECK_IN_LOOP.
+" SAP CI_ prefix format:
+... "#EC CI_CHECK_IN_LOOP
 ```
 
 ## Technical Details

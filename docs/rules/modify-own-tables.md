@@ -22,13 +22,13 @@ Directly inserting, updating, or deleting tables belonging to another applicatio
 + DELETE FROM zmara WHERE matnr = '100'.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 DELETE FROM mara WHERE matnr = '100'.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 DELETE FROM zmara WHERE matnr = '100'.
@@ -45,18 +45,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC OWN_TABLES
-" Or with SAP CI_ prefix:
-... "#EC CI_OWN_TABLES
 
-" Using pragma:
-... ##OWN_TABLES.
-" Or with SAP CI_ prefix:
-... ##CI_OWN_TABLES.
+" SAP CI_ prefix format:
+... "#EC CI_OWN_TABLES
 ```
 
 ## Technical Details

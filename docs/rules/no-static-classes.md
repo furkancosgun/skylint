@@ -30,7 +30,7 @@ Classes consisting entirely of static methods cannot be mocked via interfaces or
 + ENDCLASS.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 CLASS cl_math_util DEFINITION PUBLIC FINAL CREATE PUBLIC.
@@ -40,7 +40,7 @@ CLASS cl_math_util DEFINITION PUBLIC FINAL CREATE PUBLIC.
 ENDCLASS.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 CLASS cl_math_util DEFINITION PUBLIC FINAL CREATE PUBLIC.
@@ -61,18 +61,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC STATIC_CLS
-" Or with SAP CI_ prefix:
-... "#EC CI_STATIC_CLS
 
-" Using pragma:
-... ##STATIC_CLS.
-" Or with SAP CI_ prefix:
-... ##CI_STATIC_CLS.
+" SAP CI_ prefix format:
+... "#EC CI_STATIC_CLS
 ```
 
 ## Technical Details

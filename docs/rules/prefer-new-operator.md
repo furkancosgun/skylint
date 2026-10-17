@@ -25,14 +25,14 @@ The constructor expression `NEW #( )` is type-inferred, expression-capable, and 
 + lo_customer = NEW #( ).
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 DATA lo_customer TYPE REF TO cl_customer.
 CREATE OBJECT lo_customer.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 DATA lo_customer TYPE REF TO cl_customer.
@@ -46,6 +46,15 @@ This rule provides an **automated QuickFix** directly in Eclipse ABAP Developmen
 2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
 3. Select the automated refactoring to apply the clean syntax immediately.
 
+## Configuration & Thresholds
+
+This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
+
+| Parameter Name | Data Type | Default Value | Description |
+|---|---|:---:|---|
+| `CHECK_CREATE_OBJECT` | `Boolean` | `true` | Configurable attribute for prefer-new-operator |
+| `CHECK_RAISE_EXCEPTION` | `Boolean` | `true` | Configurable attribute for prefer-new-operator |
+
 ## CLI & CI/CD Configuration
 
 ```yaml
@@ -53,22 +62,21 @@ checks:
   prefer-new-operator:
     enabled: true
     severity: warning
+    attributes:
+      checkCreateObject: true
+      checkRaiseException: true
 ```
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC NEW_OP
-" Or with SAP CI_ prefix:
-... "#EC CI_NEW_OP
 
-" Using pragma:
-... ##NEW_OP.
-" Or with SAP CI_ prefix:
-... ##CI_NEW_OP.
+" SAP CI_ prefix format:
+... "#EC CI_NEW_OP
 ```
 
 ## Technical Details

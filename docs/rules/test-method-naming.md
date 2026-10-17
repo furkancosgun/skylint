@@ -24,13 +24,13 @@ Test method names should clearly state the condition and expected outcome (e.g.,
 + METHODS should_calculate_discount FOR TESTING.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 METHODS calculate_discount FOR TESTING.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 METHODS test_calculate_discount FOR TESTING.
@@ -49,18 +49,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC TEST_NAME
-" Or with SAP CI_ prefix:
-... "#EC CI_TEST_NAME
 
-" Using pragma:
-... ##TEST_NAME.
-" Or with SAP CI_ prefix:
-... ##CI_TEST_NAME.
+" SAP CI_ prefix format:
+... "#EC CI_TEST_NAME
 ```
 
 ## Technical Details

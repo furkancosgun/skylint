@@ -22,13 +22,13 @@ Using a hyphen/dash in structure component references is archaic. Modern ABAP st
 + DATA foobar TYPE i.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 DATA foo-bar TYPE i.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 DATA foobar TYPE i.
@@ -45,18 +45,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC NO_DASH
-" Or with SAP CI_ prefix:
-... "#EC CI_NO_DASH
 
-" Using pragma:
-... ##NO_DASH.
-" Or with SAP CI_ prefix:
-... ##CI_NO_DASH.
+" SAP CI_ prefix format:
+... "#EC CI_NO_DASH
 ```
 
 ## Technical Details

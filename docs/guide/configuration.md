@@ -14,6 +14,20 @@ When running Skylint CLI or CI/CD pipelines, Skylint searches for a configuratio
 
 ---
 
+## ⚡ Generate Default Template (`skylint init`)
+
+To quickly bootstrap a fully commented `skylint.yaml` template pre-populated with all available rules and categories, simply run:
+
+```bash
+skylint init
+```
+Or specify a custom destination path:
+```bash
+skylint init ./config/skylint.yaml
+```
+
+---
+
 ## 🛠️ Complete `skylint.yaml` Example
 
 ```yaml
@@ -46,27 +60,27 @@ checks:
     enabled: true
     severity: warning
 
-  # 2. Metrics & Complexity Thresholds
+  # 2. Metrics & Complexity Thresholds (supports camelCase and UPPER_CASE)
   max-method-length:
     enabled: true
     severity: warning
     attributes:
-      MAX_STATEMENTS: 50          # Maximum statements allowed per method
+      maxStatements: 50           # Maximum statements allowed per method
 
   max-nesting-depth:
     enabled: true
     severity: error
     attributes:
-      MAX_DEPTH: 3               # Maximum nested control structures
+      maxDepth: 3                 # Maximum nested control structures
 
   max-parameters:
     enabled: true
     severity: warning
     attributes:
-      MAX_PARAMS: 5              # Max formal parameters per method
+      maxParameters: 5            # Max formal parameters per method
 
   # 3. Disabling a specific rule
-  avoid-me:
+  prefer-predicate-names:
     enabled: false
 ```
 

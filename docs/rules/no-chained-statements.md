@@ -25,14 +25,14 @@ Chained statements (`DATA: ... , ... .`) create formatting headaches, merge conf
 + DATA lv_name TYPE string.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 DATA: lv_id   TYPE string,
       lv_name TYPE string.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 DATA lv_id   TYPE string.
@@ -53,6 +53,8 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | Parameter Name | Data Type | Default Value | Description |
 |---|---|:---:|---|
 | `ALLOW_STRUCTURE_CHAINS` | `Boolean` | `true` | Configurable attribute for no-chained-statements |
+| `CHECK_CHAINED_DECL` | `Boolean` | `true` | Configurable attribute for no-chained-statements |
+| `CHECK_CHAINED_ASSIGN` | `Boolean` | `true` | Configurable attribute for no-chained-statements |
 
 ## CLI & CI/CD Configuration
 
@@ -62,23 +64,21 @@ checks:
     enabled: true
     severity: warning
     attributes:
-      ALLOW_STRUCTURE_CHAINS: true
+      allowStructureChains: true
+      checkChainedDecl: true
+      checkChainedAssign: true
 ```
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC CHAIN_DECL
-" Or with SAP CI_ prefix:
-... "#EC CI_CHAIN_DECL
 
-" Using pragma:
-... ##CHAIN_DECL.
-" Or with SAP CI_ prefix:
-... ##CI_CHAIN_DECL.
+" SAP CI_ prefix format:
+... "#EC CI_CHAIN_DECL
 ```
 
 ## Technical Details

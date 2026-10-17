@@ -27,7 +27,7 @@ Prefer line_exists( ) over READ TABLE ... TRANSPORTING NO FIELDS.
 + ENDIF.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 READ TABLE lt_items TRANSPORTING NO FIELDS WITH KEY id = lv_id.
@@ -36,7 +36,7 @@ IF sy-subrc = 0.
 ENDIF.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 IF line_exists( lt_items[ id = lv_id ] ).
@@ -55,18 +55,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC LINE_EXISTS
-" Or with SAP CI_ prefix:
-... "#EC CI_LINE_EXISTS
 
-" Using pragma:
-... ##LINE_EXISTS.
-" Or with SAP CI_ prefix:
-... ##CI_LINE_EXISTS.
+" SAP CI_ prefix format:
+... "#EC CI_LINE_EXISTS
 ```
 
 ## Technical Details

@@ -22,13 +22,13 @@ Dynamic programming (`ASSIGN (lv_var)`, `CALL METHOD (lv_method)`) disables comp
 + CALL FUNCTION 'BAPI_USER_GET_DETAIL'.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 CALL FUNCTION lv_func_name.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 CALL FUNCTION 'BAPI_USER_GET_DETAIL'.
@@ -45,18 +45,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC NO_DYNAMIC
-" Or with SAP CI_ prefix:
-... "#EC CI_NO_DYNAMIC
 
-" Using pragma:
-... ##NO_DYNAMIC.
-" Or with SAP CI_ prefix:
-... ##CI_NO_DYNAMIC.
+" SAP CI_ prefix format:
+... "#EC CI_NO_DYNAMIC
 ```
 
 ## Technical Details

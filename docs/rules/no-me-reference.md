@@ -24,14 +24,14 @@ In ABAP, member variables and methods are automatically accessible within the in
 + process_order( ).
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 me->mv_status = c_active.
 me->process_order( ).
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 mv_status = c_active.
@@ -54,23 +54,19 @@ checks:
     enabled: true
     severity: warning
     attributes:
-      ALLOW_IN_CONSTRUCTORS: true
+      allowInConstructors: true
 ```
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC ME
-" Or with SAP CI_ prefix:
-... "#EC CI_ME
 
-" Using pragma:
-... ##ME.
-" Or with SAP CI_ prefix:
-... ##CI_ME.
+" SAP CI_ prefix format:
+... "#EC CI_ME
 ```
 
 ## Technical Details

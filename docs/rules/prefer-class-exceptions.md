@@ -22,13 +22,13 @@ Classic non-class exceptions (set via `sy-subrc`) lack stack traces, cannot carr
 + METHODS execute RAISING cx_not_found cx_failed.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 METHODS execute EXCEPTIONS not_found failed.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 METHODS execute RAISING cx_not_found cx_failed.
@@ -45,18 +45,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC CLASS_EXC
-" Or with SAP CI_ prefix:
-... "#EC CI_CLASS_EXC
 
-" Using pragma:
-... ##CLASS_EXC.
-" Or with SAP CI_ prefix:
-... ##CI_CLASS_EXC.
+" SAP CI_ prefix format:
+... "#EC CI_CLASS_EXC
 ```
 
 ## Technical Details

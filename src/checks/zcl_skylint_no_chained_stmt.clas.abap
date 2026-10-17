@@ -29,6 +29,8 @@ CLASS zcl_skylint_no_chained_stmt DEFINITION
       END OF c_pseudo_comments.
 
     DATA mv_allow_structure_chains TYPE abap_bool VALUE abap_true.
+    DATA mv_check_chained_decl     TYPE abap_bool VALUE abap_true.
+    DATA mv_check_chained_assign   TYPE abap_bool VALUE abap_true.
 
     METHODS is_structure_start
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
@@ -80,9 +82,13 @@ CLASS zcl_skylint_no_chained_stmt IMPLEMENTATION.
                                                 short_text = 'Resolve chain into single declarations' )
                                               ( code       = c_quickfix_codes-split_assign
                                                 short_text = 'Split into separate assignments' ) )
-                 attributes        = VALUE #( ( name  = 'ALLOW_STRUCTURE_CHAINS'
-                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                                                value = REF #( mv_allow_structure_chains ) ) ) ) ).
+                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                              ( name  = 'ALLOW_STRUCTURE_CHAINS'
+                                                value = REF #( mv_allow_structure_chains ) )
+                                              ( name  = 'CHECK_CHAINED_DECL'
+                                                value = REF #( mv_check_chained_decl ) )
+                                              ( name  = 'CHECK_CHAINED_ASSIGN'
+                                                value = REF #( mv_check_chained_assign ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -100,6 +106,9 @@ CLASS zcl_skylint_no_chained_stmt IMPLEMENTATION.
 
       CASE <ls_statement>-keyword.
         WHEN 'DATA' OR 'TYPES' OR 'CLASS-DATA' OR 'CONSTANTS' OR 'STATICS'.
+          IF mv_check_chained_decl = abap_false.
+            CONTINUE.
+          ENDIF.
           IF lv_idx <= lv_skip_until.
             CONTINUE.
           ENDIF.
@@ -132,7 +141,7 @@ CLASS zcl_skylint_no_chained_stmt IMPLEMENTATION.
           ENDIF.
 
         WHEN 'COMPUTE'.
-          IF has_assignment_chain( <ls_statement> ) = abap_true.
+          IF mv_check_chained_assign = abap_true AND has_assignment_chain( <ls_statement> ) = abap_true.
             CLEAR ls_quickfix.
             lt_new_code = split_chain( <ls_statement> ).
             IF lt_new_code IS NOT INITIAL.

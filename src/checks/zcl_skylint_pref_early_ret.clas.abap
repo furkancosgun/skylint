@@ -22,6 +22,9 @@ CLASS zcl_skylint_pref_early_ret DEFINITION
         early_continue TYPE string VALUE 'EARLY_CONTINUE',
       END OF c_pseudo_comments.
 
+    DATA mv_check_method_return TYPE abap_bool VALUE abap_true.
+    DATA mv_check_loop_continue TYPE abap_bool VALUE abap_true.
+
     METHODS get_first_executable_stmt
       IMPORTING it_statements TYPE if_ci_atc_source_code_provider=>ty_statements
       EXPORTING ev_index      TYPE i
@@ -52,7 +55,12 @@ CLASS zcl_skylint_pref_early_ret IMPLEMENTATION.
                      ( code           = c_finding_codes-guard_loop
                        severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Invert IF condition and use CONTINUE to reduce nesting in loop'
-                       pseudo_comment = c_pseudo_comments-early_continue ) ) ) ).
+                       pseudo_comment = c_pseudo_comments-early_continue ) )
+                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                              ( name  = 'CHECK_METHOD_RETURN'
+                                                value = REF #( mv_check_method_return ) )
+                                              ( name  = 'CHECK_LOOP_CONTINUE'
+                                                value = REF #( mv_check_loop_continue ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -60,27 +68,31 @@ CLASS zcl_skylint_pref_early_ret IMPLEMENTATION.
     DATA ls_first_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA ls_if         TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    get_first_executable_stmt( EXPORTING it_statements = is_procedure-statements
-                               IMPORTING ev_index      = lv_first_idx
-                                         es_statement  = ls_first_stmt ).
+    IF mv_check_method_return = abap_true.
+      get_first_executable_stmt( EXPORTING it_statements = is_procedure-statements
+                                 IMPORTING ev_index      = lv_first_idx
+                                           es_statement  = ls_first_stmt ).
 
-    IF     ls_first_stmt-keyword = 'IF'
-       AND lv_first_idx > 0
-       AND if_wraps_method_end( it_statements = is_procedure-statements
-                                iv_if_idx     = lv_first_idx ) = abap_true.
-      report_statement( is_statement    = ls_first_stmt
-                        iv_finding_code = c_finding_codes-guard_method ).
+      IF     ls_first_stmt-keyword = 'IF'
+         AND lv_first_idx > 0
+         AND if_wraps_method_end( it_statements = is_procedure-statements
+                                  iv_if_idx     = lv_first_idx ) = abap_true.
+        report_statement( is_statement    = ls_first_stmt
+                          iv_finding_code = c_finding_codes-guard_method ).
+      ENDIF.
     ENDIF.
 
-    LOOP AT is_procedure-statements TRANSPORTING NO FIELDS
-         WHERE keyword = 'LOOP' OR keyword = 'DO' OR keyword = 'WHILE'.
-      ls_if = find_wrapping_if( it_statements = is_procedure-statements
-                                iv_loop_idx   = sy-tabix ).
-      IF ls_if-keyword = 'IF'.
-        report_statement( is_statement    = ls_if
-                          iv_finding_code = c_finding_codes-guard_loop ).
-      ENDIF.
-    ENDLOOP.
+    IF mv_check_loop_continue = abap_true.
+      LOOP AT is_procedure-statements TRANSPORTING NO FIELDS
+           WHERE keyword = 'LOOP' OR keyword = 'DO' OR keyword = 'WHILE'.
+        ls_if = find_wrapping_if( it_statements = is_procedure-statements
+                                  iv_loop_idx   = sy-tabix ).
+        IF ls_if-keyword = 'IF'.
+          report_statement( is_statement    = ls_if
+                            iv_finding_code = c_finding_codes-guard_loop ).
+        ENDIF.
+      ENDLOOP.
+    ENDIF.
   ENDMETHOD.
 
   METHOD get_first_executable_stmt.

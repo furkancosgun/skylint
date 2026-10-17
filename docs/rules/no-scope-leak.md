@@ -29,7 +29,7 @@ In ABAP, variable declarations inside control blocks (`IF`, `LOOP`) have procedu
 + use_value( lv_value ).
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 IF lv_condition = abap_true.
@@ -38,7 +38,7 @@ ENDIF.
 use_value( lv_value ). " Leaked outside block
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 DATA lv_value TYPE i.
@@ -59,18 +59,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC SCOPE_LEAK
-" Or with SAP CI_ prefix:
-... "#EC CI_SCOPE_LEAK
 
-" Using pragma:
-... ##SCOPE_LEAK.
-" Or with SAP CI_ prefix:
-... ##CI_SCOPE_LEAK.
+" SAP CI_ prefix format:
+... "#EC CI_SCOPE_LEAK
 ```
 
 ## Technical Details

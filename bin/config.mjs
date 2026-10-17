@@ -113,6 +113,15 @@ export function loadConfig(file) {
             if (!SEVERITIES.includes(entry.severity)) warn(`invalid severity for ${id}, ignored`);
             else conf.severity = entry.severity;
           }
+          if (entry.attributes && typeof entry.attributes === 'object' && !Array.isArray(entry.attributes)) {
+            conf.attributes = {};
+            for (const [k, v] of Object.entries(entry.attributes)) {
+              // Store normalized uppercase attribute key for check compatibility
+              const upperKey = k.replace(/([a-z])([A-Z])/g, '$1_$2').toUpperCase();
+              conf.attributes[upperKey] = v;
+              conf.attributes[k] = v;
+            }
+          }
         }
         cfg.checks.set(id, conf);
       }

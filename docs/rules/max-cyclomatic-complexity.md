@@ -29,7 +29,7 @@ High cyclomatic complexity means a method contains too many decision points (bra
 + ENDMETHOD.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 " Complex method containing excessive branches (> 10 cyclomatic complexity)
@@ -38,7 +38,7 @@ METHOD compute.
 ENDMETHOD.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 " Decompose into strategy classes or cohesive helper methods
@@ -64,23 +64,19 @@ checks:
     enabled: true
     severity: warning
     attributes:
-      MAX_COMPLEXITY: 5
+      maxComplexity: 5
 ```
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC CYCLO_COMP
-" Or with SAP CI_ prefix:
-... "#EC CI_CYCLO_COMP
 
-" Using pragma:
-... ##CYCLO_COMP.
-" Or with SAP CI_ prefix:
-... ##CI_CYCLO_COMP.
+" SAP CI_ prefix format:
+... "#EC CI_CYCLO_COMP
 ```
 
 ## Technical Details

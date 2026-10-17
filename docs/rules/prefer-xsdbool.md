@@ -27,7 +27,7 @@ Writing `IF cond. lv_flag = abap_true. ELSE. lv_flag = abap_false. ENDIF.` is 5 
 + lv_has_items = xsdbool( lv_count > 0 ).
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 IF lv_count > 0.
@@ -37,7 +37,7 @@ ELSE.
 ENDIF.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 lv_has_items = xsdbool( lv_count > 0 ).
@@ -61,18 +61,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC XSDBOOL
-" Or with SAP CI_ prefix:
-... "#EC CI_XSDBOOL
 
-" Using pragma:
-... ##XSDBOOL.
-" Or with SAP CI_ prefix:
-... ##CI_XSDBOOL.
+" SAP CI_ prefix format:
+... "#EC CI_XSDBOOL
 ```
 
 ## Technical Details

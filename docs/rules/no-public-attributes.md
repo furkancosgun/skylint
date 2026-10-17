@@ -30,7 +30,7 @@ Public attributes violate encapsulation because external consumers can mutate in
 + ENDCLASS.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 CLASS cl_model DEFINITION PUBLIC.
@@ -39,7 +39,7 @@ CLASS cl_model DEFINITION PUBLIC.
 ENDCLASS.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 CLASS cl_model DEFINITION PUBLIC.
@@ -61,18 +61,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC PUBLIC_ATTR
-" Or with SAP CI_ prefix:
-... "#EC CI_PUBLIC_ATTR
 
-" Using pragma:
-... ##PUBLIC_ATTR.
-" Or with SAP CI_ prefix:
-... ##CI_PUBLIC_ATTR.
+" SAP CI_ prefix format:
+... "#EC CI_PUBLIC_ATTR
 ```
 
 ## Technical Details

@@ -27,7 +27,7 @@ Placing constants or literals on the left side of comparisons (`IF 42 = lv_value
 + ENDIF.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 IF 0 = lv_count.
@@ -35,7 +35,7 @@ IF 0 = lv_count.
 ENDIF.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 IF lv_count = 0.
@@ -61,18 +61,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC YODA_COND
-" Or with SAP CI_ prefix:
-... "#EC CI_YODA_COND
 
-" Using pragma:
-... ##YODA_COND.
-" Or with SAP CI_ prefix:
-... ##CI_YODA_COND.
+" SAP CI_ prefix format:
+... "#EC CI_YODA_COND
 ```
 
 ## Technical Details

@@ -23,13 +23,13 @@ Omitting authorization checks leaves critical business data and actions exposed 
 + CALL TRANSACTION 'VA01' WITH AUTHORITY-CHECK.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 CALL TRANSACTION 'VA01'.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 CALL TRANSACTION 'VA01' WITH AUTHORITY-CHECK.
@@ -53,18 +53,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC AUTH_CHECK
-" Or with SAP CI_ prefix:
-... "#EC CI_AUTH_CHECK
 
-" Using pragma:
-... ##AUTH_CHECK.
-" Or with SAP CI_ prefix:
-... ##CI_AUTH_CHECK.
+" SAP CI_ prefix format:
+... "#EC CI_AUTH_CHECK
 ```
 
 ## Technical Details

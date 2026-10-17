@@ -22,6 +22,9 @@ CLASS zcl_skylint_pref_str_func DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'STR_FUNC'.
+
+    DATA mv_check_condense  TYPE abap_bool VALUE abap_true.
+    DATA mv_check_translate TYPE abap_bool VALUE abap_true.
 ENDCLASS.
 
 
@@ -39,7 +42,12 @@ CLASS zcl_skylint_pref_str_func IMPLEMENTATION.
                                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-condense_stmt
                                                                 short_text = 'Use condense( ) function' )
                                                               ( code       = c_quickfix_codes-translate_stmt
-                                                                short_text = 'Use to_upper( )/to_lower( )' ) ) ) ).
+                                                                short_text = 'Use to_upper( )/to_lower( )' ) )
+                                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                                              ( name  = 'CHECK_CONDENSE'
+                                                                value = REF #( mv_check_condense ) )
+                                                              ( name  = 'CHECK_TRANSLATE'
+                                                                value = REF #( mv_check_translate ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -59,6 +67,9 @@ CLASS zcl_skylint_pref_str_func IMPLEMENTATION.
       CLEAR lv_fix_code.
       CASE <ls_statement>-keyword.
         WHEN 'CONDENSE'.
+          IF mv_check_condense = abap_false.
+            CONTINUE.
+          ENDIF.
           lv_code = c_finding_codes-condense_stmt.
           IF zcl_skylint_ast_util=>token_count( <ls_statement> ) = 2.
             lv_var = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
@@ -75,6 +86,9 @@ CLASS zcl_skylint_pref_str_func IMPLEMENTATION.
             lv_fix_code = c_quickfix_codes-condense_stmt.
           ENDIF.
         WHEN 'TRANSLATE'.
+          IF mv_check_translate = abap_false.
+            CONTINUE.
+          ENDIF.
           lv_code = c_finding_codes-translate_stmt.
           IF     zcl_skylint_ast_util=>token_count( <ls_statement> )                   = 5
              AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>

@@ -27,7 +27,7 @@ Predicate methods and boolean expressions evaluate directly to true or false. Co
 + ENDIF.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 IF is_valid( ) = abap_true.
@@ -35,7 +35,7 @@ IF is_valid( ) = abap_true.
 ENDIF.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 IF is_valid( ).
@@ -61,18 +61,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC BOOL_COMPARE
-" Or with SAP CI_ prefix:
-... "#EC CI_BOOL_COMPARE
 
-" Using pragma:
-... ##BOOL_COMPARE.
-" Or with SAP CI_ prefix:
-... ##CI_BOOL_COMPARE.
+" SAP CI_ prefix format:
+... "#EC CI_BOOL_COMPARE
 ```
 
 ## Technical Details

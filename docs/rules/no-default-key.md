@@ -23,13 +23,13 @@ Avoid WITH DEFAULT KEY; prefer EMPTY KEY or explicit keys.
 + DATA lt_customers TYPE STANDARD TABLE OF ty_customer WITH EMPTY KEY.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 DATA lt_customers TYPE STANDARD TABLE OF ty_customer WITH DEFAULT KEY.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 DATA lt_customers TYPE STANDARD TABLE OF ty_customer WITH EMPTY KEY.
@@ -53,18 +53,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC DEFAULT_KEY
-" Or with SAP CI_ prefix:
-... "#EC CI_DEFAULT_KEY
 
-" Using pragma:
-... ##DEFAULT_KEY.
-" Or with SAP CI_ prefix:
-... ##CI_DEFAULT_KEY.
+" SAP CI_ prefix format:
+... "#EC CI_DEFAULT_KEY
 ```
 
 ## Technical Details

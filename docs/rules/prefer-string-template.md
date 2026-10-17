@@ -23,13 +23,13 @@ String templates (`|Hello { lv_name }|`) provide type-safe, readable string inte
 + lv_greeting = |Hello { iv_name }|.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 CONCATENATE 'Hello' iv_name INTO lv_greeting SEPARATED BY space.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 lv_greeting = |Hello { iv_name }|.
@@ -58,23 +58,19 @@ checks:
     enabled: true
     severity: warning
     attributes:
-      ALLOW_IN_BYTE_MODE: false
+      allowInByteMode: false
 ```
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC STR_TMPL
-" Or with SAP CI_ prefix:
-... "#EC CI_STR_TMPL
 
-" Using pragma:
-... ##STR_TMPL.
-" Or with SAP CI_ prefix:
-... ##CI_STR_TMPL.
+" SAP CI_ prefix format:
+... "#EC CI_STR_TMPL
 ```
 
 ## Technical Details

@@ -29,7 +29,7 @@ Executing SQL queries (`SELECT`, `UPDATE`, `DELETE`) inside a `LOOP` generates a
 +   INTO TABLE @lt_customers.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 LOOP AT lt_orders INTO ls_order.
@@ -39,7 +39,7 @@ LOOP AT lt_orders INTO ls_order.
 ENDLOOP.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 SELECT * FROM /dmo/customer
@@ -59,18 +59,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC DB_IN_LOOP
-" Or with SAP CI_ prefix:
-... "#EC CI_DB_IN_LOOP
 
-" Using pragma:
-... ##DB_IN_LOOP.
-" Or with SAP CI_ prefix:
-... ##CI_DB_IN_LOOP.
+" SAP CI_ prefix format:
+... "#EC CI_DB_IN_LOOP
 ```
 
 ## Technical Details

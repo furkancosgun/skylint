@@ -24,14 +24,14 @@ System fields like `sy-subrc`, `sy-tabix`, and `sy-index` are managed exclusivel
 + rv_success = abap_true.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 sy-subrc = 0.
 sy-tabix = 1.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 " Pass explicit return values or flags instead of modifying system variables (sy-*)
@@ -49,18 +49,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC SY_MODIFY
-" Or with SAP CI_ prefix:
-... "#EC CI_SY_MODIFY
 
-" Using pragma:
-... ##SY_MODIFY.
-" Or with SAP CI_ prefix:
-... ##CI_SY_MODIFY.
+" SAP CI_ prefix format:
+... "#EC CI_SY_MODIFY
 ```
 
 ## Technical Details

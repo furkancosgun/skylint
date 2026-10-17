@@ -23,13 +23,13 @@ Explicit client switching bypasses automatic multi-tenant client isolation and i
 + SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 SELECT * FROM /dmo/customer USING CLIENT '100' INTO TABLE @lt_customers.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
@@ -53,18 +53,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC CLIENT_SPEC
-" Or with SAP CI_ prefix:
-... "#EC CI_CLIENT_SPEC
 
-" Using pragma:
-... ##CLIENT_SPEC.
-" Or with SAP CI_ prefix:
-... ##CI_CLIENT_SPEC.
+" SAP CI_ prefix format:
+... "#EC CI_CLIENT_SPEC
 ```
 
 ## Technical Details

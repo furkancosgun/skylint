@@ -26,14 +26,14 @@ Statements that set `sy-subrc` (such as `SELECT SINGLE`, `READ TABLE`, `AUTHORIT
 + ENDIF.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 SELECT SINGLE * FROM /dmo/customer WHERE customer_id = @lv_id INTO @ls_customer.
 process_customer( ls_customer ). " sy-subrc is never checked
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 SELECT SINGLE * FROM /dmo/customer WHERE customer_id = @lv_id INTO @ls_customer.
@@ -62,27 +62,23 @@ checks:
     enabled: true
     severity: warning
     attributes:
-      CHECK_SELECT_SINGLE: true
-      CHECK_READ_TABLE: true
-      CHECK_AUTHORITY_CHECK: true
-      CHECK_FIND_SEARCH: true
-      CHECK_ASSIGN: true
+      checkSelectSingle: true
+      checkReadTable: true
+      checkAuthorityCheck: true
+      checkFindSearch: true
+      checkAssign: true
 ```
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC CHECK_SUBRC
-" Or with SAP CI_ prefix:
-... "#EC CI_CHECK_SUBRC
 
-" Using pragma:
-... ##CHECK_SUBRC.
-" Or with SAP CI_ prefix:
-... ##CI_CHECK_SUBRC.
+" SAP CI_ prefix format:
+... "#EC CI_CHECK_SUBRC
 ```
 
 ## Technical Details

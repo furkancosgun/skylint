@@ -33,7 +33,7 @@ In method contexts, `EXIT` can be ambiguous when placed near loops. `RETURN` exp
 + ENDMETHOD.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 METHOD execute.
@@ -44,7 +44,7 @@ METHOD execute.
 ENDMETHOD.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 METHOD execute.
@@ -73,18 +73,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC RETURN
-" Or with SAP CI_ prefix:
-... "#EC CI_RETURN
 
-" Using pragma:
-... ##RETURN.
-" Or with SAP CI_ prefix:
-... ##CI_RETURN.
+" SAP CI_ prefix format:
+... "#EC CI_RETURN
 ```
 
 ## Technical Details

@@ -24,14 +24,14 @@ Methods with a `RETURNING` parameter can be used directly within expressions, as
 +   RETURNING VALUE(rv_result) TYPE i.
 ```
 
-### ✕ Non-Compliant
+### Non-Compliant
 
 ```abap
 METHODS calculate
   EXPORTING ev_result TYPE i.
 ```
 
-### ✓ Compliant
+### Compliant
 
 ```abap
 METHODS calculate
@@ -49,18 +49,14 @@ checks:
 
 ## Suppression
 
-To suppress findings for this rule, append the pseudo-comment or pragma to the statement:
+To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
-" Using pseudo-comment:
+" Standard pseudo-comment:
 ... "#EC RETURNING
-" Or with SAP CI_ prefix:
-... "#EC CI_RETURNING
 
-" Using pragma:
-... ##RETURNING.
-" Or with SAP CI_ prefix:
-... ##CI_RETURNING.
+" SAP CI_ prefix format:
+... "#EC CI_RETURNING
 ```
 
 ## Technical Details

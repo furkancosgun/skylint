@@ -26,6 +26,9 @@ CLASS zcl_skylint_pref_final_cls DEFINITION
         final_meth TYPE string VALUE 'FINAL_METHOD',
       END OF c_pseudo_comments.
 
+    DATA mv_check_classes TYPE abap_bool VALUE abap_true.
+    DATA mv_check_methods TYPE abap_bool VALUE abap_true.
+
     METHODS is_class_missing_final
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -48,7 +51,12 @@ CLASS zcl_skylint_pref_final_cls IMPLEMENTATION.
                        text           = 'Declare method as FINAL if it is not intended to be redefined'
                        pseudo_comment = c_pseudo_comments-final_meth ) )
                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-add_final
-                                                short_text = 'Add FINAL' ) ) ) ).
+                                                short_text = 'Add FINAL' ) )
+                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                              ( name  = 'CHECK_CLASSES'
+                                                value = REF #( mv_check_classes ) )
+                                              ( name  = 'CHECK_METHODS'
+                                                value = REF #( mv_check_methods ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -69,13 +77,13 @@ CLASS zcl_skylint_pref_final_cls IMPLEMENTATION.
       IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
                                                  iv_lexeme    = 'FINAL' ) = abap_true.
         lv_is_class_final = abap_true.
-      ELSEIF is_class_missing_final( <ls_statement> ) = abap_true.
+      ELSEIF mv_check_classes = abap_true AND is_class_missing_final( <ls_statement> ) = abap_true.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-class_not_final ).
       ENDIF.
     ENDLOOP.
 
-    IF lv_is_class_final = abap_true.
+    IF lv_is_class_final = abap_true OR mv_check_methods = abap_false.
       RETURN.
     ENDIF.
 

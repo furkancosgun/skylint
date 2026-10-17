@@ -27,6 +27,9 @@ CLASS zcl_skylint_pref_new_op DEFINITION
         raise_new TYPE string VALUE 'RAISE_NEW',
       END OF c_pseudo_comments.
 
+    DATA mv_check_create_object   TYPE abap_bool VALUE abap_true.
+    DATA mv_check_raise_exception TYPE abap_bool VALUE abap_true.
+
     METHODS is_static_create_object
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -63,7 +66,12 @@ CLASS zcl_skylint_pref_new_op IMPLEMENTATION.
                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-use_new
                                                 short_text = 'Use NEW constructor' )
                                               ( code       = c_quickfix_codes-raise_new
-                                                short_text = 'Use RAISE EXCEPTION NEW' ) ) ) ).
+                                                short_text = 'Use RAISE EXCEPTION NEW' ) )
+                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                              ( name  = 'CHECK_CREATE_OBJECT'
+                                                value = REF #( mv_check_create_object ) )
+                                              ( name  = 'CHECK_RAISE_EXCEPTION'
+                                                value = REF #( mv_check_raise_exception ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -77,7 +85,7 @@ CLASS zcl_skylint_pref_new_op IMPLEMENTATION.
 
       CASE <ls_statement>-keyword.
         WHEN 'CREATE'.
-          IF is_static_create_object( <ls_statement> ) = abap_true.
+          IF mv_check_create_object = abap_true AND is_static_create_object( <ls_statement> ) = abap_true.
             CLEAR ls_quickfix.
             lv_line = build_new_expression( <ls_statement> ).
             IF lv_line IS NOT INITIAL.
@@ -91,7 +99,7 @@ CLASS zcl_skylint_pref_new_op IMPLEMENTATION.
           ENDIF.
 
         WHEN 'RAISE'.
-          IF is_raise_exception_type( <ls_statement> ) = abap_true.
+          IF mv_check_raise_exception = abap_true AND is_raise_exception_type( <ls_statement> ) = abap_true.
             CLEAR ls_quickfix.
             lv_line = build_new_raise( <ls_statement> ).
             IF lv_line IS NOT INITIAL.

@@ -183,11 +183,11 @@ for (const rule of RULES) {
 
   // Code Examples
   if (nonCompliantCode) {
-    ruleDoc += `### ✕ Non-Compliant\n\n\`\`\`abap\n${nonCompliantCode}\n\`\`\`\n\n`;
+    ruleDoc += `### Non-Compliant\n\n\`\`\`abap\n${nonCompliantCode}\n\`\`\`\n\n`;
   }
 
   if (compliantCode) {
-    ruleDoc += `### ✓ Compliant\n\n\`\`\`abap\n${compliantCode}\n\`\`\`\n\n`;
+    ruleDoc += `### Compliant\n\n\`\`\`abap\n${compliantCode}\n\`\`\`\n\n`;
   }
 
   // QuickFix section if available
@@ -217,15 +217,16 @@ for (const rule of RULES) {
   if (attributes.length > 0) {
     ruleDoc += `    attributes:\n`;
     for (const attr of attributes) {
-      ruleDoc += `      ${attr.name}: ${attr.defaultValue}\n`;
+      const camelName = attr.name.toLowerCase().replace(/_([a-z0-9])/g, (_, l) => l.toUpperCase());
+      ruleDoc += `      ${camelName}: ${attr.defaultValue}\n`;
     }
   }
   ruleDoc += `\`\`\`\n\n`;
 
   // Suppression
   ruleDoc += `## Suppression\n\n`;
-  ruleDoc += `To suppress findings for this rule, append the pseudo-comment or pragma to the statement:\n\n`;
-  ruleDoc += `\`\`\`abap\n" Using pseudo-comment:\n... "#EC ${rule.pseudoComment}\n" Or with SAP CI_ prefix:\n... "#EC CI_${rule.pseudoComment}\n\n" Using pragma:\n... ##${rule.pseudoComment}.\n" Or with SAP CI_ prefix:\n... ##CI_${rule.pseudoComment}.\n\`\`\`\n\n`;
+  ruleDoc += `To suppress findings for this rule, append the pseudo-comment to the statement:\n\n`;
+  ruleDoc += `\`\`\`abap\n" Standard pseudo-comment:\n... "#EC ${rule.pseudoComment}\n\n" SAP CI_ prefix format:\n... "#EC CI_${rule.pseudoComment}\n\`\`\`\n\n`;
 
   // ABAP Class Details
   ruleDoc += `## Technical Details\n\n`;
