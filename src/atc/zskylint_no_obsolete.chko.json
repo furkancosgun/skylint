@@ -47,6 +47,21 @@
     },
     {
       "name": "CHECK_ADD"
+    },
+    {
+      "name": "CHECK_ADD_CORR"
+    },
+    {
+      "name": "CHECK_TYPE_POOLS"
+    },
+    {
+      "name": "CHECK_RANGES"
+    },
+    {
+      "name": "CHECK_HEADER_LINE"
+    },
+    {
+      "name": "CHECK_LOAD"
     }
   ]
 }

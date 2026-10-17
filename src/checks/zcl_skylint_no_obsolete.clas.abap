@@ -34,6 +34,11 @@ CLASS zcl_skylint_no_obsolete DEFINITION
     DATA mv_check_form          TYPE abap_bool VALUE abap_true.
     DATA mv_check_loop_ctl      TYPE abap_bool VALUE abap_true.
     DATA mv_check_add           TYPE abap_bool VALUE abap_true.
+    DATA mv_check_add_corr      TYPE abap_bool VALUE abap_true.
+    DATA mv_check_type_pools    TYPE abap_bool VALUE abap_true.
+    DATA mv_check_ranges        TYPE abap_bool VALUE abap_true.
+    DATA mv_check_header_line   TYPE abap_bool VALUE abap_true.
+    DATA mv_check_load          TYPE abap_bool VALUE abap_true.
 
     METHODS check_with_quickfix
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
@@ -89,7 +94,17 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
                                               ( name  = 'CHECK_LOOP_CTL'
                                                 value = REF #( mv_check_loop_ctl ) )
                                               ( name  = 'CHECK_ADD'
-                                                value = REF #( mv_check_add ) ) ) ) ).
+                                                value = REF #( mv_check_add ) )
+                                              ( name  = 'CHECK_ADD_CORR'
+                                                value = REF #( mv_check_add_corr ) )
+                                              ( name  = 'CHECK_TYPE_POOLS'
+                                                value = REF #( mv_check_type_pools ) )
+                                              ( name  = 'CHECK_RANGES'
+                                                value = REF #( mv_check_ranges ) )
+                                              ( name  = 'CHECK_HEADER_LINE'
+                                                value = REF #( mv_check_header_line ) )
+                                              ( name  = 'CHECK_LOAD'
+                                                value = REF #( mv_check_load ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -269,25 +284,30 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
 
       WHEN 'ADD-CORRESPONDING' OR 'SUBTRACT-CORRESPONDING'
         OR 'MULTIPLY-CORRESPONDING' OR 'DIVIDE-CORRESPONDING'.
-        rv_is = mv_check_add.
+        rv_is = mv_check_add_corr.
 
-      WHEN 'TYPE-POOLS' OR 'RANGES'.
-        rv_is = abap_true.
+      WHEN 'TYPE-POOLS'.
+        rv_is = mv_check_type_pools.
+
+      WHEN 'RANGES'.
+        rv_is = mv_check_ranges.
 
       WHEN 'DATA'.
-        IF    zcl_skylint_ast_util=>find_token_sequence(
-                  is_statement = is_statement
-                  it_expected  = VALUE #( ( `WITH` ) ( `HEADER` ) ( `LINE` ) ) ) > 0
-           OR zcl_skylint_ast_util=>find_token(
-                  is_statement = is_statement
-                  iv_lexeme    = 'OCCURS' ) > 0.
+        IF     mv_check_header_line = abap_true
+           AND (    zcl_skylint_ast_util=>find_token_sequence(
+                        is_statement = is_statement
+                        it_expected  = VALUE #( ( `WITH` ) ( `HEADER` ) ( `LINE` ) ) ) > 0
+                 OR zcl_skylint_ast_util=>find_token(
+                        is_statement = is_statement
+                        iv_lexeme    = 'OCCURS' ) > 0 ).
           rv_is = abap_true.
         ENDIF.
 
       WHEN 'CLASS' OR 'INTERFACE'.
-        IF zcl_skylint_ast_util=>find_token(
-               is_statement = is_statement
-               iv_lexeme    = 'LOAD' ) > 0.
+        IF     mv_check_load = abap_true
+           AND zcl_skylint_ast_util=>find_token(
+                   is_statement = is_statement
+                   iv_lexeme    = 'LOAD' ) > 0.
           rv_is = abap_true.
         ENDIF.
     ENDCASE.

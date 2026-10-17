@@ -207,6 +207,26 @@
         {
           "name": "CHECK_ADD",
           "value": "X"
+        },
+        {
+          "name": "CHECK_ADD_CORR",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_TYPE_POOLS",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_RANGES",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_HEADER_LINE",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_LOAD",
+          "value": "X"
         }
       ]
     },

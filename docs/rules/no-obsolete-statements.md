@@ -61,6 +61,11 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | `CHECK_FORM` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
 | `CHECK_LOOP_CTL` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
 | `CHECK_ADD` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
+| `CHECK_ADD_CORR` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
+| `CHECK_TYPE_POOLS` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
+| `CHECK_RANGES` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
+| `CHECK_HEADER_LINE` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
+| `CHECK_LOAD` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
 
 ## CLI & CI/CD Configuration
 
@@ -83,6 +88,11 @@ checks:
       checkForm: true
       checkLoopCtl: true
       checkAdd: true
+      checkAddCorr: true
+      checkTypePools: true
+      checkRanges: true
+      checkHeaderLine: true
+      checkLoad: true
 ```
 
 ## Suppression
