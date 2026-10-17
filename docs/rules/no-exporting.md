@@ -4,7 +4,7 @@
 
 ## Description
 
-Omit redundant EXPORTING and RECEIVING in method calls.
+Omit redundant EXPORTING, RECEIVING, and single parameter names in method calls.
 
 ## ❌ Non-Compliant Code
 

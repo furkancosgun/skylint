@@ -17,16 +17,12 @@ CLASS zcl_skylint_no_sy_modify DEFINITION
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'SY_MODIFY'.
 
-    METHODS is_system_variable_mod
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_res) TYPE abap_bool.
+    METHODS modifies_system_field
+      IMPORTING is_statement        TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_modifies) TYPE abap_bool.
 
-    METHODS is_system_field
-      IMPORTING is_ref       TYPE if_ci_atc_source_code_provider=>ty_compiler_reference
-      RETURNING VALUE(rv_is) TYPE abap_bool.
-
-    METHODS is_write_access
-      IMPORTING is_ref       TYPE if_ci_atc_source_code_provider=>ty_compiler_reference
+    METHODS is_system_write_token
+      IMPORTING is_token     TYPE if_ci_atc_source_code_provider=>ty_token
       RETURNING VALUE(rv_is) TYPE abap_bool.
 
 ENDCLASS.
@@ -48,43 +44,44 @@ CLASS zcl_skylint_no_sy_modify IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF is_system_variable_mod( <ls_statement> ) = abap_true.
+      IF modifies_system_field( <ls_statement> ) = abap_true.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-system_var_mod ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD is_system_variable_mod.
+  METHOD modifies_system_field.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_ref>   TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
-    rv_res = abap_false.
+    rv_modifies = abap_false.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      LOOP AT <ls_token>-references ASSIGNING <ls_ref>.
-        IF     is_system_field( <ls_ref> ) = abap_true
-           AND is_write_access( <ls_ref> ) = abap_true.
-          rv_res = abap_true.
-          RETURN.
-        ENDIF.
-      ENDLOOP.
+      IF is_system_write_token( <ls_token> ) = abap_true.
+        rv_modifies = abap_true.
+        RETURN.
+      ENDIF.
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD is_system_field.
-    rv_is = xsdbool(
-          is_ref-kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-      AND (    is_ref-full_name CP '\DA:SY\*'
-            OR is_ref-full_name CP '\DA:SYST\*'
-            OR is_ref-full_name  = '\DA:SY'
-            OR is_ref-full_name  = '\DA:SYST' ) ).
-  ENDMETHOD.
+  METHOD is_system_write_token.
+    FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
-  METHOD is_write_access.
-    rv_is = xsdbool(
-         is_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-write
-      OR is_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-write_partial
-      OR is_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_and_write ).
+    rv_is = abap_false.
+
+    LOOP AT is_token-references ASSIGNING <ls_ref>
+         WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
+      IF (    <ls_ref>-full_name CP '\DA:SY\*'
+           OR <ls_ref>-full_name CP '\DA:SYST\*'
+           OR <ls_ref>-full_name  = '\DA:SY'
+           OR <ls_ref>-full_name  = '\DA:SYST' )
+         AND (    <ls_ref>-usage_mode  = if_ci_atc_source_code_provider=>usage_modes-write
+               OR <ls_ref>-usage_mode  = if_ci_atc_source_code_provider=>usage_modes-write_partial
+               OR <ls_ref>-usage_mode  = if_ci_atc_source_code_provider=>usage_modes-read_and_write
+               OR <ls_ref>-usage_grade = if_ci_atc_source_code_provider=>usage_grades-definition ).
+        rv_is = abap_true.
+        RETURN.
+      ENDIF.
+    ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

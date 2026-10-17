@@ -21,8 +21,9 @@ CLASS zcl_skylint_no_yoda_cond DEFINITION
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'YODA_COND'.
 
-    METHODS is_literal
-      IMPORTING is_token     TYPE if_ci_atc_source_code_provider=>ty_token
+    METHODS is_yoda_at
+      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_index     TYPE i
       RETURNING VALUE(rv_is) TYPE abap_bool.
 
     METHODS mirror_operator
@@ -41,10 +42,6 @@ CLASS zcl_skylint_no_yoda_cond DEFINITION
                 iv_match           TYPE i
                 iv_operator        TYPE string
       RETURNING VALUE(rs_quickfix) TYPE zcl_skylint_check_base=>ty_quickfix.
-
-    METHODS has_yoda_condition
-      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_index) TYPE i.
 
 ENDCLASS.
 
@@ -65,74 +62,65 @@ CLASS zcl_skylint_no_yoda_cond IMPLEMENTATION.
 
   METHOD check.
     DATA lv_stmt_idx TYPE i.
-    DATA lv_match    TYPE i.
+    DATA lv_tok_idx  TYPE i.
+    DATA lv_total    TYPE i.
     DATA lv_op       TYPE string.
     DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_stmt_idx = sy-tabix.
-      CLEAR ls_quickfix.
-
-      lv_match = has_yoda_condition( <ls_statement> ).
-      IF lv_match <= 0.
+      lv_total = lines( <ls_statement>-tokens ).
+      IF lv_total < 3.
         CONTINUE.
       ENDIF.
 
-      lv_op = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
-                                                      iv_index     = lv_match + 1 ).
+      lv_tok_idx = 1.
+      WHILE lv_tok_idx <= lv_total - 2.
+        IF is_yoda_at( is_statement = <ls_statement>
+                       iv_index     = lv_tok_idx ) = abap_true.
+          lv_op = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
+                                                          iv_index     = lv_tok_idx + 1 ).
+          CLEAR ls_quickfix.
+          IF can_quickfix( is_statement = <ls_statement>
+                           iv_match     = lv_tok_idx
+                           iv_operator  = lv_op ) = abap_true.
+            ls_quickfix = build_quickfix( is_statement = <ls_statement>
+                                          iv_stmt_idx  = lv_stmt_idx
+                                          iv_match     = lv_tok_idx
+                                          iv_operator  = lv_op ).
+          ENDIF.
 
-      IF can_quickfix( is_statement = <ls_statement>
-                       iv_match     = lv_match
-                       iv_operator  = lv_op ) = abap_true.
-        ls_quickfix = build_quickfix( is_statement = <ls_statement>
-                                      iv_stmt_idx  = lv_stmt_idx
-                                      iv_match     = lv_match
-                                      iv_operator  = lv_op ).
-      ENDIF.
-
-      report_statement( is_statement    = <ls_statement>
-                        iv_finding_code = c_finding_codes-yoda_condition
-                        is_quickfix     = ls_quickfix ).
+          report_statement( is_statement    = <ls_statement>
+                            iv_finding_code = c_finding_codes-yoda_condition
+                            is_quickfix     = ls_quickfix ).
+          EXIT.
+        ENDIF.
+        lv_tok_idx += 1.
+      ENDWHILE.
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD has_yoda_condition.
-    DATA lv_idx   TYPE i.
-    DATA lv_total TYPE i.
-    DATA ls_t1    TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_t2    TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_t3    TYPE if_ci_atc_source_code_provider=>ty_token.
+  METHOD is_yoda_at.
+    DATA ls_t1 TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_t2 TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_t3 TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    rv_index = 0.
-    lv_total = zcl_skylint_ast_util=>token_count( is_statement ).
-    IF lv_total < 3.
-      RETURN.
+    rv_is = abap_false.
+
+    ls_t1 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                             iv_index     = iv_index ).
+    ls_t2 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                             iv_index     = iv_index + 1 ).
+    ls_t3 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                             iv_index     = iv_index + 2 ).
+
+    IF     zcl_skylint_ast_util=>token_is_literal( ls_t1 ) = abap_true
+       AND ls_t2-references IS INITIAL
+       AND zcl_skylint_ast_util=>is_comparison_operator( ls_t2-lexeme ) = abap_true
+       AND zcl_skylint_ast_util=>token_is_literal( ls_t3 ) = abap_false.
+      rv_is = abap_true.
     ENDIF.
-
-    lv_idx = 1.
-    WHILE lv_idx <= lv_total - 2.
-      ls_t1 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                               iv_index     = lv_idx ).
-      ls_t2 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                               iv_index     = lv_idx + 1 ).
-      ls_t3 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                               iv_index     = lv_idx + 2 ).
-
-      IF     is_literal( ls_t1 ) = abap_true
-         AND ls_t2-references IS INITIAL
-         AND zcl_skylint_ast_util=>is_comparison_operator( ls_t2-lexeme )  = abap_true
-         AND is_literal( ls_t3 ) = abap_false.
-        rv_index = lv_idx.
-        RETURN.
-      ENDIF.
-
-      lv_idx += 1.
-    ENDWHILE.
-  ENDMETHOD.
-
-  METHOD is_literal.
-    rv_is = zcl_skylint_ast_util=>token_is_literal( is_token ).
   ENDMETHOD.
 
   METHOD can_quickfix.

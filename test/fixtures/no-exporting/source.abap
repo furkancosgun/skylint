@@ -86,7 +86,7 @@ CLASS zcl_test_no_exporting IMPLEMENTATION.
   METHOD test_009.
     DATA lo_obj TYPE REF TO zcl_test_no_exporting.
     DATA lv_x TYPE i.
-    lo_obj->run( iv_in = lv_x RECEIVING rv_val = lv_x ).
+    lo_obj->run( EXPORTING iv_in = lv_x RECEIVING rv_val = lv_x ).
   ENDMETHOD.
 
   METHOD test_010.

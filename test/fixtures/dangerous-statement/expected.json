@@ -31,5 +31,19 @@
   {
     "method": "TEST_006",
     "code": null
+  },
+  {
+    "method": "TEST_007",
+    "code": "SHORTDUMP",
+    "line": 2,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "method": "TEST_008",
+    "code": "PROD_ASSRT",
+    "line": 3,
+    "column": 4,
+    "quickfixes": []
   }
 ]

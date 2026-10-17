@@ -61,43 +61,58 @@ CLASS zcl_skylint_no_self_assign IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_identical_assignment.
-    DATA ls_tok_left  TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_tok_right TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_ref_write> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    DATA lv_eq_idx      TYPE i.
+    DATA ls_tok_left    TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok_right   TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok_after   TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_ref_w> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    FIELD-SYMBOLS <ls_ref_r> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     rv_res = abap_false.
 
-    IF zcl_skylint_ast_util=>token_count( is_statement ) <> 3.
+    lv_eq_idx = zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                                  iv_lexeme    = '=' ).
+    IF lv_eq_idx <= 1 OR lv_eq_idx >= lines( is_statement-tokens ).
       RETURN.
     ENDIF.
 
-    IF zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                                               iv_index     = 2
-                                               iv_expected  = '=' ) = abap_false.
+    " Ensure = is top-level assignment operator (empty references)
+    ls_tok_left = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                   iv_index     = lv_eq_idx ).
+    IF ls_tok_left-references IS NOT INITIAL.
       RETURN.
     ENDIF.
 
     ls_tok_left = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                   iv_index     = 1 ).
+                                                   iv_index     = lv_eq_idx - 1 ).
     ls_tok_right = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                    iv_index     = 3 ).
+                                                    iv_index     = lv_eq_idx + 1 ).
 
-    IF ls_tok_left-lexeme = ls_tok_right-lexeme.
-      rv_res = abap_true.
-      RETURN.
-    ENDIF.
-
-    LOOP AT ls_tok_left-references ASSIGNING <ls_ref_write>
-         WHERE     kind       = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-               AND usage_mode = if_ci_atc_source_code_provider=>usage_modes-write.
-      IF     <ls_ref_write>-full_name IS NOT INITIAL
-         AND line_exists( ls_tok_right-references[
-                              kind       = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-                              usage_mode = if_ci_atc_source_code_provider=>usage_modes-read
-                              full_name  = <ls_ref_write>-full_name ] ).
-        rv_res = abap_true.
+    " Ensure RHS is a single token assignment (no operators or extra arguments following RHS)
+    IF lines( is_statement-tokens ) > lv_eq_idx + 1.
+      ls_tok_after = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                      iv_index     = lv_eq_idx + 2 ).
+      IF ls_tok_after-lexeme IS NOT INITIAL AND NOT ( ls_tok_after-lexeme CP '##*' OR ls_tok_after-lexeme = '.' ).
         RETURN.
       ENDIF.
+    ENDIF.
+
+    " 1. Compiler reference check: same symbol on LHS and RHS
+    LOOP AT ls_tok_left-references ASSIGNING <ls_ref_w>
+         WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
+      LOOP AT ls_tok_right-references ASSIGNING <ls_ref_r>
+           WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+             AND full_name = <ls_ref_w>-full_name
+             AND full_name IS NOT INITIAL.
+        rv_res = abap_true.
+        RETURN.
+      ENDLOOP.
     ENDLOOP.
+
+    " 2. Fallback to identical lexeme when not literals
+    IF     ls_tok_left-lexeme = ls_tok_right-lexeme
+       AND zcl_skylint_ast_util=>token_is_literal( ls_tok_left ) = abap_false.
+      rv_res = abap_true.
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.

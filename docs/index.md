@@ -4,13 +4,13 @@ layout: home
 hero:
   name: "Skylint"
   text: "Enterprise Clean ABAP Linter"
-  tagline: "77 Native ATC Rules for Clean ABAP & Cloud-Ready Systems. Blazing fast CLI & SAP-native integration."
+  tagline: "74 Native ATC Rules for Clean ABAP & Cloud-Ready Systems. Blazing fast CLI & SAP-native integration."
   actions:
     - theme: brand
       text: Get Started
       link: /guide/getting-started
     - theme: alt
-      text: Explore 77 Rules
+      text: Explore 74 Rules
       link: /rules/
 
 features:
@@ -18,7 +18,7 @@ features:
     title: Native SAP ATC Integration
     details: Zero adapter layers. Runs directly inside SAP GUI and ADT via if_ci_atc_check with abapGit transport.
   - icon: 🌿
-    title: 77 Clean ABAP Rules
+    title: 74 Clean ABAP Rules
     details: Enforcing modern syntax, expression-based ABAP, safety boundaries, and object-oriented cleanliness.
   - icon: 🛠️
     title: Automated QuickFixes

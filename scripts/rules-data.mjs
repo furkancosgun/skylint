@@ -598,16 +598,7 @@ ENDCLASS.`,
 ENDCLASS.`,
     },
   },
-  {
-    ruleId: 'no-raise-shortdump',
-    className: 'ZCL_SKYLINT_NO_SHORTDUMP',
-    pseudoComment: 'SHORTDUMP',
-    category: 'anti-patterns',
-    example: {
-      bad: `RAISE SHORTDUMP TYPE cx_fatal.`,
-      good: `RAISE EXCEPTION NEW cx_fatal( ).`,
-    },
-  },
+
   {
     ruleId: 'no-magic-numbers',
     className: 'ZCL_SKYLINT_NO_MAGIC_NUMBERS',
@@ -911,18 +902,7 @@ ENDMETHOD.`,
 ENDMETHOD.`,
     },
   },
-  {
-    ruleId: 'no-production-assert',
-    className: 'ZCL_SKYLINT_NO_PROD_ASSERT',
-    pseudoComment: 'PROD_ASSERT',
-    category: 'security',
-    example: {
-      bad: `ASSERT lv_amount >= 0. " Triggers runtime shortdump in production if false`,
-      good: `IF lv_amount < 0.
-  RAISE EXCEPTION NEW cx_invalid_amount( ).
-ENDIF.`,
-    },
-  },
+
   {
     ruleId: 'no-unused-variables',
     className: 'ZCL_SKYLINT_NO_UNUSED_VARS',

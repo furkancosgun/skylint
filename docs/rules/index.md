@@ -1,6 +1,6 @@
-# 📋 Skylint Rules Catalog (77 Rules)
+# 📋 Skylint Rules Catalog (74 Rules)
 
-Comprehensive reference for all 77 Clean ABAP, security, performance, and architecture rules in Skylint.
+Comprehensive reference for all 74 Clean ABAP, security, performance, and architecture rules in Skylint.
 
 ## Clean ABAP & Modern Syntax (28)
 
@@ -37,7 +37,7 @@ Modern language features, expression-oriented coding, and idiomatic Clean ABAP p
 | [`max-one-statement`](/rules/max-one-statement) | `ZCL_SKYLINT_MAX_ONE_STMT` | Max One Statement Per Line | `ONE_STMT` | `#EC ONE_STMT` | — |
 | [`prefer-inline`](/rules/prefer-inline) | `ZCL_SKYLINT_PREF_INLINE` | Prefer Inline Declarations | `PREF_INL` | `#EC PREFER_INLINE` | — |
 
-## Anti-Patterns & Bad Practices (27)
+## Anti-Patterns & Bad Practices (25)
 
 Discouraged language constructs, legacy statements, and redundant syntax.
 
@@ -46,7 +46,7 @@ Discouraged language constructs, legacy statements, and redundant syntax.
 | [`no-call-method`](/rules/no-call-method) | `ZCL_SKYLINT_NO_CALL_METHOD` | Avoid static CALL METHOD statements | `CALLMETHOD` | `#EC CALL_METH` | ⚡ Ready |
 | [`no-default-key`](/rules/no-default-key) | `ZCL_SKYLINT_NO_DEFAULT_KEY` | Avoid WITH DEFAULT KEY; prefer EMPTY KEY or explicit keys | `DEFAULTKEY` | `#EC DEFAULT_KEY` | ⚡ Ready |
 | [`no-me-reference`](/rules/no-me-reference) | `ZCL_SKYLINT_NO_ME_REFERENCE` | Avoid self-reference ME-> | `AVOIDME` | `#EC ME` | — |
-| [`no-exporting`](/rules/no-exporting) | `ZCL_SKYLINT_NO_EXPORTING` | Omit redundant EXPORTING and RECEIVING in method calls | `OMITEXPORT` | `#EC EXPORTING` | ⚡ Ready |
+| [`no-exporting`](/rules/no-exporting) | `ZCL_SKYLINT_NO_EXPORTING` | Omit redundant EXPORTING, RECEIVING, and single parameter names in method calls | `OMITEXPORT` | `#EC EXPORTING` | ⚡ Ready |
 | [`no-chained-decl`](/rules/no-chained-decl) | `ZCL_SKYLINT_NO_CHAIN_DECL` | Avoid chained declarations and chained assignments | `CHAINDECL` | `#EC CHAIN_DECL` | ⚡ Ready |
 | [`no-boolean-comparison`](/rules/no-boolean-comparison) | `ZCL_SKYLINT_NO_BOOL_COMPARE` | Avoid comparing boolean method calls to boolean literals | `BOOLCOMP` | `#EC BOOL_COMPARE` | ⚡ Ready |
 | [`no-check-in-loop`](/rules/no-check-in-loop) | `ZCL_SKYLINT_NO_CHECK_IN_LOOP` | Avoid CHECK in loop/iteration structures (prefer IF ... CONTINUE) | `CHKINLOOP` | `#EC CHECK_IN_LOOP` | ⚡ Ready |
@@ -60,9 +60,7 @@ Discouraged language constructs, legacy statements, and redundant syntax.
 | [`no-obsolete-statements`](/rules/no-obsolete-statements) | `ZCL_SKYLINT_NO_OBSOLETE` | Avoid obsolete or deprecated statements (MOVE, REFRESH, FORM, AT NEW, etc.) | `OBSOLETE` | `#EC OBSOLETE` | ⚡ Ready |
 | [`no-scope-leak`](/rules/no-scope-leak) | `ZCL_SKYLINT_NO_SCOPE_LEAK` | Scope of variable (avoid variable leaking outside control blocks) | `SCOPELEAK` | `#EC SCOPE_LEAK` | — |
 | [`no-self-assignment`](/rules/no-self-assignment) | `ZCL_SKYLINT_NO_SELF_ASSIGN` | Detect Identical Self Assignments | `IDENTMOVE` | `#EC SELF_ASSIGN` | ⚡ Ready |
-| [`no-single-param-name`](/rules/no-single-param-name) | `ZCL_SKYLINT_NO_PARAM_NAME` | Omit parameter name in single parameter method call | `OMITPARM` | `#EC PARAM_NAME` | ⚡ Ready |
 | [`no-sy-modify`](/rules/no-sy-modify) | `ZCL_SKYLINT_NO_SY_MODIFY` | Avoid sy-* System Variable Modification | `SYS_VAR_MD` | `#EC SY_MODIFY` | — |
-| [`no-raise-shortdump`](/rules/no-raise-shortdump) | `ZCL_SKYLINT_NO_SHORTDUMP` | Avoid RAISE SHORTDUMP (prefer graceful exceptions) | `SHORTDUMP` | `#EC SHORTDUMP` | — |
 | [`no-magic-numbers`](/rules/no-magic-numbers) | `ZCL_SKYLINT_NO_MAGIC_NUMBERS` | Avoid magic numbers in code; use named constants | `MAGIC_NUM` | `#EC MAGIC_NUMBERS` | — |
 | [`no-like-objects`](/rules/no-like-objects) | `ZCL_SKYLINT_NO_LIKE_OBJECTS` | Avoid LIKE referencing data objects; use explicit TYPE | `AVOID_LIKE` | `#EC LIKE_OBJECTS` | — |
 | [`no-interface-data`](/rules/no-interface-data) | `ZCL_SKYLINT_NO_INTF_DATA` | Avoid mutable DATA declarations in interfaces; allow only CONSTANTS | `INTF_DATA` | `#EC INTF_DATA` | — |
@@ -84,7 +82,7 @@ Database query efficiency, buffer protection, and internal table operation guide
 | [`require-transporting`](/rules/require-transporting) | `ZCL_SKYLINT_PREF_TRANSPORT` | Avoid full-line MODIFY itab inside LOOP without TRANSPORTING clause | `FULL_MODIF` | `#EC TRANSPORTING` | — |
 | [`slow-param-passing`](/rules/slow-param-passing) | `ZCL_SKYLINT_SLOW_PARAM_PASS` | Slow Parameter Passing | `SLOW_PASS` | `#EC SLOW_PARAM` | — |
 
-## Security & Robustness (10)
+## Security & Robustness (9)
 
 Authorizations, dynamic execution sanitation, error handling, and runtime safety.
 
@@ -97,7 +95,6 @@ Authorizations, dynamic execution sanitation, error handling, and runtime safety
 | [`require-subrc-check`](/rules/require-subrc-check) | `ZCL_SKYLINT_CHECK_SUBRC` | Check sy-subrc after DB, table and string operations | `CHECKSUBRC` | `#EC CHECK_SUBRC` | — |
 | [`no-client-specified`](/rules/no-client-specified) | `ZCL_SKYLINT_NO_CLIENT_SPEC` | Avoid USING CLIENT or CLIENT SPECIFIED in ABAP SQL | `CLIENT_SPE` | `#EC CLIENT_SPEC` | ⚡ Ready |
 | [`no-commit-work`](/rules/no-commit-work) | `ZCL_SKYLINT_NO_COMMIT_WORK` | Avoid COMMIT WORK / ROLLBACK WORK in behavior implementations | `NO_COMMIT` | `#EC COMMIT_WORK` | — |
-| [`no-production-assert`](/rules/no-production-assert) | `ZCL_SKYLINT_NO_PROD_ASSERT` | Detect native ASSERT in production code; use exceptions instead | `PROD_ASSRT` | `#EC PROD_ASSERT` | — |
 | [`modify-own-tables`](/rules/modify-own-tables) | `ZCL_SKYLINT_MODIFY_OWN_TAB` | Modify Only Own Database Tables | `NOT_OWN_TB` | `#EC OWN_TABLES` | — |
 | [`no-dynamic-stuff`](/rules/no-dynamic-stuff) | `ZCL_SKYLINT_NO_DYNAMIC_STMT` | No Dynamic Constructs (CALL, ASSIGN, CREATE, etc.) | `DYN_STUFF` | `#EC NO_DYNAMIC` | — |
 

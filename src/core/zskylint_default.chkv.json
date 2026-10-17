@@ -100,9 +100,6 @@
       "checkName": "ZSKYLINT_PREF_FULL_TYPED"
     },
     {
-      "checkName": "ZSKYLINT_NO_PARAM_NAME"
-    },
-    {
       "checkName": "ZSKYLINT_PREF_CORRESP"
     },
     {
@@ -134,9 +131,6 @@
     },
     {
       "checkName": "ZSKYLINT_PREF_FINAL_CLS"
-    },
-    {
-      "checkName": "ZSKYLINT_NO_SHORTDUMP"
     },
     {
       "checkName": "ZSKYLINT_NO_MAGIC_NUMBERS"
@@ -200,9 +194,6 @@
     },
     {
       "checkName": "ZSKYLINT_PREF_EARLY_RET"
-    },
-    {
-      "checkName": "ZSKYLINT_NO_PROD_ASSERT"
     },
     {
       "checkName": "ZSKYLINT_NO_UNUSED_VARS"

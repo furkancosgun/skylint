@@ -217,16 +217,8 @@ export default defineConfig({
         "link": "/rules/no-self-assignment"
       },
       {
-        "text": "no-single-param-name",
-        "link": "/rules/no-single-param-name"
-      },
-      {
         "text": "no-sy-modify",
         "link": "/rules/no-sy-modify"
-      },
-      {
-        "text": "no-raise-shortdump",
-        "link": "/rules/no-raise-shortdump"
       },
       {
         "text": "no-magic-numbers",
@@ -319,10 +311,6 @@ export default defineConfig({
       {
         "text": "no-commit-work",
         "link": "/rules/no-commit-work"
-      },
-      {
-        "text": "no-production-assert",
-        "link": "/rules/no-production-assert"
       },
       {
         "text": "modify-own-tables",

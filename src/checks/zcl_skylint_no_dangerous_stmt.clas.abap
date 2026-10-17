@@ -7,6 +7,8 @@ CLASS zcl_skylint_no_dangerous_stmt DEFINITION
     CONSTANTS:
       BEGIN OF c_finding_codes,
         dangerous_statement TYPE if_ci_atc_check=>ty_finding_code VALUE 'DANGER_STM',
+        raise_shortdump     TYPE if_ci_atc_check=>ty_finding_code VALUE 'SHORTDUMP',
+        prod_assert         TYPE if_ci_atc_check=>ty_finding_code VALUE 'PROD_ASSRT',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +17,12 @@ CLASS zcl_skylint_no_dangerous_stmt DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'DANGEROUS_STMT'.
+    CONSTANTS:
+      BEGIN OF c_pseudo_comments,
+        dangerous_statement TYPE string VALUE 'DANGEROUS_STMT',
+        raise_shortdump     TYPE string VALUE 'SHORTDUMP',
+        prod_assert         TYPE string VALUE 'PROD_ASSERT',
+      END OF c_pseudo_comments.
 
     DATA mv_check_exec_sql            TYPE abap_bool VALUE abap_true.
     DATA mv_check_kernel_call         TYPE abap_bool VALUE abap_true.
@@ -32,6 +39,8 @@ CLASS zcl_skylint_no_dangerous_stmt DEFINITION
     DATA mv_check_export_dynpro       TYPE abap_bool VALUE abap_true.
     DATA mv_check_editor_call         TYPE abap_bool VALUE abap_true.
     DATA mv_check_dynamic_sql         TYPE abap_bool VALUE abap_true.
+    DATA mv_check_raise_shortdump     TYPE abap_bool VALUE abap_true.
+    DATA mv_check_prod_assert         TYPE abap_bool VALUE abap_true.
     DATA mv_ignore_rap_query_provider TYPE abap_bool VALUE abap_true.
 
     METHODS is_dynamic_sql
@@ -50,7 +59,15 @@ CLASS zcl_skylint_no_dangerous_stmt IMPLEMENTATION.
                      ( code           = c_finding_codes-dangerous_statement
                        severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Dangerous statement detected; avoid dynamic/unmanaged language construct'
-                       pseudo_comment = c_pseudo_comment ) )
+                       pseudo_comment = c_pseudo_comments-dangerous_statement )
+                     ( code           = c_finding_codes-raise_shortdump
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Avoid RAISE SHORTDUMP; prefer graceful class-based exceptions'
+                       pseudo_comment = c_pseudo_comments-raise_shortdump )
+                     ( code           = c_finding_codes-prod_assert
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Avoid native ASSERT in production logic; raise an exception instead'
+                       pseudo_comment = c_pseudo_comments-prod_assert ) )
                  attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
                                               ( name  = 'CHECK_EXEC_SQL'
                                                 value = REF #( mv_check_exec_sql ) )
@@ -82,6 +99,10 @@ CLASS zcl_skylint_no_dangerous_stmt IMPLEMENTATION.
                                                 value = REF #( mv_check_editor_call ) )
                                               ( name  = 'CHECK_DYNAMIC_SQL'
                                                 value = REF #( mv_check_dynamic_sql ) )
+                                              ( name  = 'CHECK_RAISE_SHORTDUMP'
+                                                value = REF #( mv_check_raise_shortdump ) )
+                                              ( name  = 'CHECK_PROD_ASSERT'
+                                                value = REF #( mv_check_prod_assert ) )
                                               ( name  = 'IGNORE_RAP_QUERY_PROVIDER'
                                                 value = REF #( mv_ignore_rap_query_provider ) ) ) ) ).
   ENDMETHOD.
@@ -97,6 +118,20 @@ CLASS zcl_skylint_no_dangerous_stmt IMPLEMENTATION.
     ENDIF.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF     mv_check_raise_shortdump = abap_true
+         AND <ls_statement>-keyword   = 'RAISE'
+         AND zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                     iv_lexeme    = 'SHORTDUMP' ) = abap_true.
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-raise_shortdump ).
+        CONTINUE.
+      ENDIF.
+
+      IF mv_check_prod_assert = abap_true AND <ls_statement>-keyword = 'ASSERT'.
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-prod_assert ).
+        CONTINUE.
+      ENDIF.
       IF mv_check_system_call = abap_true AND <ls_statement>-keyword = 'SYSTEM-CALL'.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-dangerous_statement ).

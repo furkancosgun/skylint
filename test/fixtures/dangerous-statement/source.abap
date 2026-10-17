@@ -9,6 +9,8 @@ CLASS zcl_test_dangerous_statement DEFINITION
     METHODS test_004.
     METHODS test_005.
     METHODS test_006.
+    METHODS test_007.
+    METHODS test_008.
 ENDCLASS.
 
 
@@ -43,5 +45,14 @@ CLASS zcl_test_dangerous_statement IMPLEMENTATION.
 
   METHOD test_006.
     SELECT * FROM /dmo/customer INTO TABLE @DATA(lt_cust).
+  ENDMETHOD.
+
+  METHOD test_007.
+    RAISE SHORTDUMP TYPE cx_sy_zerodivide.
+  ENDMETHOD.
+
+  METHOD test_008.
+    DATA lv_x TYPE i.
+    ASSERT lv_x > 0.
   ENDMETHOD.
 ENDCLASS.
