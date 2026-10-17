@@ -9,7 +9,7 @@
     "skylint": "./bin/skylint.mjs"
   },
   "scripts": {
-    "build": "npm run clean && abap_transpile abaplint-transpiler.json",
+    "build": "node scripts/generate-atc.mjs && npm run clean && abap_transpile abaplint-transpiler.json",
     "test": "npm run lint && npm run unit",
     "unit": "npm run build && node --expose-gc test/run.mjs",
     "lint": "abaplint",
