@@ -49,8 +49,10 @@ CLASS zcl_skylint_no_param_escape IMPLEMENTATION.
     DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_stmt>
-         WHERE keyword = 'METHODS' OR keyword = 'CLASS-METHODS'.
+    LOOP AT is_procedure-statements ASSIGNING <ls_stmt>.
+      IF <ls_stmt>-keyword <> 'METHODS' AND <ls_stmt>-keyword <> 'CLASS-METHODS'.
+        CONTINUE.
+      ENDIF.
       ls_quickfix = build_unescape_quickfix( is_statement = <ls_stmt>
                                              iv_stmt_idx  = sy-tabix ).
       IF ls_quickfix IS NOT INITIAL.

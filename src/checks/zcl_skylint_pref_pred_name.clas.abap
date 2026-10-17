@@ -55,8 +55,10 @@ CLASS zcl_skylint_pref_pred_name IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'METHODS' OR keyword = 'CLASS-METHODS'.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF <ls_statement>-keyword <> 'METHODS' AND <ls_statement>-keyword <> 'CLASS-METHODS'.
+        CONTINUE.
+      ENDIF.
       IF has_boolean_return( <ls_statement> ) = abap_false.
         CONTINUE.
       ENDIF.

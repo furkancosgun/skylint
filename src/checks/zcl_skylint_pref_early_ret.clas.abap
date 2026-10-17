@@ -68,6 +68,8 @@ CLASS zcl_skylint_pref_early_ret IMPLEMENTATION.
     DATA ls_first_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA ls_if         TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+
     IF mv_check_method_return = abap_true.
       get_first_executable_stmt( EXPORTING it_statements = is_procedure-statements
                                  IMPORTING ev_index      = lv_first_idx
@@ -83,8 +85,12 @@ CLASS zcl_skylint_pref_early_ret IMPLEMENTATION.
     ENDIF.
 
     IF mv_check_loop_continue = abap_true.
-      LOOP AT is_procedure-statements TRANSPORTING NO FIELDS
-           WHERE keyword = 'LOOP' OR keyword = 'DO' OR keyword = 'WHILE'.
+      LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+        IF    <ls_statement>-keyword <> 'LOOP'
+          AND <ls_statement>-keyword <> 'DO'
+          AND <ls_statement>-keyword <> 'WHILE'.
+          CONTINUE.
+        ENDIF.
         ls_if = find_wrapping_if( it_statements = is_procedure-statements
                                   iv_loop_idx   = sy-tabix ).
         IF ls_if-keyword = 'IF'.

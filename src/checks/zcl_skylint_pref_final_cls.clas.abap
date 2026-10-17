@@ -72,8 +72,10 @@ CLASS zcl_skylint_pref_final_cls IMPLEMENTATION.
 
     lv_is_class_final = abap_false.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'CLASS'.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF <ls_statement>-keyword <> 'CLASS'.
+        CONTINUE.
+      ENDIF.
       IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
                                                  iv_lexeme    = 'FINAL' ) = abap_true.
         lv_is_class_final = abap_true.
@@ -87,8 +89,10 @@ CLASS zcl_skylint_pref_final_cls IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'METHODS'.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF <ls_statement>-keyword <> 'METHODS'.
+        CONTINUE.
+      ENDIF.
       lv_stmt_idx = sy-tabix.
       IF    zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
                                                     iv_lexeme    = 'FINAL' )        = abap_true

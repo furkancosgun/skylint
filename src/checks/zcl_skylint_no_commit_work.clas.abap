@@ -43,8 +43,10 @@ CLASS zcl_skylint_no_commit_work IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'COMMIT' OR keyword = 'ROLLBACK'.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF <ls_statement>-keyword <> 'COMMIT' AND <ls_statement>-keyword <> 'ROLLBACK'.
+        CONTINUE.
+      ENDIF.
       report_statement( is_statement    = <ls_statement>
                         iv_finding_code = c_finding_codes-no_commit ).
     ENDLOOP.

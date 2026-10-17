@@ -52,8 +52,10 @@ CLASS zcl_skylint_pref_lines IMPLEMENTATION.
     DATA ls_quickfix  TYPE zcl_skylint_check_base=>ty_quickfix.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'DESCRIBE'.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF <ls_statement>-keyword <> 'DESCRIBE'.
+        CONTINUE.
+      ENDIF.
       lv_stmt_idx = sy-tabix.
 
       IF    zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>

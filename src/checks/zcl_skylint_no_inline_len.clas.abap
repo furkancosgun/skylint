@@ -59,8 +59,12 @@ CLASS zcl_skylint_no_inline_len IMPLEMENTATION.
     DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'DATA' OR keyword = 'CONSTANTS' OR keyword = 'STATICS'.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF    <ls_statement>-keyword <> 'DATA'
+        AND <ls_statement>-keyword <> 'CONSTANTS'
+        AND <ls_statement>-keyword <> 'STATICS'.
+        CONTINUE.
+      ENDIF.
       lv_stmt_idx = sy-tabix.
       lv_lexeme = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
                                                           iv_index     = 2 ).

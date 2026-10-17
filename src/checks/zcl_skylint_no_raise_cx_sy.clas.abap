@@ -42,7 +42,10 @@ CLASS zcl_skylint_no_raise_cx_sy IMPLEMENTATION.
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement> WHERE keyword = 'RAISE'.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF <ls_statement>-keyword <> 'RAISE'.
+        CONTINUE.
+      ENDIF.
       IF raises_system_exception( <ls_statement> ) = abap_true.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-raise_sys ).

@@ -40,8 +40,10 @@ CLASS zcl_skylint_pref_merge_ifs IMPLEMENTATION.
     DATA lv_idx TYPE i.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'IF'.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF <ls_statement>-keyword <> 'IF'.
+        CONTINUE.
+      ENDIF.
       lv_idx = sy-tabix.
       IF is_nested_if_mergeable( iv_idx       = lv_idx
                                  is_procedure = is_procedure ) = abap_true.

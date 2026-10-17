@@ -46,8 +46,10 @@ CLASS zcl_skylint_no_call_method IMPLEMENTATION.
     DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'CALL'.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF <ls_statement>-keyword <> 'CALL'.
+        CONTINUE.
+      ENDIF.
       lv_stmt_idx = sy-tabix.
       IF zcl_skylint_ast_util=>match_token_sequence( is_statement = <ls_statement>
                                                      it_expected  = VALUE #( ( `CALL` ) ( `METHOD` ) ) ) = abap_false.

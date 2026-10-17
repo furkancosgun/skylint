@@ -45,9 +45,14 @@ CLASS zcl_skylint_no_client_spec IMPLEMENTATION.
     DATA lt_deletions TYPE zcl_skylint_ast_util=>ty_token_deletions.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE    keyword = 'SELECT' OR keyword = 'UPDATE' OR keyword = 'MODIFY'
-               OR keyword = 'DELETE' OR keyword = 'INSERT'.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF    <ls_statement>-keyword <> 'SELECT'
+        AND <ls_statement>-keyword <> 'UPDATE'
+        AND <ls_statement>-keyword <> 'MODIFY'
+        AND <ls_statement>-keyword <> 'DELETE'
+        AND <ls_statement>-keyword <> 'INSERT'.
+        CONTINUE.
+      ENDIF.
       lv_stmt_idx = sy-tabix.
       CLEAR ls_quickfix.
       CLEAR lt_deletions.

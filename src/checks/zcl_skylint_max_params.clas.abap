@@ -48,8 +48,10 @@ CLASS zcl_skylint_max_params IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'METHODS' OR keyword = 'CLASS-METHODS'.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF <ls_statement>-keyword <> 'METHODS' AND <ls_statement>-keyword <> 'CLASS-METHODS'.
+        CONTINUE.
+      ENDIF.
       IF count_parameters( <ls_statement> ) > mv_max_parameters.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-too_many_parameters ).

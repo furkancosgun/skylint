@@ -43,8 +43,10 @@ CLASS zcl_skylint_pref_inline IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_tok_next>  TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'DATA'.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF <ls_statement>-keyword <> 'DATA'.
+        CONTINUE.
+      ENDIF.
       lv_tabix = sy-tabix.
 
       IF lines( <ls_statement>-tokens ) < 4.

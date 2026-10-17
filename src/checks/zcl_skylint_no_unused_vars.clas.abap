@@ -48,8 +48,10 @@ CLASS zcl_skylint_no_unused_vars IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_decl>
-         WHERE keyword = 'DATA' OR keyword = 'FIELD-SYMBOLS'.
+    LOOP AT is_procedure-statements ASSIGNING <ls_decl>.
+      IF <ls_decl>-keyword <> 'DATA' AND <ls_decl>-keyword <> 'FIELD-SYMBOLS'.
+        CONTINUE.
+      ENDIF.
 
       " Track structure depth to avoid checking inner structure fields
       IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_decl>

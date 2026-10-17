@@ -94,8 +94,10 @@ CLASS zcl_skylint_no_empty_fae IMPLEMENTATION.
     DATA lt_quickfixes TYPE ty_quickfixes.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'SELECT'.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF <ls_statement>-keyword <> 'SELECT'.
+        CONTINUE.
+      ENDIF.
       lv_idx = sy-tabix.
       lv_fae_tab = extract_fae_table( <ls_statement> ).
 

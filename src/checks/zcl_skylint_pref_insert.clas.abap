@@ -49,8 +49,10 @@ CLASS zcl_skylint_pref_insert IMPLEMENTATION.
     DATA lt_overrides  TYPE zcl_skylint_ast_util=>ty_token_overrides.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'APPEND'.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF <ls_statement>-keyword <> 'APPEND'.
+        CONTINUE.
+      ENDIF.
       lv_stmt_idx = sy-tabix.
       CLEAR: ls_quickfix, lt_overrides.
 

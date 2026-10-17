@@ -53,8 +53,10 @@ CLASS zcl_skylint_pref_case IMPLEMENTATION.
 
     lv_total = lines( is_procedure-statements ).
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'IF'.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF <ls_statement>-keyword <> 'IF'.
+        CONTINUE.
+      ENDIF.
       lv_var = get_compared_variable( <ls_statement> ).
       IF lv_var IS INITIAL.
         CONTINUE.

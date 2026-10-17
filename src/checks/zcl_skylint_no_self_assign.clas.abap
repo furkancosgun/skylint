@@ -46,8 +46,10 @@ CLASS zcl_skylint_no_self_assign IMPLEMENTATION.
     DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'COMPUTE'.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF <ls_statement>-keyword <> 'COMPUTE'.
+        CONTINUE.
+      ENDIF.
       lv_stmt_idx = sy-tabix.
       IF is_identical_assignment( <ls_statement> ) = abap_true.
         ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-delete_self
