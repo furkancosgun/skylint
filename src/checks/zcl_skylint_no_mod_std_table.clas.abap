@@ -1,4 +1,4 @@
-CLASS zcl_skylint_modify_own_tab DEFINITION
+CLASS zcl_skylint_no_mod_std_table DEFINITION
   PUBLIC
   INHERITING FROM zcl_skylint_check_base
   CREATE PUBLIC.
@@ -27,7 +27,7 @@ CLASS zcl_skylint_modify_own_tab DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_modify_own_tab IMPLEMENTATION.
+CLASS zcl_skylint_no_mod_std_table IMPLEMENTATION.
   METHOD constructor.
     super->constructor( VALUE #( description       = 'skylint: Modify Only Own Database Tables'
                                  remote_enablement = abap_true

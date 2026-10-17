@@ -42,7 +42,7 @@ METHODS should_calculate_discount FOR TESTING.
 
 ```yaml
 checks:
-  test-method-naming:
+  prefer-test-naming:
     enabled: true
     severity: warning
 ```

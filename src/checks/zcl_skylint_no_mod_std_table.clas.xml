@@ -3,9 +3,9 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <VSEOCLASS>
-    <CLSNAME>ZCL_SKYLINT_SLOW_PARAM_PASS</CLSNAME>
+    <CLSNAME>ZCL_SKYLINT_NO_MOD_STD_TABLE</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Slow Param Passing</DESCRIPT>
+    <DESCRIPT>skylint: no-modify-standard-tables</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

@@ -50,7 +50,7 @@ ENDIF.
 
 ```yaml
 checks:
-  merge-nested-ifs:
+  prefer-merged-ifs:
     enabled: true
     severity: warning
 ```

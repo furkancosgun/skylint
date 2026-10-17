@@ -18,6 +18,15 @@ fs.mkdirSync(rulesDocsDir, { recursive: true });
 fs.mkdirSync(guideDocsDir, { recursive: true });
 fs.mkdirSync(path.join(docsDir, '.vitepress'), { recursive: true });
 
+// Clean up stale rule doc files
+const validRuleFiles = new Set(RULES.map(r => `${r.ruleId}.md`));
+validRuleFiles.add('index.md');
+for (const file of fs.readdirSync(rulesDocsDir)) {
+  if (file.endsWith('.md') && !validRuleFiles.has(file)) {
+    fs.unlinkSync(path.join(rulesDocsDir, file));
+  }
+}
+
 function extractSnippet(lines, methodName) {
   const upper = methodName.toUpperCase();
   let inside = false;

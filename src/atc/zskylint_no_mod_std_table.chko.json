@@ -1,11 +1,11 @@
 {
   "formatVersion": "1",
   "header": {
-    "description": "Slow Parameter Passing",
+    "description": "Modify Only Own Database Tables",
     "originalLanguage": "en",
     "abapLanguageVersion": "cloudDevelopment"
   },
   "category": "ZSKYLINT",
-  "implementingClass": "ZCL_SKYLINT_SLOW_PARAM_PASS",
+  "implementingClass": "ZCL_SKYLINT_NO_MOD_STD_TABLE",
   "checkType": "remoteEnabled"
 }

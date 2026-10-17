@@ -68,7 +68,7 @@ All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 | `no-check-in-loop` | [ZCL_SKYLINT_NO_CHECK_IN_LOOP](src/checks/zcl_skylint_no_check_in_loop.clas.abap) | Avoid CHECK in loops; prefer IF with CONTINUE | `CHKINLOOP` | `"#EC CHECK_IN_LOOP"` | ⚡ Ready |
 | `no-empty-block` | [ZCL_SKYLINT_NO_EMPTY_BLOCK](src/checks/zcl_skylint_no_empty_block.clas.abap) | Avoid empty control blocks (IF, CASE, LOOP, TRY, etc.) | `EMPTYCTRL` | `"#EC EMPTY_BLOCK"` | — |
 | `no-duplicate-conditions` | [ZCL_SKYLINT_NO_DUP_COND](src/checks/zcl_skylint_no_dup_cond.clas.abap) | Avoid duplicate branch conditions in IF and CASE | `DUPCOND` | `"#EC DUP_COND"` | — |
-| `merge-nested-ifs` | [ZCL_SKYLINT_PREF_MERGE_IFS](src/checks/zcl_skylint_pref_merge_ifs.clas.abap) | Merge consecutive nested IF blocks using boolean AND | `NESTEDIF` | `"#EC MERGE_IFS"` | — |
+| `prefer-merged-ifs` | [ZCL_SKYLINT_PREF_MERGE_IFS](src/checks/zcl_skylint_pref_merge_ifs.clas.abap) | Merge consecutive nested IF blocks using boolean AND | `NESTEDIF` | `"#EC MERGE_IFS"` | — |
 | `no-unreachable-code` | [ZCL_SKYLINT_NO_UNREACHABLE](src/checks/zcl_skylint_no_unreachable.clas.abap) | Detect unreachable code after jump or exit statements | `UNREACHCD` | `"#EC UNREACHABLE"` | ⚡ Ready |
 | `no-single-when` | [ZCL_SKYLINT_NO_SINGLE_WHEN](src/checks/zcl_skylint_no_single_when.clas.abap) | Avoid CASE statements with only one WHEN branch | `SHORTCASE` | `"#EC SINGLE_WHEN"` | — |
 | `no-yoda-conditions` | [ZCL_SKYLINT_NO_YODA_COND](src/checks/zcl_skylint_no_yoda_cond.clas.abap) | Avoid Yoda conditions in comparison expressions | `YODACOND` | `"#EC YODA_COND"` | ⚡ Ready |
@@ -99,7 +99,7 @@ All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 | `no-magic-numbers` | [ZCL_SKYLINT_NO_MAGIC_NUMBERS](src/checks/zcl_skylint_no_magic_numbers.clas.abap) | Avoid magic numbers in code; use named constants | `MAGIC_NUM` | `"#EC MAGIC_NUMBERS"` | — |
 | `prefer-insert-into` | [ZCL_SKYLINT_PREF_INSERT](src/checks/zcl_skylint_pref_insert.clas.abap) | Prefer INSERT ... INTO TABLE over APPEND for table safety | `PREF_INSRT` | `"#EC INSERT_INTO"` | ⚡ Ready |
 | `no-like-objects` | [ZCL_SKYLINT_NO_LIKE_OBJECTS](src/checks/zcl_skylint_no_like_objects.clas.abap) | Avoid LIKE referencing data objects; use explicit TYPE | `AVOID_LIKE` | `"#EC LIKE_OBJECTS"` | — |
-| `clean-constructor` | [ZCL_SKYLINT_CLEAN_CTOR](src/checks/zcl_skylint_clean_ctor.clas.abap) | Keep constructors clean; avoid heavy logic and DB | `CTOR_LOGIC` | `"#EC CLEAN_CTOR"` | — |
+| `max-constructor-statements` | [ZCL_SKYLINT_MAX_CTOR_STMTS](src/checks/zcl_skylint_max_ctor_stmts.clas.abap) | Keep constructors clean; avoid heavy logic and DB | `CTOR_LOGIC` | `"#EC CLEAN_CTOR"` | — |
 | `no-static-classes` | [ZCL_SKYLINT_NO_STATIC_CLS](src/checks/zcl_skylint_no_static_cls.clas.abap) | Avoid static-only classes; use instantiable classes | `STAT_CLASS` | `"#EC STATIC_CLS"` | — |
 | `prefer-predicate-names` | [ZCL_SKYLINT_PREF_PRED_NAME](src/checks/zcl_skylint_pref_pred_name.clas.abap) | Enforce predicate naming (IS_, HAS_) on boolean methods | `BOOL_NAME` | `"#EC PRED_NAME"` | — |
 | `max-inheritance-depth` | [ZCL_SKYLINT_MAX_INHERIT](src/checks/zcl_skylint_max_inherit.clas.abap) | Avoid deep class inheritance hierarchies | `DEEP_INHRT` | `"#EC INHERIT_DEPTH"` | — |
@@ -113,7 +113,7 @@ All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 | `no-client-specified` | [ZCL_SKYLINT_NO_CLIENT_SPEC](src/checks/zcl_skylint_no_client_spec.clas.abap) | Avoid USING CLIENT or CLIENT SPECIFIED in ABAP SQL | `CLIENT_SPE` | `"#EC CLIENT_SPEC"` | ⚡ Ready |
 | `no-commit-work` | [ZCL_SKYLINT_NO_COMMIT_WORK](src/checks/zcl_skylint_no_commit_work.clas.abap) | Avoid COMMIT and ROLLBACK in application logic | `NO_COMMIT` | `"#EC COMMIT_WORK"` | — |
 | `require-transporting` | [ZCL_SKYLINT_PREF_TRANSPORT](src/checks/zcl_skylint_pref_transport.clas.abap) | Avoid MODIFY itab in LOOP without TRANSPORTING clause | `FULL_MODIF` | `"#EC TRANSPORTING"` | — |
-| `test-method-naming` | [ZCL_SKYLINT_PREF_TEST_NAME](src/checks/zcl_skylint_pref_test_name.clas.abap) | Enforce test method naming (TEST_, SHOULD_) in AUnit | `TEST_NAME` | `"#EC TEST_NAME"` | — |
+| `prefer-test-naming` | [ZCL_SKYLINT_PREF_TEST_NAME](src/checks/zcl_skylint_pref_test_name.clas.abap) | Enforce test method naming (TEST_, SHOULD_) in AUnit | `TEST_NAME` | `"#EC TEST_NAME"` | — |
 | `prefer-string-functions` | [ZCL_SKYLINT_PREF_STR_FUNC](src/checks/zcl_skylint_pref_str_func.clas.abap) | Detect obsolete string statements; prefer built-in functions | `CONDENSE_S` | `"#EC STR_FUNC"` | ⚡ Ready |
 | `prefer-calc-assign-op` | [ZCL_SKYLINT_PREF_CALC_OP](src/checks/zcl_skylint_pref_calc_op.clas.abap) | Prefer calculation assignment operators (+=, -=, *=, /=) | `CALC_ASSGN` | `"#EC CALC_ASSIGN"` | ⚡ Ready |
 | `prefer-early-return` | [ZCL_SKYLINT_PREF_EARLY_RET](src/checks/zcl_skylint_pref_early_ret.clas.abap) | Prefer early return or continue over nested IF blocks | `GUARD_METH` | `"#EC EARLY_RETURN"` | — |
@@ -123,10 +123,10 @@ All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 | `prefer-case` | [ZCL_SKYLINT_PREF_CASE](src/checks/zcl_skylint_pref_case.clas.abap) | Use CASE instead of IF when checking multiple values | `USE_CASE` | `"#EC PREF_CASE"` | — |
 | `no-inline-length` | [ZCL_SKYLINT_NO_INLINE_LEN](src/checks/zcl_skylint_no_inline_len.clas.abap) | Avoid inline length specification in declarations | `PAREN_LEN` | `"#EC PAREN_LEN"` | ⚡ Ready |
 | `max-one-statement` | [ZCL_SKYLINT_MAX_ONE_STMT](src/checks/zcl_skylint_max_one_stmt.clas.abap) | Max One Statement Per Line | `ONE_STMT` | `"#EC ONE_STMT"` | — |
-| `names-no-dash` | [ZCL_SKYLINT_NAMES_NO_DASH](src/checks/zcl_skylint_names_no_dash.clas.abap) | No Dashes in Variable and Form Names | `NO_DASH` | `"#EC NO_DASH"` | — |
+| `no-dash-in-names` | [ZCL_SKYLINT_NO_DASH_IN_NAMES](src/checks/zcl_skylint_no_dash_in_names.clas.abap) | No Dashes in Variable and Form Names | `NO_DASH` | `"#EC NO_DASH"` | — |
 | `prefer-inline` | [ZCL_SKYLINT_PREF_INLINE](src/checks/zcl_skylint_pref_inline.clas.abap) | Prefer Inline Declarations | `PREF_INL` | `"#EC PREFER_INLINE"` | — |
-| `slow-param-passing` | [ZCL_SKYLINT_SLOW_PARAM_PASS](src/checks/zcl_skylint_slow_param_pass.clas.abap) | Slow Parameter Passing | `SLOW_PASS` | `"#EC SLOW_PARAM"` | — |
-| `modify-own-tables` | [ZCL_SKYLINT_MODIFY_OWN_TAB](src/checks/zcl_skylint_modify_own_tab.clas.abap) | Modify Only Own Database Tables | `NOT_OWN_TB` | `"#EC OWN_TABLES"` | — |
+| `prefer-pass-by-reference` | [ZCL_SKYLINT_PREF_PASS_BY_REF](src/checks/zcl_skylint_pref_pass_by_ref.clas.abap) | Slow Parameter Passing | `SLOW_PASS` | `"#EC SLOW_PARAM"` | — |
+| `no-modify-standard-tables` | [ZCL_SKYLINT_NO_MOD_STD_TABLE](src/checks/zcl_skylint_no_mod_std_table.clas.abap) | Modify Only Own Database Tables | `NOT_OWN_TB` | `"#EC OWN_TABLES"` | — |
 | `no-dynamic-stuff` | [ZCL_SKYLINT_NO_DYNAMIC_STMT](src/checks/zcl_skylint_no_dynamic_stmt.clas.abap) | No Dynamic Constructs (CALL, ASSIGN, CREATE, etc.) | `DYN_STUFF` | `"#EC NO_DYNAMIC"` | — |
 
 ---

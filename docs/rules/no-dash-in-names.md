@@ -38,7 +38,7 @@ DATA foobar TYPE i.
 
 ```yaml
 checks:
-  names-no-dash:
+  no-dash-in-names:
     enabled: true
     severity: warning
 ```
@@ -57,6 +57,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ## Technical Details
 
-* **Native ATC Class:** `ZCL_SKYLINT_NAMES_NO_DASH`
+* **Native ATC Class:** `ZCL_SKYLINT_NO_DASH_IN_NAMES`
 * **Finding Code:** `NO_DASH`
-* **Implementation File:** [zcl_skylint_names_no_dash.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_names_no_dash.clas.abap)
+* **Implementation File:** [zcl_skylint_no_dash_in_names.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_dash_in_names.clas.abap)

@@ -52,13 +52,13 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value | Description |
 |---|---|:---:|---|
-| `MAX_STATEMENTS` | `Integer / String` | `10` | Configurable attribute for clean-constructor |
+| `MAX_STATEMENTS` | `Integer / String` | `10` | Configurable attribute for max-constructor-statements |
 
 ## CLI & CI/CD Configuration
 
 ```yaml
 checks:
-  clean-constructor:
+  max-constructor-statements:
     enabled: true
     severity: warning
     attributes:
@@ -79,6 +79,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ## Technical Details
 
-* **Native ATC Class:** `ZCL_SKYLINT_CLEAN_CTOR`
+* **Native ATC Class:** `ZCL_SKYLINT_MAX_CTOR_STMTS`
 * **Finding Code:** `CTOR_LOGIC`
-* **Implementation File:** [zcl_skylint_clean_ctor.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_clean_ctor.clas.abap)
+* **Implementation File:** [zcl_skylint_max_ctor_stmts.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_max_ctor_stmts.clas.abap)

@@ -50,7 +50,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value | Description |
 |---|---|:---:|---|
-| `MAX_DEPTH` | `Integer / String` | `1` | Configurable attribute for max-inheritance-depth |
+| `MAX_DEPTH` | `Integer / String` | `3` | Configurable attribute for max-inheritance-depth |
 
 ## CLI & CI/CD Configuration
 
@@ -60,7 +60,7 @@ checks:
     enabled: true
     severity: warning
     attributes:
-      maxDepth: 1
+      maxDepth: 3
 ```
 
 ## Suppression

@@ -38,7 +38,7 @@ METHODS process IMPORTING iv_text TYPE string.
 
 ```yaml
 checks:
-  slow-param-passing:
+  prefer-pass-by-reference:
     enabled: true
     severity: warning
 ```
@@ -57,6 +57,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ## Technical Details
 
-* **Native ATC Class:** `ZCL_SKYLINT_SLOW_PARAM_PASS`
+* **Native ATC Class:** `ZCL_SKYLINT_PREF_PASS_BY_REF`
 * **Finding Code:** `SLOW_PASS`
-* **Implementation File:** [zcl_skylint_slow_param_pass.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_slow_param_pass.clas.abap)
+* **Implementation File:** [zcl_skylint_pref_pass_by_ref.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_pref_pass_by_ref.clas.abap)

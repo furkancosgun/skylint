@@ -1,4 +1,4 @@
-CLASS zcl_skylint_slow_param_pass DEFINITION
+CLASS zcl_skylint_pref_pass_by_ref DEFINITION
   PUBLIC
   INHERITING FROM zcl_skylint_check_base
   CREATE PUBLIC.
@@ -20,7 +20,7 @@ CLASS zcl_skylint_slow_param_pass DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_slow_param_pass IMPLEMENTATION.
+CLASS zcl_skylint_pref_pass_by_ref IMPLEMENTATION.
   METHOD constructor.
     super->constructor( VALUE #( description       = 'skylint: Slow Parameter Passing'
                                  remote_enablement = abap_true

@@ -6,7 +6,7 @@
     "abapLanguageVersion": "cloudDevelopment"
   },
   "category": "ZSKYLINT",
-  "implementingClass": "ZCL_SKYLINT_CLEAN_CTOR",
+  "implementingClass": "ZCL_SKYLINT_MAX_CTOR_STMTS",
   "checkType": "remoteEnabled",
   "parameters": [
     {

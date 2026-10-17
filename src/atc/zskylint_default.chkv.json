@@ -388,7 +388,7 @@
       "checkName": "ZSKYLINT_NO_LIKE_OBJECTS"
     },
     {
-      "checkName": "ZSKYLINT_CLEAN_CTOR",
+      "checkName": "ZSKYLINT_MAX_CTOR_STMTS",
       "parameters": [
         {
           "name": "MAX_STATEMENTS",
@@ -407,7 +407,7 @@
       "parameters": [
         {
           "name": "MAX_DEPTH",
-          "value": "1"
+          "value": "3"
         }
       ]
     },
@@ -526,16 +526,16 @@
       "checkName": "ZSKYLINT_MAX_ONE_STMT"
     },
     {
-      "checkName": "ZSKYLINT_NAMES_NO_DASH"
+      "checkName": "ZSKYLINT_NO_DASH_IN_NAMES"
     },
     {
       "checkName": "ZSKYLINT_PREF_INLINE"
     },
     {
-      "checkName": "ZSKYLINT_SLOW_PARAM_PASS"
+      "checkName": "ZSKYLINT_PREF_PASS_BY_REF"
     },
     {
-      "checkName": "ZSKYLINT_MODIFY_OWN_TAB"
+      "checkName": "ZSKYLINT_NO_MOD_STD_TABLE"
     },
     {
       "checkName": "ZSKYLINT_NO_DYNAMIC_STMT"

@@ -17,7 +17,7 @@ CLASS zcl_skylint_max_inherit DEFINITION
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'INHERIT_DEPTH'.
 
-    DATA mv_max_depth TYPE i VALUE 1.
+    DATA mv_max_depth TYPE i VALUE 3.
 
 ENDCLASS.
 

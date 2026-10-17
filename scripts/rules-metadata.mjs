@@ -59,7 +59,7 @@ export const RULES_METADATA = {
     title: 'Avoid Duplicate Branch Conditions',
     rationale: 'Repeating the exact same condition across `IF / ELSEIF` or `WHEN` branches means subsequent duplicate branches can never be reached, indicating a copy-paste error or broken logic.',
   },
-  'merge-nested-ifs': {
+  'prefer-merged-ifs': {
     title: 'Merge Nested IF Statements',
     rationale: 'Consecutive nested `IF` statements without intermediate statements can be combined with `AND`. This reduces nesting depth, flattens control flow, and simplifies cyclomatic complexity.',
   },
@@ -183,7 +183,7 @@ export const RULES_METADATA = {
     title: 'Avoid LIKE Typing on Global Dictionary Objects',
     rationale: 'Typing dictionary objects with `LIKE` is obsolete. Use `TYPE` to refer to data types and reserve `LIKE` solely for referencing local data objects in the same procedure.',
   },
-  'clean-constructor': {
+  'max-constructor-statements': {
     title: 'Keep Constructors Clean & Lightweight',
     rationale: 'Constructors should only initialize state and inject dependencies. Heavy business logic, database queries, or network I/O in constructors make test mocking and instantiation brittle.',
   },
@@ -239,7 +239,7 @@ export const RULES_METADATA = {
     title: 'Specify TRANSPORTING in MODIFY / READ TABLE',
     rationale: 'Modifying internal tables without specifying `TRANSPORTING` copies all table fields across the buffer. Specify only the modified fields to optimize execution speed.',
   },
-  'test-method-naming': {
+  'prefer-test-naming': {
     title: 'Follow Clean Naming for Unit Test Methods',
     rationale: 'Test method names should clearly state the condition and expected outcome (e.g., `calculate_discount_when_gold`). Meaningful test names act as living documentation.',
   },
@@ -279,7 +279,7 @@ export const RULES_METADATA = {
     title: 'Limit One Statement per Source Code Line',
     rationale: 'Placing multiple statements on a single line hinders debugger stepping, breaks Git line diffs, and hurts overall code scannability.',
   },
-  'names-no-dash': {
+  'no-dash-in-names': {
     title: 'Avoid Obsolete Dash (-) in Program Identifiers',
     rationale: 'Using a hyphen/dash in structure component references is archaic. Modern ABAP standardizes on the arrow notation `->` or hyphen only where mandatory.',
   },
@@ -287,11 +287,11 @@ export const RULES_METADATA = {
     title: 'Prefer Modern Inline Declarations in ABAP 7.40+',
     rationale: 'In versions supporting inline declarations, declaring variables at the point of first use reduces variable lifetime scope and removes top-of-method variable clutter.',
   },
-  'slow-param-passing': {
+  'prefer-pass-by-reference': {
     title: 'Avoid Unnecessary Pass-by-Value for Large Tables',
     rationale: 'Passing large internal tables by value creates an in-memory deep copy on every method invocation. Use pass-by-reference (`REFERENCE(it_data)`) or read-only references.',
   },
-  'modify-own-tables': {
+  'no-modify-standard-tables': {
     title: 'Only Modify Tables Defined in Your Own Package/Component',
     rationale: 'Directly inserting, updating, or deleting tables belonging to another application component bypasses business validation logic and violates modular architecture.',
   },

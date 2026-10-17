@@ -3,9 +3,9 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <VSEOCLASS>
-    <CLSNAME>ZCL_SKYLINT_NAMES_NO_DASH</CLSNAME>
+    <CLSNAME>ZCL_SKYLINT_NO_DASH_IN_NAMES</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: No Dashes in Names</DESCRIPT>
+    <DESCRIPT>skylint: no-dash-in-names</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

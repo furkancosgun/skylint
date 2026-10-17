@@ -54,8 +54,8 @@ export default defineConfig({
         "link": "/rules/prefer-return"
       },
       {
-        "text": "merge-nested-ifs",
-        "link": "/rules/merge-nested-ifs"
+        "text": "prefer-merged-ifs",
+        "link": "/rules/prefer-merged-ifs"
       },
       {
         "text": "prefer-symbol-operators",
@@ -94,8 +94,8 @@ export default defineConfig({
         "link": "/rules/prefer-insert-into"
       },
       {
-        "text": "clean-constructor",
-        "link": "/rules/clean-constructor"
+        "text": "max-constructor-statements",
+        "link": "/rules/max-constructor-statements"
       },
       {
         "text": "no-static-classes",
@@ -110,8 +110,8 @@ export default defineConfig({
         "link": "/rules/no-nested-try"
       },
       {
-        "text": "test-method-naming",
-        "link": "/rules/test-method-naming"
+        "text": "prefer-test-naming",
+        "link": "/rules/prefer-test-naming"
       },
       {
         "text": "prefer-string-functions",
@@ -248,8 +248,8 @@ export default defineConfig({
         "link": "/rules/no-inline-length"
       },
       {
-        "text": "names-no-dash",
-        "link": "/rules/names-no-dash"
+        "text": "no-dash-in-names",
+        "link": "/rules/no-dash-in-names"
       }
     ]
   },
@@ -278,8 +278,8 @@ export default defineConfig({
         "link": "/rules/require-transporting"
       },
       {
-        "text": "slow-param-passing",
-        "link": "/rules/slow-param-passing"
+        "text": "prefer-pass-by-reference",
+        "link": "/rules/prefer-pass-by-reference"
       }
     ]
   },
@@ -316,8 +316,8 @@ export default defineConfig({
         "link": "/rules/no-commit-work"
       },
       {
-        "text": "modify-own-tables",
-        "link": "/rules/modify-own-tables"
+        "text": "no-modify-standard-tables",
+        "link": "/rules/no-modify-standard-tables"
       },
       {
         "text": "no-dynamic-stuff",

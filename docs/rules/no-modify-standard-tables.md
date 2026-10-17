@@ -38,7 +38,7 @@ DELETE FROM zmara WHERE matnr = '100'.
 
 ```yaml
 checks:
-  modify-own-tables:
+  no-modify-standard-tables:
     enabled: true
     severity: warning
 ```
@@ -57,6 +57,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ## Technical Details
 
-* **Native ATC Class:** `ZCL_SKYLINT_MODIFY_OWN_TAB`
+* **Native ATC Class:** `ZCL_SKYLINT_NO_MOD_STD_TABLE`
 * **Finding Code:** `NOT_OWN_TB`
-* **Implementation File:** [zcl_skylint_modify_own_tab.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_modify_own_tab.clas.abap)
+* **Implementation File:** [zcl_skylint_no_mod_std_table.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_mod_std_table.clas.abap)

@@ -1,4 +1,4 @@
-CLASS zcl_skylint_names_no_dash DEFINITION
+CLASS zcl_skylint_no_dash_in_names DEFINITION
   PUBLIC
   INHERITING FROM zcl_skylint_check_base
   CREATE PUBLIC.
@@ -20,7 +20,7 @@ CLASS zcl_skylint_names_no_dash DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_names_no_dash IMPLEMENTATION.
+CLASS zcl_skylint_no_dash_in_names IMPLEMENTATION.
   METHOD constructor.
     super->constructor( VALUE #( description       = 'skylint: No Dashes in Variable and Form Names'
                                  remote_enablement = abap_true

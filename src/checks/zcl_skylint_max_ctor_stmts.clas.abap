@@ -1,4 +1,4 @@
-CLASS zcl_skylint_clean_ctor DEFINITION
+CLASS zcl_skylint_max_ctor_stmts DEFINITION
   PUBLIC
   INHERITING FROM zcl_skylint_check_base
   CREATE PUBLIC.
@@ -22,7 +22,7 @@ CLASS zcl_skylint_clean_ctor DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_clean_ctor IMPLEMENTATION.
+CLASS zcl_skylint_max_ctor_stmts IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
         VALUE #( description       = 'Keep constructors clean; avoid heavy logic and DB'
