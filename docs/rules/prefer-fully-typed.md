@@ -15,13 +15,6 @@ Enforce fully typed constant declarations.
 
 Generic types (`ANY`, `DATA`, `TABLE`) bypass compiler type checking and hide runtime type mismatches. Always declare concrete, specific types unless writing truly generic frameworks.
 
-## Transformation
-
-```diff
-- CONSTANTS c_status VALUE 'A'. " TYPE is omitted; implicitly typed as c length 1
-+ CONSTANTS c_status TYPE c LENGTH 1 VALUE 'A'.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -34,11 +27,18 @@ CONSTANTS c_status VALUE 'A'. " TYPE is omitted; implicitly typed as c length 1
 CONSTANTS c_status TYPE c LENGTH 1 VALUE 'A'.
 ```
 
+## Transformation
+
+```diff
+- CONSTANTS c_status VALUE 'A'. " TYPE is omitted; implicitly typed as c length 1
++ CONSTANTS c_status TYPE c LENGTH 1 VALUE 'A'.
+```
+
 ## CLI & CI/CD Configuration
 
 ```yaml
 checks:
-  require-fully-typed:
+  prefer-fully-typed:
     enabled: true
     severity: warning
 ```

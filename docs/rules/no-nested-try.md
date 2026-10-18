@@ -15,28 +15,6 @@ Avoid nested TRY blocks; extract to helper methods.
 
 Nesting `TRY` blocks inside other `TRY` blocks obfuscates error handling flow. Extract inner protected operations into distinct methods.
 
-## Transformation
-
-```diff
-- TRY.
--     step1( ).
--     TRY.
--         step2( ).
--       CATCH cx_step2_err.
--         handle_step2( ).
--     ENDTRY.
--   CATCH cx_step1_err.
--     handle_step1( ).
-- ENDTRY.
-+ " Extract inner operations into focused helper methods
-+ TRY.
-+     step1( ).
-+     execute_step2( ).
-+   CATCH cx_step1_err.
-+     handle_step1( ).
-+ ENDTRY.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -62,6 +40,28 @@ TRY.
   CATCH cx_step1_err.
     handle_step1( ).
 ENDTRY.
+```
+
+## Transformation
+
+```diff
+- TRY.
+-     step1( ).
+-     TRY.
+-         step2( ).
+-       CATCH cx_step2_err.
+-         handle_step2( ).
+-     ENDTRY.
+-   CATCH cx_step1_err.
+-     handle_step1( ).
+- ENDTRY.
++ " Extract inner operations into focused helper methods
++ TRY.
++     step1( ).
++     execute_step2( ).
++   CATCH cx_step1_err.
++     handle_step1( ).
++ ENDTRY.
 ```
 
 ## CLI & CI/CD Configuration

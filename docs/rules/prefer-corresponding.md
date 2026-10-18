@@ -16,13 +16,6 @@ Prefer CORRESPONDING Expression over MOVE-CORRESPONDING.
 
 The constructor expression `CORRESPONDING #( )` is type-safe, expression-capable, and supports modern features like `EXCEPT` and `MAPPING`. It replaces the archaic `MOVE-CORRESPONDING` statement.
 
-## Transformation
-
-```diff
-- MOVE-CORRESPONDING ls_source TO ls_target.
-+ ls_target = CORRESPONDING #( ls_source ).
-```
-
 ### Non-Compliant
 
 ```abap
@@ -33,6 +26,13 @@ MOVE-CORRESPONDING ls_source TO ls_target.
 
 ```abap
 ls_target = CORRESPONDING #( ls_source ).
+```
+
+## Transformation
+
+```diff
+- MOVE-CORRESPONDING ls_source TO ls_target.
++ ls_target = CORRESPONDING #( ls_source ).
 ```
 
 ## Automated QuickFix

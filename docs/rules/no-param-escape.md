@@ -16,13 +16,6 @@ Avoid unnecessary parameter escape (!param).
 
 Importing parameters should be treated as immutable inputs. Modifying them inside the method leads to unexpected side effects and debugging difficulties.
 
-## Transformation
-
-```diff
-- METHODS process IMPORTING !iv_data TYPE string.
-+ METHODS process IMPORTING iv_data TYPE string.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -33,6 +26,13 @@ METHODS process IMPORTING !iv_data TYPE string.
 
 ```abap
 METHODS process IMPORTING iv_data TYPE string.
+```
+
+## Transformation
+
+```diff
+- METHODS process IMPORTING !iv_data TYPE string.
++ METHODS process IMPORTING iv_data TYPE string.
 ```
 
 ## Automated QuickFix

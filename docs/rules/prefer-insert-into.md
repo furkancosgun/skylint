@@ -16,13 +16,6 @@ Prefer INSERT ... INTO TABLE over APPEND for table safety.
 
 `APPEND` implies indexed, sequential appending and fails on hashed or sorted tables. `INSERT ... INTO TABLE` works polymorphically across all internal table categories.
 
-## Transformation
-
-```diff
-- APPEND ls_item TO lt_items.
-+ INSERT ls_item INTO TABLE lt_items.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -33,6 +26,13 @@ APPEND ls_item TO lt_items.
 
 ```abap
 INSERT ls_item INTO TABLE lt_items.
+```
+
+## Transformation
+
+```diff
+- APPEND ls_item TO lt_items.
++ INSERT ls_item INTO TABLE lt_items.
 ```
 
 ## Automated QuickFix

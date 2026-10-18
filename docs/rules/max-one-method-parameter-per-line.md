@@ -15,16 +15,6 @@ Max one method parameter definition per line.
 
 Defining multiple parameters on the same line hampers readability and produces noisy version control diffs. Each parameter in a signature should be declared on its own dedicated line.
 
-## Transformation
-
-```diff
-- METHODS foo IMPORTING iv_a TYPE i iv_b TYPE string.
-+ METHODS foo
-+   IMPORTING
-+     iv_a TYPE i
-+     iv_b TYPE string.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -38,6 +28,16 @@ METHODS foo
   IMPORTING
     iv_a TYPE i
     iv_b TYPE string.
+```
+
+## Transformation
+
+```diff
+- METHODS foo IMPORTING iv_a TYPE i iv_b TYPE string.
++ METHODS foo
++   IMPORTING
++     iv_a TYPE i
++     iv_b TYPE string.
 ```
 
 ## CLI & CI/CD Configuration

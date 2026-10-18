@@ -1,0 +1,37 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Avoid mutating or sorting tables inside loops",
+    "originalLanguage": "en",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "category": "ZSKYLINT",
+  "implementingClass": "ZCL_SKYLINT_NO_MOD_LOOP_TAB",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "CHECK_APPEND"
+    },
+    {
+      "name": "CHECK_INSERT"
+    },
+    {
+      "name": "CHECK_MODIFY"
+    },
+    {
+      "name": "CHECK_DELETE"
+    },
+    {
+      "name": "CHECK_CLEAR"
+    },
+    {
+      "name": "CHECK_SORT"
+    },
+    {
+      "name": "CHECK_SORT_ANY"
+    },
+    {
+      "name": "CHECK_COLLECT"
+    }
+  ]
+}

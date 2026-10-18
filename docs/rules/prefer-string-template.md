@@ -16,13 +16,6 @@ Prefer string templates over CONCATENATE.
 
 String templates (`|Hello { lv_name }|`) provide type-safe, readable string interpolation with built-in formatting options. They eliminate procedural `CONCATENATE` and `SEPARATED BY` statements.
 
-## Transformation
-
-```diff
-- CONCATENATE 'Hello' iv_name INTO lv_greeting SEPARATED BY space.
-+ lv_greeting = |Hello { iv_name }|.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -33,6 +26,13 @@ CONCATENATE 'Hello' iv_name INTO lv_greeting SEPARATED BY space.
 
 ```abap
 lv_greeting = |Hello { iv_name }|.
+```
+
+## Transformation
+
+```diff
+- CONCATENATE 'Hello' iv_name INTO lv_greeting SEPARATED BY space.
++ lv_greeting = |Hello { iv_name }|.
 ```
 
 ## Automated QuickFix

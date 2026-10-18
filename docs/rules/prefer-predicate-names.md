@@ -15,13 +15,6 @@ Enforce predicate naming (IS_, HAS_) on boolean methods.
 
 Methods returning boolean status should read like questions (`is_valid`, `has_children`, `can_execute`) so conditionals read naturally like plain English.
 
-## Transformation
-
-```diff
-- METHODS check_active RETURNING VALUE(rv_active) TYPE abap_bool.
-+ METHODS is_active RETURNING VALUE(rv_active) TYPE abap_bool.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -32,6 +25,13 @@ METHODS check_active RETURNING VALUE(rv_active) TYPE abap_bool.
 
 ```abap
 METHODS is_active RETURNING VALUE(rv_active) TYPE abap_bool.
+```
+
+## Transformation
+
+```diff
+- METHODS check_active RETURNING VALUE(rv_active) TYPE abap_bool.
++ METHODS is_active RETURNING VALUE(rv_active) TYPE abap_bool.
 ```
 
 ## CLI & CI/CD Configuration

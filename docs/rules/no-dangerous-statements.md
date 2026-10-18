@@ -15,15 +15,6 @@ Dangerous Statements (abaplint dangerous_statement).
 
 Dynamic code generation (`GENERATE SUBROUTINE POOL`, `INSERT REPORT`), kernel calls (`SYSTEM-CALL`), and production `ASSERT` or `RAISE SHORTDUMP` jeopardize cloud compliance, security, and stability.
 
-## Transformation
-
-```diff
-- EXEC SQL.
--   SELECT * FROM /dmo/customer INTO :wa
-- ENDEXEC.
-+ SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -36,6 +27,15 @@ ENDEXEC.
 
 ```abap
 SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
+```
+
+## Transformation
+
+```diff
+- EXEC SQL.
+-   SELECT * FROM /dmo/customer INTO :wa
+- ENDEXEC.
++ SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
 ```
 
 ## Configuration & Thresholds

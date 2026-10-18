@@ -15,21 +15,6 @@ Avoid mutable public attributes in classes.
 
 Public attributes violate encapsulation because external consumers can mutate internal state arbitrarily. Encapsulate state using private/protected attributes exposed via methods or `READ-ONLY`.
 
-## Transformation
-
-```diff
-- CLASS cl_model DEFINITION PUBLIC.
--   PUBLIC SECTION.
--     DATA mv_state TYPE i.
-- ENDCLASS.
-+ CLASS cl_model DEFINITION PUBLIC.
-+   PUBLIC SECTION.
-+     METHODS get_state RETURNING VALUE(rv_state) TYPE i.
-+   PRIVATE SECTION.
-+     DATA mv_state TYPE i.
-+ ENDCLASS.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -48,6 +33,21 @@ CLASS cl_model DEFINITION PUBLIC.
   PRIVATE SECTION.
     DATA mv_state TYPE i.
 ENDCLASS.
+```
+
+## Transformation
+
+```diff
+- CLASS cl_model DEFINITION PUBLIC.
+-   PUBLIC SECTION.
+-     DATA mv_state TYPE i.
+- ENDCLASS.
++ CLASS cl_model DEFINITION PUBLIC.
++   PUBLIC SECTION.
++     METHODS get_state RETURNING VALUE(rv_state) TYPE i.
++   PRIVATE SECTION.
++     DATA mv_state TYPE i.
++ ENDCLASS.
 ```
 
 ## CLI & CI/CD Configuration

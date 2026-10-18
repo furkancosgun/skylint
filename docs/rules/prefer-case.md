@@ -15,26 +15,6 @@ Use CASE instead of IF when checking multiple values.
 
 When branching on multiple values of a single variable, `CASE ... WHEN` is more readable, structured, and performant than a chain of `ELSEIF` statements.
 
-## Transformation
-
-```diff
-- IF lv_type = 'A'.
--   process_a( ).
-- ELSEIF lv_type = 'B'.
--   process_b( ).
-- ELSEIF lv_type = 'C'.
--   process_c( ).
-- ENDIF.
-+ CASE lv_type.
-+   WHEN 'A'.
-+     process_a( ).
-+   WHEN 'B'.
-+     process_b( ).
-+   WHEN 'C'.
-+     process_c( ).
-+ ENDCASE.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -58,6 +38,26 @@ CASE lv_type.
   WHEN 'C'.
     process_c( ).
 ENDCASE.
+```
+
+## Transformation
+
+```diff
+- IF lv_type = 'A'.
+-   process_a( ).
+- ELSEIF lv_type = 'B'.
+-   process_b( ).
+- ELSEIF lv_type = 'C'.
+-   process_c( ).
+- ENDIF.
++ CASE lv_type.
++   WHEN 'A'.
++     process_a( ).
++   WHEN 'B'.
++     process_b( ).
++   WHEN 'C'.
++     process_c( ).
++ ENDCASE.
 ```
 
 ## Configuration & Thresholds

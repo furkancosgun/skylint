@@ -8,10 +8,20 @@
   },
   {
     "method": "TEST_002",
-    "code": null
+    "code": "UNUSED_VAR",
+    "line": 2,
+    "column": 4,
+    "quickfixes": []
   },
   {
     "method": "TEST_003",
+    "code": "UNUSED_VAR",
+    "line": 2,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "method": "TEST_004",
     "code": "UNUSED_VAR",
     "line": 2,
     "column": 4,
@@ -23,6 +33,28 @@
   },
   {
     "method": "TEST_005",
+    "code": "UNUSED_VAR",
+    "line": 2,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "method": "TEST_006",
+    "code": null
+  },
+  {
+    "method": "TEST_007",
+    "code": "UNUSED_VAR",
+    "line": 2,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "method": "TEST_008",
+    "code": null
+  },
+  {
+    "method": "TEST_009",
     "code": null
   }
 ]

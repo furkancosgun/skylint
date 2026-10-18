@@ -15,13 +15,6 @@ Method name overwrites built-in SAP function.
 
 Naming a method after a built-in ABAP function (e.g., LINES, STRLEN, MATCHES, XSDBOOL) obscures the standard SAP built-in and makes expressions ambiguous and difficult to read.
 
-## Transformation
-
-```diff
-- METHODS matches RETURNING VALUE(rv_res) TYPE abap_bool.
-+ METHODS do_match RETURNING VALUE(rv_res) TYPE abap_bool.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -32,6 +25,13 @@ METHODS matches RETURNING VALUE(rv_res) TYPE abap_bool.
 
 ```abap
 METHODS do_match RETURNING VALUE(rv_res) TYPE abap_bool.
+```
+
+## Transformation
+
+```diff
+- METHODS matches RETURNING VALUE(rv_res) TYPE abap_bool.
++ METHODS do_match RETURNING VALUE(rv_res) TYPE abap_bool.
 ```
 
 ## CLI & CI/CD Configuration

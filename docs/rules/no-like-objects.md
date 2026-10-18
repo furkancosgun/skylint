@@ -15,13 +15,6 @@ Avoid LIKE referencing data objects; use explicit TYPE.
 
 Typing dictionary objects with `LIKE` is obsolete. Use `TYPE` to refer to data types and reserve `LIKE` solely for referencing local data objects in the same procedure.
 
-## Transformation
-
-```diff
-- DATA lv_copy LIKE lv_original.
-+ DATA lv_copy TYPE string.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -32,6 +25,13 @@ DATA lv_copy LIKE lv_original.
 
 ```abap
 DATA lv_copy TYPE string.
+```
+
+## Transformation
+
+```diff
+- DATA lv_copy LIKE lv_original.
++ DATA lv_copy TYPE string.
 ```
 
 ## CLI & CI/CD Configuration

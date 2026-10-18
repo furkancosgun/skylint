@@ -15,19 +15,6 @@ Merge consecutive nested IF blocks using boolean AND.
 
 Consecutive nested `IF` statements without intermediate statements can be combined with `AND`. This reduces nesting depth, flattens control flow, and simplifies cyclomatic complexity.
 
-## Transformation
-
-```diff
-- IF is_connected( ).
--   IF has_permission( ).
--     execute( ).
--   ENDIF.
-- ENDIF.
-+ IF is_connected( ) AND has_permission( ).
-+   execute( ).
-+ ENDIF.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -44,6 +31,19 @@ ENDIF.
 IF is_connected( ) AND has_permission( ).
   execute( ).
 ENDIF.
+```
+
+## Transformation
+
+```diff
+- IF is_connected( ).
+-   IF has_permission( ).
+-     execute( ).
+-   ENDIF.
+- ENDIF.
++ IF is_connected( ) AND has_permission( ).
++   execute( ).
++ ENDIF.
 ```
 
 ## CLI & CI/CD Configuration

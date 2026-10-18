@@ -15,16 +15,6 @@ Do not mix RETURNING with EXPORTING or CHANGING.
 
 Clean ABAP methods should either be pure functional (RETURNING a single result) or procedures (using EXPORTING/CHANGING). Mixing both in the same signature creates confusing APIs.
 
-## Transformation
-
-```diff
-- METHODS get_data
--   EXPORTING ev_val TYPE i
--   RETURNING VALUE(rv_res) TYPE string.
-+ METHODS get_data
-+   RETURNING VALUE(rv_res) TYPE string.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -38,6 +28,16 @@ METHODS get_data
 ```abap
 METHODS get_data
   RETURNING VALUE(rv_res) TYPE string.
+```
+
+## Transformation
+
+```diff
+- METHODS get_data
+-   EXPORTING ev_val TYPE i
+-   RETURNING VALUE(rv_res) TYPE string.
++ METHODS get_data
++   RETURNING VALUE(rv_res) TYPE string.
 ```
 
 ## CLI & CI/CD Configuration

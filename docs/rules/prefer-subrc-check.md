@@ -15,17 +15,6 @@ Check sy-subrc after DB, table and string operations.
 
 Statements that set `sy-subrc` (such as `SELECT SINGLE`, `READ TABLE`, `AUTHORITY-CHECK`, `ASSIGN`) must have their return code verified immediately before invoking unrelated statements.
 
-## Transformation
-
-```diff
-- SELECT SINGLE * FROM /dmo/customer WHERE customer_id = @lv_id INTO @ls_customer.
-- process_customer( ls_customer ). " sy-subrc is never checked
-+ SELECT SINGLE * FROM /dmo/customer WHERE customer_id = @lv_id INTO @ls_customer.
-+ IF sy-subrc = 0.
-+   process_customer( ls_customer ).
-+ ENDIF.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -42,23 +31,34 @@ IF sy-subrc = 0.
 ENDIF.
 ```
 
+## Transformation
+
+```diff
+- SELECT SINGLE * FROM /dmo/customer WHERE customer_id = @lv_id INTO @ls_customer.
+- process_customer( ls_customer ). " sy-subrc is never checked
++ SELECT SINGLE * FROM /dmo/customer WHERE customer_id = @lv_id INTO @ls_customer.
++ IF sy-subrc = 0.
++   process_customer( ls_customer ).
++ ENDIF.
+```
+
 ## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
 | Parameter Name | Data Type | Default Value | Description |
 |---|---|:---:|---|
-| `CHECK_SELECT_SINGLE` | `Boolean` | `true` | Configurable attribute for require-subrc-check |
-| `CHECK_READ_TABLE` | `Boolean` | `true` | Configurable attribute for require-subrc-check |
-| `CHECK_AUTHORITY_CHECK` | `Boolean` | `true` | Configurable attribute for require-subrc-check |
-| `CHECK_FIND_SEARCH` | `Boolean` | `true` | Configurable attribute for require-subrc-check |
-| `CHECK_ASSIGN` | `Boolean` | `true` | Configurable attribute for require-subrc-check |
+| `CHECK_SELECT_SINGLE` | `Boolean` | `true` | Configurable attribute for prefer-subrc-check |
+| `CHECK_READ_TABLE` | `Boolean` | `true` | Configurable attribute for prefer-subrc-check |
+| `CHECK_AUTHORITY_CHECK` | `Boolean` | `true` | Configurable attribute for prefer-subrc-check |
+| `CHECK_FIND_SEARCH` | `Boolean` | `true` | Configurable attribute for prefer-subrc-check |
+| `CHECK_ASSIGN` | `Boolean` | `true` | Configurable attribute for prefer-subrc-check |
 
 ## CLI & CI/CD Configuration
 
 ```yaml
 checks:
-  require-subrc-check:
+  prefer-subrc-check:
     enabled: true
     severity: warning
     attributes:
@@ -83,6 +83,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ## Technical Details
 
-* **Native ATC Class:** `ZCL_SKYLINT_CHECK_SUBRC`
+* **Native ATC Class:** `ZCL_SKYLINT_PREF_CHECK_SUBRC`
 * **Finding Code:** `CHECKSUBRC`
-* **Implementation File:** [zcl_skylint_check_subrc.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_check_subrc.clas.abap)
+* **Implementation File:** [zcl_skylint_pref_check_subrc.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_pref_check_subrc.clas.abap)

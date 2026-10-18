@@ -15,24 +15,6 @@ Nesting Depth Limit (excessive control block nesting).
 
 Deeply nested blocks (`IF`, `LOOP`, `TRY`, `CASE`) cause cognitive overload ("arrow antipattern"). Flatten nested code using early exits (`RETURN`), guard clauses, and extracted methods.
 
-## Transformation
-
-```diff
-- IF cond1.
--   IF cond2.
--     IF cond3.
--       IF cond4.
--         execute( ).
--       ENDIF.
--     ENDIF.
--   ENDIF.
-- ENDIF.
-+ IF NOT cond1 OR NOT cond2 OR NOT cond3 OR NOT cond4.
-+   RETURN.
-+ ENDIF.
-+ execute( ).
-```
-
 ### Non-Compliant
 
 ```abap
@@ -54,6 +36,24 @@ IF NOT cond1 OR NOT cond2 OR NOT cond3 OR NOT cond4.
   RETURN.
 ENDIF.
 execute( ).
+```
+
+## Transformation
+
+```diff
+- IF cond1.
+-   IF cond2.
+-     IF cond3.
+-       IF cond4.
+-         execute( ).
+-       ENDIF.
+-     ENDIF.
+-   ENDIF.
+- ENDIF.
++ IF NOT cond1 OR NOT cond2 OR NOT cond3 OR NOT cond4.
++   RETURN.
++ ENDIF.
++ execute( ).
 ```
 
 ## Configuration & Thresholds

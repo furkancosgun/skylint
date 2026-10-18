@@ -15,13 +15,6 @@ No Dashes in Variable and Form Names.
 
 Using a hyphen/dash in structure component references is archaic. Modern ABAP standardizes on the arrow notation `->` or hyphen only where mandatory.
 
-## Transformation
-
-```diff
-- DATA foo-bar TYPE i.
-+ DATA foobar TYPE i.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -32,6 +25,13 @@ DATA foo-bar TYPE i.
 
 ```abap
 DATA foobar TYPE i.
+```
+
+## Transformation
+
+```diff
+- DATA foo-bar TYPE i.
++ DATA foobar TYPE i.
 ```
 
 ## CLI & CI/CD Configuration

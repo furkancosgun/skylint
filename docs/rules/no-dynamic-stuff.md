@@ -15,13 +15,6 @@ No Dynamic Constructs (CALL, ASSIGN, CREATE, etc.).
 
 Dynamic programming (`ASSIGN (lv_var)`, `CALL METHOD (lv_method)`) disables compile-time type checking, hampers automated refactoring, and opens security vulnerabilities.
 
-## Transformation
-
-```diff
-- CALL FUNCTION lv_func_name.
-+ CALL FUNCTION 'BAPI_USER_GET_DETAIL'.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -32,6 +25,13 @@ CALL FUNCTION lv_func_name.
 
 ```abap
 CALL FUNCTION 'BAPI_USER_GET_DETAIL'.
+```
+
+## Transformation
+
+```diff
+- CALL FUNCTION lv_func_name.
++ CALL FUNCTION 'BAPI_USER_GET_DETAIL'.
 ```
 
 ## CLI & CI/CD Configuration

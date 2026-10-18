@@ -15,20 +15,6 @@ Limit class member attributes to prevent God Classes.
 
 Classes with dozens of member variables are almost always God Objects that handle multiple unrelated responsibilities. Split them into smaller, focused domain classes.
 
-## Transformation
-
-```diff
-- CLASS cl_order DEFINITION.
--   PRIVATE SECTION.
--     " 30+ individual scalar member variables
-- ENDCLASS.
-+ CLASS cl_order DEFINITION.
-+   PRIVATE SECTION.
-+     DATA ms_header TYPE ty_order_header.
-+     DATA mt_items  TYPE ty_order_items.
-+ ENDCLASS.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -46,6 +32,20 @@ CLASS cl_order DEFINITION.
     DATA ms_header TYPE ty_order_header.
     DATA mt_items  TYPE ty_order_items.
 ENDCLASS.
+```
+
+## Transformation
+
+```diff
+- CLASS cl_order DEFINITION.
+-   PRIVATE SECTION.
+-     " 30+ individual scalar member variables
+- ENDCLASS.
++ CLASS cl_order DEFINITION.
++   PRIVATE SECTION.
++     DATA ms_header TYPE ty_order_header.
++     DATA mt_items  TYPE ty_order_items.
++ ENDCLASS.
 ```
 
 ## Configuration & Thresholds

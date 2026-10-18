@@ -16,15 +16,6 @@ Avoid chained declarations and chained assignments.
 
 Chained statements (`DATA: ... , ... .`) create formatting headaches, merge conflicts in Git diffs, and frequently confuse developers regarding where a type or modifier applies. Each statement should stand independently on its own line.
 
-## Transformation
-
-```diff
-- DATA: lv_id   TYPE string,
--       lv_name TYPE string.
-+ DATA lv_id   TYPE string.
-+ DATA lv_name TYPE string.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -37,6 +28,15 @@ DATA: lv_id   TYPE string,
 ```abap
 DATA lv_id   TYPE string.
 DATA lv_name TYPE string.
+```
+
+## Transformation
+
+```diff
+- DATA: lv_id   TYPE string,
+-       lv_name TYPE string.
++ DATA lv_id   TYPE string.
++ DATA lv_name TYPE string.
 ```
 
 ## Automated QuickFix

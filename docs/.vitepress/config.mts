@@ -11,7 +11,7 @@ export default defineConfig({
     logo: '/logo.svg',
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
-      { text: 'Rules (80)', link: '/rules/' },
+      { text: 'Rules (86)', link: '/rules/' },
       { text: 'GitHub', link: 'https://github.com/furkancosgun/skylint' },
     ],
     sidebar: {
@@ -70,8 +70,8 @@ export default defineConfig({
         "link": "/rules/prefer-xsdbool"
       },
       {
-        "text": "require-fully-typed",
-        "link": "/rules/require-fully-typed"
+        "text": "prefer-fully-typed",
+        "link": "/rules/prefer-fully-typed"
       },
       {
         "text": "prefer-corresponding",
@@ -126,8 +126,8 @@ export default defineConfig({
         "link": "/rules/prefer-early-return"
       },
       {
-        "text": "require-decl-order",
-        "link": "/rules/require-decl-order"
+        "text": "prefer-decl-order",
+        "link": "/rules/prefer-decl-order"
       },
       {
         "text": "no-param-escape",
@@ -164,6 +164,18 @@ export default defineConfig({
       {
         "text": "max-one-method-parameter-per-line",
         "link": "/rules/max-one-method-parameter-per-line"
+      },
+      {
+        "text": "prefer-is-initial",
+        "link": "/rules/prefer-is-initial"
+      },
+      {
+        "text": "prefer-cast",
+        "link": "/rules/prefer-cast"
+      },
+      {
+        "text": "no-redundant-clear",
+        "link": "/rules/no-redundant-clear"
       }
     ]
   },
@@ -196,8 +208,8 @@ export default defineConfig({
         "link": "/rules/no-boolean-comparison"
       },
       {
-        "text": "no-check-in-loop",
-        "link": "/rules/no-check-in-loop"
+        "text": "no-check-statement",
+        "link": "/rules/no-check-statement"
       },
       {
         "text": "no-empty-block",
@@ -270,6 +282,14 @@ export default defineConfig({
       {
         "text": "no-dash-in-names",
         "link": "/rules/no-dash-in-names"
+      },
+      {
+        "text": "no-ignored-return-value",
+        "link": "/rules/no-ignored-return-value"
+      },
+      {
+        "text": "no-modify-loop-table",
+        "link": "/rules/no-modify-loop-table"
       }
     ]
   },
@@ -290,12 +310,12 @@ export default defineConfig({
         "link": "/rules/no-select-star"
       },
       {
-        "text": "require-order-by",
-        "link": "/rules/require-order-by"
+        "text": "prefer-order-by",
+        "link": "/rules/prefer-order-by"
       },
       {
-        "text": "require-transporting",
-        "link": "/rules/require-transporting"
+        "text": "prefer-transporting",
+        "link": "/rules/prefer-transporting"
       },
       {
         "text": "prefer-pass-by-reference",
@@ -312,8 +332,8 @@ export default defineConfig({
         "link": "/rules/no-dangerous-statements"
       },
       {
-        "text": "require-auth-check",
-        "link": "/rules/require-auth-check"
+        "text": "prefer-auth-check",
+        "link": "/rules/prefer-auth-check"
       },
       {
         "text": "no-catch-cx-root",
@@ -324,8 +344,8 @@ export default defineConfig({
         "link": "/rules/no-raise-cx-sy"
       },
       {
-        "text": "require-subrc-check",
-        "link": "/rules/require-subrc-check"
+        "text": "prefer-subrc-check",
+        "link": "/rules/prefer-subrc-check"
       },
       {
         "text": "no-client-specified",
@@ -342,6 +362,10 @@ export default defineConfig({
       {
         "text": "no-dynamic-stuff",
         "link": "/rules/no-dynamic-stuff"
+      },
+      {
+        "text": "no-hardcoded-env-checks",
+        "link": "/rules/no-hardcoded-env-checks"
       }
     ]
   },

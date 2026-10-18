@@ -16,17 +16,6 @@ Prefer IS NOT over NOT ... IS.
 
 Writing `IF lo_ref IS NOT BOUND` or `IF lt_tab IS NOT INITIAL` mirrors natural language reading order and avoids misreading inverted expressions that start with `NOT`.
 
-## Transformation
-
-```diff
-- IF NOT lo_instance IS BOUND.
--   RETURN.
-- ENDIF.
-+ IF lo_instance IS NOT BOUND.
-+   RETURN.
-+ ENDIF.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -41,6 +30,17 @@ ENDIF.
 IF lo_instance IS NOT BOUND.
   RETURN.
 ENDIF.
+```
+
+## Transformation
+
+```diff
+- IF NOT lo_instance IS BOUND.
+-   RETURN.
+- ENDIF.
++ IF lo_instance IS NOT BOUND.
++   RETURN.
++ ENDIF.
 ```
 
 ## Automated QuickFix

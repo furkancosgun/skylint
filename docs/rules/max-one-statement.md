@@ -15,14 +15,6 @@ Max One Statement Per Line.
 
 Placing multiple statements on a single line hinders debugger stepping, breaks Git line diffs, and hurts overall code scannability.
 
-## Transformation
-
-```diff
-- lv_a = 1. lv_b = 2.
-+ lv_a = 1.
-+ lv_b = 2.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -34,6 +26,14 @@ lv_a = 1. lv_b = 2.
 ```abap
 lv_a = 1.
 lv_b = 2.
+```
+
+## Transformation
+
+```diff
+- lv_a = 1. lv_b = 2.
++ lv_a = 1.
++ lv_b = 2.
 ```
 
 ## CLI & CI/CD Configuration

@@ -15,21 +15,6 @@ Catch specific exceptions instead of generic cx_root.
 
 Catching `cx_root` indiscriminately swallows system runtime errors, resource exhaustion errors, and programming bugs, masking critical defects from developers.
 
-## Transformation
-
-```diff
-- TRY.
--     process_order( ).
--   CATCH cx_root.
--     " Indiscriminately catches all exceptions, masking unexpected bugs
-- ENDTRY.
-+ TRY.
-+     process_order( ).
-+   CATCH cx_order_failed INTO DATA(lx_order).
-+     logger->record( lx_order ).
-+ ENDTRY.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -48,6 +33,21 @@ TRY.
   CATCH cx_order_failed INTO DATA(lx_order).
     logger->record( lx_order ).
 ENDTRY.
+```
+
+## Transformation
+
+```diff
+- TRY.
+-     process_order( ).
+-   CATCH cx_root.
+-     " Indiscriminately catches all exceptions, masking unexpected bugs
+- ENDTRY.
++ TRY.
++     process_order( ).
++   CATCH cx_order_failed INTO DATA(lx_order).
++     logger->record( lx_order ).
++ ENDTRY.
 ```
 
 ## CLI & CI/CD Configuration

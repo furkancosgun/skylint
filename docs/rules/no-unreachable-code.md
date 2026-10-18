@@ -16,15 +16,6 @@ Detect unreachable code after jump or exit statements.
 
 Statements appearing immediately after an unconditional `RETURN`, `RAISE EXCEPTION`, `EXIT`, or `LEAVE PROGRAM` can never execute, cluttering the codebase and misleading maintainers.
 
-## Transformation
-
-```diff
-- RETURN.
-- lv_count = lv_count + 1. " Unreachable statement
-+ lv_count = lv_count + 1.
-+ RETURN.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -37,6 +28,15 @@ lv_count = lv_count + 1. " Unreachable statement
 ```abap
 lv_count = lv_count + 1.
 RETURN.
+```
+
+## Transformation
+
+```diff
+- RETURN.
+- lv_count = lv_count + 1. " Unreachable statement
++ lv_count = lv_count + 1.
++ RETURN.
 ```
 
 ## Automated QuickFix

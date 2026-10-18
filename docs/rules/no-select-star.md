@@ -15,15 +15,6 @@ Select performance (Avoid SELECT * and SELECT ... ENDSELECT).
 
 Selecting all database columns transfers unnecessary data across the network, bypasses secondary indexes, and breaks table buffering. Always specify the explicit columns required.
 
-## Transformation
-
-```diff
-- SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
-+ SELECT customer_id, first_name, last_name
-+   FROM /dmo/customer
-+   INTO TABLE @lt_customers.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -36,6 +27,15 @@ SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
 SELECT customer_id, first_name, last_name
   FROM /dmo/customer
   INTO TABLE @lt_customers.
+```
+
+## Transformation
+
+```diff
+- SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
++ SELECT customer_id, first_name, last_name
++   FROM /dmo/customer
++   INTO TABLE @lt_customers.
 ```
 
 ## Configuration & Thresholds

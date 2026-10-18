@@ -16,17 +16,6 @@ Avoid comparing boolean method calls to boolean literals.
 
 Predicate methods and boolean expressions evaluate directly to true or false. Comparing them explicitly (`IF is_valid( ) = abap_true`) is redundant, noisy, and unidiomatic.
 
-## Transformation
-
-```diff
-- IF is_valid( ) = abap_true.
--   execute( ).
-- ENDIF.
-+ IF is_valid( ).
-+   execute( ).
-+ ENDIF.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -41,6 +30,17 @@ ENDIF.
 IF is_valid( ).
   execute( ).
 ENDIF.
+```
+
+## Transformation
+
+```diff
+- IF is_valid( ) = abap_true.
+-   execute( ).
+- ENDIF.
++ IF is_valid( ).
++   execute( ).
++ ENDIF.
 ```
 
 ## Automated QuickFix

@@ -16,18 +16,6 @@ Omit unnecessary RETURN at end of routine.
 
 Routines automatically return upon reaching ENDMETHOD, ENDFORM, or ENDFUNCTION. An explicit RETURN statement at the very end of the routine body is redundant and clutters the code.
 
-## Transformation
-
-```diff
-- METHOD calculate.
--   lv_total = 100.
--   RETURN.
-- ENDMETHOD.
-+ METHOD calculate.
-+   lv_total = 100.
-+ ENDMETHOD.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -43,6 +31,18 @@ ENDMETHOD.
 METHOD calculate.
   lv_total = 100.
 ENDMETHOD.
+```
+
+## Transformation
+
+```diff
+- METHOD calculate.
+-   lv_total = 100.
+-   RETURN.
+- ENDMETHOD.
++ METHOD calculate.
++   lv_total = 100.
++ ENDMETHOD.
 ```
 
 ## Automated QuickFix

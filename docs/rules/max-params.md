@@ -15,15 +15,6 @@ Method signature cleanliness (excessive parameter count).
 
 Methods with excessive parameters are difficult to comprehend, call, and test. When a method needs more than 5-8 parameters, bundle related fields into a structured type or parameter object.
 
-## Transformation
-
-```diff
-- METHODS execute
--   IMPORTING p1 TYPE i p2 TYPE i p3 TYPE i p4 TYPE i p5 TYPE i p6 TYPE i.
-+ METHODS execute
-+   IMPORTING is_options TYPE ty_options.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -36,6 +27,15 @@ METHODS execute
 ```abap
 METHODS execute
   IMPORTING is_options TYPE ty_options.
+```
+
+## Transformation
+
+```diff
+- METHODS execute
+-   IMPORTING p1 TYPE i p2 TYPE i p3 TYPE i p4 TYPE i p5 TYPE i p6 TYPE i.
++ METHODS execute
++   IMPORTING is_options TYPE ty_options.
 ```
 
 ## Configuration & Thresholds

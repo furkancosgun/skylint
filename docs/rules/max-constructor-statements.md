@@ -15,19 +15,6 @@ Keep constructors clean; avoid heavy logic and DB.
 
 Constructors should only initialize state and inject dependencies. Heavy business logic, database queries, or network I/O in constructors make test mocking and instantiation brittle.
 
-## Transformation
-
-```diff
-- METHOD constructor.
--   super->constructor( ).
--   " 15+ statements initializing complex states and reading DB...
-- ENDMETHOD.
-+ METHOD constructor.
-+   super->constructor( ).
-+   mo_gateway = io_gateway. " Simple dependency assignment only
-+ ENDMETHOD.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -44,6 +31,19 @@ METHOD constructor.
   super->constructor( ).
   mo_gateway = io_gateway. " Simple dependency assignment only
 ENDMETHOD.
+```
+
+## Transformation
+
+```diff
+- METHOD constructor.
+-   super->constructor( ).
+-   " 15+ statements initializing complex states and reading DB...
+- ENDMETHOD.
++ METHOD constructor.
++   super->constructor( ).
++   mo_gateway = io_gateway. " Simple dependency assignment only
++ ENDMETHOD.
 ```
 
 ## Configuration & Thresholds

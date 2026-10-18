@@ -16,15 +16,6 @@ Prefer calculation assignment operators (+=, -=, *=, /=).
 
 Modern ABAP supports arithmetic assignment operators (`lv_count += 1.`), which are cleaner and more expressive than verbose legacy assignments (`lv_count = lv_count + 1.`).
 
-## Transformation
-
-```diff
-- lv_count = lv_count + 1.
-- lv_total = lv_total * 2.
-+ lv_count += 1.
-+ lv_total *= 2.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -37,6 +28,15 @@ lv_total = lv_total * 2.
 ```abap
 lv_count += 1.
 lv_total *= 2.
+```
+
+## Transformation
+
+```diff
+- lv_count = lv_count + 1.
+- lv_total = lv_total * 2.
++ lv_count += 1.
++ lv_total *= 2.
 ```
 
 ## Automated QuickFix

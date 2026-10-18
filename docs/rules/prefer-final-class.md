@@ -16,16 +16,6 @@ Prefer FINAL classes and methods by default.
 
 Classes not explicitly designed and documented for inheritance should be declared `FINAL`. This prevents subclassing that relies on fragile base-class implementation details.
 
-## Transformation
-
-```diff
-- CLASS cl_customer_service DEFINITION PUBLIC CREATE PUBLIC.
--   " Class not intended for inheritance
-- ENDCLASS.
-+ CLASS cl_customer_service DEFINITION PUBLIC FINAL CREATE PUBLIC.
-+ ENDCLASS.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -39,6 +29,16 @@ ENDCLASS.
 ```abap
 CLASS cl_customer_service DEFINITION PUBLIC FINAL CREATE PUBLIC.
 ENDCLASS.
+```
+
+## Transformation
+
+```diff
+- CLASS cl_customer_service DEFINITION PUBLIC CREATE PUBLIC.
+-   " Class not intended for inheritance
+- ENDCLASS.
++ CLASS cl_customer_service DEFINITION PUBLIC FINAL CREATE PUBLIC.
++ ENDCLASS.
 ```
 
 ## Automated QuickFix

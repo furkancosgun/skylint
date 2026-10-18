@@ -15,19 +15,6 @@ Avoid empty control blocks (IF, CASE, LOOP, TRY, etc.).
 
 Empty blocks (such as `IF ... ELSEIF ... ENDIF` with no executable statements) confuse readers and usually represent unfinished business logic or forgotten debug code.
 
-## Transformation
-
-```diff
-- IF lv_condition = abap_true.
--   " Empty block
-- ELSE.
--   process( ).
-- ENDIF.
-+ IF lv_condition = abap_false.
-+   process( ).
-+ ENDIF.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -44,6 +31,19 @@ ENDIF.
 IF lv_condition = abap_false.
   process( ).
 ENDIF.
+```
+
+## Transformation
+
+```diff
+- IF lv_condition = abap_true.
+-   " Empty block
+- ELSE.
+-   process( ).
+- ENDIF.
++ IF lv_condition = abap_false.
++   process( ).
++ ENDIF.
 ```
 
 ## Configuration & Thresholds

@@ -15,15 +15,6 @@ Enforce test method naming (TEST_, SHOULD_) in AUnit.
 
 Test method names should clearly state the condition and expected outcome (e.g., `calculate_discount_when_gold`). Meaningful test names act as living documentation.
 
-## Transformation
-
-```diff
-- METHODS calculate_discount FOR TESTING.
-+ METHODS test_calculate_discount FOR TESTING.
-+ " Or:
-+ METHODS should_calculate_discount FOR TESTING.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -36,6 +27,15 @@ METHODS calculate_discount FOR TESTING.
 METHODS test_calculate_discount FOR TESTING.
 " Or:
 METHODS should_calculate_discount FOR TESTING.
+```
+
+## Transformation
+
+```diff
+- METHODS calculate_discount FOR TESTING.
++ METHODS test_calculate_discount FOR TESTING.
++ " Or:
++ METHODS should_calculate_discount FOR TESTING.
 ```
 
 ## CLI & CI/CD Configuration

@@ -15,14 +15,6 @@ Prefer Inline Declarations.
 
 In versions supporting inline declarations, declaring variables at the point of first use reduces variable lifetime scope and removes top-of-method variable clutter.
 
-## Transformation
-
-```diff
-- DATA lv_count TYPE i.
-- lv_count = 10.
-+ DATA(lv_count) = 10.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -34,6 +26,14 @@ lv_count = 10.
 
 ```abap
 DATA(lv_count) = 10.
+```
+
+## Transformation
+
+```diff
+- DATA lv_count TYPE i.
+- lv_count = 10.
++ DATA(lv_count) = 10.
 ```
 
 ## CLI & CI/CD Configuration

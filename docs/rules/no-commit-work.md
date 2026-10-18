@@ -15,20 +15,6 @@ Avoid COMMIT and ROLLBACK in application logic.
 
 Transactional business logic should rely on the persistence framework or framework save sequence (e.g. RAP) rather than triggering premature or uncoordinated database commits.
 
-## Transformation
-
-```diff
-- " Inside a RAP behavior implementation (CL_ABAP_BEHAVIOR_HANDLER)
-- METHOD update.
--   MODIFY ENTITIES OF ...
--   COMMIT WORK.
-- ENDMETHOD.
-+ " In RAP, commits are managed automatically by the framework save sequence
-+ METHOD update.
-+   MODIFY ENTITIES OF ...
-+ ENDMETHOD.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -46,6 +32,20 @@ ENDMETHOD.
 METHOD update.
   MODIFY ENTITIES OF ...
 ENDMETHOD.
+```
+
+## Transformation
+
+```diff
+- " Inside a RAP behavior implementation (CL_ABAP_BEHAVIOR_HANDLER)
+- METHOD update.
+-   MODIFY ENTITIES OF ...
+-   COMMIT WORK.
+- ENDMETHOD.
++ " In RAP, commits are managed automatically by the framework save sequence
++ METHOD update.
++   MODIFY ENTITIES OF ...
++ ENDMETHOD.
 ```
 
 ## CLI & CI/CD Configuration

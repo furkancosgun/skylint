@@ -15,20 +15,6 @@ Avoid variable usage outside its declaring control block.
 
 In ABAP, variable declarations inside control blocks (`IF`, `LOOP`) have procedure-wide scope. Using an inner-declared variable outside its originating block creates confusing temporal dependencies.
 
-## Transformation
-
-```diff
-- IF lv_condition = abap_true.
--   DATA(lv_value) = 10.
-- ENDIF.
-- use_value( lv_value ). " Leaked outside block
-+ DATA lv_value TYPE i.
-+ IF lv_condition = abap_true.
-+   lv_value = 10.
-+ ENDIF.
-+ use_value( lv_value ).
-```
-
 ### Non-Compliant
 
 ```abap
@@ -46,6 +32,20 @@ IF lv_condition = abap_true.
   lv_value = 10.
 ENDIF.
 use_value( lv_value ).
+```
+
+## Transformation
+
+```diff
+- IF lv_condition = abap_true.
+-   DATA(lv_value) = 10.
+- ENDIF.
+- use_value( lv_value ). " Leaked outside block
++ DATA lv_value TYPE i.
++ IF lv_condition = abap_true.
++   lv_value = 10.
++ ENDIF.
++ use_value( lv_value ).
 ```
 
 ## CLI & CI/CD Configuration

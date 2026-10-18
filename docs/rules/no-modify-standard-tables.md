@@ -15,13 +15,6 @@ Modify Only Own Database Tables.
 
 Directly inserting, updating, or deleting tables belonging to another application component bypasses business validation logic and violates modular architecture.
 
-## Transformation
-
-```diff
-- DELETE FROM mara WHERE matnr = '100'.
-+ DELETE FROM zmara WHERE matnr = '100'.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -32,6 +25,13 @@ DELETE FROM mara WHERE matnr = '100'.
 
 ```abap
 DELETE FROM zmara WHERE matnr = '100'.
+```
+
+## Transformation
+
+```diff
+- DELETE FROM mara WHERE matnr = '100'.
++ DELETE FROM zmara WHERE matnr = '100'.
 ```
 
 ## CLI & CI/CD Configuration

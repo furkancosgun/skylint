@@ -15,13 +15,6 @@ Avoid raising SAP internal system exceptions (cx_sy_*).
 
 `cx_sy_*` exceptions are reserved exclusively for the ABAP runtime engine (e.g., divide by zero, null reference). Applications must define and raise their own custom exception hierarchies.
 
-## Transformation
-
-```diff
-- RAISE EXCEPTION NEW cx_sy_itab_line_not_found( ).
-+ RAISE EXCEPTION NEW cx_item_not_found( ).
-```
-
 ### Non-Compliant
 
 ```abap
@@ -32,6 +25,13 @@ RAISE EXCEPTION NEW cx_sy_itab_line_not_found( ).
 
 ```abap
 RAISE EXCEPTION NEW cx_item_not_found( ).
+```
+
+## Transformation
+
+```diff
+- RAISE EXCEPTION NEW cx_sy_itab_line_not_found( ).
++ RAISE EXCEPTION NEW cx_item_not_found( ).
 ```
 
 ## CLI & CI/CD Configuration

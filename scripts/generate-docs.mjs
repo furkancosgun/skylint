@@ -183,13 +183,6 @@ for (const rule of RULES) {
   // Rationale & Best Practices
   ruleDoc += `## Rationale\n\n${meta.rationale}\n\n`;
 
-  // Quick Visual Transformation Diff
-  const diffSnippet = buildDiffSnippet(nonCompliantCode, compliantCode);
-  if (diffSnippet) {
-    ruleDoc += `## Transformation\n\n`;
-    ruleDoc += `\`\`\`diff\n${diffSnippet}\n\`\`\`\n\n`;
-  }
-
   // Code Examples
   if (nonCompliantCode) {
     ruleDoc += `### Non-Compliant\n\n\`\`\`abap\n${nonCompliantCode}\n\`\`\`\n\n`;
@@ -197,6 +190,13 @@ for (const rule of RULES) {
 
   if (compliantCode) {
     ruleDoc += `### Compliant\n\n\`\`\`abap\n${compliantCode}\n\`\`\`\n\n`;
+  }
+
+  // Quick Visual Transformation Diff
+  const diffSnippet = buildDiffSnippet(nonCompliantCode, compliantCode);
+  if (diffSnippet) {
+    ruleDoc += `## Transformation\n\n`;
+    ruleDoc += `\`\`\`diff\n${diffSnippet}\n\`\`\`\n\n`;
   }
 
   // QuickFix section if available

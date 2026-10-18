@@ -15,18 +15,6 @@ Avoid mutable DATA in interfaces; allow only CONSTANTS.
 
 Interfaces should declare behavior (methods) and immutable contracts (constants). Mutable data in interfaces creates hidden global state across all implementers.
 
-## Transformation
-
-```diff
-- INTERFACE if_customer.
--   DATA mv_state TYPE i. " Mutable DATA in interface
-- ENDINTERFACE.
-+ INTERFACE if_customer.
-+   CONSTANTS c_default_status TYPE i VALUE 1.
-+   METHODS get_state RETURNING VALUE(rv_state) TYPE i.
-+ ENDINTERFACE.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -42,6 +30,18 @@ INTERFACE if_customer.
   CONSTANTS c_default_status TYPE i VALUE 1.
   METHODS get_state RETURNING VALUE(rv_state) TYPE i.
 ENDINTERFACE.
+```
+
+## Transformation
+
+```diff
+- INTERFACE if_customer.
+-   DATA mv_state TYPE i. " Mutable DATA in interface
+- ENDINTERFACE.
++ INTERFACE if_customer.
++   CONSTANTS c_default_status TYPE i VALUE 1.
++   METHODS get_state RETURNING VALUE(rv_state) TYPE i.
++ ENDINTERFACE.
 ```
 
 ## CLI & CI/CD Configuration

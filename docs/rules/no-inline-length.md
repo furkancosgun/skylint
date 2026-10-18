@@ -16,13 +16,6 @@ Avoid inline length specification in declarations.
 
 Specifying length in parentheses directly after a variable name (`lv_str(10) TYPE c`) is legacy syntax. Use modern explicit typing: `TYPE c LENGTH 10`.
 
-## Transformation
-
-```diff
-- DATA lv_code(10) TYPE c.
-+ DATA lv_code TYPE c LENGTH 10.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -33,6 +26,13 @@ DATA lv_code(10) TYPE c.
 
 ```abap
 DATA lv_code TYPE c LENGTH 10.
+```
+
+## Transformation
+
+```diff
+- DATA lv_code(10) TYPE c.
++ DATA lv_code TYPE c LENGTH 10.
 ```
 
 ## Automated QuickFix

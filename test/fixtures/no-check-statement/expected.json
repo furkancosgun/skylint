@@ -10,7 +10,12 @@
   },
   {
     "method": "TEST_002",
-    "code": null
+    "code": "CHKOUTLOOP",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "IFRET"
+    ]
   },
   {
     "method": "TEST_003",
@@ -20,5 +25,9 @@
     "quickfixes": [
       "IFGUARD"
     ]
+  },
+  {
+    "method": "TEST_004",
+    "code": null
   }
 ]

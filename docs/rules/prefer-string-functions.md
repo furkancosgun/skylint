@@ -16,15 +16,6 @@ Detect obsolete string statements; prefer built-in functions.
 
 Procedural string statements (`SEARCH`, `SHIFT`, `TRANSLATE`) are legacy ABAP. Replace them with functional built-in string functions (`find`, `to_upper`, `substring`, `shift_left`).
 
-## Transformation
-
-```diff
-- CONDENSE lv_text.
-- TRANSLATE lv_code TO UPPER CASE.
-+ lv_text = condense( lv_text ).
-+ lv_code = to_upper( lv_code ).
-```
-
 ### Non-Compliant
 
 ```abap
@@ -37,6 +28,15 @@ TRANSLATE lv_code TO UPPER CASE.
 ```abap
 lv_text = condense( lv_text ).
 lv_code = to_upper( lv_code ).
+```
+
+## Transformation
+
+```diff
+- CONDENSE lv_text.
+- TRANSLATE lv_code TO UPPER CASE.
++ lv_text = condense( lv_text ).
++ lv_code = to_upper( lv_code ).
 ```
 
 ## Automated QuickFix

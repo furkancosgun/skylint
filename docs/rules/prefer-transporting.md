@@ -15,19 +15,6 @@ Avoid MODIFY itab in LOOP without TRANSPORTING clause.
 
 Modifying internal tables without specifying `TRANSPORTING` copies all table fields across the buffer. Specify only the modified fields to optimize execution speed.
 
-## Transformation
-
-```diff
-- LOOP AT lt_items INTO ls_item.
--   ls_item-status = 'DONE'.
--   MODIFY lt_items FROM ls_item. " Full line copy without specifying TRANSPORTING
-- ENDLOOP.
-+ LOOP AT lt_items INTO ls_item.
-+   ls_item-status = 'DONE'.
-+   MODIFY lt_items FROM ls_item TRANSPORTING status.
-+ ENDLOOP.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -46,11 +33,24 @@ LOOP AT lt_items INTO ls_item.
 ENDLOOP.
 ```
 
+## Transformation
+
+```diff
+- LOOP AT lt_items INTO ls_item.
+-   ls_item-status = 'DONE'.
+-   MODIFY lt_items FROM ls_item. " Full line copy without specifying TRANSPORTING
+- ENDLOOP.
++ LOOP AT lt_items INTO ls_item.
++   ls_item-status = 'DONE'.
++   MODIFY lt_items FROM ls_item TRANSPORTING status.
++ ENDLOOP.
+```
+
 ## CLI & CI/CD Configuration
 
 ```yaml
 checks:
-  require-transporting:
+  prefer-transporting:
     enabled: true
     severity: warning
 ```

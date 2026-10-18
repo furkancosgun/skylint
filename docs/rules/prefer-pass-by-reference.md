@@ -15,13 +15,6 @@ Slow Parameter Passing.
 
 Passing large internal tables by value creates an in-memory deep copy on every method invocation. Use pass-by-reference (`REFERENCE(it_data)`) or read-only references.
 
-## Transformation
-
-```diff
-- METHODS process IMPORTING VALUE(iv_text) TYPE string.
-+ METHODS process IMPORTING iv_text TYPE string.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -32,6 +25,13 @@ METHODS process IMPORTING VALUE(iv_text) TYPE string.
 
 ```abap
 METHODS process IMPORTING iv_text TYPE string.
+```
+
+## Transformation
+
+```diff
+- METHODS process IMPORTING VALUE(iv_text) TYPE string.
++ METHODS process IMPORTING iv_text TYPE string.
 ```
 
 ## CLI & CI/CD Configuration

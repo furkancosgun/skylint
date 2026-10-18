@@ -15,13 +15,6 @@ Avoid MESSAGE ... RAISING; use class-based exceptions.
 
 `MESSAGE ... RAISING` combines procedural exception handling with UI messaging, preventing proper separation of concerns. Raise modern class-based exceptions instead.
 
-## Transformation
-
-```diff
-- MESSAGE e001(zmsg) RAISING not_found.
-+ RAISE EXCEPTION NEW cx_not_found( textid = cx_not_found=>c_item_missing ).
-```
-
 ### Non-Compliant
 
 ```abap
@@ -32,6 +25,13 @@ MESSAGE e001(zmsg) RAISING not_found.
 
 ```abap
 RAISE EXCEPTION NEW cx_not_found( textid = cx_not_found=>c_item_missing ).
+```
+
+## Transformation
+
+```diff
+- MESSAGE e001(zmsg) RAISING not_found.
++ RAISE EXCEPTION NEW cx_not_found( textid = cx_not_found=>c_item_missing ).
 ```
 
 ## CLI & CI/CD Configuration

@@ -16,17 +16,6 @@ Prefer symbolic operators over textual EQ, NE, LT, GT.
 
 Text comparison operators (`EQ`, `NE`, `LT`, `GT`, `LE`, `GE`) are legacy syntax. Modern programming and Clean ABAP universally standardize on mathematical symbols (`=`, `<>`, `<`, `>`, `<=`, `>=`).
 
-## Transformation
-
-```diff
-- IF lv_a EQ lv_b AND lv_c NE lv_d.
--   process( ).
-- ENDIF.
-+ IF lv_a = lv_b AND lv_c <> lv_d.
-+   process( ).
-+ ENDIF.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -41,6 +30,17 @@ ENDIF.
 IF lv_a = lv_b AND lv_c <> lv_d.
   process( ).
 ENDIF.
+```
+
+## Transformation
+
+```diff
+- IF lv_a EQ lv_b AND lv_c NE lv_d.
+-   process( ).
+- ENDIF.
++ IF lv_a = lv_b AND lv_c <> lv_d.
++   process( ).
++ ENDIF.
 ```
 
 ## Automated QuickFix

@@ -15,20 +15,6 @@ Cyclomatic Complexity Threshold.
 
 High cyclomatic complexity means a method contains too many decision points (branches, loops, catches), making comprehensive unit test branch coverage nearly impossible.
 
-## Transformation
-
-```diff
-- " Complex method containing excessive branches (> 10 cyclomatic complexity)
-- METHOD compute.
--   IF c1. ... ELSEIF c2. ... ELSEIF c3. ...
-- ENDMETHOD.
-+ " Decompose into strategy classes or cohesive helper methods
-+ METHOD compute.
-+   ro_strategy = mo_factory->get_strategy( mv_type ).
-+   ro_strategy->execute( ).
-+ ENDMETHOD.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -46,6 +32,20 @@ METHOD compute.
   ro_strategy = mo_factory->get_strategy( mv_type ).
   ro_strategy->execute( ).
 ENDMETHOD.
+```
+
+## Transformation
+
+```diff
+- " Complex method containing excessive branches (> 10 cyclomatic complexity)
+- METHOD compute.
+-   IF c1. ... ELSEIF c2. ... ELSEIF c3. ...
+- ENDMETHOD.
++ " Decompose into strategy classes or cohesive helper methods
++ METHOD compute.
++   ro_strategy = mo_factory->get_strategy( mv_type ).
++   ro_strategy->execute( ).
++ ENDMETHOD.
 ```
 
 ## Configuration & Thresholds

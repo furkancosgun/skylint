@@ -21,6 +21,14 @@ CLASS zcl_skylint_no_self_assign DEFINITION
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'SELF_ASSIGN'.
 
+    METHODS get_written_symbol
+      IMPORTING is_token         TYPE if_ci_atc_source_code_provider=>ty_token
+      RETURNING VALUE(rv_symbol) TYPE string.
+
+    METHODS get_read_symbol
+      IMPORTING is_token         TYPE if_ci_atc_source_code_provider=>ty_token
+      RETURNING VALUE(rv_symbol) TYPE string.
+
     METHODS is_identical_assignment
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
@@ -62,34 +70,69 @@ CLASS zcl_skylint_no_self_assign IMPLEMENTATION.
     ENDLOOP.
   ENDMETHOD.
 
+  METHOD get_written_symbol.
+    FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+
+    LOOP AT is_token-references ASSIGNING <ls_ref>
+         WHERE     kind       = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+               AND usage_mode = if_ci_atc_source_code_provider=>usage_modes-write.
+      rv_symbol = <ls_ref>-full_name.
+      RETURN.
+    ENDLOOP.
+
+    LOOP AT is_token-references ASSIGNING <ls_ref>
+         WHERE     kind       = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+               AND usage_mode = if_ci_atc_source_code_provider=>usage_modes-write_partial.
+      rv_symbol = <ls_ref>-full_name.
+      RETURN.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD get_read_symbol.
+    FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+
+    LOOP AT is_token-references ASSIGNING <ls_ref>
+         WHERE     kind       = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+               AND usage_mode = if_ci_atc_source_code_provider=>usage_modes-read.
+      rv_symbol = <ls_ref>-full_name.
+      RETURN.
+    ENDLOOP.
+
+    LOOP AT is_token-references ASSIGNING <ls_ref>
+         WHERE     kind        = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+               AND usage_grade = if_ci_atc_source_code_provider=>usage_grades-direct
+               AND (    usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_reference
+                     OR usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_and_write ).
+      rv_symbol = <ls_ref>-full_name.
+      RETURN.
+    ENDLOOP.
+  ENDMETHOD.
+
   METHOD is_identical_assignment.
-    DATA lv_eq_idx    TYPE i.
-    DATA ls_tok_left  TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_tok_right TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_tok_after TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_ref_w> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    DATA lv_eq_idx     TYPE i.
+    DATA ls_tok_eq     TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok_left   TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok_right  TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok_after  TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_lhs_symbol TYPE string.
+    DATA lv_rhs_symbol TYPE string.
 
     rv_res = abap_false.
 
     lv_eq_idx = zcl_skylint_ast_util=>find_token( is_statement = is_statement
-                                                  iv_lexeme    = '=' ).
+                                                   iv_lexeme    = '=' ).
     IF lv_eq_idx <= 1 OR lv_eq_idx >= lines( is_statement-tokens ).
       RETURN.
     ENDIF.
 
     " Ensure = is top-level assignment operator (empty references)
-    ls_tok_left = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                   iv_index     = lv_eq_idx ).
-    IF ls_tok_left-references IS NOT INITIAL.
+    ls_tok_eq = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                 iv_index     = lv_eq_idx ).
+    IF ls_tok_eq-references IS NOT INITIAL.
       RETURN.
     ENDIF.
 
-    ls_tok_left = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                   iv_index     = lv_eq_idx - 1 ).
-    ls_tok_right = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                    iv_index     = lv_eq_idx + 1 ).
-
-    " Ensure RHS is a single token assignment (no operators or extra arguments following RHS)
+    " Ensure RHS is a single operand assignment (no arithmetic operators or complex expressions)
     IF lines( is_statement-tokens ) > lv_eq_idx + 1.
       ls_tok_after = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                       iv_index     = lv_eq_idx + 2 ).
@@ -98,21 +141,17 @@ CLASS zcl_skylint_no_self_assign IMPLEMENTATION.
       ENDIF.
     ENDIF.
 
-    " 1. Compiler reference check: same symbol on LHS and RHS
-    LOOP AT ls_tok_left-references ASSIGNING <ls_ref_w>
-         WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
-      LOOP AT ls_tok_right-references TRANSPORTING NO FIELDS
-           WHERE     kind       = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-                 AND full_name  = <ls_ref_w>-full_name
-                 AND full_name IS NOT INITIAL.
-        rv_res = abap_true.
-        RETURN.
-      ENDLOOP.
-    ENDLOOP.
+    ls_tok_left  = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                    iv_index     = lv_eq_idx - 1 ).
+    ls_tok_right = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                    iv_index     = lv_eq_idx + 1 ).
 
-    " 2. Fallback to identical lexeme when not literals
-    IF     ls_tok_left-lexeme = ls_tok_right-lexeme
-       AND zcl_skylint_ast_util=>token_is_literal( ls_tok_left ) = abap_false.
+    lv_lhs_symbol = get_written_symbol( ls_tok_left ).
+    lv_rhs_symbol = get_read_symbol( ls_tok_right ).
+
+    IF     lv_lhs_symbol IS NOT INITIAL
+       AND lv_rhs_symbol IS NOT INITIAL
+       AND lv_lhs_symbol = lv_rhs_symbol.
       rv_res = abap_true.
     ENDIF.
   ENDMETHOD.

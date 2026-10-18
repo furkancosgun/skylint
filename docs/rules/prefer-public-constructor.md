@@ -15,19 +15,6 @@ Declare Constructor in PUBLIC SECTION.
 
 Instance constructors must always be declared in the PUBLIC SECTION, even for classes with CREATE PRIVATE or CREATE PROTECTED, ensuring standard reflection, factory instantiation, and Clean ABAP compliance.
 
-## Transformation
-
-```diff
-- CLASS zcl_service DEFINITION PUBLIC CREATE PRIVATE.
--   PRIVATE SECTION.
--     METHODS constructor.
-- ENDCLASS.
-+ CLASS zcl_service DEFINITION PUBLIC CREATE PRIVATE.
-+   PUBLIC SECTION.
-+     METHODS constructor.
-+ ENDCLASS.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -44,6 +31,19 @@ CLASS zcl_service DEFINITION PUBLIC CREATE PRIVATE.
   PUBLIC SECTION.
     METHODS constructor.
 ENDCLASS.
+```
+
+## Transformation
+
+```diff
+- CLASS zcl_service DEFINITION PUBLIC CREATE PRIVATE.
+-   PRIVATE SECTION.
+-     METHODS constructor.
+- ENDCLASS.
++ CLASS zcl_service DEFINITION PUBLIC CREATE PRIVATE.
++   PUBLIC SECTION.
++     METHODS constructor.
++ ENDCLASS.
 ```
 
 ## CLI & CI/CD Configuration

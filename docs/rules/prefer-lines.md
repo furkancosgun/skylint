@@ -16,13 +16,6 @@ Prefer lines( ) over DESCRIBE TABLE ... LINES.
 
 The built-in `lines( )` function is modern, functional, and can be embedded directly into expressions and conditionals without requiring a temporary variable or the cumbersome procedural `DESCRIBE TABLE ... LINES` statement.
 
-## Transformation
-
-```diff
-- DESCRIBE TABLE lt_customers LINES lv_count.
-+ lv_count = lines( lt_customers ).
-```
-
 ### Non-Compliant
 
 ```abap
@@ -33,6 +26,13 @@ DESCRIBE TABLE lt_customers LINES lv_count.
 
 ```abap
 lv_count = lines( lt_customers ).
+```
+
+## Transformation
+
+```diff
+- DESCRIBE TABLE lt_customers LINES lv_count.
++ lv_count = lines( lt_customers ).
 ```
 
 ## Automated QuickFix

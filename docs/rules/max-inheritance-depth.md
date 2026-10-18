@@ -15,18 +15,6 @@ Avoid deep class inheritance hierarchies.
 
 Deep class inheritance hierarchies create the fragile base class problem and tight coupling. Favor composition over inheritance (`HAS-A` instead of `IS-A`).
 
-## Transformation
-
-```diff
-- CLASS lcl_child DEFINITION INHERITING FROM lcl_sub_parent. " Depth > 3
-- ENDCLASS.
-+ " Favor composition over deep class inheritance hierarchies
-+ CLASS lcl_worker DEFINITION.
-+   PRIVATE SECTION.
-+     DATA mo_engine TYPE REF TO if_engine.
-+ ENDCLASS.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -42,6 +30,18 @@ CLASS lcl_worker DEFINITION.
   PRIVATE SECTION.
     DATA mo_engine TYPE REF TO if_engine.
 ENDCLASS.
+```
+
+## Transformation
+
+```diff
+- CLASS lcl_child DEFINITION INHERITING FROM lcl_sub_parent. " Depth > 3
+- ENDCLASS.
++ " Favor composition over deep class inheritance hierarchies
++ CLASS lcl_worker DEFINITION.
++   PRIVATE SECTION.
++     DATA mo_engine TYPE REF TO if_engine.
++ ENDCLASS.
 ```
 
 ## Configuration & Thresholds

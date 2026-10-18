@@ -16,13 +16,6 @@ Avoid WITH DEFAULT KEY; prefer EMPTY KEY or explicit keys.
 
 `WITH DEFAULT KEY` is dangerous and unpredictable because it includes all non-numeric fields as table keys, causing unexpected sorting and duplicate record bugs. Always prefer `WITH EMPTY KEY` or explicitly specified table keys.
 
-## Transformation
-
-```diff
-- DATA lt_customers TYPE STANDARD TABLE OF ty_customer WITH DEFAULT KEY.
-+ DATA lt_customers TYPE STANDARD TABLE OF ty_customer WITH EMPTY KEY.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -33,6 +26,13 @@ DATA lt_customers TYPE STANDARD TABLE OF ty_customer WITH DEFAULT KEY.
 
 ```abap
 DATA lt_customers TYPE STANDARD TABLE OF ty_customer WITH EMPTY KEY.
+```
+
+## Transformation
+
+```diff
+- DATA lt_customers TYPE STANDARD TABLE OF ty_customer WITH DEFAULT KEY.
++ DATA lt_customers TYPE STANDARD TABLE OF ty_customer WITH EMPTY KEY.
 ```
 
 ## Automated QuickFix

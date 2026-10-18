@@ -16,17 +16,6 @@ Prefer xsdbool( ) expression over manual IF-ELSE assignment.
 
 Writing `IF cond. lv_flag = abap_true. ELSE. lv_flag = abap_false. ENDIF.` is 5 lines of boilerplate. `lv_flag = xsdbool( cond )` expresses the same logic cleanly in one readable line.
 
-## Transformation
-
-```diff
-- IF lv_count > 0.
--   lv_has_items = abap_true.
-- ELSE.
--   lv_has_items = abap_false.
-- ENDIF.
-+ lv_has_items = xsdbool( lv_count > 0 ).
-```
-
 ### Non-Compliant
 
 ```abap
@@ -41,6 +30,17 @@ ENDIF.
 
 ```abap
 lv_has_items = xsdbool( lv_count > 0 ).
+```
+
+## Transformation
+
+```diff
+- IF lv_count > 0.
+-   lv_has_items = abap_true.
+- ELSE.
+-   lv_has_items = abap_false.
+- ENDIF.
++ lv_has_items = xsdbool( lv_count > 0 ).
 ```
 
 ## Automated QuickFix

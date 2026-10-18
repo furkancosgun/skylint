@@ -15,23 +15,6 @@ Prefer early return or continue over nested IF blocks.
 
 Check preconditions and invalid states at the start of the method and return immediately. This eliminates deeply nested `IF ... ELSE` ladders.
 
-## Transformation
-
-```diff
-- METHOD process_order.
--   IF is_valid( ).
--     " Entire method logic deeply nested
--     execute_order( ).
--   ENDIF.
-- ENDMETHOD.
-+ METHOD process_order.
-+   IF NOT is_valid( ).
-+     RETURN.
-+   ENDIF.
-+   execute_order( ).
-+ ENDMETHOD.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -52,6 +35,23 @@ METHOD process_order.
   ENDIF.
   execute_order( ).
 ENDMETHOD.
+```
+
+## Transformation
+
+```diff
+- METHOD process_order.
+-   IF is_valid( ).
+-     " Entire method logic deeply nested
+-     execute_order( ).
+-   ENDIF.
+- ENDMETHOD.
++ METHOD process_order.
++   IF NOT is_valid( ).
++     RETURN.
++   ENDIF.
++   execute_order( ).
++ ENDMETHOD.
 ```
 
 ## Configuration & Thresholds

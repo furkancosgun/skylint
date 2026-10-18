@@ -16,14 +16,6 @@ Avoid calling static methods via instance arrow (->).
 
 Calling a static method via an object reference arrow `lo_instance->static_method( )` gives the false impression that polymorphic instance dispatch is occurring. Use `cl_class=>static_method( )`.
 
-## Transformation
-
-```diff
-- DATA lo_instance TYPE REF TO cl_helper.
-- lo_instance->static_method( ).
-+ cl_helper=>static_method( ).
-```
-
 ### Non-Compliant
 
 ```abap
@@ -35,6 +27,14 @@ lo_instance->static_method( ).
 
 ```abap
 cl_helper=>static_method( ).
+```
+
+## Transformation
+
+```diff
+- DATA lo_instance TYPE REF TO cl_helper.
+- lo_instance->static_method( ).
++ cl_helper=>static_method( ).
 ```
 
 ## Automated QuickFix

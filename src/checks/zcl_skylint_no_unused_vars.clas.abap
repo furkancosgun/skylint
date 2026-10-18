@@ -15,13 +15,25 @@ CLASS zcl_skylint_no_unused_vars DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
+    TYPES:
+      BEGIN OF ty_variable_decl,
+        full_name TYPE string,
+        statement TYPE if_ci_atc_source_code_provider=>ty_statement,
+        token     TYPE if_ci_atc_source_code_provider=>ty_token,
+        is_inline TYPE abap_bool,
+      END OF ty_variable_decl,
+      ty_variable_decls TYPE STANDARD TABLE OF ty_variable_decl WITH EMPTY KEY.
+
     CONSTANTS c_pseudo_comment TYPE string VALUE 'NEEDED'.
 
-    METHODS is_variable_used
+    METHODS collect_declarations
+      IMPORTING it_statements   TYPE if_ci_atc_source_code_provider=>ty_statements
+      RETURNING VALUE(rt_decls) TYPE ty_variable_decls.
+
+    METHODS is_variable_read
       IMPORTING it_statements  TYPE if_ci_atc_source_code_provider=>ty_statements
-                iv_var_name    TYPE string
-                is_def_ref     TYPE if_ci_atc_source_code_provider=>ty_compiler_reference
-      RETURNING VALUE(rv_used) TYPE abap_bool.
+                iv_full_name   TYPE string
+      RETURNING VALUE(rv_read) TYPE abap_bool.
 
 ENDCLASS.
 
@@ -33,105 +45,116 @@ CLASS zcl_skylint_no_unused_vars IMPLEMENTATION.
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-unused_var
                                        severity       = if_ci_atc_check=>finding_severities-warning
-                                       text           = 'Local variable or field symbol is declared but never used'
+                                       text           = 'Local variable or field symbol is declared but never read'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_var_name     TYPE string.
-    DATA lv_struct_depth TYPE i.
-    DATA ls_def_ref      TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
-    FIELD-SYMBOLS <ls_decl>  TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lt_decls TYPE ty_variable_decls.
+    FIELD-SYMBOLS <ls_decl> TYPE ty_variable_decl.
 
     IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_decl>.
-      IF <ls_decl>-keyword <> 'DATA' AND <ls_decl>-keyword <> 'FIELD-SYMBOLS'.
-        CONTINUE.
-      ENDIF.
+    lt_decls = collect_declarations( is_procedure-statements ).
 
-      " Track structure depth to avoid checking inner structure fields
-      IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_decl>
-                                                 iv_lexeme    = 'BEGIN' ) = abap_true.
-        lv_struct_depth += 1.
-        CONTINUE.
-      ELSEIF zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_decl>
-                                                     iv_lexeme    = 'END' ) = abap_true.
-        IF lv_struct_depth > 0.
-          lv_struct_depth -= 1.
+    LOOP AT lt_decls ASSIGNING <ls_decl>.
+      IF is_variable_read( it_statements = is_procedure-statements
+                           iv_full_name  = <ls_decl>-full_name ) = abap_false.
+        IF <ls_decl>-is_inline = abap_true.
+          report_token( is_statement    = <ls_decl>-statement
+                        is_token        = <ls_decl>-token
+                        iv_finding_code = c_finding_codes-unused_var ).
+        ELSE.
+          report_statement( is_statement    = <ls_decl>-statement
+                            iv_finding_code = c_finding_codes-unused_var ).
         ENDIF.
-        CONTINUE.
-      ENDIF.
-
-      IF lv_struct_depth > 0.
-        CONTINUE.
-      ENDIF.
-
-      " Resolve the defined variable and compiler definition reference
-      CLEAR: lv_var_name,
-             ls_def_ref.
-      LOOP AT <ls_decl>-tokens ASSIGNING <ls_token>.
-        LOOP AT <ls_token>-references INTO ls_def_ref
-             WHERE     kind        = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-                   AND usage_grade = if_ci_atc_source_code_provider=>usage_grades-definition.
-          lv_var_name = <ls_token>-lexeme.
-          EXIT.
-        ENDLOOP.
-        IF lv_var_name IS NOT INITIAL.
-          EXIT.
-        ENDIF.
-      ENDLOOP.
-
-      IF lv_var_name IS INITIAL.
-        CONTINUE.
-      ENDIF.
-
-      IF is_variable_used( it_statements = is_procedure-statements
-                           iv_var_name   = lv_var_name
-                           is_def_ref    = ls_def_ref ) = abap_false.
-        report_statement( is_statement    = <ls_decl>
-                          iv_finding_code = c_finding_codes-unused_var ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD is_variable_used.
+  METHOD collect_declarations.
+    DATA lv_struct_depth TYPE i.
+    DATA ls_decl         TYPE ty_variable_decl.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_tok>  TYPE if_ci_atc_source_code_provider=>ty_token.
-
-    rv_used = abap_false.
+    FIELD-SYMBOLS <ls_ref>  TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     LOOP AT it_statements ASSIGNING <ls_stmt>.
       IF <ls_stmt>-keyword = 'DATA' OR <ls_stmt>-keyword = 'FIELD-SYMBOLS'.
-        CONTINUE.
+        IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_stmt>
+                                                   iv_lexeme    = 'BEGIN' ) = abap_true.
+          lv_struct_depth += 1.
+          IF lv_struct_depth > 1.
+            CONTINUE.
+          ENDIF.
+        ELSEIF zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_stmt>
+                                                       iv_lexeme    = 'END' ) = abap_true.
+          IF lv_struct_depth > 0.
+            lv_struct_depth -= 1.
+          ENDIF.
+          CONTINUE.
+        ELSEIF lv_struct_depth > 0.
+          CONTINUE.
+        ENDIF.
       ENDIF.
 
       LOOP AT <ls_stmt>-tokens ASSIGNING <ls_tok>.
-        " 1. Compiler reference matching symbol full_name (usage access)
-        IF is_def_ref-full_name IS NOT INITIAL.
-          LOOP AT <ls_tok>-references TRANSPORTING NO FIELDS
-               WHERE     kind         = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-                     AND full_name    = is_def_ref-full_name
-                     AND usage_grade <> if_ci_atc_source_code_provider=>usage_grades-definition.
-            rv_used = abap_true.
-            RETURN.
-          ENDLOOP.
-        ENDIF.
+        LOOP AT <ls_tok>-references ASSIGNING <ls_ref>
+             WHERE     kind        = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+                   AND usage_grade = if_ci_atc_source_code_provider=>usage_grades-definition.
 
-        " 2. Direct identifier or component access (e.g. ls_data-comp1)
-        IF     ( <ls_tok>-lexeme = iv_var_name OR <ls_tok>-lexeme CP |{ iv_var_name }-*| )
-           AND zcl_skylint_ast_util=>has_compiler_reference(
-                   is_token = <ls_tok>
-                   iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-method ) = abap_false
-           AND zcl_skylint_ast_util=>has_compiler_reference(
-                   is_token = <ls_tok>
-                   iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-type )   = abap_false.
-          rv_used = abap_true.
-          RETURN.
-        ENDIF.
+          IF <ls_ref>-full_name IS INITIAL.
+            CONTINUE.
+          ENDIF.
+
+          IF line_exists( rt_decls[ full_name = <ls_ref>-full_name ] ).
+            CONTINUE.
+          ENDIF.
+
+          CLEAR ls_decl.
+          ls_decl-full_name = <ls_ref>-full_name.
+          ls_decl-statement = <ls_stmt>.
+          ls_decl-token     = <ls_tok>.
+
+          CASE <ls_ref>-usage_mode.
+            WHEN if_ci_atc_source_code_provider=>usage_modes-definition_with_write
+              OR if_ci_atc_source_code_provider=>usage_modes-definition_with_assign.
+              ls_decl-is_inline = abap_true.
+            WHEN OTHERS.
+              ls_decl-is_inline = xsdbool( <ls_stmt>-keyword <> 'DATA' AND <ls_stmt>-keyword <> 'FIELD-SYMBOLS' ).
+          ENDCASE.
+
+          APPEND ls_decl TO rt_decls.
+        ENDLOOP.
+      ENDLOOP.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD is_variable_read.
+    FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_tok>  TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_ref>  TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+
+    rv_read = abap_false.
+
+    LOOP AT it_statements ASSIGNING <ls_stmt>.
+      LOOP AT <ls_stmt>-tokens ASSIGNING <ls_tok>.
+        LOOP AT <ls_tok>-references ASSIGNING <ls_ref>
+             WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+               AND ( full_name = iv_full_name OR full_name CP |{ iv_full_name }\\*| ).
+          CASE <ls_ref>-usage_mode.
+            WHEN if_ci_atc_source_code_provider=>usage_modes-read
+              OR if_ci_atc_source_code_provider=>usage_modes-read_and_write
+              OR if_ci_atc_source_code_provider=>usage_modes-read_reference
+              OR if_ci_atc_source_code_provider=>usage_modes-read_and_write_reference
+              OR if_ci_atc_source_code_provider=>usage_modes-any_access_reference
+              OR if_ci_atc_source_code_provider=>usage_modes-read_database.
+              rv_read = abap_true.
+              RETURN.
+          ENDCASE.
+        ENDLOOP.
       ENDLOOP.
     ENDLOOP.
   ENDMETHOD.

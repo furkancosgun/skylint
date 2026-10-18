@@ -16,13 +16,6 @@ Omit redundant EXPORTING and RECEIVING in method calls.
 
 Modern ABAP allows omitting the `EXPORTING` and `RECEIVING` keywords in functional method calls. Furthermore, when calling a method with a single importing parameter, the parameter name can be omitted entirely to make code clean and concise.
 
-## Transformation
-
-```diff
-- lo_calc->compute( EXPORTING iv_val = 10 ).
-+ lo_calc->compute( 10 ).
-```
-
 ### Non-Compliant
 
 ```abap
@@ -33,6 +26,13 @@ lo_calc->compute( EXPORTING iv_val = 10 ).
 
 ```abap
 lo_calc->compute( 10 ).
+```
+
+## Transformation
+
+```diff
+- lo_calc->compute( EXPORTING iv_val = 10 ).
++ lo_calc->compute( 10 ).
 ```
 
 ## Automated QuickFix

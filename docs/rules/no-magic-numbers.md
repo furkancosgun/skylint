@@ -15,18 +15,6 @@ Avoid magic numbers in code; use named constants.
 
 Hardcoded numeric literals scattered in logic obscure business rules and make updates error-prone. Give numbers meaningful names by declaring structured constants.
 
-## Transformation
-
-```diff
-- IF lv_status = 3.
--   process( ).
-- ENDIF.
-+ CONSTANTS c_status_completed TYPE i VALUE 3.
-+ IF lv_status = c_status_completed.
-+   process( ).
-+ ENDIF.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -42,6 +30,18 @@ CONSTANTS c_status_completed TYPE i VALUE 3.
 IF lv_status = c_status_completed.
   process( ).
 ENDIF.
+```
+
+## Transformation
+
+```diff
+- IF lv_status = 3.
+-   process( ).
+- ENDIF.
++ CONSTANTS c_status_completed TYPE i VALUE 3.
++ IF lv_status = c_status_completed.
++   process( ).
++ ENDIF.
 ```
 
 ## CLI & CI/CD Configuration

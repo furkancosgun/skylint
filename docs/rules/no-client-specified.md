@@ -16,13 +16,6 @@ Avoid USING CLIENT or CLIENT SPECIFIED in ABAP SQL.
 
 Explicit client switching bypasses automatic multi-tenant client isolation and is strictly prohibited in ABAP Cloud environment standards.
 
-## Transformation
-
-```diff
-- SELECT * FROM /dmo/customer USING CLIENT '100' INTO TABLE @lt_customers.
-+ SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -33,6 +26,13 @@ SELECT * FROM /dmo/customer USING CLIENT '100' INTO TABLE @lt_customers.
 
 ```abap
 SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
+```
+
+## Transformation
+
+```diff
+- SELECT * FROM /dmo/customer USING CLIENT '100' INTO TABLE @lt_customers.
++ SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
 ```
 
 ## Automated QuickFix

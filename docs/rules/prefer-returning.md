@@ -15,15 +15,6 @@ Prefer RETURNING over single EXPORTING.
 
 Methods with a `RETURNING` parameter can be used directly within expressions, assignments, and assertions. Prefer `RETURNING` over a single `EXPORTING` parameter.
 
-## Transformation
-
-```diff
-- METHODS calculate
--   EXPORTING ev_result TYPE i.
-+ METHODS calculate
-+   RETURNING VALUE(rv_result) TYPE i.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -36,6 +27,15 @@ METHODS calculate
 ```abap
 METHODS calculate
   RETURNING VALUE(rv_result) TYPE i.
+```
+
+## Transformation
+
+```diff
+- METHODS calculate
+-   EXPORTING ev_result TYPE i.
++ METHODS calculate
++   RETURNING VALUE(rv_result) TYPE i.
 ```
 
 ## CLI & CI/CD Configuration

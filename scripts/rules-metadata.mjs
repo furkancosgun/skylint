@@ -7,6 +7,22 @@ export const RULES_METADATA = {
     title: 'Prefer lines( ) over DESCRIBE TABLE',
     rationale: 'The built-in `lines( )` function is modern, functional, and can be embedded directly into expressions and conditionals without requiring a temporary variable or the cumbersome procedural `DESCRIBE TABLE ... LINES` statement.',
   },
+  'prefer-is-initial': {
+    title: 'Prefer IS [NOT] INITIAL over lines( ) or Literal Comparisons',
+    rationale: 'Checking whether an internal table, string, or variable is empty should be done with `IS [NOT] INITIAL` rather than counting `lines( ) > 0` or comparing to empty literals (`""`, `space`, `0`). `IS INITIAL` is idiomatic Clean ABAP, expressive, and optimized.',
+  },
+  'no-ignored-return-value': {
+    title: 'Do Not Ignore Return Value of Functional Methods',
+    rationale: 'Functional methods that declare a `RETURNING` parameter are designed to compute and return a value. Calling such methods without assigning or consuming their result indicates a bug, dead code, or an improper command-query violation where side effects were bundled into a query.',
+  },
+  'prefer-cast': {
+    title: 'Prefer CAST #( ) over ?=',
+    rationale: '`?=` is legacy downcast syntax from early ABAP Objects. Modern ABAP exclusively uses `CAST #( )` constructor expressions, which can be inlined directly into method call chains and expressions.',
+  },
+  'no-redundant-clear': {
+    title: 'Do Not CLEAR Variables Directly After Declaration',
+    rationale: 'Variables in ABAP are automatically initialized to their type-specific default initial value upon declaration. Explicitly executing `CLEAR` immediately after declaration adds visual noise and redundant statements without any functional effect.',
+  },
   'no-call-method': {
     title: 'Avoid Obsolete CALL METHOD',
     rationale: 'Procedural `CALL METHOD` is legacy syntax from early ABAP Objects. Modern ABAP exclusively uses functional call syntax (`ref->method( )` or `class=>method( )`), which reduces visual clutter and enables functional expression chaining.',
@@ -47,9 +63,9 @@ export const RULES_METADATA = {
     title: 'Prefer RETURN over EXIT in Methods',
     rationale: 'In method contexts, `EXIT` can be ambiguous when placed near loops. `RETURN` explicitly indicates an immediate exit from the current processing block or method.',
   },
-  'no-check-in-loop': {
-    title: 'Avoid CHECK in Loops',
-    rationale: '`CHECK` inside a loop behaves like a `CONTINUE`, but `CHECK` outside a loop exits the entire procedure like `RETURN`. This dual behavior leads to subtle bugs during refactoring. Use `IF ... CONTINUE` inside loops.',
+  'no-check-statement': {
+    title: 'Avoid CHECK Statements',
+    rationale: '`CHECK` has context-dependent dual semantics: inside loops it behaves like `CONTINUE`, but outside loops it behaves like `RETURN`. This makes code fragile and refactoring hazardous. Use explicit `IF ... CONTINUE` or `IF ... RETURN` instead.',
   },
   'no-empty-block': {
     title: 'Avoid Empty Control Blocks',
@@ -123,7 +139,7 @@ export const RULES_METADATA = {
     title: 'Avoid Redundant Self-Assignments',
     rationale: 'Assigning a variable or structure field to itself (`lv_x = lv_x`) is a redundant no-op and frequently hides a typo where another source field was intended.',
   },
-  'require-fully-typed': {
+  'prefer-fully-typed': {
     title: 'Require Fully Typed Variables and Parameters',
     rationale: 'Generic types (`ANY`, `DATA`, `TABLE`) bypass compiler type checking and hide runtime type mismatches. Always declare concrete, specific types unless writing truly generic frameworks.',
   },
@@ -155,11 +171,11 @@ export const RULES_METADATA = {
     title: 'Avoid Dangerous & Dynamic Native Statements',
     rationale: 'Dynamic code generation (`GENERATE SUBROUTINE POOL`, `INSERT REPORT`), kernel calls (`SYSTEM-CALL`), and production `ASSERT` or `RAISE SHORTDUMP` jeopardize cloud compliance, security, and stability.',
   },
-  'require-auth-check': {
+  'prefer-auth-check': {
     title: 'Ensure AUTHORITY-CHECK Before Sensitive Operations',
     rationale: 'Omitting authorization checks leaves critical business data and actions exposed to unauthorized users. Always verify permissions before selecting or modifying protected resources.',
   },
-  'require-order-by': {
+  'prefer-order-by': {
     title: 'Require ORDER BY for Deterministic SELECT Results',
     rationale: 'Selecting rows from a relational database without an explicit `ORDER BY` clause yields non-deterministic ordering that can change unpredictably between DB executions and updates.',
   },
@@ -223,7 +239,7 @@ export const RULES_METADATA = {
     title: 'Avoid Explicitly Raising System Exceptions (CX_SY_*)',
     rationale: '`cx_sy_*` exceptions are reserved exclusively for the ABAP runtime engine (e.g., divide by zero, null reference). Applications must define and raise their own custom exception hierarchies.',
   },
-  'require-subrc-check': {
+  'prefer-subrc-check': {
     title: 'Verify sy-subrc Promptly After System Calls',
     rationale: 'Statements that set `sy-subrc` (such as `SELECT SINGLE`, `READ TABLE`, `AUTHORITY-CHECK`, `ASSIGN`) must have their return code verified immediately before invoking unrelated statements.',
   },
@@ -235,7 +251,7 @@ export const RULES_METADATA = {
     title: 'Avoid Explicit COMMIT WORK in Business Logic',
     rationale: 'Transactional business logic should rely on the persistence framework or framework save sequence (e.g. RAP) rather than triggering premature or uncoordinated database commits.',
   },
-  'require-transporting': {
+  'prefer-transporting': {
     title: 'Specify TRANSPORTING in MODIFY / READ TABLE',
     rationale: 'Modifying internal tables without specifying `TRANSPORTING` copies all table fields across the buffer. Specify only the modified fields to optimize execution speed.',
   },
@@ -259,7 +275,7 @@ export const RULES_METADATA = {
     title: 'Eliminate Unused Local Variables and Symbols',
     rationale: 'Unused variables clutter code, confuse developers reviewing changes, and increase compilation and execution memory overhead without providing any benefit.',
   },
-  'require-decl-order': {
+  'prefer-decl-order': {
     title: 'Order Declarations (TYPES, CONSTANTS, DATA)',
     rationale: 'Declaring types first, then constants, then data variables creates a logical reading flow where subsequent definitions can safely depend on preceding ones.',
   },
@@ -322,5 +338,13 @@ export const RULES_METADATA = {
   'max-one-method-parameter-per-line': {
     title: 'Max One Method Parameter Definition Per Line',
     rationale: 'Defining multiple parameters on the same line hampers readability and produces noisy version control diffs. Each parameter in a signature should be declared on its own dedicated line.',
+  },
+  'no-modify-loop-table': {
+    title: 'Do Not Mutate the Internal Table Currently Being Looped',
+    rationale: 'Adding rows (APPEND/INSERT), modifying, deleting, or clearing rows from the table while actively looping over it can cause infinite loops, skipped rows, or cursor invalidation. Parametric toggles are available for append, insert, modify, delete, and clear operations.',
+  },
+  'no-hardcoded-env-checks': {
+    title: 'Avoid Hardcoding System & Tenant Environment Checks',
+    rationale: 'Hardcoding system identifiers (sy-sysid), client numbers (sy-mandt), host names (sy-host), or database systems (sy-dbsys) against literal values violates cloud multi-tenancy and breaks during staging, system copy, or migration. Use feature toggles, switch frameworks, or customizing instead.',
   },
 };

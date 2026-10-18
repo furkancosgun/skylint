@@ -16,15 +16,6 @@ Prefer NEW operator over CREATE OBJECT and RAISE EXCEPTION.
 
 The constructor expression `NEW #( )` is type-inferred, expression-capable, and avoids the archaic procedural `CREATE OBJECT` statement.
 
-## Transformation
-
-```diff
-- DATA lo_customer TYPE REF TO cl_customer.
-- CREATE OBJECT lo_customer.
-+ DATA lo_customer TYPE REF TO cl_customer.
-+ lo_customer = NEW #( ).
-```
-
 ### Non-Compliant
 
 ```abap
@@ -37,6 +28,15 @@ CREATE OBJECT lo_customer.
 ```abap
 DATA lo_customer TYPE REF TO cl_customer.
 lo_customer = NEW #( ).
+```
+
+## Transformation
+
+```diff
+- DATA lo_customer TYPE REF TO cl_customer.
+- CREATE OBJECT lo_customer.
++ DATA lo_customer TYPE REF TO cl_customer.
++ lo_customer = NEW #( ).
 ```
 
 ## Automated QuickFix

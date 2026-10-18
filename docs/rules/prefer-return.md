@@ -16,23 +16,6 @@ Prefer RETURN over EXIT outside loop constructs.
 
 In method contexts, `EXIT` can be ambiguous when placed near loops. `RETURN` explicitly indicates an immediate exit from the current processing block or method.
 
-## Transformation
-
-```diff
-- METHOD execute.
--   IF is_invalid( ).
--     EXIT.
--   ENDIF.
--   process( ).
-- ENDMETHOD.
-+ METHOD execute.
-+   IF is_invalid( ).
-+     RETURN.
-+   ENDIF.
-+   process( ).
-+ ENDMETHOD.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -53,6 +36,23 @@ METHOD execute.
   ENDIF.
   process( ).
 ENDMETHOD.
+```
+
+## Transformation
+
+```diff
+- METHOD execute.
+-   IF is_invalid( ).
+-     EXIT.
+-   ENDIF.
+-   process( ).
+- ENDMETHOD.
++ METHOD execute.
++   IF is_invalid( ).
++     RETURN.
++   ENDIF.
++   process( ).
++ ENDMETHOD.
 ```
 
 ## Automated QuickFix

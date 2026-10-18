@@ -15,21 +15,6 @@ Avoid static-only classes; use instantiable classes.
 
 Classes consisting entirely of static methods cannot be mocked via interfaces or subclassing during unit tests, creating rigid coupling throughout the application.
 
-## Transformation
-
-```diff
-- CLASS cl_math_util DEFINITION PUBLIC FINAL CREATE PUBLIC.
--   PUBLIC SECTION.
--     CLASS-METHODS add IMPORTING a TYPE i b TYPE i RETURNING VALUE(r) TYPE i.
--     CLASS-METHODS sub IMPORTING a TYPE i b TYPE i RETURNING VALUE(r) TYPE i.
-- ENDCLASS.
-+ CLASS cl_math_util DEFINITION PUBLIC FINAL CREATE PUBLIC.
-+   PUBLIC SECTION.
-+     INTERFACES if_math_util.
-+     METHODS add IMPORTING a TYPE i b TYPE i RETURNING VALUE(r) TYPE i.
-+ ENDCLASS.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -48,6 +33,21 @@ CLASS cl_math_util DEFINITION PUBLIC FINAL CREATE PUBLIC.
     INTERFACES if_math_util.
     METHODS add IMPORTING a TYPE i b TYPE i RETURNING VALUE(r) TYPE i.
 ENDCLASS.
+```
+
+## Transformation
+
+```diff
+- CLASS cl_math_util DEFINITION PUBLIC FINAL CREATE PUBLIC.
+-   PUBLIC SECTION.
+-     CLASS-METHODS add IMPORTING a TYPE i b TYPE i RETURNING VALUE(r) TYPE i.
+-     CLASS-METHODS sub IMPORTING a TYPE i b TYPE i RETURNING VALUE(r) TYPE i.
+- ENDCLASS.
++ CLASS cl_math_util DEFINITION PUBLIC FINAL CREATE PUBLIC.
++   PUBLIC SECTION.
++     INTERFACES if_math_util.
++     METHODS add IMPORTING a TYPE i b TYPE i RETURNING VALUE(r) TYPE i.
++ ENDCLASS.
 ```
 
 ## CLI & CI/CD Configuration

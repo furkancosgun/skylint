@@ -87,7 +87,7 @@ CLASS zcl_skylint_pref_symbol_op IMPLEMENTATION.
 
   METHOD is_legacy_operator.
     CASE iv_lexeme.
-      WHEN 'EQ' OR 'NE' OR 'GT' OR 'LT' OR 'GE' OR 'LE' OR '><'.
+      WHEN 'EQ' OR 'NE' OR 'GT' OR 'LT' OR 'GE' OR 'LE' OR '><' OR '=>' OR '=<'.
         rv_is = abap_true.
       WHEN OTHERS.
         rv_is = abap_false.
@@ -99,17 +99,15 @@ CLASS zcl_skylint_pref_symbol_op IMPLEMENTATION.
     CASE iv_lexeme.
       WHEN 'EQ'.
         rv_op = '='.
-      WHEN 'NE'.
-        rv_op = '<>'.
-      WHEN '><'.
+      WHEN 'NE' OR '><'.
         rv_op = '<>'.
       WHEN 'GT'.
         rv_op = '>'.
       WHEN 'LT'.
         rv_op = '<'.
-      WHEN 'GE'.
+      WHEN 'GE' OR '=>'.
         rv_op = '>='.
-      WHEN 'LE'.
+      WHEN 'LE' OR '=<'.
         rv_op = '<='.
     ENDCASE.
   ENDMETHOD.

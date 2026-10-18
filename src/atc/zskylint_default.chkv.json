@@ -74,7 +74,17 @@
       "checkName": "ZSKYLINT_PREF_RETURN"
     },
     {
-      "checkName": "ZSKYLINT_NO_CHECK_IN_LOOP"
+      "checkName": "ZSKYLINT_NO_CHECK_STMT",
+      "parameters": [
+        {
+          "name": "CHECK_IN_LOOP",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_OUTSIDE_LOOP",
+          "value": "X"
+        }
+      ]
     },
     {
       "checkName": "ZSKYLINT_NO_EMPTY_BLOCK",
@@ -460,7 +470,7 @@
       "checkName": "ZSKYLINT_NO_RAISE_CX_SY"
     },
     {
-      "checkName": "ZSKYLINT_CHECK_SUBRC",
+      "checkName": "ZSKYLINT_PREF_CHECK_SUBRC",
       "parameters": [
         {
           "name": "CHECK_SELECT_SINGLE",
@@ -581,6 +591,94 @@
     },
     {
       "checkName": "ZSKYLINT_MAX_PARAM_LINE"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_IS_INITIAL"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_IGNORED_RETURN"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_CAST"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_REDUNDANT_CLEAR",
+      "parameters": [
+        {
+          "name": "CHECK_BEFORE_WRITE",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_WITHOUT_READ",
+          "value": "X"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_NO_MOD_LOOP_TAB",
+      "parameters": [
+        {
+          "name": "CHECK_APPEND",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_INSERT",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_MODIFY",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_DELETE",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_CLEAR",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_SORT",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_SORT_ANY",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_COLLECT",
+          "value": "X"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_NO_HARDCODED_ENV",
+      "parameters": [
+        {
+          "name": "CHECK_SYSID",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_MANDT",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_HOST",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_DBSYS",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_OPSYS",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_UNAME",
+          "value": "X"
+        }
+      ]
     }
   ]
 }

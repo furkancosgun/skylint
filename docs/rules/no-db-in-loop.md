@@ -15,20 +15,6 @@ Avoid database access inside loop iterations.
 
 Executing SQL queries (`SELECT`, `UPDATE`, `DELETE`) inside a `LOOP` generates an N+1 query performance anti-pattern. Fetch data in bulk using `FOR ALL ENTRIES` or SQL Joins outside the loop.
 
-## Transformation
-
-```diff
-- LOOP AT lt_orders INTO ls_order.
--   SELECT SINGLE * FROM /dmo/customer
--     WHERE customer_id = @ls_order-customer_id
--     INTO @ls_customer.
-- ENDLOOP.
-+ SELECT * FROM /dmo/customer
-+   FOR ALL ENTRIES IN @lt_orders
-+   WHERE customer_id = @lt_orders-customer_id
-+   INTO TABLE @lt_customers.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -46,6 +32,20 @@ SELECT * FROM /dmo/customer
   FOR ALL ENTRIES IN @lt_orders
   WHERE customer_id = @lt_orders-customer_id
   INTO TABLE @lt_customers.
+```
+
+## Transformation
+
+```diff
+- LOOP AT lt_orders INTO ls_order.
+-   SELECT SINGLE * FROM /dmo/customer
+-     WHERE customer_id = @ls_order-customer_id
+-     INTO @ls_customer.
+- ENDLOOP.
++ SELECT * FROM /dmo/customer
++   FOR ALL ENTRIES IN @lt_orders
++   WHERE customer_id = @lt_orders-customer_id
++   INTO TABLE @lt_customers.
 ```
 
 ## CLI & CI/CD Configuration

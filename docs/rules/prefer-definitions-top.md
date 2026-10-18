@@ -15,19 +15,6 @@ Place definitions at beginning of routine.
 
 Explicit local definitions (DATA, TYPES, CONSTANTS, FIELD-SYMBOLS) should be placed at the very beginning of the routine rather than scattered in the middle of executable code.
 
-## Transformation
-
-```diff
-- METHOD calculate.
--   lv_total = 100.
--   DATA lv_tax TYPE i.
-- ENDMETHOD.
-+ METHOD calculate.
-+   DATA lv_tax TYPE i.
-+   lv_total = 100.
-+ ENDMETHOD.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -44,6 +31,19 @@ METHOD calculate.
   DATA lv_tax TYPE i.
   lv_total = 100.
 ENDMETHOD.
+```
+
+## Transformation
+
+```diff
+- METHOD calculate.
+-   lv_total = 100.
+-   DATA lv_tax TYPE i.
+- ENDMETHOD.
++ METHOD calculate.
++   DATA lv_tax TYPE i.
++   lv_total = 100.
++ ENDMETHOD.
 ```
 
 ## CLI & CI/CD Configuration

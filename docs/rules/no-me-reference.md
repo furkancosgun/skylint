@@ -15,15 +15,6 @@ Avoid self-reference ME->.
 
 In ABAP, member variables and methods are automatically accessible within the instance context. Prefixing every member access with `me->` creates visual noise, except when disambiguating parameter shadowing in constructors.
 
-## Transformation
-
-```diff
-- me->mv_status = c_active.
-- me->process_order( ).
-+ mv_status = c_active.
-+ process_order( ).
-```
-
 ### Non-Compliant
 
 ```abap
@@ -36,6 +27,15 @@ me->process_order( ).
 ```abap
 mv_status = c_active.
 process_order( ).
+```
+
+## Transformation
+
+```diff
+- me->mv_status = c_active.
+- me->process_order( ).
++ mv_status = c_active.
++ process_order( ).
 ```
 
 ## Configuration & Thresholds

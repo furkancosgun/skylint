@@ -15,15 +15,6 @@ Avoid sy-* System Variable Modification.
 
 System fields like `sy-subrc`, `sy-tabix`, and `sy-index` are managed exclusively by the ABAP runtime. Writing to them manually undermines system integrity and masks actual execution results.
 
-## Transformation
-
-```diff
-- sy-subrc = 0.
-- sy-tabix = 1.
-+ " Pass explicit return values or flags instead of modifying system variables (sy-*)
-+ rv_success = abap_true.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -36,6 +27,15 @@ sy-tabix = 1.
 ```abap
 " Pass explicit return values or flags instead of modifying system variables (sy-*)
 rv_success = abap_true.
+```
+
+## Transformation
+
+```diff
+- sy-subrc = 0.
+- sy-tabix = 1.
++ " Pass explicit return values or flags instead of modifying system variables (sy-*)
++ rv_success = abap_true.
 ```
 
 ## CLI & CI/CD Configuration

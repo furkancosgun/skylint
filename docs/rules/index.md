@@ -1,14 +1,14 @@
-# Rules Catalog (80 Rules)
+# Rules Catalog (86 Rules)
 
-Comprehensive reference for all **80** Clean ABAP, security, performance, and architecture rules in Skylint.
+Comprehensive reference for all **86** Clean ABAP, security, performance, and architecture rules in Skylint.
 
 ::: tip Skylint at a Glance
-- **80 Native ATC Rules:** 100% ABAP Cloud (Contract C1) & Steampunk Ready.
-- **29 Automated QuickFixes:** Instant one-click refactoring with <kbd>Ctrl</kbd> + <kbd>1</kbd> in Eclipse ADT.
+- **86 Native ATC Rules:** 100% ABAP Cloud (Contract C1) & Steampunk Ready.
+- **32 Automated QuickFixes:** Instant one-click refactoring with <kbd>Ctrl</kbd> + <kbd>1</kbd> in Eclipse ADT.
 - **Zero Legacy Overhead:** Built exclusively on `IF_CI_ATC_CHECK` (no obsolete Code Inspector / SCI dependency).
 :::
 
-## Clean ABAP & Modern Syntax (33)
+## Clean ABAP & Modern Syntax (36)
 
 Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.
 
@@ -23,7 +23,7 @@ Modern language features, expression-oriented coding, and idiomatic Clean ABAP p
 | [`prefer-symbol-operators`](/rules/prefer-symbol-operators) | `ZCL_SKYLINT_PREF_SYMBOL_OP` | Prefer symbolic operators over textual EQ, NE, LT, GT | `PREFEROP` | `#EC SYMBOL_OP` | ⚡ Ready |
 | [`prefer-new-operator`](/rules/prefer-new-operator) | `ZCL_SKYLINT_PREF_NEW_OP` | Prefer NEW operator over CREATE OBJECT and RAISE EXCEPTION | `PREFERNEW` | `#EC NEW_OP` | ⚡ Ready |
 | [`prefer-xsdbool`](/rules/prefer-xsdbool) | `ZCL_SKYLINT_PREF_XSDBOOL` | Prefer xsdbool( ) expression over manual IF-ELSE assignment | `PREFERXSDB` | `#EC XSDBOOL` | ⚡ Ready |
-| [`require-fully-typed`](/rules/require-fully-typed) | `ZCL_SKYLINT_PREF_FULL_TYPED` | Enforce fully typed constant declarations | `FULLYTYPED` | `#EC FULL_TYPED` | — |
+| [`prefer-fully-typed`](/rules/prefer-fully-typed) | `ZCL_SKYLINT_PREF_FULL_TYPED` | Enforce fully typed constant declarations | `FULLYTYPED` | `#EC FULL_TYPED` | — |
 | [`prefer-corresponding`](/rules/prefer-corresponding) | `ZCL_SKYLINT_PREF_CORRESP` | Prefer CORRESPONDING Expression over MOVE-CORRESPONDING | `PREFER_COR` | `#EC CORRESP` | ⚡ Ready |
 | [`prefer-returning`](/rules/prefer-returning) | `ZCL_SKYLINT_PREF_RETURNING` | Prefer RETURNING over single EXPORTING | `PREFER_RET` | `#EC RETURNING` | — |
 | [`prefer-class-exceptions`](/rules/prefer-class-exceptions) | `ZCL_SKYLINT_PREF_CLASS_EXC` | Prefer Class-Based Exceptions over Classic EXCEPTIONS | `CLASS_EXC` | `#EC CLASS_EXC` | — |
@@ -37,7 +37,7 @@ Modern language features, expression-oriented coding, and idiomatic Clean ABAP p
 | [`prefer-string-functions`](/rules/prefer-string-functions) | `ZCL_SKYLINT_PREF_STR_FUNC` | Detect obsolete string statements; prefer built-in functions | `CONDENSE_S` | `#EC STR_FUNC` | ⚡ Ready |
 | [`prefer-calc-assign-op`](/rules/prefer-calc-assign-op) | `ZCL_SKYLINT_PREF_CALC_OP` | Prefer calculation assignment operators (+=, -=, *=, /=) | `CALC_ASSGN` | `#EC CALC_ASSIGN` | ⚡ Ready |
 | [`prefer-early-return`](/rules/prefer-early-return) | `ZCL_SKYLINT_PREF_EARLY_RET` | Prefer early return or continue over nested IF blocks | `GUARD_METH` | `#EC EARLY_RETURN` | — |
-| [`require-decl-order`](/rules/require-decl-order) | `ZCL_SKYLINT_PREF_DECL_ORDER` | Enforce declaration order (TYPES, CONSTANTS, DATA, FS) | `DECL_ORDER` | `#EC DECL_ORDER` | — |
+| [`prefer-decl-order`](/rules/prefer-decl-order) | `ZCL_SKYLINT_PREF_DECL_ORDER` | Enforce declaration order (TYPES, CONSTANTS, DATA, FS) | `DECL_ORDER` | `#EC DECL_ORDER` | — |
 | [`no-param-escape`](/rules/no-param-escape) | `ZCL_SKYLINT_NO_PARAM_ESCAPE` | Avoid unnecessary parameter escape (!param) | `PARAM_ESCP` | `#EC PARAM_ESCAPE` | ⚡ Ready |
 | [`prefer-case`](/rules/prefer-case) | `ZCL_SKYLINT_PREF_CASE` | Use CASE instead of IF when checking multiple values | `USE_CASE` | `#EC PREF_CASE` | — |
 | [`max-one-statement`](/rules/max-one-statement) | `ZCL_SKYLINT_MAX_ONE_STMT` | Max One Statement Per Line | `ONE_STMT` | `#EC ONE_STMT` | — |
@@ -47,8 +47,11 @@ Modern language features, expression-oriented coding, and idiomatic Clean ABAP p
 | [`no-unnecessary-return`](/rules/no-unnecessary-return) | `ZCL_SKYLINT_NO_UNNEC_RETURN` | Omit unnecessary RETURN at end of routine | `UNNEC_RET` | `#EC NO_UNNEC_RETURN` | ⚡ Ready |
 | [`mix-returning`](/rules/mix-returning) | `ZCL_SKYLINT_NO_MIX_RETURNING` | Do not mix RETURNING with EXPORTING or CHANGING | `MIX_RET` | `#EC NO_MIX_RETURNING` | — |
 | [`max-one-method-parameter-per-line`](/rules/max-one-method-parameter-per-line) | `ZCL_SKYLINT_MAX_PARAM_LINE` | Max one method parameter definition per line | `PARAM_LINE` | `#EC MAX_PARAM_LINE` | — |
+| [`prefer-is-initial`](/rules/prefer-is-initial) | `ZCL_SKYLINT_PREF_IS_INITIAL` | Prefer IS [NOT] INITIAL over lines( ) or empty literals | `PREF_INIT` | `#EC PREF_INIT` | ⚡ Ready |
+| [`prefer-cast`](/rules/prefer-cast) | `ZCL_SKYLINT_PREF_CAST` | Prefer modern CAST #( ) expression over ?= | `PREFCAST` | `#EC PREF_CAST` | ⚡ Ready |
+| [`no-redundant-clear`](/rules/no-redundant-clear) | `ZCL_SKYLINT_NO_REDUNDANT_CLEAR` | Do not CLEAR or FREE variables redundantly | `REDUNCLEAR` | `#EC REDUNDANT_CLEAR` | ⚡ Ready |
 
-## Anti-Patterns & Bad Practices (25)
+## Anti-Patterns & Bad Practices (27)
 
 Discouraged language constructs, legacy statements, and redundant syntax.
 
@@ -60,7 +63,7 @@ Discouraged language constructs, legacy statements, and redundant syntax.
 | [`no-redundant-method-call`](/rules/no-redundant-method-call) | `ZCL_SKYLINT_NO_REDUNDANT_CALL` | Omit redundant EXPORTING and RECEIVING in method calls | `OMITEXPORT` | `#EC EXPORTING` | ⚡ Ready |
 | [`no-chained-statements`](/rules/no-chained-statements) | `ZCL_SKYLINT_NO_CHAINED_STMT` | Avoid chained declarations and chained assignments | `CHAINDECL` | `#EC CHAIN_DECL` | ⚡ Ready |
 | [`no-boolean-comparison`](/rules/no-boolean-comparison) | `ZCL_SKYLINT_NO_BOOL_COMPARE` | Avoid comparing boolean method calls to boolean literals | `BOOLCOMP` | `#EC BOOL_COMPARE` | ⚡ Ready |
-| [`no-check-in-loop`](/rules/no-check-in-loop) | `ZCL_SKYLINT_NO_CHECK_IN_LOOP` | Avoid CHECK in loops; prefer IF with CONTINUE | `CHKINLOOP` | `#EC CHECK_IN_LOOP` | ⚡ Ready |
+| [`no-check-statement`](/rules/no-check-statement) | `ZCL_SKYLINT_NO_CHECK_STMT` | Avoid CHECK statements; prefer IF with RETURN or CONTINUE | `CHKINLOOP` | `#EC CHECK_STMT` | ⚡ Ready |
 | [`no-empty-block`](/rules/no-empty-block) | `ZCL_SKYLINT_NO_EMPTY_BLOCK` | Avoid empty control blocks (IF, CASE, LOOP, TRY, etc.) | `EMPTYCTRL` | `#EC EMPTY_BLOCK` | — |
 | [`no-duplicate-conditions`](/rules/no-duplicate-conditions) | `ZCL_SKYLINT_NO_DUP_COND` | Avoid duplicate branch conditions in IF and CASE | `DUPCOND` | `#EC DUP_COND` | — |
 | [`no-unreachable-code`](/rules/no-unreachable-code) | `ZCL_SKYLINT_NO_UNREACHABLE` | Detect unreachable code after jump or exit statements | `UNREACHCD` | `#EC UNREACHABLE` | ⚡ Ready |
@@ -79,6 +82,8 @@ Discouraged language constructs, legacy statements, and redundant syntax.
 | [`no-unused-variables`](/rules/no-unused-variables) | `ZCL_SKYLINT_NO_UNUSED_VARS` | Detect unused local variables and field symbols | `UNUSED_VAR` | `#EC NEEDED` | — |
 | [`no-inline-length`](/rules/no-inline-length) | `ZCL_SKYLINT_NO_INLINE_LEN` | Avoid inline length specification in declarations | `PAREN_LEN` | `#EC PAREN_LEN` | ⚡ Ready |
 | [`no-dash-in-names`](/rules/no-dash-in-names) | `ZCL_SKYLINT_NO_DASH_IN_NAMES` | No Dashes in Variable and Form Names | `NO_DASH` | `#EC NO_DASH` | — |
+| [`no-ignored-return-value`](/rules/no-ignored-return-value) | `ZCL_SKYLINT_NO_IGNORED_RETURN` | Disallow ignoring the return value of functional methods | `IGNRET` | `#EC NO_IGNORED_RET` | — |
+| [`no-modify-loop-table`](/rules/no-modify-loop-table) | `ZCL_SKYLINT_NO_MOD_LOOP_TAB` | Avoid mutating or sorting tables inside loops | `MOD_LOOPTB` | `#EC LOOP_MODIFY` | — |
 
 ## Performance & Database (6)
 
@@ -89,25 +94,26 @@ Database query efficiency, buffer protection, and internal table operation guide
 | [`no-db-in-loop`](/rules/no-db-in-loop) | `ZCL_SKYLINT_NO_DB_IN_LOOP` | Avoid database access inside loop iterations | `DBINLOOP` | `#EC DB_IN_LOOP` | — |
 | [`no-empty-fae`](/rules/no-empty-fae) | `ZCL_SKYLINT_NO_EMPTY_FAE` | Unsecure FOR ALL ENTRIES (Missing empty itab check) | `FAENOCHECK` | `#EC EMPTY_FAE` | ⚡ Ready |
 | [`no-select-star`](/rules/no-select-star) | `ZCL_SKYLINT_NO_SELECT_STAR` | Select performance (Avoid SELECT * and SELECT ... ENDSELECT) | `SELECTSTAR` | `#EC SELECT_STAR` | — |
-| [`require-order-by`](/rules/require-order-by) | `ZCL_SKYLINT_PREF_ORDER_BY` | SELECT UP TO 1 ROWS requires ORDER BY | `SELECT_UP` | `#EC ORDER_BY` | — |
-| [`require-transporting`](/rules/require-transporting) | `ZCL_SKYLINT_PREF_TRANSPORT` | Avoid MODIFY itab in LOOP without TRANSPORTING clause | `FULL_MODIF` | `#EC TRANSPORTING` | — |
+| [`prefer-order-by`](/rules/prefer-order-by) | `ZCL_SKYLINT_PREF_ORDER_BY` | SELECT UP TO 1 ROWS requires ORDER BY | `SELECT_UP` | `#EC ORDER_BY` | — |
+| [`prefer-transporting`](/rules/prefer-transporting) | `ZCL_SKYLINT_PREF_TRANSPORT` | Avoid MODIFY itab in LOOP without TRANSPORTING clause | `FULL_MODIF` | `#EC TRANSPORTING` | — |
 | [`prefer-pass-by-reference`](/rules/prefer-pass-by-reference) | `ZCL_SKYLINT_PREF_PASS_BY_REF` | Slow Parameter Passing | `SLOW_PASS` | `#EC SLOW_PARAM` | — |
 
-## Security & Robustness (9)
+## Security & Robustness (10)
 
 Authorizations, dynamic execution sanitation, error handling, and runtime safety.
 
 | Rule ID | ABAP Class | Description | Finding Code | Pseudo-Comment | QuickFix |
 |---|---|---|:---:|:---:|:---:|
 | [`no-dangerous-statements`](/rules/no-dangerous-statements) | `ZCL_SKYLINT_NO_DANGEROUS_STMT` | Dangerous Statements (abaplint dangerous_statement) | `DANGER_STM` | `#EC DANGEROUS_STMT` | — |
-| [`require-auth-check`](/rules/require-auth-check) | `ZCL_SKYLINT_PREF_AUTH_CHECK` | Call Transaction Authority Check | `AUTH_CHECK` | `#EC AUTH_CHECK` | ⚡ Ready |
+| [`prefer-auth-check`](/rules/prefer-auth-check) | `ZCL_SKYLINT_PREF_AUTH_CHECK` | Call Transaction Authority Check | `AUTH_CHECK` | `#EC AUTH_CHECK` | ⚡ Ready |
 | [`no-catch-cx-root`](/rules/no-catch-cx-root) | `ZCL_SKYLINT_NO_CATCH_ROOT` | Catch specific exceptions instead of generic cx_root | `CATCH_ROOT` | `#EC CATCH_ROOT` | — |
 | [`no-raise-cx-sy`](/rules/no-raise-cx-sy) | `ZCL_SKYLINT_NO_RAISE_CX_SY` | Avoid raising SAP internal system exceptions (cx_sy_*) | `RAISE_SYS` | `#EC RAISE_CX_SY` | — |
-| [`require-subrc-check`](/rules/require-subrc-check) | `ZCL_SKYLINT_CHECK_SUBRC` | Check sy-subrc after DB, table and string operations | `CHECKSUBRC` | `#EC CHECK_SUBRC` | — |
+| [`prefer-subrc-check`](/rules/prefer-subrc-check) | `ZCL_SKYLINT_PREF_CHECK_SUBRC` | Check sy-subrc after DB, table and string operations | `CHECKSUBRC` | `#EC CHECK_SUBRC` | — |
 | [`no-client-specified`](/rules/no-client-specified) | `ZCL_SKYLINT_NO_CLIENT_SPEC` | Avoid USING CLIENT or CLIENT SPECIFIED in ABAP SQL | `CLIENT_SPE` | `#EC CLIENT_SPEC` | ⚡ Ready |
 | [`no-commit-work`](/rules/no-commit-work) | `ZCL_SKYLINT_NO_COMMIT_WORK` | Avoid COMMIT and ROLLBACK in application logic | `NO_COMMIT` | `#EC COMMIT_WORK` | — |
 | [`no-modify-standard-tables`](/rules/no-modify-standard-tables) | `ZCL_SKYLINT_NO_MOD_STD_TABLE` | Modify Only Own Database Tables | `NOT_OWN_TB` | `#EC OWN_TABLES` | — |
 | [`no-dynamic-stuff`](/rules/no-dynamic-stuff) | `ZCL_SKYLINT_NO_DYNAMIC_STMT` | No Dynamic Constructs (CALL, ASSIGN, CREATE, etc.) | `DYN_STUFF` | `#EC NO_DYNAMIC` | — |
+| [`no-hardcoded-env-checks`](/rules/no-hardcoded-env-checks) | `ZCL_SKYLINT_NO_HARDCODED_ENV` | Avoid reading environment system fields (sy-sysid, etc.) | `ENV_CHECK` | `#EC HARDCODED_ENV` | — |
 
 ## Metrics & Complexity Limits (6)
 

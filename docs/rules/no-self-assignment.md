@@ -16,13 +16,6 @@ Detect Identical Self Assignments.
 
 Assigning a variable or structure field to itself (`lv_x = lv_x`) is a redundant no-op and frequently hides a typo where another source field was intended.
 
-## Transformation
-
-```diff
-- lv_name = lv_name.
-+ lv_name = iv_new_name.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -33,6 +26,13 @@ lv_name = lv_name.
 
 ```abap
 lv_name = iv_new_name.
+```
+
+## Transformation
+
+```diff
+- lv_name = lv_name.
++ lv_name = iv_new_name.
 ```
 
 ## Automated QuickFix

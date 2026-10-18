@@ -16,17 +16,6 @@ Avoid Yoda conditions in comparison expressions.
 
 Placing constants or literals on the left side of comparisons (`IF 42 = lv_value`) impairs readability. ABAP natural reading flow expects the variable or subject on the left (`IF lv_value = 42`).
 
-## Transformation
-
-```diff
-- IF 0 = lv_count.
--   process( ).
-- ENDIF.
-+ IF lv_count = 0.
-+   process( ).
-+ ENDIF.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -41,6 +30,17 @@ ENDIF.
 IF lv_count = 0.
   process( ).
 ENDIF.
+```
+
+## Transformation
+
+```diff
+- IF 0 = lv_count.
+-   process( ).
+- ENDIF.
++ IF lv_count = 0.
++   process( ).
++ ENDIF.
 ```
 
 ## Automated QuickFix

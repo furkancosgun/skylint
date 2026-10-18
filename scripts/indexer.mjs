@@ -63,23 +63,35 @@ function extractCheckMetadata(rule) {
  * Update global rule counts and statistics across README.md
  */
 function updateReadmeStats(readme, count) {
-  // 1. Directory tree comment
+  // 1. Header rules badge and anchor link
   readme = readme.replace(
-    /(├── checks\/\s+#\s*)\d+(\s+Modular Check Implementations)(?:[^\n]*)/,
+    /<a href="#-clean-abap--cloud-rule-catalog-\d+-rules"><img src="https:\/\/img\.shields\.io\/badge\/rules-\d+-brightgreen\.svg" alt="Rules" \/><\/a>/g,
+    `<a href="#-clean-abap--cloud-rule-catalog-${count}-rules"><img src="https://img.shields.io/badge/rules-${count}-brightgreen.svg" alt="Rules" /></a>`
+  );
+
+  // 2. Highlights bullet
+  readme = readme.replace(
+    /(- \*\*)\d+(\s+Clean ABAP Rules:\*\*)/g,
     `$1${count}$2`
   );
 
-  // 2. Architecture ASCII box diagram
+  // 3. Directory tree comment
+  readme = readme.replace(
+    /(├── checks\/\s+#\s*)\d+(\s+modular check implementations)(?:[^\n]*)/gi,
+    `$1${count}$2`
+  );
+
+  // 4. Architecture section list item
+  readme = readme.replace(
+    /(\*\*`src\/checks\/`\*\*:\s*)\d+(\s+modular check classes)/g,
+    `$1${count}$2`
+  );
+
+  // 5. Architecture ASCII box diagram (if present)
   const boxText = `  • ${count} Rules (if_ci_atc_check)`.padEnd(45, ' ');
   readme = readme.replace(
-    /│\s*•\s*\d+\s*Rules\s*\(if_ci_atc_check\)\s*│/,
+    /│\s*•\s*\d+\s*Rules\s*\(if_ci_atc_check\)\s*│/g,
     `│${boxText}│`
-  );
-
-  // 3. Architecture section description
-  readme = readme.replace(
-    /(\*\*`src\/checks\/`\*\*:\s*)\d+(\s+rule classes)/,
-    `$1${count}$2`
   );
 
   return readme;

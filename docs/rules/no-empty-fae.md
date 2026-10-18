@@ -16,21 +16,6 @@ Unsecure FOR ALL ENTRIES (Missing empty itab check).
 
 In ABAP SQL, executing `FOR ALL ENTRIES IN @lt_table` when `lt_table` is empty drops the `WHERE` clause entirely and performs a full table scan, causing severe system performance degradation and data leaks.
 
-## Transformation
-
-```diff
-- SELECT * FROM /dmo/customer
--   FOR ALL ENTRIES IN @lt_orders
--   WHERE customer_id = @lt_orders-customer_id
--   INTO TABLE @lt_customers.
-+ IF lt_orders IS NOT INITIAL.
-+   SELECT * FROM /dmo/customer
-+     FOR ALL ENTRIES IN @lt_orders
-+     WHERE customer_id = @lt_orders-customer_id
-+     INTO TABLE @lt_customers.
-+ ENDIF.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -49,6 +34,21 @@ IF lt_orders IS NOT INITIAL.
     WHERE customer_id = @lt_orders-customer_id
     INTO TABLE @lt_customers.
 ENDIF.
+```
+
+## Transformation
+
+```diff
+- SELECT * FROM /dmo/customer
+-   FOR ALL ENTRIES IN @lt_orders
+-   WHERE customer_id = @lt_orders-customer_id
+-   INTO TABLE @lt_customers.
++ IF lt_orders IS NOT INITIAL.
++   SELECT * FROM /dmo/customer
++     FOR ALL ENTRIES IN @lt_orders
++     WHERE customer_id = @lt_orders-customer_id
++     INTO TABLE @lt_customers.
++ ENDIF.
 ```
 
 ## Automated QuickFix

@@ -15,18 +15,6 @@ Avoid CASE statements with only one WHEN branch.
 
 A `CASE` statement containing only one `WHEN` branch is unnecessarily verbose. An `IF ... ENDIF` is more concise and idiomatic.
 
-## Transformation
-
-```diff
-- CASE lv_status.
--   WHEN 'A'.
--     process_a( ).
-- ENDCASE.
-+ IF lv_status = 'A'.
-+   process_a( ).
-+ ENDIF.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -42,6 +30,18 @@ ENDCASE.
 IF lv_status = 'A'.
   process_a( ).
 ENDIF.
+```
+
+## Transformation
+
+```diff
+- CASE lv_status.
+-   WHEN 'A'.
+-     process_a( ).
+- ENDCASE.
++ IF lv_status = 'A'.
++   process_a( ).
++ ENDIF.
 ```
 
 ## CLI & CI/CD Configuration

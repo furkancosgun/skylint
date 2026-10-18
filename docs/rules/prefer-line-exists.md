@@ -15,18 +15,6 @@ Prefer line_exists( ) over READ TABLE with NO FIELDS.
 
 `line_exists( )` clearly communicates the intent of checking table membership in a single functional expression, eliminating the boilerplate of `READ TABLE ... TRANSPORTING NO FIELDS` followed by `sy-subrc = 0`.
 
-## Transformation
-
-```diff
-- READ TABLE lt_items TRANSPORTING NO FIELDS WITH KEY id = lv_id.
-- IF sy-subrc = 0.
--   process( ).
-- ENDIF.
-+ IF line_exists( lt_items[ id = lv_id ] ).
-+   process( ).
-+ ENDIF.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -42,6 +30,18 @@ ENDIF.
 IF line_exists( lt_items[ id = lv_id ] ).
   process( ).
 ENDIF.
+```
+
+## Transformation
+
+```diff
+- READ TABLE lt_items TRANSPORTING NO FIELDS WITH KEY id = lv_id.
+- IF sy-subrc = 0.
+-   process( ).
+- ENDIF.
++ IF line_exists( lt_items[ id = lv_id ] ).
++   process( ).
++ ENDIF.
 ```
 
 ## CLI & CI/CD Configuration

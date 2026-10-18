@@ -15,21 +15,6 @@ Method Length Limit (excessive statement count).
 
 Long methods violate the Single Responsibility Principle, accumulate side effects, and are notoriously difficult to unit test. Split large methods into small, focused sub-methods.
 
-## Transformation
-
-```diff
-- " Large method exceeding configured statement threshold (> 50 statements)
-- METHOD execute.
--   " 60+ statements in a single procedure...
-- ENDMETHOD.
-+ " Split into smaller, single-responsibility helper methods
-+ METHOD execute.
-+   prepare_data( ).
-+   process_records( ).
-+   finalize_result( ).
-+ ENDMETHOD.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -48,6 +33,21 @@ METHOD execute.
   process_records( ).
   finalize_result( ).
 ENDMETHOD.
+```
+
+## Transformation
+
+```diff
+- " Large method exceeding configured statement threshold (> 50 statements)
+- METHOD execute.
+-   " 60+ statements in a single procedure...
+- ENDMETHOD.
++ " Split into smaller, single-responsibility helper methods
++ METHOD execute.
++   prepare_data( ).
++   process_records( ).
++   finalize_result( ).
++ ENDMETHOD.
 ```
 
 ## Configuration & Thresholds

@@ -16,15 +16,6 @@ Avoid static CALL METHOD statements.
 
 Procedural `CALL METHOD` is legacy syntax from early ABAP Objects. Modern ABAP exclusively uses functional call syntax (`ref->method( )` or `class=>method( )`), which reduces visual clutter and enables functional expression chaining.
 
-## Transformation
-
-```diff
-- CALL METHOD lo_service->calculate_tax(
--   EXPORTING
--     iv_amount = lv_amount ).
-+ lo_service->calculate_tax( iv_amount = lv_amount ).
-```
-
 ### Non-Compliant
 
 ```abap
@@ -37,6 +28,15 @@ CALL METHOD lo_service->calculate_tax(
 
 ```abap
 lo_service->calculate_tax( iv_amount = lv_amount ).
+```
+
+## Transformation
+
+```diff
+- CALL METHOD lo_service->calculate_tax(
+-   EXPORTING
+-     iv_amount = lv_amount ).
++ lo_service->calculate_tax( iv_amount = lv_amount ).
 ```
 
 ## Automated QuickFix

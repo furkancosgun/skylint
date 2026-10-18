@@ -16,13 +16,6 @@ Call Transaction Authority Check.
 
 Omitting authorization checks leaves critical business data and actions exposed to unauthorized users. Always verify permissions before selecting or modifying protected resources.
 
-## Transformation
-
-```diff
-- CALL TRANSACTION 'VA01'.
-+ CALL TRANSACTION 'VA01' WITH AUTHORITY-CHECK.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -33,6 +26,13 @@ CALL TRANSACTION 'VA01'.
 
 ```abap
 CALL TRANSACTION 'VA01' WITH AUTHORITY-CHECK.
+```
+
+## Transformation
+
+```diff
+- CALL TRANSACTION 'VA01'.
++ CALL TRANSACTION 'VA01' WITH AUTHORITY-CHECK.
 ```
 
 ## Automated QuickFix
@@ -46,7 +46,7 @@ This rule provides an **automated QuickFix** directly in Eclipse ABAP Developmen
 
 ```yaml
 checks:
-  require-auth-check:
+  prefer-auth-check:
     enabled: true
     severity: warning
 ```

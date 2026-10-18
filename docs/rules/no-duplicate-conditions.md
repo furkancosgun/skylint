@@ -15,17 +15,6 @@ Avoid duplicate branch conditions in IF and CASE.
 
 Repeating the exact same condition across `IF / ELSEIF` or `WHEN` branches means subsequent duplicate branches can never be reached, indicating a copy-paste error or broken logic.
 
-## Transformation
-
-```diff
-- IF lv_type = 'A' OR lv_type = 'A'.
--   process( ).
-- ENDIF.
-+ IF lv_type = 'A'.
-+   process( ).
-+ ENDIF.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -40,6 +29,17 @@ ENDIF.
 IF lv_type = 'A'.
   process( ).
 ENDIF.
+```
+
+## Transformation
+
+```diff
+- IF lv_type = 'A' OR lv_type = 'A'.
+-   process( ).
+- ENDIF.
++ IF lv_type = 'A'.
++   process( ).
++ ENDIF.
 ```
 
 ## CLI & CI/CD Configuration

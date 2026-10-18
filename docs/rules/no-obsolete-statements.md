@@ -16,13 +16,6 @@ Avoid obsolete statements (MOVE, REFRESH, FORM, etc.).
 
 Legacy statements such as `MOVE`, `COMPUTE`, `REFRESH`, `TABLES`, `STATICS`, `FORM`, and `LEAVE` are prohibited in ABAP Cloud and discouraged in Clean ABAP. Replace them with modern value assignments and object-oriented constructs.
 
-## Transformation
-
-```diff
-- MOVE lv_src TO lv_dst.
-+ lv_dst = lv_src.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -33,6 +26,13 @@ MOVE lv_src TO lv_dst.
 
 ```abap
 lv_dst = lv_src.
+```
+
+## Transformation
+
+```diff
+- MOVE lv_src TO lv_dst.
++ lv_dst = lv_src.
 ```
 
 ## Automated QuickFix

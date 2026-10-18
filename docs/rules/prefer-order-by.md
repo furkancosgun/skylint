@@ -15,13 +15,6 @@ SELECT UP TO 1 ROWS requires ORDER BY.
 
 Selecting rows from a relational database without an explicit `ORDER BY` clause yields non-deterministic ordering that can change unpredictably between DB executions and updates.
 
-## Transformation
-
-```diff
-- SELECT * FROM /dmo/customer UP TO 1 ROWS INTO @ls_customer.
-+ SELECT * FROM /dmo/customer ORDER BY customer_id UP TO 1 ROWS INTO @ls_customer.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -34,11 +27,18 @@ SELECT * FROM /dmo/customer UP TO 1 ROWS INTO @ls_customer.
 SELECT * FROM /dmo/customer ORDER BY customer_id UP TO 1 ROWS INTO @ls_customer.
 ```
 
+## Transformation
+
+```diff
+- SELECT * FROM /dmo/customer UP TO 1 ROWS INTO @ls_customer.
++ SELECT * FROM /dmo/customer ORDER BY customer_id UP TO 1 ROWS INTO @ls_customer.
+```
+
 ## CLI & CI/CD Configuration
 
 ```yaml
 checks:
-  require-order-by:
+  prefer-order-by:
     enabled: true
     severity: warning
 ```

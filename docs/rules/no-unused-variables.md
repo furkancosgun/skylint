@@ -9,18 +9,11 @@
 
 Detect unused local variables and field symbols.
 
-> **ATC Finding Message:** `Local variable or field symbol is declared but never used`
+> **ATC Finding Message:** `Local variable or field symbol is declared but never read`
 
 ## Rationale
 
 Unused variables clutter code, confuse developers reviewing changes, and increase compilation and execution memory overhead without providing any benefit.
-
-## Transformation
-
-```diff
-- DATA lv_temp TYPE string. " Declared but never referenced
-+ " Remove unused declarations or add ##NEEDED pragma if required by interface
-```
 
 ### Non-Compliant
 
@@ -32,6 +25,13 @@ DATA lv_temp TYPE string. " Declared but never referenced
 
 ```abap
 " Remove unused declarations or add ##NEEDED pragma if required by interface
+```
+
+## Transformation
+
+```diff
+- DATA lv_temp TYPE string. " Declared but never referenced
++ " Remove unused declarations or add ##NEEDED pragma if required by interface
 ```
 
 ## CLI & CI/CD Configuration

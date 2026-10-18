@@ -10,6 +10,10 @@ CLASS zcl_test_no_unused_variables DEFINITION
     METHODS test_003.
     METHODS test_004.
     METHODS test_005.
+    METHODS test_006.
+    METHODS test_007.
+    METHODS test_008.
+    METHODS test_009.
 ENDCLASS.
 
 
@@ -40,6 +44,31 @@ CLASS zcl_test_no_unused_variables IMPLEMENTATION.
             END OF ls_inner,
           END OF ls_outer.
     ls_outer-comp_a = 1.
+  ENDMETHOD.
+
+  METHOD test_006.
+    DATA lv_read TYPE i.
+    DATA lv_sum TYPE i.
+    lv_read = 1.
+    lv_sum = lv_read + 2.
+    WRITE lv_sum.
+  ENDMETHOD.
+
+  METHOD test_007.
+    DATA(lv_inline_unused) = 10.
+  ENDMETHOD.
+
+  METHOD test_008.
+    DATA(lv_inline_used) = 20.
+    WRITE lv_inline_used.
+  ENDMETHOD.
+
+  METHOD test_009.
+    DATA: BEGIN OF ls_person,
+            name TYPE string,
+          END OF ls_person.
+    ls_person-name = 'Alice'.
+    WRITE ls_person-name.
   ENDMETHOD.
 ENDCLASS.
 

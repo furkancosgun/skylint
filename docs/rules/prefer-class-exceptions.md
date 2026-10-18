@@ -15,13 +15,6 @@ Prefer Class-Based Exceptions over Classic EXCEPTIONS.
 
 Classic non-class exceptions (set via `sy-subrc`) lack stack traces, cannot carry context data, and cannot be propagated up call stacks cleanly. Use class-based exceptions (`CX_ROOT` subclasses).
 
-## Transformation
-
-```diff
-- METHODS execute EXCEPTIONS not_found failed.
-+ METHODS execute RAISING cx_not_found cx_failed.
-```
-
 ### Non-Compliant
 
 ```abap
@@ -32,6 +25,13 @@ METHODS execute EXCEPTIONS not_found failed.
 
 ```abap
 METHODS execute RAISING cx_not_found cx_failed.
+```
+
+## Transformation
+
+```diff
+- METHODS execute EXCEPTIONS not_found failed.
++ METHODS execute RAISING cx_not_found cx_failed.
 ```
 
 ## CLI & CI/CD Configuration
