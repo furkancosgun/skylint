@@ -62,72 +62,57 @@ CLASS zcl_skylint_pref_final_data IMPLEMENTATION.
       CLEAR ls_declaration.
       LOOP AT <ls_statement>-tokens INTO ls_token.
         lv_token_index = sy-tabix.
-        LOOP AT ls_token-references INTO ls_ref
-             WHERE     kind       = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-                   AND usage_mode = if_ci_atc_source_code_provider=>usage_modes-definition_with_write.
-          IF zcl_skylint_ast_util=>token_is_inline_declaration( is_token  = ls_token
-                                                                iv_prefix = 'FINAL' ) = abap_true.
-            EXIT.
-          ENDIF.
-          IF zcl_skylint_ast_util=>token_is_inline_declaration( is_token  = ls_token
-                                                                iv_prefix = 'DATA' ) = abap_false.
-            CONTINUE.
-          ENDIF.
-          ls_declaration-token_index = lv_token_index.
-          ls_declaration-full_name   = ls_ref-full_name.
+        ls_ref = zcl_skylint_ast_util=>get_reference(
+                     is_token      = ls_token
+                     iv_kind       = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+                     iv_usage_mode = if_ci_atc_source_code_provider=>usage_modes-definition_with_write ).
+        IF ls_ref-full_name IS INITIAL.
+          CONTINUE.
+        ENDIF.
+        IF zcl_skylint_ast_util=>token_is_inline_declaration( is_token  = ls_token
+                                                              iv_prefix = 'FINAL' ) = abap_true.
           EXIT.
-        ENDLOOP.
-        IF ls_declaration-token_index <= 0.
+        ENDIF.
+        IF zcl_skylint_ast_util=>token_is_inline_declaration( is_token  = ls_token
+                                                              iv_prefix = 'DATA' ) = abap_false.
           CONTINUE.
         ENDIF.
-
-        IF is_written( it_statements = is_procedure-statements
-                       iv_full_name  = ls_declaration-full_name ) = abap_true.
-          CONTINUE.
-        ENDIF.
-
-        lv_name = zcl_skylint_ast_util=>get_reference_name( ls_declaration-full_name ).
-        IF lv_name IS INITIAL.
-          CONTINUE.
-        ENDIF.
-
-        lv_line     = zcl_skylint_ast_util=>flatten_statement(
-                          is_statement = <ls_statement>
-                          it_overrides = VALUE #( ( index  = ls_declaration-token_index
-                                                    lexeme = |FINAL({ lv_name })| ) )
-                          iv_suffix    = `.` ).
-        ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-to_final
-                                        iv_statement_from = sy-tabix
-                                        it_new_code       = VALUE #( ( lv_line ) ) ).
-
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-prefer_final
-                          is_quickfix     = ls_quickfix ).
-        CLEAR ls_declaration.
+        ls_declaration-token_index = lv_token_index.
+        ls_declaration-full_name   = ls_ref-full_name.
+        EXIT.
       ENDLOOP.
+      IF ls_declaration-token_index <= 0.
+        CONTINUE.
+      ENDIF.
+
+      IF is_written( it_statements = is_procedure-statements
+                     iv_full_name  = ls_declaration-full_name ) = abap_true.
+        CONTINUE.
+      ENDIF.
+
+      lv_name = zcl_skylint_ast_util=>get_reference_name( ls_declaration-full_name ).
+      IF lv_name IS INITIAL.
+        CONTINUE.
+      ENDIF.
+
+      lv_line     = zcl_skylint_ast_util=>flatten_statement(
+                        is_statement = <ls_statement>
+                        it_overrides = VALUE #( ( index  = ls_declaration-token_index
+                                                  lexeme = |FINAL({ lv_name })| ) )
+                        iv_suffix    = `.` ).
+      ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-to_final
+                                      iv_statement_from = sy-tabix
+                                      it_new_code       = VALUE #( ( lv_line ) ) ).
+
+      report_statement( is_statement    = <ls_statement>
+                        iv_finding_code = c_finding_codes-prefer_final
+                        is_quickfix     = ls_quickfix ).
+      CLEAR ls_declaration.
     ENDLOOP.
   ENDMETHOD.
 
   METHOD is_written.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_ref>       TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
-
-    rv_written = abap_false.
-
-    LOOP AT it_statements ASSIGNING <ls_statement>.
-      LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-        LOOP AT <ls_token>-references ASSIGNING <ls_ref>
-             WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
-          IF <ls_ref>-full_name <> iv_full_name AND <ls_ref>-full_name NP |{ iv_full_name }\\*|.
-            CONTINUE.
-          ENDIF.
-          IF zcl_skylint_ast_util=>is_write_usage( <ls_ref> ) = abap_true.
-            rv_written = abap_true.
-            RETURN.
-          ENDIF.
-        ENDLOOP.
-      ENDLOOP.
-    ENDLOOP.
+    rv_written = zcl_skylint_ast_util=>has_data_write_usage( it_statements = it_statements
+                                                             iv_full_name  = iv_full_name ).
   ENDMETHOD.
 ENDCLASS.

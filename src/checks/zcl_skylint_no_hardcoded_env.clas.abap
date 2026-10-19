@@ -105,37 +105,35 @@ CLASS zcl_skylint_no_hardcoded_env IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_env_var_token.
-    FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    DATA ls_ref TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     rv_env_var = c_env_vars-none.
 
-    LOOP AT is_token-references ASSIGNING <ls_ref>
-         WHERE     kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-               AND (    usage_mode = if_ci_atc_source_code_provider=>usage_modes-read
-                     OR usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_and_write
-                     OR usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_reference
-                     OR usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_and_write_reference ).
-      CASE <ls_ref>-full_name.
-        WHEN '\DA:SY\DA:SYSID' OR '\DA:SYST\DA:SYSID'.
-          rv_env_var = c_env_vars-sysid.
-          RETURN.
-        WHEN '\DA:SY\DA:MANDT' OR '\DA:SYST\DA:MANDT'.
-          rv_env_var = c_env_vars-mandt.
-          RETURN.
-        WHEN '\DA:SY\DA:HOST' OR '\DA:SYST\DA:HOST'.
-          rv_env_var = c_env_vars-host.
-          RETURN.
-        WHEN '\DA:SY\DA:DBSYS' OR '\DA:SYST\DA:DBSYS'.
-          rv_env_var = c_env_vars-dbsys.
-          RETURN.
-        WHEN '\DA:SY\DA:OPSYS' OR '\DA:SYST\DA:OPSYS'.
-          rv_env_var = c_env_vars-opsys.
-          RETURN.
-        WHEN '\DA:SY\DA:UNAME' OR '\DA:SYST\DA:UNAME'.
-          rv_env_var = c_env_vars-uname.
-          RETURN.
-      ENDCASE.
-    ENDLOOP.
+    ls_ref = zcl_skylint_ast_util=>get_reference(
+                 is_token = is_token
+                 iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
+    IF ls_ref-full_name IS INITIAL.
+      RETURN.
+    ENDIF.
+
+    IF zcl_skylint_ast_util=>is_read_usage( ls_ref ) = abap_false.
+      RETURN.
+    ENDIF.
+
+    CASE ls_ref-full_name.
+      WHEN '\DA:SY\DA:SYSID' OR '\DA:SYST\DA:SYSID'.
+        rv_env_var = c_env_vars-sysid.
+      WHEN '\DA:SY\DA:MANDT' OR '\DA:SYST\DA:MANDT'.
+        rv_env_var = c_env_vars-mandt.
+      WHEN '\DA:SY\DA:HOST' OR '\DA:SYST\DA:HOST'.
+        rv_env_var = c_env_vars-host.
+      WHEN '\DA:SY\DA:DBSYS' OR '\DA:SYST\DA:DBSYS'.
+        rv_env_var = c_env_vars-dbsys.
+      WHEN '\DA:SY\DA:OPSYS' OR '\DA:SYST\DA:OPSYS'.
+        rv_env_var = c_env_vars-opsys.
+      WHEN '\DA:SY\DA:UNAME' OR '\DA:SYST\DA:UNAME'.
+        rv_env_var = c_env_vars-uname.
+    ENDCASE.
   ENDMETHOD.
 
   METHOD is_env_enabled.

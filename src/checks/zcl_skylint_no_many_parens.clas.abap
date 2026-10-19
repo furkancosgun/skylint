@@ -152,7 +152,8 @@ CLASS zcl_skylint_no_many_parens IMPLEMENTATION.
     IF iv_open > 1.
       ls_prev = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                  iv_index     = iv_open - 1 ).
-      IF ls_prev-lexeme = 'NOT' AND ls_prev-references IS INITIAL.
+      IF zcl_skylint_ast_util=>token_is_keyword( is_token  = ls_prev
+                                                 iv_lexeme = 'NOT' ) = abap_true.
         RETURN.
       ENDIF.
     ENDIF.
@@ -162,7 +163,7 @@ CLASS zcl_skylint_no_many_parens IMPLEMENTATION.
     WHILE lv_idx < iv_close.
       ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                 iv_index     = lv_idx ).
-      IF lv_depth = 0 AND ls_tok-references IS INITIAL.
+      IF lv_depth = 0 AND zcl_skylint_ast_util=>token_is_keyword( ls_tok ) = abap_true.
         IF    zcl_skylint_ast_util=>is_comparison_operator( ls_tok-lexeme ) = abap_true
            OR ls_tok-lexeme = 'IS'
            OR ls_tok-lexeme = 'IN'
@@ -194,14 +195,16 @@ CLASS zcl_skylint_no_many_parens IMPLEMENTATION.
       IF iv_open > 1.
         ls_prev = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                    iv_index     = iv_open - 1 ).
-        IF ls_prev-lexeme = 'AND' AND ls_prev-references IS INITIAL.
+        IF zcl_skylint_ast_util=>token_is_keyword( is_token  = ls_prev
+                                                   iv_lexeme = 'AND' ) = abap_true.
           RETURN.
         ENDIF.
       ENDIF.
       IF iv_close < lv_count.
         ls_next = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                    iv_index     = iv_close + 1 ).
-        IF ls_next-lexeme = 'AND' AND ls_next-references IS INITIAL.
+        IF zcl_skylint_ast_util=>token_is_keyword( is_token  = ls_next
+                                                   iv_lexeme = 'AND' ) = abap_true.
           RETURN.
         ENDIF.
       ENDIF.

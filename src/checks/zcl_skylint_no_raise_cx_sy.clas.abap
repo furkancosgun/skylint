@@ -73,16 +73,11 @@ CLASS zcl_skylint_no_raise_cx_sy IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_system_exception_token.
-    FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    DATA ls_ref TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
-    rv_yes = abap_false.
-
-    LOOP AT is_token-references ASSIGNING <ls_ref>
-         WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-type.
-      IF <ls_ref>-full_name CP '\TY:CX_SY_*'.
-        rv_yes = abap_true.
-        RETURN.
-      ENDIF.
-    ENDLOOP.
+    ls_ref = zcl_skylint_ast_util=>get_reference(
+                 is_token = is_token
+                 iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-type ).
+    rv_yes = xsdbool( ls_ref-full_name CP '\TY:CX_SY_*' ).
   ENDMETHOD.
 ENDCLASS.

@@ -93,7 +93,8 @@ CLASS zcl_skylint_pref_insert IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      IF lv_depth = 0 AND <ls_tok>-lexeme = 'TO' AND <ls_tok>-references IS INITIAL.
+      IF lv_depth = 0 AND zcl_skylint_ast_util=>token_is_keyword( is_token  = <ls_tok>
+                                                                  iv_lexeme = 'TO' ) = abap_true.
         rv_index = lv_idx.
         RETURN.
       ENDIF.

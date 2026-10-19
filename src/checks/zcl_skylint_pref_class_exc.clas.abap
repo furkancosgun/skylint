@@ -55,15 +55,7 @@ CLASS zcl_skylint_pref_class_exc IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD has_classic_exceptions.
-    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
-
-    rv_res = abap_false.
-
-    LOOP AT is_statement-tokens INTO ls_tok.
-      IF ls_tok-lexeme = 'EXCEPTIONS' AND ls_tok-references IS INITIAL.
-        rv_res = abap_true.
-        RETURN.
-      ENDIF.
-    ENDLOOP.
+    rv_res = zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                     iv_lexeme    = 'EXCEPTIONS' ).
   ENDMETHOD.
 ENDCLASS.

@@ -22,11 +22,6 @@ CLASS zcl_skylint_pref_msg_cls DEFINITION
                 is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
-    METHODS get_declaration_type
-      IMPORTING it_statements  TYPE if_ci_atc_source_code_provider=>ty_statements
-                iv_full_name   TYPE if_ci_atc_source_code_provider=>ty_full_name
-      RETURNING VALUE(rv_type) TYPE string.
-
 ENDCLASS.
 
 
@@ -80,10 +75,10 @@ CLASS zcl_skylint_pref_msg_cls IMPLEMENTATION.
 
     IF    zcl_skylint_ast_util=>has_compiler_reference(
               is_token = ls_token
-              iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-message ) = abap_true
+              iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-message )        = abap_true
        OR zcl_skylint_ast_util=>has_compiler_reference(
               is_token = ls_token
-              iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-message_id ) = abap_true
+              iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-message_id )     = abap_true
        OR zcl_skylint_ast_util=>has_compiler_reference(
               is_token = ls_token
               iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-message_number ) = abap_true.
@@ -97,8 +92,8 @@ CLASS zcl_skylint_pref_msg_cls IMPLEMENTATION.
         RETURN.
       ENDIF.
       IF <ls_ref>-kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
-        lv_type = get_declaration_type( it_statements = it_statements
-                                        iv_full_name  = <ls_ref>-full_name ).
+        lv_type = zcl_skylint_ast_util=>get_declared_type( it_statements = it_statements
+                                                           iv_full_name  = <ls_ref>-full_name ).
         IF lv_type IS NOT INITIAL AND zcl_skylint_rtti_util=>describe_object( lv_type ) IS BOUND.
           rv_yes = abap_true.
           RETURN.
@@ -107,25 +102,5 @@ CLASS zcl_skylint_pref_msg_cls IMPLEMENTATION.
     ENDLOOP.
 
     rv_yes = abap_false.
-  ENDMETHOD.
-
-  METHOD get_declaration_type.
-    DATA ls_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
-
-    CLEAR rv_type.
-    LOOP AT it_statements INTO ls_stmt.
-      LOOP AT ls_stmt-tokens INTO ls_tok.
-        IF line_exists( ls_tok-references[ kind      = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-                                           full_name = iv_full_name ] ).
-          LOOP AT ls_tok-references ASSIGNING <ls_ref>
-               WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-type.
-            rv_type = <ls_ref>-full_name.
-            RETURN.
-          ENDLOOP.
-        ENDIF.
-      ENDLOOP.
-    ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

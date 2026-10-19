@@ -106,7 +106,8 @@ CLASS zcl_skylint_pref_case IMPLEMENTATION.
     ls_tok3 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                iv_index     = 3 ).
 
-    IF ( ls_tok3-lexeme = '=' OR ls_tok3-lexeme = 'EQ' ) AND ls_tok3-references IS INITIAL.
+    IF     zcl_skylint_ast_util=>token_is_keyword( ls_tok3 ) = abap_true
+       AND ( ls_tok3-lexeme = '=' OR ls_tok3-lexeme = 'EQ' ).
       rv_var = ls_tok2-lexeme.
     ENDIF.
   ENDMETHOD.

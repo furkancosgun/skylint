@@ -60,7 +60,7 @@ CLASS zcl_skylint_pref_cast IMPLEMENTATION.
       IF lv_tok_idx > 1.
         ls_tok = zcl_skylint_ast_util=>get_token( is_statement = <ls_statement>
                                                   iv_index     = lv_tok_idx ).
-        IF ls_tok-references IS INITIAL.
+        IF zcl_skylint_ast_util=>token_is_keyword( ls_tok ) = abap_true.
           CLEAR: lt_overrides,
                  ls_quickfix.
 

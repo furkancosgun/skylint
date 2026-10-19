@@ -77,9 +77,9 @@ CLASS zcl_skylint_no_unused_vars IMPLEMENTATION.
   METHOD collect_declarations.
     DATA lv_struct_depth TYPE i.
     DATA ls_decl         TYPE ty_variable_decl.
+    DATA ls_ref          TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_tok>  TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_ref>  TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     LOOP AT it_statements ASSIGNING <ls_stmt>.
       IF <ls_stmt>-keyword = 'DATA' OR <ls_stmt>-keyword = 'FIELD-SYMBOLS'.
@@ -101,33 +101,33 @@ CLASS zcl_skylint_no_unused_vars IMPLEMENTATION.
       ENDIF.
 
       LOOP AT <ls_stmt>-tokens ASSIGNING <ls_tok>.
-        LOOP AT <ls_tok>-references ASSIGNING <ls_ref>
-             WHERE     kind        = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-                   AND usage_grade = if_ci_atc_source_code_provider=>usage_grades-definition.
+        ls_ref = zcl_skylint_ast_util=>get_reference( <ls_tok> ).
+        IF zcl_skylint_ast_util=>is_data_definition( ls_ref ) = abap_false.
+          CONTINUE.
+        ENDIF.
 
-          IF <ls_ref>-full_name IS INITIAL.
-            CONTINUE.
-          ENDIF.
+        IF ls_ref-full_name IS INITIAL.
+          CONTINUE.
+        ENDIF.
 
-          IF line_exists( rt_decls[ full_name = <ls_ref>-full_name ] ).
-            CONTINUE.
-          ENDIF.
+        IF line_exists( rt_decls[ full_name = ls_ref-full_name ] ).
+          CONTINUE.
+        ENDIF.
 
-          CLEAR ls_decl.
-          ls_decl-full_name = <ls_ref>-full_name.
-          ls_decl-statement = <ls_stmt>.
-          ls_decl-token     = <ls_tok>.
+        CLEAR ls_decl.
+        ls_decl-full_name = ls_ref-full_name.
+        ls_decl-statement = <ls_stmt>.
+        ls_decl-token     = <ls_tok>.
 
-          CASE <ls_ref>-usage_mode.
-            WHEN if_ci_atc_source_code_provider=>usage_modes-definition_with_write
-              OR if_ci_atc_source_code_provider=>usage_modes-definition_with_assign.
-              ls_decl-is_inline = abap_true.
-            WHEN OTHERS.
-              ls_decl-is_inline = xsdbool( <ls_stmt>-keyword <> 'DATA' AND <ls_stmt>-keyword <> 'FIELD-SYMBOLS' ).
-          ENDCASE.
+        CASE ls_ref-usage_mode.
+          WHEN if_ci_atc_source_code_provider=>usage_modes-definition_with_write
+            OR if_ci_atc_source_code_provider=>usage_modes-definition_with_assign.
+            ls_decl-is_inline = abap_true.
+          WHEN OTHERS.
+            ls_decl-is_inline = xsdbool( <ls_stmt>-keyword <> 'DATA' AND <ls_stmt>-keyword <> 'FIELD-SYMBOLS' ).
+        ENDCASE.
 
-          APPEND ls_decl TO rt_decls.
-        ENDLOOP.
+        APPEND ls_decl TO rt_decls.
       ENDLOOP.
     ENDLOOP.
   ENDMETHOD.

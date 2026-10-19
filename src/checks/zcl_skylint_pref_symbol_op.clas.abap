@@ -67,8 +67,8 @@ CLASS zcl_skylint_pref_symbol_op IMPLEMENTATION.
 
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
         lv_tok_idx = sy-tabix.
-        IF     <ls_token>-references                   IS INITIAL
-           AND is_legacy_operator( <ls_token>-lexeme )  = abap_true.
+        IF     zcl_skylint_ast_util=>token_is_keyword( <ls_token> ) = abap_true
+           AND is_legacy_operator( <ls_token>-lexeme )              = abap_true.
           lt_overrides = VALUE #( ( index  = lv_tok_idx
                                     lexeme = map_to_symbol( <ls_token>-lexeme ) ) ).
           lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_statement>

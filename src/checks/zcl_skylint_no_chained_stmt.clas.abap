@@ -191,17 +191,8 @@ CLASS zcl_skylint_no_chained_stmt IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_structure_start.
-    DATA lv_lexeme TYPE string.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
-
-    rv_is = abap_false.
-    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      lv_lexeme = <ls_token>-lexeme.
-      IF lv_lexeme = 'BEGIN' AND <ls_token>-references IS INITIAL.
-        rv_is = abap_true.
-        RETURN.
-      ENDIF.
-    ENDLOOP.
+    rv_is = zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                    iv_lexeme    = 'BEGIN' ).
   ENDMETHOD.
 
   METHOD is_same_position.

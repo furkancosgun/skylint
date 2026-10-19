@@ -36,7 +36,6 @@ CLASS zcl_skylint_pref_transport IMPLEMENTATION.
     DATA lv_has_transporting TYPE abap_bool.
     DATA lv_is_itab_modify   TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
@@ -50,18 +49,13 @@ CLASS zcl_skylint_pref_transport IMPLEMENTATION.
 
         WHEN 'MODIFY'.
           IF lv_in_loop > 0.
-            lv_has_transporting = abap_false.
-            lv_is_itab_modify = abap_false.
-
-            LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-              IF <ls_token>-lexeme = 'TRANSPORTING' AND <ls_token>-references IS INITIAL.
-                lv_has_transporting = abap_true.
-              ENDIF.
-              IF     ( <ls_token>-lexeme = 'FROM' OR <ls_token>-lexeme = 'INDEX' )
-                 AND <ls_token>-references IS INITIAL.
-                lv_is_itab_modify = abap_true.
-              ENDIF.
-            ENDLOOP.
+            lv_has_transporting = zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                                          iv_lexeme    = 'TRANSPORTING' ).
+            lv_is_itab_modify = xsdbool(
+                 zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                         iv_lexeme    = 'FROM' )       = abap_true
+              OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                         iv_lexeme    = 'INDEX' )      = abap_true ).
 
             IF lv_is_itab_modify = abap_true AND lv_has_transporting = abap_false.
               report_statement( is_statement    = <ls_statement>

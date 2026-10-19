@@ -97,17 +97,14 @@ CLASS zcl_skylint_pref_inl_cast IMPLEMENTATION.
 
       CLEAR lv_full_name.
       LOOP AT <ls_statement>-tokens INTO ls_token.
-        LOOP AT ls_token-references INTO ls_ref
-             WHERE     kind       = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-                   AND usage_mode = if_ci_atc_source_code_provider=>usage_modes-definition_with_write.
-          IF zcl_skylint_ast_util=>token_is_inline_declaration( is_token  = ls_token
-                                                                iv_prefix = 'DATA' ) = abap_false.
-            CONTINUE.
-          ENDIF.
+        ls_ref = zcl_skylint_ast_util=>get_reference(
+                     is_token      = ls_token
+                     iv_kind       = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+                     iv_usage_mode = if_ci_atc_source_code_provider=>usage_modes-definition_with_write ).
+        IF     ls_ref-full_name IS NOT INITIAL
+           AND zcl_skylint_ast_util=>token_is_inline_declaration( is_token  = ls_token
+                                                                  iv_prefix = 'DATA' )  = abap_true.
           lv_full_name = ls_ref-full_name.
-          EXIT.
-        ENDLOOP.
-        IF lv_full_name IS NOT INITIAL.
           EXIT.
         ENDIF.
       ENDLOOP.
@@ -189,25 +186,24 @@ CLASS zcl_skylint_pref_inl_cast IMPLEMENTATION.
       lv_stmt_index = sy-tabix.
       LOOP AT <ls_statement>-tokens INTO ls_token.
         lv_tok_index = sy-tabix.
-        LOOP AT ls_token-references INTO ls_ref
-             WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
-          IF ls_ref-full_name <> iv_full_name.
-            CONTINUE.
-          ENDIF.
-          IF ls_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-definition_with_write.
-            CONTINUE.
-          ENDIF.
-          IF zcl_skylint_ast_util=>is_write_usage( ls_ref ) = abap_true.
-            rs_result-has_write = abap_true.
-            RETURN.
-          ENDIF.
-          IF     ls_ref-usage_mode <> if_ci_atc_source_code_provider=>usage_modes-read
-             AND ls_ref-usage_mode <> if_ci_atc_source_code_provider=>usage_modes-read_reference.
-            CONTINUE.
-          ENDIF.
-          APPEND VALUE #( statement_index = lv_stmt_index
-                          token_index     = lv_tok_index ) TO rs_result-usages.
-        ENDLOOP.
+        ls_ref = zcl_skylint_ast_util=>get_reference(
+                     is_token = ls_token
+                     iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
+        IF ls_ref-full_name <> iv_full_name.
+          CONTINUE.
+        ENDIF.
+        IF ls_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-definition_with_write.
+          CONTINUE.
+        ENDIF.
+        IF zcl_skylint_ast_util=>is_write_usage( ls_ref ) = abap_true.
+          rs_result-has_write = abap_true.
+          RETURN.
+        ENDIF.
+        IF zcl_skylint_ast_util=>is_read_usage( ls_ref ) = abap_false.
+          CONTINUE.
+        ENDIF.
+        APPEND VALUE #( statement_index = lv_stmt_index
+                        token_index     = lv_tok_index ) TO rs_result-usages.
       ENDLOOP.
     ENDLOOP.
   ENDMETHOD.

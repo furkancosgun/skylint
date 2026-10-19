@@ -168,22 +168,18 @@ CLASS zcl_skylint_no_empty_fae IMPLEMENTATION.
 
   METHOD token_matches_table.
     DATA lv_clean TYPE string.
-    FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    DATA ls_ref   TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
-    rv_matches = abap_false.
     lv_clean = clean_table_name( is_token-lexeme ).
     IF lv_clean = iv_tab_name.
       rv_matches = abap_true.
       RETURN.
     ENDIF.
 
-    LOOP AT is_token-references ASSIGNING <ls_ref>
-         WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
-      IF <ls_ref>-full_name CS |\\DA:{ iv_tab_name }|.
-        rv_matches = abap_true.
-        RETURN.
-      ENDIF.
-    ENDLOOP.
+    ls_ref = zcl_skylint_ast_util=>get_reference(
+                 is_token = is_token
+                 iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
+    rv_matches = xsdbool( ls_ref-full_name CS |\\DA:{ iv_tab_name }| ).
   ENDMETHOD.
 
   METHOD find_table_token_index.

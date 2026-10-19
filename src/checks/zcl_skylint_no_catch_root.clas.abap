@@ -32,27 +32,20 @@ CLASS zcl_skylint_no_catch_root IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
+    DATA ls_ref TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_ref>       TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF <ls_statement>-keyword <> 'CATCH'.
         CONTINUE.
       ENDIF.
-      LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-        LOOP AT <ls_token>-references ASSIGNING <ls_ref>
-             WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-type.
-          IF <ls_ref>-full_name = '\TY:CX_ROOT'.
-            report_statement( is_statement    = <ls_statement>
-                              iv_finding_code = c_finding_codes-catch_root ).
-            EXIT.
-          ENDIF.
-        ENDLOOP.
-        IF sy-subrc = 0.
-          EXIT.
-        ENDIF.
-      ENDLOOP.
+      ls_ref = zcl_skylint_ast_util=>statement_get_reference(
+                   is_statement = <ls_statement>
+                   iv_kind      = if_ci_atc_source_code_provider=>compiler_reference_kinds-type ).
+      IF ls_ref-full_name = '\TY:CX_ROOT'.
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-catch_root ).
+      ENDIF.
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

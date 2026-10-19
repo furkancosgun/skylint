@@ -7,6 +7,8 @@ CLASS ltcl_ast_util DEFINITION FINAL
     METHODS test_relative_token_search   FOR TESTING RAISING cx_static_check.
     METHODS test_semantic_helpers        FOR TESTING RAISING cx_static_check.
     METHODS test_keyword_reference_guard FOR TESTING RAISING cx_static_check.
+    METHODS test_ref_helpers             FOR TESTING RAISING cx_static_check.
+    METHODS test_keyword_and_type        FOR TESTING RAISING cx_static_check.
 ENDCLASS.
 
 
@@ -170,5 +172,66 @@ CLASS ltcl_ast_util IMPLEMENTATION.
     ls_tok = zcl_skylint_ast_util=>get_token( is_statement = ls_stmt
                                               iv_index     = 3 ).
     cl_abap_unit_assert=>assert_true( zcl_skylint_ast_util=>token_is_literal( ls_tok ) ).
+  ENDMETHOD.
+
+  METHOD test_ref_helpers.
+    DATA ls_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_ref  TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    DATA lv_has  TYPE abap_bool.
+
+    ls_stmt = VALUE #( keyword = 'MESSAGE'
+                       tokens  = VALUE #(
+                           ( lexeme     = 'e001(00)'
+                             references = VALUE #(
+                                 ( kind       = if_ci_atc_source_code_provider=>compiler_reference_kinds-message_id
+                                   usage_mode = if_ci_atc_source_code_provider=>usage_modes-read ) ) ) ) ).
+
+    lv_has = zcl_skylint_ast_util=>statement_has_reference(
+                 is_statement = ls_stmt
+                 iv_kind      = if_ci_atc_source_code_provider=>compiler_reference_kinds-message_id ).
+    cl_abap_unit_assert=>assert_true( lv_has ).
+
+    ls_ref = zcl_skylint_ast_util=>statement_get_reference(
+                 is_statement = ls_stmt
+                 iv_kind      = if_ci_atc_source_code_provider=>compiler_reference_kinds-message_id ).
+    cl_abap_unit_assert=>assert_not_initial( ls_ref-kind ).
+
+    ls_tok = zcl_skylint_ast_util=>statement_get_token(
+                 is_statement = ls_stmt
+                 iv_kind      = if_ci_atc_source_code_provider=>compiler_reference_kinds-message_id ).
+    cl_abap_unit_assert=>assert_equals( exp = 'e001(00)'
+                                        act = ls_tok-lexeme ).
+  ENDMETHOD.
+
+  METHOD test_keyword_and_type.
+    DATA ls_tok   TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lt_stmts TYPE if_ci_atc_source_code_provider=>ty_statements.
+    DATA lv_type  TYPE string.
+
+    ls_tok = VALUE #( lexeme = 'FRIENDS' ).
+    cl_abap_unit_assert=>assert_true( zcl_skylint_ast_util=>token_is_keyword( ls_tok ) ).
+    cl_abap_unit_assert=>assert_true( zcl_skylint_ast_util=>token_is_keyword( is_token  = ls_tok
+                                                                              iv_lexeme = 'FRIENDS' ) ).
+    cl_abap_unit_assert=>assert_false( zcl_skylint_ast_util=>token_is_keyword( is_token  = ls_tok
+                                                                               iv_lexeme = 'OTHER' ) ).
+
+    ls_tok-references = VALUE #( ( kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ) ).
+    cl_abap_unit_assert=>assert_false( zcl_skylint_ast_util=>token_is_keyword( ls_tok ) ).
+
+    lt_stmts = VALUE #(
+        ( keyword = 'DATA'
+          tokens  = VALUE #( ( lexeme     = 'LX_ERR'
+                               references = VALUE #(
+                                   ( full_name  = '\PR:TEST\DA:LX_ERR'
+                                     kind       = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+                                     usage_mode = if_ci_atc_source_code_provider=>usage_modes-definition )
+                                   ( full_name  = '\TY:CX_ROOT'
+                                     kind       = if_ci_atc_source_code_provider=>compiler_reference_kinds-type ) ) ) ) ) ).
+
+    lv_type = zcl_skylint_ast_util=>get_declared_type( it_statements = lt_stmts
+                                                       iv_full_name  = '\PR:TEST\DA:LX_ERR' ).
+    cl_abap_unit_assert=>assert_equals( exp = '\TY:CX_ROOT'
+                                        act = lv_type ).
   ENDMETHOD.
 ENDCLASS.

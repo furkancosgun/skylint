@@ -107,6 +107,8 @@ CLASS zcl_skylint_ast_util DEFINITION
 
     "! True when the token opens an inline declaration, i.e. DATA( ) or FINAL( ).
     "!
+    "! @parameter is_token |
+    "! @parameter iv_prefix |
     "! @parameter rv_yes |
     CLASS-METHODS token_is_inline_declaration
       IMPORTING is_token      TYPE if_ci_atc_source_code_provider=>ty_token
@@ -115,6 +117,7 @@ CLASS zcl_skylint_ast_util DEFINITION
 
     "! Net nesting effect of a token: +1 for each opening and -1 for each closing delimiter.
     "!
+    "! @parameter is_token |
     "! @parameter rv_delta |
     CLASS-METHODS token_paren_delta
       IMPORTING is_token        TYPE if_ci_atc_source_code_provider=>ty_token
@@ -125,18 +128,69 @@ CLASS zcl_skylint_ast_util DEFINITION
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
     CLASS-METHODS has_compiler_reference
-      IMPORTING is_token      TYPE if_ci_atc_source_code_provider=>ty_token
-                iv_kind       TYPE if_ci_atc_source_code_provider=>ty_reference_kind
-                iv_usage_mode TYPE if_ci_atc_source_code_provider=>ty_usage_mode OPTIONAL
-      RETURNING VALUE(rv_has) TYPE abap_bool.
+      IMPORTING is_token       TYPE if_ci_atc_source_code_provider=>ty_token
+                iv_kind        TYPE if_ci_atc_source_code_provider=>ty_reference_kind OPTIONAL
+                iv_usage_mode  TYPE if_ci_atc_source_code_provider=>ty_usage_mode     OPTIONAL
+                iv_usage_grade TYPE if_ci_atc_source_code_provider=>ty_usage_grade    OPTIONAL
+      RETURNING VALUE(rv_has)  TYPE abap_bool.
 
     CLASS-METHODS get_reference
       IMPORTING is_token            TYPE if_ci_atc_source_code_provider=>ty_token
-                iv_kind             TYPE if_ci_atc_source_code_provider=>ty_reference_kind
-                iv_usage_mode       TYPE if_ci_atc_source_code_provider=>ty_usage_mode OPTIONAL
+                iv_kind             TYPE if_ci_atc_source_code_provider=>ty_reference_kind OPTIONAL
+                iv_usage_mode       TYPE if_ci_atc_source_code_provider=>ty_usage_mode     OPTIONAL
+                iv_usage_grade      TYPE if_ci_atc_source_code_provider=>ty_usage_grade    OPTIONAL
       RETURNING VALUE(rs_reference) TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
+    CLASS-METHODS statement_has_reference
+      IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_kind        TYPE if_ci_atc_source_code_provider=>ty_reference_kind OPTIONAL
+                iv_usage_mode  TYPE if_ci_atc_source_code_provider=>ty_usage_mode     OPTIONAL
+                iv_usage_grade TYPE if_ci_atc_source_code_provider=>ty_usage_grade    OPTIONAL
+      RETURNING VALUE(rv_has)  TYPE abap_bool.
+
+    CLASS-METHODS statement_get_reference
+      IMPORTING is_statement        TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_kind             TYPE if_ci_atc_source_code_provider=>ty_reference_kind OPTIONAL
+                iv_usage_mode       TYPE if_ci_atc_source_code_provider=>ty_usage_mode     OPTIONAL
+                iv_usage_grade      TYPE if_ci_atc_source_code_provider=>ty_usage_grade    OPTIONAL
+      RETURNING VALUE(rs_reference) TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+
+    CLASS-METHODS statement_get_token
+      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_kind         TYPE if_ci_atc_source_code_provider=>ty_reference_kind OPTIONAL
+                iv_usage_mode   TYPE if_ci_atc_source_code_provider=>ty_usage_mode     OPTIONAL
+                iv_usage_grade  TYPE if_ci_atc_source_code_provider=>ty_usage_grade    OPTIONAL
+      RETURNING VALUE(rs_token) TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    CLASS-METHODS token_is_keyword
+      IMPORTING is_token      TYPE if_ci_atc_source_code_provider=>ty_token
+                iv_lexeme     TYPE string OPTIONAL
+      RETURNING VALUE(rv_yes) TYPE abap_bool.
+
+    CLASS-METHODS get_declared_type
+      IMPORTING it_statements  TYPE if_ci_atc_source_code_provider=>ty_statements
+                iv_full_name   TYPE if_ci_atc_source_code_provider=>ty_full_name
+      RETURNING VALUE(rv_type) TYPE string.
+
+    CLASS-METHODS statement_get_references
+      IMPORTING is_statement         TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_kind              TYPE if_ci_atc_source_code_provider=>ty_reference_kind OPTIONAL
+      RETURNING VALUE(rt_references) TYPE if_ci_atc_source_code_provider=>ty_compiler_references.
+
     CLASS-METHODS is_write_usage
+      IMPORTING is_reference          TYPE if_ci_atc_source_code_provider=>ty_compiler_reference
+                iv_include_definition TYPE abap_bool DEFAULT abap_false
+      RETURNING VALUE(rv_yes)         TYPE abap_bool.
+
+    CLASS-METHODS is_read_usage
+      IMPORTING is_reference  TYPE if_ci_atc_source_code_provider=>ty_compiler_reference
+      RETURNING VALUE(rv_yes) TYPE abap_bool.
+
+    CLASS-METHODS is_data_definition
+      IMPORTING is_reference  TYPE if_ci_atc_source_code_provider=>ty_compiler_reference
+      RETURNING VALUE(rv_yes) TYPE abap_bool.
+
+    CLASS-METHODS is_data_usage
       IMPORTING is_reference  TYPE if_ci_atc_source_code_provider=>ty_compiler_reference
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
@@ -152,11 +206,12 @@ CLASS zcl_skylint_ast_util DEFINITION
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
     CLASS-METHODS has_data_write_usage
-      IMPORTING it_statements TYPE if_ci_atc_source_code_provider=>ty_statements
-                iv_full_name  TYPE string
-                iv_from_idx   TYPE i DEFAULT 1
-                iv_to_idx     TYPE i DEFAULT 0
-      RETURNING VALUE(rv_yes) TYPE abap_bool.
+      IMPORTING it_statements         TYPE if_ci_atc_source_code_provider=>ty_statements
+                iv_full_name          TYPE string
+                iv_from_idx           TYPE i         DEFAULT 1
+                iv_to_idx             TYPE i         DEFAULT 0
+                iv_include_definition TYPE abap_bool DEFAULT abap_false
+      RETURNING VALUE(rv_yes)         TYPE abap_bool.
 
     CLASS-METHODS token_count
       IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
@@ -190,11 +245,6 @@ CLASS zcl_skylint_ast_util DEFINITION
       RETURNING VALUE(rv_line) TYPE string.
 
   PRIVATE SECTION.
-    CLASS-METHODS token_has_ref
-      IMPORTING is_token      TYPE if_ci_atc_source_code_provider=>ty_token
-                iv_kind       TYPE if_ci_atc_source_code_provider=>ty_reference_kind
-      RETURNING VALUE(rv_has) TYPE abap_bool.
-
     CLASS-METHODS normalize_identifier_name
       IMPORTING iv_raw         TYPE string
       RETURNING VALUE(rv_name) TYPE string.
@@ -452,19 +502,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
     ENDIF.
   ENDMETHOD.
 
-  METHOD token_has_ref.
-    rv_has = abap_false.
-
-    LOOP AT is_token-references TRANSPORTING NO FIELDS
-         WHERE kind = iv_kind.
-      rv_has = abap_true.
-      RETURN.
-    ENDLOOP.
-  ENDMETHOD.
-
   METHOD statement_is_method_call.
-    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
-
     rv_has = abap_false.
 
     CASE is_statement-keyword.
@@ -473,30 +511,16 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
         RETURN.
     ENDCASE.
 
-    LOOP AT is_statement-tokens INTO ls_tok.
-      IF token_has_ref( is_token = ls_tok
-                        iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-method ) = abap_true.
-        rv_has = abap_true.
-        RETURN.
-      ENDIF.
-    ENDLOOP.
+    rv_has = statement_has_reference( is_statement = is_statement
+                                      iv_kind      = if_ci_atc_source_code_provider=>compiler_reference_kinds-method ).
   ENDMETHOD.
 
   METHOD statement_is_db_access.
-    FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
-
-    rv_yes = abap_false.
-
-    LOOP AT is_statement-tokens ASSIGNING <ls_tok>.
-      LOOP AT <ls_tok>-references ASSIGNING <ls_ref>.
-        IF    <ls_ref>-usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_database
-           OR <ls_ref>-usage_mode = if_ci_atc_source_code_provider=>usage_modes-write_database.
-          rv_yes = abap_true.
-          RETURN.
-        ENDIF.
-      ENDLOOP.
-    ENDLOOP.
+    rv_yes = xsdbool(
+         statement_has_reference( is_statement  = is_statement
+                                  iv_usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_database )  = abap_true
+      OR statement_has_reference( is_statement  = is_statement
+                                  iv_usage_mode = if_ci_atc_source_code_provider=>usage_modes-write_database ) = abap_true ).
   ENDMETHOD.
 
   METHOD is_assignment.
@@ -629,11 +653,18 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
     FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     rv_has = abap_false.
-    LOOP AT is_token-references ASSIGNING <ls_ref> WHERE kind = iv_kind.
-      IF iv_usage_mode IS INITIAL OR <ls_ref>-usage_mode = iv_usage_mode.
-        rv_has = abap_true.
-        RETURN.
+    LOOP AT is_token-references ASSIGNING <ls_ref>.
+      IF iv_kind IS NOT INITIAL AND <ls_ref>-kind <> iv_kind.
+        CONTINUE.
       ENDIF.
+      IF iv_usage_mode IS NOT INITIAL AND <ls_ref>-usage_mode <> iv_usage_mode.
+        CONTINUE.
+      ENDIF.
+      IF iv_usage_grade IS NOT INITIAL AND <ls_ref>-usage_grade <> iv_usage_grade.
+        CONTINUE.
+      ENDIF.
+      rv_has = abap_true.
+      RETURN.
     ENDLOOP.
   ENDMETHOD.
 
@@ -641,11 +672,122 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
     FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     CLEAR rs_reference.
-    LOOP AT is_token-references ASSIGNING <ls_ref> WHERE kind = iv_kind.
-      IF iv_usage_mode IS INITIAL OR <ls_ref>-usage_mode = iv_usage_mode.
-        rs_reference = <ls_ref>.
+    LOOP AT is_token-references ASSIGNING <ls_ref>.
+      IF iv_kind IS NOT INITIAL AND <ls_ref>-kind <> iv_kind.
+        CONTINUE.
+      ENDIF.
+      IF iv_usage_mode IS NOT INITIAL AND <ls_ref>-usage_mode <> iv_usage_mode.
+        CONTINUE.
+      ENDIF.
+      IF iv_usage_grade IS NOT INITIAL AND <ls_ref>-usage_grade <> iv_usage_grade.
+        CONTINUE.
+      ENDIF.
+      rs_reference = <ls_ref>.
+      RETURN.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD statement_has_reference.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    rv_has = abap_false.
+    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
+      IF has_compiler_reference( is_token       = <ls_token>
+                                 iv_kind        = iv_kind
+                                 iv_usage_mode  = iv_usage_mode
+                                 iv_usage_grade = iv_usage_grade ) = abap_true.
+        rv_has = abap_true.
         RETURN.
       ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD statement_get_reference.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    CLEAR rs_reference.
+    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
+      rs_reference = get_reference( is_token       = <ls_token>
+                                    iv_kind        = iv_kind
+                                    iv_usage_mode  = iv_usage_mode
+                                    iv_usage_grade = iv_usage_grade ).
+      IF rs_reference IS NOT INITIAL.
+        RETURN.
+      ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD statement_get_token.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    CLEAR rs_token.
+    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
+      IF has_compiler_reference( is_token       = <ls_token>
+                                 iv_kind        = iv_kind
+                                 iv_usage_mode  = iv_usage_mode
+                                 iv_usage_grade = iv_usage_grade ) = abap_true.
+        rs_token = <ls_token>.
+        RETURN.
+      ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD token_is_keyword.
+    rv_yes = abap_false.
+    IF is_token-references IS NOT INITIAL.
+      RETURN.
+    ENDIF.
+    IF iv_lexeme IS INITIAL.
+      rv_yes = abap_true.
+    ELSEIF to_upper( is_token-lexeme ) = to_upper( iv_lexeme ).
+      rv_yes = abap_true.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD get_declared_type.
+    DATA lv_name TYPE string.
+    DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_ref>  TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+
+    CLEAR rv_type.
+    lv_name = get_reference_name( iv_full_name ).
+    IF lv_name IS INITIAL.
+      RETURN.
+    ENDIF.
+
+    LOOP AT it_statements ASSIGNING <ls_stmt>.
+      IF <ls_stmt>-keyword <> 'DATA'.
+        CONTINUE.
+      ENDIF.
+      IF has_token_lexeme( is_statement = <ls_stmt>
+                           iv_lexeme    = lv_name ) = abap_false.
+        CONTINUE.
+      ENDIF.
+      LOOP AT <ls_stmt>-tokens INTO ls_tok.
+        IF line_exists( ls_tok-references[ kind      = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+                                           full_name = iv_full_name ] ).
+          LOOP AT ls_tok-references ASSIGNING <ls_ref>
+               WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-type.
+            rv_type = <ls_ref>-full_name.
+            RETURN.
+          ENDLOOP.
+        ENDIF.
+      ENDLOOP.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD statement_get_references.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_ref>   TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+
+    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
+      LOOP AT <ls_token>-references ASSIGNING <ls_ref>.
+        IF iv_kind IS NOT INITIAL AND <ls_ref>-kind <> iv_kind.
+          CONTINUE.
+        ENDIF.
+        APPEND <ls_ref> TO rt_references.
+      ENDLOOP.
     ENDLOOP.
   ENDMETHOD.
 
@@ -656,18 +798,61 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
         OR if_ci_atc_source_code_provider=>usage_modes-read_and_write
         OR if_ci_atc_source_code_provider=>usage_modes-write_reference
         OR if_ci_atc_source_code_provider=>usage_modes-read_and_write_reference
-        OR if_ci_atc_source_code_provider=>usage_modes-any_access_reference.
+        OR if_ci_atc_source_code_provider=>usage_modes-any_access_reference
+        OR if_ci_atc_source_code_provider=>usage_modes-write_database.
+        rv_yes = abap_true.
+      WHEN if_ci_atc_source_code_provider=>usage_modes-definition_with_write
+        OR if_ci_atc_source_code_provider=>usage_modes-definition_with_assign.
+        IF iv_include_definition = abap_true.
+          rv_yes = abap_true.
+        ENDIF.
+      WHEN OTHERS.
+        rv_yes = abap_false.
+    ENDCASE.
+  ENDMETHOD.
+
+  METHOD is_read_usage.
+    CASE is_reference-usage_mode.
+      WHEN if_ci_atc_source_code_provider=>usage_modes-read
+        OR if_ci_atc_source_code_provider=>usage_modes-read_and_write
+        OR if_ci_atc_source_code_provider=>usage_modes-read_reference
+        OR if_ci_atc_source_code_provider=>usage_modes-read_and_write_reference
+        OR if_ci_atc_source_code_provider=>usage_modes-any_access_reference
+        OR if_ci_atc_source_code_provider=>usage_modes-read_database.
         rv_yes = abap_true.
       WHEN OTHERS.
         rv_yes = abap_false.
     ENDCASE.
   ENDMETHOD.
 
+  METHOD is_data_definition.
+    rv_yes = xsdbool(
+          is_reference-kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+      AND (    is_reference-usage_grade = if_ci_atc_source_code_provider=>usage_grades-definition
+            OR is_reference-usage_mode  = if_ci_atc_source_code_provider=>usage_modes-definition
+            OR is_reference-usage_mode  = if_ci_atc_source_code_provider=>usage_modes-definition_with_write
+            OR is_reference-usage_mode  = if_ci_atc_source_code_provider=>usage_modes-definition_with_assign ) ).
+  ENDMETHOD.
+
+  METHOD is_data_usage.
+    rv_yes = xsdbool(
+          is_reference-kind                  = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+      AND is_data_definition( is_reference ) = abap_false ).
+  ENDMETHOD.
+
   METHOD get_reference_name.
-    DATA lv_off TYPE i.
-    DATA lv_len TYPE i.
+    DATA lv_parsed_name TYPE string.
+    DATA lv_off         TYPE i.
+    DATA lv_len         TYPE i.
 
     CLEAR rv_name.
+    zcl_skylint_rtti_util=>parse_full_name( EXPORTING iv_full_name = iv_full_name
+                                            IMPORTING ev_data_name = lv_parsed_name ).
+    IF lv_parsed_name IS NOT INITIAL.
+      rv_name = lv_parsed_name.
+      RETURN.
+    ENDIF.
+
     rv_name = condense( iv_full_name ).
     IF rv_name IS INITIAL.
       RETURN.
@@ -713,16 +898,10 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
         LOOP AT <ls_tok>-references ASSIGNING <ls_ref>
              WHERE     kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
                    AND ( full_name = iv_full_name OR full_name CP |{ iv_full_name }\\*| ).
-          CASE <ls_ref>-usage_mode.
-            WHEN if_ci_atc_source_code_provider=>usage_modes-read
-              OR if_ci_atc_source_code_provider=>usage_modes-read_and_write
-              OR if_ci_atc_source_code_provider=>usage_modes-read_reference
-              OR if_ci_atc_source_code_provider=>usage_modes-read_and_write_reference
-              OR if_ci_atc_source_code_provider=>usage_modes-any_access_reference
-              OR if_ci_atc_source_code_provider=>usage_modes-read_database.
-              rv_yes = abap_true.
-              RETURN.
-          ENDCASE.
+          IF is_read_usage( <ls_ref> ) = abap_true.
+            rv_yes = abap_true.
+            RETURN.
+          ENDIF.
         ENDLOOP.
       ENDLOOP.
       lv_idx += 1.
@@ -757,18 +936,11 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
         LOOP AT <ls_tok>-references ASSIGNING <ls_ref>
              WHERE     kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
                    AND ( full_name = iv_full_name OR full_name CP |{ iv_full_name }\\*| ).
-          CASE <ls_ref>-usage_mode.
-            WHEN if_ci_atc_source_code_provider=>usage_modes-write
-              OR if_ci_atc_source_code_provider=>usage_modes-write_partial
-              OR if_ci_atc_source_code_provider=>usage_modes-read_and_write
-              OR if_ci_atc_source_code_provider=>usage_modes-definition_with_write
-              OR if_ci_atc_source_code_provider=>usage_modes-definition_with_assign
-              OR if_ci_atc_source_code_provider=>usage_modes-write_database
-              OR if_ci_atc_source_code_provider=>usage_modes-read_and_write_reference
-              OR if_ci_atc_source_code_provider=>usage_modes-any_access_reference.
-              rv_yes = abap_true.
-              RETURN.
-          ENDCASE.
+          IF is_write_usage( is_reference          = <ls_ref>
+                             iv_include_definition = iv_include_definition ) = abap_true.
+            rv_yes = abap_true.
+            RETURN.
+          ENDIF.
         ENDLOOP.
       ENDLOOP.
       lv_idx += 1.
@@ -800,11 +972,8 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
 
     LOOP AT it_statements ASSIGNING <ls_statement>.
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-        LOOP AT <ls_token>-references ASSIGNING <ls_ref>
-             WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
-          IF    <ls_ref>-usage_mode = if_ci_atc_source_code_provider=>usage_modes-definition
-             OR <ls_ref>-usage_mode = if_ci_atc_source_code_provider=>usage_modes-definition_with_write
-             OR <ls_ref>-usage_mode = if_ci_atc_source_code_provider=>usage_modes-definition_with_assign.
+        LOOP AT <ls_token>-references ASSIGNING <ls_ref>.
+          IF is_data_definition( <ls_ref> ) = abap_true.
             lv_off = strlen( <ls_ref>-full_name ) - strlen( lv_suffix ).
             IF lv_off >= 0 AND <ls_ref>-full_name+lv_off = lv_suffix.
               rv_yes = abap_true.

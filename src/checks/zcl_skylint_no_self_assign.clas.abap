@@ -71,41 +71,25 @@ CLASS zcl_skylint_no_self_assign IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD get_written_symbol.
-    FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    DATA ls_ref TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
-    LOOP AT is_token-references ASSIGNING <ls_ref>
-         WHERE     kind       = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-               AND usage_mode = if_ci_atc_source_code_provider=>usage_modes-write.
-      rv_symbol = <ls_ref>-full_name.
-      RETURN.
-    ENDLOOP.
-
-    LOOP AT is_token-references ASSIGNING <ls_ref>
-         WHERE     kind       = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-               AND usage_mode = if_ci_atc_source_code_provider=>usage_modes-write_partial.
-      rv_symbol = <ls_ref>-full_name.
-      RETURN.
-    ENDLOOP.
+    ls_ref = zcl_skylint_ast_util=>get_reference(
+                 is_token = is_token
+                 iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
+    IF ls_ref-full_name IS NOT INITIAL AND zcl_skylint_ast_util=>is_write_usage( ls_ref ) = abap_true.
+      rv_symbol = ls_ref-full_name.
+    ENDIF.
   ENDMETHOD.
 
   METHOD get_read_symbol.
-    FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    DATA ls_ref TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
-    LOOP AT is_token-references ASSIGNING <ls_ref>
-         WHERE     kind       = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-               AND usage_mode = if_ci_atc_source_code_provider=>usage_modes-read.
-      rv_symbol = <ls_ref>-full_name.
-      RETURN.
-    ENDLOOP.
-
-    LOOP AT is_token-references ASSIGNING <ls_ref>
-         WHERE     kind        = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-               AND usage_grade = if_ci_atc_source_code_provider=>usage_grades-direct
-               AND (    usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_reference
-                     OR usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_and_write ).
-      rv_symbol = <ls_ref>-full_name.
-      RETURN.
-    ENDLOOP.
+    ls_ref = zcl_skylint_ast_util=>get_reference(
+                 is_token = is_token
+                 iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
+    IF ls_ref-full_name IS NOT INITIAL AND zcl_skylint_ast_util=>is_read_usage( ls_ref ) = abap_true.
+      rv_symbol = ls_ref-full_name.
+    ENDIF.
   ENDMETHOD.
 
   METHOD is_identical_assignment.

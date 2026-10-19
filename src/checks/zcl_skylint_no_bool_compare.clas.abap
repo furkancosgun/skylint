@@ -97,7 +97,7 @@ CLASS zcl_skylint_no_bool_compare IMPLEMENTATION.
 
     LOOP AT is_statement-tokens INTO ls_tok.
       lv_tok_idx = sy-tabix.
-      IF ls_tok-references IS NOT INITIAL.
+      IF zcl_skylint_ast_util=>token_is_keyword( ls_tok ) = abap_false.
         CONTINUE.
       ENDIF.
 
@@ -137,19 +137,19 @@ CLASS zcl_skylint_no_bool_compare IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_boolean_literal_token.
-    FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    DATA ls_ref TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     rv_is = abap_false.
 
-    LOOP AT is_token-references ASSIGNING <ls_ref>
-         WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
-      IF    <ls_ref>-full_name = '\DA:ABAP_TRUE'
-         OR <ls_ref>-full_name = '\DA:ABAP_FALSE'
-         OR <ls_ref>-full_name = '\DA:ABAP_UNDEFINED'.
-        rv_is = abap_true.
-        RETURN.
-      ENDIF.
-    ENDLOOP.
+    ls_ref = zcl_skylint_ast_util=>get_reference(
+                 is_token = is_token
+                 iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
+    IF    ls_ref-full_name = '\DA:ABAP_TRUE'
+       OR ls_ref-full_name = '\DA:ABAP_FALSE'
+       OR ls_ref-full_name = '\DA:ABAP_UNDEFINED'.
+      rv_is = abap_true.
+      RETURN.
+    ENDIF.
 
     IF is_token-references IS INITIAL.
       CASE is_token-lexeme.

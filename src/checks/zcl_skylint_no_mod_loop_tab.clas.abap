@@ -248,17 +248,12 @@ CLASS zcl_skylint_no_mod_loop_tab IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD get_token_full_name.
-    FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    DATA ls_ref TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
-    CLEAR rv_full_name.
-
-    LOOP AT is_token-references ASSIGNING <ls_ref>
-         WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
-      IF <ls_ref>-full_name IS NOT INITIAL.
-        rv_full_name = <ls_ref>-full_name.
-        RETURN.
-      ENDIF.
-    ENDLOOP.
+    ls_ref = zcl_skylint_ast_util=>get_reference(
+                 is_token = is_token
+                 iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
+    rv_full_name = ls_ref-full_name.
   ENDMETHOD.
 
   METHOD is_loop_table_target.

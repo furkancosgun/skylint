@@ -88,21 +88,23 @@ CLASS zcl_skylint_no_ignored_return IMPLEMENTATION.
   METHOD get_invoked_method_full_name.
     DATA lv_depth     TYPE i.
     DATA lv_first_ref TYPE string.
+    DATA ls_ref       TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_ref>   TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     CLEAR rv_name.
     lv_depth = 0.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
       IF lv_depth = 0.
-        LOOP AT <ls_token>-references ASSIGNING <ls_ref>
-             WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-method.
-          rv_name = <ls_ref>-full_name.
+        ls_ref = zcl_skylint_ast_util=>get_reference(
+                     is_token = <ls_token>
+                     iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-method ).
+        IF ls_ref-full_name IS NOT INITIAL.
+          rv_name = ls_ref-full_name.
           IF lv_first_ref IS INITIAL.
-            lv_first_ref = <ls_ref>-full_name.
+            lv_first_ref = ls_ref-full_name.
           ENDIF.
-        ENDLOOP.
+        ENDIF.
       ENDIF.
 
       IF <ls_token>-lexeme CP '*('.

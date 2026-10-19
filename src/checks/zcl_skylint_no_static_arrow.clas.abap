@@ -86,21 +86,20 @@ CLASS zcl_skylint_no_static_arrow IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD class_of_static_call.
-    FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    DATA ls_ref TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     CLEAR rv_class.
     IF is_token-lexeme NS '->'.
       RETURN.
     ENDIF.
 
-    LOOP AT is_token-references ASSIGNING <ls_ref>
-         WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-method.
-      IF zcl_skylint_rtti_util=>is_static_method( <ls_ref>-full_name ) = abap_true.
-        zcl_skylint_rtti_util=>parse_full_name( EXPORTING iv_full_name  = <ls_ref>-full_name
-                                                IMPORTING ev_class_name = rv_class ).
-        RETURN.
-      ENDIF.
-    ENDLOOP.
+    ls_ref = zcl_skylint_ast_util=>get_reference(
+                 is_token = is_token
+                 iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-method ).
+    IF zcl_skylint_rtti_util=>is_static_method( ls_ref-full_name ) = abap_true.
+      zcl_skylint_rtti_util=>parse_full_name( EXPORTING iv_full_name  = ls_ref-full_name
+                                              IMPORTING ev_class_name = rv_class ).
+    ENDIF.
   ENDMETHOD.
 
   METHOD build_quickfix.

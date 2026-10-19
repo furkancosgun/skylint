@@ -29,6 +29,12 @@ CLASS ltcl_rtti_util IMPLEMENTATION.
     lo_obj = zcl_skylint_rtti_util=>describe_object( 'ZCL_SKYLINT_RTTI_UTIL' ).
     cl_abap_unit_assert=>assert_bound( lo_obj ).
 
+    lo_obj = zcl_skylint_rtti_util=>describe_object( '\PROGRAM=ZPROG\CLASS=ZCL_SKYLINT_RTTI_UTIL' ).
+    cl_abap_unit_assert=>assert_bound( lo_obj ).
+
+    lo_obj = zcl_skylint_rtti_util=>describe_object( '\PR:ZPROG\TY:ZCL_SKYLINT_RTTI_UTIL' ).
+    cl_abap_unit_assert=>assert_bound( lo_obj ).
+
     lo_obj = zcl_skylint_rtti_util=>describe_object( 'ZIF_SKYLINT_TYPES' ).
     cl_abap_unit_assert=>assert_bound( lo_obj ).
 

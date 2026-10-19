@@ -100,7 +100,7 @@ CLASS zcl_skylint_no_redundant_call IMPLEMENTATION.
     DATA lt_deletions  TYPE zcl_skylint_ast_util=>ty_token_deletions.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_ref>       TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    DATA ls_ref TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
@@ -154,26 +154,30 @@ CLASS zcl_skylint_no_redundant_call IMPLEMENTATION.
         LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
           lv_tok_idx += 1.
 
-          LOOP AT <ls_token>-references ASSIGNING <ls_ref>
-               WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-method.
-            lv_param_idx = is_single_named_param_call( is_statement = <ls_statement>
-                                                       iv_tok_idx   = lv_tok_idx
-                                                       is_ref       = <ls_ref> ).
-            IF lv_param_idx > 0.
-              CLEAR ls_quickfix.
-              lt_deletions = VALUE #( ( lv_param_idx )
-                                      ( lv_param_idx + 1 ) ).
-              lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_statement>
-                                                                 it_deletions = lt_deletions ).
-              ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-omit_param
-                                              iv_statement_from = lv_stmt_idx
-                                              it_new_code       = VALUE #( ( |{ lv_line }.| ) ) ).
-              report_statement( is_statement    = <ls_statement>
-                                iv_finding_code = c_finding_codes-omit_param
-                                is_quickfix     = ls_quickfix ).
-              EXIT.
-            ENDIF.
-          ENDLOOP.
+          ls_ref = zcl_skylint_ast_util=>get_reference(
+                       is_token = <ls_token>
+                       iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-method ).
+          IF ls_ref-full_name IS INITIAL.
+            CONTINUE.
+          ENDIF.
+
+          lv_param_idx = is_single_named_param_call( is_statement = <ls_statement>
+                                                     iv_tok_idx   = lv_tok_idx
+                                                     is_ref       = ls_ref ).
+          IF lv_param_idx > 0.
+            CLEAR ls_quickfix.
+            lt_deletions = VALUE #( ( lv_param_idx )
+                                    ( lv_param_idx + 1 ) ).
+            lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_statement>
+                                                               it_deletions = lt_deletions ).
+            ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-omit_param
+                                            iv_statement_from = lv_stmt_idx
+                                            it_new_code       = VALUE #( ( |{ lv_line }.| ) ) ).
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-omit_param
+                              is_quickfix     = ls_quickfix ).
+            EXIT.
+          ENDIF.
         ENDLOOP.
       ENDIF.
     ENDLOOP.

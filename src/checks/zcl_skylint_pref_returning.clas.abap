@@ -84,16 +84,14 @@ CLASS zcl_skylint_pref_returning IMPLEMENTATION.
     WHILE lv_idx <= lines( is_statement-tokens ).
       ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                 iv_index     = lv_idx ).
-      CASE ls_tok-lexeme.
-        WHEN 'EXCEPTIONS' OR 'RAISING'.
-          IF ls_tok-references IS INITIAL.
+      IF zcl_skylint_ast_util=>token_is_keyword( ls_tok ) = abap_true.
+        CASE ls_tok-lexeme.
+          WHEN 'EXCEPTIONS' OR 'RAISING'.
             EXIT.
-          ENDIF.
-        WHEN 'TYPE' OR 'LIKE'.
-          IF ls_tok-references IS INITIAL.
+          WHEN 'TYPE' OR 'LIKE'.
             lv_count += 1.
-          ENDIF.
-      ENDCASE.
+        ENDCASE.
+      ENDIF.
       lv_idx += 1.
     ENDWHILE.
 

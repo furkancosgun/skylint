@@ -184,7 +184,7 @@ CLASS zcl_skylint_pref_is_initial IMPLEMENTATION.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_tok>.
       lv_idx = sy-tabix.
-      IF <ls_tok>-references IS NOT INITIAL.
+      IF zcl_skylint_ast_util=>token_is_keyword( <ls_tok> ) = abap_false.
         CONTINUE.
       ENDIF.
 

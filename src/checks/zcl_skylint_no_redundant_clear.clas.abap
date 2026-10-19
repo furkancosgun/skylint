@@ -80,9 +80,8 @@ CLASS zcl_skylint_no_redundant_clear IMPLEMENTATION.
     DATA lv_loop_depth TYPE i.
     DATA lt_decls      TYPE ty_variable_decls.
     DATA ls_quickfix   TYPE zcl_skylint_check_base=>ty_quickfix.
+    DATA ls_ref        TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_tok>  TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_ref>  TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
     FIELD-SYMBOLS <ls_decl> TYPE ty_variable_decl.
 
     IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
@@ -119,52 +118,54 @@ CLASS zcl_skylint_no_redundant_clear IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      LOOP AT <ls_stmt>-tokens ASSIGNING <ls_tok>.
-        LOOP AT <ls_tok>-references ASSIGNING <ls_ref>
-             WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
-          ASSIGN lt_decls[ full_name = <ls_ref>-full_name ] TO <ls_decl>.
-          IF sy-subrc <> 0.
-            CONTINUE.
-          ENDIF.
+      ls_ref = zcl_skylint_ast_util=>statement_get_reference(
+                   is_statement = <ls_stmt>
+                   iv_kind      = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
+      IF ls_ref-full_name IS INITIAL.
+        CONTINUE.
+      ENDIF.
 
-          IF lv_stmt_idx <= <ls_decl>-stmt_idx.
-            CONTINUE.
-          ENDIF.
+      ASSIGN lt_decls[ full_name = ls_ref-full_name ] TO <ls_decl>.
+      IF sy-subrc <> 0.
+        CONTINUE.
+      ENDIF.
 
-          IF     mv_check_before_write = abap_true
-             AND <ls_decl>-has_value = abap_false
-             AND is_variable_written( it_statements = is_procedure-statements
-                                      iv_from_idx   = <ls_decl>-stmt_idx + 1
-                                      iv_to_idx     = lv_stmt_idx - 1
-                                      iv_full_name  = <ls_decl>-full_name )   = abap_false.
+      IF lv_stmt_idx <= <ls_decl>-stmt_idx.
+        CONTINUE.
+      ENDIF.
 
-            ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-remove_clear
-                                            iv_statement_from = lv_stmt_idx
-                                            it_new_code       = VALUE #( ) ).
+      IF     mv_check_before_write = abap_true
+         AND <ls_decl>-has_value = abap_false
+         AND is_variable_written( it_statements = is_procedure-statements
+                                  iv_from_idx   = <ls_decl>-stmt_idx + 1
+                                  iv_to_idx     = lv_stmt_idx - 1
+                                  iv_full_name  = <ls_decl>-full_name )   = abap_false.
 
-            report_statement( is_statement    = <ls_stmt>
-                              iv_finding_code = c_finding_codes-redundant_clear
-                              is_quickfix     = ls_quickfix ).
-            EXIT.
-          ENDIF.
+        ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-remove_clear
+                                        iv_statement_from = lv_stmt_idx
+                                        it_new_code       = VALUE #( ) ).
 
-          IF     mv_check_without_read = abap_true
-             AND is_variable_read( it_statements = is_procedure-statements
-                                   iv_from_idx   = lv_stmt_idx + 1
-                                   iv_to_idx     = lines( is_procedure-statements )
-                                   iv_full_name  = <ls_decl>-full_name )            = abap_false.
+        report_statement( is_statement    = <ls_stmt>
+                          iv_finding_code = c_finding_codes-redundant_clear
+                          is_quickfix     = ls_quickfix ).
+        CONTINUE.
+      ENDIF.
 
-            ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-remove_clear
-                                            iv_statement_from = lv_stmt_idx
-                                            it_new_code       = VALUE #( ) ).
+      IF     mv_check_without_read = abap_true
+         AND is_variable_read( it_statements = is_procedure-statements
+                               iv_from_idx   = lv_stmt_idx + 1
+                               iv_to_idx     = lines( is_procedure-statements )
+                               iv_full_name  = <ls_decl>-full_name )            = abap_false.
 
-            report_statement( is_statement    = <ls_stmt>
-                              iv_finding_code = c_finding_codes-clear_at_end
-                              is_quickfix     = ls_quickfix ).
-            EXIT.
-          ENDIF.
-        ENDLOOP.
-      ENDLOOP.
+        ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-remove_clear
+                                        iv_statement_from = lv_stmt_idx
+                                        it_new_code       = VALUE #( ) ).
+
+        report_statement( is_statement    = <ls_stmt>
+                          iv_finding_code = c_finding_codes-clear_at_end
+                          is_quickfix     = ls_quickfix ).
+        CONTINUE.
+      ENDIF.
     ENDLOOP.
   ENDMETHOD.
 
@@ -172,8 +173,8 @@ CLASS zcl_skylint_no_redundant_clear IMPLEMENTATION.
     DATA lv_stmt_idx     TYPE i.
     DATA lv_struct_depth TYPE i.
     DATA ls_decl         TYPE ty_variable_decl.
+    DATA lt_refs         TYPE if_ci_atc_source_code_provider=>ty_compiler_references.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_tok>  TYPE if_ci_atc_source_code_provider=>ty_token.
     FIELD-SYMBOLS <ls_ref>  TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     LOOP AT it_statements ASSIGNING <ls_stmt>.
@@ -199,26 +200,28 @@ CLASS zcl_skylint_no_redundant_clear IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      LOOP AT <ls_stmt>-tokens ASSIGNING <ls_tok>.
-        LOOP AT <ls_tok>-references ASSIGNING <ls_ref>
-             WHERE     kind        = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-                   AND usage_grade = if_ci_atc_source_code_provider=>usage_grades-definition.
+      lt_refs = zcl_skylint_ast_util=>statement_get_references(
+                    is_statement = <ls_stmt>
+                    iv_kind      = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
+      LOOP AT lt_refs ASSIGNING <ls_ref>.
+        IF zcl_skylint_ast_util=>is_data_definition( <ls_ref> ) = abap_false.
+          CONTINUE.
+        ENDIF.
 
-          IF <ls_ref>-full_name IS INITIAL.
-            CONTINUE.
-          ENDIF.
+        IF <ls_ref>-full_name IS INITIAL.
+          CONTINUE.
+        ENDIF.
 
-          IF line_exists( rt_decls[ full_name = <ls_ref>-full_name ] ).
-            CONTINUE.
-          ENDIF.
+        IF line_exists( rt_decls[ full_name = <ls_ref>-full_name ] ).
+          CONTINUE.
+        ENDIF.
 
-          CLEAR ls_decl.
-          ls_decl-full_name = <ls_ref>-full_name.
-          ls_decl-stmt_idx  = lv_stmt_idx.
-          ls_decl-has_value = zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_stmt>
-                                                                      iv_lexeme    = 'VALUE' ).
-          APPEND ls_decl TO rt_decls.
-        ENDLOOP.
+        CLEAR ls_decl.
+        ls_decl-full_name = <ls_ref>-full_name.
+        ls_decl-stmt_idx  = lv_stmt_idx.
+        ls_decl-has_value = zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_stmt>
+                                                                    iv_lexeme    = 'VALUE' ).
+        APPEND ls_decl TO rt_decls.
       ENDLOOP.
     ENDLOOP.
   ENDMETHOD.

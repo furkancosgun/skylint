@@ -32,18 +32,14 @@ CLASS zcl_skylint_no_like_objects IMPLEMENTATION.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF    <ls_statement>-keyword = 'DATA'    OR <ls_statement>-keyword = 'TYPES'
-         OR <ls_statement>-keyword = 'STATICS' OR <ls_statement>-keyword = 'CONSTANTS'.
-        LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-          IF <ls_token>-lexeme = 'LIKE' AND <ls_token>-references IS INITIAL.
-            report_statement( is_statement    = <ls_statement>
-                              iv_finding_code = c_finding_codes-avoid_like ).
-            EXIT.
-          ENDIF.
-        ENDLOOP.
+      IF     (    <ls_statement>-keyword = 'DATA'    OR <ls_statement>-keyword = 'TYPES'
+               OR <ls_statement>-keyword = 'STATICS' OR <ls_statement>-keyword = 'CONSTANTS' )
+         AND zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                     iv_lexeme    = 'LIKE' ) = abap_true.
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-avoid_like ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.

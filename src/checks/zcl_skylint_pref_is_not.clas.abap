@@ -113,7 +113,7 @@ CLASS zcl_skylint_pref_is_not IMPLEMENTATION.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
       lv_idx = sy-tabix.
-      IF <ls_token>-references IS NOT INITIAL.
+      IF zcl_skylint_ast_util=>token_is_keyword( <ls_token> ) = abap_false.
         CONTINUE.
       ENDIF.
       lv_lexeme = <ls_token>-lexeme.
@@ -127,7 +127,7 @@ CLASS zcl_skylint_pref_is_not IMPLEMENTATION.
         ls_next = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                    iv_index     = lv_idx + 1 ).
         lv_next_lexeme = ls_next-lexeme.
-        IF ls_next-references IS INITIAL.
+        IF zcl_skylint_ast_util=>token_is_keyword( ls_next ) = abap_true.
           CASE lv_next_lexeme.
             WHEN 'INITIAL' OR 'BOUND' OR 'ASSIGNED' OR 'SUPPLIED' OR 'REQUESTED' OR 'INSTANCE'.
               ev_matched = abap_true.

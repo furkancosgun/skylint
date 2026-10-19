@@ -42,41 +42,51 @@ CLASS zcl_skylint_rtti_util DEFINITION
       IMPORTING iv_full_name    TYPE clike
       EXPORTING ev_program_name TYPE string
                 ev_class_name   TYPE string
-                ev_meth_name    TYPE string.
+                ev_meth_name    TYPE string
+                ev_data_name    TYPE string.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_rtti_util IMPLEMENTATION.
   METHOD describe_object.
-    DATA lo_descr TYPE REF TO cl_abap_typedescr.
-    DATA lv_name  TYPE string.
-    DATA lt_parts TYPE STANDARD TABLE OF string WITH EMPTY KEY.
-    DATA lv_part  TYPE string.
+    DATA lo_descr   TYPE REF TO cl_abap_typedescr.
+    DATA lv_program TYPE string.
+    DATA lv_class   TYPE string.
 
-    lv_name = iv_name.
-    IF lv_name CS '\'.
-      SPLIT lv_name AT '\' INTO TABLE lt_parts.
-      LOOP AT lt_parts INTO lv_part.
-        IF lv_part CP 'TY:*'.
-          lv_name = lv_part+3.
-          EXIT.
-        ELSEIF lv_part CP 'CLASS=*'.
-          lv_name = lv_part+6.
-          EXIT.
-        ELSEIF lv_part CP 'INTF=*'.
-          lv_name = lv_part+5.
-          EXIT.
-        ENDIF.
-      ENDLOOP.
+    parse_full_name( EXPORTING iv_full_name    = iv_name
+                     IMPORTING ev_program_name = lv_program
+                               ev_class_name   = lv_class ).
+    IF lv_class IS INITIAL.
+      lv_class = iv_name.
     ENDIF.
 
-    cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = lv_name
-                                         RECEIVING  p_descr_ref    = lo_descr
-                                         EXCEPTIONS type_not_found = 1
-                                                    OTHERS         = 2 ).
-    IF sy-subrc <> 0 OR (     lo_descr->kind <> cl_abap_typedescr=>kind_class
-                          AND lo_descr->kind <> cl_abap_typedescr=>kind_intf ).
+    IF lv_program IS NOT INITIAL.
+      cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = |\\PROGRAM={ lv_program }\\CLASS={ lv_class }|
+                                           RECEIVING  p_descr_ref    = lo_descr
+                                           EXCEPTIONS type_not_found = 1
+                                                      OTHERS         = 2 ).
+      IF sy-subrc <> 0 OR lo_descr IS NOT BOUND.
+        cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = |\\PROGRAM={ lv_program }\\INTF={ lv_class }|
+                                             RECEIVING  p_descr_ref    = lo_descr
+                                             EXCEPTIONS type_not_found = 1
+                                                        OTHERS         = 2 ).
+      ENDIF.
+      IF ( sy-subrc <> 0 OR lo_descr IS NOT BOUND ) AND lv_class IS NOT INITIAL.
+        cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = lv_class
+                                             RECEIVING  p_descr_ref    = lo_descr
+                                             EXCEPTIONS type_not_found = 1
+                                                        OTHERS         = 2 ).
+      ENDIF.
+    ELSE.
+      cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = lv_class
+                                           RECEIVING  p_descr_ref    = lo_descr
+                                           EXCEPTIONS type_not_found = 1
+                                                      OTHERS         = 2 ).
+    ENDIF.
+
+    IF sy-subrc <> 0 OR lo_descr IS NOT BOUND OR (     lo_descr->kind <> cl_abap_typedescr=>kind_class
+                                                   AND lo_descr->kind <> cl_abap_typedescr=>kind_intf ).
       RETURN.
     ENDIF.
     ro_objdescr ?= lo_descr.
@@ -121,7 +131,8 @@ CLASS zcl_skylint_rtti_util IMPLEMENTATION.
 
     CLEAR: ev_program_name,
            ev_class_name,
-           ev_meth_name.
+           ev_meth_name,
+           ev_data_name.
     lv_str = iv_full_name.
 
     IF lv_str CS '=>'.
@@ -137,10 +148,18 @@ CLASS zcl_skylint_rtti_util IMPLEMENTATION.
       LOOP AT lt_parts INTO lv_part.
         IF lv_part CP 'PR:*'.
           ev_program_name = lv_part+3.
+        ELSEIF lv_part CP 'PROGRAM=*'.
+          ev_program_name = lv_part+8.
         ELSEIF lv_part CP 'TY:*'.
           ev_class_name = lv_part+3.
+        ELSEIF lv_part CP 'CLASS=*'.
+          ev_class_name = lv_part+6.
+        ELSEIF lv_part CP 'INTF=*'.
+          ev_class_name = lv_part+5.
         ELSEIF lv_part CP 'ME:*'.
           ev_meth_name = lv_part+3.
+        ELSEIF lv_part CP 'DA:*'.
+          ev_data_name = lv_part+3.
         ENDIF.
       ENDLOOP.
     ENDIF.
@@ -238,14 +257,7 @@ CLASS zcl_skylint_rtti_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD has_compiler_reference.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
-
-    rv_has = abap_false.
-    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      IF line_exists( <ls_token>-references[ kind = iv_kind ] ).
-        rv_has = abap_true.
-        RETURN.
-      ENDIF.
-    ENDLOOP.
+    rv_has = zcl_skylint_ast_util=>statement_has_reference( is_statement = is_statement
+                                                            iv_kind      = iv_kind ).
   ENDMETHOD.
 ENDCLASS.
