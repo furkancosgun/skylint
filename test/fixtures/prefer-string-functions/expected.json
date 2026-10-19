@@ -31,6 +31,10 @@
     ]
   },
   {
+    "method": "TEST_004",
+    "code": null
+  },
+  {
     "method": "TEST_005",
     "code": "TRANSLATE_",
     "line": 3,
@@ -38,5 +42,70 @@
     "quickfixes": [
       "TRANSLATE"
     ]
+  },
+  {
+    "method": "TEST_006",
+    "code": "SHIFT_STMT",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "SHIFT"
+    ]
+  },
+  {
+    "method": "TEST_006",
+    "code": "SHIFT_STMT",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "SHIFT"
+    ]
+  },
+  {
+    "method": "TEST_006",
+    "code": "SHIFT_STMT",
+    "line": 5,
+    "column": 4,
+    "quickfixes": [
+      "SHIFT"
+    ]
+  },
+  {
+    "method": "TEST_007",
+    "code": "SEARCH_STM",
+    "line": 3,
+    "column": 4
+  },
+  {
+    "method": "TEST_008",
+    "code": "OVERLAY_ST",
+    "line": 3,
+    "column": 4
+  },
+  {
+    "method": "TEST_009",
+    "code": null
+  },
+  {
+    "method": "TEST_010",
+    "code": "REPLACE_ST",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "REPLACE"
+    ]
+  },
+  {
+    "method": "TEST_011",
+    "code": "DESCRIBE_F",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "DESCRIBE"
+    ]
+  },
+  {
+    "method": "TEST_012",
+    "code": null
   }
 ]

@@ -54,6 +54,11 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 |---|---|:---:|---|
 | `CHECK_CONDENSE` | `Boolean` | `true` | Configurable attribute for prefer-string-functions |
 | `CHECK_TRANSLATE` | `Boolean` | `true` | Configurable attribute for prefer-string-functions |
+| `CHECK_SHIFT` | `Boolean` | `true` | Configurable attribute for prefer-string-functions |
+| `CHECK_SEARCH` | `Boolean` | `true` | Configurable attribute for prefer-string-functions |
+| `CHECK_OVERLAY` | `Boolean` | `true` | Configurable attribute for prefer-string-functions |
+| `CHECK_REPLACE` | `Boolean` | `true` | Configurable attribute for prefer-string-functions |
+| `CHECK_DESCRIBE` | `Boolean` | `true` | Configurable attribute for prefer-string-functions |
 
 ## CLI & CI/CD Configuration
 
@@ -65,6 +70,11 @@ checks:
     attributes:
       checkCondense: true
       checkTranslate: true
+      checkShift: true
+      checkSearch: true
+      checkOverlay: true
+      checkReplace: true
+      checkDescribe: true
 ```
 
 ## Suppression

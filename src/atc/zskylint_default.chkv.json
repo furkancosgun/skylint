@@ -513,6 +513,26 @@
         {
           "name": "CHECK_TRANSLATE",
           "value": "X"
+        },
+        {
+          "name": "CHECK_SHIFT",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_SEARCH",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_OVERLAY",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_REPLACE",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_DESCRIBE",
+          "value": "X"
         }
       ]
     },
