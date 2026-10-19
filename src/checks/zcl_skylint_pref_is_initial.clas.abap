@@ -38,15 +38,16 @@ ENDCLASS.
 
 CLASS zcl_skylint_pref_is_initial IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Prefer IS [NOT] INITIAL over lines( ) or empty literals'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-prefer_is_initial
-                                       severity       = if_ci_atc_check=>finding_severities-warning
-                                       text           = 'Use IS [NOT] INITIAL instead of lines( ) or empty literal comparison'
-                                       pseudo_comment = c_pseudo_comment ) )
-                                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-prefer_is_initial
-                                                                short_text = 'Rewrite with IS [NOT] INITIAL' ) ) ) ).
+    super->constructor(
+        VALUE #( description       = 'Prefer IS [NOT] INITIAL over lines( ) or empty literals'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #(
+                     ( code           = c_finding_codes-prefer_is_initial
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Use IS [NOT] INITIAL instead of lines( ) or empty literal comparison'
+                       pseudo_comment = c_pseudo_comment ) )
+                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-prefer_is_initial
+                                                short_text = 'Rewrite with IS [NOT] INITIAL' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -91,70 +92,77 @@ CLASS zcl_skylint_pref_is_initial IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check_lines_pattern.
-    DATA lv_lines_idx   TYPE i.
-    DATA lv_close_idx   TYPE i.
-    DATA lv_target_idx  TYPE i.
-    DATA lv_op          TYPE string.
-    DATA lv_val         TYPE string.
-    DATA lv_is_not      TYPE abap_bool.
-    DATA lv_line        TYPE string.
-    DATA ls_quickfix    TYPE zcl_skylint_check_base=>ty_quickfix.
-    DATA lt_overrides   TYPE zcl_skylint_ast_util=>ty_token_overrides.
-    DATA lt_deletions   TYPE zcl_skylint_ast_util=>ty_token_deletions.
-    DATA ls_next_op     TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_next_val    TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_lines_idx  TYPE i.
+    DATA lv_close_idx  TYPE i.
+    " TODO: variable is assigned but never used (ABAP cleaner)
+    DATA lv_target_idx TYPE i.
+    DATA lv_op         TYPE string.
+    DATA lv_val        TYPE string.
+    DATA lv_is_not     TYPE abap_bool.
+    DATA lv_line       TYPE string.
+    DATA ls_quickfix   TYPE zcl_skylint_check_base=>ty_quickfix.
+    DATA lt_overrides  TYPE zcl_skylint_ast_util=>ty_token_overrides.
+    DATA lt_deletions  TYPE zcl_skylint_ast_util=>ty_token_deletions.
+    DATA ls_next_op    TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_next_val   TYPE if_ci_atc_source_code_provider=>ty_token.
     FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_tok>.
-      IF to_upper( <ls_tok>-lexeme ) = 'LINES('.
-        lv_lines_idx = sy-tabix.
-        lv_target_idx = lv_lines_idx + 1.
-        lv_close_idx = lv_lines_idx + 2.
+      IF to_upper( <ls_tok>-lexeme ) <> 'LINES('.
+        CONTINUE.
+      ENDIF.
 
-        IF lines( is_statement-tokens ) >= lv_close_idx + 2.
-          IF zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                     iv_index     = lv_close_idx ) = ')'.
-            ls_next_op  = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                           iv_index     = lv_close_idx + 1 ).
-            ls_next_val = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                           iv_index     = lv_close_idx + 2 ).
-            lv_op  = ls_next_op-lexeme.
-            lv_val = ls_next_val-lexeme.
+      lv_lines_idx = sy-tabix.
+      lv_target_idx = lv_lines_idx + 1.
+      lv_close_idx = lv_lines_idx + 2.
 
-            IF    ( ( lv_op = '>' OR lv_op = 'GT' ) AND lv_val = '0' )
-               OR ( ( lv_op = '>=' OR lv_op = 'GE' ) AND lv_val = '1' )
-               OR ( ( lv_op = '<>' OR lv_op = 'NE' ) AND lv_val = '0' ).
-              lv_is_not = abap_true.
-            ELSEIF    ( ( lv_op = '=' OR lv_op = 'EQ' ) AND lv_val = '0' )
-                   OR ( ( lv_op = '<=' OR lv_op = 'LE' ) AND lv_val = '0' )
-                   OR ( ( lv_op = '<' OR lv_op = 'LT' ) AND lv_val = '1' ).
-              lv_is_not = abap_false.
-            ELSE.
-              CONTINUE.
-            ENDIF.
+      IF lines( is_statement-tokens ) < lv_close_idx + 2.
+        CONTINUE.
+      ENDIF.
 
-            lt_deletions = VALUE #( ( lv_lines_idx ) ( lv_close_idx ) ( lv_close_idx + 2 ) ).
-            IF lv_is_not = abap_true.
-              lt_overrides = VALUE #( ( index  = lv_close_idx + 1
-                                        lexeme = 'IS NOT INITIAL' ) ).
-            ELSE.
-              lt_overrides = VALUE #( ( index  = lv_close_idx + 1
-                                        lexeme = 'IS INITIAL' ) ).
-            ENDIF.
+      IF zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
+                                                 iv_index     = lv_close_idx ) = ')'.
+        ls_next_op  = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                       iv_index     = lv_close_idx + 1 ).
+        ls_next_val = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                       iv_index     = lv_close_idx + 2 ).
+        lv_op  = ls_next_op-lexeme.
+        lv_val = ls_next_val-lexeme.
 
-            lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = is_statement
-                                                               it_overrides = lt_overrides
-                                                               it_deletions = lt_deletions ).
-            ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-prefer_is_initial
-                                            iv_statement_from = iv_stmt_idx
-                                            it_new_code       = VALUE #( ( |{ lv_line }.| ) ) ).
-
-            report_statement( is_statement    = is_statement
-                              iv_finding_code = c_finding_codes-prefer_is_initial
-                              is_quickfix     = ls_quickfix ).
-            RETURN.
-          ENDIF.
+        IF    ( ( lv_op = '>'  OR lv_op = 'GT' ) AND lv_val = '0' )
+           OR ( ( lv_op = '>=' OR lv_op = 'GE' ) AND lv_val = '1' )
+           OR ( ( lv_op = '<>' OR lv_op = 'NE' ) AND lv_val = '0' ).
+          lv_is_not = abap_true.
+        ELSEIF    ( ( lv_op = '='  OR lv_op = 'EQ' ) AND lv_val = '0' )
+               OR ( ( lv_op = '<=' OR lv_op = 'LE' ) AND lv_val = '0' )
+               OR ( ( lv_op = '<'  OR lv_op = 'LT' ) AND lv_val = '1' ).
+          lv_is_not = abap_false.
+        ELSE.
+          CONTINUE.
         ENDIF.
+
+        lt_deletions = VALUE #( ( lv_lines_idx )
+                                ( lv_close_idx )
+                                ( lv_close_idx + 2 ) ).
+        IF lv_is_not = abap_true.
+          lt_overrides = VALUE #( ( index  = lv_close_idx + 1
+                                    lexeme = 'IS NOT INITIAL' ) ).
+        ELSE.
+          lt_overrides = VALUE #( ( index  = lv_close_idx + 1
+                                    lexeme = 'IS INITIAL' ) ).
+        ENDIF.
+
+        lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = is_statement
+                                                           it_overrides = lt_overrides
+                                                           it_deletions = lt_deletions ).
+        ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-prefer_is_initial
+                                        iv_statement_from = iv_stmt_idx
+                                        it_new_code       = VALUE #( ( |{ lv_line }.| ) ) ).
+
+        report_statement( is_statement    = is_statement
+                          iv_finding_code = c_finding_codes-prefer_is_initial
+                          is_quickfix     = ls_quickfix ).
+        RETURN.
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
@@ -201,7 +209,7 @@ CLASS zcl_skylint_pref_is_initial IMPLEMENTATION.
       ls_left  = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                   iv_index     = lv_left_idx ).
       ls_right = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                   iv_index     = lv_right_idx ).
+                                                  iv_index     = lv_right_idx ).
 
       IF is_initial_literal( ls_right ) = abap_true AND is_initial_literal( ls_left ) = abap_false.
         IF lines( is_statement-tokens ) > lv_right_idx.

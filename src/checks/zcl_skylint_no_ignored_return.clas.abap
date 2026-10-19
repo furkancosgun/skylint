@@ -26,13 +26,14 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_ignored_return IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Disallow ignoring the return value of functional methods'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-ignored_return_value
-                                       severity       = if_ci_atc_check=>finding_severities-warning
-                                       text           = 'Do not ignore return value of functional method; assign or use result'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor(
+        VALUE #( description       = 'Disallow ignoring the return value of functional methods'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #(
+                     ( code           = c_finding_codes-ignored_return_value
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Do not ignore return value of functional method; assign or use result'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

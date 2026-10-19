@@ -42,26 +42,22 @@ CLASS zcl_skylint_no_check_stmt IMPLEMENTATION.
     super->constructor(
         VALUE #( description       = 'Avoid CHECK statements; prefer IF with RETURN or CONTINUE'
                  remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-check_in_loop
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Avoid CHECK inside loop; use IF ... CONTINUE instead'
-                       pseudo_comment = c_pseudo_comments-check_in_loop )
-                     ( code           = c_finding_codes-check_outside_loop
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Avoid CHECK outside loop; use IF ... RETURN instead'
-                       pseudo_comment = c_pseudo_comments-check_outside_loop ) )
-                 quickfix_codes    = VALUE #(
-                     ( code       = c_quickfix_codes-use_continue
-                       short_text = 'Use IF NOT ... CONTINUE' )
-                     ( code       = c_quickfix_codes-use_return
-                       short_text = 'Use IF NOT ... RETURN' ) )
-                 attributes        = VALUE #(
-                     kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                     ( name  = 'CHECK_IN_LOOP'
-                       value = REF #( mv_check_in_loop ) )
-                     ( name  = 'CHECK_OUTSIDE_LOOP'
-                       value = REF #( mv_check_outside_loop ) ) ) ) ).
+                 finding_codes     = VALUE #( severity = if_ci_atc_check=>finding_severities-warning
+                                              ( code           = c_finding_codes-check_in_loop
+                                                text           = 'Avoid CHECK inside loop; use IF ... CONTINUE instead'
+                                                pseudo_comment = c_pseudo_comments-check_in_loop )
+                                              ( code           = c_finding_codes-check_outside_loop
+                                                text           = 'Avoid CHECK outside loop; use IF ... RETURN instead'
+                                                pseudo_comment = c_pseudo_comments-check_outside_loop ) )
+                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-use_continue
+                                                short_text = 'Use IF NOT ... CONTINUE' )
+                                              ( code       = c_quickfix_codes-use_return
+                                                short_text = 'Use IF NOT ... RETURN' ) )
+                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                              ( name  = 'CHECK_IN_LOOP'
+                                                value = REF #( mv_check_in_loop ) )
+                                              ( name  = 'CHECK_OUTSIDE_LOOP'
+                                                value = REF #( mv_check_outside_loop ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

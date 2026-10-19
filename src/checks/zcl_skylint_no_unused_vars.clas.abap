@@ -133,8 +133,7 @@ CLASS zcl_skylint_no_unused_vars IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_variable_read.
-    rv_read = zcl_skylint_ast_util=>has_data_read_usage(
-        it_statements = it_statements
-        iv_full_name  = iv_full_name ).
+    rv_read = zcl_skylint_ast_util=>has_data_read_usage( it_statements = it_statements
+                                                         iv_full_name  = iv_full_name ).
   ENDMETHOD.
 ENDCLASS.

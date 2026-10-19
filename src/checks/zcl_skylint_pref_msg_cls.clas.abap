@@ -28,12 +28,13 @@ ENDCLASS.
 CLASS zcl_skylint_pref_msg_cls IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Use a message class instead of inline message text'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #( ( code           = c_finding_codes-message_class
-                                                severity       = if_ci_atc_check=>finding_severities-warning
-                                                text           = 'Define the message class and raise it as e001( msg_class )'
-                                                pseudo_comment = c_pseudo_comment ) ) ) ).
+        VALUE #(
+            description       = 'skylint: Use a message class instead of inline message text'
+            remote_enablement = abap_true
+            finding_codes     = VALUE #( ( code           = c_finding_codes-message_class
+                                           severity       = if_ci_atc_check=>finding_severities-warning
+                                           text           = 'Define the message class and raise it as e001( msg_class )'
+                                           pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -55,23 +56,23 @@ CLASS zcl_skylint_pref_msg_cls IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD uses_message_class.
-    DATA ls_token    TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_tok      TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_name     TYPE string.
-    DATA lv_is_exc   TYPE abap_bool.
-    DATA lv_idx      TYPE i.
-    DATA lv_cnt      TYPE i.
+    DATA ls_token  TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok    TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_name   TYPE string.
+    DATA lv_is_exc TYPE abap_bool.
+    DATA lv_idx    TYPE i.
+    DATA lv_cnt    TYPE i.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_tok2>  TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_tok2> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     IF zcl_skylint_ast_util=>find_token( is_statement = is_statement
-                                                        iv_lexeme    = 'ID' ) > 0.
+                                         iv_lexeme    = 'ID' ) > 0.
       rv_yes = abap_true.
       RETURN.
     ENDIF.
 
-    ls_token = zcl_skylint_ast_util=>get_token_after( is_statement   = is_statement
-                                                        iv_lexeme      = 'MESSAGE' ).
+    ls_token = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                      iv_lexeme    = 'MESSAGE' ).
     IF zcl_skylint_ast_util=>token_is_literal( ls_token ) = abap_true.
       rv_yes = abap_false.
       RETURN.
@@ -83,18 +84,21 @@ CLASS zcl_skylint_pref_msg_cls IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    IF zcl_skylint_ast_util=>has_compiler_reference( is_token = ls_token
-      iv_kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-message ).
+    IF zcl_skylint_ast_util=>has_compiler_reference(
+           is_token = ls_token
+           iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-message ).
       rv_yes = abap_true.
       RETURN.
     ENDIF.
-    IF zcl_skylint_ast_util=>has_compiler_reference( is_token = ls_token
-      iv_kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-message_id ).
+    IF zcl_skylint_ast_util=>has_compiler_reference(
+           is_token = ls_token
+           iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-message_id ).
       rv_yes = abap_true.
       RETURN.
     ENDIF.
-    IF zcl_skylint_ast_util=>has_compiler_reference( is_token = ls_token
-      iv_kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-message_number ).
+    IF zcl_skylint_ast_util=>has_compiler_reference(
+           is_token = ls_token
+           iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-message_number ).
       rv_yes = abap_true.
       RETURN.
     ENDIF.

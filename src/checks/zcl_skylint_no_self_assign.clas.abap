@@ -120,7 +120,7 @@ CLASS zcl_skylint_no_self_assign IMPLEMENTATION.
     rv_res = abap_false.
 
     lv_eq_idx = zcl_skylint_ast_util=>find_token( is_statement = is_statement
-                                                   iv_lexeme    = '=' ).
+                                                  iv_lexeme    = '=' ).
     IF lv_eq_idx <= 1 OR lv_eq_idx >= lines( is_statement-tokens ).
       RETURN.
     ENDIF.
@@ -151,7 +151,7 @@ CLASS zcl_skylint_no_self_assign IMPLEMENTATION.
 
     IF     lv_lhs_symbol IS NOT INITIAL
        AND lv_rhs_symbol IS NOT INITIAL
-       AND lv_lhs_symbol = lv_rhs_symbol.
+       AND lv_lhs_symbol  = lv_rhs_symbol.
       rv_res = abap_true.
     ENDIF.
   ENDMETHOD.

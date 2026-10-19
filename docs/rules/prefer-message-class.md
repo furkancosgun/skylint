@@ -7,9 +7,9 @@
 
 ## Overview
 
-Use a message class (SE91) instead of inline message text.
+Use a message class instead of inline message text.
 
-> **ATC Finding Message:** `Define the message in SE91 and raise it as e001( msg_class )`
+> **ATC Finding Message:** `Define the message class and raise it as e001( msg_class )`
 
 ## Rationale
 

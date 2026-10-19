@@ -21,21 +21,19 @@ ENDCLASS.
 
 
 CLASS zcl_skylint_no_exc_overlap IMPLEMENTATION.
-
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'skylint: Classic EXCEPTIONS must not overlap'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-overlap
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Two classic exceptions share the same error number'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'skylint: Classic EXCEPTIONS must not overlap'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-overlap
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Two classic exceptions share the same error number'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lt_seen   TYPE HASHED TABLE OF string WITH UNIQUE KEY table_line.
-    DATA ls_number TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lt_seen    TYPE HASHED TABLE OF string WITH UNIQUE KEY table_line.
+    DATA ls_number  TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_exc_idx TYPE i.
     DATA lv_eq_idx  TYPE i.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.

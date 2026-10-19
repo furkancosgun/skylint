@@ -9,7 +9,7 @@
 
 RFC calls must handle system failures.
 
-> **ATC Finding Message:** `RFC call without SYSTEM_FAILURE and COMMUNICATION_FAILURE`
+> **ATC Finding Message:** `RFC call must handle SYSTEM_FAILURE and COMMUNICATION_FAILURE`
 
 ## Rationale
 

@@ -43,7 +43,7 @@ Modern language features, expression-oriented coding, and idiomatic Clean ABAP p
 | [`max-one-statement`](/rules/max-one-statement) | `ZCL_SKYLINT_MAX_ONE_STMT` | Max One Statement Per Line | `ONE_STMT` | `#EC ONE_STMT` | — |
 | [`prefer-inline`](/rules/prefer-inline) | `ZCL_SKYLINT_PREF_INLINE` | Prefer Inline Declarations | `PREF_INL` | `#EC PREFER_INLINE` | — |
 | [`prefer-final-data`](/rules/prefer-final-data) | `ZCL_SKYLINT_PREF_FINAL_DATA` | Declare inline variables as FINAL when never written again | `PREF_FIN` | `#EC PREF_FINAL` | ⚡ Ready |
-| [`prefer-message-class`](/rules/prefer-message-class) | `ZCL_SKYLINT_PREF_MSG_CLS` | Use a message class (SE91) instead of inline message text | `PREF_MSG` | `#EC MSG_CLASS` | — |
+| [`prefer-message-class`](/rules/prefer-message-class) | `ZCL_SKYLINT_PREF_MSG_CLS` | Use a message class instead of inline message text | `PREF_MSG` | `#EC MSG_CLASS` | — |
 | [`prefer-inline-cast`](/rules/prefer-inline-cast) | `ZCL_SKYLINT_PREF_INL_CAST` | Inline a CAST helper that is only read once | `PREF_ICST` | `#EC INLINE_CAST` | ⚡ Ready |
 | [`prefer-public-constructor`](/rules/prefer-public-constructor) | `ZCL_SKYLINT_PREF_PUB_CTOR` | Declare Constructor in PUBLIC SECTION | `CTOR_PUB` | `#EC PUB_CTOR` | — |
 | [`prefer-definitions-top`](/rules/prefer-definitions-top) | `ZCL_SKYLINT_PREF_DEF_TOP` | Place definitions at beginning of routine | `DEF_TOP` | `#EC DEF_TOP` | — |

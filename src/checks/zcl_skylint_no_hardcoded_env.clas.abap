@@ -62,20 +62,20 @@ CLASS zcl_skylint_no_hardcoded_env IMPLEMENTATION.
                        text           = 'Avoid reading environment system fields (sy-sysid, sy-uname, etc.)'
                        pseudo_comment = c_pseudo_comment ) )
                  attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                                                ( name  = 'CHECK_SYSID'
-                                                  value = REF #( mv_check_sysid ) )
-                                                ( name  = 'CHECK_MANDT'
-                                                  value = REF #( mv_check_mandt ) )
-                                                ( name  = 'CHECK_HOST'
-                                                  value = REF #( mv_check_host ) )
-                                                ( name  = 'CHECK_DBSYS'
-                                                  value = REF #( mv_check_dbsys ) )
-                                                ( name  = 'CHECK_OPSYS'
-                                                  value = REF #( mv_check_opsys ) )
-                                                ( name  = 'CHECK_UNAME'
-                                                  value = REF #( mv_check_uname ) )
-                                                ( name  = 'ONLY_CONDITIONAL'
-                                                  value = REF #( mv_only_conditional ) ) ) ) ).
+                                              ( name  = 'CHECK_SYSID'
+                                                value = REF #( mv_check_sysid ) )
+                                              ( name  = 'CHECK_MANDT'
+                                                value = REF #( mv_check_mandt ) )
+                                              ( name  = 'CHECK_HOST'
+                                                value = REF #( mv_check_host ) )
+                                              ( name  = 'CHECK_DBSYS'
+                                                value = REF #( mv_check_dbsys ) )
+                                              ( name  = 'CHECK_OPSYS'
+                                                value = REF #( mv_check_opsys ) )
+                                              ( name  = 'CHECK_UNAME'
+                                                value = REF #( mv_check_uname ) )
+                                              ( name  = 'ONLY_CONDITIONAL'
+                                                value = REF #( mv_only_conditional ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -110,11 +110,11 @@ CLASS zcl_skylint_no_hardcoded_env IMPLEMENTATION.
     rv_env_var = c_env_vars-none.
 
     LOOP AT is_token-references ASSIGNING <ls_ref>
-         WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-           AND (    usage_mode = if_ci_atc_source_code_provider=>usage_modes-read
-                 OR usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_and_write
-                 OR usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_reference
-                 OR usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_and_write_reference ).
+         WHERE     kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+               AND (    usage_mode = if_ci_atc_source_code_provider=>usage_modes-read
+                     OR usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_and_write
+                     OR usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_reference
+                     OR usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_and_write_reference ).
       CASE <ls_ref>-full_name.
         WHEN '\DA:SY\DA:SYSID' OR '\DA:SYST\DA:SYSID'.
           rv_env_var = c_env_vars-sysid.
@@ -168,9 +168,9 @@ CLASS zcl_skylint_no_hardcoded_env IMPLEMENTATION.
     ENDCASE.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_tok> WHERE references IS INITIAL.
-      IF <ls_tok>-lexeme = 'COND'
-      OR <ls_tok>-lexeme = 'SWITCH'
-      OR <ls_tok>-lexeme = 'WHERE'.
+      IF    <ls_tok>-lexeme = 'COND'
+         OR <ls_tok>-lexeme = 'SWITCH'
+         OR <ls_tok>-lexeme = 'WHERE'.
         rv_conditional = abap_true.
         RETURN.
       ENDIF.

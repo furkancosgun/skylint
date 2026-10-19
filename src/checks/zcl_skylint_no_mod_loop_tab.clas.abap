@@ -55,31 +55,29 @@ CLASS zcl_skylint_no_mod_loop_tab IMPLEMENTATION.
         VALUE #( description       = 'Avoid mutating or sorting tables inside loops'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-modify_loop_table
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Do not add, delete, sort, collect, or clear rows from the table currently being looped'
-                       pseudo_comment = c_pseudo_comment )
-                     ( code           = c_finding_codes-sort_in_loop
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Avoid sorting internal tables inside loops to prevent severe performance degradation'
-                       pseudo_comment = c_pseudo_comment ) )
+                     severity       = if_ci_atc_check=>finding_severities-warning
+                     pseudo_comment = c_pseudo_comment
+                     ( code = c_finding_codes-modify_loop_table
+                       text = 'Do not add, delete, sort, collect, or clear rows from the table currently being looped' )
+                     ( code = c_finding_codes-sort_in_loop
+                       text = 'Avoid sorting internal tables inside loops to prevent severe performance degradation' ) )
                  attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                                               ( name  = 'CHECK_APPEND'
-                                                 value = REF #( mv_check_append ) )
-                                               ( name  = 'CHECK_INSERT'
-                                                 value = REF #( mv_check_insert ) )
-                                               ( name  = 'CHECK_MODIFY'
-                                                 value = REF #( mv_check_modify ) )
-                                               ( name  = 'CHECK_DELETE'
-                                                 value = REF #( mv_check_delete ) )
-                                               ( name  = 'CHECK_CLEAR'
-                                                 value = REF #( mv_check_clear ) )
-                                               ( name  = 'CHECK_SORT'
-                                                 value = REF #( mv_check_sort ) )
-                                               ( name  = 'CHECK_SORT_ANY'
-                                                 value = REF #( mv_check_sort_any ) )
-                                               ( name  = 'CHECK_COLLECT'
-                                                 value = REF #( mv_check_collect ) ) ) ) ).
+                                              ( name  = 'CHECK_APPEND'
+                                                value = REF #( mv_check_append ) )
+                                              ( name  = 'CHECK_INSERT'
+                                                value = REF #( mv_check_insert ) )
+                                              ( name  = 'CHECK_MODIFY'
+                                                value = REF #( mv_check_modify ) )
+                                              ( name  = 'CHECK_DELETE'
+                                                value = REF #( mv_check_delete ) )
+                                              ( name  = 'CHECK_CLEAR'
+                                                value = REF #( mv_check_clear ) )
+                                              ( name  = 'CHECK_SORT'
+                                                value = REF #( mv_check_sort ) )
+                                              ( name  = 'CHECK_SORT_ANY'
+                                                value = REF #( mv_check_sort_any ) )
+                                              ( name  = 'CHECK_COLLECT'
+                                                value = REF #( mv_check_collect ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -186,9 +184,8 @@ CLASS zcl_skylint_no_mod_loop_tab IMPLEMENTATION.
 
     CLEAR rv_full_name.
 
-    ls_tok = zcl_skylint_ast_util=>get_token_after_sequence(
-                 is_statement = is_statement
-                 it_expected  = VALUE #( ( `LOOP` ) ( `AT` ) ) ).
+    ls_tok = zcl_skylint_ast_util=>get_token_after_sequence( is_statement = is_statement
+                                                             it_expected  = VALUE #( ( `LOOP` ) ( `AT` ) ) ).
     IF ls_tok-lexeme IS INITIAL OR ls_tok-lexeme = 'GROUP'.
       RETURN.
     ENDIF.
@@ -201,62 +198,52 @@ CLASS zcl_skylint_no_mod_loop_tab IMPLEMENTATION.
 
     CASE is_statement-keyword.
       WHEN 'APPEND'.
-        rs_token = zcl_skylint_ast_util=>get_token_after(
-                       is_statement = is_statement
-                       iv_lexeme    = 'TO' ).
+        rs_token = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                          iv_lexeme    = 'TO' ).
 
       WHEN 'INSERT'.
-        rs_token = zcl_skylint_ast_util=>get_token_after_sequence(
-                       is_statement = is_statement
-                       it_expected  = VALUE #( ( `INTO` ) ( `TABLE` ) ) ).
+        rs_token = zcl_skylint_ast_util=>get_token_after_sequence( is_statement = is_statement
+                                                                   it_expected  = VALUE #( ( `INTO` ) ( `TABLE` ) ) ).
         IF rs_token-lexeme IS INITIAL.
-          rs_token = zcl_skylint_ast_util=>get_token_after(
-                         is_statement = is_statement
-                         iv_lexeme    = 'INTO' ).
+          rs_token = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                            iv_lexeme    = 'INTO' ).
         ENDIF.
 
       WHEN 'MODIFY'.
-        rs_token = zcl_skylint_ast_util=>get_token_after_sequence(
-                       is_statement = is_statement
-                       it_expected  = VALUE #( ( `MODIFY` ) ( `TABLE` ) ) ).
+        rs_token = zcl_skylint_ast_util=>get_token_after_sequence( is_statement = is_statement
+                                                                   it_expected  = VALUE #( ( `MODIFY` ) ( `TABLE` ) ) ).
         IF rs_token-lexeme IS INITIAL.
-          rs_token = zcl_skylint_ast_util=>get_token_after(
-                         is_statement = is_statement
-                         iv_lexeme    = 'MODIFY' ).
+          rs_token = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                            iv_lexeme    = 'MODIFY' ).
         ENDIF.
 
       WHEN 'DELETE'.
         IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
                                                    iv_lexeme    = 'ADJACENT' ) = abap_true.
-          rs_token = zcl_skylint_ast_util=>get_token_after(
-                         is_statement = is_statement
-                         iv_lexeme    = 'FROM' ).
+          rs_token = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                            iv_lexeme    = 'FROM' ).
         ELSE.
           rs_token = zcl_skylint_ast_util=>get_token_after_sequence(
                          is_statement = is_statement
                          it_expected  = VALUE #( ( `DELETE` ) ( `TABLE` ) ) ).
 
           IF rs_token-lexeme IS INITIAL.
-            rs_token = zcl_skylint_ast_util=>get_token_after(
-                           is_statement = is_statement
-                           iv_lexeme    = 'DELETE' ).
+            rs_token = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                              iv_lexeme    = 'DELETE' ).
           ENDIF.
         ENDIF.
 
       WHEN 'CLEAR' OR 'FREE'.
-        rs_token = zcl_skylint_ast_util=>get_token_after(
-                       is_statement = is_statement
-                       iv_lexeme    = is_statement-keyword ).
+        rs_token = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                          iv_lexeme    = is_statement-keyword ).
 
       WHEN 'SORT'.
-        rs_token = zcl_skylint_ast_util=>get_token_after(
-                       is_statement = is_statement
-                       iv_lexeme    = 'SORT' ).
+        rs_token = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                          iv_lexeme    = 'SORT' ).
 
       WHEN 'COLLECT'.
-        rs_token = zcl_skylint_ast_util=>get_token_after(
-                       is_statement = is_statement
-                       iv_lexeme    = 'INTO' ).
+        rs_token = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                          iv_lexeme    = 'INTO' ).
     ENDCASE.
   ENDMETHOD.
 

@@ -127,7 +127,7 @@ All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 | `prefer-inline` | [ZCL_SKYLINT_PREF_INLINE](src/checks/zcl_skylint_pref_inline.clas.abap) | Prefer Inline Declarations | `PREF_INL` | `"#EC PREFER_INLINE"` | — |
 | `prefer-final-data` | [ZCL_SKYLINT_PREF_FINAL_DATA](src/checks/zcl_skylint_pref_final_data.clas.abap) | Declare inline variables as FINAL when never written again | `PREF_FIN` | `"#EC PREF_FINAL"` | ⚡ Ready |
 | `no-friends` | [ZCL_SKYLINT_NO_FRIENDS](src/checks/zcl_skylint_no_friends.clas.abap) | Avoid FRIENDS in class definitions | `NO_FRIENDS` | `"#EC FRIENDS"` | — |
-| `prefer-message-class` | [ZCL_SKYLINT_PREF_MSG_CLS](src/checks/zcl_skylint_pref_msg_cls.clas.abap) | Use a message class (SE91) instead of inline message text | `PREF_MSG` | `"#EC MSG_CLASS"` | — |
+| `prefer-message-class` | [ZCL_SKYLINT_PREF_MSG_CLS](src/checks/zcl_skylint_pref_msg_cls.clas.abap) | Use a message class instead of inline message text | `PREF_MSG` | `"#EC MSG_CLASS"` | — |
 | `prefer-inline-cast` | [ZCL_SKYLINT_PREF_INL_CAST](src/checks/zcl_skylint_pref_inl_cast.clas.abap) | Inline a CAST helper that is only read once | `PREF_ICST` | `"#EC INLINE_CAST"` | ⚡ Ready |
 | `no-exception-overlap` | [ZCL_SKYLINT_NO_EXC_OVERLAP](src/checks/zcl_skylint_no_exc_overlap.clas.abap) | Classic EXCEPTIONS must not overlap | `NO_EXC_OVL` | `"#EC EXC_OVERLAP"` | — |
 | `no-rfc-error-handling` | [ZCL_SKYLINT_NO_RFC_ERR](src/checks/zcl_skylint_no_rfc_err.clas.abap) | RFC calls must handle system failures | `NO_RFC_ERR` | `"#EC RFC_ERR"` | — |

@@ -22,19 +22,19 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_friends IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'skylint: Avoid FRIENDS in class definitions'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                  ( code           = c_finding_codes-friends
-                    severity       = if_ci_atc_check=>finding_severities-warning
-                                                text           = 'Avoid FRIENDS; expose behaviour via public methods'
-                    pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'skylint: Avoid FRIENDS in class definitions'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-friends
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       " TODO: check spelling: behaviour (BE) -> behavior (ABAP cleaner)
+                                       text           = 'Avoid FRIENDS; expose behaviour via public methods'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
     IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.

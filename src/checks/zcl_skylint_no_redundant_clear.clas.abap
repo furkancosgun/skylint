@@ -60,21 +60,19 @@ CLASS zcl_skylint_no_redundant_clear IMPLEMENTATION.
         VALUE #( description       = 'Do not CLEAR or FREE variables redundantly'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-redundant_clear
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Do not CLEAR or FREE variables after declaration; they are already initial'
-                       pseudo_comment = c_pseudo_comment )
-                     ( code           = c_finding_codes-clear_at_end
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Variable is CLEARed or FREEd but never read again before procedure ends'
-                       pseudo_comment = c_pseudo_comment ) )
+                     severity       = if_ci_atc_check=>finding_severities-warning
+                     pseudo_comment = c_pseudo_comment
+                     ( code = c_finding_codes-redundant_clear
+                       text = 'Do not CLEAR or FREE variables after declaration; they are already initial' )
+                     ( code = c_finding_codes-clear_at_end
+                       text = 'Variable is CLEARed or FREEd but never read again before procedure ends' ) )
                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-remove_clear
                                                 short_text = 'Remove redundant statement' ) )
                  attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                                                ( name  = 'CHECK_BEFORE_WRITE'
-                                                  value = REF #( mv_check_before_write ) )
-                                                ( name  = 'CHECK_WITHOUT_READ'
-                                                  value = REF #( mv_check_without_read ) ) ) ) ).
+                                              ( name  = 'CHECK_BEFORE_WRITE'
+                                                value = REF #( mv_check_before_write ) )
+                                              ( name  = 'CHECK_WITHOUT_READ'
+                                                value = REF #( mv_check_without_read ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -133,40 +131,36 @@ CLASS zcl_skylint_no_redundant_clear IMPLEMENTATION.
             CONTINUE.
           ENDIF.
 
-          IF mv_check_before_write = abap_true
+          IF     mv_check_before_write = abap_true
              AND <ls_decl>-has_value = abap_false
              AND is_variable_written( it_statements = is_procedure-statements
                                       iv_from_idx   = <ls_decl>-stmt_idx + 1
                                       iv_to_idx     = lv_stmt_idx - 1
-                                      iv_full_name  = <ls_decl>-full_name ) = abap_false.
+                                      iv_full_name  = <ls_decl>-full_name )   = abap_false.
 
-            ls_quickfix = quickfix_replace(
-                iv_quickfix_code  = c_quickfix_codes-remove_clear
-                iv_statement_from = lv_stmt_idx
-                it_new_code       = VALUE #( ) ).
+            ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-remove_clear
+                                            iv_statement_from = lv_stmt_idx
+                                            it_new_code       = VALUE #( ) ).
 
-            report_statement(
-                is_statement    = <ls_stmt>
-                iv_finding_code = c_finding_codes-redundant_clear
-                is_quickfix     = ls_quickfix ).
+            report_statement( is_statement    = <ls_stmt>
+                              iv_finding_code = c_finding_codes-redundant_clear
+                              is_quickfix     = ls_quickfix ).
             EXIT.
           ENDIF.
 
-          IF mv_check_without_read = abap_true
+          IF     mv_check_without_read = abap_true
              AND is_variable_read( it_statements = is_procedure-statements
                                    iv_from_idx   = lv_stmt_idx + 1
                                    iv_to_idx     = lines( is_procedure-statements )
-                                   iv_full_name  = <ls_decl>-full_name ) = abap_false.
+                                   iv_full_name  = <ls_decl>-full_name )            = abap_false.
 
-            ls_quickfix = quickfix_replace(
-                iv_quickfix_code  = c_quickfix_codes-remove_clear
-                iv_statement_from = lv_stmt_idx
-                it_new_code       = VALUE #( ) ).
+            ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-remove_clear
+                                            iv_statement_from = lv_stmt_idx
+                                            it_new_code       = VALUE #( ) ).
 
-            report_statement(
-                is_statement    = <ls_stmt>
-                iv_finding_code = c_finding_codes-clear_at_end
-                is_quickfix     = ls_quickfix ).
+            report_statement( is_statement    = <ls_stmt>
+                              iv_finding_code = c_finding_codes-clear_at_end
+                              is_quickfix     = ls_quickfix ).
             EXIT.
           ENDIF.
         ENDLOOP.
@@ -221,9 +215,8 @@ CLASS zcl_skylint_no_redundant_clear IMPLEMENTATION.
           CLEAR ls_decl.
           ls_decl-full_name = <ls_ref>-full_name.
           ls_decl-stmt_idx  = lv_stmt_idx.
-          ls_decl-has_value = zcl_skylint_ast_util=>has_token_lexeme(
-                                  is_statement = <ls_stmt>
-                                  iv_lexeme    = 'VALUE' ).
+          ls_decl-has_value = zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_stmt>
+                                                                      iv_lexeme    = 'VALUE' ).
           APPEND ls_decl TO rt_decls.
         ENDLOOP.
       ENDLOOP.
@@ -231,18 +224,16 @@ CLASS zcl_skylint_no_redundant_clear IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_variable_written.
-    rv_written = zcl_skylint_ast_util=>has_data_write_usage(
-        it_statements = it_statements
-        iv_full_name  = iv_full_name
-        iv_from_idx   = iv_from_idx
-        iv_to_idx     = iv_to_idx ).
+    rv_written = zcl_skylint_ast_util=>has_data_write_usage( it_statements = it_statements
+                                                             iv_full_name  = iv_full_name
+                                                             iv_from_idx   = iv_from_idx
+                                                             iv_to_idx     = iv_to_idx ).
   ENDMETHOD.
 
   METHOD is_variable_read.
-    rv_read = zcl_skylint_ast_util=>has_data_read_usage(
-        it_statements = it_statements
-        iv_full_name  = iv_full_name
-        iv_from_idx   = iv_from_idx
-        iv_to_idx     = iv_to_idx ).
+    rv_read = zcl_skylint_ast_util=>has_data_read_usage( it_statements = it_statements
+                                                         iv_full_name  = iv_full_name
+                                                         iv_from_idx   = iv_from_idx
+                                                         iv_to_idx     = iv_to_idx ).
   ENDMETHOD.
 ENDCLASS.

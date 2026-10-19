@@ -65,7 +65,7 @@ CLASS zcl_skylint_no_many_parens IMPLEMENTATION.
       lv_index = 1.
       WHILE lv_index <= lv_count.
         ls_open = zcl_skylint_ast_util=>get_token( is_statement = <ls_statement>
-                                                  iv_index     = lv_index ).
+                                                   iv_index     = lv_index ).
         lv_open = lv_index.
         IF ls_open-lexeme <> '('.
           lv_index += 1.
@@ -108,7 +108,7 @@ CLASS zcl_skylint_no_many_parens IMPLEMENTATION.
         WHILE lv_index < lv_close.
           ls_token = zcl_skylint_ast_util=>get_token( is_statement = <ls_statement>
                                                       iv_index     = lv_index ).
-          IF lv_depth = 0 AND ls_token-references IS INITIAL
+          IF     lv_depth = 0 AND ls_token-references IS INITIAL
              AND (    zcl_skylint_ast_util=>is_comparison_operator( ls_token-lexeme ) = abap_true
                    OR ls_token-lexeme = 'IS'
                    OR ls_token-lexeme = 'IN'
@@ -123,10 +123,9 @@ CLASS zcl_skylint_no_many_parens IMPLEMENTATION.
         ENDWHILE.
 
         IF lv_has_cond = abap_true.
-          lv_line = zcl_skylint_ast_util=>flatten_statement(
-                       is_statement = <ls_statement>
-                       it_deletions = VALUE #( ( lv_open ) ( lv_close ) )
-                       iv_suffix    = `.` ).
+          lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_statement>
+                                                             it_deletions = VALUE #( ( lv_open ) ( lv_close ) )
+                                                             iv_suffix    = `.` ).
           ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-remove_parentheses
                                           iv_statement_from = sy-tabix
                                           it_new_code       = VALUE #( ( lv_line ) ) ).
