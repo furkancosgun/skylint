@@ -1,14 +1,14 @@
-# Rules Catalog (86 Rules)
+# Rules Catalog (93 Rules)
 
-Comprehensive reference for all **86** Clean ABAP, security, performance, and architecture rules in Skylint.
+Comprehensive reference for all **93** Clean ABAP, security, performance, and architecture rules in Skylint.
 
 ::: tip Skylint at a Glance
-- **86 Native ATC Rules:** 100% ABAP Cloud (Contract C1) & Steampunk Ready.
-- **32 Automated QuickFixes:** Instant one-click refactoring with <kbd>Ctrl</kbd> + <kbd>1</kbd> in Eclipse ADT.
+- **93 Native ATC Rules:** 100% ABAP Cloud (Contract C1) & Steampunk Ready.
+- **35 Automated QuickFixes:** Instant one-click refactoring with <kbd>Ctrl</kbd> + <kbd>1</kbd> in Eclipse ADT.
 - **Zero Legacy Overhead:** Built exclusively on `IF_CI_ATC_CHECK` (no obsolete Code Inspector / SCI dependency).
 :::
 
-## Clean ABAP & Modern Syntax (36)
+## Clean ABAP & Modern Syntax (39)
 
 Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.
 
@@ -42,6 +42,9 @@ Modern language features, expression-oriented coding, and idiomatic Clean ABAP p
 | [`prefer-case`](/rules/prefer-case) | `ZCL_SKYLINT_PREF_CASE` | Use CASE instead of IF when checking multiple values | `USE_CASE` | `#EC PREF_CASE` | — |
 | [`max-one-statement`](/rules/max-one-statement) | `ZCL_SKYLINT_MAX_ONE_STMT` | Max One Statement Per Line | `ONE_STMT` | `#EC ONE_STMT` | — |
 | [`prefer-inline`](/rules/prefer-inline) | `ZCL_SKYLINT_PREF_INLINE` | Prefer Inline Declarations | `PREF_INL` | `#EC PREFER_INLINE` | — |
+| [`prefer-final-data`](/rules/prefer-final-data) | `ZCL_SKYLINT_PREF_FINAL_DATA` | Declare inline variables as FINAL when never written again | `PREF_FIN` | `#EC PREF_FINAL` | ⚡ Ready |
+| [`prefer-message-class`](/rules/prefer-message-class) | `ZCL_SKYLINT_PREF_MSG_CLS` | Use a message class (SE91) instead of inline message text | `PREF_MSG` | `#EC MSG_CLASS` | — |
+| [`prefer-inline-cast`](/rules/prefer-inline-cast) | `ZCL_SKYLINT_PREF_INL_CAST` | Inline a CAST helper that is only read once | `PREF_ICST` | `#EC INLINE_CAST` | ⚡ Ready |
 | [`prefer-public-constructor`](/rules/prefer-public-constructor) | `ZCL_SKYLINT_PREF_PUB_CTOR` | Declare Constructor in PUBLIC SECTION | `CTOR_PUB` | `#EC PUB_CTOR` | — |
 | [`prefer-definitions-top`](/rules/prefer-definitions-top) | `ZCL_SKYLINT_PREF_DEF_TOP` | Place definitions at beginning of routine | `DEF_TOP` | `#EC DEF_TOP` | — |
 | [`no-unnecessary-return`](/rules/no-unnecessary-return) | `ZCL_SKYLINT_NO_UNNEC_RETURN` | Omit unnecessary RETURN at end of routine | `UNNEC_RET` | `#EC NO_UNNEC_RETURN` | ⚡ Ready |
@@ -51,7 +54,7 @@ Modern language features, expression-oriented coding, and idiomatic Clean ABAP p
 | [`prefer-cast`](/rules/prefer-cast) | `ZCL_SKYLINT_PREF_CAST` | Prefer modern CAST #( ) expression over ?= | `PREFCAST` | `#EC PREF_CAST` | ⚡ Ready |
 | [`no-redundant-clear`](/rules/no-redundant-clear) | `ZCL_SKYLINT_NO_REDUNDANT_CLEAR` | Do not CLEAR or FREE variables redundantly | `REDUNCLEAR` | `#EC REDUNDANT_CLEAR` | ⚡ Ready |
 
-## Anti-Patterns & Bad Practices (27)
+## Anti-Patterns & Bad Practices (30)
 
 Discouraged language constructs, legacy statements, and redundant syntax.
 
@@ -82,6 +85,9 @@ Discouraged language constructs, legacy statements, and redundant syntax.
 | [`no-unused-variables`](/rules/no-unused-variables) | `ZCL_SKYLINT_NO_UNUSED_VARS` | Detect unused local variables and field symbols | `UNUSED_VAR` | `#EC NEEDED` | — |
 | [`no-inline-length`](/rules/no-inline-length) | `ZCL_SKYLINT_NO_INLINE_LEN` | Avoid inline length specification in declarations | `PAREN_LEN` | `#EC PAREN_LEN` | ⚡ Ready |
 | [`no-dash-in-names`](/rules/no-dash-in-names) | `ZCL_SKYLINT_NO_DASH_IN_NAMES` | No Dashes in Variable and Form Names | `NO_DASH` | `#EC NO_DASH` | — |
+| [`no-friends`](/rules/no-friends) | `ZCL_SKYLINT_NO_FRIENDS` | Avoid FRIENDS in class definitions | `NO_FRIENDS` | `#EC FRIENDS` | — |
+| [`no-exception-overlap`](/rules/no-exception-overlap) | `ZCL_SKYLINT_NO_EXC_OVERLAP` | Classic EXCEPTIONS must not overlap | `NO_EXC_OVL` | `#EC EXC_OVERLAP` | — |
+| [`no-many-parentheses`](/rules/no-many-parentheses) | `ZCL_SKYLINT_NO_MANY_PARENS` | Remove redundant parentheses | `MANY_PAREN` | `#EC MANY_PARENS` | ⚡ Ready |
 | [`no-ignored-return-value`](/rules/no-ignored-return-value) | `ZCL_SKYLINT_NO_IGNORED_RETURN` | Disallow ignoring the return value of functional methods | `IGNRET` | `#EC NO_IGNORED_RET` | — |
 | [`no-modify-loop-table`](/rules/no-modify-loop-table) | `ZCL_SKYLINT_NO_MOD_LOOP_TAB` | Avoid mutating or sorting tables inside loops | `MOD_LOOPTB` | `#EC LOOP_MODIFY` | — |
 
@@ -98,7 +104,7 @@ Database query efficiency, buffer protection, and internal table operation guide
 | [`prefer-transporting`](/rules/prefer-transporting) | `ZCL_SKYLINT_PREF_TRANSPORT` | Avoid MODIFY itab in LOOP without TRANSPORTING clause | `FULL_MODIF` | `#EC TRANSPORTING` | — |
 | [`prefer-pass-by-reference`](/rules/prefer-pass-by-reference) | `ZCL_SKYLINT_PREF_PASS_BY_REF` | Slow Parameter Passing | `SLOW_PASS` | `#EC SLOW_PARAM` | — |
 
-## Security & Robustness (10)
+## Security & Robustness (11)
 
 Authorizations, dynamic execution sanitation, error handling, and runtime safety.
 
@@ -111,6 +117,7 @@ Authorizations, dynamic execution sanitation, error handling, and runtime safety
 | [`prefer-subrc-check`](/rules/prefer-subrc-check) | `ZCL_SKYLINT_PREF_CHECK_SUBRC` | Check sy-subrc after DB, table and string operations | `CHECKSUBRC` | `#EC CHECK_SUBRC` | — |
 | [`no-client-specified`](/rules/no-client-specified) | `ZCL_SKYLINT_NO_CLIENT_SPEC` | Avoid USING CLIENT or CLIENT SPECIFIED in ABAP SQL | `CLIENT_SPE` | `#EC CLIENT_SPEC` | ⚡ Ready |
 | [`no-commit-work`](/rules/no-commit-work) | `ZCL_SKYLINT_NO_COMMIT_WORK` | Avoid COMMIT and ROLLBACK in application logic | `NO_COMMIT` | `#EC COMMIT_WORK` | — |
+| [`no-rfc-error-handling`](/rules/no-rfc-error-handling) | `ZCL_SKYLINT_NO_RFC_ERR` | RFC calls must handle system failures | `NO_RFC_ERR` | `#EC RFC_ERR` | — |
 | [`no-modify-standard-tables`](/rules/no-modify-standard-tables) | `ZCL_SKYLINT_NO_MOD_STD_TABLE` | Modify Only Own Database Tables | `NOT_OWN_TB` | `#EC OWN_TABLES` | — |
 | [`no-dynamic-stuff`](/rules/no-dynamic-stuff) | `ZCL_SKYLINT_NO_DYNAMIC_STMT` | No Dynamic Constructs (CALL, ASSIGN, CREATE, etc.) | `DYN_STUFF` | `#EC NO_DYNAMIC` | — |
 | [`no-hardcoded-env-checks`](/rules/no-hardcoded-env-checks) | `ZCL_SKYLINT_NO_HARDCODED_ENV` | Avoid reading environment system fields (sy-sysid, etc.) | `ENV_CHECK` | `#EC HARDCODED_ENV` | — |

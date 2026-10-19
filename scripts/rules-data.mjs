@@ -1006,6 +1006,76 @@ ENDCASE.`,
     },
   },
   {
+    ruleId: 'prefer-final-data',
+    className: 'ZCL_SKYLINT_PREF_FINAL_DATA',
+    pseudoComment: 'PREF_FINAL',
+    category: 'clean-abap',
+    example: {
+      bad: `DATA(lv_count) = 10.\nWRITE lv_count.`,
+      good: `FINAL(lv_count) = 10.\nWRITE lv_count.`,
+    },
+  },
+  {
+    ruleId: 'no-friends',
+    className: 'ZCL_SKYLINT_NO_FRIENDS',
+    pseudoComment: 'FRIENDS',
+    category: 'anti-patterns',
+    example: {
+      bad: `CLASS lcl_service DEFINITION.\n  PUBLIC SECTION.\n    FRIENDS lcl_helper.\nENDCLASS.`,
+      good: `CLASS lcl_service DEFINITION.\n  PUBLIC SECTION.\n    METHODS execute.\nENDCLASS.`,
+    },
+  },
+  {
+    ruleId: 'prefer-message-class',
+    className: 'ZCL_SKYLINT_PREF_MSG_CLS',
+    pseudoComment: 'MSG_CLASS',
+    category: 'clean-abap',
+    example: {
+      bad: `MESSAGE 'Something went wrong' TYPE 'E'.`,
+      good: `MESSAGE e001(bc_msg).`,
+    },
+  },
+  {
+    ruleId: 'prefer-inline-cast',
+    className: 'ZCL_SKYLINT_PREF_INL_CAST',
+    pseudoComment: 'INLINE_CAST',
+    category: 'clean-abap',
+    example: {
+      bad: `DATA(helper) = CAST lcl_node( object ).\nresult = helper->get_tokens( ).`,
+      good: `result = CAST lcl_node( object )->get_tokens( ).`,
+    },
+  },
+  {
+    ruleId: 'no-exception-overlap',
+    className: 'ZCL_SKYLINT_NO_EXC_OVERLAP',
+    pseudoComment: 'EXC_OVERLAP',
+    category: 'anti-patterns',
+    example: {
+      bad: `CALL FUNCTION 'SOMETHING'\n  EXCEPTIONS\n    system_failure        = 1 MESSAGE lv_message\n    communication_failure = 1 MESSAGE lv_message\n    OTHERS                = 1.`,
+      good: `CALL FUNCTION 'SOMETHING'\n  EXCEPTIONS\n    system_failure        = 1 MESSAGE lv_message\n    communication_failure = 2 MESSAGE lv_message\n    OTHERS                = 3.`,
+    },
+  },
+  {
+    ruleId: 'no-rfc-error-handling',
+    className: 'ZCL_SKYLINT_NO_RFC_ERR',
+    pseudoComment: 'RFC_ERR',
+    category: 'security',
+    example: {
+      bad: `CALL FUNCTION 'Z_RFC'\n  DESTINATION lv_rfc.`,
+      good: `CALL FUNCTION 'Z_RFC'\n  DESTINATION lv_rfc\n  EXCEPTIONS\n    system_failure        = 1 MESSAGE msg\n    communication_failure = 2 MESSAGE msg\n    OTHERS                = 3.`,
+    },
+  },
+  {
+    ruleId: 'no-many-parentheses',
+    className: 'ZCL_SKYLINT_NO_MANY_PARENS',
+    pseudoComment: 'MANY_PARENS',
+    category: 'anti-patterns',
+    example: {
+      bad: `IF ( destination IS INITIAL ).\nENDIF.`,
+      good: `IF destination IS INITIAL.\nENDIF.`,
+    },
+  },
+  {
     ruleId: 'prefer-pass-by-reference',
     className: 'ZCL_SKYLINT_PREF_PASS_BY_REF',
     pseudoComment: 'SLOW_PARAM',

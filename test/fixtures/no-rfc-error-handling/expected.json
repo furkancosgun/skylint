@@ -1,0 +1,10 @@
+[
+  { "method": "TEST_001", "code": "NO_RFC_ERR", "line": 2, "column": 4 },
+  { "method": "TEST_002", "code": null },
+  { "method": "TEST_003", "code": "NO_RFC_ERR", "line": 2, "column": 4 },
+  { "method": "TEST_004", "code": "NO_RFC_ERR", "line": 2, "column": 4 },
+  { "method": "TEST_005", "code": null },
+  { "method": "TEST_006", "code": null },
+  { "method": "TEST_007", "code": "NO_RFC_ERR", "line": 2, "column": 4 },
+  { "method": "TEST_008", "code": "NO_RFC_ERR", "line": 2, "column": 4 }
+]

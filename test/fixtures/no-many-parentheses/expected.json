@@ -1,0 +1,13 @@
+[
+  { "method": "TEST_001", "code": "MANY_PAREN", "line": 2, "column": 7, "quickfixes": ["NOPARENS"] },
+  { "method": "TEST_002", "code": "MANY_PAREN", "line": 2, "column": 23, "quickfixes": ["NOPARENS"] },
+  { "method": "TEST_003", "code": null },
+  { "method": "TEST_004", "code": null },
+  { "method": "TEST_005", "code": null },
+  { "method": "TEST_006", "code": null },
+  { "method": "TEST_007", "code": null },
+  { "method": "TEST_008", "code": null },
+  { "method": "TEST_009", "code": "MANY_PAREN", "line": 2, "column": 23, "quickfixes": ["NOPARENS"] },
+  { "method": "TEST_010", "code": null },
+  { "method": "TEST_011", "code": "MANY_PAREN", "line": 2, "column": 7, "quickfixes": ["NOPARENS"] }
+]

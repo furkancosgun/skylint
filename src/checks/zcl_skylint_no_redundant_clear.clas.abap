@@ -231,75 +231,18 @@ CLASS zcl_skylint_no_redundant_clear IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_variable_written.
-    DATA lv_idx TYPE i.
-    FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_tok>  TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_ref>  TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
-
-    rv_written = abap_false.
-
-    lv_idx = iv_from_idx.
-    WHILE lv_idx <= iv_to_idx.
-      ASSIGN it_statements[ lv_idx ] TO <ls_stmt>.
-      IF sy-subrc <> 0.
-        EXIT.
-      ENDIF.
-
-      LOOP AT <ls_stmt>-tokens ASSIGNING <ls_tok>.
-        LOOP AT <ls_tok>-references ASSIGNING <ls_ref>
-             WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-               AND ( full_name = iv_full_name OR full_name CP |{ iv_full_name }\\*| ).
-          CASE <ls_ref>-usage_mode.
-            WHEN if_ci_atc_source_code_provider=>usage_modes-write
-              OR if_ci_atc_source_code_provider=>usage_modes-read_and_write
-              OR if_ci_atc_source_code_provider=>usage_modes-definition_with_write
-              OR if_ci_atc_source_code_provider=>usage_modes-definition_with_assign
-              OR if_ci_atc_source_code_provider=>usage_modes-write_database
-              OR if_ci_atc_source_code_provider=>usage_modes-read_and_write_reference
-              OR if_ci_atc_source_code_provider=>usage_modes-any_access_reference.
-              rv_written = abap_true.
-              RETURN.
-          ENDCASE.
-        ENDLOOP.
-      ENDLOOP.
-
-      lv_idx += 1.
-    ENDWHILE.
+    rv_written = zcl_skylint_ast_util=>has_data_write_usage(
+        it_statements = it_statements
+        iv_full_name  = iv_full_name
+        iv_from_idx   = iv_from_idx
+        iv_to_idx     = iv_to_idx ).
   ENDMETHOD.
 
   METHOD is_variable_read.
-    DATA lv_idx TYPE i.
-    FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_tok>  TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_ref>  TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
-
-    rv_read = abap_false.
-
-    lv_idx = iv_from_idx.
-    WHILE lv_idx <= iv_to_idx.
-      ASSIGN it_statements[ lv_idx ] TO <ls_stmt>.
-      IF sy-subrc <> 0.
-        EXIT.
-      ENDIF.
-
-      LOOP AT <ls_stmt>-tokens ASSIGNING <ls_tok>.
-        LOOP AT <ls_tok>-references ASSIGNING <ls_ref>
-             WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-               AND ( full_name = iv_full_name OR full_name CP |{ iv_full_name }\\*| ).
-          CASE <ls_ref>-usage_mode.
-            WHEN if_ci_atc_source_code_provider=>usage_modes-read
-              OR if_ci_atc_source_code_provider=>usage_modes-read_and_write
-              OR if_ci_atc_source_code_provider=>usage_modes-read_reference
-              OR if_ci_atc_source_code_provider=>usage_modes-read_and_write_reference
-              OR if_ci_atc_source_code_provider=>usage_modes-read_database
-              OR if_ci_atc_source_code_provider=>usage_modes-any_access_reference.
-              rv_read = abap_true.
-              RETURN.
-          ENDCASE.
-        ENDLOOP.
-      ENDLOOP.
-
-      lv_idx += 1.
-    ENDWHILE.
+    rv_read = zcl_skylint_ast_util=>has_data_read_usage(
+        it_statements = it_statements
+        iv_full_name  = iv_full_name
+        iv_from_idx   = iv_from_idx
+        iv_to_idx     = iv_to_idx ).
   ENDMETHOD.
 ENDCLASS.

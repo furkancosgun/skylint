@@ -11,7 +11,7 @@ export default defineConfig({
     logo: '/logo.svg',
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
-      { text: 'Rules (86)', link: '/rules/' },
+      { text: 'Rules (93)', link: '/rules/' },
       { text: 'GitHub', link: 'https://github.com/furkancosgun/skylint' },
     ],
     sidebar: {
@@ -144,6 +144,18 @@ export default defineConfig({
       {
         "text": "prefer-inline",
         "link": "/rules/prefer-inline"
+      },
+      {
+        "text": "prefer-final-data",
+        "link": "/rules/prefer-final-data"
+      },
+      {
+        "text": "prefer-message-class",
+        "link": "/rules/prefer-message-class"
+      },
+      {
+        "text": "prefer-inline-cast",
+        "link": "/rules/prefer-inline-cast"
       },
       {
         "text": "prefer-public-constructor",
@@ -284,6 +296,18 @@ export default defineConfig({
         "link": "/rules/no-dash-in-names"
       },
       {
+        "text": "no-friends",
+        "link": "/rules/no-friends"
+      },
+      {
+        "text": "no-exception-overlap",
+        "link": "/rules/no-exception-overlap"
+      },
+      {
+        "text": "no-many-parentheses",
+        "link": "/rules/no-many-parentheses"
+      },
+      {
         "text": "no-ignored-return-value",
         "link": "/rules/no-ignored-return-value"
       },
@@ -354,6 +378,10 @@ export default defineConfig({
       {
         "text": "no-commit-work",
         "link": "/rules/no-commit-work"
+      },
+      {
+        "text": "no-rfc-error-handling",
+        "link": "/rules/no-rfc-error-handling"
       },
       {
         "text": "no-modify-standard-tables",

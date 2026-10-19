@@ -347,4 +347,32 @@ export const RULES_METADATA = {
     title: 'Avoid Hardcoding System & Tenant Environment Checks',
     rationale: 'Hardcoding system identifiers (sy-sysid), client numbers (sy-mandt), host names (sy-host), or database systems (sy-dbsys) against literal values violates cloud multi-tenancy and breaks during staging, system copy, or migration. Use feature toggles, switch frameworks, or customizing instead.',
   },
+  'prefer-final-data': {
+    title: 'Prefer FINAL( ) over DATA( ) when the variable is never written again',
+    rationale: 'When an inline DATA( ) variable is assigned once and never written again, declaring it FINAL( ) communicates immutability and lets the compiler enforce it.',
+  },
+  'no-friends': {
+    title: 'Avoid FRIENDS in class definitions',
+    rationale: 'FRIENDS grants another class access to private/protected members, breaking encapsulation. Expose behaviour through the public interface instead.',
+  },
+  'prefer-message-class': {
+    title: 'Use a message class (SE91) instead of inline message text',
+    rationale: 'Inline message texts cannot be translated and are hard to maintain. Define messages in a message class and raise them as e001( msg_class ).',
+  },
+  'prefer-inline-cast': {
+    title: 'Inline a CAST helper that is only read once',
+    rationale: 'A CAST helper declared as DATA and read exactly once in the following statement can be inlined, removing a temporary variable.',
+  },
+  'no-exception-overlap': {
+    title: 'Classic EXCEPTIONS must not map two errors to the same number',
+    rationale: 'When two classic exceptions share one error number, the caller cannot tell which one was raised.',
+  },
+  'no-rfc-error-handling': {
+    title: 'RFC calls must handle SYSTEM_FAILURE and COMMUNICATION_FAILURE',
+    rationale: 'Remote calls can fail at runtime; the caller must handle system and communication failures (and resource failures for async calls in a group).',
+  },
+  'no-many-parentheses': {
+    title: 'Remove redundant parentheses',
+    rationale: 'Parentheses that only wrap a complete condition or expression add noise and can be removed without changing semantics.',
+  },
 };

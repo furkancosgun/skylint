@@ -566,6 +566,27 @@
       "checkName": "ZSKYLINT_PREF_INLINE"
     },
     {
+      "checkName": "ZSKYLINT_PREF_FINAL_DATA"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_FRIENDS"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_MSG_CLS"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_INL_CAST"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_EXC_OVERLAP"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_RFC_ERR"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_MANY_PARENS"
+    },
+    {
       "checkName": "ZSKYLINT_PREF_PASS_BY_REF"
     },
     {

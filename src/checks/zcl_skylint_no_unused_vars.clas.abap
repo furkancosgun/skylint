@@ -133,29 +133,8 @@ CLASS zcl_skylint_no_unused_vars IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_variable_read.
-    FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_tok>  TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_ref>  TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
-
-    rv_read = abap_false.
-
-    LOOP AT it_statements ASSIGNING <ls_stmt>.
-      LOOP AT <ls_stmt>-tokens ASSIGNING <ls_tok>.
-        LOOP AT <ls_tok>-references ASSIGNING <ls_ref>
-             WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-               AND ( full_name = iv_full_name OR full_name CP |{ iv_full_name }\\*| ).
-          CASE <ls_ref>-usage_mode.
-            WHEN if_ci_atc_source_code_provider=>usage_modes-read
-              OR if_ci_atc_source_code_provider=>usage_modes-read_and_write
-              OR if_ci_atc_source_code_provider=>usage_modes-read_reference
-              OR if_ci_atc_source_code_provider=>usage_modes-read_and_write_reference
-              OR if_ci_atc_source_code_provider=>usage_modes-any_access_reference
-              OR if_ci_atc_source_code_provider=>usage_modes-read_database.
-              rv_read = abap_true.
-              RETURN.
-          ENDCASE.
-        ENDLOOP.
-      ENDLOOP.
-    ENDLOOP.
+    rv_read = zcl_skylint_ast_util=>has_data_read_usage(
+        it_statements = it_statements
+        iv_full_name  = iv_full_name ).
   ENDMETHOD.
 ENDCLASS.
