@@ -11,7 +11,7 @@
 <p align="center">
   <a href="https://github.com/furkancosgun/skylint/actions/workflows/ci.yml"><img src="https://github.com/furkancosgun/skylint/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
   <a href="https://furkancosgun.github.io/skylint/"><img src="https://img.shields.io/badge/docs-online-blue.svg" alt="Docs" /></a>
-  <a href="#-clean-abap--cloud-rule-catalog-93-rules"><img src="https://img.shields.io/badge/rules-93-brightgreen.svg" alt="Rules" /></a>
+  <a href="#-clean-abap--cloud-rule-catalog-94-rules"><img src="https://img.shields.io/badge/rules-94-brightgreen.svg" alt="Rules" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-yellow.svg" alt="License" /></a>
 </p>
 
@@ -24,7 +24,7 @@
 ## ⚡ Highlights
 
 - **Native SAP ATC:** Every check implements `if_ci_atc_check` directly and runs natively in Eclipse ADT and SAP GUI.
-- **93 Clean ABAP Rules:** Comprehensive checks for modern syntax, expressions, safety, and performance.
+- **94 Clean ABAP Rules:** Comprehensive checks for modern syntax, expressions, safety, and performance.
 - **Automated QuickFixes:** Built-in QuickFix engine for instant refactoring via `Ctrl + 1`.
 - **Zero Boilerplate:** Base class encapsulates statement traversal, finding reporting, and pseudo-comment handling.
 - **CLI & CI/CD Ready:** Fast local CLI (`npx skylint scan`) and automated GitHub Actions CI & Pages deployment.
@@ -37,7 +37,7 @@
 skylint/
 ├── src/
 │   ├── core/         # Base check class, metadata, AST & RTTI utilities
-│   ├── checks/       # 93 modular check implementations
+│   ├── checks/       # 94 modular check implementations
 │   └── atc/          # Generated ATC objects (CHKC, CHKO, CHKV)
 ├── bin/              # Executable CLI (skylint scan, explain, init)
 ├── docs/             # VitePress enterprise documentation source
@@ -48,7 +48,7 @@ skylint/
 
 ---
 
-## 📋 Clean ABAP & Cloud Rule Catalog (93 Rules)
+## 📋 Clean ABAP & Cloud Rule Catalog (94 Rules)
 
 All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 
@@ -113,7 +113,6 @@ All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 | `no-client-specified` | [ZCL_SKYLINT_NO_CLIENT_SPEC](src/checks/zcl_skylint_no_client_spec.clas.abap) | Avoid USING CLIENT or CLIENT SPECIFIED in ABAP SQL | `CLIENT_SPE` | `"#EC CLIENT_SPEC"` | ⚡ Ready |
 | `no-commit-work` | [ZCL_SKYLINT_NO_COMMIT_WORK](src/checks/zcl_skylint_no_commit_work.clas.abap) | Avoid COMMIT and ROLLBACK in application logic | `NO_COMMIT` | `"#EC COMMIT_WORK"` | — |
 | `prefer-transporting` | [ZCL_SKYLINT_PREF_TRANSPORT](src/checks/zcl_skylint_pref_transport.clas.abap) | Avoid MODIFY itab in LOOP without TRANSPORTING clause | `FULL_MODIF` | `"#EC TRANSPORTING"` | — |
-| `prefer-test-naming` | [ZCL_SKYLINT_PREF_TEST_NAME](src/checks/zcl_skylint_pref_test_name.clas.abap) | Enforce test method naming (TEST_, SHOULD_) in AUnit | `TEST_NAME` | `"#EC TEST_NAME"` | — |
 | `prefer-string-functions` | [ZCL_SKYLINT_PREF_STR_FUNC](src/checks/zcl_skylint_pref_str_func.clas.abap) | Detect obsolete string statements; prefer built-in functions | `CONDENSE_S` | `"#EC STR_FUNC"` | ⚡ Ready |
 | `prefer-calc-assign-op` | [ZCL_SKYLINT_PREF_CALC_OP](src/checks/zcl_skylint_pref_calc_op.clas.abap) | Prefer calculation assignment operators (+=, -=, *=, /=) | `CALC_ASSGN` | `"#EC CALC_ASSIGN"` | ⚡ Ready |
 | `prefer-early-return` | [ZCL_SKYLINT_PREF_EARLY_RET](src/checks/zcl_skylint_pref_early_ret.clas.abap) | Prefer early return or continue over nested IF blocks | `GUARD_METH` | `"#EC EARLY_RETURN"` | — |
@@ -147,6 +146,8 @@ All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 | `no-redundant-clear` | [ZCL_SKYLINT_NO_REDUNDANT_CLEAR](src/checks/zcl_skylint_no_redundant_clear.clas.abap) | Do not CLEAR or FREE variables redundantly | `REDUNCLEAR` | `"#EC REDUNDANT_CLEAR"` | ⚡ Ready |
 | `no-modify-loop-table` | [ZCL_SKYLINT_NO_MOD_LOOP_TAB](src/checks/zcl_skylint_no_mod_loop_tab.clas.abap) | Avoid mutating or sorting tables inside loops | `MOD_LOOPTB` | `"#EC LOOP_MODIFY"` | — |
 | `no-hardcoded-env-checks` | [ZCL_SKYLINT_NO_HARDCODED_ENV](src/checks/zcl_skylint_no_hardcoded_env.clas.abap) | Avoid reading environment system fields (sy-sysid, etc.) | `ENV_CHECK` | `"#EC HARDCODED_ENV"` | — |
+| `max-line-length` | [ZCL_SKYLINT_MAX_LINE_LEN](src/checks/zcl_skylint_max_line_len.clas.abap) | Maximum Line Length | `LINE_LEN` | `"#EC LINE_LEN"` | — |
+| `prefer-naming` | [ZCL_SKYLINT_PREF_NAMING](src/checks/zcl_skylint_pref_naming.clas.abap) | Standard Naming Conventions | `ATTR_NAME` | `"#EC NAMING"` | — |
 
 ---
 
@@ -270,7 +271,7 @@ report_statement( is_statement    = <ls_statement>
 Skylint is built directly on the native SAP ATC framework:
 
 1. **`src/core/`**: Base check engine (`zcl_skylint_check_base` implementing `if_ci_atc_check`), shared metadata (`zcl_skylint_check_meta_data`), and AST/RTTI traversal utilities.
-2. **`src/checks/`**: 93 modular check classes, each directly selectable in ATC Check Variants (`CHKV`).
+2. **`src/checks/`**: 94 modular check classes, each directly selectable in ATC Check Variants (`CHKV`).
 3. **`src/atc/`**: Standard ATC category (`CHKC`), check (`CHKO`), and variant (`CHKV`) definitions.
 4. **`deps/atc/src/`**: Local ATC framework stubs for offline abaplint validation (excluded from abapGit transports).
 

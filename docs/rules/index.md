@@ -1,9 +1,9 @@
-# Rules Catalog (93 Rules)
+# Rules Catalog (94 Rules)
 
-Comprehensive reference for all **93** Clean ABAP, security, performance, and architecture rules in Skylint.
+Comprehensive reference for all **94** Clean ABAP, security, performance, and architecture rules in Skylint.
 
 ::: tip Skylint at a Glance
-- **93 Native ATC Rules:** 100% ABAP Cloud (Contract C1) & Steampunk Ready.
+- **94 Native ATC Rules:** 100% ABAP Cloud (Contract C1) & Steampunk Ready.
 - **35 Automated QuickFixes:** Instant one-click refactoring with <kbd>Ctrl</kbd> + <kbd>1</kbd> in Eclipse ADT.
 - **Zero Legacy Overhead:** Built exclusively on `IF_CI_ATC_CHECK` (no obsolete Code Inspector / SCI dependency).
 :::
@@ -33,7 +33,6 @@ Modern language features, expression-oriented coding, and idiomatic Clean ABAP p
 | [`no-static-classes`](/rules/no-static-classes) | `ZCL_SKYLINT_NO_STATIC_CLS` | Avoid static-only classes; use instantiable classes | `STAT_CLASS` | `#EC STATIC_CLS` | — |
 | [`prefer-predicate-names`](/rules/prefer-predicate-names) | `ZCL_SKYLINT_PREF_PRED_NAME` | Enforce predicate naming (IS_, HAS_) on boolean methods | `BOOL_NAME` | `#EC PRED_NAME` | — |
 | [`no-nested-try`](/rules/no-nested-try) | `ZCL_SKYLINT_NO_NESTED_TRY` | Avoid nested TRY blocks; extract to helper methods | `NESTED_TRY` | `#EC NESTED_TRY` | — |
-| [`prefer-test-naming`](/rules/prefer-test-naming) | `ZCL_SKYLINT_PREF_TEST_NAME` | Enforce test method naming (TEST_, SHOULD_) in AUnit | `TEST_NAME` | `#EC TEST_NAME` | — |
 | [`prefer-string-functions`](/rules/prefer-string-functions) | `ZCL_SKYLINT_PREF_STR_FUNC` | Detect obsolete string statements; prefer built-in functions | `CONDENSE_S` | `#EC STR_FUNC` | ⚡ Ready |
 | [`prefer-calc-assign-op`](/rules/prefer-calc-assign-op) | `ZCL_SKYLINT_PREF_CALC_OP` | Prefer calculation assignment operators (+=, -=, *=, /=) | `CALC_ASSGN` | `#EC CALC_ASSIGN` | ⚡ Ready |
 | [`prefer-early-return`](/rules/prefer-early-return) | `ZCL_SKYLINT_PREF_EARLY_RET` | Prefer early return or continue over nested IF blocks | `GUARD_METH` | `#EC EARLY_RETURN` | — |
@@ -53,6 +52,7 @@ Modern language features, expression-oriented coding, and idiomatic Clean ABAP p
 | [`prefer-is-initial`](/rules/prefer-is-initial) | `ZCL_SKYLINT_PREF_IS_INITIAL` | Prefer IS [NOT] INITIAL over lines( ) or empty literals | `PREF_INIT` | `#EC PREF_INIT` | ⚡ Ready |
 | [`prefer-cast`](/rules/prefer-cast) | `ZCL_SKYLINT_PREF_CAST` | Prefer modern CAST #( ) expression over ?= | `PREFCAST` | `#EC PREF_CAST` | ⚡ Ready |
 | [`no-redundant-clear`](/rules/no-redundant-clear) | `ZCL_SKYLINT_NO_REDUNDANT_CLEAR` | Do not CLEAR or FREE variables redundantly | `REDUNCLEAR` | `#EC REDUNDANT_CLEAR` | ⚡ Ready |
+| [`prefer-naming`](/rules/prefer-naming) | `ZCL_SKYLINT_PREF_NAMING` | Standard Naming Conventions | `ATTR_NAME` | `#EC NAMING` | — |
 
 ## Anti-Patterns & Bad Practices (30)
 
@@ -122,7 +122,7 @@ Authorizations, dynamic execution sanitation, error handling, and runtime safety
 | [`no-dynamic-stuff`](/rules/no-dynamic-stuff) | `ZCL_SKYLINT_NO_DYNAMIC_STMT` | No Dynamic Constructs (CALL, ASSIGN, CREATE, etc.) | `DYN_STUFF` | `#EC NO_DYNAMIC` | — |
 | [`no-hardcoded-env-checks`](/rules/no-hardcoded-env-checks) | `ZCL_SKYLINT_NO_HARDCODED_ENV` | Avoid reading environment system fields (sy-sysid, etc.) | `ENV_CHECK` | `#EC HARDCODED_ENV` | — |
 
-## Metrics & Complexity Limits (6)
+## Metrics & Complexity Limits (7)
 
 Quantitative boundaries for method size, nesting depth, parameter counts, and cyclomatic complexity.
 
@@ -134,4 +134,5 @@ Quantitative boundaries for method size, nesting depth, parameter counts, and cy
 | [`max-cyclomatic-complexity`](/rules/max-cyclomatic-complexity) | `ZCL_SKYLINT_MAX_CYCLO_COMP` | Cyclomatic Complexity Threshold | `CYCLO_COMP` | `#EC CYCLO_COMP` | — |
 | [`max-inheritance-depth`](/rules/max-inheritance-depth) | `ZCL_SKYLINT_MAX_INHERIT` | Avoid deep class inheritance hierarchies | `DEEP_INHRT` | `#EC INHERIT_DEPTH` | — |
 | [`max-attributes`](/rules/max-attributes) | `ZCL_SKYLINT_MAX_ATTRIBUTES` | Limit class member attributes to prevent God Classes | `ATTR_COUNT` | `#EC ATTRIBUTES` | — |
+| [`max-line-length`](/rules/max-line-length) | `ZCL_SKYLINT_MAX_LINE_LEN` | Maximum Line Length | `LINE_LEN` | `#EC LINE_LEN` | — |
 

@@ -504,9 +504,6 @@
       "checkName": "ZSKYLINT_PREF_TRANSPORT"
     },
     {
-      "checkName": "ZSKYLINT_PREF_TEST_NAME"
-    },
-    {
       "checkName": "ZSKYLINT_PREF_STR_FUNC",
       "parameters": [
         {
@@ -697,6 +694,32 @@
         },
         {
           "name": "CHECK_UNAME",
+          "value": "X"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_MAX_LINE_LEN",
+      "parameters": [
+        {
+          "name": "MAX_LENGTH",
+          "value": "120"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_NAMING",
+      "parameters": [
+        {
+          "name": "ATTR_IGN_EXC",
+          "value": "X"
+        },
+        {
+          "name": "ATTR_IGN_LOCAL",
+          "value": "X"
+        },
+        {
+          "name": "PARAM_IGN_EXC",
           "value": "X"
         }
       ]

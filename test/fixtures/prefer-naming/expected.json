@@ -1,0 +1,80 @@
+[
+  {
+    "method": "TEST_001",
+    "code": null
+  },
+  {
+    "method": "TEST_002",
+    "code": "LVAR_NAME",
+    "line": 2,
+    "column": 4
+  },
+  {
+    "method": "TEST_002",
+    "code": "LVAR_NAME",
+    "line": 3,
+    "column": 4
+  },
+  {
+    "method": "TEST_002",
+    "code": "LVAR_NAME",
+    "line": 4,
+    "column": 4
+  },
+  {
+    "method": "TEST_002",
+    "code": "LVAR_NAME",
+    "line": 5,
+    "column": 4
+  },
+  {
+    "method": "TEST_003",
+    "code": "LVAR_NAME",
+    "line": 2,
+    "column": 4
+  },
+  {
+    "method": "TEST_003",
+    "code": "LVAR_NAME",
+    "line": 3,
+    "column": 4
+  },
+  {
+    "method": "LCL_GOOD",
+    "code": null
+  },
+  {
+    "method": "BAD_CLASS",
+    "code": "LCLS_NAME",
+    "line": 1,
+    "column": 0
+  },
+  {
+    "method": "BAD_CLASS",
+    "code": "PARAM_NAME",
+    "line": 4,
+    "column": 4
+  },
+  {
+    "method": "LIF_GOOD",
+    "code": null
+  },
+  {
+    "method": "BAD_INTF",
+    "code": "INTF_NAME",
+    "line": 1,
+    "column": 0
+  },
+  {
+    "method": "BAD_GLOBAL",
+    "code": "GCLS_NAME",
+    "line": 1,
+    "column": 0
+  },
+  {
+    "method": "BAD_GINTF",
+    "code": "GINTF_NAME",
+    "line": 1,
+    "column": 0
+  }
+]

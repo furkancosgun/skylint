@@ -1,0 +1,72 @@
+# max-line-length
+
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="tip" text="Metrics & Complexity Limits" />
+  <Badge type="danger" text="Finding: LINE_LEN" />
+</div>
+
+## Overview
+
+Maximum Line Length.
+
+> **ATC Finding Message:** `Line length exceeds configured maximum limit`
+
+## Rationale
+
+Maximum Line Length
+
+### Non-Compliant
+
+```abap
+DATA lv_extremely_long_variable_name_created_specifically_to_exceed_the_maximum_allowed_line_length_of_one_hundred_twenty_chars TYPE i.
+```
+
+### Compliant
+
+```abap
+DATA lv_compact_name TYPE i.
+```
+
+## Transformation
+
+```diff
+- DATA lv_extremely_long_variable_name_created_specifically_to_exceed_the_maximum_allowed_line_length_of_one_hundred_twenty_chars TYPE i.
++ DATA lv_compact_name TYPE i.
+```
+
+## Configuration & Thresholds
+
+This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
+
+| Parameter Name | Data Type | Default Value | Description |
+|---|---|:---:|---|
+| `MAX_LENGTH` | `Integer / String` | `120` | Configurable attribute for max-line-length |
+
+## CLI & CI/CD Configuration
+
+```yaml
+checks:
+  max-line-length:
+    enabled: true
+    severity: warning
+    attributes:
+      maxLength: 120
+```
+
+## Suppression
+
+To suppress findings for this rule, append the pseudo-comment to the statement:
+
+```abap
+" Standard pseudo-comment:
+... "#EC LINE_LEN
+
+" SAP CI_ prefix format:
+... "#EC CI_LINE_LEN
+```
+
+## Technical Details
+
+* **Native ATC Class:** `ZCL_SKYLINT_MAX_LINE_LEN`
+* **Finding Code:** `LINE_LEN`
+* **Implementation File:** [zcl_skylint_max_line_len.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_max_line_len.clas.abap)

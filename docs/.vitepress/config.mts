@@ -11,7 +11,7 @@ export default defineConfig({
     logo: '/logo.svg',
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
-      { text: 'Rules (93)', link: '/rules/' },
+      { text: 'Rules (94)', link: '/rules/' },
       { text: 'GitHub', link: 'https://github.com/furkancosgun/skylint' },
     ],
     sidebar: {
@@ -110,10 +110,6 @@ export default defineConfig({
         "link": "/rules/no-nested-try"
       },
       {
-        "text": "prefer-test-naming",
-        "link": "/rules/prefer-test-naming"
-      },
-      {
         "text": "prefer-string-functions",
         "link": "/rules/prefer-string-functions"
       },
@@ -188,6 +184,10 @@ export default defineConfig({
       {
         "text": "no-redundant-clear",
         "link": "/rules/no-redundant-clear"
+      },
+      {
+        "text": "prefer-naming",
+        "link": "/rules/prefer-naming"
       }
     ]
   },
@@ -424,6 +424,10 @@ export default defineConfig({
       {
         "text": "max-attributes",
         "link": "/rules/max-attributes"
+      },
+      {
+        "text": "max-line-length",
+        "link": "/rules/max-line-length"
       }
     ]
   }

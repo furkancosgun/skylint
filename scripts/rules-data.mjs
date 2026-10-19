@@ -845,18 +845,6 @@ ENDLOOP.`,
 ENDLOOP.`,
     },
   },
-  {
-    ruleId: 'prefer-test-naming',
-    className: 'ZCL_SKYLINT_PREF_TEST_NAME',
-    pseudoComment: 'TEST_NAME',
-    category: 'clean-abap',
-    example: {
-      bad: `METHODS calculate_discount FOR TESTING.`,
-      good: `METHODS test_calculate_discount FOR TESTING.
-" Or:
-METHODS should_calculate_discount FOR TESTING.`,
-    },
-  },
 
   {
     ruleId: 'prefer-string-functions',
@@ -1223,6 +1211,26 @@ ENDCASE.`,
     example: {
       bad: `IF sy-sysid = 'PRD' OR sy-mandt = '100'.\n  enable_production_mode( ).\nENDIF.`,
       good: `IF is_feature_enabled( c_features-prod_mode ) = abap_true.\n  enable_production_mode( ).\nENDIF.`,
+    },
+  },
+  {
+    ruleId: 'max-line-length',
+    className: 'ZCL_SKYLINT_MAX_LINE_LEN',
+    pseudoComment: 'LINE_LEN',
+    category: 'metrics',
+    example: {
+      bad: `DATA lv_extremely_long_variable_name_created_specifically_to_exceed_the_maximum_allowed_line_length_of_one_hundred_twenty_chars TYPE i.`,
+      good: `DATA lv_compact_name TYPE i.`,
+    },
+  },
+  {
+    ruleId: 'prefer-naming',
+    className: 'ZCL_SKYLINT_PREF_NAMING',
+    pseudoComment: 'NAMING',
+    category: 'clean-abap',
+    example: {
+      bad: `DATA foo TYPE i.`,
+      good: `DATA lv_foo TYPE i.`,
     },
   },
 ];
