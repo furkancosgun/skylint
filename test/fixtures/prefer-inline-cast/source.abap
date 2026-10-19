@@ -23,7 +23,8 @@ CLASS zcl_test_prefer_inl_cast DEFINITION
     METHODS test_004.
     METHODS test_005.
     METHODS test_006.
-    METHODS test_007.ENDCLASS.
+    METHODS test_007.
+ENDCLASS.
 
 CLASS zcl_test_prefer_inl_cast IMPLEMENTATION.
   METHOD test_001.

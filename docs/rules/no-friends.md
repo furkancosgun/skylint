@@ -9,7 +9,7 @@
 
 Avoid FRIENDS in class definitions.
 
-> **ATC Finding Message:** `Avoid FRIENDS; expose behaviour via public methods`
+> **ATC Finding Message:** `Avoid FRIENDS; expose behavior via public methods`
 
 ## Rationale
 
@@ -18,16 +18,16 @@ FRIENDS grants another class access to private/protected members, breaking encap
 ### Non-Compliant
 
 ```abap
-CLASS lcl_service DEFINITION.
+CLASS lcl_service DEFINITION FINAL FRIENDS lcl_helper CREATE PUBLIC.
   PUBLIC SECTION.
-    FRIENDS lcl_helper.
+    METHODS execute.
 ENDCLASS.
 ```
 
 ### Compliant
 
 ```abap
-CLASS lcl_service DEFINITION.
+CLASS lcl_service DEFINITION FINAL CREATE PUBLIC.
   PUBLIC SECTION.
     METHODS execute.
 ENDCLASS.
@@ -36,11 +36,11 @@ ENDCLASS.
 ## Transformation
 
 ```diff
-- CLASS lcl_service DEFINITION.
+- CLASS lcl_service DEFINITION FINAL FRIENDS lcl_helper CREATE PUBLIC.
 -   PUBLIC SECTION.
--     FRIENDS lcl_helper.
+-     METHODS execute.
 - ENDCLASS.
-+ CLASS lcl_service DEFINITION.
++ CLASS lcl_service DEFINITION FINAL CREATE PUBLIC.
 +   PUBLIC SECTION.
 +     METHODS execute.
 + ENDCLASS.

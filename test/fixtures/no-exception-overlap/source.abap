@@ -9,7 +9,8 @@ CLASS zcl_test_no_exc_overlap DEFINITION
     METHODS test_003.
     METHODS test_004.
     METHODS test_005.
-    METHODS test_006.ENDCLASS.
+    METHODS test_006.
+ENDCLASS.
 
 CLASS zcl_test_no_exc_overlap IMPLEMENTATION.
   METHOD test_001.
@@ -31,25 +32,7 @@ CLASS zcl_test_no_exc_overlap IMPLEMENTATION.
   METHOD test_003.
     WRITE 1.
   ENDMETHOD.
-  METHOD test_004.
-    CALL FUNCTION 'SOMETHING'
-      EXCEPTIONS
-        first  = 1
-        second = 2
-        OTHERS = 1.
-  ENDMETHOD.
 
-  METHOD test_005.
-    CALL FUNCTION 'SOMETHING'
-      EXCEPTIONS
-        first  = 1
-        second = 2
-        OTHERS = 3.
-  ENDMETHOD.
-
-  METHOD test_006.
-    WRITE 1.
-  ENDMETHOD. 
   METHOD test_004.
     CALL FUNCTION 'SOMETHING'
       EXCEPTIONS

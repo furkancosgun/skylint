@@ -40,5 +40,35 @@
   {
     "method": "TEST_008",
     "code": null
+  },
+  {
+    "method": "TEST_009",
+    "code": "PREF_FIN",
+    "line": 2,
+    "column": 4,
+    "quickfixes": [
+      "TOFINAL"
+    ]
+  },
+  {
+    "method": "TEST_010",
+    "code": "PREF_FIN",
+    "line": 2,
+    "column": 4,
+    "quickfixes": [
+      "TOFINAL"
+    ]
+  },
+  {
+    "method": "TEST_011",
+    "code": null
+  },
+  {
+    "method": "TEST_012",
+    "code": null
+  },
+  {
+    "method": "TEST_013",
+    "code": null
   }
 ]

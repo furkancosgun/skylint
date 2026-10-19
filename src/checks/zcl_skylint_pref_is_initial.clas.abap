@@ -92,19 +92,17 @@ CLASS zcl_skylint_pref_is_initial IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check_lines_pattern.
-    DATA lv_lines_idx  TYPE i.
-    DATA lv_close_idx  TYPE i.
-    " TODO: variable is assigned but never used (ABAP cleaner)
-    DATA lv_target_idx TYPE i.
-    DATA lv_op         TYPE string.
-    DATA lv_val        TYPE string.
-    DATA lv_is_not     TYPE abap_bool.
-    DATA lv_line       TYPE string.
-    DATA ls_quickfix   TYPE zcl_skylint_check_base=>ty_quickfix.
-    DATA lt_overrides  TYPE zcl_skylint_ast_util=>ty_token_overrides.
-    DATA lt_deletions  TYPE zcl_skylint_ast_util=>ty_token_deletions.
-    DATA ls_next_op    TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_next_val   TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_lines_idx TYPE i.
+    DATA lv_close_idx TYPE i.
+    DATA lv_op        TYPE string.
+    DATA lv_val       TYPE string.
+    DATA lv_is_not    TYPE abap_bool.
+    DATA lv_line      TYPE string.
+    DATA ls_quickfix  TYPE zcl_skylint_check_base=>ty_quickfix.
+    DATA lt_overrides TYPE zcl_skylint_ast_util=>ty_token_overrides.
+    DATA lt_deletions TYPE zcl_skylint_ast_util=>ty_token_deletions.
+    DATA ls_next_op   TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_next_val  TYPE if_ci_atc_source_code_provider=>ty_token.
     FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_tok>.
@@ -113,7 +111,6 @@ CLASS zcl_skylint_pref_is_initial IMPLEMENTATION.
       ENDIF.
 
       lv_lines_idx = sy-tabix.
-      lv_target_idx = lv_lines_idx + 1.
       lv_close_idx = lv_lines_idx + 2.
 
       IF lines( is_statement-tokens ) < lv_close_idx + 2.

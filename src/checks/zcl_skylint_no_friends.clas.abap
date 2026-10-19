@@ -27,8 +27,7 @@ CLASS zcl_skylint_no_friends IMPLEMENTATION.
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-friends
                                        severity       = if_ci_atc_check=>finding_severities-warning
-                                       " TODO: check spelling: behaviour (BE) -> behavior (ABAP cleaner)
-                                       text           = 'Avoid FRIENDS; expose behaviour via public methods'
+                                       text           = 'Avoid FRIENDS; expose behavior via public methods'
                                        pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 

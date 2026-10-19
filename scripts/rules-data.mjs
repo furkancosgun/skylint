@@ -1021,8 +1021,8 @@ ENDCASE.`,
     pseudoComment: 'FRIENDS',
     category: 'anti-patterns',
     example: {
-      bad: `CLASS lcl_service DEFINITION.\n  PUBLIC SECTION.\n    FRIENDS lcl_helper.\nENDCLASS.`,
-      good: `CLASS lcl_service DEFINITION.\n  PUBLIC SECTION.\n    METHODS execute.\nENDCLASS.`,
+      bad: `CLASS lcl_service DEFINITION FINAL FRIENDS lcl_helper CREATE PUBLIC.\n  PUBLIC SECTION.\n    METHODS execute.\nENDCLASS.`,
+      good: `CLASS lcl_service DEFINITION FINAL CREATE PUBLIC.\n  PUBLIC SECTION.\n    METHODS execute.\nENDCLASS.`,
     },
   },
   {

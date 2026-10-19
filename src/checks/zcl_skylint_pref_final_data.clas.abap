@@ -119,7 +119,7 @@ CLASS zcl_skylint_pref_final_data IMPLEMENTATION.
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
         LOOP AT <ls_token>-references ASSIGNING <ls_ref>
              WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
-          IF <ls_ref>-full_name <> iv_full_name.
+          IF <ls_ref>-full_name <> iv_full_name AND <ls_ref>-full_name NP |{ iv_full_name }\\*|.
             CONTINUE.
           ENDIF.
           IF zcl_skylint_ast_util=>is_write_usage( <ls_ref> ) = abap_true.

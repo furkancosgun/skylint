@@ -24,6 +24,11 @@ CLASS zcl_test_prefer_final_data DEFINITION
     METHODS test_006.
     METHODS test_007.
     METHODS test_008.
+    METHODS test_009.
+    METHODS test_010.
+    METHODS test_011.
+    METHODS test_012.
+    METHODS test_013.
 ENDCLASS.
 
 CLASS zcl_test_prefer_final_data IMPLEMENTATION.
@@ -71,5 +76,33 @@ CLASS zcl_test_prefer_final_data IMPLEMENTATION.
       lv_count = 20.
     ENDIF.
     WRITE lv_count.
+  ENDMETHOD.
+
+  METHOD test_009.
+    DATA(ls_pair) = VALUE ty_pair( item = 1 ).
+    WRITE ls_pair-item.
+  ENDMETHOD.
+
+  METHOD test_010.
+    DATA(lt_tab) = VALUE string_table( ( `A` ) ).
+    WRITE lines( lt_tab ).
+  ENDMETHOD.
+
+  METHOD test_011.
+    DATA(lt_tab) = VALUE string_table( ( `A` ) ).
+    APPEND `B` TO lt_tab.
+    WRITE lines( lt_tab ).
+  ENDMETHOD.
+
+  METHOD test_012.
+    DATA(lt_tab) = VALUE string_table( ( `A` ) ).
+    MODIFY lt_tab FROM `B` INDEX 1.
+    WRITE lines( lt_tab ).
+  ENDMETHOD.
+
+  METHOD test_013.
+    DATA(lt_tab) = VALUE string_table( ( `A` ) ).
+    DELETE lt_tab INDEX 1.
+    WRITE lines( lt_tab ).
   ENDMETHOD.
 ENDCLASS.

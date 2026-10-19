@@ -22,6 +22,11 @@ CLASS zcl_skylint_pref_msg_cls DEFINITION
                 is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
+    METHODS get_declaration_type
+      IMPORTING it_statements  TYPE if_ci_atc_source_code_provider=>ty_statements
+                iv_full_name   TYPE if_ci_atc_source_code_provider=>ty_full_name
+      RETURNING VALUE(rv_type) TYPE string.
+
 ENDCLASS.
 
 
@@ -56,14 +61,9 @@ CLASS zcl_skylint_pref_msg_cls IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD uses_message_class.
-    DATA ls_token  TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_tok    TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_name   TYPE string.
-    DATA lv_is_exc TYPE abap_bool.
-    DATA lv_idx    TYPE i.
-    DATA lv_cnt    TYPE i.
-    FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_tok2> TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_type  TYPE string.
+    FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     IF zcl_skylint_ast_util=>find_token( is_statement = is_statement
                                          iv_lexeme    = 'ID' ) > 0.
@@ -78,72 +78,54 @@ CLASS zcl_skylint_pref_msg_cls IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    IF contains( val = ls_token-lexeme
-                 sub = '(' ).
+    IF    zcl_skylint_ast_util=>has_compiler_reference(
+              is_token = ls_token
+              iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-message ) = abap_true
+       OR zcl_skylint_ast_util=>has_compiler_reference(
+              is_token = ls_token
+              iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-message_id ) = abap_true
+       OR zcl_skylint_ast_util=>has_compiler_reference(
+              is_token = ls_token
+              iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-message_number ) = abap_true.
       rv_yes = abap_true.
       RETURN.
     ENDIF.
 
-    IF zcl_skylint_ast_util=>has_compiler_reference(
-           is_token = ls_token
-           iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-message ).
-      rv_yes = abap_true.
-      RETURN.
-    ENDIF.
-    IF zcl_skylint_ast_util=>has_compiler_reference(
-           is_token = ls_token
-           iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-message_id ).
-      rv_yes = abap_true.
-      RETURN.
-    ENDIF.
-    IF zcl_skylint_ast_util=>has_compiler_reference(
-           is_token = ls_token
-           iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-message_number ).
-      rv_yes = abap_true.
-      RETURN.
-    ENDIF.
-
-    lv_name = to_upper( ls_token-lexeme ).
-    lv_is_exc = abap_false.
-
-    LOOP AT it_statements ASSIGNING <ls_stmt>.
-      IF <ls_stmt>-keyword <> 'DATA'.
-        CONTINUE.
+    LOOP AT ls_token-references ASSIGNING <ls_ref>.
+      IF zcl_skylint_rtti_util=>describe_object( <ls_ref>-full_name ) IS BOUND.
+        rv_yes = abap_true.
+        RETURN.
       ENDIF.
-      LOOP AT <ls_stmt>-tokens ASSIGNING <ls_tok2>.
-        IF to_upper( <ls_tok2>-lexeme ) <> lv_name.
-          CONTINUE.
+      IF <ls_ref>-kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
+        lv_type = get_declaration_type( it_statements = it_statements
+                                        iv_full_name  = <ls_ref>-full_name ).
+        IF lv_type IS NOT INITIAL AND zcl_skylint_rtti_util=>describe_object( lv_type ) IS BOUND.
+          rv_yes = abap_true.
+          RETURN.
         ENDIF.
-        lv_cnt = lines( <ls_stmt>-tokens ).
-        lv_idx = sy-tabix + 1.
-        WHILE lv_idx <= lv_cnt.
-          ls_tok = zcl_skylint_ast_util=>get_token( is_statement = <ls_stmt>
-                                                    iv_index     = lv_idx ).
-          IF ls_tok-lexeme IS NOT INITIAL AND to_upper( ls_tok-lexeme ) CP 'CX_*'.
-            lv_is_exc = abap_true.
-            EXIT.
-          ENDIF.
-          lv_idx += 1.
-        ENDWHILE.
-        IF lv_is_exc = abap_true.
-          EXIT.
-        ENDIF.
-      ENDLOOP.
-      IF lv_is_exc = abap_true.
-        EXIT.
       ENDIF.
     ENDLOOP.
 
-    IF lv_is_exc = abap_true.
-      rv_yes = abap_true.
-      RETURN.
-    ENDIF.
-
-    IF lv_name CP 'LX*' OR lv_name CP 'EXC*' OR lv_name CP '*EXCEPTION*' OR lv_name CP '*ERROR*'.
-      rv_yes = abap_true.
-      RETURN.
-    ENDIF.
-
     rv_yes = abap_false.
+  ENDMETHOD.
+
+  METHOD get_declaration_type.
+    DATA ls_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+
+    CLEAR rv_type.
+    LOOP AT it_statements INTO ls_stmt.
+      LOOP AT ls_stmt-tokens INTO ls_tok.
+        IF line_exists( ls_tok-references[ kind      = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+                                           full_name = iv_full_name ] ).
+          LOOP AT ls_tok-references ASSIGNING <ls_ref>
+               WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-type.
+            rv_type = <ls_ref>-full_name.
+            RETURN.
+          ENDLOOP.
+        ENDIF.
+      ENDLOOP.
+    ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

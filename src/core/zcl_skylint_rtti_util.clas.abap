@@ -50,8 +50,28 @@ ENDCLASS.
 CLASS zcl_skylint_rtti_util IMPLEMENTATION.
   METHOD describe_object.
     DATA lo_descr TYPE REF TO cl_abap_typedescr.
+    DATA lv_name  TYPE string.
+    DATA lt_parts TYPE STANDARD TABLE OF string WITH EMPTY KEY.
+    DATA lv_part  TYPE string.
 
-    cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = iv_name
+    lv_name = iv_name.
+    IF lv_name CS '\'.
+      SPLIT lv_name AT '\' INTO TABLE lt_parts.
+      LOOP AT lt_parts INTO lv_part.
+        IF lv_part CP 'TY:*'.
+          lv_name = lv_part+3.
+          EXIT.
+        ELSEIF lv_part CP 'CLASS=*'.
+          lv_name = lv_part+6.
+          EXIT.
+        ELSEIF lv_part CP 'INTF=*'.
+          lv_name = lv_part+5.
+          EXIT.
+        ENDIF.
+      ENDLOOP.
+    ENDIF.
+
+    cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = lv_name
                                          RECEIVING  p_descr_ref    = lo_descr
                                          EXCEPTIONS type_not_found = 1
                                                     OTHERS         = 2 ).
