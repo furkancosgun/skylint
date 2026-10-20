@@ -307,13 +307,18 @@ export default defineConfig({
     hostname: 'https://furkancosgun.github.io/skylint/',
   },
   head: [
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }],
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '${process.env.VITEPRESS_BASE || '/'}logo.svg' }],
     ['meta', { name: 'robots', content: 'index, follow' }],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:title', content: 'Skylint - Enterprise Clean ABAP & Cloud ATC Linter' }],
     ['meta', { property: 'og:description', content: 'Enterprise Clean ABAP & Cloud ATC Linter Engine' }],
     ['meta', { property: 'og:image', content: 'https://furkancosgun.github.io/skylint/logo.svg' }],
   ],
+  transformHead: ({ pageData }) => {
+    const rel = pageData.relativePath.replace(/\\.md$/, '').replace(/(^|\\/)index$/, '$1');
+    const path = rel === '' ? '/' : '/' + rel;
+    return [['link', { rel: 'canonical', href: 'https://furkancosgun.github.io/skylint' + path }]];
+  },
   themeConfig: {
     logo: '/logo.svg',
     nav: [
