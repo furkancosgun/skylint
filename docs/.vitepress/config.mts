@@ -11,7 +11,7 @@ export default defineConfig({
     logo: '/logo.svg',
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
-      { text: 'Rules (94)', link: '/rules/' },
+      { text: 'Rules (95)', link: '/rules/' },
       { text: 'GitHub', link: 'https://github.com/furkancosgun/skylint' },
     ],
     sidebar: {
@@ -254,6 +254,10 @@ export default defineConfig({
       {
         "text": "no-obsolete-statements",
         "link": "/rules/no-obsolete-statements"
+      },
+      {
+        "text": "no-list-processing",
+        "link": "/rules/no-list-processing"
       },
       {
         "text": "no-scope-leak",

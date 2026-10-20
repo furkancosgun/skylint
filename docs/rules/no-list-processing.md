@@ -1,4 +1,4 @@
-# no-list-processing
+# Avoid Classic List Processing Statements
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
@@ -13,7 +13,7 @@ Prohibit classic list processing statements.
 
 ## Rationale
 
-Prohibit classic list processing statements
+Statements such as `WRITE`, `ULINE`, `SKIP`, `NEW-LINE`, `FORMAT`, `POSITION`, `RESERVE`, `READ LINE`, `MODIFY LINE`, and `SCROLL LIST` are classic list-processing constructs forbidden in OO/Cloud ABAP. Use application logging and modern UI frameworks instead.
 
 ### Non-Compliant
 
@@ -47,6 +47,8 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | `CHECK_SKIP` | `Boolean` | `true` | Configurable attribute for no-list-processing |
 | `CHECK_OTHER` | `Boolean` | `true` | Configurable attribute for no-list-processing |
 | `IGN_WRITE_TO` | `Boolean` | `true` | Configurable attribute for no-list-processing |
+| `CHECK_LEAVE` | `Boolean` | `true` | Configurable attribute for no-list-processing |
+| `CHECK_REJECT` | `Boolean` | `true` | Configurable attribute for no-list-processing |
 
 ## CLI & CI/CD Configuration
 
@@ -61,6 +63,8 @@ checks:
       checkSkip: true
       checkOther: true
       ignWriteTo: true
+      checkLeave: true
+      checkReject: true
 ```
 
 ## Suppression

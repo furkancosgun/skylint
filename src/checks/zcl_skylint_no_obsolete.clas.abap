@@ -136,14 +136,14 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
                                                 value = REF #( mv_check_initial_size ) )
                                               ( name  = 'CHECK_CATCH_SYSTEM'
                                                 value = REF #( mv_check_catch_system ) )
-                                               ( name  = 'CHECK_GET_REFERENCE'
-                                                 value = REF #( mv_check_get_reference ) )
-                                               ( name  = 'CHECK_INFOTYPES'
-                                                 value = REF #( mv_check_infotypes ) )
-                                               ( name  = 'CHECK_COMMUNICATION'
-                                                 value = REF #( mv_check_communication ) )
-                                               ( name  = 'CHECK_SET_EXT_CHECK'
-                                                 value = REF #( mv_check_set_ext_check ) ) ) ) ).
+                                              ( name  = 'CHECK_GET_REFERENCE'
+                                                value = REF #( mv_check_get_reference ) )
+                                              ( name  = 'CHECK_INFOTYPES'
+                                                value = REF #( mv_check_infotypes ) )
+                                              ( name  = 'CHECK_COMMUNICATION'
+                                                value = REF #( mv_check_communication ) )
+                                              ( name  = 'CHECK_SET_EXT_CHECK'
+                                                value = REF #( mv_check_set_ext_check ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -342,9 +342,9 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
         rv_is = mv_check_communication.
 
       WHEN 'SET'.
-        IF mv_check_set_ext_check = abap_true
+        IF     mv_check_set_ext_check = abap_true
            AND zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
-                                                          it_expected    = VALUE #( ( `EXTENDED` ) ( `CHECK` ) ) ) > 0.
+                                                          it_expected  = VALUE #( ( `EXTENDED` ) ( `CHECK` ) ) ) > 0.
           rv_is = abap_true.
         ENDIF.
 

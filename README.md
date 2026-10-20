@@ -11,7 +11,7 @@
 <p align="center">
   <a href="https://github.com/furkancosgun/skylint/actions/workflows/ci.yml"><img src="https://github.com/furkancosgun/skylint/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
   <a href="https://furkancosgun.github.io/skylint/"><img src="https://img.shields.io/badge/docs-online-blue.svg" alt="Docs" /></a>
-  <a href="#-clean-abap--cloud-rule-catalog-94-rules"><img src="https://img.shields.io/badge/rules-94-brightgreen.svg" alt="Rules" /></a>
+  <a href="#-clean-abap--cloud-rule-catalog-95-rules"><img src="https://img.shields.io/badge/rules-95-brightgreen.svg" alt="Rules" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-yellow.svg" alt="License" /></a>
 </p>
 
@@ -24,7 +24,7 @@
 ## ⚡ Highlights
 
 - **Native SAP ATC:** Every check implements `if_ci_atc_check` directly and runs natively in Eclipse ADT and SAP GUI.
-- **94 Clean ABAP Rules:** Comprehensive checks for modern syntax, expressions, safety, and performance.
+- **95 Clean ABAP Rules:** Comprehensive checks for modern syntax, expressions, safety, and performance.
 - **Automated QuickFixes:** Built-in QuickFix engine for instant refactoring via `Ctrl + 1`.
 - **Zero Boilerplate:** Base class encapsulates statement traversal, finding reporting, and pseudo-comment handling.
 - **CLI & CI/CD Ready:** Fast local CLI (`npx skylint scan`) and automated GitHub Actions CI & Pages deployment.
@@ -37,7 +37,7 @@
 skylint/
 ├── src/
 │   ├── core/         # Base check class, metadata, AST & RTTI utilities
-│   ├── checks/       # 94 modular check implementations
+│   ├── checks/       # 95 modular check implementations
 │   └── atc/          # Generated ATC objects (CHKC, CHKO, CHKV)
 ├── bin/              # Executable CLI (skylint scan, explain, init)
 ├── docs/             # VitePress enterprise documentation source
@@ -48,7 +48,7 @@ skylint/
 
 ---
 
-## 📋 Clean ABAP & Cloud Rule Catalog (94 Rules)
+## 📋 Clean ABAP & Cloud Rule Catalog (95 Rules)
 
 All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 
@@ -78,6 +78,7 @@ All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 | `no-static-via-instance` | [ZCL_SKYLINT_NO_STATIC_ARROW](src/checks/zcl_skylint_no_static_arrow.clas.abap) | Avoid calling static methods via instance arrow (->) | `STATICVIAI` | `"#EC STATIC_ARROW"` | ⚡ Ready |
 | `no-public-attributes` | [ZCL_SKYLINT_NO_PUBLIC_ATTR](src/checks/zcl_skylint_no_public_attr.clas.abap) | Avoid mutable public attributes in classes | `NOPUBATTR` | `"#EC PUBLIC_ATTR"` | — |
 | `no-obsolete-statements` | [ZCL_SKYLINT_NO_OBSOLETE](src/checks/zcl_skylint_no_obsolete.clas.abap) | Avoid obsolete statements (MOVE, REFRESH, FORM, etc.) | `OBSOLETE` | `"#EC OBSOLETE"` | ⚡ Ready |
+| `no-list-processing` | [ZCL_SKYLINT_NO_LIST_PROC](src/checks/zcl_skylint_no_list_proc.clas.abap) | Prohibit classic list processing statements | `LIST_PROC` | `"#EC LIST_PROC"` | — |
 | `max-params` | [ZCL_SKYLINT_MAX_PARAMS](src/checks/zcl_skylint_max_params.clas.abap) | Method signature cleanliness (excessive parameter count) | `PARAMCOUNT` | `"#EC MAX_PARAMS"` | — |
 | `no-db-in-loop` | [ZCL_SKYLINT_NO_DB_IN_LOOP](src/checks/zcl_skylint_no_db_in_loop.clas.abap) | Avoid database access inside loop iterations | `DBINLOOP` | `"#EC DB_IN_LOOP"` | — |
 | `no-empty-fae` | [ZCL_SKYLINT_NO_EMPTY_FAE](src/checks/zcl_skylint_no_empty_fae.clas.abap) | Unsecure FOR ALL ENTRIES (Missing empty itab check) | `FAENOCHECK` | `"#EC EMPTY_FAE"` | ⚡ Ready |
@@ -271,7 +272,7 @@ report_statement( is_statement    = <ls_statement>
 Skylint is built directly on the native SAP ATC framework:
 
 1. **`src/core/`**: Base check engine (`zcl_skylint_check_base` implementing `if_ci_atc_check`), shared metadata (`zcl_skylint_check_meta_data`), and AST/RTTI traversal utilities.
-2. **`src/checks/`**: 94 modular check classes, each directly selectable in ATC Check Variants (`CHKV`).
+2. **`src/checks/`**: 95 modular check classes, each directly selectable in ATC Check Variants (`CHKV`).
 3. **`src/atc/`**: Standard ATC category (`CHKC`), check (`CHKO`), and variant (`CHKV`) definitions.
 4. **`deps/atc/src/`**: Local ATC framework stubs for offline abaplint validation (excluded from abapGit transports).
 

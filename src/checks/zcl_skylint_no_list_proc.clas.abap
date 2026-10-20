@@ -30,30 +30,28 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_list_proc IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'skylint: Prohibit classic list processing statements'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-list_processing
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'List processing statement is forbidden in OO/Cloud ABAP'
-                       pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                     ( name  = 'CHECK_WRITE'
-                       value = REF #( mv_check_write ) )
-                     ( name  = 'CHECK_ULINE'
-                       value = REF #( mv_check_uline ) )
-                     ( name  = 'CHECK_SKIP'
-                       value = REF #( mv_check_skip ) )
-                     ( name  = 'CHECK_OTHER'
-                       value = REF #( mv_check_other ) )
-                     ( name  = 'IGN_WRITE_TO'
-                       value = REF #( mv_ignore_write_to ) )
-                     ( name  = 'CHECK_LEAVE'
-                       value = REF #( mv_check_leave ) )
-                     ( name  = 'CHECK_REJECT'
-                       value = REF #( mv_check_reject ) ) ) ) ).
+    super->constructor( VALUE #( description       = 'skylint: Prohibit classic list processing statements'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-list_processing
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'List processing statement is forbidden in OO/Cloud ABAP'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                                              ( name  = 'CHECK_WRITE'
+                                                                value = REF #( mv_check_write ) )
+                                                              ( name  = 'CHECK_ULINE'
+                                                                value = REF #( mv_check_uline ) )
+                                                              ( name  = 'CHECK_SKIP'
+                                                                value = REF #( mv_check_skip ) )
+                                                              ( name  = 'CHECK_OTHER'
+                                                                value = REF #( mv_check_other ) )
+                                                              ( name  = 'IGN_WRITE_TO'
+                                                                value = REF #( mv_ignore_write_to ) )
+                                                              ( name  = 'CHECK_LEAVE'
+                                                                value = REF #( mv_check_leave ) )
+                                                              ( name  = 'CHECK_REJECT'
+                                                                value = REF #( mv_check_reject ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -65,9 +63,9 @@ CLASS zcl_skylint_no_list_proc IMPLEMENTATION.
           IF mv_check_write = abap_false.
             CONTINUE.
           ENDIF.
-          IF mv_ignore_write_to = abap_true
+          IF     mv_ignore_write_to = abap_true
              AND zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
-                                                   iv_lexeme    = 'TO' ) > 0.
+                                                   iv_lexeme    = 'TO' )         > 0.
             CONTINUE.
           ENDIF.
           report_statement( is_statement    = <ls_statement>
@@ -92,25 +90,25 @@ CLASS zcl_skylint_no_list_proc IMPLEMENTATION.
           ENDIF.
 
         WHEN 'READ'.
-          IF mv_check_other = abap_true
+          IF     mv_check_other = abap_true
              AND zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
-                                                   iv_lexeme    = 'LINE' ) > 0.
+                                                   iv_lexeme    = 'LINE' )       > 0.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-list_processing ).
           ENDIF.
 
         WHEN 'MODIFY'.
-          IF mv_check_other = abap_true
+          IF     mv_check_other = abap_true
              AND zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
-                                                   iv_lexeme    = 'LINE' ) > 0.
+                                                   iv_lexeme    = 'LINE' )       > 0.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-list_processing ).
           ENDIF.
 
         WHEN 'SCROLL'.
-          IF mv_check_other = abap_true
+          IF     mv_check_other = abap_true
              AND zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
-                                                   iv_lexeme    = 'LIST' ) > 0.
+                                                   iv_lexeme    = 'LIST' )       > 0.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-list_processing ).
           ENDIF.

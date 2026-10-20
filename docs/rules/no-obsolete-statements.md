@@ -66,6 +66,19 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | `CHECK_RANGES` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
 | `CHECK_HEADER_LINE` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
 | `CHECK_LOAD` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
+| `CHECK_PACK` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
+| `CHECK_UNPACK` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
+| `CHECK_EXTRACT` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
+| `CHECK_COMMON_PART` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
+| `CHECK_FREE_MEMORY` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
+| `CHECK_PROVIDE` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
+| `CHECK_CONTEXTS` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
+| `CHECK_INITIAL_SIZE` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
+| `CHECK_CATCH_SYSTEM` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
+| `CHECK_GET_REFERENCE` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
+| `CHECK_INFOTYPES` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
+| `CHECK_COMMUNICATION` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
+| `CHECK_SET_EXT_CHECK` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
 
 ## CLI & CI/CD Configuration
 
@@ -93,6 +106,19 @@ checks:
       checkRanges: true
       checkHeaderLine: true
       checkLoad: true
+      checkPack: true
+      checkUnpack: true
+      checkExtract: true
+      checkCommonPart: true
+      checkFreeMemory: true
+      checkProvide: true
+      checkContexts: true
+      checkInitialSize: true
+      checkCatchSystem: true
+      checkGetReference: true
+      checkInfotypes: true
+      checkCommunication: true
+      checkSetExtCheck: true
 ```
 
 ## Suppression

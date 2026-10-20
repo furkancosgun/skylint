@@ -115,6 +115,10 @@ export const RULES_METADATA = {
     title: 'Avoid Obsolete & Forbidden Statements',
     rationale: 'Legacy statements such as `MOVE`, `COMPUTE`, `REFRESH`, `TABLES`, `STATICS`, `FORM`, and `LEAVE` are prohibited in ABAP Cloud and discouraged in Clean ABAP. Replace them with modern value assignments and object-oriented constructs.',
   },
+  'no-list-processing': {
+    title: 'Avoid Classic List Processing Statements',
+    rationale: 'Statements such as `WRITE`, `ULINE`, `SKIP`, `NEW-LINE`, `FORMAT`, `POSITION`, `RESERVE`, `READ LINE`, `MODIFY LINE`, and `SCROLL LIST` are classic list-processing constructs forbidden in OO/Cloud ABAP. Use application logging and modern UI frameworks instead.',
+  },
   'max-params': {
     title: 'Limit Method Parameter Count',
     rationale: 'Methods with excessive parameters are difficult to comprehend, call, and test. When a method needs more than 5-8 parameters, bundle related fields into a structured type or parameter object.',

@@ -1,9 +1,9 @@
-# Rules Catalog (94 Rules)
+# Rules Catalog (95 Rules)
 
-Comprehensive reference for all **94** Clean ABAP, security, performance, and architecture rules in Skylint.
+Comprehensive reference for all **95** Clean ABAP, security, performance, and architecture rules in Skylint.
 
 ::: tip Skylint at a Glance
-- **94 Native ATC Rules:** 100% ABAP Cloud (Contract C1) & Steampunk Ready.
+- **95 Native ATC Rules:** 100% ABAP Cloud (Contract C1) & Steampunk Ready.
 - **35 Automated QuickFixes:** Instant one-click refactoring with <kbd>Ctrl</kbd> + <kbd>1</kbd> in Eclipse ADT.
 - **Zero Legacy Overhead:** Built exclusively on `IF_CI_ATC_CHECK` (no obsolete Code Inspector / SCI dependency).
 :::
@@ -54,7 +54,7 @@ Modern language features, expression-oriented coding, and idiomatic Clean ABAP p
 | [`no-redundant-clear`](/rules/no-redundant-clear) | `ZCL_SKYLINT_NO_REDUNDANT_CLEAR` | Do not CLEAR or FREE variables redundantly | `REDUNCLEAR` | `#EC REDUNDANT_CLEAR` | ⚡ Ready |
 | [`prefer-naming`](/rules/prefer-naming) | `ZCL_SKYLINT_PREF_NAMING` | Standard Naming Conventions | `ATTR_NAME` | `#EC NAMING` | — |
 
-## Anti-Patterns & Bad Practices (30)
+## Anti-Patterns & Bad Practices (31)
 
 Discouraged language constructs, legacy statements, and redundant syntax.
 
@@ -75,6 +75,7 @@ Discouraged language constructs, legacy statements, and redundant syntax.
 | [`no-static-via-instance`](/rules/no-static-via-instance) | `ZCL_SKYLINT_NO_STATIC_ARROW` | Avoid calling static methods via instance arrow (->) | `STATICVIAI` | `#EC STATIC_ARROW` | ⚡ Ready |
 | [`no-public-attributes`](/rules/no-public-attributes) | `ZCL_SKYLINT_NO_PUBLIC_ATTR` | Avoid mutable public attributes in classes | `NOPUBATTR` | `#EC PUBLIC_ATTR` | — |
 | [`no-obsolete-statements`](/rules/no-obsolete-statements) | `ZCL_SKYLINT_NO_OBSOLETE` | Avoid obsolete statements (MOVE, REFRESH, FORM, etc.) | `OBSOLETE` | `#EC OBSOLETE` | ⚡ Ready |
+| [`no-list-processing`](/rules/no-list-processing) | `ZCL_SKYLINT_NO_LIST_PROC` | Prohibit classic list processing statements | `LIST_PROC` | `#EC LIST_PROC` | — |
 | [`no-scope-leak`](/rules/no-scope-leak) | `ZCL_SKYLINT_NO_SCOPE_LEAK` | Avoid variable usage outside its declaring control block | `SCOPELEAK` | `#EC SCOPE_LEAK` | — |
 | [`no-self-assignment`](/rules/no-self-assignment) | `ZCL_SKYLINT_NO_SELF_ASSIGN` | Detect Identical Self Assignments | `IDENTMOVE` | `#EC SELF_ASSIGN` | ⚡ Ready |
 | [`no-sy-modify`](/rules/no-sy-modify) | `ZCL_SKYLINT_NO_SY_MODIFY` | Avoid sy-* System Variable Modification | `SYS_VAR_MD` | `#EC SY_MODIFY` | — |
