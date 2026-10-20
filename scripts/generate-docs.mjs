@@ -304,7 +304,7 @@ export default defineConfig({
   cleanUrls: true,
   lastUpdated: true,
   sitemap: {
-    hostname: 'https://furkancosgun.github.io/skylint',
+    hostname: 'https://furkancosgun.github.io/skylint/',
   },
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }],
