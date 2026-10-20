@@ -42,9 +42,9 @@ METHODS execute
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value | Description |
-|---|---|:---:|---|
-| `MAX_PARAMETERS` | `Integer / String` | `8` | Configurable attribute for max-params |
+| Parameter Name | Data Type | Default Value |
+|---|---|:---:|
+| `MAX_PARAMETERS` | `Integer / String` | `8` |
 
 ## CLI & CI/CD Configuration
 

@@ -62,10 +62,10 @@ This rule provides an **automated QuickFix** directly in Eclipse ABAP Developmen
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value | Description |
-|---|---|:---:|---|
-| `CHECK_IN_LOOP` | `Boolean` | `true` | Configurable attribute for no-check-statement |
-| `CHECK_OUTSIDE_LOOP` | `Boolean` | `true` | Configurable attribute for no-check-statement |
+| Parameter Name | Data Type | Default Value |
+|---|---|:---:|
+| `CHECK_IN_LOOP` | `Boolean` | `true` |
+| `CHECK_OUTSIDE_LOOP` | `Boolean` | `true` |
 
 ## CLI & CI/CD Configuration
 

@@ -40,15 +40,15 @@ mo_logger->info( 'Order processed:' ).
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value | Description |
-|---|---|:---:|---|
-| `CHECK_WRITE` | `Boolean` | `true` | Configurable attribute for no-list-processing |
-| `CHECK_ULINE` | `Boolean` | `true` | Configurable attribute for no-list-processing |
-| `CHECK_SKIP` | `Boolean` | `true` | Configurable attribute for no-list-processing |
-| `CHECK_OTHER` | `Boolean` | `true` | Configurable attribute for no-list-processing |
-| `IGN_WRITE_TO` | `Boolean` | `true` | Configurable attribute for no-list-processing |
-| `CHECK_LEAVE` | `Boolean` | `true` | Configurable attribute for no-list-processing |
-| `CHECK_REJECT` | `Boolean` | `true` | Configurable attribute for no-list-processing |
+| Parameter Name | Data Type | Default Value |
+|---|---|:---:|
+| `CHECK_WRITE` | `Boolean` | `true` |
+| `CHECK_ULINE` | `Boolean` | `true` |
+| `CHECK_SKIP` | `Boolean` | `true` |
+| `CHECK_OTHER` | `Boolean` | `true` |
+| `IGN_WRITE_TO` | `Boolean` | `true` |
+| `CHECK_LEAVE` | `Boolean` | `true` |
+| `CHECK_REJECT` | `Boolean` | `true` |
 
 ## CLI & CI/CD Configuration
 

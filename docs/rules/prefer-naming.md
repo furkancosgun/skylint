@@ -1,4 +1,4 @@
-# prefer-naming
+# Enforce Naming Conventions
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
@@ -13,7 +13,7 @@ Standard Naming Conventions.
 
 ## Rationale
 
-Standard Naming Conventions
+Consistent naming conventions (prefixes for variables, parameters, types, etc.) make code self-documenting and easier to navigate. Configure patterns per scope to enforce team standards automatically.
 
 ### Non-Compliant
 
@@ -38,39 +38,39 @@ DATA lv_foo TYPE i.
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value | Description |
-|---|---|:---:|---|
-| `ATTR_IGN_EXC` | `Boolean` | `true` | Configurable attribute for prefer-naming |
-| `ATTR_IGN_LOCAL` | `Boolean` | `true` | Configurable attribute for prefer-naming |
-| `ATTR_IGN_INTF` | `Boolean` | `false` | Configurable attribute for prefer-naming |
-| `ATTR_STATICS` | `Integer / String` | `'^G` | Configurable attribute for prefer-naming |
-| `ATTR_INSTANCE` | `Integer / String` | `'^M` | Configurable attribute for prefer-naming |
-| `ATTR_CONSTANTS` | `Integer / String` | `''` | Configurable attribute for prefer-naming |
-| `PARAM_IGN_EXC` | `Boolean` | `true` | Configurable attribute for prefer-naming |
-| `PARAM_IMPORTING` | `Integer / String` | `'^I` | Configurable attribute for prefer-naming |
-| `PARAM_RETURNING` | `Integer / String` | `'^R` | Configurable attribute for prefer-naming |
-| `PARAM_CHANGING` | `Integer / String` | `'^C` | Configurable attribute for prefer-naming |
-| `PARAM_EXPORTING` | `Integer / String` | `'^E` | Configurable attribute for prefer-naming |
-| `LOCAL_DATA` | `Integer / String` | `'^L` | Configurable attribute for prefer-naming |
-| `LOCAL_CONST` | `Integer / String` | `'^LC_` | Configurable attribute for prefer-naming |
-| `LOCAL_FS` | `Integer / String` | `'^<L` | Configurable attribute for prefer-naming |
-| `LOCAL_STATICS` | `Integer / String` | `'^S` | Configurable attribute for prefer-naming |
-| `CLASS_LOCAL` | `Integer / String` | `'^LC(L|X)_` | Configurable attribute for prefer-naming |
-| `CLASS_TEST` | `Integer / String` | `'^LTCL_` | Configurable attribute for prefer-naming |
-| `CLASS_GLOBAL` | `Integer / String` | `'^ZC(L|X)_` | Configurable attribute for prefer-naming |
-| `SSCR_PARAM` | `Integer / String` | `'^P_` | Configurable attribute for prefer-naming |
-| `SSCR_SELOPT` | `Integer / String` | `'^S_` | Configurable attribute for prefer-naming |
-| `TYPES_PATTERN` | `Integer / String` | `'^TY_` | Configurable attribute for prefer-naming |
-| `MACRO_PATTERN` | `Integer / String` | `'^_` | Configurable attribute for prefer-naming |
-| `FORM_PATTERN` | `Integer / String` | `'^F_` | Configurable attribute for prefer-naming |
-| `FUNCTION_PATTERN` | `Integer / String` | `'^Z` | Configurable attribute for prefer-naming |
-| `INTF_LOCAL` | `Integer / String` | `'^LIF_` | Configurable attribute for prefer-naming |
-| `INTF_GLOBAL` | `Integer / String` | `'^ZIF_` | Configurable attribute for prefer-naming |
-| `EVENT_NAME` | `Integer / String` | `'^[A-Z][A-Z0-9_]+$'` | Configurable attribute for prefer-naming |
-| `EVENT_HANDLER` | `Integer / String` | `'^ON_` | Configurable attribute for prefer-naming |
-| `TEST_METHOD` | `Integer / String` | `'^(TEST|SHOULD)_` | Configurable attribute for prefer-naming |
-| `PROG_PATTERN` | `Integer / String` | `'^Z` | Configurable attribute for prefer-naming |
-| `FUGR_PATTERN` | `Integer / String` | `'^Z` | Configurable attribute for prefer-naming |
+| Parameter Name | Data Type | Default Value |
+|---|---|:---:|
+| `ATTR_IGN_EXC` | `Boolean` | `true` |
+| `ATTR_IGN_LOCAL` | `Boolean` | `true` |
+| `ATTR_IGN_INTF` | `Boolean` | `false` |
+| `ATTR_STATICS` | `Integer / String` | `'^G._.+$'` |
+| `ATTR_INSTANCE` | `Integer / String` | `'^M._.+$'` |
+| `ATTR_CONSTANTS` | `Integer / String` | `''` |
+| `PARAM_IGN_EXC` | `Boolean` | `true` |
+| `PARAM_IMPORTING` | `Integer / String` | `'^I._.+$'` |
+| `PARAM_RETURNING` | `Integer / String` | `'^R._.+$'` |
+| `PARAM_CHANGING` | `Integer / String` | `'^C._.+$'` |
+| `PARAM_EXPORTING` | `Integer / String` | `'^E._.+$'` |
+| `LOCAL_DATA` | `Integer / String` | `'^L._.+$'` |
+| `LOCAL_CONST` | `Integer / String` | `'^LC_.+$'` |
+| `LOCAL_FS` | `Integer / String` | `'^<L._.+>$'` |
+| `LOCAL_STATICS` | `Integer / String` | `'^S._.+$'` |
+| `CLASS_LOCAL` | `Integer / String` | `'^LC(L|X)_.+$'` |
+| `CLASS_TEST` | `Integer / String` | `'^LTCL_.+$'` |
+| `CLASS_GLOBAL` | `Integer / String` | `'^ZC(L|X)_.+$'` |
+| `SSCR_PARAM` | `Integer / String` | `'^P_.+$'` |
+| `SSCR_SELOPT` | `Integer / String` | `'^S_.+$'` |
+| `TYPES_PATTERN` | `Integer / String` | `'^TY_.+$'` |
+| `MACRO_PATTERN` | `Integer / String` | `'^_.+$'` |
+| `FORM_PATTERN` | `Integer / String` | `'^F_.+$'` |
+| `FUNCTION_PATTERN` | `Integer / String` | `'^Z.*$'` |
+| `INTF_LOCAL` | `Integer / String` | `'^LIF_.+$'` |
+| `INTF_GLOBAL` | `Integer / String` | `'^ZIF_.+$'` |
+| `EVENT_NAME` | `Integer / String` | `'^[A-Z][A-Z0-9_]+$'` |
+| `EVENT_HANDLER` | `Integer / String` | `'^ON_.+$'` |
+| `TEST_METHOD` | `Integer / String` | `'^(TEST|SHOULD)_.+$'` |
+| `PROG_PATTERN` | `Integer / String` | `'^Z.+$'` |
+| `FUGR_PATTERN` | `Integer / String` | `'^Z.+$'` |
 
 ## CLI & CI/CD Configuration
 
@@ -83,34 +83,34 @@ checks:
       attrIgnExc: true
       attrIgnLocal: true
       attrIgnIntf: false
-      attrStatics: '^G
-      attrInstance: '^M
+      attrStatics: '^G._.+$'
+      attrInstance: '^M._.+$'
       attrConstants: ''
       paramIgnExc: true
-      paramImporting: '^I
-      paramReturning: '^R
-      paramChanging: '^C
-      paramExporting: '^E
-      localData: '^L
-      localConst: '^LC_
-      localFs: '^<L
-      localStatics: '^S
-      classLocal: '^LC(L|X)_
-      classTest: '^LTCL_
-      classGlobal: '^ZC(L|X)_
-      sscrParam: '^P_
-      sscrSelopt: '^S_
-      typesPattern: '^TY_
-      macroPattern: '^_
-      formPattern: '^F_
-      functionPattern: '^Z
-      intfLocal: '^LIF_
-      intfGlobal: '^ZIF_
+      paramImporting: '^I._.+$'
+      paramReturning: '^R._.+$'
+      paramChanging: '^C._.+$'
+      paramExporting: '^E._.+$'
+      localData: '^L._.+$'
+      localConst: '^LC_.+$'
+      localFs: '^<L._.+>$'
+      localStatics: '^S._.+$'
+      classLocal: '^LC(L|X)_.+$'
+      classTest: '^LTCL_.+$'
+      classGlobal: '^ZC(L|X)_.+$'
+      sscrParam: '^P_.+$'
+      sscrSelopt: '^S_.+$'
+      typesPattern: '^TY_.+$'
+      macroPattern: '^_.+$'
+      formPattern: '^F_.+$'
+      functionPattern: '^Z.*$'
+      intfLocal: '^LIF_.+$'
+      intfGlobal: '^ZIF_.+$'
       eventName: '^[A-Z][A-Z0-9_]+$'
-      eventHandler: '^ON_
-      testMethod: '^(TEST|SHOULD)_
-      progPattern: '^Z
-      fugrPattern: '^Z
+      eventHandler: '^ON_.+$'
+      testMethod: '^(TEST|SHOULD)_.+$'
+      progPattern: '^Z.+$'
+      fugrPattern: '^Z.+$'
 ```
 
 ## Suppression

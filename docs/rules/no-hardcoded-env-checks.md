@@ -46,15 +46,15 @@ ENDIF.
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value | Description |
-|---|---|:---:|---|
-| `CHECK_SYSID` | `Boolean` | `true` | Configurable attribute for no-hardcoded-env-checks |
-| `CHECK_MANDT` | `Boolean` | `true` | Configurable attribute for no-hardcoded-env-checks |
-| `CHECK_HOST` | `Boolean` | `true` | Configurable attribute for no-hardcoded-env-checks |
-| `CHECK_DBSYS` | `Boolean` | `true` | Configurable attribute for no-hardcoded-env-checks |
-| `CHECK_OPSYS` | `Boolean` | `true` | Configurable attribute for no-hardcoded-env-checks |
-| `CHECK_UNAME` | `Boolean` | `true` | Configurable attribute for no-hardcoded-env-checks |
-| `ONLY_CONDITIONAL` | `Boolean` | `false` | Configurable attribute for no-hardcoded-env-checks |
+| Parameter Name | Data Type | Default Value |
+|---|---|:---:|
+| `CHECK_SYSID` | `Boolean` | `true` |
+| `CHECK_MANDT` | `Boolean` | `true` |
+| `CHECK_HOST` | `Boolean` | `true` |
+| `CHECK_DBSYS` | `Boolean` | `true` |
+| `CHECK_OPSYS` | `Boolean` | `true` |
+| `CHECK_UNAME` | `Boolean` | `true` |
+| `ONLY_CONDITIONAL` | `Boolean` | `false` |
 
 ## CLI & CI/CD Configuration
 

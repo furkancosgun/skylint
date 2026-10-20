@@ -50,11 +50,11 @@ This rule provides an **automated QuickFix** directly in Eclipse ABAP Developmen
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value | Description |
-|---|---|:---:|---|
-| `ALLOW_STRUCTURE_CHAINS` | `Boolean` | `true` | Configurable attribute for no-chained-statements |
-| `CHECK_CHAINED_DECL` | `Boolean` | `true` | Configurable attribute for no-chained-statements |
-| `CHECK_CHAINED_ASSIGN` | `Boolean` | `true` | Configurable attribute for no-chained-statements |
+| Parameter Name | Data Type | Default Value |
+|---|---|:---:|
+| `ALLOW_STRUCTURE_CHAINS` | `Boolean` | `true` |
+| `CHECK_CHAINED_DECL` | `Boolean` | `true` |
+| `CHECK_CHAINED_ASSIGN` | `Boolean` | `true` |
 
 ## CLI & CI/CD Configuration
 

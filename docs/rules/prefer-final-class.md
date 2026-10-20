@@ -52,10 +52,10 @@ This rule provides an **automated QuickFix** directly in Eclipse ABAP Developmen
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value | Description |
-|---|---|:---:|---|
-| `CHECK_CLASSES` | `Boolean` | `true` | Configurable attribute for prefer-final-class |
-| `CHECK_METHODS` | `Boolean` | `true` | Configurable attribute for prefer-final-class |
+| Parameter Name | Data Type | Default Value |
+|---|---|:---:|
+| `CHECK_CLASSES` | `Boolean` | `true` |
+| `CHECK_METHODS` | `Boolean` | `true` |
 
 ## CLI & CI/CD Configuration
 

@@ -7,7 +7,7 @@ export default defineConfig({
   cleanUrls: true,
   lastUpdated: true,
   sitemap: {
-    hostname: 'https://furkancosgun.github.io/skylint',
+    hostname: 'https://furkancosgun.github.io/skylint/',
   },
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }],
@@ -17,6 +17,11 @@ export default defineConfig({
     ['meta', { property: 'og:description', content: 'Enterprise Clean ABAP & Cloud ATC Linter Engine' }],
     ['meta', { property: 'og:image', content: 'https://furkancosgun.github.io/skylint/logo.svg' }],
   ],
+  transformHead: ({ pageData }) => {
+    const rel = pageData.relativePath.replace(/\.md$/, '').replace(/(^|\/)index$/, '$1');
+    const path = rel === '' ? '/' : '/' + rel;
+    return [['link', { rel: 'canonical', href: 'https://furkancosgun.github.io/skylint' + path }]];
+  },
   themeConfig: {
     logo: '/logo.svg',
     nav: [

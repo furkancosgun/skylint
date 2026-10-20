@@ -50,9 +50,9 @@ ENDMETHOD.
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value | Description |
-|---|---|:---:|---|
-| `MAX_STATEMENTS` | `Integer / String` | `10` | Configurable attribute for max-constructor-statements |
+| Parameter Name | Data Type | Default Value |
+|---|---|:---:|
+| `MAX_STATEMENTS` | `Integer / String` | `10` |
 
 ## CLI & CI/CD Configuration
 

@@ -48,10 +48,10 @@ This rule provides an **automated QuickFix** directly in Eclipse ABAP Developmen
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value | Description |
-|---|---|:---:|---|
-| `CHECK_BEFORE_WRITE` | `Boolean` | `true` | Configurable attribute for no-redundant-clear |
-| `CHECK_WITHOUT_READ` | `Boolean` | `true` | Configurable attribute for no-redundant-clear |
+| Parameter Name | Data Type | Default Value |
+|---|---|:---:|
+| `CHECK_BEFORE_WRITE` | `Boolean` | `true` |
+| `CHECK_WITHOUT_READ` | `Boolean` | `true` |
 
 ## CLI & CI/CD Configuration
 

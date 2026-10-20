@@ -60,9 +60,9 @@ execute( ).
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value | Description |
-|---|---|:---:|---|
-| `MAX_DEPTH` | `Integer / String` | `3` | Configurable attribute for max-nesting-depth |
+| Parameter Name | Data Type | Default Value |
+|---|---|:---:|
+| `MAX_DEPTH` | `Integer / String` | `3` |
 
 ## CLI & CI/CD Configuration
 

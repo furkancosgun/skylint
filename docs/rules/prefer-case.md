@@ -64,9 +64,9 @@ ENDCASE.
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value | Description |
-|---|---|:---:|---|
-| `MIN_BRANCHES` | `Integer / String` | `3` | Configurable attribute for prefer-case |
+| Parameter Name | Data Type | Default Value |
+|---|---|:---:|
+| `MIN_BRANCHES` | `Integer / String` | `3` |
 
 ## CLI & CI/CD Configuration
 

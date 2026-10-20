@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { RULES, CATEGORIES } from './rules-data.mjs';
-import { RULES_METADATA } from './rules-metadata.mjs';
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -70,7 +70,7 @@ function extractAttributes(content) {
     const varName = e[2];
     const kindMatch = e[0].match(/kind\s*=\s*if_ci_atc_check_meta_data=>attribute_kinds-([a-z]+)/);
     const kind = kindMatch ? kindMatch[1] : defaultKind;
-    const valRegex = new RegExp(`DATA\\s+${varName}\\s+TYPE\\s+\\S+\\s+VALUE\\s+([^.\\n\\r]+)\\.`, 'i');
+    const valRegex = new RegExp(`DATA\\s+${varName}\\s+TYPE\\s+\\S+\\s+VALUE\\s+('.*?'|[^.\\n\\r]+)\\.`, 'i');
     const valM = content.match(valRegex);
     let defVal = valM ? valM[1].trim() : '';
     if (defVal.toLowerCase() === 'abap_true') defVal = 'true';
@@ -127,9 +127,9 @@ for (const rule of RULES) {
     }
   }
 
-  const meta = RULES_METADATA[rule.ruleId] || {
-    title: rule.ruleId,
-    rationale: classDesc,
+  const meta = {
+    title: rule.title || rule.ruleId,
+    rationale: rule.rationale || classDesc,
   };
 
   // Prioritize canonical Clean ABAP example from RULES, fallback to fixture
@@ -212,10 +212,10 @@ for (const rule of RULES) {
   if (attributes.length > 0) {
     ruleDoc += `## Configuration & Thresholds\n\n`;
     ruleDoc += `This check can be fine-tuned directly in the ATC Check Variant Editor (\`CHKV\`) in Eclipse ADT:\n\n`;
-    ruleDoc += `| Parameter Name | Data Type | Default Value | Description |\n`;
-    ruleDoc += `|---|---|:---:|---|\n`;
+    ruleDoc += `| Parameter Name | Data Type | Default Value |\n`;
+    ruleDoc += `|---|---|:---:|\n`;
     for (const attr of attributes) {
-      ruleDoc += `| \`${attr.name}\` | \`${attr.kind}\` | \`${attr.defaultValue}\` | Configurable attribute for ${rule.ruleId} |\n`;
+      ruleDoc += `| \`${attr.name}\` | \`${attr.kind}\` | \`${attr.defaultValue}\` |\n`;
     }
     ruleDoc += `\n`;
   }

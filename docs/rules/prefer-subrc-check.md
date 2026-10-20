@@ -46,13 +46,13 @@ ENDIF.
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value | Description |
-|---|---|:---:|---|
-| `CHECK_SELECT_SINGLE` | `Boolean` | `true` | Configurable attribute for prefer-subrc-check |
-| `CHECK_READ_TABLE` | `Boolean` | `true` | Configurable attribute for prefer-subrc-check |
-| `CHECK_AUTHORITY_CHECK` | `Boolean` | `true` | Configurable attribute for prefer-subrc-check |
-| `CHECK_FIND_SEARCH` | `Boolean` | `true` | Configurable attribute for prefer-subrc-check |
-| `CHECK_ASSIGN` | `Boolean` | `true` | Configurable attribute for prefer-subrc-check |
+| Parameter Name | Data Type | Default Value |
+|---|---|:---:|
+| `CHECK_SELECT_SINGLE` | `Boolean` | `true` |
+| `CHECK_READ_TABLE` | `Boolean` | `true` |
+| `CHECK_AUTHORITY_CHECK` | `Boolean` | `true` |
+| `CHECK_FIND_SEARCH` | `Boolean` | `true` |
+| `CHECK_ASSIGN` | `Boolean` | `true` |
 
 ## CLI & CI/CD Configuration
 

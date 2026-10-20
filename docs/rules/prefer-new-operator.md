@@ -50,10 +50,10 @@ This rule provides an **automated QuickFix** directly in Eclipse ABAP Developmen
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value | Description |
-|---|---|:---:|---|
-| `CHECK_CREATE_OBJECT` | `Boolean` | `true` | Configurable attribute for prefer-new-operator |
-| `CHECK_RAISE_EXCEPTION` | `Boolean` | `true` | Configurable attribute for prefer-new-operator |
+| Parameter Name | Data Type | Default Value |
+|---|---|:---:|
+| `CHECK_CREATE_OBJECT` | `Boolean` | `true` |
+| `CHECK_RAISE_EXCEPTION` | `Boolean` | `true` |
 
 ## CLI & CI/CD Configuration
 

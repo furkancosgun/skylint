@@ -50,15 +50,15 @@ This rule provides an **automated QuickFix** directly in Eclipse ABAP Developmen
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value | Description |
-|---|---|:---:|---|
-| `CHECK_CONDENSE` | `Boolean` | `true` | Configurable attribute for prefer-string-functions |
-| `CHECK_TRANSLATE` | `Boolean` | `true` | Configurable attribute for prefer-string-functions |
-| `CHECK_SHIFT` | `Boolean` | `true` | Configurable attribute for prefer-string-functions |
-| `CHECK_SEARCH` | `Boolean` | `true` | Configurable attribute for prefer-string-functions |
-| `CHECK_OVERLAY` | `Boolean` | `true` | Configurable attribute for prefer-string-functions |
-| `CHECK_REPLACE` | `Boolean` | `true` | Configurable attribute for prefer-string-functions |
-| `CHECK_DESCRIBE` | `Boolean` | `true` | Configurable attribute for prefer-string-functions |
+| Parameter Name | Data Type | Default Value |
+|---|---|:---:|
+| `CHECK_CONDENSE` | `Boolean` | `true` |
+| `CHECK_TRANSLATE` | `Boolean` | `true` |
+| `CHECK_SHIFT` | `Boolean` | `true` |
+| `CHECK_SEARCH` | `Boolean` | `true` |
+| `CHECK_OVERLAY` | `Boolean` | `true` |
+| `CHECK_REPLACE` | `Boolean` | `true` |
+| `CHECK_DESCRIBE` | `Boolean` | `true` |
 
 ## CLI & CI/CD Configuration
 

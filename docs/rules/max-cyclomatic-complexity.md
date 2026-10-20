@@ -52,9 +52,9 @@ ENDMETHOD.
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value | Description |
-|---|---|:---:|---|
-| `MAX_COMPLEXITY` | `Integer / String` | `5` | Configurable attribute for max-cyclomatic-complexity |
+| Parameter Name | Data Type | Default Value |
+|---|---|:---:|
+| `MAX_COMPLEXITY` | `Integer / String` | `5` |
 
 ## CLI & CI/CD Configuration
 

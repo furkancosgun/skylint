@@ -1,4 +1,4 @@
-# max-line-length
+# Limit Line Length
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Metrics & Complexity Limits" />
@@ -13,7 +13,7 @@ Maximum Line Length.
 
 ## Rationale
 
-Maximum Line Length
+Long lines reduce readability, force horizontal scrolling, and complicate code review. Keep source lines within a configurable limit (typically 120 characters) by breaking statements and using expression-based ABAP.
 
 ### Non-Compliant
 
@@ -38,9 +38,9 @@ DATA lv_compact_name TYPE i.
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value | Description |
-|---|---|:---:|---|
-| `MAX_LENGTH` | `Integer / String` | `120` | Configurable attribute for max-line-length |
+| Parameter Name | Data Type | Default Value |
+|---|---|:---:|
+| `MAX_LENGTH` | `Integer / String` | `120` |
 
 ## CLI & CI/CD Configuration
 

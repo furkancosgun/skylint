@@ -42,10 +42,10 @@ SELECT customer_id, first_name, last_name
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value | Description |
-|---|---|:---:|---|
-| `CHECK_SELECT_STAR` | `Boolean` | `true` | Configurable attribute for no-select-star |
-| `CHECK_ENDSELECT` | `Boolean` | `true` | Configurable attribute for no-select-star |
+| Parameter Name | Data Type | Default Value |
+|---|---|:---:|
+| `CHECK_SELECT_STAR` | `Boolean` | `true` |
+| `CHECK_ENDSELECT` | `Boolean` | `true` |
 
 ## CLI & CI/CD Configuration
 

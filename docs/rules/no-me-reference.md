@@ -42,9 +42,9 @@ process_order( ).
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value | Description |
-|---|---|:---:|---|
-| `ALLOW_IN_CONSTRUCTORS` | `Boolean` | `true` | Configurable attribute for no-me-reference |
+| Parameter Name | Data Type | Default Value |
+|---|---|:---:|
+| `ALLOW_IN_CONSTRUCTORS` | `Boolean` | `true` |
 
 ## CLI & CI/CD Configuration
 

@@ -54,9 +54,9 @@ ENDMETHOD.
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value | Description |
-|---|---|:---:|---|
-| `MAX_STATEMENTS` | `Integer / String` | `5` | Configurable attribute for max-method-length |
+| Parameter Name | Data Type | Default Value |
+|---|---|:---:|
+| `MAX_STATEMENTS` | `Integer / String` | `5` |
 
 ## CLI & CI/CD Configuration
 

@@ -50,16 +50,16 @@ ENDIF.
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value | Description |
-|---|---|:---:|---|
-| `CHECK_IF` | `Boolean` | `true` | Configurable attribute for no-empty-block |
-| `CHECK_LOOP` | `Boolean` | `true` | Configurable attribute for no-empty-block |
-| `CHECK_CASE` | `Boolean` | `true` | Configurable attribute for no-empty-block |
-| `CHECK_TRY` | `Boolean` | `true` | Configurable attribute for no-empty-block |
-| `CHECK_CATCH` | `Boolean` | `true` | Configurable attribute for no-empty-block |
-| `CHECK_TRY_NO_CATCH` | `Boolean` | `true` | Configurable attribute for no-empty-block |
-| `CHECK_DO` | `Boolean` | `true` | Configurable attribute for no-empty-block |
-| `CHECK_WHILE` | `Boolean` | `true` | Configurable attribute for no-empty-block |
+| Parameter Name | Data Type | Default Value |
+|---|---|:---:|
+| `CHECK_IF` | `Boolean` | `true` |
+| `CHECK_LOOP` | `Boolean` | `true` |
+| `CHECK_CASE` | `Boolean` | `true` |
+| `CHECK_TRY` | `Boolean` | `true` |
+| `CHECK_CATCH` | `Boolean` | `true` |
+| `CHECK_TRY_NO_CATCH` | `Boolean` | `true` |
+| `CHECK_DO` | `Boolean` | `true` |
+| `CHECK_WHILE` | `Boolean` | `true` |
 
 ## CLI & CI/CD Configuration
 

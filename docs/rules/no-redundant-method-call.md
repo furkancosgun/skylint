@@ -46,11 +46,11 @@ This rule provides an **automated QuickFix** directly in Eclipse ABAP Developmen
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value | Description |
-|---|---|:---:|---|
-| `CHECK_EXPORTING` | `Boolean` | `true` | Configurable attribute for no-redundant-method-call |
-| `CHECK_RECEIVING` | `Boolean` | `true` | Configurable attribute for no-redundant-method-call |
-| `CHECK_PARAM_NAME` | `Boolean` | `true` | Configurable attribute for no-redundant-method-call |
+| Parameter Name | Data Type | Default Value |
+|---|---|:---:|
+| `CHECK_EXPORTING` | `Boolean` | `true` |
+| `CHECK_RECEIVING` | `Boolean` | `true` |
+| `CHECK_PARAM_NAME` | `Boolean` | `true` |
 
 ## CLI & CI/CD Configuration
 

@@ -58,10 +58,10 @@ ENDMETHOD.
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value | Description |
-|---|---|:---:|---|
-| `CHECK_METHOD_RETURN` | `Boolean` | `true` | Configurable attribute for prefer-early-return |
-| `CHECK_LOOP_CONTINUE` | `Boolean` | `true` | Configurable attribute for prefer-early-return |
+| Parameter Name | Data Type | Default Value |
+|---|---|:---:|
+| `CHECK_METHOD_RETURN` | `Boolean` | `true` |
+| `CHECK_LOOP_CONTINUE` | `Boolean` | `true` |
 
 ## CLI & CI/CD Configuration
 

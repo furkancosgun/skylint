@@ -46,39 +46,39 @@ This rule provides an **automated QuickFix** directly in Eclipse ABAP Developmen
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value | Description |
-|---|---|:---:|---|
-| `CHECK_MOVE` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
-| `CHECK_REFRESH` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
-| `CHECK_COMPUTE` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
-| `CHECK_TABLES` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
-| `CHECK_FIELD_GROUPS` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
-| `CHECK_TEST_SEAMS` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
-| `CHECK_BREAK` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
-| `CHECK_STATICS` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
-| `CHECK_DEFINE` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
-| `CHECK_EXPORT_MEMORY` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
-| `CHECK_FORM` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
-| `CHECK_LOOP_CTL` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
-| `CHECK_ADD` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
-| `CHECK_ADD_CORR` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
-| `CHECK_TYPE_POOLS` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
-| `CHECK_RANGES` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
-| `CHECK_HEADER_LINE` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
-| `CHECK_LOAD` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
-| `CHECK_PACK` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
-| `CHECK_UNPACK` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
-| `CHECK_EXTRACT` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
-| `CHECK_COMMON_PART` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
-| `CHECK_FREE_MEMORY` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
-| `CHECK_PROVIDE` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
-| `CHECK_CONTEXTS` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
-| `CHECK_INITIAL_SIZE` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
-| `CHECK_CATCH_SYSTEM` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
-| `CHECK_GET_REFERENCE` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
-| `CHECK_INFOTYPES` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
-| `CHECK_COMMUNICATION` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
-| `CHECK_SET_EXT_CHECK` | `Boolean` | `true` | Configurable attribute for no-obsolete-statements |
+| Parameter Name | Data Type | Default Value |
+|---|---|:---:|
+| `CHECK_MOVE` | `Boolean` | `true` |
+| `CHECK_REFRESH` | `Boolean` | `true` |
+| `CHECK_COMPUTE` | `Boolean` | `true` |
+| `CHECK_TABLES` | `Boolean` | `true` |
+| `CHECK_FIELD_GROUPS` | `Boolean` | `true` |
+| `CHECK_TEST_SEAMS` | `Boolean` | `true` |
+| `CHECK_BREAK` | `Boolean` | `true` |
+| `CHECK_STATICS` | `Boolean` | `true` |
+| `CHECK_DEFINE` | `Boolean` | `true` |
+| `CHECK_EXPORT_MEMORY` | `Boolean` | `true` |
+| `CHECK_FORM` | `Boolean` | `true` |
+| `CHECK_LOOP_CTL` | `Boolean` | `true` |
+| `CHECK_ADD` | `Boolean` | `true` |
+| `CHECK_ADD_CORR` | `Boolean` | `true` |
+| `CHECK_TYPE_POOLS` | `Boolean` | `true` |
+| `CHECK_RANGES` | `Boolean` | `true` |
+| `CHECK_HEADER_LINE` | `Boolean` | `true` |
+| `CHECK_LOAD` | `Boolean` | `true` |
+| `CHECK_PACK` | `Boolean` | `true` |
+| `CHECK_UNPACK` | `Boolean` | `true` |
+| `CHECK_EXTRACT` | `Boolean` | `true` |
+| `CHECK_COMMON_PART` | `Boolean` | `true` |
+| `CHECK_FREE_MEMORY` | `Boolean` | `true` |
+| `CHECK_PROVIDE` | `Boolean` | `true` |
+| `CHECK_CONTEXTS` | `Boolean` | `true` |
+| `CHECK_INITIAL_SIZE` | `Boolean` | `true` |
+| `CHECK_CATCH_SYSTEM` | `Boolean` | `true` |
+| `CHECK_GET_REFERENCE` | `Boolean` | `true` |
+| `CHECK_INFOTYPES` | `Boolean` | `true` |
+| `CHECK_COMMUNICATION` | `Boolean` | `true` |
+| `CHECK_SET_EXT_CHECK` | `Boolean` | `true` |
 
 ## CLI & CI/CD Configuration
 

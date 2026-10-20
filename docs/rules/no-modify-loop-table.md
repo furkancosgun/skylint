@@ -46,16 +46,16 @@ ENDLOOP.
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value | Description |
-|---|---|:---:|---|
-| `CHECK_APPEND` | `Boolean` | `true` | Configurable attribute for no-modify-loop-table |
-| `CHECK_INSERT` | `Boolean` | `true` | Configurable attribute for no-modify-loop-table |
-| `CHECK_MODIFY` | `Boolean` | `true` | Configurable attribute for no-modify-loop-table |
-| `CHECK_DELETE` | `Boolean` | `true` | Configurable attribute for no-modify-loop-table |
-| `CHECK_CLEAR` | `Boolean` | `true` | Configurable attribute for no-modify-loop-table |
-| `CHECK_SORT` | `Boolean` | `true` | Configurable attribute for no-modify-loop-table |
-| `CHECK_SORT_ANY` | `Boolean` | `true` | Configurable attribute for no-modify-loop-table |
-| `CHECK_COLLECT` | `Boolean` | `true` | Configurable attribute for no-modify-loop-table |
+| Parameter Name | Data Type | Default Value |
+|---|---|:---:|
+| `CHECK_APPEND` | `Boolean` | `true` |
+| `CHECK_INSERT` | `Boolean` | `true` |
+| `CHECK_MODIFY` | `Boolean` | `true` |
+| `CHECK_DELETE` | `Boolean` | `true` |
+| `CHECK_CLEAR` | `Boolean` | `true` |
+| `CHECK_SORT` | `Boolean` | `true` |
+| `CHECK_SORT_ANY` | `Boolean` | `true` |
+| `CHECK_COLLECT` | `Boolean` | `true` |
 
 ## CLI & CI/CD Configuration
 
