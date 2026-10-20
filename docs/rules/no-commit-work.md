@@ -1,3 +1,7 @@
+---
+description: "Avoid COMMIT and ROLLBACK in application logic"
+---
+
 # Avoid Explicit COMMIT WORK in Business Logic
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

@@ -1,3 +1,7 @@
+---
+description: "Prefer IS NOT over NOT ... IS"
+---
+
 # Prefer IS NOT over NOT ... IS
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

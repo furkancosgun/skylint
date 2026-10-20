@@ -1,3 +1,7 @@
+---
+description: "Guide to suppressing findings in Skylint using standard SAP ATC pseudo-comments and pragmas with dual-match compatibility (#EC and #EC CI_)."
+---
+
 # Suppressions Guide
 
 In Clean ABAP development, static analysis rules guide quality and readability. However, in certain scenarios—such as interfacing with external legacy APIs or performance-critical micro-optimizations—deviating from a rule is intentional and necessary.

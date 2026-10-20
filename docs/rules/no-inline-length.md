@@ -1,3 +1,7 @@
+---
+description: "Avoid inline length specification in declarations"
+---
+
 # Avoid Obsolete Inline Length Specifications (var(len))
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

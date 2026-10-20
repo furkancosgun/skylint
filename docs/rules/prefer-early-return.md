@@ -1,3 +1,7 @@
+---
+description: "Prefer early return or continue over nested IF blocks"
+---
+
 # Prefer Early Return to Reduce Nesting (Guard Clauses)
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

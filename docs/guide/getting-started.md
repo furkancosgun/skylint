@@ -1,3 +1,7 @@
+---
+description: "Get started with Skylint, an enterprise static analysis and linter engine designed natively for ABAP Cloud and Clean ABAP with automated QuickFixes."
+---
+
 # 🚀 Getting Started with Skylint
 
 **Skylint** is an enterprise-grade static analysis and linter engine designed natively for **ABAP Cloud** and **Clean ABAP**. It enforces modern coding standards, prevents anti-patterns, and offers automated one-click QuickFixes right inside Eclipse ADT and CI/CD pipelines.

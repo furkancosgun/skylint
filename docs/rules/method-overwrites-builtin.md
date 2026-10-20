@@ -1,3 +1,7 @@
+---
+description: "Method name overwrites built-in SAP function"
+---
+
 # Avoid Method Names That Overwrite Built-in Functions
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

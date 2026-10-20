@@ -1,3 +1,7 @@
+---
+description: "Declare inline variables as FINAL when never written again"
+---
+
 # Prefer FINAL( ) over DATA( ) when the variable is never written again
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

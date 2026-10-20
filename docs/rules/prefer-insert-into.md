@@ -1,3 +1,7 @@
+---
+description: "Prefer INSERT ... INTO TABLE over APPEND for table safety"
+---
+
 # Prefer INSERT ... INTO TABLE over APPEND
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

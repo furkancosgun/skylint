@@ -1,3 +1,7 @@
+---
+description: "Avoid chained declarations and chained assignments"
+---
+
 # Avoid Chained Declarations & Assignments
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

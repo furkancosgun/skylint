@@ -1,3 +1,7 @@
+---
+description: "Unsecure FOR ALL ENTRIES (Missing empty itab check)"
+---
+
 # Prevent Empty FOR ALL ENTRIES Inquiries
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

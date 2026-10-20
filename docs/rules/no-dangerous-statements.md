@@ -1,3 +1,7 @@
+---
+description: "Dangerous Statements (abaplint dangerous_statement)"
+---
+
 # Avoid Dangerous & Dynamic Native Statements
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

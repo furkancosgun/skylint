@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { execSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { RULES, CATEGORIES } from './rules-data.mjs';
 
@@ -164,8 +165,9 @@ for (const rule of RULES) {
 
   const categoryInfo = CATEGORIES[rule.category] || { title: rule.category };
 
-  // Rule Page Title
-  let ruleDoc = `# ${meta.title}\n\n`;
+  // Rule Page Title with SEO frontmatter
+  const cleanDesc = (classDesc || '').replace(/"/g, '\\"');
+  let ruleDoc = `---\ndescription: "${cleanDesc}"\n---\n\n# ${meta.title}\n\n`;
 
   // Badge bar wrapper with inline margin
   ruleDoc += `<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">\n`;
@@ -259,7 +261,7 @@ for (const rule of RULES) {
 }
 
 // Generate rules/index.md with At a Glance statistics card
-let catalogMd = `# Rules Catalog (${RULES.length} Rules)\n\n`;
+let catalogMd = `---\ndescription: "Comprehensive reference and catalog for all ${RULES.length} Clean ABAP, security, performance, and architecture rules in Skylint."\n---\n\n# Rules Catalog (${RULES.length} Rules)\n\n`;
 catalogMd += `Comprehensive reference for all **${RULES.length}** Clean ABAP, security, performance, and architecture rules in Skylint.\n\n`;
 
 catalogMd += `::: tip Skylint at a Glance\n`;
@@ -306,27 +308,84 @@ const sidebarRules = Object.entries(CATEGORIES).map(([catKey, catInfo]) => ({
 
 const vpConfig = `import { defineConfig } from 'vitepress';
 
+const base = process.env.VITEPRESS_BASE || '/';
+
 export default defineConfig({
   title: 'Skylint',
   description: 'Enterprise Clean ABAP & Cloud ATC Linter Engine',
-  base: process.env.VITEPRESS_BASE || '/',
+  base,
   cleanUrls: true,
   lastUpdated: true,
   sitemap: {
     hostname: 'https://furkancosgun.github.io/skylint/',
   },
   head: [
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: '${process.env.VITEPRESS_BASE || '/'}logo.svg' }],
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: \`\${base}logo.svg\` }],
     ['meta', { name: 'robots', content: 'index, follow' }],
+    ['meta', { name: 'google-site-verification', content: 'googlebe62f3b9b7abdd43' }],
     ['meta', { property: 'og:type', content: 'website' }],
-    ['meta', { property: 'og:title', content: 'Skylint - Enterprise Clean ABAP & Cloud ATC Linter' }],
-    ['meta', { property: 'og:description', content: 'Enterprise Clean ABAP & Cloud ATC Linter Engine' }],
-    ['meta', { property: 'og:image', content: 'https://furkancosgun.github.io/skylint/logo.svg' }],
+    ['meta', { property: 'og:image', content: 'https://furkancosgun.github.io/skylint/og-image.png' }],
+    ['meta', { property: 'og:image:width', content: '1200' }],
+    ['meta', { property: 'og:image:height', content: '630' }],
+    ['meta', { property: 'og:image:type', content: 'image/png' }],
+    ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+    ['meta', { name: 'twitter:image', content: 'https://furkancosgun.github.io/skylint/og-image.png' }],
   ],
-  transformHead: ({ pageData }) => {
-    const rel = pageData.relativePath.replace(/\\.md$/, '').replace(/(^|\\/)index$/, '$1');
-    const path = rel === '' ? '/' : '/' + rel;
-    return [['link', { rel: 'canonical', href: 'https://furkancosgun.github.io/skylint' + path }]];
+  transformHead: ({ pageData, title, description }) => {
+    if (pageData.isNotFound) {
+      return [
+        ['meta', { name: 'robots', content: 'noindex, nofollow' }],
+      ];
+    }
+
+    const canonicalHostname = 'https://furkancosgun.github.io/skylint';
+    const cleanPath = pageData.relativePath
+      .replace(/\\.md$/, '')
+      .replace(/(^|\\/)index$/, '$1');
+    const url = (canonicalHostname + '/' + cleanPath).replace(/\\/+$/, '') + (cleanPath === '' || cleanPath.endsWith('/') ? '/' : '');
+
+    const ogTitle = title === 'Skylint' ? 'Skylint - Enterprise Clean ABAP & Cloud ATC Linter' : (title || 'Skylint');
+    const ogDescription = pageData.frontmatter?.description || description || 'Enterprise Clean ABAP & Cloud ATC Linter Engine';
+
+    const tags = [
+      ['link', { rel: 'canonical', href: url }],
+      ['meta', { property: 'og:url', content: url }],
+      ['meta', { property: 'og:title', content: ogTitle }],
+      ['meta', { property: 'og:description', content: ogDescription }],
+      ['meta', { name: 'description', content: ogDescription }],
+      ['meta', { name: 'twitter:title', content: ogTitle }],
+      ['meta', { name: 'twitter:description', content: ogDescription }],
+    ];
+
+    if (cleanPath === '') {
+      tags.push([
+        'script',
+        { type: 'application/ld+json' },
+        JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'SoftwareApplication',
+          'name': 'Skylint',
+          'applicationCategory': 'DeveloperApplication',
+          'operatingSystem': 'SAP ABAP Cloud, Node.js',
+          'description': 'Enterprise Clean ABAP & Cloud ATC Linter Engine with ${RULES.length}+ Native Rules',
+          'url': 'https://furkancosgun.github.io/skylint/',
+          'license': 'https://github.com/furkancosgun/skylint/blob/main/LICENSE',
+          'image': 'https://furkancosgun.github.io/skylint/og-image.png',
+          'offers': {
+            '@type': 'Offer',
+            'price': '0',
+            'priceCurrency': 'USD',
+          },
+          'author': {
+            '@type': 'Person',
+            'name': 'Furkan COSGUN',
+            'url': 'https://github.com/furkancosgun',
+          },
+        }),
+      ]);
+    }
+
+    return tags;
   },
   themeConfig: {
     logo: '/logo.svg',
@@ -404,5 +463,75 @@ features:
 `;
 
 fs.writeFileSync(path.join(docsDir, 'index.md'), indexMd, 'utf8');
+
+// Generate Dynamic Open Graph Image (docs/public/og-image.svg & og-image.png)
+function generateOgImage() {
+  const publicDir = path.join(docsDir, 'public');
+  fs.mkdirSync(publicDir, { recursive: true });
+  const logoPath = path.join(publicDir, 'logo.svg');
+  if (!fs.existsSync(logoPath)) return;
+
+  const logoSvg = fs.readFileSync(logoPath, 'utf8');
+  const defsMatch = logoSvg.match(/<defs>([\s\S]*?)<\/defs>/);
+  const innerMatch = logoSvg.match(/<circle[\s\S]*?<\/g>/);
+  if (!defsMatch || !innerMatch) return;
+
+  const ogSvg = `<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    ${defsMatch[1]}
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0e17" />
+      <stop offset="50%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#030712" />
+    </linearGradient>
+    <radialGradient id="cardGlow" cx="20%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#0284c7" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#0284c7" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bgGrad)" />
+  <rect width="1200" height="630" fill="url(#cardGlow)" />
+  <rect x="1" y="1" width="1198" height="628" rx="8" fill="none" stroke="#1e293b" stroke-width="2" />
+
+  <g transform="translate(100, 155) scale(0.32)">
+    ${innerMatch[0]}
+  </g>
+
+  <g transform="translate(480, 210)">
+    <text font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="76" font-weight="800" fill="#ffffff" letter-spacing="-1">Skylint</text>
+    <text y="68" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="28" font-weight="500" fill="#38bdf8">Enterprise Clean ABAP &amp; Cloud ATC Linter Engine</text>
+    <text y="125" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="21" font-weight="400" fill="#94a3b8">Native SAP ATC Integration · ${RULES.length} Clean Rules · Automated ADT QuickFixes</text>
+
+    <g transform="translate(0, 185)">
+      <rect x="0" y="0" width="185" height="42" rx="21" fill="#0369a1" fill-opacity="0.25" stroke="#0284c7" stroke-width="1.5" />
+      <text x="92" y="26" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="600" fill="#38bdf8" text-anchor="middle">⚡ 100% Native ATC</text>
+
+      <rect x="200" y="0" width="190" height="42" rx="21" fill="#047857" fill-opacity="0.25" stroke="#059669" stroke-width="1.5" />
+      <text x="295" y="26" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="600" fill="#34d399" text-anchor="middle">🌿 ${RULES.length} Clean Rules</text>
+
+      <rect x="405" y="0" width="200" height="42" rx="21" fill="#7c3aed" fill-opacity="0.25" stroke="#8b5cf6" stroke-width="1.5" />
+      <text x="505" y="26" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="600" fill="#a78bfa" text-anchor="middle">🛠️ Instant QuickFixes</text>
+    </g>
+  </g>
+
+  <g transform="translate(100, 560)">
+    <text font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="17" font-weight="500" fill="#64748b">https://furkancosgun.github.io/skylint</text>
+    <text x="1000" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="17" font-weight="500" fill="#64748b" text-anchor="end">Contract C1 · Steampunk Ready</text>
+  </g>
+</svg>`;
+
+  const ogSvgPath = path.join(publicDir, 'og-image.svg');
+  const ogPngPath = path.join(publicDir, 'og-image.png');
+  fs.writeFileSync(ogSvgPath, ogSvg, 'utf8');
+
+  try {
+    execSync(`which sips && sips -s format png "${ogSvgPath}" --out "${ogPngPath}"`, { stdio: 'ignore' });
+  } catch {
+    // Graceful fallback on environments where sips is unavailable (e.g. Linux CI)
+  }
+}
+
+generateOgImage();
 
 console.log('✓ All enterprise documentation and VitePress configuration generated successfully.');

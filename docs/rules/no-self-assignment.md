@@ -1,3 +1,7 @@
+---
+description: "Detect Identical Self Assignments"
+---
+
 # Avoid Redundant Self-Assignments
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

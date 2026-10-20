@@ -1,3 +1,7 @@
+---
+description: "Avoid raising SAP internal system exceptions (cx_sy_*)"
+---
+
 # Avoid Explicitly Raising System Exceptions (CX_SY_*)
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

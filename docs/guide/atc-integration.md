@@ -1,3 +1,7 @@
+---
+description: "Comprehensive guide on integrating Skylint with SAP ABAP Test Cockpit (ATC), configuring Check Variants, and running automated CI/CD checks."
+---
+
 # 🏛️ SAP ATC Integration Guide
 
 Skylint is an **ATC-native** static analysis engine. This guide explains how Skylint integrates into SAP's modern quality assurance infrastructure, why it exclusively targets **ABAP Test Cockpit (ATC)** instead of the legacy **Code Inspector (SCI)**, and how to set up Check Variants and CI/CD pipelines.

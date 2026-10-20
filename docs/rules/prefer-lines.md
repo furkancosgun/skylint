@@ -1,3 +1,7 @@
+---
+description: "Prefer lines( ) over DESCRIBE TABLE ... LINES"
+---
+
 # Prefer lines( ) over DESCRIBE TABLE
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

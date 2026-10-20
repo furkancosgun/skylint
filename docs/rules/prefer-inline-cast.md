@@ -1,3 +1,7 @@
+---
+description: "Inline a CAST helper that is only read once"
+---
+
 # Inline a CAST helper that is only read once
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

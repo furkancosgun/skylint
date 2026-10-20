@@ -1,3 +1,7 @@
+---
+description: "Avoid WITH DEFAULT KEY; prefer EMPTY KEY or explicit keys"
+---
+
 # Avoid WITH DEFAULT KEY
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

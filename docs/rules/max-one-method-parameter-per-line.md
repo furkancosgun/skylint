@@ -1,3 +1,7 @@
+---
+description: "Max one method parameter definition per line"
+---
+
 # Max One Method Parameter Definition Per Line
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

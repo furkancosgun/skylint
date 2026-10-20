@@ -1,3 +1,7 @@
+---
+description: "Prefer Inline Declarations"
+---
+
 # Prefer Modern Inline Declarations in ABAP 7.40+
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

@@ -1,3 +1,7 @@
+---
+description: "Classic EXCEPTIONS must not overlap"
+---
+
 # Classic EXCEPTIONS must not map two errors to the same number
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

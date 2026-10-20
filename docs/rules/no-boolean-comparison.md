@@ -1,3 +1,7 @@
+---
+description: "Avoid comparing boolean method calls to boolean literals"
+---
+
 # Avoid Comparing to abap_true / abap_false
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

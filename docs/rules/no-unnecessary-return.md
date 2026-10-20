@@ -1,3 +1,7 @@
+---
+description: "Omit unnecessary RETURN at end of routine"
+---
+
 # Omit Unnecessary RETURN Statement
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

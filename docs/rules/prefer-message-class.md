@@ -1,3 +1,7 @@
+---
+description: "Use a message class instead of inline message text"
+---
+
 # Use a message class (SE91) instead of inline message text
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

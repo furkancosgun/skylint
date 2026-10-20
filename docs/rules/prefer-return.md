@@ -1,3 +1,7 @@
+---
+description: "Prefer RETURN over EXIT outside loop constructs"
+---
+
 # Prefer RETURN over EXIT in Methods
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

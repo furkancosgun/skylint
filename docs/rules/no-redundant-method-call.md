@@ -1,3 +1,7 @@
+---
+description: "Omit redundant EXPORTING and RECEIVING in method calls"
+---
+
 # Omit Redundant Call Syntax (EXPORTING / RECEIVING / Single Param)
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

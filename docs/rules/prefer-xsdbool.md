@@ -1,3 +1,7 @@
+---
+description: "Prefer xsdbool( ) expression over manual IF-ELSE assignment"
+---
+
 # Prefer xsdbool( ) for Boolean Assignments
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

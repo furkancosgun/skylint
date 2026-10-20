@@ -1,3 +1,7 @@
+---
+description: "Cyclomatic Complexity Threshold"
+---
+
 # Limit Cyclomatic Complexity
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

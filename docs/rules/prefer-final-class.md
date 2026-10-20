@@ -1,3 +1,7 @@
+---
+description: "Prefer FINAL classes and methods by default"
+---
+
 # Design for Inheritance or Prohibit It (FINAL)
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

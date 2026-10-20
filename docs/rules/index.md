@@ -1,3 +1,7 @@
+---
+description: "Comprehensive reference and catalog for all 95 Clean ABAP, security, performance, and architecture rules in Skylint."
+---
+
 # Rules Catalog (95 Rules)
 
 Comprehensive reference for all **95** Clean ABAP, security, performance, and architecture rules in Skylint.

@@ -1,3 +1,7 @@
+---
+description: "Disallow ignoring the return value of functional methods"
+---
+
 # Do Not Ignore Return Value of Functional Methods
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

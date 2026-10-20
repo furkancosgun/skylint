@@ -1,3 +1,7 @@
+---
+description: "Enforce predicate naming (IS_, HAS_) on boolean methods"
+---
+
 # Use Predicate Naming for Boolean Methods (is_, has_, can_)
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

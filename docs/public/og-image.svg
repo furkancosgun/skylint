@@ -1,0 +1,114 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    
+    <!-- Background Circle Radial Gradient: Vivid Azure Blue with Radial Soft Glow -->
+    <radialGradient id="skylintGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1aa1ff" />
+      <stop offset="65%" stop-color="#0485fc" />
+      <stop offset="100%" stop-color="#0074e8" />
+    </radialGradient>
+  
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0e17" />
+      <stop offset="50%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#030712" />
+    </linearGradient>
+    <radialGradient id="cardGlow" cx="20%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#0284c7" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#0284c7" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bgGrad)" />
+  <rect width="1200" height="630" fill="url(#cardGlow)" />
+  <rect x="1" y="1" width="1198" height="628" rx="8" fill="none" stroke="#1e293b" stroke-width="2" />
+
+  <g transform="translate(100, 155) scale(0.32)">
+    <circle cx="500" cy="500" r="470" fill="url(#skylintGlow)" />
+
+  <!-- Pure Vector Artwork Group (Clean White fill) -->
+  <g transform="translate(0.000000,833.000000) scale(0.100000,-0.100000)" fill="#ffffff" stroke="none">
+  <path d="M4745 5539 c-294 -51 -533 -175 -740 -383 -114 -115 -205 -244 -274
+-388 -34 -72 -51 -98 -64 -98 -11 0 -64 -9 -119 -20 -213 -44 -395 -144 -559
+-309 -115 -114 -191 -234 -258 -403 -57 -147 -66 -204 -65 -423 1 -188 2 -205
+28 -290 116 -384 392 -671 761 -794 168 -56 141 -55 1248 -58 565 -1 1027 1
+1027 6 0 4 -12 19 -28 32 -15 13 -61 53 -102 89 -41 36 -77 67 -80 70 -7 7
+-159 140 -203 178 l-38 32 -758 0 c-837 0 -856 1 -996 62 -277 121 -444 358
+-462 655 -20 336 187 632 517 743 91 30 261 38 354 16 50 -12 71 -13 76 -5 4
+6 10 43 14 81 7 78 42 191 89 283 93 186 249 342 432 433 152 75 277 104 450
+105 279 0 517 -102 711 -305 138 -144 242 -361 263 -548 7 -63 6 -63 116 -40
+92 19 243 8 340 -24 291 -98 485 -350 508 -661 4 -48 7 -52 72 -107 37 -32
+119 -98 181 -148 l113 -89 10 37 c72 275 10 630 -154 888 -114 179 -262 312
+-455 409 -97 49 -185 76 -314 96 -84 13 -89 15 -101 44 -39 91 -52 117 -96
+191 -203 343 -545 576 -945 644 -154 26 -347 26 -499 -1z" />
+  <path d="M6425 3492 c-30 -6 -42 -19 -58 -65 -64 -181 -190 -545 -243 -704
+-71 -212 -72 -228 -13 -258 37 -20 69 -10 94 28 8 13 51 129 95 258 78 231
+186 544 215 626 26 74 -17 130 -90 115z" />
+  <path d="M5864 3347 c-12 -7 -39 -26 -60 -44 -21 -17 -88 -71 -149 -118 -187
+-146 -194 -152 -201 -190 -4 -22 -1 -41 8 -54 28 -39 381 -325 420 -340 30
+-11 82 9 97 38 30 55 11 77 -192 235 -70 54 -127 101 -127 105 0 3 12 15 27
+26 62 46 240 186 271 213 77 69 -4 181 -94 129z" />
+  <path d="M6640 3340 c-27 -27 -34 -63 -18 -93 7 -14 54 -56 103 -94 161 -122
+215 -166 215 -174 0 -4 -62 -56 -137 -116 -174 -137 -182 -144 -189 -179 -8
+-43 32 -84 83 -84 34 1 59 18 232 155 106 85 200 163 207 172 7 10 14 34 14
+54 0 27 -7 42 -32 66 -39 36 -314 254 -365 289 -43 29 -86 31 -113 4z" />
+  <path d="M5635 1860 c-6 -11 -4 -114 3 -142 4 -16 17 -18 93 -18 l89 0 0 85 0
+85 -89 0 c-50 0 -93 -4 -96 -10z" />
+  <path d="M3150 1851 c-190 -41 -304 -236 -226 -389 42 -82 106 -118 276 -158
+171 -39 230 -63 253 -102 27 -46 14 -95 -37 -136 -37 -30 -41 -31 -139 -31
+-93 0 -106 2 -149 28 -33 19 -51 37 -59 62 l-13 35 -88 0 c-101 0 -101 0 -71
+-84 45 -125 180 -196 373 -196 178 0 290 53 348 165 36 67 38 179 5 241 -44
+83 -118 121 -338 174 -69 16 -138 36 -154 44 -71 37 -61 133 19 174 38 20 57
+23 120 20 97 -5 144 -27 167 -79 l17 -39 89 0 90 0 -7 39 c-3 21 -17 59 -31
+84 -58 102 -151 149 -310 153 -55 2 -116 -1 -135 -5z" />
+  <path d="M3795 1842 c-3 -3 -5 -216 -5 -474 l0 -468 90 0 90 0 0 98 0 98 45
+44 c24 24 46 42 48 39 1 -2 16 -24 32 -49 17 -25 32 -47 35 -50 3 -3 32 -44
+64 -92 63 -97 49 -90 185 -89 35 0 65 2 68 4 3 4 -81 132 -215 326 -34 48 -49
+79 -44 88 5 7 42 48 83 91 40 43 94 99 119 125 l44 47 -105 0 c-95 0 -106 -2
+-129 -23 -24 -22 -142 -151 -192 -209 -13 -16 -27 -28 -31 -28 -4 0 -7 117 -7
+259 0 249 -1 260 -20 266 -22 7 -147 4 -155 -3z" />
+  <path d="M5306 1843 c-3 -4 -6 -217 -6 -475 l0 -468 90 0 90 0 0 469 0 469
+-37 6 c-48 7 -129 6 -137 -1z" />
+  <path d="M6837 1773 c-4 -3 -7 -48 -7 -100 l0 -93 -55 0 -55 0 0 -70 0 -70 54
+0 54 0 4 -197 c5 -225 10 -248 78 -305 52 -45 119 -63 207 -55 35 4 68 9 73
+12 6 4 10 36 10 73 l0 67 -74 0 c-66 0 -76 2 -95 25 -19 24 -20 35 -18 200 l2
+175 93 3 92 3 0 69 0 70 -95 0 -95 0 0 100 0 100 -83 0 c-46 0 -87 -3 -90 -7z" />
+  <path d="M6276 1581 c-27 -11 -63 -34 -81 -51 -17 -16 -34 -30 -38 -30 -4 0
+-7 18 -7 40 l0 40 -85 0 -85 0 0 -339 0 -338 38 -6 c20 -4 61 -4 90 0 l52 6 0
+214 c0 249 5 269 74 303 79 38 162 16 198 -51 16 -30 18 -60 18 -250 l0 -217
+58 -4 c31 -1 72 -2 90 0 l33 3 -3 257 c-4 280 -7 297 -65 362 -64 72 -192 99
+-287 61z" />
+  <path d="M4500 1567 c0 -7 59 -158 130 -336 72 -177 130 -333 130 -345 0 -12
+-11 -38 -25 -58 -29 -43 -78 -61 -137 -52 l-38 7 0 -67 c0 -63 1 -67 28 -77
+47 -19 154 -5 206 25 41 24 116 114 116 139 0 5 20 59 44 121 24 61 58 149 75
+196 18 47 41 105 51 130 29 71 120 314 120 323 0 4 -40 7 -89 7 l-89 0 -16
+-42 c-33 -90 -136 -409 -136 -423 0 -7 -4 -16 -9 -19 -5 -3 -37 79 -71 182
+-35 103 -66 192 -70 197 -4 6 -13 31 -20 58 l-13 47 -93 0 c-70 0 -94 -3 -94
+-13z" />
+  <path d="M5636 1572 c-2 -4 -2 -157 1 -340 l6 -332 89 0 88 0 -2 338 -3 337
+-87 3 c-47 1 -89 -1 -92 -6z" />
+  </g>
+  </g>
+
+  <g transform="translate(480, 210)">
+    <text font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="76" font-weight="800" fill="#ffffff" letter-spacing="-1">Skylint</text>
+    <text y="68" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="28" font-weight="500" fill="#38bdf8">Enterprise Clean ABAP &amp; Cloud ATC Linter Engine</text>
+    <text y="125" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="21" font-weight="400" fill="#94a3b8">Native SAP ATC Integration · 95 Clean Rules · Automated ADT QuickFixes</text>
+
+    <g transform="translate(0, 185)">
+      <rect x="0" y="0" width="185" height="42" rx="21" fill="#0369a1" fill-opacity="0.25" stroke="#0284c7" stroke-width="1.5" />
+      <text x="92" y="26" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="600" fill="#38bdf8" text-anchor="middle">⚡ 100% Native ATC</text>
+
+      <rect x="200" y="0" width="190" height="42" rx="21" fill="#047857" fill-opacity="0.25" stroke="#059669" stroke-width="1.5" />
+      <text x="295" y="26" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="600" fill="#34d399" text-anchor="middle">🌿 95 Clean Rules</text>
+
+      <rect x="405" y="0" width="200" height="42" rx="21" fill="#7c3aed" fill-opacity="0.25" stroke="#8b5cf6" stroke-width="1.5" />
+      <text x="505" y="26" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="600" fill="#a78bfa" text-anchor="middle">🛠️ Instant QuickFixes</text>
+    </g>
+  </g>
+
+  <g transform="translate(100, 560)">
+    <text font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="17" font-weight="500" fill="#64748b">https://furkancosgun.github.io/skylint</text>
+    <text x="1000" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="17" font-weight="500" fill="#64748b" text-anchor="end">Contract C1 · Steampunk Ready</text>
+  </g>
+</svg>

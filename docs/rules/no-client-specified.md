@@ -1,3 +1,7 @@
+---
+description: "Avoid USING CLIENT or CLIENT SPECIFIED in ABAP SQL"
+---
+
 # Avoid CLIENT SPECIFIED / USING CLIENT in Cloud
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

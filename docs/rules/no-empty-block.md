@@ -1,3 +1,7 @@
+---
+description: "Avoid empty control blocks (IF, CASE, LOOP, TRY, etc.)"
+---
+
 # Avoid Empty Control Blocks
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

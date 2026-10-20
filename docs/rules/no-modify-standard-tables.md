@@ -1,3 +1,7 @@
+---
+description: "Modify Only Own Database Tables"
+---
+
 # Only Modify Tables Defined in Your Own Package/Component
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

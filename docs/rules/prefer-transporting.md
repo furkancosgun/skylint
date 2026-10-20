@@ -1,3 +1,7 @@
+---
+description: "Avoid MODIFY itab in LOOP without TRANSPORTING clause"
+---
+
 # Specify TRANSPORTING in MODIFY / READ TABLE
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

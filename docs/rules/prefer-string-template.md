@@ -1,3 +1,7 @@
+---
+description: "Prefer string templates over CONCATENATE"
+---
+
 # Prefer String Templates over CONCATENATE
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

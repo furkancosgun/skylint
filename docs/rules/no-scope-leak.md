@@ -1,3 +1,7 @@
+---
+description: "Avoid variable usage outside its declaring control block"
+---
+
 # Avoid Variable Scope Leaking from Inner Blocks
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

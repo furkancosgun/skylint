@@ -1,3 +1,7 @@
+---
+description: "Learn how to configure Skylint rules, severities, and thresholds via skylint.yaml, CLI options, and SAP ATC Check Variant parameters."
+---
+
 # ⚙️ Configuration Reference (`skylint.yaml`)
 
 Skylint offers flexible configuration options at both the repository level (via `skylint.yaml`) and the SAP ATC level (via ATC Check Variant attributes).

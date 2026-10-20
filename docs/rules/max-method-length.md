@@ -1,3 +1,7 @@
+---
+description: "Method Length Limit (excessive statement count)"
+---
+
 # Limit Method Length (Statements)
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

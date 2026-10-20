@@ -1,3 +1,7 @@
+---
+description: "Prefer line_exists( ) over READ TABLE with NO FIELDS"
+---
+
 # Prefer line_exists( ) over READ TABLE TRANSPORTING NO FIELDS
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

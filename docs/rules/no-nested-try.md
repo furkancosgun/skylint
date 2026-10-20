@@ -1,3 +1,7 @@
+---
+description: "Avoid nested TRY blocks; extract to helper methods"
+---
+
 # Avoid Deeply Nested TRY ... CATCH Blocks
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

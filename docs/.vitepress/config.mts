@@ -1,26 +1,83 @@
 import { defineConfig } from 'vitepress';
 
+const base = process.env.VITEPRESS_BASE || '/';
+
 export default defineConfig({
   title: 'Skylint',
   description: 'Enterprise Clean ABAP & Cloud ATC Linter Engine',
-  base: process.env.VITEPRESS_BASE || '/',
+  base,
   cleanUrls: true,
   lastUpdated: true,
   sitemap: {
     hostname: 'https://furkancosgun.github.io/skylint/',
   },
   head: [
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }],
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: `${base}logo.svg` }],
     ['meta', { name: 'robots', content: 'index, follow' }],
+    ['meta', { name: 'google-site-verification', content: 'googlebe62f3b9b7abdd43' }],
     ['meta', { property: 'og:type', content: 'website' }],
-    ['meta', { property: 'og:title', content: 'Skylint - Enterprise Clean ABAP & Cloud ATC Linter' }],
-    ['meta', { property: 'og:description', content: 'Enterprise Clean ABAP & Cloud ATC Linter Engine' }],
-    ['meta', { property: 'og:image', content: 'https://furkancosgun.github.io/skylint/logo.svg' }],
+    ['meta', { property: 'og:image', content: 'https://furkancosgun.github.io/skylint/og-image.png' }],
+    ['meta', { property: 'og:image:width', content: '1200' }],
+    ['meta', { property: 'og:image:height', content: '630' }],
+    ['meta', { property: 'og:image:type', content: 'image/png' }],
+    ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+    ['meta', { name: 'twitter:image', content: 'https://furkancosgun.github.io/skylint/og-image.png' }],
   ],
-  transformHead: ({ pageData }) => {
-    const rel = pageData.relativePath.replace(/\.md$/, '').replace(/(^|\/)index$/, '$1');
-    const path = rel === '' ? '/' : '/' + rel;
-    return [['link', { rel: 'canonical', href: 'https://furkancosgun.github.io/skylint' + path }]];
+  transformHead: ({ pageData, title, description }) => {
+    if (pageData.isNotFound) {
+      return [
+        ['meta', { name: 'robots', content: 'noindex, nofollow' }],
+      ];
+    }
+
+    const canonicalHostname = 'https://furkancosgun.github.io/skylint';
+    const cleanPath = pageData.relativePath
+      .replace(/\.md$/, '')
+      .replace(/(^|\/)index$/, '$1');
+    const url = (canonicalHostname + '/' + cleanPath).replace(/\/+$/, '') + (cleanPath === '' || cleanPath.endsWith('/') ? '/' : '');
+
+    const ogTitle = title === 'Skylint' ? 'Skylint - Enterprise Clean ABAP & Cloud ATC Linter' : (title || 'Skylint');
+    const ogDescription = pageData.frontmatter?.description || description || 'Enterprise Clean ABAP & Cloud ATC Linter Engine';
+
+    const tags = [
+      ['link', { rel: 'canonical', href: url }],
+      ['meta', { property: 'og:url', content: url }],
+      ['meta', { property: 'og:title', content: ogTitle }],
+      ['meta', { property: 'og:description', content: ogDescription }],
+      ['meta', { name: 'description', content: ogDescription }],
+      ['meta', { name: 'twitter:title', content: ogTitle }],
+      ['meta', { name: 'twitter:description', content: ogDescription }],
+    ];
+
+    if (cleanPath === '') {
+      tags.push([
+        'script',
+        { type: 'application/ld+json' },
+        JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'SoftwareApplication',
+          'name': 'Skylint',
+          'applicationCategory': 'DeveloperApplication',
+          'operatingSystem': 'SAP ABAP Cloud, Node.js',
+          'description': 'Enterprise Clean ABAP & Cloud ATC Linter Engine with 95+ Native Rules',
+          'url': 'https://furkancosgun.github.io/skylint/',
+          'license': 'https://github.com/furkancosgun/skylint/blob/main/LICENSE',
+          'image': 'https://furkancosgun.github.io/skylint/og-image.png',
+          'offers': {
+            '@type': 'Offer',
+            'price': '0',
+            'priceCurrency': 'USD',
+          },
+          'author': {
+            '@type': 'Person',
+            'name': 'Furkan COSGUN',
+            'url': 'https://github.com/furkancosgun',
+          },
+        }),
+      ]);
+    }
+
+    return tags;
   },
   themeConfig: {
     logo: '/logo.svg',

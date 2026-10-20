@@ -1,3 +1,7 @@
+---
+description: "Detect obsolete string statements; prefer built-in functions"
+---
+
 # Prefer Built-in String Functions over SEARCH/SHIFT
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

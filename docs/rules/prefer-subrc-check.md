@@ -1,3 +1,7 @@
+---
+description: "Check sy-subrc after DB, table and string operations"
+---
+
 # Verify sy-subrc Promptly After System Calls
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">

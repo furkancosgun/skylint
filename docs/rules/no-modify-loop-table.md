@@ -1,3 +1,7 @@
+---
+description: "Avoid mutating or sorting tables inside loops"
+---
+
 # Do Not Mutate the Internal Table Currently Being Looped
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
