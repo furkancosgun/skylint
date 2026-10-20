@@ -301,8 +301,18 @@ export default defineConfig({
   title: 'Skylint',
   description: 'Enterprise Clean ABAP & Cloud ATC Linter Engine',
   base: process.env.VITEPRESS_BASE || '/',
+  cleanUrls: true,
+  lastUpdated: true,
+  sitemap: {
+    hostname: 'https://furkancosgun.github.io/skylint',
+  },
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }],
+    ['meta', { name: 'robots', content: 'index, follow' }],
+    ['meta', { property: 'og:type', content: 'website' }],
+    ['meta', { property: 'og:title', content: 'Skylint - Enterprise Clean ABAP & Cloud ATC Linter' }],
+    ['meta', { property: 'og:description', content: 'Enterprise Clean ABAP & Cloud ATC Linter Engine' }],
+    ['meta', { property: 'og:image', content: 'https://furkancosgun.github.io/skylint/logo.svg' }],
   ],
   themeConfig: {
     logo: '/logo.svg',
