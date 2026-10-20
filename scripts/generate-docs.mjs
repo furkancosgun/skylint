@@ -124,7 +124,7 @@ for (const rule of RULES) {
 
     attributes = extractAttributes(content);
 
-    const fMatches = [...content.matchAll(/text\s*=\s*(?:'([^']+)'|\|([^|]+)\|)/g)].map((x) => (x[1] || x[2]).trim());
+    const fMatches = [...content.matchAll(/(?<![_a-zA-Z])text\s*=\s*(?:'([^']+)'|\|([^|]+)\|)/g)].map((x) => (x[1] || x[2]).trim());
     if (fMatches.length > 0) {
       findingTexts = fMatches;
     }
