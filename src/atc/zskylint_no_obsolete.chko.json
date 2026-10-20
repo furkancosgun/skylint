@@ -62,6 +62,36 @@
     },
     {
       "name": "CHECK_LOAD"
+    },
+    {
+      "name": "CHECK_PACK"
+    },
+    {
+      "name": "CHECK_UNPACK"
+    },
+    {
+      "name": "CHECK_EXTRACT"
+    },
+    {
+      "name": "CHECK_COMMON_PART"
+    },
+    {
+      "name": "CHECK_FREE_MEMORY"
+    },
+    {
+      "name": "CHECK_PROVIDE"
+    },
+    {
+      "name": "CHECK_CONTEXTS"
+    },
+    {
+      "name": "CHECK_INITIAL_SIZE"
+    },
+    {
+      "name": "CHECK_CATCH_SYSTEM"
+    },
+    {
+      "name": "CHECK_GET_REFERENCE"
     }
   ]
 }

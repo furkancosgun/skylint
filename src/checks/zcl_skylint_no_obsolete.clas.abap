@@ -39,6 +39,16 @@ CLASS zcl_skylint_no_obsolete DEFINITION
     DATA mv_check_ranges        TYPE abap_bool VALUE abap_true.
     DATA mv_check_header_line   TYPE abap_bool VALUE abap_true.
     DATA mv_check_load          TYPE abap_bool VALUE abap_true.
+    DATA mv_check_pack          TYPE abap_bool VALUE abap_true.
+    DATA mv_check_unpack        TYPE abap_bool VALUE abap_true.
+    DATA mv_check_extract       TYPE abap_bool VALUE abap_true.
+    DATA mv_check_common_part   TYPE abap_bool VALUE abap_true.
+    DATA mv_check_free_memory   TYPE abap_bool VALUE abap_true.
+    DATA mv_check_provide       TYPE abap_bool VALUE abap_true.
+    DATA mv_check_contexts      TYPE abap_bool VALUE abap_true.
+    DATA mv_check_initial_size  TYPE abap_bool VALUE abap_true.
+    DATA mv_check_catch_system  TYPE abap_bool VALUE abap_true.
+    DATA mv_check_get_reference TYPE abap_bool VALUE abap_true.
 
     METHODS check_with_quickfix
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
@@ -104,7 +114,27 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
                                               ( name  = 'CHECK_HEADER_LINE'
                                                 value = REF #( mv_check_header_line ) )
                                               ( name  = 'CHECK_LOAD'
-                                                value = REF #( mv_check_load ) ) ) ) ).
+                                                value = REF #( mv_check_load ) )
+                                              ( name  = 'CHECK_PACK'
+                                                value = REF #( mv_check_pack ) )
+                                              ( name  = 'CHECK_UNPACK'
+                                                value = REF #( mv_check_unpack ) )
+                                              ( name  = 'CHECK_EXTRACT'
+                                                value = REF #( mv_check_extract ) )
+                                              ( name  = 'CHECK_COMMON_PART'
+                                                value = REF #( mv_check_common_part ) )
+                                              ( name  = 'CHECK_FREE_MEMORY'
+                                                value = REF #( mv_check_free_memory ) )
+                                              ( name  = 'CHECK_PROVIDE'
+                                                value = REF #( mv_check_provide ) )
+                                              ( name  = 'CHECK_CONTEXTS'
+                                                value = REF #( mv_check_contexts ) )
+                                              ( name  = 'CHECK_INITIAL_SIZE'
+                                                value = REF #( mv_check_initial_size ) )
+                                              ( name  = 'CHECK_CATCH_SYSTEM'
+                                                value = REF #( mv_check_catch_system ) )
+                                              ( name  = 'CHECK_GET_REFERENCE'
+                                                value = REF #( mv_check_get_reference ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -112,6 +142,7 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
     DATA lv_is_match TYPE abap_bool.
     DATA lv_line     TYPE string.
     DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
+
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
@@ -150,26 +181,41 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
     CLEAR ev_line.
 
     CASE is_statement-keyword.
+      WHEN 'GET'.
+        IF     mv_check_get_reference = abap_true
+           AND zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
+                                                          it_expected  = VALUE #( ( `REFERENCE` ) ( `OF` ) ) ) > 0
+           AND zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                       iv_lexeme    = 'INTO' ) = abap_true.
+
+          ev_is_match = abap_true.
+          lv_src = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                          iv_lexeme    = 'OF' )-lexeme.
+          lv_dst = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                          iv_lexeme    = 'INTO' )-lexeme.
+          ev_line = |{ lv_dst } = REF #( { lv_src } ).|.
+        ENDIF.
       WHEN 'MOVE'.
         IF mv_check_move = abap_true.
           ev_is_match = abap_true.
-          IF     zcl_skylint_ast_util=>token_count( is_statement )             = 4
-             AND zcl_skylint_ast_util=>find_token( is_statement = is_statement
-                                                   iv_lexeme    = 'TO' )       > 0.
-            lv_src = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                             iv_index     = 2 ).
-            lv_dst = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                             iv_index     = 4 ).
-            ev_line = |{ lv_dst } = { lv_src }.|.
+          IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                     iv_lexeme    = 'TO' ) = abap_true.
+            lv_src = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                            iv_lexeme    = 'MOVE' )-lexeme.
+            lv_dst = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                            iv_lexeme    = 'TO' )-lexeme.
+            IF lv_src IS NOT INITIAL AND lv_dst IS NOT INITIAL.
+              ev_line = |{ lv_dst } = { lv_src }.|.
+            ENDIF.
           ENDIF.
         ENDIF.
 
       WHEN 'REFRESH'.
         IF mv_check_refresh = abap_true.
           ev_is_match = abap_true.
-          IF zcl_skylint_ast_util=>token_count( is_statement ) = 2.
-            lv_dst = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                             iv_index     = 2 ).
+          lv_dst = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                          iv_lexeme    = 'REFRESH' )-lexeme.
+          IF lv_dst IS NOT INITIAL.
             ev_line = |CLEAR { lv_dst }.|.
           ENDIF.
         ENDIF.
@@ -187,58 +233,63 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
       WHEN 'ADD'.
         IF mv_check_add = abap_true.
           ev_is_match = abap_true.
-          IF     zcl_skylint_ast_util=>token_count( is_statement )             = 4
-             AND zcl_skylint_ast_util=>find_token( is_statement = is_statement
-                                                   iv_lexeme    = 'TO' )       > 0.
-            lv_src = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                             iv_index     = 2 ).
-            lv_dst = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                             iv_index     = 4 ).
-            ev_line = |{ lv_dst } = { lv_dst } + { lv_src }.|.
+          IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                     iv_lexeme    = 'TO' ) = abap_true.
+            lv_src = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                            iv_lexeme    = 'ADD' )-lexeme.
+            lv_dst = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                            iv_lexeme    = 'TO' )-lexeme.
+            IF lv_src IS NOT INITIAL AND lv_dst IS NOT INITIAL.
+              ev_line = |{ lv_dst } = { lv_dst } + { lv_src }.|.
+            ENDIF.
           ENDIF.
         ENDIF.
 
       WHEN 'SUBTRACT'.
         IF mv_check_add = abap_true.
           ev_is_match = abap_true.
-          IF     zcl_skylint_ast_util=>token_count( is_statement )             = 4
-             AND zcl_skylint_ast_util=>find_token( is_statement = is_statement
-                                                   iv_lexeme    = 'FROM' )     > 0.
-            lv_src = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                             iv_index     = 2 ).
-            lv_dst = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                             iv_index     = 4 ).
-            ev_line = |{ lv_dst } = { lv_dst } - { lv_src }.|.
+          IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                     iv_lexeme    = 'FROM' ) = abap_true.
+            lv_src = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                            iv_lexeme    = 'SUBTRACT' )-lexeme.
+            lv_dst = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                            iv_lexeme    = 'FROM' )-lexeme.
+            IF lv_src IS NOT INITIAL AND lv_dst IS NOT INITIAL.
+              ev_line = |{ lv_dst } = { lv_dst } - { lv_src }.|.
+            ENDIF.
           ENDIF.
         ENDIF.
 
       WHEN 'MULTIPLY'.
         IF mv_check_add = abap_true.
           ev_is_match = abap_true.
-          IF     zcl_skylint_ast_util=>token_count( is_statement )             = 4
-             AND zcl_skylint_ast_util=>find_token( is_statement = is_statement
-                                                   iv_lexeme    = 'BY' )       > 0.
-            lv_dst = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                             iv_index     = 2 ).
-            lv_src = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                             iv_index     = 4 ).
-            ev_line = |{ lv_dst } = { lv_dst } * { lv_src }.|.
+          IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                     iv_lexeme    = 'BY' ) = abap_true.
+            lv_dst = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                            iv_lexeme    = 'MULTIPLY' )-lexeme.
+            lv_src = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                            iv_lexeme    = 'BY' )-lexeme.
+            IF lv_dst IS NOT INITIAL AND lv_src IS NOT INITIAL.
+              ev_line = |{ lv_dst } = { lv_dst } * { lv_src }.|.
+            ENDIF.
           ENDIF.
         ENDIF.
 
       WHEN 'DIVIDE'.
         IF mv_check_add = abap_true.
           ev_is_match = abap_true.
-          IF     zcl_skylint_ast_util=>token_count( is_statement )             = 4
-             AND zcl_skylint_ast_util=>find_token( is_statement = is_statement
-                                                   iv_lexeme    = 'BY' )       > 0.
-            lv_dst = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                             iv_index     = 2 ).
-            lv_src = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                             iv_index     = 4 ).
-            ev_line = |{ lv_dst } = { lv_dst } / { lv_src }.|.
+          IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                     iv_lexeme    = 'BY' ) = abap_true.
+            lv_dst = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                            iv_lexeme    = 'DIVIDE' )-lexeme.
+            lv_src = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                            iv_lexeme    = 'BY' )-lexeme.
+            IF lv_dst IS NOT INITIAL AND lv_src IS NOT INITIAL.
+              ev_line = |{ lv_dst } = { lv_dst } / { lv_src }.|.
+            ENDIF.
           ENDIF.
         ENDIF.
+
     ENDCASE.
   ENDMETHOD.
 
@@ -246,6 +297,35 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
     rv_is = abap_false.
 
     CASE is_statement-keyword.
+      WHEN 'PACK'.
+        rv_is = mv_check_pack.
+
+      WHEN 'UNPACK'.
+        rv_is = mv_check_unpack.
+
+      WHEN 'EXTRACT'.
+        rv_is = mv_check_extract.
+
+      WHEN 'PROVIDE' OR 'ENDPROVIDE'.
+        rv_is = mv_check_provide.
+
+      WHEN 'CONTEXTS' OR 'DEMAND' OR 'SUPPLY'.
+        rv_is = mv_check_contexts.
+
+      WHEN 'FREE'.
+        IF     mv_check_free_memory = abap_true
+           AND zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                       iv_lexeme    = 'MEMORY' )   = abap_true.
+          rv_is = abap_true.
+        ENDIF.
+
+      WHEN 'CATCH'.
+        IF     mv_check_catch_system = abap_true
+           AND zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                       iv_lexeme    = 'SYSTEM-EXCEPTIONS' ) = abap_true.
+          rv_is = abap_true.
+        ENDIF.
+
       WHEN 'TABLES'.
         rv_is = mv_check_tables.
 
@@ -294,6 +374,19 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
                  OR zcl_skylint_ast_util=>find_token( is_statement = is_statement
                                                       iv_lexeme    = 'OCCURS' )        > 0 ).
           rv_is = abap_true.
+        ENDIF.
+
+        IF     mv_check_common_part = abap_true
+           AND zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
+                                                          it_expected  = VALUE #( ( `COMMON` ) ( `PART` ) ) ) > 0.
+          rv_is = abap_true.
+        ENDIF.
+
+        IF     mv_check_initial_size = abap_true
+           AND zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
+                                                          it_expected  = VALUE #( ( `INITIAL` ) ( `SIZE` ) ) ) > 0.
+          rv_is = abap_true.
+          RETURN.
         ENDIF.
 
       WHEN 'CLASS' OR 'INTERFACE'.

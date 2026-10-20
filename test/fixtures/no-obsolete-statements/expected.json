@@ -89,5 +89,15 @@
     "line": 2,
     "column": 4,
     "quickfixes": []
-  }
+  },
+  { "method": "TEST_014", "code": "OBSOLETE", "line": 4, "column": 4, "quickfixes": [] },
+  { "method": "TEST_015", "code": "OBSOLETE", "line": 4, "column": 4, "quickfixes": [] },
+  { "method": "TEST_016", "code": "OBSOLETE", "line": 3, "column": 4, "quickfixes": [] },
+  { "method": "TEST_017", "code": "OBSOLETE", "line": 2, "column": 4, "quickfixes": [] },
+  { "method": "TEST_018", "code": "OBSOLETE", "line": 3, "column": 4, "quickfixes": [] },
+  { "method": "TEST_019", "code": "OBSOLETE", "line": 5, "column": 4, "quickfixes": [] },
+  { "method": "TEST_020", "code": "OBSOLETE", "line": 2, "column": 4, "quickfixes": [] },
+  { "method": "TEST_021", "code": "OBSOLETE", "line": 2, "column": 4, "quickfixes": [] },
+  { "method": "TEST_022", "code": "OBSOLETE", "line": 3, "column": 4, "quickfixes": [] },
+  { "method": "TEST_023", "code": "OBSOLETE", "line": 4, "column": 4, "quickfixes": [ "REPLACE_OB" ] }
 ]

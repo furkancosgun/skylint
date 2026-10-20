@@ -237,6 +237,46 @@
         {
           "name": "CHECK_LOAD",
           "value": "X"
+        },
+        {
+          "name": "CHECK_PACK",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_UNPACK",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_EXTRACT",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_COMMON_PART",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_FREE_MEMORY",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_PROVIDE",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_CONTEXTS",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_INITIAL_SIZE",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_CATCH_SYSTEM",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_GET_REFERENCE",
+          "value": "X"
         }
       ]
     },
