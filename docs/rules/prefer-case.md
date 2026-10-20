@@ -2,7 +2,7 @@
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="danger" text="Finding: USE_CASE" />
+  <Badge type="danger" text="#EC PREF_CASE" />
 </div>
 
 ## Overview
@@ -66,7 +66,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value |
 |---|---|:---:|
-| `MIN_BRANCHES` | `Integer / String` | `3` |
+| `MIN_BRANCHES` | `Integer / String` | <code>3</code> |
 
 ## CLI & CI/CD Configuration
 
@@ -94,5 +94,4 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_CASE`
-* **Finding Code:** `USE_CASE`
 * **Implementation File:** [zcl_skylint_pref_case.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_pref_case.clas.abap)

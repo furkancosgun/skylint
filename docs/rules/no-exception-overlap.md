@@ -2,7 +2,7 @@
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="danger" text="Finding: NO_EXC_OVL" />
+  <Badge type="danger" text="#EC EXC_OVERLAP" />
 </div>
 
 ## Overview
@@ -74,5 +74,4 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_EXC_OVERLAP`
-* **Finding Code:** `NO_EXC_OVL`
 * **Implementation File:** [zcl_skylint_no_exc_overlap.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_exc_overlap.clas.abap)

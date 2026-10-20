@@ -3,14 +3,17 @@
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
-  <Badge type="danger" text="Finding: OMITEXPORT" />
+  <Badge type="danger" text="#EC EXPORTING" />
 </div>
 
 ## Overview
 
 Omit redundant EXPORTING and RECEIVING in method calls.
 
-> **ATC Finding Message:** `Omit explicit EXPORTING keyword in method invocation`
+> **ATC Finding Messages:**
+> - `Omit explicit EXPORTING keyword in method invocation`
+> - `Omit RECEIVING keyword; use functional call or omit parameter`
+> - `Omit explicit parameter name in single parameter method call`
 
 ## Rationale
 
@@ -48,9 +51,9 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value |
 |---|---|:---:|
-| `CHECK_EXPORTING` | `Boolean` | `true` |
-| `CHECK_RECEIVING` | `Boolean` | `true` |
-| `CHECK_PARAM_NAME` | `Boolean` | `true` |
+| `CHECK_EXPORTING` | `Boolean` | <code>true</code> |
+| `CHECK_RECEIVING` | `Boolean` | <code>true</code> |
+| `CHECK_PARAM_NAME` | `Boolean` | <code>true</code> |
 
 ## CLI & CI/CD Configuration
 
@@ -80,5 +83,4 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_REDUNDANT_CALL`
-* **Finding Code:** `OMITEXPORT`
 * **Implementation File:** [zcl_skylint_no_redundant_call.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_redundant_call.clas.abap)

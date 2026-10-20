@@ -2,7 +2,7 @@
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Security & Robustness" />
-  <Badge type="danger" text="Finding: NOT_OWN_TB" />
+  <Badge type="danger" text="#EC OWN_TABLES" />
 </div>
 
 ## Overview
@@ -58,5 +58,4 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_MOD_STD_TABLE`
-* **Finding Code:** `NOT_OWN_TB`
 * **Implementation File:** [zcl_skylint_no_mod_std_table.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_mod_std_table.clas.abap)

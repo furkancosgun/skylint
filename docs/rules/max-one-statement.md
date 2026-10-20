@@ -2,7 +2,7 @@
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="danger" text="Finding: ONE_STMT" />
+  <Badge type="danger" text="#EC ONE_STMT" />
 </div>
 
 ## Overview
@@ -60,5 +60,4 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_MAX_ONE_STMT`
-* **Finding Code:** `ONE_STMT`
 * **Implementation File:** [zcl_skylint_max_one_stmt.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_max_one_stmt.clas.abap)

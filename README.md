@@ -151,7 +151,8 @@ All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 | `prefer-naming` | [ZCL_SKYLINT_PREF_NAMING](src/checks/zcl_skylint_pref_naming.clas.abap) | Standard Naming Conventions | `"#EC NAMING"` | — |
 
 ---
-## ?? How to Author a Custom Skylint Check
+
+## 🚀 How to Author a Custom Skylint Check
 
 1. Create `src/checks/zcl_skylint_XXX.clas.abap` extending `zcl_skylint_check_base`; implement `constructor` (metadata) and `check` (loop `is_procedure-statements`).
 2. Create `src/checks/zcl_skylint_XXX.clas.xml` (plain abapGit class XML).

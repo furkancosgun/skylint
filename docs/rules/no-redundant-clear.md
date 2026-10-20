@@ -3,14 +3,16 @@
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
-  <Badge type="danger" text="Finding: REDUNCLEAR" />
+  <Badge type="danger" text="#EC REDUNDANT_CLEAR" />
 </div>
 
 ## Overview
 
 Do not CLEAR or FREE variables redundantly.
 
-> **ATC Finding Message:** `Do not CLEAR or FREE variables after declaration; they are already initial`
+> **ATC Finding Messages:**
+> - `Do not CLEAR or FREE variables after declaration; they are already initial`
+> - `Variable is CLEARed or FREEd but never read again before procedure ends`
 
 ## Rationale
 
@@ -50,8 +52,8 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value |
 |---|---|:---:|
-| `CHECK_BEFORE_WRITE` | `Boolean` | `true` |
-| `CHECK_WITHOUT_READ` | `Boolean` | `true` |
+| `CHECK_BEFORE_WRITE` | `Boolean` | <code>true</code> |
+| `CHECK_WITHOUT_READ` | `Boolean` | <code>true</code> |
 
 ## CLI & CI/CD Configuration
 
@@ -80,5 +82,4 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_REDUNDANT_CLEAR`
-* **Finding Code:** `REDUNCLEAR`
 * **Implementation File:** [zcl_skylint_no_redundant_clear.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_redundant_clear.clas.abap)

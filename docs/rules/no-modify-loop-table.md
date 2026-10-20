@@ -2,14 +2,16 @@
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="danger" text="Finding: MOD_LOOPTB" />
+  <Badge type="danger" text="#EC LOOP_MODIFY" />
 </div>
 
 ## Overview
 
 Avoid mutating or sorting tables inside loops.
 
-> **ATC Finding Message:** `Do not add, delete, sort, collect, or clear rows from the table currently being looped`
+> **ATC Finding Messages:**
+> - `Do not add, delete, sort, collect, or clear rows from the table currently being looped`
+> - `Avoid sorting internal tables inside loops to prevent severe performance degradation`
 
 ## Rationale
 
@@ -48,14 +50,14 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value |
 |---|---|:---:|
-| `CHECK_APPEND` | `Boolean` | `true` |
-| `CHECK_INSERT` | `Boolean` | `true` |
-| `CHECK_MODIFY` | `Boolean` | `true` |
-| `CHECK_DELETE` | `Boolean` | `true` |
-| `CHECK_CLEAR` | `Boolean` | `true` |
-| `CHECK_SORT` | `Boolean` | `true` |
-| `CHECK_SORT_ANY` | `Boolean` | `true` |
-| `CHECK_COLLECT` | `Boolean` | `true` |
+| `CHECK_APPEND` | `Boolean` | <code>true</code> |
+| `CHECK_INSERT` | `Boolean` | <code>true</code> |
+| `CHECK_MODIFY` | `Boolean` | <code>true</code> |
+| `CHECK_DELETE` | `Boolean` | <code>true</code> |
+| `CHECK_CLEAR` | `Boolean` | <code>true</code> |
+| `CHECK_SORT` | `Boolean` | <code>true</code> |
+| `CHECK_SORT_ANY` | `Boolean` | <code>true</code> |
+| `CHECK_COLLECT` | `Boolean` | <code>true</code> |
 
 ## CLI & CI/CD Configuration
 
@@ -90,5 +92,4 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_MOD_LOOP_TAB`
-* **Finding Code:** `MOD_LOOPTB`
 * **Implementation File:** [zcl_skylint_no_mod_loop_tab.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_mod_loop_tab.clas.abap)

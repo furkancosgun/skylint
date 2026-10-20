@@ -2,14 +2,30 @@
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="danger" text="Finding: ATTR_NAME" />
+  <Badge type="danger" text="#EC NAMING" />
 </div>
 
 ## Overview
 
 Standard Naming Conventions.
 
-> **ATC Finding Message:** `Class attribute name does not match configured pattern`
+> **ATC Finding Messages:**
+> - `Class attribute name does not match configured pattern`
+> - `Method parameter name does not match configured pattern`
+> - `Local variable name does not match configured pattern`
+> - `Local class name does not match configured pattern`
+> - `Global class name does not match configured pattern`
+> - `Selection screen element name does not match configured pattern`
+> - `Type name does not match configured pattern`
+> - `Macro name does not match configured pattern`
+> - `Form routine name does not match configured pattern`
+> - `Function module name does not match configured pattern`
+> - `Local interface name does not match configured pattern`
+> - `Global interface name does not match configured pattern`
+> - `Event or event handler name does not match configured pattern`
+> - `Test method name does not match configured pattern`
+> - `Program name does not match configured pattern`
+> - `Function group name does not match configured pattern`
 
 ## Rationale
 
@@ -40,37 +56,37 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value |
 |---|---|:---:|
-| `ATTR_IGN_EXC` | `Boolean` | `true` |
-| `ATTR_IGN_LOCAL` | `Boolean` | `true` |
-| `ATTR_IGN_INTF` | `Boolean` | `false` |
-| `ATTR_STATICS` | `Integer / String` | `'^G._.+$'` |
-| `ATTR_INSTANCE` | `Integer / String` | `'^M._.+$'` |
-| `ATTR_CONSTANTS` | `Integer / String` | `''` |
-| `PARAM_IGN_EXC` | `Boolean` | `true` |
-| `PARAM_IMPORTING` | `Integer / String` | `'^I._.+$'` |
-| `PARAM_RETURNING` | `Integer / String` | `'^R._.+$'` |
-| `PARAM_CHANGING` | `Integer / String` | `'^C._.+$'` |
-| `PARAM_EXPORTING` | `Integer / String` | `'^E._.+$'` |
-| `LOCAL_DATA` | `Integer / String` | `'^L._.+$'` |
-| `LOCAL_CONST` | `Integer / String` | `'^LC_.+$'` |
-| `LOCAL_FS` | `Integer / String` | `'^<L._.+>$'` |
-| `LOCAL_STATICS` | `Integer / String` | `'^S._.+$'` |
-| `CLASS_LOCAL` | `Integer / String` | `'^LC(L|X)_.+$'` |
-| `CLASS_TEST` | `Integer / String` | `'^LTCL_.+$'` |
-| `CLASS_GLOBAL` | `Integer / String` | `'^ZC(L|X)_.+$'` |
-| `SSCR_PARAM` | `Integer / String` | `'^P_.+$'` |
-| `SSCR_SELOPT` | `Integer / String` | `'^S_.+$'` |
-| `TYPES_PATTERN` | `Integer / String` | `'^TY_.+$'` |
-| `MACRO_PATTERN` | `Integer / String` | `'^_.+$'` |
-| `FORM_PATTERN` | `Integer / String` | `'^F_.+$'` |
-| `FUNCTION_PATTERN` | `Integer / String` | `'^Z.*$'` |
-| `INTF_LOCAL` | `Integer / String` | `'^LIF_.+$'` |
-| `INTF_GLOBAL` | `Integer / String` | `'^ZIF_.+$'` |
-| `EVENT_NAME` | `Integer / String` | `'^[A-Z][A-Z0-9_]+$'` |
-| `EVENT_HANDLER` | `Integer / String` | `'^ON_.+$'` |
-| `TEST_METHOD` | `Integer / String` | `'^(TEST|SHOULD)_.+$'` |
-| `PROG_PATTERN` | `Integer / String` | `'^Z.+$'` |
-| `FUGR_PATTERN` | `Integer / String` | `'^Z.+$'` |
+| `ATTR_IGN_EXC` | `Boolean` | <code>true</code> |
+| `ATTR_IGN_LOCAL` | `Boolean` | <code>true</code> |
+| `ATTR_IGN_INTF` | `Boolean` | <code>false</code> |
+| `ATTR_STATICS` | `Integer / String` | <code>'^G._.+$'</code> |
+| `ATTR_INSTANCE` | `Integer / String` | <code>'^M._.+$'</code> |
+| `ATTR_CONSTANTS` | `Integer / String` | <code>''</code> |
+| `PARAM_IGN_EXC` | `Boolean` | <code>true</code> |
+| `PARAM_IMPORTING` | `Integer / String` | <code>'^I._.+$'</code> |
+| `PARAM_RETURNING` | `Integer / String` | <code>'^R._.+$'</code> |
+| `PARAM_CHANGING` | `Integer / String` | <code>'^C._.+$'</code> |
+| `PARAM_EXPORTING` | `Integer / String` | <code>'^E._.+$'</code> |
+| `LOCAL_DATA` | `Integer / String` | <code>'^L._.+$'</code> |
+| `LOCAL_CONST` | `Integer / String` | <code>'^LC_.+$'</code> |
+| `LOCAL_FS` | `Integer / String` | <code>'^<L._.+>$'</code> |
+| `LOCAL_STATICS` | `Integer / String` | <code>'^S._.+$'</code> |
+| `CLASS_LOCAL` | `Integer / String` | <code>'^LC(L&#124;X)_.+$'</code> |
+| `CLASS_TEST` | `Integer / String` | <code>'^LTCL_.+$'</code> |
+| `CLASS_GLOBAL` | `Integer / String` | <code>'^ZC(L&#124;X)_.+$'</code> |
+| `SSCR_PARAM` | `Integer / String` | <code>'^P_.+$'</code> |
+| `SSCR_SELOPT` | `Integer / String` | <code>'^S_.+$'</code> |
+| `TYPES_PATTERN` | `Integer / String` | <code>'^TY_.+$'</code> |
+| `MACRO_PATTERN` | `Integer / String` | <code>'^_.+$'</code> |
+| `FORM_PATTERN` | `Integer / String` | <code>'^F_.+$'</code> |
+| `FUNCTION_PATTERN` | `Integer / String` | <code>'^Z.*$'</code> |
+| `INTF_LOCAL` | `Integer / String` | <code>'^LIF_.+$'</code> |
+| `INTF_GLOBAL` | `Integer / String` | <code>'^ZIF_.+$'</code> |
+| `EVENT_NAME` | `Integer / String` | <code>'^[A-Z][A-Z0-9_]+$'</code> |
+| `EVENT_HANDLER` | `Integer / String` | <code>'^ON_.+$'</code> |
+| `TEST_METHOD` | `Integer / String` | <code>'^(TEST&#124;SHOULD)_.+$'</code> |
+| `PROG_PATTERN` | `Integer / String` | <code>'^Z.+$'</code> |
+| `FUGR_PATTERN` | `Integer / String` | <code>'^Z.+$'</code> |
 
 ## CLI & CI/CD Configuration
 
@@ -128,5 +144,4 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_NAMING`
-* **Finding Code:** `ATTR_NAME`
 * **Implementation File:** [zcl_skylint_pref_naming.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_pref_naming.clas.abap)

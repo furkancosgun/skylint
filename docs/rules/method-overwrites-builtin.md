@@ -2,7 +2,7 @@
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="naming" />
-  <Badge type="danger" text="Finding: BUILTIN" />
+  <Badge type="danger" text="#EC NO_OVERW_BUILTIN" />
 </div>
 
 ## Overview
@@ -58,5 +58,4 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_OVERW_BUILTIN`
-* **Finding Code:** `BUILTIN`
 * **Implementation File:** [zcl_skylint_no_overw_builtin.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_overw_builtin.clas.abap)

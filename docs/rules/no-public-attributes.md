@@ -2,7 +2,7 @@
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="danger" text="Finding: NOPUBATTR" />
+  <Badge type="danger" text="#EC PUBLIC_ATTR" />
 </div>
 
 ## Overview
@@ -74,5 +74,4 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_PUBLIC_ATTR`
-* **Finding Code:** `NOPUBATTR`
 * **Implementation File:** [zcl_skylint_no_public_attr.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_public_attr.clas.abap)

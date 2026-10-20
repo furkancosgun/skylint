@@ -2,14 +2,16 @@
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Performance & Database" />
-  <Badge type="danger" text="Finding: SELECTSTAR" />
+  <Badge type="danger" text="#EC SELECT_STAR" />
 </div>
 
 ## Overview
 
 Select performance (Avoid SELECT * and SELECT ... ENDSELECT).
 
-> **ATC Finding Message:** `Avoid SELECT *; specify required columns explicitly`
+> **ATC Finding Messages:**
+> - `Avoid SELECT *; specify required columns explicitly`
+> - `Avoid SELECT ... ENDSELECT loop; use array fetch INTO TABLE`
 
 ## Rationale
 
@@ -44,8 +46,8 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value |
 |---|---|:---:|
-| `CHECK_SELECT_STAR` | `Boolean` | `true` |
-| `CHECK_ENDSELECT` | `Boolean` | `true` |
+| `CHECK_SELECT_STAR` | `Boolean` | <code>true</code> |
+| `CHECK_ENDSELECT` | `Boolean` | <code>true</code> |
 
 ## CLI & CI/CD Configuration
 
@@ -74,5 +76,4 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_SELECT_STAR`
-* **Finding Code:** `SELECTSTAR`
 * **Implementation File:** [zcl_skylint_no_select_star.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_select_star.clas.abap)

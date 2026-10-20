@@ -3,7 +3,7 @@
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
-  <Badge type="danger" text="Finding: PREF_ICST" />
+  <Badge type="danger" text="#EC INLINE_CAST" />
 </div>
 
 ## Overview
@@ -68,5 +68,4 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_INL_CAST`
-* **Finding Code:** `PREF_ICST`
 * **Implementation File:** [zcl_skylint_pref_inl_cast.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_pref_inl_cast.clas.abap)

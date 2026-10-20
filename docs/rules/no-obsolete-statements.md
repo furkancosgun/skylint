@@ -3,7 +3,7 @@
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
-  <Badge type="danger" text="Finding: OBSOLETE" />
+  <Badge type="danger" text="#EC OBSOLETE" />
 </div>
 
 ## Overview
@@ -48,37 +48,37 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value |
 |---|---|:---:|
-| `CHECK_MOVE` | `Boolean` | `true` |
-| `CHECK_REFRESH` | `Boolean` | `true` |
-| `CHECK_COMPUTE` | `Boolean` | `true` |
-| `CHECK_TABLES` | `Boolean` | `true` |
-| `CHECK_FIELD_GROUPS` | `Boolean` | `true` |
-| `CHECK_TEST_SEAMS` | `Boolean` | `true` |
-| `CHECK_BREAK` | `Boolean` | `true` |
-| `CHECK_STATICS` | `Boolean` | `true` |
-| `CHECK_DEFINE` | `Boolean` | `true` |
-| `CHECK_EXPORT_MEMORY` | `Boolean` | `true` |
-| `CHECK_FORM` | `Boolean` | `true` |
-| `CHECK_LOOP_CTL` | `Boolean` | `true` |
-| `CHECK_ADD` | `Boolean` | `true` |
-| `CHECK_ADD_CORR` | `Boolean` | `true` |
-| `CHECK_TYPE_POOLS` | `Boolean` | `true` |
-| `CHECK_RANGES` | `Boolean` | `true` |
-| `CHECK_HEADER_LINE` | `Boolean` | `true` |
-| `CHECK_LOAD` | `Boolean` | `true` |
-| `CHECK_PACK` | `Boolean` | `true` |
-| `CHECK_UNPACK` | `Boolean` | `true` |
-| `CHECK_EXTRACT` | `Boolean` | `true` |
-| `CHECK_COMMON_PART` | `Boolean` | `true` |
-| `CHECK_FREE_MEMORY` | `Boolean` | `true` |
-| `CHECK_PROVIDE` | `Boolean` | `true` |
-| `CHECK_CONTEXTS` | `Boolean` | `true` |
-| `CHECK_INITIAL_SIZE` | `Boolean` | `true` |
-| `CHECK_CATCH_SYSTEM` | `Boolean` | `true` |
-| `CHECK_GET_REFERENCE` | `Boolean` | `true` |
-| `CHECK_INFOTYPES` | `Boolean` | `true` |
-| `CHECK_COMMUNICATION` | `Boolean` | `true` |
-| `CHECK_SET_EXT_CHECK` | `Boolean` | `true` |
+| `CHECK_MOVE` | `Boolean` | <code>true</code> |
+| `CHECK_REFRESH` | `Boolean` | <code>true</code> |
+| `CHECK_COMPUTE` | `Boolean` | <code>true</code> |
+| `CHECK_TABLES` | `Boolean` | <code>true</code> |
+| `CHECK_FIELD_GROUPS` | `Boolean` | <code>true</code> |
+| `CHECK_TEST_SEAMS` | `Boolean` | <code>true</code> |
+| `CHECK_BREAK` | `Boolean` | <code>true</code> |
+| `CHECK_STATICS` | `Boolean` | <code>true</code> |
+| `CHECK_DEFINE` | `Boolean` | <code>true</code> |
+| `CHECK_EXPORT_MEMORY` | `Boolean` | <code>true</code> |
+| `CHECK_FORM` | `Boolean` | <code>true</code> |
+| `CHECK_LOOP_CTL` | `Boolean` | <code>true</code> |
+| `CHECK_ADD` | `Boolean` | <code>true</code> |
+| `CHECK_ADD_CORR` | `Boolean` | <code>true</code> |
+| `CHECK_TYPE_POOLS` | `Boolean` | <code>true</code> |
+| `CHECK_RANGES` | `Boolean` | <code>true</code> |
+| `CHECK_HEADER_LINE` | `Boolean` | <code>true</code> |
+| `CHECK_LOAD` | `Boolean` | <code>true</code> |
+| `CHECK_PACK` | `Boolean` | <code>true</code> |
+| `CHECK_UNPACK` | `Boolean` | <code>true</code> |
+| `CHECK_EXTRACT` | `Boolean` | <code>true</code> |
+| `CHECK_COMMON_PART` | `Boolean` | <code>true</code> |
+| `CHECK_FREE_MEMORY` | `Boolean` | <code>true</code> |
+| `CHECK_PROVIDE` | `Boolean` | <code>true</code> |
+| `CHECK_CONTEXTS` | `Boolean` | <code>true</code> |
+| `CHECK_INITIAL_SIZE` | `Boolean` | <code>true</code> |
+| `CHECK_CATCH_SYSTEM` | `Boolean` | <code>true</code> |
+| `CHECK_GET_REFERENCE` | `Boolean` | <code>true</code> |
+| `CHECK_INFOTYPES` | `Boolean` | <code>true</code> |
+| `CHECK_COMMUNICATION` | `Boolean` | <code>true</code> |
+| `CHECK_SET_EXT_CHECK` | `Boolean` | <code>true</code> |
 
 ## CLI & CI/CD Configuration
 
@@ -136,5 +136,4 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_OBSOLETE`
-* **Finding Code:** `OBSOLETE`
 * **Implementation File:** [zcl_skylint_no_obsolete.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_obsolete.clas.abap)

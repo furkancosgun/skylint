@@ -2,7 +2,7 @@
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Security & Robustness" />
-  <Badge type="danger" text="Finding: ENV_CHECK" />
+  <Badge type="danger" text="#EC HARDCODED_ENV" />
 </div>
 
 ## Overview
@@ -48,13 +48,13 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value |
 |---|---|:---:|
-| `CHECK_SYSID` | `Boolean` | `true` |
-| `CHECK_MANDT` | `Boolean` | `true` |
-| `CHECK_HOST` | `Boolean` | `true` |
-| `CHECK_DBSYS` | `Boolean` | `true` |
-| `CHECK_OPSYS` | `Boolean` | `true` |
-| `CHECK_UNAME` | `Boolean` | `true` |
-| `ONLY_CONDITIONAL` | `Boolean` | `false` |
+| `CHECK_SYSID` | `Boolean` | <code>true</code> |
+| `CHECK_MANDT` | `Boolean` | <code>true</code> |
+| `CHECK_HOST` | `Boolean` | <code>true</code> |
+| `CHECK_DBSYS` | `Boolean` | <code>true</code> |
+| `CHECK_OPSYS` | `Boolean` | <code>true</code> |
+| `CHECK_UNAME` | `Boolean` | <code>true</code> |
+| `ONLY_CONDITIONAL` | `Boolean` | <code>false</code> |
 
 ## CLI & CI/CD Configuration
 
@@ -88,5 +88,4 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_HARDCODED_ENV`
-* **Finding Code:** `ENV_CHECK`
 * **Implementation File:** [zcl_skylint_no_hardcoded_env.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_hardcoded_env.clas.abap)

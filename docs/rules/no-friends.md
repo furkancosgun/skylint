@@ -2,7 +2,7 @@
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="danger" text="Finding: NO_FRIENDS" />
+  <Badge type="danger" text="#EC FRIENDS" />
 </div>
 
 ## Overview
@@ -70,5 +70,4 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_FRIENDS`
-* **Finding Code:** `NO_FRIENDS`
 * **Implementation File:** [zcl_skylint_no_friends.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_friends.clas.abap)

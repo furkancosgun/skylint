@@ -2,7 +2,7 @@
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="danger" text="Finding: LIST_PROC" />
+  <Badge type="danger" text="#EC LIST_PROC" />
 </div>
 
 ## Overview
@@ -42,13 +42,13 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value |
 |---|---|:---:|
-| `CHECK_WRITE` | `Boolean` | `true` |
-| `CHECK_ULINE` | `Boolean` | `true` |
-| `CHECK_SKIP` | `Boolean` | `true` |
-| `CHECK_OTHER` | `Boolean` | `true` |
-| `IGN_WRITE_TO` | `Boolean` | `true` |
-| `CHECK_LEAVE` | `Boolean` | `true` |
-| `CHECK_REJECT` | `Boolean` | `true` |
+| `CHECK_WRITE` | `Boolean` | <code>true</code> |
+| `CHECK_ULINE` | `Boolean` | <code>true</code> |
+| `CHECK_SKIP` | `Boolean` | <code>true</code> |
+| `CHECK_OTHER` | `Boolean` | <code>true</code> |
+| `IGN_WRITE_TO` | `Boolean` | <code>true</code> |
+| `CHECK_LEAVE` | `Boolean` | <code>true</code> |
+| `CHECK_REJECT` | `Boolean` | <code>true</code> |
 
 ## CLI & CI/CD Configuration
 
@@ -82,5 +82,4 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_LIST_PROC`
-* **Finding Code:** `LIST_PROC`
 * **Implementation File:** [zcl_skylint_no_list_proc.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_list_proc.clas.abap)

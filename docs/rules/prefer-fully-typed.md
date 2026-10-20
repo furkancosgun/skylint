@@ -2,7 +2,7 @@
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="danger" text="Finding: FULLYTYPED" />
+  <Badge type="danger" text="#EC FULL_TYPED" />
 </div>
 
 ## Overview
@@ -58,5 +58,4 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_FULL_TYPED`
-* **Finding Code:** `FULLYTYPED`
 * **Implementation File:** [zcl_skylint_pref_full_typed.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_pref_full_typed.clas.abap)

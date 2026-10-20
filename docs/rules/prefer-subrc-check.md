@@ -2,7 +2,7 @@
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Security & Robustness" />
-  <Badge type="danger" text="Finding: CHECKSUBRC" />
+  <Badge type="danger" text="#EC CHECK_SUBRC" />
 </div>
 
 ## Overview
@@ -48,11 +48,11 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value |
 |---|---|:---:|
-| `CHECK_SELECT_SINGLE` | `Boolean` | `true` |
-| `CHECK_READ_TABLE` | `Boolean` | `true` |
-| `CHECK_AUTHORITY_CHECK` | `Boolean` | `true` |
-| `CHECK_FIND_SEARCH` | `Boolean` | `true` |
-| `CHECK_ASSIGN` | `Boolean` | `true` |
+| `CHECK_SELECT_SINGLE` | `Boolean` | <code>true</code> |
+| `CHECK_READ_TABLE` | `Boolean` | <code>true</code> |
+| `CHECK_AUTHORITY_CHECK` | `Boolean` | <code>true</code> |
+| `CHECK_FIND_SEARCH` | `Boolean` | <code>true</code> |
+| `CHECK_ASSIGN` | `Boolean` | <code>true</code> |
 
 ## CLI & CI/CD Configuration
 
@@ -84,5 +84,4 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_CHECK_SUBRC`
-* **Finding Code:** `CHECKSUBRC`
 * **Implementation File:** [zcl_skylint_pref_check_subrc.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_pref_check_subrc.clas.abap)

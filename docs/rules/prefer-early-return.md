@@ -2,14 +2,16 @@
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="danger" text="Finding: GUARD_METH" />
+  <Badge type="danger" text="#EC EARLY_RETURN" />
 </div>
 
 ## Overview
 
 Prefer early return or continue over nested IF blocks.
 
-> **ATC Finding Message:** `Invert IF condition and use RETURN to reduce nesting in method`
+> **ATC Finding Messages:**
+> - `Invert IF condition and use RETURN to reduce nesting in method`
+> - `Invert IF condition and use CONTINUE to reduce nesting in loop`
 
 ## Rationale
 
@@ -60,8 +62,8 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value |
 |---|---|:---:|
-| `CHECK_METHOD_RETURN` | `Boolean` | `true` |
-| `CHECK_LOOP_CONTINUE` | `Boolean` | `true` |
+| `CHECK_METHOD_RETURN` | `Boolean` | <code>true</code> |
+| `CHECK_LOOP_CONTINUE` | `Boolean` | <code>true</code> |
 
 ## CLI & CI/CD Configuration
 
@@ -90,5 +92,4 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_EARLY_RET`
-* **Finding Code:** `GUARD_METH`
 * **Implementation File:** [zcl_skylint_pref_early_ret.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_pref_early_ret.clas.abap)

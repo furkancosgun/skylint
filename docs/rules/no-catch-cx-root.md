@@ -2,7 +2,7 @@
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Security & Robustness" />
-  <Badge type="danger" text="Finding: CATCH_ROOT" />
+  <Badge type="danger" text="#EC CATCH_ROOT" />
 </div>
 
 ## Overview
@@ -74,5 +74,4 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_CATCH_ROOT`
-* **Finding Code:** `CATCH_ROOT`
 * **Implementation File:** [zcl_skylint_no_catch_root.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_catch_root.clas.abap)

@@ -2,7 +2,7 @@
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="danger" text="Finding: MIX_RET" />
+  <Badge type="danger" text="#EC NO_MIX_RETURNING" />
 </div>
 
 ## Overview
@@ -64,5 +64,4 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_MIX_RETURNING`
-* **Finding Code:** `MIX_RET`
 * **Implementation File:** [zcl_skylint_no_mix_returning.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_mix_returning.clas.abap)

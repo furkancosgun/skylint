@@ -2,7 +2,7 @@
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Metrics & Complexity Limits" />
-  <Badge type="danger" text="Finding: CYCLO_COMP" />
+  <Badge type="danger" text="#EC CYCLO_COMP" />
 </div>
 
 ## Overview
@@ -54,7 +54,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value |
 |---|---|:---:|
-| `MAX_COMPLEXITY` | `Integer / String` | `5` |
+| `MAX_COMPLEXITY` | `Integer / String` | <code>5</code> |
 
 ## CLI & CI/CD Configuration
 
@@ -82,5 +82,4 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_MAX_CYCLO_COMP`
-* **Finding Code:** `CYCLO_COMP`
 * **Implementation File:** [zcl_skylint_max_cyclo_comp.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_max_cyclo_comp.clas.abap)

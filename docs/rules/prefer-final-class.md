@@ -3,14 +3,16 @@
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
-  <Badge type="danger" text="Finding: NOT_FINAL" />
+  <Badge type="danger" text="#EC FINAL_CLS" />
 </div>
 
 ## Overview
 
 Prefer FINAL classes and methods by default.
 
-> **ATC Finding Message:** `Classes should be marked FINAL by default unless designed for inheritance`
+> **ATC Finding Messages:**
+> - `Classes should be marked FINAL by default unless designed for inheritance`
+> - `Declare method as FINAL if it is not intended to be redefined`
 
 ## Rationale
 
@@ -54,8 +56,8 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value |
 |---|---|:---:|
-| `CHECK_CLASSES` | `Boolean` | `true` |
-| `CHECK_METHODS` | `Boolean` | `true` |
+| `CHECK_CLASSES` | `Boolean` | <code>true</code> |
+| `CHECK_METHODS` | `Boolean` | <code>true</code> |
 
 ## CLI & CI/CD Configuration
 
@@ -84,5 +86,4 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_FINAL_CLS`
-* **Finding Code:** `NOT_FINAL`
 * **Implementation File:** [zcl_skylint_pref_final_cls.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_pref_final_cls.clas.abap)

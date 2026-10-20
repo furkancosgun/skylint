@@ -2,14 +2,16 @@
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="danger" text="Finding: EMPTYCTRL" />
+  <Badge type="danger" text="#EC EMPTY_BLOCK" />
 </div>
 
 ## Overview
 
 Avoid empty control blocks (IF, CASE, LOOP, TRY, etc.).
 
-> **ATC Finding Message:** `Empty control block detected; remove redundant control statement`
+> **ATC Finding Messages:**
+> - `Empty control block detected; remove redundant control statement`
+> - `TRY block without CATCH is superfluous`
 
 ## Rationale
 
@@ -52,14 +54,14 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value |
 |---|---|:---:|
-| `CHECK_IF` | `Boolean` | `true` |
-| `CHECK_LOOP` | `Boolean` | `true` |
-| `CHECK_CASE` | `Boolean` | `true` |
-| `CHECK_TRY` | `Boolean` | `true` |
-| `CHECK_CATCH` | `Boolean` | `true` |
-| `CHECK_TRY_NO_CATCH` | `Boolean` | `true` |
-| `CHECK_DO` | `Boolean` | `true` |
-| `CHECK_WHILE` | `Boolean` | `true` |
+| `CHECK_IF` | `Boolean` | <code>true</code> |
+| `CHECK_LOOP` | `Boolean` | <code>true</code> |
+| `CHECK_CASE` | `Boolean` | <code>true</code> |
+| `CHECK_TRY` | `Boolean` | <code>true</code> |
+| `CHECK_CATCH` | `Boolean` | <code>true</code> |
+| `CHECK_TRY_NO_CATCH` | `Boolean` | <code>true</code> |
+| `CHECK_DO` | `Boolean` | <code>true</code> |
+| `CHECK_WHILE` | `Boolean` | <code>true</code> |
 
 ## CLI & CI/CD Configuration
 
@@ -94,5 +96,4 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_EMPTY_BLOCK`
-* **Finding Code:** `EMPTYCTRL`
 * **Implementation File:** [zcl_skylint_no_empty_block.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_empty_block.clas.abap)

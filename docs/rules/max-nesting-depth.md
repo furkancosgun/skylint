@@ -2,7 +2,7 @@
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Metrics & Complexity Limits" />
-  <Badge type="danger" text="Finding: NESTING_DP" />
+  <Badge type="danger" text="#EC NESTING" />
 </div>
 
 ## Overview
@@ -62,7 +62,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value |
 |---|---|:---:|
-| `MAX_DEPTH` | `Integer / String` | `3` |
+| `MAX_DEPTH` | `Integer / String` | <code>3</code> |
 
 ## CLI & CI/CD Configuration
 
@@ -90,5 +90,4 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_MAX_NESTING`
-* **Finding Code:** `NESTING_DP`
 * **Implementation File:** [zcl_skylint_max_nesting.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_max_nesting.clas.abap)

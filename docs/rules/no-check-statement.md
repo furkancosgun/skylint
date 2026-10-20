@@ -3,14 +3,16 @@
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
-  <Badge type="danger" text="Finding: CHKINLOOP" />
+  <Badge type="danger" text="#EC CHECK_STMT" />
 </div>
 
 ## Overview
 
 Avoid CHECK statements; prefer IF with RETURN or CONTINUE.
 
-> **ATC Finding Message:** `Avoid CHECK inside loop; use IF ... CONTINUE instead`
+> **ATC Finding Messages:**
+> - `Avoid CHECK inside loop; use IF ... CONTINUE instead`
+> - `Avoid CHECK outside loop; use IF ... RETURN instead`
 
 ## Rationale
 
@@ -64,8 +66,8 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value |
 |---|---|:---:|
-| `CHECK_IN_LOOP` | `Boolean` | `true` |
-| `CHECK_OUTSIDE_LOOP` | `Boolean` | `true` |
+| `CHECK_IN_LOOP` | `Boolean` | <code>true</code> |
+| `CHECK_OUTSIDE_LOOP` | `Boolean` | <code>true</code> |
 
 ## CLI & CI/CD Configuration
 
@@ -94,5 +96,4 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_CHECK_STMT`
-* **Finding Code:** `CHKINLOOP`
 * **Implementation File:** [zcl_skylint_no_check_stmt.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_check_stmt.clas.abap)

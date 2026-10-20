@@ -3,14 +3,21 @@
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
-  <Badge type="danger" text="Finding: CONDENSE_S" />
+  <Badge type="danger" text="#EC STR_FUNC" />
 </div>
 
 ## Overview
 
 Detect obsolete string statements; prefer built-in functions.
 
-> **ATC Finding Message:** `Use modern built-in string function condense( ... ) instead`
+> **ATC Finding Messages:**
+> - `Use modern built-in string function condense( ... ) instead`
+> - `Use modern string functions to_upper() or to_lower() instead`
+> - `Use modern string function shift_left( ) or shift_right( ) instead`
+> - `SEARCH statement is obsolete; prefer find( ) or contains( )`
+> - `OVERLAY statement is obsolete; prefer string functions or templates`
+> - `Obsolete REPLACE statement; prefer replace( ) function`
+> - `Use strlen( ... ) instead of DESCRIBE FIELD ... LENGTH`
 
 ## Rationale
 
@@ -52,13 +59,13 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value |
 |---|---|:---:|
-| `CHECK_CONDENSE` | `Boolean` | `true` |
-| `CHECK_TRANSLATE` | `Boolean` | `true` |
-| `CHECK_SHIFT` | `Boolean` | `true` |
-| `CHECK_SEARCH` | `Boolean` | `true` |
-| `CHECK_OVERLAY` | `Boolean` | `true` |
-| `CHECK_REPLACE` | `Boolean` | `true` |
-| `CHECK_DESCRIBE` | `Boolean` | `true` |
+| `CHECK_CONDENSE` | `Boolean` | <code>true</code> |
+| `CHECK_TRANSLATE` | `Boolean` | <code>true</code> |
+| `CHECK_SHIFT` | `Boolean` | <code>true</code> |
+| `CHECK_SEARCH` | `Boolean` | <code>true</code> |
+| `CHECK_OVERLAY` | `Boolean` | <code>true</code> |
+| `CHECK_REPLACE` | `Boolean` | <code>true</code> |
+| `CHECK_DESCRIBE` | `Boolean` | <code>true</code> |
 
 ## CLI & CI/CD Configuration
 
@@ -92,5 +99,4 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_STR_FUNC`
-* **Finding Code:** `CONDENSE_S`
 * **Implementation File:** [zcl_skylint_pref_str_func.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_pref_str_func.clas.abap)

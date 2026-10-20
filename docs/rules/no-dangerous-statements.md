@@ -2,14 +2,17 @@
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Security & Robustness" />
-  <Badge type="danger" text="Finding: DANGER_STM" />
+  <Badge type="danger" text="#EC DANGEROUS_STMT" />
 </div>
 
 ## Overview
 
 Dangerous Statements (abaplint dangerous_statement).
 
-> **ATC Finding Message:** `Dangerous statement detected; avoid dynamic/unmanaged language construct`
+> **ATC Finding Messages:**
+> - `Dangerous statement detected; avoid dynamic/unmanaged language construct`
+> - `Avoid RAISE SHORTDUMP; prefer graceful class-based exceptions`
+> - `Avoid native ASSERT in production logic; raise an exception instead`
 
 ## Rationale
 
@@ -44,24 +47,24 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value |
 |---|---|:---:|
-| `CHECK_EXEC_SQL` | `Boolean` | `true` |
-| `CHECK_KERNEL_CALL` | `Boolean` | `true` |
-| `CHECK_SYSTEM_CALL` | `Boolean` | `true` |
-| `CHECK_SYNTAX_CHECK` | `Boolean` | `true` |
-| `CHECK_INSERT_REPORT` | `Boolean` | `true` |
-| `CHECK_GENERATE_DYNPRO` | `Boolean` | `true` |
-| `CHECK_GENERATE_REPORT` | `Boolean` | `true` |
-| `CHECK_GENERATE_SUBROUTINE` | `Boolean` | `true` |
-| `CHECK_DELETE_REPORT` | `Boolean` | `true` |
-| `CHECK_DELETE_TEXTPOOL` | `Boolean` | `true` |
-| `CHECK_INSERT_TEXTPOOL` | `Boolean` | `true` |
-| `CHECK_DELETE_DYNPRO` | `Boolean` | `true` |
-| `CHECK_EXPORT_DYNPRO` | `Boolean` | `true` |
-| `CHECK_EDITOR_CALL` | `Boolean` | `true` |
-| `CHECK_DYNAMIC_SQL` | `Boolean` | `true` |
-| `CHECK_RAISE_SHORTDUMP` | `Boolean` | `true` |
-| `CHECK_PROD_ASSERT` | `Boolean` | `true` |
-| `IGNORE_RAP_QUERY_PROVIDER` | `Boolean` | `true` |
+| `CHECK_EXEC_SQL` | `Boolean` | <code>true</code> |
+| `CHECK_KERNEL_CALL` | `Boolean` | <code>true</code> |
+| `CHECK_SYSTEM_CALL` | `Boolean` | <code>true</code> |
+| `CHECK_SYNTAX_CHECK` | `Boolean` | <code>true</code> |
+| `CHECK_INSERT_REPORT` | `Boolean` | <code>true</code> |
+| `CHECK_GENERATE_DYNPRO` | `Boolean` | <code>true</code> |
+| `CHECK_GENERATE_REPORT` | `Boolean` | <code>true</code> |
+| `CHECK_GENERATE_SUBROUTINE` | `Boolean` | <code>true</code> |
+| `CHECK_DELETE_REPORT` | `Boolean` | <code>true</code> |
+| `CHECK_DELETE_TEXTPOOL` | `Boolean` | <code>true</code> |
+| `CHECK_INSERT_TEXTPOOL` | `Boolean` | <code>true</code> |
+| `CHECK_DELETE_DYNPRO` | `Boolean` | <code>true</code> |
+| `CHECK_EXPORT_DYNPRO` | `Boolean` | <code>true</code> |
+| `CHECK_EDITOR_CALL` | `Boolean` | <code>true</code> |
+| `CHECK_DYNAMIC_SQL` | `Boolean` | <code>true</code> |
+| `CHECK_RAISE_SHORTDUMP` | `Boolean` | <code>true</code> |
+| `CHECK_PROD_ASSERT` | `Boolean` | <code>true</code> |
+| `IGNORE_RAP_QUERY_PROVIDER` | `Boolean` | <code>true</code> |
 
 ## CLI & CI/CD Configuration
 
@@ -106,5 +109,4 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_DANGEROUS_STMT`
-* **Finding Code:** `DANGER_STM`
 * **Implementation File:** [zcl_skylint_no_dangerous_stmt.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_dangerous_stmt.clas.abap)
