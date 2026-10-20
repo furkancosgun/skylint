@@ -173,15 +173,22 @@ for (const rule of RULES) {
   if (hasQuickfix) {
     ruleDoc += `  <Badge type="warning" text="⚡ QuickFix Ready" />\n`;
   }
-  const findingBadge = findingCodes.length > 1 ? `Finding: ${findingCode} (+${findingCodes.length - 1})` : `Finding: ${findingCode}`;
-  ruleDoc += `  <Badge type="danger" text="${findingBadge}" />\n`;
+  ruleDoc += `  <Badge type="danger" text="#EC ${rule.pseudoComment}" />\n`;
   ruleDoc += `</div>\n\n`;
 
   // Meaningful Description: Include check purpose & specific finding text
   ruleDoc += `## Overview\n\n`;
   ruleDoc += `${classDesc}.\n\n`;
-  if (findingTexts.length > 0 && findingTexts[0] !== classDesc) {
-    ruleDoc += `> **ATC Finding Message:** \`${findingTexts[0]}\`\n\n`;
+  if (findingTexts.length > 0) {
+    if (findingTexts.length === 1) {
+      ruleDoc += `> **ATC Finding Message:** \`${findingTexts[0]}\`\n\n`;
+    } else {
+      ruleDoc += `> **ATC Finding Messages:**\n`;
+      for (const t of findingTexts) {
+        ruleDoc += `> - \`${t}\`\n`;
+      }
+      ruleDoc += `\n`;
+    }
   }
 
   // Rationale & Best Practices
@@ -245,15 +252,7 @@ for (const rule of RULES) {
   // ABAP Class Details
   ruleDoc += `## Technical Details\n\n`;
   ruleDoc += `* **Native ATC Class:** \`${rule.className}\`\n`;
-  ruleDoc += `### Finding Codes\n\n`;
-  ruleDoc += `| Finding Code | ATC Finding Message |\n`;
-  ruleDoc += `|---|---|\n`;
-  for (let i = 0; i < findingCodes.length; i++) {
-    const msg = findingTexts[i] || '';
-    const escapedMsg = msg.replace(/\|/g, '&#124;');
-    ruleDoc += `| \`${findingCodes[i]}\` | ${escapedMsg} |\n`;
-  }
-  ruleDoc += `\n`;
+
   ruleDoc += `* **Implementation File:** [${rule.className.toLowerCase()}.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/${rule.className.toLowerCase()}.clas.abap)\n`;
 
   fs.writeFileSync(path.join(rulesDocsDir, `${rule.ruleId}.md`), ruleDoc, 'utf8');
@@ -273,25 +272,22 @@ for (const [catKey, catInfo] of Object.entries(CATEGORIES)) {
   const catRules = RULES.filter((r) => r.category === catKey);
   catalogMd += `## ${catInfo.title} (${catRules.length})\n\n`;
   catalogMd += `${catInfo.description}\n\n`;
-  catalogMd += `| Rule ID | ABAP Class | Description | Finding Code | Pseudo-Comment | QuickFix |\n`;
-  catalogMd += `|---|---|---|:---:|:---:|:---:|\n`;
+  catalogMd += `| Rule ID | ABAP Class | Description | Pseudo-Comment | QuickFix |\n`;
+  catalogMd += `|---|---|---|:---:|:---:|\n`;
 
   for (const r of catRules) {
     const checkFile = path.join(checksDir, `${r.className.toLowerCase()}.clas.abap`);
     let desc = r.ruleId;
-    let code = '';
     let qf = '—';
 
     if (fs.existsSync(checkFile)) {
       const c = fs.readFileSync(checkFile, 'utf8');
       const dm = c.match(/description\s*=\s*'([^']+)'/);
       if (dm) desc = dm[1].replace(/^skylint:\s*/i, '');
-      const cm = c.match(/c_finding_codes[\s\S]*?VALUE\s*'([A-Za-z0-9_]+)'/);
-      if (cm) code = cm[1];
       if (/quickfix_codes|quickfix_replace/i.test(c)) qf = '⚡ Ready';
     }
 
-    catalogMd += `| [\`${r.ruleId}\`](/rules/${r.ruleId}) | \`${r.className}\` | ${desc} | \`${code}\` | \`#EC ${r.pseudoComment}\` | ${qf} |\n`;
+    catalogMd += `| [\`${r.ruleId}\`](/rules/${r.ruleId}) | \`${r.className}\` | ${desc} | \`#EC ${r.pseudoComment}\` | ${qf} |\n`;
   }
   catalogMd += `\n`;
 }

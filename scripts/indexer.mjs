@@ -113,14 +113,14 @@ function generateReadmeCatalog() {
 
   let catalogMd = `## 📋 Clean ABAP & Cloud Rule Catalog (${total} Rules)\n\n`;
   catalogMd += `All Clean ABAP, security, and cloud-native rules implemented in Skylint:\n\n`;
-  catalogMd += `| Rule ID | ABAP Class | Description | Finding Code | Pseudo-Comment | QuickFix |\n`;
-  catalogMd += `|---|---|---|:---:|:---:|:---:|\n`;
+  catalogMd += `| Rule ID | ABAP Class | Description | Pseudo-Comment | QuickFix |\n`;
+  catalogMd += `|---|---|---|:---:|:---:|\n`;
 
   for (const rule of RULES) {
     const meta = extractCheckMetadata(rule);
     if (!meta) continue;
 
-    catalogMd += `| \`${meta.ruleId}\` | [${meta.className}](${meta.path}) | ${meta.description} | \`${meta.findingCode}\` | \`${meta.pseudoComment}\` | ${meta.quickfix} |\n`;
+    catalogMd += `| \`${meta.ruleId}\` | [${meta.className}](${meta.path}) | ${meta.description} | \`${meta.pseudoComment}\` | ${meta.quickfix} |\n`;
   }
   catalogMd += `\n---\n\n`;
 
