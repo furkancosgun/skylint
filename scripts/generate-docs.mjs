@@ -219,8 +219,8 @@ for (const rule of RULES) {
     ruleDoc += `| Parameter Name | Data Type | Default Value |\n`;
     ruleDoc += `|---|---|:---:|\n`;
     for (const attr of attributes) {
-      const escapedDefault = attr.defaultValue.replace(/\|/g, '\\|');
-      ruleDoc += `| \`${attr.name}\` | \`${attr.kind}\` | ${escapedDefault} |\n`;
+      const escapedDefault = attr.defaultValue.replace(/\|/g, '&#124;');
+      ruleDoc += `| \`${attr.name}\` | \`${attr.kind}\` | <code>${escapedDefault}</code> |\n`;
     }
     ruleDoc += `\n`;
   }
