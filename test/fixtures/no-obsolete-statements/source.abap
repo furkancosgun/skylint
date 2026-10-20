@@ -26,6 +26,9 @@ CLASS zcl_test_no_obsolete_statement DEFINITION
     METHODS test_021.
     METHODS test_022.
     METHODS test_023.
+    METHODS test_024.
+    METHODS test_025.
+    METHODS test_026.
 ENDCLASS.
 
 CLASS zcl_test_no_obsolete_statement IMPLEMENTATION.
@@ -156,5 +159,17 @@ CLASS zcl_test_no_obsolete_statement IMPLEMENTATION.
     DATA lv_src TYPE i.
     DATA lr_ref TYPE REF TO i.
     GET REFERENCE OF lv_src INTO lr_ref.
+  ENDMETHOD.
+
+  METHOD test_024.
+    INFOTYPES spfli.
+  ENDMETHOD.
+
+  METHOD test_025.
+    COMMUNICATION INIT DESTINATION 'X'.
+  ENDMETHOD.
+
+  METHOD test_026.
+    SET EXTENDED CHECK ON.
   ENDMETHOD.
 ENDCLASS.

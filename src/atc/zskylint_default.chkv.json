@@ -277,6 +277,18 @@
         {
           "name": "CHECK_GET_REFERENCE",
           "value": "X"
+        },
+        {
+          "name": "CHECK_INFOTYPES",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_COMMUNICATION",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_SET_EXT_CHECK",
+          "value": "X"
         }
       ]
     },

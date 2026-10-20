@@ -92,6 +92,15 @@
     },
     {
       "name": "CHECK_GET_REFERENCE"
+    },
+    {
+      "name": "CHECK_INFOTYPES"
+    },
+    {
+      "name": "CHECK_COMMUNICATION"
+    },
+    {
+      "name": "CHECK_SET_EXT_CHECK"
     }
   ]
 }
