@@ -7,5 +7,5 @@
   },
   "category": "ZSKYLINT",
   "implementingClass": "ZCL_SKYLINT_NO_STATIC_ARROW",
-  "checkType": "remoteEnabled"
+  "checkType": "local"
 }

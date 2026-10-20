@@ -44,7 +44,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value |
 |---|---|:---:|
-| `MAX_LENGTH` | `Integer / String` | <code>120</code> |
+| `MAX_LENGTH` | `Integer` | <code>120</code> |
 
 ## CLI & CI/CD Configuration
 

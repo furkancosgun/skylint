@@ -5,9 +5,6 @@
   "engines": {
     "node": ">=20.0.0"
   },
-  "bin": {
-    "skylint": "./bin/skylint.mjs"
-  },
   "scripts": {
     "build": "node scripts/generate-atc.mjs && npm run clean && abap_transpile abaplint-transpiler.json",
     "test": "npm run lint && npm run unit",
@@ -16,7 +13,6 @@
     "fix": "abaplint --fix",
     "clean": "node --eval \"fs.rmSync('output', { recursive: true, force: true })\"",
     "index": "node scripts/indexer.mjs && node scripts/generate-atc.mjs",
-    "scan": "node bin/skylint.mjs scan",
     "docs:dev": "vitepress dev docs",
     "docs:build": "node scripts/generate-docs.mjs && vitepress build docs",
     "docs:preview": "vitepress preview docs",
@@ -28,8 +24,5 @@
     "@abaplint/transpiler": "latest",
     "@abaplint/transpiler-cli": "latest",
     "vitepress": "^1.6.4"
-  },
-  "dependencies": {
-    "yaml": "^2.9.1"
   }
 }

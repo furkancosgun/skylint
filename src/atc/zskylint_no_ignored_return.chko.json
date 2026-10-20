@@ -7,5 +7,5 @@
   },
   "category": "ZSKYLINT",
   "implementingClass": "ZCL_SKYLINT_NO_IGNORED_RETURN",
-  "checkType": "remoteEnabled"
+  "checkType": "local"
 }

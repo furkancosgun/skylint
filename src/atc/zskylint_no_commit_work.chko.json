@@ -7,5 +7,5 @@
   },
   "category": "ZSKYLINT",
   "implementingClass": "ZCL_SKYLINT_NO_COMMIT_WORK",
-  "checkType": "remoteEnabled"
+  "checkType": "local"
 }

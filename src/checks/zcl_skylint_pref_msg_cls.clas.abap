@@ -30,7 +30,7 @@ CLASS zcl_skylint_pref_msg_cls IMPLEMENTATION.
     super->constructor(
         VALUE #(
             description       = 'skylint: Use a message class instead of inline message text'
-            remote_enablement = abap_true
+            remote_enablement = abap_false
             finding_codes     = VALUE #( ( code           = c_finding_codes-message_class
                                            severity       = if_ci_atc_check=>finding_severities-warning
                                            text           = 'Define the message class and raise it as e001( msg_class )'

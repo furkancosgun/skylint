@@ -40,7 +40,7 @@ CLASS zcl_skylint_no_static_arrow IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
         VALUE #( description       = 'Avoid calling static methods via instance arrow (->)'
-                 remote_enablement = abap_true
+                 remote_enablement = abap_false
                  finding_codes     = VALUE #( ( code           = c_finding_codes-static_call_via_instance
                                                 severity       = if_ci_atc_check=>finding_severities-warning
                                                 text           = 'Call static method using => instead of ->'

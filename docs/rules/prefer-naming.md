@@ -63,34 +63,34 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | `ATTR_IGN_EXC` | `Boolean` | <code>true</code> |
 | `ATTR_IGN_LOCAL` | `Boolean` | <code>true</code> |
 | `ATTR_IGN_INTF` | `Boolean` | <code>false</code> |
-| `ATTR_STATICS` | `Integer / String` | <code>'^G._.+$'</code> |
-| `ATTR_INSTANCE` | `Integer / String` | <code>'^M._.+$'</code> |
-| `ATTR_CONSTANTS` | `Integer / String` | <code>''</code> |
+| `ATTR_STATICS` | `String` | <code>'^G._.+$'</code> |
+| `ATTR_INSTANCE` | `String` | <code>'^M._.+$'</code> |
+| `ATTR_CONSTANTS` | `String` | <code>''</code> |
 | `PARAM_IGN_EXC` | `Boolean` | <code>true</code> |
-| `PARAM_IMPORTING` | `Integer / String` | <code>'^I._.+$'</code> |
-| `PARAM_RETURNING` | `Integer / String` | <code>'^R._.+$'</code> |
-| `PARAM_CHANGING` | `Integer / String` | <code>'^C._.+$'</code> |
-| `PARAM_EXPORTING` | `Integer / String` | <code>'^E._.+$'</code> |
-| `LOCAL_DATA` | `Integer / String` | <code>'^L._.+$'</code> |
-| `LOCAL_CONST` | `Integer / String` | <code>'^LC_.+$'</code> |
-| `LOCAL_FS` | `Integer / String` | <code>'^<L._.+>$'</code> |
-| `LOCAL_STATICS` | `Integer / String` | <code>'^S._.+$'</code> |
-| `CLASS_LOCAL` | `Integer / String` | <code>'^LC(L&#124;X)_.+$'</code> |
-| `CLASS_TEST` | `Integer / String` | <code>'^LTCL_.+$'</code> |
-| `CLASS_GLOBAL` | `Integer / String` | <code>'^ZC(L&#124;X)_.+$'</code> |
-| `SSCR_PARAM` | `Integer / String` | <code>'^P_.+$'</code> |
-| `SSCR_SELOPT` | `Integer / String` | <code>'^S_.+$'</code> |
-| `TYPES_PATTERN` | `Integer / String` | <code>'^TY_.+$'</code> |
-| `MACRO_PATTERN` | `Integer / String` | <code>'^_.+$'</code> |
-| `FORM_PATTERN` | `Integer / String` | <code>'^F_.+$'</code> |
-| `FUNCTION_PATTERN` | `Integer / String` | <code>'^Z.*$'</code> |
-| `INTF_LOCAL` | `Integer / String` | <code>'^LIF_.+$'</code> |
-| `INTF_GLOBAL` | `Integer / String` | <code>'^ZIF_.+$'</code> |
-| `EVENT_NAME` | `Integer / String` | <code>'^[A-Z][A-Z0-9_]+$'</code> |
-| `EVENT_HANDLER` | `Integer / String` | <code>'^ON_.+$'</code> |
-| `TEST_METHOD` | `Integer / String` | <code>'^(TEST&#124;SHOULD)_.+$'</code> |
-| `PROG_PATTERN` | `Integer / String` | <code>'^Z.+$'</code> |
-| `FUGR_PATTERN` | `Integer / String` | <code>'^Z.+$'</code> |
+| `PARAM_IMPORTING` | `String` | <code>'^I._.+$'</code> |
+| `PARAM_RETURNING` | `String` | <code>'^R._.+$'</code> |
+| `PARAM_CHANGING` | `String` | <code>'^C._.+$'</code> |
+| `PARAM_EXPORTING` | `String` | <code>'^E._.+$'</code> |
+| `LOCAL_DATA` | `String` | <code>'^L._.+$'</code> |
+| `LOCAL_CONST` | `String` | <code>'^LC_.+$'</code> |
+| `LOCAL_FS` | `String` | <code>'^<L._.+>$'</code> |
+| `LOCAL_STATICS` | `String` | <code>'^S._.+$'</code> |
+| `CLASS_LOCAL` | `String` | <code>'^LC(L&#124;X)_.+$'</code> |
+| `CLASS_TEST` | `String` | <code>'^LTCL_.+$'</code> |
+| `CLASS_GLOBAL` | `String` | <code>'^ZC(L&#124;X)_.+$'</code> |
+| `SSCR_PARAM` | `String` | <code>'^P_.+$'</code> |
+| `SSCR_SELOPT` | `String` | <code>'^S_.+$'</code> |
+| `TYPES_PATTERN` | `String` | <code>'^TY_.+$'</code> |
+| `MACRO_PATTERN` | `String` | <code>'^_.+$'</code> |
+| `FORM_PATTERN` | `String` | <code>'^F_.+$'</code> |
+| `FUNCTION_PATTERN` | `String` | <code>'^Z.*$'</code> |
+| `INTF_LOCAL` | `String` | <code>'^LIF_.+$'</code> |
+| `INTF_GLOBAL` | `String` | <code>'^ZIF_.+$'</code> |
+| `EVENT_NAME` | `String` | <code>'^[A-Z][A-Z0-9_]+$'</code> |
+| `EVENT_HANDLER` | `String` | <code>'^ON_.+$'</code> |
+| `TEST_METHOD` | `String` | <code>'^(TEST&#124;SHOULD)_.+$'</code> |
+| `PROG_PATTERN` | `String` | <code>'^Z.+$'</code> |
+| `FUGR_PATTERN` | `String` | <code>'^Z.+$'</code> |
 
 ## CLI & CI/CD Configuration
 

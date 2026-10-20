@@ -77,9 +77,16 @@ function extractAttributes(content) {
     if (defVal.toLowerCase() === 'abap_true') defVal = 'true';
     if (defVal.toLowerCase() === 'abap_false') defVal = 'false';
 
+    let resolvedKind = 'String';
+    if (kind === 'boolean') {
+      resolvedKind = 'Boolean';
+    } else if (/^\d+$/.test(defVal)) {
+      resolvedKind = 'Integer';
+    }
+
     results.push({
       name,
-      kind: kind === 'boolean' ? 'Boolean' : 'Integer / String',
+      kind: resolvedKind,
       defaultValue: defVal,
     });
   }
@@ -95,7 +102,20 @@ function buildDiffSnippet(bad, good) {
 
 console.log(`Generating rich enterprise documentation for ${RULES.length} rules...`);
 
+// Load default parameters from src/atc/zskylint_default.chkv.json
+const chkvPath = path.join(rootDir, 'src', 'atc', 'zskylint_default.chkv.json');
+const defaultParamsMap = {};
+if (fs.existsSync(chkvPath)) {
+  const chkv = JSON.parse(fs.readFileSync(chkvPath, 'utf8'));
+  for (const item of chkv.selectedChecks || []) {
+    if (item.parameters) {
+      defaultParamsMap[item.checkName] = item.parameters;
+    }
+  }
+}
+
 let totalQuickFixes = 0;
+const catalogRules = [];
 
 for (const rule of RULES) {
   const checkFile = path.join(checksDir, `${rule.className.toLowerCase()}.clas.abap`);
@@ -258,7 +278,49 @@ for (const rule of RULES) {
   ruleDoc += `* **Implementation File:** [${rule.className.toLowerCase()}.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/${rule.className.toLowerCase()}.clas.abap)\n`;
 
   fs.writeFileSync(path.join(rulesDocsDir, `${rule.ruleId}.md`), ruleDoc, 'utf8');
+
+  // Collect for interactive Variant Builder & Playground
+  const checkName = rule.className.replace(/^ZCL_/, 'Z');
+  catalogRules.push({
+    ruleId: rule.ruleId,
+    title: meta.title,
+    className: rule.className,
+    checkName: checkName,
+    category: rule.category || 'General',
+    categoryTitle: categoryInfo.title || rule.category,
+    pseudoComment: rule.pseudoComment || '',
+    severity: severity,
+    findingCode: findingCode,
+    findingTexts: findingTexts.length > 0 ? findingTexts : [classDesc],
+    description: classDesc,
+    rationale: meta.rationale,
+    hasQuickfix: hasQuickfix,
+    attributes: attributes,
+    defaultParameters: defaultParamsMap[checkName] || [],
+    nonCompliantCode: nonCompliantCode || '',
+    compliantCode: compliantCode || '',
+  });
 }
+
+// Write catalog rules JSON for interactive Vue components
+const componentsDir = path.join(docsDir, 'components');
+fs.mkdirSync(componentsDir, { recursive: true });
+fs.writeFileSync(path.join(componentsDir, 'rules-data.json'), JSON.stringify(catalogRules, null, 2), 'utf8');
+
+// Generate docs/variant-builder.md
+const variantBuilderMd = `---
+layout: page
+title: ATC Variant Builder & Live Playground
+description: Configure custom SAP ATC check variants, tune rule parameters, download .chkv.json files for SAP GUI / abapGit, and test Clean ABAP rules live.
+---
+
+<script setup>
+import VariantBuilder from './components/VariantBuilder.vue';
+</script>
+
+<VariantBuilder />
+`;
+fs.writeFileSync(path.join(docsDir, 'variant-builder.md'), variantBuilderMd, 'utf8');
 
 // Generate rules/index.md with At a Glance statistics card
 let catalogMd = `---\ndescription: "Comprehensive reference and catalog for all ${RULES.length} Clean ABAP, security, performance, and architecture rules in Skylint."\n---\n\n# Rules Catalog (${RULES.length} Rules)\n\n`;
@@ -318,6 +380,14 @@ export default defineConfig({
   lastUpdated: true,
   sitemap: {
     hostname: 'https://furkancosgun.github.io/skylint/',
+  },
+  vite: {
+    build: {
+      target: 'esnext',
+    },
+    esbuild: {
+      target: 'esnext',
+    },
   },
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: \`\${base}logo.svg\` }],
@@ -392,9 +462,11 @@ export default defineConfig({
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
       { text: 'Rules (${RULES.length})', link: '/rules/' },
+      { text: 'Variant Builder', link: '/variant-builder' },
       { text: 'GitHub', link: 'https://github.com/furkancosgun/skylint' },
     ],
     sidebar: {
+      '/variant-builder': [],
       '/guide/': [
         {
           text: 'Architecture & Guides',
@@ -445,6 +517,9 @@ hero:
     - theme: alt
       text: Explore ${RULES.length} Rules
       link: /rules/
+    - theme: alt
+      text: 🎛️ Variant Builder
+      link: /variant-builder
 
 features:
   - icon: ⚡
@@ -456,9 +531,9 @@ features:
   - icon: 🛠️
     title: Automated QuickFixes
     details: Built-in automated refactoring for modern syntax upgrades (lines, string templates, NEW #, etc.) with Ctrl + 1.
-  - icon: 🚀
-    title: High-Performance CLI & CI/CD
-    details: Fast local scanning, Git pre-commit hooks, and CI/CD SARIF reports powered by transpile engine.
+  - icon: 🎛️
+    title: ATC Variant Builder & Sandbox
+    details: Build custom SAP ATC check variants (.chkv.json), tune parameters, and test Clean ABAP rules live in your browser.
 ---
 `;
 

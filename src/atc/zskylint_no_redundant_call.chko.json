@@ -7,7 +7,7 @@
   },
   "category": "ZSKYLINT",
   "implementingClass": "ZCL_SKYLINT_NO_REDUNDANT_CALL",
-  "checkType": "remoteEnabled",
+  "checkType": "local",
   "parameters": [
     {
       "name": "CHECK_EXPORTING"

@@ -52,6 +52,16 @@ function getCheckParameters(rule) {
   });
 }
 
+function isRemoteEnabled(rule) {
+  const checkFile = path.join(checksDir, `${rule.className.toLowerCase()}.clas.abap`);
+  if (!fs.existsSync(checkFile)) return true;
+  const content = fs.readFileSync(checkFile, 'utf8');
+  if (/remote_enablement\s*=\s*abap_false/i.test(content)) {
+    return false;
+  }
+  return true;
+}
+
 export function generateAtcObjects() {
   console.log(`Generating ATC CHKC, CHKO, and CHKV objects for ${RULES.length} rules under src/atc/...`);
 
@@ -108,7 +118,7 @@ export function generateAtcObjects() {
       },
       category: 'ZSKYLINT',
       implementingClass: rule.className,
-      checkType: 'remoteEnabled',
+      checkType: isRemoteEnabled(rule) ? 'remoteEnabled' : 'local',
     };
 
     const checkEntry = { checkName };
@@ -139,9 +149,17 @@ export function generateAtcObjects() {
     },
     selectedChecks,
   };
-  fs.writeFileSync(path.join(atcDir, 'zskylint_default.chkv.json'), JSON.stringify(variantJson, null, 2) + '\n', 'utf8');
+  // 4. Generate Registry of compiled ABAP check classes for live execution
+  let registryCode = '// Auto-generated registry of compiled ABAP check classes\nexport const CHECK_MODULES = {\n';
+  for (const r of RULES) {
+    const clsName = r.className.toUpperCase();
+    const fileName = r.className.toLowerCase() + '.clas.mjs';
+    registryCode += `  '${clsName}': () => import('../output/project/${fileName}'),\n`;
+  }
+  registryCode += '};\n';
+  fs.writeFileSync(path.join(rootDir, 'lib', 'checks-registry.mjs'), registryCode, 'utf8');
 
-  console.log(`✓ Created 1 CHKC (category), ${RULES.length} CHKO (checks - ${checksWithParams} with parameters), and 1 CHKV (variant) in src/atc/.`);
+  console.log(`✓ Created 1 CHKC (category), ${RULES.length} CHKO (checks - ${checksWithParams} with parameters), 1 CHKV (variant), and lib/checks-registry.mjs.`);
 }
 
 generateAtcObjects();

@@ -11,6 +11,14 @@ export default defineConfig({
   sitemap: {
     hostname: 'https://furkancosgun.github.io/skylint/',
   },
+  vite: {
+    build: {
+      target: 'esnext',
+    },
+    esbuild: {
+      target: 'esnext',
+    },
+  },
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: `${base}logo.svg` }],
     ['meta', { name: 'robots', content: 'index, follow' }],
@@ -84,9 +92,11 @@ export default defineConfig({
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
       { text: 'Rules (95)', link: '/rules/' },
+      { text: 'Variant Builder', link: '/variant-builder' },
       { text: 'GitHub', link: 'https://github.com/furkancosgun/skylint' },
     ],
     sidebar: {
+      '/variant-builder': [],
       '/guide/': [
         {
           text: 'Architecture & Guides',

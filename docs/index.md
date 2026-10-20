@@ -15,6 +15,9 @@ hero:
     - theme: alt
       text: Explore 95 Rules
       link: /rules/
+    - theme: alt
+      text: 🎛️ Variant Builder
+      link: /variant-builder
 
 features:
   - icon: ⚡
@@ -26,7 +29,7 @@ features:
   - icon: 🛠️
     title: Automated QuickFixes
     details: Built-in automated refactoring for modern syntax upgrades (lines, string templates, NEW #, etc.) with Ctrl + 1.
-  - icon: 🚀
-    title: High-Performance CLI & CI/CD
-    details: Fast local scanning, Git pre-commit hooks, and CI/CD SARIF reports powered by transpile engine.
+  - icon: 🎛️
+    title: ATC Variant Builder & Sandbox
+    details: Build custom SAP ATC check variants (.chkv.json), tune parameters, and test Clean ABAP rules live in your browser.
 ---

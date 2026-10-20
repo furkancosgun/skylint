@@ -58,7 +58,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value |
 |---|---|:---:|
-| `MAX_ATTRIBUTES` | `Integer / String` | <code>5</code> |
+| `MAX_ATTRIBUTES` | `Integer` | <code>5</code> |
 
 ## CLI & CI/CD Configuration
 

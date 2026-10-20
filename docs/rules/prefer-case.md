@@ -70,7 +70,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value |
 |---|---|:---:|
-| `MIN_BRANCHES` | `Integer / String` | <code>3</code> |
+| `MIN_BRANCHES` | `Integer` | <code>3</code> |
 
 ## CLI & CI/CD Configuration
 

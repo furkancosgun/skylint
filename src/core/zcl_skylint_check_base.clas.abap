@@ -329,6 +329,9 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
       ENDIF.
 
       ASSIGN <ls_own>-value->* TO <lv_own>.
+      IF sy-subrc <> 0.
+        CONTINUE.
+      ENDIF.
       ASSIGN <ls_new>-value->* TO <lv_new>.
       IF sy-subrc <> 0.
         CONTINUE.

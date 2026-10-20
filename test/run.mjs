@@ -5,11 +5,11 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import {
   Lexer,
   buildStatements,
-  enrichStatementsWithAbaplint,
-  feedRtti,
+  enrichStatements,
   extractAllProcedures,
   resolveProcedureForTarget,
 } from '../lib/ast.mjs';
+import { feedRtti } from '../lib/rtti-feeder.mjs';
 import {
   buildProcedureValue,
   buildProceduresTable,
@@ -23,10 +23,7 @@ import { RULES, resolveRule } from '../scripts/rules-data.mjs';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, '..');
-const outDir = path.join(rootDir, 'output');
-const projectDir = fs.existsSync(path.join(outDir, 'project')) ? path.join(outDir, 'project') : outDir;
 const fixturesDir = path.join(rootDir, 'test', 'fixtures');
-const toFileUrl = (p) => pathToFileURL(p).href;
 
 export function loadFixture(key) {
   const rule = typeof key === 'object' && key !== null ? key : resolveRule(key);
@@ -49,8 +46,6 @@ export function loadFixture(key) {
 export function discoverChecks() {
   return RULES.map((r) => r.ruleId);
 }
-
-
 
 function sameCodes(a, b) {
   if (!Array.isArray(a) || !Array.isArray(b)) return false;
@@ -94,7 +89,7 @@ async function runRow({ abap, getCheck, rule, fullLines, row }) {
   const statements = buildStatements(new Lexer(snippetSource).run());
   await feedRtti(fullSource, objectName, abap);
   const methodName = targetProc.kind === 'METH' ? targetProc.methodName || '' : '';
-  await enrichStatementsWithAbaplint(statements, fullSource, objectName, methodName, targetProc.offset);
+  await enrichStatements(statements, fullSource, objectName, methodName, targetProc.offset);
 
   const procValue = buildProcedureValue(abap, {
     kind: targetProc.kind,

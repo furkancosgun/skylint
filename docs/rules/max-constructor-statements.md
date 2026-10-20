@@ -56,7 +56,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value |
 |---|---|:---:|
-| `MAX_STATEMENTS` | `Integer / String` | <code>10</code> |
+| `MAX_STATEMENTS` | `Integer` | <code>10</code> |
 
 ## CLI & CI/CD Configuration
 

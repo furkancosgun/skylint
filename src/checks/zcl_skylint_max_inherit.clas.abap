@@ -26,7 +26,7 @@ CLASS zcl_skylint_max_inherit IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
         VALUE #( description       = 'Avoid deep class inheritance hierarchies'
-                 remote_enablement = abap_true
+                 remote_enablement = abap_false
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-deep_inheritance
                        severity       = if_ci_atc_check=>finding_severities-warning
