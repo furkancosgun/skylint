@@ -100,6 +100,7 @@ for (const rule of RULES) {
   const checkFile = path.join(checksDir, `${rule.className.toLowerCase()}.clas.abap`);
   let classDesc = rule.ruleId;
   let findingCode = 'UNKNOWN';
+  let findingCodes = [];
   let severity = 'warning';
   let hasQuickfix = false;
   let attributes = [];
@@ -110,8 +111,10 @@ for (const rule of RULES) {
     const descMatch = content.match(/description\s*=\s*'([^']+)'/);
     if (descMatch) classDesc = descMatch[1].replace(/^skylint:\s*/i, '').trim();
 
-    const codeMatch = content.match(/c_finding_codes[\s\S]*?VALUE\s*'([A-Za-z0-9_]+)'/);
-    if (codeMatch) findingCode = codeMatch[1];
+    const codeBlockMatch = content.match(/BEGIN OF c_finding_codes,([\s\S]*?)END OF c_finding_codes\./);
+    const codeMatches = codeBlockMatch ? [...codeBlockMatch[1].matchAll(/VALUE\s*'([A-Za-z0-9_]+)'/g)] : [];
+    findingCodes = codeMatches.map((m) => m[1]);
+    if (findingCodes.length > 0) findingCode = findingCodes[0];
 
     const sevMatch = content.match(/severity\s*=\s*if_ci_atc_check=>finding_severities-([a-z]+)/);
     if (sevMatch) severity = sevMatch[1];
@@ -170,7 +173,8 @@ for (const rule of RULES) {
   if (hasQuickfix) {
     ruleDoc += `  <Badge type="warning" text="⚡ QuickFix Ready" />\n`;
   }
-  ruleDoc += `  <Badge type="danger" text="Finding: ${findingCode}" />\n`;
+  const findingBadge = findingCodes.length > 1 ? `Finding: ${findingCode} (+${findingCodes.length - 1})` : `Finding: ${findingCode}`;
+  ruleDoc += `  <Badge type="danger" text="${findingBadge}" />\n`;
   ruleDoc += `</div>\n\n`;
 
   // Meaningful Description: Include check purpose & specific finding text
@@ -215,7 +219,8 @@ for (const rule of RULES) {
     ruleDoc += `| Parameter Name | Data Type | Default Value |\n`;
     ruleDoc += `|---|---|:---:|\n`;
     for (const attr of attributes) {
-      ruleDoc += `| \`${attr.name}\` | \`${attr.kind}\` | \`${attr.defaultValue}\` |\n`;
+      const escapedDefault = attr.defaultValue.replace(/\|/g, '\\|');
+      ruleDoc += `| \`${attr.name}\` | \`${attr.kind}\` | ${escapedDefault} |\n`;
     }
     ruleDoc += `\n`;
   }
@@ -240,7 +245,7 @@ for (const rule of RULES) {
   // ABAP Class Details
   ruleDoc += `## Technical Details\n\n`;
   ruleDoc += `* **Native ATC Class:** \`${rule.className}\`\n`;
-  ruleDoc += `* **Finding Code:** \`${findingCode}\`\n`;
+  ruleDoc += `   * **Finding Codes:** ${findingCodes.map((c) => `\`${c}\``).join(', ')}\n`;
   ruleDoc += `* **Implementation File:** [${rule.className.toLowerCase()}.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/${rule.className.toLowerCase()}.clas.abap)\n`;
 
   fs.writeFileSync(path.join(rulesDocsDir, `${rule.ruleId}.md`), ruleDoc, 'utf8');
