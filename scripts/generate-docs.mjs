@@ -245,7 +245,15 @@ for (const rule of RULES) {
   // ABAP Class Details
   ruleDoc += `## Technical Details\n\n`;
   ruleDoc += `* **Native ATC Class:** \`${rule.className}\`\n`;
-  ruleDoc += `   * **Finding Codes:** ${findingCodes.map((c) => `\`${c}\``).join(', ')}\n`;
+  ruleDoc += `### Finding Codes\n\n`;
+  ruleDoc += `| Finding Code | ATC Finding Message |\n`;
+  ruleDoc += `|---|---|\n`;
+  for (let i = 0; i < findingCodes.length; i++) {
+    const msg = findingTexts[i] || '';
+    const escapedMsg = msg.replace(/\|/g, '&#124;');
+    ruleDoc += `| \`${findingCodes[i]}\` | ${escapedMsg} |\n`;
+  }
+  ruleDoc += `\n`;
   ruleDoc += `* **Implementation File:** [${rule.className.toLowerCase()}.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/${rule.className.toLowerCase()}.clas.abap)\n`;
 
   fs.writeFileSync(path.join(rulesDocsDir, `${rule.ruleId}.md`), ruleDoc, 'utf8');
