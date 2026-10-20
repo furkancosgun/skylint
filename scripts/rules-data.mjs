@@ -357,6 +357,16 @@ ENDCLASS.`,
     },
   },
   {
+    ruleId: 'no-list-processing',
+    className: 'ZCL_SKYLINT_NO_LIST_PROC',
+    pseudoComment: 'LIST_PROC',
+    category: 'anti-patterns',
+    example: {
+      bad: `WRITE: / 'Order processed:'.\nULINE.`,
+      good: `mo_logger->info( 'Order processed:' ).`,
+    },
+  },
+  {
     ruleId: 'max-params',
     className: 'ZCL_SKYLINT_MAX_PARAMS',
     pseudoComment: 'MAX_PARAMS',

@@ -293,6 +293,39 @@
       ]
     },
     {
+      "checkName": "ZSKYLINT_NO_LIST_PROC",
+      "parameters": [
+        {
+          "name": "CHECK_WRITE",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_ULINE",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_SKIP",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_OTHER",
+          "value": "X"
+        },
+        {
+          "name": "IGN_WRITE_TO",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_LEAVE",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_REJECT",
+          "value": "X"
+        }
+      ]
+    },
+    {
       "checkName": "ZSKYLINT_MAX_PARAMS",
       "parameters": [
         {

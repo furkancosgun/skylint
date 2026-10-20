@@ -1,0 +1,34 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Prohibit classic list processing statements",
+    "originalLanguage": "en",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "category": "ZSKYLINT",
+  "implementingClass": "ZCL_SKYLINT_NO_LIST_PROC",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "CHECK_WRITE"
+    },
+    {
+      "name": "CHECK_ULINE"
+    },
+    {
+      "name": "CHECK_SKIP"
+    },
+    {
+      "name": "CHECK_OTHER"
+    },
+    {
+      "name": "IGN_WRITE_TO"
+    },
+    {
+      "name": "CHECK_LEAVE"
+    },
+    {
+      "name": "CHECK_REJECT"
+    }
+  ]
+}
