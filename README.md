@@ -62,11 +62,11 @@ skylint/
 │   └── atc/          # Generated SAP ATC objects (CHKC category, CHKO checks, CHKV variant)
 ├── deps/             # Local ATC framework stubs for offline abaplint validation
 ├── docs/             # VitePress enterprise documentation & interactive rule catalog
+├── lib/              # Test harness internals, AST parser, and QuickFix validator
 ├── scripts/          # Generators for ATC descriptors, documentation, and metadata
 ├── test/
 │   ├── fixtures/     # 95 rule fixture suites (source.abap and expected.json)
-│   ├── run.mjs       # ATC-native offline test harness
-│   └── roundtrip.mjs # QuickFix AST round-trip syntax validator
+│   └── run.mjs       # ATC-native offline test harness
 ├── abaplint.json     # ABAP Cloud validation rules
 └── package.json      # NPM build, test, and documentation scripts
 ```

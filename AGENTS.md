@@ -392,7 +392,7 @@ Notes:
 - Local verification: `npm test` runs full linter, build, and fixture assertions across all checks.
   Run `node test/run.mjs [XXX]` to test a specific check.
 - **QuickFix Round-Trip Validation:** Every recorded QuickFix is automatically applied and parsed
-  via `@abaplint/core` (`test/roundtrip.mjs`) to ensure it leaves behind valid, parseable ABAP.
+  via `@abaplint/core` (`lib/roundtrip.mjs`) to ensure it leaves behind valid, parseable ABAP.
 - `expected.json` rows target either a `METHOD name` slice, `CLASS/INTERFACE name` definition block
   (`target = 'LCL_CHILD'` slices `CLASS lcl_child DEFINITION..ENDCLASS.`), or full procedure (`target = 'LCL_X=>METH'`).
 - Rows assert `{target, code, line, column}` plus optional `quickfixes: [...]`
