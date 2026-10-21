@@ -1,6 +1,6 @@
 [
   {
-    "method": "TEST_001",
+    "target": "TEST_001",
     "code": "OMITEXPORT",
     "line": 4,
     "column": 4,
@@ -9,7 +9,7 @@
     ]
   },
   {
-    "method": "TEST_002",
+    "target": "TEST_002",
     "code": "OMITPARM",
     "line": 4,
     "column": 4,
@@ -18,7 +18,7 @@
     ]
   },
   {
-    "method": "TEST_003",
+    "target": "TEST_003",
     "code": "OMITEXPORT",
     "line": 3,
     "column": 4,
@@ -27,23 +27,23 @@
     ]
   },
   {
-    "method": "TEST_004",
+    "target": "TEST_004",
     "code": null
   },
   {
-    "method": "TEST_005",
+    "target": "TEST_005",
     "code": null
   },
   {
-    "method": "TEST_006",
+    "target": "TEST_006",
     "code": null
   },
   {
-    "method": "TEST_007",
+    "target": "TEST_007",
     "code": null
   },
   {
-    "method": "TEST_008",
+    "target": "TEST_008",
     "code": "OMITRECEIV",
     "line": 4,
     "column": 4,
@@ -52,7 +52,7 @@
     ]
   },
   {
-    "method": "TEST_009",
+    "target": "TEST_009",
     "code": "OMITRECEIV",
     "line": 4,
     "column": 4,
@@ -61,7 +61,7 @@
     ]
   },
   {
-    "method": "TEST_010",
+    "target": "TEST_010",
     "code": "OMITPARM",
     "line": 4,
     "column": 4,
@@ -70,7 +70,7 @@
     ]
   },
   {
-    "method": "TEST_011",
+    "target": "TEST_011",
     "code": null
   }
 ]

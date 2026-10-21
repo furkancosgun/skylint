@@ -73,14 +73,15 @@ function readFindingDetails(g) {
  * Runs a single expected row assertion against the ATC check instance.
  */
 export async function runRow({ abap, getCheck, rule, fullLines, row, proceduresCache = null }) {
+  const targetName = row.target || row.method;
   const procedures = proceduresCache || extractAllProcedures(fullLines);
-  const targetProc = resolveProcedureForTarget(procedures, row.method);
+  const targetProc = resolveProcedureForTarget(procedures, targetName);
   const checkId = rule.ruleId;
 
   if (!targetProc || targetProc.snippet.length === 0) {
     return {
       pass: false,
-      message: `${checkId}/${row.method}: procedure could not be extracted`,
+      message: `${checkId}/${targetName}: procedure could not be extracted`,
       findings: [],
     };
   }
@@ -143,7 +144,7 @@ export async function runRow({ abap, getCheck, rule, fullLines, row, proceduresC
       if (errors.length > 0) {
         return {
           pass: false,
-          message: `${checkId}/${row.method}: quickfix ${fix.code} breaks syntax: ${errors.join('; ')}`,
+          message: `${checkId}/${targetName}: quickfix ${fix.code} breaks syntax: ${errors.join('; ')}`,
           findings,
         };
       }
@@ -155,7 +156,7 @@ export async function runRow({ abap, getCheck, rule, fullLines, row, proceduresC
     if (findings.length === 0) return { pass: true, findings };
     return {
       pass: false,
-      message: `${checkId}/${row.method} [${targetProc.kind} ${targetProc.name}]: expected 0 findings, got ${JSON.stringify(findings)}`,
+      message: `${checkId}/${targetName} [${targetProc.kind} ${targetProc.name}]: expected 0 findings, got ${JSON.stringify(findings)}`,
       findings,
     };
   }
@@ -165,7 +166,7 @@ export async function runRow({ abap, getCheck, rule, fullLines, row, proceduresC
   if (!hit) {
     return {
       pass: false,
-      message: `${checkId}/${row.method} [${targetProc.kind} ${targetProc.name}]: expected ${row.code} at ${row.line}:${row.column}, got ${JSON.stringify(findings)}`,
+      message: `${checkId}/${targetName} [${targetProc.kind} ${targetProc.name}]: expected ${row.code} at ${row.line}:${row.column}, got ${JSON.stringify(findings)}`,
       findings,
     };
   }
@@ -174,7 +175,7 @@ export async function runRow({ abap, getCheck, rule, fullLines, row, proceduresC
   if (row.quickfixes !== undefined && !sameCodes(hit.quickfixes, row.quickfixes)) {
     return {
       pass: false,
-      message: `${checkId}/${row.method}: expected quickfixes ${JSON.stringify(row.quickfixes)}, got ${JSON.stringify(hit.quickfixes)}`,
+      message: `${checkId}/${targetName}: expected quickfixes ${JSON.stringify(row.quickfixes)}, got ${JSON.stringify(hit.quickfixes)}`,
       findings,
     };
   }
@@ -189,6 +190,7 @@ async function runCheck({ abap, getCheck, rule, verbose = false }) {
   let passed = 0;
 
   for (const row of expected) {
+    const targetName = row.target || row.method;
     const res = await runRow({
       abap,
       getCheck,
@@ -200,7 +202,7 @@ async function runCheck({ abap, getCheck, rule, verbose = false }) {
     if (res.pass) {
       passed += 1;
       if (verbose) {
-        console.log(`  PASS ${rule.ruleId}/${row.method}`);
+        console.log(`  PASS ${rule.ruleId}/${targetName}`);
       }
     } else {
       failures.push(res.message);

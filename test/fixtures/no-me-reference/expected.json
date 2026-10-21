@@ -1,24 +1,24 @@
 [
   {
-    "method": "TEST_001",
+    "target": "TEST_001",
     "code": "AVOIDME",
     "line": 2,
     "column": 4,
     "quickfixes": []
   },
   {
-    "method": "TEST_002",
+    "target": "TEST_002",
     "code": null
   },
   {
-    "method": "TEST_003",
+    "target": "TEST_003",
     "code": "AVOIDME",
     "line": 2,
     "column": 4,
     "quickfixes": []
   },
   {
-    "method": "CONSTRUCTOR",
+    "target": "CONSTRUCTOR",
     "code": null
   }
 ]

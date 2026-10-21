@@ -1,6 +1,6 @@
 [
   {
-    "method": "LCL_BAD",
+    "target": "LCL_BAD",
     "code": "PARAM_ESCP",
     "line": 3,
     "column": 4,
@@ -9,11 +9,11 @@
     ]
   },
   {
-    "method": "LCL_CLEAN",
+    "target": "LCL_CLEAN",
     "code": null
   },
   {
-    "method": "LCL_BAD2",
+    "target": "LCL_BAD2",
     "code": "PARAM_ESCP",
     "line": 3,
     "column": 4,

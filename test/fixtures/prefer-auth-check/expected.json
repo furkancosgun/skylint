@@ -1,6 +1,6 @@
 [
   {
-    "method": "TEST_001",
+    "target": "TEST_001",
     "code": "AUTH_CHECK",
     "line": 2,
     "column": 4,
@@ -9,11 +9,11 @@
     ]
   },
   {
-    "method": "TEST_002",
+    "target": "TEST_002",
     "code": null
   },
   {
-    "method": "TEST_003",
+    "target": "TEST_003",
     "code": "AUTH_CHECK",
     "line": 2,
     "column": 4,

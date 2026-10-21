@@ -1,4 +1,12 @@
 [
-  { "method": "TEST_001", "code": "NO_DASH", "line": 2, "column": 4 },
-  { "method": "TEST_002", "code": null }
+  {
+    "target": "TEST_001",
+    "code": "NO_DASH",
+    "line": 2,
+    "column": 4
+  },
+  {
+    "target": "TEST_002",
+    "code": null
+  }
 ]

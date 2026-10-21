@@ -1,10 +1,46 @@
 [
-  { "method": "TEST_001", "code": "DYN_STUFF", "line": 3, "column": 4 },
-  { "method": "TEST_002", "code": null },
-  { "method": "TEST_003", "code": "DYN_STUFF", "line": 4, "column": 4 },
-  { "method": "TEST_004", "code": "DYN_STUFF", "line": 4, "column": 4 },
-  { "method": "TEST_005", "code": null },
-  { "method": "TEST_006", "code": "DYN_STUFF", "line": 3, "column": 4 },
-  { "method": "TEST_007", "code": "DYN_STUFF", "line": 4, "column": 4 },
-  { "method": "TEST_008", "code": "DYN_STUFF", "line": 3, "column": 4 }
+  {
+    "target": "TEST_001",
+    "code": "DYN_STUFF",
+    "line": 3,
+    "column": 4
+  },
+  {
+    "target": "TEST_002",
+    "code": null
+  },
+  {
+    "target": "TEST_003",
+    "code": "DYN_STUFF",
+    "line": 4,
+    "column": 4
+  },
+  {
+    "target": "TEST_004",
+    "code": "DYN_STUFF",
+    "line": 4,
+    "column": 4
+  },
+  {
+    "target": "TEST_005",
+    "code": null
+  },
+  {
+    "target": "TEST_006",
+    "code": "DYN_STUFF",
+    "line": 3,
+    "column": 4
+  },
+  {
+    "target": "TEST_007",
+    "code": "DYN_STUFF",
+    "line": 4,
+    "column": 4
+  },
+  {
+    "target": "TEST_008",
+    "code": "DYN_STUFF",
+    "line": 3,
+    "column": 4
+  }
 ]

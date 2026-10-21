@@ -368,8 +368,8 @@ ENDCLASS.
 `expected.json` (`code: null` asserts zero findings):
 ```json
 [
-  { "method": "TEST_001", "code": "FINDINGCD", "line": 2, "column": 4, "quickfixes": ["REPLACE_ST"] },
-  { "method": "TEST_002", "code": null }
+  { "target": "TEST_001", "code": "FINDINGCD", "line": 2, "column": 4, "quickfixes": ["REPLACE_ST"] },
+  { "target": "TEST_002", "code": null }
 ]
 ```
 
@@ -378,10 +378,9 @@ Notes:
   Run `node test/run.mjs [XXX]` to test a specific check.
 - **QuickFix Round-Trip Validation:** Every recorded QuickFix is automatically applied and parsed
   via `@abaplint/core` (`test/roundtrip.mjs`) to ensure it leaves behind valid, parseable ABAP.
-- `expected.json` rows target either a `METHOD name` slice or a `CLASS/INTERFACE name` definition block
-  (`method = 'LCL_CHILD'` slices `CLASS lcl_child DEFINITION..ENDCLASS.`). Method rows fall back to a class
-  definition block when the body is empty/`RETURN.` only.
-- Rows assert `{method, code, line, column}` plus optional `quickfixes: [...]`
+- `expected.json` rows target either a `METHOD name` slice, `CLASS/INTERFACE name` definition block
+  (`target = 'LCL_CHILD'` slices `CLASS lcl_child DEFINITION..ENDCLASS.`), or full procedure (`target = 'LCL_X=>METH'`).
+- Rows assert `{target, code, line, column}` plus optional `quickfixes: [...]`
   (created quickfix codes recorded by the fakes). Fill missing `quickfixes`
   with `node test/run.mjs --fix-quickfixes [XXX]` — it never overwrites
   existing entries, so stale values fail loudly instead of being masked.

@@ -1,6 +1,6 @@
 [
   {
-    "method": "TEST_001",
+    "target": "TEST_001",
     "code": "PREF_ICST",
     "line": 3,
     "column": 4,
@@ -9,7 +9,7 @@
     ]
   },
   {
-    "method": "TEST_002",
+    "target": "TEST_002",
     "code": "PREF_ICST",
     "line": 3,
     "column": 4,
@@ -18,14 +18,23 @@
     ]
   },
   {
-    "method": "TEST_003",
+    "target": "TEST_003",
     "code": null
   },
   {
-    "method": "TEST_004",
+    "target": "TEST_004",
     "code": null
   },
-  { "method": "TEST_005", "code": null },
-  { "method": "TEST_006", "code": null },
-  { "method": "TEST_007", "code": null }
+  {
+    "target": "TEST_005",
+    "code": null
+  },
+  {
+    "target": "TEST_006",
+    "code": null
+  },
+  {
+    "target": "TEST_007",
+    "code": null
+  }
 ]

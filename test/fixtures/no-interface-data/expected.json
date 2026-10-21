@@ -1,24 +1,24 @@
 [
   {
-    "method": "LIF_TEST",
+    "target": "LIF_TEST",
     "code": "INTF_DATA",
     "line": 2,
     "column": 2,
     "quickfixes": []
   },
   {
-    "method": "LIF_CLEAN",
+    "target": "LIF_CLEAN",
     "code": null
   },
   {
-    "method": "LIF_STATE2",
+    "target": "LIF_STATE2",
     "code": "INTF_DATA",
     "line": 2,
     "column": 2,
     "quickfixes": []
   },
   {
-    "method": "LIF_CONSTS2",
+    "target": "LIF_CONSTS2",
     "code": null
   }
 ]

@@ -1,24 +1,24 @@
 [
   {
-    "method": "LCL_BAD",
+    "target": "LCL_BAD",
     "code": "BOOL_NAME",
     "line": 3,
     "column": 4,
     "quickfixes": []
   },
   {
-    "method": "LCL_CLEAN",
+    "target": "LCL_CLEAN",
     "code": null
   },
   {
-    "method": "LCL_CALC",
+    "target": "LCL_CALC",
     "code": "BOOL_NAME",
     "line": 3,
     "column": 4,
     "quickfixes": []
   },
   {
-    "method": "LCL_STATE",
+    "target": "LCL_STATE",
     "code": null
   }
 ]

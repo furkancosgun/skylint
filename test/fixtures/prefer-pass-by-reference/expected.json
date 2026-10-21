@@ -1,13 +1,13 @@
 [
   {
-    "method": "LCL_BAD",
+    "target": "LCL_BAD",
     "code": "SLOW_PASS",
     "line": 3,
     "column": 4,
     "quickfixes": []
   },
   {
-    "method": "LCL_CLEAN",
+    "target": "LCL_CLEAN",
     "code": null
   }
 ]

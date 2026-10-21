@@ -1,17 +1,17 @@
 [
   {
-    "method": "TEST_001",
+    "target": "TEST_001",
     "code": "NESTED_TRY",
     "line": 3,
     "column": 6,
     "quickfixes": []
   },
   {
-    "method": "TEST_002",
+    "target": "TEST_002",
     "code": null
   },
   {
-    "method": "TEST_003",
+    "target": "TEST_003",
     "code": "NESTED_TRY",
     "line": 4,
     "column": 6,

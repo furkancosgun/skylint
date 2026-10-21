@@ -1,13 +1,64 @@
 [
-  { "method": "TEST_001", "code": "ENV_CHECK", "line": 2, "column": 7 },
-  { "method": "TEST_002", "code": "ENV_CHECK", "line": 2, "column": 15 },
-  { "method": "TEST_003", "code": "ENV_CHECK", "line": 2, "column": 9 },
-  { "method": "TEST_004", "code": "ENV_CHECK", "line": 2, "column": 7 },
-  { "method": "TEST_005", "code": "ENV_CHECK", "line": 2, "column": 7 },
-  { "method": "TEST_006", "code": null },
-  { "method": "TEST_007", "code": "ENV_CHECK", "line": 3, "column": 7 },
-  { "method": "TEST_008", "code": null },
-  { "method": "TEST_009", "code": "ENV_CHECK", "line": 3, "column": 16 },
-  { "method": "TEST_010", "code": "ENV_CHECK", "line": 2, "column": 7 },
-  { "method": "TEST_011", "code": "ENV_CHECK", "line": 2, "column": 7 }
+  {
+    "target": "TEST_001",
+    "code": "ENV_CHECK",
+    "line": 2,
+    "column": 7
+  },
+  {
+    "target": "TEST_002",
+    "code": "ENV_CHECK",
+    "line": 2,
+    "column": 15
+  },
+  {
+    "target": "TEST_003",
+    "code": "ENV_CHECK",
+    "line": 2,
+    "column": 9
+  },
+  {
+    "target": "TEST_004",
+    "code": "ENV_CHECK",
+    "line": 2,
+    "column": 7
+  },
+  {
+    "target": "TEST_005",
+    "code": "ENV_CHECK",
+    "line": 2,
+    "column": 7
+  },
+  {
+    "target": "TEST_006",
+    "code": null
+  },
+  {
+    "target": "TEST_007",
+    "code": "ENV_CHECK",
+    "line": 3,
+    "column": 7
+  },
+  {
+    "target": "TEST_008",
+    "code": null
+  },
+  {
+    "target": "TEST_009",
+    "code": "ENV_CHECK",
+    "line": 3,
+    "column": 16
+  },
+  {
+    "target": "TEST_010",
+    "code": "ENV_CHECK",
+    "line": 2,
+    "column": 7
+  },
+  {
+    "target": "TEST_011",
+    "code": "ENV_CHECK",
+    "line": 2,
+    "column": 7
+  }
 ]

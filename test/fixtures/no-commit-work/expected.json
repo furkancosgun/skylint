@@ -1,6 +1,6 @@
 [
   {
-    "method": "DO_COMMIT",
+    "target": "DO_COMMIT",
     "code": "NO_COMMIT",
     "line": 2,
     "column": 4,

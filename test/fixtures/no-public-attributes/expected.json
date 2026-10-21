@@ -1,24 +1,24 @@
 [
   {
-    "method": "LCL_MUTABLE",
+    "target": "LCL_MUTABLE",
     "code": "NOPUBATTR",
     "line": 3,
     "column": 4,
     "quickfixes": []
   },
   {
-    "method": "LCL_CLEAN",
+    "target": "LCL_CLEAN",
     "code": null
   },
   {
-    "method": "LCL_EXTRA_BAD",
+    "target": "LCL_EXTRA_BAD",
     "code": "NOPUBATTR",
     "line": 3,
     "column": 4,
     "quickfixes": []
   },
   {
-    "method": "LCL_EXTRA_CLEAN",
+    "target": "LCL_EXTRA_CLEAN",
     "code": null
   }
 ]

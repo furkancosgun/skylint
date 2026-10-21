@@ -1,9 +1,36 @@
 [
-  { "method": "TEST_001", "code": "NOT_OWN_TB", "line": 2, "column": 4 },
-  { "method": "TEST_002", "code": null },
-  { "method": "TEST_003", "code": "NOT_OWN_TB", "line": 2, "column": 4 },
-  { "method": "TEST_004", "code": null },
-  { "method": "TEST_005", "code": "NOT_OWN_TB", "line": 2, "column": 4 },
-  { "method": "TEST_006", "code": null },
-  { "method": "TEST_007", "code": null }
+  {
+    "target": "TEST_001",
+    "code": "NOT_OWN_TB",
+    "line": 2,
+    "column": 4
+  },
+  {
+    "target": "TEST_002",
+    "code": null
+  },
+  {
+    "target": "TEST_003",
+    "code": "NOT_OWN_TB",
+    "line": 2,
+    "column": 4
+  },
+  {
+    "target": "TEST_004",
+    "code": null
+  },
+  {
+    "target": "TEST_005",
+    "code": "NOT_OWN_TB",
+    "line": 2,
+    "column": 4
+  },
+  {
+    "target": "TEST_006",
+    "code": null
+  },
+  {
+    "target": "TEST_007",
+    "code": null
+  }
 ]

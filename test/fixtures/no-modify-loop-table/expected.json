@@ -1,14 +1,68 @@
 [
-  { "method": "TEST_001", "code": "MOD_LOOPTB", "line": 4, "column": 6 },
-  { "method": "TEST_002", "code": "MOD_LOOPTB", "line": 4, "column": 6 },
-  { "method": "TEST_003", "code": "MOD_LOOPTB", "line": 4, "column": 6 },
-  { "method": "TEST_004", "code": "MOD_LOOPTB", "line": 4, "column": 6 },
-  { "method": "TEST_005", "code": "MOD_LOOPTB", "line": 4, "column": 6 },
-  { "method": "TEST_006", "code": null },
-  { "method": "TEST_007", "code": null },
-  { "method": "TEST_008", "code": null },
-  { "method": "TEST_009", "code": "MOD_LOOPTB", "line": 6, "column": 6 },
-  { "method": "TEST_010", "code": "MOD_LOOPTB", "line": 4, "column": 6 },
-  { "method": "TEST_011", "code": "SORT_INLP", "line": 5, "column": 6 },
-  { "method": "TEST_012", "code": "MOD_LOOPTB", "line": 4, "column": 6 }
+  {
+    "target": "TEST_001",
+    "code": "MOD_LOOPTB",
+    "line": 4,
+    "column": 6
+  },
+  {
+    "target": "TEST_002",
+    "code": "MOD_LOOPTB",
+    "line": 4,
+    "column": 6
+  },
+  {
+    "target": "TEST_003",
+    "code": "MOD_LOOPTB",
+    "line": 4,
+    "column": 6
+  },
+  {
+    "target": "TEST_004",
+    "code": "MOD_LOOPTB",
+    "line": 4,
+    "column": 6
+  },
+  {
+    "target": "TEST_005",
+    "code": "MOD_LOOPTB",
+    "line": 4,
+    "column": 6
+  },
+  {
+    "target": "TEST_006",
+    "code": null
+  },
+  {
+    "target": "TEST_007",
+    "code": null
+  },
+  {
+    "target": "TEST_008",
+    "code": null
+  },
+  {
+    "target": "TEST_009",
+    "code": "MOD_LOOPTB",
+    "line": 6,
+    "column": 6
+  },
+  {
+    "target": "TEST_010",
+    "code": "MOD_LOOPTB",
+    "line": 4,
+    "column": 6
+  },
+  {
+    "target": "TEST_011",
+    "code": "SORT_INLP",
+    "line": 5,
+    "column": 6
+  },
+  {
+    "target": "TEST_012",
+    "code": "MOD_LOOPTB",
+    "line": 4,
+    "column": 6
+  }
 ]

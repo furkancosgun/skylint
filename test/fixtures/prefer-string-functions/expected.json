@@ -1,6 +1,6 @@
 [
   {
-    "method": "TEST_001",
+    "target": "TEST_001",
     "code": "CONDENSE_S",
     "line": 3,
     "column": 4,
@@ -9,7 +9,7 @@
     ]
   },
   {
-    "method": "TEST_001",
+    "target": "TEST_001",
     "code": "TRANSLATE_",
     "line": 4,
     "column": 4,
@@ -18,11 +18,11 @@
     ]
   },
   {
-    "method": "TEST_002",
+    "target": "TEST_002",
     "code": null
   },
   {
-    "method": "TEST_003",
+    "target": "TEST_003",
     "code": "CONDENSE_S",
     "line": 3,
     "column": 4,
@@ -31,11 +31,11 @@
     ]
   },
   {
-    "method": "TEST_004",
+    "target": "TEST_004",
     "code": null
   },
   {
-    "method": "TEST_005",
+    "target": "TEST_005",
     "code": "TRANSLATE_",
     "line": 3,
     "column": 4,
@@ -44,7 +44,7 @@
     ]
   },
   {
-    "method": "TEST_006",
+    "target": "TEST_006",
     "code": "SHIFT_STMT",
     "line": 3,
     "column": 4,
@@ -53,7 +53,7 @@
     ]
   },
   {
-    "method": "TEST_006",
+    "target": "TEST_006",
     "code": "SHIFT_STMT",
     "line": 4,
     "column": 4,
@@ -62,7 +62,7 @@
     ]
   },
   {
-    "method": "TEST_006",
+    "target": "TEST_006",
     "code": "SHIFT_STMT",
     "line": 5,
     "column": 4,
@@ -71,23 +71,23 @@
     ]
   },
   {
-    "method": "TEST_007",
+    "target": "TEST_007",
     "code": "SEARCH_STM",
     "line": 3,
     "column": 4
   },
   {
-    "method": "TEST_008",
+    "target": "TEST_008",
     "code": "OVERLAY_ST",
     "line": 3,
     "column": 4
   },
   {
-    "method": "TEST_009",
+    "target": "TEST_009",
     "code": null
   },
   {
-    "method": "TEST_010",
+    "target": "TEST_010",
     "code": "REPLACE_ST",
     "line": 3,
     "column": 4,
@@ -96,7 +96,7 @@
     ]
   },
   {
-    "method": "TEST_011",
+    "target": "TEST_011",
     "code": "DESCRIBE_F",
     "line": 4,
     "column": 4,
@@ -105,7 +105,7 @@
     ]
   },
   {
-    "method": "TEST_012",
+    "target": "TEST_012",
     "code": null
   }
 ]

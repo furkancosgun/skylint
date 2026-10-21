@@ -1,6 +1,6 @@
 [
   {
-    "method": "TEST_001",
+    "target": "TEST_001",
     "code": "PREFERXSDB",
     "line": 5,
     "column": 4,
@@ -9,11 +9,11 @@
     ]
   },
   {
-    "method": "TEST_002",
+    "target": "TEST_002",
     "code": null
   },
   {
-    "method": "TEST_003",
+    "target": "TEST_003",
     "code": "PREFERXSDB",
     "line": 5,
     "column": 4,
@@ -22,7 +22,7 @@
     ]
   },
   {
-    "method": "TEST_005",
+    "target": "TEST_005",
     "code": null
   }
 ]

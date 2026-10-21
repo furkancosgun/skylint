@@ -1,20 +1,20 @@
 [
   {
-    "method": "LCL_BAD",
+    "target": "LCL_BAD",
     "code": "PARAM_LINE",
     "line": 3,
     "column": 4,
     "quickfixes": []
   },
   {
-    "method": "LCL_BAD",
+    "target": "LCL_BAD",
     "code": "PARAM_LINE",
     "line": 6,
     "column": 4,
     "quickfixes": []
   },
   {
-    "method": "LCL_GOOD",
+    "target": "LCL_GOOD",
     "code": null
   }
 ]

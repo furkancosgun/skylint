@@ -1,10 +1,10 @@
 [
   {
-    "method": "TEST_001",
+    "target": "TEST_001",
     "code": null
   },
   {
-    "method": "TEST_002",
+    "target": "TEST_002",
     "code": "LINE_LEN",
     "line": 2,
     "column": 4

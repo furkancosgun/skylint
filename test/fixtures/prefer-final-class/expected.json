@@ -1,24 +1,24 @@
 [
   {
-    "method": "LCL_NOT_FINAL",
+    "target": "LCL_NOT_FINAL",
     "code": "NOT_FINAL",
     "line": 1,
     "column": 0,
     "quickfixes": []
   },
   {
-    "method": "LCL_CLEAN",
+    "target": "LCL_CLEAN",
     "code": null
   },
   {
-    "method": "LCL_CHILD2",
+    "target": "LCL_CHILD2",
     "code": "NOT_FINAL",
     "line": 1,
     "column": 0,
     "quickfixes": []
   },
   {
-    "method": "LCL_CLEAN2",
+    "target": "LCL_CLEAN2",
     "code": null
   }
 ]

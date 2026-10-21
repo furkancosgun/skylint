@@ -1,6 +1,6 @@
 [
   {
-    "method": "TEST_001",
+    "target": "TEST_001",
     "code": "PREF_FIN",
     "line": 2,
     "column": 4,
@@ -9,27 +9,27 @@
     ]
   },
   {
-    "method": "TEST_002",
+    "target": "TEST_002",
     "code": null
   },
   {
-    "method": "TEST_003",
+    "target": "TEST_003",
     "code": null
   },
   {
-    "method": "TEST_004",
+    "target": "TEST_004",
     "code": null
   },
   {
-    "method": "TEST_005",
+    "target": "TEST_005",
     "code": null
   },
   {
-    "method": "TEST_006",
+    "target": "TEST_006",
     "code": null
   },
   {
-    "method": "TEST_007",
+    "target": "TEST_007",
     "code": "PREF_FIN",
     "line": 2,
     "column": 4,
@@ -38,11 +38,11 @@
     ]
   },
   {
-    "method": "TEST_008",
+    "target": "TEST_008",
     "code": null
   },
   {
-    "method": "TEST_009",
+    "target": "TEST_009",
     "code": "PREF_FIN",
     "line": 2,
     "column": 4,
@@ -51,7 +51,7 @@
     ]
   },
   {
-    "method": "TEST_010",
+    "target": "TEST_010",
     "code": "PREF_FIN",
     "line": 2,
     "column": 4,
@@ -60,15 +60,15 @@
     ]
   },
   {
-    "method": "TEST_011",
+    "target": "TEST_011",
     "code": null
   },
   {
-    "method": "TEST_012",
+    "target": "TEST_012",
     "code": null
   },
   {
-    "method": "TEST_013",
+    "target": "TEST_013",
     "code": null
   }
 ]

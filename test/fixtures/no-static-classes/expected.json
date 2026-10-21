@@ -1,24 +1,24 @@
 [
   {
-    "method": "LCL_HELPER",
+    "target": "LCL_HELPER",
     "code": "STAT_CLASS",
     "line": 1,
     "column": 0,
     "quickfixes": []
   },
   {
-    "method": "LCL_CLEAN",
+    "target": "LCL_CLEAN",
     "code": null
   },
   {
-    "method": "LCL_UTIL2",
+    "target": "LCL_UTIL2",
     "code": "STAT_CLASS",
     "line": 1,
     "column": 0,
     "quickfixes": []
   },
   {
-    "method": "LCL_MIXED2",
+    "target": "LCL_MIXED2",
     "code": null
   }
 ]

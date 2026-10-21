@@ -1,13 +1,13 @@
 [
   {
-    "method": "LCL_CHILD",
+    "target": "LCL_CHILD",
     "code": "DEEP_INHRT",
     "line": 1,
     "column": 0,
     "quickfixes": []
   },
   {
-    "method": "LCL_B2",
+    "target": "LCL_B2",
     "code": null
   }
 ]

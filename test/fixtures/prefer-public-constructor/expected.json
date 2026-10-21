@@ -1,13 +1,13 @@
 [
   {
-    "method": "LCL_BAD",
+    "target": "LCL_BAD",
     "code": "CTOR_PUB",
     "line": 3,
     "column": 4,
     "quickfixes": []
   },
   {
-    "method": "LCL_GOOD",
+    "target": "LCL_GOOD",
     "code": null
   }
 ]

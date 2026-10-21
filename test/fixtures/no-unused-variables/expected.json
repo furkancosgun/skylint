@@ -1,60 +1,60 @@
 [
   {
-    "method": "TEST_001",
+    "target": "TEST_001",
     "code": "UNUSED_VAR",
     "line": 2,
     "column": 4,
     "quickfixes": []
   },
   {
-    "method": "TEST_002",
+    "target": "TEST_002",
     "code": "UNUSED_VAR",
     "line": 2,
     "column": 4,
     "quickfixes": []
   },
   {
-    "method": "TEST_003",
+    "target": "TEST_003",
     "code": "UNUSED_VAR",
     "line": 2,
     "column": 4,
     "quickfixes": []
   },
   {
-    "method": "TEST_004",
+    "target": "TEST_004",
     "code": "UNUSED_VAR",
     "line": 2,
     "column": 4,
     "quickfixes": []
   },
   {
-    "method": "ZCL_TEST_NO_UNUSED_VARIABLES",
+    "target": "ZCL_TEST_NO_UNUSED_VARIABLES",
     "code": null
   },
   {
-    "method": "TEST_005",
+    "target": "TEST_005",
     "code": "UNUSED_VAR",
     "line": 2,
     "column": 4,
     "quickfixes": []
   },
   {
-    "method": "TEST_006",
+    "target": "TEST_006",
     "code": null
   },
   {
-    "method": "TEST_007",
+    "target": "TEST_007",
     "code": "UNUSED_VAR",
     "line": 2,
     "column": 4,
     "quickfixes": []
   },
   {
-    "method": "TEST_008",
+    "target": "TEST_008",
     "code": null
   },
   {
-    "method": "TEST_009",
+    "target": "TEST_009",
     "code": null
   }
 ]

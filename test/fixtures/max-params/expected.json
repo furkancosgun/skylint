@@ -1,24 +1,24 @@
 [
   {
-    "method": "LCL_MANY_PARAMS",
+    "target": "LCL_MANY_PARAMS",
     "code": "PARAMCOUNT",
     "line": 3,
     "column": 4,
     "quickfixes": []
   },
   {
-    "method": "LCL_CLEAN",
+    "target": "LCL_CLEAN",
     "code": null
   },
   {
-    "method": "LCL_MANY_TWO",
+    "target": "LCL_MANY_TWO",
     "code": "PARAMCOUNT",
     "line": 3,
     "column": 4,
     "quickfixes": []
   },
   {
-    "method": "LCL_TIDY",
+    "target": "LCL_TIDY",
     "code": null
   }
 ]

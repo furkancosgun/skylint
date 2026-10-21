@@ -1,42 +1,42 @@
 [
   {
-    "method": "TEST_001",
+    "target": "TEST_001",
     "code": "EMPTYCTRL",
     "line": 3,
     "column": 4,
     "quickfixes": []
   },
   {
-    "method": "TEST_002",
+    "target": "TEST_002",
     "code": null
   },
   {
-    "method": "TEST_003",
+    "target": "TEST_003",
     "code": "EMPTYCTRL",
     "line": 4,
     "column": 4,
     "quickfixes": []
   },
   {
-    "method": "TEST_004",
+    "target": "TEST_004",
     "code": null
   },
   {
-    "method": "TEST_005",
+    "target": "TEST_005",
     "code": "EMPTYCTRL",
     "line": 4,
     "column": 4,
     "quickfixes": []
   },
   {
-    "method": "TEST_006",
+    "target": "TEST_006",
     "code": "TRYWITHOUT",
     "line": 2,
     "column": 4,
     "quickfixes": []
   },
   {
-    "method": "TEST_007",
+    "target": "TEST_007",
     "code": null
   }
 ]

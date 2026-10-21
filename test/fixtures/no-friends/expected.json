@@ -1,22 +1,22 @@
 [
   {
-    "method": "LCL_SERVICE",
+    "target": "LCL_SERVICE",
     "code": "NO_FRIENDS",
     "line": 2,
     "column": 8
   },
   {
-    "method": "LCL_OPEN",
+    "target": "LCL_OPEN",
     "code": "NO_FRIENDS",
     "line": 2,
     "column": 8
   },
   {
-    "method": "LCL_CLEAN",
+    "target": "LCL_CLEAN",
     "code": null
   },
   {
-    "method": "ZCL_TEST_NO_FRIENDS",
+    "target": "ZCL_TEST_NO_FRIENDS",
     "code": null
   }
 ]

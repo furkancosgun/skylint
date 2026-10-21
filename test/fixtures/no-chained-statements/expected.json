@@ -1,6 +1,6 @@
 [
   {
-    "method": "TEST_001",
+    "target": "TEST_001",
     "code": "CHAINDECL",
     "line": 3,
     "column": 4,
@@ -9,11 +9,11 @@
     ]
   },
   {
-    "method": "TEST_002",
+    "target": "TEST_002",
     "code": null
   },
   {
-    "method": "TEST_003",
+    "target": "TEST_003",
     "code": "CHAINDECL",
     "line": 3,
     "column": 4,
@@ -22,11 +22,11 @@
     ]
   },
   {
-    "method": "TEST_004",
+    "target": "TEST_004",
     "code": null
   },
   {
-    "method": "TEST_005",
+    "target": "TEST_005",
     "code": "CHAINDECL",
     "line": 3,
     "column": 4,
@@ -35,7 +35,7 @@
     ]
   },
   {
-    "method": "TEST_006",
+    "target": "TEST_006",
     "code": "ASSIGNCHN",
     "line": 5,
     "column": 4,
@@ -44,7 +44,7 @@
     ]
   },
   {
-    "method": "TEST_007",
+    "target": "TEST_007",
     "code": null
   }
 ]
