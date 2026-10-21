@@ -58,7 +58,7 @@ Skylint is distributed as standard ABAP Cloud source code and can be imported di
 skylint/
 ├── src/
 │   ├── core/         # Engine core: Base check class, metadata, AST & RTTI utilities
-│   ├── checks/       # 95 modular check implementations (ZCL_SKYLINT_*)
+│   ├── checks/       # 95 modular check implementations
 │   └── atc/          # Generated SAP ATC objects (CHKC category, CHKO checks, CHKV variant)
 ├── deps/             # Local ATC framework stubs for offline abaplint validation
 ├── docs/             # VitePress enterprise documentation & interactive rule catalog
@@ -73,49 +73,21 @@ skylint/
 
 ---
 
-## 📋 Rule Categories (95 Rules)
+## 📋 Clean ABAP & Cloud Rules (95 Rules)
 
-Skylint organizes 95 Clean ABAP checks into structured categories. Explore the complete interactive catalog with detailed rationales, configuration attributes, and before/after code examples at [https://furkancosgun.github.io/skylint/rules/](https://furkancosgun.github.io/skylint/rules/).
+Skylint enforces 95 Clean ABAP, security, and cloud-native rules across 5 core categories.
 
-### 1. Modern Syntax & Expressions
-- `prefer-lines`: Prefer `lines( )` over `DESCRIBE TABLE ... LINES`. ⚡ QuickFix
-- `prefer-is-not`: Prefer `IS NOT` over `NOT ... IS`. ⚡ QuickFix
-- `prefer-new-operator`: Prefer `NEW #( )` over `CREATE OBJECT`. ⚡ QuickFix
-- `prefer-xsdbool`: Prefer `xsdbool( )` over manual IF-ELSE assignment. ⚡ QuickFix
-- `prefer-string-template`: Prefer string templates `|...|` over `CONCATENATE`. ⚡ QuickFix
-- `prefer-symbol-operators`: Prefer symbolic operators (`=`, `<>`, `<`, `>`) over textual operators (`EQ`, `NE`, `LT`, `GT`). ⚡ QuickFix
-- `prefer-calc-assign-op`: Prefer calculation assignment operators (`+=`, `-=`, `*=`, `/=`). ⚡ QuickFix
-- `prefer-cast`: Prefer modern `CAST #( )` over `?=`. ⚡ QuickFix
-- `no-call-method`: Avoid obsolete static `CALL METHOD` syntax. ⚡ QuickFix
-- `no-chained-statements`: Avoid chained declarations (`DATA: ...`) and chained assignments. ⚡ QuickFix
+Explore the complete interactive catalog with detailed rationales, configuration attributes, and before/after code examples:
 
-### 2. SQL & Performance
-- `no-db-in-loop`: Avoid database queries (`SELECT`, `UPDATE`, `DELETE`) inside loop iterations.
-- `no-empty-fae`: Detect `FOR ALL ENTRIES` without prior check for empty internal tables. ⚡ QuickFix
-- `no-select-star`: Disallow `SELECT *` and `SELECT ... ENDSELECT` loops.
-- `prefer-order-by`: Require explicit `ORDER BY` when using `SELECT ... UP TO 1 ROWS`.
-- `prefer-line-exists`: Prefer `line_exists( )` over `READ TABLE ... TRANSPORTING NO FIELDS`.
-- `prefer-transporting`: Enforce `TRANSPORTING` clause when using `MODIFY itab` inside a loop.
+👉 **[Browse Full Interactive Rule Catalog (https://furkancosgun.github.io/skylint/rules/)](https://furkancosgun.github.io/skylint/rules/)**
 
-### 3. Clean Architecture & Structure
-- `no-empty-block`: Flag empty control blocks (`IF`, `CASE`, `LOOP`, `TRY`).
-- `max-method-length`: Enforce maximum statement limit per method to prevent monolithic routines.
-- `max-nesting-depth`: Restrict deep nesting of control blocks (`IF`, `LOOP`, `TRY`).
-- `max-params`: Limit the number of parameters in method signatures.
-- `prefer-early-return`: Recommend early exit (`RETURN` / `CONTINUE`) over deeply nested conditional blocks.
-- `prefer-final-class`: Encourage `FINAL` classes by default unless explicitly intended for inheritance. ⚡ QuickFix
-- `prefer-final-data`: Enforce `FINAL(var)` on immutable inline declarations. ⚡ QuickFix
-- `no-static-classes`: Avoid static-only utility classes; prefer instantiable classes with interfaces.
-- `no-me-reference`: Discourage unnecessary `ME->` self-references.
+### Rule Categories
 
-### 4. Safety & Error Handling
-- `no-dangerous-statements`: Flag dangerous statements (`SYSTEM-CALL`, `GENERATE SUBROUTINE POOL`, etc.).
-- `prefer-auth-check`: Verify `AUTHORITY-CHECK` prior to transaction or sensitive calls. ⚡ QuickFix
-- `no-sy-modify`: Disallow manual overwrites of SAP system fields (`sy-*`).
-- `no-catch-cx-root`: Prevent catching generic `cx_root`; catch specific exception types.
-- `no-raise-cx-sy`: Prohibit throwing SAP internal kernel exceptions (`cx_sy_*`).
-- `prefer-class-exceptions`: Disallow legacy exception numbers; prefer class-based exceptions.
-- `no-client-specified`: Disallow `CLIENT SPECIFIED` and `USING CLIENT` in ABAP Cloud. ⚡ QuickFix
+- **Clean ABAP & Modern Syntax** (39 rules) — Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.
+- **Anti-Patterns & Bad Practices** (31 rules) — Discouraged language constructs, legacy statements, and redundant syntax.
+- **Performance & Database** (6 rules) — Database query efficiency, buffer protection, and internal table operation guidelines.
+- **Security & Robustness** (11 rules) — Authorizations, dynamic execution sanitation, error handling, and runtime safety.
+- **Metrics & Complexity Limits** (7 rules) — Quantitative boundaries for method size, nesting depth, parameter counts, and cyclomatic complexity.
 
 ---
 
