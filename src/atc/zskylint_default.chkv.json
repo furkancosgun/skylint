@@ -7,6 +7,12 @@
   },
   "selectedChecks": [
     {
+      "checkName": "ZSKYLINT_PREF_COND"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_SWITCH"
+    },
+    {
       "checkName": "ZSKYLINT_PREF_LINES"
     },
     {

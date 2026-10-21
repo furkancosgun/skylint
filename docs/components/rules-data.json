@@ -1,5 +1,61 @@
 [
   {
+    "ruleId": "prefer-cond",
+    "title": "Prefer COND #( ) Expression over IF/ELSEIF/ELSE",
+    "className": "ZCL_SKYLINT_PREF_COND",
+    "checkName": "ZSKYLINT_PREF_COND",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "PREF_COND",
+    "severity": "warning",
+    "findingCode": "PREFCOND",
+    "findingTexts": [
+      "Prefer COND #( ) constructor expression over IF/ELSEIF"
+    ],
+    "description": "Prefer COND #( ) expression over IF/ELSEIF/ELSE statement",
+    "rationale": "IF/ELSEIF/ELSE statements that merely assign values to a single variable based on conditional checks can be written much more concisely and expressively using modern ABAP COND #( ) constructor expressions.",
+    "hasQuickfix": true,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "REQUIRE_ELSE",
+        "kind": "Boolean",
+        "defaultValue": "false"
+      }
+    ],
+    "defaultParameters": [],
+    "nonCompliantCode": "IF lv_score >= 90.\n  lv_grade = 'A'.\nELSEIF lv_score >= 80.\n  lv_grade = 'B'.\nELSE.\n  lv_grade = 'C'.\nENDIF.",
+    "compliantCode": "lv_grade = COND #( \n  WHEN lv_score >= 90 THEN 'A'\n  WHEN lv_score >= 80 THEN 'B'\n  ELSE 'C' )."
+  },
+  {
+    "ruleId": "prefer-switch",
+    "title": "Prefer SWITCH #( ) Expression over CASE Statement",
+    "className": "ZCL_SKYLINT_PREF_SWITCH",
+    "checkName": "ZSKYLINT_PREF_SWITCH",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "PREF_SWITCH",
+    "severity": "warning",
+    "findingCode": "PREFSWITCH",
+    "findingTexts": [
+      "Prefer SWITCH #( ) constructor expression over CASE"
+    ],
+    "description": "Prefer SWITCH #( ) expression over CASE statement",
+    "rationale": "CASE statements that merely assign values to a single variable can be written much more concisely using modern ABAP SWITCH #( ) constructor expressions, eliminating repetitive assignment code and improving readability.",
+    "hasQuickfix": true,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "REQUIRE_OTHERS",
+        "kind": "Boolean",
+        "defaultValue": "false"
+      }
+    ],
+    "defaultParameters": [],
+    "nonCompliantCode": "CASE lv_status.\n  WHEN 'O'.\n    lv_text = 'Open'.\n  WHEN 'C'.\n    lv_text = 'Closed'.\n  WHEN OTHERS.\n    lv_text = 'Unknown'.\nENDCASE.",
+    "compliantCode": "lv_text = SWITCH #( lv_status\n  WHEN 'O' THEN 'Open'\n  WHEN 'C' THEN 'Closed'\n  ELSE 'Unknown' )."
+  },
+  {
     "ruleId": "prefer-lines",
     "title": "Prefer lines( ) over DESCRIBE TABLE",
     "className": "ZCL_SKYLINT_PREF_LINES",

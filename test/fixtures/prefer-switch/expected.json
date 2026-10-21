@@ -1,0 +1,6 @@
+[
+  { "target": "TEST_001", "code": "PREFSWITCH", "line": 5, "column": 4, "quickfixes": ["USESWITCH"] },
+  { "target": "TEST_002", "code": null },
+  { "target": "TEST_003", "code": null },
+  { "target": "TEST_004", "code": null }
+]

@@ -1,23 +1,25 @@
 ---
-description: "Comprehensive reference and catalog for all 95 Clean ABAP, security, performance, and architecture rules in Skylint."
+description: "Comprehensive reference and catalog for all 97 Clean ABAP, security, performance, and architecture rules in Skylint."
 ---
 
-# Rules Catalog (95 Rules)
+# Rules Catalog (97 Rules)
 
-Comprehensive reference for all **95** Clean ABAP, security, performance, and architecture rules in Skylint.
+Comprehensive reference for all **97** Clean ABAP, security, performance, and architecture rules in Skylint.
 
 ::: tip Skylint at a Glance
-- **95 Native ATC Rules:** 100% ABAP Cloud (Contract C1) & Steampunk Ready.
-- **35 Automated QuickFixes:** Instant one-click refactoring with <kbd>Ctrl</kbd> + <kbd>1</kbd> in Eclipse ADT.
+- **97 Native ATC Rules:** 100% ABAP Cloud (Contract C1) & Steampunk Ready.
+- **37 Automated QuickFixes:** Instant one-click refactoring with <kbd>Ctrl</kbd> + <kbd>1</kbd> in Eclipse ADT.
 - **Zero Legacy Overhead:** Built exclusively on `IF_CI_ATC_CHECK` (no obsolete Code Inspector / SCI dependency).
 :::
 
-## Clean ABAP & Modern Syntax (32)
+## Clean ABAP & Modern Syntax (34)
 
 Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.
 
 | Rule ID | ABAP Class | Description | Pseudo-Comment | QuickFix | Remote Enabled |
 |---|---|---|:---:|:---:|:---:|
+| [`prefer-cond`](/rules/prefer-cond) | `ZCL_SKYLINT_PREF_COND` | Prefer COND #( ) expression over IF/ELSEIF/ELSE statement | `#EC PREF_COND` | ⚡ Ready | ✅ Yes |
+| [`prefer-switch`](/rules/prefer-switch) | `ZCL_SKYLINT_PREF_SWITCH` | Prefer SWITCH #( ) expression over CASE statement | `#EC PREF_SWITCH` | ⚡ Ready | ✅ Yes |
 | [`prefer-lines`](/rules/prefer-lines) | `ZCL_SKYLINT_PREF_LINES` | Prefer lines( ) over DESCRIBE TABLE ... LINES | `#EC LINES` | ⚡ Ready | ✅ Yes |
 | [`prefer-is-not`](/rules/prefer-is-not) | `ZCL_SKYLINT_PREF_IS_NOT` | Prefer IS NOT over NOT ... IS | `#EC IS_NOT` | ⚡ Ready | ✅ Yes |
 | [`prefer-string-template`](/rules/prefer-string-template) | `ZCL_SKYLINT_PREF_STR_TMPL` | Prefer string templates over CONCATENATE | `#EC STR_TMPL` | ⚡ Ready | ✅ Yes |

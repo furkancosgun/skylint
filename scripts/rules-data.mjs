@@ -33,6 +33,30 @@ export const CATEGORIES = {
 
 export const RULES = [
   {
+    ruleId: 'prefer-cond',
+    title: 'Prefer COND #( ) Expression over IF/ELSEIF/ELSE',
+    rationale: 'IF/ELSEIF/ELSE statements that merely assign values to a single variable based on conditional checks can be written much more concisely and expressively using modern ABAP COND #( ) constructor expressions.',
+    className: 'ZCL_SKYLINT_PREF_COND',
+    pseudoComment: 'PREF_COND',
+    category: 'clean-abap',
+    example: {
+      bad: `IF lv_score >= 90.\n  lv_grade = 'A'.\nELSEIF lv_score >= 80.\n  lv_grade = 'B'.\nELSE.\n  lv_grade = 'C'.\nENDIF.`,
+      good: `lv_grade = COND #( \n  WHEN lv_score >= 90 THEN 'A'\n  WHEN lv_score >= 80 THEN 'B'\n  ELSE 'C' ).`,
+    },
+  },
+  {
+    ruleId: 'prefer-switch',
+    title: 'Prefer SWITCH #( ) Expression over CASE Statement',
+    rationale: 'CASE statements that merely assign values to a single variable can be written much more concisely using modern ABAP SWITCH #( ) constructor expressions, eliminating repetitive assignment code and improving readability.',
+    className: 'ZCL_SKYLINT_PREF_SWITCH',
+    pseudoComment: 'PREF_SWITCH',
+    category: 'clean-abap',
+    example: {
+      bad: `CASE lv_status.\n  WHEN 'O'.\n    lv_text = 'Open'.\n  WHEN 'C'.\n    lv_text = 'Closed'.\n  WHEN OTHERS.\n    lv_text = 'Unknown'.\nENDCASE.`,
+      good: `lv_text = SWITCH #( lv_status\n  WHEN 'O' THEN 'Open'\n  WHEN 'C' THEN 'Closed'\n  ELSE 'Unknown' ).`,
+    },
+  },
+  {
     ruleId: 'prefer-lines',
     title: 'Prefer lines( ) over DESCRIBE TABLE',
     rationale: 'The built-in `lines( )` function is modern, functional, and can be embedded directly into expressions and conditionals without requiring a temporary variable or the cumbersome procedural `DESCRIBE TABLE ... LINES` statement.',
