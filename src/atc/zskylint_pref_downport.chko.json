@@ -6,7 +6,7 @@
     "abapLanguageVersion": "cloudDevelopment"
   },
   "category": "ZSKYLINT",
-  "implementingClass": "ZCL_SKYLINT_DOWNPORT_COMPAT",
+  "implementingClass": "ZCL_SKYLINT_PREF_DOWNPORT",
   "checkType": "remoteEnabled",
   "parameters": [
     {

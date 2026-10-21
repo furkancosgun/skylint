@@ -1,4 +1,4 @@
-CLASS zcl_skylint_downport_compat DEFINITION
+CLASS zcl_skylint_pref_downport DEFINITION
   PUBLIC
   INHERITING FROM zcl_skylint_check_base
   CREATE PUBLIC.
@@ -74,45 +74,42 @@ CLASS zcl_skylint_downport_compat DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_downport_compat IMPLEMENTATION.
-
+CLASS zcl_skylint_pref_downport IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #(
-            description       = 'Detect 7.40+ syntax incompatible with downport targets'
-            remote_enablement = abap_true
-            finding_codes     = VALUE #( ( code           = c_finding_codes-downport_incompatible
-                                           severity       = if_ci_atc_check=>finding_severities-warning
-                                           text           = 'Modern ABAP construct is incompatible with downport target release'
-                                           pseudo_comment = c_pseudo_comment ) )
-            attributes        = VALUE #(
-                kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                ( name  = 'CHECK_CONSTRUCTORS'
-                  value = REF #( mv_check_constructors ) )
-                ( name  = 'CHECK_TABLE_EXPR'
-                  value = REF #( mv_check_table_expr ) )
-                ( name  = 'CHECK_INLINE_DECL'
-                  value = REF #( mv_check_inline_decl ) )
-                ( name  = 'CHECK_STRING_TEMPL'
-                  value = REF #( mv_check_string_templ ) )
-                ( name  = 'CHECK_CHAINING'
-                  value = REF #( mv_check_chaining ) )
-                ( name  = 'CHECK_EMPTY_KEY'
-                  value = REF #( mv_check_empty_key ) )
-                ( name  = 'CHECK_CALC_ASSIGN'
-                  value = REF #( mv_check_calc_assign ) )
-                ( name  = 'CHECK_LINE_FUNCS'
-                  value = REF #( mv_check_line_funcs ) )
-                ( name  = 'CHECK_STRICT_SQL'
-                  value = REF #( mv_check_strict_sql ) )
-                ( name  = 'CHECK_RAISE_MESSAGE'
-                  value = REF #( mv_check_raise_msg ) ) ) ) ).
+    super->constructor( VALUE #(
+                            description       = 'Detect 7.40+ syntax incompatible with downport targets'
+                            remote_enablement = abap_true
+                            finding_codes     = VALUE #(
+                                ( code           = c_finding_codes-downport_incompatible
+                                  severity       = if_ci_atc_check=>finding_severities-warning
+                                  text           = 'Modern ABAP construct is incompatible with downport target release'
+                                  pseudo_comment = c_pseudo_comment ) )
+                            attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                                         ( name  = 'CHECK_CONSTRUCTORS'
+                                                           value = REF #( mv_check_constructors ) )
+                                                         ( name  = 'CHECK_TABLE_EXPR'
+                                                           value = REF #( mv_check_table_expr ) )
+                                                         ( name  = 'CHECK_INLINE_DECL'
+                                                           value = REF #( mv_check_inline_decl ) )
+                                                         ( name  = 'CHECK_STRING_TEMPL'
+                                                           value = REF #( mv_check_string_templ ) )
+                                                         ( name  = 'CHECK_CHAINING'
+                                                           value = REF #( mv_check_chaining ) )
+                                                         ( name  = 'CHECK_EMPTY_KEY'
+                                                           value = REF #( mv_check_empty_key ) )
+                                                         ( name  = 'CHECK_CALC_ASSIGN'
+                                                           value = REF #( mv_check_calc_assign ) )
+                                                         ( name  = 'CHECK_LINE_FUNCS'
+                                                           value = REF #( mv_check_line_funcs ) )
+                                                         ( name  = 'CHECK_STRICT_SQL'
+                                                           value = REF #( mv_check_strict_sql ) )
+                                                         ( name  = 'CHECK_RAISE_MESSAGE'
+                                                           value = REF #( mv_check_raise_msg ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    " If all checks are disabled (default), return immediately
     IF     mv_check_constructors = abap_false
        AND mv_check_table_expr   = abap_false
        AND mv_check_inline_decl  = abap_false
@@ -200,7 +197,6 @@ CLASS zcl_skylint_downport_compat IMPLEMENTATION.
     rv_has = abap_false.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      " Keyword check: must have empty references so user variables with the same name are ignored
       IF <ls_token>-references IS NOT INITIAL.
         CONTINUE.
       ENDIF.
@@ -219,7 +215,7 @@ CLASS zcl_skylint_downport_compat IMPLEMENTATION.
          OR lv_lex = 'CAST'.
         ls_next = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                    iv_index     = sy-tabix + 1 ).
-        IF ls_next-lexeme CP '*(' OR ls_next-lexeme = '#' OR ls_next-lexeme = '#('.
+        IF strlen( ls_next-lexeme ) > 1 AND ls_next-lexeme CP '*('.
           rv_has = abap_true.
           RETURN.
         ENDIF.
@@ -233,7 +229,7 @@ CLASS zcl_skylint_downport_compat IMPLEMENTATION.
     rv_has = abap_false.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      IF <ls_token>-lexeme = '[' AND <ls_token>-references IS INITIAL.
+      IF <ls_token>-lexeme CP '[' OR <ls_token>-lexeme = ']'.
         rv_has = abap_true.
         RETURN.
       ENDIF.
@@ -249,9 +245,10 @@ CLASS zcl_skylint_downport_compat IMPLEMENTATION.
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
       lv_lex = <ls_token>-lexeme.
       IF    lv_lex CP 'DATA(*'
+         OR lv_lex CP '@DATA(*'
          OR lv_lex CP 'FINAL(*'
-         OR lv_lex CP 'FIELD-SYMBOL(*'
-         OR lv_lex CP '@DATA(*'.
+         OR lv_lex CP '@FINAL(*'
+         OR lv_lex CP 'FIELD-SYMBOL(*'.
         rv_has = abap_true.
         RETURN.
       ENDIF.
@@ -292,8 +289,8 @@ CLASS zcl_skylint_downport_compat IMPLEMENTATION.
 
   METHOD has_empty_key.
     rv_has = xsdbool( zcl_skylint_ast_util=>find_token_sequence(
-                           is_statement = is_statement
-                           it_expected  = VALUE #( ( `WITH` ) ( `EMPTY` ) ( `KEY` ) ) ) > 0 ).
+                          is_statement = is_statement
+                          it_expected  = VALUE #( ( `WITH` ) ( `EMPTY` ) ( `KEY` ) ) ) > 0 ).
   ENDMETHOD.
 
   METHOD has_calc_assign.
@@ -367,5 +364,4 @@ CLASS zcl_skylint_downport_compat IMPLEMENTATION.
       rv_has = abap_true.
     ENDIF.
   ENDMETHOD.
-
 ENDCLASS.

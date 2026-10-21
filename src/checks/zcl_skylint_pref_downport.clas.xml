@@ -3,7 +3,7 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <VSEOCLASS>
-    <CLSNAME>ZCL_SKYLINT_DOWNPORT_COMPAT</CLSNAME>
+    <CLSNAME>ZCL_SKYLINT_PREF_DOWNPORT</CLSNAME>
     <LANGU>E</LANGU>
     <DESCRIPT>skylint: Downport Compatibility (7.40+)</DESCRIPT>
     <STATE>1</STATE>

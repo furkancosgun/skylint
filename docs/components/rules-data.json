@@ -2,8 +2,8 @@
   {
     "ruleId": "downport-compat",
     "title": "Check Downport Compatibility (7.40+ Modern Constructs)",
-    "className": "ZCL_SKYLINT_DOWNPORT_COMPAT",
-    "checkName": "ZSKYLINT_DOWNPORT_COMPAT",
+    "className": "ZCL_SKYLINT_PREF_DOWNPORT",
+    "checkName": "ZSKYLINT_PREF_DOWNPORT",
     "category": "cloud-readiness",
     "categoryTitle": "cloud-readiness",
     "pseudoComment": "DOWNPORT_COMPAT",

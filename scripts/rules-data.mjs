@@ -36,7 +36,7 @@ export const RULES = [
     ruleId: 'downport-compat',
     title: 'Check Downport Compatibility (7.40+ Modern Constructs)',
     rationale: 'Flags modern 7.40+ ABAP constructs (constructor expressions, table expressions, inline declarations, string templates, and method chaining) when targeting legacy SAP NetWeaver downport releases (e.g. 7.00, 7.31). All checks default to disabled so modern workflows remain unaffected.',
-    className: 'ZCL_SKYLINT_DOWNPORT_COMPAT',
+    className: 'ZCL_SKYLINT_PREF_DOWNPORT',
     pseudoComment: 'DOWNPORT_COMPAT',
     category: 'cloud-readiness',
     example: {
