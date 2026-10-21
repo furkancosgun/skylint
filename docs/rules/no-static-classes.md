@@ -5,7 +5,7 @@ description: "Avoid static-only classes; use instantiable classes"
 # Avoid Purely Static Utility Classes
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
-  <Badge type="tip" text="Clean ABAP & Modern Syntax" />
+  <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC STATIC_CLS" />
   <Badge type="info" text="Remote Enabled" />
 </div>

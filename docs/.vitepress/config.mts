@@ -176,20 +176,8 @@ export default defineConfig({
         "link": "/rules/prefer-insert-into"
       },
       {
-        "text": "max-constructor-statements",
-        "link": "/rules/max-constructor-statements"
-      },
-      {
-        "text": "no-static-classes",
-        "link": "/rules/no-static-classes"
-      },
-      {
         "text": "prefer-predicate-names",
         "link": "/rules/prefer-predicate-names"
-      },
-      {
-        "text": "no-nested-try",
-        "link": "/rules/no-nested-try"
       },
       {
         "text": "prefer-string-functions",
@@ -206,10 +194,6 @@ export default defineConfig({
       {
         "text": "prefer-decl-order",
         "link": "/rules/prefer-decl-order"
-      },
-      {
-        "text": "no-param-escape",
-        "link": "/rules/no-param-escape"
       },
       {
         "text": "prefer-case",
@@ -244,14 +228,6 @@ export default defineConfig({
         "link": "/rules/prefer-definitions-top"
       },
       {
-        "text": "no-unnecessary-return",
-        "link": "/rules/no-unnecessary-return"
-      },
-      {
-        "text": "mix-returning",
-        "link": "/rules/mix-returning"
-      },
-      {
         "text": "max-one-method-parameter-per-line",
         "link": "/rules/max-one-method-parameter-per-line"
       },
@@ -262,10 +238,6 @@ export default defineConfig({
       {
         "text": "prefer-cast",
         "link": "/rules/prefer-cast"
-      },
-      {
-        "text": "no-redundant-clear",
-        "link": "/rules/no-redundant-clear"
       },
       {
         "text": "prefer-naming",
@@ -350,16 +322,16 @@ export default defineConfig({
         "link": "/rules/no-self-assignment"
       },
       {
-        "text": "no-sy-modify",
-        "link": "/rules/no-sy-modify"
-      },
-      {
         "text": "no-magic-numbers",
         "link": "/rules/no-magic-numbers"
       },
       {
         "text": "no-like-objects",
         "link": "/rules/no-like-objects"
+      },
+      {
+        "text": "no-static-classes",
+        "link": "/rules/no-static-classes"
       },
       {
         "text": "no-interface-data",
@@ -370,8 +342,16 @@ export default defineConfig({
         "link": "/rules/no-message-raising"
       },
       {
+        "text": "no-nested-try",
+        "link": "/rules/no-nested-try"
+      },
+      {
         "text": "no-unused-variables",
         "link": "/rules/no-unused-variables"
+      },
+      {
+        "text": "no-param-escape",
+        "link": "/rules/no-param-escape"
       },
       {
         "text": "no-inline-length",
@@ -394,12 +374,24 @@ export default defineConfig({
         "link": "/rules/no-many-parentheses"
       },
       {
+        "text": "no-unnecessary-return",
+        "link": "/rules/no-unnecessary-return"
+      },
+      {
+        "text": "mix-returning",
+        "link": "/rules/mix-returning"
+      },
+      {
+        "text": "method-overwrites-builtin",
+        "link": "/rules/method-overwrites-builtin"
+      },
+      {
         "text": "no-ignored-return-value",
         "link": "/rules/no-ignored-return-value"
       },
       {
-        "text": "no-modify-loop-table",
-        "link": "/rules/no-modify-loop-table"
+        "text": "no-redundant-clear",
+        "link": "/rules/no-redundant-clear"
       }
     ]
   },
@@ -430,6 +422,10 @@ export default defineConfig({
       {
         "text": "prefer-pass-by-reference",
         "link": "/rules/prefer-pass-by-reference"
+      },
+      {
+        "text": "no-modify-loop-table",
+        "link": "/rules/no-modify-loop-table"
       }
     ]
   },
@@ -437,6 +433,10 @@ export default defineConfig({
     "text": "Security & Robustness",
     "collapsed": false,
     "items": [
+      {
+        "text": "no-sy-modify",
+        "link": "/rules/no-sy-modify"
+      },
       {
         "text": "no-dangerous-statements",
         "link": "/rules/no-dangerous-statements"
@@ -502,6 +502,10 @@ export default defineConfig({
       {
         "text": "max-cyclomatic-complexity",
         "link": "/rules/max-cyclomatic-complexity"
+      },
+      {
+        "text": "max-constructor-statements",
+        "link": "/rules/max-constructor-statements"
       },
       {
         "text": "max-inheritance-depth",

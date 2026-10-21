@@ -5,7 +5,7 @@ description: "Avoid nested TRY blocks; extract to helper methods"
 # Avoid Deeply Nested TRY ... CATCH Blocks
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
-  <Badge type="tip" text="Clean ABAP & Modern Syntax" />
+  <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC NESTED_TRY" />
   <Badge type="info" text="Remote Enabled" />
 </div>

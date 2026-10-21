@@ -12,7 +12,7 @@ Comprehensive reference for all **95** Clean ABAP, security, performance, and ar
 - **Zero Legacy Overhead:** Built exclusively on `IF_CI_ATC_CHECK` (no obsolete Code Inspector / SCI dependency).
 :::
 
-## Clean ABAP & Modern Syntax (39)
+## Clean ABAP & Modern Syntax (32)
 
 Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.
 
@@ -33,15 +33,11 @@ Modern language features, expression-oriented coding, and idiomatic Clean ABAP p
 | [`prefer-class-exceptions`](/rules/prefer-class-exceptions) | `ZCL_SKYLINT_PREF_CLASS_EXC` | Prefer Class-Based Exceptions over Classic EXCEPTIONS | `#EC CLASS_EXC` | — | ✅ Yes |
 | [`prefer-final-class`](/rules/prefer-final-class) | `ZCL_SKYLINT_PREF_FINAL_CLS` | Prefer FINAL classes and methods by default | `#EC FINAL_CLS` | ⚡ Ready | ✅ Yes |
 | [`prefer-insert-into`](/rules/prefer-insert-into) | `ZCL_SKYLINT_PREF_INSERT` | Prefer INSERT ... INTO TABLE over APPEND for table safety | `#EC INSERT_INTO` | ⚡ Ready | ✅ Yes |
-| [`max-constructor-statements`](/rules/max-constructor-statements) | `ZCL_SKYLINT_MAX_CTOR_STMTS` | Keep constructors clean; avoid heavy logic and DB | `#EC CLEAN_CTOR` | — | ✅ Yes |
-| [`no-static-classes`](/rules/no-static-classes) | `ZCL_SKYLINT_NO_STATIC_CLS` | Avoid static-only classes; use instantiable classes | `#EC STATIC_CLS` | — | ✅ Yes |
 | [`prefer-predicate-names`](/rules/prefer-predicate-names) | `ZCL_SKYLINT_PREF_PRED_NAME` | Enforce predicate naming (IS_, HAS_) on boolean methods | `#EC PRED_NAME` | — | ✅ Yes |
-| [`no-nested-try`](/rules/no-nested-try) | `ZCL_SKYLINT_NO_NESTED_TRY` | Avoid nested TRY blocks; extract to helper methods | `#EC NESTED_TRY` | — | ✅ Yes |
 | [`prefer-string-functions`](/rules/prefer-string-functions) | `ZCL_SKYLINT_PREF_STR_FUNC` | Detect obsolete string statements; prefer built-in functions | `#EC STR_FUNC` | ⚡ Ready | ✅ Yes |
 | [`prefer-calc-assign-op`](/rules/prefer-calc-assign-op) | `ZCL_SKYLINT_PREF_CALC_OP` | Prefer calculation assignment operators (+=, -=, *=, /=) | `#EC CALC_ASSIGN` | ⚡ Ready | ✅ Yes |
 | [`prefer-early-return`](/rules/prefer-early-return) | `ZCL_SKYLINT_PREF_EARLY_RET` | Prefer early return or continue over nested IF blocks | `#EC EARLY_RETURN` | — | ✅ Yes |
 | [`prefer-decl-order`](/rules/prefer-decl-order) | `ZCL_SKYLINT_PREF_DECL_ORDER` | Enforce declaration order (TYPES, CONSTANTS, DATA, FS) | `#EC DECL_ORDER` | — | ✅ Yes |
-| [`no-param-escape`](/rules/no-param-escape) | `ZCL_SKYLINT_NO_PARAM_ESCAPE` | Avoid unnecessary parameter escape (!param) | `#EC PARAM_ESCAPE` | ⚡ Ready | ✅ Yes |
 | [`prefer-case`](/rules/prefer-case) | `ZCL_SKYLINT_PREF_CASE` | Use CASE instead of IF when checking multiple values | `#EC PREF_CASE` | — | ✅ Yes |
 | [`max-one-statement`](/rules/max-one-statement) | `ZCL_SKYLINT_MAX_ONE_STMT` | Max One Statement Per Line | `#EC ONE_STMT` | — | ✅ Yes |
 | [`prefer-inline`](/rules/prefer-inline) | `ZCL_SKYLINT_PREF_INLINE` | Prefer Inline Declarations | `#EC PREFER_INLINE` | — | ✅ Yes |
@@ -50,15 +46,12 @@ Modern language features, expression-oriented coding, and idiomatic Clean ABAP p
 | [`prefer-inline-cast`](/rules/prefer-inline-cast) | `ZCL_SKYLINT_PREF_INL_CAST` | Inline a CAST helper that is only read once | `#EC INLINE_CAST` | ⚡ Ready | ✅ Yes |
 | [`prefer-public-constructor`](/rules/prefer-public-constructor) | `ZCL_SKYLINT_PREF_PUB_CTOR` | Declare Constructor in PUBLIC SECTION | `#EC PUB_CTOR` | — | ✅ Yes |
 | [`prefer-definitions-top`](/rules/prefer-definitions-top) | `ZCL_SKYLINT_PREF_DEF_TOP` | Place definitions at beginning of routine | `#EC DEF_TOP` | — | ✅ Yes |
-| [`no-unnecessary-return`](/rules/no-unnecessary-return) | `ZCL_SKYLINT_NO_UNNEC_RETURN` | Omit unnecessary RETURN at end of routine | `#EC NO_UNNEC_RETURN` | ⚡ Ready | ✅ Yes |
-| [`mix-returning`](/rules/mix-returning) | `ZCL_SKYLINT_NO_MIX_RETURNING` | Do not mix RETURNING with EXPORTING or CHANGING | `#EC NO_MIX_RETURNING` | — | ✅ Yes |
 | [`max-one-method-parameter-per-line`](/rules/max-one-method-parameter-per-line) | `ZCL_SKYLINT_MAX_PARAM_LINE` | Max one method parameter definition per line | `#EC MAX_PARAM_LINE` | — | ✅ Yes |
 | [`prefer-is-initial`](/rules/prefer-is-initial) | `ZCL_SKYLINT_PREF_IS_INITIAL` | Prefer IS [NOT] INITIAL over lines( ) or empty literals | `#EC PREF_INIT` | ⚡ Ready | ✅ Yes |
 | [`prefer-cast`](/rules/prefer-cast) | `ZCL_SKYLINT_PREF_CAST` | Prefer modern CAST #( ) expression over ?= | `#EC PREF_CAST` | ⚡ Ready | ✅ Yes |
-| [`no-redundant-clear`](/rules/no-redundant-clear) | `ZCL_SKYLINT_NO_REDUNDANT_CLEAR` | Do not CLEAR or FREE variables redundantly | `#EC REDUNDANT_CLEAR` | ⚡ Ready | ✅ Yes |
 | [`prefer-naming`](/rules/prefer-naming) | `ZCL_SKYLINT_PREF_NAMING` | Standard Naming Conventions | `#EC NAMING` | — | ✅ Yes |
 
-## Anti-Patterns & Bad Practices (31)
+## Anti-Patterns & Bad Practices (36)
 
 Discouraged language constructs, legacy statements, and redundant syntax.
 
@@ -82,21 +75,26 @@ Discouraged language constructs, legacy statements, and redundant syntax.
 | [`no-list-processing`](/rules/no-list-processing) | `ZCL_SKYLINT_NO_LIST_PROC` | Prohibit classic list processing statements | `#EC LIST_PROC` | — | ✅ Yes |
 | [`no-scope-leak`](/rules/no-scope-leak) | `ZCL_SKYLINT_NO_SCOPE_LEAK` | Avoid variable usage outside its declaring control block | `#EC SCOPE_LEAK` | — | ✅ Yes |
 | [`no-self-assignment`](/rules/no-self-assignment) | `ZCL_SKYLINT_NO_SELF_ASSIGN` | Detect Identical Self Assignments | `#EC SELF_ASSIGN` | ⚡ Ready | ✅ Yes |
-| [`no-sy-modify`](/rules/no-sy-modify) | `ZCL_SKYLINT_NO_SY_MODIFY` | Avoid sy-* System Variable Modification | `#EC SY_MODIFY` | — | ✅ Yes |
 | [`no-magic-numbers`](/rules/no-magic-numbers) | `ZCL_SKYLINT_NO_MAGIC_NUMBERS` | Avoid magic numbers in code; use named constants | `#EC MAGIC_NUMBERS` | — | ✅ Yes |
 | [`no-like-objects`](/rules/no-like-objects) | `ZCL_SKYLINT_NO_LIKE_OBJECTS` | Avoid LIKE referencing data objects; use explicit TYPE | `#EC LIKE_OBJECTS` | — | ✅ Yes |
+| [`no-static-classes`](/rules/no-static-classes) | `ZCL_SKYLINT_NO_STATIC_CLS` | Avoid static-only classes; use instantiable classes | `#EC STATIC_CLS` | — | ✅ Yes |
 | [`no-interface-data`](/rules/no-interface-data) | `ZCL_SKYLINT_NO_INTF_DATA` | Avoid mutable DATA in interfaces; allow only CONSTANTS | `#EC INTF_DATA` | — | ✅ Yes |
 | [`no-message-raising`](/rules/no-message-raising) | `ZCL_SKYLINT_NO_MSG_RAISING` | Avoid MESSAGE ... RAISING; use class-based exceptions | `#EC MSG_RAISING` | — | ✅ Yes |
+| [`no-nested-try`](/rules/no-nested-try) | `ZCL_SKYLINT_NO_NESTED_TRY` | Avoid nested TRY blocks; extract to helper methods | `#EC NESTED_TRY` | — | ✅ Yes |
 | [`no-unused-variables`](/rules/no-unused-variables) | `ZCL_SKYLINT_NO_UNUSED_VARS` | Detect unused local variables and field symbols | `#EC NEEDED` | — | ✅ Yes |
+| [`no-param-escape`](/rules/no-param-escape) | `ZCL_SKYLINT_NO_PARAM_ESCAPE` | Avoid unnecessary parameter escape (!param) | `#EC PARAM_ESCAPE` | ⚡ Ready | ✅ Yes |
 | [`no-inline-length`](/rules/no-inline-length) | `ZCL_SKYLINT_NO_INLINE_LEN` | Avoid inline length specification in declarations | `#EC PAREN_LEN` | ⚡ Ready | ✅ Yes |
 | [`no-dash-in-names`](/rules/no-dash-in-names) | `ZCL_SKYLINT_NO_DASH_IN_NAMES` | No Dashes in Variable and Form Names | `#EC NO_DASH` | — | ✅ Yes |
 | [`no-friends`](/rules/no-friends) | `ZCL_SKYLINT_NO_FRIENDS` | Avoid FRIENDS in class definitions | `#EC FRIENDS` | — | ✅ Yes |
 | [`no-exception-overlap`](/rules/no-exception-overlap) | `ZCL_SKYLINT_NO_EXC_OVERLAP` | Classic EXCEPTIONS must not overlap | `#EC EXC_OVERLAP` | — | ✅ Yes |
 | [`no-many-parentheses`](/rules/no-many-parentheses) | `ZCL_SKYLINT_NO_MANY_PARENS` | Remove redundant parentheses | `#EC MANY_PARENS` | ⚡ Ready | ✅ Yes |
+| [`no-unnecessary-return`](/rules/no-unnecessary-return) | `ZCL_SKYLINT_NO_UNNEC_RETURN` | Omit unnecessary RETURN at end of routine | `#EC NO_UNNEC_RETURN` | ⚡ Ready | ✅ Yes |
+| [`mix-returning`](/rules/mix-returning) | `ZCL_SKYLINT_NO_MIX_RETURNING` | Do not mix RETURNING with EXPORTING or CHANGING | `#EC NO_MIX_RETURNING` | — | ✅ Yes |
+| [`method-overwrites-builtin`](/rules/method-overwrites-builtin) | `ZCL_SKYLINT_NO_OVERW_BUILTIN` | Method name overwrites built-in SAP function | `#EC NO_OVERW_BUILTIN` | — | ✅ Yes |
 | [`no-ignored-return-value`](/rules/no-ignored-return-value) | `ZCL_SKYLINT_NO_IGNORED_RETURN` | Disallow ignoring the return value of functional methods | `#EC NO_IGNORED_RET` | — | ❌ No |
-| [`no-modify-loop-table`](/rules/no-modify-loop-table) | `ZCL_SKYLINT_NO_MOD_LOOP_TAB` | Avoid mutating or sorting tables inside loops | `#EC LOOP_MODIFY` | — | ✅ Yes |
+| [`no-redundant-clear`](/rules/no-redundant-clear) | `ZCL_SKYLINT_NO_REDUNDANT_CLEAR` | Do not CLEAR or FREE variables redundantly | `#EC REDUNDANT_CLEAR` | ⚡ Ready | ✅ Yes |
 
-## Performance & Database (6)
+## Performance & Database (7)
 
 Database query efficiency, buffer protection, and internal table operation guidelines.
 
@@ -108,13 +106,15 @@ Database query efficiency, buffer protection, and internal table operation guide
 | [`prefer-order-by`](/rules/prefer-order-by) | `ZCL_SKYLINT_PREF_ORDER_BY` | SELECT UP TO 1 ROWS requires ORDER BY | `#EC ORDER_BY` | — | ✅ Yes |
 | [`prefer-transporting`](/rules/prefer-transporting) | `ZCL_SKYLINT_PREF_TRANSPORT` | Avoid MODIFY itab in LOOP without TRANSPORTING clause | `#EC TRANSPORTING` | — | ✅ Yes |
 | [`prefer-pass-by-reference`](/rules/prefer-pass-by-reference) | `ZCL_SKYLINT_PREF_PASS_BY_REF` | Slow Parameter Passing | `#EC SLOW_PARAM` | — | ✅ Yes |
+| [`no-modify-loop-table`](/rules/no-modify-loop-table) | `ZCL_SKYLINT_NO_MOD_LOOP_TAB` | Avoid mutating or sorting tables inside loops | `#EC LOOP_MODIFY` | — | ✅ Yes |
 
-## Security & Robustness (11)
+## Security & Robustness (12)
 
 Authorizations, dynamic execution sanitation, error handling, and runtime safety.
 
 | Rule ID | ABAP Class | Description | Pseudo-Comment | QuickFix | Remote Enabled |
 |---|---|---|:---:|:---:|:---:|
+| [`no-sy-modify`](/rules/no-sy-modify) | `ZCL_SKYLINT_NO_SY_MODIFY` | Avoid sy-* System Variable Modification | `#EC SY_MODIFY` | — | ✅ Yes |
 | [`no-dangerous-statements`](/rules/no-dangerous-statements) | `ZCL_SKYLINT_NO_DANGEROUS_STMT` | Dangerous Statements (abaplint dangerous_statement) | `#EC DANGEROUS_STMT` | — | ✅ Yes |
 | [`prefer-auth-check`](/rules/prefer-auth-check) | `ZCL_SKYLINT_PREF_AUTH_CHECK` | Call Transaction Authority Check | `#EC AUTH_CHECK` | ⚡ Ready | ✅ Yes |
 | [`no-catch-cx-root`](/rules/no-catch-cx-root) | `ZCL_SKYLINT_NO_CATCH_ROOT` | Catch specific exceptions instead of generic cx_root | `#EC CATCH_ROOT` | — | ✅ Yes |
@@ -127,7 +127,7 @@ Authorizations, dynamic execution sanitation, error handling, and runtime safety
 | [`no-dynamic-stuff`](/rules/no-dynamic-stuff) | `ZCL_SKYLINT_NO_DYNAMIC_STMT` | No Dynamic Constructs (CALL, ASSIGN, CREATE, etc.) | `#EC NO_DYNAMIC` | — | ✅ Yes |
 | [`no-hardcoded-env-checks`](/rules/no-hardcoded-env-checks) | `ZCL_SKYLINT_NO_HARDCODED_ENV` | Avoid reading environment system fields (sy-sysid, etc.) | `#EC HARDCODED_ENV` | — | ✅ Yes |
 
-## Metrics & Complexity Limits (7)
+## Metrics & Complexity Limits (8)
 
 Quantitative boundaries for method size, nesting depth, parameter counts, and cyclomatic complexity.
 
@@ -137,6 +137,7 @@ Quantitative boundaries for method size, nesting depth, parameter counts, and cy
 | [`max-method-length`](/rules/max-method-length) | `ZCL_SKYLINT_MAX_METHOD_LEN` | Method Length Limit (excessive statement count) | `#EC METHOD_LEN` | — | ✅ Yes |
 | [`max-nesting-depth`](/rules/max-nesting-depth) | `ZCL_SKYLINT_MAX_NESTING` | Nesting Depth Limit (excessive control block nesting) | `#EC NESTING` | — | ✅ Yes |
 | [`max-cyclomatic-complexity`](/rules/max-cyclomatic-complexity) | `ZCL_SKYLINT_MAX_CYCLO_COMP` | Cyclomatic Complexity Threshold | `#EC CYCLO_COMP` | — | ✅ Yes |
+| [`max-constructor-statements`](/rules/max-constructor-statements) | `ZCL_SKYLINT_MAX_CTOR_STMTS` | Keep constructors clean; avoid heavy logic and DB | `#EC CLEAN_CTOR` | — | ✅ Yes |
 | [`max-inheritance-depth`](/rules/max-inheritance-depth) | `ZCL_SKYLINT_MAX_INHERIT` | Avoid deep class inheritance hierarchies | `#EC INHERIT_DEPTH` | — | ❌ No |
 | [`max-attributes`](/rules/max-attributes) | `ZCL_SKYLINT_MAX_ATTRIBUTES` | Limit class member attributes to prevent God Classes | `#EC ATTRIBUTES` | — | ✅ Yes |
 | [`max-line-length`](/rules/max-line-length) | `ZCL_SKYLINT_MAX_LINE_LEN` | Maximum Line Length | `#EC LINE_LEN` | — | ✅ Yes |

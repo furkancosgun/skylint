@@ -5,7 +5,7 @@ description: "Avoid unnecessary parameter escape (!param)"
 # Avoid Reassigning Importing Parameters
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
-  <Badge type="tip" text="Clean ABAP & Modern Syntax" />
+  <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
   <Badge type="danger" text="#EC PARAM_ESCAPE" />
   <Badge type="info" text="Remote Enabled" />

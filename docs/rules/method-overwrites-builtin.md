@@ -5,7 +5,7 @@ description: "Method name overwrites built-in SAP function"
 # Avoid Method Names That Overwrite Built-in Functions
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
-  <Badge type="tip" text="naming" />
+  <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC NO_OVERW_BUILTIN" />
   <Badge type="info" text="Remote Enabled" />
 </div>

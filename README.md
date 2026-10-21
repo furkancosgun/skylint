@@ -83,11 +83,11 @@ Explore the complete interactive catalog with detailed rationales, configuration
 
 ### Rule Categories
 
-- **Clean ABAP & Modern Syntax** (39 rules) — Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.
-- **Anti-Patterns & Bad Practices** (31 rules) — Discouraged language constructs, legacy statements, and redundant syntax.
-- **Performance & Database** (6 rules) — Database query efficiency, buffer protection, and internal table operation guidelines.
-- **Security & Robustness** (11 rules) — Authorizations, dynamic execution sanitation, error handling, and runtime safety.
-- **Metrics & Complexity Limits** (7 rules) — Quantitative boundaries for method size, nesting depth, parameter counts, and cyclomatic complexity.
+- **Clean ABAP & Modern Syntax** — Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.
+- **Anti-Patterns & Bad Practices** — Discouraged language constructs, legacy statements, and redundant syntax.
+- **Performance & Database** — Database query efficiency, buffer protection, and internal table operation guidelines.
+- **Security & Robustness** — Authorizations, dynamic execution sanitation, error handling, and runtime safety.
+- **Metrics & Complexity Limits** — Quantitative boundaries for method size, nesting depth, parameter counts, and cyclomatic complexity.
 
 ---
 
