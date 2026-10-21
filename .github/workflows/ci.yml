@@ -34,4 +34,3 @@ jobs:
 
       - name: Verify documentation build
         run: npm run docs:build
-EOF
