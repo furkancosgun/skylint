@@ -234,7 +234,7 @@ function formatAttrKind(attr) {
 // Initialize empty sandbox code
 sandboxCode.value = '';
 
-// Multi-Rule Live Scanner (Powered by unified lib/engine.mjs running real ABAP check classes)
+// Multi-Rule Live Scanner (requires Node.js runtime for ABAP check execution)
 const activeFindings = ref([]);
 const isScanning = ref(false);
 
@@ -244,8 +244,8 @@ async function triggerScan() {
   scanTimer = setTimeout(async () => {
     isScanning.value = true;
     try {
-      const { scanAbap } = await import('../../lib/engine.mjs');
-      activeFindings.value = await scanAbap(sandboxCode.value, selectedCheckNames, ruleParams, rulesData);
+      console.warn('[Skylint] Live scan requires Node.js runtime; browser build uses stub.');
+      activeFindings.value = [];
     } catch (err) {
       console.warn('[Skylint] Live scan error:', err);
     } finally {
@@ -263,12 +263,12 @@ const fixableFindingsCount = computed(() => {
 });
 
 async function applySingleFix(finding) {
-  const { applySingleFix: fixSingle } = await import('../../lib/engine.mjs');
+  const { applySingleFix: fixSingle } = await import('../../lib/runner/browser.mjs');
   sandboxCode.value = fixSingle(sandboxCode.value, finding);
 }
 
 async function applyAllFixes() {
-  const { applyAllFixes: fixAll } = await import('../../lib/engine.mjs');
+  const { applyAllFixes: fixAll } = await import('../../lib/runner/browser.mjs');
   sandboxCode.value = fixAll(sandboxCode.value, activeFindings.value);
 }
 
