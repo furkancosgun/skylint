@@ -41,6 +41,31 @@
         "name": "CHECK_CHAINING",
         "kind": "Boolean",
         "defaultValue": "false"
+      },
+      {
+        "name": "CHECK_EMPTY_KEY",
+        "kind": "Boolean",
+        "defaultValue": "false"
+      },
+      {
+        "name": "CHECK_CALC_ASSIGN",
+        "kind": "Boolean",
+        "defaultValue": "false"
+      },
+      {
+        "name": "CHECK_LINE_FUNCS",
+        "kind": "Boolean",
+        "defaultValue": "false"
+      },
+      {
+        "name": "CHECK_STRICT_SQL",
+        "kind": "Boolean",
+        "defaultValue": "false"
+      },
+      {
+        "name": "CHECK_RAISE_MESSAGE",
+        "kind": "Boolean",
+        "defaultValue": "false"
       }
     ],
     "defaultParameters": [],

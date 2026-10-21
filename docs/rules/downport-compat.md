@@ -58,6 +58,11 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | `CHECK_INLINE_DECL` | `Boolean` | <code>false</code> |
 | `CHECK_STRING_TEMPL` | `Boolean` | <code>false</code> |
 | `CHECK_CHAINING` | `Boolean` | <code>false</code> |
+| `CHECK_EMPTY_KEY` | `Boolean` | <code>false</code> |
+| `CHECK_CALC_ASSIGN` | `Boolean` | <code>false</code> |
+| `CHECK_LINE_FUNCS` | `Boolean` | <code>false</code> |
+| `CHECK_STRICT_SQL` | `Boolean` | <code>false</code> |
+| `CHECK_RAISE_MESSAGE` | `Boolean` | <code>false</code> |
 
 ## CLI & CI/CD Configuration
 
@@ -72,6 +77,11 @@ checks:
       checkInlineDecl: false
       checkStringTempl: false
       checkChaining: false
+      checkEmptyKey: false
+      checkCalcAssign: false
+      checkLineFuncs: false
+      checkStrictSql: false
+      checkRaiseMessage: false
 ```
 
 ## Suppression

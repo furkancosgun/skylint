@@ -23,6 +23,21 @@
     },
     {
       "name": "CHECK_CHAINING"
+    },
+    {
+      "name": "CHECK_EMPTY_KEY"
+    },
+    {
+      "name": "CHECK_CALC_ASSIGN"
+    },
+    {
+      "name": "CHECK_LINE_FUNCS"
+    },
+    {
+      "name": "CHECK_STRICT_SQL"
+    },
+    {
+      "name": "CHECK_RAISE_MESSAGE"
     }
   ]
 }
