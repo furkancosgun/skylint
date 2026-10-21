@@ -66,31 +66,31 @@ ENDCLASS.
 
 
 CLASS zcl_skylint_pref_cond IMPLEMENTATION.
-
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Prefer COND #( ) expression over IF/ELSEIF/ELSE statement'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #( ( code           = c_finding_codes-prefer_cond
-                                                severity       = if_ci_atc_check=>finding_severities-warning
-                                                text           = 'Prefer COND #( ) constructor expression over IF/ELSEIF'
-                                                pseudo_comment = c_pseudo_comment ) )
-                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-use_cond
-                                                short_text = 'Replace IF with COND #( )' ) )
-                 attributes        = VALUE #( ( name  = 'REQUIRE_ELSE'
-                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                                                value = REF #( mv_require_else ) ) ) ) ).
+        VALUE #(
+            description       = 'Prefer COND #( ) expression over IF/ELSEIF/ELSE statement'
+            remote_enablement = abap_true
+            finding_codes     = VALUE #( ( code           = c_finding_codes-prefer_cond
+                                           severity       = if_ci_atc_check=>finding_severities-warning
+                                           text           = 'Prefer COND #( ) constructor expression over IF/ELSEIF'
+                                           pseudo_comment = c_pseudo_comment ) )
+            quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-use_cond
+                                           short_text = 'Replace IF with COND #( )' ) )
+            attributes        = VALUE #( ( name  = 'REQUIRE_ELSE'
+                                           kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                           value = REF #( mv_require_else ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_idx        TYPE i.
-    DATA lv_total      TYPE i.
-    DATA lt_branches   TYPE ty_cond_branches.
-    DATA lv_target     TYPE string.
-    DATA lv_endif_idx  TYPE i.
-    DATA lv_valid      TYPE abap_bool.
-    DATA ls_quickfix   TYPE zcl_skylint_check_base=>ty_quickfix.
-    DATA lt_new_code   TYPE zcl_skylint_check_base=>ty_code_lines.
+    DATA lv_idx       TYPE i.
+    DATA lv_total     TYPE i.
+    DATA lt_branches  TYPE ty_cond_branches.
+    DATA lv_target    TYPE string.
+    DATA lv_endif_idx TYPE i.
+    DATA lv_valid     TYPE abap_bool.
+    DATA ls_quickfix  TYPE zcl_skylint_check_base=>ty_quickfix.
+    DATA lt_new_code  TYPE zcl_skylint_check_base=>ty_code_lines.
     FIELD-SYMBOLS <ls_if> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     lv_total = zcl_skylint_ast_util=>statement_count( is_procedure-statements ).
@@ -144,7 +144,10 @@ CLASS zcl_skylint_pref_cond IMPLEMENTATION.
     DATA lv_is_assign   TYPE abap_bool.
     DATA lv_has_else    TYPE abap_bool.
 
-    CLEAR: et_branches, ev_target, ev_endif_idx, ev_valid.
+    CLEAR: et_branches,
+           ev_target,
+           ev_endif_idx,
+           ev_valid.
     ev_valid = abap_true.
 
     " First branch: IF statement
@@ -257,7 +260,9 @@ CLASS zcl_skylint_pref_cond IMPLEMENTATION.
     DATA ls_first     TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA ls_second    TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    CLEAR: ev_target, ev_expr, ev_is_assign.
+    CLEAR: ev_target,
+           ev_expr,
+           ev_is_assign.
 
     IF is_statement-keyword <> 'COMPUTE'.
       RETURN.
@@ -300,9 +305,8 @@ CLASS zcl_skylint_pref_cond IMPLEMENTATION.
       lv_curr_idx += 1.
     ENDWHILE.
 
-    rv_text = concat_lines_of(
-        table = lt_parts
-        sep   = ` ` ).
+    rv_text = concat_lines_of( table = lt_parts
+                               sep   = ` ` ).
   ENDMETHOD.
 
   METHOD build_cond_code.
@@ -314,9 +318,8 @@ CLASS zcl_skylint_pref_cond IMPLEMENTATION.
     CLEAR rt_code.
     ls_first_tok = zcl_skylint_ast_util=>get_first_token( is_if_stmt ).
     IF ls_first_tok-position-column > 1.
-      lv_indent = repeat(
-          val = ` `
-          occ = ls_first_tok-position-column - 1 ).
+      lv_indent = repeat( val = ` `
+                          occ = ls_first_tok-position-column - 1 ).
     ENDIF.
 
     APPEND |{ lv_indent }{ iv_target } = COND #( | TO rt_code.
@@ -337,5 +340,4 @@ CLASS zcl_skylint_pref_cond IMPLEMENTATION.
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
-
 ENDCLASS.

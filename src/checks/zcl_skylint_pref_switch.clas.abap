@@ -69,7 +69,6 @@ ENDCLASS.
 
 
 CLASS zcl_skylint_pref_switch IMPLEMENTATION.
-
   METHOD constructor.
     super->constructor(
         VALUE #( description       = 'Prefer SWITCH #( ) expression over CASE statement'
@@ -146,7 +145,10 @@ CLASS zcl_skylint_pref_switch IMPLEMENTATION.
     DATA lv_is_assign   TYPE abap_bool.
     DATA lv_has_others  TYPE abap_bool.
 
-    CLEAR: et_branches, ev_target, ev_endcase_idx, ev_valid.
+    CLEAR: et_branches,
+           ev_target,
+           ev_endcase_idx,
+           ev_valid.
     ev_valid = abap_true.
     lv_curr  = iv_case_idx + 1.
 
@@ -241,7 +243,9 @@ CLASS zcl_skylint_pref_switch IMPLEMENTATION.
     DATA ls_first     TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA ls_second    TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    CLEAR: ev_target, ev_expr, ev_is_assign.
+    CLEAR: ev_target,
+           ev_expr,
+           ev_is_assign.
 
     IF is_statement-keyword <> 'COMPUTE'.
       RETURN.
@@ -284,9 +288,8 @@ CLASS zcl_skylint_pref_switch IMPLEMENTATION.
       lv_curr_idx += 1.
     ENDWHILE.
 
-    rv_text = concat_lines_of(
-        table = lt_parts
-        sep   = ` ` ).
+    rv_text = concat_lines_of( table = lt_parts
+                               sep   = ` ` ).
   ENDMETHOD.
 
   METHOD build_switch_code.
@@ -307,9 +310,8 @@ CLASS zcl_skylint_pref_switch IMPLEMENTATION.
 
     ls_first_tok = zcl_skylint_ast_util=>get_first_token( is_case_stmt ).
     IF ls_first_tok-position-column > 1.
-      lv_indent = repeat(
-          val = ` `
-          occ = ls_first_tok-position-column - 1 ).
+      lv_indent = repeat( val = ` `
+                          occ = ls_first_tok-position-column - 1 ).
     ENDIF.
 
     APPEND |{ lv_indent }{ iv_target } = SWITCH #( { lv_operand }| TO rt_code.
@@ -330,5 +332,4 @@ CLASS zcl_skylint_pref_switch IMPLEMENTATION.
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
-
 ENDCLASS.
