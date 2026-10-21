@@ -27,66 +27,60 @@ CLASS zcl_skylint_downport_compat DEFINITION
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     METHODS has_constructor_expr
-      IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_has)  TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_has) TYPE abap_bool.
 
     METHODS has_table_expression
-      IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_has)  TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_has) TYPE abap_bool.
 
     METHODS has_inline_declaration
-      IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_has)  TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_has) TYPE abap_bool.
 
     METHODS has_string_template
-      IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_has)  TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_has) TYPE abap_bool.
 
     METHODS has_method_chaining
-      IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_has)  TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_has) TYPE abap_bool.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_downport_compat IMPLEMENTATION.
-
   METHOD constructor.
-    super->constructor(
-        VALUE #(
-            description       = 'Detect 7.40+ syntax incompatible with downport targets'
-            remote_enablement = abap_true
-            finding_codes     = VALUE #( ( code           = c_finding_codes-downport_incompatible
-                                           severity       = if_ci_atc_check=>finding_severities-warning
-                                           text           = 'Modern ABAP construct is incompatible with downport target release'
-                                           pseudo_comment = c_pseudo_comment ) )
-            attributes        = VALUE #(
-                ( name  = 'CHECK_CONSTRUCTORS'
-                  kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                  value = REF #( mv_check_constructors ) )
-                ( name  = 'CHECK_TABLE_EXPR'
-                  kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                  value = REF #( mv_check_table_expr ) )
-                ( name  = 'CHECK_INLINE_DECL'
-                  kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                  value = REF #( mv_check_inline_decl ) )
-                ( name  = 'CHECK_STRING_TEMPL'
-                  kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                  value = REF #( mv_check_string_templ ) )
-                ( name  = 'CHECK_CHAINING'
-                  kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                  value = REF #( mv_check_chaining ) ) ) ) ).
+    super->constructor( VALUE #(
+                            description       = 'Detect 7.40+ syntax incompatible with downport targets'
+                            remote_enablement = abap_true
+                            finding_codes     = VALUE #(
+                                ( code           = c_finding_codes-downport_incompatible
+                                  severity       = if_ci_atc_check=>finding_severities-warning
+                                  text           = 'Modern ABAP construct is incompatible with downport target release'
+                                  pseudo_comment = c_pseudo_comment ) )
+                            attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                                         ( name  = 'CHECK_CONSTRUCTORS'
+                                                           value = REF #( mv_check_constructors ) )
+                                                         ( name  = 'CHECK_TABLE_EXPR'
+                                                           value = REF #( mv_check_table_expr ) )
+                                                         ( name  = 'CHECK_INLINE_DECL'
+                                                           value = REF #( mv_check_inline_decl ) )
+                                                         ( name  = 'CHECK_STRING_TEMPL'
+                                                           value = REF #( mv_check_string_templ ) )
+                                                         ( name  = 'CHECK_CHAINING'
+                                                           value = REF #( mv_check_chaining ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     " If all checks are disabled (default), return immediately
-    IF    mv_check_constructors = abap_false
-      AND mv_check_table_expr   = abap_false
-      AND mv_check_inline_decl  = abap_false
-      AND mv_check_string_templ = abap_false
-      AND mv_check_chaining     = abap_false.
+    IF     mv_check_constructors = abap_false
+       AND mv_check_table_expr   = abap_false
+       AND mv_check_inline_decl  = abap_false
+       AND mv_check_string_templ = abap_false
+       AND mv_check_chaining     = abap_false.
       RETURN.
     ENDIF.
 
@@ -134,16 +128,16 @@ CLASS zcl_skylint_downport_compat IMPLEMENTATION.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
       lv_lex = <ls_token>-lexeme.
-      IF (    lv_lex = 'NEW'
-           OR lv_lex = 'VALUE'
-           OR lv_lex = 'COND'
-           OR lv_lex = 'SWITCH'
-           OR lv_lex = 'REDUCE'
-           OR lv_lex = 'FILTER'
-           OR lv_lex = 'CORRESPONDING'
-           OR lv_lex = 'EXACT'
-           OR lv_lex = 'CONV'
-           OR lv_lex = 'REF' )
+      IF     (    lv_lex = 'NEW'
+               OR lv_lex = 'VALUE'
+               OR lv_lex = 'COND'
+               OR lv_lex = 'SWITCH'
+               OR lv_lex = 'REDUCE'
+               OR lv_lex = 'FILTER'
+               OR lv_lex = 'CORRESPONDING'
+               OR lv_lex = 'EXACT'
+               OR lv_lex = 'CONV'
+               OR lv_lex = 'REF' )
          AND zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
                                                      iv_index     = sy-tabix + 1
                                                      iv_expected  = `#` ) = abap_true.
@@ -213,5 +207,4 @@ CLASS zcl_skylint_downport_compat IMPLEMENTATION.
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
-
 ENDCLASS.
