@@ -1,23 +1,25 @@
 ---
-description: "Comprehensive reference and catalog for all 97 Clean ABAP, security, performance, and architecture rules in Skylint."
+description: "Comprehensive reference and catalog for all 99 Clean ABAP, security, performance, and architecture rules in Skylint."
 ---
 
-# Rules Catalog (97 Rules)
+# Rules Catalog (99 Rules)
 
-Comprehensive reference for all **97** Clean ABAP, security, performance, and architecture rules in Skylint.
+Comprehensive reference for all **99** Clean ABAP, security, performance, and architecture rules in Skylint.
 
 ::: tip Skylint at a Glance
-- **97 Native ATC Rules:** 100% ABAP Cloud (Contract C1) & Steampunk Ready.
-- **37 Automated QuickFixes:** Instant one-click refactoring with <kbd>Ctrl</kbd> + <kbd>1</kbd> in Eclipse ADT.
+- **99 Native ATC Rules:** 100% ABAP Cloud (Contract C1) & Steampunk Ready.
+- **39 Automated QuickFixes:** Instant one-click refactoring with <kbd>Ctrl</kbd> + <kbd>1</kbd> in Eclipse ADT.
 - **Zero Legacy Overhead:** Built exclusively on `IF_CI_ATC_CHECK` (no obsolete Code Inspector / SCI dependency).
 :::
 
-## Clean ABAP & Modern Syntax (34)
+## Clean ABAP & Modern Syntax (36)
 
 Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.
 
 | Rule ID | ABAP Class | Description | Pseudo-Comment | QuickFix | Remote Enabled |
 |---|---|---|:---:|:---:|:---:|
+| [`prefer-reduce`](/rules/prefer-reduce) | `ZCL_SKYLINT_PREF_REDUCE` | Prefer REDUCE #( ) expression over simple aggregation LOOP | `#EC PREF_REDUCE` | ⚡ Ready | ✅ Yes |
+| [`prefer-tab-expr`](/rules/prefer-tab-expr) | `ZCL_SKYLINT_PREF_TAB_EXPR` | Prefer table expression itab[ ... ] over READ TABLE | `#EC PREF_TAB_EXPR` | ⚡ Ready | ✅ Yes |
 | [`prefer-cond`](/rules/prefer-cond) | `ZCL_SKYLINT_PREF_COND` | Prefer COND #( ) expression over IF/ELSEIF/ELSE statement | `#EC PREF_COND` | ⚡ Ready | ✅ Yes |
 | [`prefer-switch`](/rules/prefer-switch) | `ZCL_SKYLINT_PREF_SWITCH` | Prefer SWITCH #( ) expression over CASE statement | `#EC PREF_SWITCH` | ⚡ Ready | ✅ Yes |
 | [`prefer-lines`](/rules/prefer-lines) | `ZCL_SKYLINT_PREF_LINES` | Prefer lines( ) over DESCRIBE TABLE ... LINES | `#EC LINES` | ⚡ Ready | ✅ Yes |

@@ -1,5 +1,60 @@
 [
   {
+    "ruleId": "prefer-reduce",
+    "title": "Prefer REDUCE #( ) Expression over Simple Aggregation LOOP",
+    "className": "ZCL_SKYLINT_PREF_REDUCE",
+    "checkName": "ZSKYLINT_PREF_REDUCE",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "PREF_REDUCE",
+    "severity": "warning",
+    "findingCode": "PREFREDUCE",
+    "findingTexts": [
+      "Prefer REDUCE #( ) expression over simple aggregation LOOP"
+    ],
+    "description": "Prefer REDUCE #( ) expression over simple aggregation LOOP",
+    "rationale": "Simple loops that only accumulate a sum or concatenate strings into a single target variable can be expressed much more concisely and declaratively with modern ABAP REDUCE #( ) constructor expressions.",
+    "hasQuickfix": true,
+    "remoteEnabled": true,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "LOOP AT lt_items INTO ls_item.\n  lv_sum = lv_sum + ls_item-amount.\nENDLOOP.",
+    "compliantCode": "lv_sum = REDUCE #( \n  INIT res = lv_sum\n  FOR ls_item IN lt_items\n  NEXT res = res + ls_item-amount )."
+  },
+  {
+    "ruleId": "prefer-tab-expr",
+    "title": "Prefer Table Expression itab[ ... ] over READ TABLE",
+    "className": "ZCL_SKYLINT_PREF_TAB_EXPR",
+    "checkName": "ZSKYLINT_PREF_TAB_EXPR",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "PREF_TAB_EXPR",
+    "severity": "warning",
+    "findingCode": "PREFTABEXP",
+    "findingTexts": [
+      "Prefer table expression itab[ ... ] over READ TABLE"
+    ],
+    "description": "Prefer table expression itab[ ... ] over READ TABLE",
+    "rationale": "Table expressions provide a direct, functional syntax for accessing internal table rows by key or index, eliminating procedural `READ TABLE` boilerplate and integrating seamlessly into expressions.",
+    "hasQuickfix": true,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "USE_OPTIONAL",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "defaultParameters": [
+      {
+        "name": "USE_OPTIONAL",
+        "value": "X"
+      }
+    ],
+    "nonCompliantCode": "READ TABLE lt_items INTO ls_item WITH KEY id = lv_id.\nREAD TABLE lt_items ASSIGNING <fs_item> INDEX 1.",
+    "compliantCode": "ls_item = VALUE #( lt_items[ id = lv_id ] OPTIONAL ).\nASSIGN lt_items[ 1 ] TO <fs_item>."
+  },
+  {
     "ruleId": "prefer-cond",
     "title": "Prefer COND #( ) Expression over IF/ELSEIF/ELSE",
     "className": "ZCL_SKYLINT_PREF_COND",

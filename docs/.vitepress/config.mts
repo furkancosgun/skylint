@@ -67,7 +67,7 @@ export default defineConfig({
           'name': 'Skylint',
           'applicationCategory': 'DeveloperApplication',
           'operatingSystem': 'SAP ABAP Cloud, Node.js',
-          'description': 'Enterprise Clean ABAP & Cloud ATC Linter Engine with 97+ Native Rules',
+          'description': 'Enterprise Clean ABAP & Cloud ATC Linter Engine with 99+ Native Rules',
           'url': 'https://furkancosgun.github.io/skylint/',
           'license': 'https://github.com/furkancosgun/skylint/blob/main/LICENSE',
           'image': 'https://furkancosgun.github.io/skylint/og-image.png',
@@ -91,7 +91,7 @@ export default defineConfig({
     logo: '/logo.svg',
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
-      { text: 'Rules (97)', link: '/rules/' },
+      { text: 'Rules (99)', link: '/rules/' },
       { text: 'Variant Builder', link: '/variant-builder' },
       { text: 'GitHub', link: 'https://github.com/furkancosgun/skylint' },
     ],
@@ -115,6 +115,14 @@ export default defineConfig({
     "text": "Clean ABAP & Modern Syntax",
     "collapsed": false,
     "items": [
+      {
+        "text": "prefer-reduce",
+        "link": "/rules/prefer-reduce"
+      },
+      {
+        "text": "prefer-tab-expr",
+        "link": "/rules/prefer-tab-expr"
+      },
       {
         "text": "prefer-cond",
         "link": "/rules/prefer-cond"

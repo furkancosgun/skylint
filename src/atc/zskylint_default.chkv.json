@@ -7,6 +7,18 @@
   },
   "selectedChecks": [
     {
+      "checkName": "ZSKYLINT_PREF_REDUCE"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_TAB_EXPR",
+      "parameters": [
+        {
+          "name": "USE_OPTIONAL",
+          "value": "X"
+        }
+      ]
+    },
+    {
       "checkName": "ZSKYLINT_PREF_COND"
     },
     {

@@ -33,6 +33,30 @@ export const CATEGORIES = {
 
 export const RULES = [
   {
+    ruleId: 'prefer-reduce',
+    title: 'Prefer REDUCE #( ) Expression over Simple Aggregation LOOP',
+    rationale: 'Simple loops that only accumulate a sum or concatenate strings into a single target variable can be expressed much more concisely and declaratively with modern ABAP REDUCE #( ) constructor expressions.',
+    className: 'ZCL_SKYLINT_PREF_REDUCE',
+    pseudoComment: 'PREF_REDUCE',
+    category: 'clean-abap',
+    example: {
+      bad: `LOOP AT lt_items INTO ls_item.\n  lv_sum = lv_sum + ls_item-amount.\nENDLOOP.`,
+      good: `lv_sum = REDUCE #( \n  INIT res = lv_sum\n  FOR ls_item IN lt_items\n  NEXT res = res + ls_item-amount ).`,
+    },
+  },
+  {
+    ruleId: 'prefer-tab-expr',
+    title: 'Prefer Table Expression itab[ ... ] over READ TABLE',
+    rationale: 'Table expressions provide a direct, functional syntax for accessing internal table rows by key or index, eliminating procedural `READ TABLE` boilerplate and integrating seamlessly into expressions.',
+    className: 'ZCL_SKYLINT_PREF_TAB_EXPR',
+    pseudoComment: 'PREF_TAB_EXPR',
+    category: 'clean-abap',
+    example: {
+      bad: `READ TABLE lt_items INTO ls_item WITH KEY id = lv_id.\nREAD TABLE lt_items ASSIGNING <fs_item> INDEX 1.`,
+      good: `ls_item = VALUE #( lt_items[ id = lv_id ] OPTIONAL ).\nASSIGN lt_items[ 1 ] TO <fs_item>.`,
+    },
+  },
+  {
     ruleId: 'prefer-cond',
     title: 'Prefer COND #( ) Expression over IF/ELSEIF/ELSE',
     rationale: 'IF/ELSEIF/ELSE statements that merely assign values to a single variable based on conditional checks can be written much more concisely and expressively using modern ABAP COND #( ) constructor expressions.',
