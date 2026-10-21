@@ -140,14 +140,9 @@ The split of responsibilities is fixed:
 - abaplint resolves the *root* symbol of a component access, so the component path
   (`ls_data-field` -> `\DA:LS_DATA\DA:FIELD`) is added by the Skylint parser.
 - abaplint cannot resolve symbols that are unknown to the registry (e.g. `CX_ROOT`,
-  database tables that are not part of the scanned project). For those the heuristic
-  fallback of `lib/core/semantic.mjs` stays in place.
-- Reference modes (environment variable `SKYLINT_REFERENCES`):
-  - `hybrid` (default) - definitions from the parser, usages from abaplint
-  - `abaplint` - abaplint only (no definitions, useful for measuring the delta)
-  - `heuristic` - the previous text based resolver only
-- `npm run test:refs` compares two modes over all fixtures and reports the rows
-  where the findings differ. Both modes must produce the same findings.
+  database tables that are not part of the scanned project). For those the safe
+  fallback of `lib/core/semantic.mjs` complements the references.
+- All 95 checks and 496 fixtures run through this unified pipeline.
 
 ### 3. Safe RTTI over String Matching (Class Hierarchies & Types)
 - **Never use string parsing or regex** on `is_procedure-id-name` or `INHERITING FROM` to determine class hierarchies, interfaces, or superclasses.

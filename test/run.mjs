@@ -25,13 +25,6 @@ const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, '..');
 const fixturesDir = path.join(rootDir, 'test', 'fixtures');
 
-export const REFERENCE_MODES = ['heuristic', 'abaplint', 'hybrid'];
-
-export function referenceMode() {
-  const mode = (process.env.SKYLINT_REFERENCES || 'hybrid').toLowerCase();
-  return REFERENCE_MODES.includes(mode) ? mode : 'hybrid';
-}
-
 export function loadFixture(key) {
   const rule = typeof key === 'object' && key !== null ? key : resolveRule(key);
   if (!rule) {
@@ -97,7 +90,6 @@ export async function runRow({ abap, getCheck, rule, fullLines, row }) {
   await feedRtti(fullSource, objectName, abap);
   const methodName = targetProc.kind === 'METH' ? targetProc.methodName || '' : '';
   await enrichStatements(statements, fullSource, objectName, methodName, targetProc.offset, {
-    references: referenceMode(),
     objectName,
     objectKind: targetProc.mainKind,
   });
