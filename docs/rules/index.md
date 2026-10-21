@@ -1,13 +1,13 @@
 ---
-description: "Comprehensive reference and catalog for all 99 Clean ABAP, security, performance, and architecture rules in Skylint."
+description: "Comprehensive reference and catalog for all 100 Clean ABAP, security, performance, and architecture rules in Skylint."
 ---
 
-# Rules Catalog (99 Rules)
+# Rules Catalog (100 Rules)
 
-Comprehensive reference for all **99** Clean ABAP, security, performance, and architecture rules in Skylint.
+Comprehensive reference for all **100** Clean ABAP, security, performance, and architecture rules in Skylint.
 
 ::: tip Skylint at a Glance
-- **99 Native ATC Rules:** 100% ABAP Cloud (Contract C1) & Steampunk Ready.
+- **100 Native ATC Rules:** 100% ABAP Cloud (Contract C1) & Steampunk Ready.
 - **39 Automated QuickFixes:** Instant one-click refactoring with <kbd>Ctrl</kbd> + <kbd>1</kbd> in Eclipse ADT.
 - **Zero Legacy Overhead:** Built exclusively on `IF_CI_ATC_CHECK` (no obsolete Code Inspector / SCI dependency).
 :::

@@ -1,5 +1,53 @@
 [
   {
+    "ruleId": "downport-compat",
+    "title": "Check Downport Compatibility (7.40+ Modern Constructs)",
+    "className": "ZCL_SKYLINT_DOWNPORT_COMPAT",
+    "checkName": "ZSKYLINT_DOWNPORT_COMPAT",
+    "category": "cloud-readiness",
+    "categoryTitle": "cloud-readiness",
+    "pseudoComment": "DOWNPORT_COMPAT",
+    "severity": "warning",
+    "findingCode": "DOWNPORT",
+    "findingTexts": [
+      "Modern ABAP construct is incompatible with downport target release"
+    ],
+    "description": "Detect 7.40+ syntax incompatible with downport targets",
+    "rationale": "Flags modern 7.40+ ABAP constructs (constructor expressions, table expressions, inline declarations, string templates, and method chaining) when targeting legacy SAP NetWeaver downport releases (e.g. 7.00, 7.31). All checks default to disabled so modern workflows remain unaffected.",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "CHECK_CONSTRUCTORS",
+        "kind": "Boolean",
+        "defaultValue": "false"
+      },
+      {
+        "name": "CHECK_TABLE_EXPR",
+        "kind": "Boolean",
+        "defaultValue": "false"
+      },
+      {
+        "name": "CHECK_INLINE_DECL",
+        "kind": "Boolean",
+        "defaultValue": "false"
+      },
+      {
+        "name": "CHECK_STRING_TEMPL",
+        "kind": "Boolean",
+        "defaultValue": "false"
+      },
+      {
+        "name": "CHECK_CHAINING",
+        "kind": "Boolean",
+        "defaultValue": "false"
+      }
+    ],
+    "defaultParameters": [],
+    "nonCompliantCode": "DATA(lv_val) = VALUE #( lt_data[ 1 ]-field OPTIONAL ).",
+    "compliantCode": "DATA lv_val TYPE string.\nREAD TABLE lt_data INTO ls_data INDEX 1.\nIF sy-subrc = 0.\n  lv_val = ls_data-field.\nENDIF."
+  },
+  {
     "ruleId": "prefer-reduce",
     "title": "Prefer REDUCE #( ) Expression over Simple Aggregation LOOP",
     "className": "ZCL_SKYLINT_PREF_REDUCE",

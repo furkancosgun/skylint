@@ -33,6 +33,18 @@ export const CATEGORIES = {
 
 export const RULES = [
   {
+    ruleId: 'downport-compat',
+    title: 'Check Downport Compatibility (7.40+ Modern Constructs)',
+    rationale: 'Flags modern 7.40+ ABAP constructs (constructor expressions, table expressions, inline declarations, string templates, and method chaining) when targeting legacy SAP NetWeaver downport releases (e.g. 7.00, 7.31). All checks default to disabled so modern workflows remain unaffected.',
+    className: 'ZCL_SKYLINT_DOWNPORT_COMPAT',
+    pseudoComment: 'DOWNPORT_COMPAT',
+    category: 'cloud-readiness',
+    example: {
+      bad: `DATA(lv_val) = VALUE #( lt_data[ 1 ]-field OPTIONAL ).`,
+      good: `DATA lv_val TYPE string.\nREAD TABLE lt_data INTO ls_data INDEX 1.\nIF sy-subrc = 0.\n  lv_val = ls_data-field.\nENDIF.`,
+    },
+  },
+  {
     ruleId: 'prefer-reduce',
     title: 'Prefer REDUCE #( ) Expression over Simple Aggregation LOOP',
     rationale: 'Simple loops that only accumulate a sum or concatenate strings into a single target variable can be expressed much more concisely and declaratively with modern ABAP REDUCE #( ) constructor expressions.',

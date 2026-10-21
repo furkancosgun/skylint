@@ -7,6 +7,9 @@
   },
   "selectedChecks": [
     {
+      "checkName": "ZSKYLINT_DOWNPORT_COMPAT"
+    },
+    {
       "checkName": "ZSKYLINT_PREF_REDUCE"
     },
     {
