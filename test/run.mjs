@@ -69,8 +69,11 @@ function readFindingDetails(g) {
   return { codes: [], fixes: [] };
 }
 
-export async function runRow({ abap, getCheck, rule, fullLines, row }) {
-  const procedures = extractAllProcedures(fullLines);
+/**
+ * Runs a single expected row assertion against the ATC check instance.
+ */
+export async function runRow({ abap, getCheck, rule, fullLines, row, proceduresCache = null }) {
+  const procedures = proceduresCache || extractAllProcedures(fullLines);
   const targetProc = resolveProcedureForTarget(procedures, row.method);
   const checkId = rule.ruleId;
 
@@ -126,6 +129,7 @@ export async function runRow({ abap, getCheck, rule, fullLines, row }) {
     };
   });
 
+  // Validate QuickFix syntax roundtrip
   for (const f of findings) {
     for (const fix of f.fixes || []) {
       const errors = await validateFix(
@@ -146,24 +150,27 @@ export async function runRow({ abap, getCheck, rule, fullLines, row }) {
     }
   }
 
+  // 1. Assert: No findings expected
   if (!row.code) {
     if (findings.length === 0) return { pass: true, findings };
     return {
       pass: false,
-      message: `${checkId}/${row.method}: expected 0 findings, got ${JSON.stringify(findings)}`,
+      message: `${checkId}/${row.method} [${targetProc.kind} ${targetProc.name}]: expected 0 findings, got ${JSON.stringify(findings)}`,
       findings,
     };
   }
 
+  // 2. Assert: Specific finding expected
   const hit = findings.find((f) => f.code === row.code && f.line === row.line && f.column === row.column);
   if (!hit) {
     return {
       pass: false,
-      message: `${checkId}/${row.method}: expected ${row.code} at ${row.line}:${row.column}, got ${JSON.stringify(findings)}`,
+      message: `${checkId}/${row.method} [${targetProc.kind} ${targetProc.name}]: expected ${row.code} at ${row.line}:${row.column}, got ${JSON.stringify(findings)}`,
       findings,
     };
   }
 
+  // 3. Assert: Quickfixes match
   if (row.quickfixes !== undefined && !sameCodes(hit.quickfixes, row.quickfixes)) {
     return {
       pass: false,
@@ -177,11 +184,19 @@ export async function runRow({ abap, getCheck, rule, fullLines, row }) {
 
 async function runCheck({ abap, getCheck, rule, verbose = false }) {
   const { lines, expected } = loadFixture(rule);
+  const procedures = extractAllProcedures(lines);
   const failures = [];
   let passed = 0;
 
   for (const row of expected) {
-    const res = await runRow({ abap, getCheck, rule, fullLines: lines, row });
+    const res = await runRow({
+      abap,
+      getCheck,
+      rule,
+      fullLines: lines,
+      row,
+      proceduresCache: procedures,
+    });
     if (res.pass) {
       passed += 1;
       if (verbose) {
