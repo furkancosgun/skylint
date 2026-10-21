@@ -1,7 +1,7 @@
 ---
 layout: page
-title: ATC Variant Builder & Live Playground
-description: Configure custom SAP ATC check variants, tune rule parameters, download .chkv.json files for SAP GUI / abapGit, and test Clean ABAP rules live.
+title: ATC Variant Builder
+description: Configure custom SAP ATC check variants, tune rule parameters and download .chkv.json files for SAP GUI / abapGit.
 ---
 
 <script setup>

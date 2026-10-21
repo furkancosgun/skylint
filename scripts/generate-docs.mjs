@@ -245,7 +245,7 @@ for (const rule of RULES) {
 
   fs.writeFileSync(path.join(rulesDocsDir, `${rule.ruleId}.md`), ruleDoc, 'utf8');
 
-  // Collect for interactive Variant Builder & Playground
+  // Collect for interactive Variant Builder
   const checkName = rule.className.replace(/^ZCL_/, 'Z');
   catalogRules.push({
     ruleId: rule.ruleId,
@@ -276,8 +276,8 @@ fs.writeFileSync(path.join(componentsDir, 'rules-data.json'), JSON.stringify(cat
 // Generate docs/variant-builder.md
 const variantBuilderMd = `---
 layout: page
-title: ATC Variant Builder & Live Playground
-description: Configure custom SAP ATC check variants, tune rule parameters, download .chkv.json files for SAP GUI / abapGit, and test Clean ABAP rules live.
+title: ATC Variant Builder
+description: Configure custom SAP ATC check variants, tune rule parameters and download .chkv.json files for SAP GUI / abapGit.
 ---
 
 <script setup>
@@ -498,8 +498,8 @@ features:
     title: Automated QuickFixes
     details: Built-in automated refactoring for modern syntax upgrades (lines, string templates, NEW #, etc.) with Ctrl + 1.
   - icon: 🎛️
-    title: ATC Variant Builder & Sandbox
-    details: Build custom SAP ATC check variants (.chkv.json), tune parameters, and test Clean ABAP rules live in your browser.
+    title: ATC Variant Builder
+    details: Build custom SAP ATC check variants (.chkv.json) and tune rule parameters for SAP GUI / abapGit.
 ---
 `;
 

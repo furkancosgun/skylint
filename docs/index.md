@@ -30,6 +30,6 @@ features:
     title: Automated QuickFixes
     details: Built-in automated refactoring for modern syntax upgrades (lines, string templates, NEW #, etc.) with Ctrl + 1.
   - icon: 🎛️
-    title: ATC Variant Builder & Sandbox
-    details: Build custom SAP ATC check variants (.chkv.json), tune parameters, and test Clean ABAP rules live in your browser.
+    title: ATC Variant Builder
+    details: Build custom SAP ATC check variants (.chkv.json) and tune rule parameters for SAP GUI / abapGit.
 ---
