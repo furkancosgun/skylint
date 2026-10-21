@@ -3,44 +3,9 @@ CLASS lcl_bad DEFINITION.
     METHODS matches RETURNING VALUE(rv_res) TYPE abap_bool.
     CLASS-METHODS lines RETURNING VALUE(rv_cnt) TYPE i.
 ENDCLASS.
-CLASS lcl_bad IMPLEMENTATION.
-  METHOD matches.
-    RETURN.
-  ENDMETHOD.
-  METHOD lines.
-    RETURN.
-  ENDMETHOD.
-ENDCLASS.
 
 CLASS lcl_good DEFINITION.
   PUBLIC SECTION.
     METHODS do_match RETURNING VALUE(rv_res) TYPE abap_bool.
     CLASS-METHODS count_lines RETURNING VALUE(rv_cnt) TYPE i.
-ENDCLASS.
-CLASS lcl_good IMPLEMENTATION.
-  METHOD do_match.
-    RETURN.
-  ENDMETHOD.
-  METHOD count_lines.
-    RETURN.
-  ENDMETHOD.
-ENDCLASS.
-
-CLASS zcl_skylint_test_built DEFINITION
-  PUBLIC FINAL
-  CREATE PUBLIC.
-
-  PUBLIC SECTION.
-    METHODS test_001.
-    METHODS test_002.
-ENDCLASS.
-
-CLASS zcl_skylint_test_built IMPLEMENTATION.
-  METHOD test_001.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD test_002.
-    RETURN.
-  ENDMETHOD.
 ENDCLASS.

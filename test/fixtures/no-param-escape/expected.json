@@ -1,6 +1,6 @@
 [
   {
-    "method": "TEST_001",
+    "method": "LCL_BAD",
     "code": "PARAM_ESCP",
     "line": 3,
     "column": 4,
@@ -9,11 +9,11 @@
     ]
   },
   {
-    "method": "TEST_002",
+    "method": "LCL_CLEAN",
     "code": null
   },
   {
-    "method": "TEST_003",
+    "method": "LCL_BAD2",
     "code": "PARAM_ESCP",
     "line": 3,
     "column": 4,

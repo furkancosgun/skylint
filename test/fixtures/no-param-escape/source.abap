@@ -2,48 +2,13 @@ CLASS lcl_bad DEFINITION.
   PUBLIC SECTION.
     METHODS meth_escaped IMPORTING !iv_param TYPE i.
 ENDCLASS.
-CLASS lcl_bad IMPLEMENTATION.
-  METHOD meth_escaped.
-    RETURN.
-  ENDMETHOD.
-ENDCLASS.
 
 CLASS lcl_clean DEFINITION.
   PUBLIC SECTION.
     METHODS meth_clean IMPORTING iv_param TYPE i.
 ENDCLASS.
-CLASS lcl_clean IMPLEMENTATION.
-  METHOD meth_clean.
-    RETURN.
-  ENDMETHOD.
-ENDCLASS.
 
-CLASS zcl_test_no_param_escape DEFINITION
-  PUBLIC FINAL
-  CREATE PUBLIC.
-
+CLASS lcl_bad2 DEFINITION.
   PUBLIC SECTION.
-    METHODS test_001.
-    METHODS test_002.
-    METHODS test_003.
-    METHODS test_004.
-ENDCLASS.
-
-CLASS zcl_test_no_param_escape IMPLEMENTATION.
-  METHOD test_001.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD test_002.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD test_003.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD test_004.
-    DATA lv_val TYPE i.
-    lv_val = 1.
-  ENDMETHOD.
+    CLASS-METHODS run_escaped EXPORTING !ev_out TYPE string.
 ENDCLASS.

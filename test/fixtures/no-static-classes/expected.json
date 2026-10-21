@@ -1,20 +1,24 @@
 [
   {
-    "method": "TEST_001",
+    "method": "LCL_HELPER",
     "code": "STAT_CLASS",
     "line": 1,
     "column": 0,
     "quickfixes": []
   },
   {
-    "method": "TEST_002",
+    "method": "LCL_CLEAN",
     "code": null
   },
   {
-    "method": "TEST_003",
+    "method": "LCL_UTIL2",
     "code": "STAT_CLASS",
     "line": 1,
     "column": 0,
     "quickfixes": []
+  },
+  {
+    "method": "LCL_MIXED2",
+    "code": null
   }
 ]

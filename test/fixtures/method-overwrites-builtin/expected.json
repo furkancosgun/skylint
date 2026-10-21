@@ -1,20 +1,20 @@
 [
   {
-    "method": "TEST_001",
+    "method": "LCL_BAD",
     "code": "BUILTIN",
     "line": 3,
     "column": 4,
     "quickfixes": []
   },
   {
-    "method": "TEST_001",
+    "method": "LCL_BAD",
     "code": "BUILTIN",
     "line": 4,
     "column": 4,
     "quickfixes": []
   },
   {
-    "method": "TEST_002",
+    "method": "LCL_GOOD",
     "code": null
   }
 ]

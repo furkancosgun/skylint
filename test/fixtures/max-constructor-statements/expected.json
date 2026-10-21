@@ -1,18 +1,13 @@
 [
   {
-    "method": "TEST_001",
-    "code": null
+    "method": "LCL_BAD_CTOR=>CONSTRUCTOR",
+    "code": "CTOR_LOGIC",
+    "line": 13,
+    "column": 4,
+    "quickfixes": []
   },
   {
-    "method": "TEST_002",
-    "code": null
-  },
-  {
-    "method": "TEST_003",
-    "code": null
-  },
-  {
-    "method": "TEST_004",
+    "method": "LCL_GOOD_CTOR=>CONSTRUCTOR",
     "code": null
   }
 ]

@@ -2,55 +2,18 @@ CLASS lcl_mutable DEFINITION.
   PUBLIC SECTION.
     DATA mv_attr TYPE i.
 ENDCLASS.
-CLASS lcl_mutable IMPLEMENTATION.
-ENDCLASS.
 
 CLASS lcl_clean DEFINITION.
   PUBLIC SECTION.
     DATA mv_attr TYPE i READ-ONLY.
-ENDCLASS.
-CLASS lcl_clean IMPLEMENTATION.
 ENDCLASS.
 
 CLASS lcl_extra_bad DEFINITION.
   PUBLIC SECTION.
     DATA mv_extra TYPE string.
 ENDCLASS.
-CLASS lcl_extra_bad IMPLEMENTATION.
-ENDCLASS.
 
 CLASS lcl_extra_clean DEFINITION.
   PRIVATE SECTION.
     DATA mv_priv TYPE i.
-ENDCLASS.
-CLASS lcl_extra_clean IMPLEMENTATION.
-ENDCLASS.
-
-CLASS zcl_test_no_public_attributes DEFINITION
-  PUBLIC FINAL
-  CREATE PUBLIC.
-
-  PUBLIC SECTION.
-    METHODS test_001.
-    METHODS test_002.
-    METHODS test_003.
-    METHODS test_004.
-ENDCLASS.
-
-CLASS zcl_test_no_public_attributes IMPLEMENTATION.
-  METHOD test_001.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD test_002.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD test_003.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD test_004.
-    RETURN.
-  ENDMETHOD.
 ENDCLASS.

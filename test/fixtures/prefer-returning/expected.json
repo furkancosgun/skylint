@@ -1,27 +1,31 @@
 [
   {
-    "method": "TEST_001",
+    "method": "LCL_BAD",
     "code": "PREFER_RET",
     "line": 3,
     "column": 4,
     "quickfixes": []
   },
   {
-    "method": "TEST_001",
+    "method": "LCL_BAD",
     "code": "PREFER_RET",
     "line": 4,
     "column": 4,
     "quickfixes": []
   },
   {
-    "method": "TEST_002",
+    "method": "LCL_CLEAN",
     "code": null
   },
   {
-    "method": "TEST_003",
+    "method": "LCL_BAD2",
     "code": "PREFER_RET",
     "line": 3,
     "column": 4,
     "quickfixes": []
+  },
+  {
+    "method": "LCL_CLEAN2",
+    "code": null
   }
 ]

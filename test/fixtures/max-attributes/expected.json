@@ -1,17 +1,17 @@
 [
   {
-    "method": "TEST_001",
+    "method": "LCL_GOD",
     "code": "ATTR_COUNT",
     "line": 1,
     "column": 0,
     "quickfixes": []
   },
   {
-    "method": "TEST_002",
+    "method": "LCL_SMALL",
     "code": null
   },
   {
-    "method": "TEST_003",
+    "method": "LCL_STATIC_GOD",
     "code": "ATTR_COUNT",
     "line": 1,
     "column": 0,

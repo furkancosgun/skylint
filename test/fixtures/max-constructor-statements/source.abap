@@ -1,57 +1,33 @@
-CLASS zcl_test_clean_constructor DEFINITION
-  PUBLIC FINAL
-  CREATE PUBLIC.
-
+CLASS lcl_bad_ctor DEFINITION.
   PUBLIC SECTION.
     METHODS constructor.
-    METHODS test_001.
-    METHODS test_002.
-    METHODS test_003.
-    METHODS test_004.
 ENDCLASS.
 
-CLASS zcl_test_clean_constructor IMPLEMENTATION.
+CLASS lcl_bad_ctor IMPLEMENTATION.
   METHOD constructor.
     DATA lv_val TYPE i.
     lv_val = 1.
-    lv_val = 1.
-    lv_val = 1.
-    lv_val = 1.
-    lv_val = 1.
-    lv_val = 1.
-    lv_val = 1.
-    lv_val = 1.
-    lv_val = 1.
-    lv_val = 1.
-    lv_val = 1.
+    lv_val = 2.
+    lv_val = 3.
+    lv_val = 4.
+    lv_val = 5.
+    lv_val = 6.
+    lv_val = 7.
+    lv_val = 8.
+    lv_val = 9.
+    lv_val = 10.
+    lv_val = 11.
   ENDMETHOD.
+ENDCLASS.
 
-  METHOD test_001.
-    RETURN.
-  ENDMETHOD.
+CLASS lcl_good_ctor DEFINITION.
+  PUBLIC SECTION.
+    METHODS constructor.
+ENDCLASS.
 
-  METHOD test_002.
-    RETURN.
-  ENDMETHOD.
-
-  METHOD test_003.
-    DATA lv_a TYPE i.
-    DATA lv_b TYPE i.
-    lv_a = 1.
-    lv_b = 2.
-    lv_a = 3.
-    lv_b = 4.
-    lv_a = 5.
-    lv_b = 6.
-    lv_a = 7.
-    lv_b = 8.
-    lv_a = 9.
-    lv_b = 10.
-    lv_a = 11.
-  ENDMETHOD.
-
-  METHOD test_004.
-    DATA lv_a TYPE i.
-    lv_a = 1.
+CLASS lcl_good_ctor IMPLEMENTATION.
+  METHOD constructor.
+    DATA lv_x TYPE i.
+    lv_x = 1.
   ENDMETHOD.
 ENDCLASS.
