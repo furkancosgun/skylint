@@ -19,10 +19,11 @@
     "deps": "node scripts/fetch-deps.mjs"
   },
   "devDependencies": {
-    "@abaplint/cli": "latest",
-    "@abaplint/runtime": "latest",
-    "@abaplint/transpiler": "latest",
-    "@abaplint/transpiler-cli": "latest",
+    "@abaplint/cli": "^2.120.80",
+    "@abaplint/core": "^2.120.84",
+    "@abaplint/runtime": "^2.14.7",
+    "@abaplint/transpiler": "^2.14.7",
+    "@abaplint/transpiler-cli": "^2.14.7",
     "vitepress": "^1.6.4"
   }
 }
