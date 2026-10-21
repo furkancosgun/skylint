@@ -8,16 +8,16 @@ import {
   enrichStatements,
   extractAllProcedures,
   resolveProcedureForTarget,
-} from '../lib/ast.mjs';
+} from '../lib/core/ast.mjs';
 import { feedRtti } from '../lib/rtti-feeder.mjs';
 import {
   buildProcedureValue,
   buildProceduresTable,
   buildObjectValue,
   createFakes,
-} from '../lib/harness.mjs';
+} from '../lib/bridge/abap-fakes.mjs';
 import { validateFix } from '../lib/roundtrip.mjs';
-import { initRuntime, createLoader } from '../lib/runtime.mjs';
+import { initRuntime, createLoader } from '../lib/bridge/abap-runtime.mjs';
 import { RULES, resolveRule } from '../scripts/rules-data.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
