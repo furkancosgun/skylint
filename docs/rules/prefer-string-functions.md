@@ -8,6 +8,7 @@ description: "Detect obsolete string statements; prefer built-in functions"
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
   <Badge type="danger" text="#EC STR_FUNC" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

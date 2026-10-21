@@ -8,6 +8,7 @@ description: "Prefer lines( ) over DESCRIBE TABLE ... LINES"
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
   <Badge type="danger" text="#EC LINES" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

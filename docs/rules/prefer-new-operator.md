@@ -8,6 +8,7 @@ description: "Prefer NEW operator over CREATE OBJECT and RAISE EXCEPTION"
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
   <Badge type="danger" text="#EC NEW_OP" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

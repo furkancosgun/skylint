@@ -8,6 +8,7 @@ description: "Do not CLEAR or FREE variables redundantly"
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
   <Badge type="danger" text="#EC REDUNDANT_CLEAR" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

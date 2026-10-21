@@ -8,6 +8,7 @@ description: "Avoid comparing boolean method calls to boolean literals"
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
   <Badge type="danger" text="#EC BOOL_COMPARE" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

@@ -7,6 +7,7 @@ description: "Method name overwrites built-in SAP function"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="naming" />
   <Badge type="danger" text="#EC NO_OVERW_BUILTIN" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

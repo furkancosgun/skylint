@@ -8,6 +8,7 @@ description: "Prefer INSERT ... INTO TABLE over APPEND for table safety"
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
   <Badge type="danger" text="#EC INSERT_INTO" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

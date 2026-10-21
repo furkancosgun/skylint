@@ -7,6 +7,7 @@ description: "Avoid mutable DATA in interfaces; allow only CONSTANTS"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC INTF_DATA" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

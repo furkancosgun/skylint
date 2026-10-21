@@ -8,6 +8,7 @@ description: "Prefer CORRESPONDING Expression over MOVE-CORRESPONDING"
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
   <Badge type="danger" text="#EC CORRESP" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

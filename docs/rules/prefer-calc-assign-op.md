@@ -8,6 +8,7 @@ description: "Prefer calculation assignment operators (+=, -=, *=, /=)"
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
   <Badge type="danger" text="#EC CALC_ASSIGN" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

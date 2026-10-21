@@ -53,25 +53,45 @@ export function getPseudoComment(rule) {
   return `"#EC ${rule.pseudoComment}"`;
 }
 
+export function stripAbapQuotes(value) {
+  if (typeof value !== 'string') return value;
+  const trimmed = value.trim();
+  const match = trimmed.match(/^'((?:[^']|'')*)'$/);
+  if (!match) return trimmed;
+  return match[1].replace(/''/g, "'");
+}
+
+function readAttributeRaw(content, varName) {
+  const re = new RegExp(
+    `DATA\\s+${varName}\\s+TYPE\\s+[^\\n]*?VALUE\\s+('(?:[^']|'')*'|abap_true|abap_false|-?\\d+|[^\\s.]+)`,
+    'i'
+  );
+  const match = content.match(re);
+  return match ? match[1].trim() : '';
+}
+
 export function getCheckParameters(rule) {
   const content = readCheckSource(rule);
   if (!content) return undefined;
 
-  const attrMatch = content.match(/attributes\s*=\s*VALUE #\([\s\S]*?\)\s*\)\s*\)/);
+  const attrMatch = content.match(/attributes\s*=\s*VALUE\s*#\([\s\S]*?\)\s*\)\s*\)/);
   if (!attrMatch) return undefined;
 
-  const bound = [...attrMatch[0].matchAll(/name\s*=\s*['"]([^'"\s]+)['"][\s\S]*?REF #\(\s*([a-zA-Z0-9_]+)\s*\)/g)];
+  const bound = [...attrMatch[0].matchAll(/name\s*=\s*['"]([^'"\s]+)['"][\s\S]*?REF\s*#\(\s*([a-zA-Z0-9_]+)\s*\)/g)];
   if (bound.length === 0) return undefined;
 
   return bound.map(([_, name, varName]) => {
+    const raw = readAttributeRaw(content, varName);
+    const lower = raw.toLowerCase();
     let value = '';
-    const varDecl = content.match(new RegExp('DATA\\s+' + varName + '\\s+TYPE\\s+([^\\.\\n]+)\\.', 'i'));
-    if (varDecl) {
-      const valMatch = varDecl[1].match(/VALUE\s+([a-zA-Z0-9_]+)/i);
-      if (valMatch) {
-        const raw = valMatch[1];
-        value = raw.toLowerCase() === 'abap_true' ? 'X' : (raw.toLowerCase() === 'abap_false' ? '' : raw);
-      }
+    if (lower === 'abap_true') {
+      value = 'X';
+    } else if (lower === 'abap_false') {
+      value = '';
+    } else if (raw.startsWith("'")) {
+      value = stripAbapQuotes(raw);
+    } else {
+      value = raw;
     }
     return { name, value };
   });
@@ -107,11 +127,16 @@ export function extractAttributes(content) {
     const varName = e[2];
     const kindMatch = e[0].match(/kind\s*=\s*if_ci_atc_check_meta_data=>attribute_kinds-([a-z]+)/);
     const kind = kindMatch ? kindMatch[1] : defaultKind;
-    const valRegex = new RegExp(`DATA\\s+${varName}\\s+TYPE\\s+\\S+\\s+VALUE\\s+('.*?'|[^.\\n\\r]+)\\.`, 'i');
-    const valM = content.match(valRegex);
-    let defVal = valM ? valM[1].trim() : '';
-    if (defVal.toLowerCase() === 'abap_true') defVal = 'true';
-    if (defVal.toLowerCase() === 'abap_false') defVal = 'false';
+    const raw = readAttributeRaw(content, varName);
+    const rawLower = raw.toLowerCase();
+    let defVal = '';
+    if (rawLower === 'abap_true') {
+      defVal = 'true';
+    } else if (rawLower === 'abap_false') {
+      defVal = 'false';
+    } else {
+      defVal = stripAbapQuotes(raw);
+    }
 
     let resolvedKind = 'String';
     if (kind === 'boolean') {

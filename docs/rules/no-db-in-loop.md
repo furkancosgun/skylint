@@ -7,6 +7,7 @@ description: "Avoid database access inside loop iterations"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Performance & Database" />
   <Badge type="danger" text="#EC DB_IN_LOOP" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

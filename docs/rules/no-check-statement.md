@@ -8,6 +8,7 @@ description: "Avoid CHECK statements; prefer IF with RETURN or CONTINUE"
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
   <Badge type="danger" text="#EC CHECK_STMT" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

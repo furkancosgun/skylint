@@ -8,6 +8,7 @@ description: "Prefer string templates over CONCATENATE"
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
   <Badge type="danger" text="#EC STR_TMPL" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

@@ -8,6 +8,7 @@ description: "Avoid USING CLIENT or CLIENT SPECIFIED in ABAP SQL"
   <Badge type="tip" text="Security & Robustness" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
   <Badge type="danger" text="#EC CLIENT_SPEC" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

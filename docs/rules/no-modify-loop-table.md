@@ -7,6 +7,7 @@ description: "Avoid mutating or sorting tables inside loops"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC LOOP_MODIFY" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

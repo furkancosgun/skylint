@@ -7,6 +7,7 @@ description: "Prefer RETURNING over single EXPORTING"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="danger" text="#EC RETURNING" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

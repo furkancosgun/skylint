@@ -8,6 +8,7 @@ description: "Omit redundant EXPORTING and RECEIVING in method calls"
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
   <Badge type="danger" text="#EC EXPORTING" />
+  <Badge type="warning" text="Local Only" />
 </div>
 
 ## Overview

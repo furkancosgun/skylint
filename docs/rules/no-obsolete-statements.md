@@ -8,6 +8,7 @@ description: "Avoid obsolete statements (MOVE, REFRESH, FORM, etc.)"
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
   <Badge type="danger" text="#EC OBSOLETE" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

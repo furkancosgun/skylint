@@ -3,7 +3,7 @@ import path from 'node:path';
 import { execSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { RULES, CATEGORIES } from './rules-data.mjs';
-import { extractAttributes } from './check-metadata.mjs';
+import { extractAttributes, isRemoteEnabled } from './check-metadata.mjs';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -122,6 +122,8 @@ for (const rule of RULES) {
     rationale: rule.rationale || classDesc,
   };
 
+  const remoteEnabled = isRemoteEnabled(rule);
+
   // Prioritize canonical Clean ABAP example from RULES, fallback to fixture
   let nonCompliantCode = rule.example?.bad || '';
   let compliantCode = rule.example?.good || '';
@@ -162,6 +164,7 @@ for (const rule of RULES) {
     ruleDoc += `  <Badge type="warning" text="⚡ QuickFix Ready" />\n`;
   }
   ruleDoc += `  <Badge type="danger" text="#EC ${rule.pseudoComment}" />\n`;
+  ruleDoc += `  <Badge type="${remoteEnabled ? 'info' : 'warning'}" text="${remoteEnabled ? 'Remote Enabled' : 'Local Only'}" />\n`;
   ruleDoc += `</div>\n\n`;
 
   // Meaningful Description: Include check purpose & specific finding text
@@ -261,6 +264,7 @@ for (const rule of RULES) {
     description: classDesc,
     rationale: meta.rationale,
     hasQuickfix: hasQuickfix,
+    remoteEnabled: remoteEnabled,
     attributes: attributes,
     defaultParameters: defaultParamsMap[checkName] || [],
     nonCompliantCode: nonCompliantCode || '',
@@ -302,22 +306,24 @@ for (const [catKey, catInfo] of Object.entries(CATEGORIES)) {
   const catRules = RULES.filter((r) => r.category === catKey);
   catalogMd += `## ${catInfo.title} (${catRules.length})\n\n`;
   catalogMd += `${catInfo.description}\n\n`;
-  catalogMd += `| Rule ID | ABAP Class | Description | Pseudo-Comment | QuickFix |\n`;
-  catalogMd += `|---|---|---|:---:|:---:|\n`;
+  catalogMd += `| Rule ID | ABAP Class | Description | Pseudo-Comment | QuickFix | Remote Enabled |\n`;
+  catalogMd += `|---|---|---|:---:|:---:|:---:|\n`;
 
   for (const r of catRules) {
     const checkFile = path.join(checksDir, `${r.className.toLowerCase()}.clas.abap`);
     let desc = r.ruleId;
     let qf = '—';
+    let remote = '✅ Yes';
 
     if (fs.existsSync(checkFile)) {
       const c = fs.readFileSync(checkFile, 'utf8');
       const dm = c.match(/description\s*=\s*'([^']+)'/);
       if (dm) desc = dm[1].replace(/^skylint:\s*/i, '');
       if (/quickfix_codes|quickfix_replace/i.test(c)) qf = '⚡ Ready';
+      if (/remote_enablement\s*=\s*abap_false/i.test(c)) remote = '❌ No';
     }
 
-    catalogMd += `| [\`${r.ruleId}\`](/rules/${r.ruleId}) | \`${r.className}\` | ${desc} | \`#EC ${r.pseudoComment}\` | ${qf} |\n`;
+    catalogMd += `| [\`${r.ruleId}\`](/rules/${r.ruleId}) | \`${r.className}\` | ${desc} | \`#EC ${r.pseudoComment}\` | ${qf} | ${remote} |\n`;
   }
   catalogMd += `\n`;
 }

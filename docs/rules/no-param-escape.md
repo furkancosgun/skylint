@@ -8,6 +8,7 @@ description: "Avoid unnecessary parameter escape (!param)"
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
   <Badge type="danger" text="#EC PARAM_ESCAPE" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

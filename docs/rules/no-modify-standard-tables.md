@@ -7,6 +7,7 @@ description: "Modify Only Own Database Tables"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Security & Robustness" />
   <Badge type="danger" text="#EC OWN_TABLES" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

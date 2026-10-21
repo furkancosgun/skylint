@@ -7,6 +7,7 @@ description: "Enforce predicate naming (IS_, HAS_) on boolean methods"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="danger" text="#EC PRED_NAME" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

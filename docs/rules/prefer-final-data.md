@@ -8,6 +8,7 @@ description: "Declare inline variables as FINAL when never written again"
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
   <Badge type="danger" text="#EC PREF_FINAL" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

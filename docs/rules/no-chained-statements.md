@@ -8,6 +8,7 @@ description: "Avoid chained declarations and chained assignments"
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
   <Badge type="danger" text="#EC CHAIN_DECL" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

@@ -7,6 +7,7 @@ description: "Avoid static-only classes; use instantiable classes"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="danger" text="#EC STATIC_CLS" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

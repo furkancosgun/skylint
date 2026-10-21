@@ -8,6 +8,7 @@ description: "Unsecure FOR ALL ENTRIES (Missing empty itab check)"
   <Badge type="tip" text="Performance & Database" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
   <Badge type="danger" text="#EC EMPTY_FAE" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

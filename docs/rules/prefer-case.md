@@ -7,6 +7,7 @@ description: "Use CASE instead of IF when checking multiple values"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="danger" text="#EC PREF_CASE" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

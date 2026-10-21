@@ -8,6 +8,7 @@ description: "Prefer FINAL classes and methods by default"
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
   <Badge type="danger" text="#EC FINAL_CLS" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

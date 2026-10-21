@@ -7,6 +7,7 @@ description: "Prefer Class-Based Exceptions over Classic EXCEPTIONS"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="danger" text="#EC CLASS_EXC" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

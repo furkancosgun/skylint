@@ -8,6 +8,7 @@ description: "Omit unnecessary RETURN at end of routine"
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
   <Badge type="danger" text="#EC NO_UNNEC_RETURN" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

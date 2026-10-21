@@ -7,6 +7,7 @@ description: "Cyclomatic Complexity Threshold"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Metrics & Complexity Limits" />
   <Badge type="danger" text="#EC CYCLO_COMP" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

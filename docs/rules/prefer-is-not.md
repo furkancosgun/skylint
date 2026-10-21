@@ -8,6 +8,7 @@ description: "Prefer IS NOT over NOT ... IS"
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
   <Badge type="danger" text="#EC IS_NOT" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

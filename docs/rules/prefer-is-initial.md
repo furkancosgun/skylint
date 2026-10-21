@@ -8,6 +8,7 @@ description: "Prefer IS [NOT] INITIAL over lines( ) or empty literals"
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
   <Badge type="danger" text="#EC PREF_INIT" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

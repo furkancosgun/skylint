@@ -8,6 +8,7 @@ description: "Avoid calling static methods via instance arrow (->)"
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
   <Badge type="danger" text="#EC STATIC_ARROW" />
+  <Badge type="warning" text="Local Only" />
 </div>
 
 ## Overview

@@ -8,6 +8,7 @@ description: "Call Transaction Authority Check"
   <Badge type="tip" text="Security & Robustness" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
   <Badge type="danger" text="#EC AUTH_CHECK" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

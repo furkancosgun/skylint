@@ -7,6 +7,7 @@ description: "Limit class member attributes to prevent God Classes"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Metrics & Complexity Limits" />
   <Badge type="danger" text="#EC ATTRIBUTES" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

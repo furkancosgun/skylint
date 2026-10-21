@@ -824,8 +824,112 @@
           "value": "X"
         },
         {
+          "name": "ATTR_STATICS",
+          "value": "^G._.+$"
+        },
+        {
+          "name": "ATTR_INSTANCE",
+          "value": "^M._.+$"
+        },
+        {
           "name": "PARAM_IGN_EXC",
           "value": "X"
+        },
+        {
+          "name": "PARAM_IMPORTING",
+          "value": "^I._.+$"
+        },
+        {
+          "name": "PARAM_RETURNING",
+          "value": "^R._.+$"
+        },
+        {
+          "name": "PARAM_CHANGING",
+          "value": "^C._.+$"
+        },
+        {
+          "name": "PARAM_EXPORTING",
+          "value": "^E._.+$"
+        },
+        {
+          "name": "LOCAL_DATA",
+          "value": "^L._.+$"
+        },
+        {
+          "name": "LOCAL_CONST",
+          "value": "^LC_.+$"
+        },
+        {
+          "name": "LOCAL_FS",
+          "value": "^<L._.+>$"
+        },
+        {
+          "name": "LOCAL_STATICS",
+          "value": "^S._.+$"
+        },
+        {
+          "name": "CLASS_LOCAL",
+          "value": "^LC(L|X)_.+$"
+        },
+        {
+          "name": "CLASS_TEST",
+          "value": "^LTCL_.+$"
+        },
+        {
+          "name": "CLASS_GLOBAL",
+          "value": "^ZC(L|X)_.+$"
+        },
+        {
+          "name": "SSCR_PARAM",
+          "value": "^P_.+$"
+        },
+        {
+          "name": "SSCR_SELOPT",
+          "value": "^S_.+$"
+        },
+        {
+          "name": "TYPES_PATTERN",
+          "value": "^TY_.+$"
+        },
+        {
+          "name": "MACRO_PATTERN",
+          "value": "^_.+$"
+        },
+        {
+          "name": "FORM_PATTERN",
+          "value": "^F_.+$"
+        },
+        {
+          "name": "FUNCTION_PATTERN",
+          "value": "^Z.*$"
+        },
+        {
+          "name": "INTF_LOCAL",
+          "value": "^LIF_.+$"
+        },
+        {
+          "name": "INTF_GLOBAL",
+          "value": "^ZIF_.+$"
+        },
+        {
+          "name": "EVENT_NAME",
+          "value": "^[A-Z][A-Z0-9_]+$"
+        },
+        {
+          "name": "EVENT_HANDLER",
+          "value": "^ON_.+$"
+        },
+        {
+          "name": "TEST_METHOD",
+          "value": "^(TEST|SHOULD)_.+$"
+        },
+        {
+          "name": "PROG_PATTERN",
+          "value": "^Z.+$"
+        },
+        {
+          "name": "FUGR_PATTERN",
+          "value": "^Z.+$"
         }
       ]
     }

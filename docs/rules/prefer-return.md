@@ -8,6 +8,7 @@ description: "Prefer RETURN over EXIT outside loop constructs"
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
   <Badge type="danger" text="#EC RETURN" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

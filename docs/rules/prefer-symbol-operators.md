@@ -8,6 +8,7 @@ description: "Prefer symbolic operators over textual EQ, NE, LT, GT"
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
   <Badge type="danger" text="#EC SYMBOL_OP" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

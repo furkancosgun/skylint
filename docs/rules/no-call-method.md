@@ -8,6 +8,7 @@ description: "Avoid static CALL METHOD statements"
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
   <Badge type="danger" text="#EC CALL_METH" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

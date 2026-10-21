@@ -7,6 +7,7 @@ description: "Disallow ignoring the return value of functional methods"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC NO_IGNORED_RET" />
+  <Badge type="warning" text="Local Only" />
 </div>
 
 ## Overview

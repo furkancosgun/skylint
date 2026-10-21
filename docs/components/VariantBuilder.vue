@@ -7,6 +7,7 @@ const searchQuery = ref('');
 const selectedCategory = ref('ALL');
 const filterOnlyConfigurable = ref(false);
 const filterOnlyQuickfix = ref(false);
+const filterOnlyRemoteEnabled = ref(false);
 
 const variantName = ref('ZSKYLINT_CUSTOM');
 const variantDescription = ref('Custom Skylint Clean ABAP Variant');
@@ -24,11 +25,11 @@ for (const r of rulesData) {
       // Find default parameter value if exists in defaultParameters
       const defParam = (r.defaultParameters || []).find((p) => p.name === attr.name);
       if (defParam) {
-        ruleParams[r.checkName][attr.name] = defParam.value;
+        ruleParams[r.checkName][attr.name] = stripQuotes(defParam.value);
       } else if (attr.kind === 'Boolean') {
         ruleParams[r.checkName][attr.name] = attr.defaultValue === 'true' ? 'X' : '';
       } else {
-        ruleParams[r.checkName][attr.name] = attr.defaultValue || '';
+        ruleParams[r.checkName][attr.name] = stripQuotes(attr.defaultValue || '');
       }
     }
   }
@@ -63,6 +64,10 @@ const quickfixCount = computed(() => {
   return rulesData.filter((r) => r.hasQuickfix).length;
 });
 
+const remoteEnabledCount = computed(() => {
+  return rulesData.filter((r) => r.remoteEnabled).length;
+});
+
 const activeCount = computed(() => selectedCheckNames.size);
 
 const isAllSelected = computed(() => selectedCheckNames.size === rulesData.length);
@@ -72,11 +77,13 @@ const filteredRules = computed(() => {
   const cat = selectedCategory.value;
   const onlyCfg = filterOnlyConfigurable.value;
   const onlyQf = filterOnlyQuickfix.value;
+  const onlyRemote = filterOnlyRemoteEnabled.value;
 
   return rulesData.filter((rule) => {
     if (cat !== 'ALL' && rule.category !== cat) return false;
     if (onlyCfg && (!rule.attributes || rule.attributes.length === 0)) return false;
     if (onlyQf && !rule.hasQuickfix) return false;
+    if (onlyRemote && !rule.remoteEnabled) return false;
 
     if (q) {
       const matchId = rule.ruleId.toLowerCase().includes(q);
@@ -120,11 +127,11 @@ function resetDefaults() {
       for (const attr of r.attributes) {
         const defParam = (r.defaultParameters || []).find((p) => p.name === attr.name);
         if (defParam) {
-          ruleParams[r.checkName][attr.name] = defParam.value;
+          ruleParams[r.checkName][attr.name] = stripQuotes(defParam.value);
         } else if (attr.kind === 'Boolean') {
           ruleParams[r.checkName][attr.name] = attr.defaultValue === 'true' ? 'X' : '';
         } else {
-          ruleParams[r.checkName][attr.name] = attr.defaultValue || '';
+          ruleParams[r.checkName][attr.name] = stripQuotes(attr.defaultValue || '');
         }
       }
     }
@@ -142,6 +149,13 @@ function toggleParamDrawer(checkName) {
   }
 }
 
+function stripQuotes(value) {
+  const trimmed = String(value ?? '').trim();
+  const match = trimmed.match(/^'((?:[^']|'')*)'$/);
+  if (!match) return trimmed;
+  return match[1].replace(/''/g, "'");
+}
+
 function generateVariantObject() {
   const vName = (variantName.value || 'ZSKYLINT_CUSTOM').trim().toUpperCase();
   const selectedChecks = [];
@@ -156,7 +170,7 @@ function generateVariantObject() {
         for (const attr of rule.attributes) {
           const val = currentParams[attr.name];
           if (val !== undefined && val !== '') {
-            params.push({ name: attr.name, value: String(val) });
+            params.push({ name: attr.name, value: stripQuotes(val) });
           }
         }
       }
@@ -370,6 +384,13 @@ function formatAttrKind(attr) {
         >
           ⚡ QuickFix ({{ quickfixCount }})
         </button>
+        <button
+          class="vb-pill toggle-pill"
+          :class="{ active: filterOnlyRemoteEnabled }"
+          @click="filterOnlyRemoteEnabled = !filterOnlyRemoteEnabled"
+        >
+          🌐 Remote Enabled ({{ remoteEnabledCount }})
+        </button>
       </div>
     </section>
 
@@ -422,6 +443,7 @@ function formatAttrKind(attr) {
               <span v-else>#EC {{ rule.pseudoComment }}</span>
             </button>
             <span v-if="rule.hasQuickfix" class="vb-tag qf">⚡ QuickFix Ready</span>
+            <span v-if="!rule.remoteEnabled" class="vb-tag local" title="Check runs locally only (remote_enablement = abap_false)">🔒 Local Only</span>
 
             <!-- Parameters Toggle (if applicable) -->
             <button
@@ -1033,6 +1055,19 @@ html.dark .vb-tag.qf {
   background: rgba(245, 158, 11, 0.15);
   color: #fcd34d;
   border-color: rgba(245, 158, 11, 0.3);
+}
+
+.vb-tag.local {
+  background: #e0e7ff;
+  color: #4338ca;
+  border-color: #c7d2fe;
+  font-weight: 600;
+}
+
+html.dark .vb-tag.local {
+  background: rgba(99, 102, 241, 0.15);
+  color: #a5b4fc;
+  border-color: rgba(99, 102, 241, 0.3);
 }
 
 .vb-tag.params-toggle {

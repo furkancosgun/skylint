@@ -8,6 +8,7 @@ description: "Prefer xsdbool( ) expression over manual IF-ELSE assignment"
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
   <Badge type="danger" text="#EC XSDBOOL" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

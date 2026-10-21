@@ -7,6 +7,7 @@ description: "Check sy-subrc after DB, table and string operations"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Security & Robustness" />
   <Badge type="danger" text="#EC CHECK_SUBRC" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

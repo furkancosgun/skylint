@@ -15,6 +15,7 @@
     "description": "Prefer lines( ) over DESCRIBE TABLE ... LINES",
     "rationale": "The built-in `lines( )` function is modern, functional, and can be embedded directly into expressions and conditionals without requiring a temporary variable or the cumbersome procedural `DESCRIBE TABLE ... LINES` statement.",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "DESCRIBE TABLE lt_customers LINES lv_count.",
@@ -36,6 +37,7 @@
     "description": "Avoid static CALL METHOD statements",
     "rationale": "Procedural `CALL METHOD` is legacy syntax from early ABAP Objects. Modern ABAP exclusively uses functional call syntax (`ref->method( )` or `class=>method( )`), which reduces visual clutter and enables functional expression chaining.",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "CALL METHOD lo_service->calculate_tax(\n  EXPORTING\n    iv_amount = lv_amount ).",
@@ -57,6 +59,7 @@
     "description": "Avoid WITH DEFAULT KEY; prefer EMPTY KEY or explicit keys",
     "rationale": "`WITH DEFAULT KEY` is dangerous and unpredictable because it includes all non-numeric fields as table keys, causing unexpected sorting and duplicate record bugs. Always prefer `WITH EMPTY KEY` or explicitly specified table keys.",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "DATA lt_customers TYPE STANDARD TABLE OF ty_customer WITH DEFAULT KEY.",
@@ -78,6 +81,7 @@
     "description": "Prefer IS NOT over NOT ... IS",
     "rationale": "Writing `IF lo_ref IS NOT BOUND` or `IF lt_tab IS NOT INITIAL` mirrors natural language reading order and avoids misreading inverted expressions that start with `NOT`.",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "IF NOT lo_instance IS BOUND.\n  RETURN.\nENDIF.",
@@ -99,6 +103,7 @@
     "description": "Avoid self-reference ME->",
     "rationale": "In ABAP, member variables and methods are automatically accessible within the instance context. Prefixing every member access with `me->` creates visual noise, except when disambiguating parameter shadowing in constructors.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [
       {
         "name": "ALLOW_IN_CONSTRUCTORS",
@@ -133,6 +138,7 @@
     "description": "Omit redundant EXPORTING and RECEIVING in method calls",
     "rationale": "Modern ABAP allows omitting the `EXPORTING` and `RECEIVING` keywords in functional method calls. Furthermore, when calling a method with a single importing parameter, the parameter name can be omitted entirely to make code clean and concise.",
     "hasQuickfix": true,
+    "remoteEnabled": false,
     "attributes": [
       {
         "name": "CHECK_EXPORTING",
@@ -184,6 +190,7 @@
     "description": "Avoid chained declarations and chained assignments",
     "rationale": "Chained statements (`DATA: ... , ... .`) create formatting headaches, merge conflicts in Git diffs, and frequently confuse developers regarding where a type or modifier applies. Each statement should stand independently on its own line.",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [
       {
         "name": "ALLOW_STRUCTURE_CHAINS",
@@ -234,6 +241,7 @@
     "description": "Prefer string templates over CONCATENATE",
     "rationale": "String templates (`|Hello { lv_name }|`) provide type-safe, readable string interpolation with built-in formatting options. They eliminate procedural `CONCATENATE` and `SEPARATED BY` statements.",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "CONCATENATE 'Hello' iv_name INTO lv_greeting SEPARATED BY space.",
@@ -255,6 +263,7 @@
     "description": "Avoid comparing boolean method calls to boolean literals",
     "rationale": "Predicate methods and boolean expressions evaluate directly to true or false. Comparing them explicitly (`IF is_valid( ) = abap_true`) is redundant, noisy, and unidiomatic.",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "IF is_valid( ) = abap_true.\n  execute( ).\nENDIF.",
@@ -276,6 +285,7 @@
     "description": "Prefer line_exists( ) over READ TABLE with NO FIELDS",
     "rationale": "`line_exists( )` clearly communicates the intent of checking table membership in a single functional expression, eliminating the boilerplate of `READ TABLE ... TRANSPORTING NO FIELDS` followed by `sy-subrc = 0`.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "READ TABLE lt_items TRANSPORTING NO FIELDS WITH KEY id = lv_id.\nIF sy-subrc = 0.\n  process( ).\nENDIF.",
@@ -297,6 +307,7 @@
     "description": "Prefer RETURN over EXIT outside loop constructs",
     "rationale": "In method contexts, `EXIT` can be ambiguous when placed near loops. `RETURN` explicitly indicates an immediate exit from the current processing block or method.",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "METHOD execute.\n  IF is_invalid( ).\n    EXIT.\n  ENDIF.\n  process( ).\nENDMETHOD.",
@@ -319,6 +330,7 @@
     "description": "Avoid CHECK statements; prefer IF with RETURN or CONTINUE",
     "rationale": "`CHECK` has context-dependent dual semantics: inside loops it behaves like `CONTINUE`, but outside loops it behaves like `RETURN`. This makes code fragile and refactoring hazardous. Use explicit `IF ... CONTINUE` or `IF ... RETURN` instead.",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [
       {
         "name": "CHECK_IN_LOOP",
@@ -361,6 +373,7 @@
     "description": "Avoid empty control blocks (IF, CASE, LOOP, TRY, etc.)",
     "rationale": "Empty blocks (such as `IF ... ELSEIF ... ENDIF` with no executable statements) confuse readers and usually represent unfinished business logic or forgotten debug code.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [
       {
         "name": "CHECK_IF",
@@ -456,6 +469,7 @@
     "description": "Avoid duplicate branch conditions in IF and CASE",
     "rationale": "Repeating the exact same condition across `IF / ELSEIF` or `WHEN` branches means subsequent duplicate branches can never be reached, indicating a copy-paste error or broken logic.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "IF lv_type = 'A' OR lv_type = 'A'.\n  process( ).\nENDIF.",
@@ -477,6 +491,7 @@
     "description": "Merge consecutive nested IF blocks using boolean AND",
     "rationale": "Consecutive nested `IF` statements without intermediate statements can be combined with `AND`. This reduces nesting depth, flattens control flow, and simplifies cyclomatic complexity.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "IF is_connected( ).\n  IF has_permission( ).\n    execute( ).\n  ENDIF.\nENDIF.",
@@ -498,6 +513,7 @@
     "description": "Detect unreachable code after jump or exit statements",
     "rationale": "Statements appearing immediately after an unconditional `RETURN`, `RAISE EXCEPTION`, `EXIT`, or `LEAVE PROGRAM` can never execute, cluttering the codebase and misleading maintainers.",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "RETURN.\nlv_count = lv_count + 1. \" Unreachable statement",
@@ -519,6 +535,7 @@
     "description": "Avoid CASE statements with only one WHEN branch",
     "rationale": "A `CASE` statement containing only one `WHEN` branch is unnecessarily verbose. An `IF ... ENDIF` is more concise and idiomatic.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "CASE lv_status.\n  WHEN 'A'.\n    process_a( ).\nENDCASE.",
@@ -540,6 +557,7 @@
     "description": "Avoid Yoda conditions in comparison expressions",
     "rationale": "Placing constants or literals on the left side of comparisons (`IF 42 = lv_value`) impairs readability. ABAP natural reading flow expects the variable or subject on the left (`IF lv_value = 42`).",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "IF 0 = lv_count.\n  process( ).\nENDIF.",
@@ -561,6 +579,7 @@
     "description": "Prefer symbolic operators over textual EQ, NE, LT, GT",
     "rationale": "Text comparison operators (`EQ`, `NE`, `LT`, `GT`, `LE`, `GE`) are legacy syntax. Modern programming and Clean ABAP universally standardize on mathematical symbols (`=`, `<>`, `<`, `>`, `<=`, `>=`).",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "IF lv_a EQ lv_b AND lv_c NE lv_d.\n  process( ).\nENDIF.",
@@ -583,6 +602,7 @@
     "description": "Prefer NEW operator over CREATE OBJECT and RAISE EXCEPTION",
     "rationale": "The constructor expression `NEW #( )` is type-inferred, expression-capable, and avoids the archaic procedural `CREATE OBJECT` statement.",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [
       {
         "name": "CHECK_CREATE_OBJECT",
@@ -624,6 +644,7 @@
     "description": "Prefer xsdbool( ) expression over manual IF-ELSE assignment",
     "rationale": "Writing `IF cond. lv_flag = abap_true. ELSE. lv_flag = abap_false. ENDIF.` is 5 lines of boilerplate. `lv_flag = xsdbool( cond )` expresses the same logic cleanly in one readable line.",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "IF lv_count > 0.\n  lv_has_items = abap_true.\nELSE.\n  lv_has_items = abap_false.\nENDIF.",
@@ -645,6 +666,7 @@
     "description": "Avoid calling static methods via instance arrow (->)",
     "rationale": "Calling a static method via an object reference arrow `lo_instance->static_method( )` gives the false impression that polymorphic instance dispatch is occurring. Use `cl_class=>static_method( )`.",
     "hasQuickfix": true,
+    "remoteEnabled": false,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "DATA lo_instance TYPE REF TO cl_helper.\nlo_instance->static_method( ).",
@@ -666,6 +688,7 @@
     "description": "Avoid mutable public attributes in classes",
     "rationale": "Public attributes violate encapsulation because external consumers can mutate internal state arbitrarily. Encapsulate state using private/protected attributes exposed via methods or `READ-ONLY`.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "CLASS cl_model DEFINITION PUBLIC.\n  PUBLIC SECTION.\n    DATA mv_state TYPE i.\nENDCLASS.",
@@ -687,6 +710,7 @@
     "description": "Avoid obsolete statements (MOVE, REFRESH, FORM, etc.)",
     "rationale": "Legacy statements such as `MOVE`, `COMPUTE`, `REFRESH`, `TABLES`, `STATICS`, `FORM`, and `LEAVE` are prohibited in ABAP Cloud and discouraged in Clean ABAP. Replace them with modern value assignments and object-oriented constructs.",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [
       {
         "name": "CHECK_MOVE",
@@ -989,6 +1013,7 @@
     "description": "Prohibit classic list processing statements",
     "rationale": "Statements such as `WRITE`, `ULINE`, `SKIP`, `NEW-LINE`, `FORMAT`, `POSITION`, `RESERVE`, `READ LINE`, `MODIFY LINE`, and `SCROLL LIST` are classic list-processing constructs forbidden in OO/Cloud ABAP. Use application logging and modern UI frameworks instead.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [
       {
         "name": "CHECK_WRITE",
@@ -1075,6 +1100,7 @@
     "description": "Method signature cleanliness (excessive parameter count)",
     "rationale": "Methods with excessive parameters are difficult to comprehend, call, and test. When a method needs more than 5-8 parameters, bundle related fields into a structured type or parameter object.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [
       {
         "name": "MAX_PARAMETERS",
@@ -1107,6 +1133,7 @@
     "description": "Avoid database access inside loop iterations",
     "rationale": "Executing SQL queries (`SELECT`, `UPDATE`, `DELETE`) inside a `LOOP` generates an N+1 query performance anti-pattern. Fetch data in bulk using `FOR ALL ENTRIES` or SQL Joins outside the loop.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "LOOP AT lt_orders INTO ls_order.\n  SELECT SINGLE * FROM /dmo/customer\n    WHERE customer_id = @ls_order-customer_id\n    INTO @ls_customer.\nENDLOOP.",
@@ -1128,6 +1155,7 @@
     "description": "Unsecure FOR ALL ENTRIES (Missing empty itab check)",
     "rationale": "In ABAP SQL, executing `FOR ALL ENTRIES IN @lt_table` when `lt_table` is empty drops the `WHERE` clause entirely and performs a full table scan, causing severe system performance degradation and data leaks.",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "SELECT * FROM /dmo/customer\n  FOR ALL ENTRIES IN @lt_orders\n  WHERE customer_id = @lt_orders-customer_id\n  INTO TABLE @lt_customers.",
@@ -1150,6 +1178,7 @@
     "description": "Select performance (Avoid SELECT * and SELECT ... ENDSELECT)",
     "rationale": "Selecting all database columns transfers unnecessary data across the network, bypasses secondary indexes, and breaks table buffering. Always specify the explicit columns required.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [
       {
         "name": "CHECK_SELECT_STAR",
@@ -1191,6 +1220,7 @@
     "description": "Avoid variable usage outside its declaring control block",
     "rationale": "In ABAP, variable declarations inside control blocks (`IF`, `LOOP`) have procedure-wide scope. Using an inner-declared variable outside its originating block creates confusing temporal dependencies.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "IF lv_condition = abap_true.\n  DATA(lv_value) = 10.\nENDIF.\nuse_value( lv_value ). \" Leaked outside block",
@@ -1212,6 +1242,7 @@
     "description": "Detect Identical Self Assignments",
     "rationale": "Assigning a variable or structure field to itself (`lv_x = lv_x`) is a redundant no-op and frequently hides a typo where another source field was intended.",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "lv_name = lv_name.",
@@ -1233,6 +1264,7 @@
     "description": "Enforce fully typed constant declarations",
     "rationale": "Generic types (`ANY`, `DATA`, `TABLE`) bypass compiler type checking and hide runtime type mismatches. Always declare concrete, specific types unless writing truly generic frameworks.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "CONSTANTS c_status VALUE 'A'. \" TYPE is omitted; implicitly typed as c length 1",
@@ -1254,6 +1286,7 @@
     "description": "Prefer CORRESPONDING Expression over MOVE-CORRESPONDING",
     "rationale": "The constructor expression `CORRESPONDING #( )` is type-safe, expression-capable, and supports modern features like `EXCEPT` and `MAPPING`. It replaces the archaic `MOVE-CORRESPONDING` statement.",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "MOVE-CORRESPONDING ls_source TO ls_target.",
@@ -1275,6 +1308,7 @@
     "description": "Method Length Limit (excessive statement count)",
     "rationale": "Long methods violate the Single Responsibility Principle, accumulate side effects, and are notoriously difficult to unit test. Split large methods into small, focused sub-methods.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [
       {
         "name": "MAX_STATEMENTS",
@@ -1307,6 +1341,7 @@
     "description": "Nesting Depth Limit (excessive control block nesting)",
     "rationale": "Deeply nested blocks (`IF`, `LOOP`, `TRY`, `CASE`) cause cognitive overload (\"arrow antipattern\"). Flatten nested code using early exits (`RETURN`), guard clauses, and extracted methods.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [
       {
         "name": "MAX_DEPTH",
@@ -1339,6 +1374,7 @@
     "description": "Avoid sy-* System Variable Modification",
     "rationale": "System fields like `sy-subrc`, `sy-tabix`, and `sy-index` are managed exclusively by the ABAP runtime. Writing to them manually undermines system integrity and masks actual execution results.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "sy-subrc = 0.\nsy-tabix = 1.",
@@ -1360,6 +1396,7 @@
     "description": "Prefer RETURNING over single EXPORTING",
     "rationale": "Methods with a `RETURNING` parameter can be used directly within expressions, assignments, and assertions. Prefer `RETURNING` over a single `EXPORTING` parameter.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "METHODS calculate\n  EXPORTING ev_result TYPE i.",
@@ -1381,6 +1418,7 @@
     "description": "Prefer Class-Based Exceptions over Classic EXCEPTIONS",
     "rationale": "Classic non-class exceptions (set via `sy-subrc`) lack stack traces, cannot carry context data, and cannot be propagated up call stacks cleanly. Use class-based exceptions (`CX_ROOT` subclasses).",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "METHODS execute EXCEPTIONS not_found failed.",
@@ -1404,6 +1442,7 @@
     "description": "Dangerous Statements (abaplint dangerous_statement)",
     "rationale": "Dynamic code generation (`GENERATE SUBROUTINE POOL`, `INSERT REPORT`), kernel calls (`SYSTEM-CALL`), and production `ASSERT` or `RAISE SHORTDUMP` jeopardize cloud compliance, security, and stability.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [
       {
         "name": "CHECK_EXEC_SQL",
@@ -1589,6 +1628,7 @@
     "description": "Call Transaction Authority Check",
     "rationale": "Omitting authorization checks leaves critical business data and actions exposed to unauthorized users. Always verify permissions before selecting or modifying protected resources.",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "CALL TRANSACTION 'VA01'.",
@@ -1610,6 +1650,7 @@
     "description": "SELECT UP TO 1 ROWS requires ORDER BY",
     "rationale": "Selecting rows from a relational database without an explicit `ORDER BY` clause yields non-deterministic ordering that can change unpredictably between DB executions and updates.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "SELECT * FROM /dmo/customer UP TO 1 ROWS INTO @ls_customer.",
@@ -1631,6 +1672,7 @@
     "description": "Cyclomatic Complexity Threshold",
     "rationale": "High cyclomatic complexity means a method contains too many decision points (branches, loops, catches), making comprehensive unit test branch coverage nearly impossible.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [
       {
         "name": "MAX_COMPLEXITY",
@@ -1664,6 +1706,7 @@
     "description": "Prefer FINAL classes and methods by default",
     "rationale": "Classes not explicitly designed and documented for inheritance should be declared `FINAL`. This prevents subclassing that relies on fragile base-class implementation details.",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [
       {
         "name": "CHECK_CLASSES",
@@ -1705,6 +1748,7 @@
     "description": "Avoid magic numbers in code; use named constants",
     "rationale": "Hardcoded numeric literals scattered in logic obscure business rules and make updates error-prone. Give numbers meaningful names by declaring structured constants.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "IF lv_status = 3.\n  process( ).\nENDIF.",
@@ -1726,6 +1770,7 @@
     "description": "Prefer INSERT ... INTO TABLE over APPEND for table safety",
     "rationale": "`APPEND` implies indexed, sequential appending and fails on hashed or sorted tables. `INSERT ... INTO TABLE` works polymorphically across all internal table categories.",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "APPEND ls_item TO lt_items.",
@@ -1747,6 +1792,7 @@
     "description": "Avoid LIKE referencing data objects; use explicit TYPE",
     "rationale": "Typing dictionary objects with `LIKE` is obsolete. Use `TYPE` to refer to data types and reserve `LIKE` solely for referencing local data objects in the same procedure.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "DATA lv_copy LIKE lv_original.",
@@ -1768,6 +1814,7 @@
     "description": "Keep constructors clean; avoid heavy logic and DB",
     "rationale": "Constructors should only initialize state and inject dependencies. Heavy business logic, database queries, or network I/O in constructors make test mocking and instantiation brittle.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [
       {
         "name": "MAX_STATEMENTS",
@@ -1800,6 +1847,7 @@
     "description": "Avoid static-only classes; use instantiable classes",
     "rationale": "Classes consisting entirely of static methods cannot be mocked via interfaces or subclassing during unit tests, creating rigid coupling throughout the application.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "CLASS cl_math_util DEFINITION PUBLIC FINAL CREATE PUBLIC.\n  PUBLIC SECTION.\n    CLASS-METHODS add IMPORTING a TYPE i b TYPE i RETURNING VALUE(r) TYPE i.\n    CLASS-METHODS sub IMPORTING a TYPE i b TYPE i RETURNING VALUE(r) TYPE i.\nENDCLASS.",
@@ -1821,6 +1869,7 @@
     "description": "Enforce predicate naming (IS_, HAS_) on boolean methods",
     "rationale": "Methods returning boolean status should read like questions (`is_valid`, `has_children`, `can_execute`) so conditionals read naturally like plain English.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "METHODS check_active RETURNING VALUE(rv_active) TYPE abap_bool.",
@@ -1842,6 +1891,7 @@
     "description": "Avoid deep class inheritance hierarchies",
     "rationale": "Deep class inheritance hierarchies create the fragile base class problem and tight coupling. Favor composition over inheritance (`HAS-A` instead of `IS-A`).",
     "hasQuickfix": false,
+    "remoteEnabled": false,
     "attributes": [
       {
         "name": "MAX_DEPTH",
@@ -1874,6 +1924,7 @@
     "description": "Limit class member attributes to prevent God Classes",
     "rationale": "Classes with dozens of member variables are almost always God Objects that handle multiple unrelated responsibilities. Split them into smaller, focused domain classes.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [
       {
         "name": "MAX_ATTRIBUTES",
@@ -1906,6 +1957,7 @@
     "description": "Avoid mutable DATA in interfaces; allow only CONSTANTS",
     "rationale": "Interfaces should declare behavior (methods) and immutable contracts (constants). Mutable data in interfaces creates hidden global state across all implementers.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "INTERFACE if_customer.\n  DATA mv_state TYPE i. \" Mutable DATA in interface\nENDINTERFACE.",
@@ -1927,6 +1979,7 @@
     "description": "Catch specific exceptions instead of generic cx_root",
     "rationale": "Catching `cx_root` indiscriminately swallows system runtime errors, resource exhaustion errors, and programming bugs, masking critical defects from developers.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "TRY.\n    process_order( ).\n  CATCH cx_root.\n    \" Indiscriminately catches all exceptions, masking unexpected bugs\nENDTRY.",
@@ -1948,6 +2001,7 @@
     "description": "Avoid MESSAGE ... RAISING; use class-based exceptions",
     "rationale": "`MESSAGE ... RAISING` combines procedural exception handling with UI messaging, preventing proper separation of concerns. Raise modern class-based exceptions instead.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "MESSAGE e001(zmsg) RAISING not_found.",
@@ -1969,6 +2023,7 @@
     "description": "Avoid nested TRY blocks; extract to helper methods",
     "rationale": "Nesting `TRY` blocks inside other `TRY` blocks obfuscates error handling flow. Extract inner protected operations into distinct methods.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "TRY.\n    step1( ).\n    TRY.\n        step2( ).\n      CATCH cx_step2_err.\n        handle_step2( ).\n    ENDTRY.\n  CATCH cx_step1_err.\n    handle_step1( ).\nENDTRY.",
@@ -1990,6 +2045,7 @@
     "description": "Avoid raising SAP internal system exceptions (cx_sy_*)",
     "rationale": "`cx_sy_*` exceptions are reserved exclusively for the ABAP runtime engine (e.g., divide by zero, null reference). Applications must define and raise their own custom exception hierarchies.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "RAISE EXCEPTION NEW cx_sy_itab_line_not_found( ).",
@@ -2011,6 +2067,7 @@
     "description": "Check sy-subrc after DB, table and string operations",
     "rationale": "Statements that set `sy-subrc` (such as `SELECT SINGLE`, `READ TABLE`, `AUTHORITY-CHECK`, `ASSIGN`) must have their return code verified immediately before invoking unrelated statements.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [
       {
         "name": "CHECK_SELECT_SINGLE",
@@ -2079,6 +2136,7 @@
     "description": "Avoid USING CLIENT or CLIENT SPECIFIED in ABAP SQL",
     "rationale": "Explicit client switching bypasses automatic multi-tenant client isolation and is strictly prohibited in ABAP Cloud environment standards.",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "SELECT * FROM /dmo/customer USING CLIENT '100' INTO TABLE @lt_customers.",
@@ -2100,6 +2158,7 @@
     "description": "Avoid COMMIT and ROLLBACK in application logic",
     "rationale": "Transactional business logic should rely on the persistence framework or framework save sequence (e.g. RAP) rather than triggering premature or uncoordinated database commits.",
     "hasQuickfix": false,
+    "remoteEnabled": false,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "\" Inside a RAP behavior implementation (CL_ABAP_BEHAVIOR_HANDLER)\nMETHOD update.\n  MODIFY ENTITIES OF ...\n  COMMIT WORK.\nENDMETHOD.",
@@ -2121,6 +2180,7 @@
     "description": "Avoid MODIFY itab in LOOP without TRANSPORTING clause",
     "rationale": "Modifying internal tables without specifying `TRANSPORTING` copies all table fields across the buffer. Specify only the modified fields to optimize execution speed.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "LOOP AT lt_items INTO ls_item.\n  ls_item-status = 'DONE'.\n  MODIFY lt_items FROM ls_item. \" Full line copy without specifying TRANSPORTING\nENDLOOP.",
@@ -2148,6 +2208,7 @@
     "description": "Detect obsolete string statements; prefer built-in functions",
     "rationale": "Procedural string statements (`SEARCH`, `SHIFT`, `TRANSLATE`) are legacy ABAP. Replace them with functional built-in string functions (`find`, `to_upper`, `substring`, `shift_left`).",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [
       {
         "name": "CHECK_CONDENSE",
@@ -2234,6 +2295,7 @@
     "description": "Prefer calculation assignment operators (+=, -=, *=, /=)",
     "rationale": "Modern ABAP supports arithmetic assignment operators (`lv_count += 1.`), which are cleaner and more expressive than verbose legacy assignments (`lv_count = lv_count + 1.`).",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "lv_count = lv_count + 1.\nlv_total = lv_total * 2.",
@@ -2256,6 +2318,7 @@
     "description": "Prefer early return or continue over nested IF blocks",
     "rationale": "Check preconditions and invalid states at the start of the method and return immediately. This eliminates deeply nested `IF ... ELSE` ladders.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [
       {
         "name": "CHECK_METHOD_RETURN",
@@ -2297,6 +2360,7 @@
     "description": "Detect unused local variables and field symbols",
     "rationale": "Unused variables clutter code, confuse developers reviewing changes, and increase compilation and execution memory overhead without providing any benefit.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "DATA lv_temp TYPE string. \" Declared but never referenced",
@@ -2318,6 +2382,7 @@
     "description": "Enforce declaration order (TYPES, CONSTANTS, DATA, FS)",
     "rationale": "Declaring types first, then constants, then data variables creates a logical reading flow where subsequent definitions can safely depend on preceding ones.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "METHOD execute.\n  DATA lv_count TYPE i.\n  TYPES ty_status TYPE c LENGTH 1. \" TYPES declared after DATA\n  CONSTANTS c_init TYPE ty_status VALUE 'I'.\nENDMETHOD.",
@@ -2339,6 +2404,7 @@
     "description": "Avoid unnecessary parameter escape (!param)",
     "rationale": "Importing parameters should be treated as immutable inputs. Modifying them inside the method leads to unexpected side effects and debugging difficulties.",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "METHODS process IMPORTING !iv_data TYPE string.",
@@ -2360,6 +2426,7 @@
     "description": "Use CASE instead of IF when checking multiple values",
     "rationale": "When branching on multiple values of a single variable, `CASE ... WHEN` is more readable, structured, and performant than a chain of `ELSEIF` statements.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [
       {
         "name": "MIN_BRANCHES",
@@ -2392,6 +2459,7 @@
     "description": "Avoid inline length specification in declarations",
     "rationale": "Specifying length in parentheses directly after a variable name (`lv_str(10) TYPE c`) is legacy syntax. Use modern explicit typing: `TYPE c LENGTH 10`.",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "DATA lv_code(10) TYPE c.",
@@ -2413,6 +2481,7 @@
     "description": "Max One Statement Per Line",
     "rationale": "Placing multiple statements on a single line hinders debugger stepping, breaks Git line diffs, and hurts overall code scannability.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "lv_a = 1. lv_b = 2.",
@@ -2434,6 +2503,7 @@
     "description": "No Dashes in Variable and Form Names",
     "rationale": "Using a hyphen/dash in structure component references is archaic. Modern ABAP standardizes on the arrow notation `->` or hyphen only where mandatory.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "DATA foo-bar TYPE i.",
@@ -2455,6 +2525,7 @@
     "description": "Prefer Inline Declarations",
     "rationale": "In versions supporting inline declarations, declaring variables at the point of first use reduces variable lifetime scope and removes top-of-method variable clutter.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "DATA lv_count TYPE i.\nlv_count = 10.",
@@ -2476,6 +2547,7 @@
     "description": "Declare inline variables as FINAL when never written again",
     "rationale": "When an inline DATA( ) variable is assigned once and never written again, declaring it FINAL( ) communicates immutability and lets the compiler enforce it.",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "DATA(lv_count) = 10.\nWRITE lv_count.",
@@ -2497,6 +2569,7 @@
     "description": "Avoid FRIENDS in class definitions",
     "rationale": "FRIENDS grants another class access to private/protected members, breaking encapsulation. Expose behaviour through the public interface instead.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "CLASS lcl_service DEFINITION FINAL FRIENDS lcl_helper CREATE PUBLIC.\n  PUBLIC SECTION.\n    METHODS execute.\nENDCLASS.",
@@ -2518,6 +2591,7 @@
     "description": "Use a message class instead of inline message text",
     "rationale": "Inline message texts cannot be translated and are hard to maintain. Define messages in a message class and raise them as e001( msg_class ).",
     "hasQuickfix": false,
+    "remoteEnabled": false,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "MESSAGE 'Something went wrong' TYPE 'E'.",
@@ -2539,6 +2613,7 @@
     "description": "Inline a CAST helper that is only read once",
     "rationale": "A CAST helper declared as DATA and read exactly once in the following statement can be inlined, removing a temporary variable.",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "DATA(helper) = CAST lcl_node( object ).\nresult = helper->get_tokens( ).",
@@ -2560,6 +2635,7 @@
     "description": "Classic EXCEPTIONS must not overlap",
     "rationale": "When two classic exceptions share one error number, the caller cannot tell which one was raised.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "CALL FUNCTION 'SOMETHING'\n  EXCEPTIONS\n    system_failure        = 1 MESSAGE lv_message\n    communication_failure = 1 MESSAGE lv_message\n    OTHERS                = 1.",
@@ -2581,6 +2657,7 @@
     "description": "RFC calls must handle system failures",
     "rationale": "Remote calls can fail at runtime; the caller must handle system and communication failures (and resource failures for async calls in a group).",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "CALL FUNCTION 'Z_RFC'\n  DESTINATION lv_rfc.",
@@ -2602,6 +2679,7 @@
     "description": "Remove redundant parentheses",
     "rationale": "Parentheses that only wrap a complete condition or expression add noise and can be removed without changing semantics.",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "IF ( destination IS INITIAL ).\nENDIF.",
@@ -2623,6 +2701,7 @@
     "description": "Slow Parameter Passing",
     "rationale": "Passing large internal tables by value creates an in-memory deep copy on every method invocation. Use pass-by-reference (`REFERENCE(it_data)`) or read-only references.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "METHODS process IMPORTING VALUE(iv_text) TYPE string.",
@@ -2644,6 +2723,7 @@
     "description": "Modify Only Own Database Tables",
     "rationale": "Directly inserting, updating, or deleting tables belonging to another application component bypasses business validation logic and violates modular architecture.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "DELETE FROM mara WHERE matnr = '100'.",
@@ -2665,6 +2745,7 @@
     "description": "No Dynamic Constructs (CALL, ASSIGN, CREATE, etc.)",
     "rationale": "Dynamic programming (`ASSIGN (lv_var)`, `CALL METHOD (lv_method)`) disables compile-time type checking, hampers automated refactoring, and opens security vulnerabilities.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "CALL FUNCTION lv_func_name.",
@@ -2686,6 +2767,7 @@
     "description": "Declare Constructor in PUBLIC SECTION",
     "rationale": "Instance constructors must always be declared in the PUBLIC SECTION, even for classes with CREATE PRIVATE or CREATE PROTECTED, ensuring standard reflection, factory instantiation, and Clean ABAP compliance.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "CLASS zcl_service DEFINITION PUBLIC CREATE PRIVATE.\n  PRIVATE SECTION.\n    METHODS constructor.\nENDCLASS.",
@@ -2707,6 +2789,7 @@
     "description": "Place definitions at beginning of routine",
     "rationale": "Explicit local definitions (DATA, TYPES, CONSTANTS, FIELD-SYMBOLS) should be placed at the very beginning of the routine rather than scattered in the middle of executable code.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "METHOD calculate.\n  lv_total = 100.\n  DATA lv_tax TYPE i.\nENDMETHOD.",
@@ -2728,6 +2811,7 @@
     "description": "Omit unnecessary RETURN at end of routine",
     "rationale": "Routines automatically return upon reaching ENDMETHOD, ENDFORM, or ENDFUNCTION. An explicit RETURN statement at the very end of the routine body is redundant and clutters the code.",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "METHOD calculate.\n  lv_total = 100.\n  RETURN.\nENDMETHOD.",
@@ -2749,6 +2833,7 @@
     "description": "Do not mix RETURNING with EXPORTING or CHANGING",
     "rationale": "Clean ABAP methods should either be pure functional (RETURNING a single result) or procedures (using EXPORTING/CHANGING). Mixing both in the same signature creates confusing APIs.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "METHODS get_data\n  EXPORTING ev_val TYPE i\n  RETURNING VALUE(rv_res) TYPE string.",
@@ -2770,6 +2855,7 @@
     "description": "Method name overwrites built-in SAP function",
     "rationale": "Naming a method after a built-in ABAP function (e.g., LINES, STRLEN, MATCHES, XSDBOOL) obscures the standard SAP built-in and makes expressions ambiguous and difficult to read.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "METHODS matches RETURNING VALUE(rv_res) TYPE abap_bool.",
@@ -2791,6 +2877,7 @@
     "description": "Max one method parameter definition per line",
     "rationale": "Defining multiple parameters on the same line hampers readability and produces noisy version control diffs. Each parameter in a signature should be declared on its own dedicated line.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "METHODS foo IMPORTING iv_a TYPE i iv_b TYPE string.",
@@ -2812,6 +2899,7 @@
     "description": "Prefer IS [NOT] INITIAL over lines( ) or empty literals",
     "rationale": "Checking whether an internal table, string, or variable is empty should be done with `IS [NOT] INITIAL` rather than counting `lines( ) > 0` or comparing to empty literals (`\"\"`, `space`, `0`). `IS INITIAL` is idiomatic Clean ABAP, expressive, and optimized.",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "IF lines( lt_items ) > 0.\nENDIF.",
@@ -2833,6 +2921,7 @@
     "description": "Disallow ignoring the return value of functional methods",
     "rationale": "Functional methods that declare a `RETURNING` parameter are designed to compute and return a value. Calling such methods without assigning or consuming their result indicates a bug, dead code, or an improper command-query violation where side effects were bundled into a query.",
     "hasQuickfix": false,
+    "remoteEnabled": false,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "lo_calc->get_total( ).",
@@ -2854,6 +2943,7 @@
     "description": "Prefer modern CAST #( ) expression over ?=",
     "rationale": "`?=` is legacy downcast syntax from early ABAP Objects. Modern ABAP exclusively uses `CAST #( )` constructor expressions, which can be inlined directly into method call chains and expressions.",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
     "nonCompliantCode": "lo_child ?= lo_parent.",
@@ -2876,6 +2966,7 @@
     "description": "Do not CLEAR or FREE variables redundantly",
     "rationale": "Variables in ABAP are automatically initialized to their type-specific default initial value upon declaration. Explicitly executing `CLEAR` immediately after declaration adds visual noise and redundant statements without any functional effect.",
     "hasQuickfix": true,
+    "remoteEnabled": true,
     "attributes": [
       {
         "name": "CHECK_BEFORE_WRITE",
@@ -2918,6 +3009,7 @@
     "description": "Avoid mutating or sorting tables inside loops",
     "rationale": "Adding rows (APPEND/INSERT), modifying, deleting, or clearing rows from the table while actively looping over it can cause infinite loops, skipped rows, or cursor invalidation. Parametric toggles are available for append, insert, modify, delete, and clear operations.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [
       {
         "name": "CHECK_APPEND",
@@ -3013,6 +3105,7 @@
     "description": "Avoid reading environment system fields (sy-sysid, etc.)",
     "rationale": "Hardcoding system identifiers (sy-sysid), client numbers (sy-mandt), host names (sy-host), or database systems (sy-dbsys) against literal values violates cloud multi-tenancy and breaks during staging, system copy, or migration. Use feature toggles, switch frameworks, or customizing instead.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [
       {
         "name": "CHECK_SYSID",
@@ -3095,6 +3188,7 @@
     "description": "Maximum Line Length",
     "rationale": "Long lines reduce readability, force horizontal scrolling, and complicate code review. Keep source lines within a configurable limit (typically 120 characters) by breaking statements and using expression-based ABAP.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [
       {
         "name": "MAX_LENGTH",
@@ -3142,6 +3236,7 @@
     "description": "Standard Naming Conventions",
     "rationale": "Consistent naming conventions (prefixes for variables, parameters, types, etc.) make code self-documenting and easier to navigate. Configure patterns per scope to enforce team standards automatically.",
     "hasQuickfix": false,
+    "remoteEnabled": true,
     "attributes": [
       {
         "name": "ATTR_IGN_EXC",
@@ -3161,17 +3256,17 @@
       {
         "name": "ATTR_STATICS",
         "kind": "String",
-        "defaultValue": "'^G._.+$'"
+        "defaultValue": "^G._.+$"
       },
       {
         "name": "ATTR_INSTANCE",
         "kind": "String",
-        "defaultValue": "'^M._.+$'"
+        "defaultValue": "^M._.+$"
       },
       {
         "name": "ATTR_CONSTANTS",
         "kind": "String",
-        "defaultValue": "''"
+        "defaultValue": ""
       },
       {
         "name": "PARAM_IGN_EXC",
@@ -3181,122 +3276,122 @@
       {
         "name": "PARAM_IMPORTING",
         "kind": "String",
-        "defaultValue": "'^I._.+$'"
+        "defaultValue": "^I._.+$"
       },
       {
         "name": "PARAM_RETURNING",
         "kind": "String",
-        "defaultValue": "'^R._.+$'"
+        "defaultValue": "^R._.+$"
       },
       {
         "name": "PARAM_CHANGING",
         "kind": "String",
-        "defaultValue": "'^C._.+$'"
+        "defaultValue": "^C._.+$"
       },
       {
         "name": "PARAM_EXPORTING",
         "kind": "String",
-        "defaultValue": "'^E._.+$'"
+        "defaultValue": "^E._.+$"
       },
       {
         "name": "LOCAL_DATA",
         "kind": "String",
-        "defaultValue": "'^L._.+$'"
+        "defaultValue": "^L._.+$"
       },
       {
         "name": "LOCAL_CONST",
         "kind": "String",
-        "defaultValue": "'^LC_.+$'"
+        "defaultValue": "^LC_.+$"
       },
       {
         "name": "LOCAL_FS",
         "kind": "String",
-        "defaultValue": "'^<L._.+>$'"
+        "defaultValue": "^<L._.+>$"
       },
       {
         "name": "LOCAL_STATICS",
         "kind": "String",
-        "defaultValue": "'^S._.+$'"
+        "defaultValue": "^S._.+$"
       },
       {
         "name": "CLASS_LOCAL",
         "kind": "String",
-        "defaultValue": "'^LC(L|X)_.+$'"
+        "defaultValue": "^LC(L|X)_.+$"
       },
       {
         "name": "CLASS_TEST",
         "kind": "String",
-        "defaultValue": "'^LTCL_.+$'"
+        "defaultValue": "^LTCL_.+$"
       },
       {
         "name": "CLASS_GLOBAL",
         "kind": "String",
-        "defaultValue": "'^ZC(L|X)_.+$'"
+        "defaultValue": "^ZC(L|X)_.+$"
       },
       {
         "name": "SSCR_PARAM",
         "kind": "String",
-        "defaultValue": "'^P_.+$'"
+        "defaultValue": "^P_.+$"
       },
       {
         "name": "SSCR_SELOPT",
         "kind": "String",
-        "defaultValue": "'^S_.+$'"
+        "defaultValue": "^S_.+$"
       },
       {
         "name": "TYPES_PATTERN",
         "kind": "String",
-        "defaultValue": "'^TY_.+$'"
+        "defaultValue": "^TY_.+$"
       },
       {
         "name": "MACRO_PATTERN",
         "kind": "String",
-        "defaultValue": "'^_.+$'"
+        "defaultValue": "^_.+$"
       },
       {
         "name": "FORM_PATTERN",
         "kind": "String",
-        "defaultValue": "'^F_.+$'"
+        "defaultValue": "^F_.+$"
       },
       {
         "name": "FUNCTION_PATTERN",
         "kind": "String",
-        "defaultValue": "'^Z.*$'"
+        "defaultValue": "^Z.*$"
       },
       {
         "name": "INTF_LOCAL",
         "kind": "String",
-        "defaultValue": "'^LIF_.+$'"
+        "defaultValue": "^LIF_.+$"
       },
       {
         "name": "INTF_GLOBAL",
         "kind": "String",
-        "defaultValue": "'^ZIF_.+$'"
+        "defaultValue": "^ZIF_.+$"
       },
       {
         "name": "EVENT_NAME",
         "kind": "String",
-        "defaultValue": "'^[A-Z][A-Z0-9_]+$'"
+        "defaultValue": "^[A-Z][A-Z0-9_]+$"
       },
       {
         "name": "EVENT_HANDLER",
         "kind": "String",
-        "defaultValue": "'^ON_.+$'"
+        "defaultValue": "^ON_.+$"
       },
       {
         "name": "TEST_METHOD",
         "kind": "String",
-        "defaultValue": "'^(TEST|SHOULD)_.+$'"
+        "defaultValue": "^(TEST|SHOULD)_.+$"
       },
       {
         "name": "PROG_PATTERN",
         "kind": "String",
-        "defaultValue": "'^Z.+$'"
+        "defaultValue": "^Z.+$"
       },
       {
         "name": "FUGR_PATTERN",
         "kind": "String",
-        "defaultValue": "'^Z.+$'"
+        "defaultValue": "^Z.+$"
       }
     ],
     "defaultParameters": [
@@ -3309,8 +3404,112 @@
         "value": "X"
       },
       {
+        "name": "ATTR_STATICS",
+        "value": "^G._.+$"
+      },
+      {
+        "name": "ATTR_INSTANCE",
+        "value": "^M._.+$"
+      },
+      {
         "name": "PARAM_IGN_EXC",
         "value": "X"
+      },
+      {
+        "name": "PARAM_IMPORTING",
+        "value": "^I._.+$"
+      },
+      {
+        "name": "PARAM_RETURNING",
+        "value": "^R._.+$"
+      },
+      {
+        "name": "PARAM_CHANGING",
+        "value": "^C._.+$"
+      },
+      {
+        "name": "PARAM_EXPORTING",
+        "value": "^E._.+$"
+      },
+      {
+        "name": "LOCAL_DATA",
+        "value": "^L._.+$"
+      },
+      {
+        "name": "LOCAL_CONST",
+        "value": "^LC_.+$"
+      },
+      {
+        "name": "LOCAL_FS",
+        "value": "^<L._.+>$"
+      },
+      {
+        "name": "LOCAL_STATICS",
+        "value": "^S._.+$"
+      },
+      {
+        "name": "CLASS_LOCAL",
+        "value": "^LC(L|X)_.+$"
+      },
+      {
+        "name": "CLASS_TEST",
+        "value": "^LTCL_.+$"
+      },
+      {
+        "name": "CLASS_GLOBAL",
+        "value": "^ZC(L|X)_.+$"
+      },
+      {
+        "name": "SSCR_PARAM",
+        "value": "^P_.+$"
+      },
+      {
+        "name": "SSCR_SELOPT",
+        "value": "^S_.+$"
+      },
+      {
+        "name": "TYPES_PATTERN",
+        "value": "^TY_.+$"
+      },
+      {
+        "name": "MACRO_PATTERN",
+        "value": "^_.+$"
+      },
+      {
+        "name": "FORM_PATTERN",
+        "value": "^F_.+$"
+      },
+      {
+        "name": "FUNCTION_PATTERN",
+        "value": "^Z.*$"
+      },
+      {
+        "name": "INTF_LOCAL",
+        "value": "^LIF_.+$"
+      },
+      {
+        "name": "INTF_GLOBAL",
+        "value": "^ZIF_.+$"
+      },
+      {
+        "name": "EVENT_NAME",
+        "value": "^[A-Z][A-Z0-9_]+$"
+      },
+      {
+        "name": "EVENT_HANDLER",
+        "value": "^ON_.+$"
+      },
+      {
+        "name": "TEST_METHOD",
+        "value": "^(TEST|SHOULD)_.+$"
+      },
+      {
+        "name": "PROG_PATTERN",
+        "value": "^Z.+$"
+      },
+      {
+        "name": "FUGR_PATTERN",
+        "value": "^Z.+$"
       }
     ],
     "nonCompliantCode": "DATA foo TYPE i.",

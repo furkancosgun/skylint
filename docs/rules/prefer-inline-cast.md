@@ -8,6 +8,7 @@ description: "Inline a CAST helper that is only read once"
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="⚡ QuickFix Ready" />
   <Badge type="danger" text="#EC INLINE_CAST" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

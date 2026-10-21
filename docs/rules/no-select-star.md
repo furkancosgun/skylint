@@ -7,6 +7,7 @@ description: "Select performance (Avoid SELECT * and SELECT ... ENDSELECT)"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Performance & Database" />
   <Badge type="danger" text="#EC SELECT_STAR" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview

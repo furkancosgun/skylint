@@ -7,6 +7,7 @@ description: "Avoid deep class inheritance hierarchies"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="tip" text="Metrics & Complexity Limits" />
   <Badge type="danger" text="#EC INHERIT_DEPTH" />
+  <Badge type="warning" text="Local Only" />
 </div>
 
 ## Overview
