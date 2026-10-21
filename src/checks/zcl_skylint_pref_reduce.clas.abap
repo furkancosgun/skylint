@@ -61,7 +61,6 @@ ENDCLASS.
 
 
 CLASS zcl_skylint_pref_reduce IMPLEMENTATION.
-
   METHOD constructor.
     super->constructor(
         VALUE #(
@@ -118,16 +117,17 @@ CLASS zcl_skylint_pref_reduce IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD parse_simple_loop.
-    DATA ls_loop_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_body_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_end_stmt  TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lv_into_pos  TYPE i.
+    DATA ls_loop_stmt  TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_body_stmt  TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_end_stmt   TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_into_pos   TYPE i.
     DATA lv_assign_pos TYPE i.
-    DATA lv_where_pos TYPE i.
-    DATA lv_grp_pos   TYPE i.
-    DATA ls_tok       TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_where_pos  TYPE i.
+    DATA lv_grp_pos    TYPE i.
+    DATA ls_tok        TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    CLEAR: es_info, ev_endloop_idx.
+    CLEAR: es_info,
+           ev_endloop_idx.
 
     " Exactly LOOP statement, body statement, ENDLOOP statement: index + 2 must be ENDLOOP
     IF iv_loop_idx + 2 > iv_total.
@@ -201,7 +201,9 @@ CLASS zcl_skylint_pref_reduce IMPLEMENTATION.
     DATA ls_third     TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_expr_text TYPE string.
 
-    CLEAR: ev_acc_var, ev_expr, ev_is_valid.
+    CLEAR: ev_acc_var,
+           ev_expr,
+           ev_is_valid.
 
     IF is_statement-keyword <> 'COMPUTE'.
       RETURN.
@@ -288,5 +290,4 @@ CLASS zcl_skylint_pref_reduce IMPLEMENTATION.
     APPEND |{ lv_indent }  FOR { is_info-target_name } IN { is_info-table_name }| TO rt_code.
     APPEND |{ lv_indent }  NEXT res = { lv_replaced } ).| TO rt_code.
   ENDMETHOD.
-
 ENDCLASS.

@@ -54,21 +54,19 @@ ENDCLASS.
 
 
 CLASS zcl_skylint_pref_tab_expr IMPLEMENTATION.
-
   METHOD constructor.
     super->constructor(
-        VALUE #(
-            description       = 'Prefer table expression itab[ ... ] over READ TABLE'
-            remote_enablement = abap_true
-            finding_codes     = VALUE #( ( code           = c_finding_codes-prefer_tab_expr
-                                           severity       = if_ci_atc_check=>finding_severities-warning
-                                           text           = 'Prefer table expression itab[ ... ] over READ TABLE'
-                                           pseudo_comment = c_pseudo_comment ) )
-            quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-use_tab_expr
-                                           short_text = 'Replace READ TABLE with table expression' ) )
-            attributes        = VALUE #( ( name  = 'USE_OPTIONAL'
-                                           kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                                           value = REF #( mv_use_optional ) ) ) ) ).
+        VALUE #( description       = 'Prefer table expression itab[ ... ] over READ TABLE'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #( ( code           = c_finding_codes-prefer_tab_expr
+                                                severity       = if_ci_atc_check=>finding_severities-warning
+                                                text           = 'Prefer table expression itab[ ... ] over READ TABLE'
+                                                pseudo_comment = c_pseudo_comment ) )
+                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-use_tab_expr
+                                                short_text = 'Replace READ TABLE with table expression' ) )
+                 attributes        = VALUE #( ( name  = 'USE_OPTIONAL'
+                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                                value = REF #( mv_use_optional ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -127,9 +125,8 @@ CLASS zcl_skylint_pref_tab_expr IMPLEMENTATION.
     ENDIF.
 
     " Ignore BINARY SEARCH (requires sorted table or explicit sort)
-    lv_bin_pos = zcl_skylint_ast_util=>find_token_sequence(
-                     is_statement = is_statement
-                     it_expected  = VALUE #( ( `BINARY` ) ( `SEARCH` ) ) ).
+    lv_bin_pos = zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
+                                                            it_expected  = VALUE #( ( `BINARY` ) ( `SEARCH` ) ) ).
     IF lv_bin_pos > 0.
       RETURN.
     ENDIF.
@@ -151,9 +148,8 @@ CLASS zcl_skylint_pref_tab_expr IMPLEMENTATION.
                                                       iv_lexeme    = 'INTO' ).
     lv_assign_pos = zcl_skylint_ast_util=>find_token( is_statement = is_statement
                                                       iv_lexeme    = 'ASSIGNING' ).
-    lv_ref_pos    = zcl_skylint_ast_util=>find_token_sequence(
-                        is_statement = is_statement
-                        it_expected  = VALUE #( ( `REFERENCE` ) ( `INTO` ) ) ).
+    lv_ref_pos    = zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
+                                                               it_expected  = VALUE #( ( `REFERENCE` ) ( `INTO` ) ) ).
 
     IF lv_into_pos > 0.
       lv_target_pos = lv_into_pos + 1.
@@ -191,12 +187,12 @@ CLASS zcl_skylint_pref_tab_expr IMPLEMENTATION.
                                                  iv_from_idx  = lv_key_pos + 2
                                                  iv_to_idx    = lv_tokens_cnt ).
         rs_info-is_valid  = abap_true.
-      ELSEIF zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                                                     iv_index     = lv_key_pos + 1
-                                                     iv_expected  = `TABLE` ) = abap_true
-         AND zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                                                     iv_index     = lv_key_pos + 2
-                                                     iv_expected  = `KEY` ) = abap_true.
+      ELSEIF     zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
+                                                         iv_index     = lv_key_pos + 1
+                                                         iv_expected  = `TABLE` )      = abap_true
+             AND zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
+                                                         iv_index     = lv_key_pos + 2
+                                                         iv_expected  = `KEY` )        = abap_true.
         rs_info-cond_text = extract_tokens_text( is_statement = is_statement
                                                  iv_from_idx  = lv_key_pos + 3
                                                  iv_to_idx    = lv_tokens_cnt ).
@@ -253,5 +249,4 @@ CLASS zcl_skylint_pref_tab_expr IMPLEMENTATION.
       APPEND |{ lv_indent }{ is_info-target_name } = { lv_expr }.| TO rt_code.
     ENDIF.
   ENDMETHOD.
-
 ENDCLASS.
