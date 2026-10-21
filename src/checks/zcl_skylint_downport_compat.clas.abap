@@ -193,7 +193,8 @@ CLASS zcl_skylint_downport_compat IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD has_constructor_expr.
-    DATA lv_lex TYPE string.
+    DATA lv_lex  TYPE string.
+    DATA ls_next TYPE if_ci_atc_source_code_provider=>ty_token.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_has = abap_false.
@@ -205,22 +206,23 @@ CLASS zcl_skylint_downport_compat IMPLEMENTATION.
       ENDIF.
 
       lv_lex = <ls_token>-lexeme.
-      IF     (    lv_lex = 'NEW'
-               OR lv_lex = 'VALUE'
-               OR lv_lex = 'COND'
-               OR lv_lex = 'SWITCH'
-               OR lv_lex = 'REDUCE'
-               OR lv_lex = 'FILTER'
-               OR lv_lex = 'CORRESPONDING'
-               OR lv_lex = 'EXACT'
-               OR lv_lex = 'CONV'
-               OR lv_lex = 'REF'
-               OR lv_lex = 'CAST' )
-         AND zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                                                     iv_index     = sy-tabix + 1
-                                                     iv_expected  = `#` ) = abap_true.
-        rv_has = abap_true.
-        RETURN.
+      IF    lv_lex = 'NEW'
+         OR lv_lex = 'VALUE'
+         OR lv_lex = 'COND'
+         OR lv_lex = 'SWITCH'
+         OR lv_lex = 'REDUCE'
+         OR lv_lex = 'FILTER'
+         OR lv_lex = 'CORRESPONDING'
+         OR lv_lex = 'EXACT'
+         OR lv_lex = 'CONV'
+         OR lv_lex = 'REF'
+         OR lv_lex = 'CAST'.
+        ls_next = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                   iv_index     = sy-tabix + 1 ).
+        IF ls_next-lexeme CP '*(' OR ls_next-lexeme = '#' OR ls_next-lexeme = '#('.
+          rv_has = abap_true.
+          RETURN.
+        ENDIF.
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
@@ -246,9 +248,10 @@ CLASS zcl_skylint_downport_compat IMPLEMENTATION.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
       lv_lex = <ls_token>-lexeme.
-      IF    lv_lex = 'DATA('
-         OR lv_lex = 'FINAL('
-         OR lv_lex = 'FIELD-SYMBOL('.
+      IF    lv_lex CP 'DATA(*'
+         OR lv_lex CP 'FINAL(*'
+         OR lv_lex CP 'FIELD-SYMBOL(*'
+         OR lv_lex CP '@DATA(*'.
         rv_has = abap_true.
         RETURN.
       ENDIF.
@@ -261,7 +264,8 @@ CLASS zcl_skylint_downport_compat IMPLEMENTATION.
     rv_has = abap_false.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      IF <ls_token>-lexeme CP '|*|'.
+      IF contains( val = <ls_token>-lexeme
+                   sub = '|' ).
         rv_has = abap_true.
         RETURN.
       ENDIF.
@@ -299,10 +303,6 @@ CLASS zcl_skylint_downport_compat IMPLEMENTATION.
     rv_has = abap_false.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      IF <ls_token>-references IS NOT INITIAL.
-        CONTINUE.
-      ENDIF.
-
       lv_lex = <ls_token>-lexeme.
       IF    lv_lex = '+='
          OR lv_lex = '-='

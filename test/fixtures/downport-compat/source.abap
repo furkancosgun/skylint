@@ -8,10 +8,15 @@ ENDCLASS.
 CLASS zcl_skylint_test_downport IMPLEMENTATION.
 
   METHOD test_001.
+    DATA new TYPE i.
     DATA lv_text TYPE string.
+    DATA lt_data TYPE string_table.
 
     " Compliant: default attributes are all abap_false
-    lv_text = VALUE #( ).
+    new = 1.
+    new += 2.
+    lv_text = VALUE string_table( ( |Line: { new }| ) ).
+    lt_data = VALUE #( ( `Item` ) ).
   ENDMETHOD.
 
   METHOD test_002.
