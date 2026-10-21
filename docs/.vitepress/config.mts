@@ -516,6 +516,16 @@ export default defineConfig({
         "link": "/rules/max-line-length"
       }
     ]
+  },
+  {
+    "text": "Naming",
+    "collapsed": false,
+    "items": [
+      {
+        "text": "method-overwrites-builtin",
+        "link": "/rules/method-overwrites-builtin"
+      }
+    ]
   }
 ]
       ],

@@ -26,8 +26,12 @@ jobs:
       - name: Fetch test dependencies
         run: npm run deps
 
+      - name: Generate ATC objects and checks registry
+        run: node scripts/generate-atc.mjs
+
       - name: Run linter and tests
         run: npm test
 
       - name: Verify documentation build
         run: npm run docs:build
+EOF

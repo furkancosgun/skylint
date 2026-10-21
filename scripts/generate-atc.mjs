@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { RULES } from './rules-data.mjs';
+import { getCheckDescription, getCheckParameters, isRemoteEnabled } from './check-metadata.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -11,56 +12,8 @@ const checksDir = path.join(srcDir, 'checks');
 const coreDir = path.join(srcDir, 'core');
 const atcDir = path.join(srcDir, 'atc');
 
-function getCheckDescription(rule) {
-  const checkFile = path.join(checksDir, `${rule.className.toLowerCase()}.clas.abap`);
-  if (fs.existsSync(checkFile)) {
-    const content = fs.readFileSync(checkFile, 'utf8');
-    const match = content.match(/description\s*=\s*'([^']+)'/);
-    if (match) {
-      let desc = match[1].replace(/^skylint:\s*/i, '').trim();
-      if (desc.length > 60) {
-        throw new Error(`ABAP class ${rule.className} description exceeds 60 characters (${desc.length}): "${desc}"`);
-      }
-      return desc;
-    }
-  }
-  return `Check rule ${rule.ruleId}`.slice(0, 60);
-}
 
-function getCheckParameters(rule) {
-  const checkFile = path.join(checksDir, `${rule.className.toLowerCase()}.clas.abap`);
-  if (!fs.existsSync(checkFile)) return undefined;
 
-  const content = fs.readFileSync(checkFile, 'utf8');
-  const attrMatch = content.match(/attributes\s*=\s*VALUE #\([\s\S]*?\)\s*\)\s*\)/);
-  if (!attrMatch) return undefined;
-
-  const bound = [...attrMatch[0].matchAll(/name\s*=\s*['"]([^'"\s]+)['"][\s\S]*?REF #\(\s*([a-zA-Z0-9_]+)\s*\)/g)];
-  if (bound.length === 0) return undefined;
-
-  return bound.map(([_, name, varName]) => {
-    let value = '';
-    const varDecl = content.match(new RegExp('DATA\\s+' + varName + '\\s+TYPE\\s+([^\\.\\n]+)\\.', 'i'));
-    if (varDecl) {
-      const valMatch = varDecl[1].match(/VALUE\s+([a-zA-Z0-9_]+)/i);
-      if (valMatch) {
-        const raw = valMatch[1];
-        value = raw.toLowerCase() === 'abap_true' ? 'X' : (raw.toLowerCase() === 'abap_false' ? '' : raw);
-      }
-    }
-    return { name, value };
-  });
-}
-
-function isRemoteEnabled(rule) {
-  const checkFile = path.join(checksDir, `${rule.className.toLowerCase()}.clas.abap`);
-  if (!fs.existsSync(checkFile)) return true;
-  const content = fs.readFileSync(checkFile, 'utf8');
-  if (/remote_enablement\s*=\s*abap_false/i.test(content)) {
-    return false;
-  }
-  return true;
-}
 
 export function generateAtcObjects() {
   console.log(`Generating ATC CHKC, CHKO, and CHKV objects for ${RULES.length} rules under src/atc/...`);
@@ -149,6 +102,7 @@ export function generateAtcObjects() {
     },
     selectedChecks,
   };
+  fs.writeFileSync(path.join(atcDir, 'zskylint_default.chkv.json'), JSON.stringify(variantJson, null, 2) + '\n', 'utf8');
   // 4. Generate Registry of compiled ABAP check classes for live execution
   let registryCode = '// Auto-generated registry of compiled ABAP check classes\nexport const CHECK_MODULES = {\n';
   for (const r of RULES) {

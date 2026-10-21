@@ -21,6 +21,1077 @@
     "compliantCode": "lv_count = lines( lt_customers )."
   },
   {
+    "ruleId": "prefer-is-not",
+    "title": "Prefer IS NOT over NOT ... IS",
+    "className": "ZCL_SKYLINT_PREF_IS_NOT",
+    "checkName": "ZSKYLINT_PREF_IS_NOT",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "IS_NOT",
+    "severity": "warning",
+    "findingCode": "PREFERISNT",
+    "findingTexts": [
+      "Use IS NOT instead of NOT ... IS"
+    ],
+    "description": "Prefer IS NOT over NOT ... IS",
+    "rationale": "Writing `IF lo_ref IS NOT BOUND` or `IF lt_tab IS NOT INITIAL` mirrors natural language reading order and avoids misreading inverted expressions that start with `NOT`.",
+    "hasQuickfix": true,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "IF NOT lo_instance IS BOUND.\n  RETURN.\nENDIF.",
+    "compliantCode": "IF lo_instance IS NOT BOUND.\n  RETURN.\nENDIF."
+  },
+  {
+    "ruleId": "prefer-string-template",
+    "title": "Prefer String Templates over CONCATENATE",
+    "className": "ZCL_SKYLINT_PREF_STR_TMPL",
+    "checkName": "ZSKYLINT_PREF_STR_TMPL",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "STR_TMPL",
+    "severity": "warning",
+    "findingCode": "CONCATSTR",
+    "findingTexts": [
+      "Use string template |...| instead of CONCATENATE"
+    ],
+    "description": "Prefer string templates over CONCATENATE",
+    "rationale": "String templates (`|Hello { lv_name }|`) provide type-safe, readable string interpolation with built-in formatting options. They eliminate procedural `CONCATENATE` and `SEPARATED BY` statements.",
+    "hasQuickfix": true,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "CONCATENATE 'Hello' iv_name INTO lv_greeting SEPARATED BY space.",
+    "compliantCode": "lv_greeting = |Hello { iv_name }|."
+  },
+  {
+    "ruleId": "prefer-line-exists",
+    "title": "Prefer line_exists( ) over READ TABLE TRANSPORTING NO FIELDS",
+    "className": "ZCL_SKYLINT_PREF_LINE_EXISTS",
+    "checkName": "ZSKYLINT_PREF_LINE_EXISTS",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "LINE_EXISTS",
+    "severity": "warning",
+    "findingCode": "PREFLINEX",
+    "findingTexts": [
+      "Prefer line_exists( ... ) instead of READ TABLE ... TRANSPORTING NO FIELDS"
+    ],
+    "description": "Prefer line_exists( ) over READ TABLE with NO FIELDS",
+    "rationale": "`line_exists( )` clearly communicates the intent of checking table membership in a single functional expression, eliminating the boilerplate of `READ TABLE ... TRANSPORTING NO FIELDS` followed by `sy-subrc = 0`.",
+    "hasQuickfix": false,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "READ TABLE lt_items TRANSPORTING NO FIELDS WITH KEY id = lv_id.\nIF sy-subrc = 0.\n  process( ).\nENDIF.",
+    "compliantCode": "IF line_exists( lt_items[ id = lv_id ] ).\n  process( ).\nENDIF."
+  },
+  {
+    "ruleId": "prefer-return",
+    "title": "Prefer RETURN over EXIT in Methods",
+    "className": "ZCL_SKYLINT_PREF_RETURN",
+    "checkName": "ZSKYLINT_PREF_RETURN",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "RETURN",
+    "severity": "warning",
+    "findingCode": "EXITOUTLP",
+    "findingTexts": [
+      "Use RETURN instead of EXIT when leaving a procedure"
+    ],
+    "description": "Prefer RETURN over EXIT outside loop constructs",
+    "rationale": "In method contexts, `EXIT` can be ambiguous when placed near loops. `RETURN` explicitly indicates an immediate exit from the current processing block or method.",
+    "hasQuickfix": true,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "METHOD execute.\n  IF is_invalid( ).\n    EXIT.\n  ENDIF.\n  process( ).\nENDMETHOD.",
+    "compliantCode": "METHOD execute.\n  IF is_invalid( ).\n    RETURN.\n  ENDIF.\n  process( ).\nENDMETHOD."
+  },
+  {
+    "ruleId": "prefer-merged-ifs",
+    "title": "Merge Nested IF Statements",
+    "className": "ZCL_SKYLINT_PREF_MERGE_IFS",
+    "checkName": "ZSKYLINT_PREF_MERGE_IFS",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "MERGE_IFS",
+    "severity": "warning",
+    "findingCode": "NESTEDIF",
+    "findingTexts": [
+      "Nested IF block can be merged with outer IF using AND"
+    ],
+    "description": "Merge consecutive nested IF blocks using boolean AND",
+    "rationale": "Consecutive nested `IF` statements without intermediate statements can be combined with `AND`. This reduces nesting depth, flattens control flow, and simplifies cyclomatic complexity.",
+    "hasQuickfix": false,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "IF is_connected( ).\n  IF has_permission( ).\n    execute( ).\n  ENDIF.\nENDIF.",
+    "compliantCode": "IF is_connected( ) AND has_permission( ).\n  execute( ).\nENDIF."
+  },
+  {
+    "ruleId": "prefer-symbol-operators",
+    "title": "Prefer Symbol Comparison Operators (=, <>, <, >)",
+    "className": "ZCL_SKYLINT_PREF_SYMBOL_OP",
+    "checkName": "ZSKYLINT_PREF_SYMBOL_OP",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "SYMBOL_OP",
+    "severity": "warning",
+    "findingCode": "PREFEROP",
+    "findingTexts": [
+      "Prefer modern comparison operators (=, <>, <, >, <=, >=) over legacy keywords"
+    ],
+    "description": "Prefer symbolic operators over textual EQ, NE, LT, GT",
+    "rationale": "Text comparison operators (`EQ`, `NE`, `LT`, `GT`, `LE`, `GE`) are legacy syntax. Modern programming and Clean ABAP universally standardize on mathematical symbols (`=`, `<>`, `<`, `>`, `<=`, `>=`).",
+    "hasQuickfix": true,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "IF lv_a EQ lv_b AND lv_c NE lv_d.\n  process( ).\nENDIF.",
+    "compliantCode": "IF lv_a = lv_b AND lv_c <> lv_d.\n  process( ).\nENDIF."
+  },
+  {
+    "ruleId": "prefer-new-operator",
+    "title": "Prefer NEW #( ) over CREATE OBJECT",
+    "className": "ZCL_SKYLINT_PREF_NEW_OP",
+    "checkName": "ZSKYLINT_PREF_NEW_OP",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "NEW_OP",
+    "severity": "warning",
+    "findingCode": "PREFERNEW",
+    "findingTexts": [
+      "Prefer NEW #( ) expression over CREATE OBJECT",
+      "Prefer RAISE EXCEPTION NEW cx_name( ) over RAISE EXCEPTION TYPE"
+    ],
+    "description": "Prefer NEW operator over CREATE OBJECT and RAISE EXCEPTION",
+    "rationale": "The constructor expression `NEW #( )` is type-inferred, expression-capable, and avoids the archaic procedural `CREATE OBJECT` statement.",
+    "hasQuickfix": true,
+    "attributes": [
+      {
+        "name": "CHECK_CREATE_OBJECT",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_RAISE_EXCEPTION",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "defaultParameters": [],
+    "nonCompliantCode": "DATA lo_customer TYPE REF TO cl_customer.\nCREATE OBJECT lo_customer.",
+    "compliantCode": "DATA lo_customer TYPE REF TO cl_customer.\nlo_customer = NEW #( )."
+  },
+  {
+    "ruleId": "prefer-xsdbool",
+    "title": "Prefer xsdbool( ) for Boolean Assignments",
+    "className": "ZCL_SKYLINT_PREF_XSDBOOL",
+    "checkName": "ZSKYLINT_PREF_XSDBOOL",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "XSDBOOL",
+    "severity": "warning",
+    "findingCode": "PREFERXSDB",
+    "findingTexts": [
+      "Prefer xsdbool( ) over manual IF-ELSE assignment"
+    ],
+    "description": "Prefer xsdbool( ) expression over manual IF-ELSE assignment",
+    "rationale": "Writing `IF cond. lv_flag = abap_true. ELSE. lv_flag = abap_false. ENDIF.` is 5 lines of boilerplate. `lv_flag = xsdbool( cond )` expresses the same logic cleanly in one readable line.",
+    "hasQuickfix": true,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "IF lv_count > 0.\n  lv_has_items = abap_true.\nELSE.\n  lv_has_items = abap_false.\nENDIF.",
+    "compliantCode": "lv_has_items = xsdbool( lv_count > 0 )."
+  },
+  {
+    "ruleId": "prefer-fully-typed",
+    "title": "Require Fully Typed Variables and Parameters",
+    "className": "ZCL_SKYLINT_PREF_FULL_TYPED",
+    "checkName": "ZSKYLINT_PREF_FULL_TYPED",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "FULL_TYPED",
+    "severity": "warning",
+    "findingCode": "FULLYTYPED",
+    "findingTexts": [
+      "Constant declaration should explicitly specify TYPE"
+    ],
+    "description": "Enforce fully typed constant declarations",
+    "rationale": "Generic types (`ANY`, `DATA`, `TABLE`) bypass compiler type checking and hide runtime type mismatches. Always declare concrete, specific types unless writing truly generic frameworks.",
+    "hasQuickfix": false,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "CONSTANTS c_status VALUE 'A'. \" TYPE is omitted; implicitly typed as c length 1",
+    "compliantCode": "CONSTANTS c_status TYPE c LENGTH 1 VALUE 'A'."
+  },
+  {
+    "ruleId": "prefer-corresponding",
+    "title": "Prefer CORRESPONDING #( ) Operator",
+    "className": "ZCL_SKYLINT_PREF_CORRESP",
+    "checkName": "ZSKYLINT_PREF_CORRESP",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "CORRESP",
+    "severity": "warning",
+    "findingCode": "PREFER_COR",
+    "findingTexts": [
+      "Prefer functional CORRESPONDING #( ... ) over MOVE-CORRESPONDING"
+    ],
+    "description": "Prefer CORRESPONDING Expression over MOVE-CORRESPONDING",
+    "rationale": "The constructor expression `CORRESPONDING #( )` is type-safe, expression-capable, and supports modern features like `EXCEPT` and `MAPPING`. It replaces the archaic `MOVE-CORRESPONDING` statement.",
+    "hasQuickfix": true,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "MOVE-CORRESPONDING ls_source TO ls_target.",
+    "compliantCode": "ls_target = CORRESPONDING #( ls_source )."
+  },
+  {
+    "ruleId": "prefer-returning",
+    "title": "Prefer Functional RETURNING Parameters",
+    "className": "ZCL_SKYLINT_PREF_RETURNING",
+    "checkName": "ZSKYLINT_PREF_RETURNING",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "RETURNING",
+    "severity": "warning",
+    "findingCode": "PREFER_RET",
+    "findingTexts": [
+      "Prefer functional RETURNING parameter over single EXPORTING parameter"
+    ],
+    "description": "Prefer RETURNING over single EXPORTING",
+    "rationale": "Methods with a `RETURNING` parameter can be used directly within expressions, assignments, and assertions. Prefer `RETURNING` over a single `EXPORTING` parameter.",
+    "hasQuickfix": false,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "METHODS calculate\n  EXPORTING ev_result TYPE i.",
+    "compliantCode": "METHODS calculate\n  RETURNING VALUE(rv_result) TYPE i."
+  },
+  {
+    "ruleId": "prefer-class-exceptions",
+    "title": "Prefer Class-Based Exceptions over Classic EXCEPTIONS",
+    "className": "ZCL_SKYLINT_PREF_CLASS_EXC",
+    "checkName": "ZSKYLINT_PREF_CLASS_EXC",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "CLASS_EXC",
+    "severity": "warning",
+    "findingCode": "CLASS_EXC",
+    "findingTexts": [
+      "Prefer class-based exceptions (RAISING) over classic EXCEPTIONS"
+    ],
+    "description": "Prefer Class-Based Exceptions over Classic EXCEPTIONS",
+    "rationale": "Classic non-class exceptions (set via `sy-subrc`) lack stack traces, cannot carry context data, and cannot be propagated up call stacks cleanly. Use class-based exceptions (`CX_ROOT` subclasses).",
+    "hasQuickfix": false,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "METHODS execute EXCEPTIONS not_found failed.",
+    "compliantCode": "METHODS execute RAISING cx_not_found cx_failed."
+  },
+  {
+    "ruleId": "prefer-final-class",
+    "title": "Design for Inheritance or Prohibit It (FINAL)",
+    "className": "ZCL_SKYLINT_PREF_FINAL_CLS",
+    "checkName": "ZSKYLINT_PREF_FINAL_CLS",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "FINAL_CLS",
+    "severity": "warning",
+    "findingCode": "NOT_FINAL",
+    "findingTexts": [
+      "Classes should be marked FINAL by default unless designed for inheritance",
+      "Declare method as FINAL if it is not intended to be redefined"
+    ],
+    "description": "Prefer FINAL classes and methods by default",
+    "rationale": "Classes not explicitly designed and documented for inheritance should be declared `FINAL`. This prevents subclassing that relies on fragile base-class implementation details.",
+    "hasQuickfix": true,
+    "attributes": [
+      {
+        "name": "CHECK_CLASSES",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_METHODS",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "defaultParameters": [],
+    "nonCompliantCode": "CLASS cl_customer_service DEFINITION PUBLIC CREATE PUBLIC.\n  \" Class not intended for inheritance\nENDCLASS.",
+    "compliantCode": "CLASS cl_customer_service DEFINITION PUBLIC FINAL CREATE PUBLIC.\nENDCLASS."
+  },
+  {
+    "ruleId": "prefer-insert-into",
+    "title": "Prefer INSERT ... INTO TABLE over APPEND",
+    "className": "ZCL_SKYLINT_PREF_INSERT",
+    "checkName": "ZSKYLINT_PREF_INSERT",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "INSERT_INTO",
+    "severity": "warning",
+    "findingCode": "PREF_INSRT",
+    "findingTexts": [
+      "Prefer INSERT ... INTO TABLE over APPEND"
+    ],
+    "description": "Prefer INSERT ... INTO TABLE over APPEND for table safety",
+    "rationale": "`APPEND` implies indexed, sequential appending and fails on hashed or sorted tables. `INSERT ... INTO TABLE` works polymorphically across all internal table categories.",
+    "hasQuickfix": true,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "APPEND ls_item TO lt_items.",
+    "compliantCode": "INSERT ls_item INTO TABLE lt_items."
+  },
+  {
+    "ruleId": "max-constructor-statements",
+    "title": "Keep Constructors Clean & Lightweight",
+    "className": "ZCL_SKYLINT_MAX_CTOR_STMTS",
+    "checkName": "ZSKYLINT_MAX_CTOR_STMTS",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "CLEAN_CTOR",
+    "severity": "warning",
+    "findingCode": "CTOR_LOGIC",
+    "findingTexts": [
+      "Avoid heavy business logic/loops in constructor; use injection only"
+    ],
+    "description": "Keep constructors clean; avoid heavy logic and DB",
+    "rationale": "Constructors should only initialize state and inject dependencies. Heavy business logic, database queries, or network I/O in constructors make test mocking and instantiation brittle.",
+    "hasQuickfix": false,
+    "attributes": [
+      {
+        "name": "MAX_STATEMENTS",
+        "kind": "Integer",
+        "defaultValue": "10"
+      }
+    ],
+    "defaultParameters": [],
+    "nonCompliantCode": "METHOD constructor.\n  super->constructor( ).\n  \" 15+ statements initializing complex states and reading DB...\nENDMETHOD.",
+    "compliantCode": "METHOD constructor.\n  super->constructor( ).\n  mo_gateway = io_gateway. \" Simple dependency assignment only\nENDMETHOD."
+  },
+  {
+    "ruleId": "no-static-classes",
+    "title": "Avoid Purely Static Utility Classes",
+    "className": "ZCL_SKYLINT_NO_STATIC_CLS",
+    "checkName": "ZSKYLINT_NO_STATIC_CLS",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "STATIC_CLS",
+    "severity": "warning",
+    "findingCode": "STAT_CLASS",
+    "findingTexts": [
+      "Avoid static-only classes; declare instance methods and interfaces"
+    ],
+    "description": "Avoid static-only classes; use instantiable classes",
+    "rationale": "Classes consisting entirely of static methods cannot be mocked via interfaces or subclassing during unit tests, creating rigid coupling throughout the application.",
+    "hasQuickfix": false,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "CLASS cl_math_util DEFINITION PUBLIC FINAL CREATE PUBLIC.\n  PUBLIC SECTION.\n    CLASS-METHODS add IMPORTING a TYPE i b TYPE i RETURNING VALUE(r) TYPE i.\n    CLASS-METHODS sub IMPORTING a TYPE i b TYPE i RETURNING VALUE(r) TYPE i.\nENDCLASS.",
+    "compliantCode": "CLASS cl_math_util DEFINITION PUBLIC FINAL CREATE PUBLIC.\n  PUBLIC SECTION.\n    INTERFACES if_math_util.\n    METHODS add IMPORTING a TYPE i b TYPE i RETURNING VALUE(r) TYPE i.\nENDCLASS."
+  },
+  {
+    "ruleId": "prefer-predicate-names",
+    "title": "Use Predicate Naming for Boolean Methods (is_, has_, can_)",
+    "className": "ZCL_SKYLINT_PREF_PRED_NAME",
+    "checkName": "ZSKYLINT_PREF_PRED_NAME",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "PRED_NAME",
+    "severity": "warning",
+    "findingCode": "BOOL_NAME",
+    "findingTexts": [
+      "Boolean-returning method should use predicate name (IS_, HAS_, CAN_)"
+    ],
+    "description": "Enforce predicate naming (IS_, HAS_) on boolean methods",
+    "rationale": "Methods returning boolean status should read like questions (`is_valid`, `has_children`, `can_execute`) so conditionals read naturally like plain English.",
+    "hasQuickfix": false,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "METHODS check_active RETURNING VALUE(rv_active) TYPE abap_bool.",
+    "compliantCode": "METHODS is_active RETURNING VALUE(rv_active) TYPE abap_bool."
+  },
+  {
+    "ruleId": "no-nested-try",
+    "title": "Avoid Deeply Nested TRY ... CATCH Blocks",
+    "className": "ZCL_SKYLINT_NO_NESTED_TRY",
+    "checkName": "ZSKYLINT_NO_NESTED_TRY",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "NESTED_TRY",
+    "severity": "warning",
+    "findingCode": "NESTED_TRY",
+    "findingTexts": [
+      "Avoid nested TRY blocks; extract to dedicated method"
+    ],
+    "description": "Avoid nested TRY blocks; extract to helper methods",
+    "rationale": "Nesting `TRY` blocks inside other `TRY` blocks obfuscates error handling flow. Extract inner protected operations into distinct methods.",
+    "hasQuickfix": false,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "TRY.\n    step1( ).\n    TRY.\n        step2( ).\n      CATCH cx_step2_err.\n        handle_step2( ).\n    ENDTRY.\n  CATCH cx_step1_err.\n    handle_step1( ).\nENDTRY.",
+    "compliantCode": "\" Extract inner operations into focused helper methods\nTRY.\n    step1( ).\n    execute_step2( ).\n  CATCH cx_step1_err.\n    handle_step1( ).\nENDTRY."
+  },
+  {
+    "ruleId": "prefer-string-functions",
+    "title": "Prefer Built-in String Functions over SEARCH/SHIFT",
+    "className": "ZCL_SKYLINT_PREF_STR_FUNC",
+    "checkName": "ZSKYLINT_PREF_STR_FUNC",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "STR_FUNC",
+    "severity": "warning",
+    "findingCode": "CONDENSE_S",
+    "findingTexts": [
+      "Use modern built-in string function condense( ... ) instead",
+      "Use modern string functions to_upper() or to_lower() instead",
+      "Use modern string function shift_left( ) or shift_right( ) instead",
+      "SEARCH statement is obsolete; prefer find( ) or contains( )",
+      "OVERLAY statement is obsolete; prefer string functions or templates",
+      "Obsolete REPLACE statement; prefer replace( ) function",
+      "Use strlen( ... ) instead of DESCRIBE FIELD ... LENGTH"
+    ],
+    "description": "Detect obsolete string statements; prefer built-in functions",
+    "rationale": "Procedural string statements (`SEARCH`, `SHIFT`, `TRANSLATE`) are legacy ABAP. Replace them with functional built-in string functions (`find`, `to_upper`, `substring`, `shift_left`).",
+    "hasQuickfix": true,
+    "attributes": [
+      {
+        "name": "CHECK_CONDENSE",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_TRANSLATE",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_SHIFT",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_SEARCH",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_OVERLAY",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_REPLACE",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_DESCRIBE",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "defaultParameters": [],
+    "nonCompliantCode": "CONDENSE lv_text.\nTRANSLATE lv_code TO UPPER CASE.",
+    "compliantCode": "lv_text = condense( lv_text ).\nlv_code = to_upper( lv_code )."
+  },
+  {
+    "ruleId": "prefer-calc-assign-op",
+    "title": "Prefer Calculation Assignment Operators (+=, -=, *=)",
+    "className": "ZCL_SKYLINT_PREF_CALC_OP",
+    "checkName": "ZSKYLINT_PREF_CALC_OP",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "CALC_ASSIGN",
+    "severity": "warning",
+    "findingCode": "CALC_ASSGN",
+    "findingTexts": [
+      "Use calculation assignment operator (+=, -=) or ADD statement replacement"
+    ],
+    "description": "Prefer calculation assignment operators (+=, -=, *=, /=)",
+    "rationale": "Modern ABAP supports arithmetic assignment operators (`lv_count += 1.`), which are cleaner and more expressive than verbose legacy assignments (`lv_count = lv_count + 1.`).",
+    "hasQuickfix": true,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "lv_count = lv_count + 1.\nlv_total = lv_total * 2.",
+    "compliantCode": "lv_count += 1.\nlv_total *= 2."
+  },
+  {
+    "ruleId": "prefer-early-return",
+    "title": "Prefer Early Return to Reduce Nesting (Guard Clauses)",
+    "className": "ZCL_SKYLINT_PREF_EARLY_RET",
+    "checkName": "ZSKYLINT_PREF_EARLY_RET",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "EARLY_RETURN",
+    "severity": "warning",
+    "findingCode": "GUARD_METH",
+    "findingTexts": [
+      "Invert IF condition and use RETURN to reduce nesting in method",
+      "Invert IF condition and use CONTINUE to reduce nesting in loop"
+    ],
+    "description": "Prefer early return or continue over nested IF blocks",
+    "rationale": "Check preconditions and invalid states at the start of the method and return immediately. This eliminates deeply nested `IF ... ELSE` ladders.",
+    "hasQuickfix": false,
+    "attributes": [
+      {
+        "name": "CHECK_METHOD_RETURN",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_LOOP_CONTINUE",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "defaultParameters": [],
+    "nonCompliantCode": "METHOD process_order.\n  IF is_valid( ).\n    \" Entire method logic deeply nested\n    execute_order( ).\n  ENDIF.\nENDMETHOD.",
+    "compliantCode": "METHOD process_order.\n  IF NOT is_valid( ).\n    RETURN.\n  ENDIF.\n  execute_order( ).\nENDMETHOD."
+  },
+  {
+    "ruleId": "prefer-decl-order",
+    "title": "Order Declarations (TYPES, CONSTANTS, DATA)",
+    "className": "ZCL_SKYLINT_PREF_DECL_ORDER",
+    "checkName": "ZSKYLINT_PREF_DECL_ORDER",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "DECL_ORDER",
+    "severity": "warning",
+    "findingCode": "DECL_ORDER",
+    "findingTexts": [
+      "Declare local TYPES before CONSTANTS before DATA before FIELD-SYMBOLS"
+    ],
+    "description": "Enforce declaration order (TYPES, CONSTANTS, DATA, FS)",
+    "rationale": "Declaring types first, then constants, then data variables creates a logical reading flow where subsequent definitions can safely depend on preceding ones.",
+    "hasQuickfix": false,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "METHOD execute.\n  DATA lv_count TYPE i.\n  TYPES ty_status TYPE c LENGTH 1. \" TYPES declared after DATA\n  CONSTANTS c_init TYPE ty_status VALUE 'I'.\nENDMETHOD.",
+    "compliantCode": "METHOD execute.\n  TYPES ty_status TYPE c LENGTH 1.\n  CONSTANTS c_init TYPE ty_status VALUE 'I'.\n  DATA lv_count TYPE i.\nENDMETHOD."
+  },
+  {
+    "ruleId": "no-param-escape",
+    "title": "Avoid Reassigning Importing Parameters",
+    "className": "ZCL_SKYLINT_NO_PARAM_ESCAPE",
+    "checkName": "ZSKYLINT_NO_PARAM_ESCAPE",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "PARAM_ESCAPE",
+    "severity": "warning",
+    "findingCode": "PARAM_ESCP",
+    "findingTexts": [
+      "Escape params with ! only on keyword clash"
+    ],
+    "description": "Avoid unnecessary parameter escape (!param)",
+    "rationale": "Importing parameters should be treated as immutable inputs. Modifying them inside the method leads to unexpected side effects and debugging difficulties.",
+    "hasQuickfix": true,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "METHODS process IMPORTING !iv_data TYPE string.",
+    "compliantCode": "METHODS process IMPORTING iv_data TYPE string."
+  },
+  {
+    "ruleId": "prefer-case",
+    "title": "Prefer CASE over Multiple IF / ELSEIF on the Same Variable",
+    "className": "ZCL_SKYLINT_PREF_CASE",
+    "checkName": "ZSKYLINT_PREF_CASE",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "PREF_CASE",
+    "severity": "warning",
+    "findingCode": "USE_CASE",
+    "findingTexts": [
+      "Multiple ELSEIF branches check the same variable; use CASE instead"
+    ],
+    "description": "Use CASE instead of IF when checking multiple values",
+    "rationale": "When branching on multiple values of a single variable, `CASE ... WHEN` is more readable, structured, and performant than a chain of `ELSEIF` statements.",
+    "hasQuickfix": false,
+    "attributes": [
+      {
+        "name": "MIN_BRANCHES",
+        "kind": "Integer",
+        "defaultValue": "3"
+      }
+    ],
+    "defaultParameters": [],
+    "nonCompliantCode": "IF lv_type = 'A'.\n  process_a( ).\nELSEIF lv_type = 'B'.\n  process_b( ).\nELSEIF lv_type = 'C'.\n  process_c( ).\nENDIF.",
+    "compliantCode": "CASE lv_type.\n  WHEN 'A'.\n    process_a( ).\n  WHEN 'B'.\n    process_b( ).\n  WHEN 'C'.\n    process_c( ).\nENDCASE."
+  },
+  {
+    "ruleId": "max-one-statement",
+    "title": "Limit One Statement per Source Code Line",
+    "className": "ZCL_SKYLINT_MAX_ONE_STMT",
+    "checkName": "ZSKYLINT_MAX_ONE_STMT",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "ONE_STMT",
+    "severity": "warning",
+    "findingCode": "ONE_STMT",
+    "findingTexts": [
+      "Only one statement is allowed per line"
+    ],
+    "description": "Max One Statement Per Line",
+    "rationale": "Placing multiple statements on a single line hinders debugger stepping, breaks Git line diffs, and hurts overall code scannability.",
+    "hasQuickfix": false,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "lv_a = 1. lv_b = 2.",
+    "compliantCode": "lv_a = 1.\nlv_b = 2."
+  },
+  {
+    "ruleId": "prefer-inline",
+    "title": "Prefer Modern Inline Declarations in ABAP 7.40+",
+    "className": "ZCL_SKYLINT_PREF_INLINE",
+    "checkName": "ZSKYLINT_PREF_INLINE",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "PREFER_INLINE",
+    "severity": "warning",
+    "findingCode": "PREF_INL",
+    "findingTexts": [
+      "Prefer inline declaration over separate DATA and assignment"
+    ],
+    "description": "Prefer Inline Declarations",
+    "rationale": "In versions supporting inline declarations, declaring variables at the point of first use reduces variable lifetime scope and removes top-of-method variable clutter.",
+    "hasQuickfix": false,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "DATA lv_count TYPE i.\nlv_count = 10.",
+    "compliantCode": "DATA(lv_count) = 10."
+  },
+  {
+    "ruleId": "prefer-final-data",
+    "title": "Prefer FINAL( ) over DATA( ) when the variable is never written again",
+    "className": "ZCL_SKYLINT_PREF_FINAL_DATA",
+    "checkName": "ZSKYLINT_PREF_FINAL_DATA",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "PREF_FINAL",
+    "severity": "warning",
+    "findingCode": "PREF_FIN",
+    "findingTexts": [
+      "Inline variable is never written again; declare it with FINAL( )"
+    ],
+    "description": "Declare inline variables as FINAL when never written again",
+    "rationale": "When an inline DATA( ) variable is assigned once and never written again, declaring it FINAL( ) communicates immutability and lets the compiler enforce it.",
+    "hasQuickfix": true,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "DATA(lv_count) = 10.\nWRITE lv_count.",
+    "compliantCode": "FINAL(lv_count) = 10.\nWRITE lv_count."
+  },
+  {
+    "ruleId": "prefer-message-class",
+    "title": "Use a message class (SE91) instead of inline message text",
+    "className": "ZCL_SKYLINT_PREF_MSG_CLS",
+    "checkName": "ZSKYLINT_PREF_MSG_CLS",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "MSG_CLASS",
+    "severity": "warning",
+    "findingCode": "PREF_MSG",
+    "findingTexts": [
+      "Define the message class and raise it as e001( msg_class )"
+    ],
+    "description": "Use a message class instead of inline message text",
+    "rationale": "Inline message texts cannot be translated and are hard to maintain. Define messages in a message class and raise them as e001( msg_class ).",
+    "hasQuickfix": false,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "MESSAGE 'Something went wrong' TYPE 'E'.",
+    "compliantCode": "MESSAGE e001(bc_msg)."
+  },
+  {
+    "ruleId": "prefer-inline-cast",
+    "title": "Inline a CAST helper that is only read once",
+    "className": "ZCL_SKYLINT_PREF_INL_CAST",
+    "checkName": "ZSKYLINT_PREF_INL_CAST",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "INLINE_CAST",
+    "severity": "warning",
+    "findingCode": "PREF_ICST",
+    "findingTexts": [
+      "CAST helper is read exactly once in the next statement; inline it"
+    ],
+    "description": "Inline a CAST helper that is only read once",
+    "rationale": "A CAST helper declared as DATA and read exactly once in the following statement can be inlined, removing a temporary variable.",
+    "hasQuickfix": true,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "DATA(helper) = CAST lcl_node( object ).\nresult = helper->get_tokens( ).",
+    "compliantCode": "result = CAST lcl_node( object )->get_tokens( )."
+  },
+  {
+    "ruleId": "prefer-public-constructor",
+    "title": "Declare Constructor in PUBLIC SECTION",
+    "className": "ZCL_SKYLINT_PREF_PUB_CTOR",
+    "checkName": "ZSKYLINT_PREF_PUB_CTOR",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "PUB_CTOR",
+    "severity": "warning",
+    "findingCode": "CTOR_PUB",
+    "findingTexts": [
+      "Declare constructor in PUBLIC SECTION, even if class is CREATE PRIVATE"
+    ],
+    "description": "Declare Constructor in PUBLIC SECTION",
+    "rationale": "Instance constructors must always be declared in the PUBLIC SECTION, even for classes with CREATE PRIVATE or CREATE PROTECTED, ensuring standard reflection, factory instantiation, and Clean ABAP compliance.",
+    "hasQuickfix": false,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "CLASS zcl_service DEFINITION PUBLIC CREATE PRIVATE.\n  PRIVATE SECTION.\n    METHODS constructor.\nENDCLASS.",
+    "compliantCode": "CLASS zcl_service DEFINITION PUBLIC CREATE PRIVATE.\n  PUBLIC SECTION.\n    METHODS constructor.\nENDCLASS."
+  },
+  {
+    "ruleId": "prefer-definitions-top",
+    "title": "Place Definitions at Top of Routine",
+    "className": "ZCL_SKYLINT_PREF_DEF_TOP",
+    "checkName": "ZSKYLINT_PREF_DEF_TOP",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "DEF_TOP",
+    "severity": "warning",
+    "findingCode": "DEF_TOP",
+    "findingTexts": [
+      "Reorder definitions to beginning of routine; avoid scattered DATA statements"
+    ],
+    "description": "Place definitions at beginning of routine",
+    "rationale": "Explicit local definitions (DATA, TYPES, CONSTANTS, FIELD-SYMBOLS) should be placed at the very beginning of the routine rather than scattered in the middle of executable code.",
+    "hasQuickfix": false,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "METHOD calculate.\n  lv_total = 100.\n  DATA lv_tax TYPE i.\nENDMETHOD.",
+    "compliantCode": "METHOD calculate.\n  DATA lv_tax TYPE i.\n  lv_total = 100.\nENDMETHOD."
+  },
+  {
+    "ruleId": "no-unnecessary-return",
+    "title": "Omit Unnecessary RETURN Statement",
+    "className": "ZCL_SKYLINT_NO_UNNEC_RETURN",
+    "checkName": "ZSKYLINT_NO_UNNEC_RETURN",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "NO_UNNEC_RETURN",
+    "severity": "warning",
+    "findingCode": "UNNEC_RET",
+    "findingTexts": [
+      "Omit optional RETURN at end of routine; routines return automatically"
+    ],
+    "description": "Omit unnecessary RETURN at end of routine",
+    "rationale": "Routines automatically return upon reaching ENDMETHOD, ENDFORM, or ENDFUNCTION. An explicit RETURN statement at the very end of the routine body is redundant and clutters the code.",
+    "hasQuickfix": true,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "METHOD calculate.\n  lv_total = 100.\n  RETURN.\nENDMETHOD.",
+    "compliantCode": "METHOD calculate.\n  lv_total = 100.\nENDMETHOD."
+  },
+  {
+    "ruleId": "mix-returning",
+    "title": "Do Not Mix RETURNING with EXPORTING or CHANGING",
+    "className": "ZCL_SKYLINT_NO_MIX_RETURNING",
+    "checkName": "ZSKYLINT_NO_MIX_RETURNING",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "NO_MIX_RETURNING",
+    "severity": "warning",
+    "findingCode": "MIX_RET",
+    "findingTexts": [
+      "Do not mix RETURNING with EXPORTING or CHANGING parameters in a single method"
+    ],
+    "description": "Do not mix RETURNING with EXPORTING or CHANGING",
+    "rationale": "Clean ABAP methods should either be pure functional (RETURNING a single result) or procedures (using EXPORTING/CHANGING). Mixing both in the same signature creates confusing APIs.",
+    "hasQuickfix": false,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "METHODS get_data\n  EXPORTING ev_val TYPE i\n  RETURNING VALUE(rv_res) TYPE string.",
+    "compliantCode": "METHODS get_data\n  RETURNING VALUE(rv_res) TYPE string."
+  },
+  {
+    "ruleId": "max-one-method-parameter-per-line",
+    "title": "Max One Method Parameter Definition Per Line",
+    "className": "ZCL_SKYLINT_MAX_PARAM_LINE",
+    "checkName": "ZSKYLINT_MAX_PARAM_LINE",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "MAX_PARAM_LINE",
+    "severity": "warning",
+    "findingCode": "PARAM_LINE",
+    "findingTexts": [
+      "Keep max one method parameter definition per line"
+    ],
+    "description": "Max one method parameter definition per line",
+    "rationale": "Defining multiple parameters on the same line hampers readability and produces noisy version control diffs. Each parameter in a signature should be declared on its own dedicated line.",
+    "hasQuickfix": false,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "METHODS foo IMPORTING iv_a TYPE i iv_b TYPE string.",
+    "compliantCode": "METHODS foo\n  IMPORTING\n    iv_a TYPE i\n    iv_b TYPE string."
+  },
+  {
+    "ruleId": "prefer-is-initial",
+    "title": "Prefer IS [NOT] INITIAL over lines( ) or Literal Comparisons",
+    "className": "ZCL_SKYLINT_PREF_IS_INITIAL",
+    "checkName": "ZSKYLINT_PREF_IS_INITIAL",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "PREF_INIT",
+    "severity": "warning",
+    "findingCode": "PREF_INIT",
+    "findingTexts": [
+      "Use IS [NOT] INITIAL instead of lines( ) or empty literal comparison"
+    ],
+    "description": "Prefer IS [NOT] INITIAL over lines( ) or empty literals",
+    "rationale": "Checking whether an internal table, string, or variable is empty should be done with `IS [NOT] INITIAL` rather than counting `lines( ) > 0` or comparing to empty literals (`\"\"`, `space`, `0`). `IS INITIAL` is idiomatic Clean ABAP, expressive, and optimized.",
+    "hasQuickfix": true,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "IF lines( lt_items ) > 0.\nENDIF.",
+    "compliantCode": "IF lt_items IS NOT INITIAL.\nENDIF."
+  },
+  {
+    "ruleId": "prefer-cast",
+    "title": "Prefer CAST #( ) over ?=",
+    "className": "ZCL_SKYLINT_PREF_CAST",
+    "checkName": "ZSKYLINT_PREF_CAST",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "PREF_CAST",
+    "severity": "warning",
+    "findingCode": "PREFCAST",
+    "findingTexts": [
+      "Prefer CAST #( ) constructor expression over ?= downcast"
+    ],
+    "description": "Prefer modern CAST #( ) expression over ?=",
+    "rationale": "`?=` is legacy downcast syntax from early ABAP Objects. Modern ABAP exclusively uses `CAST #( )` constructor expressions, which can be inlined directly into method call chains and expressions.",
+    "hasQuickfix": true,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "lo_child ?= lo_parent.",
+    "compliantCode": "lo_child = CAST #( lo_parent )."
+  },
+  {
+    "ruleId": "no-redundant-clear",
+    "title": "Do Not CLEAR Variables Directly After Declaration",
+    "className": "ZCL_SKYLINT_NO_REDUNDANT_CLEAR",
+    "checkName": "ZSKYLINT_NO_REDUNDANT_CLEAR",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "REDUNDANT_CLEAR",
+    "severity": "warning",
+    "findingCode": "REDUNCLEAR",
+    "findingTexts": [
+      "Do not CLEAR or FREE variables after declaration; they are already initial",
+      "Variable is CLEARed or FREEd but never read again before procedure ends"
+    ],
+    "description": "Do not CLEAR or FREE variables redundantly",
+    "rationale": "Variables in ABAP are automatically initialized to their type-specific default initial value upon declaration. Explicitly executing `CLEAR` immediately after declaration adds visual noise and redundant statements without any functional effect.",
+    "hasQuickfix": true,
+    "attributes": [
+      {
+        "name": "CHECK_BEFORE_WRITE",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_WITHOUT_READ",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "defaultParameters": [],
+    "nonCompliantCode": "DATA lv_count TYPE i.\nCLEAR lv_count.",
+    "compliantCode": "DATA lv_count TYPE i."
+  },
+  {
+    "ruleId": "prefer-naming",
+    "title": "Enforce Naming Conventions",
+    "className": "ZCL_SKYLINT_PREF_NAMING",
+    "checkName": "ZSKYLINT_PREF_NAMING",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "NAMING",
+    "severity": "warning",
+    "findingCode": "ATTR_NAME",
+    "findingTexts": [
+      "Class attribute name does not match configured pattern",
+      "Method parameter name does not match configured pattern",
+      "Local variable name does not match configured pattern",
+      "Local class name does not match configured pattern",
+      "Global class name does not match configured pattern",
+      "Selection screen element name does not match configured pattern",
+      "Type name does not match configured pattern",
+      "Macro name does not match configured pattern",
+      "Form routine name does not match configured pattern",
+      "Function module name does not match configured pattern",
+      "Local interface name does not match configured pattern",
+      "Global interface name does not match configured pattern",
+      "Event or event handler name does not match configured pattern",
+      "Test method name does not match configured pattern",
+      "Program name does not match configured pattern",
+      "Function group name does not match configured pattern"
+    ],
+    "description": "Standard Naming Conventions",
+    "rationale": "Consistent naming conventions (prefixes for variables, parameters, types, etc.) make code self-documenting and easier to navigate. Configure patterns per scope to enforce team standards automatically.",
+    "hasQuickfix": false,
+    "attributes": [
+      {
+        "name": "ATTR_IGN_EXC",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "ATTR_IGN_LOCAL",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "ATTR_IGN_INTF",
+        "kind": "Boolean",
+        "defaultValue": "false"
+      },
+      {
+        "name": "ATTR_STATICS",
+        "kind": "String",
+        "defaultValue": "'^G._.+$'"
+      },
+      {
+        "name": "ATTR_INSTANCE",
+        "kind": "String",
+        "defaultValue": "'^M._.+$'"
+      },
+      {
+        "name": "ATTR_CONSTANTS",
+        "kind": "String",
+        "defaultValue": "''"
+      },
+      {
+        "name": "PARAM_IGN_EXC",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "PARAM_IMPORTING",
+        "kind": "String",
+        "defaultValue": "'^I._.+$'"
+      },
+      {
+        "name": "PARAM_RETURNING",
+        "kind": "String",
+        "defaultValue": "'^R._.+$'"
+      },
+      {
+        "name": "PARAM_CHANGING",
+        "kind": "String",
+        "defaultValue": "'^C._.+$'"
+      },
+      {
+        "name": "PARAM_EXPORTING",
+        "kind": "String",
+        "defaultValue": "'^E._.+$'"
+      },
+      {
+        "name": "LOCAL_DATA",
+        "kind": "String",
+        "defaultValue": "'^L._.+$'"
+      },
+      {
+        "name": "LOCAL_CONST",
+        "kind": "String",
+        "defaultValue": "'^LC_.+$'"
+      },
+      {
+        "name": "LOCAL_FS",
+        "kind": "String",
+        "defaultValue": "'^<L._.+>$'"
+      },
+      {
+        "name": "LOCAL_STATICS",
+        "kind": "String",
+        "defaultValue": "'^S._.+$'"
+      },
+      {
+        "name": "CLASS_LOCAL",
+        "kind": "String",
+        "defaultValue": "'^LC(L|X)_.+$'"
+      },
+      {
+        "name": "CLASS_TEST",
+        "kind": "String",
+        "defaultValue": "'^LTCL_.+$'"
+      },
+      {
+        "name": "CLASS_GLOBAL",
+        "kind": "String",
+        "defaultValue": "'^ZC(L|X)_.+$'"
+      },
+      {
+        "name": "SSCR_PARAM",
+        "kind": "String",
+        "defaultValue": "'^P_.+$'"
+      },
+      {
+        "name": "SSCR_SELOPT",
+        "kind": "String",
+        "defaultValue": "'^S_.+$'"
+      },
+      {
+        "name": "TYPES_PATTERN",
+        "kind": "String",
+        "defaultValue": "'^TY_.+$'"
+      },
+      {
+        "name": "MACRO_PATTERN",
+        "kind": "String",
+        "defaultValue": "'^_.+$'"
+      },
+      {
+        "name": "FORM_PATTERN",
+        "kind": "String",
+        "defaultValue": "'^F_.+$'"
+      },
+      {
+        "name": "FUNCTION_PATTERN",
+        "kind": "String",
+        "defaultValue": "'^Z.*$'"
+      },
+      {
+        "name": "INTF_LOCAL",
+        "kind": "String",
+        "defaultValue": "'^LIF_.+$'"
+      },
+      {
+        "name": "INTF_GLOBAL",
+        "kind": "String",
+        "defaultValue": "'^ZIF_.+$'"
+      },
+      {
+        "name": "EVENT_NAME",
+        "kind": "String",
+        "defaultValue": "'^[A-Z][A-Z0-9_]+$'"
+      },
+      {
+        "name": "EVENT_HANDLER",
+        "kind": "String",
+        "defaultValue": "'^ON_.+$'"
+      },
+      {
+        "name": "TEST_METHOD",
+        "kind": "String",
+        "defaultValue": "'^(TEST|SHOULD)_.+$'"
+      },
+      {
+        "name": "PROG_PATTERN",
+        "kind": "String",
+        "defaultValue": "'^Z.+$'"
+      },
+      {
+        "name": "FUGR_PATTERN",
+        "kind": "String",
+        "defaultValue": "'^Z.+$'"
+      }
+    ],
+    "defaultParameters": [],
+    "nonCompliantCode": "DATA foo TYPE i.",
+    "compliantCode": "DATA lv_foo TYPE i."
+  },
+  {
     "ruleId": "no-call-method",
     "title": "Avoid Obsolete CALL METHOD",
     "className": "ZCL_SKYLINT_NO_CALL_METHOD",
@@ -61,27 +1132,6 @@
     "defaultParameters": [],
     "nonCompliantCode": "DATA lt_customers TYPE STANDARD TABLE OF ty_customer WITH DEFAULT KEY.",
     "compliantCode": "DATA lt_customers TYPE STANDARD TABLE OF ty_customer WITH EMPTY KEY."
-  },
-  {
-    "ruleId": "prefer-is-not",
-    "title": "Prefer IS NOT over NOT ... IS",
-    "className": "ZCL_SKYLINT_PREF_IS_NOT",
-    "checkName": "ZSKYLINT_PREF_IS_NOT",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "IS_NOT",
-    "severity": "warning",
-    "findingCode": "PREFERISNT",
-    "findingTexts": [
-      "Use IS NOT instead of NOT ... IS"
-    ],
-    "description": "Prefer IS NOT over NOT ... IS",
-    "rationale": "Writing `IF lo_ref IS NOT BOUND` or `IF lt_tab IS NOT INITIAL` mirrors natural language reading order and avoids misreading inverted expressions that start with `NOT`.",
-    "hasQuickfix": true,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "IF NOT lo_instance IS BOUND.\n  RETURN.\nENDIF.",
-    "compliantCode": "IF lo_instance IS NOT BOUND.\n  RETURN.\nENDIF."
   },
   {
     "ruleId": "no-me-reference",
@@ -188,27 +1238,6 @@
     "compliantCode": "DATA lv_id   TYPE string.\nDATA lv_name TYPE string."
   },
   {
-    "ruleId": "prefer-string-template",
-    "title": "Prefer String Templates over CONCATENATE",
-    "className": "ZCL_SKYLINT_PREF_STR_TMPL",
-    "checkName": "ZSKYLINT_PREF_STR_TMPL",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "STR_TMPL",
-    "severity": "warning",
-    "findingCode": "CONCATSTR",
-    "findingTexts": [
-      "Use string template |...| instead of CONCATENATE"
-    ],
-    "description": "Prefer string templates over CONCATENATE",
-    "rationale": "String templates (`|Hello { lv_name }|`) provide type-safe, readable string interpolation with built-in formatting options. They eliminate procedural `CONCATENATE` and `SEPARATED BY` statements.",
-    "hasQuickfix": true,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "CONCATENATE 'Hello' iv_name INTO lv_greeting SEPARATED BY space.",
-    "compliantCode": "lv_greeting = |Hello { iv_name }|."
-  },
-  {
     "ruleId": "no-boolean-comparison",
     "title": "Avoid Comparing to abap_true / abap_false",
     "className": "ZCL_SKYLINT_NO_BOOL_COMPARE",
@@ -228,48 +1257,6 @@
     "defaultParameters": [],
     "nonCompliantCode": "IF is_valid( ) = abap_true.\n  execute( ).\nENDIF.",
     "compliantCode": "IF is_valid( ).\n  execute( ).\nENDIF."
-  },
-  {
-    "ruleId": "prefer-line-exists",
-    "title": "Prefer line_exists( ) over READ TABLE TRANSPORTING NO FIELDS",
-    "className": "ZCL_SKYLINT_PREF_LINE_EXISTS",
-    "checkName": "ZSKYLINT_PREF_LINE_EXISTS",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "LINE_EXISTS",
-    "severity": "warning",
-    "findingCode": "PREFLINEX",
-    "findingTexts": [
-      "Prefer line_exists( ... ) instead of READ TABLE ... TRANSPORTING NO FIELDS"
-    ],
-    "description": "Prefer line_exists( ) over READ TABLE with NO FIELDS",
-    "rationale": "`line_exists( )` clearly communicates the intent of checking table membership in a single functional expression, eliminating the boilerplate of `READ TABLE ... TRANSPORTING NO FIELDS` followed by `sy-subrc = 0`.",
-    "hasQuickfix": false,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "READ TABLE lt_items TRANSPORTING NO FIELDS WITH KEY id = lv_id.\nIF sy-subrc = 0.\n  process( ).\nENDIF.",
-    "compliantCode": "IF line_exists( lt_items[ id = lv_id ] ).\n  process( ).\nENDIF."
-  },
-  {
-    "ruleId": "prefer-return",
-    "title": "Prefer RETURN over EXIT in Methods",
-    "className": "ZCL_SKYLINT_PREF_RETURN",
-    "checkName": "ZSKYLINT_PREF_RETURN",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "RETURN",
-    "severity": "warning",
-    "findingCode": "EXITOUTLP",
-    "findingTexts": [
-      "Use RETURN instead of EXIT when leaving a procedure"
-    ],
-    "description": "Prefer RETURN over EXIT outside loop constructs",
-    "rationale": "In method contexts, `EXIT` can be ambiguous when placed near loops. `RETURN` explicitly indicates an immediate exit from the current processing block or method.",
-    "hasQuickfix": true,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "METHOD execute.\n  IF is_invalid( ).\n    EXIT.\n  ENDIF.\n  process( ).\nENDMETHOD.",
-    "compliantCode": "METHOD execute.\n  IF is_invalid( ).\n    RETURN.\n  ENDIF.\n  process( ).\nENDMETHOD."
   },
   {
     "ruleId": "no-check-statement",
@@ -389,27 +1376,6 @@
     "compliantCode": "IF lv_type = 'A'.\n  process( ).\nENDIF."
   },
   {
-    "ruleId": "prefer-merged-ifs",
-    "title": "Merge Nested IF Statements",
-    "className": "ZCL_SKYLINT_PREF_MERGE_IFS",
-    "checkName": "ZSKYLINT_PREF_MERGE_IFS",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "MERGE_IFS",
-    "severity": "warning",
-    "findingCode": "NESTEDIF",
-    "findingTexts": [
-      "Nested IF block can be merged with outer IF using AND"
-    ],
-    "description": "Merge consecutive nested IF blocks using boolean AND",
-    "rationale": "Consecutive nested `IF` statements without intermediate statements can be combined with `AND`. This reduces nesting depth, flattens control flow, and simplifies cyclomatic complexity.",
-    "hasQuickfix": false,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "IF is_connected( ).\n  IF has_permission( ).\n    execute( ).\n  ENDIF.\nENDIF.",
-    "compliantCode": "IF is_connected( ) AND has_permission( ).\n  execute( ).\nENDIF."
-  },
-  {
     "ruleId": "no-unreachable-code",
     "title": "Avoid Dead / Unreachable Code",
     "className": "ZCL_SKYLINT_NO_UNREACHABLE",
@@ -471,81 +1437,6 @@
     "defaultParameters": [],
     "nonCompliantCode": "IF 0 = lv_count.\n  process( ).\nENDIF.",
     "compliantCode": "IF lv_count = 0.\n  process( ).\nENDIF."
-  },
-  {
-    "ruleId": "prefer-symbol-operators",
-    "title": "Prefer Symbol Comparison Operators (=, <>, <, >)",
-    "className": "ZCL_SKYLINT_PREF_SYMBOL_OP",
-    "checkName": "ZSKYLINT_PREF_SYMBOL_OP",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "SYMBOL_OP",
-    "severity": "warning",
-    "findingCode": "PREFEROP",
-    "findingTexts": [
-      "Prefer modern comparison operators (=, <>, <, >, <=, >=) over legacy keywords"
-    ],
-    "description": "Prefer symbolic operators over textual EQ, NE, LT, GT",
-    "rationale": "Text comparison operators (`EQ`, `NE`, `LT`, `GT`, `LE`, `GE`) are legacy syntax. Modern programming and Clean ABAP universally standardize on mathematical symbols (`=`, `<>`, `<`, `>`, `<=`, `>=`).",
-    "hasQuickfix": true,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "IF lv_a EQ lv_b AND lv_c NE lv_d.\n  process( ).\nENDIF.",
-    "compliantCode": "IF lv_a = lv_b AND lv_c <> lv_d.\n  process( ).\nENDIF."
-  },
-  {
-    "ruleId": "prefer-new-operator",
-    "title": "Prefer NEW #( ) over CREATE OBJECT",
-    "className": "ZCL_SKYLINT_PREF_NEW_OP",
-    "checkName": "ZSKYLINT_PREF_NEW_OP",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "NEW_OP",
-    "severity": "warning",
-    "findingCode": "PREFERNEW",
-    "findingTexts": [
-      "Prefer NEW #( ) expression over CREATE OBJECT",
-      "Prefer RAISE EXCEPTION NEW cx_name( ) over RAISE EXCEPTION TYPE"
-    ],
-    "description": "Prefer NEW operator over CREATE OBJECT and RAISE EXCEPTION",
-    "rationale": "The constructor expression `NEW #( )` is type-inferred, expression-capable, and avoids the archaic procedural `CREATE OBJECT` statement.",
-    "hasQuickfix": true,
-    "attributes": [
-      {
-        "name": "CHECK_CREATE_OBJECT",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_RAISE_EXCEPTION",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      }
-    ],
-    "defaultParameters": [],
-    "nonCompliantCode": "DATA lo_customer TYPE REF TO cl_customer.\nCREATE OBJECT lo_customer.",
-    "compliantCode": "DATA lo_customer TYPE REF TO cl_customer.\nlo_customer = NEW #( )."
-  },
-  {
-    "ruleId": "prefer-xsdbool",
-    "title": "Prefer xsdbool( ) for Boolean Assignments",
-    "className": "ZCL_SKYLINT_PREF_XSDBOOL",
-    "checkName": "ZSKYLINT_PREF_XSDBOOL",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "XSDBOOL",
-    "severity": "warning",
-    "findingCode": "PREFERXSDB",
-    "findingTexts": [
-      "Prefer xsdbool( ) over manual IF-ELSE assignment"
-    ],
-    "description": "Prefer xsdbool( ) expression over manual IF-ELSE assignment",
-    "rationale": "Writing `IF cond. lv_flag = abap_true. ELSE. lv_flag = abap_false. ENDIF.` is 5 lines of boilerplate. `lv_flag = xsdbool( cond )` expresses the same logic cleanly in one readable line.",
-    "hasQuickfix": true,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "IF lv_count > 0.\n  lv_has_items = abap_true.\nELSE.\n  lv_has_items = abap_false.\nENDIF.",
-    "compliantCode": "lv_has_items = xsdbool( lv_count > 0 )."
   },
   {
     "ruleId": "no-static-via-instance",
@@ -824,6 +1715,363 @@
     "compliantCode": "mo_logger->info( 'Order processed:' )."
   },
   {
+    "ruleId": "no-scope-leak",
+    "title": "Avoid Variable Scope Leaking from Inner Blocks",
+    "className": "ZCL_SKYLINT_NO_SCOPE_LEAK",
+    "checkName": "ZSKYLINT_NO_SCOPE_LEAK",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "SCOPE_LEAK",
+    "severity": "warning",
+    "findingCode": "SCOPELEAK",
+    "findingTexts": [
+      "Variable declared in inner block is referenced outside its scope"
+    ],
+    "description": "Avoid variable usage outside its declaring control block",
+    "rationale": "In ABAP, variable declarations inside control blocks (`IF`, `LOOP`) have procedure-wide scope. Using an inner-declared variable outside its originating block creates confusing temporal dependencies.",
+    "hasQuickfix": false,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "IF lv_condition = abap_true.\n  DATA(lv_value) = 10.\nENDIF.\nuse_value( lv_value ). \" Leaked outside block",
+    "compliantCode": "DATA lv_value TYPE i.\nIF lv_condition = abap_true.\n  lv_value = 10.\nENDIF.\nuse_value( lv_value )."
+  },
+  {
+    "ruleId": "no-self-assignment",
+    "title": "Avoid Redundant Self-Assignments",
+    "className": "ZCL_SKYLINT_NO_SELF_ASSIGN",
+    "checkName": "ZSKYLINT_NO_SELF_ASSIGN",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "SELF_ASSIGN",
+    "severity": "warning",
+    "findingCode": "IDENTMOVE",
+    "findingTexts": [
+      "Identical assignment has no effect; remove redundant statement"
+    ],
+    "description": "Detect Identical Self Assignments",
+    "rationale": "Assigning a variable or structure field to itself (`lv_x = lv_x`) is a redundant no-op and frequently hides a typo where another source field was intended.",
+    "hasQuickfix": true,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "lv_name = lv_name.",
+    "compliantCode": "lv_name = iv_new_name."
+  },
+  {
+    "ruleId": "no-sy-modify",
+    "title": "Avoid Modifying System Fields (sy-*)",
+    "className": "ZCL_SKYLINT_NO_SY_MODIFY",
+    "checkName": "ZSKYLINT_NO_SY_MODIFY",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "SY_MODIFY",
+    "severity": "warning",
+    "findingCode": "SYS_VAR_MD",
+    "findingTexts": [
+      "Avoid modifying system fields (sy-*); system variables are read-only"
+    ],
+    "description": "Avoid sy-* System Variable Modification",
+    "rationale": "System fields like `sy-subrc`, `sy-tabix`, and `sy-index` are managed exclusively by the ABAP runtime. Writing to them manually undermines system integrity and masks actual execution results.",
+    "hasQuickfix": false,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "sy-subrc = 0.\nsy-tabix = 1.",
+    "compliantCode": "\" Pass explicit return values or flags instead of modifying system variables (sy-*)\nrv_success = abap_true."
+  },
+  {
+    "ruleId": "no-magic-numbers",
+    "title": "Avoid Magic Numbers; Use Named Constants",
+    "className": "ZCL_SKYLINT_NO_MAGIC_NUMBERS",
+    "checkName": "ZSKYLINT_NO_MAGIC_NUMBERS",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "MAGIC_NUMBERS",
+    "severity": "warning",
+    "findingCode": "MAGIC_NUM",
+    "findingTexts": [
+      "Avoid hardcoded magic numbers; declare a named constant"
+    ],
+    "description": "Avoid magic numbers in code; use named constants",
+    "rationale": "Hardcoded numeric literals scattered in logic obscure business rules and make updates error-prone. Give numbers meaningful names by declaring structured constants.",
+    "hasQuickfix": false,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "IF lv_status = 3.\n  process( ).\nENDIF.",
+    "compliantCode": "CONSTANTS c_status_completed TYPE i VALUE 3.\nIF lv_status = c_status_completed.\n  process( ).\nENDIF."
+  },
+  {
+    "ruleId": "no-like-objects",
+    "title": "Avoid LIKE Typing on Global Dictionary Objects",
+    "className": "ZCL_SKYLINT_NO_LIKE_OBJECTS",
+    "checkName": "ZSKYLINT_NO_LIKE_OBJECTS",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "LIKE_OBJECTS",
+    "severity": "warning",
+    "findingCode": "AVOID_LIKE",
+    "findingTexts": [
+      "Avoid LIKE for data declarations; specify TYPE explicitly"
+    ],
+    "description": "Avoid LIKE referencing data objects; use explicit TYPE",
+    "rationale": "Typing dictionary objects with `LIKE` is obsolete. Use `TYPE` to refer to data types and reserve `LIKE` solely for referencing local data objects in the same procedure.",
+    "hasQuickfix": false,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "DATA lv_copy LIKE lv_original.",
+    "compliantCode": "DATA lv_copy TYPE string."
+  },
+  {
+    "ruleId": "no-interface-data",
+    "title": "Avoid DATA Attributes in Interfaces",
+    "className": "ZCL_SKYLINT_NO_INTF_DATA",
+    "checkName": "ZSKYLINT_NO_INTF_DATA",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "INTF_DATA",
+    "severity": "warning",
+    "findingCode": "INTF_DATA",
+    "findingTexts": [
+      "Avoid mutable DATA in interfaces; declare CONSTANTS or move to class"
+    ],
+    "description": "Avoid mutable DATA in interfaces; allow only CONSTANTS",
+    "rationale": "Interfaces should declare behavior (methods) and immutable contracts (constants). Mutable data in interfaces creates hidden global state across all implementers.",
+    "hasQuickfix": false,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "INTERFACE if_customer.\n  DATA mv_state TYPE i. \" Mutable DATA in interface\nENDINTERFACE.",
+    "compliantCode": "INTERFACE if_customer.\n  CONSTANTS c_default_status TYPE i VALUE 1.\n  METHODS get_state RETURNING VALUE(rv_state) TYPE i.\nENDINTERFACE."
+  },
+  {
+    "ruleId": "no-message-raising",
+    "title": "Avoid Obsolete MESSAGE ... RAISING in Methods",
+    "className": "ZCL_SKYLINT_NO_MSG_RAISING",
+    "checkName": "ZSKYLINT_NO_MSG_RAISING",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "MSG_RAISING",
+    "severity": "warning",
+    "findingCode": "MSG_RAISE",
+    "findingTexts": [
+      "Avoid obsolete MESSAGE ... RAISING; raise class-based exceptions"
+    ],
+    "description": "Avoid MESSAGE ... RAISING; use class-based exceptions",
+    "rationale": "`MESSAGE ... RAISING` combines procedural exception handling with UI messaging, preventing proper separation of concerns. Raise modern class-based exceptions instead.",
+    "hasQuickfix": false,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "MESSAGE e001(zmsg) RAISING not_found.",
+    "compliantCode": "RAISE EXCEPTION NEW cx_not_found( textid = cx_not_found=>c_item_missing )."
+  },
+  {
+    "ruleId": "no-unused-variables",
+    "title": "Eliminate Unused Local Variables and Symbols",
+    "className": "ZCL_SKYLINT_NO_UNUSED_VARS",
+    "checkName": "ZSKYLINT_NO_UNUSED_VARS",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "NEEDED",
+    "severity": "warning",
+    "findingCode": "UNUSED_VAR",
+    "findingTexts": [
+      "Local variable or field symbol is declared but never read"
+    ],
+    "description": "Detect unused local variables and field symbols",
+    "rationale": "Unused variables clutter code, confuse developers reviewing changes, and increase compilation and execution memory overhead without providing any benefit.",
+    "hasQuickfix": false,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "DATA lv_temp TYPE string. \" Declared but never referenced",
+    "compliantCode": "\" Remove unused declarations or add ##NEEDED pragma if required by interface"
+  },
+  {
+    "ruleId": "no-inline-length",
+    "title": "Avoid Obsolete Inline Length Specifications (var(len))",
+    "className": "ZCL_SKYLINT_NO_INLINE_LEN",
+    "checkName": "ZSKYLINT_NO_INLINE_LEN",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "PAREN_LEN",
+    "severity": "warning",
+    "findingCode": "PAREN_LEN",
+    "findingTexts": [
+      "Avoid length in parentheses; use TYPE ... LENGTH ..."
+    ],
+    "description": "Avoid inline length specification in declarations",
+    "rationale": "Specifying length in parentheses directly after a variable name (`lv_str(10) TYPE c`) is legacy syntax. Use modern explicit typing: `TYPE c LENGTH 10`.",
+    "hasQuickfix": true,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "DATA lv_code(10) TYPE c.",
+    "compliantCode": "DATA lv_code TYPE c LENGTH 10."
+  },
+  {
+    "ruleId": "no-dash-in-names",
+    "title": "Avoid Obsolete Dash (-) in Program Identifiers",
+    "className": "ZCL_SKYLINT_NO_DASH_IN_NAMES",
+    "checkName": "ZSKYLINT_NO_DASH_IN_NAMES",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "NO_DASH",
+    "severity": "warning",
+    "findingCode": "NO_DASH",
+    "findingTexts": [
+      "Avoid dashes in variable, constant, and field-symbol names"
+    ],
+    "description": "No Dashes in Variable and Form Names",
+    "rationale": "Using a hyphen/dash in structure component references is archaic. Modern ABAP standardizes on the arrow notation `->` or hyphen only where mandatory.",
+    "hasQuickfix": false,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "DATA foo-bar TYPE i.",
+    "compliantCode": "DATA foobar TYPE i."
+  },
+  {
+    "ruleId": "no-friends",
+    "title": "Avoid FRIENDS in class definitions",
+    "className": "ZCL_SKYLINT_NO_FRIENDS",
+    "checkName": "ZSKYLINT_NO_FRIENDS",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "FRIENDS",
+    "severity": "warning",
+    "findingCode": "NO_FRIENDS",
+    "findingTexts": [
+      "Avoid FRIENDS; expose behavior via public methods"
+    ],
+    "description": "Avoid FRIENDS in class definitions",
+    "rationale": "FRIENDS grants another class access to private/protected members, breaking encapsulation. Expose behaviour through the public interface instead.",
+    "hasQuickfix": false,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "CLASS lcl_service DEFINITION FINAL FRIENDS lcl_helper CREATE PUBLIC.\n  PUBLIC SECTION.\n    METHODS execute.\nENDCLASS.",
+    "compliantCode": "CLASS lcl_service DEFINITION FINAL CREATE PUBLIC.\n  PUBLIC SECTION.\n    METHODS execute.\nENDCLASS."
+  },
+  {
+    "ruleId": "no-exception-overlap",
+    "title": "Classic EXCEPTIONS must not map two errors to the same number",
+    "className": "ZCL_SKYLINT_NO_EXC_OVERLAP",
+    "checkName": "ZSKYLINT_NO_EXC_OVERLAP",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "EXC_OVERLAP",
+    "severity": "warning",
+    "findingCode": "NO_EXC_OVL",
+    "findingTexts": [
+      "Two classic exceptions share the same error number"
+    ],
+    "description": "Classic EXCEPTIONS must not overlap",
+    "rationale": "When two classic exceptions share one error number, the caller cannot tell which one was raised.",
+    "hasQuickfix": false,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "CALL FUNCTION 'SOMETHING'\n  EXCEPTIONS\n    system_failure        = 1 MESSAGE lv_message\n    communication_failure = 1 MESSAGE lv_message\n    OTHERS                = 1.",
+    "compliantCode": "CALL FUNCTION 'SOMETHING'\n  EXCEPTIONS\n    system_failure        = 1 MESSAGE lv_message\n    communication_failure = 2 MESSAGE lv_message\n    OTHERS                = 3."
+  },
+  {
+    "ruleId": "no-many-parentheses",
+    "title": "Remove redundant parentheses",
+    "className": "ZCL_SKYLINT_NO_MANY_PARENS",
+    "checkName": "ZSKYLINT_NO_MANY_PARENS",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "MANY_PARENS",
+    "severity": "warning",
+    "findingCode": "MANY_PAREN",
+    "findingTexts": [
+      "Parentheses wrap a complete expression and can be removed"
+    ],
+    "description": "Remove redundant parentheses",
+    "rationale": "Parentheses that only wrap a complete condition or expression add noise and can be removed without changing semantics.",
+    "hasQuickfix": true,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "IF ( destination IS INITIAL ).\nENDIF.",
+    "compliantCode": "IF destination IS INITIAL.\nENDIF."
+  },
+  {
+    "ruleId": "no-ignored-return-value",
+    "title": "Do Not Ignore Return Value of Functional Methods",
+    "className": "ZCL_SKYLINT_NO_IGNORED_RETURN",
+    "checkName": "ZSKYLINT_NO_IGNORED_RETURN",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "NO_IGNORED_RET",
+    "severity": "warning",
+    "findingCode": "IGNRET",
+    "findingTexts": [
+      "Do not ignore return value of functional method; assign or use result"
+    ],
+    "description": "Disallow ignoring the return value of functional methods",
+    "rationale": "Functional methods that declare a `RETURNING` parameter are designed to compute and return a value. Calling such methods without assigning or consuming their result indicates a bug, dead code, or an improper command-query violation where side effects were bundled into a query.",
+    "hasQuickfix": false,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "lo_calc->get_total( ).",
+    "compliantCode": "lv_total = lo_calc->get_total( )."
+  },
+  {
+    "ruleId": "no-modify-loop-table",
+    "title": "Do Not Mutate the Internal Table Currently Being Looped",
+    "className": "ZCL_SKYLINT_NO_MOD_LOOP_TAB",
+    "checkName": "ZSKYLINT_NO_MOD_LOOP_TAB",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "LOOP_MODIFY",
+    "severity": "warning",
+    "findingCode": "MOD_LOOPTB",
+    "findingTexts": [
+      "Do not add, delete, sort, collect, or clear rows from the table currently being looped",
+      "Avoid sorting internal tables inside loops to prevent severe performance degradation"
+    ],
+    "description": "Avoid mutating or sorting tables inside loops",
+    "rationale": "Adding rows (APPEND/INSERT), modifying, deleting, or clearing rows from the table while actively looping over it can cause infinite loops, skipped rows, or cursor invalidation. Parametric toggles are available for append, insert, modify, delete, and clear operations.",
+    "hasQuickfix": false,
+    "attributes": [
+      {
+        "name": "CHECK_APPEND",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_INSERT",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_MODIFY",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_DELETE",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_CLEAR",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_SORT",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_SORT_ANY",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_COLLECT",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "defaultParameters": [],
+    "nonCompliantCode": "LOOP AT lt_orders INTO ls_order.\n  APPEND ls_order TO lt_orders.\nENDLOOP.",
+    "compliantCode": "LOOP AT lt_orders INTO ls_order.\n  APPEND ls_order TO lt_new_orders.\nENDLOOP."
+  },
+  {
     "ruleId": "max-params",
     "title": "Limit Method Parameter Count",
     "className": "ZCL_SKYLINT_MAX_PARAMS",
@@ -849,6 +2097,168 @@
     "defaultParameters": [],
     "nonCompliantCode": "METHODS execute\n  IMPORTING p1 TYPE i p2 TYPE i p3 TYPE i p4 TYPE i p5 TYPE i p6 TYPE i.",
     "compliantCode": "METHODS execute\n  IMPORTING is_options TYPE ty_options."
+  },
+  {
+    "ruleId": "max-method-length",
+    "title": "Limit Method Length (Statements)",
+    "className": "ZCL_SKYLINT_MAX_METHOD_LEN",
+    "checkName": "ZSKYLINT_MAX_METHOD_LEN",
+    "category": "metrics",
+    "categoryTitle": "Metrics & Complexity Limits",
+    "pseudoComment": "METHOD_LEN",
+    "severity": "warning",
+    "findingCode": "METHOD_LEN",
+    "findingTexts": [
+      "Method length exceeds maximum allowed statement limit"
+    ],
+    "description": "Method Length Limit (excessive statement count)",
+    "rationale": "Long methods violate the Single Responsibility Principle, accumulate side effects, and are notoriously difficult to unit test. Split large methods into small, focused sub-methods.",
+    "hasQuickfix": false,
+    "attributes": [
+      {
+        "name": "MAX_STATEMENTS",
+        "kind": "Integer",
+        "defaultValue": "5"
+      }
+    ],
+    "defaultParameters": [],
+    "nonCompliantCode": "\" Large method exceeding configured statement threshold (> 50 statements)\nMETHOD execute.\n  \" 60+ statements in a single procedure...\nENDMETHOD.",
+    "compliantCode": "\" Split into smaller, single-responsibility helper methods\nMETHOD execute.\n  prepare_data( ).\n  process_records( ).\n  finalize_result( ).\nENDMETHOD."
+  },
+  {
+    "ruleId": "max-nesting-depth",
+    "title": "Limit Control Flow Nesting Depth",
+    "className": "ZCL_SKYLINT_MAX_NESTING",
+    "checkName": "ZSKYLINT_MAX_NESTING",
+    "category": "metrics",
+    "categoryTitle": "Metrics & Complexity Limits",
+    "pseudoComment": "NESTING",
+    "severity": "warning",
+    "findingCode": "NESTING_DP",
+    "findingTexts": [
+      "Control block nesting depth exceeds"
+    ],
+    "description": "Nesting Depth Limit (excessive control block nesting)",
+    "rationale": "Deeply nested blocks (`IF`, `LOOP`, `TRY`, `CASE`) cause cognitive overload (\"arrow antipattern\"). Flatten nested code using early exits (`RETURN`), guard clauses, and extracted methods.",
+    "hasQuickfix": false,
+    "attributes": [
+      {
+        "name": "MAX_DEPTH",
+        "kind": "Integer",
+        "defaultValue": "3"
+      }
+    ],
+    "defaultParameters": [],
+    "nonCompliantCode": "IF cond1.\n  IF cond2.\n    IF cond3.\n      IF cond4.\n        execute( ).\n      ENDIF.\n    ENDIF.\n  ENDIF.\nENDIF.",
+    "compliantCode": "IF NOT cond1 OR NOT cond2 OR NOT cond3 OR NOT cond4.\n  RETURN.\nENDIF.\nexecute( )."
+  },
+  {
+    "ruleId": "max-cyclomatic-complexity",
+    "title": "Limit Cyclomatic Complexity",
+    "className": "ZCL_SKYLINT_MAX_CYCLO_COMP",
+    "checkName": "ZSKYLINT_MAX_CYCLO_COMP",
+    "category": "metrics",
+    "categoryTitle": "Metrics & Complexity Limits",
+    "pseudoComment": "CYCLO_COMP",
+    "severity": "warning",
+    "findingCode": "CYCLO_COMP",
+    "findingTexts": [
+      "Procedure cyclomatic complexity exceeds threshold"
+    ],
+    "description": "Cyclomatic Complexity Threshold",
+    "rationale": "High cyclomatic complexity means a method contains too many decision points (branches, loops, catches), making comprehensive unit test branch coverage nearly impossible.",
+    "hasQuickfix": false,
+    "attributes": [
+      {
+        "name": "MAX_COMPLEXITY",
+        "kind": "Integer",
+        "defaultValue": "5"
+      }
+    ],
+    "defaultParameters": [],
+    "nonCompliantCode": "\" Complex method containing excessive branches (> 10 cyclomatic complexity)\nMETHOD compute.\n  IF c1. ... ELSEIF c2. ... ELSEIF c3. ...\nENDMETHOD.",
+    "compliantCode": "\" Decompose into strategy classes or cohesive helper methods\nMETHOD compute.\n  ro_strategy = mo_factory->get_strategy( mv_type ).\n  ro_strategy->execute( ).\nENDMETHOD."
+  },
+  {
+    "ruleId": "max-inheritance-depth",
+    "title": "Limit Inheritance Depth",
+    "className": "ZCL_SKYLINT_MAX_INHERIT",
+    "checkName": "ZSKYLINT_MAX_INHERIT",
+    "category": "metrics",
+    "categoryTitle": "Metrics & Complexity Limits",
+    "pseudoComment": "INHERIT_DEPTH",
+    "severity": "warning",
+    "findingCode": "DEEP_INHRT",
+    "findingTexts": [
+      "Avoid deep class inheritance; prefer composition over inheritance"
+    ],
+    "description": "Avoid deep class inheritance hierarchies",
+    "rationale": "Deep class inheritance hierarchies create the fragile base class problem and tight coupling. Favor composition over inheritance (`HAS-A` instead of `IS-A`).",
+    "hasQuickfix": false,
+    "attributes": [
+      {
+        "name": "MAX_DEPTH",
+        "kind": "Integer",
+        "defaultValue": "3"
+      }
+    ],
+    "defaultParameters": [],
+    "nonCompliantCode": "CLASS lcl_child DEFINITION INHERITING FROM lcl_sub_parent. \" Depth > 3\nENDCLASS.",
+    "compliantCode": "\" Favor composition over deep class inheritance hierarchies\nCLASS lcl_worker DEFINITION.\n  PRIVATE SECTION.\n    DATA mo_engine TYPE REF TO if_engine.\nENDCLASS."
+  },
+  {
+    "ruleId": "max-attributes",
+    "title": "Limit Member Attributes per Class",
+    "className": "ZCL_SKYLINT_MAX_ATTRIBUTES",
+    "checkName": "ZSKYLINT_MAX_ATTRIBUTES",
+    "category": "metrics",
+    "categoryTitle": "Metrics & Complexity Limits",
+    "pseudoComment": "ATTRIBUTES",
+    "severity": "warning",
+    "findingCode": "ATTR_COUNT",
+    "findingTexts": [
+      "Class has too many member attributes; split into cohesive components"
+    ],
+    "description": "Limit class member attributes to prevent God Classes",
+    "rationale": "Classes with dozens of member variables are almost always God Objects that handle multiple unrelated responsibilities. Split them into smaller, focused domain classes.",
+    "hasQuickfix": false,
+    "attributes": [
+      {
+        "name": "MAX_ATTRIBUTES",
+        "kind": "Integer",
+        "defaultValue": "5"
+      }
+    ],
+    "defaultParameters": [],
+    "nonCompliantCode": "CLASS cl_order DEFINITION.\n  PRIVATE SECTION.\n    \" 30+ individual scalar member variables\nENDCLASS.",
+    "compliantCode": "CLASS cl_order DEFINITION.\n  PRIVATE SECTION.\n    DATA ms_header TYPE ty_order_header.\n    DATA mt_items  TYPE ty_order_items.\nENDCLASS."
+  },
+  {
+    "ruleId": "max-line-length",
+    "title": "Limit Line Length",
+    "className": "ZCL_SKYLINT_MAX_LINE_LEN",
+    "checkName": "ZSKYLINT_MAX_LINE_LEN",
+    "category": "metrics",
+    "categoryTitle": "Metrics & Complexity Limits",
+    "pseudoComment": "LINE_LEN",
+    "severity": "warning",
+    "findingCode": "LINE_LEN",
+    "findingTexts": [
+      "Line length exceeds configured maximum limit"
+    ],
+    "description": "Maximum Line Length",
+    "rationale": "Long lines reduce readability, force horizontal scrolling, and complicate code review. Keep source lines within a configurable limit (typically 120 characters) by breaking statements and using expression-based ABAP.",
+    "hasQuickfix": false,
+    "attributes": [
+      {
+        "name": "MAX_LENGTH",
+        "kind": "Integer",
+        "defaultValue": "120"
+      }
+    ],
+    "defaultParameters": [],
+    "nonCompliantCode": "DATA lv_extremely_long_variable_name_created_specifically_to_exceed_the_maximum_allowed_line_length_of_one_hundred_twenty_chars TYPE i.",
+    "compliantCode": "DATA lv_compact_name TYPE i."
   },
   {
     "ruleId": "no-db-in-loop",
@@ -926,205 +2336,67 @@
     "compliantCode": "SELECT customer_id, first_name, last_name\n  FROM /dmo/customer\n  INTO TABLE @lt_customers."
   },
   {
-    "ruleId": "no-scope-leak",
-    "title": "Avoid Variable Scope Leaking from Inner Blocks",
-    "className": "ZCL_SKYLINT_NO_SCOPE_LEAK",
-    "checkName": "ZSKYLINT_NO_SCOPE_LEAK",
-    "category": "anti-patterns",
-    "categoryTitle": "Anti-Patterns & Bad Practices",
-    "pseudoComment": "SCOPE_LEAK",
+    "ruleId": "prefer-order-by",
+    "title": "Require ORDER BY for Deterministic SELECT Results",
+    "className": "ZCL_SKYLINT_PREF_ORDER_BY",
+    "checkName": "ZSKYLINT_PREF_ORDER_BY",
+    "category": "performance",
+    "categoryTitle": "Performance & Database",
+    "pseudoComment": "ORDER_BY",
     "severity": "warning",
-    "findingCode": "SCOPELEAK",
+    "findingCode": "SELECT_UP",
     "findingTexts": [
-      "Variable declared in inner block is referenced outside its scope"
+      "SELECT UP TO 1 ROWS requires an explicit ORDER BY clause for determinism"
     ],
-    "description": "Avoid variable usage outside its declaring control block",
-    "rationale": "In ABAP, variable declarations inside control blocks (`IF`, `LOOP`) have procedure-wide scope. Using an inner-declared variable outside its originating block creates confusing temporal dependencies.",
+    "description": "SELECT UP TO 1 ROWS requires ORDER BY",
+    "rationale": "Selecting rows from a relational database without an explicit `ORDER BY` clause yields non-deterministic ordering that can change unpredictably between DB executions and updates.",
     "hasQuickfix": false,
     "attributes": [],
     "defaultParameters": [],
-    "nonCompliantCode": "IF lv_condition = abap_true.\n  DATA(lv_value) = 10.\nENDIF.\nuse_value( lv_value ). \" Leaked outside block",
-    "compliantCode": "DATA lv_value TYPE i.\nIF lv_condition = abap_true.\n  lv_value = 10.\nENDIF.\nuse_value( lv_value )."
+    "nonCompliantCode": "SELECT * FROM /dmo/customer UP TO 1 ROWS INTO @ls_customer.",
+    "compliantCode": "SELECT * FROM /dmo/customer ORDER BY customer_id UP TO 1 ROWS INTO @ls_customer."
   },
   {
-    "ruleId": "no-self-assignment",
-    "title": "Avoid Redundant Self-Assignments",
-    "className": "ZCL_SKYLINT_NO_SELF_ASSIGN",
-    "checkName": "ZSKYLINT_NO_SELF_ASSIGN",
-    "category": "anti-patterns",
-    "categoryTitle": "Anti-Patterns & Bad Practices",
-    "pseudoComment": "SELF_ASSIGN",
+    "ruleId": "prefer-transporting",
+    "title": "Specify TRANSPORTING in MODIFY / READ TABLE",
+    "className": "ZCL_SKYLINT_PREF_TRANSPORT",
+    "checkName": "ZSKYLINT_PREF_TRANSPORT",
+    "category": "performance",
+    "categoryTitle": "Performance & Database",
+    "pseudoComment": "TRANSPORTING",
     "severity": "warning",
-    "findingCode": "IDENTMOVE",
+    "findingCode": "FULL_MODIF",
     "findingTexts": [
-      "Identical assignment has no effect; remove redundant statement"
+      "Specify TRANSPORTING fields in MODIFY itab inside loop for performance"
     ],
-    "description": "Detect Identical Self Assignments",
-    "rationale": "Assigning a variable or structure field to itself (`lv_x = lv_x`) is a redundant no-op and frequently hides a typo where another source field was intended.",
-    "hasQuickfix": true,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "lv_name = lv_name.",
-    "compliantCode": "lv_name = iv_new_name."
-  },
-  {
-    "ruleId": "prefer-fully-typed",
-    "title": "Require Fully Typed Variables and Parameters",
-    "className": "ZCL_SKYLINT_PREF_FULL_TYPED",
-    "checkName": "ZSKYLINT_PREF_FULL_TYPED",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "FULL_TYPED",
-    "severity": "warning",
-    "findingCode": "FULLYTYPED",
-    "findingTexts": [
-      "Constant declaration should explicitly specify TYPE"
-    ],
-    "description": "Enforce fully typed constant declarations",
-    "rationale": "Generic types (`ANY`, `DATA`, `TABLE`) bypass compiler type checking and hide runtime type mismatches. Always declare concrete, specific types unless writing truly generic frameworks.",
+    "description": "Avoid MODIFY itab in LOOP without TRANSPORTING clause",
+    "rationale": "Modifying internal tables without specifying `TRANSPORTING` copies all table fields across the buffer. Specify only the modified fields to optimize execution speed.",
     "hasQuickfix": false,
     "attributes": [],
     "defaultParameters": [],
-    "nonCompliantCode": "CONSTANTS c_status VALUE 'A'. \" TYPE is omitted; implicitly typed as c length 1",
-    "compliantCode": "CONSTANTS c_status TYPE c LENGTH 1 VALUE 'A'."
+    "nonCompliantCode": "LOOP AT lt_items INTO ls_item.\n  ls_item-status = 'DONE'.\n  MODIFY lt_items FROM ls_item. \" Full line copy without specifying TRANSPORTING\nENDLOOP.",
+    "compliantCode": "LOOP AT lt_items INTO ls_item.\n  ls_item-status = 'DONE'.\n  MODIFY lt_items FROM ls_item TRANSPORTING status.\nENDLOOP."
   },
   {
-    "ruleId": "prefer-corresponding",
-    "title": "Prefer CORRESPONDING #( ) Operator",
-    "className": "ZCL_SKYLINT_PREF_CORRESP",
-    "checkName": "ZSKYLINT_PREF_CORRESP",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "CORRESP",
+    "ruleId": "prefer-pass-by-reference",
+    "title": "Avoid Unnecessary Pass-by-Value for Large Tables",
+    "className": "ZCL_SKYLINT_PREF_PASS_BY_REF",
+    "checkName": "ZSKYLINT_PREF_PASS_BY_REF",
+    "category": "performance",
+    "categoryTitle": "Performance & Database",
+    "pseudoComment": "SLOW_PARAM",
     "severity": "warning",
-    "findingCode": "PREFER_COR",
+    "findingCode": "SLOW_PASS",
     "findingTexts": [
-      "Prefer functional CORRESPONDING #( ... ) over MOVE-CORRESPONDING"
+      "Avoid pass-by-value for importing method parameters"
     ],
-    "description": "Prefer CORRESPONDING Expression over MOVE-CORRESPONDING",
-    "rationale": "The constructor expression `CORRESPONDING #( )` is type-safe, expression-capable, and supports modern features like `EXCEPT` and `MAPPING`. It replaces the archaic `MOVE-CORRESPONDING` statement.",
-    "hasQuickfix": true,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "MOVE-CORRESPONDING ls_source TO ls_target.",
-    "compliantCode": "ls_target = CORRESPONDING #( ls_source )."
-  },
-  {
-    "ruleId": "max-method-length",
-    "title": "Limit Method Length (Statements)",
-    "className": "ZCL_SKYLINT_MAX_METHOD_LEN",
-    "checkName": "ZSKYLINT_MAX_METHOD_LEN",
-    "category": "metrics",
-    "categoryTitle": "Metrics & Complexity Limits",
-    "pseudoComment": "METHOD_LEN",
-    "severity": "warning",
-    "findingCode": "METHOD_LEN",
-    "findingTexts": [
-      "Method length exceeds maximum allowed statement limit"
-    ],
-    "description": "Method Length Limit (excessive statement count)",
-    "rationale": "Long methods violate the Single Responsibility Principle, accumulate side effects, and are notoriously difficult to unit test. Split large methods into small, focused sub-methods.",
-    "hasQuickfix": false,
-    "attributes": [
-      {
-        "name": "MAX_STATEMENTS",
-        "kind": "Integer",
-        "defaultValue": "5"
-      }
-    ],
-    "defaultParameters": [],
-    "nonCompliantCode": "\" Large method exceeding configured statement threshold (> 50 statements)\nMETHOD execute.\n  \" 60+ statements in a single procedure...\nENDMETHOD.",
-    "compliantCode": "\" Split into smaller, single-responsibility helper methods\nMETHOD execute.\n  prepare_data( ).\n  process_records( ).\n  finalize_result( ).\nENDMETHOD."
-  },
-  {
-    "ruleId": "max-nesting-depth",
-    "title": "Limit Control Flow Nesting Depth",
-    "className": "ZCL_SKYLINT_MAX_NESTING",
-    "checkName": "ZSKYLINT_MAX_NESTING",
-    "category": "metrics",
-    "categoryTitle": "Metrics & Complexity Limits",
-    "pseudoComment": "NESTING",
-    "severity": "warning",
-    "findingCode": "NESTING_DP",
-    "findingTexts": [
-      "Control block nesting depth exceeds"
-    ],
-    "description": "Nesting Depth Limit (excessive control block nesting)",
-    "rationale": "Deeply nested blocks (`IF`, `LOOP`, `TRY`, `CASE`) cause cognitive overload (\"arrow antipattern\"). Flatten nested code using early exits (`RETURN`), guard clauses, and extracted methods.",
-    "hasQuickfix": false,
-    "attributes": [
-      {
-        "name": "MAX_DEPTH",
-        "kind": "Integer",
-        "defaultValue": "3"
-      }
-    ],
-    "defaultParameters": [],
-    "nonCompliantCode": "IF cond1.\n  IF cond2.\n    IF cond3.\n      IF cond4.\n        execute( ).\n      ENDIF.\n    ENDIF.\n  ENDIF.\nENDIF.",
-    "compliantCode": "IF NOT cond1 OR NOT cond2 OR NOT cond3 OR NOT cond4.\n  RETURN.\nENDIF.\nexecute( )."
-  },
-  {
-    "ruleId": "no-sy-modify",
-    "title": "Avoid Modifying System Fields (sy-*)",
-    "className": "ZCL_SKYLINT_NO_SY_MODIFY",
-    "checkName": "ZSKYLINT_NO_SY_MODIFY",
-    "category": "anti-patterns",
-    "categoryTitle": "Anti-Patterns & Bad Practices",
-    "pseudoComment": "SY_MODIFY",
-    "severity": "warning",
-    "findingCode": "SYS_VAR_MD",
-    "findingTexts": [
-      "Avoid modifying system fields (sy-*); system variables are read-only"
-    ],
-    "description": "Avoid sy-* System Variable Modification",
-    "rationale": "System fields like `sy-subrc`, `sy-tabix`, and `sy-index` are managed exclusively by the ABAP runtime. Writing to them manually undermines system integrity and masks actual execution results.",
+    "description": "Slow Parameter Passing",
+    "rationale": "Passing large internal tables by value creates an in-memory deep copy on every method invocation. Use pass-by-reference (`REFERENCE(it_data)`) or read-only references.",
     "hasQuickfix": false,
     "attributes": [],
     "defaultParameters": [],
-    "nonCompliantCode": "sy-subrc = 0.\nsy-tabix = 1.",
-    "compliantCode": "\" Pass explicit return values or flags instead of modifying system variables (sy-*)\nrv_success = abap_true."
-  },
-  {
-    "ruleId": "prefer-returning",
-    "title": "Prefer Functional RETURNING Parameters",
-    "className": "ZCL_SKYLINT_PREF_RETURNING",
-    "checkName": "ZSKYLINT_PREF_RETURNING",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "RETURNING",
-    "severity": "warning",
-    "findingCode": "PREFER_RET",
-    "findingTexts": [
-      "Prefer functional RETURNING parameter over single EXPORTING parameter"
-    ],
-    "description": "Prefer RETURNING over single EXPORTING",
-    "rationale": "Methods with a `RETURNING` parameter can be used directly within expressions, assignments, and assertions. Prefer `RETURNING` over a single `EXPORTING` parameter.",
-    "hasQuickfix": false,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "METHODS calculate\n  EXPORTING ev_result TYPE i.",
-    "compliantCode": "METHODS calculate\n  RETURNING VALUE(rv_result) TYPE i."
-  },
-  {
-    "ruleId": "prefer-class-exceptions",
-    "title": "Prefer Class-Based Exceptions over Classic EXCEPTIONS",
-    "className": "ZCL_SKYLINT_PREF_CLASS_EXC",
-    "checkName": "ZSKYLINT_PREF_CLASS_EXC",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "CLASS_EXC",
-    "severity": "warning",
-    "findingCode": "CLASS_EXC",
-    "findingTexts": [
-      "Prefer class-based exceptions (RAISING) over classic EXCEPTIONS"
-    ],
-    "description": "Prefer Class-Based Exceptions over Classic EXCEPTIONS",
-    "rationale": "Classic non-class exceptions (set via `sy-subrc`) lack stack traces, cannot carry context data, and cannot be propagated up call stacks cleanly. Use class-based exceptions (`CX_ROOT` subclasses).",
-    "hasQuickfix": false,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "METHODS execute EXCEPTIONS not_found failed.",
-    "compliantCode": "METHODS execute RAISING cx_not_found cx_failed."
+    "nonCompliantCode": "METHODS process IMPORTING VALUE(iv_text) TYPE string.",
+    "compliantCode": "METHODS process IMPORTING iv_text TYPE string."
   },
   {
     "ruleId": "no-dangerous-statements",
@@ -1262,294 +2534,6 @@
     "compliantCode": "CALL TRANSACTION 'VA01' WITH AUTHORITY-CHECK."
   },
   {
-    "ruleId": "prefer-order-by",
-    "title": "Require ORDER BY for Deterministic SELECT Results",
-    "className": "ZCL_SKYLINT_PREF_ORDER_BY",
-    "checkName": "ZSKYLINT_PREF_ORDER_BY",
-    "category": "performance",
-    "categoryTitle": "Performance & Database",
-    "pseudoComment": "ORDER_BY",
-    "severity": "warning",
-    "findingCode": "SELECT_UP",
-    "findingTexts": [
-      "SELECT UP TO 1 ROWS requires an explicit ORDER BY clause for determinism"
-    ],
-    "description": "SELECT UP TO 1 ROWS requires ORDER BY",
-    "rationale": "Selecting rows from a relational database without an explicit `ORDER BY` clause yields non-deterministic ordering that can change unpredictably between DB executions and updates.",
-    "hasQuickfix": false,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "SELECT * FROM /dmo/customer UP TO 1 ROWS INTO @ls_customer.",
-    "compliantCode": "SELECT * FROM /dmo/customer ORDER BY customer_id UP TO 1 ROWS INTO @ls_customer."
-  },
-  {
-    "ruleId": "max-cyclomatic-complexity",
-    "title": "Limit Cyclomatic Complexity",
-    "className": "ZCL_SKYLINT_MAX_CYCLO_COMP",
-    "checkName": "ZSKYLINT_MAX_CYCLO_COMP",
-    "category": "metrics",
-    "categoryTitle": "Metrics & Complexity Limits",
-    "pseudoComment": "CYCLO_COMP",
-    "severity": "warning",
-    "findingCode": "CYCLO_COMP",
-    "findingTexts": [
-      "Procedure cyclomatic complexity exceeds threshold"
-    ],
-    "description": "Cyclomatic Complexity Threshold",
-    "rationale": "High cyclomatic complexity means a method contains too many decision points (branches, loops, catches), making comprehensive unit test branch coverage nearly impossible.",
-    "hasQuickfix": false,
-    "attributes": [
-      {
-        "name": "MAX_COMPLEXITY",
-        "kind": "Integer",
-        "defaultValue": "5"
-      }
-    ],
-    "defaultParameters": [],
-    "nonCompliantCode": "\" Complex method containing excessive branches (> 10 cyclomatic complexity)\nMETHOD compute.\n  IF c1. ... ELSEIF c2. ... ELSEIF c3. ...\nENDMETHOD.",
-    "compliantCode": "\" Decompose into strategy classes or cohesive helper methods\nMETHOD compute.\n  ro_strategy = mo_factory->get_strategy( mv_type ).\n  ro_strategy->execute( ).\nENDMETHOD."
-  },
-  {
-    "ruleId": "prefer-final-class",
-    "title": "Design for Inheritance or Prohibit It (FINAL)",
-    "className": "ZCL_SKYLINT_PREF_FINAL_CLS",
-    "checkName": "ZSKYLINT_PREF_FINAL_CLS",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "FINAL_CLS",
-    "severity": "warning",
-    "findingCode": "NOT_FINAL",
-    "findingTexts": [
-      "Classes should be marked FINAL by default unless designed for inheritance",
-      "Declare method as FINAL if it is not intended to be redefined"
-    ],
-    "description": "Prefer FINAL classes and methods by default",
-    "rationale": "Classes not explicitly designed and documented for inheritance should be declared `FINAL`. This prevents subclassing that relies on fragile base-class implementation details.",
-    "hasQuickfix": true,
-    "attributes": [
-      {
-        "name": "CHECK_CLASSES",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_METHODS",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      }
-    ],
-    "defaultParameters": [],
-    "nonCompliantCode": "CLASS cl_customer_service DEFINITION PUBLIC CREATE PUBLIC.\n  \" Class not intended for inheritance\nENDCLASS.",
-    "compliantCode": "CLASS cl_customer_service DEFINITION PUBLIC FINAL CREATE PUBLIC.\nENDCLASS."
-  },
-  {
-    "ruleId": "no-magic-numbers",
-    "title": "Avoid Magic Numbers; Use Named Constants",
-    "className": "ZCL_SKYLINT_NO_MAGIC_NUMBERS",
-    "checkName": "ZSKYLINT_NO_MAGIC_NUMBERS",
-    "category": "anti-patterns",
-    "categoryTitle": "Anti-Patterns & Bad Practices",
-    "pseudoComment": "MAGIC_NUMBERS",
-    "severity": "warning",
-    "findingCode": "MAGIC_NUM",
-    "findingTexts": [
-      "Avoid hardcoded magic numbers; declare a named constant"
-    ],
-    "description": "Avoid magic numbers in code; use named constants",
-    "rationale": "Hardcoded numeric literals scattered in logic obscure business rules and make updates error-prone. Give numbers meaningful names by declaring structured constants.",
-    "hasQuickfix": false,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "IF lv_status = 3.\n  process( ).\nENDIF.",
-    "compliantCode": "CONSTANTS c_status_completed TYPE i VALUE 3.\nIF lv_status = c_status_completed.\n  process( ).\nENDIF."
-  },
-  {
-    "ruleId": "prefer-insert-into",
-    "title": "Prefer INSERT ... INTO TABLE over APPEND",
-    "className": "ZCL_SKYLINT_PREF_INSERT",
-    "checkName": "ZSKYLINT_PREF_INSERT",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "INSERT_INTO",
-    "severity": "warning",
-    "findingCode": "PREF_INSRT",
-    "findingTexts": [
-      "Prefer INSERT ... INTO TABLE over APPEND"
-    ],
-    "description": "Prefer INSERT ... INTO TABLE over APPEND for table safety",
-    "rationale": "`APPEND` implies indexed, sequential appending and fails on hashed or sorted tables. `INSERT ... INTO TABLE` works polymorphically across all internal table categories.",
-    "hasQuickfix": true,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "APPEND ls_item TO lt_items.",
-    "compliantCode": "INSERT ls_item INTO TABLE lt_items."
-  },
-  {
-    "ruleId": "no-like-objects",
-    "title": "Avoid LIKE Typing on Global Dictionary Objects",
-    "className": "ZCL_SKYLINT_NO_LIKE_OBJECTS",
-    "checkName": "ZSKYLINT_NO_LIKE_OBJECTS",
-    "category": "anti-patterns",
-    "categoryTitle": "Anti-Patterns & Bad Practices",
-    "pseudoComment": "LIKE_OBJECTS",
-    "severity": "warning",
-    "findingCode": "AVOID_LIKE",
-    "findingTexts": [
-      "Avoid LIKE for data declarations; specify TYPE explicitly"
-    ],
-    "description": "Avoid LIKE referencing data objects; use explicit TYPE",
-    "rationale": "Typing dictionary objects with `LIKE` is obsolete. Use `TYPE` to refer to data types and reserve `LIKE` solely for referencing local data objects in the same procedure.",
-    "hasQuickfix": false,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "DATA lv_copy LIKE lv_original.",
-    "compliantCode": "DATA lv_copy TYPE string."
-  },
-  {
-    "ruleId": "max-constructor-statements",
-    "title": "Keep Constructors Clean & Lightweight",
-    "className": "ZCL_SKYLINT_MAX_CTOR_STMTS",
-    "checkName": "ZSKYLINT_MAX_CTOR_STMTS",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "CLEAN_CTOR",
-    "severity": "warning",
-    "findingCode": "CTOR_LOGIC",
-    "findingTexts": [
-      "Avoid heavy business logic/loops in constructor; use injection only"
-    ],
-    "description": "Keep constructors clean; avoid heavy logic and DB",
-    "rationale": "Constructors should only initialize state and inject dependencies. Heavy business logic, database queries, or network I/O in constructors make test mocking and instantiation brittle.",
-    "hasQuickfix": false,
-    "attributes": [
-      {
-        "name": "MAX_STATEMENTS",
-        "kind": "Integer",
-        "defaultValue": "10"
-      }
-    ],
-    "defaultParameters": [],
-    "nonCompliantCode": "METHOD constructor.\n  super->constructor( ).\n  \" 15+ statements initializing complex states and reading DB...\nENDMETHOD.",
-    "compliantCode": "METHOD constructor.\n  super->constructor( ).\n  mo_gateway = io_gateway. \" Simple dependency assignment only\nENDMETHOD."
-  },
-  {
-    "ruleId": "no-static-classes",
-    "title": "Avoid Purely Static Utility Classes",
-    "className": "ZCL_SKYLINT_NO_STATIC_CLS",
-    "checkName": "ZSKYLINT_NO_STATIC_CLS",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "STATIC_CLS",
-    "severity": "warning",
-    "findingCode": "STAT_CLASS",
-    "findingTexts": [
-      "Avoid static-only classes; declare instance methods and interfaces"
-    ],
-    "description": "Avoid static-only classes; use instantiable classes",
-    "rationale": "Classes consisting entirely of static methods cannot be mocked via interfaces or subclassing during unit tests, creating rigid coupling throughout the application.",
-    "hasQuickfix": false,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "CLASS cl_math_util DEFINITION PUBLIC FINAL CREATE PUBLIC.\n  PUBLIC SECTION.\n    CLASS-METHODS add IMPORTING a TYPE i b TYPE i RETURNING VALUE(r) TYPE i.\n    CLASS-METHODS sub IMPORTING a TYPE i b TYPE i RETURNING VALUE(r) TYPE i.\nENDCLASS.",
-    "compliantCode": "CLASS cl_math_util DEFINITION PUBLIC FINAL CREATE PUBLIC.\n  PUBLIC SECTION.\n    INTERFACES if_math_util.\n    METHODS add IMPORTING a TYPE i b TYPE i RETURNING VALUE(r) TYPE i.\nENDCLASS."
-  },
-  {
-    "ruleId": "prefer-predicate-names",
-    "title": "Use Predicate Naming for Boolean Methods (is_, has_, can_)",
-    "className": "ZCL_SKYLINT_PREF_PRED_NAME",
-    "checkName": "ZSKYLINT_PREF_PRED_NAME",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "PRED_NAME",
-    "severity": "warning",
-    "findingCode": "BOOL_NAME",
-    "findingTexts": [
-      "Boolean-returning method should use predicate name (IS_, HAS_, CAN_)"
-    ],
-    "description": "Enforce predicate naming (IS_, HAS_) on boolean methods",
-    "rationale": "Methods returning boolean status should read like questions (`is_valid`, `has_children`, `can_execute`) so conditionals read naturally like plain English.",
-    "hasQuickfix": false,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "METHODS check_active RETURNING VALUE(rv_active) TYPE abap_bool.",
-    "compliantCode": "METHODS is_active RETURNING VALUE(rv_active) TYPE abap_bool."
-  },
-  {
-    "ruleId": "max-inheritance-depth",
-    "title": "Limit Inheritance Depth",
-    "className": "ZCL_SKYLINT_MAX_INHERIT",
-    "checkName": "ZSKYLINT_MAX_INHERIT",
-    "category": "metrics",
-    "categoryTitle": "Metrics & Complexity Limits",
-    "pseudoComment": "INHERIT_DEPTH",
-    "severity": "warning",
-    "findingCode": "DEEP_INHRT",
-    "findingTexts": [
-      "Avoid deep class inheritance; prefer composition over inheritance"
-    ],
-    "description": "Avoid deep class inheritance hierarchies",
-    "rationale": "Deep class inheritance hierarchies create the fragile base class problem and tight coupling. Favor composition over inheritance (`HAS-A` instead of `IS-A`).",
-    "hasQuickfix": false,
-    "attributes": [
-      {
-        "name": "MAX_DEPTH",
-        "kind": "Integer",
-        "defaultValue": "3"
-      }
-    ],
-    "defaultParameters": [],
-    "nonCompliantCode": "CLASS lcl_child DEFINITION INHERITING FROM lcl_sub_parent. \" Depth > 3\nENDCLASS.",
-    "compliantCode": "\" Favor composition over deep class inheritance hierarchies\nCLASS lcl_worker DEFINITION.\n  PRIVATE SECTION.\n    DATA mo_engine TYPE REF TO if_engine.\nENDCLASS."
-  },
-  {
-    "ruleId": "max-attributes",
-    "title": "Limit Member Attributes per Class",
-    "className": "ZCL_SKYLINT_MAX_ATTRIBUTES",
-    "checkName": "ZSKYLINT_MAX_ATTRIBUTES",
-    "category": "metrics",
-    "categoryTitle": "Metrics & Complexity Limits",
-    "pseudoComment": "ATTRIBUTES",
-    "severity": "warning",
-    "findingCode": "ATTR_COUNT",
-    "findingTexts": [
-      "Class has too many member attributes; split into cohesive components"
-    ],
-    "description": "Limit class member attributes to prevent God Classes",
-    "rationale": "Classes with dozens of member variables are almost always God Objects that handle multiple unrelated responsibilities. Split them into smaller, focused domain classes.",
-    "hasQuickfix": false,
-    "attributes": [
-      {
-        "name": "MAX_ATTRIBUTES",
-        "kind": "Integer",
-        "defaultValue": "5"
-      }
-    ],
-    "defaultParameters": [],
-    "nonCompliantCode": "CLASS cl_order DEFINITION.\n  PRIVATE SECTION.\n    \" 30+ individual scalar member variables\nENDCLASS.",
-    "compliantCode": "CLASS cl_order DEFINITION.\n  PRIVATE SECTION.\n    DATA ms_header TYPE ty_order_header.\n    DATA mt_items  TYPE ty_order_items.\nENDCLASS."
-  },
-  {
-    "ruleId": "no-interface-data",
-    "title": "Avoid DATA Attributes in Interfaces",
-    "className": "ZCL_SKYLINT_NO_INTF_DATA",
-    "checkName": "ZSKYLINT_NO_INTF_DATA",
-    "category": "anti-patterns",
-    "categoryTitle": "Anti-Patterns & Bad Practices",
-    "pseudoComment": "INTF_DATA",
-    "severity": "warning",
-    "findingCode": "INTF_DATA",
-    "findingTexts": [
-      "Avoid mutable DATA in interfaces; declare CONSTANTS or move to class"
-    ],
-    "description": "Avoid mutable DATA in interfaces; allow only CONSTANTS",
-    "rationale": "Interfaces should declare behavior (methods) and immutable contracts (constants). Mutable data in interfaces creates hidden global state across all implementers.",
-    "hasQuickfix": false,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "INTERFACE if_customer.\n  DATA mv_state TYPE i. \" Mutable DATA in interface\nENDINTERFACE.",
-    "compliantCode": "INTERFACE if_customer.\n  CONSTANTS c_default_status TYPE i VALUE 1.\n  METHODS get_state RETURNING VALUE(rv_state) TYPE i.\nENDINTERFACE."
-  },
-  {
     "ruleId": "no-catch-cx-root",
     "title": "Avoid Catching Generic CX_ROOT",
     "className": "ZCL_SKYLINT_NO_CATCH_ROOT",
@@ -1569,48 +2553,6 @@
     "defaultParameters": [],
     "nonCompliantCode": "TRY.\n    process_order( ).\n  CATCH cx_root.\n    \" Indiscriminately catches all exceptions, masking unexpected bugs\nENDTRY.",
     "compliantCode": "TRY.\n    process_order( ).\n  CATCH cx_order_failed INTO DATA(lx_order).\n    logger->record( lx_order ).\nENDTRY."
-  },
-  {
-    "ruleId": "no-message-raising",
-    "title": "Avoid Obsolete MESSAGE ... RAISING in Methods",
-    "className": "ZCL_SKYLINT_NO_MSG_RAISING",
-    "checkName": "ZSKYLINT_NO_MSG_RAISING",
-    "category": "anti-patterns",
-    "categoryTitle": "Anti-Patterns & Bad Practices",
-    "pseudoComment": "MSG_RAISING",
-    "severity": "warning",
-    "findingCode": "MSG_RAISE",
-    "findingTexts": [
-      "Avoid obsolete MESSAGE ... RAISING; raise class-based exceptions"
-    ],
-    "description": "Avoid MESSAGE ... RAISING; use class-based exceptions",
-    "rationale": "`MESSAGE ... RAISING` combines procedural exception handling with UI messaging, preventing proper separation of concerns. Raise modern class-based exceptions instead.",
-    "hasQuickfix": false,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "MESSAGE e001(zmsg) RAISING not_found.",
-    "compliantCode": "RAISE EXCEPTION NEW cx_not_found( textid = cx_not_found=>c_item_missing )."
-  },
-  {
-    "ruleId": "no-nested-try",
-    "title": "Avoid Deeply Nested TRY ... CATCH Blocks",
-    "className": "ZCL_SKYLINT_NO_NESTED_TRY",
-    "checkName": "ZSKYLINT_NO_NESTED_TRY",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "NESTED_TRY",
-    "severity": "warning",
-    "findingCode": "NESTED_TRY",
-    "findingTexts": [
-      "Avoid nested TRY blocks; extract to dedicated method"
-    ],
-    "description": "Avoid nested TRY blocks; extract to helper methods",
-    "rationale": "Nesting `TRY` blocks inside other `TRY` blocks obfuscates error handling flow. Extract inner protected operations into distinct methods.",
-    "hasQuickfix": false,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "TRY.\n    step1( ).\n    TRY.\n        step2( ).\n      CATCH cx_step2_err.\n        handle_step2( ).\n    ENDTRY.\n  CATCH cx_step1_err.\n    handle_step1( ).\nENDTRY.",
-    "compliantCode": "\" Extract inner operations into focused helper methods\nTRY.\n    step1( ).\n    execute_step2( ).\n  CATCH cx_step1_err.\n    handle_step1( ).\nENDTRY."
   },
   {
     "ruleId": "no-raise-cx-sy",
@@ -1723,423 +2665,6 @@
     "compliantCode": "\" In RAP, commits are managed automatically by the framework save sequence\nMETHOD update.\n  MODIFY ENTITIES OF ...\nENDMETHOD."
   },
   {
-    "ruleId": "prefer-transporting",
-    "title": "Specify TRANSPORTING in MODIFY / READ TABLE",
-    "className": "ZCL_SKYLINT_PREF_TRANSPORT",
-    "checkName": "ZSKYLINT_PREF_TRANSPORT",
-    "category": "performance",
-    "categoryTitle": "Performance & Database",
-    "pseudoComment": "TRANSPORTING",
-    "severity": "warning",
-    "findingCode": "FULL_MODIF",
-    "findingTexts": [
-      "Specify TRANSPORTING fields in MODIFY itab inside loop for performance"
-    ],
-    "description": "Avoid MODIFY itab in LOOP without TRANSPORTING clause",
-    "rationale": "Modifying internal tables without specifying `TRANSPORTING` copies all table fields across the buffer. Specify only the modified fields to optimize execution speed.",
-    "hasQuickfix": false,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "LOOP AT lt_items INTO ls_item.\n  ls_item-status = 'DONE'.\n  MODIFY lt_items FROM ls_item. \" Full line copy without specifying TRANSPORTING\nENDLOOP.",
-    "compliantCode": "LOOP AT lt_items INTO ls_item.\n  ls_item-status = 'DONE'.\n  MODIFY lt_items FROM ls_item TRANSPORTING status.\nENDLOOP."
-  },
-  {
-    "ruleId": "prefer-string-functions",
-    "title": "Prefer Built-in String Functions over SEARCH/SHIFT",
-    "className": "ZCL_SKYLINT_PREF_STR_FUNC",
-    "checkName": "ZSKYLINT_PREF_STR_FUNC",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "STR_FUNC",
-    "severity": "warning",
-    "findingCode": "CONDENSE_S",
-    "findingTexts": [
-      "Use modern built-in string function condense( ... ) instead",
-      "Use modern string functions to_upper() or to_lower() instead",
-      "Use modern string function shift_left( ) or shift_right( ) instead",
-      "SEARCH statement is obsolete; prefer find( ) or contains( )",
-      "OVERLAY statement is obsolete; prefer string functions or templates",
-      "Obsolete REPLACE statement; prefer replace( ) function",
-      "Use strlen( ... ) instead of DESCRIBE FIELD ... LENGTH"
-    ],
-    "description": "Detect obsolete string statements; prefer built-in functions",
-    "rationale": "Procedural string statements (`SEARCH`, `SHIFT`, `TRANSLATE`) are legacy ABAP. Replace them with functional built-in string functions (`find`, `to_upper`, `substring`, `shift_left`).",
-    "hasQuickfix": true,
-    "attributes": [
-      {
-        "name": "CHECK_CONDENSE",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_TRANSLATE",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_SHIFT",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_SEARCH",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_OVERLAY",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_REPLACE",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_DESCRIBE",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      }
-    ],
-    "defaultParameters": [],
-    "nonCompliantCode": "CONDENSE lv_text.\nTRANSLATE lv_code TO UPPER CASE.",
-    "compliantCode": "lv_text = condense( lv_text ).\nlv_code = to_upper( lv_code )."
-  },
-  {
-    "ruleId": "prefer-calc-assign-op",
-    "title": "Prefer Calculation Assignment Operators (+=, -=, *=)",
-    "className": "ZCL_SKYLINT_PREF_CALC_OP",
-    "checkName": "ZSKYLINT_PREF_CALC_OP",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "CALC_ASSIGN",
-    "severity": "warning",
-    "findingCode": "CALC_ASSGN",
-    "findingTexts": [
-      "Use calculation assignment operator (+=, -=) or ADD statement replacement"
-    ],
-    "description": "Prefer calculation assignment operators (+=, -=, *=, /=)",
-    "rationale": "Modern ABAP supports arithmetic assignment operators (`lv_count += 1.`), which are cleaner and more expressive than verbose legacy assignments (`lv_count = lv_count + 1.`).",
-    "hasQuickfix": true,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "lv_count = lv_count + 1.\nlv_total = lv_total * 2.",
-    "compliantCode": "lv_count += 1.\nlv_total *= 2."
-  },
-  {
-    "ruleId": "prefer-early-return",
-    "title": "Prefer Early Return to Reduce Nesting (Guard Clauses)",
-    "className": "ZCL_SKYLINT_PREF_EARLY_RET",
-    "checkName": "ZSKYLINT_PREF_EARLY_RET",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "EARLY_RETURN",
-    "severity": "warning",
-    "findingCode": "GUARD_METH",
-    "findingTexts": [
-      "Invert IF condition and use RETURN to reduce nesting in method",
-      "Invert IF condition and use CONTINUE to reduce nesting in loop"
-    ],
-    "description": "Prefer early return or continue over nested IF blocks",
-    "rationale": "Check preconditions and invalid states at the start of the method and return immediately. This eliminates deeply nested `IF ... ELSE` ladders.",
-    "hasQuickfix": false,
-    "attributes": [
-      {
-        "name": "CHECK_METHOD_RETURN",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_LOOP_CONTINUE",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      }
-    ],
-    "defaultParameters": [],
-    "nonCompliantCode": "METHOD process_order.\n  IF is_valid( ).\n    \" Entire method logic deeply nested\n    execute_order( ).\n  ENDIF.\nENDMETHOD.",
-    "compliantCode": "METHOD process_order.\n  IF NOT is_valid( ).\n    RETURN.\n  ENDIF.\n  execute_order( ).\nENDMETHOD."
-  },
-  {
-    "ruleId": "no-unused-variables",
-    "title": "Eliminate Unused Local Variables and Symbols",
-    "className": "ZCL_SKYLINT_NO_UNUSED_VARS",
-    "checkName": "ZSKYLINT_NO_UNUSED_VARS",
-    "category": "anti-patterns",
-    "categoryTitle": "Anti-Patterns & Bad Practices",
-    "pseudoComment": "NEEDED",
-    "severity": "warning",
-    "findingCode": "UNUSED_VAR",
-    "findingTexts": [
-      "Local variable or field symbol is declared but never read"
-    ],
-    "description": "Detect unused local variables and field symbols",
-    "rationale": "Unused variables clutter code, confuse developers reviewing changes, and increase compilation and execution memory overhead without providing any benefit.",
-    "hasQuickfix": false,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "DATA lv_temp TYPE string. \" Declared but never referenced",
-    "compliantCode": "\" Remove unused declarations or add ##NEEDED pragma if required by interface"
-  },
-  {
-    "ruleId": "prefer-decl-order",
-    "title": "Order Declarations (TYPES, CONSTANTS, DATA)",
-    "className": "ZCL_SKYLINT_PREF_DECL_ORDER",
-    "checkName": "ZSKYLINT_PREF_DECL_ORDER",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "DECL_ORDER",
-    "severity": "warning",
-    "findingCode": "DECL_ORDER",
-    "findingTexts": [
-      "Declare local TYPES before CONSTANTS before DATA before FIELD-SYMBOLS"
-    ],
-    "description": "Enforce declaration order (TYPES, CONSTANTS, DATA, FS)",
-    "rationale": "Declaring types first, then constants, then data variables creates a logical reading flow where subsequent definitions can safely depend on preceding ones.",
-    "hasQuickfix": false,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "METHOD execute.\n  DATA lv_count TYPE i.\n  TYPES ty_status TYPE c LENGTH 1. \" TYPES declared after DATA\n  CONSTANTS c_init TYPE ty_status VALUE 'I'.\nENDMETHOD.",
-    "compliantCode": "METHOD execute.\n  TYPES ty_status TYPE c LENGTH 1.\n  CONSTANTS c_init TYPE ty_status VALUE 'I'.\n  DATA lv_count TYPE i.\nENDMETHOD."
-  },
-  {
-    "ruleId": "no-param-escape",
-    "title": "Avoid Reassigning Importing Parameters",
-    "className": "ZCL_SKYLINT_NO_PARAM_ESCAPE",
-    "checkName": "ZSKYLINT_NO_PARAM_ESCAPE",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "PARAM_ESCAPE",
-    "severity": "warning",
-    "findingCode": "PARAM_ESCP",
-    "findingTexts": [
-      "Escape params with ! only on keyword clash"
-    ],
-    "description": "Avoid unnecessary parameter escape (!param)",
-    "rationale": "Importing parameters should be treated as immutable inputs. Modifying them inside the method leads to unexpected side effects and debugging difficulties.",
-    "hasQuickfix": true,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "METHODS process IMPORTING !iv_data TYPE string.",
-    "compliantCode": "METHODS process IMPORTING iv_data TYPE string."
-  },
-  {
-    "ruleId": "prefer-case",
-    "title": "Prefer CASE over Multiple IF / ELSEIF on the Same Variable",
-    "className": "ZCL_SKYLINT_PREF_CASE",
-    "checkName": "ZSKYLINT_PREF_CASE",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "PREF_CASE",
-    "severity": "warning",
-    "findingCode": "USE_CASE",
-    "findingTexts": [
-      "Multiple ELSEIF branches check the same variable; use CASE instead"
-    ],
-    "description": "Use CASE instead of IF when checking multiple values",
-    "rationale": "When branching on multiple values of a single variable, `CASE ... WHEN` is more readable, structured, and performant than a chain of `ELSEIF` statements.",
-    "hasQuickfix": false,
-    "attributes": [
-      {
-        "name": "MIN_BRANCHES",
-        "kind": "Integer",
-        "defaultValue": "3"
-      }
-    ],
-    "defaultParameters": [],
-    "nonCompliantCode": "IF lv_type = 'A'.\n  process_a( ).\nELSEIF lv_type = 'B'.\n  process_b( ).\nELSEIF lv_type = 'C'.\n  process_c( ).\nENDIF.",
-    "compliantCode": "CASE lv_type.\n  WHEN 'A'.\n    process_a( ).\n  WHEN 'B'.\n    process_b( ).\n  WHEN 'C'.\n    process_c( ).\nENDCASE."
-  },
-  {
-    "ruleId": "no-inline-length",
-    "title": "Avoid Obsolete Inline Length Specifications (var(len))",
-    "className": "ZCL_SKYLINT_NO_INLINE_LEN",
-    "checkName": "ZSKYLINT_NO_INLINE_LEN",
-    "category": "anti-patterns",
-    "categoryTitle": "Anti-Patterns & Bad Practices",
-    "pseudoComment": "PAREN_LEN",
-    "severity": "warning",
-    "findingCode": "PAREN_LEN",
-    "findingTexts": [
-      "Avoid length in parentheses; use TYPE ... LENGTH ..."
-    ],
-    "description": "Avoid inline length specification in declarations",
-    "rationale": "Specifying length in parentheses directly after a variable name (`lv_str(10) TYPE c`) is legacy syntax. Use modern explicit typing: `TYPE c LENGTH 10`.",
-    "hasQuickfix": true,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "DATA lv_code(10) TYPE c.",
-    "compliantCode": "DATA lv_code TYPE c LENGTH 10."
-  },
-  {
-    "ruleId": "max-one-statement",
-    "title": "Limit One Statement per Source Code Line",
-    "className": "ZCL_SKYLINT_MAX_ONE_STMT",
-    "checkName": "ZSKYLINT_MAX_ONE_STMT",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "ONE_STMT",
-    "severity": "warning",
-    "findingCode": "ONE_STMT",
-    "findingTexts": [
-      "Only one statement is allowed per line"
-    ],
-    "description": "Max One Statement Per Line",
-    "rationale": "Placing multiple statements on a single line hinders debugger stepping, breaks Git line diffs, and hurts overall code scannability.",
-    "hasQuickfix": false,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "lv_a = 1. lv_b = 2.",
-    "compliantCode": "lv_a = 1.\nlv_b = 2."
-  },
-  {
-    "ruleId": "no-dash-in-names",
-    "title": "Avoid Obsolete Dash (-) in Program Identifiers",
-    "className": "ZCL_SKYLINT_NO_DASH_IN_NAMES",
-    "checkName": "ZSKYLINT_NO_DASH_IN_NAMES",
-    "category": "anti-patterns",
-    "categoryTitle": "Anti-Patterns & Bad Practices",
-    "pseudoComment": "NO_DASH",
-    "severity": "warning",
-    "findingCode": "NO_DASH",
-    "findingTexts": [
-      "Avoid dashes in variable, constant, and field-symbol names"
-    ],
-    "description": "No Dashes in Variable and Form Names",
-    "rationale": "Using a hyphen/dash in structure component references is archaic. Modern ABAP standardizes on the arrow notation `->` or hyphen only where mandatory.",
-    "hasQuickfix": false,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "DATA foo-bar TYPE i.",
-    "compliantCode": "DATA foobar TYPE i."
-  },
-  {
-    "ruleId": "prefer-inline",
-    "title": "Prefer Modern Inline Declarations in ABAP 7.40+",
-    "className": "ZCL_SKYLINT_PREF_INLINE",
-    "checkName": "ZSKYLINT_PREF_INLINE",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "PREFER_INLINE",
-    "severity": "warning",
-    "findingCode": "PREF_INL",
-    "findingTexts": [
-      "Prefer inline declaration over separate DATA and assignment"
-    ],
-    "description": "Prefer Inline Declarations",
-    "rationale": "In versions supporting inline declarations, declaring variables at the point of first use reduces variable lifetime scope and removes top-of-method variable clutter.",
-    "hasQuickfix": false,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "DATA lv_count TYPE i.\nlv_count = 10.",
-    "compliantCode": "DATA(lv_count) = 10."
-  },
-  {
-    "ruleId": "prefer-final-data",
-    "title": "Prefer FINAL( ) over DATA( ) when the variable is never written again",
-    "className": "ZCL_SKYLINT_PREF_FINAL_DATA",
-    "checkName": "ZSKYLINT_PREF_FINAL_DATA",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "PREF_FINAL",
-    "severity": "warning",
-    "findingCode": "PREF_FIN",
-    "findingTexts": [
-      "Inline variable is never written again; declare it with FINAL( )"
-    ],
-    "description": "Declare inline variables as FINAL when never written again",
-    "rationale": "When an inline DATA( ) variable is assigned once and never written again, declaring it FINAL( ) communicates immutability and lets the compiler enforce it.",
-    "hasQuickfix": true,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "DATA(lv_count) = 10.\nWRITE lv_count.",
-    "compliantCode": "FINAL(lv_count) = 10.\nWRITE lv_count."
-  },
-  {
-    "ruleId": "no-friends",
-    "title": "Avoid FRIENDS in class definitions",
-    "className": "ZCL_SKYLINT_NO_FRIENDS",
-    "checkName": "ZSKYLINT_NO_FRIENDS",
-    "category": "anti-patterns",
-    "categoryTitle": "Anti-Patterns & Bad Practices",
-    "pseudoComment": "FRIENDS",
-    "severity": "warning",
-    "findingCode": "NO_FRIENDS",
-    "findingTexts": [
-      "Avoid FRIENDS; expose behavior via public methods"
-    ],
-    "description": "Avoid FRIENDS in class definitions",
-    "rationale": "FRIENDS grants another class access to private/protected members, breaking encapsulation. Expose behaviour through the public interface instead.",
-    "hasQuickfix": false,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "CLASS lcl_service DEFINITION FINAL FRIENDS lcl_helper CREATE PUBLIC.\n  PUBLIC SECTION.\n    METHODS execute.\nENDCLASS.",
-    "compliantCode": "CLASS lcl_service DEFINITION FINAL CREATE PUBLIC.\n  PUBLIC SECTION.\n    METHODS execute.\nENDCLASS."
-  },
-  {
-    "ruleId": "prefer-message-class",
-    "title": "Use a message class (SE91) instead of inline message text",
-    "className": "ZCL_SKYLINT_PREF_MSG_CLS",
-    "checkName": "ZSKYLINT_PREF_MSG_CLS",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "MSG_CLASS",
-    "severity": "warning",
-    "findingCode": "PREF_MSG",
-    "findingTexts": [
-      "Define the message class and raise it as e001( msg_class )"
-    ],
-    "description": "Use a message class instead of inline message text",
-    "rationale": "Inline message texts cannot be translated and are hard to maintain. Define messages in a message class and raise them as e001( msg_class ).",
-    "hasQuickfix": false,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "MESSAGE 'Something went wrong' TYPE 'E'.",
-    "compliantCode": "MESSAGE e001(bc_msg)."
-  },
-  {
-    "ruleId": "prefer-inline-cast",
-    "title": "Inline a CAST helper that is only read once",
-    "className": "ZCL_SKYLINT_PREF_INL_CAST",
-    "checkName": "ZSKYLINT_PREF_INL_CAST",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "INLINE_CAST",
-    "severity": "warning",
-    "findingCode": "PREF_ICST",
-    "findingTexts": [
-      "CAST helper is read exactly once in the next statement; inline it"
-    ],
-    "description": "Inline a CAST helper that is only read once",
-    "rationale": "A CAST helper declared as DATA and read exactly once in the following statement can be inlined, removing a temporary variable.",
-    "hasQuickfix": true,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "DATA(helper) = CAST lcl_node( object ).\nresult = helper->get_tokens( ).",
-    "compliantCode": "result = CAST lcl_node( object )->get_tokens( )."
-  },
-  {
-    "ruleId": "no-exception-overlap",
-    "title": "Classic EXCEPTIONS must not map two errors to the same number",
-    "className": "ZCL_SKYLINT_NO_EXC_OVERLAP",
-    "checkName": "ZSKYLINT_NO_EXC_OVERLAP",
-    "category": "anti-patterns",
-    "categoryTitle": "Anti-Patterns & Bad Practices",
-    "pseudoComment": "EXC_OVERLAP",
-    "severity": "warning",
-    "findingCode": "NO_EXC_OVL",
-    "findingTexts": [
-      "Two classic exceptions share the same error number"
-    ],
-    "description": "Classic EXCEPTIONS must not overlap",
-    "rationale": "When two classic exceptions share one error number, the caller cannot tell which one was raised.",
-    "hasQuickfix": false,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "CALL FUNCTION 'SOMETHING'\n  EXCEPTIONS\n    system_failure        = 1 MESSAGE lv_message\n    communication_failure = 1 MESSAGE lv_message\n    OTHERS                = 1.",
-    "compliantCode": "CALL FUNCTION 'SOMETHING'\n  EXCEPTIONS\n    system_failure        = 1 MESSAGE lv_message\n    communication_failure = 2 MESSAGE lv_message\n    OTHERS                = 3."
-  },
-  {
     "ruleId": "no-rfc-error-handling",
     "title": "RFC calls must handle SYSTEM_FAILURE and COMMUNICATION_FAILURE",
     "className": "ZCL_SKYLINT_NO_RFC_ERR",
@@ -2159,48 +2684,6 @@
     "defaultParameters": [],
     "nonCompliantCode": "CALL FUNCTION 'Z_RFC'\n  DESTINATION lv_rfc.",
     "compliantCode": "CALL FUNCTION 'Z_RFC'\n  DESTINATION lv_rfc\n  EXCEPTIONS\n    system_failure        = 1 MESSAGE msg\n    communication_failure = 2 MESSAGE msg\n    OTHERS                = 3."
-  },
-  {
-    "ruleId": "no-many-parentheses",
-    "title": "Remove redundant parentheses",
-    "className": "ZCL_SKYLINT_NO_MANY_PARENS",
-    "checkName": "ZSKYLINT_NO_MANY_PARENS",
-    "category": "anti-patterns",
-    "categoryTitle": "Anti-Patterns & Bad Practices",
-    "pseudoComment": "MANY_PARENS",
-    "severity": "warning",
-    "findingCode": "MANY_PAREN",
-    "findingTexts": [
-      "Parentheses wrap a complete expression and can be removed"
-    ],
-    "description": "Remove redundant parentheses",
-    "rationale": "Parentheses that only wrap a complete condition or expression add noise and can be removed without changing semantics.",
-    "hasQuickfix": true,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "IF ( destination IS INITIAL ).\nENDIF.",
-    "compliantCode": "IF destination IS INITIAL.\nENDIF."
-  },
-  {
-    "ruleId": "prefer-pass-by-reference",
-    "title": "Avoid Unnecessary Pass-by-Value for Large Tables",
-    "className": "ZCL_SKYLINT_PREF_PASS_BY_REF",
-    "checkName": "ZSKYLINT_PREF_PASS_BY_REF",
-    "category": "performance",
-    "categoryTitle": "Performance & Database",
-    "pseudoComment": "SLOW_PARAM",
-    "severity": "warning",
-    "findingCode": "SLOW_PASS",
-    "findingTexts": [
-      "Avoid pass-by-value for importing method parameters"
-    ],
-    "description": "Slow Parameter Passing",
-    "rationale": "Passing large internal tables by value creates an in-memory deep copy on every method invocation. Use pass-by-reference (`REFERENCE(it_data)`) or read-only references.",
-    "hasQuickfix": false,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "METHODS process IMPORTING VALUE(iv_text) TYPE string.",
-    "compliantCode": "METHODS process IMPORTING iv_text TYPE string."
   },
   {
     "ruleId": "no-modify-standard-tables",
@@ -2243,291 +2726,6 @@
     "defaultParameters": [],
     "nonCompliantCode": "CALL FUNCTION lv_func_name.",
     "compliantCode": "CALL FUNCTION 'BAPI_USER_GET_DETAIL'."
-  },
-  {
-    "ruleId": "prefer-public-constructor",
-    "title": "Declare Constructor in PUBLIC SECTION",
-    "className": "ZCL_SKYLINT_PREF_PUB_CTOR",
-    "checkName": "ZSKYLINT_PREF_PUB_CTOR",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "PUB_CTOR",
-    "severity": "warning",
-    "findingCode": "CTOR_PUB",
-    "findingTexts": [
-      "Declare constructor in PUBLIC SECTION, even if class is CREATE PRIVATE"
-    ],
-    "description": "Declare Constructor in PUBLIC SECTION",
-    "rationale": "Instance constructors must always be declared in the PUBLIC SECTION, even for classes with CREATE PRIVATE or CREATE PROTECTED, ensuring standard reflection, factory instantiation, and Clean ABAP compliance.",
-    "hasQuickfix": false,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "CLASS zcl_service DEFINITION PUBLIC CREATE PRIVATE.\n  PRIVATE SECTION.\n    METHODS constructor.\nENDCLASS.",
-    "compliantCode": "CLASS zcl_service DEFINITION PUBLIC CREATE PRIVATE.\n  PUBLIC SECTION.\n    METHODS constructor.\nENDCLASS."
-  },
-  {
-    "ruleId": "prefer-definitions-top",
-    "title": "Place Definitions at Top of Routine",
-    "className": "ZCL_SKYLINT_PREF_DEF_TOP",
-    "checkName": "ZSKYLINT_PREF_DEF_TOP",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "DEF_TOP",
-    "severity": "warning",
-    "findingCode": "DEF_TOP",
-    "findingTexts": [
-      "Reorder definitions to beginning of routine; avoid scattered DATA statements"
-    ],
-    "description": "Place definitions at beginning of routine",
-    "rationale": "Explicit local definitions (DATA, TYPES, CONSTANTS, FIELD-SYMBOLS) should be placed at the very beginning of the routine rather than scattered in the middle of executable code.",
-    "hasQuickfix": false,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "METHOD calculate.\n  lv_total = 100.\n  DATA lv_tax TYPE i.\nENDMETHOD.",
-    "compliantCode": "METHOD calculate.\n  DATA lv_tax TYPE i.\n  lv_total = 100.\nENDMETHOD."
-  },
-  {
-    "ruleId": "no-unnecessary-return",
-    "title": "Omit Unnecessary RETURN Statement",
-    "className": "ZCL_SKYLINT_NO_UNNEC_RETURN",
-    "checkName": "ZSKYLINT_NO_UNNEC_RETURN",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "NO_UNNEC_RETURN",
-    "severity": "warning",
-    "findingCode": "UNNEC_RET",
-    "findingTexts": [
-      "Omit optional RETURN at end of routine; routines return automatically"
-    ],
-    "description": "Omit unnecessary RETURN at end of routine",
-    "rationale": "Routines automatically return upon reaching ENDMETHOD, ENDFORM, or ENDFUNCTION. An explicit RETURN statement at the very end of the routine body is redundant and clutters the code.",
-    "hasQuickfix": true,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "METHOD calculate.\n  lv_total = 100.\n  RETURN.\nENDMETHOD.",
-    "compliantCode": "METHOD calculate.\n  lv_total = 100.\nENDMETHOD."
-  },
-  {
-    "ruleId": "mix-returning",
-    "title": "Do Not Mix RETURNING with EXPORTING or CHANGING",
-    "className": "ZCL_SKYLINT_NO_MIX_RETURNING",
-    "checkName": "ZSKYLINT_NO_MIX_RETURNING",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "NO_MIX_RETURNING",
-    "severity": "warning",
-    "findingCode": "MIX_RET",
-    "findingTexts": [
-      "Do not mix RETURNING with EXPORTING or CHANGING parameters in a single method"
-    ],
-    "description": "Do not mix RETURNING with EXPORTING or CHANGING",
-    "rationale": "Clean ABAP methods should either be pure functional (RETURNING a single result) or procedures (using EXPORTING/CHANGING). Mixing both in the same signature creates confusing APIs.",
-    "hasQuickfix": false,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "METHODS get_data\n  EXPORTING ev_val TYPE i\n  RETURNING VALUE(rv_res) TYPE string.",
-    "compliantCode": "METHODS get_data\n  RETURNING VALUE(rv_res) TYPE string."
-  },
-  {
-    "ruleId": "method-overwrites-builtin",
-    "title": "Avoid Method Names That Overwrite Built-in Functions",
-    "className": "ZCL_SKYLINT_NO_OVERW_BUILTIN",
-    "checkName": "ZSKYLINT_NO_OVERW_BUILTIN",
-    "category": "naming",
-    "categoryTitle": "naming",
-    "pseudoComment": "NO_OVERW_BUILTIN",
-    "severity": "warning",
-    "findingCode": "BUILTIN",
-    "findingTexts": [
-      "Method name overwrites built-in SAP function name"
-    ],
-    "description": "Method name overwrites built-in SAP function",
-    "rationale": "Naming a method after a built-in ABAP function (e.g., LINES, STRLEN, MATCHES, XSDBOOL) obscures the standard SAP built-in and makes expressions ambiguous and difficult to read.",
-    "hasQuickfix": false,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "METHODS matches RETURNING VALUE(rv_res) TYPE abap_bool.",
-    "compliantCode": "METHODS do_match RETURNING VALUE(rv_res) TYPE abap_bool."
-  },
-  {
-    "ruleId": "max-one-method-parameter-per-line",
-    "title": "Max One Method Parameter Definition Per Line",
-    "className": "ZCL_SKYLINT_MAX_PARAM_LINE",
-    "checkName": "ZSKYLINT_MAX_PARAM_LINE",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "MAX_PARAM_LINE",
-    "severity": "warning",
-    "findingCode": "PARAM_LINE",
-    "findingTexts": [
-      "Keep max one method parameter definition per line"
-    ],
-    "description": "Max one method parameter definition per line",
-    "rationale": "Defining multiple parameters on the same line hampers readability and produces noisy version control diffs. Each parameter in a signature should be declared on its own dedicated line.",
-    "hasQuickfix": false,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "METHODS foo IMPORTING iv_a TYPE i iv_b TYPE string.",
-    "compliantCode": "METHODS foo\n  IMPORTING\n    iv_a TYPE i\n    iv_b TYPE string."
-  },
-  {
-    "ruleId": "prefer-is-initial",
-    "title": "Prefer IS [NOT] INITIAL over lines( ) or Literal Comparisons",
-    "className": "ZCL_SKYLINT_PREF_IS_INITIAL",
-    "checkName": "ZSKYLINT_PREF_IS_INITIAL",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "PREF_INIT",
-    "severity": "warning",
-    "findingCode": "PREF_INIT",
-    "findingTexts": [
-      "Use IS [NOT] INITIAL instead of lines( ) or empty literal comparison"
-    ],
-    "description": "Prefer IS [NOT] INITIAL over lines( ) or empty literals",
-    "rationale": "Checking whether an internal table, string, or variable is empty should be done with `IS [NOT] INITIAL` rather than counting `lines( ) > 0` or comparing to empty literals (`\"\"`, `space`, `0`). `IS INITIAL` is idiomatic Clean ABAP, expressive, and optimized.",
-    "hasQuickfix": true,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "IF lines( lt_items ) > 0.\nENDIF.",
-    "compliantCode": "IF lt_items IS NOT INITIAL.\nENDIF."
-  },
-  {
-    "ruleId": "no-ignored-return-value",
-    "title": "Do Not Ignore Return Value of Functional Methods",
-    "className": "ZCL_SKYLINT_NO_IGNORED_RETURN",
-    "checkName": "ZSKYLINT_NO_IGNORED_RETURN",
-    "category": "anti-patterns",
-    "categoryTitle": "Anti-Patterns & Bad Practices",
-    "pseudoComment": "NO_IGNORED_RET",
-    "severity": "warning",
-    "findingCode": "IGNRET",
-    "findingTexts": [
-      "Do not ignore return value of functional method; assign or use result"
-    ],
-    "description": "Disallow ignoring the return value of functional methods",
-    "rationale": "Functional methods that declare a `RETURNING` parameter are designed to compute and return a value. Calling such methods without assigning or consuming their result indicates a bug, dead code, or an improper command-query violation where side effects were bundled into a query.",
-    "hasQuickfix": false,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "lo_calc->get_total( ).",
-    "compliantCode": "lv_total = lo_calc->get_total( )."
-  },
-  {
-    "ruleId": "prefer-cast",
-    "title": "Prefer CAST #( ) over ?=",
-    "className": "ZCL_SKYLINT_PREF_CAST",
-    "checkName": "ZSKYLINT_PREF_CAST",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "PREF_CAST",
-    "severity": "warning",
-    "findingCode": "PREFCAST",
-    "findingTexts": [
-      "Prefer CAST #( ) constructor expression over ?= downcast"
-    ],
-    "description": "Prefer modern CAST #( ) expression over ?=",
-    "rationale": "`?=` is legacy downcast syntax from early ABAP Objects. Modern ABAP exclusively uses `CAST #( )` constructor expressions, which can be inlined directly into method call chains and expressions.",
-    "hasQuickfix": true,
-    "attributes": [],
-    "defaultParameters": [],
-    "nonCompliantCode": "lo_child ?= lo_parent.",
-    "compliantCode": "lo_child = CAST #( lo_parent )."
-  },
-  {
-    "ruleId": "no-redundant-clear",
-    "title": "Do Not CLEAR Variables Directly After Declaration",
-    "className": "ZCL_SKYLINT_NO_REDUNDANT_CLEAR",
-    "checkName": "ZSKYLINT_NO_REDUNDANT_CLEAR",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "REDUNDANT_CLEAR",
-    "severity": "warning",
-    "findingCode": "REDUNCLEAR",
-    "findingTexts": [
-      "Do not CLEAR or FREE variables after declaration; they are already initial",
-      "Variable is CLEARed or FREEd but never read again before procedure ends"
-    ],
-    "description": "Do not CLEAR or FREE variables redundantly",
-    "rationale": "Variables in ABAP are automatically initialized to their type-specific default initial value upon declaration. Explicitly executing `CLEAR` immediately after declaration adds visual noise and redundant statements without any functional effect.",
-    "hasQuickfix": true,
-    "attributes": [
-      {
-        "name": "CHECK_BEFORE_WRITE",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_WITHOUT_READ",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      }
-    ],
-    "defaultParameters": [],
-    "nonCompliantCode": "DATA lv_count TYPE i.\nCLEAR lv_count.",
-    "compliantCode": "DATA lv_count TYPE i."
-  },
-  {
-    "ruleId": "no-modify-loop-table",
-    "title": "Do Not Mutate the Internal Table Currently Being Looped",
-    "className": "ZCL_SKYLINT_NO_MOD_LOOP_TAB",
-    "checkName": "ZSKYLINT_NO_MOD_LOOP_TAB",
-    "category": "anti-patterns",
-    "categoryTitle": "Anti-Patterns & Bad Practices",
-    "pseudoComment": "LOOP_MODIFY",
-    "severity": "warning",
-    "findingCode": "MOD_LOOPTB",
-    "findingTexts": [
-      "Do not add, delete, sort, collect, or clear rows from the table currently being looped",
-      "Avoid sorting internal tables inside loops to prevent severe performance degradation"
-    ],
-    "description": "Avoid mutating or sorting tables inside loops",
-    "rationale": "Adding rows (APPEND/INSERT), modifying, deleting, or clearing rows from the table while actively looping over it can cause infinite loops, skipped rows, or cursor invalidation. Parametric toggles are available for append, insert, modify, delete, and clear operations.",
-    "hasQuickfix": false,
-    "attributes": [
-      {
-        "name": "CHECK_APPEND",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_INSERT",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_MODIFY",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_DELETE",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_CLEAR",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_SORT",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_SORT_ANY",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_COLLECT",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      }
-    ],
-    "defaultParameters": [],
-    "nonCompliantCode": "LOOP AT lt_orders INTO ls_order.\n  APPEND ls_order TO lt_orders.\nENDLOOP.",
-    "compliantCode": "LOOP AT lt_orders INTO ls_order.\n  APPEND ls_order TO lt_new_orders.\nENDLOOP."
   },
   {
     "ruleId": "no-hardcoded-env-checks",
@@ -2587,222 +2785,24 @@
     "compliantCode": "IF is_feature_enabled( c_features-prod_mode ) = abap_true.\n  enable_production_mode( ).\nENDIF."
   },
   {
-    "ruleId": "max-line-length",
-    "title": "Limit Line Length",
-    "className": "ZCL_SKYLINT_MAX_LINE_LEN",
-    "checkName": "ZSKYLINT_MAX_LINE_LEN",
-    "category": "metrics",
-    "categoryTitle": "Metrics & Complexity Limits",
-    "pseudoComment": "LINE_LEN",
+    "ruleId": "method-overwrites-builtin",
+    "title": "Avoid Method Names That Overwrite Built-in Functions",
+    "className": "ZCL_SKYLINT_NO_OVERW_BUILTIN",
+    "checkName": "ZSKYLINT_NO_OVERW_BUILTIN",
+    "category": "naming",
+    "categoryTitle": "Naming",
+    "pseudoComment": "NO_OVERW_BUILTIN",
     "severity": "warning",
-    "findingCode": "LINE_LEN",
+    "findingCode": "BUILTIN",
     "findingTexts": [
-      "Line length exceeds configured maximum limit"
+      "Method name overwrites built-in SAP function name"
     ],
-    "description": "Maximum Line Length",
-    "rationale": "Long lines reduce readability, force horizontal scrolling, and complicate code review. Keep source lines within a configurable limit (typically 120 characters) by breaking statements and using expression-based ABAP.",
+    "description": "Method name overwrites built-in SAP function",
+    "rationale": "Naming a method after a built-in ABAP function (e.g., LINES, STRLEN, MATCHES, XSDBOOL) obscures the standard SAP built-in and makes expressions ambiguous and difficult to read.",
     "hasQuickfix": false,
-    "attributes": [
-      {
-        "name": "MAX_LENGTH",
-        "kind": "Integer",
-        "defaultValue": "120"
-      }
-    ],
+    "attributes": [],
     "defaultParameters": [],
-    "nonCompliantCode": "DATA lv_extremely_long_variable_name_created_specifically_to_exceed_the_maximum_allowed_line_length_of_one_hundred_twenty_chars TYPE i.",
-    "compliantCode": "DATA lv_compact_name TYPE i."
-  },
-  {
-    "ruleId": "prefer-naming",
-    "title": "Enforce Naming Conventions",
-    "className": "ZCL_SKYLINT_PREF_NAMING",
-    "checkName": "ZSKYLINT_PREF_NAMING",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "NAMING",
-    "severity": "warning",
-    "findingCode": "ATTR_NAME",
-    "findingTexts": [
-      "Class attribute name does not match configured pattern",
-      "Method parameter name does not match configured pattern",
-      "Local variable name does not match configured pattern",
-      "Local class name does not match configured pattern",
-      "Global class name does not match configured pattern",
-      "Selection screen element name does not match configured pattern",
-      "Type name does not match configured pattern",
-      "Macro name does not match configured pattern",
-      "Form routine name does not match configured pattern",
-      "Function module name does not match configured pattern",
-      "Local interface name does not match configured pattern",
-      "Global interface name does not match configured pattern",
-      "Event or event handler name does not match configured pattern",
-      "Test method name does not match configured pattern",
-      "Program name does not match configured pattern",
-      "Function group name does not match configured pattern"
-    ],
-    "description": "Standard Naming Conventions",
-    "rationale": "Consistent naming conventions (prefixes for variables, parameters, types, etc.) make code self-documenting and easier to navigate. Configure patterns per scope to enforce team standards automatically.",
-    "hasQuickfix": false,
-    "attributes": [
-      {
-        "name": "ATTR_IGN_EXC",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "ATTR_IGN_LOCAL",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "ATTR_IGN_INTF",
-        "kind": "Boolean",
-        "defaultValue": "false"
-      },
-      {
-        "name": "ATTR_STATICS",
-        "kind": "String",
-        "defaultValue": "'^G._.+$'"
-      },
-      {
-        "name": "ATTR_INSTANCE",
-        "kind": "String",
-        "defaultValue": "'^M._.+$'"
-      },
-      {
-        "name": "ATTR_CONSTANTS",
-        "kind": "String",
-        "defaultValue": "''"
-      },
-      {
-        "name": "PARAM_IGN_EXC",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "PARAM_IMPORTING",
-        "kind": "String",
-        "defaultValue": "'^I._.+$'"
-      },
-      {
-        "name": "PARAM_RETURNING",
-        "kind": "String",
-        "defaultValue": "'^R._.+$'"
-      },
-      {
-        "name": "PARAM_CHANGING",
-        "kind": "String",
-        "defaultValue": "'^C._.+$'"
-      },
-      {
-        "name": "PARAM_EXPORTING",
-        "kind": "String",
-        "defaultValue": "'^E._.+$'"
-      },
-      {
-        "name": "LOCAL_DATA",
-        "kind": "String",
-        "defaultValue": "'^L._.+$'"
-      },
-      {
-        "name": "LOCAL_CONST",
-        "kind": "String",
-        "defaultValue": "'^LC_.+$'"
-      },
-      {
-        "name": "LOCAL_FS",
-        "kind": "String",
-        "defaultValue": "'^<L._.+>$'"
-      },
-      {
-        "name": "LOCAL_STATICS",
-        "kind": "String",
-        "defaultValue": "'^S._.+$'"
-      },
-      {
-        "name": "CLASS_LOCAL",
-        "kind": "String",
-        "defaultValue": "'^LC(L|X)_.+$'"
-      },
-      {
-        "name": "CLASS_TEST",
-        "kind": "String",
-        "defaultValue": "'^LTCL_.+$'"
-      },
-      {
-        "name": "CLASS_GLOBAL",
-        "kind": "String",
-        "defaultValue": "'^ZC(L|X)_.+$'"
-      },
-      {
-        "name": "SSCR_PARAM",
-        "kind": "String",
-        "defaultValue": "'^P_.+$'"
-      },
-      {
-        "name": "SSCR_SELOPT",
-        "kind": "String",
-        "defaultValue": "'^S_.+$'"
-      },
-      {
-        "name": "TYPES_PATTERN",
-        "kind": "String",
-        "defaultValue": "'^TY_.+$'"
-      },
-      {
-        "name": "MACRO_PATTERN",
-        "kind": "String",
-        "defaultValue": "'^_.+$'"
-      },
-      {
-        "name": "FORM_PATTERN",
-        "kind": "String",
-        "defaultValue": "'^F_.+$'"
-      },
-      {
-        "name": "FUNCTION_PATTERN",
-        "kind": "String",
-        "defaultValue": "'^Z.*$'"
-      },
-      {
-        "name": "INTF_LOCAL",
-        "kind": "String",
-        "defaultValue": "'^LIF_.+$'"
-      },
-      {
-        "name": "INTF_GLOBAL",
-        "kind": "String",
-        "defaultValue": "'^ZIF_.+$'"
-      },
-      {
-        "name": "EVENT_NAME",
-        "kind": "String",
-        "defaultValue": "'^[A-Z][A-Z0-9_]+$'"
-      },
-      {
-        "name": "EVENT_HANDLER",
-        "kind": "String",
-        "defaultValue": "'^ON_.+$'"
-      },
-      {
-        "name": "TEST_METHOD",
-        "kind": "String",
-        "defaultValue": "'^(TEST|SHOULD)_.+$'"
-      },
-      {
-        "name": "PROG_PATTERN",
-        "kind": "String",
-        "defaultValue": "'^Z.+$'"
-      },
-      {
-        "name": "FUGR_PATTERN",
-        "kind": "String",
-        "defaultValue": "'^Z.+$'"
-      }
-    ],
-    "defaultParameters": [],
-    "nonCompliantCode": "DATA foo TYPE i.",
-    "compliantCode": "DATA lv_foo TYPE i."
+    "nonCompliantCode": "METHODS matches RETURNING VALUE(rv_res) TYPE abap_bool.",
+    "compliantCode": "METHODS do_match RETURNING VALUE(rv_res) TYPE abap_bool."
   }
 ]

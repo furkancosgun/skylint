@@ -1,3 +1,5 @@
+import { Lexer} from '../../lib/ast.mjs';
+
 function escapeHtml(s) {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
@@ -155,40 +157,39 @@ const ABAP_KEYWORDS = new Set(
     .filter((k) => !EXCLUDE_FROM_KEYWORDS.has(k))
 );
 
+function classify(lexeme) {
+  const up = (lexeme || '').toUpperCase();
+  if (up.startsWith('"') || up.startsWith('*')) return 'abap-cmt';
+  if (up.startsWith("'") || up.startsWith('`') || up.startsWith('|')) return 'abap-id';
+  if (ABAP_KEYWORDS.has(up)) return 'abap-kw';
+  // fallback keyword check via a larger set is done by membership in the runtime Lexer? keep simple
+  return 'abap-id';
+}
+
 export function highlightAbap(code) {
   if (!code) return '';
-  return code.split('\n').map((line) => {
-    // Whole-line comment (* at start of line)
-    if (/^\s*\*/.test(line)) {
-      return `<span class="abap-cmt">${escapeHtml(line)}</span>`;
-    }
-
-    // Match comments ("), string literals, numbers, words/identifiers, operators, whitespace
-    const regex = /(".*$)|('(?:''|[^'])*'|`[^`]*`|\|(?:[^\\|]|\\[\s\S])*\|)|(\b\d+\b)|([a-zA-Z_][a-zA-Z0-9_]*(?:-(?!>)[a-zA-Z0-9_]+)*)|(->|=>|\?=|<=|>=|<>|&&|[=+\-*/<>():.,])|(\s+)|(.)/g;
+  const tokens = new Lexer(code).run();
+  const byLine = new Map();
+  for (const t of tokens) {
+    const line = t.position.line;
+    if (!byLine.has(line)) byLine.set(line, []);
+    byLine.get(line).push(t);
+  }
+  const lines = code.split('\n');
+  return lines.map((line, idx) => {
+    const lineTokens = (byLine.get(idx + 1) || []).slice().sort((a, b) => a.position.column - b.position.column);
     let out = '';
-    let m;
-    while ((m = regex.exec(line)) !== null) {
-      const [full, comment, str, num, word, op, ws, other] = m;
-      if (comment) {
-        out += `<span class="abap-cmt">${escapeHtml(comment)}</span>`;
-      } else if (word) {
-        if (ABAP_KEYWORDS.has(word.toUpperCase())) {
-          out += `<span class="abap-kw">${escapeHtml(word)}</span>`;
-        } else {
-          out += `<span class="abap-id">${escapeHtml(word)}</span>`;
-        }
-      } else if (str) {
-        out += `<span class="abap-id">${escapeHtml(str)}</span>`;
-      } else if (num) {
-        out += `<span class="abap-id">${num}</span>`;
-      } else if (op) {
-        out += `<span class="abap-id">${escapeHtml(op)}</span>`;
-      } else if (ws) {
-        out += ws;
-      } else if (other) {
-        out += `<span class="abap-id">${escapeHtml(other)}</span>`;
-      }
+    let pos = 0;
+    for (const t of lineTokens) {
+      const col = t.position.column;
+      if (col > pos) out += escapeHtml(line.slice(pos, col));
+      const len = t.lexeme.length;
+      const end = Math.min(col + len, line.length);
+      const cls = classify(t.lexeme);
+      out += `<span class="${cls}">${escapeHtml(line.slice(col, end))}</span>`;
+      pos = end;
     }
+    if (pos < line.length) out += escapeHtml(line.slice(pos));
     return out;
   }).join('\n');
 }

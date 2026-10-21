@@ -9,3 +9,6 @@ node_modules/
 docs/.vitepress/dist/
 docs/.vitepress/cache/
 deps/open-abap-core/
+
+# generated
+lib/checks-registry.mjs

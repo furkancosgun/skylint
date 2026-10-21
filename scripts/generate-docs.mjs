@@ -3,6 +3,7 @@ import path from 'node:path';
 import { execSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { RULES, CATEGORIES } from './rules-data.mjs';
+import { extractAttributes } from './check-metadata.mjs';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -57,41 +58,6 @@ function extractSnippet(lines, methodName) {
   return buffer.map((l) => (l.length >= minIndent ? l.slice(minIndent) : l)).join('\n').trim();
 }
 
-function extractAttributes(content) {
-  const attrBlockMatch = content.match(/attributes\s*=\s*VALUE\s*#\(([\s\S]*?)\)\s*\)\s*\./);
-  if (!attrBlockMatch) return [];
-  const block = attrBlockMatch[1];
-  const defaultKindMatch = block.match(/kind\s*=\s*if_ci_atc_check_meta_data=>attribute_kinds-([a-z]+)/);
-  const defaultKind = defaultKindMatch ? defaultKindMatch[1] : 'elementary';
-
-  const results = [];
-  const entries = [...block.matchAll(/\(\s*name\s*=\s*'([A-Za-z0-9_]+)'[\s\S]*?value\s*=\s*REF\s*#\(\s*([a-zA-Z0-9_]+)\s*\)/g)];
-  for (const e of entries) {
-    const name = e[1];
-    const varName = e[2];
-    const kindMatch = e[0].match(/kind\s*=\s*if_ci_atc_check_meta_data=>attribute_kinds-([a-z]+)/);
-    const kind = kindMatch ? kindMatch[1] : defaultKind;
-    const valRegex = new RegExp(`DATA\\s+${varName}\\s+TYPE\\s+\\S+\\s+VALUE\\s+('.*?'|[^.\\n\\r]+)\\.`, 'i');
-    const valM = content.match(valRegex);
-    let defVal = valM ? valM[1].trim() : '';
-    if (defVal.toLowerCase() === 'abap_true') defVal = 'true';
-    if (defVal.toLowerCase() === 'abap_false') defVal = 'false';
-
-    let resolvedKind = 'String';
-    if (kind === 'boolean') {
-      resolvedKind = 'Boolean';
-    } else if (/^\d+$/.test(defVal)) {
-      resolvedKind = 'Integer';
-    }
-
-    results.push({
-      name,
-      kind: resolvedKind,
-      defaultValue: defVal,
-    });
-  }
-  return results;
-}
 
 function buildDiffSnippet(bad, good) {
   if (!bad || !good) return '';

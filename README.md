@@ -55,100 +55,100 @@ All Clean ABAP, security, and cloud-native rules implemented in Skylint:
 | Rule ID | ABAP Class | Description | Pseudo-Comment | QuickFix |
 |---|---|---|:---:|:---:|
 | `prefer-lines` | [ZCL_SKYLINT_PREF_LINES](src/checks/zcl_skylint_pref_lines.clas.abap) | Prefer lines( ) over DESCRIBE TABLE ... LINES | `"#EC LINES"` | ⚡ Ready |
-| `no-call-method` | [ZCL_SKYLINT_NO_CALL_METHOD](src/checks/zcl_skylint_no_call_method.clas.abap) | Avoid static CALL METHOD statements | `"#EC CALL_METH"` | ⚡ Ready |
-| `no-default-key` | [ZCL_SKYLINT_NO_DEFAULT_KEY](src/checks/zcl_skylint_no_default_key.clas.abap) | Avoid WITH DEFAULT KEY; prefer EMPTY KEY or explicit keys | `"#EC DEFAULT_KEY"` | ⚡ Ready |
 | `prefer-is-not` | [ZCL_SKYLINT_PREF_IS_NOT](src/checks/zcl_skylint_pref_is_not.clas.abap) | Prefer IS NOT over NOT ... IS | `"#EC IS_NOT"` | ⚡ Ready |
-| `no-me-reference` | [ZCL_SKYLINT_NO_ME_REFERENCE](src/checks/zcl_skylint_no_me_reference.clas.abap) | Avoid self-reference ME-> | `"#EC ME"` | — |
-| `no-redundant-method-call` | [ZCL_SKYLINT_NO_REDUNDANT_CALL](src/checks/zcl_skylint_no_redundant_call.clas.abap) | Omit redundant EXPORTING and RECEIVING in method calls | `"#EC EXPORTING"` | ⚡ Ready |
-| `no-chained-statements` | [ZCL_SKYLINT_NO_CHAINED_STMT](src/checks/zcl_skylint_no_chained_stmt.clas.abap) | Avoid chained declarations and chained assignments | `"#EC CHAIN_DECL"` | ⚡ Ready |
 | `prefer-string-template` | [ZCL_SKYLINT_PREF_STR_TMPL](src/checks/zcl_skylint_pref_str_tmpl.clas.abap) | Prefer string templates over CONCATENATE | `"#EC STR_TMPL"` | ⚡ Ready |
-| `no-boolean-comparison` | [ZCL_SKYLINT_NO_BOOL_COMPARE](src/checks/zcl_skylint_no_bool_compare.clas.abap) | Avoid comparing boolean method calls to boolean literals | `"#EC BOOL_COMPARE"` | ⚡ Ready |
-| `prefer-line-exists` | [ZCL_SKYLINT_PREF_LINE_EXISTS](src/checks/zcl_skylint_pref_line_exists.clas.abap) | Prefer line_exists( ) over READ TABLE with NO FIELDS | `"#EC LINE_EXISTS"` | — |
+| `prefer-line-exists` | [ZCL_SKYLINT_PREF_LINE_EXISTS](src/checks/zcl_skylint_pref_line_exists.clas.abap) | Prefer line_exists( ) over READ TABLE with NO FIELDS | `"#EC LINE_EXISTS"` | ✗ |
 | `prefer-return` | [ZCL_SKYLINT_PREF_RETURN](src/checks/zcl_skylint_pref_return.clas.abap) | Prefer RETURN over EXIT outside loop constructs | `"#EC RETURN"` | ⚡ Ready |
-| `no-check-statement` | [ZCL_SKYLINT_NO_CHECK_STMT](src/checks/zcl_skylint_no_check_stmt.clas.abap) | Avoid CHECK statements; prefer IF with RETURN or CONTINUE | `"#EC CHECK_STMT"` | ⚡ Ready |
-| `no-empty-block` | [ZCL_SKYLINT_NO_EMPTY_BLOCK](src/checks/zcl_skylint_no_empty_block.clas.abap) | Avoid empty control blocks (IF, CASE, LOOP, TRY, etc.) | `"#EC EMPTY_BLOCK"` | — |
-| `no-duplicate-conditions` | [ZCL_SKYLINT_NO_DUP_COND](src/checks/zcl_skylint_no_dup_cond.clas.abap) | Avoid duplicate branch conditions in IF and CASE | `"#EC DUP_COND"` | — |
-| `prefer-merged-ifs` | [ZCL_SKYLINT_PREF_MERGE_IFS](src/checks/zcl_skylint_pref_merge_ifs.clas.abap) | Merge consecutive nested IF blocks using boolean AND | `"#EC MERGE_IFS"` | — |
-| `no-unreachable-code` | [ZCL_SKYLINT_NO_UNREACHABLE](src/checks/zcl_skylint_no_unreachable.clas.abap) | Detect unreachable code after jump or exit statements | `"#EC UNREACHABLE"` | ⚡ Ready |
-| `no-single-when` | [ZCL_SKYLINT_NO_SINGLE_WHEN](src/checks/zcl_skylint_no_single_when.clas.abap) | Avoid CASE statements with only one WHEN branch | `"#EC SINGLE_WHEN"` | — |
-| `no-yoda-conditions` | [ZCL_SKYLINT_NO_YODA_COND](src/checks/zcl_skylint_no_yoda_cond.clas.abap) | Avoid Yoda conditions in comparison expressions | `"#EC YODA_COND"` | ⚡ Ready |
+| `prefer-merged-ifs` | [ZCL_SKYLINT_PREF_MERGE_IFS](src/checks/zcl_skylint_pref_merge_ifs.clas.abap) | Merge consecutive nested IF blocks using boolean AND | `"#EC MERGE_IFS"` | ✗ |
 | `prefer-symbol-operators` | [ZCL_SKYLINT_PREF_SYMBOL_OP](src/checks/zcl_skylint_pref_symbol_op.clas.abap) | Prefer symbolic operators over textual EQ, NE, LT, GT | `"#EC SYMBOL_OP"` | ⚡ Ready |
 | `prefer-new-operator` | [ZCL_SKYLINT_PREF_NEW_OP](src/checks/zcl_skylint_pref_new_op.clas.abap) | Prefer NEW operator over CREATE OBJECT and RAISE EXCEPTION | `"#EC NEW_OP"` | ⚡ Ready |
 | `prefer-xsdbool` | [ZCL_SKYLINT_PREF_XSDBOOL](src/checks/zcl_skylint_pref_xsdbool.clas.abap) | Prefer xsdbool( ) expression over manual IF-ELSE assignment | `"#EC XSDBOOL"` | ⚡ Ready |
-| `no-static-via-instance` | [ZCL_SKYLINT_NO_STATIC_ARROW](src/checks/zcl_skylint_no_static_arrow.clas.abap) | Avoid calling static methods via instance arrow (->) | `"#EC STATIC_ARROW"` | ⚡ Ready |
-| `no-public-attributes` | [ZCL_SKYLINT_NO_PUBLIC_ATTR](src/checks/zcl_skylint_no_public_attr.clas.abap) | Avoid mutable public attributes in classes | `"#EC PUBLIC_ATTR"` | — |
-| `no-obsolete-statements` | [ZCL_SKYLINT_NO_OBSOLETE](src/checks/zcl_skylint_no_obsolete.clas.abap) | Avoid obsolete statements (MOVE, REFRESH, FORM, etc.) | `"#EC OBSOLETE"` | ⚡ Ready |
-| `no-list-processing` | [ZCL_SKYLINT_NO_LIST_PROC](src/checks/zcl_skylint_no_list_proc.clas.abap) | Prohibit classic list processing statements | `"#EC LIST_PROC"` | — |
-| `max-params` | [ZCL_SKYLINT_MAX_PARAMS](src/checks/zcl_skylint_max_params.clas.abap) | Method signature cleanliness (excessive parameter count) | `"#EC MAX_PARAMS"` | — |
-| `no-db-in-loop` | [ZCL_SKYLINT_NO_DB_IN_LOOP](src/checks/zcl_skylint_no_db_in_loop.clas.abap) | Avoid database access inside loop iterations | `"#EC DB_IN_LOOP"` | — |
-| `no-empty-fae` | [ZCL_SKYLINT_NO_EMPTY_FAE](src/checks/zcl_skylint_no_empty_fae.clas.abap) | Unsecure FOR ALL ENTRIES (Missing empty itab check) | `"#EC EMPTY_FAE"` | ⚡ Ready |
-| `no-select-star` | [ZCL_SKYLINT_NO_SELECT_STAR](src/checks/zcl_skylint_no_select_star.clas.abap) | Select performance (Avoid SELECT * and SELECT ... ENDSELECT) | `"#EC SELECT_STAR"` | — |
-| `no-scope-leak` | [ZCL_SKYLINT_NO_SCOPE_LEAK](src/checks/zcl_skylint_no_scope_leak.clas.abap) | Avoid variable usage outside its declaring control block | `"#EC SCOPE_LEAK"` | — |
-| `no-self-assignment` | [ZCL_SKYLINT_NO_SELF_ASSIGN](src/checks/zcl_skylint_no_self_assign.clas.abap) | Detect Identical Self Assignments | `"#EC SELF_ASSIGN"` | ⚡ Ready |
-| `prefer-fully-typed` | [ZCL_SKYLINT_PREF_FULL_TYPED](src/checks/zcl_skylint_pref_full_typed.clas.abap) | Enforce fully typed constant declarations | `"#EC FULL_TYPED"` | — |
+| `prefer-fully-typed` | [ZCL_SKYLINT_PREF_FULL_TYPED](src/checks/zcl_skylint_pref_full_typed.clas.abap) | Enforce fully typed constant declarations | `"#EC FULL_TYPED"` | ✗ |
 | `prefer-corresponding` | [ZCL_SKYLINT_PREF_CORRESP](src/checks/zcl_skylint_pref_corresp.clas.abap) | Prefer CORRESPONDING Expression over MOVE-CORRESPONDING | `"#EC CORRESP"` | ⚡ Ready |
-| `max-method-length` | [ZCL_SKYLINT_MAX_METHOD_LEN](src/checks/zcl_skylint_max_method_len.clas.abap) | Method Length Limit (excessive statement count) | `"#EC METHOD_LEN"` | — |
-| `max-nesting-depth` | [ZCL_SKYLINT_MAX_NESTING](src/checks/zcl_skylint_max_nesting.clas.abap) | Nesting Depth Limit (excessive control block nesting) | `"#EC NESTING"` | — |
-| `no-sy-modify` | [ZCL_SKYLINT_NO_SY_MODIFY](src/checks/zcl_skylint_no_sy_modify.clas.abap) | Avoid sy-* System Variable Modification | `"#EC SY_MODIFY"` | — |
-| `prefer-returning` | [ZCL_SKYLINT_PREF_RETURNING](src/checks/zcl_skylint_pref_returning.clas.abap) | Prefer RETURNING over single EXPORTING | `"#EC RETURNING"` | — |
-| `prefer-class-exceptions` | [ZCL_SKYLINT_PREF_CLASS_EXC](src/checks/zcl_skylint_pref_class_exc.clas.abap) | Prefer Class-Based Exceptions over Classic EXCEPTIONS | `"#EC CLASS_EXC"` | — |
-| `no-dangerous-statements` | [ZCL_SKYLINT_NO_DANGEROUS_STMT](src/checks/zcl_skylint_no_dangerous_stmt.clas.abap) | Dangerous Statements (abaplint dangerous_statement) | `"#EC DANGEROUS_STMT"` | — |
-| `prefer-auth-check` | [ZCL_SKYLINT_PREF_AUTH_CHECK](src/checks/zcl_skylint_pref_auth_check.clas.abap) | Call Transaction Authority Check | `"#EC AUTH_CHECK"` | ⚡ Ready |
-| `prefer-order-by` | [ZCL_SKYLINT_PREF_ORDER_BY](src/checks/zcl_skylint_pref_order_by.clas.abap) | SELECT UP TO 1 ROWS requires ORDER BY | `"#EC ORDER_BY"` | — |
-| `max-cyclomatic-complexity` | [ZCL_SKYLINT_MAX_CYCLO_COMP](src/checks/zcl_skylint_max_cyclo_comp.clas.abap) | Cyclomatic Complexity Threshold | `"#EC CYCLO_COMP"` | — |
+| `prefer-returning` | [ZCL_SKYLINT_PREF_RETURNING](src/checks/zcl_skylint_pref_returning.clas.abap) | Prefer RETURNING over single EXPORTING | `"#EC RETURNING"` | ✗ |
+| `prefer-class-exceptions` | [ZCL_SKYLINT_PREF_CLASS_EXC](src/checks/zcl_skylint_pref_class_exc.clas.abap) | Prefer Class-Based Exceptions over Classic EXCEPTIONS | `"#EC CLASS_EXC"` | ✗ |
 | `prefer-final-class` | [ZCL_SKYLINT_PREF_FINAL_CLS](src/checks/zcl_skylint_pref_final_cls.clas.abap) | Prefer FINAL classes and methods by default | `"#EC FINAL_CLS"` | ⚡ Ready |
-| `no-magic-numbers` | [ZCL_SKYLINT_NO_MAGIC_NUMBERS](src/checks/zcl_skylint_no_magic_numbers.clas.abap) | Avoid magic numbers in code; use named constants | `"#EC MAGIC_NUMBERS"` | — |
 | `prefer-insert-into` | [ZCL_SKYLINT_PREF_INSERT](src/checks/zcl_skylint_pref_insert.clas.abap) | Prefer INSERT ... INTO TABLE over APPEND for table safety | `"#EC INSERT_INTO"` | ⚡ Ready |
-| `no-like-objects` | [ZCL_SKYLINT_NO_LIKE_OBJECTS](src/checks/zcl_skylint_no_like_objects.clas.abap) | Avoid LIKE referencing data objects; use explicit TYPE | `"#EC LIKE_OBJECTS"` | — |
-| `max-constructor-statements` | [ZCL_SKYLINT_MAX_CTOR_STMTS](src/checks/zcl_skylint_max_ctor_stmts.clas.abap) | Keep constructors clean; avoid heavy logic and DB | `"#EC CLEAN_CTOR"` | — |
-| `no-static-classes` | [ZCL_SKYLINT_NO_STATIC_CLS](src/checks/zcl_skylint_no_static_cls.clas.abap) | Avoid static-only classes; use instantiable classes | `"#EC STATIC_CLS"` | — |
-| `prefer-predicate-names` | [ZCL_SKYLINT_PREF_PRED_NAME](src/checks/zcl_skylint_pref_pred_name.clas.abap) | Enforce predicate naming (IS_, HAS_) on boolean methods | `"#EC PRED_NAME"` | — |
-| `max-inheritance-depth` | [ZCL_SKYLINT_MAX_INHERIT](src/checks/zcl_skylint_max_inherit.clas.abap) | Avoid deep class inheritance hierarchies | `"#EC INHERIT_DEPTH"` | — |
-| `max-attributes` | [ZCL_SKYLINT_MAX_ATTRIBUTES](src/checks/zcl_skylint_max_attributes.clas.abap) | Limit class member attributes to prevent God Classes | `"#EC ATTRIBUTES"` | — |
-| `no-interface-data` | [ZCL_SKYLINT_NO_INTF_DATA](src/checks/zcl_skylint_no_intf_data.clas.abap) | Avoid mutable DATA in interfaces; allow only CONSTANTS | `"#EC INTF_DATA"` | — |
-| `no-catch-cx-root` | [ZCL_SKYLINT_NO_CATCH_ROOT](src/checks/zcl_skylint_no_catch_root.clas.abap) | Catch specific exceptions instead of generic cx_root | `"#EC CATCH_ROOT"` | — |
-| `no-message-raising` | [ZCL_SKYLINT_NO_MSG_RAISING](src/checks/zcl_skylint_no_msg_raising.clas.abap) | Avoid MESSAGE ... RAISING; use class-based exceptions | `"#EC MSG_RAISING"` | — |
-| `no-nested-try` | [ZCL_SKYLINT_NO_NESTED_TRY](src/checks/zcl_skylint_no_nested_try.clas.abap) | Avoid nested TRY blocks; extract to helper methods | `"#EC NESTED_TRY"` | — |
-| `no-raise-cx-sy` | [ZCL_SKYLINT_NO_RAISE_CX_SY](src/checks/zcl_skylint_no_raise_cx_sy.clas.abap) | Avoid raising SAP internal system exceptions (cx_sy_*) | `"#EC RAISE_CX_SY"` | — |
-| `prefer-subrc-check` | [ZCL_SKYLINT_PREF_CHECK_SUBRC](src/checks/zcl_skylint_pref_check_subrc.clas.abap) | Check sy-subrc after DB, table and string operations | `"#EC CHECK_SUBRC"` | — |
-| `no-client-specified` | [ZCL_SKYLINT_NO_CLIENT_SPEC](src/checks/zcl_skylint_no_client_spec.clas.abap) | Avoid USING CLIENT or CLIENT SPECIFIED in ABAP SQL | `"#EC CLIENT_SPEC"` | ⚡ Ready |
-| `no-commit-work` | [ZCL_SKYLINT_NO_COMMIT_WORK](src/checks/zcl_skylint_no_commit_work.clas.abap) | Avoid COMMIT and ROLLBACK in application logic | `"#EC COMMIT_WORK"` | — |
-| `prefer-transporting` | [ZCL_SKYLINT_PREF_TRANSPORT](src/checks/zcl_skylint_pref_transport.clas.abap) | Avoid MODIFY itab in LOOP without TRANSPORTING clause | `"#EC TRANSPORTING"` | — |
+| `max-constructor-statements` | [ZCL_SKYLINT_MAX_CTOR_STMTS](src/checks/zcl_skylint_max_ctor_stmts.clas.abap) | Keep constructors clean; avoid heavy logic and DB | `"#EC CLEAN_CTOR"` | ✗ |
+| `no-static-classes` | [ZCL_SKYLINT_NO_STATIC_CLS](src/checks/zcl_skylint_no_static_cls.clas.abap) | Avoid static-only classes; use instantiable classes | `"#EC STATIC_CLS"` | ✗ |
+| `prefer-predicate-names` | [ZCL_SKYLINT_PREF_PRED_NAME](src/checks/zcl_skylint_pref_pred_name.clas.abap) | Enforce predicate naming (IS_, HAS_) on boolean methods | `"#EC PRED_NAME"` | ✗ |
+| `no-nested-try` | [ZCL_SKYLINT_NO_NESTED_TRY](src/checks/zcl_skylint_no_nested_try.clas.abap) | Avoid nested TRY blocks; extract to helper methods | `"#EC NESTED_TRY"` | ✗ |
 | `prefer-string-functions` | [ZCL_SKYLINT_PREF_STR_FUNC](src/checks/zcl_skylint_pref_str_func.clas.abap) | Detect obsolete string statements; prefer built-in functions | `"#EC STR_FUNC"` | ⚡ Ready |
 | `prefer-calc-assign-op` | [ZCL_SKYLINT_PREF_CALC_OP](src/checks/zcl_skylint_pref_calc_op.clas.abap) | Prefer calculation assignment operators (+=, -=, *=, /=) | `"#EC CALC_ASSIGN"` | ⚡ Ready |
-| `prefer-early-return` | [ZCL_SKYLINT_PREF_EARLY_RET](src/checks/zcl_skylint_pref_early_ret.clas.abap) | Prefer early return or continue over nested IF blocks | `"#EC EARLY_RETURN"` | — |
-| `no-unused-variables` | [ZCL_SKYLINT_NO_UNUSED_VARS](src/checks/zcl_skylint_no_unused_vars.clas.abap) | Detect unused local variables and field symbols | `"#EC NEEDED"` | — |
-| `prefer-decl-order` | [ZCL_SKYLINT_PREF_DECL_ORDER](src/checks/zcl_skylint_pref_decl_order.clas.abap) | Enforce declaration order (TYPES, CONSTANTS, DATA, FS) | `"#EC DECL_ORDER"` | — |
+| `prefer-early-return` | [ZCL_SKYLINT_PREF_EARLY_RET](src/checks/zcl_skylint_pref_early_ret.clas.abap) | Prefer early return or continue over nested IF blocks | `"#EC EARLY_RETURN"` | ✗ |
+| `prefer-decl-order` | [ZCL_SKYLINT_PREF_DECL_ORDER](src/checks/zcl_skylint_pref_decl_order.clas.abap) | Enforce declaration order (TYPES, CONSTANTS, DATA, FS) | `"#EC DECL_ORDER"` | ✗ |
 | `no-param-escape` | [ZCL_SKYLINT_NO_PARAM_ESCAPE](src/checks/zcl_skylint_no_param_escape.clas.abap) | Avoid unnecessary parameter escape (!param) | `"#EC PARAM_ESCAPE"` | ⚡ Ready |
-| `prefer-case` | [ZCL_SKYLINT_PREF_CASE](src/checks/zcl_skylint_pref_case.clas.abap) | Use CASE instead of IF when checking multiple values | `"#EC PREF_CASE"` | — |
-| `no-inline-length` | [ZCL_SKYLINT_NO_INLINE_LEN](src/checks/zcl_skylint_no_inline_len.clas.abap) | Avoid inline length specification in declarations | `"#EC PAREN_LEN"` | ⚡ Ready |
-| `max-one-statement` | [ZCL_SKYLINT_MAX_ONE_STMT](src/checks/zcl_skylint_max_one_stmt.clas.abap) | Max One Statement Per Line | `"#EC ONE_STMT"` | — |
-| `no-dash-in-names` | [ZCL_SKYLINT_NO_DASH_IN_NAMES](src/checks/zcl_skylint_no_dash_in_names.clas.abap) | No Dashes in Variable and Form Names | `"#EC NO_DASH"` | — |
-| `prefer-inline` | [ZCL_SKYLINT_PREF_INLINE](src/checks/zcl_skylint_pref_inline.clas.abap) | Prefer Inline Declarations | `"#EC PREFER_INLINE"` | — |
+| `prefer-case` | [ZCL_SKYLINT_PREF_CASE](src/checks/zcl_skylint_pref_case.clas.abap) | Use CASE instead of IF when checking multiple values | `"#EC PREF_CASE"` | ✗ |
+| `max-one-statement` | [ZCL_SKYLINT_MAX_ONE_STMT](src/checks/zcl_skylint_max_one_stmt.clas.abap) | Max One Statement Per Line | `"#EC ONE_STMT"` | ✗ |
+| `prefer-inline` | [ZCL_SKYLINT_PREF_INLINE](src/checks/zcl_skylint_pref_inline.clas.abap) | Prefer Inline Declarations | `"#EC PREFER_INLINE"` | ✗ |
 | `prefer-final-data` | [ZCL_SKYLINT_PREF_FINAL_DATA](src/checks/zcl_skylint_pref_final_data.clas.abap) | Declare inline variables as FINAL when never written again | `"#EC PREF_FINAL"` | ⚡ Ready |
-| `no-friends` | [ZCL_SKYLINT_NO_FRIENDS](src/checks/zcl_skylint_no_friends.clas.abap) | Avoid FRIENDS in class definitions | `"#EC FRIENDS"` | — |
-| `prefer-message-class` | [ZCL_SKYLINT_PREF_MSG_CLS](src/checks/zcl_skylint_pref_msg_cls.clas.abap) | Use a message class instead of inline message text | `"#EC MSG_CLASS"` | — |
+| `prefer-message-class` | [ZCL_SKYLINT_PREF_MSG_CLS](src/checks/zcl_skylint_pref_msg_cls.clas.abap) | Use a message class instead of inline message text | `"#EC MSG_CLASS"` | ✗ |
 | `prefer-inline-cast` | [ZCL_SKYLINT_PREF_INL_CAST](src/checks/zcl_skylint_pref_inl_cast.clas.abap) | Inline a CAST helper that is only read once | `"#EC INLINE_CAST"` | ⚡ Ready |
-| `no-exception-overlap` | [ZCL_SKYLINT_NO_EXC_OVERLAP](src/checks/zcl_skylint_no_exc_overlap.clas.abap) | Classic EXCEPTIONS must not overlap | `"#EC EXC_OVERLAP"` | — |
-| `no-rfc-error-handling` | [ZCL_SKYLINT_NO_RFC_ERR](src/checks/zcl_skylint_no_rfc_err.clas.abap) | RFC calls must handle system failures | `"#EC RFC_ERR"` | — |
-| `no-many-parentheses` | [ZCL_SKYLINT_NO_MANY_PARENS](src/checks/zcl_skylint_no_many_parens.clas.abap) | Remove redundant parentheses | `"#EC MANY_PARENS"` | ⚡ Ready |
-| `prefer-pass-by-reference` | [ZCL_SKYLINT_PREF_PASS_BY_REF](src/checks/zcl_skylint_pref_pass_by_ref.clas.abap) | Slow Parameter Passing | `"#EC SLOW_PARAM"` | — |
-| `no-modify-standard-tables` | [ZCL_SKYLINT_NO_MOD_STD_TABLE](src/checks/zcl_skylint_no_mod_std_table.clas.abap) | Modify Only Own Database Tables | `"#EC OWN_TABLES"` | — |
-| `no-dynamic-stuff` | [ZCL_SKYLINT_NO_DYNAMIC_STMT](src/checks/zcl_skylint_no_dynamic_stmt.clas.abap) | No Dynamic Constructs (CALL, ASSIGN, CREATE, etc.) | `"#EC NO_DYNAMIC"` | — |
-| `prefer-public-constructor` | [ZCL_SKYLINT_PREF_PUB_CTOR](src/checks/zcl_skylint_pref_pub_ctor.clas.abap) | Declare Constructor in PUBLIC SECTION | `"#EC PUB_CTOR"` | — |
-| `prefer-definitions-top` | [ZCL_SKYLINT_PREF_DEF_TOP](src/checks/zcl_skylint_pref_def_top.clas.abap) | Place definitions at beginning of routine | `"#EC DEF_TOP"` | — |
+| `prefer-public-constructor` | [ZCL_SKYLINT_PREF_PUB_CTOR](src/checks/zcl_skylint_pref_pub_ctor.clas.abap) | Declare Constructor in PUBLIC SECTION | `"#EC PUB_CTOR"` | ✗ |
+| `prefer-definitions-top` | [ZCL_SKYLINT_PREF_DEF_TOP](src/checks/zcl_skylint_pref_def_top.clas.abap) | Place definitions at beginning of routine | `"#EC DEF_TOP"` | ✗ |
 | `no-unnecessary-return` | [ZCL_SKYLINT_NO_UNNEC_RETURN](src/checks/zcl_skylint_no_unnec_return.clas.abap) | Omit unnecessary RETURN at end of routine | `"#EC NO_UNNEC_RETURN"` | ⚡ Ready |
-| `mix-returning` | [ZCL_SKYLINT_NO_MIX_RETURNING](src/checks/zcl_skylint_no_mix_returning.clas.abap) | Do not mix RETURNING with EXPORTING or CHANGING | `"#EC NO_MIX_RETURNING"` | — |
-| `method-overwrites-builtin` | [ZCL_SKYLINT_NO_OVERW_BUILTIN](src/checks/zcl_skylint_no_overw_builtin.clas.abap) | Method name overwrites built-in SAP function | `"#EC NO_OVERW_BUILTIN"` | — |
-| `max-one-method-parameter-per-line` | [ZCL_SKYLINT_MAX_PARAM_LINE](src/checks/zcl_skylint_max_param_line.clas.abap) | Max one method parameter definition per line | `"#EC MAX_PARAM_LINE"` | — |
+| `mix-returning` | [ZCL_SKYLINT_NO_MIX_RETURNING](src/checks/zcl_skylint_no_mix_returning.clas.abap) | Do not mix RETURNING with EXPORTING or CHANGING | `"#EC NO_MIX_RETURNING"` | ✗ |
+| `max-one-method-parameter-per-line` | [ZCL_SKYLINT_MAX_PARAM_LINE](src/checks/zcl_skylint_max_param_line.clas.abap) | Max one method parameter definition per line | `"#EC MAX_PARAM_LINE"` | ✗ |
 | `prefer-is-initial` | [ZCL_SKYLINT_PREF_IS_INITIAL](src/checks/zcl_skylint_pref_is_initial.clas.abap) | Prefer IS [NOT] INITIAL over lines( ) or empty literals | `"#EC PREF_INIT"` | ⚡ Ready |
-| `no-ignored-return-value` | [ZCL_SKYLINT_NO_IGNORED_RETURN](src/checks/zcl_skylint_no_ignored_return.clas.abap) | Disallow ignoring the return value of functional methods | `"#EC NO_IGNORED_RET"` | — |
 | `prefer-cast` | [ZCL_SKYLINT_PREF_CAST](src/checks/zcl_skylint_pref_cast.clas.abap) | Prefer modern CAST #( ) expression over ?= | `"#EC PREF_CAST"` | ⚡ Ready |
 | `no-redundant-clear` | [ZCL_SKYLINT_NO_REDUNDANT_CLEAR](src/checks/zcl_skylint_no_redundant_clear.clas.abap) | Do not CLEAR or FREE variables redundantly | `"#EC REDUNDANT_CLEAR"` | ⚡ Ready |
-| `no-modify-loop-table` | [ZCL_SKYLINT_NO_MOD_LOOP_TAB](src/checks/zcl_skylint_no_mod_loop_tab.clas.abap) | Avoid mutating or sorting tables inside loops | `"#EC LOOP_MODIFY"` | — |
-| `no-hardcoded-env-checks` | [ZCL_SKYLINT_NO_HARDCODED_ENV](src/checks/zcl_skylint_no_hardcoded_env.clas.abap) | Avoid reading environment system fields (sy-sysid, etc.) | `"#EC HARDCODED_ENV"` | — |
-| `max-line-length` | [ZCL_SKYLINT_MAX_LINE_LEN](src/checks/zcl_skylint_max_line_len.clas.abap) | Maximum Line Length | `"#EC LINE_LEN"` | — |
-| `prefer-naming` | [ZCL_SKYLINT_PREF_NAMING](src/checks/zcl_skylint_pref_naming.clas.abap) | Standard Naming Conventions | `"#EC NAMING"` | — |
+| `prefer-naming` | [ZCL_SKYLINT_PREF_NAMING](src/checks/zcl_skylint_pref_naming.clas.abap) | Standard Naming Conventions | `"#EC NAMING"` | ✗ |
+| `no-call-method` | [ZCL_SKYLINT_NO_CALL_METHOD](src/checks/zcl_skylint_no_call_method.clas.abap) | Avoid static CALL METHOD statements | `"#EC CALL_METH"` | ⚡ Ready |
+| `no-default-key` | [ZCL_SKYLINT_NO_DEFAULT_KEY](src/checks/zcl_skylint_no_default_key.clas.abap) | Avoid WITH DEFAULT KEY; prefer EMPTY KEY or explicit keys | `"#EC DEFAULT_KEY"` | ⚡ Ready |
+| `no-me-reference` | [ZCL_SKYLINT_NO_ME_REFERENCE](src/checks/zcl_skylint_no_me_reference.clas.abap) | Avoid self-reference ME-> | `"#EC ME"` | ✗ |
+| `no-redundant-method-call` | [ZCL_SKYLINT_NO_REDUNDANT_CALL](src/checks/zcl_skylint_no_redundant_call.clas.abap) | Omit redundant EXPORTING and RECEIVING in method calls | `"#EC EXPORTING"` | ⚡ Ready |
+| `no-chained-statements` | [ZCL_SKYLINT_NO_CHAINED_STMT](src/checks/zcl_skylint_no_chained_stmt.clas.abap) | Avoid chained declarations and chained assignments | `"#EC CHAIN_DECL"` | ⚡ Ready |
+| `no-boolean-comparison` | [ZCL_SKYLINT_NO_BOOL_COMPARE](src/checks/zcl_skylint_no_bool_compare.clas.abap) | Avoid comparing boolean method calls to boolean literals | `"#EC BOOL_COMPARE"` | ⚡ Ready |
+| `no-check-statement` | [ZCL_SKYLINT_NO_CHECK_STMT](src/checks/zcl_skylint_no_check_stmt.clas.abap) | Avoid CHECK statements; prefer IF with RETURN or CONTINUE | `"#EC CHECK_STMT"` | ⚡ Ready |
+| `no-empty-block` | [ZCL_SKYLINT_NO_EMPTY_BLOCK](src/checks/zcl_skylint_no_empty_block.clas.abap) | Avoid empty control blocks (IF, CASE, LOOP, TRY, etc.) | `"#EC EMPTY_BLOCK"` | ✗ |
+| `no-duplicate-conditions` | [ZCL_SKYLINT_NO_DUP_COND](src/checks/zcl_skylint_no_dup_cond.clas.abap) | Avoid duplicate branch conditions in IF and CASE | `"#EC DUP_COND"` | ✗ |
+| `no-unreachable-code` | [ZCL_SKYLINT_NO_UNREACHABLE](src/checks/zcl_skylint_no_unreachable.clas.abap) | Detect unreachable code after jump or exit statements | `"#EC UNREACHABLE"` | ⚡ Ready |
+| `no-single-when` | [ZCL_SKYLINT_NO_SINGLE_WHEN](src/checks/zcl_skylint_no_single_when.clas.abap) | Avoid CASE statements with only one WHEN branch | `"#EC SINGLE_WHEN"` | ✗ |
+| `no-yoda-conditions` | [ZCL_SKYLINT_NO_YODA_COND](src/checks/zcl_skylint_no_yoda_cond.clas.abap) | Avoid Yoda conditions in comparison expressions | `"#EC YODA_COND"` | ⚡ Ready |
+| `no-static-via-instance` | [ZCL_SKYLINT_NO_STATIC_ARROW](src/checks/zcl_skylint_no_static_arrow.clas.abap) | Avoid calling static methods via instance arrow (->) | `"#EC STATIC_ARROW"` | ⚡ Ready |
+| `no-public-attributes` | [ZCL_SKYLINT_NO_PUBLIC_ATTR](src/checks/zcl_skylint_no_public_attr.clas.abap) | Avoid mutable public attributes in classes | `"#EC PUBLIC_ATTR"` | ✗ |
+| `no-obsolete-statements` | [ZCL_SKYLINT_NO_OBSOLETE](src/checks/zcl_skylint_no_obsolete.clas.abap) | Avoid obsolete statements (MOVE, REFRESH, FORM, etc.) | `"#EC OBSOLETE"` | ⚡ Ready |
+| `no-list-processing` | [ZCL_SKYLINT_NO_LIST_PROC](src/checks/zcl_skylint_no_list_proc.clas.abap) | Prohibit classic list processing statements | `"#EC LIST_PROC"` | ✗ |
+| `no-scope-leak` | [ZCL_SKYLINT_NO_SCOPE_LEAK](src/checks/zcl_skylint_no_scope_leak.clas.abap) | Avoid variable usage outside its declaring control block | `"#EC SCOPE_LEAK"` | ✗ |
+| `no-self-assignment` | [ZCL_SKYLINT_NO_SELF_ASSIGN](src/checks/zcl_skylint_no_self_assign.clas.abap) | Detect Identical Self Assignments | `"#EC SELF_ASSIGN"` | ⚡ Ready |
+| `no-sy-modify` | [ZCL_SKYLINT_NO_SY_MODIFY](src/checks/zcl_skylint_no_sy_modify.clas.abap) | Avoid sy-* System Variable Modification | `"#EC SY_MODIFY"` | ✗ |
+| `no-magic-numbers` | [ZCL_SKYLINT_NO_MAGIC_NUMBERS](src/checks/zcl_skylint_no_magic_numbers.clas.abap) | Avoid magic numbers in code; use named constants | `"#EC MAGIC_NUMBERS"` | ✗ |
+| `no-like-objects` | [ZCL_SKYLINT_NO_LIKE_OBJECTS](src/checks/zcl_skylint_no_like_objects.clas.abap) | Avoid LIKE referencing data objects; use explicit TYPE | `"#EC LIKE_OBJECTS"` | ✗ |
+| `no-interface-data` | [ZCL_SKYLINT_NO_INTF_DATA](src/checks/zcl_skylint_no_intf_data.clas.abap) | Avoid mutable DATA in interfaces; allow only CONSTANTS | `"#EC INTF_DATA"` | ✗ |
+| `no-message-raising` | [ZCL_SKYLINT_NO_MSG_RAISING](src/checks/zcl_skylint_no_msg_raising.clas.abap) | Avoid MESSAGE ... RAISING; use class-based exceptions | `"#EC MSG_RAISING"` | ✗ |
+| `no-unused-variables` | [ZCL_SKYLINT_NO_UNUSED_VARS](src/checks/zcl_skylint_no_unused_vars.clas.abap) | Detect unused local variables and field symbols | `"#EC NEEDED"` | ✗ |
+| `no-inline-length` | [ZCL_SKYLINT_NO_INLINE_LEN](src/checks/zcl_skylint_no_inline_len.clas.abap) | Avoid inline length specification in declarations | `"#EC PAREN_LEN"` | ⚡ Ready |
+| `no-dash-in-names` | [ZCL_SKYLINT_NO_DASH_IN_NAMES](src/checks/zcl_skylint_no_dash_in_names.clas.abap) | No Dashes in Variable and Form Names | `"#EC NO_DASH"` | ✗ |
+| `no-friends` | [ZCL_SKYLINT_NO_FRIENDS](src/checks/zcl_skylint_no_friends.clas.abap) | Avoid FRIENDS in class definitions | `"#EC FRIENDS"` | ✗ |
+| `no-exception-overlap` | [ZCL_SKYLINT_NO_EXC_OVERLAP](src/checks/zcl_skylint_no_exc_overlap.clas.abap) | Classic EXCEPTIONS must not overlap | `"#EC EXC_OVERLAP"` | ✗ |
+| `no-many-parentheses` | [ZCL_SKYLINT_NO_MANY_PARENS](src/checks/zcl_skylint_no_many_parens.clas.abap) | Remove redundant parentheses | `"#EC MANY_PARENS"` | ⚡ Ready |
+| `no-ignored-return-value` | [ZCL_SKYLINT_NO_IGNORED_RETURN](src/checks/zcl_skylint_no_ignored_return.clas.abap) | Disallow ignoring the return value of functional methods | `"#EC NO_IGNORED_RET"` | ✗ |
+| `no-modify-loop-table` | [ZCL_SKYLINT_NO_MOD_LOOP_TAB](src/checks/zcl_skylint_no_mod_loop_tab.clas.abap) | Avoid mutating or sorting tables inside loops | `"#EC LOOP_MODIFY"` | ✗ |
+| `max-params` | [ZCL_SKYLINT_MAX_PARAMS](src/checks/zcl_skylint_max_params.clas.abap) | Method signature cleanliness (excessive parameter count) | `"#EC MAX_PARAMS"` | ✗ |
+| `max-method-length` | [ZCL_SKYLINT_MAX_METHOD_LEN](src/checks/zcl_skylint_max_method_len.clas.abap) | Method Length Limit (excessive statement count) | `"#EC METHOD_LEN"` | ✗ |
+| `max-nesting-depth` | [ZCL_SKYLINT_MAX_NESTING](src/checks/zcl_skylint_max_nesting.clas.abap) | Nesting Depth Limit (excessive control block nesting) | `"#EC NESTING"` | ✗ |
+| `max-cyclomatic-complexity` | [ZCL_SKYLINT_MAX_CYCLO_COMP](src/checks/zcl_skylint_max_cyclo_comp.clas.abap) | Cyclomatic Complexity Threshold | `"#EC CYCLO_COMP"` | ✗ |
+| `max-inheritance-depth` | [ZCL_SKYLINT_MAX_INHERIT](src/checks/zcl_skylint_max_inherit.clas.abap) | Avoid deep class inheritance hierarchies | `"#EC INHERIT_DEPTH"` | ✗ |
+| `max-attributes` | [ZCL_SKYLINT_MAX_ATTRIBUTES](src/checks/zcl_skylint_max_attributes.clas.abap) | Limit class member attributes to prevent God Classes | `"#EC ATTRIBUTES"` | ✗ |
+| `max-line-length` | [ZCL_SKYLINT_MAX_LINE_LEN](src/checks/zcl_skylint_max_line_len.clas.abap) | Maximum Line Length | `"#EC LINE_LEN"` | ✗ |
+| `no-db-in-loop` | [ZCL_SKYLINT_NO_DB_IN_LOOP](src/checks/zcl_skylint_no_db_in_loop.clas.abap) | Avoid database access inside loop iterations | `"#EC DB_IN_LOOP"` | ✗ |
+| `no-empty-fae` | [ZCL_SKYLINT_NO_EMPTY_FAE](src/checks/zcl_skylint_no_empty_fae.clas.abap) | Unsecure FOR ALL ENTRIES (Missing empty itab check) | `"#EC EMPTY_FAE"` | ⚡ Ready |
+| `no-select-star` | [ZCL_SKYLINT_NO_SELECT_STAR](src/checks/zcl_skylint_no_select_star.clas.abap) | Select performance (Avoid SELECT * and SELECT ... ENDSELECT) | `"#EC SELECT_STAR"` | ✗ |
+| `prefer-order-by` | [ZCL_SKYLINT_PREF_ORDER_BY](src/checks/zcl_skylint_pref_order_by.clas.abap) | SELECT UP TO 1 ROWS requires ORDER BY | `"#EC ORDER_BY"` | ✗ |
+| `prefer-transporting` | [ZCL_SKYLINT_PREF_TRANSPORT](src/checks/zcl_skylint_pref_transport.clas.abap) | Avoid MODIFY itab in LOOP without TRANSPORTING clause | `"#EC TRANSPORTING"` | ✗ |
+| `prefer-pass-by-reference` | [ZCL_SKYLINT_PREF_PASS_BY_REF](src/checks/zcl_skylint_pref_pass_by_ref.clas.abap) | Slow Parameter Passing | `"#EC SLOW_PARAM"` | ✗ |
+| `no-dangerous-statements` | [ZCL_SKYLINT_NO_DANGEROUS_STMT](src/checks/zcl_skylint_no_dangerous_stmt.clas.abap) | Dangerous Statements (abaplint dangerous_statement) | `"#EC DANGEROUS_STMT"` | ✗ |
+| `prefer-auth-check` | [ZCL_SKYLINT_PREF_AUTH_CHECK](src/checks/zcl_skylint_pref_auth_check.clas.abap) | Call Transaction Authority Check | `"#EC AUTH_CHECK"` | ⚡ Ready |
+| `no-catch-cx-root` | [ZCL_SKYLINT_NO_CATCH_ROOT](src/checks/zcl_skylint_no_catch_root.clas.abap) | Catch specific exceptions instead of generic cx_root | `"#EC CATCH_ROOT"` | ✗ |
+| `no-raise-cx-sy` | [ZCL_SKYLINT_NO_RAISE_CX_SY](src/checks/zcl_skylint_no_raise_cx_sy.clas.abap) | Avoid raising SAP internal system exceptions (cx_sy_*) | `"#EC RAISE_CX_SY"` | ✗ |
+| `prefer-subrc-check` | [ZCL_SKYLINT_PREF_CHECK_SUBRC](src/checks/zcl_skylint_pref_check_subrc.clas.abap) | Check sy-subrc after DB, table and string operations | `"#EC CHECK_SUBRC"` | ✗ |
+| `no-client-specified` | [ZCL_SKYLINT_NO_CLIENT_SPEC](src/checks/zcl_skylint_no_client_spec.clas.abap) | Avoid USING CLIENT or CLIENT SPECIFIED in ABAP SQL | `"#EC CLIENT_SPEC"` | ⚡ Ready |
+| `no-commit-work` | [ZCL_SKYLINT_NO_COMMIT_WORK](src/checks/zcl_skylint_no_commit_work.clas.abap) | Avoid COMMIT and ROLLBACK in application logic | `"#EC COMMIT_WORK"` | ✗ |
+| `no-rfc-error-handling` | [ZCL_SKYLINT_NO_RFC_ERR](src/checks/zcl_skylint_no_rfc_err.clas.abap) | RFC calls must handle system failures | `"#EC RFC_ERR"` | ✗ |
+| `no-modify-standard-tables` | [ZCL_SKYLINT_NO_MOD_STD_TABLE](src/checks/zcl_skylint_no_mod_std_table.clas.abap) | Modify Only Own Database Tables | `"#EC OWN_TABLES"` | ✗ |
+| `no-dynamic-stuff` | [ZCL_SKYLINT_NO_DYNAMIC_STMT](src/checks/zcl_skylint_no_dynamic_stmt.clas.abap) | No Dynamic Constructs (CALL, ASSIGN, CREATE, etc.) | `"#EC NO_DYNAMIC"` | ✗ |
+| `no-hardcoded-env-checks` | [ZCL_SKYLINT_NO_HARDCODED_ENV](src/checks/zcl_skylint_no_hardcoded_env.clas.abap) | Avoid reading environment system fields (sy-sysid, etc.) | `"#EC HARDCODED_ENV"` | ✗ |
+| `method-overwrites-builtin` | [ZCL_SKYLINT_NO_OVERW_BUILTIN](src/checks/zcl_skylint_no_overw_builtin.clas.abap) | Method name overwrites built-in SAP function | `"#EC NO_OVERW_BUILTIN"` | ✗ |
 
 ---
 

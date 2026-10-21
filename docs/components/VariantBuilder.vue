@@ -1,7 +1,6 @@
 <script setup>
 import { ref, reactive, computed, watch, onMounted, nextTick } from 'vue';
 import rulesData from './rules-data.json';
-import { scanAbap, applySingleFix as fixSingle, applyAllFixes as fixAll } from '../../lib/engine.mjs';
 import { highlightAbap } from './abapHighlighter.mjs';
 
 // --- State ---
@@ -245,6 +244,7 @@ async function triggerScan() {
   scanTimer = setTimeout(async () => {
     isScanning.value = true;
     try {
+      const { scanAbap } = await import('../../lib/engine.mjs');
       activeFindings.value = await scanAbap(sandboxCode.value, selectedCheckNames, ruleParams, rulesData);
     } catch (err) {
       console.warn('[Skylint] Live scan error:', err);
@@ -262,11 +262,13 @@ const fixableFindingsCount = computed(() => {
   return activeFindings.value.filter((f) => f.hasFix).length;
 });
 
-function applySingleFix(finding) {
+async function applySingleFix(finding) {
+  const { applySingleFix: fixSingle } = await import('../../lib/engine.mjs');
   sandboxCode.value = fixSingle(sandboxCode.value, finding);
 }
 
-function applyAllFixes() {
+async function applyAllFixes() {
+  const { applyAllFixes: fixAll } = await import('../../lib/engine.mjs');
   sandboxCode.value = fixAll(sandboxCode.value, activeFindings.value);
 }
 

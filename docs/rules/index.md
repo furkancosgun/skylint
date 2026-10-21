@@ -141,3 +141,11 @@ Quantitative boundaries for method size, nesting depth, parameter counts, and cy
 | [`max-attributes`](/rules/max-attributes) | `ZCL_SKYLINT_MAX_ATTRIBUTES` | Limit class member attributes to prevent God Classes | `#EC ATTRIBUTES` | — |
 | [`max-line-length`](/rules/max-line-length) | `ZCL_SKYLINT_MAX_LINE_LEN` | Maximum Line Length | `#EC LINE_LEN` | — |
 
+## Naming (1)
+
+Identifier naming conventions and conflicts with built-in functions.
+
+| Rule ID | ABAP Class | Description | Pseudo-Comment | QuickFix |
+|---|---|---|:---:|:---:|
+| [`method-overwrites-builtin`](/rules/method-overwrites-builtin) | `ZCL_SKYLINT_NO_OVERW_BUILTIN` | Method name overwrites built-in SAP function | `#EC NO_OVERW_BUILTIN` | — |
+
