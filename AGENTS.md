@@ -124,6 +124,31 @@ Compiler symbol resolution is stored in `is_statement-tokens-references` (of typ
   ENDLOOP.
   ```
 
+### 2.1 How Compiler References Are Produced (JS Test Process)
+The `tokens-references` seen by a check are produced by the Skylint test harness, not by SAP.
+The split of responsibilities is fixed:
+
+| Layer | Module | Responsibility |
+| --- | --- | --- |
+| Skylint parser | `lib/core/lexer.mjs`, `lib/core/parser.mjs` | statements, keywords, chain unrolling, token positions |
+| abaplint | `lib/core/references-abaplint.mjs` | **symbol resolution of usages** (read/write/method/type/object/table) via `SyntaxLogic` + spaghetti scope |
+| Skylint parser | `lib/core/semantic.mjs` | **definitions** (`usage_grade 0`), inline declarations, system variables, message classes, database tables, catch types |
+
+- abaplint does not emit references for declaration sites, therefore definitions
+  (`DATA`, `CONSTANTS`, `FIELD-SYMBOLS`, `STATICS`, inline `DATA(...)`/`FIELD-SYMBOL(...)`)
+  are synthesized by the Skylint parser with `usage_grade = 0`.
+- abaplint resolves the *root* symbol of a component access, so the component path
+  (`ls_data-field` -> `\DA:LS_DATA\DA:FIELD`) is added by the Skylint parser.
+- abaplint cannot resolve symbols that are unknown to the registry (e.g. `CX_ROOT`,
+  database tables that are not part of the scanned project). For those the heuristic
+  fallback of `lib/core/semantic.mjs` stays in place.
+- Reference modes (environment variable `SKYLINT_REFERENCES`):
+  - `hybrid` (default) - definitions from the parser, usages from abaplint
+  - `abaplint` - abaplint only (no definitions, useful for measuring the delta)
+  - `heuristic` - the previous text based resolver only
+- `npm run test:refs` compares two modes over all fixtures and reports the rows
+  where the findings differ. Both modes must produce the same findings.
+
 ### 3. Safe RTTI over String Matching (Class Hierarchies & Types)
 - **Never use string parsing or regex** on `is_procedure-id-name` or `INHERITING FROM` to determine class hierarchies, interfaces, or superclasses.
 - **Always use ABAP Run-Time Type Identification (RTTI) via `zcl_skylint_rtti_util`:**

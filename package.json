@@ -9,6 +9,8 @@
     "build": "node scripts/generate-atc.mjs && npm run clean && abap_transpile abaplint-transpiler.json",
     "test": "npm run lint && npm run unit",
     "unit": "npm run build && node --expose-gc test/run.mjs",
+    "test:refs": "node test/compare-references.mjs",
+    "test:refs:diff": "node test/compare-references.mjs --mode-a heuristic --mode-b hybrid",
     "lint": "abaplint",
     "fix": "abaplint --fix",
     "clean": "node --eval \"fs.rmSync('output', { recursive: true, force: true })\"",
