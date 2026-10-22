@@ -79,8 +79,6 @@ const catalogRules = [];
 for (const rule of RULES) {
   const checkFile = path.join(checksDir, `${rule.className.toLowerCase()}.clas.abap`);
   let classDesc = rule.ruleId;
-  let findingCode = 'UNKNOWN';
-  let findingCodes = [];
   let severity = 'warning';
   let hasQuickfix = false;
   let attributes = [];
@@ -90,11 +88,6 @@ for (const rule of RULES) {
     const content = fs.readFileSync(checkFile, 'utf8');
     const descMatch = content.match(/description\s*=\s*'([^']+)'/);
     if (descMatch) classDesc = descMatch[1].replace(/^skylint:\s*/i, '').trim();
-
-    const codeBlockMatch = content.match(/BEGIN OF c_finding_codes,([\s\S]*?)END OF c_finding_codes\./);
-    const codeMatches = codeBlockMatch ? [...codeBlockMatch[1].matchAll(/VALUE\s*'([A-Za-z0-9_]+)'/g)] : [];
-    findingCodes = codeMatches.map((m) => m[1]);
-    if (findingCodes.length > 0) findingCode = findingCodes[0];
 
     const sevMatch = content.match(/severity\s*=\s*if_ci_atc_check=>finding_severities-([a-z]+)/);
     if (sevMatch) severity = sevMatch[1];
@@ -235,17 +228,11 @@ for (const rule of RULES) {
     category: rule.category || 'General',
     categoryTitle: categoryInfo.title || rule.category,
     pseudoComment: rule.pseudoComment || '',
-    severity: severity,
-    findingCode: findingCode,
-    findingTexts: findingTexts.length > 0 ? findingTexts : [classDesc],
     description: classDesc,
-    rationale: meta.rationale,
     hasQuickfix: hasQuickfix,
     remoteEnabled: remoteEnabled,
     attributes: attributes,
     defaultParameters: defaultParamsMap[checkName] || [],
-    nonCompliantCode: nonCompliantCode || '',
-    compliantCode: compliantCode || '',
   });
 }
 

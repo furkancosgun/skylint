@@ -372,7 +372,7 @@ function formatAttrKind(attr) {
           </svg>
           <template v-else>{{ step.id }}</template>
         </span>
-        <span class="vb-step-label">{{ step.label }}</span>
+        <span>{{ step.label }}</span>
       </button>
     </nav>
 
@@ -393,7 +393,7 @@ function formatAttrKind(attr) {
     </div>
 
     <!-- Variant Configuration & Export Card -->
-    <section v-show="currentStep === 1" class="vb-card vb-config-card">
+    <section v-show="currentStep === 1" class="vb-card">
       <div class="vb-card-header">
         <div class="vb-card-title-group">
           <svg class="vb-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -468,20 +468,18 @@ function formatAttrKind(attr) {
           </button>
         </div>
 
-        <div class="vb-bulk-actions">
-          <button v-if="!isAllSelected" class="vb-btn-sm" type="button" @click="selectAll">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-              <path d="m5 12 4 4L19 6" />
-            </svg>
-            Select all
-          </button>
-          <button v-else class="vb-btn-sm" type="button" @click="deselectAll">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-              <path d="M18 6 6 18M6 6l12 12" />
-            </svg>
-            Deselect all
-          </button>
-        </div>
+        <button v-if="!isAllSelected" class="vb-btn-sm" type="button" @click="selectAll">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+            <path d="m5 12 4 4L19 6" />
+          </svg>
+          Select all
+        </button>
+        <button v-else class="vb-btn-sm" type="button" @click="deselectAll">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+            <path d="M18 6 6 18M6 6l12 12" />
+          </svg>
+          Deselect all
+        </button>
       </div>
 
       <!-- Category Filter Pills -->
@@ -532,7 +530,7 @@ function formatAttrKind(attr) {
     <!-- Rules List -->
     <section v-show="currentStep === 2" class="vb-rules-section">
       <div class="vb-rules-header">
-        <span class="vb-rules-count">Showing {{ filteredRules.length }} of {{ rulesData.length }} checks</span>
+        <span>Showing {{ filteredRules.length }} of {{ rulesData.length }} checks</span>
       </div>
 
       <div class="vb-rules-grid">
@@ -568,7 +566,7 @@ function formatAttrKind(attr) {
 
           <!-- Metadata Tags Row -->
           <div class="vb-tags-row">
-            <span class="vb-tag cat">{{ rule.categoryTitle }}</span>
+            <span class="vb-tag">{{ rule.categoryTitle }}</span>
             <button
               class="vb-tag pseudo"
               type="button"
@@ -636,7 +634,7 @@ function formatAttrKind(attr) {
                 </div>
 
                 <!-- Boolean Parameter (Checkbox / Toggle) -->
-                <div v-if="attr.kind === 'Boolean'" class="vb-param-control">
+                <div v-if="attr.kind === 'Boolean'">
                   <label class="vb-checkbox-label">
                     <input
                       type="checkbox"
@@ -648,7 +646,7 @@ function formatAttrKind(attr) {
                 </div>
 
                 <!-- Elementary / Integer Parameter -->
-                <div v-else class="vb-param-control">
+                <div v-else>
                   <input
                     v-model="ruleParams[rule.checkName][attr.name]"
                     type="text"
@@ -663,7 +661,7 @@ function formatAttrKind(attr) {
       </div>
     </section>
 
-    <section v-show="currentStep === 3" class="vb-card vb-review-card">
+    <section v-show="currentStep === 3" class="vb-card">
       <div class="vb-card-header">
         <div class="vb-card-title-group">
           <svg class="vb-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -824,11 +822,6 @@ function formatAttrKind(attr) {
   font-size: 0.85rem;
 }
 
-.vb-stat-chip.highlight {
-  border-color: var(--vp-c-brand-1);
-  background: var(--vp-c-brand-soft);
-}
-
 .vb-stat-num {
   font-weight: 700;
   color: var(--vp-c-brand-1);
@@ -865,10 +858,6 @@ function formatAttrKind(attr) {
   gap: 0.75rem;
 }
 
-.vb-icon {
-  font-size: 1.75rem;
-}
-
 .vb-card-title {
   font-size: 1.3rem;
   font-weight: 700;
@@ -880,13 +869,6 @@ function formatAttrKind(attr) {
   font-size: 0.88rem;
   color: var(--vp-c-text-2);
   margin: 0.25rem 0 0;
-}
-
-/* Actions Group */
-.vb-actions-group {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
 }
 
 .vb-btn {
@@ -1042,14 +1024,17 @@ function formatAttrKind(attr) {
 }
 
 .vb-btn-sm {
-  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   padding: 0.4rem 0.75rem;
+  border: 1px solid var(--vp-c-divider);
   border-radius: 6px;
   background: var(--vp-c-bg-soft);
-  border: 1px solid var(--vp-c-divider);
   color: var(--vp-c-text-1);
-  cursor: pointer;
+  font-size: 0.8rem;
   font-weight: 500;
+  cursor: pointer;
 }
 
 .vb-btn-sm:hover {
@@ -1106,11 +1091,9 @@ function formatAttrKind(attr) {
 }
 
 .vb-rules-header {
-  display: flex;
-  justify-content: space-between;
   margin-bottom: 0.75rem;
-  font-size: 0.82rem;
   color: var(--vp-c-text-3);
+  font-size: 0.82rem;
 }
 
 .vb-rules-grid {
@@ -1130,7 +1113,6 @@ function formatAttrKind(attr) {
 
 .vb-rule-card.active {
   border-color: var(--vp-c-brand-soft);
-  background: var(--vp-c-bg-soft);
 }
 
 .vb-rule-card:hover {
@@ -1230,24 +1212,6 @@ function formatAttrKind(attr) {
   line-height: 1.4;
 }
 
-.vb-btn-test {
-  font-size: 0.78rem;
-  font-weight: 600;
-  padding: 0.35rem 0.7rem;
-  border-radius: 6px;
-  background: var(--vp-c-brand-soft);
-  color: var(--vp-c-brand-1);
-  border: 1px solid transparent;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.2s ease;
-}
-
-.vb-btn-test:hover {
-  background: var(--vp-c-brand-1);
-  color: #fff;
-}
-
 /* Tags Row */
 .vb-tags-row {
   display: flex;
@@ -1259,21 +1223,22 @@ function formatAttrKind(attr) {
 }
 
 .vb-tag {
-  font-size: 0.72rem;
-  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
   padding: 0.15rem 0.5rem;
-  border-radius: 4px;
   border: 1px solid var(--vp-c-divider);
+  border-radius: 4px;
   background: var(--vp-c-bg);
   color: var(--vp-c-text-2);
+  font-size: 0.72rem;
+  font-weight: 500;
 }
 
 .vb-tag.pseudo {
-  cursor: pointer;
-  font-family: var(--vp-font-family-mono);
-  background: var(--vp-c-bg);
-  border-color: var(--vp-c-divider);
   color: var(--vp-c-text-1);
+  font-family: var(--vp-font-family-mono);
+  cursor: pointer;
 }
 
 .vb-tag.pseudo:hover {
@@ -1318,11 +1283,6 @@ html.dark .vb-tag.local {
 .vb-tag.params-toggle.open {
   background: var(--vp-c-brand-1);
   color: #fff;
-}
-
-.vb-arrow {
-  font-size: 0.65rem;
-  margin-left: 0.2rem;
 }
 
 /* Parameters Drawer */
@@ -1384,7 +1344,6 @@ html.dark .vb-tag.local {
   padding: 0.3rem 0.5rem;
   font-size: 0.8rem;
 }
-
 
 /* Wizard stepper */
 .vb-stepper {
@@ -1522,27 +1481,14 @@ html.dark .vb-tag.local {
   flex-shrink: 0;
 }
 
-.vb-btn-sm {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-}
-
-.vb-btn-sm svg {
+.vb-btn-sm svg,
+.vb-clear-btn svg {
   width: 14px;
   height: 14px;
 }
 
 .vb-clear-btn svg {
-  width: 14px;
-  height: 14px;
   display: block;
-}
-
-.vb-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
 }
 
 .vb-tag svg {

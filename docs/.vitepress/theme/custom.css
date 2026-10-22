@@ -25,15 +25,6 @@ html {
   scroll-behavior: smooth;
 }
 
-a,
-button,
-input,
-select,
-textarea,
-summary {
-  outline-offset: 2px;
-}
-
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
@@ -53,12 +44,6 @@ summary:focus-visible {
 
 .VPFeature .VPImage {
   border-radius: 12px;
-}
-
-.vp-doc h2,
-.vp-doc h3,
-.vp-doc h4 {
-  color: var(--vp-c-text-1);
 }
 
 .vp-doc h2,
