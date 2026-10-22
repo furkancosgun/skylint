@@ -37,17 +37,6 @@ IF lo_instance IS NOT BOUND.
 ENDIF.
 ```
 
-## Transformation
-
-```diff
-- IF NOT lo_instance IS BOUND.
--   RETURN.
-- ENDIF.
-+ IF lo_instance IS NOT BOUND.
-+   RETURN.
-+ ENDIF.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

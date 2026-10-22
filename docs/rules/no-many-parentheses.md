@@ -35,15 +35,6 @@ IF destination IS INITIAL.
 ENDIF.
 ```
 
-## Transformation
-
-```diff
-- IF ( destination IS INITIAL ).
-- ENDIF.
-+ IF destination IS INITIAL.
-+ ENDIF.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

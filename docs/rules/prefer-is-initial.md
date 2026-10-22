@@ -35,15 +35,6 @@ IF lt_items IS NOT INITIAL.
 ENDIF.
 ```
 
-## Transformation
-
-```diff
-- IF lines( lt_items ) > 0.
-- ENDIF.
-+ IF lt_items IS NOT INITIAL.
-+ ENDIF.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

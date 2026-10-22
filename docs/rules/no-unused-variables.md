@@ -32,13 +32,6 @@ DATA lv_temp TYPE string. " Declared but never referenced
 " Remove unused declarations or add ##NEEDED pragma if required by interface
 ```
 
-## Transformation
-
-```diff
-- DATA lv_temp TYPE string. " Declared but never referenced
-+ " Remove unused declarations or add ##NEEDED pragma if required by interface
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

@@ -34,15 +34,6 @@ mv_status = c_active.
 process_order( ).
 ```
 
-## Transformation
-
-```diff
-- me->mv_status = c_active.
-- me->process_order( ).
-+ mv_status = c_active.
-+ process_order( ).
-```
-
 ## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:

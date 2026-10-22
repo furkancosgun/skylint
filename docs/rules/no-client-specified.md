@@ -33,13 +33,6 @@ SELECT * FROM /dmo/customer USING CLIENT '100' INTO TABLE @lt_customers.
 SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
 ```
 
-## Transformation
-
-```diff
-- SELECT * FROM /dmo/customer USING CLIENT '100' INTO TABLE @lt_customers.
-+ SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

@@ -215,7 +215,7 @@ CLASS zcl_skylint_pref_downport IMPLEMENTATION.
          OR lv_lex = 'CAST'.
         ls_next = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                    iv_index     = sy-tabix + 1 ).
-        IF strlen( ls_next-lexeme ) > 1 AND ls_next-lexeme CP '*('.
+        IF ls_next-lexeme CP '*('.
           rv_has = abap_true.
           RETURN.
         ENDIF.

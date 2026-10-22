@@ -37,17 +37,6 @@ ENDIF.
 lv_has_items = xsdbool( lv_count > 0 ).
 ```
 
-## Transformation
-
-```diff
-- IF lv_count > 0.
--   lv_has_items = abap_true.
-- ELSE.
--   lv_has_items = abap_false.
-- ENDIF.
-+ lv_has_items = xsdbool( lv_count > 0 ).
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

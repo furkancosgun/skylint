@@ -34,14 +34,6 @@ lo_instance->static_method( ).
 cl_helper=>static_method( ).
 ```
 
-## Transformation
-
-```diff
-- DATA lo_instance TYPE REF TO cl_helper.
-- lo_instance->static_method( ).
-+ cl_helper=>static_method( ).
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

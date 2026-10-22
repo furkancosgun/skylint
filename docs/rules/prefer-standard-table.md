@@ -33,13 +33,6 @@ DATA lt_rows TYPE TABLE OF mara.
 DATA lt_rows TYPE STANDARD TABLE OF mara.
 ```
 
-## Transformation
-
-```diff
-- DATA lt_rows TYPE TABLE OF mara.
-+ DATA lt_rows TYPE STANDARD TABLE OF mara.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

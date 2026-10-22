@@ -38,19 +38,6 @@ CLASS lcl_service DEFINITION FINAL CREATE PUBLIC.
 ENDCLASS.
 ```
 
-## Transformation
-
-```diff
-- CLASS lcl_service DEFINITION FINAL FRIENDS lcl_helper CREATE PUBLIC.
--   PUBLIC SECTION.
--     METHODS execute.
-- ENDCLASS.
-+ CLASS lcl_service DEFINITION FINAL CREATE PUBLIC.
-+   PUBLIC SECTION.
-+     METHODS execute.
-+ ENDCLASS.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

@@ -32,13 +32,6 @@ DATA lv_extremely_long_variable_name_created_specifically_to_exceed_the_maximum_
 DATA lv_compact_name TYPE i.
 ```
 
-## Transformation
-
-```diff
-- DATA lv_extremely_long_variable_name_created_specifically_to_exceed_the_maximum_allowed_line_length_of_one_hundred_twenty_chars TYPE i.
-+ DATA lv_compact_name TYPE i.
-```
-
 ## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:

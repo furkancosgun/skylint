@@ -43,23 +43,6 @@ METHOD test.
 ENDMETHOD.
 ```
 
-## Transformation
-
-```diff
-- METHOD test.
-- DATA lv_a TYPE i.
--   IF lv_a = 1.
-- lv_a = 2.
--   ENDIF.
-- ENDMETHOD.
-+ METHOD test.
-+   DATA lv_a TYPE i.
-+   IF lv_a = 1.
-+     lv_a = 2.
-+   ENDIF.
-+ ENDMETHOD.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

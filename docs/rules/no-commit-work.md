@@ -39,20 +39,6 @@ METHOD update.
 ENDMETHOD.
 ```
 
-## Transformation
-
-```diff
-- " Inside a RAP behavior implementation (CL_ABAP_BEHAVIOR_HANDLER)
-- METHOD update.
--   MODIFY ENTITIES OF ...
--   COMMIT WORK.
-- ENDMETHOD.
-+ " In RAP, commits are managed automatically by the framework save sequence
-+ METHOD update.
-+   MODIFY ENTITIES OF ...
-+ ENDMETHOD.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

@@ -32,13 +32,6 @@ RAISE EXCEPTION NEW cx_sy_itab_line_not_found( ).
 RAISE EXCEPTION NEW cx_item_not_found( ).
 ```
 
-## Transformation
-
-```diff
-- RAISE EXCEPTION NEW cx_sy_itab_line_not_found( ).
-+ RAISE EXCEPTION NEW cx_item_not_found( ).
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

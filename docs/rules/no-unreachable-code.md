@@ -35,15 +35,6 @@ lv_count = lv_count + 1.
 RETURN.
 ```
 
-## Transformation
-
-```diff
-- RETURN.
-- lv_count = lv_count + 1. " Unreachable statement
-+ lv_count = lv_count + 1.
-+ RETURN.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

@@ -35,15 +35,6 @@ ls_item = VALUE #( lt_items[ id = lv_id ] OPTIONAL ).
 ASSIGN lt_items[ 1 ] TO <fs_item>.
 ```
 
-## Transformation
-
-```diff
-- READ TABLE lt_items INTO ls_item WITH KEY id = lv_id.
-- READ TABLE lt_items ASSIGNING <fs_item> INDEX 1.
-+ ls_item = VALUE #( lt_items[ id = lv_id ] OPTIONAL ).
-+ ASSIGN lt_items[ 1 ] TO <fs_item>.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

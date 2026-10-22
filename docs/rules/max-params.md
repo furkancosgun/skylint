@@ -34,15 +34,6 @@ METHODS execute
   IMPORTING is_options TYPE ty_options.
 ```
 
-## Transformation
-
-```diff
-- METHODS execute
--   IMPORTING p1 TYPE i p2 TYPE i p3 TYPE i p4 TYPE i p5 TYPE i p6 TYPE i.
-+ METHODS execute
-+   IMPORTING is_options TYPE ty_options.
-```
-
 ## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:

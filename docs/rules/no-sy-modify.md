@@ -34,15 +34,6 @@ sy-tabix = 1.
 rv_success = abap_true.
 ```
 
-## Transformation
-
-```diff
-- sy-subrc = 0.
-- sy-tabix = 1.
-+ " Pass explicit return values or flags instead of modifying system variables (sy-*)
-+ rv_success = abap_true.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

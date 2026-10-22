@@ -42,15 +42,6 @@ lv_text = condense( lv_text ).
 lv_code = to_upper( lv_code ).
 ```
 
-## Transformation
-
-```diff
-- CONDENSE lv_text.
-- TRANSLATE lv_code TO UPPER CASE.
-+ lv_text = condense( lv_text ).
-+ lv_code = to_upper( lv_code ).
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

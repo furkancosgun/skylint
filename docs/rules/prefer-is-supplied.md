@@ -37,17 +37,6 @@ IF iv_name IS SUPPLIED.
 ENDIF.
 ```
 
-## Transformation
-
-```diff
-- IF iv_name IS REQUESTED.
--   process( iv_name ).
-- ENDIF.
-+ IF iv_name IS SUPPLIED.
-+   process( iv_name ).
-+ ENDIF.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

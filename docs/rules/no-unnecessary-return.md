@@ -38,18 +38,6 @@ METHOD calculate.
 ENDMETHOD.
 ```
 
-## Transformation
-
-```diff
-- METHOD calculate.
--   lv_total = 100.
--   RETURN.
-- ENDMETHOD.
-+ METHOD calculate.
-+   lv_total = 100.
-+ ENDMETHOD.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

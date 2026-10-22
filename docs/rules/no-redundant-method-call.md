@@ -36,13 +36,6 @@ lo_calc->compute( EXPORTING iv_val = 10 ).
 lo_calc->compute( 10 ).
 ```
 
-## Transformation
-
-```diff
-- lo_calc->compute( EXPORTING iv_val = 10 ).
-+ lo_calc->compute( 10 ).
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

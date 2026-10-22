@@ -33,14 +33,6 @@ lv_a = 1.
 lv_b = 2.
 ```
 
-## Transformation
-
-```diff
-- lv_a = 1. lv_b = 2.
-+ lv_a = 1.
-+ lv_b = 2.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

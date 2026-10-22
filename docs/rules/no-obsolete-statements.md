@@ -33,13 +33,6 @@ MOVE lv_src TO lv_dst.
 lv_dst = lv_src.
 ```
 
-## Transformation
-
-```diff
-- MOVE lv_src TO lv_dst.
-+ lv_dst = lv_src.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
@@ -84,6 +77,18 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | `CHECK_INFOTYPES` | `Boolean` | <code>true</code> |
 | `CHECK_COMMUNICATION` | `Boolean` | <code>true</code> |
 | `CHECK_SET_EXT_CHECK` | `Boolean` | <code>true</code> |
+| `CHECK_OCCURS` | `Boolean` | <code>true</code> |
+| `CHECK_FS_STRUCTURE` | `Boolean` | <code>true</code> |
+| `CHECK_PARAMETER` | `Boolean` | <code>true</code> |
+| `CHECK_SELECT_NO_INTO` | `Boolean` | <code>true</code> |
+| `CHECK_EXIT_SQL` | `Boolean` | <code>true</code> |
+| `CHECK_SORT_BY_FS` | `Boolean` | <code>true</code> |
+| `CHECK_CALL_TRANSF` | `Boolean` | <code>true</code> |
+| `CHECK_REGEX` | `Boolean` | <code>true</code> |
+| `CHECK_OCCURENCES` | `Boolean` | <code>true</code> |
+| `CHECK_REPLACE_INTO` | `Boolean` | <code>true</code> |
+| `CHECK_LOOP_EXTRACT` | `Boolean` | <code>true</code> |
+| `CHECK_SORT_EXTRACT` | `Boolean` | <code>true</code> |
 
 ## Suppression
 

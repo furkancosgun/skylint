@@ -34,14 +34,6 @@ result = helper->get_tokens( ).
 result = CAST lcl_node( object )->get_tokens( ).
 ```
 
-## Transformation
-
-```diff
-- DATA(helper) = CAST lcl_node( object ).
-- result = helper->get_tokens( ).
-+ result = CAST lcl_node( object )->get_tokens( ).
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

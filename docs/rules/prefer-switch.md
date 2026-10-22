@@ -43,23 +43,6 @@ lv_text = SWITCH #( lv_status
   ELSE 'Unknown' ).
 ```
 
-## Transformation
-
-```diff
-- CASE lv_status.
--   WHEN 'O'.
--     lv_text = 'Open'.
--   WHEN 'C'.
--     lv_text = 'Closed'.
--   WHEN OTHERS.
--     lv_text = 'Unknown'.
-- ENDCASE.
-+ lv_text = SWITCH #( lv_status
-+   WHEN 'O' THEN 'Open'
-+   WHEN 'C' THEN 'Closed'
-+   ELSE 'Unknown' ).
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

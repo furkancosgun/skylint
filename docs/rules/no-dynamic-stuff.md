@@ -32,13 +32,6 @@ CALL FUNCTION lv_func_name.
 CALL FUNCTION 'BAPI_USER_GET_DETAIL'.
 ```
 
-## Transformation
-
-```diff
-- CALL FUNCTION lv_func_name.
-+ CALL FUNCTION 'BAPI_USER_GET_DETAIL'.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

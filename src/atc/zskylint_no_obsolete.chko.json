@@ -101,6 +101,42 @@
     },
     {
       "name": "CHECK_SET_EXT_CHECK"
+    },
+    {
+      "name": "CHECK_OCCURS"
+    },
+    {
+      "name": "CHECK_FS_STRUCTURE"
+    },
+    {
+      "name": "CHECK_PARAMETER"
+    },
+    {
+      "name": "CHECK_SELECT_NO_INTO"
+    },
+    {
+      "name": "CHECK_EXIT_SQL"
+    },
+    {
+      "name": "CHECK_SORT_BY_FS"
+    },
+    {
+      "name": "CHECK_CALL_TRANSF"
+    },
+    {
+      "name": "CHECK_REGEX"
+    },
+    {
+      "name": "CHECK_OCCURENCES"
+    },
+    {
+      "name": "CHECK_REPLACE_INTO"
+    },
+    {
+      "name": "CHECK_LOOP_EXTRACT"
+    },
+    {
+      "name": "CHECK_SORT_EXTRACT"
     }
   ]
 }

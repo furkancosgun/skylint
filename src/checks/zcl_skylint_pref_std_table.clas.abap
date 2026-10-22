@@ -31,16 +31,15 @@ ENDCLASS.
 
 CLASS zcl_skylint_pref_std_table IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Prefer explicit TYPE STANDARD TABLE OF over TYPE TABLE OF'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-std_table
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Specify the table kind explicitly: TYPE STANDARD TABLE OF'
-                       pseudo_comment = c_pseudo_comment ) )
-                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-add_standard
-                                                short_text = 'Add STANDARD table kind' ) ) ) ).
+    super->constructor( VALUE #( description       = 'Prefer explicit TYPE STANDARD TABLE OF over TYPE TABLE OF'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-std_table
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Specify the table kind explicitly: TYPE STANDARD TABLE OF'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-add_standard
+                                                                short_text = 'Add STANDARD table kind' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -58,10 +57,9 @@ CLASS zcl_skylint_pref_std_table IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      lv_line = zcl_skylint_ast_util=>flatten_statement(
-                    is_statement = <ls_statement>
-                    it_overrides = lt_overrides
-                    iv_suffix    = '.' ).
+      lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_statement>
+                                                         it_overrides = lt_overrides
+                                                         iv_suffix    = '.' ).
       ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-add_standard
                                       iv_statement_from = lv_stmt_idx
                                       it_new_code       = VALUE #( ( lv_line ) ) ).
@@ -82,10 +80,9 @@ CLASS zcl_skylint_pref_std_table IMPLEMENTATION.
     lv_count = lines( is_statement-tokens ).
 
     WHILE lv_start > 0 AND lv_start <= lv_count.
-      lv_index = zcl_skylint_ast_util=>find_token_sequence(
-                     is_statement   = is_statement
-                     it_expected    = VALUE #( ( `TYPE` ) ( `TABLE` ) ( `OF` ) )
-                     iv_start_index = lv_start ).
+      lv_index = zcl_skylint_ast_util=>find_token_sequence( is_statement   = is_statement
+                                                            it_expected    = VALUE #( ( `TYPE` ) ( `TABLE` ) ( `OF` ) )
+                                                            iv_start_index = lv_start ).
       IF lv_index = 0.
         EXIT.
       ENDIF.

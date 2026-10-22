@@ -51,14 +51,15 @@ ENDCLASS.
 CLASS zcl_skylint_pref_expand_macro IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Expand Macro Calls'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #( ( code           = c_finding_codes-expand_macro
-                                                severity       = if_ci_atc_check=>finding_severities-warning
-                                                text           = 'Macro call should be expanded into explicit statements'
-                                                pseudo_comment = c_pseudo_comment ) )
-                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-expand_macro
-                                                short_text = 'Expand macro into explicit statements' ) ) ) ).
+        VALUE #(
+            description       = 'skylint: Expand Macro Calls'
+            remote_enablement = abap_true
+            finding_codes     = VALUE #( ( code           = c_finding_codes-expand_macro
+                                           severity       = if_ci_atc_check=>finding_severities-warning
+                                           text           = 'Macro call should be expanded into explicit statements'
+                                           pseudo_comment = c_pseudo_comment ) )
+            quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-expand_macro
+                                           short_text = 'Expand macro into explicit statements' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -106,7 +107,7 @@ CLASS zcl_skylint_pref_expand_macro IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      READ TABLE lt_macros ASSIGNING <ls_macro> WITH KEY name = lv_macro_name.
+      ASSIGN lt_macros[ name = lv_macro_name ] TO <ls_macro>.
       IF sy-subrc = 0.
         lt_expansion = build_macro_expansion( is_call  = <ls_statement>
                                               is_macro = <ls_macro> ).
@@ -126,9 +127,9 @@ CLASS zcl_skylint_pref_expand_macro IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD build_macro_expansion.
-    DATA lv_indent     TYPE string.
-    DATA lv_stmt_text  TYPE string.
-    DATA lv_tok_text   TYPE string.
+    DATA lv_indent    TYPE string.
+    DATA lv_stmt_text TYPE string.
+    DATA lv_tok_text  TYPE string.
     FIELD-SYMBOLS <ls_stmt>  TYPE ty_macro_stmt.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 

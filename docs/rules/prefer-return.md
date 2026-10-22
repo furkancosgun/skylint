@@ -43,23 +43,6 @@ METHOD execute.
 ENDMETHOD.
 ```
 
-## Transformation
-
-```diff
-- METHOD execute.
--   IF is_invalid( ).
--     EXIT.
--   ENDIF.
--   process( ).
-- ENDMETHOD.
-+ METHOD execute.
-+   IF is_invalid( ).
-+     RETURN.
-+   ENDIF.
-+   process( ).
-+ ENDMETHOD.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

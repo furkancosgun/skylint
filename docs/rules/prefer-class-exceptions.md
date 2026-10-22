@@ -32,13 +32,6 @@ METHODS execute EXCEPTIONS not_found failed.
 METHODS execute RAISING cx_not_found cx_failed.
 ```
 
-## Transformation
-
-```diff
-- METHODS execute EXCEPTIONS not_found failed.
-+ METHODS execute RAISING cx_not_found cx_failed.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

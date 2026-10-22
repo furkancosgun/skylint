@@ -40,21 +40,6 @@ TRY.
 ENDTRY.
 ```
 
-## Transformation
-
-```diff
-- TRY.
--     process_order( ).
--   CATCH cx_root.
--     " Indiscriminately catches all exceptions, masking unexpected bugs
-- ENDTRY.
-+ TRY.
-+     process_order( ).
-+   CATCH cx_order_failed INTO DATA(lx_order).
-+     logger->record( lx_order ).
-+ ENDTRY.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

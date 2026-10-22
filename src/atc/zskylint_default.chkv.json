@@ -310,6 +310,54 @@
         {
           "name": "CHECK_SET_EXT_CHECK",
           "value": "X"
+        },
+        {
+          "name": "CHECK_OCCURS",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_FS_STRUCTURE",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_PARAMETER",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_SELECT_NO_INTO",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_EXIT_SQL",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_SORT_BY_FS",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_CALL_TRANSF",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_REGEX",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_OCCURENCES",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_REPLACE_INTO",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_LOOP_EXTRACT",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_SORT_EXTRACT",
+          "value": "X"
         }
       ]
     },
@@ -713,7 +761,17 @@
       "checkName": "ZSKYLINT_PREF_PASS_BY_REF"
     },
     {
-      "checkName": "ZSKYLINT_NO_MOD_STD_TABLE"
+      "checkName": "ZSKYLINT_NO_MOD_STD_TABLE",
+      "parameters": [
+        {
+          "name": "OWN_TABLES",
+          "value": "^[yz/]"
+        },
+        {
+          "name": "REPORT_DYNAMIC",
+          "value": "X"
+        }
+      ]
     },
     {
       "checkName": "ZSKYLINT_NO_DYNAMIC_STMT"

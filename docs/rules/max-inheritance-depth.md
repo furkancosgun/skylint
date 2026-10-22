@@ -37,18 +37,6 @@ CLASS lcl_worker DEFINITION.
 ENDCLASS.
 ```
 
-## Transformation
-
-```diff
-- CLASS lcl_child DEFINITION INHERITING FROM lcl_sub_parent. " Depth > 3
-- ENDCLASS.
-+ " Favor composition over deep class inheritance hierarchies
-+ CLASS lcl_worker DEFINITION.
-+   PRIVATE SECTION.
-+     DATA mo_engine TYPE REF TO if_engine.
-+ ENDCLASS.
-```
-
 ## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:

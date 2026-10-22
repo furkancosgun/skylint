@@ -32,13 +32,6 @@ METHODS process IMPORTING VALUE(iv_text) TYPE string.
 METHODS process IMPORTING iv_text TYPE string.
 ```
 
-## Transformation
-
-```diff
-- METHODS process IMPORTING VALUE(iv_text) TYPE string.
-+ METHODS process IMPORTING iv_text TYPE string.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

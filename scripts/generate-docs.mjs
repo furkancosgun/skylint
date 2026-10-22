@@ -59,13 +59,6 @@ function extractSnippet(lines, methodName) {
 }
 
 
-function buildDiffSnippet(bad, good) {
-  if (!bad || !good) return '';
-  const badLines = bad.split('\n').map((l) => `- ${l}`);
-  const goodLines = good.split('\n').map((l) => `+ ${l}`);
-  return [...badLines, ...goodLines].join('\n');
-}
-
 console.log(`Generating rich enterprise documentation for ${RULES.length} rules...`);
 
 // Load default parameters from src/atc/zskylint_default.chkv.json
@@ -192,13 +185,6 @@ for (const rule of RULES) {
 
   if (compliantCode) {
     ruleDoc += `### Compliant\n\n\`\`\`abap\n${compliantCode}\n\`\`\`\n\n`;
-  }
-
-  // Quick Visual Transformation Diff
-  const diffSnippet = buildDiffSnippet(nonCompliantCode, compliantCode);
-  if (diffSnippet) {
-    ruleDoc += `## Transformation\n\n`;
-    ruleDoc += `\`\`\`diff\n${diffSnippet}\n\`\`\`\n\n`;
   }
 
   // QuickFix section if available

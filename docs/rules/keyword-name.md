@@ -34,15 +34,6 @@ DATA lv_class TYPE string.
 DATA lv_type TYPE i.
 ```
 
-## Transformation
-
-```diff
-- DATA class TYPE string.
-- DATA type TYPE i.
-+ DATA lv_class TYPE string.
-+ DATA lv_type TYPE i.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

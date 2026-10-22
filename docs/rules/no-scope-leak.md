@@ -39,20 +39,6 @@ ENDIF.
 use_value( lv_value ).
 ```
 
-## Transformation
-
-```diff
-- IF lv_condition = abap_true.
--   DATA(lv_value) = 10.
-- ENDIF.
-- use_value( lv_value ). " Leaked outside block
-+ DATA lv_value TYPE i.
-+ IF lv_condition = abap_true.
-+   lv_value = 10.
-+ ENDIF.
-+ use_value( lv_value ).
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

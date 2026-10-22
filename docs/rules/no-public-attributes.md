@@ -40,21 +40,6 @@ CLASS cl_model DEFINITION PUBLIC.
 ENDCLASS.
 ```
 
-## Transformation
-
-```diff
-- CLASS cl_model DEFINITION PUBLIC.
--   PUBLIC SECTION.
--     DATA mv_state TYPE i.
-- ENDCLASS.
-+ CLASS cl_model DEFINITION PUBLIC.
-+   PUBLIC SECTION.
-+     METHODS get_state RETURNING VALUE(rv_state) TYPE i.
-+   PRIVATE SECTION.
-+     DATA mv_state TYPE i.
-+ ENDCLASS.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

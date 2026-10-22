@@ -36,15 +36,6 @@ SELECT customer_id, first_name, last_name
   INTO TABLE @lt_customers.
 ```
 
-## Transformation
-
-```diff
-- SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
-+ SELECT customer_id, first_name, last_name
-+   FROM /dmo/customer
-+   INTO TABLE @lt_customers.
-```
-
 ## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:

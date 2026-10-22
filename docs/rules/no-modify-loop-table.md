@@ -38,17 +38,6 @@ LOOP AT lt_orders INTO ls_order.
 ENDLOOP.
 ```
 
-## Transformation
-
-```diff
-- LOOP AT lt_orders INTO ls_order.
--   APPEND ls_order TO lt_orders.
-- ENDLOOP.
-+ LOOP AT lt_orders INTO ls_order.
-+   APPEND ls_order TO lt_new_orders.
-+ ENDLOOP.
-```
-
 ## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:

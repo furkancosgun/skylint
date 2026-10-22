@@ -40,21 +40,6 @@ METHOD execute.
 ENDMETHOD.
 ```
 
-## Transformation
-
-```diff
-- " Large method exceeding configured statement threshold (> 50 statements)
-- METHOD execute.
--   " 60+ statements in a single procedure...
-- ENDMETHOD.
-+ " Split into smaller, single-responsibility helper methods
-+ METHOD execute.
-+   prepare_data( ).
-+   process_records( ).
-+   finalize_result( ).
-+ ENDMETHOD.
-```
-
 ## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:

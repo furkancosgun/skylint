@@ -33,13 +33,6 @@ APPEND ls_item TO lt_items.
 INSERT ls_item INTO TABLE lt_items.
 ```
 
-## Transformation
-
-```diff
-- APPEND ls_item TO lt_items.
-+ INSERT ls_item INTO TABLE lt_items.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

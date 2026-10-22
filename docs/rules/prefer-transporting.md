@@ -38,19 +38,6 @@ LOOP AT lt_items INTO ls_item.
 ENDLOOP.
 ```
 
-## Transformation
-
-```diff
-- LOOP AT lt_items INTO ls_item.
--   ls_item-status = 'DONE'.
--   MODIFY lt_items FROM ls_item. " Full line copy without specifying TRANSPORTING
-- ENDLOOP.
-+ LOOP AT lt_items INTO ls_item.
-+   ls_item-status = 'DONE'.
-+   MODIFY lt_items FROM ls_item TRANSPORTING status.
-+ ENDLOOP.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

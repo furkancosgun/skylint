@@ -36,9 +36,9 @@ CLASS zcl_skylint_no_keyword_name IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_name      TYPE string.
-    DATA ls_token     TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_inner     TYPE string.
+    DATA lv_name  TYPE string.
+    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_inner TYPE string.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
@@ -103,6 +103,7 @@ CLASS zcl_skylint_no_keyword_name IMPLEMENTATION.
 
   METHOD is_abap_keyword.
     DATA lv_upper TYPE string.
+
     lv_upper = to_upper( iv_name ).
 
     CASE lv_upper.

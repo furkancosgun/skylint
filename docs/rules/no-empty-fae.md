@@ -41,21 +41,6 @@ IF lt_orders IS NOT INITIAL.
 ENDIF.
 ```
 
-## Transformation
-
-```diff
-- SELECT * FROM /dmo/customer
--   FOR ALL ENTRIES IN @lt_orders
--   WHERE customer_id = @lt_orders-customer_id
--   INTO TABLE @lt_customers.
-+ IF lt_orders IS NOT INITIAL.
-+   SELECT * FROM /dmo/customer
-+     FOR ALL ENTRIES IN @lt_orders
-+     WHERE customer_id = @lt_orders-customer_id
-+     INTO TABLE @lt_customers.
-+ ENDIF.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

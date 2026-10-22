@@ -39,20 +39,6 @@ SELECT * FROM /dmo/customer
   INTO TABLE @lt_customers.
 ```
 
-## Transformation
-
-```diff
-- LOOP AT lt_orders INTO ls_order.
--   SELECT SINGLE * FROM /dmo/customer
--     WHERE customer_id = @ls_order-customer_id
--     INTO @ls_customer.
-- ENDLOOP.
-+ SELECT * FROM /dmo/customer
-+   FOR ALL ENTRIES IN @lt_orders
-+   WHERE customer_id = @lt_orders-customer_id
-+   INTO TABLE @lt_customers.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

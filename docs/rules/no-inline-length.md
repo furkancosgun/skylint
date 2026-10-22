@@ -33,13 +33,6 @@ DATA lv_code(10) TYPE c.
 DATA lv_code TYPE c LENGTH 10.
 ```
 
-## Transformation
-
-```diff
-- DATA lv_code(10) TYPE c.
-+ DATA lv_code TYPE c LENGTH 10.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

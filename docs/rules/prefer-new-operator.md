@@ -37,15 +37,6 @@ DATA lo_customer TYPE REF TO cl_customer.
 lo_customer = NEW #( ).
 ```
 
-## Transformation
-
-```diff
-- DATA lo_customer TYPE REF TO cl_customer.
-- CREATE OBJECT lo_customer.
-+ DATA lo_customer TYPE REF TO cl_customer.
-+ lo_customer = NEW #( ).
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

@@ -38,19 +38,6 @@ METHOD calculate.
 ENDMETHOD.
 ```
 
-## Transformation
-
-```diff
-- METHOD calculate.
--   lv_total = 100.
--   DATA lv_tax TYPE i.
-- ENDMETHOD.
-+ METHOD calculate.
-+   DATA lv_tax TYPE i.
-+   lv_total = 100.
-+ ENDMETHOD.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

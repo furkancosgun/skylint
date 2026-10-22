@@ -37,17 +37,6 @@ IF lv_condition = abap_true.
 ENDIF.
 ```
 
-## Transformation
-
-```diff
-- IF 1 = 2.
--   DATA lv_dead TYPE i.
-- ENDIF.
-+ IF lv_condition = abap_true.
-+   DATA lv_active TYPE i.
-+ ENDIF.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

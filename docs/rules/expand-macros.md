@@ -36,16 +36,6 @@ _set_val 10.
 lv_val = 10.
 ```
 
-## Transformation
-
-```diff
-- DEFINE _set_val.
--   lv_val = &1.
-- END-OF-DEFINITION.
-- _set_val 10.
-+ lv_val = 10.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

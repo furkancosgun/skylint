@@ -35,16 +35,6 @@ METHODS get_data
   RETURNING VALUE(rv_res) TYPE string.
 ```
 
-## Transformation
-
-```diff
-- METHODS get_data
--   EXPORTING ev_val TYPE i
--   RETURNING VALUE(rv_res) TYPE string.
-+ METHODS get_data
-+   RETURNING VALUE(rv_res) TYPE string.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

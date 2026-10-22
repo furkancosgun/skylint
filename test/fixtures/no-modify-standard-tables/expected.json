@@ -32,5 +32,11 @@
   {
     "target": "TEST_007",
     "code": null
+  },
+  {
+    "target": "TEST_008",
+    "code": "NOT_OWN_TB",
+    "line": 5,
+    "column": 4
   }
 ]

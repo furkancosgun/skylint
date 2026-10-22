@@ -37,17 +37,6 @@ IF lv_count = 0.
 ENDIF.
 ```
 
-## Transformation
-
-```diff
-- IF 0 = lv_count.
--   process( ).
-- ENDIF.
-+ IF lv_count = 0.
-+   process( ).
-+ ENDIF.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

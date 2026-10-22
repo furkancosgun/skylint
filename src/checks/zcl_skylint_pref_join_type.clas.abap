@@ -32,16 +32,15 @@ ENDCLASS.
 
 CLASS zcl_skylint_pref_join_type IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Prefer an explicit JOIN type such as INNER JOIN'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-join_type
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Specify the JOIN type explicitly, for example INNER JOIN'
-                       pseudo_comment = c_pseudo_comment ) )
-                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-add_inner
-                                                short_text = 'Add explicit INNER JOIN' ) ) ) ).
+    super->constructor( VALUE #( description       = 'Prefer an explicit JOIN type such as INNER JOIN'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-join_type
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Specify the JOIN type explicitly, for example INNER JOIN'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-add_inner
+                                                                short_text = 'Add explicit INNER JOIN' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -76,10 +75,9 @@ CLASS zcl_skylint_pref_join_type IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      lv_line = zcl_skylint_ast_util=>flatten_statement(
-                    is_statement = <ls_statement>
-                    it_overrides = lt_overrides
-                    iv_suffix    = '.' ).
+      lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_statement>
+                                                         it_overrides = lt_overrides
+                                                         iv_suffix    = '.' ).
       ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-add_inner
                                       iv_statement_from = lv_stmt_idx
                                       it_new_code       = VALUE #( ( lv_line ) ) ).

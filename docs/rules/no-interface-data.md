@@ -37,18 +37,6 @@ INTERFACE if_customer.
 ENDINTERFACE.
 ```
 
-## Transformation
-
-```diff
-- INTERFACE if_customer.
--   DATA mv_state TYPE i. " Mutable DATA in interface
-- ENDINTERFACE.
-+ INTERFACE if_customer.
-+   CONSTANTS c_default_status TYPE i VALUE 1.
-+   METHODS get_state RETURNING VALUE(rv_state) TYPE i.
-+ ENDINTERFACE.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

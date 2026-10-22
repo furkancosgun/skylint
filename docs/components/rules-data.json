@@ -670,11 +670,12 @@
     "severity": "warning",
     "findingCode": "NESTEDIF",
     "findingTexts": [
-      "Nested IF block can be merged with outer IF using AND"
+      "Nested IF block can be merged with outer IF using AND",
+      "Nested IF in ELSE block can be changed to ELSEIF"
     ],
     "description": "Merge consecutive nested IF blocks using boolean AND",
-    "rationale": "Consecutive nested `IF` statements without intermediate statements can be combined with `AND`. This reduces nesting depth, flattens control flow, and simplifies cyclomatic complexity.",
-    "hasQuickfix": false,
+    "rationale": "Consecutive nested `IF` statements without intermediate statements can be combined with `AND`. A nested `IF` that is the sole statement in an `ELSE` block can be converted to `ELSEIF`. Both reduce nesting depth, flatten control flow, and simplify cyclomatic complexity.",
+    "hasQuickfix": true,
     "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": [],
@@ -1050,6 +1051,66 @@
         "name": "CHECK_SET_EXT_CHECK",
         "kind": "Boolean",
         "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_OCCURS",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_FS_STRUCTURE",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_PARAMETER",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_SELECT_NO_INTO",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_EXIT_SQL",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_SORT_BY_FS",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_CALL_TRANSF",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_REGEX",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_OCCURENCES",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_REPLACE_INTO",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_LOOP_EXTRACT",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_SORT_EXTRACT",
+        "kind": "Boolean",
+        "defaultValue": "true"
       }
     ],
     "defaultParameters": [
@@ -1175,6 +1236,54 @@
       },
       {
         "name": "CHECK_SET_EXT_CHECK",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_OCCURS",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_FS_STRUCTURE",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_PARAMETER",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_SELECT_NO_INTO",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_EXIT_SQL",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_SORT_BY_FS",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_CALL_TRANSF",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_REGEX",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_OCCURENCES",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_REPLACE_INTO",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_LOOP_EXTRACT",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_SORT_EXTRACT",
         "value": "X"
       }
     ],
@@ -2902,14 +3011,34 @@
     "severity": "warning",
     "findingCode": "NOT_OWN_TB",
     "findingTexts": [
-      "Modify only customer-owned (Z/Y or /.../) database tables"
+      "Modify only customer-owned database tables (see OWN_TABLES)"
     ],
     "description": "Modify Only Own Database Tables",
-    "rationale": "Directly inserting, updating, or deleting tables belonging to another application component bypasses business validation logic and violates modular architecture.",
+    "rationale": "Directly inserting, updating, or deleting tables belonging to another application component bypasses business validation logic and violates modular architecture. Which tables are considered your own is configurable via `OWN_TABLES`, a case-insensitive regex (default `^[yz/]`); dynamic table names are reported when `REPORT_DYNAMIC` is enabled.",
     "hasQuickfix": false,
     "remoteEnabled": true,
-    "attributes": [],
-    "defaultParameters": [],
+    "attributes": [
+      {
+        "name": "OWN_TABLES",
+        "kind": "String",
+        "defaultValue": "^[yz/]"
+      },
+      {
+        "name": "REPORT_DYNAMIC",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "defaultParameters": [
+      {
+        "name": "OWN_TABLES",
+        "value": "^[yz/]"
+      },
+      {
+        "name": "REPORT_DYNAMIC",
+        "value": "X"
+      }
+    ],
     "nonCompliantCode": "DELETE FROM mara WHERE matnr = '100'.",
     "compliantCode": "DELETE FROM zmara WHERE matnr = '100'."
   },

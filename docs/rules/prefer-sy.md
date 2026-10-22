@@ -33,13 +33,6 @@ WRITE syst-uname.
 WRITE sy-uname.
 ```
 
-## Transformation
-
-```diff
-- WRITE syst-uname.
-+ WRITE sy-uname.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

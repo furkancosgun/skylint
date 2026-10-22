@@ -37,15 +37,6 @@ DATA lv_id   TYPE string.
 DATA lv_name TYPE string.
 ```
 
-## Transformation
-
-```diff
-- DATA: lv_id   TYPE string,
--       lv_name TYPE string.
-+ DATA lv_id   TYPE string.
-+ DATA lv_name TYPE string.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

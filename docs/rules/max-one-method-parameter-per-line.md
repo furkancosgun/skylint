@@ -35,16 +35,6 @@ METHODS foo
     iv_b TYPE string.
 ```
 
-## Transformation
-
-```diff
-- METHODS foo IMPORTING iv_a TYPE i iv_b TYPE string.
-+ METHODS foo
-+   IMPORTING
-+     iv_a TYPE i
-+     iv_b TYPE string.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

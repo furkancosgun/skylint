@@ -36,17 +36,6 @@ IF sy-subrc = 0.
 ENDIF.
 ```
 
-## Transformation
-
-```diff
-- DATA(lv_val) = VALUE #( lt_data[ 1 ]-field OPTIONAL ).
-+ DATA lv_val TYPE string.
-+ READ TABLE lt_data INTO ls_data INDEX 1.
-+ IF sy-subrc = 0.
-+   lv_val = ls_data-field.
-+ ENDIF.
-```
-
 ## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:

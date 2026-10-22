@@ -39,20 +39,6 @@ CLASS cl_order DEFINITION.
 ENDCLASS.
 ```
 
-## Transformation
-
-```diff
-- CLASS cl_order DEFINITION.
--   PRIVATE SECTION.
--     " 30+ individual scalar member variables
-- ENDCLASS.
-+ CLASS cl_order DEFINITION.
-+   PRIVATE SECTION.
-+     DATA ms_header TYPE ty_order_header.
-+     DATA mt_items  TYPE ty_order_items.
-+ ENDCLASS.
-```
-
 ## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:

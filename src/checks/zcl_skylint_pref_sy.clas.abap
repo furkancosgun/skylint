@@ -31,16 +31,15 @@ ENDCLASS.
 
 CLASS zcl_skylint_pref_sy IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Prefer the short system field alias SY over SYST'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-use_sy
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Use sy- instead of syst- for system fields'
-                       pseudo_comment = c_pseudo_comment ) )
-                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-use_sy
-                                                short_text = 'Replace SYST with SY' ) ) ) ).
+    super->constructor( VALUE #( description       = 'Prefer the short system field alias SY over SYST'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-use_sy
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Use sy- instead of syst- for system fields'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-use_sy
+                                                                short_text = 'Replace SYST with SY' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -58,10 +57,9 @@ CLASS zcl_skylint_pref_sy IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      lv_line = zcl_skylint_ast_util=>flatten_statement(
-                    is_statement = <ls_statement>
-                    it_overrides = lt_overrides
-                    iv_suffix    = '.' ).
+      lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_statement>
+                                                         it_overrides = lt_overrides
+                                                         iv_suffix    = '.' ).
       ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-use_sy
                                       iv_statement_from = lv_stmt_idx
                                       it_new_code       = VALUE #( ( lv_line ) ) ).
@@ -87,13 +85,13 @@ CLASS zcl_skylint_pref_sy IMPLEMENTATION.
       ls_ref = zcl_skylint_ast_util=>get_reference(
                    is_token = <ls_token>
                    iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
-      IF    ls_ref-full_name <> '\DA:SYST'
+      IF     ls_ref-full_name <> '\DA:SYST'
          AND ls_ref-full_name NP '\DA:SYST\*'.
         CONTINUE.
       ENDIF.
 
-      lv_name = 'SY' && substring( val = <ls_token>-lexeme
-                                    off = 4 ).
+      lv_name = |SY| && substring( val = <ls_token>-lexeme
+                                   off = 4 ).
       APPEND VALUE #( index  = sy-tabix
                       lexeme = lv_name ) TO rt_found.
     ENDLOOP.

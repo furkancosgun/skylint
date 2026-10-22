@@ -37,18 +37,6 @@ IF lv_status = 'A'.
 ENDIF.
 ```
 
-## Transformation
-
-```diff
-- CASE lv_status.
--   WHEN 'A'.
--     process_a( ).
-- ENDCASE.
-+ IF lv_status = 'A'.
-+   process_a( ).
-+ ENDIF.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

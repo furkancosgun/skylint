@@ -38,19 +38,6 @@ CLASS zcl_service DEFINITION PUBLIC CREATE PRIVATE.
 ENDCLASS.
 ```
 
-## Transformation
-
-```diff
-- CLASS zcl_service DEFINITION PUBLIC CREATE PRIVATE.
--   PRIVATE SECTION.
--     METHODS constructor.
-- ENDCLASS.
-+ CLASS zcl_service DEFINITION PUBLIC CREATE PRIVATE.
-+   PUBLIC SECTION.
-+     METHODS constructor.
-+ ENDCLASS.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

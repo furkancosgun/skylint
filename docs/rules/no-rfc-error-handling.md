@@ -38,19 +38,6 @@ CALL FUNCTION 'Z_RFC'
     OTHERS                = 3.
 ```
 
-## Transformation
-
-```diff
-- CALL FUNCTION 'Z_RFC'
--   DESTINATION lv_rfc.
-+ CALL FUNCTION 'Z_RFC'
-+   DESTINATION lv_rfc
-+   EXCEPTIONS
-+     system_failure        = 1 MESSAGE msg
-+     communication_failure = 2 MESSAGE msg
-+     OTHERS                = 3.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

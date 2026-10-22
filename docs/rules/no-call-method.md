@@ -35,15 +35,6 @@ CALL METHOD lo_service->calculate_tax(
 lo_service->calculate_tax( iv_amount = lv_amount ).
 ```
 
-## Transformation
-
-```diff
-- CALL METHOD lo_service->calculate_tax(
--   EXPORTING
--     iv_amount = lv_amount ).
-+ lo_service->calculate_tax( iv_amount = lv_amount ).
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

@@ -52,5 +52,83 @@ CLASS zcl_test_merge_nested_ifs IMPLEMENTATION.
       ENDIF.
     ENDIF.
   ENDMETHOD.
+  METHOD test_005.
+    DATA lv_a TYPE i.
+    DATA lv_b TYPE i.
+    DATA lv_c TYPE i.
+    IF lv_a = 1.
+      lv_c = 0.
+    ELSE.
+      IF lv_b = 2.
+        lv_c = 3.
+      ENDIF.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_006.
+    DATA lv_a TYPE i.
+    DATA lv_b TYPE i.
+    IF lv_a = 1.
+      lv_a = 2.
+    ELSE.
+      lv_b = 1.
+      IF lv_b = 2.
+        lv_b = 3.
+      ENDIF.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_007.
+    DATA lv_a TYPE i.
+    DATA lv_b TYPE i.
+    IF lv_a = 1.
+      lv_a = 2.
+    ELSE.
+      IF lv_b = 2.
+        lv_b = 3.
+      ELSE.
+        lv_b = 4.
+      ENDIF.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_008.
+    DATA lv_a TYPE i.
+    DATA lv_b TYPE i.
+    IF lv_a = 1.
+      IF lv_b = 2.
+        lv_b = 3.
+      ELSE.
+        lv_b = 4.
+      ENDIF.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_009.
+    DATA lv_a TYPE i.
+    DATA lv_b TYPE i.
+    IF lv_a = 1.
+      lv_a = 2.
+    ELSE.
+      IF lv_b = 2.
+        lv_b = 3.
+      ENDIF.
+      lv_b = 4.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_010.
+    DATA lv_a TYPE i.
+    DATA lv_b TYPE i.
+    IF lv_a = 1.
+      lv_a = 2.
+    ELSEIF lv_a = 2.
+      lv_a = 3.
+    ELSE.
+      IF lv_b = 2.
+        lv_b = 3.
+      ENDIF.
+    ENDIF.
+  ENDMETHOD.
 ENDCLASS.
 

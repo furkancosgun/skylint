@@ -32,13 +32,6 @@ DATA lv_copy LIKE lv_original.
 DATA lv_copy TYPE string.
 ```
 
-## Transformation
-
-```diff
-- DATA lv_copy LIKE lv_original.
-+ DATA lv_copy TYPE string.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

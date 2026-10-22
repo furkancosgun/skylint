@@ -32,13 +32,6 @@ MESSAGE 'Something went wrong' TYPE 'E'.
 MESSAGE e001(bc_msg).
 ```
 
-## Transformation
-
-```diff
-- MESSAGE 'Something went wrong' TYPE 'E'.
-+ MESSAGE e001(bc_msg).
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

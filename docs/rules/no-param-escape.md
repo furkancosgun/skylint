@@ -33,13 +33,6 @@ METHODS process IMPORTING !iv_data TYPE string.
 METHODS process IMPORTING iv_data TYPE string.
 ```
 
-## Transformation
-
-```diff
-- METHODS process IMPORTING !iv_data TYPE string.
-+ METHODS process IMPORTING iv_data TYPE string.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

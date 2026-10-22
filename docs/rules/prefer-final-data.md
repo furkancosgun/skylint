@@ -35,15 +35,6 @@ FINAL(lv_count) = 10.
 WRITE lv_count.
 ```
 
-## Transformation
-
-```diff
-- DATA(lv_count) = 10.
-- WRITE lv_count.
-+ FINAL(lv_count) = 10.
-+ WRITE lv_count.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

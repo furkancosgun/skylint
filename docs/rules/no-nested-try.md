@@ -47,28 +47,6 @@ TRY.
 ENDTRY.
 ```
 
-## Transformation
-
-```diff
-- TRY.
--     step1( ).
--     TRY.
--         step2( ).
--       CATCH cx_step2_err.
--         handle_step2( ).
--     ENDTRY.
--   CATCH cx_step1_err.
--     handle_step1( ).
-- ENDTRY.
-+ " Extract inner operations into focused helper methods
-+ TRY.
-+     step1( ).
-+     execute_step2( ).
-+   CATCH cx_step1_err.
-+     handle_step1( ).
-+ ENDTRY.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

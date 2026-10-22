@@ -32,13 +32,6 @@ METHODS matches RETURNING VALUE(rv_res) TYPE abap_bool.
 METHODS do_match RETURNING VALUE(rv_res) TYPE abap_bool.
 ```
 
-## Transformation
-
-```diff
-- METHODS matches RETURNING VALUE(rv_res) TYPE abap_bool.
-+ METHODS do_match RETURNING VALUE(rv_res) TYPE abap_bool.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

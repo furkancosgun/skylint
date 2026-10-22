@@ -42,22 +42,6 @@ lv_grade = COND #(
   ELSE 'C' ).
 ```
 
-## Transformation
-
-```diff
-- IF lv_score >= 90.
--   lv_grade = 'A'.
-- ELSEIF lv_score >= 80.
--   lv_grade = 'B'.
-- ELSE.
--   lv_grade = 'C'.
-- ENDIF.
-+ lv_grade = COND #( 
-+   WHEN lv_score >= 90 THEN 'A'
-+   WHEN lv_score >= 80 THEN 'B'
-+   ELSE 'C' ).
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

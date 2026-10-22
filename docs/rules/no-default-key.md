@@ -33,13 +33,6 @@ DATA lt_customers TYPE STANDARD TABLE OF ty_customer WITH DEFAULT KEY.
 DATA lt_customers TYPE STANDARD TABLE OF ty_customer WITH EMPTY KEY.
 ```
 
-## Transformation
-
-```diff
-- DATA lt_customers TYPE STANDARD TABLE OF ty_customer WITH DEFAULT KEY.
-+ DATA lt_customers TYPE STANDARD TABLE OF ty_customer WITH EMPTY KEY.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

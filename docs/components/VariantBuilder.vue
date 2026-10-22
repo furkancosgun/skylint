@@ -11,7 +11,7 @@ const filterOnlyRemoteEnabled = ref(false);
 
 const variantName = ref('ZSKYLINT_CUSTOM');
 const variantDescription = ref('Custom Skylint Clean ABAP Variant');
-const abapLanguageVersion = ref('cloudDevelopment');
+const abapLanguageVersion = ref('standard');
 
 // Set of enabled checkNames (default: all enabled)
 const selectedCheckNames = reactive(new Set(rulesData.map((r) => r.checkName)));
@@ -138,7 +138,7 @@ function resetDefaults() {
   }
   variantName.value = 'ZSKYLINT_CUSTOM';
   variantDescription.value = 'Custom Skylint Clean ABAP Variant';
-  abapLanguageVersion.value = 'cloudDevelopment';
+  abapLanguageVersion.value = 'standard';
 }
 
 function toggleParamDrawer(checkName) {
@@ -186,7 +186,7 @@ function generateVariantObject() {
     header: {
       description: variantDescription.value || 'Custom Skylint Variant',
       originalLanguage: 'en',
-      abapLanguageVersion: abapLanguageVersion.value || 'cloudDevelopment',
+      abapLanguageVersion: abapLanguageVersion.value || 'standard',
     },
     selectedChecks,
   };
@@ -322,6 +322,17 @@ function formatAttrKind(attr) {
             placeholder="Custom Skylint Clean ABAP Variant"
           />
           <span class="vb-hint">Displayed in Eclipse ADT and SAP GUI variant lists</span>
+        </div>
+
+        <div class="vb-field">
+          <label class="vb-label">ABAP Language Version</label>
+          <select v-model="abapLanguageVersion" class="vb-select">
+            <option value="standard">Standard</option>
+            <option value="cloudDevelopment">ABAP Cloud Development</option>
+          </select>
+          <span class="vb-hint">
+            {{ abapLanguageVersion === 'cloudDevelopment' ? 'ABAP cloud development' : 'Standard' }}
+          </span>
         </div>
       </div>
     </section>

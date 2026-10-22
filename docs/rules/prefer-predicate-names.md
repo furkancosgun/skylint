@@ -32,13 +32,6 @@ METHODS check_active RETURNING VALUE(rv_active) TYPE abap_bool.
 METHODS is_active RETURNING VALUE(rv_active) TYPE abap_bool.
 ```
 
-## Transformation
-
-```diff
-- METHODS check_active RETURNING VALUE(rv_active) TYPE abap_bool.
-+ METHODS is_active RETURNING VALUE(rv_active) TYPE abap_bool.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

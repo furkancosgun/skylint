@@ -37,17 +37,6 @@ IF lv_a = lv_b AND lv_c <> lv_d.
 ENDIF.
 ```
 
-## Transformation
-
-```diff
-- IF lv_a EQ lv_b AND lv_c NE lv_d.
--   process( ).
-- ENDIF.
-+ IF lv_a = lv_b AND lv_c <> lv_d.
-+   process( ).
-+ ENDIF.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

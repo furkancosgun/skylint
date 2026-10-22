@@ -8,7 +8,7 @@ Comprehensive reference for all **108** Clean ABAP, security, performance, and a
 
 ::: tip Skylint at a Glance
 - **108 Native ATC Rules:** 100% ABAP Cloud (Contract C1) & Steampunk Ready.
-- **46 Automated QuickFixes:** Instant one-click refactoring with <kbd>Ctrl</kbd> + <kbd>1</kbd> in Eclipse ADT.
+- **47 Automated QuickFixes:** Instant one-click refactoring with <kbd>Ctrl</kbd> + <kbd>1</kbd> in Eclipse ADT.
 - **Zero Legacy Overhead:** Built exclusively on `IF_CI_ATC_CHECK` (no obsolete Code Inspector / SCI dependency).
 :::
 
@@ -27,7 +27,7 @@ Modern language features, expression-oriented coding, and idiomatic Clean ABAP p
 | [`prefer-string-template`](/rules/prefer-string-template) | `ZCL_SKYLINT_PREF_STR_TMPL` | Prefer string templates over CONCATENATE | `#EC STR_TMPL` | ⚡ Ready | ✅ Yes |
 | [`prefer-line-exists`](/rules/prefer-line-exists) | `ZCL_SKYLINT_PREF_LINE_EXISTS` | Prefer line_exists( ) over READ TABLE with NO FIELDS | `#EC LINE_EXISTS` | — | ✅ Yes |
 | [`prefer-return`](/rules/prefer-return) | `ZCL_SKYLINT_PREF_RETURN` | Prefer RETURN over EXIT outside loop constructs | `#EC RETURN` | ⚡ Ready | ✅ Yes |
-| [`prefer-merged-ifs`](/rules/prefer-merged-ifs) | `ZCL_SKYLINT_PREF_MERGE_IFS` | Merge consecutive nested IF blocks using boolean AND | `#EC MERGE_IFS` | — | ✅ Yes |
+| [`prefer-merged-ifs`](/rules/prefer-merged-ifs) | `ZCL_SKYLINT_PREF_MERGE_IFS` | Merge consecutive nested IF blocks using boolean AND | `#EC MERGE_IFS` | ⚡ Ready | ✅ Yes |
 | [`prefer-symbol-operators`](/rules/prefer-symbol-operators) | `ZCL_SKYLINT_PREF_SYMBOL_OP` | Prefer symbolic operators over textual EQ, NE, LT, GT | `#EC SYMBOL_OP` | ⚡ Ready | ✅ Yes |
 | [`prefer-new-operator`](/rules/prefer-new-operator) | `ZCL_SKYLINT_PREF_NEW_OP` | Prefer NEW operator over CREATE OBJECT and RAISE EXCEPTION | `#EC NEW_OP` | ⚡ Ready | ✅ Yes |
 | [`prefer-xsdbool`](/rules/prefer-xsdbool) | `ZCL_SKYLINT_PREF_XSDBOOL` | Prefer xsdbool( ) expression over manual IF-ELSE assignment | `#EC XSDBOOL` | ⚡ Ready | ✅ Yes |

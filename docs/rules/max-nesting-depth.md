@@ -43,24 +43,6 @@ ENDIF.
 execute( ).
 ```
 
-## Transformation
-
-```diff
-- IF cond1.
--   IF cond2.
--     IF cond3.
--       IF cond4.
--         execute( ).
--       ENDIF.
--     ENDIF.
--   ENDIF.
-- ENDIF.
-+ IF NOT cond1 OR NOT cond2 OR NOT cond3 OR NOT cond4.
-+   RETURN.
-+ ENDIF.
-+ execute( ).
-```
-
 ## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:

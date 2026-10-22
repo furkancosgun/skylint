@@ -32,13 +32,6 @@ CONSTANTS c_status VALUE 'A'. " TYPE is omitted; implicitly typed as c length 1
 CONSTANTS c_status TYPE c LENGTH 1 VALUE 'A'.
 ```
 
-## Transformation
-
-```diff
-- CONSTANTS c_status VALUE 'A'. " TYPE is omitted; implicitly typed as c length 1
-+ CONSTANTS c_status TYPE c LENGTH 1 VALUE 'A'.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

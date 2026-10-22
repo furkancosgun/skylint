@@ -32,13 +32,6 @@ MESSAGE e001(zmsg) RAISING not_found.
 RAISE EXCEPTION NEW cx_not_found( textid = cx_not_found=>c_item_missing ).
 ```
 
-## Transformation
-
-```diff
-- MESSAGE e001(zmsg) RAISING not_found.
-+ RAISE EXCEPTION NEW cx_not_found( textid = cx_not_found=>c_item_missing ).
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

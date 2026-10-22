@@ -36,17 +36,6 @@ IF lv_type = 'A'.
 ENDIF.
 ```
 
-## Transformation
-
-```diff
-- IF lv_type = 'A' OR lv_type = 'A'.
--   process( ).
-- ENDIF.
-+ IF lv_type = 'A'.
-+   process( ).
-+ ENDIF.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

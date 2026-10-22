@@ -33,14 +33,6 @@ ULINE.
 mo_logger->info( 'Order processed:' ).
 ```
 
-## Transformation
-
-```diff
-- WRITE: / 'Order processed:'.
-- ULINE.
-+ mo_logger->info( 'Order processed:' ).
-```
-
 ## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:

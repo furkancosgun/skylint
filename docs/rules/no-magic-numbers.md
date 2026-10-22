@@ -37,18 +37,6 @@ IF lv_status = c_status_completed.
 ENDIF.
 ```
 
-## Transformation
-
-```diff
-- IF lv_status = 3.
--   process( ).
-- ENDIF.
-+ CONSTANTS c_status_completed TYPE i VALUE 3.
-+ IF lv_status = c_status_completed.
-+   process( ).
-+ ENDIF.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

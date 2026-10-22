@@ -33,13 +33,6 @@ DESCRIBE TABLE lt_customers LINES lv_count.
 lv_count = lines( lt_customers ).
 ```
 
-## Transformation
-
-```diff
-- DESCRIBE TABLE lt_customers LINES lv_count.
-+ lv_count = lines( lt_customers ).
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

@@ -120,10 +120,7 @@
   },
   {
     "target": "TEST_018",
-    "code": "OBSOLETE",
-    "line": 3,
-    "column": 4,
-    "quickfixes": []
+    "code": null
   },
   {
     "target": "TEST_019",
@@ -178,6 +175,140 @@
   },
   {
     "target": "TEST_026",
+    "code": "OBSOLETE",
+    "line": 2,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_027",
+    "code": "OBSOLETE",
+    "line": 2,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_028",
+    "code": null
+  },
+  {
+    "target": "TEST_029",
+    "code": "OBSOLETE",
+    "line": 2,
+    "column": 4,
+    "quickfixes": [
+      "REPLACE_OB"
+    ]
+  },
+  {
+    "target": "TEST_030",
+    "code": "OBSOLETE",
+    "line": 2,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_031",
+    "code": null
+  },
+  {
+    "target": "TEST_032",
+    "code": null
+  },
+  {
+    "target": "TEST_033",
+    "code": null
+  },
+  {
+    "target": "TEST_034",
+    "code": "OBSOLETE",
+    "line": 2,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_035",
+    "code": "OBSOLETE",
+    "line": 4,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_036",
+    "code": null
+  },
+  {
+    "target": "TEST_037",
+    "code": "OBSOLETE",
+    "line": 2,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_038",
+    "code": "OBSOLETE",
+    "line": 2,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_039",
+    "code": "OBSOLETE",
+    "line": 2,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_040",
+    "code": "OBSOLETE",
+    "line": 2,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_041",
+    "code": "OBSOLETE",
+    "line": 3,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_042",
+    "code": "OBSOLETE",
+    "line": 2,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_043",
+    "code": "OBSOLETE",
+    "line": 2,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_044",
+    "code": "OBSOLETE",
+    "line": 2,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_045",
+    "code": "OBSOLETE",
+    "line": 2,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_046",
+    "code": "OBSOLETE",
+    "line": 2,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_047",
     "code": "OBSOLETE",
     "line": 2,
     "column": 4,

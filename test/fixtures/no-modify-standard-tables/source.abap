@@ -7,6 +7,7 @@ CLASS zcl_test_modify_own_tab DEFINITION PUBLIC FINAL CREATE PUBLIC.
     METHODS test_005.
     METHODS test_006.
     METHODS test_007.
+    METHODS test_008.
 ENDCLASS.
 
 CLASS zcl_test_modify_own_tab IMPLEMENTATION.
@@ -38,4 +39,10 @@ CLASS zcl_test_modify_own_tab IMPLEMENTATION.
     DATA lt_data TYPE string_table.
     MODIFY lt_data FROM 'hello' INDEX 1.
   ENDMETHOD.
-ENDCLASS.
+  METHOD test_008.
+    DATA lv_table TYPE string.
+    DATA ls_row TYPE mara.
+    lv_table = 'MARA'.
+    MODIFY (lv_table) FROM ls_row.
+  ENDMETHOD.
+

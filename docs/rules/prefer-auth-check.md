@@ -33,13 +33,6 @@ CALL TRANSACTION 'VA01'.
 CALL TRANSACTION 'VA01' WITH AUTHORITY-CHECK.
 ```
 
-## Transformation
-
-```diff
-- CALL TRANSACTION 'VA01'.
-+ CALL TRANSACTION 'VA01' WITH AUTHORITY-CHECK.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

@@ -48,13 +48,6 @@ DATA foo TYPE i.
 DATA lv_foo TYPE i.
 ```
 
-## Transformation
-
-```diff
-- DATA foo TYPE i.
-+ DATA lv_foo TYPE i.
-```
-
 ## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:

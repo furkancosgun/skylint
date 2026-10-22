@@ -33,13 +33,6 @@ lo_child ?= lo_parent.
 lo_child = CAST #( lo_parent ).
 ```
 
-## Transformation
-
-```diff
-- lo_child ?= lo_parent.
-+ lo_child = CAST #( lo_parent ).
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

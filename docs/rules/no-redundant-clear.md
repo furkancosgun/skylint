@@ -36,14 +36,6 @@ CLEAR lv_count.
 DATA lv_count TYPE i.
 ```
 
-## Transformation
-
-```diff
-- DATA lv_count TYPE i.
-- CLEAR lv_count.
-+ DATA lv_count TYPE i.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

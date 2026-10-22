@@ -45,26 +45,6 @@ CASE lv_type.
 ENDCASE.
 ```
 
-## Transformation
-
-```diff
-- IF lv_type = 'A'.
--   process_a( ).
-- ELSEIF lv_type = 'B'.
--   process_b( ).
-- ELSEIF lv_type = 'C'.
--   process_c( ).
-- ENDIF.
-+ CASE lv_type.
-+   WHEN 'A'.
-+     process_a( ).
-+   WHEN 'B'.
-+     process_b( ).
-+   WHEN 'C'.
-+     process_c( ).
-+ ENDCASE.
-```
-
 ## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:

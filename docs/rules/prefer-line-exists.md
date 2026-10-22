@@ -37,18 +37,6 @@ IF line_exists( lt_items[ id = lv_id ] ).
 ENDIF.
 ```
 
-## Transformation
-
-```diff
-- READ TABLE lt_items TRANSPORTING NO FIELDS WITH KEY id = lv_id.
-- IF sy-subrc = 0.
--   process( ).
-- ENDIF.
-+ IF line_exists( lt_items[ id = lv_id ] ).
-+   process( ).
-+ ENDIF.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

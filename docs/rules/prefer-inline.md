@@ -33,14 +33,6 @@ lv_count = 10.
 DATA(lv_count) = 10.
 ```
 
-## Transformation
-
-```diff
-- DATA lv_count TYPE i.
-- lv_count = 10.
-+ DATA(lv_count) = 10.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

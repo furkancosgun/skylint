@@ -36,17 +36,6 @@ IF is_feature_enabled( c_features-prod_mode ) = abap_true.
 ENDIF.
 ```
 
-## Transformation
-
-```diff
-- IF sy-sysid = 'PRD' OR sy-mandt = '100'.
--   enable_production_mode( ).
-- ENDIF.
-+ IF is_feature_enabled( c_features-prod_mode ) = abap_true.
-+   enable_production_mode( ).
-+ ENDIF.
-```
-
 ## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:

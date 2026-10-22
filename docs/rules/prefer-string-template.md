@@ -33,13 +33,6 @@ CONCATENATE 'Hello' iv_name INTO lv_greeting SEPARATED BY space.
 lv_greeting = |Hello { iv_name }|.
 ```
 
-## Transformation
-
-```diff
-- CONCATENATE 'Hello' iv_name INTO lv_greeting SEPARATED BY space.
-+ lv_greeting = |Hello { iv_name }|.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

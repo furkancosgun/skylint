@@ -38,19 +38,6 @@ METHOD constructor.
 ENDMETHOD.
 ```
 
-## Transformation
-
-```diff
-- METHOD constructor.
--   super->constructor( ).
--   " 15+ statements initializing complex states and reading DB...
-- ENDMETHOD.
-+ METHOD constructor.
-+   super->constructor( ).
-+   mo_gateway = io_gateway. " Simple dependency assignment only
-+ ENDMETHOD.
-```
-
 ## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:

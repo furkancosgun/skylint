@@ -33,13 +33,6 @@ lv_name = lv_name.
 lv_name = iv_new_name.
 ```
 
-## Transformation
-
-```diff
-- lv_name = lv_name.
-+ lv_name = iv_new_name.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

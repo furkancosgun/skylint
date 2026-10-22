@@ -7,5 +7,13 @@
   },
   "category": "ZSKYLINT",
   "implementingClass": "ZCL_SKYLINT_NO_MOD_STD_TABLE",
-  "checkType": "remoteEnabled"
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "OWN_TABLES"
+    },
+    {
+      "name": "REPORT_DYNAMIC"
+    }
+  ]
 }

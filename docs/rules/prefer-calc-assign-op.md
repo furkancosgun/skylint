@@ -35,15 +35,6 @@ lv_count += 1.
 lv_total *= 2.
 ```
 
-## Transformation
-
-```diff
-- lv_count = lv_count + 1.
-- lv_total = lv_total * 2.
-+ lv_count += 1.
-+ lv_total *= 2.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

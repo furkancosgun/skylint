@@ -38,16 +38,6 @@ CLASS cl_customer_service DEFINITION PUBLIC FINAL CREATE PUBLIC.
 ENDCLASS.
 ```
 
-## Transformation
-
-```diff
-- CLASS cl_customer_service DEFINITION PUBLIC CREATE PUBLIC.
--   " Class not intended for inheritance
-- ENDCLASS.
-+ CLASS cl_customer_service DEFINITION PUBLIC FINAL CREATE PUBLIC.
-+ ENDCLASS.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

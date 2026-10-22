@@ -32,13 +32,6 @@ DATA foo-bar TYPE i.
 DATA foobar TYPE i.
 ```
 
-## Transformation
-
-```diff
-- DATA foo-bar TYPE i.
-+ DATA foobar TYPE i.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

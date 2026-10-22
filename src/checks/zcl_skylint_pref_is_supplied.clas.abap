@@ -31,16 +31,15 @@ ENDCLASS.
 
 CLASS zcl_skylint_pref_is_supplied IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Prefer IS SUPPLIED over the obsolete IS REQUESTED'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-is_supplied
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Use IS SUPPLIED instead of IS REQUESTED'
-                       pseudo_comment = c_pseudo_comment ) )
-                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-use_supplied
-                                                short_text = 'Replace with IS SUPPLIED' ) ) ) ).
+    super->constructor( VALUE #( description       = 'Prefer IS SUPPLIED over the obsolete IS REQUESTED'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-is_supplied
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Use IS SUPPLIED instead of IS REQUESTED'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-use_supplied
+                                                                short_text = 'Replace with IS SUPPLIED' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -58,10 +57,9 @@ CLASS zcl_skylint_pref_is_supplied IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      lv_line = zcl_skylint_ast_util=>flatten_statement(
-                    is_statement = <ls_statement>
-                    it_overrides = lt_overrides
-                    iv_suffix    = '.' ).
+      lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_statement>
+                                                         it_overrides = lt_overrides
+                                                         iv_suffix    = '.' ).
       ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-use_supplied
                                       iv_statement_from = lv_stmt_idx
                                       it_new_code       = VALUE #( ( lv_line ) ) ).
@@ -88,7 +86,7 @@ CLASS zcl_skylint_pref_is_supplied IMPLEMENTATION.
                                                         iv_index     = sy-tabix - 1 ).
       lv_prev_prev = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
                                                              iv_index     = sy-tabix - 2 ).
-      IF    lv_prev <> 'IS'
+      IF     lv_prev <> 'IS'
          AND ( lv_prev <> 'NOT' OR lv_prev_prev <> 'IS' ).
         CONTINUE.
       ENDIF.

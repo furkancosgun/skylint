@@ -37,15 +37,6 @@ ENDEXEC.
 SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
 ```
 
-## Transformation
-
-```diff
-- EXEC SQL.
--   SELECT * FROM /dmo/customer INTO :wa
-- ENDEXEC.
-+ SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
-```
-
 ## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:

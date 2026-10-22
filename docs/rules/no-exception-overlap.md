@@ -40,21 +40,6 @@ CALL FUNCTION 'SOMETHING'
     OTHERS                = 3.
 ```
 
-## Transformation
-
-```diff
-- CALL FUNCTION 'SOMETHING'
--   EXCEPTIONS
--     system_failure        = 1 MESSAGE lv_message
--     communication_failure = 1 MESSAGE lv_message
--     OTHERS                = 1.
-+ CALL FUNCTION 'SOMETHING'
-+   EXCEPTIONS
-+     system_failure        = 1 MESSAGE lv_message
-+     communication_failure = 2 MESSAGE lv_message
-+     OTHERS                = 3.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

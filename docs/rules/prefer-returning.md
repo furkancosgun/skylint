@@ -34,15 +34,6 @@ METHODS calculate
   RETURNING VALUE(rv_result) TYPE i.
 ```
 
-## Transformation
-
-```diff
-- METHODS calculate
--   EXPORTING ev_result TYPE i.
-+ METHODS calculate
-+   RETURNING VALUE(rv_result) TYPE i.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

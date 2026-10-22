@@ -40,21 +40,6 @@ METHOD execute.
 ENDMETHOD.
 ```
 
-## Transformation
-
-```diff
-- METHOD execute.
--   DATA lv_count TYPE i.
--   TYPES ty_status TYPE c LENGTH 1. " TYPES declared after DATA
--   CONSTANTS c_init TYPE ty_status VALUE 'I'.
-- ENDMETHOD.
-+ METHOD execute.
-+   TYPES ty_status TYPE c LENGTH 1.
-+   CONSTANTS c_init TYPE ty_status VALUE 'I'.
-+   DATA lv_count TYPE i.
-+ ENDMETHOD.
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

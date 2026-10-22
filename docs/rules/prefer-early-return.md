@@ -44,23 +44,6 @@ METHOD process_order.
 ENDMETHOD.
 ```
 
-## Transformation
-
-```diff
-- METHOD process_order.
--   IF is_valid( ).
--     " Entire method logic deeply nested
--     execute_order( ).
--   ENDIF.
-- ENDMETHOD.
-+ METHOD process_order.
-+   IF NOT is_valid( ).
-+     RETURN.
-+   ENDIF.
-+   execute_order( ).
-+ ENDMETHOD.
-```
-
 ## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:

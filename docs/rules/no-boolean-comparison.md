@@ -37,17 +37,6 @@ IF is_valid( ).
 ENDIF.
 ```
 
-## Transformation
-
-```diff
-- IF is_valid( ) = abap_true.
--   execute( ).
-- ENDIF.
-+ IF is_valid( ).
-+   execute( ).
-+ ENDIF.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

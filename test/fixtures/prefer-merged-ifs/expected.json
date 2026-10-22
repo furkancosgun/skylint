@@ -16,5 +16,39 @@
     "line": 5,
     "column": 4,
     "quickfixes": []
+  },
+  {
+    "target": "TEST_005",
+    "code": "ELSEIF",
+    "line": 7,
+    "column": 4,
+    "quickfixes": [
+      "USE_ELSEIF"
+    ]
+  },
+  {
+    "target": "TEST_006",
+    "code": null
+  },
+  {
+    "target": "TEST_007",
+    "code": null
+  },
+  {
+    "target": "TEST_008",
+    "code": null
+  },
+  {
+    "target": "TEST_009",
+    "code": null
+  },
+  {
+    "target": "TEST_010",
+    "code": "ELSEIF",
+    "line": 8,
+    "column": 4,
+    "quickfixes": [
+      "USE_ELSEIF"
+    ]
   }
 ]

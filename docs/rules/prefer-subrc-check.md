@@ -36,17 +36,6 @@ IF sy-subrc = 0.
 ENDIF.
 ```
 
-## Transformation
-
-```diff
-- SELECT SINGLE * FROM /dmo/customer WHERE customer_id = @lv_id INTO @ls_customer.
-- process_customer( ls_customer ). " sy-subrc is never checked
-+ SELECT SINGLE * FROM /dmo/customer WHERE customer_id = @lv_id INTO @ls_customer.
-+ IF sy-subrc = 0.
-+   process_customer( ls_customer ).
-+ ENDIF.
-```
-
 ## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:

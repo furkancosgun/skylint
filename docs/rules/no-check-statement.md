@@ -43,21 +43,6 @@ LOOP AT lt_items INTO ls_item.
 ENDLOOP.
 ```
 
-## Transformation
-
-```diff
-- LOOP AT lt_items INTO ls_item.
--   CHECK ls_item-status = 'ACTIVE'.
--   process( ls_item ).
-- ENDLOOP.
-+ LOOP AT lt_items INTO ls_item.
-+   IF ls_item-status <> 'ACTIVE'.
-+     CONTINUE.
-+   ENDIF.
-+   process( ls_item ).
-+ ENDLOOP.
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

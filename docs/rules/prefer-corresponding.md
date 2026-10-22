@@ -33,13 +33,6 @@ MOVE-CORRESPONDING ls_source TO ls_target.
 ls_target = CORRESPONDING #( ls_source ).
 ```
 
-## Transformation
-
-```diff
-- MOVE-CORRESPONDING ls_source TO ls_target.
-+ ls_target = CORRESPONDING #( ls_source ).
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

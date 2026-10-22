@@ -32,13 +32,6 @@ lo_calc->get_total( ).
 lv_total = lo_calc->get_total( ).
 ```
 
-## Transformation
-
-```diff
-- lo_calc->get_total( ).
-+ lv_total = lo_calc->get_total( ).
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

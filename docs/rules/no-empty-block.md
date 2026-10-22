@@ -40,19 +40,6 @@ IF lv_condition = abap_false.
 ENDIF.
 ```
 
-## Transformation
-
-```diff
-- IF lv_condition = abap_true.
--   " Empty block
-- ELSE.
--   process( ).
-- ENDIF.
-+ IF lv_condition = abap_false.
-+   process( ).
-+ ENDIF.
-```
-
 ## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:

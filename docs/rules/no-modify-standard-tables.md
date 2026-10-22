@@ -14,11 +14,11 @@ description: "Modify Only Own Database Tables"
 
 Modify Only Own Database Tables.
 
-> **ATC Finding Message:** `Modify only customer-owned (Z/Y or /.../) database tables`
+> **ATC Finding Message:** `Modify only customer-owned database tables (see OWN_TABLES)`
 
 ## Rationale
 
-Directly inserting, updating, or deleting tables belonging to another application component bypasses business validation logic and violates modular architecture.
+Directly inserting, updating, or deleting tables belonging to another application component bypasses business validation logic and violates modular architecture. Which tables are considered your own is configurable via `OWN_TABLES`, a case-insensitive regex (default `^[yz/]`); dynamic table names are reported when `REPORT_DYNAMIC` is enabled.
 
 ### Non-Compliant
 
@@ -32,12 +32,14 @@ DELETE FROM mara WHERE matnr = '100'.
 DELETE FROM zmara WHERE matnr = '100'.
 ```
 
-## Transformation
+## Configuration & Thresholds
 
-```diff
-- DELETE FROM mara WHERE matnr = '100'.
-+ DELETE FROM zmara WHERE matnr = '100'.
-```
+This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
+
+| Parameter Name | Data Type | Default Value |
+|---|---|:---:|
+| `OWN_TABLES` | `String` | <code>^[yz/]</code> |
+| `REPORT_DYNAMIC` | `Boolean` | <code>true</code> |
 
 ## Suppression
 

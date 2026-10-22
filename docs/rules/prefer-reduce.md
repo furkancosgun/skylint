@@ -38,18 +38,6 @@ lv_sum = REDUCE #(
   NEXT res = res + ls_item-amount ).
 ```
 
-## Transformation
-
-```diff
-- LOOP AT lt_items INTO ls_item.
--   lv_sum = lv_sum + ls_item-amount.
-- ENDLOOP.
-+ lv_sum = REDUCE #( 
-+   INIT res = lv_sum
-+   FOR ls_item IN lt_items
-+   NEXT res = res + ls_item-amount ).
-```
-
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
