@@ -1,0 +1,11 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Prefer IS SUPPLIED over the obsolete IS REQUESTED",
+    "originalLanguage": "en",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "category": "ZSKYLINT",
+  "implementingClass": "ZCL_SKYLINT_PREF_IS_SUPPLIED",
+  "checkType": "remoteEnabled"
+}

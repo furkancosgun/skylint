@@ -1,18 +1,18 @@
 ---
-description: "Comprehensive reference and catalog for all 104 Clean ABAP, security, performance, and architecture rules in Skylint."
+description: "Comprehensive reference and catalog for all 108 Clean ABAP, security, performance, and architecture rules in Skylint."
 ---
 
-# Rules Catalog (104 Rules)
+# Rules Catalog (108 Rules)
 
-Comprehensive reference for all **104** Clean ABAP, security, performance, and architecture rules in Skylint.
+Comprehensive reference for all **108** Clean ABAP, security, performance, and architecture rules in Skylint.
 
 ::: tip Skylint at a Glance
-- **104 Native ATC Rules:** 100% ABAP Cloud (Contract C1) & Steampunk Ready.
-- **42 Automated QuickFixes:** Instant one-click refactoring with <kbd>Ctrl</kbd> + <kbd>1</kbd> in Eclipse ADT.
+- **108 Native ATC Rules:** 100% ABAP Cloud (Contract C1) & Steampunk Ready.
+- **46 Automated QuickFixes:** Instant one-click refactoring with <kbd>Ctrl</kbd> + <kbd>1</kbd> in Eclipse ADT.
 - **Zero Legacy Overhead:** Built exclusively on `IF_CI_ATC_CHECK` (no obsolete Code Inspector / SCI dependency).
 :::
 
-## Clean ABAP & Modern Syntax (37)
+## Clean ABAP & Modern Syntax (41)
 
 Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.
 
@@ -55,6 +55,10 @@ Modern language features, expression-oriented coding, and idiomatic Clean ABAP p
 | [`prefer-cast`](/rules/prefer-cast) | `ZCL_SKYLINT_PREF_CAST` | Prefer modern CAST #( ) expression over ?= | `#EC PREF_CAST` | ⚡ Ready | ✅ Yes |
 | [`prefer-naming`](/rules/prefer-naming) | `ZCL_SKYLINT_PREF_NAMING` | Standard Naming Conventions | `#EC NAMING` | — | ✅ Yes |
 | [`bad-indent`](/rules/bad-indent) | `ZCL_SKYLINT_NO_BAD_INDENT` | Bad Statement Indentation | `#EC BAD_INDENT` | ⚡ Ready | ✅ Yes |
+| [`prefer-join-type`](/rules/prefer-join-type) | `ZCL_SKYLINT_PREF_JOIN_TYPE` | Prefer an explicit JOIN type such as INNER JOIN | `#EC JOIN_TYPE` | ⚡ Ready | ✅ Yes |
+| [`prefer-standard-table`](/rules/prefer-standard-table) | `ZCL_SKYLINT_PREF_STD_TABLE` | Prefer explicit TYPE STANDARD TABLE OF over TYPE TABLE OF | `#EC PREF_STD_TABLE` | ⚡ Ready | ✅ Yes |
+| [`prefer-is-supplied`](/rules/prefer-is-supplied) | `ZCL_SKYLINT_PREF_IS_SUPPLIED` | Prefer IS SUPPLIED over the obsolete IS REQUESTED | `#EC PREF_IS_SUPPLIED` | ⚡ Ready | ✅ Yes |
+| [`prefer-sy`](/rules/prefer-sy) | `ZCL_SKYLINT_PREF_SY` | Prefer the short system field alias SY over SYST | `#EC PREF_SY` | ⚡ Ready | ✅ Yes |
 
 ## Anti-Patterns & Bad Practices (39)
 

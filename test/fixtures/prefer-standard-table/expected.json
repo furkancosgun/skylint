@@ -1,0 +1,28 @@
+[
+  {
+    "target": "TEST_001",
+    "code": "STD_TABLE",
+    "line": 2,
+    "column": 4,
+    "quickfixes": [
+      "ADD_STDTAB"
+    ]
+  },
+  {
+    "target": "TEST_002",
+    "code": null
+  },
+  {
+    "target": "TEST_003",
+    "code": null
+  },
+  {
+    "target": "TEST_004",
+    "code": "STD_TABLE",
+    "line": 2,
+    "column": 4,
+    "quickfixes": [
+      "ADD_STDTAB"
+    ]
+  }
+]

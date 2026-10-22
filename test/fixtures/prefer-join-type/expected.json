@@ -1,0 +1,19 @@
+[
+  {
+    "target": "TEST_001",
+    "code": "JOIN_TYPE",
+    "line": 2,
+    "column": 4,
+    "quickfixes": [
+      "ADD_INNER"
+    ]
+  },
+  {
+    "target": "TEST_002",
+    "code": null
+  },
+  {
+    "target": "TEST_003",
+    "code": null
+  }
+]

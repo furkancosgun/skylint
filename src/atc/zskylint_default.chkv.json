@@ -971,6 +971,18 @@
     },
     {
       "checkName": "ZSKYLINT_NO_KEYWORD_NAME"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_JOIN_TYPE"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_STD_TABLE"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_IS_SUPPLIED"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_SY"
     }
   ]
 }

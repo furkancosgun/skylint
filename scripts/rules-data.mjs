@@ -1541,6 +1541,54 @@ ENDCASE.`,
       good: `DATA lv_class TYPE string.\nDATA lv_type TYPE i.`,
     },
   },
+  {
+    ruleId: 'prefer-join-type',
+    title: 'Prefer an Explicit JOIN Type',
+    rationale: 'A bare `JOIN` silently defaults to an inner join, which hides the intended cardinality and makes the query harder to review. State the join type explicitly with `INNER JOIN`, `LEFT OUTER JOIN`, `RIGHT OUTER JOIN`, or `CROSS JOIN`.',
+    className: 'ZCL_SKYLINT_PREF_JOIN_TYPE',
+    pseudoComment: 'JOIN_TYPE',
+    category: 'clean-abap',
+    example: {
+      bad: `SELECT * FROM mara JOIN makt ON mara~matnr = makt~matnr INTO TABLE @DATA(lt_result).`,
+      good: `SELECT * FROM mara INNER JOIN makt ON mara~matnr = makt~matnr INTO TABLE @DATA(lt_result).`,
+    },
+  },
+  {
+    ruleId: 'prefer-standard-table',
+    title: 'Prefer TYPE STANDARD TABLE OF over TYPE TABLE OF',
+    rationale: '`TYPE TABLE OF` declares an implicit standard table and obscures the table kind. Spelling out `TYPE STANDARD TABLE OF` makes the access pattern and performance characteristics explicit, and keeps declarations consistent with sorted or hashed tables.',
+    className: 'ZCL_SKYLINT_PREF_STD_TABLE',
+    pseudoComment: 'PREF_STD_TABLE',
+    category: 'clean-abap',
+    example: {
+      bad: `DATA lt_rows TYPE TABLE OF mara.`,
+      good: `DATA lt_rows TYPE STANDARD TABLE OF mara.`,
+    },
+  },
+  {
+    ruleId: 'prefer-is-supplied',
+    title: 'Prefer IS SUPPLIED over IS REQUESTED',
+    rationale: '`IS REQUESTED` is obsolete and only meaningful for output parameters. `IS SUPPLIED` expresses the actual question reliably: whether the caller passed an actual parameter, regardless of the parameter direction.',
+    className: 'ZCL_SKYLINT_PREF_IS_SUPPLIED',
+    pseudoComment: 'PREF_IS_SUPPLIED',
+    category: 'clean-abap',
+    example: {
+      bad: `IF iv_name IS REQUESTED.\n  process( iv_name ).\nENDIF.`,
+      good: `IF iv_name IS SUPPLIED.\n  process( iv_name ).\nENDIF.`,
+    },
+  },
+  {
+    ruleId: 'prefer-sy',
+    title: 'Prefer the Short System Field Alias SY over SYST',
+    rationale: '`SY` and `SYST` address the same system structure, but `SY` is the established short form. Using a single alias keeps system field access consistent throughout the codebase.',
+    className: 'ZCL_SKYLINT_PREF_SY',
+    pseudoComment: 'PREF_SY',
+    category: 'clean-abap',
+    example: {
+      bad: `WRITE syst-uname.`,
+      good: `WRITE sy-uname.`,
+    },
+  },
 ];
 
 export const RULE_BY_RULE_ID = new Map(RULES.map(r => [r.ruleId, r]));

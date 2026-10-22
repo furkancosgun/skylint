@@ -3797,5 +3797,93 @@
     "defaultParameters": [],
     "nonCompliantCode": "DATA class TYPE string.\nDATA type TYPE i.",
     "compliantCode": "DATA lv_class TYPE string.\nDATA lv_type TYPE i."
+  },
+  {
+    "ruleId": "prefer-join-type",
+    "title": "Prefer an Explicit JOIN Type",
+    "className": "ZCL_SKYLINT_PREF_JOIN_TYPE",
+    "checkName": "ZSKYLINT_PREF_JOIN_TYPE",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "JOIN_TYPE",
+    "severity": "warning",
+    "findingCode": "JOIN_TYPE",
+    "findingTexts": [
+      "Specify the JOIN type explicitly, for example INNER JOIN"
+    ],
+    "description": "Prefer an explicit JOIN type such as INNER JOIN",
+    "rationale": "A bare `JOIN` silently defaults to an inner join, which hides the intended cardinality and makes the query harder to review. State the join type explicitly with `INNER JOIN`, `LEFT OUTER JOIN`, `RIGHT OUTER JOIN`, or `CROSS JOIN`.",
+    "hasQuickfix": true,
+    "remoteEnabled": true,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "SELECT * FROM mara JOIN makt ON mara~matnr = makt~matnr INTO TABLE @DATA(lt_result).",
+    "compliantCode": "SELECT * FROM mara INNER JOIN makt ON mara~matnr = makt~matnr INTO TABLE @DATA(lt_result)."
+  },
+  {
+    "ruleId": "prefer-standard-table",
+    "title": "Prefer TYPE STANDARD TABLE OF over TYPE TABLE OF",
+    "className": "ZCL_SKYLINT_PREF_STD_TABLE",
+    "checkName": "ZSKYLINT_PREF_STD_TABLE",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "PREF_STD_TABLE",
+    "severity": "warning",
+    "findingCode": "STD_TABLE",
+    "findingTexts": [
+      "Specify the table kind explicitly: TYPE STANDARD TABLE OF"
+    ],
+    "description": "Prefer explicit TYPE STANDARD TABLE OF over TYPE TABLE OF",
+    "rationale": "`TYPE TABLE OF` declares an implicit standard table and obscures the table kind. Spelling out `TYPE STANDARD TABLE OF` makes the access pattern and performance characteristics explicit, and keeps declarations consistent with sorted or hashed tables.",
+    "hasQuickfix": true,
+    "remoteEnabled": true,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "DATA lt_rows TYPE TABLE OF mara.",
+    "compliantCode": "DATA lt_rows TYPE STANDARD TABLE OF mara."
+  },
+  {
+    "ruleId": "prefer-is-supplied",
+    "title": "Prefer IS SUPPLIED over IS REQUESTED",
+    "className": "ZCL_SKYLINT_PREF_IS_SUPPLIED",
+    "checkName": "ZSKYLINT_PREF_IS_SUPPLIED",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "PREF_IS_SUPPLIED",
+    "severity": "warning",
+    "findingCode": "SUPPLIED",
+    "findingTexts": [
+      "Use IS SUPPLIED instead of IS REQUESTED"
+    ],
+    "description": "Prefer IS SUPPLIED over the obsolete IS REQUESTED",
+    "rationale": "`IS REQUESTED` is obsolete and only meaningful for output parameters. `IS SUPPLIED` expresses the actual question reliably: whether the caller passed an actual parameter, regardless of the parameter direction.",
+    "hasQuickfix": true,
+    "remoteEnabled": true,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "IF iv_name IS REQUESTED.\n  process( iv_name ).\nENDIF.",
+    "compliantCode": "IF iv_name IS SUPPLIED.\n  process( iv_name ).\nENDIF."
+  },
+  {
+    "ruleId": "prefer-sy",
+    "title": "Prefer the Short System Field Alias SY over SYST",
+    "className": "ZCL_SKYLINT_PREF_SY",
+    "checkName": "ZSKYLINT_PREF_SY",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "PREF_SY",
+    "severity": "warning",
+    "findingCode": "USE_SY",
+    "findingTexts": [
+      "Use sy- instead of syst- for system fields"
+    ],
+    "description": "Prefer the short system field alias SY over SYST",
+    "rationale": "`SY` and `SYST` address the same system structure, but `SY` is the established short form. Using a single alias keeps system field access consistent throughout the codebase.",
+    "hasQuickfix": true,
+    "remoteEnabled": true,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "WRITE syst-uname.",
+    "compliantCode": "WRITE sy-uname."
   }
 ]

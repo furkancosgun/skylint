@@ -531,9 +531,13 @@ fs.writeFileSync(path.join(docsDir, 'index.md'), indexMd, 'utf8');
 function generateOgImage() {
   const publicDir = path.join(docsDir, 'public');
   fs.mkdirSync(publicDir, { recursive: true });
+  const ogSvgPath = path.join(publicDir, 'og-image.svg');
+  if (fs.existsSync(ogSvgPath) && process.env.FORCE_OG_IMAGE !== '1') return;
+
   const logoPath = path.join(publicDir, 'logo.svg');
   if (!fs.existsSync(logoPath)) return;
 
+  const ogRuleCount = '100+';
   const logoSvg = fs.readFileSync(logoPath, 'utf8');
   const defsMatch = logoSvg.match(/<defs>([\s\S]*?)<\/defs>/);
   const innerMatch = logoSvg.match(/<circle[\s\S]*?<\/g>/);
@@ -564,14 +568,14 @@ function generateOgImage() {
   <g transform="translate(480, 210)">
     <text font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="76" font-weight="800" fill="#ffffff" letter-spacing="-1">Skylint</text>
     <text y="68" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="28" font-weight="500" fill="#38bdf8">Enterprise Clean ABAP &amp; Cloud ATC Linter Engine</text>
-    <text y="125" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="21" font-weight="400" fill="#94a3b8">Native SAP ATC Integration · ${RULES.length} Clean Rules · Automated ADT QuickFixes</text>
+    <text y="125" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="21" font-weight="400" fill="#94a3b8">Native SAP ATC Integration · ${ogRuleCount} Clean Rules · Automated ADT QuickFixes</text>
 
     <g transform="translate(0, 185)">
       <rect x="0" y="0" width="185" height="42" rx="21" fill="#0369a1" fill-opacity="0.25" stroke="#0284c7" stroke-width="1.5" />
       <text x="92" y="26" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="600" fill="#38bdf8" text-anchor="middle">⚡ 100% Native ATC</text>
 
       <rect x="200" y="0" width="190" height="42" rx="21" fill="#047857" fill-opacity="0.25" stroke="#059669" stroke-width="1.5" />
-      <text x="295" y="26" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="600" fill="#34d399" text-anchor="middle">🌿 ${RULES.length} Clean Rules</text>
+      <text x="295" y="26" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="600" fill="#34d399" text-anchor="middle">🌿 ${ogRuleCount} Clean Rules</text>
 
       <rect x="405" y="0" width="200" height="42" rx="21" fill="#7c3aed" fill-opacity="0.25" stroke="#8b5cf6" stroke-width="1.5" />
       <text x="505" y="26" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="600" fill="#a78bfa" text-anchor="middle">🛠️ Instant QuickFixes</text>
@@ -584,7 +588,6 @@ function generateOgImage() {
   </g>
 </svg>`;
 
-  const ogSvgPath = path.join(publicDir, 'og-image.svg');
   const ogPngPath = path.join(publicDir, 'og-image.png');
   fs.writeFileSync(ogSvgPath, ogSvg, 'utf8');
 

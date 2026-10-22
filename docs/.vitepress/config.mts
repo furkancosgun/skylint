@@ -73,7 +73,7 @@ export default defineConfig({
           'name': 'Skylint',
           'applicationCategory': 'DeveloperApplication',
           'operatingSystem': 'SAP ABAP Cloud, Node.js',
-          'description': 'Enterprise Clean ABAP & Cloud ATC Linter Engine with 104+ Native Rules',
+          'description': 'Enterprise Clean ABAP & Cloud ATC Linter Engine with 108+ Native Rules',
           'url': 'https://skylint.org/',
           'license': 'https://github.com/furkancosgun/skylint/blob/main/LICENSE',
           'image': 'https://skylint.org/og-image.png',
@@ -97,7 +97,7 @@ export default defineConfig({
     logo: { src: '/logo.svg', alt: 'Skylint Logo' },
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
-      { text: 'Rules (104)', link: '/rules/' },
+      { text: 'Rules (108)', link: '/rules/' },
       { text: 'Variant Builder', link: '/variant-builder' },
       { text: 'GitHub', link: 'https://github.com/furkancosgun/skylint' },
     ],
@@ -268,6 +268,22 @@ export default defineConfig({
       {
         "text": "bad-indent",
         "link": "/rules/bad-indent"
+      },
+      {
+        "text": "prefer-join-type",
+        "link": "/rules/prefer-join-type"
+      },
+      {
+        "text": "prefer-standard-table",
+        "link": "/rules/prefer-standard-table"
+      },
+      {
+        "text": "prefer-is-supplied",
+        "link": "/rules/prefer-is-supplied"
+      },
+      {
+        "text": "prefer-sy",
+        "link": "/rules/prefer-sy"
       }
     ]
   },

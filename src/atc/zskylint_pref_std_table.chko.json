@@ -1,0 +1,11 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Prefer explicit TYPE STANDARD TABLE OF over TYPE TABLE OF",
+    "originalLanguage": "en",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "category": "ZSKYLINT",
+  "implementingClass": "ZCL_SKYLINT_PREF_STD_TABLE",
+  "checkType": "remoteEnabled"
+}
