@@ -57,17 +57,3 @@ Skylint provides an interactive web-based **Variant Builder** in the documentati
 - Adjust parameter limits and thresholds visually.
 - Export the configuration as an SAP ATC Check Variant (`CHKV`) JSON definition ready for import into your repository.
 
----
-
-## 📋 Common Parameter Reference
-
-Below are key configurable parameters available across Skylint rules:
-
-| Rule | Parameter | Type | Default | Description |
-|---|---|---|:---:|---|
-| `max-method-length` | `MAX_STATEMENTS` | Integer | `50` | Maximum statements allowed per procedure |
-| `max-nesting-depth` | `MAX_DEPTH` | Integer | `3` | Maximum nesting depth for control structures |
-| `max-params` | `MAX_PARAMETERS` | Integer | `5` | Maximum formal parameters for method definitions |
-| `max-attributes` | `MAX_ATTRIBUTES` | Integer | `10` | Maximum attributes allowed per class |
-| `max-line-length` | `MAX_LINE_LENGTH` | Integer | `120` | Maximum allowed line length in characters |
-| `prefer-naming` | `VARIABLE_PATTERN` | String | `^L[VTSOA]_.*$` | Regex pattern for local variable naming |

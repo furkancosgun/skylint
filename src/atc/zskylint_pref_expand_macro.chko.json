@@ -1,11 +1,11 @@
 {
   "formatVersion": "1",
   "header": {
-    "description": "Avoid Using ABAP Keywords as Identifier Names",
+    "description": "Expand Macro Calls",
     "originalLanguage": "en",
     "abapLanguageVersion": "cloudDevelopment"
   },
   "category": "ZSKYLINT",
-  "implementingClass": "ZCL_SKYLINT_KEYWORD_NAME",
+  "implementingClass": "ZCL_SKYLINT_PREF_EXPAND_MACRO",
   "checkType": "remoteEnabled"
 }

@@ -89,5 +89,5 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ## Technical Details
 
-* **Native ATC Class:** `ZCL_SKYLINT_BAD_INDENT`
-* **Implementation File:** [zcl_skylint_bad_indent.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_bad_indent.clas.abap)
+* **Native ATC Class:** `ZCL_SKYLINT_NO_BAD_INDENT`
+* **Implementation File:** [zcl_skylint_no_bad_indent.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_bad_indent.clas.abap)

@@ -19,9 +19,7 @@ Skylint is engineered from the ground up for the modern ABAP ecosystem:
 
 ## 📦 Installation & Setup
 
-You can run Skylint in two primary environments: directly in your SAP system as native ATC checks, or locally/in CI/CD pipelines as a CLI tool.
-
-### Option 1: Native SAP System Installation (Recommended)
+Skylint is installed directly into your SAP system as native ATC checks via abapGit:
 
 1. **Prerequisites:**
    - SAP BTP ABAP Environment, SAP S/4HANA Cloud, or SAP S/4HANA 2022+ On-Premise.
@@ -40,41 +38,6 @@ You can run Skylint in two primary environments: directly in your SAP system as 
 3. **Verify Installation:**
    - In Eclipse ADT, search for classes prefixed with `ZCL_SKYLINT_`.
    - All check classes inherit from `ZCL_SKYLINT_CHECK_BASE` and are immediately ready for ATC variant assignment.
-
----
-
-### Option 2: Local & CI/CD Pipeline (CLI)
-
-Skylint includes a fast, standalone AST analyzer for developer machines, pre-commit hooks, and GitHub Actions / GitLab CI workflows:
-
-```bash
-# Clone the repository
-git clone https://github.com/furkancosgun/skylint.git
-cd skylint
-
-# Install dependencies
-npm install
-
-# Run comprehensive test suite
-npm test
-```
-
-Scan any ABAP source repository or folder:
-
-```bash
-# Scan a directory against all Clean ABAP rules
-skylint scan ./src
-
-# Scan with automatic QuickFix code transformation
-skylint scan ./src --fix
-
-# Scan filtering by a specific rule
-skylint scan ./src --filter prefer-lines
-
-# Output findings in JSON or SARIF for pipeline ingestion
-skylint scan ./src --json
-skylint scan ./src --sarif > results.sarif
-```
 
 ---
 

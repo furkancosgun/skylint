@@ -3,9 +3,9 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <VSEOCLASS>
-    <CLSNAME>ZCL_SKYLINT_BAD_INDENT</CLSNAME>
+    <CLSNAME>ZCL_SKYLINT_NO_KEYWORD_NAME</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Bad Statement Indentation</DESCRIPT>
+    <DESCRIPT>skylint: Avoid Using Keywords as Identifier Names</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

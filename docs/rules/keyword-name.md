@@ -57,5 +57,5 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ## Technical Details
 
-* **Native ATC Class:** `ZCL_SKYLINT_KEYWORD_NAME`
-* **Implementation File:** [zcl_skylint_keyword_name.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_keyword_name.clas.abap)
+* **Native ATC Class:** `ZCL_SKYLINT_NO_KEYWORD_NAME`
+* **Implementation File:** [zcl_skylint_no_keyword_name.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_keyword_name.clas.abap)

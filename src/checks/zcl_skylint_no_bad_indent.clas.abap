@@ -1,4 +1,4 @@
-CLASS zcl_skylint_bad_indent DEFINITION
+CLASS zcl_skylint_no_bad_indent DEFINITION
   PUBLIC
   INHERITING FROM zcl_skylint_check_base
   CREATE PUBLIC.
@@ -32,7 +32,7 @@ CLASS zcl_skylint_bad_indent DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_bad_indent IMPLEMENTATION.
+CLASS zcl_skylint_no_bad_indent IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
         VALUE #( description       = 'skylint: Bad Statement Indentation'
@@ -49,13 +49,13 @@ CLASS zcl_skylint_bad_indent IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_base_col  TYPE i.
-    DATA lv_expected  TYPE i.
-    DATA lv_stmt_col  TYPE i.
-    DATA lv_check_col TYPE i.
-    DATA lv_stmt_idx  TYPE i.
-    DATA lt_new_code  TYPE zcl_skylint_check_base=>ty_code_lines.
-    DATA ls_quickfix  TYPE zcl_skylint_check_base=>ty_quickfix.
+    DATA lv_base_col       TYPE i.
+    DATA lv_expected       TYPE i.
+    DATA lv_stmt_col       TYPE i.
+    DATA lv_check_col      TYPE i.
+    DATA lv_stmt_idx       TYPE i.
+    DATA lt_new_code       TYPE zcl_skylint_check_base=>ty_code_lines.
+    DATA ls_quickfix       TYPE zcl_skylint_check_base=>ty_quickfix.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     lv_base_col = -1.
@@ -107,7 +107,7 @@ CLASS zcl_skylint_bad_indent IMPLEMENTATION.
           ENDIF.
 
         WHEN 'ENDIF' OR 'ENDLOOP' OR 'ENDDO' OR 'ENDWHILE' OR 'ENDTRY' OR 'ENDCASE'.
-          lv_expected -= mv_indent_step.
+          lv_expected = lv_expected - mv_indent_step.
           IF lv_expected < 0.
             lv_expected = 0.
           ENDIF.
@@ -133,7 +133,7 @@ CLASS zcl_skylint_bad_indent IMPLEMENTATION.
                               iv_finding_code = c_finding_codes-bad_indent
                               is_quickfix     = ls_quickfix ).
           ENDIF.
-          lv_expected += mv_indent_step.
+          lv_expected = lv_expected + mv_indent_step.
 
         WHEN OTHERS.
           IF lv_stmt_col <> lv_expected.

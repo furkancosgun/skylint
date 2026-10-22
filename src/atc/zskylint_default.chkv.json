@@ -955,10 +955,10 @@
       ]
     },
     {
-      "checkName": "ZSKYLINT_EXPAND_MACROS"
+      "checkName": "ZSKYLINT_PREF_EXPAND_MACRO"
     },
     {
-      "checkName": "ZSKYLINT_BAD_INDENT",
+      "checkName": "ZSKYLINT_NO_BAD_INDENT",
       "parameters": [
         {
           "name": "INDENT_STEP",
@@ -970,7 +970,7 @@
       "checkName": "ZSKYLINT_NO_DEAD_CODE"
     },
     {
-      "checkName": "ZSKYLINT_KEYWORD_NAME"
+      "checkName": "ZSKYLINT_NO_KEYWORD_NAME"
     }
   ]
 }

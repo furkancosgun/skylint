@@ -136,22 +136,3 @@ stage('ATC Static Analysis') {
 ### 2. Git-Enabled CTS (gCTS) Pre-Commit Checks
 When using gCTS in ABAP Cloud, you can configure an ATC quality gate in the repository settings to automatically run the Skylint variant before any commit or push is accepted.
 
-### 3. Local CLI in GitHub Actions / GitLab CI
-For projects maintaining source code in git repositories (e.g., via abapGit), Skylint can run entirely offline without requiring a live SAP system:
-```yaml
-# .github/workflows/skylint.yml
-name: Skylint Static Analysis
-on: [push, pull_request]
-
-jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: npm ci
-      - run: npm run build
-      - run: npx skylint scan ./src
-```

@@ -3702,8 +3702,8 @@
   {
     "ruleId": "expand-macros",
     "title": "Expand Macro Calls into Explicit Statements",
-    "className": "ZCL_SKYLINT_EXPAND_MACROS",
-    "checkName": "ZSKYLINT_EXPAND_MACROS",
+    "className": "ZCL_SKYLINT_PREF_EXPAND_MACRO",
+    "checkName": "ZSKYLINT_PREF_EXPAND_MACRO",
     "category": "anti-patterns",
     "categoryTitle": "Anti-Patterns & Bad Practices",
     "pseudoComment": "EXPAND_MACROS",
@@ -3724,8 +3724,8 @@
   {
     "ruleId": "bad-indent",
     "title": "Statement Indentation Must Match Block Nesting",
-    "className": "ZCL_SKYLINT_BAD_INDENT",
-    "checkName": "ZSKYLINT_BAD_INDENT",
+    "className": "ZCL_SKYLINT_NO_BAD_INDENT",
+    "checkName": "ZSKYLINT_NO_BAD_INDENT",
     "category": "clean-abap",
     "categoryTitle": "Clean ABAP & Modern Syntax",
     "pseudoComment": "BAD_INDENT",
@@ -3779,8 +3779,8 @@
   {
     "ruleId": "keyword-name",
     "title": "Avoid Using ABAP Keywords as Identifier Names",
-    "className": "ZCL_SKYLINT_KEYWORD_NAME",
-    "checkName": "ZSKYLINT_KEYWORD_NAME",
+    "className": "ZCL_SKYLINT_NO_KEYWORD_NAME",
+    "checkName": "ZSKYLINT_NO_KEYWORD_NAME",
     "category": "anti-patterns",
     "categoryTitle": "Anti-Patterns & Bad Practices",
     "pseudoComment": "KEYWORD_NAME",

@@ -3,9 +3,9 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <VSEOCLASS>
-    <CLSNAME>ZCL_SKYLINT_KEYWORD_NAME</CLSNAME>
+    <CLSNAME>ZCL_SKYLINT_PREF_EXPAND_MACRO</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Avoid Using Keywords as Identifier Names</DESCRIPT>
+    <DESCRIPT>skylint: Expand Macro Calls</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

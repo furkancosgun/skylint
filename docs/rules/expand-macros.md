@@ -67,5 +67,5 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ## Technical Details
 
-* **Native ATC Class:** `ZCL_SKYLINT_EXPAND_MACROS`
-* **Implementation File:** [zcl_skylint_expand_macros.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_expand_macros.clas.abap)
+* **Native ATC Class:** `ZCL_SKYLINT_PREF_EXPAND_MACRO`
+* **Implementation File:** [zcl_skylint_pref_expand_macro.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_pref_expand_macro.clas.abap)
