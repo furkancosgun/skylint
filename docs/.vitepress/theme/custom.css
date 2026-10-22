@@ -68,7 +68,7 @@ summary:focus-visible {
 
 .vp-doc table {
   border-radius: 8px;
-  overflow: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 .vp-doc tr {
@@ -77,6 +77,21 @@ summary:focus-visible {
 
 .vp-doc tbody tr:hover {
   background: var(--vp-c-brand-softest);
+}
+
+@media (max-width: 768px) {
+  .vp-doc table {
+    font-size: 0.82rem;
+  }
+
+  .vp-doc th,
+  .vp-doc td {
+    padding: 0.45rem 0.6rem;
+  }
+
+  .vp-doc th {
+    white-space: nowrap;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

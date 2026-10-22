@@ -128,12 +128,35 @@ const filteredRules = computed(() => {
 });
 
 // --- Methods ---
+function setStep(stepId) {
+  currentStep.value = Math.min(Math.max(stepId, 1), steps.length);
+
+  if (typeof window === 'undefined' || !window.matchMedia('(max-width: 640px)').matches) {
+    return;
+  }
+
+  const target = document.querySelector('.vb-mobile-progress');
+  if (!target) {
+    return;
+  }
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  target.scrollIntoView({
+    behavior: reduceMotion ? 'auto' : 'smooth',
+    block: 'start',
+  });
+}
+
+function goToStep(stepId) {
+  setStep(stepId);
+}
+
 function nextStep() {
-  currentStep.value = Math.min(currentStep.value + 1, steps.length);
+  setStep(currentStep.value + 1);
 }
 
 function prevStep() {
-  currentStep.value = Math.max(currentStep.value - 1, 1);
+  setStep(currentStep.value - 1);
 }
 
 function toggleCheck(checkName) {
@@ -341,7 +364,7 @@ function formatAttrKind(attr) {
         class="vb-step"
         :class="{ active: currentStep === step.id, complete: currentStep > step.id }"
         :aria-current="currentStep === step.id ? 'step' : undefined"
-        @click="currentStep = step.id"
+        @click="goToStep(step.id)"
       >
         <span class="vb-step-num">
           <svg v-if="currentStep > step.id" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
@@ -352,6 +375,22 @@ function formatAttrKind(attr) {
         <span class="vb-step-label">{{ step.label }}</span>
       </button>
     </nav>
+
+    <div class="vb-mobile-progress">
+      <div class="vb-mobile-progress-row">
+        <span class="vb-mobile-progress-step">Step {{ currentStep }} of {{ steps.length }}</span>
+        <strong class="vb-mobile-progress-label">{{ steps[currentStep - 1].label }}</strong>
+      </div>
+      <div
+        class="vb-mobile-progress-track"
+        role="progressbar"
+        :aria-valuenow="currentStep"
+        aria-valuemin="1"
+        :aria-valuemax="steps.length"
+      >
+        <span :style="{ width: `${(currentStep / steps.length) * 100}%` }"></span>
+      </div>
+    </div>
 
     <!-- Variant Configuration & Export Card -->
     <section v-show="currentStep === 1" class="vb-card vb-config-card">
@@ -665,7 +704,19 @@ function formatAttrKind(attr) {
 
       <div class="vb-json-header">
         <span>Variant JSON preview</span>
-        <span>{{ activeCount }} checks · {{ abapLanguageVersion }}</span>
+        <div class="vb-json-header-actions">
+          <span>{{ activeCount }} checks · {{ abapLanguageVersion }}</span>
+          <button class="vb-json-copy" type="button" title="Copy variant JSON" @click="copyVariantJson">
+            <svg v-if="copiedJson" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+              <path d="m5 12 4 4L19 6" />
+            </svg>
+            <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="9" y="9" width="12" height="12" rx="2" />
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+            </svg>
+            {{ copiedJson ? 'Copied' : 'Copy JSON' }}
+          </button>
+        </div>
       </div>
       <pre class="vb-json-preview" aria-label="Generated CHKV JSON"><code v-html="highlightedJson"></code></pre>
     </section>
@@ -676,30 +727,23 @@ function formatAttrKind(attr) {
         <span class="vb-sticky-count">{{ activeCount }} checks enabled</span>
       </div>
       <div class="vb-sticky-actions">
-        <button v-if="currentStep > 1" class="vb-btn vb-btn-secondary" type="button" @click="prevStep">
+        <button
+          class="vb-btn vb-btn-secondary"
+          type="button"
+          :disabled="currentStep === 1"
+          @click="prevStep"
+        >
           Back
         </button>
         <button v-if="currentStep < steps.length" class="vb-btn vb-btn-primary" type="button" @click="nextStep">
-          Next: {{ steps[currentStep].label }}
+          Continue
         </button>
-        <template v-else>
-          <button class="vb-btn vb-btn-secondary" type="button" @click="copyVariantJson">
-            <svg v-if="copiedJson" class="vb-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-              <path d="m5 12 4 4L19 6" />
-            </svg>
-            <svg v-else class="vb-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <rect x="9" y="9" width="12" height="12" rx="2" />
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-            </svg>
-            {{ copiedJson ? 'Copied' : 'Copy JSON' }}
-          </button>
-          <button class="vb-btn vb-btn-primary" type="button" @click="downloadVariant">
-            <svg class="vb-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
-            </svg>
-            Download .chkv.json
-          </button>
-        </template>
+        <button v-else class="vb-btn vb-btn-primary" type="button" @click="downloadVariant">
+          <svg class="vb-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+          </svg>
+          Download<span class="vb-download-ext"> .chkv.json</span>
+        </button>
       </div>
     </div>
 
@@ -848,6 +892,7 @@ function formatAttrKind(attr) {
 .vb-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
   font-weight: 600;
   font-size: 0.88rem;
@@ -856,6 +901,12 @@ function formatAttrKind(attr) {
   border: 1px solid transparent;
   cursor: pointer;
   transition: all 0.2s ease;
+}
+
+.vb-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .vb-btn-primary {
@@ -1409,12 +1460,57 @@ html.dark .vb-tag.local {
   color: var(--vp-c-brand-1);
 }
 
-@media (max-width: 620px) {
-  .vb-step {
-    flex-direction: column;
-    gap: 0.25rem;
-    font-size: 0.72rem;
-    padding: 0.5rem 0.35rem;
+.vb-mobile-progress {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .vb-stepper {
+    display: none;
+  }
+
+  .vb-mobile-progress {
+    display: block;
+    max-width: 760px;
+    margin: 0 auto 1.25rem;
+    padding: 0 0.25rem;
+    scroll-margin-top: calc(var(--vp-nav-height) + 16px);
+  }
+
+  .vb-mobile-progress-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .vb-mobile-progress-step {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--vp-c-text-3);
+  }
+
+  .vb-mobile-progress-label {
+    font-size: 0.9rem;
+    color: var(--vp-c-text-1);
+  }
+
+  .vb-mobile-progress-track {
+    height: 4px;
+    overflow: hidden;
+    border: 1px solid var(--vp-c-divider);
+    border-radius: 999px;
+    background: var(--vp-c-bg-soft);
+  }
+
+  .vb-mobile-progress-track span {
+    display: block;
+    height: 100%;
+    background: var(--vp-c-brand-1);
+    transition: width 0.25s ease;
   }
 }
 
@@ -1535,6 +1631,40 @@ html.dark .vb-tag.local {
   color: var(--vp-c-text-3);
 }
 
+.vb-json-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.vb-json-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.55rem;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 6px;
+  background: var(--vp-c-bg-soft);
+  color: var(--vp-c-text-2);
+  font-family: inherit;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: normal;
+  text-transform: none;
+  cursor: pointer;
+}
+
+.vb-json-copy:hover {
+  border-color: var(--vp-c-brand-1);
+  color: var(--vp-c-brand-1);
+}
+
+.vb-json-copy svg {
+  width: 14px;
+  height: 14px;
+}
+
 .vb-json-preview :deep(.vb-json-key) {
   color: #0369a1;
   font-weight: 600;
@@ -1639,6 +1769,7 @@ html.dark .vb-json-preview :deep(.vb-json-null) {
   .vb-sticky-bar {
     bottom: 0;
     width: 100%;
+    padding: 0.5rem 0.65rem calc(0.5rem + env(safe-area-inset-bottom));
     border-radius: 12px 12px 0 0;
   }
 
@@ -1648,11 +1779,26 @@ html.dark .vb-json-preview :deep(.vb-json-null) {
 
   .vb-sticky-actions {
     width: 100%;
+    flex-wrap: nowrap;
+    justify-content: center;
   }
 
   .vb-sticky-actions .vb-btn {
-    flex: 1;
-    justify-content: center;
+    flex: 1 1 0;
+    max-width: 160px;
+    min-height: 36px;
+    padding: 0.45rem 0.7rem;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+
+  .vb-download-ext {
+    display: none;
+  }
+
+  .vb-sticky-actions .vb-btn-icon {
+    width: 14px;
+    height: 14px;
   }
 }
 </style>

@@ -162,14 +162,14 @@ function resetFilters() {
           </thead>
           <tbody>
             <tr v-for="rule in category.rules" :key="rule.ruleId">
-              <td>
+              <td data-label="Rule">
                 <a :href="withBase(`/rules/${rule.ruleId}`)"><code>{{ rule.ruleId }}</code></a>
               </td>
-              <td><code>{{ rule.className }}</code></td>
-              <td>{{ rule.description }}</td>
-              <td><code>#EC {{ rule.pseudoComment }}</code></td>
-              <td class="center">{{ rule.hasQuickfix ? 'Yes' : 'No' }}</td>
-              <td class="center">{{ rule.remoteEnabled ? 'Yes' : 'No' }}</td>
+              <td data-label="ABAP Class"><code>{{ rule.className }}</code></td>
+              <td data-label="Description">{{ rule.description }}</td>
+              <td data-label="Suppression"><code>#EC {{ rule.pseudoComment }}</code></td>
+              <td class="center" data-label="QuickFix">{{ rule.hasQuickfix ? 'Yes' : 'No' }}</td>
+              <td class="center" data-label="Remote">{{ rule.remoteEnabled ? 'Yes' : 'No' }}</td>
             </tr>
           </tbody>
         </table>
@@ -391,7 +391,18 @@ function resetFilters() {
   cursor: pointer;
 }
 
+@media (max-width: 900px) {
+  .catalog-toolbar {
+    position: static;
+  }
+}
+
 @media (max-width: 720px) {
+  .catalog-toolbar {
+    margin-bottom: 1rem;
+    padding: 0.5rem 0 0.75rem;
+  }
+
   .catalog-search-row {
     flex-direction: column;
     align-items: stretch;
@@ -400,6 +411,97 @@ function resetFilters() {
 
   .catalog-count {
     text-align: right;
+  }
+
+  .catalog-pills {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 0.3rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .catalog-pill,
+  .catalog-divider,
+  .catalog-reset {
+    flex-shrink: 0;
+  }
+
+  .catalog-category {
+    scroll-margin-top: calc(var(--vp-nav-height) + 16px);
+  }
+
+  .catalog-table-wrap {
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .catalog-table {
+    display: block;
+    width: 100%;
+    font-size: 0.84rem;
+  }
+
+  .catalog-table thead {
+    display: none;
+  }
+
+  .catalog-table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .catalog-table tr {
+    display: block;
+    padding: 0.75rem 0.85rem;
+    border: 1px solid var(--vp-c-divider);
+    border-radius: 8px;
+    background: var(--vp-c-bg-soft);
+  }
+
+  .catalog-table td {
+    display: block;
+    padding: 0;
+    border: 0;
+  }
+
+  .catalog-table td[data-label="ABAP Class"] {
+    display: none;
+  }
+
+  .catalog-table td[data-label="Rule"] {
+    font-size: 0.9rem;
+  }
+
+  .catalog-table td[data-label="Description"] {
+    margin: 0.3rem 0 0.5rem;
+    color: var(--vp-c-text-2);
+  }
+
+  .catalog-table td[data-label="Suppression"] {
+    margin-bottom: 0.45rem;
+  }
+
+  .catalog-table td.center {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-right: 0.35rem;
+    padding: 0.15rem 0.45rem;
+    border: 1px solid var(--vp-c-divider);
+    border-radius: 999px;
+    background: var(--vp-c-bg);
+    color: var(--vp-c-text-2);
+    font-size: 0.7rem;
+    text-align: left;
+  }
+
+  .catalog-table td.center::before {
+    content: attr(data-label);
+    color: var(--vp-c-text-3);
+    font-weight: 600;
   }
 }
 </style>
