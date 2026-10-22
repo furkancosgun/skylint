@@ -5,6 +5,7 @@ description: "Select performance (Avoid SELECT * and SELECT ... ENDSELECT)"
 # Avoid SELECT * Queries
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Performance & Database" />
   <Badge type="danger" text="#EC SELECT_STAR" />
   <Badge type="info" text="Remote Enabled" />
@@ -20,12 +21,12 @@ Select performance (Avoid SELECT * and SELECT ... ENDSELECT).
 
 ## Rationale
 
-Selecting all database columns transfers unnecessary data across the network, bypasses secondary indexes, and breaks table buffering. Always specify the explicit columns required.
+SELECT * reads every column even when only a few fields are used, increasing network traffic and memory consumption. It also prevents efficient covering-index access and makes the code break when the table structure changes. List the required columns explicitly so the query stays stable and efficient.
 
 ### Non-Compliant
 
 ```abap
-SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
+SELECT * FROM /dmo/customer WHERE country = 'DE' INTO TABLE @lt_customers.
 ```
 
 ### Compliant
@@ -33,6 +34,7 @@ SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
 ```abap
 SELECT customer_id, first_name, last_name
   FROM /dmo/customer
+  WHERE country = 'DE'
   INTO TABLE @lt_customers.
 ```
 

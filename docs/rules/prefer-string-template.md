@@ -5,8 +5,9 @@ description: "Prefer string templates over CONCATENATE"
 # Prefer String Templates over CONCATENATE
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC STR_TMPL" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,18 +20,18 @@ Prefer string templates over CONCATENATE.
 
 ## Rationale
 
-String templates (`|Hello { lv_name }|`) provide type-safe, readable string interpolation with built-in formatting options. They eliminate procedural `CONCATENATE` and `SEPARATED BY` statements.
+CONCATENATE with SEPARATED BY is a procedural statement that splits a message into literals and variables and cannot be nested in expressions. String templates interpolate values directly, preserve spaces, and support formatting options for numbers, dates, and alignment. Use a template for readable text composition and reserve CONCATENATE only for legacy downport code.
 
 ### Non-Compliant
 
 ```abap
-CONCATENATE 'Hello' iv_name INTO lv_greeting SEPARATED BY space.
+CONCATENATE 'Order' lv_order_id 'created' INTO lv_message SEPARATED BY space.
 ```
 
 ### Compliant
 
 ```abap
-lv_greeting = |Hello { iv_name }|.
+lv_message = |Order { lv_order_id } created|.
 ```
 
 ## Automated QuickFix

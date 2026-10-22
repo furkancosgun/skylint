@@ -5,6 +5,7 @@ description: "Limit class member attributes to prevent God Classes"
 # Limit Member Attributes per Class
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Metrics & Complexity Limits" />
   <Badge type="danger" text="#EC ATTRIBUTES" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,24 +19,29 @@ Limit class member attributes to prevent God Classes.
 
 ## Rationale
 
-Classes with dozens of member variables are almost always God Objects that handle multiple unrelated responsibilities. Split them into smaller, focused domain classes.
+A class with many member variables tends to own several unrelated responsibilities and becomes a God object. Its state is hard to initialize, test, and reason about, and changes ripple through many methods. Split cohesive fields into smaller domain objects or focused classes.
 
 ### Non-Compliant
 
 ```abap
-CLASS cl_order DEFINITION.
+CLASS cl_order DEFINITION PUBLIC CREATE PUBLIC.
   PRIVATE SECTION.
-    " 30+ individual scalar member variables
+    DATA mv_id TYPE string.
+    DATA mv_customer TYPE string.
+    DATA mv_status TYPE string.
+    DATA mv_total TYPE i.
+    DATA mv_currency TYPE string.
+    DATA mv_created_at TYPE timestamp.
 ENDCLASS.
 ```
 
 ### Compliant
 
 ```abap
-CLASS cl_order DEFINITION.
+CLASS cl_order DEFINITION PUBLIC CREATE PUBLIC.
   PRIVATE SECTION.
     DATA ms_header TYPE ty_order_header.
-    DATA mt_items  TYPE ty_order_items.
+    DATA mt_items TYPE ty_order_items.
 ENDCLASS.
 ```
 

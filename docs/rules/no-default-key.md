@@ -5,8 +5,9 @@ description: "Avoid WITH DEFAULT KEY; prefer EMPTY KEY or explicit keys"
 # Avoid WITH DEFAULT KEY
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC DEFAULT_KEY" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,18 +20,18 @@ Avoid WITH DEFAULT KEY; prefer EMPTY KEY or explicit keys.
 
 ## Rationale
 
-`WITH DEFAULT KEY` is dangerous and unpredictable because it includes all non-numeric fields as table keys, causing unexpected sorting and duplicate record bugs. Always prefer `WITH EMPTY KEY` or explicitly specified table keys.
+WITH DEFAULT KEY makes every non-numeric field part of the implicit table key, so which rows count as duplicates depends on the structure definition. Adding a field later silently changes the key and can introduce unexpected duplicates or sort behavior. Use WITH EMPTY KEY for standard tables that are accessed by index, or declare an explicit key for sorted and hashed tables.
 
 ### Non-Compliant
 
 ```abap
-DATA lt_customers TYPE STANDARD TABLE OF ty_customer WITH DEFAULT KEY.
+DATA lt_open_orders TYPE STANDARD TABLE OF ty_open_order WITH DEFAULT KEY.
 ```
 
 ### Compliant
 
 ```abap
-DATA lt_customers TYPE STANDARD TABLE OF ty_customer WITH EMPTY KEY.
+DATA lt_open_orders TYPE STANDARD TABLE OF ty_open_order WITH EMPTY KEY.
 ```
 
 ## Automated QuickFix

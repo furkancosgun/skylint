@@ -5,6 +5,7 @@ description: "Method name overwrites built-in SAP function"
 # Avoid Method Names That Overwrite Built-in Functions
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC NO_OVERW_BUILTIN" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,18 +19,20 @@ Method name overwrites built-in SAP function.
 
 ## Rationale
 
-Naming a method after a built-in ABAP function (e.g., LINES, STRLEN, MATCHES, XSDBOOL) obscures the standard SAP built-in and makes expressions ambiguous and difficult to read.
+Naming a method LINES, STRLEN, or XSDBOOL shadows a well-known built-in and makes the call site ambiguous. Readers cannot tell whether the built-in or the method is intended. Use a descriptive verb that does not collide with language functions.
 
 ### Non-Compliant
 
 ```abap
-METHODS matches RETURNING VALUE(rv_res) TYPE abap_bool.
+METHODS matches
+  RETURNING VALUE(rv_result) TYPE abap_bool.
 ```
 
 ### Compliant
 
 ```abap
-METHODS do_match RETURNING VALUE(rv_res) TYPE abap_bool.
+METHODS matches_pattern
+  RETURNING VALUE(rv_result) TYPE abap_bool.
 ```
 
 ## Suppression

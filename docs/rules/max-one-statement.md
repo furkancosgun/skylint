@@ -5,6 +5,7 @@ description: "Max One Statement Per Line"
 # Limit One Statement per Source Code Line
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="danger" text="#EC ONE_STMT" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,19 +19,19 @@ Max One Statement Per Line.
 
 ## Rationale
 
-Placing multiple statements on a single line hinders debugger stepping, breaks Git line diffs, and hurts overall code scannability.
+Two statements on one line are easy to miss during review and produce coarse Git diffs. Debugger stepping and code coverage also become harder to follow when multiple statements share a line. Put each statement on its own line.
 
 ### Non-Compliant
 
 ```abap
-lv_a = 1. lv_b = 2.
+lv_count = 0. lv_total = 0.
 ```
 
 ### Compliant
 
 ```abap
-lv_a = 1.
-lv_b = 2.
+lv_count = 0.
+lv_total = 0.
 ```
 
 ## Suppression

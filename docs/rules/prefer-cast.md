@@ -5,8 +5,9 @@ description: "Prefer modern CAST #( ) expression over ?="
 # Prefer CAST #( ) over ?=
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC PREF_CAST" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,18 +20,18 @@ Prefer modern CAST #( ) expression over ?=.
 
 ## Rationale
 
-`?=` is legacy downcast syntax from early ABAP Objects. Modern ABAP exclusively uses `CAST #( )` constructor expressions, which can be inlined directly into method call chains and expressions.
+The ?= downcast operator is legacy syntax and cannot be nested inside expressions. CAST #( ) returns a typed reference and can be used directly in call chains or constructor expressions. Use CAST for downcasts and let # infer the target type.
 
 ### Non-Compliant
 
 ```abap
-lo_child ?= lo_parent.
+lo_invoice ?= lo_document.
 ```
 
 ### Compliant
 
 ```abap
-lo_child = CAST #( lo_parent ).
+lo_invoice = CAST #( lo_document ).
 ```
 
 ## Automated QuickFix

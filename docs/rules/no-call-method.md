@@ -5,8 +5,9 @@ description: "Avoid static CALL METHOD statements"
 # Avoid Obsolete CALL METHOD
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC CALL_METH" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,20 +20,22 @@ Avoid static CALL METHOD statements.
 
 ## Rationale
 
-Procedural `CALL METHOD` is legacy syntax from early ABAP Objects. Modern ABAP exclusively uses functional call syntax (`ref->method( )` or `class=>method( )`), which reduces visual clutter and enables functional expression chaining.
+CALL METHOD is the procedural call syntax from early ABAP Objects and needs explicit EXPORTING and RECEIVING sections. Functional syntax is shorter, can be used inside expressions, and removes visual clutter around parameter lists. Use ref->method( ) or class=>method( ) for all method calls.
 
 ### Non-Compliant
 
 ```abap
-CALL METHOD lo_service->calculate_tax(
+CALL METHOD lo_service->calculate_tax
   EXPORTING
-    iv_amount = lv_amount ).
+    iv_amount = lv_amount
+  RECEIVING
+    rv_tax    = lv_tax.
 ```
 
 ### Compliant
 
 ```abap
-lo_service->calculate_tax( iv_amount = lv_amount ).
+lv_tax = lo_service->calculate_tax( lv_amount ).
 ```
 
 ## Automated QuickFix

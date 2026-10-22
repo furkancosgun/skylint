@@ -5,6 +5,7 @@ description: "Modify Only Own Database Tables"
 # Only Modify Tables Defined in Your Own Package/Component
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Security & Robustness" />
   <Badge type="danger" text="#EC OWN_TABLES" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,18 +19,18 @@ Modify Only Own Database Tables.
 
 ## Rationale
 
-Directly inserting, updating, or deleting tables belonging to another application component bypasses business validation logic and violates modular architecture. Which tables are considered your own is configurable via `OWN_TABLES`, a case-insensitive regex (default `^[yz/]`); dynamic table names are reported when `REPORT_DYNAMIC` is enabled.
+Writing directly to tables owned by another application component bypasses its validations, change documents, and authorization logic. It also creates an undocumented dependency that can break when the owning component evolves. Modify only tables in your own package and use released APIs for foreign data.
 
 ### Non-Compliant
 
 ```abap
-DELETE FROM mara WHERE matnr = '100'.
+UPDATE mara SET matnr = @lv_matnr WHERE matnr = @lv_old_matnr.
 ```
 
 ### Compliant
 
 ```abap
-DELETE FROM zmara WHERE matnr = '100'.
+UPDATE zmara SET matnr = @lv_matnr WHERE matnr = @lv_old_matnr.
 ```
 
 ## Configuration & Thresholds

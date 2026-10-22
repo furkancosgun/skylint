@@ -5,6 +5,7 @@ description: "Avoid FRIENDS in class definitions"
 # Avoid FRIENDS in class definitions
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC FRIENDS" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,12 +19,12 @@ Avoid FRIENDS in class definitions.
 
 ## Rationale
 
-FRIENDS grants another class access to private/protected members, breaking encapsulation. Expose behaviour through the public interface instead.
+FRIENDS exposes private and protected members to another class and creates a hidden bidirectional dependency. It defeats encapsulation and makes both classes harder to change independently. Expose a public method or interface instead of granting friendship.
 
 ### Non-Compliant
 
 ```abap
-CLASS lcl_service DEFINITION FINAL FRIENDS lcl_helper CREATE PUBLIC.
+CLASS lcl_service DEFINITION PUBLIC FINAL FRIENDS lcl_helper CREATE PUBLIC.
   PUBLIC SECTION.
     METHODS execute.
 ENDCLASS.
@@ -32,7 +33,7 @@ ENDCLASS.
 ### Compliant
 
 ```abap
-CLASS lcl_service DEFINITION FINAL CREATE PUBLIC.
+CLASS lcl_service DEFINITION PUBLIC FINAL CREATE PUBLIC.
   PUBLIC SECTION.
     METHODS execute.
 ENDCLASS.

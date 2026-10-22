@@ -5,8 +5,9 @@ description: "Avoid inline length specification in declarations"
 # Avoid Obsolete Inline Length Specifications (var(len))
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC PAREN_LEN" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,18 +20,18 @@ Avoid inline length specification in declarations.
 
 ## Rationale
 
-Specifying length in parentheses directly after a variable name (`lv_str(10) TYPE c`) is legacy syntax. Use modern explicit typing: `TYPE c LENGTH 10`.
+The legacy lv_name(10) syntax mixes the identifier and its length and is easy to misread as a substring or function call. Modern ABAP writes the type and length as separate, explicit tokens. Use TYPE c LENGTH n or a named type so the declaration is unambiguous.
 
 ### Non-Compliant
 
 ```abap
-DATA lv_code(10) TYPE c.
+DATA lv_country(2) TYPE c.
 ```
 
 ### Compliant
 
 ```abap
-DATA lv_code TYPE c LENGTH 10.
+DATA lv_country TYPE c LENGTH 2.
 ```
 
 ## Automated QuickFix

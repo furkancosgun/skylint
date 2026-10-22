@@ -5,8 +5,9 @@ description: "Prefer xsdbool( ) expression over manual IF-ELSE assignment"
 # Prefer xsdbool( ) for Boolean Assignments
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC XSDBOOL" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,22 +20,22 @@ Prefer xsdbool( ) expression over manual IF-ELSE assignment.
 
 ## Rationale
 
-Writing `IF cond. lv_flag = abap_true. ELSE. lv_flag = abap_false. ENDIF.` is 5 lines of boilerplate. `lv_flag = xsdbool( cond )` expresses the same logic cleanly in one readable line.
+An IF/ELSE whose only task is to assign abap_true or abap_false uses many lines for a single boolean conversion. xsdbool( ) expresses the condition directly and assigns the result in one statement. This removes duplicated branches and makes the relationship between condition and flag obvious.
 
 ### Non-Compliant
 
 ```abap
-IF lv_count > 0.
-  lv_has_items = abap_true.
+IF lv_discount > 0.
+  lv_has_discount = abap_true.
 ELSE.
-  lv_has_items = abap_false.
+  lv_has_discount = abap_false.
 ENDIF.
 ```
 
 ### Compliant
 
 ```abap
-lv_has_items = xsdbool( lv_count > 0 ).
+lv_has_discount = xsdbool( lv_discount > 0 ).
 ```
 
 ## Automated QuickFix

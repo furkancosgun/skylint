@@ -5,8 +5,9 @@ description: "Prefer RETURN over EXIT outside loop constructs"
 # Prefer RETURN over EXIT in Methods
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC RETURN" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,28 +20,24 @@ Prefer RETURN over EXIT outside loop constructs.
 
 ## Rationale
 
-In method contexts, `EXIT` can be ambiguous when placed near loops. `RETURN` explicitly indicates an immediate exit from the current processing block or method.
+EXIT has loop-specific meaning and can leave a method at a point that is easy to overlook when the surrounding code changes. RETURN explicitly ends the current procedure and cannot be confused with loop control. Use RETURN for method exit and LEAVE LOOP or CONTINUE for loop control.
 
 ### Non-Compliant
 
 ```abap
-METHOD execute.
-  IF is_invalid( ).
-    EXIT.
-  ENDIF.
-  process( ).
-ENDMETHOD.
+IF is_invalid( ).
+  EXIT.
+ENDIF.
+process( ).
 ```
 
 ### Compliant
 
 ```abap
-METHOD execute.
-  IF is_invalid( ).
-    RETURN.
-  ENDIF.
-  process( ).
-ENDMETHOD.
+IF is_invalid( ).
+  RETURN.
+ENDIF.
+process( ).
 ```
 
 ## Automated QuickFix

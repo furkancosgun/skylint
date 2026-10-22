@@ -5,6 +5,7 @@ description: "Slow Parameter Passing"
 # Avoid Unnecessary Pass-by-Value for Large Tables
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Performance & Database" />
   <Badge type="danger" text="#EC SLOW_PARAM" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,18 +19,20 @@ Slow Parameter Passing.
 
 ## Rationale
 
-Passing large internal tables by value creates an in-memory deep copy on every method invocation. Use pass-by-reference (`REFERENCE(it_data)`) or read-only references.
+Passing a large internal table by VALUE makes a deep copy before the method body starts, costing memory and CPU on every call. ABAP already protects reference parameters when the method only reads them. Use pass-by-reference for large tables and reserve VALUE for small scalars that need a local copy.
 
 ### Non-Compliant
 
 ```abap
-METHODS process IMPORTING VALUE(iv_text) TYPE string.
+METHODS process
+  IMPORTING VALUE(it_items) TYPE ty_items.
 ```
 
 ### Compliant
 
 ```abap
-METHODS process IMPORTING iv_text TYPE string.
+METHODS process
+  IMPORTING it_items TYPE ty_items.
 ```
 
 ## Suppression

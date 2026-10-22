@@ -5,8 +5,9 @@ description: "Prefer the short system field alias SY over SYST"
 # Prefer the Short System Field Alias SY over SYST
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC PREF_SY" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,18 +20,18 @@ Prefer the short system field alias SY over SYST.
 
 ## Rationale
 
-`SY` and `SYST` address the same system structure, but `SY` is the established short form. Using a single alias keeps system field access consistent throughout the codebase.
+SYST and SY address the same system structure, so mixing both aliases makes code look inconsistent and complicates searching. SY is the conventional short form used throughout Clean ABAP. Use sy- consistently for system field access.
 
 ### Non-Compliant
 
 ```abap
-WRITE syst-uname.
+lv_user = syst-uname.
 ```
 
 ### Compliant
 
 ```abap
-WRITE sy-uname.
+lv_user = sy-uname.
 ```
 
 ## Automated QuickFix

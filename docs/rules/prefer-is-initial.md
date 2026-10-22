@@ -5,8 +5,9 @@ description: "Prefer IS [NOT] INITIAL over lines( ) or empty literals"
 # Prefer IS [NOT] INITIAL over lines( ) or Literal Comparisons
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC PREF_INIT" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,12 +20,13 @@ Prefer IS [NOT] INITIAL over lines( ) or empty literals.
 
 ## Rationale
 
-Checking whether an internal table, string, or variable is empty should be done with `IS [NOT] INITIAL` rather than counting `lines( ) > 0` or comparing to empty literals (`""`, `space`, `0`). `IS INITIAL` is idiomatic Clean ABAP, expressive, and optimized.
+Comparing lines( ) to zero or a string to an empty literal asks an indirect question. IS INITIAL states emptiness directly and works for tables, strings, structures, and elementary values. It also avoids counting overhead and literal edge cases.
 
 ### Non-Compliant
 
 ```abap
 IF lines( lt_items ) > 0.
+  process( ).
 ENDIF.
 ```
 
@@ -32,6 +34,7 @@ ENDIF.
 
 ```abap
 IF lt_items IS NOT INITIAL.
+  process( ).
 ENDIF.
 ```
 

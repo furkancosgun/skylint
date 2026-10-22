@@ -5,6 +5,7 @@ description: "Enforce predicate naming (IS_, HAS_) on boolean methods"
 # Use Predicate Naming for Boolean Methods (is_, has_, can_)
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="danger" text="#EC PRED_NAME" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,18 +19,20 @@ Enforce predicate naming (IS_, HAS_) on boolean methods.
 
 ## Rationale
 
-Methods returning boolean status should read like questions (`is_valid`, `has_children`, `can_execute`) so conditionals read naturally like plain English.
+A boolean method reads best as a yes/no question, especially when it appears inside an IF condition. Names such as check_active or get_active leave the return type ambiguous and can suggest a side effect. Use is_, has_, or can_ prefixes for methods that return abap_bool.
 
 ### Non-Compliant
 
 ```abap
-METHODS check_active RETURNING VALUE(rv_active) TYPE abap_bool.
+METHODS check_active
+  RETURNING VALUE(rv_active) TYPE abap_bool.
 ```
 
 ### Compliant
 
 ```abap
-METHODS is_active RETURNING VALUE(rv_active) TYPE abap_bool.
+METHODS is_active
+  RETURNING VALUE(rv_active) TYPE abap_bool.
 ```
 
 ## Suppression

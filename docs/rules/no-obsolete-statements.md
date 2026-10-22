@@ -5,8 +5,9 @@ description: "Avoid obsolete statements (MOVE, REFRESH, FORM, etc.)"
 # Avoid Obsolete & Forbidden Statements
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC OBSOLETE" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,18 +20,18 @@ Avoid obsolete statements (MOVE, REFRESH, FORM, etc.).
 
 ## Rationale
 
-Legacy statements such as `MOVE`, `COMPUTE`, `REFRESH`, `TABLES`, `STATICS`, `FORM`, and `LEAVE` are prohibited in ABAP Cloud and discouraged in Clean ABAP. Replace them with modern value assignments and object-oriented constructs.
+Statements such as MOVE, REFRESH, TABLES, STATICS, FORM, and LEAVE are legacy constructs that are discouraged by Clean ABAP and several are forbidden in ABAP Cloud. They bypass modern type checking and object-oriented structure, and they make the code harder to migrate. Replace them with direct assignments, modern table operations, and class methods.
 
 ### Non-Compliant
 
 ```abap
-MOVE lv_src TO lv_dst.
+MOVE lv_source TO lv_target.
 ```
 
 ### Compliant
 
 ```abap
-lv_dst = lv_src.
+lv_target = lv_source.
 ```
 
 ## Automated QuickFix

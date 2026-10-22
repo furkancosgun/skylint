@@ -5,8 +5,9 @@ description: "Avoid CHECK statements; prefer IF with RETURN or CONTINUE"
 # Avoid CHECK Statements
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC CHECK_STMT" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -21,25 +22,25 @@ Avoid CHECK statements; prefer IF with RETURN or CONTINUE.
 
 ## Rationale
 
-`CHECK` has context-dependent dual semantics: inside loops it behaves like `CONTINUE`, but outside loops it behaves like `RETURN`. This makes code fragile and refactoring hazardous. Use explicit `IF ... CONTINUE` or `IF ... RETURN` instead.
+CHECK behaves like CONTINUE inside a loop but like RETURN outside a loop, so moving the statement between contexts silently changes control flow. That dual meaning makes refactoring and reviews hazardous. Replace it with an explicit IF ... CONTINUE or IF ... RETURN that states the intended behavior.
 
 ### Non-Compliant
 
 ```abap
-LOOP AT lt_items INTO ls_item.
-  CHECK ls_item-status = 'ACTIVE'.
-  process( ls_item ).
+LOOP AT lt_orders INTO ls_order.
+  CHECK ls_order-status = 'OPEN'.
+  process_order( ls_order ).
 ENDLOOP.
 ```
 
 ### Compliant
 
 ```abap
-LOOP AT lt_items INTO ls_item.
-  IF ls_item-status <> 'ACTIVE'.
+LOOP AT lt_orders INTO ls_order.
+  IF ls_order-status <> 'OPEN'.
     CONTINUE.
   ENDIF.
-  process( ls_item ).
+  process_order( ls_order ).
 ENDLOOP.
 ```
 

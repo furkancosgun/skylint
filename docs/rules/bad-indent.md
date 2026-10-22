@@ -5,8 +5,9 @@ description: "Bad Statement Indentation"
 # Statement Indentation Must Match Block Nesting
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC BAD_INDENT" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,27 +20,27 @@ Bad Statement Indentation.
 
 ## Rationale
 
-Consistent indentation according to block nesting hierarchy improves code clarity, readability, and maintainability across the codebase.
+Indentation is the fastest visual cue for block nesting, so inconsistent indentation misleads readers about which statements belong together. It also creates noisy diffs when a formatter runs. Indent each block level consistently.
 
 ### Non-Compliant
 
 ```abap
-METHOD test.
-DATA lv_a TYPE i.
-  IF lv_a = 1.
-lv_a = 2.
-  ENDIF.
+METHOD calculate.
+DATA lv_total TYPE i.
+  LOOP AT lt_items INTO ls_item.
+lv_total = lv_total + ls_item-amount.
+  ENDLOOP.
 ENDMETHOD.
 ```
 
 ### Compliant
 
 ```abap
-METHOD test.
-  DATA lv_a TYPE i.
-  IF lv_a = 1.
-    lv_a = 2.
-  ENDIF.
+METHOD calculate.
+  DATA lv_total TYPE i.
+  LOOP AT lt_items INTO ls_item.
+    lv_total = lv_total + ls_item-amount.
+  ENDLOOP.
 ENDMETHOD.
 ```
 

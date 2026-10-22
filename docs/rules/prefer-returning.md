@@ -5,6 +5,7 @@ description: "Prefer RETURNING over single EXPORTING"
 # Prefer Functional RETURNING Parameters
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="danger" text="#EC RETURNING" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,20 +19,20 @@ Prefer RETURNING over single EXPORTING.
 
 ## Rationale
 
-Methods with a `RETURNING` parameter can be used directly within expressions, assignments, and assertions. Prefer `RETURNING` over a single `EXPORTING` parameter.
+A single EXPORTING parameter forces callers to declare a target and invoke the method as a statement. A RETURNING parameter makes the method usable directly in assignments, expressions, and assertions. Prefer RETURNING for value-producing methods and reserve EXPORTING for methods that genuinely return several outputs.
 
 ### Non-Compliant
 
 ```abap
-METHODS calculate
-  EXPORTING ev_result TYPE i.
+METHODS get_total
+  EXPORTING ev_total TYPE i.
 ```
 
 ### Compliant
 
 ```abap
-METHODS calculate
-  RETURNING VALUE(rv_result) TYPE i.
+METHODS get_total
+  RETURNING VALUE(rv_total) TYPE i.
 ```
 
 ## Suppression

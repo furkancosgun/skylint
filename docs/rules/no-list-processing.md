@@ -5,6 +5,7 @@ description: "Prohibit classic list processing statements"
 # Avoid Classic List Processing Statements
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC LIST_PROC" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,12 +19,12 @@ Prohibit classic list processing statements.
 
 ## Rationale
 
-Statements such as `WRITE`, `ULINE`, `SKIP`, `NEW-LINE`, `FORMAT`, `POSITION`, `RESERVE`, `READ LINE`, `MODIFY LINE`, and `SCROLL LIST` are classic list-processing constructs forbidden in OO/Cloud ABAP. Use application logging and modern UI frameworks instead.
+Classic list processing with WRITE, ULINE, FORMAT, and READ LINE only works in SAP GUI list reports and is unavailable in ABAP Cloud. It couples business logic to screen output and makes the code impossible to test independently. Use application logging or a modern UI framework instead of writing directly to a list.
 
 ### Non-Compliant
 
 ```abap
-WRITE: / 'Order processed:'.
+WRITE / 'Order processed:'.
 ULINE.
 ```
 

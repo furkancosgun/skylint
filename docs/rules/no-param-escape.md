@@ -2,11 +2,12 @@
 description: "Avoid unnecessary parameter escape (!param)"
 ---
 
-# Avoid Reassigning Importing Parameters
+# Avoid Obsolete ! Escape Prefix in Parameter Names
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC PARAM_ESCAPE" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,18 +20,20 @@ Avoid unnecessary parameter escape (!param).
 
 ## Rationale
 
-Importing parameters should be treated as immutable inputs. Modifying them inside the method leads to unexpected side effects and debugging difficulties.
+The ! escape prefix is legacy syntax used to force a parameter name to be treated literally. It adds noise to signatures and is unnecessary in modern ABAP, where parameter names are unambiguous. Remove the ! and use a clear parameter name instead.
 
 ### Non-Compliant
 
 ```abap
-METHODS process IMPORTING !iv_data TYPE string.
+METHODS process
+  IMPORTING !iv_data TYPE string.
 ```
 
 ### Compliant
 
 ```abap
-METHODS process IMPORTING iv_data TYPE string.
+METHODS process
+  IMPORTING iv_data TYPE string.
 ```
 
 ## Automated QuickFix

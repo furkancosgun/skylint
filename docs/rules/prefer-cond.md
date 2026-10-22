@@ -5,8 +5,9 @@ description: "Prefer COND #( ) expression over IF/ELSEIF/ELSE statement"
 # Prefer COND #( ) Expression over IF/ELSEIF/ELSE
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC PREF_COND" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,7 +20,7 @@ Prefer COND #( ) expression over IF/ELSEIF/ELSE statement.
 
 ## Rationale
 
-IF/ELSEIF/ELSE statements that merely assign values to a single variable based on conditional checks can be written much more concisely and expressively using modern ABAP COND #( ) constructor expressions.
+An IF/ELSEIF chain that only assigns different values to the same variable duplicates the assignment target and spreads one decision over many lines. COND #( ) turns the whole mapping into a single expression, so the target is assigned exactly once and cannot be left uninitialized. It also composes with assignments and method calls. Keep IF when branches perform multiple statements or side effects.
 
 ### Non-Compliant
 
@@ -36,7 +37,7 @@ ENDIF.
 ### Compliant
 
 ```abap
-lv_grade = COND #( 
+lv_grade = COND string(
   WHEN lv_score >= 90 THEN 'A'
   WHEN lv_score >= 80 THEN 'B'
   ELSE 'C' ).

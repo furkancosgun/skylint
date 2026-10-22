@@ -35,554 +35,445 @@ export const RULES = [
   {
     ruleId: 'downport-compat',
     title: 'Check Downport Compatibility (7.40+ Modern Constructs)',
-    rationale: 'Flags modern 7.40+ ABAP constructs (constructor expressions, table expressions, inline declarations, string templates, and method chaining) when targeting legacy SAP NetWeaver downport releases (e.g. 7.00, 7.31). All checks default to disabled so modern workflows remain unaffected.',
+    rationale: 'Modern ABAP constructs such as constructor expressions, table expressions, inline declarations, string templates, and functional method chaining do not compile on legacy NetWeaver releases. When a project must remain downport-compatible, these constructs silently raise the required kernel and syntax level. The check keeps that incompatibility visible by reporting each modern construct; it is disabled by default so modern development is unaffected.',
     className: 'ZCL_SKYLINT_PREF_DOWNPORT',
     pseudoComment: 'DOWNPORT_COMPAT',
-    category: 'cloud-readiness',
+    category: 'clean-abap',
     example: {
-      bad: `DATA(lv_val) = VALUE #( lt_data[ 1 ]-field OPTIONAL ).`,
-      good: `DATA lv_val TYPE string.\nREAD TABLE lt_data INTO ls_data INDEX 1.\nIF sy-subrc = 0.\n  lv_val = ls_data-field.\nENDIF.`,
+      bad: `DATA(lv_name) = lt_customers[ 1 ]-name.`,
+      good: `DATA lv_name TYPE string.\nDATA ls_customer TYPE ty_customer.\nREAD TABLE lt_customers INTO ls_customer INDEX 1.\nIF sy-subrc = 0.\n  lv_name = ls_customer-name.\nENDIF.`,
     },
   },
   {
     ruleId: 'prefer-reduce',
     title: 'Prefer REDUCE #( ) Expression over Simple Aggregation LOOP',
-    rationale: 'Simple loops that only accumulate a sum or concatenate strings into a single target variable can be expressed much more concisely and declaratively with modern ABAP REDUCE #( ) constructor expressions.',
+    rationale: 'A loop that only accumulates a sum or builds a single aggregated value mixes imperative control flow with a simple calculation and hides the real intent. Such loops are longer to read and easy to break when the accumulator initialization or the loop body changes. REDUCE #( ) expresses the aggregation declaratively inside one expression and removes the mutable helper state. Use REDUCE for straightforward sums, counts, and string concatenation, and keep a loop only when it performs additional side effects.',
     className: 'ZCL_SKYLINT_PREF_REDUCE',
     pseudoComment: 'PREF_REDUCE',
     category: 'clean-abap',
     example: {
-      bad: `LOOP AT lt_items INTO ls_item.\n  lv_sum = lv_sum + ls_item-amount.\nENDLOOP.`,
-      good: `lv_sum = REDUCE #( \n  INIT res = lv_sum\n  FOR ls_item IN lt_items\n  NEXT res = res + ls_item-amount ).`,
+      bad: `LOOP AT lt_orders INTO ls_order.\n  lv_total = lv_total + ls_order-amount.\nENDLOOP.`,
+      good: `lv_total = REDUCE i( INIT total = 0\n  FOR ls_order IN lt_orders\n  NEXT total = total + ls_order-amount ).`,
     },
   },
   {
     ruleId: 'prefer-tab-expr',
     title: 'Prefer Table Expression itab[ ... ] over READ TABLE',
-    rationale: 'Table expressions provide a direct, functional syntax for accessing internal table rows by key or index, eliminating procedural `READ TABLE` boilerplate and integrating seamlessly into expressions.',
+    rationale: 'READ TABLE requires a separate work area or field symbol plus a sy-subrc check, which spreads a simple row lookup across several statements. Table expressions return the row directly and can be nested inside VALUE, COND, and method calls. Use OPTIONAL or DEFAULT when a missing row is valid, and catch CX_SY_ITAB_LINE_NOT_FOUND when absence is an error.',
     className: 'ZCL_SKYLINT_PREF_TAB_EXPR',
     pseudoComment: 'PREF_TAB_EXPR',
     category: 'clean-abap',
     example: {
-      bad: `READ TABLE lt_items INTO ls_item WITH KEY id = lv_id.\nREAD TABLE lt_items ASSIGNING <fs_item> INDEX 1.`,
-      good: `ls_item = VALUE #( lt_items[ id = lv_id ] OPTIONAL ).\nASSIGN lt_items[ 1 ] TO <fs_item>.`,
+      bad: `READ TABLE lt_orders INTO ls_order WITH KEY order_id = lv_id.\nREAD TABLE lt_orders ASSIGNING <ls_order> INDEX 1.`,
+      good: `ls_order = VALUE #( lt_orders[ order_id = lv_id ] OPTIONAL ).\nASSIGN lt_orders[ 1 ] TO <ls_order>.`,
     },
   },
   {
     ruleId: 'prefer-cond',
     title: 'Prefer COND #( ) Expression over IF/ELSEIF/ELSE',
-    rationale: 'IF/ELSEIF/ELSE statements that merely assign values to a single variable based on conditional checks can be written much more concisely and expressively using modern ABAP COND #( ) constructor expressions.',
+    rationale: 'An IF/ELSEIF chain that only assigns different values to the same variable duplicates the assignment target and spreads one decision over many lines. COND #( ) turns the whole mapping into a single expression, so the target is assigned exactly once and cannot be left uninitialized. It also composes with assignments and method calls. Keep IF when branches perform multiple statements or side effects.',
     className: 'ZCL_SKYLINT_PREF_COND',
     pseudoComment: 'PREF_COND',
     category: 'clean-abap',
     example: {
       bad: `IF lv_score >= 90.\n  lv_grade = 'A'.\nELSEIF lv_score >= 80.\n  lv_grade = 'B'.\nELSE.\n  lv_grade = 'C'.\nENDIF.`,
-      good: `lv_grade = COND #( \n  WHEN lv_score >= 90 THEN 'A'\n  WHEN lv_score >= 80 THEN 'B'\n  ELSE 'C' ).`,
+      good: `lv_grade = COND string(\n  WHEN lv_score >= 90 THEN 'A'\n  WHEN lv_score >= 80 THEN 'B'\n  ELSE 'C' ).`,
     },
   },
   {
     ruleId: 'prefer-switch',
     title: 'Prefer SWITCH #( ) Expression over CASE Statement',
-    rationale: 'CASE statements that merely assign values to a single variable can be written much more concisely using modern ABAP SWITCH #( ) constructor expressions, eliminating repetitive assignment code and improving readability.',
+    rationale: 'A CASE statement whose branches only assign a result is a verbose value mapping: it repeats the assignment variable in every branch. SWITCH #( ) makes the input value and all possible results visible in one expression and avoids temporary state. Use SWITCH for pure mappings and CASE when a branch contains several statements or side effects.',
     className: 'ZCL_SKYLINT_PREF_SWITCH',
     pseudoComment: 'PREF_SWITCH',
     category: 'clean-abap',
     example: {
       bad: `CASE lv_status.\n  WHEN 'O'.\n    lv_text = 'Open'.\n  WHEN 'C'.\n    lv_text = 'Closed'.\n  WHEN OTHERS.\n    lv_text = 'Unknown'.\nENDCASE.`,
-      good: `lv_text = SWITCH #( lv_status\n  WHEN 'O' THEN 'Open'\n  WHEN 'C' THEN 'Closed'\n  ELSE 'Unknown' ).`,
+      good: `lv_text = SWITCH string( lv_status\n  WHEN 'O' THEN 'Open'\n  WHEN 'C' THEN 'Closed'\n  ELSE 'Unknown' ).`,
     },
   },
   {
     ruleId: 'prefer-lines',
     title: 'Prefer lines( ) over DESCRIBE TABLE',
-    rationale: 'The built-in `lines( )` function is modern, functional, and can be embedded directly into expressions and conditionals without requiring a temporary variable or the cumbersome procedural `DESCRIBE TABLE ... LINES` statement.',
+    rationale: 'DESCRIBE TABLE LINES requires an extra variable and separates the question about table size from the code that uses the answer. The lines( ) built-in returns the row count as a value and can be embedded directly in conditions and expressions. This reduces temporary variables and makes the intent obvious at the call site.',
     className: 'ZCL_SKYLINT_PREF_LINES',
     pseudoComment: 'LINES',
     category: 'clean-abap',
     example: {
-      bad: `DESCRIBE TABLE lt_customers LINES lv_count.`,
-      good: `lv_count = lines( lt_customers ).`,
+      bad: `DESCRIBE TABLE lt_items LINES lv_count.\nIF lv_count = 0.\n  RETURN.\nENDIF.`,
+      good: `IF lines( lt_items ) = 0.\n  RETURN.\nENDIF.`,
     },
   },
   {
     ruleId: 'no-call-method',
     title: 'Avoid Obsolete CALL METHOD',
-    rationale: 'Procedural `CALL METHOD` is legacy syntax from early ABAP Objects. Modern ABAP exclusively uses functional call syntax (`ref->method( )` or `class=>method( )`), which reduces visual clutter and enables functional expression chaining.',
+    rationale: 'CALL METHOD is the procedural call syntax from early ABAP Objects and needs explicit EXPORTING and RECEIVING sections. Functional syntax is shorter, can be used inside expressions, and removes visual clutter around parameter lists. Use ref->method( ) or class=>method( ) for all method calls.',
     className: 'ZCL_SKYLINT_NO_CALL_METHOD',
     pseudoComment: 'CALL_METH',
     category: 'anti-patterns',
     example: {
-      bad: `CALL METHOD lo_service->calculate_tax(
-  EXPORTING
-    iv_amount = lv_amount ).`,
-      good: `lo_service->calculate_tax( iv_amount = lv_amount ).`,
+      bad: `CALL METHOD lo_service->calculate_tax\n  EXPORTING\n    iv_amount = lv_amount\n  RECEIVING\n    rv_tax    = lv_tax.`,
+      good: `lv_tax = lo_service->calculate_tax( lv_amount ).`,
     },
   },
   {
     ruleId: 'no-default-key',
     title: 'Avoid WITH DEFAULT KEY',
-    rationale: '`WITH DEFAULT KEY` is dangerous and unpredictable because it includes all non-numeric fields as table keys, causing unexpected sorting and duplicate record bugs. Always prefer `WITH EMPTY KEY` or explicitly specified table keys.',
+    rationale: 'WITH DEFAULT KEY makes every non-numeric field part of the implicit table key, so which rows count as duplicates depends on the structure definition. Adding a field later silently changes the key and can introduce unexpected duplicates or sort behavior. Use WITH EMPTY KEY for standard tables that are accessed by index, or declare an explicit key for sorted and hashed tables.',
     className: 'ZCL_SKYLINT_NO_DEFAULT_KEY',
     pseudoComment: 'DEFAULT_KEY',
     category: 'anti-patterns',
     example: {
-      bad: `DATA lt_customers TYPE STANDARD TABLE OF ty_customer WITH DEFAULT KEY.`,
-      good: `DATA lt_customers TYPE STANDARD TABLE OF ty_customer WITH EMPTY KEY.`,
+      bad: `DATA lt_open_orders TYPE STANDARD TABLE OF ty_open_order WITH DEFAULT KEY.`,
+      good: `DATA lt_open_orders TYPE STANDARD TABLE OF ty_open_order WITH EMPTY KEY.`,
     },
   },
   {
     ruleId: 'prefer-is-not',
     title: 'Prefer IS NOT over NOT ... IS',
-    rationale: 'Writing `IF lo_ref IS NOT BOUND` or `IF lt_tab IS NOT INITIAL` mirrors natural language reading order and avoids misreading inverted expressions that start with `NOT`.',
+    rationale: 'Writing NOT before a complete IS expression forces the reader to negate the condition mentally and can be misread in compound logic. IS NOT keeps the subject first and reads in natural order, as in lo_instance IS NOT BOUND. Prefer IS NOT for predicates such as IS BOUND, IS INITIAL, and IS ASSIGNED.',
     className: 'ZCL_SKYLINT_PREF_IS_NOT',
     pseudoComment: 'IS_NOT',
     category: 'clean-abap',
     example: {
-      bad: `IF NOT lo_instance IS BOUND.
-  RETURN.
-ENDIF.`,
-      good: `IF lo_instance IS NOT BOUND.
-  RETURN.
-ENDIF.`,
+      bad: `IF NOT lt_items IS INITIAL.\n  process_items( lt_items ).\nENDIF.`,
+      good: `IF lt_items IS NOT INITIAL.\n  process_items( lt_items ).\nENDIF.`,
     },
   },
   {
     ruleId: 'no-me-reference',
     title: 'Avoid Redundant ME-> Self Reference',
-    rationale: 'In ABAP, member variables and methods are automatically accessible within the instance context. Prefixing every member access with `me->` creates visual noise, except when disambiguating parameter shadowing in constructors.',
+    rationale: 'Member variables and methods are already accessible inside an instance method, so prefixing every access with me-> only adds noise. Removing the prefix keeps attention on the member itself and makes genuine shadowing easier to spot. Keep me-> only where a parameter or local variable shadows the member, typically in constructors and setters.',
     className: 'ZCL_SKYLINT_NO_ME_REFERENCE',
     pseudoComment: 'ME',
     category: 'anti-patterns',
     example: {
-      bad: `me->mv_status = c_active.
-me->process_order( ).`,
-      good: `mv_status = c_active.
-process_order( ).`,
+      bad: `me->mv_order_count = me->mv_order_count + 1.\nme->save( ).`,
+      good: `mv_order_count = mv_order_count + 1.\nsave( ).`,
     },
   },
   {
     ruleId: 'no-redundant-method-call',
     title: 'Omit Redundant Call Syntax (EXPORTING / RECEIVING / Single Param)',
-    rationale: 'Modern ABAP allows omitting the `EXPORTING` and `RECEIVING` keywords in functional method calls. Furthermore, when calling a method with a single importing parameter, the parameter name can be omitted entirely to make code clean and concise.',
+    rationale: 'In functional calls the EXPORTING and RECEIVING keywords are optional, and a method with a single importing parameter can be called positionally. Repeating the keywords and parameter name adds noise without improving clarity. Omit them when the call is unambiguous, but keep parameter names when several optional parameters could be confused.',
     className: 'ZCL_SKYLINT_NO_REDUNDANT_CALL',
     pseudoComment: 'EXPORTING',
     category: 'anti-patterns',
     example: {
-      bad: `lo_calc->compute( EXPORTING iv_val = 10 ).`,
-      good: `lo_calc->compute( 10 ).`,
+      bad: `lo_pricing->apply_discount( EXPORTING iv_percent = 10 ).`,
+      good: `lo_pricing->apply_discount( 10 ).`,
     },
   },
   {
     ruleId: 'no-chained-statements',
     title: 'Avoid Chained Declarations & Assignments',
-    rationale: 'Chained statements (`DATA: ... , ... .`) create formatting headaches, merge conflicts in Git diffs, and frequently confuse developers regarding where a type or modifier applies. Each statement should stand independently on its own line.',
+    rationale: 'Chained statements pack several definitions behind a colon and commas, so a modifier or type can appear to apply to more than one name. They also turn a one-line change into a large diff and make merge conflicts harder to resolve. Write each declaration or assignment as its own complete statement so scope and modifiers are unambiguous.',
     className: 'ZCL_SKYLINT_NO_CHAINED_STMT',
     pseudoComment: 'CHAIN_DECL',
     category: 'anti-patterns',
     example: {
-      bad: `DATA: lv_id   TYPE string,
-      lv_name TYPE string.`,
-      good: `DATA lv_id   TYPE string.
-DATA lv_name TYPE string.`,
+      bad: `DATA: lv_order_id TYPE string,\n      lv_status   TYPE string.`,
+      good: `DATA lv_order_id TYPE string.\nDATA lv_status TYPE string.`,
     },
   },
   {
     ruleId: 'prefer-string-template',
     title: 'Prefer String Templates over CONCATENATE',
-    rationale: 'String templates (`|Hello { lv_name }|`) provide type-safe, readable string interpolation with built-in formatting options. They eliminate procedural `CONCATENATE` and `SEPARATED BY` statements.',
+    rationale: 'CONCATENATE with SEPARATED BY is a procedural statement that splits a message into literals and variables and cannot be nested in expressions. String templates interpolate values directly, preserve spaces, and support formatting options for numbers, dates, and alignment. Use a template for readable text composition and reserve CONCATENATE only for legacy downport code.',
     className: 'ZCL_SKYLINT_PREF_STR_TMPL',
     pseudoComment: 'STR_TMPL',
     category: 'clean-abap',
     example: {
-      bad: `CONCATENATE 'Hello' iv_name INTO lv_greeting SEPARATED BY space.`,
-      good: `lv_greeting = |Hello { iv_name }|.`,
+      bad: `CONCATENATE 'Order' lv_order_id 'created' INTO lv_message SEPARATED BY space.`,
+      good: `lv_message = |Order { lv_order_id } created|.`,
     },
   },
   {
     ruleId: 'no-boolean-comparison',
     title: 'Avoid Comparing to abap_true / abap_false',
-    rationale: 'Predicate methods and boolean expressions evaluate directly to true or false. Comparing them explicitly (`IF is_valid( ) = abap_true`) is redundant, noisy, and unidiomatic.',
+    rationale: 'A boolean expression already evaluates to true or false, so comparing it to abap_true is redundant. The comparison hides predicate intent and can mask a missing method call or an accidental assignment. Test the expression directly and use NOT when the negative case is needed.',
     className: 'ZCL_SKYLINT_NO_BOOL_COMPARE',
     pseudoComment: 'BOOL_COMPARE',
     category: 'anti-patterns',
     example: {
-      bad: `IF is_valid( ) = abap_true.
-  execute( ).
-ENDIF.`,
-      good: `IF is_valid( ).
-  execute( ).
-ENDIF.`,
+      bad: `IF is_valid( ) = abap_false.\n  RETURN.\nENDIF.`,
+      good: `IF NOT is_valid( ).\n  RETURN.\nENDIF.`,
     },
   },
   {
     ruleId: 'prefer-line-exists',
     title: 'Prefer line_exists( ) over READ TABLE TRANSPORTING NO FIELDS',
-    rationale: '`line_exists( )` clearly communicates the intent of checking table membership in a single functional expression, eliminating the boilerplate of `READ TABLE ... TRANSPORTING NO FIELDS` followed by `sy-subrc = 0`.',
+    rationale: 'READ TABLE TRANSPORTING NO FIELDS followed by a sy-subrc check is a procedural way to ask whether a row exists. line_exists( ) expresses membership in one expression and can be used directly in a condition. It also removes the risk of checking a sy-subrc that was overwritten by an unrelated statement.',
     className: 'ZCL_SKYLINT_PREF_LINE_EXISTS',
     pseudoComment: 'LINE_EXISTS',
     category: 'clean-abap',
     example: {
-      bad: `READ TABLE lt_items TRANSPORTING NO FIELDS WITH KEY id = lv_id.
-IF sy-subrc = 0.
-  process( ).
-ENDIF.`,
-      good: `IF line_exists( lt_items[ id = lv_id ] ).
-  process( ).
-ENDIF.`,
+      bad: `READ TABLE lt_customers TRANSPORTING NO FIELDS WITH KEY customer_id = lv_id.\nIF sy-subrc = 0.\n  process_customer( lv_id ).\nENDIF.`,
+      good: `IF line_exists( lt_customers[ customer_id = lv_id ] ).\n  process_customer( lv_id ).\nENDIF.`,
     },
   },
   {
     ruleId: 'prefer-return',
     title: 'Prefer RETURN over EXIT in Methods',
-    rationale: 'In method contexts, `EXIT` can be ambiguous when placed near loops. `RETURN` explicitly indicates an immediate exit from the current processing block or method.',
+    rationale: 'EXIT has loop-specific meaning and can leave a method at a point that is easy to overlook when the surrounding code changes. RETURN explicitly ends the current procedure and cannot be confused with loop control. Use RETURN for method exit and LEAVE LOOP or CONTINUE for loop control.',
     className: 'ZCL_SKYLINT_PREF_RETURN',
     pseudoComment: 'RETURN',
     category: 'clean-abap',
     example: {
-      bad: `METHOD execute.
-  IF is_invalid( ).
-    EXIT.
-  ENDIF.
-  process( ).
-ENDMETHOD.`,
-      good: `METHOD execute.
-  IF is_invalid( ).
-    RETURN.
-  ENDIF.
-  process( ).
-ENDMETHOD.`,
+      bad: `IF is_invalid( ).\n  EXIT.\nENDIF.\nprocess( ).`,
+      good: `IF is_invalid( ).\n  RETURN.\nENDIF.\nprocess( ).`,
     },
   },
   {
     ruleId: 'no-check-statement',
     title: 'Avoid CHECK Statements',
-    rationale: '`CHECK` has context-dependent dual semantics: inside loops it behaves like `CONTINUE`, but outside loops it behaves like `RETURN`. This makes code fragile and refactoring hazardous. Use explicit `IF ... CONTINUE` or `IF ... RETURN` instead.',
+    rationale: 'CHECK behaves like CONTINUE inside a loop but like RETURN outside a loop, so moving the statement between contexts silently changes control flow. That dual meaning makes refactoring and reviews hazardous. Replace it with an explicit IF ... CONTINUE or IF ... RETURN that states the intended behavior.',
     className: 'ZCL_SKYLINT_NO_CHECK_STMT',
     pseudoComment: 'CHECK_STMT',
     category: 'anti-patterns',
     example: {
-      bad: `LOOP AT lt_items INTO ls_item.
-  CHECK ls_item-status = 'ACTIVE'.
-  process( ls_item ).
-ENDLOOP.`,
-      good: `LOOP AT lt_items INTO ls_item.
-  IF ls_item-status <> 'ACTIVE'.
-    CONTINUE.
-  ENDIF.
-  process( ls_item ).
-ENDLOOP.`,
+      bad: `LOOP AT lt_orders INTO ls_order.\n  CHECK ls_order-status = 'OPEN'.\n  process_order( ls_order ).\nENDLOOP.`,
+      good: `LOOP AT lt_orders INTO ls_order.\n  IF ls_order-status <> 'OPEN'.\n    CONTINUE.\n  ENDIF.\n  process_order( ls_order ).\nENDLOOP.`,
     },
   },
   {
     ruleId: 'no-empty-block',
     title: 'Avoid Empty Control Blocks',
-    rationale: 'Empty blocks (such as `IF ... ELSEIF ... ENDIF` with no executable statements) confuse readers and usually represent unfinished business logic or forgotten debug code.',
+    rationale: 'An empty branch usually signals unfinished logic, forgotten code, or an inverted condition. Readers must search for hidden behavior and may assume the branch does something. Restructure the condition so every branch has a purpose, or remove the empty block entirely.',
     className: 'ZCL_SKYLINT_NO_EMPTY_BLOCK',
     pseudoComment: 'EMPTY_BLOCK',
     category: 'anti-patterns',
     example: {
-      bad: `IF lv_condition = abap_true.
-  " Empty block
-ELSE.
-  process( ).
-ENDIF.`,
-      good: `IF lv_condition = abap_false.
-  process( ).
-ENDIF.`,
+      bad: `IF lv_is_active = abap_true.\n  " no processing yet\nELSE.\n  process( ).\nENDIF.`,
+      good: `IF NOT lv_is_active.\n  process( ).\nENDIF.`,
     },
   },
 
   {
     ruleId: 'no-duplicate-conditions',
     title: 'Avoid Duplicate Branch Conditions',
-    rationale: 'Repeating the exact same condition across `IF / ELSEIF` or `WHEN` branches means subsequent duplicate branches can never be reached, indicating a copy-paste error or broken logic.',
+    rationale: 'A repeated IF/ELSEIF or WHEN condition can never be reached because the earlier branch already handles it. This is usually a copy-paste error and can leave the intended branch permanently dead. Remove the duplicate or correct the condition so every branch has a distinct purpose.',
     className: 'ZCL_SKYLINT_NO_DUP_COND',
     pseudoComment: 'DUP_COND',
     category: 'anti-patterns',
     example: {
-      bad: `IF lv_type = 'A' OR lv_type = 'A'.
-  process( ).
-ENDIF.`,
-      good: `IF lv_type = 'A'.
-  process( ).
-ENDIF.`,
+      bad: `IF lv_status = 'A'.\n  process_a( ).\nELSEIF lv_status = 'A'.\n  process_b( ).\nENDIF.`,
+      good: `IF lv_status = 'A'.\n  process_a( ).\nELSEIF lv_status = 'B'.\n  process_b( ).\nENDIF.`,
     },
   },
   {
     ruleId: 'prefer-merged-ifs',
     title: 'Merge Nested IF Statements',
-    rationale: 'Consecutive nested `IF` statements without intermediate statements can be combined with `AND`. A nested `IF` that is the sole statement in an `ELSE` block can be converted to `ELSEIF`. Both reduce nesting depth, flatten control flow, and simplify cyclomatic complexity.',
+    rationale: 'Nested IF statements without intermediate statements add indentation without adding meaning. Merging them with AND or converting a nested IF in an ELSE block into ELSEIF flattens the control flow and makes the combined condition explicit. Less nesting reduces cyclomatic complexity and makes the happy path easier to test.',
     className: 'ZCL_SKYLINT_PREF_MERGE_IFS',
     pseudoComment: 'MERGE_IFS',
     category: 'clean-abap',
     example: {
-      bad: `IF is_connected( ).
-  IF has_permission( ).
-    execute( ).
-  ENDIF.
-ENDIF.`,
-      good: `IF is_connected( ) AND has_permission( ).
-  execute( ).
-ENDIF.`,
+      bad: `IF is_active( ).\n  IF is_authorized( ).\n    process_order( ).\n  ENDIF.\nENDIF.`,
+      good: `IF is_active( ) AND is_authorized( ).\n  process_order( ).\nENDIF.`,
     },
   },
   {
     ruleId: 'no-unreachable-code',
     title: 'Avoid Dead / Unreachable Code',
-    rationale: 'Statements appearing immediately after an unconditional `RETURN`, `RAISE EXCEPTION`, `EXIT`, or `LEAVE PROGRAM` can never execute, cluttering the codebase and misleading maintainers.',
+    rationale: 'Statements after an unconditional RETURN, RAISE EXCEPTION, or EXIT can never execute and often remain from debugging or an earlier design. They mislead maintainers and inflate apparent method size and coverage. Remove the statements or move them before the terminating statement if they are still needed.',
     className: 'ZCL_SKYLINT_NO_UNREACHABLE',
     pseudoComment: 'UNREACHABLE',
     category: 'anti-patterns',
     example: {
-      bad: `RETURN.
-lv_count = lv_count + 1. " Unreachable statement`,
-      good: `lv_count = lv_count + 1.
-RETURN.`,
+      bad: `RETURN.\nlv_count = lv_count + 1.`,
+      good: `lv_count = lv_count + 1.\nRETURN.`,
     },
   },
   {
     ruleId: 'no-single-when',
     title: 'Avoid CASE with a Single WHEN Branch',
-    rationale: 'A `CASE` statement containing only one `WHEN` branch is unnecessarily verbose. An `IF ... ENDIF` is more concise and idiomatic.',
+    rationale: 'CASE implies that a value is compared against several alternatives, so a single WHEN makes readers look for missing branches. An IF with the same condition is shorter and states the intent directly. Use CASE only when there are multiple distinct branches or when a value mapping is genuinely clearer.',
     className: 'ZCL_SKYLINT_NO_SINGLE_WHEN',
     pseudoComment: 'SINGLE_WHEN',
     category: 'anti-patterns',
     example: {
-      bad: `CASE lv_status.
-  WHEN 'A'.
-    process_a( ).
-ENDCASE.`,
-      good: `IF lv_status = 'A'.
-  process_a( ).
-ENDIF.`,
+      bad: `CASE lv_order_status.\n  WHEN 'C'.\n    close_order( ).\nENDCASE.`,
+      good: `IF lv_order_status = 'C'.\n  close_order( ).\nENDIF.`,
     },
   },
   {
     ruleId: 'no-yoda-conditions',
     title: 'Avoid Yoda Conditions',
-    rationale: 'Placing constants or literals on the left side of comparisons (`IF 42 = lv_value`) impairs readability. ABAP natural reading flow expects the variable or subject on the left (`IF lv_value = 42`).',
+    rationale: 'Yoda conditions place the literal or constant on the left side of a comparison and break the natural ABAP reading order of subject, operator, and value. The habit comes from languages where an accidental assignment in a condition is possible, which is not the case for ABAP comparisons. Keep the variable or expression on the left so conditions read like plain language.',
     className: 'ZCL_SKYLINT_NO_YODA_COND',
     pseudoComment: 'YODA_COND',
     category: 'anti-patterns',
     example: {
-      bad: `IF 0 = lv_count.
-  process( ).
-ENDIF.`,
-      good: `IF lv_count = 0.
-  process( ).
-ENDIF.`,
+      bad: `IF 'ACTIVE' = lv_status.\n  process( ).\nENDIF.`,
+      good: `IF lv_status = 'ACTIVE'.\n  process( ).\nENDIF.`,
     },
   },
   {
     ruleId: 'prefer-symbol-operators',
     title: 'Prefer Symbol Comparison Operators (=, <>, <, >)',
-    rationale: 'Text comparison operators (`EQ`, `NE`, `LT`, `GT`, `LE`, `GE`) are legacy syntax. Modern programming and Clean ABAP universally standardize on mathematical symbols (`=`, `<>`, `<`, `>`, `<=`, `>=`).',
+    rationale: 'Text comparison operators such as EQ, NE, GT, LT, GE, and LE are legacy synonyms for the symbolic operators. Symbols are shorter, match mathematical notation, and are the Clean ABAP standard. Consistent symbols also make boolean expressions easier to scan in conditions and constructor expressions.',
     className: 'ZCL_SKYLINT_PREF_SYMBOL_OP',
     pseudoComment: 'SYMBOL_OP',
     category: 'clean-abap',
     example: {
-      bad: `IF lv_a EQ lv_b AND lv_c NE lv_d.
-  process( ).
-ENDIF.`,
-      good: `IF lv_a = lv_b AND lv_c <> lv_d.
-  process( ).
-ENDIF.`,
+      bad: `IF lv_total GT 100 AND lv_status NE 'X'.\n  process( ).\nENDIF.`,
+      good: `IF lv_total > 100 AND lv_status <> 'X'.\n  process( ).\nENDIF.`,
     },
   },
   {
     ruleId: 'prefer-new-operator',
     title: 'Prefer NEW #( ) over CREATE OBJECT',
-    rationale: 'The constructor expression `NEW #( )` is type-inferred, expression-capable, and avoids the archaic procedural `CREATE OBJECT` statement.',
+    rationale: 'CREATE OBJECT is the procedural object-creation statement and requires a separate declaration and assignment. NEW #( ) infers the class from the target, can be used inside expressions, and keeps construction close to where the reference is needed. Use NEW for object creation in modern ABAP and reserve CREATE OBJECT for legacy downport code.',
     className: 'ZCL_SKYLINT_PREF_NEW_OP',
     pseudoComment: 'NEW_OP',
     category: 'clean-abap',
     example: {
-      bad: `DATA lo_customer TYPE REF TO cl_customer.
-CREATE OBJECT lo_customer.`,
-      good: `DATA lo_customer TYPE REF TO cl_customer.
-lo_customer = NEW #( ).`,
+      bad: `DATA lo_customer TYPE REF TO cl_customer.\nCREATE OBJECT lo_customer EXPORTING iv_name = lv_name.`,
+      good: `DATA lo_customer TYPE REF TO cl_customer.\nlo_customer = NEW #( iv_name = lv_name ).`,
     },
   },
   {
     ruleId: 'prefer-xsdbool',
     title: 'Prefer xsdbool( ) for Boolean Assignments',
-    rationale: 'Writing `IF cond. lv_flag = abap_true. ELSE. lv_flag = abap_false. ENDIF.` is 5 lines of boilerplate. `lv_flag = xsdbool( cond )` expresses the same logic cleanly in one readable line.',
+    rationale: 'An IF/ELSE whose only task is to assign abap_true or abap_false uses many lines for a single boolean conversion. xsdbool( ) expresses the condition directly and assigns the result in one statement. This removes duplicated branches and makes the relationship between condition and flag obvious.',
     className: 'ZCL_SKYLINT_PREF_XSDBOOL',
     pseudoComment: 'XSDBOOL',
     category: 'clean-abap',
     example: {
-      bad: `IF lv_count > 0.
-  lv_has_items = abap_true.
-ELSE.
-  lv_has_items = abap_false.
-ENDIF.`,
-      good: `lv_has_items = xsdbool( lv_count > 0 ).`,
+      bad: `IF lv_discount > 0.\n  lv_has_discount = abap_true.\nELSE.\n  lv_has_discount = abap_false.\nENDIF.`,
+      good: `lv_has_discount = xsdbool( lv_discount > 0 ).`,
     },
   },
   {
     ruleId: 'no-static-via-instance',
     title: 'Avoid Calling Static Methods via Instance References (->)',
-    rationale: 'Calling a static method via an object reference arrow `lo_instance->static_method( )` gives the false impression that polymorphic instance dispatch is occurring. Use `cl_class=>static_method( )`.',
+    rationale: 'Calling a static method through an instance reference uses the instance arrow and suggests polymorphic dispatch that is not happening. It also creates an unnecessary dependency on a live object. Use the class name with => so readers immediately see that the method is static and cannot be overridden.',
     className: 'ZCL_SKYLINT_NO_STATIC_ARROW',
     pseudoComment: 'STATIC_ARROW',
     category: 'anti-patterns',
     example: {
-      bad: `DATA lo_instance TYPE REF TO cl_helper.
-lo_instance->static_method( ).`,
-      good: `cl_helper=>static_method( ).`,
+      bad: `DATA lo_helper TYPE REF TO cl_helper.\nlo_helper->format_date( lv_date ).`,
+      good: `cl_helper=>format_date( lv_date ).`,
     },
   },
   {
     ruleId: 'no-public-attributes',
     title: 'Avoid Public Attributes in Classes',
-    rationale: 'Public attributes violate encapsulation because external consumers can mutate internal state arbitrarily. Encapsulate state using private/protected attributes exposed via methods or `READ-ONLY`.',
+    rationale: 'Public attributes let any caller read or overwrite internal state, so the class cannot enforce its own invariants. They also expose implementation details that become difficult to change without breaking consumers. Keep state private or protected and expose read-only getters or behavior methods that control access.',
     className: 'ZCL_SKYLINT_NO_PUBLIC_ATTR',
     pseudoComment: 'PUBLIC_ATTR',
     category: 'anti-patterns',
     example: {
-      bad: `CLASS cl_model DEFINITION PUBLIC.
-  PUBLIC SECTION.
-    DATA mv_state TYPE i.
-ENDCLASS.`,
-      good: `CLASS cl_model DEFINITION PUBLIC.
-  PUBLIC SECTION.
-    METHODS get_state RETURNING VALUE(rv_state) TYPE i.
-  PRIVATE SECTION.
-    DATA mv_state TYPE i.
-ENDCLASS.`,
+      bad: `CLASS cl_model DEFINITION PUBLIC CREATE PUBLIC.\n  PUBLIC SECTION.\n    DATA mv_state TYPE i.\nENDCLASS.`,
+      good: `CLASS cl_model DEFINITION PUBLIC CREATE PUBLIC.\n  PUBLIC SECTION.\n    METHODS get_state RETURNING VALUE(rv_state) TYPE i.\n  PRIVATE SECTION.\n    DATA mv_state TYPE i.\nENDCLASS.`,
     },
   },
   {
     ruleId: 'no-obsolete-statements',
     title: 'Avoid Obsolete & Forbidden Statements',
-    rationale: 'Legacy statements such as `MOVE`, `COMPUTE`, `REFRESH`, `TABLES`, `STATICS`, `FORM`, and `LEAVE` are prohibited in ABAP Cloud and discouraged in Clean ABAP. Replace them with modern value assignments and object-oriented constructs.',
+    rationale: 'Statements such as MOVE, REFRESH, TABLES, STATICS, FORM, and LEAVE are legacy constructs that are discouraged by Clean ABAP and several are forbidden in ABAP Cloud. They bypass modern type checking and object-oriented structure, and they make the code harder to migrate. Replace them with direct assignments, modern table operations, and class methods.',
     className: 'ZCL_SKYLINT_NO_OBSOLETE',
     pseudoComment: 'OBSOLETE',
     category: 'anti-patterns',
     example: {
-      bad: `MOVE lv_src TO lv_dst.`,
-      good: `lv_dst = lv_src.`,
+      bad: `MOVE lv_source TO lv_target.`,
+      good: `lv_target = lv_source.`,
     },
   },
   {
     ruleId: 'no-list-processing',
     title: 'Avoid Classic List Processing Statements',
-    rationale: 'Statements such as `WRITE`, `ULINE`, `SKIP`, `NEW-LINE`, `FORMAT`, `POSITION`, `RESERVE`, `READ LINE`, `MODIFY LINE`, and `SCROLL LIST` are classic list-processing constructs forbidden in OO/Cloud ABAP. Use application logging and modern UI frameworks instead.',
+    rationale: 'Classic list processing with WRITE, ULINE, FORMAT, and READ LINE only works in SAP GUI list reports and is unavailable in ABAP Cloud. It couples business logic to screen output and makes the code impossible to test independently. Use application logging or a modern UI framework instead of writing directly to a list.',
     className: 'ZCL_SKYLINT_NO_LIST_PROC',
     pseudoComment: 'LIST_PROC',
     category: 'anti-patterns',
     example: {
-      bad: `WRITE: / 'Order processed:'.\nULINE.`,
+      bad: `WRITE / 'Order processed:'.\nULINE.`,
       good: `mo_logger->info( 'Order processed:' ).`,
     },
   },
   {
     ruleId: 'max-params',
     title: 'Limit Method Parameter Count',
-    rationale: 'Methods with excessive parameters are difficult to comprehend, call, and test. When a method needs more than 5-8 parameters, bundle related fields into a structured type or parameter object.',
+    rationale: 'A long parameter list is hard to call correctly because positional order and optional parameters are easy to mix up. It usually means the method has too many responsibilities and must change whenever a new input is needed. Group related inputs into a structure or parameter object so the signature stays small and self-documenting.',
     className: 'ZCL_SKYLINT_MAX_PARAMS',
     pseudoComment: 'MAX_PARAMS',
     category: 'metrics',
     example: {
-      bad: `METHODS execute
-  IMPORTING p1 TYPE i p2 TYPE i p3 TYPE i p4 TYPE i p5 TYPE i p6 TYPE i.`,
-      good: `METHODS execute
-  IMPORTING is_options TYPE ty_options.`,
+      bad: `METHODS create_order\n  IMPORTING\n    iv_customer_id TYPE string\n    iv_material    TYPE string\n    iv_quantity    TYPE i\n    iv_unit        TYPE meins\n    iv_plant       TYPE werks_d\n    iv_delivery    TYPE datum\n    iv_price       TYPE netpr\n    iv_currency    TYPE waers\n    iv_note        TYPE string.`,
+      good: `METHODS create_order\n  IMPORTING\n    is_order TYPE ty_order_input.`,
     },
   },
   {
     ruleId: 'no-db-in-loop',
     title: 'Avoid Database Access Inside Loops',
-    rationale: 'Executing SQL queries (`SELECT`, `UPDATE`, `DELETE`) inside a `LOOP` generates an N+1 query performance anti-pattern. Fetch data in bulk using `FOR ALL ENTRIES` or SQL Joins outside the loop.',
+    rationale: 'A database call inside a loop executes once per row, creating the N+1 query problem and multiplying network round trips. Performance degrades quickly as the table grows and can exhaust database resources. Select the required data in bulk before the loop with FOR ALL ENTRIES or a JOIN, then process it in memory.',
     className: 'ZCL_SKYLINT_NO_DB_IN_LOOP',
     pseudoComment: 'DB_IN_LOOP',
     category: 'performance',
     example: {
-      bad: `LOOP AT lt_orders INTO ls_order.
-  SELECT SINGLE * FROM /dmo/customer
-    WHERE customer_id = @ls_order-customer_id
-    INTO @ls_customer.
-ENDLOOP.`,
-      good: `SELECT * FROM /dmo/customer
-  FOR ALL ENTRIES IN @lt_orders
-  WHERE customer_id = @lt_orders-customer_id
-  INTO TABLE @lt_customers.`,
+      bad: `LOOP AT lt_orders INTO ls_order.\n  SELECT SINGLE customer_id FROM /dmo/customer\n    WHERE customer_id = @ls_order-customer_id\n    INTO @lv_customer_id.\nENDLOOP.`,
+      good: `IF lt_orders IS NOT INITIAL.\n  SELECT customer_id FROM /dmo/customer\n    FOR ALL ENTRIES IN @lt_orders\n    WHERE customer_id = @lt_orders-customer_id\n    INTO TABLE @lt_customer_ids.\nENDIF.`,
     },
   },
   {
     ruleId: 'no-empty-fae',
     title: 'Prevent Empty FOR ALL ENTRIES Inquiries',
-    rationale: 'In ABAP SQL, executing `FOR ALL ENTRIES IN @lt_table` when `lt_table` is empty drops the `WHERE` clause entirely and performs a full table scan, causing severe system performance degradation and data leaks.',
+    rationale: 'When the driver table of a FOR ALL ENTRIES query is empty, ABAP SQL drops the WHERE condition and reads the entire database table. That can cause timeouts, huge memory consumption, and unintended data exposure. Guard the statement with an IS NOT INITIAL check before executing it.',
     className: 'ZCL_SKYLINT_NO_EMPTY_FAE',
     pseudoComment: 'EMPTY_FAE',
     category: 'performance',
     example: {
-      bad: `SELECT * FROM /dmo/customer
-  FOR ALL ENTRIES IN @lt_orders
-  WHERE customer_id = @lt_orders-customer_id
-  INTO TABLE @lt_customers.`,
-      good: `IF lt_orders IS NOT INITIAL.
-  SELECT * FROM /dmo/customer
-    FOR ALL ENTRIES IN @lt_orders
-    WHERE customer_id = @lt_orders-customer_id
-    INTO TABLE @lt_customers.
-ENDIF.`,
+      bad: `SELECT customer_id FROM /dmo/customer\n  FOR ALL ENTRIES IN @lt_orders\n  WHERE customer_id = @lt_orders-customer_id\n  INTO TABLE @lt_customer_ids.`,
+      good: `IF lt_orders IS NOT INITIAL.\n  SELECT customer_id FROM /dmo/customer\n    FOR ALL ENTRIES IN @lt_orders\n    WHERE customer_id = @lt_orders-customer_id\n    INTO TABLE @lt_customer_ids.\nENDIF.`,
     },
   },
   {
     ruleId: 'no-select-star',
     title: 'Avoid SELECT * Queries',
-    rationale: 'Selecting all database columns transfers unnecessary data across the network, bypasses secondary indexes, and breaks table buffering. Always specify the explicit columns required.',
+    rationale: 'SELECT * reads every column even when only a few fields are used, increasing network traffic and memory consumption. It also prevents efficient covering-index access and makes the code break when the table structure changes. List the required columns explicitly so the query stays stable and efficient.',
     className: 'ZCL_SKYLINT_NO_SELECT_STAR',
     pseudoComment: 'SELECT_STAR',
     category: 'performance',
     example: {
-      bad: `SELECT * FROM /dmo/customer INTO TABLE @lt_customers.`,
-      good: `SELECT customer_id, first_name, last_name
-  FROM /dmo/customer
-  INTO TABLE @lt_customers.`,
+      bad: `SELECT * FROM /dmo/customer WHERE country = 'DE' INTO TABLE @lt_customers.`,
+      good: `SELECT customer_id, first_name, last_name\n  FROM /dmo/customer\n  WHERE country = 'DE'\n  INTO TABLE @lt_customers.`,
     },
   },
   {
     ruleId: 'no-scope-leak',
     title: 'Avoid Variable Scope Leaking from Inner Blocks',
-    rationale: 'In ABAP, variable declarations inside control blocks (`IF`, `LOOP`) have procedure-wide scope. Using an inner-declared variable outside its originating block creates confusing temporal dependencies.',
+    rationale: 'A variable declared inside an IF or LOOP block is still visible after the block ends, so using it later creates a hidden dependency on whether the branch executed. This makes behavior hard to reason about and can leave the variable uninitialized. Declare the variable in the enclosing scope and assign it explicitly inside the branch.',
     className: 'ZCL_SKYLINT_NO_SCOPE_LEAK',
     pseudoComment: 'SCOPE_LEAK',
     category: 'anti-patterns',
     example: {
-      bad: `IF lv_condition = abap_true.
-  DATA(lv_value) = 10.
-ENDIF.
-use_value( lv_value ). " Leaked outside block`,
-      good: `DATA lv_value TYPE i.
-IF lv_condition = abap_true.
-  lv_value = 10.
-ENDIF.
-use_value( lv_value ).`,
+      bad: `IF is_valid( ).\n  DATA(lv_message) = |Order { lv_id }|.\nENDIF.\nlog_message( lv_message ).`,
+      good: `DATA lv_message TYPE string.\nIF is_valid( ).\n  lv_message = |Order { lv_id }|.\nENDIF.\nlog_message( lv_message ).`,
     },
   },
   {
     ruleId: 'no-self-assignment',
     title: 'Avoid Redundant Self-Assignments',
-    rationale: 'Assigning a variable or structure field to itself (`lv_x = lv_x`) is a redundant no-op and frequently hides a typo where another source field was intended.',
+    rationale: 'Assigning a variable or component to itself does nothing and is usually left over from refactoring or a typo in the source field. It adds noise and can hide a missing assignment. Assign the intended source value or delete the statement.',
     className: 'ZCL_SKYLINT_NO_SELF_ASSIGN',
     pseudoComment: 'SELF_ASSIGN',
     category: 'anti-patterns',
     example: {
-      bad: `lv_name = lv_name.`,
-      good: `lv_name = iv_new_name.`,
+      bad: `ls_order-customer_id = ls_order-customer_id.`,
+      good: `ls_order-customer_id = iv_customer_id.`,
     },
   },
   {
     ruleId: 'prefer-fully-typed',
     title: 'Require Fully Typed Variables and Parameters',
-    rationale: 'Generic types (`ANY`, `DATA`, `TABLE`) bypass compiler type checking and hide runtime type mismatches. Always declare concrete, specific types unless writing truly generic frameworks.',
+    rationale: 'Untyped constants and data objects receive an implicit type whose length and value range are easy to misjudge. A later change to the literal can silently truncate data or alter comparisons. Declare explicit TYPE and LENGTH so the contract is visible to readers and checked by the compiler.',
     className: 'ZCL_SKYLINT_PREF_FULL_TYPED',
     pseudoComment: 'FULL_TYPED',
     category: 'clean-abap',
     example: {
-      bad: `CONSTANTS c_status VALUE 'A'. " TYPE is omitted; implicitly typed as c length 1`,
+      bad: `CONSTANTS c_status VALUE 'A'.`,
       good: `CONSTANTS c_status TYPE c LENGTH 1 VALUE 'A'.`,
     },
   },
@@ -590,1003 +481,857 @@ use_value( lv_value ).`,
   {
     ruleId: 'prefer-corresponding',
     title: 'Prefer CORRESPONDING #( ) Operator',
-    rationale: 'The constructor expression `CORRESPONDING #( )` is type-safe, expression-capable, and supports modern features like `EXCEPT` and `MAPPING`. It replaces the archaic `MOVE-CORRESPONDING` statement.',
+    rationale: 'MOVE-CORRESPONDING is a procedural statement that copies same-named fields implicitly and cannot be nested in expressions. CORRESPONDING #( ) is expression-capable and supports EXCEPT, MAPPING, and DISCARDING to control the mapping explicitly. Use it to make structure transfers visible and type-safe.',
     className: 'ZCL_SKYLINT_PREF_CORRESP',
     pseudoComment: 'CORRESP',
     category: 'clean-abap',
     example: {
-      bad: `MOVE-CORRESPONDING ls_source TO ls_target.`,
-      good: `ls_target = CORRESPONDING #( ls_source ).`,
+      bad: `MOVE-CORRESPONDING ls_customer_api TO ls_customer_db.`,
+      good: `ls_customer_db = CORRESPONDING #( ls_customer_api ).`,
     },
   },
   {
     ruleId: 'max-method-length',
     title: 'Limit Method Length (Statements)',
-    rationale: 'Long methods violate the Single Responsibility Principle, accumulate side effects, and are notoriously difficult to unit test. Split large methods into small, focused sub-methods.',
+    rationale: 'A method with many statements usually carries several responsibilities and accumulates local state that is hard to follow. Long methods are difficult to unit test, review, and reuse, and they tend to change for unrelated reasons. Extract cohesive steps into small named methods so each one has a single purpose.',
     className: 'ZCL_SKYLINT_MAX_METHOD_LEN',
     pseudoComment: 'METHOD_LEN',
     category: 'metrics',
     example: {
-      bad: `" Large method exceeding configured statement threshold (> 50 statements)
-METHOD execute.
-  " 60+ statements in a single procedure...
-ENDMETHOD.`,
-      good: `" Split into smaller, single-responsibility helper methods
-METHOD execute.
-  prepare_data( ).
-  process_records( ).
-  finalize_result( ).
-ENDMETHOD.`,
+      bad: `METHOD post_order.\n  DATA lv_total TYPE i.\n  lv_total = ls_order-quantity * ls_order-price.\n  check_credit( ls_order-customer_id ).\n  save_header( ls_order ).\n  save_items( ls_order ).\n  update_status( ls_order ).\n  log_created( ls_order ).\nENDMETHOD.`,
+      good: `METHOD post_order.\n  prepare_order( ls_order ).\n  save_order( ls_order ).\n  log_created( ls_order ).\nENDMETHOD.`,
     },
   },
   {
     ruleId: 'max-nesting-depth',
     title: 'Limit Control Flow Nesting Depth',
-    rationale: 'Deeply nested blocks (`IF`, `LOOP`, `TRY`, `CASE`) cause cognitive overload ("arrow antipattern"). Flatten nested code using early exits (`RETURN`), guard clauses, and extracted methods.',
+    rationale: 'Every nested IF, LOOP, or TRY level adds a condition that the reader must hold in mind, producing the arrow anti-pattern. Deep nesting also increases cyclomatic complexity and makes branch coverage expensive. Flatten the code with guard clauses, early returns, and extracted methods.',
     className: 'ZCL_SKYLINT_MAX_NESTING',
     pseudoComment: 'NESTING',
     category: 'metrics',
     example: {
-      bad: `IF cond1.
-  IF cond2.
-    IF cond3.
-      IF cond4.
-        execute( ).
-      ENDIF.
-    ENDIF.
-  ENDIF.
-ENDIF.`,
-      good: `IF NOT cond1 OR NOT cond2 OR NOT cond3 OR NOT cond4.
-  RETURN.
-ENDIF.
-execute( ).`,
+      bad: `IF is_authorized( ).\n  IF is_valid( ).\n    IF has_stock( ).\n      IF is_released( ).\n        execute( ).\n      ENDIF.\n    ENDIF.\n  ENDIF.\nENDIF.`,
+      good: `IF NOT is_authorized( ) OR NOT is_valid( )\n   OR NOT has_stock( ) OR NOT is_released( ).\n  RETURN.\nENDIF.\nexecute( ).`,
     },
   },
   {
     ruleId: 'no-sy-modify',
     title: 'Avoid Modifying System Fields (sy-*)',
-    rationale: 'System fields like `sy-subrc`, `sy-tabix`, and `sy-index` are managed exclusively by the ABAP runtime. Writing to them manually undermines system integrity and masks actual execution results.',
+    rationale: 'System fields such as sy-subrc, sy-tabix, and sy-index are maintained by the ABAP runtime and carry the result of the last statement. Writing to them falsifies that contract and can break framework logic or later checks. Return explicit values or flags instead of changing runtime state.',
     className: 'ZCL_SKYLINT_NO_SY_MODIFY',
     pseudoComment: 'SY_MODIFY',
     category: 'security',
     example: {
-      bad: `sy-subrc = 0.
-sy-tabix = 1.`,
-      good: `" Pass explicit return values or flags instead of modifying system variables (sy-*)
-rv_success = abap_true.`,
+      bad: `sy-subrc = 0.\nsy-tabix = 1.`,
+      good: `rv_success = abap_true.\nrt_result = lt_result.`,
     },
   },
   {
     ruleId: 'prefer-returning',
     title: 'Prefer Functional RETURNING Parameters',
-    rationale: 'Methods with a `RETURNING` parameter can be used directly within expressions, assignments, and assertions. Prefer `RETURNING` over a single `EXPORTING` parameter.',
+    rationale: 'A single EXPORTING parameter forces callers to declare a target and invoke the method as a statement. A RETURNING parameter makes the method usable directly in assignments, expressions, and assertions. Prefer RETURNING for value-producing methods and reserve EXPORTING for methods that genuinely return several outputs.',
     className: 'ZCL_SKYLINT_PREF_RETURNING',
     pseudoComment: 'RETURNING',
     category: 'clean-abap',
     example: {
-      bad: `METHODS calculate
-  EXPORTING ev_result TYPE i.`,
-      good: `METHODS calculate
-  RETURNING VALUE(rv_result) TYPE i.`,
+      bad: `METHODS get_total\n  EXPORTING ev_total TYPE i.`,
+      good: `METHODS get_total\n  RETURNING VALUE(rv_total) TYPE i.`,
     },
   },
   {
     ruleId: 'prefer-class-exceptions',
     title: 'Prefer Class-Based Exceptions over Classic EXCEPTIONS',
-    rationale: 'Classic non-class exceptions (set via `sy-subrc`) lack stack traces, cannot carry context data, and cannot be propagated up call stacks cleanly. Use class-based exceptions (`CX_ROOT` subclasses).',
+    rationale: 'Classic exceptions report failure through sy-subrc and cannot carry a message object, stack trace, or context data. They are easy to ignore and do not propagate cleanly through call stacks. Use CX_ROOT subclasses with RAISING and CATCH so errors are explicit, typed, and carry useful information.',
     className: 'ZCL_SKYLINT_PREF_CLASS_EXC',
     pseudoComment: 'CLASS_EXC',
     category: 'clean-abap',
     example: {
-      bad: `METHODS execute EXCEPTIONS not_found failed.`,
-      good: `METHODS execute RAISING cx_not_found cx_failed.`,
+      bad: `METHODS execute\n  EXCEPTIONS not_found failed.`,
+      good: `METHODS execute\n  RAISING cx_not_found cx_failed.`,
     },
   },
   {
     ruleId: 'no-dangerous-statements',
     title: 'Avoid Dangerous & Dynamic Native Statements',
-    rationale: 'Dynamic code generation (`GENERATE SUBROUTINE POOL`, `INSERT REPORT`), kernel calls (`SYSTEM-CALL`), and production `ASSERT` or `RAISE SHORTDUMP` jeopardize cloud compliance, security, and stability.',
+    rationale: 'Dynamic report generation, kernel calls, native SQL, and production ASSERT or RAISE SHORTDUMP bypass the ABAP runtime and its security model. They are not available in ABAP Cloud and can introduce injection risks or portability problems. Use supported ABAP SQL and class-based APIs instead.',
     className: 'ZCL_SKYLINT_NO_DANGEROUS_STMT',
     pseudoComment: 'DANGEROUS_STMT',
     category: 'security',
     example: {
-      bad: `EXEC SQL.
-  SELECT * FROM /dmo/customer INTO :wa
-ENDEXEC.`,
-      good: `SELECT * FROM /dmo/customer INTO TABLE @lt_customers.`,
+      bad: `EXEC SQL.\n  SELECT * FROM /dmo/customer INTO :wa.\nENDEXEC.`,
+      good: `SELECT customer_id FROM /dmo/customer INTO TABLE @lt_customer_ids.`,
     },
   },
   {
     ruleId: 'prefer-auth-check',
     title: 'Ensure AUTHORITY-CHECK Before Sensitive Operations',
-    rationale: 'Omitting authorization checks leaves critical business data and actions exposed to unauthorized users. Always verify permissions before selecting or modifying protected resources.',
+    rationale: 'Starting a transaction or sensitive operation without an authority check lets any user who reaches the code perform protected actions. Authorization must be verified before the operation, not assumed from the surrounding UI. Add WITH AUTHORITY-CHECK to the CALL TRANSACTION or perform an explicit AUTHORITY-CHECK first.',
     className: 'ZCL_SKYLINT_PREF_AUTH_CHECK',
     pseudoComment: 'AUTH_CHECK',
     category: 'security',
     example: {
-      bad: `CALL TRANSACTION 'VA01'.`,
-      good: `CALL TRANSACTION 'VA01' WITH AUTHORITY-CHECK.`,
+      bad: `CALL TRANSACTION 'ME21N'.`,
+      good: `CALL TRANSACTION 'ME21N' WITH AUTHORITY-CHECK.`,
     },
   },
   {
     ruleId: 'prefer-order-by',
     title: 'Require ORDER BY for Deterministic SELECT Results',
-    rationale: 'Selecting rows from a relational database without an explicit `ORDER BY` clause yields non-deterministic ordering that can change unpredictably between DB executions and updates.',
+    rationale: 'A SELECT with UP TO n ROWS but no ORDER BY returns an arbitrary subset whose contents can change after database reorganization or parallel execution. That makes results non-deterministic and difficult to reproduce in tests. Add ORDER BY on a stable key so the same query returns the same rows.',
     className: 'ZCL_SKYLINT_PREF_ORDER_BY',
     pseudoComment: 'ORDER_BY',
     category: 'performance',
     example: {
-      bad: `SELECT * FROM /dmo/customer UP TO 1 ROWS INTO @ls_customer.`,
-      good: `SELECT * FROM /dmo/customer ORDER BY customer_id UP TO 1 ROWS INTO @ls_customer.`,
+      bad: `SELECT customer_id FROM /dmo/customer UP TO 1 ROWS INTO @lv_customer_id.`,
+      good: `SELECT customer_id FROM /dmo/customer ORDER BY customer_id UP TO 1 ROWS INTO @lv_customer_id.`,
     },
   },
   {
     ruleId: 'max-cyclomatic-complexity',
     title: 'Limit Cyclomatic Complexity',
-    rationale: 'High cyclomatic complexity means a method contains too many decision points (branches, loops, catches), making comprehensive unit test branch coverage nearly impossible.',
+    rationale: 'Cyclomatic complexity counts the independent decision paths through a method, so a high value means many branches need separate tests. Such methods are hard to understand and easy to break when one condition changes. Split the decisions into cohesive helper methods or strategy objects.',
     className: 'ZCL_SKYLINT_MAX_CYCLO_COMP',
     pseudoComment: 'CYCLO_COMP',
     category: 'metrics',
     example: {
-      bad: `" Complex method containing excessive branches (> 10 cyclomatic complexity)
-METHOD compute.
-  IF c1. ... ELSEIF c2. ... ELSEIF c3. ...
-ENDMETHOD.`,
-      good: `" Decompose into strategy classes or cohesive helper methods
-METHOD compute.
-  ro_strategy = mo_factory->get_strategy( mv_type ).
-  ro_strategy->execute( ).
-ENDMETHOD.`,
+      bad: `METHOD check_order.\n  IF is_blocked( ).\n    RETURN.\n  ENDIF.\n  IF has_no_stock( ).\n    RETURN.\n  ENDIF.\n  IF is_over_limit( ).\n    RETURN.\n  ENDIF.\n  IF needs_approval( ).\n    approve( ).\n  ENDIF.\n  IF is_priority( ).\n    expedite( ).\n  ENDIF.\n  release( ).\nENDMETHOD.`,
+      good: `METHOD check_order.\n  validate_order( ).\n  approve_order( ).\n  release_order( ).\nENDMETHOD.`,
     },
   },
   {
     ruleId: 'prefer-final-class',
     title: 'Design for Inheritance or Prohibit It (FINAL)',
-    rationale: 'Classes not explicitly designed and documented for inheritance should be declared `FINAL`. This prevents subclassing that relies on fragile base-class implementation details.',
+    rationale: 'A class that is not designed for inheritance can still be subclassed, and subclasses may depend on internal behavior that later changes. Marking the class FINAL prevents fragile base class problems and documents that no extension is intended. Remove FINAL only when the class has documented extension points.',
     className: 'ZCL_SKYLINT_PREF_FINAL_CLS',
     pseudoComment: 'FINAL_CLS',
     category: 'clean-abap',
     example: {
-      bad: `CLASS cl_customer_service DEFINITION PUBLIC CREATE PUBLIC.
-  " Class not intended for inheritance
-ENDCLASS.`,
-      good: `CLASS cl_customer_service DEFINITION PUBLIC FINAL CREATE PUBLIC.
-ENDCLASS.`,
+      bad: `CLASS cl_customer_service DEFINITION\n  PUBLIC CREATE PUBLIC.\n  PUBLIC SECTION.\n    METHODS execute.\nENDCLASS.`,
+      good: `CLASS cl_customer_service DEFINITION\n  PUBLIC FINAL CREATE PUBLIC.\n  PUBLIC SECTION.\n    METHODS execute.\nENDCLASS.`,
     },
   },
 
   {
     ruleId: 'no-magic-numbers',
     title: 'Avoid Magic Numbers; Use Named Constants',
-    rationale: 'Hardcoded numeric literals scattered in logic obscure business rules and make updates error-prone. Give numbers meaningful names by declaring structured constants.',
+    rationale: 'A numeric literal in logic does not explain what it represents, and the same value repeated in several places must be changed consistently. Named constants turn business rules into readable intent and give the value a single source of truth. Declare typed constants and reuse them instead of scattering numbers through the code.',
     className: 'ZCL_SKYLINT_NO_MAGIC_NUMBERS',
     pseudoComment: 'MAGIC_NUMBERS',
     category: 'anti-patterns',
     example: {
-      bad: `IF lv_status = 3.
-  process( ).
-ENDIF.`,
-      good: `CONSTANTS c_status_completed TYPE i VALUE 3.
-IF lv_status = c_status_completed.
-  process( ).
-ENDIF.`,
+      bad: `IF lv_retry_count >= 3.\n  process( ).\nENDIF.`,
+      good: `CONSTANTS c_max_retries TYPE i VALUE 3.\nIF lv_retry_count >= c_max_retries.\n  process( ).\nENDIF.`,
     },
   },
   {
     ruleId: 'prefer-insert-into',
     title: 'Prefer INSERT ... INTO TABLE over APPEND',
-    rationale: '`APPEND` implies indexed, sequential appending and fails on hashed or sorted tables. `INSERT ... INTO TABLE` works polymorphically across all internal table categories.',
+    rationale: 'APPEND only works for index tables and implies sequential insertion, so changing the table type to sorted or hashed later breaks the code. INSERT ... INTO TABLE works with every table category and states the intent generically. Use INSERT for table handling that should remain independent of the concrete table kind.',
     className: 'ZCL_SKYLINT_PREF_INSERT',
     pseudoComment: 'INSERT_INTO',
     category: 'clean-abap',
     example: {
-      bad: `APPEND ls_item TO lt_items.`,
-      good: `INSERT ls_item INTO TABLE lt_items.`,
+      bad: `APPEND ls_order_item TO lt_order_items.`,
+      good: `INSERT ls_order_item INTO TABLE lt_order_items.`,
     },
   },
   {
     ruleId: 'no-like-objects',
     title: 'Avoid LIKE Typing on Global Dictionary Objects',
-    rationale: 'Typing dictionary objects with `LIKE` is obsolete. Use `TYPE` to refer to data types and reserve `LIKE` solely for referencing local data objects in the same procedure.',
+    rationale: 'LIKE copies the type of a data object, which couples the new declaration to an implementation detail rather than to a type contract. For Dictionary objects, TYPE references the type directly and stays stable when the referenced object changes. Use LIKE only for local data objects whose type is intentionally shared.',
     className: 'ZCL_SKYLINT_NO_LIKE_OBJECTS',
     pseudoComment: 'LIKE_OBJECTS',
     category: 'anti-patterns',
     example: {
-      bad: `DATA lv_copy LIKE lv_original.`,
-      good: `DATA lv_copy TYPE string.`,
+      bad: `DATA lv_material LIKE mara-matnr.`,
+      good: `DATA lv_material TYPE mara-matnr.`,
     },
   },
   {
     ruleId: 'max-constructor-statements',
     title: 'Keep Constructors Clean & Lightweight',
-    rationale: 'Constructors should only initialize state and inject dependencies. Heavy business logic, database queries, or network I/O in constructors make test mocking and instantiation brittle.',
+    rationale: 'A constructor overloaded with business logic, database access, or I/O is hard to instantiate in tests and hides its dependencies. Construction should be cheap and predictable, with failures handled by explicit factory or service logic. Limit constructors to dependency injection and simple state initialization.',
     className: 'ZCL_SKYLINT_MAX_CTOR_STMTS',
     pseudoComment: 'CLEAN_CTOR',
     category: 'metrics',
     example: {
-      bad: `METHOD constructor.
-  super->constructor( ).
-  " 15+ statements initializing complex states and reading DB...
-ENDMETHOD.`,
-      good: `METHOD constructor.
-  super->constructor( ).
-  mo_gateway = io_gateway. " Simple dependency assignment only
-ENDMETHOD.`,
+      bad: `METHOD constructor.\n  super->constructor( ).\n  mv_id = iv_id.\n  mv_name = iv_name.\n  mv_status = c_new.\n  mv_created_at = utclong_current( ).\n  mv_created_by = sy-uname.\n  mv_total = 0.\n  mv_currency = c_currency.\n  mv_language = sy-langu.\n  mv_country = iv_country.\n  mv_note = iv_note.\n  load_defaults( ).\nENDMETHOD.`,
+      good: `METHOD constructor.\n  super->constructor( ).\n  mo_gateway = io_gateway.\n  mv_id = iv_id.\nENDMETHOD.`,
     },
   },
   {
     ruleId: 'no-static-classes',
     title: 'Avoid Purely Static Utility Classes',
-    rationale: 'Classes consisting entirely of static methods cannot be mocked via interfaces or subclassing during unit tests, creating rigid coupling throughout the application.',
+    rationale: 'A class made only of static methods cannot be mocked through an interface, so every caller is tightly coupled to the implementation. Static state also leaks between tests and makes behavior order-dependent. Inject an instance through an interface and use instance methods instead.',
     className: 'ZCL_SKYLINT_NO_STATIC_CLS',
     pseudoComment: 'STATIC_CLS',
     category: 'anti-patterns',
     example: {
-      bad: `CLASS cl_math_util DEFINITION PUBLIC FINAL CREATE PUBLIC.
-  PUBLIC SECTION.
-    CLASS-METHODS add IMPORTING a TYPE i b TYPE i RETURNING VALUE(r) TYPE i.
-    CLASS-METHODS sub IMPORTING a TYPE i b TYPE i RETURNING VALUE(r) TYPE i.
-ENDCLASS.`,
-      good: `CLASS cl_math_util DEFINITION PUBLIC FINAL CREATE PUBLIC.
-  PUBLIC SECTION.
-    INTERFACES if_math_util.
-    METHODS add IMPORTING a TYPE i b TYPE i RETURNING VALUE(r) TYPE i.
-ENDCLASS.`,
+      bad: `CLASS cl_math_util DEFINITION PUBLIC FINAL CREATE PUBLIC.\n  PUBLIC SECTION.\n    CLASS-METHODS add IMPORTING a TYPE i b TYPE i RETURNING VALUE(r) TYPE i.\n    CLASS-METHODS sub IMPORTING a TYPE i b TYPE i RETURNING VALUE(r) TYPE i.\nENDCLASS.`,
+      good: `CLASS cl_math_util DEFINITION PUBLIC FINAL CREATE PUBLIC.\n  PUBLIC SECTION.\n    INTERFACES if_math_util.\nENDCLASS.`,
     },
   },
   {
     ruleId: 'prefer-predicate-names',
     title: 'Use Predicate Naming for Boolean Methods (is_, has_, can_)',
-    rationale: 'Methods returning boolean status should read like questions (`is_valid`, `has_children`, `can_execute`) so conditionals read naturally like plain English.',
+    rationale: 'A boolean method reads best as a yes/no question, especially when it appears inside an IF condition. Names such as check_active or get_active leave the return type ambiguous and can suggest a side effect. Use is_, has_, or can_ prefixes for methods that return abap_bool.',
     className: 'ZCL_SKYLINT_PREF_PRED_NAME',
     pseudoComment: 'PRED_NAME',
     category: 'clean-abap',
     example: {
-      bad: `METHODS check_active RETURNING VALUE(rv_active) TYPE abap_bool.`,
-      good: `METHODS is_active RETURNING VALUE(rv_active) TYPE abap_bool.`,
+      bad: `METHODS check_active\n  RETURNING VALUE(rv_active) TYPE abap_bool.`,
+      good: `METHODS is_active\n  RETURNING VALUE(rv_active) TYPE abap_bool.`,
     },
   },
   {
     ruleId: 'max-inheritance-depth',
     title: 'Limit Inheritance Depth',
-    rationale: 'Deep class inheritance hierarchies create the fragile base class problem and tight coupling. Favor composition over inheritance (`HAS-A` instead of `IS-A`).',
+    rationale: 'Deep inheritance chains make behavior depend on many superclasses and expose subclasses to the fragile base class problem. A change near the root can affect every descendant and is hard to test completely. Prefer composition and keep class hierarchies shallow.',
     className: 'ZCL_SKYLINT_MAX_INHERIT',
     pseudoComment: 'INHERIT_DEPTH',
     category: 'metrics',
     example: {
-      bad: `CLASS lcl_child DEFINITION INHERITING FROM lcl_sub_parent. " Depth > 3
-ENDCLASS.`,
-      good: `" Favor composition over deep class inheritance hierarchies
-CLASS lcl_worker DEFINITION.
-  PRIVATE SECTION.
-    DATA mo_engine TYPE REF TO if_engine.
-ENDCLASS.`,
+      bad: `CLASS lcl_level1 DEFINITION.\nENDCLASS.\nCLASS lcl_level2 DEFINITION INHERITING FROM lcl_level1.\nENDCLASS.\nCLASS lcl_level3 DEFINITION INHERITING FROM lcl_level2.\nENDCLASS.\nCLASS lcl_level4 DEFINITION INHERITING FROM lcl_level3.\nENDCLASS.\nCLASS lcl_level5 DEFINITION INHERITING FROM lcl_level4.\nENDCLASS.`,
+      good: `CLASS lcl_worker DEFINITION.\n  PRIVATE SECTION.\n    DATA mo_engine TYPE REF TO if_engine.\nENDCLASS.`,
     },
   },
   {
     ruleId: 'max-attributes',
     title: 'Limit Member Attributes per Class',
-    rationale: 'Classes with dozens of member variables are almost always God Objects that handle multiple unrelated responsibilities. Split them into smaller, focused domain classes.',
+    rationale: 'A class with many member variables tends to own several unrelated responsibilities and becomes a God object. Its state is hard to initialize, test, and reason about, and changes ripple through many methods. Split cohesive fields into smaller domain objects or focused classes.',
     className: 'ZCL_SKYLINT_MAX_ATTRIBUTES',
     pseudoComment: 'ATTRIBUTES',
     category: 'metrics',
     example: {
-      bad: `CLASS cl_order DEFINITION.
-  PRIVATE SECTION.
-    " 30+ individual scalar member variables
-ENDCLASS.`,
-      good: `CLASS cl_order DEFINITION.
-  PRIVATE SECTION.
-    DATA ms_header TYPE ty_order_header.
-    DATA mt_items  TYPE ty_order_items.
-ENDCLASS.`,
+      bad: `CLASS cl_order DEFINITION PUBLIC CREATE PUBLIC.\n  PRIVATE SECTION.\n    DATA mv_id TYPE string.\n    DATA mv_customer TYPE string.\n    DATA mv_status TYPE string.\n    DATA mv_total TYPE i.\n    DATA mv_currency TYPE string.\n    DATA mv_created_at TYPE timestamp.\nENDCLASS.`,
+      good: `CLASS cl_order DEFINITION PUBLIC CREATE PUBLIC.\n  PRIVATE SECTION.\n    DATA ms_header TYPE ty_order_header.\n    DATA mt_items TYPE ty_order_items.\nENDCLASS.`,
     },
   },
   {
     ruleId: 'no-interface-data',
     title: 'Avoid DATA Attributes in Interfaces',
-    rationale: 'Interfaces should declare behavior (methods) and immutable contracts (constants). Mutable data in interfaces creates hidden global state across all implementers.',
+    rationale: 'Interfaces describe behavior and should not introduce mutable state into their contract. A DATA attribute in an interface exposes implementation details and can create shared state across all implementers. Use methods to expose state and constants for immutable values.',
     className: 'ZCL_SKYLINT_NO_INTF_DATA',
     pseudoComment: 'INTF_DATA',
     category: 'anti-patterns',
     example: {
-      bad: `INTERFACE if_customer.
-  DATA mv_state TYPE i. " Mutable DATA in interface
-ENDINTERFACE.`,
-      good: `INTERFACE if_customer.
-  CONSTANTS c_default_status TYPE i VALUE 1.
-  METHODS get_state RETURNING VALUE(rv_state) TYPE i.
-ENDINTERFACE.`,
+      bad: `INTERFACE if_customer.\n  DATA mv_state TYPE i.\nENDINTERFACE.`,
+      good: `INTERFACE if_customer.\n  CONSTANTS c_default_status TYPE i VALUE 1.\n  METHODS get_state RETURNING VALUE(rv_state) TYPE i.\nENDINTERFACE.`,
     },
   },
   {
     ruleId: 'no-catch-cx-root',
     title: 'Avoid Catching Generic CX_ROOT',
-    rationale: 'Catching `cx_root` indiscriminately swallows system runtime errors, resource exhaustion errors, and programming bugs, masking critical defects from developers.',
+    rationale: 'Catching CX_ROOT catches programming errors, resource shortages, and runtime failures together with expected business exceptions. The handler cannot respond correctly to all of them and may hide serious defects. Catch only the specific exception types you can handle and let everything else propagate.',
     className: 'ZCL_SKYLINT_NO_CATCH_ROOT',
     pseudoComment: 'CATCH_ROOT',
     category: 'security',
     example: {
-      bad: `TRY.
-    process_order( ).
-  CATCH cx_root.
-    " Indiscriminately catches all exceptions, masking unexpected bugs
-ENDTRY.`,
-      good: `TRY.
-    process_order( ).
-  CATCH cx_order_failed INTO DATA(lx_order).
-    logger->record( lx_order ).
-ENDTRY.`,
+      bad: `TRY.\n  process_order( ).\nCATCH cx_root.\n  " swallowed\nENDTRY.`,
+      good: `TRY.\n  process_order( ).\nCATCH cx_order_failed INTO DATA(lx_order).\n  logger->record( lx_order ).\nENDTRY.`,
     },
   },
   {
     ruleId: 'no-message-raising',
     title: 'Avoid Obsolete MESSAGE ... RAISING in Methods',
-    rationale: '`MESSAGE ... RAISING` combines procedural exception handling with UI messaging, preventing proper separation of concerns. Raise modern class-based exceptions instead.',
+    rationale: 'MESSAGE ... RAISING mixes UI message output with exception propagation and depends on classic exception numbers. It separates poorly from business logic and is unsuitable for APIs that should return typed failures. Raise a class-based exception that references the message class text instead.',
     className: 'ZCL_SKYLINT_NO_MSG_RAISING',
     pseudoComment: 'MSG_RAISING',
     category: 'anti-patterns',
     example: {
-      bad: `MESSAGE e001(zmsg) RAISING not_found.`,
-      good: `RAISE EXCEPTION NEW cx_not_found( textid = cx_not_found=>c_item_missing ).`,
+      bad: `MESSAGE e002(zorder) RAISING not_found.`,
+      good: `RAISE EXCEPTION NEW cx_order_not_found( textid = cx_order_not_found=>c_order_missing ).`,
     },
   },
   {
     ruleId: 'no-nested-try',
     title: 'Avoid Deeply Nested TRY ... CATCH Blocks',
-    rationale: 'Nesting `TRY` blocks inside other `TRY` blocks obfuscates error handling flow. Extract inner protected operations into distinct methods.',
+    rationale: 'A TRY block inside another TRY block makes it unclear which handler owns which failure and often duplicates cleanup logic. The inner operation should have its own exception contract behind a method boundary. Extract it into a focused helper and keep one TRY per responsibility.',
     className: 'ZCL_SKYLINT_NO_NESTED_TRY',
     pseudoComment: 'NESTED_TRY',
     category: 'anti-patterns',
     example: {
-      bad: `TRY.
-    step1( ).
-    TRY.
-        step2( ).
-      CATCH cx_step2_err.
-        handle_step2( ).
-    ENDTRY.
-  CATCH cx_step1_err.
-    handle_step1( ).
-ENDTRY.`,
-      good: `" Extract inner operations into focused helper methods
-TRY.
-    step1( ).
-    execute_step2( ).
-  CATCH cx_step1_err.
-    handle_step1( ).
-ENDTRY.`,
+      bad: `TRY.\n  step1( ).\n  TRY.\n    step2( ).\n  CATCH cx_step2_error.\n    handle_step2( ).\n  ENDTRY.\nCATCH cx_step1_error.\n  handle_step1( ).\nENDTRY.`,
+      good: `TRY.\n  step1( ).\n  execute_step2( ).\nCATCH cx_step1_error.\n  handle_step1( ).\nENDTRY.`,
     },
   },
   {
     ruleId: 'no-raise-cx-sy',
     title: 'Avoid Explicitly Raising System Exceptions (CX_SY_*)',
-    rationale: '`cx_sy_*` exceptions are reserved exclusively for the ABAP runtime engine (e.g., divide by zero, null reference). Applications must define and raise their own custom exception hierarchies.',
+    rationale: 'CX_SY_* exceptions describe failures detected by the ABAP runtime, such as invalid table access or division by zero. Applications should not fabricate those conditions because callers cannot distinguish them from real runtime faults. Define and raise a custom exception class for application errors instead.',
     className: 'ZCL_SKYLINT_NO_RAISE_CX_SY',
     pseudoComment: 'RAISE_CX_SY',
     category: 'security',
     example: {
-      bad: `RAISE EXCEPTION NEW cx_sy_itab_line_not_found( ).`,
-      good: `RAISE EXCEPTION NEW cx_item_not_found( ).`,
+      bad: `RAISE EXCEPTION NEW cx_sy_zerodivide( ).`,
+      good: `RAISE EXCEPTION NEW cx_invalid_amount( ).`,
     },
   },
   {
     ruleId: 'prefer-subrc-check',
     title: 'Verify sy-subrc Promptly After System Calls',
-    rationale: 'Statements that set `sy-subrc` (such as `SELECT SINGLE`, `READ TABLE`, `AUTHORITY-CHECK`, `ASSIGN`) must have their return code verified immediately before invoking unrelated statements.',
+    rationale: 'Statements such as SELECT SINGLE, READ TABLE, and AUTHORITY-CHECK report success through sy-subrc. If another statement runs first, the return code is overwritten and the failure is silently ignored. Check sy-subrc immediately, or use a modern expression that handles absence explicitly.',
     className: 'ZCL_SKYLINT_PREF_CHECK_SUBRC',
     pseudoComment: 'CHECK_SUBRC',
     category: 'security',
     example: {
-      bad: `SELECT SINGLE * FROM /dmo/customer WHERE customer_id = @lv_id INTO @ls_customer.
-process_customer( ls_customer ). " sy-subrc is never checked`,
-      good: `SELECT SINGLE * FROM /dmo/customer WHERE customer_id = @lv_id INTO @ls_customer.
-IF sy-subrc = 0.
-  process_customer( ls_customer ).
-ENDIF.`,
+      bad: `SELECT SINGLE customer_id FROM /dmo/customer\n  WHERE customer_id = @lv_id\n  INTO @lv_customer_id.\nprocess_customer( lv_customer_id ).`,
+      good: `SELECT SINGLE customer_id FROM /dmo/customer\n  WHERE customer_id = @lv_id\n  INTO @lv_customer_id.\nIF sy-subrc = 0.\n  process_customer( lv_customer_id ).\nENDIF.`,
     },
   },
   {
     ruleId: 'no-client-specified',
     title: 'Avoid CLIENT SPECIFIED / USING CLIENT in Cloud',
-    rationale: 'Explicit client switching bypasses automatic multi-tenant client isolation and is strictly prohibited in ABAP Cloud environment standards.',
+    rationale: 'USING CLIENT and CLIENT SPECIFIED let code read or write another client and bypass the tenant isolation that ABAP Cloud guarantees. This is a security and compliance violation in multi-tenant environments. Remove explicit client handling and rely on the session client.',
     className: 'ZCL_SKYLINT_NO_CLIENT_SPEC',
     pseudoComment: 'CLIENT_SPEC',
     category: 'security',
     example: {
-      bad: `SELECT * FROM /dmo/customer USING CLIENT '100' INTO TABLE @lt_customers.`,
-      good: `SELECT * FROM /dmo/customer INTO TABLE @lt_customers.`,
+      bad: `SELECT customer_id FROM /dmo/customer USING CLIENT '100' INTO TABLE @lt_customer_ids.`,
+      good: `SELECT customer_id FROM /dmo/customer INTO TABLE @lt_customer_ids.`,
     },
   },
   {
     ruleId: 'no-commit-work',
     title: 'Avoid Explicit COMMIT WORK in Business Logic',
-    rationale: 'Transactional business logic should rely on the persistence framework or framework save sequence (e.g. RAP) rather than triggering premature or uncoordinated database commits.',
+    rationale: 'COMMIT WORK inside business logic ends the SAP LUW at an arbitrary point, so later failures cannot roll back earlier changes. Frameworks such as RAP manage the save sequence and commit for you. Let the framework commit and keep the business logic transactional.',
     className: 'ZCL_SKYLINT_NO_COMMIT_WORK',
     pseudoComment: 'COMMIT_WORK',
     category: 'security',
     example: {
-      bad: `" Inside a RAP behavior implementation (CL_ABAP_BEHAVIOR_HANDLER)
-METHOD update.
-  MODIFY ENTITIES OF ...
-  COMMIT WORK.
-ENDMETHOD.`,
-      good: `" In RAP, commits are managed automatically by the framework save sequence
-METHOD update.
-  MODIFY ENTITIES OF ...
-ENDMETHOD.`,
+      bad: `METHOD save_order.\n  UPDATE zorder SET status = @lv_status WHERE order_id = @lv_id.\n  COMMIT WORK.\nENDMETHOD.`,
+      good: `METHOD save_order.\n  UPDATE zorder SET status = @lv_status WHERE order_id = @lv_id.\nENDMETHOD.`,
     },
   },
   {
     ruleId: 'prefer-transporting',
     title: 'Specify TRANSPORTING in MODIFY / READ TABLE',
-    rationale: 'Modifying internal tables without specifying `TRANSPORTING` copies all table fields across the buffer. Specify only the modified fields to optimize execution speed.',
+    rationale: 'MODIFY without TRANSPORTING copies the entire table line from the work area, even when only one field changed. On wide tables this costs extra memory and CPU for every row. Name the changed fields in TRANSPORTING so only the relevant data is written.',
     className: 'ZCL_SKYLINT_PREF_TRANSPORT',
     pseudoComment: 'TRANSPORTING',
     category: 'performance',
     example: {
-      bad: `LOOP AT lt_items INTO ls_item.
-  ls_item-status = 'DONE'.
-  MODIFY lt_items FROM ls_item. " Full line copy without specifying TRANSPORTING
-ENDLOOP.`,
-      good: `LOOP AT lt_items INTO ls_item.
-  ls_item-status = 'DONE'.
-  MODIFY lt_items FROM ls_item TRANSPORTING status.
-ENDLOOP.`,
+      bad: `LOOP AT lt_items INTO ls_item.\n  ls_item-status = 'DONE'.\n  MODIFY lt_items FROM ls_item.\nENDLOOP.`,
+      good: `LOOP AT lt_items INTO ls_item.\n  ls_item-status = 'DONE'.\n  MODIFY lt_items FROM ls_item TRANSPORTING status.\nENDLOOP.`,
     },
   },
 
   {
     ruleId: 'prefer-string-functions',
     title: 'Prefer Built-in String Functions over SEARCH/SHIFT',
-    rationale: 'Procedural string statements (`SEARCH`, `SHIFT`, `TRANSLATE`) are legacy ABAP. Replace them with functional built-in string functions (`find`, `to_upper`, `substring`, `shift_left`).',
+    rationale: 'Statements such as CONDENSE, TRANSLATE, SHIFT, and SEARCH mutate a variable and cannot be used inside expressions. Built-in functions return values, compose cleanly, and make the intended transformation explicit. Use functions such as to_upper, to_lower, find, substring, and shift_left instead.',
     className: 'ZCL_SKYLINT_PREF_STR_FUNC',
     pseudoComment: 'STR_FUNC',
     category: 'clean-abap',
     example: {
-      bad: `CONDENSE lv_text.
-TRANSLATE lv_code TO UPPER CASE.`,
-      good: `lv_text = condense( lv_text ).
-lv_code = to_upper( lv_code ).`,
+      bad: `SHIFT lv_code LEFT BY 2 PLACES.\nTRANSLATE lv_country TO UPPER CASE.`,
+      good: `lv_code = shift_left( val = lv_code places = 2 ).\nlv_country = to_upper( lv_country ).`,
     },
   },
   {
     ruleId: 'prefer-calc-assign-op',
     title: 'Prefer Calculation Assignment Operators (+=, -=, *=)',
-    rationale: 'Modern ABAP supports arithmetic assignment operators (`lv_count += 1.`), which are cleaner and more expressive than verbose legacy assignments (`lv_count = lv_count + 1.`).',
+    rationale: 'Assignments such as lv_total = lv_total + 1 repeat the target variable and make the update harder to scan. Compound operators +=, -=, and *= express the change directly and avoid duplicating the left-hand side. Use them for simple arithmetic updates where the target is both source and result.',
     className: 'ZCL_SKYLINT_PREF_CALC_OP',
     pseudoComment: 'CALC_ASSIGN',
     category: 'clean-abap',
     example: {
-      bad: `lv_count = lv_count + 1.
-lv_total = lv_total * 2.`,
-      good: `lv_count += 1.
-lv_total *= 2.`,
+      bad: `lv_stock = lv_stock - 1.\nlv_price = lv_price * 1.19.`,
+      good: `lv_stock -= 1.\nlv_price *= 1.19.`,
     },
   },
   {
     ruleId: 'prefer-early-return',
     title: 'Prefer Early Return to Reduce Nesting (Guard Clauses)',
-    rationale: 'Check preconditions and invalid states at the start of the method and return immediately. This eliminates deeply nested `IF ... ELSE` ladders.',
+    rationale: 'Wrapping the whole method body in IF is_valid( ) creates unnecessary nesting and pushes the happy path to the right. Guard clauses reject invalid input at the top and leave the main logic flat and easy to read. Return early for preconditions and error cases instead of indenting the successful path.',
     className: 'ZCL_SKYLINT_PREF_EARLY_RET',
     pseudoComment: 'EARLY_RETURN',
     category: 'clean-abap',
     example: {
-      bad: `METHOD process_order.
-  IF is_valid( ).
-    " Entire method logic deeply nested
-    execute_order( ).
-  ENDIF.
-ENDMETHOD.`,
-      good: `METHOD process_order.
-  IF NOT is_valid( ).
-    RETURN.
-  ENDIF.
-  execute_order( ).
-ENDMETHOD.`,
+      bad: `METHOD process_order.\n  IF is_valid( ).\n    execute_order( ).\n    log_order( ).\n  ENDIF.\nENDMETHOD.`,
+      good: `METHOD process_order.\n  IF NOT is_valid( ).\n    RETURN.\n  ENDIF.\n  execute_order( ).\n  log_order( ).\nENDMETHOD.`,
     },
   },
 
   {
     ruleId: 'no-unused-variables',
     title: 'Eliminate Unused Local Variables and Symbols',
-    rationale: 'Unused variables clutter code, confuse developers reviewing changes, and increase compilation and execution memory overhead without providing any benefit.',
+    rationale: 'An unused variable or field symbol adds noise and suggests incomplete refactoring or a missing assignment. It keeps dead objects alive longer than necessary and makes reviews harder. Remove the declaration, or mark it with ##NEEDED when an external contract requires it.',
     className: 'ZCL_SKYLINT_NO_UNUSED_VARS',
     pseudoComment: 'NEEDED',
     category: 'anti-patterns',
     example: {
-      bad: `DATA lv_temp TYPE string. " Declared but never referenced`,
-      good: `" Remove unused declarations or add ##NEEDED pragma if required by interface`,
+      bad: `DATA lv_message TYPE string.\nprocess_order( ).`,
+      good: `DATA lv_message TYPE string.\nlv_message = |Order { lv_id }|.\nlog_message( lv_message ).`,
     },
   },
   {
     ruleId: 'prefer-decl-order',
     title: 'Order Declarations (TYPES, CONSTANTS, DATA)',
-    rationale: 'Declaring types first, then constants, then data variables creates a logical reading flow where subsequent definitions can safely depend on preceding ones.',
+    rationale: 'Declarations in arbitrary order make dependencies hard to follow and can place a DATA declaration before the TYPE it uses. A stable order of TYPES, CONSTANTS, then DATA gives readers a predictable structure. Group declarations by kind at the top of the routine.',
     className: 'ZCL_SKYLINT_PREF_DECL_ORDER',
     pseudoComment: 'DECL_ORDER',
     category: 'clean-abap',
     example: {
-      bad: `METHOD execute.
-  DATA lv_count TYPE i.
-  TYPES ty_status TYPE c LENGTH 1. " TYPES declared after DATA
-  CONSTANTS c_init TYPE ty_status VALUE 'I'.
-ENDMETHOD.`,
-      good: `METHOD execute.
-  TYPES ty_status TYPE c LENGTH 1.
-  CONSTANTS c_init TYPE ty_status VALUE 'I'.
-  DATA lv_count TYPE i.
-ENDMETHOD.`,
+      bad: `METHOD execute.\n  DATA lv_count TYPE i.\n  TYPES ty_status TYPE c LENGTH 1.\n  CONSTANTS c_init TYPE ty_status VALUE 'I'.\nENDMETHOD.`,
+      good: `METHOD execute.\n  TYPES ty_status TYPE c LENGTH 1.\n  CONSTANTS c_init TYPE ty_status VALUE 'I'.\n  DATA lv_count TYPE i.\nENDMETHOD.`,
     },
   },
   {
     ruleId: 'no-param-escape',
-    title: 'Avoid Reassigning Importing Parameters',
-    rationale: 'Importing parameters should be treated as immutable inputs. Modifying them inside the method leads to unexpected side effects and debugging difficulties.',
+    title: 'Avoid Obsolete ! Escape Prefix in Parameter Names',
+    rationale: 'The ! escape prefix is legacy syntax used to force a parameter name to be treated literally. It adds noise to signatures and is unnecessary in modern ABAP, where parameter names are unambiguous. Remove the ! and use a clear parameter name instead.',
     className: 'ZCL_SKYLINT_NO_PARAM_ESCAPE',
     pseudoComment: 'PARAM_ESCAPE',
     category: 'anti-patterns',
     example: {
-      bad: `METHODS process IMPORTING !iv_data TYPE string.`,
-      good: `METHODS process IMPORTING iv_data TYPE string.`,
+      bad: `METHODS process\n  IMPORTING !iv_data TYPE string.`,
+      good: `METHODS process\n  IMPORTING iv_data TYPE string.`,
     },
   },
 
   {
     ruleId: 'prefer-case',
     title: 'Prefer CASE over Multiple IF / ELSEIF on the Same Variable',
-    rationale: 'When branching on multiple values of a single variable, `CASE ... WHEN` is more readable, structured, and performant than a chain of `ELSEIF` statements.',
+    rationale: 'A chain of ELSEIF statements that compares the same variable to different values is harder to scan than a CASE statement. CASE groups all alternatives under one subject and makes a missing OTHERS branch visible. Use CASE for multi-value dispatch on a single expression.',
     className: 'ZCL_SKYLINT_PREF_CASE',
     pseudoComment: 'PREF_CASE',
     category: 'clean-abap',
     example: {
-      bad: `IF lv_type = 'A'.
-  process_a( ).
-ELSEIF lv_type = 'B'.
-  process_b( ).
-ELSEIF lv_type = 'C'.
-  process_c( ).
-ENDIF.`,
-      good: `CASE lv_type.
-  WHEN 'A'.
-    process_a( ).
-  WHEN 'B'.
-    process_b( ).
-  WHEN 'C'.
-    process_c( ).
-ENDCASE.`,
+      bad: `IF lv_payment_method = 'CARD'.\n  process_card( ).\nELSEIF lv_payment_method = 'CASH'.\n  process_cash( ).\nELSEIF lv_payment_method = 'TRANSFER'.\n  process_transfer( ).\nENDIF.`,
+      good: `CASE lv_payment_method.\n  WHEN 'CARD'.\n    process_card( ).\n  WHEN 'CASH'.\n    process_cash( ).\n  WHEN 'TRANSFER'.\n    process_transfer( ).\nENDCASE.`,
     },
   },
   {
     ruleId: 'no-inline-length',
     title: 'Avoid Obsolete Inline Length Specifications (var(len))',
-    rationale: 'Specifying length in parentheses directly after a variable name (`lv_str(10) TYPE c`) is legacy syntax. Use modern explicit typing: `TYPE c LENGTH 10`.',
+    rationale: 'The legacy lv_name(10) syntax mixes the identifier and its length and is easy to misread as a substring or function call. Modern ABAP writes the type and length as separate, explicit tokens. Use TYPE c LENGTH n or a named type so the declaration is unambiguous.',
     className: 'ZCL_SKYLINT_NO_INLINE_LEN',
     pseudoComment: 'PAREN_LEN',
     category: 'anti-patterns',
     example: {
-      bad: `DATA lv_code(10) TYPE c.`,
-      good: `DATA lv_code TYPE c LENGTH 10.`,
+      bad: `DATA lv_country(2) TYPE c.`,
+      good: `DATA lv_country TYPE c LENGTH 2.`,
     },
   },
   {
     ruleId: 'max-one-statement',
     title: 'Limit One Statement per Source Code Line',
-    rationale: 'Placing multiple statements on a single line hinders debugger stepping, breaks Git line diffs, and hurts overall code scannability.',
+    rationale: 'Two statements on one line are easy to miss during review and produce coarse Git diffs. Debugger stepping and code coverage also become harder to follow when multiple statements share a line. Put each statement on its own line.',
     className: 'ZCL_SKYLINT_MAX_ONE_STMT',
     pseudoComment: 'ONE_STMT',
     category: 'clean-abap',
     example: {
-      bad: `lv_a = 1. lv_b = 2.`,
-      good: `lv_a = 1.\nlv_b = 2.`,
+      bad: `lv_count = 0. lv_total = 0.`,
+      good: `lv_count = 0.\nlv_total = 0.`,
     },
   },
   {
     ruleId: 'no-dash-in-names',
     title: 'Avoid Obsolete Dash (-) in Program Identifiers',
-    rationale: 'Using a hyphen/dash in structure component references is archaic. Modern ABAP standardizes on the arrow notation `->` or hyphen only where mandatory.',
+    rationale: 'A hyphen inside an identifier is legacy ABAP and is easily confused with the component selector for structures. It also complicates searching, refactoring, and tooling that treats the name as an expression. Use underscores in identifier names and reserve hyphens for component access.',
     className: 'ZCL_SKYLINT_NO_DASH_IN_NAMES',
     pseudoComment: 'NO_DASH',
     category: 'anti-patterns',
     example: {
-      bad: `DATA foo-bar TYPE i.`,
-      good: `DATA foobar TYPE i.`,
+      bad: `DATA customer-name TYPE string.`,
+      good: `DATA customer_name TYPE string.`,
     },
   },
   {
     ruleId: 'prefer-inline',
     title: 'Prefer Modern Inline Declarations in ABAP 7.40+',
-    rationale: 'In versions supporting inline declarations, declaring variables at the point of first use reduces variable lifetime scope and removes top-of-method variable clutter.',
+    rationale: 'Declaring a variable at the top and assigning it in the very next statement separates the declaration from its first use. Inline DATA( ) keeps the variable close to where it is needed and shortens its lifetime in the reader mind. Use inline declarations when the type is obvious from the initial value.',
     className: 'ZCL_SKYLINT_PREF_INLINE',
     pseudoComment: 'PREFER_INLINE',
     category: 'clean-abap',
     example: {
-      bad: `DATA lv_count TYPE i.\nlv_count = 10.`,
-      good: `DATA(lv_count) = 10.`,
+      bad: `DATA lv_name TYPE string.\nlv_name = |Order { lv_id }|.`,
+      good: `DATA(lv_name) = |Order { lv_id }|.`,
     },
   },
   {
     ruleId: 'prefer-final-data',
     title: 'Prefer FINAL( ) over DATA( ) when the variable is never written again',
-    rationale: 'When an inline DATA( ) variable is assigned once and never written again, declaring it FINAL( ) communicates immutability and lets the compiler enforce it.',
+    rationale: 'An inline variable that is assigned once and never changed should be declared FINAL so the compiler enforces immutability. This prevents accidental later writes and documents that the value is a constant for the rest of the method. Use FINAL( ) for single-assignment locals.',
     className: 'ZCL_SKYLINT_PREF_FINAL_DATA',
     pseudoComment: 'PREF_FINAL',
     category: 'clean-abap',
     example: {
-      bad: `DATA(lv_count) = 10.\nWRITE lv_count.`,
-      good: `FINAL(lv_count) = 10.\nWRITE lv_count.`,
+      bad: `DATA(lv_count) = lines( lt_items ).\nprocess( lv_count ).`,
+      good: `FINAL(lv_count) = lines( lt_items ).\nprocess( lv_count ).`,
     },
   },
   {
     ruleId: 'no-friends',
     title: 'Avoid FRIENDS in class definitions',
-    rationale: 'FRIENDS grants another class access to private/protected members, breaking encapsulation. Expose behaviour through the public interface instead.',
+    rationale: 'FRIENDS exposes private and protected members to another class and creates a hidden bidirectional dependency. It defeats encapsulation and makes both classes harder to change independently. Expose a public method or interface instead of granting friendship.',
     className: 'ZCL_SKYLINT_NO_FRIENDS',
     pseudoComment: 'FRIENDS',
     category: 'anti-patterns',
     example: {
-      bad: `CLASS lcl_service DEFINITION FINAL FRIENDS lcl_helper CREATE PUBLIC.\n  PUBLIC SECTION.\n    METHODS execute.\nENDCLASS.`,
-      good: `CLASS lcl_service DEFINITION FINAL CREATE PUBLIC.\n  PUBLIC SECTION.\n    METHODS execute.\nENDCLASS.`,
+      bad: `CLASS lcl_service DEFINITION PUBLIC FINAL FRIENDS lcl_helper CREATE PUBLIC.\n  PUBLIC SECTION.\n    METHODS execute.\nENDCLASS.`,
+      good: `CLASS lcl_service DEFINITION PUBLIC FINAL CREATE PUBLIC.\n  PUBLIC SECTION.\n    METHODS execute.\nENDCLASS.`,
     },
   },
   {
     ruleId: 'prefer-message-class',
     title: 'Use a message class (SE91) instead of inline message text',
-    rationale: 'Inline message texts cannot be translated and are hard to maintain. Define messages in a message class and raise them as e001( msg_class ).',
+    rationale: 'Inline message texts are not translatable through SE91 and are scattered across the codebase. A message class centralizes text, numbering, and translation for all consumers. Raise messages with MESSAGE e001(zmsg) or a class-based exception that references the message text.',
     className: 'ZCL_SKYLINT_PREF_MSG_CLS',
     pseudoComment: 'MSG_CLASS',
     category: 'clean-abap',
     example: {
       bad: `MESSAGE 'Something went wrong' TYPE 'E'.`,
-      good: `MESSAGE e001(bc_msg).`,
+      good: `MESSAGE e001(zmsg).`,
     },
   },
   {
     ruleId: 'prefer-inline-cast',
     title: 'Inline a CAST helper that is only read once',
-    rationale: 'A CAST helper declared as DATA and read exactly once in the following statement can be inlined, removing a temporary variable.',
+    rationale: 'A CAST helper assigned to a temporary and read only once adds a variable that carries no extra meaning. Inlining the CAST into the consuming expression keeps the downcast and its use together. Use CAST type( ... )->method( ) when the helper is not reused.',
     className: 'ZCL_SKYLINT_PREF_INL_CAST',
     pseudoComment: 'INLINE_CAST',
     category: 'clean-abap',
     example: {
-      bad: `DATA(helper) = CAST lcl_node( object ).\nresult = helper->get_tokens( ).`,
-      good: `result = CAST lcl_node( object )->get_tokens( ).`,
+      bad: `DATA(lo_node) = CAST lcl_node( io_object ).\nresult = lo_node->get_tokens( ).`,
+      good: `result = CAST lcl_node( io_object )->get_tokens( ).`,
     },
   },
   {
     ruleId: 'no-exception-overlap',
     title: 'Classic EXCEPTIONS must not map two errors to the same number',
-    rationale: 'When two classic exceptions share one error number, the caller cannot tell which one was raised.',
+    rationale: 'When two classic exceptions map to the same sy-subrc number, the caller cannot tell which failure occurred. This makes error handling guesswork and can hide the real cause. Assign distinct numbers and reserve OTHERS for unexpected failures.',
     className: 'ZCL_SKYLINT_NO_EXC_OVERLAP',
     pseudoComment: 'EXC_OVERLAP',
     category: 'anti-patterns',
     example: {
-      bad: `CALL FUNCTION 'SOMETHING'\n  EXCEPTIONS\n    system_failure        = 1 MESSAGE lv_message\n    communication_failure = 1 MESSAGE lv_message\n    OTHERS                = 1.`,
-      good: `CALL FUNCTION 'SOMETHING'\n  EXCEPTIONS\n    system_failure        = 1 MESSAGE lv_message\n    communication_failure = 2 MESSAGE lv_message\n    OTHERS                = 3.`,
+      bad: `CALL FUNCTION 'Z_PROCESS_ORDER'\n  EXCEPTIONS\n    system_failure        = 1 MESSAGE lv_message\n    communication_failure = 1 MESSAGE lv_message\n    OTHERS                = 1.`,
+      good: `CALL FUNCTION 'Z_PROCESS_ORDER'\n  EXCEPTIONS\n    system_failure        = 1 MESSAGE lv_message\n    communication_failure = 2 MESSAGE lv_message\n    OTHERS                = 3.`,
     },
   },
   {
     ruleId: 'no-rfc-error-handling',
     title: 'RFC calls must handle SYSTEM_FAILURE and COMMUNICATION_FAILURE',
-    rationale: 'Remote calls can fail at runtime; the caller must handle system and communication failures (and resource failures for async calls in a group).',
+    rationale: 'A remote function call can fail because the target system is unavailable or the communication layer breaks, independently of the function logic. Without handlers for SYSTEM_FAILURE and COMMUNICATION_FAILURE, these failures become unhandled dumps or silent errors. Always handle both, plus OTHERS, and evaluate the response.',
     className: 'ZCL_SKYLINT_NO_RFC_ERR',
     pseudoComment: 'RFC_ERR',
     category: 'security',
     example: {
       bad: `CALL FUNCTION 'Z_RFC'\n  DESTINATION lv_rfc.`,
-      good: `CALL FUNCTION 'Z_RFC'\n  DESTINATION lv_rfc\n  EXCEPTIONS\n    system_failure        = 1 MESSAGE msg\n    communication_failure = 2 MESSAGE msg\n    OTHERS                = 3.`,
+      good: `CALL FUNCTION 'Z_RFC'\n  DESTINATION lv_rfc\n  EXCEPTIONS\n    system_failure        = 1 MESSAGE lv_message\n    communication_failure = 2 MESSAGE lv_message\n    OTHERS                = 3.`,
     },
   },
   {
     ruleId: 'no-many-parentheses',
     title: 'Remove redundant parentheses',
-    rationale: 'Parentheses that only wrap a complete condition or expression add noise and can be removed without changing semantics.',
+    rationale: 'Parentheses that wrap an entire condition or arithmetic expression do not change evaluation order but add visual noise. They often remain after refactoring and make expressions look more complex than they are. Remove redundant outer parentheses and keep only those needed for precedence.',
     className: 'ZCL_SKYLINT_NO_MANY_PARENS',
     pseudoComment: 'MANY_PARENS',
     category: 'anti-patterns',
     example: {
-      bad: `IF ( destination IS INITIAL ).\nENDIF.`,
-      good: `IF destination IS INITIAL.\nENDIF.`,
+      bad: `IF ( lv_status = 'A' ).\n  process_a( ).\nENDIF.`,
+      good: `IF lv_status = 'A'.\n  process_a( ).\nENDIF.`,
     },
   },
   {
     ruleId: 'prefer-pass-by-reference',
     title: 'Avoid Unnecessary Pass-by-Value for Large Tables',
-    rationale: 'Passing large internal tables by value creates an in-memory deep copy on every method invocation. Use pass-by-reference (`REFERENCE(it_data)`) or read-only references.',
+    rationale: 'Passing a large internal table by VALUE makes a deep copy before the method body starts, costing memory and CPU on every call. ABAP already protects reference parameters when the method only reads them. Use pass-by-reference for large tables and reserve VALUE for small scalars that need a local copy.',
     className: 'ZCL_SKYLINT_PREF_PASS_BY_REF',
     pseudoComment: 'SLOW_PARAM',
     category: 'performance',
     example: {
-      bad: `METHODS process IMPORTING VALUE(iv_text) TYPE string.`,
-      good: `METHODS process IMPORTING iv_text TYPE string.`,
+      bad: `METHODS process\n  IMPORTING VALUE(it_items) TYPE ty_items.`,
+      good: `METHODS process\n  IMPORTING it_items TYPE ty_items.`,
     },
   },
   {
     ruleId: 'no-modify-standard-tables',
     title: 'Only Modify Tables Defined in Your Own Package/Component',
-    rationale: 'Directly inserting, updating, or deleting tables belonging to another application component bypasses business validation logic and violates modular architecture. Which tables are considered your own is configurable via `OWN_TABLES`, a case-insensitive regex (default `^[yz/]`); dynamic table names are reported when `REPORT_DYNAMIC` is enabled.',
+    rationale: 'Writing directly to tables owned by another application component bypasses its validations, change documents, and authorization logic. It also creates an undocumented dependency that can break when the owning component evolves. Modify only tables in your own package and use released APIs for foreign data.',
     className: 'ZCL_SKYLINT_NO_MOD_STD_TABLE',
     pseudoComment: 'OWN_TABLES',
     category: 'security',
     example: {
-      bad: `DELETE FROM mara WHERE matnr = '100'.`,
-      good: `DELETE FROM zmara WHERE matnr = '100'.`,
+      bad: `UPDATE mara SET matnr = @lv_matnr WHERE matnr = @lv_old_matnr.`,
+      good: `UPDATE zmara SET matnr = @lv_matnr WHERE matnr = @lv_old_matnr.`,
     },
   },
   {
     ruleId: 'no-dynamic-stuff',
     title: 'Avoid Unnecessary Dynamic Programming Constructs',
-    rationale: 'Dynamic programming (`ASSIGN (lv_var)`, `CALL METHOD (lv_method)`) disables compile-time type checking, hampers automated refactoring, and opens security vulnerabilities.',
+    rationale: 'Dynamic calls such as CALL FUNCTION lv_name, ASSIGN (lv_name), and CALL METHOD (lv_name) defer resolution to runtime. Compile-time checking is lost, refactoring cannot follow the call, and user-controlled input can become an injection vector. Prefer static calls and typed references, and sanitize any unavoidable dynamic access.',
     className: 'ZCL_SKYLINT_NO_DYNAMIC_STMT',
     pseudoComment: 'NO_DYNAMIC',
     category: 'security',
     example: {
-      bad: `CALL FUNCTION lv_func_name.`,
+      bad: `CALL FUNCTION lv_function_name.`,
       good: `CALL FUNCTION 'BAPI_USER_GET_DETAIL'.`,
     },
   },
   {
     ruleId: 'prefer-public-constructor',
     title: 'Declare Constructor in PUBLIC SECTION',
-    rationale: 'Instance constructors must always be declared in the PUBLIC SECTION, even for classes with CREATE PRIVATE or CREATE PROTECTED, ensuring standard reflection, factory instantiation, and Clean ABAP compliance.',
+    rationale: 'Even when a class uses CREATE PRIVATE or CREATE PROTECTED, its instance constructor must be declared in the public section so the runtime and frameworks can instantiate it. Declaring the constructor privately makes reflection and framework integration harder. Keep the constructor in PUBLIC and control creation through the CREATE addition.',
     className: 'ZCL_SKYLINT_PREF_PUB_CTOR',
     pseudoComment: 'PUB_CTOR',
     category: 'clean-abap',
     example: {
-      bad: `CLASS zcl_service DEFINITION PUBLIC CREATE PRIVATE.\n  PRIVATE SECTION.\n    METHODS constructor.\nENDCLASS.`,
-      good: `CLASS zcl_service DEFINITION PUBLIC CREATE PRIVATE.\n  PUBLIC SECTION.\n    METHODS constructor.\nENDCLASS.`,
+      bad: `CLASS zcl_order_service DEFINITION PUBLIC CREATE PRIVATE.\n  PRIVATE SECTION.\n    METHODS constructor.\nENDCLASS.`,
+      good: `CLASS zcl_order_service DEFINITION PUBLIC CREATE PRIVATE.\n  PUBLIC SECTION.\n    METHODS constructor.\nENDCLASS.`,
     },
   },
   {
     ruleId: 'prefer-definitions-top',
     title: 'Place Definitions at Top of Routine',
-    rationale: 'Explicit local definitions (DATA, TYPES, CONSTANTS, FIELD-SYMBOLS) should be placed at the very beginning of the routine rather than scattered in the middle of executable code.',
+    rationale: 'A declaration in the middle of executable code interrupts the reading flow and hides that the variable exists for the whole routine. It also makes accidental use before declaration harder to spot. Put DATA, TYPES, CONSTANTS, and FIELD-SYMBOLS at the top of the routine.',
     className: 'ZCL_SKYLINT_PREF_DEF_TOP',
     pseudoComment: 'DEF_TOP',
     category: 'clean-abap',
     example: {
-      bad: `METHOD calculate.\n  lv_total = 100.\n  DATA lv_tax TYPE i.\nENDMETHOD.`,
-      good: `METHOD calculate.\n  DATA lv_tax TYPE i.\n  lv_total = 100.\nENDMETHOD.`,
+      bad: `METHOD calculate.\n  DATA lv_total TYPE i.\n  lv_total = 100.\n  DATA lv_tax TYPE i.\nENDMETHOD.`,
+      good: `METHOD calculate.\n  DATA lv_total TYPE i.\n  DATA lv_tax TYPE i.\n  lv_total = 100.\nENDMETHOD.`,
     },
   },
   {
     ruleId: 'no-unnecessary-return',
     title: 'Omit Unnecessary RETURN Statement',
-    rationale: 'Routines automatically return upon reaching ENDMETHOD, ENDFORM, or ENDFUNCTION. An explicit RETURN statement at the very end of the routine body is redundant and clutters the code.',
+    rationale: 'A RETURN as the final statement of a method, form, or function changes nothing because the routine ends at ENDMETHOD, ENDFORM, or ENDFUNCTION anyway. It adds a line that implies a special exit and can obscure the real control flow. Remove trailing RETURN statements and keep early returns only where they are meaningful.',
     className: 'ZCL_SKYLINT_NO_UNNEC_RETURN',
     pseudoComment: 'NO_UNNEC_RETURN',
     category: 'anti-patterns',
     example: {
-      bad: `METHOD calculate.\n  lv_total = 100.\n  RETURN.\nENDMETHOD.`,
-      good: `METHOD calculate.\n  lv_total = 100.\nENDMETHOD.`,
+      bad: `METHOD get_total.\n  rv_total = lv_subtotal + lv_tax.\n  RETURN.\nENDMETHOD.`,
+      good: `METHOD get_total.\n  rv_total = lv_subtotal + lv_tax.\nENDMETHOD.`,
     },
   },
   {
     ruleId: 'mix-returning',
     title: 'Do Not Mix RETURNING with EXPORTING or CHANGING',
-    rationale: 'Clean ABAP methods should either be pure functional (RETURNING a single result) or procedures (using EXPORTING/CHANGING). Mixing both in the same signature creates confusing APIs.',
+    rationale: 'A method that returns a value and also exports or changes parameters has a mixed contract: callers must capture the result and provide extra targets. This complicates expression use and suggests the method does more than one thing. Split it into a functional query and a separate command.',
     className: 'ZCL_SKYLINT_NO_MIX_RETURNING',
     pseudoComment: 'NO_MIX_RETURNING',
     category: 'anti-patterns',
     example: {
-      bad: `METHODS get_data\n  EXPORTING ev_val TYPE i\n  RETURNING VALUE(rv_res) TYPE string.`,
-      good: `METHODS get_data\n  RETURNING VALUE(rv_res) TYPE string.`,
+      bad: `METHODS get_data\n  EXPORTING ev_count TYPE i\n  RETURNING VALUE(rv_result) TYPE string.`,
+      good: `METHODS get_data\n  RETURNING VALUE(rv_result) TYPE string.`,
     },
   },
   {
     ruleId: 'method-overwrites-builtin',
     title: 'Avoid Method Names That Overwrite Built-in Functions',
-    rationale: 'Naming a method after a built-in ABAP function (e.g., LINES, STRLEN, MATCHES, XSDBOOL) obscures the standard SAP built-in and makes expressions ambiguous and difficult to read.',
+    rationale: 'Naming a method LINES, STRLEN, or XSDBOOL shadows a well-known built-in and makes the call site ambiguous. Readers cannot tell whether the built-in or the method is intended. Use a descriptive verb that does not collide with language functions.',
     className: 'ZCL_SKYLINT_NO_OVERW_BUILTIN',
     pseudoComment: 'NO_OVERW_BUILTIN',
     category: 'anti-patterns',
     example: {
-      bad: `METHODS matches RETURNING VALUE(rv_res) TYPE abap_bool.`,
-      good: `METHODS do_match RETURNING VALUE(rv_res) TYPE abap_bool.`,
+      bad: `METHODS matches\n  RETURNING VALUE(rv_result) TYPE abap_bool.`,
+      good: `METHODS matches_pattern\n  RETURNING VALUE(rv_result) TYPE abap_bool.`,
     },
   },
   {
     ruleId: 'max-one-method-parameter-per-line',
     title: 'Max One Method Parameter Definition Per Line',
-    rationale: 'Defining multiple parameters on the same line hampers readability and produces noisy version control diffs. Each parameter in a signature should be declared on its own dedicated line.',
+    rationale: 'Several parameters on one line are hard to scan and produce noisy diffs when one parameter changes. Multi-line signatures also allow types and comments to align clearly. Declare each parameter on its own line.',
     className: 'ZCL_SKYLINT_MAX_PARAM_LINE',
     pseudoComment: 'MAX_PARAM_LINE',
     category: 'clean-abap',
     example: {
-      bad: `METHODS foo IMPORTING iv_a TYPE i iv_b TYPE string.`,
-      good: `METHODS foo\n  IMPORTING\n    iv_a TYPE i\n    iv_b TYPE string.`,
+      bad: `METHODS process IMPORTING iv_a TYPE i iv_b TYPE string.`,
+      good: `METHODS process\n  IMPORTING\n    iv_a TYPE i\n    iv_b TYPE string.`,
     },
   },
   {
     ruleId: 'prefer-is-initial',
     title: 'Prefer IS [NOT] INITIAL over lines( ) or Literal Comparisons',
-    rationale: 'Checking whether an internal table, string, or variable is empty should be done with `IS [NOT] INITIAL` rather than counting `lines( ) > 0` or comparing to empty literals (`""`, `space`, `0`). `IS INITIAL` is idiomatic Clean ABAP, expressive, and optimized.',
+    rationale: 'Comparing lines( ) to zero or a string to an empty literal asks an indirect question. IS INITIAL states emptiness directly and works for tables, strings, structures, and elementary values. It also avoids counting overhead and literal edge cases.',
     className: 'ZCL_SKYLINT_PREF_IS_INITIAL',
     pseudoComment: 'PREF_INIT',
     category: 'clean-abap',
     example: {
-      bad: `IF lines( lt_items ) > 0.\nENDIF.`,
-      good: `IF lt_items IS NOT INITIAL.\nENDIF.`,
+      bad: `IF lines( lt_items ) > 0.\n  process( ).\nENDIF.`,
+      good: `IF lt_items IS NOT INITIAL.\n  process( ).\nENDIF.`,
     },
   },
   {
     ruleId: 'no-ignored-return-value',
     title: 'Do Not Ignore Return Value of Functional Methods',
-    rationale: 'Functional methods that declare a `RETURNING` parameter are designed to compute and return a value. Calling such methods without assigning or consuming their result indicates a bug, dead code, or an improper command-query violation where side effects were bundled into a query.',
+    rationale: 'A functional method is called for its RETURNING value, so discarding that value usually means the call is pointless or the method hides side effects. If the method intentionally has side effects, it should not return a value. Assign or consume the result, or refactor the method into a command.',
     className: 'ZCL_SKYLINT_NO_IGNORED_RETURN',
     pseudoComment: 'NO_IGNORED_RET',
     category: 'anti-patterns',
     example: {
-      bad: `lo_calc->get_total( ).`,
-      good: `lv_total = lo_calc->get_total( ).`,
+      bad: `lo_calculator->get_total( ).`,
+      good: `lv_total = lo_calculator->get_total( ).`,
     },
   },
   {
     ruleId: 'prefer-cast',
     title: 'Prefer CAST #( ) over ?=',
-    rationale: '`?=` is legacy downcast syntax from early ABAP Objects. Modern ABAP exclusively uses `CAST #( )` constructor expressions, which can be inlined directly into method call chains and expressions.',
+    rationale: 'The ?= downcast operator is legacy syntax and cannot be nested inside expressions. CAST #( ) returns a typed reference and can be used directly in call chains or constructor expressions. Use CAST for downcasts and let # infer the target type.',
     className: 'ZCL_SKYLINT_PREF_CAST',
     pseudoComment: 'PREF_CAST',
     category: 'clean-abap',
     example: {
-      bad: `lo_child ?= lo_parent.`,
-      good: `lo_child = CAST #( lo_parent ).`,
+      bad: `lo_invoice ?= lo_document.`,
+      good: `lo_invoice = CAST #( lo_document ).`,
     },
   },
   {
     ruleId: 'no-redundant-clear',
     title: 'Do Not CLEAR Variables Directly After Declaration',
-    rationale: 'Variables in ABAP are automatically initialized to their type-specific default initial value upon declaration. Explicitly executing `CLEAR` immediately after declaration adds visual noise and redundant statements without any functional effect.',
+    rationale: 'A newly declared variable already has its type-specific initial value, so CLEAR immediately after DATA is a no-op. It adds noise and suggests the declaration might not initialize the variable. Remove the CLEAR or initialize the variable when it is actually reused.',
     className: 'ZCL_SKYLINT_NO_REDUNDANT_CLEAR',
     pseudoComment: 'REDUNDANT_CLEAR',
     category: 'anti-patterns',
     example: {
-      bad: `DATA lv_count TYPE i.\nCLEAR lv_count.`,
-      good: `DATA lv_count TYPE i.`,
+      bad: `DATA lt_items TYPE string_table.\nCLEAR lt_items.`,
+      good: `DATA lt_items TYPE string_table.`,
     },
   },
   {
     ruleId: 'no-modify-loop-table',
     title: 'Do Not Mutate the Internal Table Currently Being Looped',
-    rationale: 'Adding rows (APPEND/INSERT), modifying, deleting, or clearing rows from the table while actively looping over it can cause infinite loops, skipped rows, or cursor invalidation. Parametric toggles are available for append, insert, modify, delete, and clear operations.',
+    rationale: 'Appending, inserting, modifying, or deleting rows of the table being looped can invalidate the loop cursor. The result may be skipped rows, duplicate processing, or an endless loop. Iterate over a snapshot or collect changes in a separate table and apply them after the loop.',
     className: 'ZCL_SKYLINT_NO_MOD_LOOP_TAB',
     pseudoComment: 'LOOP_MODIFY',
     category: 'performance',
     example: {
-      bad: `LOOP AT lt_orders INTO ls_order.\n  APPEND ls_order TO lt_orders.\nENDLOOP.`,
-      good: `LOOP AT lt_orders INTO ls_order.\n  APPEND ls_order TO lt_new_orders.\nENDLOOP.`,
+      bad: `LOOP AT lt_orders INTO ls_order.\n  INSERT ls_order INTO lt_orders.\nENDLOOP.`,
+      good: `LOOP AT lt_orders INTO ls_order.\n  INSERT ls_order INTO lt_processed_orders.\nENDLOOP.`,
     },
   },
   {
     ruleId: 'no-hardcoded-env-checks',
     title: 'Avoid Hardcoding System & Tenant Environment Checks',
-    rationale: 'Hardcoding system identifiers (sy-sysid), client numbers (sy-mandt), host names (sy-host), or database systems (sy-dbsys) against literal values violates cloud multi-tenancy and breaks during staging, system copy, or migration. Use feature toggles, switch frameworks, or customizing instead.',
+    rationale: 'Comparing sy-sysid, sy-mandt, or sy-host to literals bakes a specific system landscape into the code. The logic breaks after a client copy, system copy, or cloud tenant move. Use configuration, feature toggles, or authorization objects instead.',
     className: 'ZCL_SKYLINT_NO_HARDCODED_ENV',
     pseudoComment: 'HARDCODED_ENV',
     category: 'security',
     example: {
       bad: `IF sy-sysid = 'PRD' OR sy-mandt = '100'.\n  enable_production_mode( ).\nENDIF.`,
-      good: `IF is_feature_enabled( c_features-prod_mode ) = abap_true.\n  enable_production_mode( ).\nENDIF.`,
+      good: `IF is_feature_enabled( c_features-prod_mode ).\n  enable_production_mode( ).\nENDIF.`,
     },
   },
   {
     ruleId: 'max-line-length',
     title: 'Limit Line Length',
-    rationale: 'Long lines reduce readability, force horizontal scrolling, and complicate code review. Keep source lines within a configurable limit (typically 120 characters) by breaking statements and using expression-based ABAP.',
+    rationale: 'Lines longer than the configured limit force horizontal scrolling and hide parts of a statement in review tools. They also encourage dense expressions that are hard to debug. Break statements at logical operators and use short, meaningful names.',
     className: 'ZCL_SKYLINT_MAX_LINE_LEN',
     pseudoComment: 'LINE_LEN',
     category: 'metrics',
     example: {
-      bad: `DATA lv_extremely_long_variable_name_created_specifically_to_exceed_the_maximum_allowed_line_length_of_one_hundred_twenty_chars TYPE i.`,
-      good: `DATA lv_compact_name TYPE i.`,
+      bad: `lv_result = lo_service->calculate_total_with_discount_and_tax_for_customer( iv_customer_id = lv_customer_id iv_currency = lv_currency ).`,
+      good: `lv_result = lo_service->calculate_total_with_discount_and_tax_for_customer(\n  iv_customer_id = lv_customer_id\n  iv_currency    = lv_currency ).`,
     },
   },
   {
     ruleId: 'prefer-naming',
     title: 'Enforce Naming Conventions',
-    rationale: 'Consistent naming conventions (prefixes for variables, parameters, types, etc.) make code self-documenting and easier to navigate. Configure patterns per scope to enforce team standards automatically.',
+    rationale: 'Without a naming convention, local variables, parameters, and types are indistinguishable and the code becomes harder to navigate. Prefixes such as lv_, iv_, and ty_ encode scope and kind at a glance. Apply the configured patterns consistently within a team.',
     className: 'ZCL_SKYLINT_PREF_NAMING',
     pseudoComment: 'NAMING',
     category: 'clean-abap',
     example: {
-      bad: `DATA foo TYPE i.`,
-      good: `DATA lv_foo TYPE i.`,
+      bad: `DATA customer_name TYPE string.`,
+      good: `DATA lv_customer_name TYPE string.`,
     },
   },
   {
     ruleId: 'expand-macros',
     title: 'Expand Macro Calls into Explicit Statements',
-    rationale: 'Macros defined via DEFINE ... END-OF-DEFINITION are obsolete, difficult to debug, and unsupported in ABAP Cloud. Macro invocations should be expanded into explicit statements.',
+    rationale: 'Macros expand textually, so the debugger cannot step into them and syntax errors point at the invocation rather than the definition. They are obsolete and unsupported in ABAP Cloud. Replace each macro call with explicit statements or a method.',
     className: 'ZCL_SKYLINT_PREF_EXPAND_MACRO',
     pseudoComment: 'EXPAND_MACROS',
     category: 'anti-patterns',
     example: {
-      bad: `DEFINE _set_val.\n  lv_val = &1.\nEND-OF-DEFINITION.\n_set_val 10.`,
-      good: `lv_val = 10.`,
+      bad: `DEFINE set_status.\n  lv_status = &1.\nEND-OF-DEFINITION.\nDATA lv_status TYPE string.\nset_status 'A'.`,
+      good: `DATA lv_status TYPE string.\nlv_status = 'A'.`,
     },
   },
   {
     ruleId: 'bad-indent',
     title: 'Statement Indentation Must Match Block Nesting',
-    rationale: 'Consistent indentation according to block nesting hierarchy improves code clarity, readability, and maintainability across the codebase.',
+    rationale: 'Indentation is the fastest visual cue for block nesting, so inconsistent indentation misleads readers about which statements belong together. It also creates noisy diffs when a formatter runs. Indent each block level consistently.',
     className: 'ZCL_SKYLINT_NO_BAD_INDENT',
     pseudoComment: 'BAD_INDENT',
     category: 'clean-abap',
     example: {
-      bad: `METHOD test.\nDATA lv_a TYPE i.\n  IF lv_a = 1.\nlv_a = 2.\n  ENDIF.\nENDMETHOD.`,
-      good: `METHOD test.\n  DATA lv_a TYPE i.\n  IF lv_a = 1.\n    lv_a = 2.\n  ENDIF.\nENDMETHOD.`,
+      bad: `METHOD calculate.\nDATA lv_total TYPE i.\n  LOOP AT lt_items INTO ls_item.\nlv_total = lv_total + ls_item-amount.\n  ENDLOOP.\nENDMETHOD.`,
+      good: `METHOD calculate.\n  DATA lv_total TYPE i.\n  LOOP AT lt_items INTO ls_item.\n    lv_total = lv_total + ls_item-amount.\n  ENDLOOP.\nENDMETHOD.`,
     },
   },
   {
     ruleId: 'no-dead-code',
     title: 'Avoid Dead Code with Constant Conditions',
-    rationale: 'Conditional branches with constant expressions such as 1 = 2 or abap_false can never be executed, creating dead code that clutters the program and misleads maintainers.',
+    rationale: 'A condition that is always false, such as 1 = 2 or abap_false, makes the branch impossible to reach. Dead branches hide unfinished logic and can contain declarations that confuse scope analysis. Remove the branch or replace the constant with the real runtime condition.',
     className: 'ZCL_SKYLINT_NO_DEAD_CODE',
     pseudoComment: 'NO_DEAD_CODE',
     category: 'anti-patterns',
     example: {
-      bad: `IF 1 = 2.\n  DATA lv_dead TYPE i.\nENDIF.`,
-      good: `IF lv_condition = abap_true.\n  DATA lv_active TYPE i.\nENDIF.`,
+      bad: `IF 1 = 2.\n  process( ).\nENDIF.`,
+      good: `IF is_enabled( ).\n  process( ).\nENDIF.`,
     },
   },
   {
     ruleId: 'keyword-name',
     title: 'Avoid Using ABAP Keywords as Identifier Names',
-    rationale: 'Naming variables, parameters, constants, or types after ABAP keywords (such as class, type, data, method) leads to confusion, shadows language constructs, and impairs code readability.',
+    rationale: 'Using a language keyword such as class, type, or data as an identifier shadows the keyword and forces readers to disambiguate from context. It also complicates searching and can confuse tooling. Prefix identifiers with their role, for example lv_type.',
     className: 'ZCL_SKYLINT_NO_KEYWORD_NAME',
     pseudoComment: 'KEYWORD_NAME',
     category: 'anti-patterns',
     example: {
-      bad: `DATA class TYPE string.\nDATA type TYPE i.`,
-      good: `DATA lv_class TYPE string.\nDATA lv_type TYPE i.`,
+      bad: `DATA interface TYPE string.\nDATA report TYPE i.`,
+      good: `DATA lv_interface TYPE string.\nDATA lv_report TYPE i.`,
     },
   },
   {
     ruleId: 'prefer-join-type',
     title: 'Prefer an Explicit JOIN Type',
-    rationale: 'A bare `JOIN` silently defaults to an inner join, which hides the intended cardinality and makes the query harder to review. State the join type explicitly with `INNER JOIN`, `LEFT OUTER JOIN`, `RIGHT OUTER JOIN`, or `CROSS JOIN`.',
+    rationale: 'A bare JOIN defaults to INNER JOIN, but the default is invisible at the call site and easy to misread as an outer join. Explicit join types document cardinality and make reviews safer. Always write INNER JOIN, LEFT OUTER JOIN, RIGHT OUTER JOIN, or CROSS JOIN.',
     className: 'ZCL_SKYLINT_PREF_JOIN_TYPE',
     pseudoComment: 'JOIN_TYPE',
     category: 'clean-abap',
     example: {
-      bad: `SELECT * FROM mara JOIN makt ON mara~matnr = makt~matnr INTO TABLE @DATA(lt_result).`,
-      good: `SELECT * FROM mara INNER JOIN makt ON mara~matnr = makt~matnr INTO TABLE @DATA(lt_result).`,
+      bad: `SELECT mara~matnr, makt~maktx\n  FROM mara JOIN makt ON mara~matnr = makt~matnr\n  INTO TABLE @lt_result.`,
+      good: `SELECT mara~matnr, makt~maktx\n  FROM mara INNER JOIN makt ON mara~matnr = makt~matnr\n  INTO TABLE @lt_result.`,
     },
   },
   {
     ruleId: 'prefer-standard-table',
     title: 'Prefer TYPE STANDARD TABLE OF over TYPE TABLE OF',
-    rationale: '`TYPE TABLE OF` declares an implicit standard table and obscures the table kind. Spelling out `TYPE STANDARD TABLE OF` makes the access pattern and performance characteristics explicit, and keeps declarations consistent with sorted or hashed tables.',
+    rationale: 'TYPE TABLE OF implicitly means a standard table, so the reader must know the default to understand access costs. Spelling out STANDARD makes the table kind and its linear search behavior explicit. It also keeps declarations consistent when tables are later changed to sorted or hashed.',
     className: 'ZCL_SKYLINT_PREF_STD_TABLE',
     pseudoComment: 'PREF_STD_TABLE',
     category: 'clean-abap',
     example: {
-      bad: `DATA lt_rows TYPE TABLE OF mara.`,
-      good: `DATA lt_rows TYPE STANDARD TABLE OF mara.`,
+      bad: `DATA lt_customers TYPE TABLE OF ty_customer.`,
+      good: `DATA lt_customers TYPE STANDARD TABLE OF ty_customer.`,
     },
   },
   {
     ruleId: 'prefer-is-supplied',
     title: 'Prefer IS SUPPLIED over IS REQUESTED',
-    rationale: '`IS REQUESTED` is obsolete and only meaningful for output parameters. `IS SUPPLIED` expresses the actual question reliably: whether the caller passed an actual parameter, regardless of the parameter direction.',
+    rationale: 'IS REQUESTED is obsolete and only reports whether an output parameter was requested by the caller, not whether an input was actually supplied. IS SUPPLIED works for every parameter direction and states the real condition. Replace IS REQUESTED with IS SUPPLIED.',
     className: 'ZCL_SKYLINT_PREF_IS_SUPPLIED',
     pseudoComment: 'PREF_IS_SUPPLIED',
     category: 'clean-abap',
     example: {
-      bad: `IF iv_name IS REQUESTED.\n  process( iv_name ).\nENDIF.`,
-      good: `IF iv_name IS SUPPLIED.\n  process( iv_name ).\nENDIF.`,
+      bad: `IF iv_currency IS REQUESTED.\n  convert_amount( iv_currency ).\nENDIF.`,
+      good: `IF iv_currency IS SUPPLIED.\n  convert_amount( iv_currency ).\nENDIF.`,
     },
   },
   {
     ruleId: 'prefer-sy',
     title: 'Prefer the Short System Field Alias SY over SYST',
-    rationale: '`SY` and `SYST` address the same system structure, but `SY` is the established short form. Using a single alias keeps system field access consistent throughout the codebase.',
+    rationale: 'SYST and SY address the same system structure, so mixing both aliases makes code look inconsistent and complicates searching. SY is the conventional short form used throughout Clean ABAP. Use sy- consistently for system field access.',
     className: 'ZCL_SKYLINT_PREF_SY',
     pseudoComment: 'PREF_SY',
     category: 'clean-abap',
     example: {
-      bad: `WRITE syst-uname.`,
-      good: `WRITE sy-uname.`,
+      bad: `lv_user = syst-uname.`,
+      good: `lv_user = sy-uname.`,
     },
   },
 ];

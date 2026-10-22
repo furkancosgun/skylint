@@ -5,8 +5,9 @@ description: "Prefer IS SUPPLIED over the obsolete IS REQUESTED"
 # Prefer IS SUPPLIED over IS REQUESTED
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC PREF_IS_SUPPLIED" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,21 +20,21 @@ Prefer IS SUPPLIED over the obsolete IS REQUESTED.
 
 ## Rationale
 
-`IS REQUESTED` is obsolete and only meaningful for output parameters. `IS SUPPLIED` expresses the actual question reliably: whether the caller passed an actual parameter, regardless of the parameter direction.
+IS REQUESTED is obsolete and only reports whether an output parameter was requested by the caller, not whether an input was actually supplied. IS SUPPLIED works for every parameter direction and states the real condition. Replace IS REQUESTED with IS SUPPLIED.
 
 ### Non-Compliant
 
 ```abap
-IF iv_name IS REQUESTED.
-  process( iv_name ).
+IF iv_currency IS REQUESTED.
+  convert_amount( iv_currency ).
 ENDIF.
 ```
 
 ### Compliant
 
 ```abap
-IF iv_name IS SUPPLIED.
-  process( iv_name ).
+IF iv_currency IS SUPPLIED.
+  convert_amount( iv_currency ).
 ENDIF.
 ```
 

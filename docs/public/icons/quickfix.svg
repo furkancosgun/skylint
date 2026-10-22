@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-label="Automatic QuickFixes">
+  <defs>
+    <linearGradient id="quickfix-a" x1="6" y1="4" x2="42" y2="44" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#d97706"/>
+      <stop offset="1" stop-color="#dc2626"/>
+    </linearGradient>
+  </defs>
+  <rect width="48" height="48" rx="12" fill="url(#quickfix-a)"/>
+  <path d="M28.5 11 16 26h7l-3.5 11L36 21h-7.5l0-10Z" fill="none" stroke="#fff" stroke-width="2.2" stroke-linejoin="round"/>
+  <path d="M15 35.5h7" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+</svg>

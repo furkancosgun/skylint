@@ -5,6 +5,7 @@ description: "Avoid database access inside loop iterations"
 # Avoid Database Access Inside Loops
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Performance & Database" />
   <Badge type="danger" text="#EC DB_IN_LOOP" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,25 +19,27 @@ Avoid database access inside loop iterations.
 
 ## Rationale
 
-Executing SQL queries (`SELECT`, `UPDATE`, `DELETE`) inside a `LOOP` generates an N+1 query performance anti-pattern. Fetch data in bulk using `FOR ALL ENTRIES` or SQL Joins outside the loop.
+A database call inside a loop executes once per row, creating the N+1 query problem and multiplying network round trips. Performance degrades quickly as the table grows and can exhaust database resources. Select the required data in bulk before the loop with FOR ALL ENTRIES or a JOIN, then process it in memory.
 
 ### Non-Compliant
 
 ```abap
 LOOP AT lt_orders INTO ls_order.
-  SELECT SINGLE * FROM /dmo/customer
+  SELECT SINGLE customer_id FROM /dmo/customer
     WHERE customer_id = @ls_order-customer_id
-    INTO @ls_customer.
+    INTO @lv_customer_id.
 ENDLOOP.
 ```
 
 ### Compliant
 
 ```abap
-SELECT * FROM /dmo/customer
-  FOR ALL ENTRIES IN @lt_orders
-  WHERE customer_id = @lt_orders-customer_id
-  INTO TABLE @lt_customers.
+IF lt_orders IS NOT INITIAL.
+  SELECT customer_id FROM /dmo/customer
+    FOR ALL ENTRIES IN @lt_orders
+    WHERE customer_id = @lt_orders-customer_id
+    INTO TABLE @lt_customer_ids.
+ENDIF.
 ```
 
 ## Suppression

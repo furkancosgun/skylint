@@ -5,6 +5,7 @@ description: "Max one method parameter definition per line"
 # Max One Method Parameter Definition Per Line
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="danger" text="#EC MAX_PARAM_LINE" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,18 +19,18 @@ Max one method parameter definition per line.
 
 ## Rationale
 
-Defining multiple parameters on the same line hampers readability and produces noisy version control diffs. Each parameter in a signature should be declared on its own dedicated line.
+Several parameters on one line are hard to scan and produce noisy diffs when one parameter changes. Multi-line signatures also allow types and comments to align clearly. Declare each parameter on its own line.
 
 ### Non-Compliant
 
 ```abap
-METHODS foo IMPORTING iv_a TYPE i iv_b TYPE string.
+METHODS process IMPORTING iv_a TYPE i iv_b TYPE string.
 ```
 
 ### Compliant
 
 ```abap
-METHODS foo
+METHODS process
   IMPORTING
     iv_a TYPE i
     iv_b TYPE string.

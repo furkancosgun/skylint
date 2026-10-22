@@ -5,6 +5,7 @@ description: "Avoid reading environment system fields (sy-sysid, etc.)"
 # Avoid Hardcoding System & Tenant Environment Checks
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Security & Robustness" />
   <Badge type="danger" text="#EC HARDCODED_ENV" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,7 +19,7 @@ Avoid reading environment system fields (sy-sysid, etc.).
 
 ## Rationale
 
-Hardcoding system identifiers (sy-sysid), client numbers (sy-mandt), host names (sy-host), or database systems (sy-dbsys) against literal values violates cloud multi-tenancy and breaks during staging, system copy, or migration. Use feature toggles, switch frameworks, or customizing instead.
+Comparing sy-sysid, sy-mandt, or sy-host to literals bakes a specific system landscape into the code. The logic breaks after a client copy, system copy, or cloud tenant move. Use configuration, feature toggles, or authorization objects instead.
 
 ### Non-Compliant
 
@@ -31,7 +32,7 @@ ENDIF.
 ### Compliant
 
 ```abap
-IF is_feature_enabled( c_features-prod_mode ) = abap_true.
+IF is_feature_enabled( c_features-prod_mode ).
   enable_production_mode( ).
 ENDIF.
 ```

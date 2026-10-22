@@ -5,6 +5,7 @@ description: "Avoid variable usage outside its declaring control block"
 # Avoid Variable Scope Leaking from Inner Blocks
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC SCOPE_LEAK" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,25 +19,25 @@ Avoid variable usage outside its declaring control block.
 
 ## Rationale
 
-In ABAP, variable declarations inside control blocks (`IF`, `LOOP`) have procedure-wide scope. Using an inner-declared variable outside its originating block creates confusing temporal dependencies.
+A variable declared inside an IF or LOOP block is still visible after the block ends, so using it later creates a hidden dependency on whether the branch executed. This makes behavior hard to reason about and can leave the variable uninitialized. Declare the variable in the enclosing scope and assign it explicitly inside the branch.
 
 ### Non-Compliant
 
 ```abap
-IF lv_condition = abap_true.
-  DATA(lv_value) = 10.
+IF is_valid( ).
+  DATA(lv_message) = |Order { lv_id }|.
 ENDIF.
-use_value( lv_value ). " Leaked outside block
+log_message( lv_message ).
 ```
 
 ### Compliant
 
 ```abap
-DATA lv_value TYPE i.
-IF lv_condition = abap_true.
-  lv_value = 10.
+DATA lv_message TYPE string.
+IF is_valid( ).
+  lv_message = |Order { lv_id }|.
 ENDIF.
-use_value( lv_value ).
+log_message( lv_message ).
 ```
 
 ## Suppression

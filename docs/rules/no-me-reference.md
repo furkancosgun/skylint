@@ -5,6 +5,7 @@ description: "Avoid self-reference ME->"
 # Avoid Redundant ME-> Self Reference
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC ME" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,20 +19,20 @@ Avoid self-reference ME->.
 
 ## Rationale
 
-In ABAP, member variables and methods are automatically accessible within the instance context. Prefixing every member access with `me->` creates visual noise, except when disambiguating parameter shadowing in constructors.
+Member variables and methods are already accessible inside an instance method, so prefixing every access with me-> only adds noise. Removing the prefix keeps attention on the member itself and makes genuine shadowing easier to spot. Keep me-> only where a parameter or local variable shadows the member, typically in constructors and setters.
 
 ### Non-Compliant
 
 ```abap
-me->mv_status = c_active.
-me->process_order( ).
+me->mv_order_count = me->mv_order_count + 1.
+me->save( ).
 ```
 
 ### Compliant
 
 ```abap
-mv_status = c_active.
-process_order( ).
+mv_order_count = mv_order_count + 1.
+save( ).
 ```
 
 ## Configuration & Thresholds

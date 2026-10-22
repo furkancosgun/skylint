@@ -5,6 +5,7 @@ description: "Place definitions at beginning of routine"
 # Place Definitions at Top of Routine
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="danger" text="#EC DEF_TOP" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,12 +19,13 @@ Place definitions at beginning of routine.
 
 ## Rationale
 
-Explicit local definitions (DATA, TYPES, CONSTANTS, FIELD-SYMBOLS) should be placed at the very beginning of the routine rather than scattered in the middle of executable code.
+A declaration in the middle of executable code interrupts the reading flow and hides that the variable exists for the whole routine. It also makes accidental use before declaration harder to spot. Put DATA, TYPES, CONSTANTS, and FIELD-SYMBOLS at the top of the routine.
 
 ### Non-Compliant
 
 ```abap
 METHOD calculate.
+  DATA lv_total TYPE i.
   lv_total = 100.
   DATA lv_tax TYPE i.
 ENDMETHOD.
@@ -33,6 +35,7 @@ ENDMETHOD.
 
 ```abap
 METHOD calculate.
+  DATA lv_total TYPE i.
   DATA lv_tax TYPE i.
   lv_total = 100.
 ENDMETHOD.

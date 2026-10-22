@@ -5,8 +5,9 @@ description: "Remove redundant parentheses"
 # Remove redundant parentheses
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC MANY_PARENS" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,19 +20,21 @@ Remove redundant parentheses.
 
 ## Rationale
 
-Parentheses that only wrap a complete condition or expression add noise and can be removed without changing semantics.
+Parentheses that wrap an entire condition or arithmetic expression do not change evaluation order but add visual noise. They often remain after refactoring and make expressions look more complex than they are. Remove redundant outer parentheses and keep only those needed for precedence.
 
 ### Non-Compliant
 
 ```abap
-IF ( destination IS INITIAL ).
+IF ( lv_status = 'A' ).
+  process_a( ).
 ENDIF.
 ```
 
 ### Compliant
 
 ```abap
-IF destination IS INITIAL.
+IF lv_status = 'A'.
+  process_a( ).
 ENDIF.
 ```
 

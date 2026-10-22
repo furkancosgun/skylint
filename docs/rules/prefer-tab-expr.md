@@ -5,8 +5,9 @@ description: "Prefer table expression itab[ ... ] over READ TABLE"
 # Prefer Table Expression itab[ ... ] over READ TABLE
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC PREF_TAB_EXPR" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,20 +20,20 @@ Prefer table expression itab[ ... ] over READ TABLE.
 
 ## Rationale
 
-Table expressions provide a direct, functional syntax for accessing internal table rows by key or index, eliminating procedural `READ TABLE` boilerplate and integrating seamlessly into expressions.
+READ TABLE requires a separate work area or field symbol plus a sy-subrc check, which spreads a simple row lookup across several statements. Table expressions return the row directly and can be nested inside VALUE, COND, and method calls. Use OPTIONAL or DEFAULT when a missing row is valid, and catch CX_SY_ITAB_LINE_NOT_FOUND when absence is an error.
 
 ### Non-Compliant
 
 ```abap
-READ TABLE lt_items INTO ls_item WITH KEY id = lv_id.
-READ TABLE lt_items ASSIGNING <fs_item> INDEX 1.
+READ TABLE lt_orders INTO ls_order WITH KEY order_id = lv_id.
+READ TABLE lt_orders ASSIGNING <ls_order> INDEX 1.
 ```
 
 ### Compliant
 
 ```abap
-ls_item = VALUE #( lt_items[ id = lv_id ] OPTIONAL ).
-ASSIGN lt_items[ 1 ] TO <fs_item>.
+ls_order = VALUE #( lt_orders[ order_id = lv_id ] OPTIONAL ).
+ASSIGN lt_orders[ 1 ] TO <ls_order>.
 ```
 
 ## Automated QuickFix

@@ -5,6 +5,7 @@ description: "Avoid empty control blocks (IF, CASE, LOOP, TRY, etc.)"
 # Avoid Empty Control Blocks
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC EMPTY_BLOCK" />
   <Badge type="info" text="Remote Enabled" />
@@ -20,13 +21,13 @@ Avoid empty control blocks (IF, CASE, LOOP, TRY, etc.).
 
 ## Rationale
 
-Empty blocks (such as `IF ... ELSEIF ... ENDIF` with no executable statements) confuse readers and usually represent unfinished business logic or forgotten debug code.
+An empty branch usually signals unfinished logic, forgotten code, or an inverted condition. Readers must search for hidden behavior and may assume the branch does something. Restructure the condition so every branch has a purpose, or remove the empty block entirely.
 
 ### Non-Compliant
 
 ```abap
-IF lv_condition = abap_true.
-  " Empty block
+IF lv_is_active = abap_true.
+  " no processing yet
 ELSE.
   process( ).
 ENDIF.
@@ -35,7 +36,7 @@ ENDIF.
 ### Compliant
 
 ```abap
-IF lv_condition = abap_false.
+IF NOT lv_is_active.
   process( ).
 ENDIF.
 ```

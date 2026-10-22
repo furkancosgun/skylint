@@ -5,8 +5,9 @@ description: "Detect Identical Self Assignments"
 # Avoid Redundant Self-Assignments
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC SELF_ASSIGN" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,18 +20,18 @@ Detect Identical Self Assignments.
 
 ## Rationale
 
-Assigning a variable or structure field to itself (`lv_x = lv_x`) is a redundant no-op and frequently hides a typo where another source field was intended.
+Assigning a variable or component to itself does nothing and is usually left over from refactoring or a typo in the source field. It adds noise and can hide a missing assignment. Assign the intended source value or delete the statement.
 
 ### Non-Compliant
 
 ```abap
-lv_name = lv_name.
+ls_order-customer_id = ls_order-customer_id.
 ```
 
 ### Compliant
 
 ```abap
-lv_name = iv_new_name.
+ls_order-customer_id = iv_customer_id.
 ```
 
 ## Automated QuickFix

@@ -5,6 +5,7 @@ description: "Maximum Line Length"
 # Limit Line Length
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Metrics & Complexity Limits" />
   <Badge type="danger" text="#EC LINE_LEN" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,18 +19,20 @@ Maximum Line Length.
 
 ## Rationale
 
-Long lines reduce readability, force horizontal scrolling, and complicate code review. Keep source lines within a configurable limit (typically 120 characters) by breaking statements and using expression-based ABAP.
+Lines longer than the configured limit force horizontal scrolling and hide parts of a statement in review tools. They also encourage dense expressions that are hard to debug. Break statements at logical operators and use short, meaningful names.
 
 ### Non-Compliant
 
 ```abap
-DATA lv_extremely_long_variable_name_created_specifically_to_exceed_the_maximum_allowed_line_length_of_one_hundred_twenty_chars TYPE i.
+lv_result = lo_service->calculate_total_with_discount_and_tax_for_customer( iv_customer_id = lv_customer_id iv_currency = lv_currency ).
 ```
 
 ### Compliant
 
 ```abap
-DATA lv_compact_name TYPE i.
+lv_result = lo_service->calculate_total_with_discount_and_tax_for_customer(
+  iv_customer_id = lv_customer_id
+  iv_currency    = lv_currency ).
 ```
 
 ## Configuration & Thresholds

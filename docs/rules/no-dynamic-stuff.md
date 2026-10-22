@@ -5,6 +5,7 @@ description: "No Dynamic Constructs (CALL, ASSIGN, CREATE, etc.)"
 # Avoid Unnecessary Dynamic Programming Constructs
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Security & Robustness" />
   <Badge type="danger" text="#EC NO_DYNAMIC" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,12 +19,12 @@ No Dynamic Constructs (CALL, ASSIGN, CREATE, etc.).
 
 ## Rationale
 
-Dynamic programming (`ASSIGN (lv_var)`, `CALL METHOD (lv_method)`) disables compile-time type checking, hampers automated refactoring, and opens security vulnerabilities.
+Dynamic calls such as CALL FUNCTION lv_name, ASSIGN (lv_name), and CALL METHOD (lv_name) defer resolution to runtime. Compile-time checking is lost, refactoring cannot follow the call, and user-controlled input can become an injection vector. Prefer static calls and typed references, and sanitize any unavoidable dynamic access.
 
 ### Non-Compliant
 
 ```abap
-CALL FUNCTION lv_func_name.
+CALL FUNCTION lv_function_name.
 ```
 
 ### Compliant

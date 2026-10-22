@@ -5,6 +5,7 @@ description: "Avoid CASE statements with only one WHEN branch"
 # Avoid CASE with a Single WHEN Branch
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC SINGLE_WHEN" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,22 +19,22 @@ Avoid CASE statements with only one WHEN branch.
 
 ## Rationale
 
-A `CASE` statement containing only one `WHEN` branch is unnecessarily verbose. An `IF ... ENDIF` is more concise and idiomatic.
+CASE implies that a value is compared against several alternatives, so a single WHEN makes readers look for missing branches. An IF with the same condition is shorter and states the intent directly. Use CASE only when there are multiple distinct branches or when a value mapping is genuinely clearer.
 
 ### Non-Compliant
 
 ```abap
-CASE lv_status.
-  WHEN 'A'.
-    process_a( ).
+CASE lv_order_status.
+  WHEN 'C'.
+    close_order( ).
 ENDCASE.
 ```
 
 ### Compliant
 
 ```abap
-IF lv_status = 'A'.
-  process_a( ).
+IF lv_order_status = 'C'.
+  close_order( ).
 ENDIF.
 ```
 

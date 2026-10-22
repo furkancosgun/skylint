@@ -5,8 +5,9 @@ description: "Prefer lines( ) over DESCRIBE TABLE ... LINES"
 # Prefer lines( ) over DESCRIBE TABLE
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC LINES" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,18 +20,23 @@ Prefer lines( ) over DESCRIBE TABLE ... LINES.
 
 ## Rationale
 
-The built-in `lines( )` function is modern, functional, and can be embedded directly into expressions and conditionals without requiring a temporary variable or the cumbersome procedural `DESCRIBE TABLE ... LINES` statement.
+DESCRIBE TABLE LINES requires an extra variable and separates the question about table size from the code that uses the answer. The lines( ) built-in returns the row count as a value and can be embedded directly in conditions and expressions. This reduces temporary variables and makes the intent obvious at the call site.
 
 ### Non-Compliant
 
 ```abap
-DESCRIBE TABLE lt_customers LINES lv_count.
+DESCRIBE TABLE lt_items LINES lv_count.
+IF lv_count = 0.
+  RETURN.
+ENDIF.
 ```
 
 ### Compliant
 
 ```abap
-lv_count = lines( lt_customers ).
+IF lines( lt_items ) = 0.
+  RETURN.
+ENDIF.
 ```
 
 ## Automated QuickFix

@@ -42,6 +42,14 @@ const expandedParams = reactive(new Set());
 const copiedJson = ref(false);
 const copiedPseudo = ref('');
 
+// --- Wizard state ---
+const currentStep = ref(1);
+const steps = [
+  { id: 1, label: 'Metadata' },
+  { id: 2, label: 'Rules' },
+  { id: 3, label: 'Review & Export' },
+];
+
 // --- Computed ---
 const categories = computed(() => {
   const map = new Map();
@@ -72,6 +80,23 @@ const activeCount = computed(() => selectedCheckNames.size);
 
 const isAllSelected = computed(() => selectedCheckNames.size === rulesData.length);
 
+const selectedByCategory = computed(() => {
+  return categories.value
+    .map((cat) => ({
+      ...cat,
+      selected: rulesData.filter(
+        (r) => r.category === cat.key && selectedCheckNames.has(r.checkName)
+      ).length,
+    }))
+    .filter((cat) => cat.selected > 0);
+});
+
+const variantJson = computed(() => JSON.stringify(generateVariantObject(), null, 2));
+
+const selectedQuickfixCount = computed(
+  () => rulesData.filter((r) => r.hasQuickfix && selectedCheckNames.has(r.checkName)).length
+);
+
 const filteredRules = computed(() => {
   const q = searchQuery.value.trim().toLowerCase();
   const cat = selectedCategory.value;
@@ -101,6 +126,14 @@ const filteredRules = computed(() => {
 });
 
 // --- Methods ---
+function nextStep() {
+  currentStep.value = Math.min(currentStep.value + 1, steps.length);
+}
+
+function prevStep() {
+  currentStep.value = Math.max(currentStep.value - 1, 1);
+}
+
 function toggleCheck(checkName) {
   if (selectedCheckNames.has(checkName)) {
     selectedCheckNames.delete(checkName);
@@ -273,31 +306,47 @@ function formatAttrKind(attr) {
       </div>
     </header>
 
+    <nav class="vb-stepper" aria-label="Variant builder steps">
+      <button
+        v-for="step in steps"
+        :key="step.id"
+        type="button"
+        class="vb-step"
+        :class="{ active: currentStep === step.id, complete: currentStep > step.id }"
+        :aria-current="currentStep === step.id ? 'step' : undefined"
+        @click="currentStep = step.id"
+      >
+        <span class="vb-step-num">
+          <svg v-if="currentStep > step.id" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+            <path d="m5 12 4 4L19 6" />
+          </svg>
+          <template v-else>{{ step.id }}</template>
+        </span>
+        <span class="vb-step-label">{{ step.label }}</span>
+      </button>
+    </nav>
+
     <!-- Variant Configuration & Export Card -->
-    <section class="vb-card vb-config-card">
+    <section v-show="currentStep === 1" class="vb-card vb-config-card">
       <div class="vb-card-header">
         <div class="vb-card-title-group">
-          <span class="vb-icon">🎛️</span>
+          <svg class="vb-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h10M18 18h2" />
+            <circle cx="16" cy="6" r="2" />
+            <circle cx="10" cy="12" r="2" />
+            <circle cx="16" cy="18" r="2" />
+          </svg>
           <div>
             <h2 class="vb-card-title">Variant Configuration</h2>
             <p class="vb-card-desc">Define your variant metadata and export to standard SAP ATC JSON format.</p>
           </div>
         </div>
-        <div class="vb-actions-group">
-          <button class="vb-btn vb-btn-primary" @click="downloadVariant">
-            <svg class="vb-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
-            </svg>
-            Download Variant (.chkv.json)
-          </button>
-          <button class="vb-btn vb-btn-secondary" @click="copyVariantJson">
-            <span v-if="copiedJson">✓ Copied!</span>
-            <span v-else>📋 Copy JSON</span>
-          </button>
-          <button class="vb-btn vb-btn-ghost" @click="resetDefaults" title="Reset to defaults">
-            ↺ Reset
-          </button>
-        </div>
+        <button class="vb-btn vb-btn-ghost" type="button" @click="resetDefaults" title="Reset to defaults">
+          <svg class="vb-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5" />
+          </svg>
+          Reset defaults
+        </button>
       </div>
 
       <div class="vb-form-grid">
@@ -338,7 +387,7 @@ function formatAttrKind(attr) {
     </section>
 
     <!-- Search & Filter Controls -->
-    <section class="vb-filters-section">
+    <section v-show="currentStep === 2" class="vb-filters-section">
       <div class="vb-search-row">
         <div class="vb-search-box">
           <svg class="vb-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -349,14 +398,28 @@ function formatAttrKind(attr) {
             v-model="searchQuery"
             type="text"
             class="vb-search-input"
-            placeholder="Search 95 rules by ID, title, pseudo-comment (#EC ...), or description..."
+            :placeholder="`Search ${rulesData.length} rules by ID, title, pseudo-comment (#EC ...), or description...`"
           />
-          <button v-if="searchQuery" class="vb-clear-btn" @click="searchQuery = ''">✕</button>
+          <button v-if="searchQuery" class="vb-clear-btn" type="button" aria-label="Clear search" @click="searchQuery = ''">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
         </div>
 
         <div class="vb-bulk-actions">
-          <button v-if="!isAllSelected" class="vb-btn-sm" @click="selectAll">✓ Select All</button>
-          <button v-else class="vb-btn-sm" @click="deselectAll">✗ Deselect All</button>
+          <button v-if="!isAllSelected" class="vb-btn-sm" type="button" @click="selectAll">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+              <path d="m5 12 4 4L19 6" />
+            </svg>
+            Select all
+          </button>
+          <button v-else class="vb-btn-sm" type="button" @click="deselectAll">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+            Deselect all
+          </button>
         </div>
       </div>
 
@@ -386,27 +449,27 @@ function formatAttrKind(attr) {
           :class="{ active: filterOnlyConfigurable }"
           @click="filterOnlyConfigurable = !filterOnlyConfigurable"
         >
-          ⚙️ Configurable ({{ configurableCount }})
+          Configurable ({{ configurableCount }})
         </button>
         <button
           class="vb-pill toggle-pill"
           :class="{ active: filterOnlyQuickfix }"
           @click="filterOnlyQuickfix = !filterOnlyQuickfix"
         >
-          ⚡ QuickFix ({{ quickfixCount }})
+          QuickFix ({{ quickfixCount }})
         </button>
         <button
           class="vb-pill toggle-pill"
           :class="{ active: filterOnlyRemoteEnabled }"
           @click="filterOnlyRemoteEnabled = !filterOnlyRemoteEnabled"
         >
-          🌐 Remote Enabled ({{ remoteEnabledCount }})
+          Remote Enabled ({{ remoteEnabledCount }})
         </button>
       </div>
     </section>
 
     <!-- Rules List -->
-    <section class="vb-rules-section">
+    <section v-show="currentStep === 2" class="vb-rules-section">
       <div class="vb-rules-header">
         <span class="vb-rules-count">Showing {{ filteredRules.length }} of {{ rulesData.length }} checks</span>
       </div>
@@ -444,27 +507,54 @@ function formatAttrKind(attr) {
 
           <!-- Metadata Tags Row -->
           <div class="vb-tags-row">
+            <span class="vb-tag sev" :class="rule.severity">{{ rule.severity }}</span>
             <span class="vb-tag cat">{{ rule.categoryTitle }}</span>
             <button
               class="vb-tag pseudo"
+              type="button"
               :title="'Click to copy pseudo-comment #EC ' + rule.pseudoComment"
               @click="copyPseudo(rule.pseudoComment)"
             >
-              <span v-if="copiedPseudo === rule.pseudoComment">✓ Copied</span>
+              <span v-if="copiedPseudo === rule.pseudoComment" class="vb-inline-status">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                  <path d="m5 12 4 4L19 6" />
+                </svg>
+                Copied
+              </span>
               <span v-else>#EC {{ rule.pseudoComment }}</span>
             </button>
-            <span v-if="rule.hasQuickfix" class="vb-tag qf">⚡ QuickFix Ready</span>
-            <span v-if="!rule.remoteEnabled" class="vb-tag local" title="Check runs locally only (remote_enablement = abap_false)">🔒 Local Only</span>
+            <span v-if="rule.hasQuickfix" class="vb-tag qf">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z" />
+              </svg>
+              QuickFix
+            </span>
+            <span v-if="!rule.remoteEnabled" class="vb-tag local" title="Check runs locally only (remote_enablement = abap_false)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <rect x="5" y="11" width="14" height="10" rx="2" />
+                <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+              </svg>
+              Local Only
+            </span>
 
             <!-- Parameters Toggle (if applicable) -->
             <button
               v-if="rule.attributes && rule.attributes.length > 0"
               class="vb-tag params-toggle"
+              type="button"
               :class="{ open: expandedParams.has(rule.checkName) }"
               @click="toggleParamDrawer(rule.checkName)"
             >
-              ⚙️ {{ rule.attributes.length }} Parameter{{ rule.attributes.length > 1 ? 's' : '' }}
-              <span class="vb-arrow">{{ expandedParams.has(rule.checkName) ? '▲' : '▼' }}</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M4 7h16M4 12h16M4 17h16" />
+                <circle cx="9" cy="7" r="2" />
+                <circle cx="15" cy="12" r="2" />
+                <circle cx="9" cy="17" r="2" />
+              </svg>
+              {{ rule.attributes.length }} Parameter{{ rule.attributes.length > 1 ? 's' : '' }}
+              <svg class="vb-arrow" :class="{ rotated: expandedParams.has(rule.checkName) }" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                <path d="m6 9 6 6 6-6" />
+              </svg>
             </button>
           </div>
 
@@ -513,6 +603,85 @@ function formatAttrKind(attr) {
       </div>
     </section>
 
+    <section v-show="currentStep === 3" class="vb-card vb-review-card">
+      <div class="vb-card-header">
+        <div class="vb-card-title-group">
+          <svg class="vb-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M9 3h6l1 2h3a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h3l1-2Z" />
+            <path d="m8 13 3 3 5-6" />
+          </svg>
+          <div>
+            <h2 class="vb-card-title">Review &amp; Export</h2>
+            <p class="vb-card-desc">Validate the selected checks and inspect the generated CHKV JSON before exporting.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="vb-review-grid">
+        <div class="vb-review-item">
+          <span class="vb-review-label">Variant name</span>
+          <strong class="vb-review-value">{{ variantName || 'ZSKYLINT_CUSTOM' }}</strong>
+        </div>
+        <div class="vb-review-item">
+          <span class="vb-review-label">Language version</span>
+          <strong class="vb-review-value">{{ abapLanguageVersion === 'cloudDevelopment' ? 'ABAP Cloud Development' : 'Standard' }}</strong>
+        </div>
+        <div class="vb-review-item">
+          <span class="vb-review-label">Enabled checks</span>
+          <strong class="vb-review-value">{{ activeCount }} / {{ rulesData.length }}</strong>
+        </div>
+        <div class="vb-review-item">
+          <span class="vb-review-label">QuickFixes included</span>
+          <strong class="vb-review-value">{{ selectedQuickfixCount }}</strong>
+        </div>
+      </div>
+
+      <div class="vb-review-categories">
+        <span v-for="cat in selectedByCategory" :key="cat.key" class="vb-count-pill">
+          {{ cat.title }}: {{ cat.selected }}
+        </span>
+      </div>
+
+      <div class="vb-json-header">
+        <span>Variant JSON preview</span>
+        <span>{{ activeCount }} checks · {{ abapLanguageVersion }}</span>
+      </div>
+      <pre class="vb-json-preview" aria-label="Generated CHKV JSON"><code>{{ variantJson }}</code></pre>
+    </section>
+
+    <div class="vb-sticky-bar" role="region" aria-label="Variant builder actions">
+      <div class="vb-sticky-info">
+        <span class="vb-sticky-step">Step {{ currentStep }} of {{ steps.length }}</span>
+        <span class="vb-sticky-count">{{ activeCount }} checks enabled</span>
+      </div>
+      <div class="vb-sticky-actions">
+        <button v-if="currentStep > 1" class="vb-btn vb-btn-secondary" type="button" @click="prevStep">
+          Back
+        </button>
+        <button v-if="currentStep < steps.length" class="vb-btn vb-btn-primary" type="button" @click="nextStep">
+          Next: {{ steps[currentStep].label }}
+        </button>
+        <template v-else>
+          <button class="vb-btn vb-btn-secondary" type="button" @click="copyVariantJson">
+            <svg v-if="copiedJson" class="vb-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+              <path d="m5 12 4 4L19 6" />
+            </svg>
+            <svg v-else class="vb-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="9" y="9" width="12" height="12" rx="2" />
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+            </svg>
+            {{ copiedJson ? 'Copied' : 'Copy JSON' }}
+          </button>
+          <button class="vb-btn vb-btn-primary" type="button" @click="downloadVariant">
+            <svg class="vb-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+            </svg>
+            Download .chkv.json
+          </button>
+        </template>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -521,7 +690,7 @@ function formatAttrKind(attr) {
 .vb-container {
   max-width: 1240px;
   margin: 0 auto;
-  padding: 2rem 1.5rem 4rem;
+  padding: 2rem 1.5rem 8rem;
   color: var(--vp-c-text-1);
   font-family: var(--vp-font-family-base);
 }
@@ -1159,4 +1328,294 @@ html.dark .vb-tag.local {
   font-size: 0.8rem;
 }
 
+
+/* Wizard stepper */
+.vb-stepper {
+  display: flex;
+  gap: 0.4rem;
+  max-width: 760px;
+  margin: 0 auto 2rem;
+  padding: 0.4rem;
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 12px;
+}
+
+.vb-step {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--vp-c-text-2);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.vb-step:hover {
+  color: var(--vp-c-text-1);
+}
+
+.vb-step.active {
+  background: var(--vp-c-bg);
+  color: var(--vp-c-brand-1);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.vb-step.complete {
+  color: var(--vp-c-brand-1);
+}
+
+.vb-step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  border: 1px solid var(--vp-c-divider);
+  font-size: 0.72rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.vb-step-num svg {
+  width: 13px;
+  height: 13px;
+}
+
+.vb-step.active .vb-step-num {
+  background: var(--vp-c-brand-1);
+  border-color: var(--vp-c-brand-1);
+  color: #fff;
+}
+
+.vb-step.complete .vb-step-num {
+  background: var(--vp-c-brand-soft);
+  border-color: transparent;
+  color: var(--vp-c-brand-1);
+}
+
+@media (max-width: 620px) {
+  .vb-step {
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: 0.72rem;
+    padding: 0.5rem 0.35rem;
+  }
+}
+
+/* Inline icons */
+.vb-icon-svg {
+  width: 1.75rem;
+  height: 1.75rem;
+  color: var(--vp-c-brand-1);
+  flex-shrink: 0;
+}
+
+.vb-btn-sm {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.vb-btn-sm svg {
+  width: 14px;
+  height: 14px;
+}
+
+.vb-clear-btn svg {
+  width: 14px;
+  height: 14px;
+  display: block;
+}
+
+.vb-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.vb-tag svg {
+  width: 12px;
+  height: 12px;
+}
+
+.vb-tag.sev {
+  text-transform: capitalize;
+  font-weight: 700;
+}
+
+.vb-tag.sev.note {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.vb-inline-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.vb-inline-status svg {
+  width: 12px;
+  height: 12px;
+}
+
+.vb-arrow {
+  width: 12px;
+  height: 12px;
+  margin-left: 0.15rem;
+  transition: transform 0.2s ease;
+}
+
+.vb-arrow.rotated {
+  transform: rotate(180deg);
+}
+
+/* Review & export */
+.vb-review-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.vb-review-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 1rem;
+  background: var(--vp-c-bg);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+}
+
+.vb-review-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--vp-c-text-3);
+}
+
+.vb-review-value {
+  font-size: 1rem;
+  color: var(--vp-c-text-1);
+}
+
+.vb-review-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 1rem;
+}
+
+.vb-count-pill {
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: var(--vp-c-brand-soft);
+  color: var(--vp-c-brand-1);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.vb-json-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin: 1.5rem 0 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--vp-c-text-3);
+}
+
+.vb-json-preview {
+  margin: 0;
+  max-height: 420px;
+  overflow: auto;
+  padding: 1rem;
+  background: var(--vp-c-bg);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  font-family: var(--vp-font-family-mono);
+  font-size: 0.78rem;
+  line-height: 1.55;
+  tab-size: 2;
+}
+
+/* Sticky export bar */
+.vb-sticky-bar {
+  position: fixed;
+  left: 50%;
+  bottom: 1.25rem;
+  transform: translateX(-50%);
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: min(1100px, calc(100vw - 2rem));
+  padding: 0.65rem 0.85rem 0.65rem 1rem;
+  background: color-mix(in srgb, var(--vp-c-bg) 88%, transparent);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(14px);
+}
+
+.vb-sticky-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.vb-sticky-step {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--vp-c-text-3);
+}
+
+.vb-sticky-count {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.vb-sticky-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+  .vb-sticky-bar {
+    bottom: 0;
+    width: 100%;
+    border-radius: 12px 12px 0 0;
+  }
+
+  .vb-sticky-info {
+    display: none;
+  }
+
+  .vb-sticky-actions {
+    width: 100%;
+  }
+
+  .vb-sticky-actions .vb-btn {
+    flex: 1;
+    justify-content: center;
+  }
+}
 </style>

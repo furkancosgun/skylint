@@ -5,6 +5,7 @@ description: "Prefer Class-Based Exceptions over Classic EXCEPTIONS"
 # Prefer Class-Based Exceptions over Classic EXCEPTIONS
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="danger" text="#EC CLASS_EXC" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,18 +19,20 @@ Prefer Class-Based Exceptions over Classic EXCEPTIONS.
 
 ## Rationale
 
-Classic non-class exceptions (set via `sy-subrc`) lack stack traces, cannot carry context data, and cannot be propagated up call stacks cleanly. Use class-based exceptions (`CX_ROOT` subclasses).
+Classic exceptions report failure through sy-subrc and cannot carry a message object, stack trace, or context data. They are easy to ignore and do not propagate cleanly through call stacks. Use CX_ROOT subclasses with RAISING and CATCH so errors are explicit, typed, and carry useful information.
 
 ### Non-Compliant
 
 ```abap
-METHODS execute EXCEPTIONS not_found failed.
+METHODS execute
+  EXCEPTIONS not_found failed.
 ```
 
 ### Compliant
 
 ```abap
-METHODS execute RAISING cx_not_found cx_failed.
+METHODS execute
+  RAISING cx_not_found cx_failed.
 ```
 
 ## Suppression

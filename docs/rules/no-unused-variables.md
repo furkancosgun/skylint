@@ -5,6 +5,7 @@ description: "Detect unused local variables and field symbols"
 # Eliminate Unused Local Variables and Symbols
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC NEEDED" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,18 +19,21 @@ Detect unused local variables and field symbols.
 
 ## Rationale
 
-Unused variables clutter code, confuse developers reviewing changes, and increase compilation and execution memory overhead without providing any benefit.
+An unused variable or field symbol adds noise and suggests incomplete refactoring or a missing assignment. It keeps dead objects alive longer than necessary and makes reviews harder. Remove the declaration, or mark it with ##NEEDED when an external contract requires it.
 
 ### Non-Compliant
 
 ```abap
-DATA lv_temp TYPE string. " Declared but never referenced
+DATA lv_message TYPE string.
+process_order( ).
 ```
 
 ### Compliant
 
 ```abap
-" Remove unused declarations or add ##NEEDED pragma if required by interface
+DATA lv_message TYPE string.
+lv_message = |Order { lv_id }|.
+log_message( lv_message ).
 ```
 
 ## Suppression

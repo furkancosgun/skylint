@@ -5,6 +5,7 @@ description: "Classic EXCEPTIONS must not overlap"
 # Classic EXCEPTIONS must not map two errors to the same number
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC EXC_OVERLAP" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,12 +19,12 @@ Classic EXCEPTIONS must not overlap.
 
 ## Rationale
 
-When two classic exceptions share one error number, the caller cannot tell which one was raised.
+When two classic exceptions map to the same sy-subrc number, the caller cannot tell which failure occurred. This makes error handling guesswork and can hide the real cause. Assign distinct numbers and reserve OTHERS for unexpected failures.
 
 ### Non-Compliant
 
 ```abap
-CALL FUNCTION 'SOMETHING'
+CALL FUNCTION 'Z_PROCESS_ORDER'
   EXCEPTIONS
     system_failure        = 1 MESSAGE lv_message
     communication_failure = 1 MESSAGE lv_message
@@ -33,7 +34,7 @@ CALL FUNCTION 'SOMETHING'
 ### Compliant
 
 ```abap
-CALL FUNCTION 'SOMETHING'
+CALL FUNCTION 'Z_PROCESS_ORDER'
   EXCEPTIONS
     system_failure        = 1 MESSAGE lv_message
     communication_failure = 2 MESSAGE lv_message

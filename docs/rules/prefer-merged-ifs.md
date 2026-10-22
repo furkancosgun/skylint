@@ -5,8 +5,9 @@ description: "Merge consecutive nested IF blocks using boolean AND"
 # Merge Nested IF Statements
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC MERGE_IFS" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -21,14 +22,14 @@ Merge consecutive nested IF blocks using boolean AND.
 
 ## Rationale
 
-Consecutive nested `IF` statements without intermediate statements can be combined with `AND`. A nested `IF` that is the sole statement in an `ELSE` block can be converted to `ELSEIF`. Both reduce nesting depth, flatten control flow, and simplify cyclomatic complexity.
+Nested IF statements without intermediate statements add indentation without adding meaning. Merging them with AND or converting a nested IF in an ELSE block into ELSEIF flattens the control flow and makes the combined condition explicit. Less nesting reduces cyclomatic complexity and makes the happy path easier to test.
 
 ### Non-Compliant
 
 ```abap
-IF is_connected( ).
-  IF has_permission( ).
-    execute( ).
+IF is_active( ).
+  IF is_authorized( ).
+    process_order( ).
   ENDIF.
 ENDIF.
 ```
@@ -36,8 +37,8 @@ ENDIF.
 ### Compliant
 
 ```abap
-IF is_connected( ) AND has_permission( ).
-  execute( ).
+IF is_active( ) AND is_authorized( ).
+  process_order( ).
 ENDIF.
 ```
 

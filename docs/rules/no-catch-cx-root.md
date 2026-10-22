@@ -5,6 +5,7 @@ description: "Catch specific exceptions instead of generic cx_root"
 # Avoid Catching Generic CX_ROOT
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Security & Robustness" />
   <Badge type="danger" text="#EC CATCH_ROOT" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,15 +19,15 @@ Catch specific exceptions instead of generic cx_root.
 
 ## Rationale
 
-Catching `cx_root` indiscriminately swallows system runtime errors, resource exhaustion errors, and programming bugs, masking critical defects from developers.
+Catching CX_ROOT catches programming errors, resource shortages, and runtime failures together with expected business exceptions. The handler cannot respond correctly to all of them and may hide serious defects. Catch only the specific exception types you can handle and let everything else propagate.
 
 ### Non-Compliant
 
 ```abap
 TRY.
-    process_order( ).
-  CATCH cx_root.
-    " Indiscriminately catches all exceptions, masking unexpected bugs
+  process_order( ).
+CATCH cx_root.
+  " swallowed
 ENDTRY.
 ```
 
@@ -34,9 +35,9 @@ ENDTRY.
 
 ```abap
 TRY.
-    process_order( ).
-  CATCH cx_order_failed INTO DATA(lx_order).
-    logger->record( lx_order ).
+  process_order( ).
+CATCH cx_order_failed INTO DATA(lx_order).
+  logger->record( lx_order ).
 ENDTRY.
 ```
 

@@ -5,8 +5,9 @@ description: "Prefer REDUCE #( ) expression over simple aggregation LOOP"
 # Prefer REDUCE #( ) Expression over Simple Aggregation LOOP
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC PREF_REDUCE" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,23 +20,22 @@ Prefer REDUCE #( ) expression over simple aggregation LOOP.
 
 ## Rationale
 
-Simple loops that only accumulate a sum or concatenate strings into a single target variable can be expressed much more concisely and declaratively with modern ABAP REDUCE #( ) constructor expressions.
+A loop that only accumulates a sum or builds a single aggregated value mixes imperative control flow with a simple calculation and hides the real intent. Such loops are longer to read and easy to break when the accumulator initialization or the loop body changes. REDUCE #( ) expresses the aggregation declaratively inside one expression and removes the mutable helper state. Use REDUCE for straightforward sums, counts, and string concatenation, and keep a loop only when it performs additional side effects.
 
 ### Non-Compliant
 
 ```abap
-LOOP AT lt_items INTO ls_item.
-  lv_sum = lv_sum + ls_item-amount.
+LOOP AT lt_orders INTO ls_order.
+  lv_total = lv_total + ls_order-amount.
 ENDLOOP.
 ```
 
 ### Compliant
 
 ```abap
-lv_sum = REDUCE #( 
-  INIT res = lv_sum
-  FOR ls_item IN lt_items
-  NEXT res = res + ls_item-amount ).
+lv_total = REDUCE i( INIT total = 0
+  FOR ls_order IN lt_orders
+  NEXT total = total + ls_order-amount ).
 ```
 
 ## Automated QuickFix

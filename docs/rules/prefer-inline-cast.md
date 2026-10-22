@@ -5,8 +5,9 @@ description: "Inline a CAST helper that is only read once"
 # Inline a CAST helper that is only read once
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC INLINE_CAST" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,19 +20,19 @@ Inline a CAST helper that is only read once.
 
 ## Rationale
 
-A CAST helper declared as DATA and read exactly once in the following statement can be inlined, removing a temporary variable.
+A CAST helper assigned to a temporary and read only once adds a variable that carries no extra meaning. Inlining the CAST into the consuming expression keeps the downcast and its use together. Use CAST type( ... )->method( ) when the helper is not reused.
 
 ### Non-Compliant
 
 ```abap
-DATA(helper) = CAST lcl_node( object ).
-result = helper->get_tokens( ).
+DATA(lo_node) = CAST lcl_node( io_object ).
+result = lo_node->get_tokens( ).
 ```
 
 ### Compliant
 
 ```abap
-result = CAST lcl_node( object )->get_tokens( ).
+result = CAST lcl_node( io_object )->get_tokens( ).
 ```
 
 ## Automated QuickFix

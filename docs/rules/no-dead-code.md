@@ -5,8 +5,9 @@ description: "Detect Dead Code with Constant Condition"
 # Avoid Dead Code with Constant Conditions
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC NO_DEAD_CODE" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,21 +20,21 @@ Detect Dead Code with Constant Condition.
 
 ## Rationale
 
-Conditional branches with constant expressions such as 1 = 2 or abap_false can never be executed, creating dead code that clutters the program and misleads maintainers.
+A condition that is always false, such as 1 = 2 or abap_false, makes the branch impossible to reach. Dead branches hide unfinished logic and can contain declarations that confuse scope analysis. Remove the branch or replace the constant with the real runtime condition.
 
 ### Non-Compliant
 
 ```abap
 IF 1 = 2.
-  DATA lv_dead TYPE i.
+  process( ).
 ENDIF.
 ```
 
 ### Compliant
 
 ```abap
-IF lv_condition = abap_true.
-  DATA lv_active TYPE i.
+IF is_enabled( ).
+  process( ).
 ENDIF.
 ```
 

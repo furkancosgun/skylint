@@ -148,13 +148,16 @@ for (const rule of RULES) {
 
   // Rule Page Title with SEO frontmatter
   const cleanDesc = (classDesc || '').replace(/"/g, '\\"');
+  const severityType = severity === 'error' ? 'danger' : severity === 'note' ? 'info' : 'warning';
+  const severityLabel = severity.charAt(0).toUpperCase() + severity.slice(1);
   let ruleDoc = `---\ndescription: "${cleanDesc}"\n---\n\n# ${meta.title}\n\n`;
 
   // Badge bar wrapper with inline margin
   ruleDoc += `<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">\n`;
+  ruleDoc += `  <Badge type="${severityType}" text="${severityLabel}" />\n`;
   ruleDoc += `  <Badge type="tip" text="${categoryInfo.title}" />\n`;
   if (hasQuickfix) {
-    ruleDoc += `  <Badge type="warning" text="⚡ QuickFix Ready" />\n`;
+    ruleDoc += `  <Badge type="warning" text="QuickFix Ready" />\n`;
   }
   ruleDoc += `  <Badge type="danger" text="#EC ${rule.pseudoComment}" />\n`;
   ruleDoc += `  <Badge type="${remoteEnabled ? 'info' : 'warning'}" text="${remoteEnabled ? 'Remote Enabled' : 'Local Only'}" />\n`;
@@ -276,9 +279,14 @@ catalogMd += `- **${totalQuickFixes} Automated QuickFixes:** Instant one-click r
 catalogMd += `- **Zero Legacy Overhead:** Built exclusively on \`IF_CI_ATC_CHECK\` (no obsolete Code Inspector / SCI dependency).\n`;
 catalogMd += `:::\n\n`;
 
+const categoryLinks = Object.entries(CATEGORIES)
+  .map(([catKey, catInfo]) => `<a href="#${catKey}">${catInfo.title}</a>`)
+  .join('\n  ');
+catalogMd += `<div class="rule-filter-bar">\n  ${categoryLinks}\n</div>\n\n`;
+
 for (const [catKey, catInfo] of Object.entries(CATEGORIES)) {
   const catRules = RULES.filter((r) => r.category === catKey);
-  catalogMd += `## ${catInfo.title} (${catRules.length})\n\n`;
+  catalogMd += `## ${catInfo.title} (${catRules.length}) {#${catKey}}\n\n`;
   catalogMd += `${catInfo.description}\n\n`;
   catalogMd += `| Rule ID | ABAP Class | Description | Pseudo-Comment | QuickFix | Remote Enabled |\n`;
   catalogMd += `|---|---|---|:---:|:---:|:---:|\n`;
@@ -286,15 +294,15 @@ for (const [catKey, catInfo] of Object.entries(CATEGORIES)) {
   for (const r of catRules) {
     const checkFile = path.join(checksDir, `${r.className.toLowerCase()}.clas.abap`);
     let desc = r.ruleId;
-    let qf = '—';
-    let remote = '✅ Yes';
+    let qf = 'No';
+    let remote = 'Yes';
 
     if (fs.existsSync(checkFile)) {
       const c = fs.readFileSync(checkFile, 'utf8');
       const dm = c.match(/description\s*=\s*'([^']+)'/);
       if (dm) desc = dm[1].replace(/^skylint:\s*/i, '');
-      if (/quickfix_codes|quickfix_replace/i.test(c)) qf = '⚡ Ready';
-      if (/remote_enablement\s*=\s*abap_false/i.test(c)) remote = '❌ No';
+      if (/quickfix_codes|quickfix_replace/i.test(c)) qf = 'Yes';
+      if (/remote_enablement\s*=\s*abap_false/i.test(c)) remote = 'No';
     }
 
     catalogMd += `| [\`${r.ruleId}\`](/rules/${r.ruleId}) | \`${r.className}\` | ${desc} | \`#EC ${r.pseudoComment}\` | ${qf} | ${remote} |\n`;
@@ -307,11 +315,7 @@ fs.writeFileSync(path.join(rulesDocsDir, 'index.md'), catalogMd, 'utf8');
 // Generate VitePress Sidebar config
 const sidebarRules = Object.entries(CATEGORIES).map(([catKey, catInfo]) => ({
   text: catInfo.title,
-  collapsed: false,
-  items: RULES.filter((r) => r.category === catKey).map((r) => ({
-    text: r.ruleId,
-    link: `/rules/${r.ruleId}`,
-  })),
+  link: `/rules/#${catKey}`,
 }));
 
 const vpConfig = `import { defineConfig } from 'vitepress';
@@ -325,6 +329,7 @@ export default defineConfig({
   base,
   cleanUrls: true,
   lastUpdated: true,
+  appearance: 'dark',
   sitemap: {
     hostname: 'https://skylint.org/',
   },
@@ -470,47 +475,62 @@ hero:
       text: Explore ${RULES.length} Rules
       link: /rules/
     - theme: alt
-      text: 🎛️ Variant Builder
+      text: Variant Builder
       link: /variant-builder
 
 features:
-  - icon: ⚡
+  - icon:
+      src: /icons/atc.svg
+      alt: Native SAP ATC integration
+      width: 48
+      height: 48
     title: Native SAP ATC Integration
     details: Zero adapter layers. Runs directly inside SAP GUI and Eclipse ADT via if_ci_atc_check with abapGit transport.
-  - icon: 🌿
+  - icon:
+      src: /icons/rules.svg
+      alt: Clean ABAP rule catalog
+      width: 48
+      height: 48
     title: ${RULES.length} Clean ABAP Rules
     details: Enforcing modern syntax, expression-based ABAP, safety boundaries, and object-oriented cleanliness.
-  - icon: 🛠️
+  - icon:
+      src: /icons/quickfix.svg
+      alt: Automated QuickFixes
+      width: 48
+      height: 48
     title: Automated QuickFixes
     details: Built-in automated refactoring for modern syntax upgrades (lines, string templates, NEW #, etc.) with Ctrl + 1.
-  - icon: 🎛️
+  - icon:
+      src: /icons/variant.svg
+      alt: ATC Variant Builder
+      width: 48
+      height: 48
     title: ATC Variant Builder
     details: Build custom SAP ATC check variants (.chkv.json) and tune rule parameters for SAP GUI / abapGit.
 ---
 
-## 🏛️ Enterprise ABAP Quality Platform
+## Enterprise ABAP Quality Platform
 
 Skylint transforms static code analysis for SAP ecosystems by executing directly within the standard **ABAP Test Cockpit (ATC)** framework. It enforces Clean ABAP guidelines and cloud-readiness natively inside Eclipse ADT and automated pipelines.
 
-### 🚀 Architecture & Documentation
+### Architecture & Documentation
 - [Getting Started & Installation Guide](/guide/getting-started): Step-by-step setup via abapGit for SAP BTP, S/4HANA Cloud, and On-Premise.
 - [SAP ATC Integration & ABAP Cloud](/guide/atc-integration): Learn why native ATC replaces legacy SCI and how to configure CI/CD.
 - [ATC Variant Configuration & Parameters](/guide/configuration): Configure rule severities, parameters, and thresholds in Eclipse ADT.
 - [Suppressions & Pragma Standards](/guide/suppressions): Manage intentional exceptions using standard #EC pseudo-comments and pragmas.
 
-### 📋 Clean ABAP Rule Categories
-- [Clean ABAP & Modern Syntax](/rules/): Modern language features, expression-oriented coding, and idiomatic practices.
-- [Anti-Patterns & Bad Practices](/rules/): Discouraged constructs, obsolete statements, and redundant syntax.
-- [Performance & Database Optimization](/rules/): Database query efficiency, buffer protection, and internal table operation guidelines.
-- [Security & Robustness](/rules/): Authorizations, dynamic execution sanitation, error handling, and runtime safety.
-- [Metrics & Complexity Limits](/rules/): Quantitative boundaries for method size, nesting depth, parameter counts, and cyclomatic complexity.
+### Clean ABAP Rule Categories
+- [Clean ABAP & Modern Syntax](/rules/#clean-abap): Modern language features, expression-oriented coding, and idiomatic practices.
+- [Anti-Patterns & Bad Practices](/rules/#anti-patterns): Discouraged constructs, obsolete statements, and redundant syntax.
+- [Performance & Database Optimization](/rules/#performance): Database query efficiency, buffer protection, and internal table operation guidelines.
+- [Security & Robustness](/rules/#security): Authorizations, dynamic execution sanitation, error handling, and runtime safety.
+- [Metrics & Complexity Limits](/rules/#metrics): Quantitative boundaries for method size, nesting depth, parameter counts, and cyclomatic complexity.
 
-### 🛠️ Developer Tools & Catalogs
+### Developer Tools & Catalogs
 - [Interactive ATC Variant Builder](/variant-builder): Visually customize rules, tune thresholds, and export CHKV JSON configurations.
 - [Complete Interactive Catalog](/rules/): Browse all ${RULES.length} native check rules with before-and-after Clean ABAP examples.
 - [GitHub Open Source Repository](https://github.com/furkancosgun/skylint): Source code, issue tracker, contributions, and community releases.
 `;
-
 fs.writeFileSync(path.join(docsDir, 'index.md'), indexMd, 'utf8');
 
 // Generate Dynamic Open Graph Image (docs/public/og-image.svg & og-image.png)
@@ -564,7 +584,7 @@ function generateOgImage() {
       <text x="295" y="26" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="600" fill="#34d399" text-anchor="middle">🌿 ${ogRuleCount} Clean Rules</text>
 
       <rect x="405" y="0" width="200" height="42" rx="21" fill="#7c3aed" fill-opacity="0.25" stroke="#8b5cf6" stroke-width="1.5" />
-      <text x="505" y="26" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="600" fill="#a78bfa" text-anchor="middle">🛠️ Instant QuickFixes</text>
+      <text x="505" y="26" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="600" fill="#a78bfa" text-anchor="middle">Instant QuickFixes</text>
     </g>
   </g>
 

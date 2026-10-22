@@ -5,6 +5,7 @@ description: "Avoid duplicate branch conditions in IF and CASE"
 # Avoid Duplicate Branch Conditions
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC DUP_COND" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,21 +19,25 @@ Avoid duplicate branch conditions in IF and CASE.
 
 ## Rationale
 
-Repeating the exact same condition across `IF / ELSEIF` or `WHEN` branches means subsequent duplicate branches can never be reached, indicating a copy-paste error or broken logic.
+A repeated IF/ELSEIF or WHEN condition can never be reached because the earlier branch already handles it. This is usually a copy-paste error and can leave the intended branch permanently dead. Remove the duplicate or correct the condition so every branch has a distinct purpose.
 
 ### Non-Compliant
 
 ```abap
-IF lv_type = 'A' OR lv_type = 'A'.
-  process( ).
+IF lv_status = 'A'.
+  process_a( ).
+ELSEIF lv_status = 'A'.
+  process_b( ).
 ENDIF.
 ```
 
 ### Compliant
 
 ```abap
-IF lv_type = 'A'.
-  process( ).
+IF lv_status = 'A'.
+  process_a( ).
+ELSEIF lv_status = 'B'.
+  process_b( ).
 ENDIF.
 ```
 

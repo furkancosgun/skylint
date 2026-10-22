@@ -5,6 +5,7 @@ description: "Use a message class instead of inline message text"
 # Use a message class (SE91) instead of inline message text
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="danger" text="#EC MSG_CLASS" />
   <Badge type="warning" text="Local Only" />
@@ -18,7 +19,7 @@ Use a message class instead of inline message text.
 
 ## Rationale
 
-Inline message texts cannot be translated and are hard to maintain. Define messages in a message class and raise them as e001( msg_class ).
+Inline message texts are not translatable through SE91 and are scattered across the codebase. A message class centralizes text, numbering, and translation for all consumers. Raise messages with MESSAGE e001(zmsg) or a class-based exception that references the message text.
 
 ### Non-Compliant
 
@@ -29,7 +30,7 @@ MESSAGE 'Something went wrong' TYPE 'E'.
 ### Compliant
 
 ```abap
-MESSAGE e001(bc_msg).
+MESSAGE e001(zmsg).
 ```
 
 ## Suppression

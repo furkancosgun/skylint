@@ -5,6 +5,7 @@ description: "Avoid mutable public attributes in classes"
 # Avoid Public Attributes in Classes
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC PUBLIC_ATTR" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,12 +19,12 @@ Avoid mutable public attributes in classes.
 
 ## Rationale
 
-Public attributes violate encapsulation because external consumers can mutate internal state arbitrarily. Encapsulate state using private/protected attributes exposed via methods or `READ-ONLY`.
+Public attributes let any caller read or overwrite internal state, so the class cannot enforce its own invariants. They also expose implementation details that become difficult to change without breaking consumers. Keep state private or protected and expose read-only getters or behavior methods that control access.
 
 ### Non-Compliant
 
 ```abap
-CLASS cl_model DEFINITION PUBLIC.
+CLASS cl_model DEFINITION PUBLIC CREATE PUBLIC.
   PUBLIC SECTION.
     DATA mv_state TYPE i.
 ENDCLASS.
@@ -32,7 +33,7 @@ ENDCLASS.
 ### Compliant
 
 ```abap
-CLASS cl_model DEFINITION PUBLIC.
+CLASS cl_model DEFINITION PUBLIC CREATE PUBLIC.
   PUBLIC SECTION.
     METHODS get_state RETURNING VALUE(rv_state) TYPE i.
   PRIVATE SECTION.

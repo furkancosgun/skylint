@@ -5,6 +5,7 @@ description: "Avoid mutating or sorting tables inside loops"
 # Do Not Mutate the Internal Table Currently Being Looped
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Performance & Database" />
   <Badge type="danger" text="#EC LOOP_MODIFY" />
   <Badge type="info" text="Remote Enabled" />
@@ -20,13 +21,13 @@ Avoid mutating or sorting tables inside loops.
 
 ## Rationale
 
-Adding rows (APPEND/INSERT), modifying, deleting, or clearing rows from the table while actively looping over it can cause infinite loops, skipped rows, or cursor invalidation. Parametric toggles are available for append, insert, modify, delete, and clear operations.
+Appending, inserting, modifying, or deleting rows of the table being looped can invalidate the loop cursor. The result may be skipped rows, duplicate processing, or an endless loop. Iterate over a snapshot or collect changes in a separate table and apply them after the loop.
 
 ### Non-Compliant
 
 ```abap
 LOOP AT lt_orders INTO ls_order.
-  APPEND ls_order TO lt_orders.
+  INSERT ls_order INTO lt_orders.
 ENDLOOP.
 ```
 
@@ -34,7 +35,7 @@ ENDLOOP.
 
 ```abap
 LOOP AT lt_orders INTO ls_order.
-  APPEND ls_order TO lt_new_orders.
+  INSERT ls_order INTO lt_processed_orders.
 ENDLOOP.
 ```
 

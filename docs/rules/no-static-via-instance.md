@@ -5,8 +5,9 @@ description: "Avoid calling static methods via instance arrow (->)"
 # Avoid Calling Static Methods via Instance References (->)
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC STATIC_ARROW" />
   <Badge type="warning" text="Local Only" />
 </div>
@@ -19,19 +20,19 @@ Avoid calling static methods via instance arrow (->).
 
 ## Rationale
 
-Calling a static method via an object reference arrow `lo_instance->static_method( )` gives the false impression that polymorphic instance dispatch is occurring. Use `cl_class=>static_method( )`.
+Calling a static method through an instance reference uses the instance arrow and suggests polymorphic dispatch that is not happening. It also creates an unnecessary dependency on a live object. Use the class name with => so readers immediately see that the method is static and cannot be overridden.
 
 ### Non-Compliant
 
 ```abap
-DATA lo_instance TYPE REF TO cl_helper.
-lo_instance->static_method( ).
+DATA lo_helper TYPE REF TO cl_helper.
+lo_helper->format_date( lv_date ).
 ```
 
 ### Compliant
 
 ```abap
-cl_helper=>static_method( ).
+cl_helper=>format_date( lv_date ).
 ```
 
 ## Automated QuickFix

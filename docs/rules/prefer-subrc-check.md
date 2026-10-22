@@ -5,6 +5,7 @@ description: "Check sy-subrc after DB, table and string operations"
 # Verify sy-subrc Promptly After System Calls
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Security & Robustness" />
   <Badge type="danger" text="#EC CHECK_SUBRC" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,21 +19,25 @@ Check sy-subrc after DB, table and string operations.
 
 ## Rationale
 
-Statements that set `sy-subrc` (such as `SELECT SINGLE`, `READ TABLE`, `AUTHORITY-CHECK`, `ASSIGN`) must have their return code verified immediately before invoking unrelated statements.
+Statements such as SELECT SINGLE, READ TABLE, and AUTHORITY-CHECK report success through sy-subrc. If another statement runs first, the return code is overwritten and the failure is silently ignored. Check sy-subrc immediately, or use a modern expression that handles absence explicitly.
 
 ### Non-Compliant
 
 ```abap
-SELECT SINGLE * FROM /dmo/customer WHERE customer_id = @lv_id INTO @ls_customer.
-process_customer( ls_customer ). " sy-subrc is never checked
+SELECT SINGLE customer_id FROM /dmo/customer
+  WHERE customer_id = @lv_id
+  INTO @lv_customer_id.
+process_customer( lv_customer_id ).
 ```
 
 ### Compliant
 
 ```abap
-SELECT SINGLE * FROM /dmo/customer WHERE customer_id = @lv_id INTO @ls_customer.
+SELECT SINGLE customer_id FROM /dmo/customer
+  WHERE customer_id = @lv_id
+  INTO @lv_customer_id.
 IF sy-subrc = 0.
-  process_customer( ls_customer ).
+  process_customer( lv_customer_id ).
 ENDIF.
 ```
 

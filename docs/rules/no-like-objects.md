@@ -5,6 +5,7 @@ description: "Avoid LIKE referencing data objects; use explicit TYPE"
 # Avoid LIKE Typing on Global Dictionary Objects
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC LIKE_OBJECTS" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,18 +19,18 @@ Avoid LIKE referencing data objects; use explicit TYPE.
 
 ## Rationale
 
-Typing dictionary objects with `LIKE` is obsolete. Use `TYPE` to refer to data types and reserve `LIKE` solely for referencing local data objects in the same procedure.
+LIKE copies the type of a data object, which couples the new declaration to an implementation detail rather than to a type contract. For Dictionary objects, TYPE references the type directly and stays stable when the referenced object changes. Use LIKE only for local data objects whose type is intentionally shared.
 
 ### Non-Compliant
 
 ```abap
-DATA lv_copy LIKE lv_original.
+DATA lv_material LIKE mara-matnr.
 ```
 
 ### Compliant
 
 ```abap
-DATA lv_copy TYPE string.
+DATA lv_material TYPE mara-matnr.
 ```
 
 ## Suppression

@@ -5,8 +5,9 @@ description: "Prefer CORRESPONDING Expression over MOVE-CORRESPONDING"
 # Prefer CORRESPONDING #( ) Operator
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC CORRESP" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,18 +20,18 @@ Prefer CORRESPONDING Expression over MOVE-CORRESPONDING.
 
 ## Rationale
 
-The constructor expression `CORRESPONDING #( )` is type-safe, expression-capable, and supports modern features like `EXCEPT` and `MAPPING`. It replaces the archaic `MOVE-CORRESPONDING` statement.
+MOVE-CORRESPONDING is a procedural statement that copies same-named fields implicitly and cannot be nested in expressions. CORRESPONDING #( ) is expression-capable and supports EXCEPT, MAPPING, and DISCARDING to control the mapping explicitly. Use it to make structure transfers visible and type-safe.
 
 ### Non-Compliant
 
 ```abap
-MOVE-CORRESPONDING ls_source TO ls_target.
+MOVE-CORRESPONDING ls_customer_api TO ls_customer_db.
 ```
 
 ### Compliant
 
 ```abap
-ls_target = CORRESPONDING #( ls_source ).
+ls_customer_db = CORRESPONDING #( ls_customer_api ).
 ```
 
 ## Automated QuickFix

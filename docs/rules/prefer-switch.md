@@ -5,8 +5,9 @@ description: "Prefer SWITCH #( ) expression over CASE statement"
 # Prefer SWITCH #( ) Expression over CASE Statement
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC PREF_SWITCH" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,7 +20,7 @@ Prefer SWITCH #( ) expression over CASE statement.
 
 ## Rationale
 
-CASE statements that merely assign values to a single variable can be written much more concisely using modern ABAP SWITCH #( ) constructor expressions, eliminating repetitive assignment code and improving readability.
+A CASE statement whose branches only assign a result is a verbose value mapping: it repeats the assignment variable in every branch. SWITCH #( ) makes the input value and all possible results visible in one expression and avoids temporary state. Use SWITCH for pure mappings and CASE when a branch contains several statements or side effects.
 
 ### Non-Compliant
 
@@ -37,7 +38,7 @@ ENDCASE.
 ### Compliant
 
 ```abap
-lv_text = SWITCH #( lv_status
+lv_text = SWITCH string( lv_status
   WHEN 'O' THEN 'Open'
   WHEN 'C' THEN 'Closed'
   ELSE 'Unknown' ).

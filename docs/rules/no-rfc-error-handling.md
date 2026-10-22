@@ -5,6 +5,7 @@ description: "RFC calls must handle system failures"
 # RFC calls must handle SYSTEM_FAILURE and COMMUNICATION_FAILURE
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="danger" text="Error" />
   <Badge type="tip" text="Security & Robustness" />
   <Badge type="danger" text="#EC RFC_ERR" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,7 +19,7 @@ RFC calls must handle system failures.
 
 ## Rationale
 
-Remote calls can fail at runtime; the caller must handle system and communication failures (and resource failures for async calls in a group).
+A remote function call can fail because the target system is unavailable or the communication layer breaks, independently of the function logic. Without handlers for SYSTEM_FAILURE and COMMUNICATION_FAILURE, these failures become unhandled dumps or silent errors. Always handle both, plus OTHERS, and evaluate the response.
 
 ### Non-Compliant
 
@@ -33,8 +34,8 @@ CALL FUNCTION 'Z_RFC'
 CALL FUNCTION 'Z_RFC'
   DESTINATION lv_rfc
   EXCEPTIONS
-    system_failure        = 1 MESSAGE msg
-    communication_failure = 2 MESSAGE msg
+    system_failure        = 1 MESSAGE lv_message
+    communication_failure = 2 MESSAGE lv_message
     OTHERS                = 3.
 ```
 

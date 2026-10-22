@@ -5,6 +5,7 @@ description: "Use CASE instead of IF when checking multiple values"
 # Prefer CASE over Multiple IF / ELSEIF on the Same Variable
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="danger" text="#EC PREF_CASE" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,30 +19,30 @@ Use CASE instead of IF when checking multiple values.
 
 ## Rationale
 
-When branching on multiple values of a single variable, `CASE ... WHEN` is more readable, structured, and performant than a chain of `ELSEIF` statements.
+A chain of ELSEIF statements that compares the same variable to different values is harder to scan than a CASE statement. CASE groups all alternatives under one subject and makes a missing OTHERS branch visible. Use CASE for multi-value dispatch on a single expression.
 
 ### Non-Compliant
 
 ```abap
-IF lv_type = 'A'.
-  process_a( ).
-ELSEIF lv_type = 'B'.
-  process_b( ).
-ELSEIF lv_type = 'C'.
-  process_c( ).
+IF lv_payment_method = 'CARD'.
+  process_card( ).
+ELSEIF lv_payment_method = 'CASH'.
+  process_cash( ).
+ELSEIF lv_payment_method = 'TRANSFER'.
+  process_transfer( ).
 ENDIF.
 ```
 
 ### Compliant
 
 ```abap
-CASE lv_type.
-  WHEN 'A'.
-    process_a( ).
-  WHEN 'B'.
-    process_b( ).
-  WHEN 'C'.
-    process_c( ).
+CASE lv_payment_method.
+  WHEN 'CARD'.
+    process_card( ).
+  WHEN 'CASH'.
+    process_cash( ).
+  WHEN 'TRANSFER'.
+    process_transfer( ).
 ENDCASE.
 ```
 

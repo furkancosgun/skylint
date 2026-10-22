@@ -5,6 +5,7 @@ description: "Prefer early return or continue over nested IF blocks"
 # Prefer Early Return to Reduce Nesting (Guard Clauses)
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="danger" text="#EC EARLY_RETURN" />
   <Badge type="info" text="Remote Enabled" />
@@ -20,15 +21,15 @@ Prefer early return or continue over nested IF blocks.
 
 ## Rationale
 
-Check preconditions and invalid states at the start of the method and return immediately. This eliminates deeply nested `IF ... ELSE` ladders.
+Wrapping the whole method body in IF is_valid( ) creates unnecessary nesting and pushes the happy path to the right. Guard clauses reject invalid input at the top and leave the main logic flat and easy to read. Return early for preconditions and error cases instead of indenting the successful path.
 
 ### Non-Compliant
 
 ```abap
 METHOD process_order.
   IF is_valid( ).
-    " Entire method logic deeply nested
     execute_order( ).
+    log_order( ).
   ENDIF.
 ENDMETHOD.
 ```
@@ -41,6 +42,7 @@ METHOD process_order.
     RETURN.
   ENDIF.
   execute_order( ).
+  log_order( ).
 ENDMETHOD.
 ```
 

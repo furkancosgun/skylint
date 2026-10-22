@@ -5,8 +5,9 @@ description: "Prefer NEW operator over CREATE OBJECT and RAISE EXCEPTION"
 # Prefer NEW #( ) over CREATE OBJECT
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC NEW_OP" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -21,20 +22,20 @@ Prefer NEW operator over CREATE OBJECT and RAISE EXCEPTION.
 
 ## Rationale
 
-The constructor expression `NEW #( )` is type-inferred, expression-capable, and avoids the archaic procedural `CREATE OBJECT` statement.
+CREATE OBJECT is the procedural object-creation statement and requires a separate declaration and assignment. NEW #( ) infers the class from the target, can be used inside expressions, and keeps construction close to where the reference is needed. Use NEW for object creation in modern ABAP and reserve CREATE OBJECT for legacy downport code.
 
 ### Non-Compliant
 
 ```abap
 DATA lo_customer TYPE REF TO cl_customer.
-CREATE OBJECT lo_customer.
+CREATE OBJECT lo_customer EXPORTING iv_name = lv_name.
 ```
 
 ### Compliant
 
 ```abap
 DATA lo_customer TYPE REF TO cl_customer.
-lo_customer = NEW #( ).
+lo_customer = NEW #( iv_name = lv_name ).
 ```
 
 ## Automated QuickFix

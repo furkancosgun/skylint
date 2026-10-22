@@ -5,8 +5,9 @@ description: "Detect obsolete string statements; prefer built-in functions"
 # Prefer Built-in String Functions over SEARCH/SHIFT
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC STR_FUNC" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -26,20 +27,20 @@ Detect obsolete string statements; prefer built-in functions.
 
 ## Rationale
 
-Procedural string statements (`SEARCH`, `SHIFT`, `TRANSLATE`) are legacy ABAP. Replace them with functional built-in string functions (`find`, `to_upper`, `substring`, `shift_left`).
+Statements such as CONDENSE, TRANSLATE, SHIFT, and SEARCH mutate a variable and cannot be used inside expressions. Built-in functions return values, compose cleanly, and make the intended transformation explicit. Use functions such as to_upper, to_lower, find, substring, and shift_left instead.
 
 ### Non-Compliant
 
 ```abap
-CONDENSE lv_text.
-TRANSLATE lv_code TO UPPER CASE.
+SHIFT lv_code LEFT BY 2 PLACES.
+TRANSLATE lv_country TO UPPER CASE.
 ```
 
 ### Compliant
 
 ```abap
-lv_text = condense( lv_text ).
-lv_code = to_upper( lv_code ).
+lv_code = shift_left( val = lv_code places = 2 ).
+lv_country = to_upper( lv_country ).
 ```
 
 ## Automated QuickFix

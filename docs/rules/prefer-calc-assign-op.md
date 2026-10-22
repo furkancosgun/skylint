@@ -5,8 +5,9 @@ description: "Prefer calculation assignment operators (+=, -=, *=, /=)"
 # Prefer Calculation Assignment Operators (+=, -=, *=)
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC CALC_ASSIGN" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,20 +20,20 @@ Prefer calculation assignment operators (+=, -=, *=, /=).
 
 ## Rationale
 
-Modern ABAP supports arithmetic assignment operators (`lv_count += 1.`), which are cleaner and more expressive than verbose legacy assignments (`lv_count = lv_count + 1.`).
+Assignments such as lv_total = lv_total + 1 repeat the target variable and make the update harder to scan. Compound operators +=, -=, and *= express the change directly and avoid duplicating the left-hand side. Use them for simple arithmetic updates where the target is both source and result.
 
 ### Non-Compliant
 
 ```abap
-lv_count = lv_count + 1.
-lv_total = lv_total * 2.
+lv_stock = lv_stock - 1.
+lv_price = lv_price * 1.19.
 ```
 
 ### Compliant
 
 ```abap
-lv_count += 1.
-lv_total *= 2.
+lv_stock -= 1.
+lv_price *= 1.19.
 ```
 
 ## Automated QuickFix

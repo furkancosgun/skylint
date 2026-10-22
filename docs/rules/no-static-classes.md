@@ -5,6 +5,7 @@ description: "Avoid static-only classes; use instantiable classes"
 # Avoid Purely Static Utility Classes
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC STATIC_CLS" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,7 +19,7 @@ Avoid static-only classes; use instantiable classes.
 
 ## Rationale
 
-Classes consisting entirely of static methods cannot be mocked via interfaces or subclassing during unit tests, creating rigid coupling throughout the application.
+A class made only of static methods cannot be mocked through an interface, so every caller is tightly coupled to the implementation. Static state also leaks between tests and makes behavior order-dependent. Inject an instance through an interface and use instance methods instead.
 
 ### Non-Compliant
 
@@ -36,7 +37,6 @@ ENDCLASS.
 CLASS cl_math_util DEFINITION PUBLIC FINAL CREATE PUBLIC.
   PUBLIC SECTION.
     INTERFACES if_math_util.
-    METHODS add IMPORTING a TYPE i b TYPE i RETURNING VALUE(r) TYPE i.
 ENDCLASS.
 ```
 

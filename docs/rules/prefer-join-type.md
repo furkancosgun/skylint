@@ -5,8 +5,9 @@ description: "Prefer an explicit JOIN type such as INNER JOIN"
 # Prefer an Explicit JOIN Type
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC JOIN_TYPE" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,18 +20,22 @@ Prefer an explicit JOIN type such as INNER JOIN.
 
 ## Rationale
 
-A bare `JOIN` silently defaults to an inner join, which hides the intended cardinality and makes the query harder to review. State the join type explicitly with `INNER JOIN`, `LEFT OUTER JOIN`, `RIGHT OUTER JOIN`, or `CROSS JOIN`.
+A bare JOIN defaults to INNER JOIN, but the default is invisible at the call site and easy to misread as an outer join. Explicit join types document cardinality and make reviews safer. Always write INNER JOIN, LEFT OUTER JOIN, RIGHT OUTER JOIN, or CROSS JOIN.
 
 ### Non-Compliant
 
 ```abap
-SELECT * FROM mara JOIN makt ON mara~matnr = makt~matnr INTO TABLE @DATA(lt_result).
+SELECT mara~matnr, makt~maktx
+  FROM mara JOIN makt ON mara~matnr = makt~matnr
+  INTO TABLE @lt_result.
 ```
 
 ### Compliant
 
 ```abap
-SELECT * FROM mara INNER JOIN makt ON mara~matnr = makt~matnr INTO TABLE @DATA(lt_result).
+SELECT mara~matnr, makt~maktx
+  FROM mara INNER JOIN makt ON mara~matnr = makt~matnr
+  INTO TABLE @lt_result.
 ```
 
 ## Automated QuickFix

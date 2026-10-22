@@ -5,6 +5,7 @@ description: "Standard Naming Conventions"
 # Enforce Naming Conventions
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="danger" text="#EC NAMING" />
   <Badge type="info" text="Remote Enabled" />
@@ -34,18 +35,18 @@ Standard Naming Conventions.
 
 ## Rationale
 
-Consistent naming conventions (prefixes for variables, parameters, types, etc.) make code self-documenting and easier to navigate. Configure patterns per scope to enforce team standards automatically.
+Without a naming convention, local variables, parameters, and types are indistinguishable and the code becomes harder to navigate. Prefixes such as lv_, iv_, and ty_ encode scope and kind at a glance. Apply the configured patterns consistently within a team.
 
 ### Non-Compliant
 
 ```abap
-DATA foo TYPE i.
+DATA customer_name TYPE string.
 ```
 
 ### Compliant
 
 ```abap
-DATA lv_foo TYPE i.
+DATA lv_customer_name TYPE string.
 ```
 
 ## Configuration & Thresholds

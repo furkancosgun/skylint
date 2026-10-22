@@ -5,8 +5,9 @@ description: "Detect unreachable code after jump or exit statements"
 # Avoid Dead / Unreachable Code
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC UNREACHABLE" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,13 +20,13 @@ Detect unreachable code after jump or exit statements.
 
 ## Rationale
 
-Statements appearing immediately after an unconditional `RETURN`, `RAISE EXCEPTION`, `EXIT`, or `LEAVE PROGRAM` can never execute, cluttering the codebase and misleading maintainers.
+Statements after an unconditional RETURN, RAISE EXCEPTION, or EXIT can never execute and often remain from debugging or an earlier design. They mislead maintainers and inflate apparent method size and coverage. Remove the statements or move them before the terminating statement if they are still needed.
 
 ### Non-Compliant
 
 ```abap
 RETURN.
-lv_count = lv_count + 1. " Unreachable statement
+lv_count = lv_count + 1.
 ```
 
 ### Compliant

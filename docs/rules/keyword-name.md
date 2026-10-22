@@ -5,6 +5,7 @@ description: "Avoid Using ABAP Keywords as Identifier Names"
 # Avoid Using ABAP Keywords as Identifier Names
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC KEYWORD_NAME" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,20 +19,20 @@ Avoid Using ABAP Keywords as Identifier Names.
 
 ## Rationale
 
-Naming variables, parameters, constants, or types after ABAP keywords (such as class, type, data, method) leads to confusion, shadows language constructs, and impairs code readability.
+Using a language keyword such as class, type, or data as an identifier shadows the keyword and forces readers to disambiguate from context. It also complicates searching and can confuse tooling. Prefix identifiers with their role, for example lv_type.
 
 ### Non-Compliant
 
 ```abap
-DATA class TYPE string.
-DATA type TYPE i.
+DATA interface TYPE string.
+DATA report TYPE i.
 ```
 
 ### Compliant
 
 ```abap
-DATA lv_class TYPE string.
-DATA lv_type TYPE i.
+DATA lv_interface TYPE string.
+DATA lv_report TYPE i.
 ```
 
 ## Suppression

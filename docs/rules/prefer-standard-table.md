@@ -5,8 +5,9 @@ description: "Prefer explicit TYPE STANDARD TABLE OF over TYPE TABLE OF"
 # Prefer TYPE STANDARD TABLE OF over TYPE TABLE OF
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC PREF_STD_TABLE" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,18 +20,18 @@ Prefer explicit TYPE STANDARD TABLE OF over TYPE TABLE OF.
 
 ## Rationale
 
-`TYPE TABLE OF` declares an implicit standard table and obscures the table kind. Spelling out `TYPE STANDARD TABLE OF` makes the access pattern and performance characteristics explicit, and keeps declarations consistent with sorted or hashed tables.
+TYPE TABLE OF implicitly means a standard table, so the reader must know the default to understand access costs. Spelling out STANDARD makes the table kind and its linear search behavior explicit. It also keeps declarations consistent when tables are later changed to sorted or hashed.
 
 ### Non-Compliant
 
 ```abap
-DATA lt_rows TYPE TABLE OF mara.
+DATA lt_customers TYPE TABLE OF ty_customer.
 ```
 
 ### Compliant
 
 ```abap
-DATA lt_rows TYPE STANDARD TABLE OF mara.
+DATA lt_customers TYPE STANDARD TABLE OF ty_customer.
 ```
 
 ## Automated QuickFix

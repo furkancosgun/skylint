@@ -5,6 +5,7 @@ description: "Method Length Limit (excessive statement count)"
 # Limit Method Length (Statements)
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Metrics & Complexity Limits" />
   <Badge type="danger" text="#EC METHOD_LEN" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,25 +19,29 @@ Method Length Limit (excessive statement count).
 
 ## Rationale
 
-Long methods violate the Single Responsibility Principle, accumulate side effects, and are notoriously difficult to unit test. Split large methods into small, focused sub-methods.
+A method with many statements usually carries several responsibilities and accumulates local state that is hard to follow. Long methods are difficult to unit test, review, and reuse, and they tend to change for unrelated reasons. Extract cohesive steps into small named methods so each one has a single purpose.
 
 ### Non-Compliant
 
 ```abap
-" Large method exceeding configured statement threshold (> 50 statements)
-METHOD execute.
-  " 60+ statements in a single procedure...
+METHOD post_order.
+  DATA lv_total TYPE i.
+  lv_total = ls_order-quantity * ls_order-price.
+  check_credit( ls_order-customer_id ).
+  save_header( ls_order ).
+  save_items( ls_order ).
+  update_status( ls_order ).
+  log_created( ls_order ).
 ENDMETHOD.
 ```
 
 ### Compliant
 
 ```abap
-" Split into smaller, single-responsibility helper methods
-METHOD execute.
-  prepare_data( ).
-  process_records( ).
-  finalize_result( ).
+METHOD post_order.
+  prepare_order( ls_order ).
+  save_order( ls_order ).
+  log_created( ls_order ).
 ENDMETHOD.
 ```
 

@@ -5,6 +5,7 @@ description: "Do not mix RETURNING with EXPORTING or CHANGING"
 # Do Not Mix RETURNING with EXPORTING or CHANGING
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC NO_MIX_RETURNING" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,21 +19,21 @@ Do not mix RETURNING with EXPORTING or CHANGING.
 
 ## Rationale
 
-Clean ABAP methods should either be pure functional (RETURNING a single result) or procedures (using EXPORTING/CHANGING). Mixing both in the same signature creates confusing APIs.
+A method that returns a value and also exports or changes parameters has a mixed contract: callers must capture the result and provide extra targets. This complicates expression use and suggests the method does more than one thing. Split it into a functional query and a separate command.
 
 ### Non-Compliant
 
 ```abap
 METHODS get_data
-  EXPORTING ev_val TYPE i
-  RETURNING VALUE(rv_res) TYPE string.
+  EXPORTING ev_count TYPE i
+  RETURNING VALUE(rv_result) TYPE string.
 ```
 
 ### Compliant
 
 ```abap
 METHODS get_data
-  RETURNING VALUE(rv_res) TYPE string.
+  RETURNING VALUE(rv_result) TYPE string.
 ```
 
 ## Suppression

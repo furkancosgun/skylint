@@ -5,8 +5,9 @@ description: "Call Transaction Authority Check"
 # Ensure AUTHORITY-CHECK Before Sensitive Operations
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Security & Robustness" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC AUTH_CHECK" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,18 +20,18 @@ Call Transaction Authority Check.
 
 ## Rationale
 
-Omitting authorization checks leaves critical business data and actions exposed to unauthorized users. Always verify permissions before selecting or modifying protected resources.
+Starting a transaction or sensitive operation without an authority check lets any user who reaches the code perform protected actions. Authorization must be verified before the operation, not assumed from the surrounding UI. Add WITH AUTHORITY-CHECK to the CALL TRANSACTION or perform an explicit AUTHORITY-CHECK first.
 
 ### Non-Compliant
 
 ```abap
-CALL TRANSACTION 'VA01'.
+CALL TRANSACTION 'ME21N'.
 ```
 
 ### Compliant
 
 ```abap
-CALL TRANSACTION 'VA01' WITH AUTHORITY-CHECK.
+CALL TRANSACTION 'ME21N' WITH AUTHORITY-CHECK.
 ```
 
 ## Automated QuickFix

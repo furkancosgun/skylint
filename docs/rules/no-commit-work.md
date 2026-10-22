@@ -5,6 +5,7 @@ description: "Avoid COMMIT and ROLLBACK in application logic"
 # Avoid Explicit COMMIT WORK in Business Logic
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Security & Robustness" />
   <Badge type="danger" text="#EC COMMIT_WORK" />
   <Badge type="warning" text="Local Only" />
@@ -18,14 +19,13 @@ Avoid COMMIT and ROLLBACK in application logic.
 
 ## Rationale
 
-Transactional business logic should rely on the persistence framework or framework save sequence (e.g. RAP) rather than triggering premature or uncoordinated database commits.
+COMMIT WORK inside business logic ends the SAP LUW at an arbitrary point, so later failures cannot roll back earlier changes. Frameworks such as RAP manage the save sequence and commit for you. Let the framework commit and keep the business logic transactional.
 
 ### Non-Compliant
 
 ```abap
-" Inside a RAP behavior implementation (CL_ABAP_BEHAVIOR_HANDLER)
-METHOD update.
-  MODIFY ENTITIES OF ...
+METHOD save_order.
+  UPDATE zorder SET status = @lv_status WHERE order_id = @lv_id.
   COMMIT WORK.
 ENDMETHOD.
 ```
@@ -33,9 +33,8 @@ ENDMETHOD.
 ### Compliant
 
 ```abap
-" In RAP, commits are managed automatically by the framework save sequence
-METHOD update.
-  MODIFY ENTITIES OF ...
+METHOD save_order.
+  UPDATE zorder SET status = @lv_status WHERE order_id = @lv_id.
 ENDMETHOD.
 ```
 

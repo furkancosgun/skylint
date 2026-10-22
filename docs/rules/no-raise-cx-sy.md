@@ -5,6 +5,7 @@ description: "Avoid raising SAP internal system exceptions (cx_sy_*)"
 # Avoid Explicitly Raising System Exceptions (CX_SY_*)
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Security & Robustness" />
   <Badge type="danger" text="#EC RAISE_CX_SY" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,18 +19,18 @@ Avoid raising SAP internal system exceptions (cx_sy_*).
 
 ## Rationale
 
-`cx_sy_*` exceptions are reserved exclusively for the ABAP runtime engine (e.g., divide by zero, null reference). Applications must define and raise their own custom exception hierarchies.
+CX_SY_* exceptions describe failures detected by the ABAP runtime, such as invalid table access or division by zero. Applications should not fabricate those conditions because callers cannot distinguish them from real runtime faults. Define and raise a custom exception class for application errors instead.
 
 ### Non-Compliant
 
 ```abap
-RAISE EXCEPTION NEW cx_sy_itab_line_not_found( ).
+RAISE EXCEPTION NEW cx_sy_zerodivide( ).
 ```
 
 ### Compliant
 
 ```abap
-RAISE EXCEPTION NEW cx_item_not_found( ).
+RAISE EXCEPTION NEW cx_invalid_amount( ).
 ```
 
 ## Suppression

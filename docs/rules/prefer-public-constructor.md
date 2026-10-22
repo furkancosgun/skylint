@@ -5,6 +5,7 @@ description: "Declare Constructor in PUBLIC SECTION"
 # Declare Constructor in PUBLIC SECTION
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="danger" text="#EC PUB_CTOR" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,12 +19,12 @@ Declare Constructor in PUBLIC SECTION.
 
 ## Rationale
 
-Instance constructors must always be declared in the PUBLIC SECTION, even for classes with CREATE PRIVATE or CREATE PROTECTED, ensuring standard reflection, factory instantiation, and Clean ABAP compliance.
+Even when a class uses CREATE PRIVATE or CREATE PROTECTED, its instance constructor must be declared in the public section so the runtime and frameworks can instantiate it. Declaring the constructor privately makes reflection and framework integration harder. Keep the constructor in PUBLIC and control creation through the CREATE addition.
 
 ### Non-Compliant
 
 ```abap
-CLASS zcl_service DEFINITION PUBLIC CREATE PRIVATE.
+CLASS zcl_order_service DEFINITION PUBLIC CREATE PRIVATE.
   PRIVATE SECTION.
     METHODS constructor.
 ENDCLASS.
@@ -32,7 +33,7 @@ ENDCLASS.
 ### Compliant
 
 ```abap
-CLASS zcl_service DEFINITION PUBLIC CREATE PRIVATE.
+CLASS zcl_order_service DEFINITION PUBLIC CREATE PRIVATE.
   PUBLIC SECTION.
     METHODS constructor.
 ENDCLASS.

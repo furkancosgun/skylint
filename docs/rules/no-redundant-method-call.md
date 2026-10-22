@@ -5,8 +5,9 @@ description: "Omit redundant EXPORTING and RECEIVING in method calls"
 # Omit Redundant Call Syntax (EXPORTING / RECEIVING / Single Param)
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC EXPORTING" />
   <Badge type="warning" text="Local Only" />
 </div>
@@ -22,18 +23,18 @@ Omit redundant EXPORTING and RECEIVING in method calls.
 
 ## Rationale
 
-Modern ABAP allows omitting the `EXPORTING` and `RECEIVING` keywords in functional method calls. Furthermore, when calling a method with a single importing parameter, the parameter name can be omitted entirely to make code clean and concise.
+In functional calls the EXPORTING and RECEIVING keywords are optional, and a method with a single importing parameter can be called positionally. Repeating the keywords and parameter name adds noise without improving clarity. Omit them when the call is unambiguous, but keep parameter names when several optional parameters could be confused.
 
 ### Non-Compliant
 
 ```abap
-lo_calc->compute( EXPORTING iv_val = 10 ).
+lo_pricing->apply_discount( EXPORTING iv_percent = 10 ).
 ```
 
 ### Compliant
 
 ```abap
-lo_calc->compute( 10 ).
+lo_pricing->apply_discount( 10 ).
 ```
 
 ## Automated QuickFix

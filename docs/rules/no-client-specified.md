@@ -5,8 +5,9 @@ description: "Avoid USING CLIENT or CLIENT SPECIFIED in ABAP SQL"
 # Avoid CLIENT SPECIFIED / USING CLIENT in Cloud
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Security & Robustness" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC CLIENT_SPEC" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,18 +20,18 @@ Avoid USING CLIENT or CLIENT SPECIFIED in ABAP SQL.
 
 ## Rationale
 
-Explicit client switching bypasses automatic multi-tenant client isolation and is strictly prohibited in ABAP Cloud environment standards.
+USING CLIENT and CLIENT SPECIFIED let code read or write another client and bypass the tenant isolation that ABAP Cloud guarantees. This is a security and compliance violation in multi-tenant environments. Remove explicit client handling and rely on the session client.
 
 ### Non-Compliant
 
 ```abap
-SELECT * FROM /dmo/customer USING CLIENT '100' INTO TABLE @lt_customers.
+SELECT customer_id FROM /dmo/customer USING CLIENT '100' INTO TABLE @lt_customer_ids.
 ```
 
 ### Compliant
 
 ```abap
-SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
+SELECT customer_id FROM /dmo/customer INTO TABLE @lt_customer_ids.
 ```
 
 ## Automated QuickFix

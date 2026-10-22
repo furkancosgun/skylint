@@ -5,8 +5,9 @@ description: "Prefer IS NOT over NOT ... IS"
 # Prefer IS NOT over NOT ... IS
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC IS_NOT" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,21 +20,21 @@ Prefer IS NOT over NOT ... IS.
 
 ## Rationale
 
-Writing `IF lo_ref IS NOT BOUND` or `IF lt_tab IS NOT INITIAL` mirrors natural language reading order and avoids misreading inverted expressions that start with `NOT`.
+Writing NOT before a complete IS expression forces the reader to negate the condition mentally and can be misread in compound logic. IS NOT keeps the subject first and reads in natural order, as in lo_instance IS NOT BOUND. Prefer IS NOT for predicates such as IS BOUND, IS INITIAL, and IS ASSIGNED.
 
 ### Non-Compliant
 
 ```abap
-IF NOT lo_instance IS BOUND.
-  RETURN.
+IF NOT lt_items IS INITIAL.
+  process_items( lt_items ).
 ENDIF.
 ```
 
 ### Compliant
 
 ```abap
-IF lo_instance IS NOT BOUND.
-  RETURN.
+IF lt_items IS NOT INITIAL.
+  process_items( lt_items ).
 ENDIF.
 ```
 

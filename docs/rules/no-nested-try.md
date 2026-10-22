@@ -5,6 +5,7 @@ description: "Avoid nested TRY blocks; extract to helper methods"
 # Avoid Deeply Nested TRY ... CATCH Blocks
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC NESTED_TRY" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,32 +19,31 @@ Avoid nested TRY blocks; extract to helper methods.
 
 ## Rationale
 
-Nesting `TRY` blocks inside other `TRY` blocks obfuscates error handling flow. Extract inner protected operations into distinct methods.
+A TRY block inside another TRY block makes it unclear which handler owns which failure and often duplicates cleanup logic. The inner operation should have its own exception contract behind a method boundary. Extract it into a focused helper and keep one TRY per responsibility.
 
 ### Non-Compliant
 
 ```abap
 TRY.
-    step1( ).
-    TRY.
-        step2( ).
-      CATCH cx_step2_err.
-        handle_step2( ).
-    ENDTRY.
-  CATCH cx_step1_err.
-    handle_step1( ).
+  step1( ).
+  TRY.
+    step2( ).
+  CATCH cx_step2_error.
+    handle_step2( ).
+  ENDTRY.
+CATCH cx_step1_error.
+  handle_step1( ).
 ENDTRY.
 ```
 
 ### Compliant
 
 ```abap
-" Extract inner operations into focused helper methods
 TRY.
-    step1( ).
-    execute_step2( ).
-  CATCH cx_step1_err.
-    handle_step1( ).
+  step1( ).
+  execute_step2( ).
+CATCH cx_step1_error.
+  handle_step1( ).
 ENDTRY.
 ```
 

@@ -5,6 +5,7 @@ description: "No Dashes in Variable and Form Names"
 # Avoid Obsolete Dash (-) in Program Identifiers
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC NO_DASH" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,18 +19,18 @@ No Dashes in Variable and Form Names.
 
 ## Rationale
 
-Using a hyphen/dash in structure component references is archaic. Modern ABAP standardizes on the arrow notation `->` or hyphen only where mandatory.
+A hyphen inside an identifier is legacy ABAP and is easily confused with the component selector for structures. It also complicates searching, refactoring, and tooling that treats the name as an expression. Use underscores in identifier names and reserve hyphens for component access.
 
 ### Non-Compliant
 
 ```abap
-DATA foo-bar TYPE i.
+DATA customer-name TYPE string.
 ```
 
 ### Compliant
 
 ```abap
-DATA foobar TYPE i.
+DATA customer_name TYPE string.
 ```
 
 ## Suppression

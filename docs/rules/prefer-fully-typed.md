@@ -5,6 +5,7 @@ description: "Enforce fully typed constant declarations"
 # Require Fully Typed Variables and Parameters
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="danger" text="#EC FULL_TYPED" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,12 +19,12 @@ Enforce fully typed constant declarations.
 
 ## Rationale
 
-Generic types (`ANY`, `DATA`, `TABLE`) bypass compiler type checking and hide runtime type mismatches. Always declare concrete, specific types unless writing truly generic frameworks.
+Untyped constants and data objects receive an implicit type whose length and value range are easy to misjudge. A later change to the literal can silently truncate data or alter comparisons. Declare explicit TYPE and LENGTH so the contract is visible to readers and checked by the compiler.
 
 ### Non-Compliant
 
 ```abap
-CONSTANTS c_status VALUE 'A'. " TYPE is omitted; implicitly typed as c length 1
+CONSTANTS c_status VALUE 'A'.
 ```
 
 ### Compliant

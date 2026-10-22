@@ -5,6 +5,7 @@ description: "SELECT UP TO 1 ROWS requires ORDER BY"
 # Require ORDER BY for Deterministic SELECT Results
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Performance & Database" />
   <Badge type="danger" text="#EC ORDER_BY" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,18 +19,18 @@ SELECT UP TO 1 ROWS requires ORDER BY.
 
 ## Rationale
 
-Selecting rows from a relational database without an explicit `ORDER BY` clause yields non-deterministic ordering that can change unpredictably between DB executions and updates.
+A SELECT with UP TO n ROWS but no ORDER BY returns an arbitrary subset whose contents can change after database reorganization or parallel execution. That makes results non-deterministic and difficult to reproduce in tests. Add ORDER BY on a stable key so the same query returns the same rows.
 
 ### Non-Compliant
 
 ```abap
-SELECT * FROM /dmo/customer UP TO 1 ROWS INTO @ls_customer.
+SELECT customer_id FROM /dmo/customer UP TO 1 ROWS INTO @lv_customer_id.
 ```
 
 ### Compliant
 
 ```abap
-SELECT * FROM /dmo/customer ORDER BY customer_id UP TO 1 ROWS INTO @ls_customer.
+SELECT customer_id FROM /dmo/customer ORDER BY customer_id UP TO 1 ROWS INTO @lv_customer_id.
 ```
 
 ## Suppression

@@ -5,6 +5,7 @@ description: "Detect 7.40+ syntax incompatible with downport targets"
 # Check Downport Compatibility (7.40+ Modern Constructs)
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="cloud-readiness" />
   <Badge type="danger" text="#EC DOWNPORT_COMPAT" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,21 +19,22 @@ Detect 7.40+ syntax incompatible with downport targets.
 
 ## Rationale
 
-Flags modern 7.40+ ABAP constructs (constructor expressions, table expressions, inline declarations, string templates, and method chaining) when targeting legacy SAP NetWeaver downport releases (e.g. 7.00, 7.31). All checks default to disabled so modern workflows remain unaffected.
+Modern ABAP constructs such as constructor expressions, table expressions, inline declarations, string templates, and functional method chaining do not compile on legacy NetWeaver releases. When a project must remain downport-compatible, these constructs silently raise the required kernel and syntax level. The check keeps that incompatibility visible by reporting each modern construct; it is disabled by default so modern development is unaffected.
 
 ### Non-Compliant
 
 ```abap
-DATA(lv_val) = VALUE #( lt_data[ 1 ]-field OPTIONAL ).
+DATA(lv_name) = lt_customers[ 1 ]-name.
 ```
 
 ### Compliant
 
 ```abap
-DATA lv_val TYPE string.
-READ TABLE lt_data INTO ls_data INDEX 1.
+DATA lv_name TYPE string.
+DATA ls_customer TYPE ty_customer.
+READ TABLE lt_customers INTO ls_customer INDEX 1.
 IF sy-subrc = 0.
-  lv_val = ls_data-field.
+  lv_name = ls_customer-name.
 ENDIF.
 ```
 

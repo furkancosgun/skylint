@@ -5,6 +5,7 @@ description: "Avoid MESSAGE ... RAISING; use class-based exceptions"
 # Avoid Obsolete MESSAGE ... RAISING in Methods
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC MSG_RAISING" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,18 +19,18 @@ Avoid MESSAGE ... RAISING; use class-based exceptions.
 
 ## Rationale
 
-`MESSAGE ... RAISING` combines procedural exception handling with UI messaging, preventing proper separation of concerns. Raise modern class-based exceptions instead.
+MESSAGE ... RAISING mixes UI message output with exception propagation and depends on classic exception numbers. It separates poorly from business logic and is unsuitable for APIs that should return typed failures. Raise a class-based exception that references the message class text instead.
 
 ### Non-Compliant
 
 ```abap
-MESSAGE e001(zmsg) RAISING not_found.
+MESSAGE e002(zorder) RAISING not_found.
 ```
 
 ### Compliant
 
 ```abap
-RAISE EXCEPTION NEW cx_not_found( textid = cx_not_found=>c_item_missing ).
+RAISE EXCEPTION NEW cx_order_not_found( textid = cx_order_not_found=>c_order_missing ).
 ```
 
 ## Suppression

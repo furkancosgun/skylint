@@ -5,8 +5,9 @@ description: "Avoid chained declarations and chained assignments"
 # Avoid Chained Declarations & Assignments
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC CHAIN_DECL" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -21,20 +22,20 @@ Avoid chained declarations and chained assignments.
 
 ## Rationale
 
-Chained statements (`DATA: ... , ... .`) create formatting headaches, merge conflicts in Git diffs, and frequently confuse developers regarding where a type or modifier applies. Each statement should stand independently on its own line.
+Chained statements pack several definitions behind a colon and commas, so a modifier or type can appear to apply to more than one name. They also turn a one-line change into a large diff and make merge conflicts harder to resolve. Write each declaration or assignment as its own complete statement so scope and modifiers are unambiguous.
 
 ### Non-Compliant
 
 ```abap
-DATA: lv_id   TYPE string,
-      lv_name TYPE string.
+DATA: lv_order_id TYPE string,
+      lv_status   TYPE string.
 ```
 
 ### Compliant
 
 ```abap
-DATA lv_id   TYPE string.
-DATA lv_name TYPE string.
+DATA lv_order_id TYPE string.
+DATA lv_status TYPE string.
 ```
 
 ## Automated QuickFix

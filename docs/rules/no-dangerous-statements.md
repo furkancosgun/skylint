@@ -5,6 +5,7 @@ description: "Dangerous Statements (abaplint dangerous_statement)"
 # Avoid Dangerous & Dynamic Native Statements
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Security & Robustness" />
   <Badge type="danger" text="#EC DANGEROUS_STMT" />
   <Badge type="info" text="Remote Enabled" />
@@ -21,20 +22,20 @@ Dangerous Statements (abaplint dangerous_statement).
 
 ## Rationale
 
-Dynamic code generation (`GENERATE SUBROUTINE POOL`, `INSERT REPORT`), kernel calls (`SYSTEM-CALL`), and production `ASSERT` or `RAISE SHORTDUMP` jeopardize cloud compliance, security, and stability.
+Dynamic report generation, kernel calls, native SQL, and production ASSERT or RAISE SHORTDUMP bypass the ABAP runtime and its security model. They are not available in ABAP Cloud and can introduce injection risks or portability problems. Use supported ABAP SQL and class-based APIs instead.
 
 ### Non-Compliant
 
 ```abap
 EXEC SQL.
-  SELECT * FROM /dmo/customer INTO :wa
+  SELECT * FROM /dmo/customer INTO :wa.
 ENDEXEC.
 ```
 
 ### Compliant
 
 ```abap
-SELECT * FROM /dmo/customer INTO TABLE @lt_customers.
+SELECT customer_id FROM /dmo/customer INTO TABLE @lt_customer_ids.
 ```
 
 ## Configuration & Thresholds

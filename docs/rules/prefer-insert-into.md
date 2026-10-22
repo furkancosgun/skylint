@@ -5,8 +5,9 @@ description: "Prefer INSERT ... INTO TABLE over APPEND for table safety"
 # Prefer INSERT ... INTO TABLE over APPEND
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC INSERT_INTO" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,18 +20,18 @@ Prefer INSERT ... INTO TABLE over APPEND for table safety.
 
 ## Rationale
 
-`APPEND` implies indexed, sequential appending and fails on hashed or sorted tables. `INSERT ... INTO TABLE` works polymorphically across all internal table categories.
+APPEND only works for index tables and implies sequential insertion, so changing the table type to sorted or hashed later breaks the code. INSERT ... INTO TABLE works with every table category and states the intent generically. Use INSERT for table handling that should remain independent of the concrete table kind.
 
 ### Non-Compliant
 
 ```abap
-APPEND ls_item TO lt_items.
+APPEND ls_order_item TO lt_order_items.
 ```
 
 ### Compliant
 
 ```abap
-INSERT ls_item INTO TABLE lt_items.
+INSERT ls_order_item INTO TABLE lt_order_items.
 ```
 
 ## Automated QuickFix

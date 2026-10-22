@@ -5,6 +5,7 @@ description: "Avoid magic numbers in code; use named constants"
 # Avoid Magic Numbers; Use Named Constants
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC MAGIC_NUMBERS" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,12 +19,12 @@ Avoid magic numbers in code; use named constants.
 
 ## Rationale
 
-Hardcoded numeric literals scattered in logic obscure business rules and make updates error-prone. Give numbers meaningful names by declaring structured constants.
+A numeric literal in logic does not explain what it represents, and the same value repeated in several places must be changed consistently. Named constants turn business rules into readable intent and give the value a single source of truth. Declare typed constants and reuse them instead of scattering numbers through the code.
 
 ### Non-Compliant
 
 ```abap
-IF lv_status = 3.
+IF lv_retry_count >= 3.
   process( ).
 ENDIF.
 ```
@@ -31,8 +32,8 @@ ENDIF.
 ### Compliant
 
 ```abap
-CONSTANTS c_status_completed TYPE i VALUE 3.
-IF lv_status = c_status_completed.
+CONSTANTS c_max_retries TYPE i VALUE 3.
+IF lv_retry_count >= c_max_retries.
   process( ).
 ENDIF.
 ```

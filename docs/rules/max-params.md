@@ -5,6 +5,7 @@ description: "Method signature cleanliness (excessive parameter count)"
 # Limit Method Parameter Count
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Metrics & Complexity Limits" />
   <Badge type="danger" text="#EC MAX_PARAMS" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,20 +19,30 @@ Method signature cleanliness (excessive parameter count).
 
 ## Rationale
 
-Methods with excessive parameters are difficult to comprehend, call, and test. When a method needs more than 5-8 parameters, bundle related fields into a structured type or parameter object.
+A long parameter list is hard to call correctly because positional order and optional parameters are easy to mix up. It usually means the method has too many responsibilities and must change whenever a new input is needed. Group related inputs into a structure or parameter object so the signature stays small and self-documenting.
 
 ### Non-Compliant
 
 ```abap
-METHODS execute
-  IMPORTING p1 TYPE i p2 TYPE i p3 TYPE i p4 TYPE i p5 TYPE i p6 TYPE i.
+METHODS create_order
+  IMPORTING
+    iv_customer_id TYPE string
+    iv_material    TYPE string
+    iv_quantity    TYPE i
+    iv_unit        TYPE meins
+    iv_plant       TYPE werks_d
+    iv_delivery    TYPE datum
+    iv_price       TYPE netpr
+    iv_currency    TYPE waers
+    iv_note        TYPE string.
 ```
 
 ### Compliant
 
 ```abap
-METHODS execute
-  IMPORTING is_options TYPE ty_options.
+METHODS create_order
+  IMPORTING
+    is_order TYPE ty_order_input.
 ```
 
 ## Configuration & Thresholds

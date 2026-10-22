@@ -5,8 +5,9 @@ description: "Do not CLEAR or FREE variables redundantly"
 # Do Not CLEAR Variables Directly After Declaration
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC REDUNDANT_CLEAR" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -21,19 +22,19 @@ Do not CLEAR or FREE variables redundantly.
 
 ## Rationale
 
-Variables in ABAP are automatically initialized to their type-specific default initial value upon declaration. Explicitly executing `CLEAR` immediately after declaration adds visual noise and redundant statements without any functional effect.
+A newly declared variable already has its type-specific initial value, so CLEAR immediately after DATA is a no-op. It adds noise and suggests the declaration might not initialize the variable. Remove the CLEAR or initialize the variable when it is actually reused.
 
 ### Non-Compliant
 
 ```abap
-DATA lv_count TYPE i.
-CLEAR lv_count.
+DATA lt_items TYPE string_table.
+CLEAR lt_items.
 ```
 
 ### Compliant
 
 ```abap
-DATA lv_count TYPE i.
+DATA lt_items TYPE string_table.
 ```
 
 ## Automated QuickFix

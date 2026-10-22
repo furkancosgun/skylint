@@ -5,8 +5,9 @@ description: "Expand Macro Calls"
 # Expand Macro Calls into Explicit Statements
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC EXPAND_MACROS" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,21 +20,23 @@ Expand Macro Calls.
 
 ## Rationale
 
-Macros defined via DEFINE ... END-OF-DEFINITION are obsolete, difficult to debug, and unsupported in ABAP Cloud. Macro invocations should be expanded into explicit statements.
+Macros expand textually, so the debugger cannot step into them and syntax errors point at the invocation rather than the definition. They are obsolete and unsupported in ABAP Cloud. Replace each macro call with explicit statements or a method.
 
 ### Non-Compliant
 
 ```abap
-DEFINE _set_val.
-  lv_val = &1.
+DEFINE set_status.
+  lv_status = &1.
 END-OF-DEFINITION.
-_set_val 10.
+DATA lv_status TYPE string.
+set_status 'A'.
 ```
 
 ### Compliant
 
 ```abap
-lv_val = 10.
+DATA lv_status TYPE string.
+lv_status = 'A'.
 ```
 
 ## Automated QuickFix

@@ -5,8 +5,9 @@ description: "Avoid comparing boolean method calls to boolean literals"
 # Avoid Comparing to abap_true / abap_false
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC BOOL_COMPARE" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,21 +20,21 @@ Avoid comparing boolean method calls to boolean literals.
 
 ## Rationale
 
-Predicate methods and boolean expressions evaluate directly to true or false. Comparing them explicitly (`IF is_valid( ) = abap_true`) is redundant, noisy, and unidiomatic.
+A boolean expression already evaluates to true or false, so comparing it to abap_true is redundant. The comparison hides predicate intent and can mask a missing method call or an accidental assignment. Test the expression directly and use NOT when the negative case is needed.
 
 ### Non-Compliant
 
 ```abap
-IF is_valid( ) = abap_true.
-  execute( ).
+IF is_valid( ) = abap_false.
+  RETURN.
 ENDIF.
 ```
 
 ### Compliant
 
 ```abap
-IF is_valid( ).
-  execute( ).
+IF NOT is_valid( ).
+  RETURN.
 ENDIF.
 ```
 

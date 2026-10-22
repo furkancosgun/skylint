@@ -5,8 +5,9 @@ description: "Prefer FINAL classes and methods by default"
 # Design for Inheritance or Prohibit It (FINAL)
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC FINAL_CLS" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -21,20 +22,25 @@ Prefer FINAL classes and methods by default.
 
 ## Rationale
 
-Classes not explicitly designed and documented for inheritance should be declared `FINAL`. This prevents subclassing that relies on fragile base-class implementation details.
+A class that is not designed for inheritance can still be subclassed, and subclasses may depend on internal behavior that later changes. Marking the class FINAL prevents fragile base class problems and documents that no extension is intended. Remove FINAL only when the class has documented extension points.
 
 ### Non-Compliant
 
 ```abap
-CLASS cl_customer_service DEFINITION PUBLIC CREATE PUBLIC.
-  " Class not intended for inheritance
+CLASS cl_customer_service DEFINITION
+  PUBLIC CREATE PUBLIC.
+  PUBLIC SECTION.
+    METHODS execute.
 ENDCLASS.
 ```
 
 ### Compliant
 
 ```abap
-CLASS cl_customer_service DEFINITION PUBLIC FINAL CREATE PUBLIC.
+CLASS cl_customer_service DEFINITION
+  PUBLIC FINAL CREATE PUBLIC.
+  PUBLIC SECTION.
+    METHODS execute.
 ENDCLASS.
 ```
 

@@ -5,8 +5,9 @@ description: "Declare inline variables as FINAL when never written again"
 # Prefer FINAL( ) over DATA( ) when the variable is never written again
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC PREF_FINAL" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,20 +20,20 @@ Declare inline variables as FINAL when never written again.
 
 ## Rationale
 
-When an inline DATA( ) variable is assigned once and never written again, declaring it FINAL( ) communicates immutability and lets the compiler enforce it.
+An inline variable that is assigned once and never changed should be declared FINAL so the compiler enforces immutability. This prevents accidental later writes and documents that the value is a constant for the rest of the method. Use FINAL( ) for single-assignment locals.
 
 ### Non-Compliant
 
 ```abap
-DATA(lv_count) = 10.
-WRITE lv_count.
+DATA(lv_count) = lines( lt_items ).
+process( lv_count ).
 ```
 
 ### Compliant
 
 ```abap
-FINAL(lv_count) = 10.
-WRITE lv_count.
+FINAL(lv_count) = lines( lt_items ).
+process( lv_count ).
 ```
 
 ## Automated QuickFix

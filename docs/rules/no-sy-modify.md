@@ -5,6 +5,7 @@ description: "Avoid sy-* System Variable Modification"
 # Avoid Modifying System Fields (sy-*)
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Security & Robustness" />
   <Badge type="danger" text="#EC SY_MODIFY" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,7 +19,7 @@ Avoid sy-* System Variable Modification.
 
 ## Rationale
 
-System fields like `sy-subrc`, `sy-tabix`, and `sy-index` are managed exclusively by the ABAP runtime. Writing to them manually undermines system integrity and masks actual execution results.
+System fields such as sy-subrc, sy-tabix, and sy-index are maintained by the ABAP runtime and carry the result of the last statement. Writing to them falsifies that contract and can break framework logic or later checks. Return explicit values or flags instead of changing runtime state.
 
 ### Non-Compliant
 
@@ -30,8 +31,8 @@ sy-tabix = 1.
 ### Compliant
 
 ```abap
-" Pass explicit return values or flags instead of modifying system variables (sy-*)
 rv_success = abap_true.
+rt_result = lt_result.
 ```
 
 ## Suppression

@@ -5,8 +5,9 @@ description: "Omit unnecessary RETURN at end of routine"
 # Omit Unnecessary RETURN Statement
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC NO_UNNEC_RETURN" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,13 +20,13 @@ Omit unnecessary RETURN at end of routine.
 
 ## Rationale
 
-Routines automatically return upon reaching ENDMETHOD, ENDFORM, or ENDFUNCTION. An explicit RETURN statement at the very end of the routine body is redundant and clutters the code.
+A RETURN as the final statement of a method, form, or function changes nothing because the routine ends at ENDMETHOD, ENDFORM, or ENDFUNCTION anyway. It adds a line that implies a special exit and can obscure the real control flow. Remove trailing RETURN statements and keep early returns only where they are meaningful.
 
 ### Non-Compliant
 
 ```abap
-METHOD calculate.
-  lv_total = 100.
+METHOD get_total.
+  rv_total = lv_subtotal + lv_tax.
   RETURN.
 ENDMETHOD.
 ```
@@ -33,8 +34,8 @@ ENDMETHOD.
 ### Compliant
 
 ```abap
-METHOD calculate.
-  lv_total = 100.
+METHOD get_total.
+  rv_total = lv_subtotal + lv_tax.
 ENDMETHOD.
 ```
 

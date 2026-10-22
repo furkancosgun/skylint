@@ -5,8 +5,9 @@ description: "Prefer symbolic operators over textual EQ, NE, LT, GT"
 # Prefer Symbol Comparison Operators (=, <>, <, >)
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC SYMBOL_OP" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,12 +20,12 @@ Prefer symbolic operators over textual EQ, NE, LT, GT.
 
 ## Rationale
 
-Text comparison operators (`EQ`, `NE`, `LT`, `GT`, `LE`, `GE`) are legacy syntax. Modern programming and Clean ABAP universally standardize on mathematical symbols (`=`, `<>`, `<`, `>`, `<=`, `>=`).
+Text comparison operators such as EQ, NE, GT, LT, GE, and LE are legacy synonyms for the symbolic operators. Symbols are shorter, match mathematical notation, and are the Clean ABAP standard. Consistent symbols also make boolean expressions easier to scan in conditions and constructor expressions.
 
 ### Non-Compliant
 
 ```abap
-IF lv_a EQ lv_b AND lv_c NE lv_d.
+IF lv_total GT 100 AND lv_status NE 'X'.
   process( ).
 ENDIF.
 ```
@@ -32,7 +33,7 @@ ENDIF.
 ### Compliant
 
 ```abap
-IF lv_a = lv_b AND lv_c <> lv_d.
+IF lv_total > 100 AND lv_status <> 'X'.
   process( ).
 ENDIF.
 ```

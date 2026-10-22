@@ -5,6 +5,7 @@ description: "Cyclomatic Complexity Threshold"
 # Limit Cyclomatic Complexity
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Metrics & Complexity Limits" />
   <Badge type="danger" text="#EC CYCLO_COMP" />
   <Badge type="info" text="Remote Enabled" />
@@ -18,24 +19,38 @@ Cyclomatic Complexity Threshold.
 
 ## Rationale
 
-High cyclomatic complexity means a method contains too many decision points (branches, loops, catches), making comprehensive unit test branch coverage nearly impossible.
+Cyclomatic complexity counts the independent decision paths through a method, so a high value means many branches need separate tests. Such methods are hard to understand and easy to break when one condition changes. Split the decisions into cohesive helper methods or strategy objects.
 
 ### Non-Compliant
 
 ```abap
-" Complex method containing excessive branches (> 10 cyclomatic complexity)
-METHOD compute.
-  IF c1. ... ELSEIF c2. ... ELSEIF c3. ...
+METHOD check_order.
+  IF is_blocked( ).
+    RETURN.
+  ENDIF.
+  IF has_no_stock( ).
+    RETURN.
+  ENDIF.
+  IF is_over_limit( ).
+    RETURN.
+  ENDIF.
+  IF needs_approval( ).
+    approve( ).
+  ENDIF.
+  IF is_priority( ).
+    expedite( ).
+  ENDIF.
+  release( ).
 ENDMETHOD.
 ```
 
 ### Compliant
 
 ```abap
-" Decompose into strategy classes or cohesive helper methods
-METHOD compute.
-  ro_strategy = mo_factory->get_strategy( mv_type ).
-  ro_strategy->execute( ).
+METHOD check_order.
+  validate_order( ).
+  approve_order( ).
+  release_order( ).
 ENDMETHOD.
 ```
 

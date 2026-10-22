@@ -5,6 +5,7 @@ description: "Disallow ignoring the return value of functional methods"
 # Do Not Ignore Return Value of Functional Methods
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC NO_IGNORED_RET" />
   <Badge type="warning" text="Local Only" />
@@ -18,18 +19,18 @@ Disallow ignoring the return value of functional methods.
 
 ## Rationale
 
-Functional methods that declare a `RETURNING` parameter are designed to compute and return a value. Calling such methods without assigning or consuming their result indicates a bug, dead code, or an improper command-query violation where side effects were bundled into a query.
+A functional method is called for its RETURNING value, so discarding that value usually means the call is pointless or the method hides side effects. If the method intentionally has side effects, it should not return a value. Assign or consume the result, or refactor the method into a command.
 
 ### Non-Compliant
 
 ```abap
-lo_calc->get_total( ).
+lo_calculator->get_total( ).
 ```
 
 ### Compliant
 
 ```abap
-lv_total = lo_calc->get_total( ).
+lv_total = lo_calculator->get_total( ).
 ```
 
 ## Suppression

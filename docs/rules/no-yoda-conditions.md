@@ -5,8 +5,9 @@ description: "Avoid Yoda conditions in comparison expressions"
 # Avoid Yoda Conditions
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="warning" text="⚡ QuickFix Ready" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC YODA_COND" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -19,12 +20,12 @@ Avoid Yoda conditions in comparison expressions.
 
 ## Rationale
 
-Placing constants or literals on the left side of comparisons (`IF 42 = lv_value`) impairs readability. ABAP natural reading flow expects the variable or subject on the left (`IF lv_value = 42`).
+Yoda conditions place the literal or constant on the left side of a comparison and break the natural ABAP reading order of subject, operator, and value. The habit comes from languages where an accidental assignment in a condition is possible, which is not the case for ABAP comparisons. Keep the variable or expression on the left so conditions read like plain language.
 
 ### Non-Compliant
 
 ```abap
-IF 0 = lv_count.
+IF 'ACTIVE' = lv_status.
   process( ).
 ENDIF.
 ```
@@ -32,7 +33,7 @@ ENDIF.
 ### Compliant
 
 ```abap
-IF lv_count = 0.
+IF lv_status = 'ACTIVE'.
   process( ).
 ENDIF.
 ```
