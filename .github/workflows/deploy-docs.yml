@@ -37,8 +37,6 @@ jobs:
 
       - name: Build documentation
         run: npm run docs:build
-        env:
-          VITEPRESS_BASE: /skylint/
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

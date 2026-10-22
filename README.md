@@ -10,13 +10,13 @@
 
 <p align="center">
   <a href="https://github.com/furkancosgun/skylint/actions/workflows/ci.yml"><img src="https://github.com/furkancosgun/skylint/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
-  <a href="https://furkancosgun.github.io/skylint/"><img src="https://img.shields.io/badge/docs-online-blue.svg" alt="Docs" /></a>
-  <a href="https://furkancosgun.github.io/skylint/rules/"><img src="https://img.shields.io/badge/rules-100%2B-brightgreen.svg" alt="Rules" /></a>
+  <a href="https://skylint.org/"><img src="https://img.shields.io/badge/docs-online-blue.svg" alt="Docs" /></a>
+  <a href="https://skylint.org/rules/"><img src="https://img.shields.io/badge/rules-100%2B-brightgreen.svg" alt="Rules" /></a>
   <img src="https://img.shields.io/badge/target-ABAP%20Cloud-informational.svg" alt="ABAP Cloud" />
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-yellow.svg" alt="License" /></a>
 </p>
 
-> 📖 **Full Documentation & Interactive Rule Catalog:** [https://furkancosgun.github.io/skylint/](https://furkancosgun.github.io/skylint/)
+> 📖 **Full Documentation & Interactive Rule Catalog:** [https://skylint.org/](https://skylint.org/)
 
 ---
 
@@ -79,7 +79,7 @@ Skylint enforces 100+ Clean ABAP, security, and cloud-native rules across 5 core
 
 Explore the complete interactive catalog with detailed rationales, configuration attributes, and before/after code examples:
 
-👉 **[Browse Full Interactive Rule Catalog (https://furkancosgun.github.io/skylint/rules/)](https://furkancosgun.github.io/skylint/rules/)**
+👉 **[Browse Full Interactive Rule Catalog (https://skylint.org/rules/)](https://skylint.org/rules/)**
 
 ### Rule Categories
 

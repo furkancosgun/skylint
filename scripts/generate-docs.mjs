@@ -340,7 +340,7 @@ export default defineConfig({
   cleanUrls: true,
   lastUpdated: true,
   sitemap: {
-    hostname: 'https://furkancosgun.github.io/skylint/',
+    hostname: 'https://skylint.org/',
   },
   vite: {
     build: {
@@ -352,17 +352,17 @@ export default defineConfig({
   },
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: \`\${base}logo.svg\` }],
-    ['link', { rel: 'sitemap', type: 'application/xml', title: 'Sitemap', href: 'https://furkancosgun.github.io/skylint/sitemap.xml' }],
+    ['link', { rel: 'sitemap', type: 'application/xml', title: 'Sitemap', href: 'https://skylint.org/sitemap.xml' }],
     ['meta', { name: 'robots', content: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' }],
     ['meta', { name: 'google-site-verification', content: 'googlebe62f3b9b7abdd43' }],
     ['meta', { name: 'keywords', content: 'abap, clean abap, atc, sap, abap cloud, linter, static analysis, quickfix, btp, s4hana' }],
     ['meta', { property: 'og:type', content: 'website' }],
-    ['meta', { property: 'og:image', content: 'https://furkancosgun.github.io/skylint/og-image.png' }],
+    ['meta', { property: 'og:image', content: 'https://skylint.org/og-image.png' }],
     ['meta', { property: 'og:image:width', content: '1200' }],
     ['meta', { property: 'og:image:height', content: '630' }],
     ['meta', { property: 'og:image:type', content: 'image/png' }],
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
-    ['meta', { name: 'twitter:image', content: 'https://furkancosgun.github.io/skylint/og-image.png' }],
+    ['meta', { name: 'twitter:image', content: 'https://skylint.org/og-image.png' }],
     ['style', {}, '@media (max-width: 768px) { .vp-doc { font-size: 15px; } }'],
   ],
   transformHead: ({ pageData, title, description }) => {
@@ -372,7 +372,7 @@ export default defineConfig({
       ];
     }
 
-    const canonicalHostname = 'https://furkancosgun.github.io/skylint';
+    const canonicalHostname = 'https://skylint.org';
     const cleanPath = pageData.relativePath
       .replace(/\\.md$/, '')
       .replace(/(^|\\/)index$/, '$1');
@@ -404,9 +404,9 @@ export default defineConfig({
           'applicationCategory': 'DeveloperApplication',
           'operatingSystem': 'SAP ABAP Cloud, Node.js',
           'description': 'Enterprise Clean ABAP & Cloud ATC Linter Engine with ${RULES.length}+ Native Rules',
-          'url': 'https://furkancosgun.github.io/skylint/',
+          'url': 'https://skylint.org/',
           'license': 'https://github.com/furkancosgun/skylint/blob/main/LICENSE',
-          'image': 'https://furkancosgun.github.io/skylint/og-image.png',
+          'image': 'https://skylint.org/og-image.png',
           'offers': {
             '@type': 'Offer',
             'price': '0',
@@ -579,7 +579,7 @@ function generateOgImage() {
   </g>
 
   <g transform="translate(100, 560)">
-    <text font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="17" font-weight="500" fill="#64748b">https://furkancosgun.github.io/skylint</text>
+    <text font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="17" font-weight="500" fill="#64748b">https://skylint.org</text>
     <text x="1000" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="17" font-weight="500" fill="#64748b" text-anchor="end">Contract C1 · Steampunk Ready</text>
   </g>
 </svg>`;

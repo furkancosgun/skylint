@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://furkancosgun.github.io/skylint/sitemap.xml
+Sitemap: https://skylint.org/sitemap.xml
