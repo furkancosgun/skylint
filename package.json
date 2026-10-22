@@ -2,7 +2,7 @@
   "name": "skylint",
   "version": "1.0.0",
   "type": "module",
-  "main": "lib/runner/index.mjs",
+  "main": "lib/index.mjs",
   "engines": {
     "node": ">=20.0.0"
   },
