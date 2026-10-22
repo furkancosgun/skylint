@@ -3698,5 +3698,104 @@
     ],
     "nonCompliantCode": "DATA foo TYPE i.",
     "compliantCode": "DATA lv_foo TYPE i."
+  },
+  {
+    "ruleId": "expand-macros",
+    "title": "Expand Macro Calls into Explicit Statements",
+    "className": "ZCL_SKYLINT_EXPAND_MACROS",
+    "checkName": "ZSKYLINT_EXPAND_MACROS",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "EXPAND_MACROS",
+    "severity": "warning",
+    "findingCode": "EXPMACRO",
+    "findingTexts": [
+      "Macro call should be expanded into explicit statements"
+    ],
+    "description": "Expand Macro Calls",
+    "rationale": "Macros defined via DEFINE ... END-OF-DEFINITION are obsolete, difficult to debug, and unsupported in ABAP Cloud. Macro invocations should be expanded into explicit statements.",
+    "hasQuickfix": true,
+    "remoteEnabled": true,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "DEFINE _set_val.\n  lv_val = &1.\nEND-OF-DEFINITION.\n_set_val 10.",
+    "compliantCode": "lv_val = 10."
+  },
+  {
+    "ruleId": "bad-indent",
+    "title": "Statement Indentation Must Match Block Nesting",
+    "className": "ZCL_SKYLINT_BAD_INDENT",
+    "checkName": "ZSKYLINT_BAD_INDENT",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "BAD_INDENT",
+    "severity": "warning",
+    "findingCode": "BADINDENT",
+    "findingTexts": [
+      "Statement indentation does not match block nesting"
+    ],
+    "description": "Bad Statement Indentation",
+    "rationale": "Consistent indentation according to block nesting hierarchy improves code clarity, readability, and maintainability across the codebase.",
+    "hasQuickfix": true,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "INDENT_STEP",
+        "kind": "Integer",
+        "defaultValue": "2"
+      }
+    ],
+    "defaultParameters": [
+      {
+        "name": "INDENT_STEP",
+        "value": "2"
+      }
+    ],
+    "nonCompliantCode": "METHOD test.\nDATA lv_a TYPE i.\n  IF lv_a = 1.\nlv_a = 2.\n  ENDIF.\nENDMETHOD.",
+    "compliantCode": "METHOD test.\n  DATA lv_a TYPE i.\n  IF lv_a = 1.\n    lv_a = 2.\n  ENDIF.\nENDMETHOD."
+  },
+  {
+    "ruleId": "no-dead-code",
+    "title": "Avoid Dead Code with Constant Conditions",
+    "className": "ZCL_SKYLINT_NO_DEAD_CODE",
+    "checkName": "ZSKYLINT_NO_DEAD_CODE",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "NO_DEAD_CODE",
+    "severity": "warning",
+    "findingCode": "DEADCODE",
+    "findingTexts": [
+      "Condition is always false, creating dead code"
+    ],
+    "description": "Detect Dead Code with Constant Condition",
+    "rationale": "Conditional branches with constant expressions such as 1 = 2 or abap_false can never be executed, creating dead code that clutters the program and misleads maintainers.",
+    "hasQuickfix": true,
+    "remoteEnabled": true,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "IF 1 = 2.\n  DATA lv_dead TYPE i.\nENDIF.",
+    "compliantCode": "IF lv_condition = abap_true.\n  DATA lv_active TYPE i.\nENDIF."
+  },
+  {
+    "ruleId": "keyword-name",
+    "title": "Avoid Using ABAP Keywords as Identifier Names",
+    "className": "ZCL_SKYLINT_KEYWORD_NAME",
+    "checkName": "ZSKYLINT_KEYWORD_NAME",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "KEYWORD_NAME",
+    "severity": "warning",
+    "findingCode": "KEYWORDNM",
+    "findingTexts": [
+      "Identifier name matches an ABAP keyword"
+    ],
+    "description": "Avoid Using ABAP Keywords as Identifier Names",
+    "rationale": "Naming variables, parameters, constants, or types after ABAP keywords (such as class, type, data, method) leads to confusion, shadows language constructs, and impairs code readability.",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "defaultParameters": [],
+    "nonCompliantCode": "DATA class TYPE string.\nDATA type TYPE i.",
+    "compliantCode": "DATA lv_class TYPE string.\nDATA lv_type TYPE i."
   }
 ]

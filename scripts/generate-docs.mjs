@@ -223,18 +223,6 @@ for (const rule of RULES) {
     ruleDoc += `\n`;
   }
 
-  // CLI Configuration
-  ruleDoc += `## CLI & CI/CD Configuration\n\n`;
-  ruleDoc += `\`\`\`yaml\nchecks:\n  ${rule.ruleId}:\n    enabled: true\n    severity: ${severity}\n`;
-  if (attributes.length > 0) {
-    ruleDoc += `    attributes:\n`;
-    for (const attr of attributes) {
-      const camelName = attr.name.toLowerCase().replace(/_([a-z0-9])/g, (_, l) => l.toUpperCase());
-      ruleDoc += `      ${camelName}: ${attr.defaultValue}\n`;
-    }
-  }
-  ruleDoc += `\`\`\`\n\n`;
-
   // Suppression
   ruleDoc += `## Suppression\n\n`;
   ruleDoc += `To suppress findings for this rule, append the pseudo-comment to the statement:\n\n`;
@@ -444,7 +432,7 @@ export default defineConfig({
           text: 'Architecture & Guides',
           items: [
             { text: 'Getting Started', link: '/guide/getting-started' },
-            { text: 'Configuration (skylint.yaml)', link: '/guide/configuration' },
+            { text: 'Configuration (ATC Variants)', link: '/guide/configuration' },
             { text: 'SAP ATC Integration', link: '/guide/atc-integration' },
             { text: 'Suppressions & Pragmas', link: '/guide/suppressions' },
           ],

@@ -45,15 +45,6 @@ METHODS foo
 +     iv_b TYPE string.
 ```
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  max-one-method-parameter-per-line:
-    enabled: true
-    severity: warning
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

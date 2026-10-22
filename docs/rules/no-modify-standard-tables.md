@@ -39,15 +39,6 @@ DELETE FROM zmara WHERE matnr = '100'.
 + DELETE FROM zmara WHERE matnr = '100'.
 ```
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  no-modify-standard-tables:
-    enabled: true
-    severity: warning
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

@@ -1,18 +1,18 @@
 ---
-description: "Comprehensive reference and catalog for all 100 Clean ABAP, security, performance, and architecture rules in Skylint."
+description: "Comprehensive reference and catalog for all 104 Clean ABAP, security, performance, and architecture rules in Skylint."
 ---
 
-# Rules Catalog (100 Rules)
+# Rules Catalog (104 Rules)
 
-Comprehensive reference for all **100** Clean ABAP, security, performance, and architecture rules in Skylint.
+Comprehensive reference for all **104** Clean ABAP, security, performance, and architecture rules in Skylint.
 
 ::: tip Skylint at a Glance
-- **100 Native ATC Rules:** 100% ABAP Cloud (Contract C1) & Steampunk Ready.
-- **39 Automated QuickFixes:** Instant one-click refactoring with <kbd>Ctrl</kbd> + <kbd>1</kbd> in Eclipse ADT.
+- **104 Native ATC Rules:** 100% ABAP Cloud (Contract C1) & Steampunk Ready.
+- **42 Automated QuickFixes:** Instant one-click refactoring with <kbd>Ctrl</kbd> + <kbd>1</kbd> in Eclipse ADT.
 - **Zero Legacy Overhead:** Built exclusively on `IF_CI_ATC_CHECK` (no obsolete Code Inspector / SCI dependency).
 :::
 
-## Clean ABAP & Modern Syntax (36)
+## Clean ABAP & Modern Syntax (37)
 
 Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.
 
@@ -54,8 +54,9 @@ Modern language features, expression-oriented coding, and idiomatic Clean ABAP p
 | [`prefer-is-initial`](/rules/prefer-is-initial) | `ZCL_SKYLINT_PREF_IS_INITIAL` | Prefer IS [NOT] INITIAL over lines( ) or empty literals | `#EC PREF_INIT` | ⚡ Ready | ✅ Yes |
 | [`prefer-cast`](/rules/prefer-cast) | `ZCL_SKYLINT_PREF_CAST` | Prefer modern CAST #( ) expression over ?= | `#EC PREF_CAST` | ⚡ Ready | ✅ Yes |
 | [`prefer-naming`](/rules/prefer-naming) | `ZCL_SKYLINT_PREF_NAMING` | Standard Naming Conventions | `#EC NAMING` | — | ✅ Yes |
+| [`bad-indent`](/rules/bad-indent) | `ZCL_SKYLINT_BAD_INDENT` | Bad Statement Indentation | `#EC BAD_INDENT` | ⚡ Ready | ✅ Yes |
 
-## Anti-Patterns & Bad Practices (36)
+## Anti-Patterns & Bad Practices (39)
 
 Discouraged language constructs, legacy statements, and redundant syntax.
 
@@ -97,6 +98,9 @@ Discouraged language constructs, legacy statements, and redundant syntax.
 | [`method-overwrites-builtin`](/rules/method-overwrites-builtin) | `ZCL_SKYLINT_NO_OVERW_BUILTIN` | Method name overwrites built-in SAP function | `#EC NO_OVERW_BUILTIN` | — | ✅ Yes |
 | [`no-ignored-return-value`](/rules/no-ignored-return-value) | `ZCL_SKYLINT_NO_IGNORED_RETURN` | Disallow ignoring the return value of functional methods | `#EC NO_IGNORED_RET` | — | ❌ No |
 | [`no-redundant-clear`](/rules/no-redundant-clear) | `ZCL_SKYLINT_NO_REDUNDANT_CLEAR` | Do not CLEAR or FREE variables redundantly | `#EC REDUNDANT_CLEAR` | ⚡ Ready | ✅ Yes |
+| [`expand-macros`](/rules/expand-macros) | `ZCL_SKYLINT_EXPAND_MACROS` | Expand Macro Calls | `#EC EXPAND_MACROS` | ⚡ Ready | ✅ Yes |
+| [`no-dead-code`](/rules/no-dead-code) | `ZCL_SKYLINT_NO_DEAD_CODE` | Detect Dead Code with Constant Condition | `#EC NO_DEAD_CODE` | ⚡ Ready | ✅ Yes |
+| [`keyword-name`](/rules/keyword-name) | `ZCL_SKYLINT_KEYWORD_NAME` | Avoid Using ABAP Keywords as Identifier Names | `#EC KEYWORD_NAME` | — | ✅ Yes |
 
 ## Performance & Database (7)
 

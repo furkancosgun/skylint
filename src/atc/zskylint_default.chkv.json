@@ -953,6 +953,24 @@
           "value": "^Z.+$"
         }
       ]
+    },
+    {
+      "checkName": "ZSKYLINT_EXPAND_MACROS"
+    },
+    {
+      "checkName": "ZSKYLINT_BAD_INDENT",
+      "parameters": [
+        {
+          "name": "INDENT_STEP",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_NO_DEAD_CODE"
+    },
+    {
+      "checkName": "ZSKYLINT_KEYWORD_NAME"
     }
   ]
 }

@@ -64,26 +64,6 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | `CHECK_STRICT_SQL` | `Boolean` | <code>false</code> |
 | `CHECK_RAISE_MESSAGE` | `Boolean` | <code>false</code> |
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  downport-compat:
-    enabled: true
-    severity: warning
-    attributes:
-      checkConstructors: false
-      checkTableExpr: false
-      checkInlineDecl: false
-      checkStringTempl: false
-      checkChaining: false
-      checkEmptyKey: false
-      checkCalcAssign: false
-      checkLineFuncs: false
-      checkStrictSql: false
-      checkRaiseMessage: false
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

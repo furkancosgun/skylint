@@ -43,15 +43,6 @@ METHODS calculate
 +   RETURNING VALUE(rv_result) TYPE i.
 ```
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  prefer-returning:
-    enabled: true
-    severity: warning
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

@@ -1,0 +1,4 @@
+[
+  { "target": "TEST_001", "code": "BADINDENT", "line": 2, "column": 2, "quickfixes": ["FIXINDENT"] },
+  { "target": "TEST_002", "code": null }
+]

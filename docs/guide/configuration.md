@@ -1,126 +1,73 @@
 ---
-description: "Learn how to configure Skylint rules, severities, and thresholds via skylint.yaml, CLI options, and SAP ATC Check Variant parameters."
+description: "Learn how to configure Skylint rules, severities, and thresholds via SAP ATC Check Variants (CHKV) and Eclipse ADT."
 ---
 
-# ⚙️ Configuration Reference (`skylint.yaml`)
+# ⚙️ Configuration Reference (ATC Check Variants)
 
-Skylint offers flexible configuration options at both the repository level (via `skylint.yaml`) and the SAP ATC level (via ATC Check Variant attributes).
-
----
-
-## 📄 File Location & Hierarchy
-
-When running Skylint CLI or CI/CD pipelines, Skylint searches for a configuration file in the following order:
-1. File explicitly passed via `--config <path>`
-2. `./skylint.yaml` in the current working directory
-3. `./skylint.yml` in the current working directory
-4. Built-in defaults (all rules enabled at their default severities)
+Skylint is an **ATC-native** static analysis engine. Configuration is handled entirely through standard SAP **ATC Check Variants** (`CHKV`), both inside SAP systems via Eclipse ADT and in automated workflows.
 
 ---
 
-## ⚡ Generate Default Template (`skylint init`)
+## 🏛️ ATC Check Variant Architecture
 
-To quickly bootstrap a fully commented `skylint.yaml` template pre-populated with all available rules and categories, simply run:
+In modern ABAP (SAP BTP ABAP Environment, SAP S/4HANA Cloud, and S/4HANA On-Premise 2022+), an ATC Check Variant (`CHKV`) is an ABAP repository object that defines:
+1. **Enabled Checks:** Which check classes (`ZCL_SKYLINT_*`) are active during the inspection.
+2. **Finding Severities:** The severity assigned to findings produced by each check (`error`, `warning`, `note`).
+3. **Check Parameters & Thresholds:** Fine-tuned rule configurations (e.g., maximum method statements, nesting limits, allowed prefixes) defined via check attributes.
 
-```bash
-skylint init
+---
+
+## 🛠️ Configuring Checks in Eclipse ADT
+
+When editing an ATC Check Variant in Eclipse ADT:
+
+### 1. Enabling and Disabling Rules
+- Expand the Skylint category in the Check Variant tree.
+- Check the box next to any rule (`ZCL_SKYLINT_*`) to enable it, or uncheck to disable it.
+
+### 2. Customizing Severity Levels
+For each selected check, you can override its finding severity:
+- **Error:** Fails quality gates and blocks transport releases in SAP CTS/gCTS.
+- **Warning:** Flags non-compliant Clean ABAP code that developers should refactor.
+- **Note:** Informational suggestion or lightweight recommendation.
+
+### 3. Check Parameters & Thresholds
+Checks with configurable attributes expose a **Parameters** tab in Eclipse ADT:
+- Select the check in the variant editor.
+- The parameter table displays all configurable fields (such as `MAX_STATEMENTS`, `MAX_DEPTH`, `ALLOWED_PREFIXES`).
+- Modify the values directly; they are persisted as part of the `CHKV` object.
+
+---
+
+## 📦 Default Variant (`ZSKYLINT_DEFAULT`)
+
+Skylint includes a ready-to-use default ATC Check Variant definition located in:
+```text
+src/atc/zskylint_default.chkv.json
 ```
-Or specify a custom destination path:
-```bash
-skylint init ./config/skylint.yaml
-```
+This variant enables all Clean ABAP rules with production-tested thresholds and standard severities.
 
 ---
 
-## 🛠️ Complete `skylint.yaml` Example
+## 🎨 Interactive Variant Builder
 
-```yaml
-# ==============================================================================
-# Skylint Static Analysis Configuration
-# ==============================================================================
-
-# Minimum finding severity reported to console and exit code
-# Supported values: error | warning | note
-minSeverity: warning
-
-# File and folder exclusion patterns (standard glob syntax)
-exclude:
-  - "**/*.testclasses.abap"       # Ignore unit test doubles/includes
-  - "**/generated/**"             # Ignore auto-generated proxies/CDS artifacts
-  - "**/zcl_legacy_*.clas.abap"   # Exclude legacy modules during transition
-
-# Rule-specific overrides keyed by semantic ruleId
-checks:
-  # 1. Clean ABAP & Modern Syntax
-  prefer-lines:
-    enabled: true
-    severity: warning
-
-  no-call-method:
-    enabled: true
-    severity: error
-
-  prefer-string-template:
-    enabled: true
-    severity: warning
-
-  # 2. Metrics & Complexity Thresholds (supports camelCase and UPPER_CASE)
-  max-method-length:
-    enabled: true
-    severity: warning
-    attributes:
-      maxStatements: 50           # Maximum statements allowed per method
-
-  max-nesting-depth:
-    enabled: true
-    severity: error
-    attributes:
-      maxDepth: 3                 # Maximum nested control structures
-
-  max-parameters:
-    enabled: true
-    severity: warning
-    attributes:
-      maxParameters: 5            # Max formal parameters per method
-
-  # 3. Disabling a specific rule
-  prefer-predicate-names:
-    enabled: false
-```
+Skylint provides an interactive web-based **Variant Builder** in the documentation portal:
+- Navigate to the [Variant Builder](/variant-builder).
+- Select the categories and rules relevant to your team.
+- Adjust parameter limits and thresholds visually.
+- Export the configuration as an SAP ATC Check Variant (`CHKV`) JSON definition ready for import into your repository.
 
 ---
 
-## 📋 Configuration Options Reference
+## 📋 Common Parameter Reference
 
-### Global Settings
+Below are key configurable parameters available across Skylint rules:
 
-| Property | Type | Default | Description |
-|---|---|---|---|
-| `minSeverity` | `string` | `note` | Minimum severity of findings to output (`error`, `warning`, `note`). Findings below this threshold are omitted. |
-| `exclude` | `string[]` | `[]` | Array of glob patterns matching files or folders that should be completely skipped during analysis. |
-| `checks` | `map` | `{}` | Key-value dictionary containing per-rule overrides. |
-
----
-
-### Per-Rule Settings (`checks.<ruleId>`)
-
-Each rule entry in `checks` uses the semantic kebab-case `ruleId` (e.g. `prefer-lines`, `no-db-in-loop`, `max-method-length`):
-
-| Property | Type | Default | Description |
-|---|---|---|---|
-| `enabled` | `boolean` | `true` | Enables or disables the check rule completely. |
-| `severity` | `string` | Rule default | Overrides the severity level (`error`, `warning`, or `note`). |
-| `attributes` | `map` | `{}` | Check-specific parameter key-value pairs (e.g., numeric limits or boolean flags). |
-
----
-
-## 🔄 Mapping to SAP ATC Check Variants
-
-When running inside an SAP system, the configuration defined in `skylint.yaml` directly corresponds to settings available in the **Eclipse ADT ATC Check Variant Editor**:
-
-| `skylint.yaml` Concept | SAP ATC Check Variant Concept |
-|---|---|
-| `checks.<ruleId>.enabled` | Checkbox next to the check class (`ZCL_SKYLINT_*`) |
-| `checks.<ruleId>.severity` | Severity column in the ATC Check Variant Editor |
-| `checks.<ruleId>.attributes` | Check Attributes pane in the Eclipse ADT Variant Editor |
-| `exclude` | Object/Package selection filter in the ATC run configuration |
+| Rule | Parameter | Type | Default | Description |
+|---|---|---|:---:|---|
+| `max-method-length` | `MAX_STATEMENTS` | Integer | `50` | Maximum statements allowed per procedure |
+| `max-nesting-depth` | `MAX_DEPTH` | Integer | `3` | Maximum nesting depth for control structures |
+| `max-params` | `MAX_PARAMETERS` | Integer | `5` | Maximum formal parameters for method definitions |
+| `max-attributes` | `MAX_ATTRIBUTES` | Integer | `10` | Maximum attributes allowed per class |
+| `max-line-length` | `MAX_LINE_LENGTH` | Integer | `120` | Maximum allowed line length in characters |
+| `prefer-naming` | `VARIABLE_PATTERN` | String | `^L[VTSOA]_.*$` | Regex pattern for local variable naming |

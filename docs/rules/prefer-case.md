@@ -73,17 +73,6 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 |---|---|:---:|
 | `MIN_BRANCHES` | `Integer` | <code>3</code> |
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  prefer-case:
-    enabled: true
-    severity: warning
-    attributes:
-      minBranches: 3
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

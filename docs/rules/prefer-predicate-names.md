@@ -39,15 +39,6 @@ METHODS is_active RETURNING VALUE(rv_active) TYPE abap_bool.
 + METHODS is_active RETURNING VALUE(rv_active) TYPE abap_bool.
 ```
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  prefer-predicate-names:
-    enabled: true
-    severity: warning
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

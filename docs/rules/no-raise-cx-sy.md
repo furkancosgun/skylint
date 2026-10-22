@@ -39,15 +39,6 @@ RAISE EXCEPTION NEW cx_item_not_found( ).
 + RAISE EXCEPTION NEW cx_item_not_found( ).
 ```
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  no-raise-cx-sy:
-    enabled: true
-    severity: warning
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

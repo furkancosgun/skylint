@@ -55,23 +55,6 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | `CHECK_LEAVE` | `Boolean` | <code>true</code> |
 | `CHECK_REJECT` | `Boolean` | <code>true</code> |
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  no-list-processing:
-    enabled: true
-    severity: warning
-    attributes:
-      checkWrite: true
-      checkUline: true
-      checkSkip: true
-      checkOther: true
-      ignWriteTo: true
-      checkLeave: true
-      checkReject: true
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

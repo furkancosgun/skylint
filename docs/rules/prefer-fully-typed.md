@@ -39,15 +39,6 @@ CONSTANTS c_status TYPE c LENGTH 1 VALUE 'A'.
 + CONSTANTS c_status TYPE c LENGTH 1 VALUE 'A'.
 ```
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  prefer-fully-typed:
-    enabled: true
-    severity: warning
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

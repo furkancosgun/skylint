@@ -51,15 +51,6 @@ CALL FUNCTION 'Z_RFC'
 +     OTHERS                = 3.
 ```
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  no-rfc-error-handling:
-    enabled: true
-    severity: error
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

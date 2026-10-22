@@ -69,15 +69,6 @@ ENDTRY.
 + ENDTRY.
 ```
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  no-nested-try:
-    enabled: true
-    severity: warning
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

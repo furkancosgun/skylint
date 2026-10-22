@@ -60,19 +60,6 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | `CHECK_RECEIVING` | `Boolean` | <code>true</code> |
 | `CHECK_PARAM_NAME` | `Boolean` | <code>true</code> |
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  no-redundant-method-call:
-    enabled: true
-    severity: warning
-    attributes:
-      checkExporting: true
-      checkReceiving: true
-      checkParamName: true
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

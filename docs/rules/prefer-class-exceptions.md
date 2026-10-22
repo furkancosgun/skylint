@@ -39,15 +39,6 @@ METHODS execute RAISING cx_not_found cx_failed.
 + METHODS execute RAISING cx_not_found cx_failed.
 ```
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  prefer-class-exceptions:
-    enabled: true
-    severity: warning
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

@@ -51,17 +51,6 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 |---|---|:---:|
 | `ALLOW_IN_CONSTRUCTORS` | `Boolean` | <code>true</code> |
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  no-me-reference:
-    enabled: true
-    severity: warning
-    attributes:
-      allowInConstructors: true
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

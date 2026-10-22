@@ -72,23 +72,6 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | `CHECK_REPLACE` | `Boolean` | <code>true</code> |
 | `CHECK_DESCRIBE` | `Boolean` | <code>true</code> |
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  prefer-string-functions:
-    enabled: true
-    severity: warning
-    attributes:
-      checkCondense: true
-      checkTranslate: true
-      checkShift: true
-      checkSearch: true
-      checkOverlay: true
-      checkReplace: true
-      checkDescribe: true
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

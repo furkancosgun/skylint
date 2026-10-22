@@ -64,24 +64,6 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | `CHECK_SORT_ANY` | `Boolean` | <code>true</code> |
 | `CHECK_COLLECT` | `Boolean` | <code>true</code> |
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  no-modify-loop-table:
-    enabled: true
-    severity: warning
-    attributes:
-      checkAppend: true
-      checkInsert: true
-      checkModify: true
-      checkDelete: true
-      checkClear: true
-      checkSort: true
-      checkSortAny: true
-      checkCollect: true
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

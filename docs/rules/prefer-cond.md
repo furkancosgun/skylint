@@ -73,17 +73,6 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 |---|---|:---:|
 | `REQUIRE_ELSE` | `Boolean` | <code>false</code> |
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  prefer-cond:
-    enabled: true
-    severity: warning
-    attributes:
-      requireElse: false
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

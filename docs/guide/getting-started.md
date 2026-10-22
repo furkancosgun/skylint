@@ -99,6 +99,6 @@ Once installed in your SAP system and configured in an ATC Check Variant:
 ## 🧭 Next Steps
 
 - [SAP ATC Integration Guide](/guide/atc-integration): Learn how to configure ATC Check Variants and CI/CD pipelines.
-- [Configuration Reference (`skylint.yaml`)](/guide/configuration): Customize rule severities, exclusions, and thresholds.
+- [Configuration Reference (ATC Check Variants)](/guide/configuration): Customize rule severities, parameters, and thresholds.
 - [Suppressions & Pragmas](/guide/suppressions): How to suppress intentional violations using `#EC` and `##` pragmas.
 - [Rules Catalog](/rules/): Browse all available rules with non-compliant and compliant examples.

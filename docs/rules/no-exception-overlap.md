@@ -55,15 +55,6 @@ CALL FUNCTION 'SOMETHING'
 +     OTHERS                = 3.
 ```
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  no-exception-overlap:
-    enabled: true
-    severity: warning
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

@@ -67,7 +67,7 @@ export default defineConfig({
           'name': 'Skylint',
           'applicationCategory': 'DeveloperApplication',
           'operatingSystem': 'SAP ABAP Cloud, Node.js',
-          'description': 'Enterprise Clean ABAP & Cloud ATC Linter Engine with 100+ Native Rules',
+          'description': 'Enterprise Clean ABAP & Cloud ATC Linter Engine with 104+ Native Rules',
           'url': 'https://furkancosgun.github.io/skylint/',
           'license': 'https://github.com/furkancosgun/skylint/blob/main/LICENSE',
           'image': 'https://furkancosgun.github.io/skylint/og-image.png',
@@ -91,7 +91,7 @@ export default defineConfig({
     logo: '/logo.svg',
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
-      { text: 'Rules (100)', link: '/rules/' },
+      { text: 'Rules (104)', link: '/rules/' },
       { text: 'Variant Builder', link: '/variant-builder' },
       { text: 'GitHub', link: 'https://github.com/furkancosgun/skylint' },
     ],
@@ -102,7 +102,7 @@ export default defineConfig({
           text: 'Architecture & Guides',
           items: [
             { text: 'Getting Started', link: '/guide/getting-started' },
-            { text: 'Configuration (skylint.yaml)', link: '/guide/configuration' },
+            { text: 'Configuration (ATC Variants)', link: '/guide/configuration' },
             { text: 'SAP ATC Integration', link: '/guide/atc-integration' },
             { text: 'Suppressions & Pragmas', link: '/guide/suppressions' },
           ],
@@ -258,6 +258,10 @@ export default defineConfig({
       {
         "text": "prefer-naming",
         "link": "/rules/prefer-naming"
+      },
+      {
+        "text": "bad-indent",
+        "link": "/rules/bad-indent"
       }
     ]
   },
@@ -408,6 +412,18 @@ export default defineConfig({
       {
         "text": "no-redundant-clear",
         "link": "/rules/no-redundant-clear"
+      },
+      {
+        "text": "expand-macros",
+        "link": "/rules/expand-macros"
+      },
+      {
+        "text": "no-dead-code",
+        "link": "/rules/no-dead-code"
+      },
+      {
+        "text": "keyword-name",
+        "link": "/rules/keyword-name"
       }
     ]
   },

@@ -39,15 +39,6 @@ RAISE EXCEPTION NEW cx_not_found( textid = cx_not_found=>c_item_missing ).
 + RAISE EXCEPTION NEW cx_not_found( textid = cx_not_found=>c_item_missing ).
 ```
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  no-message-raising:
-    enabled: true
-    severity: warning
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

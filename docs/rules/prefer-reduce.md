@@ -57,15 +57,6 @@ This rule provides an **automated QuickFix** directly in Eclipse ABAP Developmen
 2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
 3. Select the automated refactoring to apply the clean syntax immediately.
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  prefer-reduce:
-    enabled: true
-    severity: warning
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

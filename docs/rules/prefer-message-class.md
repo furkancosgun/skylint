@@ -39,15 +39,6 @@ MESSAGE e001(bc_msg).
 + MESSAGE e001(bc_msg).
 ```
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  prefer-message-class:
-    enabled: true
-    severity: warning
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

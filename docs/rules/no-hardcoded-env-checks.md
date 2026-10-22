@@ -61,23 +61,6 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | `CHECK_UNAME` | `Boolean` | <code>true</code> |
 | `ONLY_CONDITIONAL` | `Boolean` | <code>false</code> |
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  no-hardcoded-env-checks:
-    enabled: true
-    severity: warning
-    attributes:
-      checkSysid: true
-      checkMandt: true
-      checkHost: true
-      checkDbsys: true
-      checkOpsys: true
-      checkUname: true
-      onlyConditional: false
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

@@ -60,18 +60,6 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | `CHECK_BEFORE_WRITE` | `Boolean` | <code>true</code> |
 | `CHECK_WITHOUT_READ` | `Boolean` | <code>true</code> |
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  no-redundant-clear:
-    enabled: true
-    severity: warning
-    attributes:
-      checkBeforeWrite: true
-      checkWithoutRead: true
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

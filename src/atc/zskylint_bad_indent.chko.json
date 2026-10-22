@@ -1,0 +1,16 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Bad Statement Indentation",
+    "originalLanguage": "en",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "category": "ZSKYLINT",
+  "implementingClass": "ZCL_SKYLINT_BAD_INDENT",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "INDENT_STEP"
+    }
+  ]
+}

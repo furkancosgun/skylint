@@ -39,15 +39,6 @@ lv_total = lo_calc->get_total( ).
 + lv_total = lo_calc->get_total( ).
 ```
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  no-ignored-return-value:
-    enabled: true
-    severity: warning
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

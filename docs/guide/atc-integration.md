@@ -153,5 +153,5 @@ jobs:
           node-version: 20
       - run: npm ci
       - run: npm run build
-      - run: npx skylint scan ./src --config skylint.yaml
+      - run: npx skylint scan ./src
 ```

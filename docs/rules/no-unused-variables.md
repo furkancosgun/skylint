@@ -39,15 +39,6 @@ DATA lv_temp TYPE string. " Declared but never referenced
 + " Remove unused declarations or add ##NEEDED pragma if required by interface
 ```
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  no-unused-variables:
-    enabled: true
-    severity: warning
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

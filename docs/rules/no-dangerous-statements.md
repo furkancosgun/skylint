@@ -71,34 +71,6 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | `CHECK_PROD_ASSERT` | `Boolean` | <code>true</code> |
 | `IGNORE_RAP_QUERY_PROVIDER` | `Boolean` | <code>true</code> |
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  no-dangerous-statements:
-    enabled: true
-    severity: warning
-    attributes:
-      checkExecSql: true
-      checkKernelCall: true
-      checkSystemCall: true
-      checkSyntaxCheck: true
-      checkInsertReport: true
-      checkGenerateDynpro: true
-      checkGenerateReport: true
-      checkGenerateSubroutine: true
-      checkDeleteReport: true
-      checkDeleteTextpool: true
-      checkInsertTextpool: true
-      checkDeleteDynpro: true
-      checkExportDynpro: true
-      checkEditorCall: true
-      checkDynamicSql: true
-      checkRaiseShortdump: true
-      checkProdAssert: true
-      ignoreRapQueryProvider: true
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

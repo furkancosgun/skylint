@@ -39,15 +39,6 @@ METHODS process IMPORTING iv_text TYPE string.
 + METHODS process IMPORTING iv_text TYPE string.
 ```
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  prefer-pass-by-reference:
-    enabled: true
-    severity: warning
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

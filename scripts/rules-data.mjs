@@ -1493,6 +1493,54 @@ ENDCASE.`,
       good: `DATA lv_foo TYPE i.`,
     },
   },
+  {
+    ruleId: 'expand-macros',
+    title: 'Expand Macro Calls into Explicit Statements',
+    rationale: 'Macros defined via DEFINE ... END-OF-DEFINITION are obsolete, difficult to debug, and unsupported in ABAP Cloud. Macro invocations should be expanded into explicit statements.',
+    className: 'ZCL_SKYLINT_EXPAND_MACROS',
+    pseudoComment: 'EXPAND_MACROS',
+    category: 'anti-patterns',
+    example: {
+      bad: `DEFINE _set_val.\n  lv_val = &1.\nEND-OF-DEFINITION.\n_set_val 10.`,
+      good: `lv_val = 10.`,
+    },
+  },
+  {
+    ruleId: 'bad-indent',
+    title: 'Statement Indentation Must Match Block Nesting',
+    rationale: 'Consistent indentation according to block nesting hierarchy improves code clarity, readability, and maintainability across the codebase.',
+    className: 'ZCL_SKYLINT_BAD_INDENT',
+    pseudoComment: 'BAD_INDENT',
+    category: 'clean-abap',
+    example: {
+      bad: `METHOD test.\nDATA lv_a TYPE i.\n  IF lv_a = 1.\nlv_a = 2.\n  ENDIF.\nENDMETHOD.`,
+      good: `METHOD test.\n  DATA lv_a TYPE i.\n  IF lv_a = 1.\n    lv_a = 2.\n  ENDIF.\nENDMETHOD.`,
+    },
+  },
+  {
+    ruleId: 'no-dead-code',
+    title: 'Avoid Dead Code with Constant Conditions',
+    rationale: 'Conditional branches with constant expressions such as 1 = 2 or abap_false can never be executed, creating dead code that clutters the program and misleads maintainers.',
+    className: 'ZCL_SKYLINT_NO_DEAD_CODE',
+    pseudoComment: 'NO_DEAD_CODE',
+    category: 'anti-patterns',
+    example: {
+      bad: `IF 1 = 2.\n  DATA lv_dead TYPE i.\nENDIF.`,
+      good: `IF lv_condition = abap_true.\n  DATA lv_active TYPE i.\nENDIF.`,
+    },
+  },
+  {
+    ruleId: 'keyword-name',
+    title: 'Avoid Using ABAP Keywords as Identifier Names',
+    rationale: 'Naming variables, parameters, constants, or types after ABAP keywords (such as class, type, data, method) leads to confusion, shadows language constructs, and impairs code readability.',
+    className: 'ZCL_SKYLINT_KEYWORD_NAME',
+    pseudoComment: 'KEYWORD_NAME',
+    category: 'anti-patterns',
+    example: {
+      bad: `DATA class TYPE string.\nDATA type TYPE i.`,
+      good: `DATA lv_class TYPE string.\nDATA lv_type TYPE i.`,
+    },
+  },
 ];
 
 export const RULE_BY_RULE_ID = new Map(RULES.map(r => [r.ruleId, r]));

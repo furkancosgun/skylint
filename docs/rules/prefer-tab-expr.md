@@ -59,17 +59,6 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 |---|---|:---:|
 | `USE_OPTIONAL` | `Boolean` | <code>true</code> |
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  prefer-tab-expr:
-    enabled: true
-    severity: warning
-    attributes:
-      useOptional: true
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

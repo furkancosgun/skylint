@@ -45,15 +45,6 @@ METHODS get_data
 +   RETURNING VALUE(rv_res) TYPE string.
 ```
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  mix-returning:
-    enabled: true
-    severity: warning
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

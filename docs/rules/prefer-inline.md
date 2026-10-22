@@ -41,15 +41,6 @@ DATA(lv_count) = 10.
 + DATA(lv_count) = 10.
 ```
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  prefer-inline:
-    enabled: true
-    severity: warning
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

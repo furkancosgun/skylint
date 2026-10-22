@@ -39,15 +39,6 @@ DATA lv_copy TYPE string.
 + DATA lv_copy TYPE string.
 ```
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  no-like-objects:
-    enabled: true
-    severity: warning
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

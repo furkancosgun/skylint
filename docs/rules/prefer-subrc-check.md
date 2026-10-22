@@ -59,21 +59,6 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | `CHECK_FIND_SEARCH` | `Boolean` | <code>true</code> |
 | `CHECK_ASSIGN` | `Boolean` | <code>true</code> |
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  prefer-subrc-check:
-    enabled: true
-    severity: warning
-    attributes:
-      checkSelectSingle: true
-      checkReadTable: true
-      checkAuthorityCheck: true
-      checkFindSearch: true
-      checkAssign: true
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

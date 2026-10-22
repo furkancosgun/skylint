@@ -41,15 +41,6 @@ lv_b = 2.
 + lv_b = 2.
 ```
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  max-one-statement:
-    enabled: true
-    severity: warning
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

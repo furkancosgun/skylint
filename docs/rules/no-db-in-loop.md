@@ -53,15 +53,6 @@ SELECT * FROM /dmo/customer
 +   INTO TABLE @lt_customers.
 ```
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  no-db-in-loop:
-    enabled: true
-    severity: warning
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

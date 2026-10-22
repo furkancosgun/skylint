@@ -63,17 +63,6 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 |---|---|:---:|
 | `MAX_STATEMENTS` | `Integer` | <code>5</code> |
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  max-method-length:
-    enabled: true
-    severity: warning
-    attributes:
-      maxStatements: 5
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

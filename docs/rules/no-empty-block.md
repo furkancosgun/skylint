@@ -68,24 +68,6 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | `CHECK_DO` | `Boolean` | <code>true</code> |
 | `CHECK_WHILE` | `Boolean` | <code>true</code> |
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  no-empty-block:
-    enabled: true
-    severity: warning
-    attributes:
-      checkIf: true
-      checkLoop: true
-      checkCase: true
-      checkTry: true
-      checkCatch: true
-      checkTryNoCatch: true
-      checkDo: true
-      checkWhile: true
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

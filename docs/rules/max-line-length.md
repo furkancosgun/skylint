@@ -47,17 +47,6 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 |---|---|:---:|
 | `MAX_LENGTH` | `Integer` | <code>120</code> |
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  max-line-length:
-    enabled: true
-    severity: warning
-    attributes:
-      maxLength: 120
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

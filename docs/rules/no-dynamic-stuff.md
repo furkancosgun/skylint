@@ -39,15 +39,6 @@ CALL FUNCTION 'BAPI_USER_GET_DETAIL'.
 + CALL FUNCTION 'BAPI_USER_GET_DETAIL'.
 ```
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  no-dynamic-stuff:
-    enabled: true
-    severity: warning
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

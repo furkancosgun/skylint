@@ -1,0 +1,4 @@
+[
+  { "target": "TEST_001", "code": "EXPMACRO", "line": 5, "column": 4, "quickfixes": ["EXPMACRO"] },
+  { "target": "TEST_002", "code": null }
+]

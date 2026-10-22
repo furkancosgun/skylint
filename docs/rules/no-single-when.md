@@ -49,15 +49,6 @@ ENDIF.
 + ENDIF.
 ```
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  no-single-when:
-    enabled: true
-    severity: warning
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

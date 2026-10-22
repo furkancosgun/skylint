@@ -63,19 +63,6 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | `CHECK_CHAINED_DECL` | `Boolean` | <code>true</code> |
 | `CHECK_CHAINED_ASSIGN` | `Boolean` | <code>true</code> |
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  no-chained-statements:
-    enabled: true
-    severity: warning
-    attributes:
-      allowStructureChains: true
-      checkChainedDecl: true
-      checkChainedAssign: true
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

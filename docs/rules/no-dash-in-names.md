@@ -39,15 +39,6 @@ DATA foobar TYPE i.
 + DATA foobar TYPE i.
 ```
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  no-dash-in-names:
-    enabled: true
-    severity: warning
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

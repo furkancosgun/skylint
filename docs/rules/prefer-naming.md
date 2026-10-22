@@ -93,47 +93,6 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | `PROG_PATTERN` | `String` | <code>^Z.+$</code> |
 | `FUGR_PATTERN` | `String` | <code>^Z.+$</code> |
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  prefer-naming:
-    enabled: true
-    severity: warning
-    attributes:
-      attrIgnExc: true
-      attrIgnLocal: true
-      attrIgnIntf: false
-      attrStatics: ^G._.+$
-      attrInstance: ^M._.+$
-      attrConstants: 
-      paramIgnExc: true
-      paramImporting: ^I._.+$
-      paramReturning: ^R._.+$
-      paramChanging: ^C._.+$
-      paramExporting: ^E._.+$
-      localData: ^L._.+$
-      localConst: ^LC_.+$
-      localFs: ^<L._.+>$
-      localStatics: ^S._.+$
-      classLocal: ^LC(L|X)_.+$
-      classTest: ^LTCL_.+$
-      classGlobal: ^ZC(L|X)_.+$
-      sscrParam: ^P_.+$
-      sscrSelopt: ^S_.+$
-      typesPattern: ^TY_.+$
-      macroPattern: ^_.+$
-      formPattern: ^F_.+$
-      functionPattern: ^Z.*$
-      intfLocal: ^LIF_.+$
-      intfGlobal: ^ZIF_.+$
-      eventName: ^[A-Z][A-Z0-9_]+$
-      eventHandler: ^ON_.+$
-      testMethod: ^(TEST|SHOULD)_.+$
-      progPattern: ^Z.+$
-      fugrPattern: ^Z.+$
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

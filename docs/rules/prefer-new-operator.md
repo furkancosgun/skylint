@@ -62,18 +62,6 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | `CHECK_CREATE_OBJECT` | `Boolean` | <code>true</code> |
 | `CHECK_RAISE_EXCEPTION` | `Boolean` | <code>true</code> |
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  prefer-new-operator:
-    enabled: true
-    severity: warning
-    attributes:
-      checkCreateObject: true
-      checkRaiseException: true
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

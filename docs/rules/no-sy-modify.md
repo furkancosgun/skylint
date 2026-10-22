@@ -43,15 +43,6 @@ rv_success = abap_true.
 + rv_success = abap_true.
 ```
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  no-sy-modify:
-    enabled: true
-    severity: warning
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

@@ -39,15 +39,6 @@ METHODS do_match RETURNING VALUE(rv_res) TYPE abap_bool.
 + METHODS do_match RETURNING VALUE(rv_res) TYPE abap_bool.
 ```
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  method-overwrites-builtin:
-    enabled: true
-    severity: warning
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

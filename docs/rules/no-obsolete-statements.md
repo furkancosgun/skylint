@@ -85,47 +85,6 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | `CHECK_COMMUNICATION` | `Boolean` | <code>true</code> |
 | `CHECK_SET_EXT_CHECK` | `Boolean` | <code>true</code> |
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  no-obsolete-statements:
-    enabled: true
-    severity: warning
-    attributes:
-      checkMove: true
-      checkRefresh: true
-      checkCompute: true
-      checkTables: true
-      checkFieldGroups: true
-      checkTestSeams: true
-      checkBreak: true
-      checkStatics: true
-      checkDefine: true
-      checkExportMemory: true
-      checkForm: true
-      checkLoopCtl: true
-      checkAdd: true
-      checkAddCorr: true
-      checkTypePools: true
-      checkRanges: true
-      checkHeaderLine: true
-      checkLoad: true
-      checkPack: true
-      checkUnpack: true
-      checkExtract: true
-      checkCommonPart: true
-      checkFreeMemory: true
-      checkProvide: true
-      checkContexts: true
-      checkInitialSize: true
-      checkCatchSystem: true
-      checkGetReference: true
-      checkInfotypes: true
-      checkCommunication: true
-      checkSetExtCheck: true
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

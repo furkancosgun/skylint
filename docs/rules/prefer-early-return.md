@@ -70,18 +70,6 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | `CHECK_METHOD_RETURN` | `Boolean` | <code>true</code> |
 | `CHECK_LOOP_CONTINUE` | `Boolean` | <code>true</code> |
 
-## CLI & CI/CD Configuration
-
-```yaml
-checks:
-  prefer-early-return:
-    enabled: true
-    severity: warning
-    attributes:
-      checkMethodReturn: true
-      checkLoopContinue: true
-```
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:
