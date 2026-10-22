@@ -10,7 +10,7 @@ Skylint supports full **statement-level suppression** using standard ABAP pseudo
 
 ---
 
-## 🎯 Dual-Match Compatibility (`TAG` & `CI_TAG`)
+## Dual-Match Compatibility (`TAG` & `CI_TAG`)
 
 In adherence to SAP's ATC framework design (as seen in SAP Code Pal for ABAP Cloud), Skylint check rules support **both** concise tags and traditional SAP `CI_` prefixed tags:
 
@@ -61,7 +61,7 @@ Every Skylint check inherits from `zcl_skylint_check_base`. When a statement or 
 
 ---
 
-## 💡 Best Practices for Suppressions
+## Best Practices for Suppressions
 
 ::: tip Clean ABAP Guideline: Fix First, Suppress Only with Justification
 1. **Always prefer fixing over suppressing:** If an automated QuickFix is available (<kbd>Ctrl</kbd> + <kbd>1</kbd>), apply it rather than hiding the finding.
@@ -75,7 +75,7 @@ Every Skylint check inherits from `zcl_skylint_check_base`. When a statement or 
 
 ---
 
-## 🔍 Finding Rule Suppression Codes
+## Finding Rule Suppression Codes
 
 Every rule in Skylint defines its specific suppression code. You can find the exact pseudo-comment or pragma code for any check:
 - In the [Rules Catalog](/rules/) under each rule's documentation page.

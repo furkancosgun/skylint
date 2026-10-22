@@ -2,13 +2,13 @@
 description: "Learn how to configure Skylint rules, severities, and thresholds via SAP ATC Check Variants (CHKV) and Eclipse ADT."
 ---
 
-# ⚙️ Configuration Reference (ATC Check Variants)
+# Configuration Reference (ATC Check Variants)
 
 Skylint is an **ATC-native** static analysis engine. Configuration is handled entirely through standard SAP **ATC Check Variants** (`CHKV`), both inside SAP systems via Eclipse ADT and in automated workflows.
 
 ---
 
-## 🏛️ ATC Check Variant Architecture
+## ATC Check Variant Architecture
 
 In modern ABAP (SAP BTP ABAP Environment, SAP S/4HANA Cloud, and S/4HANA On-Premise 2022+), an ATC Check Variant (`CHKV`) is an ABAP repository object that defines:
 1. **Enabled Checks:** Which check classes (`ZCL_SKYLINT_*`) are active during the inspection.
@@ -17,7 +17,7 @@ In modern ABAP (SAP BTP ABAP Environment, SAP S/4HANA Cloud, and S/4HANA On-Prem
 
 ---
 
-## 🛠️ Configuring Checks in Eclipse ADT
+## Configuring Checks in Eclipse ADT
 
 When editing an ATC Check Variant in Eclipse ADT:
 
@@ -39,7 +39,7 @@ Checks with configurable attributes expose a **Parameters** tab in Eclipse ADT:
 
 ---
 
-## 📦 Default Variant (`ZSKYLINT_DEFAULT`)
+## Default Variant (`ZSKYLINT_DEFAULT`)
 
 Skylint includes a ready-to-use default ATC Check Variant definition located in:
 ```text
@@ -49,7 +49,7 @@ This variant enables all Clean ABAP rules with production-tested thresholds and 
 
 ---
 
-## 🎨 Interactive Variant Builder
+## Interactive Variant Builder
 
 Skylint provides an interactive web-based **Variant Builder** in the documentation portal:
 - Navigate to the [Variant Builder](/variant-builder).

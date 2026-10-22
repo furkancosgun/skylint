@@ -2,13 +2,13 @@
 description: "Get started with Skylint, an enterprise static analysis and linter engine designed natively for ABAP Cloud and Clean ABAP with automated QuickFixes."
 ---
 
-# 🚀 Getting Started with Skylint
+# Getting Started with Skylint
 
 **Skylint** is an enterprise-grade static analysis and linter engine designed natively for **ABAP Cloud** and **Clean ABAP**. It enforces modern coding standards, prevents anti-patterns, and offers automated one-click QuickFixes right inside Eclipse ADT and CI/CD pipelines.
 
 ---
 
-## ⚡ Architectural Foundation: 100% Native ATC
+## Architectural Foundation: 100% Native ATC
 
 Skylint is engineered from the ground up for the modern ABAP ecosystem:
 - **ATC-Native Core:** Every check rule implements SAP's released public interface [`IF_CI_ATC_CHECK`](https://help.sap.com/doc/abapdocu_cp_index_htm/cloud/en-US/index.htm?file=if_ci_atc_check.htm).
@@ -17,7 +17,7 @@ Skylint is engineered from the ground up for the modern ABAP ecosystem:
 
 ---
 
-## 📦 Installation & Setup
+## Installation & Setup
 
 Skylint is installed directly into your SAP system as native ATC checks via abapGit:
 
@@ -41,7 +41,7 @@ Skylint is installed directly into your SAP system as native ATC checks via abap
 
 ---
 
-## 🛠️ The Developer Workflow in Eclipse ADT
+## The Developer Workflow in Eclipse ADT
 
 Once installed in your SAP system and configured in an ATC Check Variant:
 
@@ -59,7 +59,7 @@ Once installed in your SAP system and configured in an ATC Check Variant:
 
 ---
 
-## 🧭 Next Steps
+## Next Steps
 
 - [SAP ATC Integration Guide](/guide/atc-integration): Learn how to configure ATC Check Variants and CI/CD pipelines.
 - [Configuration Reference (ATC Check Variants)](/guide/configuration): Customize rule severities, parameters, and thresholds.

@@ -6,7 +6,7 @@ description: "Detect 7.40+ syntax incompatible with downport targets"
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
-  <Badge type="tip" text="cloud-readiness" />
+  <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="danger" text="#EC DOWNPORT_COMPAT" />
   <Badge type="info" text="Remote Enabled" />
 </div>

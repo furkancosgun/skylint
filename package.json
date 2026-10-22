@@ -17,6 +17,7 @@
     "docs:dev": "vitepress dev docs",
     "docs:build": "node scripts/generate-docs.mjs && vitepress build docs",
     "docs:preview": "vitepress preview docs",
+    "docs:check": "node scripts/check-links.mjs",
     "deps": "node scripts/fetch-deps.mjs"
   },
   "devDependencies": {

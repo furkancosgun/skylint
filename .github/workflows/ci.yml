@@ -34,3 +34,14 @@ jobs:
 
       - name: Verify documentation build
         run: npm run docs:build
+
+      - name: Check generated documentation is committed
+        run: |
+          if [ -n "$(git status --porcelain -- docs)" ]; then
+            git status --porcelain -- docs
+            echo "::error::Generated documentation is out of date. Run 'npm run docs:build' and commit the generated files."
+            exit 1
+          fi
+
+      - name: Check internal documentation links
+        run: npm run docs:check

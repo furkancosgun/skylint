@@ -2,13 +2,13 @@
 description: "Comprehensive guide on integrating Skylint with SAP ABAP Test Cockpit (ATC), configuring Check Variants, and running automated CI/CD checks."
 ---
 
-# 🏛️ SAP ATC Integration Guide
+# SAP ATC Integration Guide
 
 Skylint is an **ATC-native** static analysis engine. This guide explains how Skylint integrates into SAP's modern quality assurance infrastructure, why it exclusively targets **ABAP Test Cockpit (ATC)** instead of the legacy **Code Inspector (SCI)**, and how to set up Check Variants and CI/CD pipelines.
 
 ---
 
-## 🚫 Why ATC and NOT Classic SCI (Code Inspector)?
+## Why ATC and NOT Classic SCI (Code Inspector)?
 
 A critical design choice of Skylint is its exclusive adherence to **SAP's modern ATC framework** (`IF_CI_ATC_CHECK`).
 
@@ -17,9 +17,9 @@ A critical design choice of Skylint is its exclusive adherence to **SAP's modern
 | Dimension | Legacy Code Inspector (SCI) | Modern ABAP Test Cockpit (ATC) | Skylint Architecture |
 |---|---|---|---|
 | **Base Interface** | `cl_ci_check_root` | `if_ci_atc_check` | Extends `zcl_skylint_check_base` & implements `if_ci_atc_check` |
-| **ABAP Cloud Support** | ❌ **Forbidden / Not Released** | ✅ **100% Released (Contract C1)** | Native ABAP Cloud (`Language Version 5`) |
+| **ABAP Cloud Support** | **Forbidden / Not Released** | **100% Released (Contract C1)** | Native ABAP Cloud (`Language Version 5`) |
 | **Tooling & IDE** | SAP GUI (Tx `SCI`, `SCII`) | Eclipse ADT (ABAP Development Tools) | Native Eclipse ADT integration |
-| **QuickFix Automation** | ❌ Not supported | ✅ Native QuickFix API (`cl_ci_atc_quickfixes`) | One-click fixes via <kbd>Ctrl</kbd> + <kbd>1</kbd> |
+| **QuickFix Automation** | Not supported | Native QuickFix API (`cl_ci_atc_quickfixes`) | One-click fixes via <kbd>Ctrl</kbd> + <kbd>1</kbd> |
 | **Compiler Symbols** | Raw text tokens without semantics | Full symbol resolution (`compiler_references`) | Type-safe AST traversal |
 | **Remote Checkability** | Complex RFC scripts | RFC & HTTPS Remote Source Providers | Built-in remote enablement (`is_remote_enabled = abap_true`) |
 
@@ -31,7 +31,7 @@ Trying to run Skylint via legacy SCI is neither supported nor possible in ABAP C
 
 ---
 
-## 🛠️ Configuring Skylint in Eclipse ADT
+## Configuring Skylint in Eclipse ADT
 
 In modern ABAP systems (SAP BTP ABAP Environment, S/4HANA Cloud, and S/4HANA 2022+), ATC Check Variants are ABAP repository objects created and maintained directly in **Eclipse ADT**.
 
@@ -75,7 +75,7 @@ To enforce Skylint checks across your development team during transport release 
 
 ---
 
-## 🏃 Running Checks in Eclipse ADT
+## Running Checks in Eclipse ADT
 
 Developers can execute Skylint checks on individual objects, entire packages, or whole software components:
 
@@ -90,7 +90,7 @@ Developers can execute Skylint checks on individual objects, entire packages, or
 
 ---
 
-## 💡 Using Automated QuickFixes (<kbd>Ctrl</kbd> + <kbd>1</kbd>)
+## Using Automated QuickFixes (<kbd>Ctrl</kbd> + <kbd>1</kbd>)
 
 Skylint provides automated one-click QuickFixes for dozens of rules (e.g. `prefer-lines`, `no-call-method`, `prefer-is-not`, `prefer-string-template`).
 
@@ -102,7 +102,7 @@ Skylint provides automated one-click QuickFixes for dozens of rules (e.g. `prefe
 
 ---
 
-## 🌐 Central & Remote ATC Scenarios
+## Central & Remote ATC Scenarios
 
 In enterprise landscapes with multiple development systems, SAP recommends a **Central ATC Check System** architecture.
 
@@ -113,7 +113,7 @@ Because Skylint check base classes set `remote_enablement = abap_true` and use f
 
 ---
 
-## 🤖 CI/CD Pipeline Automation
+## CI/CD Pipeline Automation
 
 Skylint integrates smoothly into modern DevOps pipelines:
 

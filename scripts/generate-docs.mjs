@@ -254,6 +254,28 @@ const componentsDir = path.join(docsDir, 'components');
 fs.mkdirSync(componentsDir, { recursive: true });
 fs.writeFileSync(path.join(componentsDir, 'rules-data.json'), JSON.stringify(catalogRules, null, 2), 'utf8');
 
+const catalogData = {
+  categories: Object.entries(CATEGORIES).map(([key, info]) => ({
+    key,
+    title: info.title,
+    description: info.description,
+    count: RULES.filter((r) => r.category === key).length,
+  })),
+  rules: catalogRules.map((r) => ({
+    ruleId: r.ruleId,
+    title: r.title,
+    className: r.className,
+    description: r.description,
+    category: r.category,
+    categoryTitle: r.categoryTitle,
+    pseudoComment: r.pseudoComment,
+    hasQuickfix: r.hasQuickfix,
+    remoteEnabled: r.remoteEnabled,
+    configurable: Array.isArray(r.attributes) && r.attributes.length > 0,
+  })),
+};
+fs.writeFileSync(path.join(componentsDir, 'catalog-data.json'), JSON.stringify(catalogData, null, 2), 'utf8');
+
 // Generate docs/variant-builder.md
 const variantBuilderMd = `---
 layout: page
@@ -279,36 +301,7 @@ catalogMd += `- **${totalQuickFixes} Automated QuickFixes:** Instant one-click r
 catalogMd += `- **Zero Legacy Overhead:** Built exclusively on \`IF_CI_ATC_CHECK\` (no obsolete Code Inspector / SCI dependency).\n`;
 catalogMd += `:::\n\n`;
 
-const categoryLinks = Object.entries(CATEGORIES)
-  .map(([catKey, catInfo]) => `<a href="#${catKey}">${catInfo.title}</a>`)
-  .join('\n  ');
-catalogMd += `<div class="rule-filter-bar">\n  ${categoryLinks}\n</div>\n\n`;
-
-for (const [catKey, catInfo] of Object.entries(CATEGORIES)) {
-  const catRules = RULES.filter((r) => r.category === catKey);
-  catalogMd += `## ${catInfo.title} (${catRules.length}) {#${catKey}}\n\n`;
-  catalogMd += `${catInfo.description}\n\n`;
-  catalogMd += `| Rule ID | ABAP Class | Description | Pseudo-Comment | QuickFix | Remote Enabled |\n`;
-  catalogMd += `|---|---|---|:---:|:---:|:---:|\n`;
-
-  for (const r of catRules) {
-    const checkFile = path.join(checksDir, `${r.className.toLowerCase()}.clas.abap`);
-    let desc = r.ruleId;
-    let qf = 'No';
-    let remote = 'Yes';
-
-    if (fs.existsSync(checkFile)) {
-      const c = fs.readFileSync(checkFile, 'utf8');
-      const dm = c.match(/description\s*=\s*'([^']+)'/);
-      if (dm) desc = dm[1].replace(/^skylint:\s*/i, '');
-      if (/quickfix_codes|quickfix_replace/i.test(c)) qf = 'Yes';
-      if (/remote_enablement\s*=\s*abap_false/i.test(c)) remote = 'No';
-    }
-
-    catalogMd += `| [\`${r.ruleId}\`](/rules/${r.ruleId}) | \`${r.className}\` | ${desc} | \`#EC ${r.pseudoComment}\` | ${qf} | ${remote} |\n`;
-  }
-  catalogMd += `\n`;
-}
+catalogMd += `<script setup>\nimport RuleCatalog from '../components/RuleCatalog.vue';\n</script>\n\n<RuleCatalog />\n`;
 
 fs.writeFileSync(path.join(rulesDocsDir, 'index.md'), catalogMd, 'utf8');
 

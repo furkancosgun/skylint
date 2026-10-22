@@ -93,6 +93,8 @@ const selectedByCategory = computed(() => {
 
 const variantJson = computed(() => JSON.stringify(generateVariantObject(), null, 2));
 
+const highlightedJson = computed(() => highlightJson(variantJson.value));
+
 const selectedQuickfixCount = computed(
   () => rulesData.filter((r) => r.hasQuickfix && selectedCheckNames.has(r.checkName)).length
 );
@@ -187,6 +189,31 @@ function stripQuotes(value) {
   const match = trimmed.match(/^'((?:[^']|'')*)'$/);
   if (!match) return trimmed;
   return match[1].replace(/''/g, "'");
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function highlightJson(json) {
+  const escaped = escapeHtml(json);
+  return escaped.replace(
+    /("(?:\\u[a-fA-F0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(?:true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?)/g,
+    (match) => {
+      let cls = 'number';
+      if (match.startsWith('"')) {
+        cls = /:\s*$/.test(match) ? 'key' : 'string';
+      } else if (match === 'true' || match === 'false') {
+        cls = 'boolean';
+      } else if (match === 'null') {
+        cls = 'null';
+      }
+      return `<span class="vb-json-${cls}">${match}</span>`;
+    }
+  );
 }
 
 function generateVariantObject() {
@@ -359,7 +386,6 @@ function formatAttrKind(attr) {
             placeholder="ZSKYLINT_CUSTOM"
             @input="variantName = variantName.toUpperCase()"
           />
-          <span class="vb-hint">Target name for SAP transaction SCI / ATC check variant</span>
         </div>
 
         <div class="vb-field">
@@ -370,7 +396,6 @@ function formatAttrKind(attr) {
             class="vb-input"
             placeholder="Custom Skylint Clean ABAP Variant"
           />
-          <span class="vb-hint">Displayed in Eclipse ADT and SAP GUI variant lists</span>
         </div>
 
         <div class="vb-field">
@@ -379,9 +404,6 @@ function formatAttrKind(attr) {
             <option value="standard">Standard</option>
             <option value="cloudDevelopment">ABAP Cloud Development</option>
           </select>
-          <span class="vb-hint">
-            {{ abapLanguageVersion === 'cloudDevelopment' ? 'ABAP cloud development' : 'Standard' }}
-          </span>
         </div>
       </div>
     </section>
@@ -507,7 +529,6 @@ function formatAttrKind(attr) {
 
           <!-- Metadata Tags Row -->
           <div class="vb-tags-row">
-            <span class="vb-tag sev" :class="rule.severity">{{ rule.severity }}</span>
             <span class="vb-tag cat">{{ rule.categoryTitle }}</span>
             <button
               class="vb-tag pseudo"
@@ -646,7 +667,7 @@ function formatAttrKind(attr) {
         <span>Variant JSON preview</span>
         <span>{{ activeCount }} checks · {{ abapLanguageVersion }}</span>
       </div>
-      <pre class="vb-json-preview" aria-label="Generated CHKV JSON"><code>{{ variantJson }}</code></pre>
+      <pre class="vb-json-preview" aria-label="Generated CHKV JSON"><code v-html="highlightedJson"></code></pre>
     </section>
 
     <div class="vb-sticky-bar" role="region" aria-label="Variant builder actions">
@@ -912,11 +933,6 @@ function formatAttrKind(attr) {
   font-family: var(--vp-font-family-mono);
   font-weight: 600;
   letter-spacing: 0.05em;
-}
-
-.vb-hint {
-  font-size: 0.75rem;
-  color: var(--vp-c-text-3);
 }
 
 /* Filters Section */
@@ -1201,16 +1217,6 @@ function formatAttrKind(attr) {
   color: var(--vp-c-text-2);
 }
 
-.vb-tag.sev.warning {
-  border-color: #f59e0b;
-  color: #f59e0b;
-}
-
-.vb-tag.sev.error {
-  border-color: #ef4444;
-  color: #ef4444;
-}
-
 .vb-tag.pseudo {
   cursor: pointer;
   font-family: var(--vp-font-family-mono);
@@ -1448,16 +1454,6 @@ html.dark .vb-tag.local {
   height: 12px;
 }
 
-.vb-tag.sev {
-  text-transform: capitalize;
-  font-weight: 700;
-}
-
-.vb-tag.sev.note {
-  border-color: #3b82f6;
-  color: #3b82f6;
-}
-
 .vb-inline-status {
   display: inline-flex;
   align-items: center;
@@ -1537,6 +1533,47 @@ html.dark .vb-tag.local {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--vp-c-text-3);
+}
+
+.vb-json-preview :deep(.vb-json-key) {
+  color: #0369a1;
+  font-weight: 600;
+}
+
+.vb-json-preview :deep(.vb-json-string) {
+  color: #15803d;
+}
+
+.vb-json-preview :deep(.vb-json-number) {
+  color: #b45309;
+}
+
+.vb-json-preview :deep(.vb-json-boolean) {
+  color: #7c3aed;
+}
+
+.vb-json-preview :deep(.vb-json-null) {
+  color: #b91c1c;
+}
+
+html.dark .vb-json-preview :deep(.vb-json-key) {
+  color: #7dd3fc;
+}
+
+html.dark .vb-json-preview :deep(.vb-json-string) {
+  color: #86efac;
+}
+
+html.dark .vb-json-preview :deep(.vb-json-number) {
+  color: #fcd34d;
+}
+
+html.dark .vb-json-preview :deep(.vb-json-boolean) {
+  color: #c4b5fd;
+}
+
+html.dark .vb-json-preview :deep(.vb-json-null) {
+  color: #fca5a5;
 }
 
 .vb-json-preview {
