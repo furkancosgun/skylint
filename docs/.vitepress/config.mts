@@ -4,6 +4,7 @@ const base = process.env.VITEPRESS_BASE || '/';
 
 export default defineConfig({
   title: 'Skylint',
+  titleTemplate: ':title | Enterprise Clean ABAP & Cloud ATC Linter',
   description: 'Enterprise Clean ABAP & Cloud ATC Linter Engine',
   base,
   cleanUrls: true,
@@ -21,8 +22,10 @@ export default defineConfig({
   },
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: `${base}logo.svg` }],
-    ['meta', { name: 'robots', content: 'index, follow' }],
+    ['link', { rel: 'sitemap', type: 'application/xml', title: 'Sitemap', href: 'https://furkancosgun.github.io/skylint/sitemap.xml' }],
+    ['meta', { name: 'robots', content: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' }],
     ['meta', { name: 'google-site-verification', content: 'googlebe62f3b9b7abdd43' }],
+    ['meta', { name: 'keywords', content: 'abap, clean abap, atc, sap, abap cloud, linter, static analysis, quickfix, btp, s4hana' }],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:image', content: 'https://furkancosgun.github.io/skylint/og-image.png' }],
     ['meta', { property: 'og:image:width', content: '1200' }],
@@ -30,6 +33,7 @@ export default defineConfig({
     ['meta', { property: 'og:image:type', content: 'image/png' }],
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
     ['meta', { name: 'twitter:image', content: 'https://furkancosgun.github.io/skylint/og-image.png' }],
+    ['style', {}, '@media (max-width: 768px) { .vp-doc { font-size: 15px; } }'],
   ],
   transformHead: ({ pageData, title, description }) => {
     if (pageData.isNotFound) {
@@ -52,6 +56,8 @@ export default defineConfig({
       ['meta', { property: 'og:url', content: url }],
       ['meta', { property: 'og:title', content: ogTitle }],
       ['meta', { property: 'og:description', content: ogDescription }],
+      ['meta', { property: 'og:updated_time', content: new Date().toISOString() }],
+      ['meta', { property: 'article:modified_time', content: new Date().toISOString() }],
       ['meta', { name: 'description', content: ogDescription }],
       ['meta', { name: 'twitter:title', content: ogTitle }],
       ['meta', { name: 'twitter:description', content: ogDescription }],
@@ -88,7 +94,7 @@ export default defineConfig({
     return tags;
   },
   themeConfig: {
-    logo: '/logo.svg',
+    logo: { src: '/logo.svg', alt: 'Skylint Logo' },
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
       { text: 'Rules (104)', link: '/rules/' },

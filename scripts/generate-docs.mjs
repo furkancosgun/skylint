@@ -334,6 +334,7 @@ const base = process.env.VITEPRESS_BASE || '/';
 
 export default defineConfig({
   title: 'Skylint',
+  titleTemplate: ':title | Enterprise Clean ABAP & Cloud ATC Linter',
   description: 'Enterprise Clean ABAP & Cloud ATC Linter Engine',
   base,
   cleanUrls: true,
@@ -351,8 +352,10 @@ export default defineConfig({
   },
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: \`\${base}logo.svg\` }],
-    ['meta', { name: 'robots', content: 'index, follow' }],
+    ['link', { rel: 'sitemap', type: 'application/xml', title: 'Sitemap', href: 'https://furkancosgun.github.io/skylint/sitemap.xml' }],
+    ['meta', { name: 'robots', content: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' }],
     ['meta', { name: 'google-site-verification', content: 'googlebe62f3b9b7abdd43' }],
+    ['meta', { name: 'keywords', content: 'abap, clean abap, atc, sap, abap cloud, linter, static analysis, quickfix, btp, s4hana' }],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:image', content: 'https://furkancosgun.github.io/skylint/og-image.png' }],
     ['meta', { property: 'og:image:width', content: '1200' }],
@@ -360,6 +363,7 @@ export default defineConfig({
     ['meta', { property: 'og:image:type', content: 'image/png' }],
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
     ['meta', { name: 'twitter:image', content: 'https://furkancosgun.github.io/skylint/og-image.png' }],
+    ['style', {}, '@media (max-width: 768px) { .vp-doc { font-size: 15px; } }'],
   ],
   transformHead: ({ pageData, title, description }) => {
     if (pageData.isNotFound) {
@@ -382,6 +386,8 @@ export default defineConfig({
       ['meta', { property: 'og:url', content: url }],
       ['meta', { property: 'og:title', content: ogTitle }],
       ['meta', { property: 'og:description', content: ogDescription }],
+      ['meta', { property: 'og:updated_time', content: new Date().toISOString() }],
+      ['meta', { property: 'article:modified_time', content: new Date().toISOString() }],
       ['meta', { name: 'description', content: ogDescription }],
       ['meta', { name: 'twitter:title', content: ogTitle }],
       ['meta', { name: 'twitter:description', content: ogDescription }],
@@ -418,7 +424,7 @@ export default defineConfig({
     return tags;
   },
   themeConfig: {
-    logo: '/logo.svg',
+    logo: { src: '/logo.svg', alt: 'Skylint Logo' },
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
       { text: 'Rules (${RULES.length})', link: '/rules/' },
@@ -495,6 +501,28 @@ features:
     title: ATC Variant Builder
     details: Build custom SAP ATC check variants (.chkv.json) and tune rule parameters for SAP GUI / abapGit.
 ---
+
+## 🏛️ Enterprise ABAP Quality Platform
+
+Skylint transforms static code analysis for SAP ecosystems by executing directly within the standard **ABAP Test Cockpit (ATC)** framework. It enforces Clean ABAP guidelines and cloud-readiness natively inside Eclipse ADT and automated pipelines.
+
+### 🚀 Architecture & Documentation
+- [Getting Started & Installation Guide](/guide/getting-started): Step-by-step setup via abapGit for SAP BTP, S/4HANA Cloud, and On-Premise.
+- [SAP ATC Integration & ABAP Cloud](/guide/atc-integration): Learn why native ATC replaces legacy SCI and how to configure CI/CD.
+- [ATC Variant Configuration & Parameters](/guide/configuration): Configure rule severities, parameters, and thresholds in Eclipse ADT.
+- [Suppressions & Pragma Standards](/guide/suppressions): Manage intentional exceptions using standard #EC pseudo-comments and pragmas.
+
+### 📋 Clean ABAP Rule Categories
+- [Clean ABAP & Modern Syntax](/rules/): Modern language features, expression-oriented coding, and idiomatic practices.
+- [Anti-Patterns & Bad Practices](/rules/): Discouraged constructs, obsolete statements, and redundant syntax.
+- [Performance & Database Optimization](/rules/): Database query efficiency, buffer protection, and internal table operation guidelines.
+- [Security & Robustness](/rules/): Authorizations, dynamic execution sanitation, error handling, and runtime safety.
+- [Metrics & Complexity Limits](/rules/): Quantitative boundaries for method size, nesting depth, parameter counts, and cyclomatic complexity.
+
+### 🛠️ Developer Tools & Catalogs
+- [Interactive ATC Variant Builder](/variant-builder): Visually customize rules, tune thresholds, and export CHKV JSON configurations.
+- [Complete Interactive Catalog](/rules/): Browse all ${RULES.length} native check rules with before-and-after Clean ABAP examples.
+- [GitHub Open Source Repository](https://github.com/furkancosgun/skylint): Source code, issue tracker, contributions, and community releases.
 `;
 
 fs.writeFileSync(path.join(docsDir, 'index.md'), indexMd, 'utf8');

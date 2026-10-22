@@ -33,3 +33,25 @@ features:
     title: ATC Variant Builder
     details: Build custom SAP ATC check variants (.chkv.json) and tune rule parameters for SAP GUI / abapGit.
 ---
+
+## 🏛️ Enterprise ABAP Quality Platform
+
+Skylint transforms static code analysis for SAP ecosystems by executing directly within the standard **ABAP Test Cockpit (ATC)** framework. It enforces Clean ABAP guidelines and cloud-readiness natively inside Eclipse ADT and automated pipelines.
+
+### 🚀 Architecture & Documentation
+- [Getting Started & Installation Guide](/guide/getting-started): Step-by-step setup via abapGit for SAP BTP, S/4HANA Cloud, and On-Premise.
+- [SAP ATC Integration & ABAP Cloud](/guide/atc-integration): Learn why native ATC replaces legacy SCI and how to configure CI/CD.
+- [ATC Variant Configuration & Parameters](/guide/configuration): Configure rule severities, parameters, and thresholds in Eclipse ADT.
+- [Suppressions & Pragma Standards](/guide/suppressions): Manage intentional exceptions using standard #EC pseudo-comments and pragmas.
+
+### 📋 Clean ABAP Rule Categories
+- [Clean ABAP & Modern Syntax](/rules/): Modern language features, expression-oriented coding, and idiomatic practices.
+- [Anti-Patterns & Bad Practices](/rules/): Discouraged constructs, obsolete statements, and redundant syntax.
+- [Performance & Database Optimization](/rules/): Database query efficiency, buffer protection, and internal table operation guidelines.
+- [Security & Robustness](/rules/): Authorizations, dynamic execution sanitation, error handling, and runtime safety.
+- [Metrics & Complexity Limits](/rules/): Quantitative boundaries for method size, nesting depth, parameter counts, and cyclomatic complexity.
+
+### 🛠️ Developer Tools & Catalogs
+- [Interactive ATC Variant Builder](/variant-builder): Visually customize rules, tune thresholds, and export CHKV JSON configurations.
+- [Complete Interactive Catalog](/rules/): Browse all 104 native check rules with before-and-after Clean ABAP examples.
+- [GitHub Open Source Repository](https://github.com/furkancosgun/skylint): Source code, issue tracker, contributions, and community releases.
