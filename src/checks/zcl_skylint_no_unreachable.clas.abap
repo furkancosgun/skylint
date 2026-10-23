@@ -106,8 +106,7 @@ CLASS zcl_skylint_no_unreachable IMPLEMENTATION.
         WHEN OTHERS.
           IF is_depth_unreachable( it_states = lt_states
                                    iv_depth  = lv_depth ) = abap_true.
-            " Only single dead statements get a delete fix; block openers
-            " (IF/LOOP/...) need their whole body removed by hand.
+
             ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-delete_stmt
                                             iv_statement_from = lv_stmt_idx
                                             it_new_code       = VALUE #( ) ).

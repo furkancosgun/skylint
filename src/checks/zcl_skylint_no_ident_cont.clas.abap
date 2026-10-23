@@ -135,9 +135,9 @@ CLASS zcl_skylint_no_ident_cont IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD evaluate_if.
-    DATA ls_if_branch     TYPE ty_branch.
-    DATA ls_else_branch   TYPE ty_branch.
-    DATA lv_has_elseif    TYPE abap_bool.
+    DATA ls_if_branch   TYPE ty_branch.
+    DATA ls_else_branch TYPE ty_branch.
+    DATA lv_has_elseif  TYPE abap_bool.
 
     READ TABLE is_frame-branches INTO ls_if_branch WITH KEY kind = 'IF'.
     IF sy-subrc <> 0.

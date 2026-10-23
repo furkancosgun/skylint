@@ -59,9 +59,9 @@ CLASS zcl_skylint_pref_filter IMPLEMENTATION.
     ENDIF.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF <ls_statement>-keyword = 'LOOP'
+      IF     <ls_statement>-keyword = 'LOOP'
          AND is_simple_filter( it_statements = is_procedure-statements
-                               iv_index      = sy-tabix ) = abap_true.
+                               iv_index      = sy-tabix )              = abap_true.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-prefer_filter ).
       ENDIF.
@@ -140,15 +140,15 @@ CLASS zcl_skylint_pref_filter IMPLEMENTATION.
     DATA ls_target TYPE if_ci_atc_source_code_provider=>ty_token.
 
     ev_valid = abap_false.
-    CLEAR: ev_source, ev_work_area.
+    CLEAR: ev_source,
+           ev_work_area.
 
     IF zcl_skylint_ast_util=>token_count( is_statement ) <> 5.
       RETURN.
     ENDIF.
 
-    IF zcl_skylint_ast_util=>match_token_sequence(
-           is_statement = is_statement
-           it_expected  = VALUE #( ( `LOOP` ) ( `AT` ) ) ) = abap_false.
+    IF zcl_skylint_ast_util=>match_token_sequence( is_statement = is_statement
+                                                   it_expected  = VALUE #( ( `LOOP` ) ( `AT` ) ) ) = abap_false.
       RETURN.
     ENDIF.
 
@@ -176,7 +176,8 @@ CLASS zcl_skylint_pref_filter IMPLEMENTATION.
     DATA ls_dest TYPE if_ci_atc_source_code_provider=>ty_token.
 
     ev_valid = abap_false.
-    CLEAR: ev_source, ev_destination.
+    CLEAR: ev_source,
+           ev_destination.
 
     IF is_statement-keyword <> 'APPEND'.
       RETURN.
@@ -217,11 +218,11 @@ CLASS zcl_skylint_pref_filter IMPLEMENTATION.
         RETURN.
       ENDIF.
       IF    zcl_skylint_ast_util=>token_is_keyword( is_token  = <ls_token>
-                                                    iv_lexeme = 'OR' ) = abap_true
+                                                    iv_lexeme = 'OR' )     = abap_true
          OR zcl_skylint_ast_util=>token_is_keyword( is_token  = <ls_token>
-                                                    iv_lexeme = 'NOT' ) = abap_true
+                                                    iv_lexeme = 'NOT' )    = abap_true
          OR zcl_skylint_ast_util=>token_is_keyword( is_token  = <ls_token>
-                                                    iv_lexeme = 'EQUIV' ) = abap_true.
+                                                    iv_lexeme = 'EQUIV' )  = abap_true.
         rv_yes = abap_true.
         RETURN.
       ENDIF.

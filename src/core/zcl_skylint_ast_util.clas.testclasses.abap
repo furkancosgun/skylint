@@ -22,7 +22,6 @@ CLASS ltcl_ast_util IMPLEMENTATION.
                       usage_mode = if_ci_atc_source_code_provider=>usage_modes-read ).
     lt_refs = VALUE #( ( ls_ref ) ).
 
-    " Token 'EXPORTING' with compiler reference (e.g. variable named 'exporting')
     ls_stmt = VALUE #( keyword = 'CALL'
                        tokens  = VALUE #( ( lexeme = 'CALL' )
                                           ( lexeme     = 'exporting'
@@ -37,7 +36,6 @@ CLASS ltcl_ast_util IMPLEMENTATION.
                                                                                iv_index     = 2
                                                                                iv_expected  = 'EXPORTING' ) ).
 
-    " True keyword 'EXPORTING' with empty references IS matched
     ls_stmt = VALUE #( keyword = 'CALL'
                        tokens  = VALUE #( ( lexeme = 'CALL' )
                                           ( lexeme = 'EXPORTING' ) ) ).

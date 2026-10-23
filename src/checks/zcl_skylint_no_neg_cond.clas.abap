@@ -80,9 +80,9 @@ CLASS zcl_skylint_no_neg_cond IMPLEMENTATION.
       lv_idx = sy-tabix.
 
       IF    zcl_skylint_ast_util=>token_is_keyword( is_token  = <ls_token>
-                                                    iv_lexeme = '<>' ) = abap_true
+                                                    iv_lexeme = '<>' )     = abap_true
          OR zcl_skylint_ast_util=>token_is_keyword( is_token  = <ls_token>
-                                                    iv_lexeme = 'NE' ) = abap_true.
+                                                    iv_lexeme = 'NE' )     = abap_true.
         rv_yes = abap_true.
         RETURN.
       ENDIF.
@@ -149,12 +149,12 @@ CLASS zcl_skylint_no_neg_cond IMPLEMENTATION.
     LOOP AT it_statements FROM iv_index + 1 ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'IF'.
-          lv_depth = lv_depth + 1.
+          lv_depth += 1.
         WHEN 'ENDIF'.
           IF lv_depth = 0.
             EXIT.
           ENDIF.
-          lv_depth = lv_depth - 1.
+          lv_depth -= 1.
         WHEN 'ELSEIF'.
           IF lv_depth = 0.
             lv_has_elseif = abap_true.

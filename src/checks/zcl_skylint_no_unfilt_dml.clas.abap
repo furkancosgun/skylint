@@ -18,12 +18,12 @@ CLASS zcl_skylint_no_unfilt_dml DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_UNFILT_DML'.
 
     METHODS has_top_level_where
-      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_has)   TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_has) TYPE abap_bool.
 
     METHODS is_unfiltered_dml
-      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_yes)   TYPE abap_bool.
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_yes) TYPE abap_bool.
 ENDCLASS.
 
 
@@ -65,9 +65,8 @@ CLASS zcl_skylint_no_unfilt_dml IMPLEMENTATION.
           RETURN.
         ENDIF.
       WHEN 'DELETE'.
-        IF zcl_skylint_ast_util=>match_token_sequence(
-               is_statement = is_statement
-               it_expected  = VALUE #( ( `DELETE` ) ( `FROM` ) ) ) = abap_false.
+        IF zcl_skylint_ast_util=>match_token_sequence( is_statement = is_statement
+                                                       it_expected  = VALUE #( ( `DELETE` ) ( `FROM` ) ) ) = abap_false.
           RETURN.
         ENDIF.
       WHEN OTHERS.
@@ -92,13 +91,12 @@ CLASS zcl_skylint_no_unfilt_dml IMPLEMENTATION.
     rv_has = abap_false.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      IF lv_depth = 0 AND zcl_skylint_ast_util=>token_is_keyword(
-                                is_token = <ls_token>
-                                iv_lexeme = 'WHERE' ) = abap_true.
+      IF lv_depth = 0 AND zcl_skylint_ast_util=>token_is_keyword( is_token  = <ls_token>
+                                                                  iv_lexeme = 'WHERE' ) = abap_true.
         rv_has = abap_true.
         RETURN.
       ENDIF.
-      lv_depth = lv_depth + zcl_skylint_ast_util=>token_paren_delta( <ls_token> ).
+      lv_depth += zcl_skylint_ast_util=>token_paren_delta( <ls_token> ).
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

@@ -126,14 +126,12 @@ CLASS zcl_skylint_no_self_assign IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    " Ensure = is top-level assignment operator (empty references)
     ls_tok_eq = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                  iv_index     = lv_eq_idx ).
     IF ls_tok_eq-references IS NOT INITIAL.
       RETURN.
     ENDIF.
 
-    " Ensure RHS is a single operand assignment (no arithmetic operators or complex expressions)
     IF lines( is_statement-tokens ) > lv_eq_idx + 1.
       ls_tok_after = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                       iv_index     = lv_eq_idx + 2 ).

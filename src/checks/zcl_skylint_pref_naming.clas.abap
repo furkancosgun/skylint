@@ -32,7 +32,6 @@ CLASS zcl_skylint_pref_naming DEFINITION
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'NAMING'.
 
-    " Class Attribute Names
     DATA mv_attr_ignore_exceptions  TYPE abap_bool VALUE abap_true.
     DATA mv_attr_ignore_local       TYPE abap_bool VALUE abap_true.
     DATA mv_attr_ignore_interfaces  TYPE abap_bool VALUE abap_false.
@@ -40,52 +39,40 @@ CLASS zcl_skylint_pref_naming DEFINITION
     DATA mv_attr_instance           TYPE string    VALUE '^M._.+$'.
     DATA mv_attr_constants          TYPE string    VALUE ''.
 
-    " Method Parameter Names
     DATA mv_param_ignore_exceptions TYPE abap_bool VALUE abap_true.
     DATA mv_param_importing         TYPE string    VALUE '^I._.+$'.
     DATA mv_param_returning         TYPE string    VALUE '^R._.+$'.
     DATA mv_param_changing          TYPE string    VALUE '^C._.+$'.
     DATA mv_param_exporting         TYPE string    VALUE '^E._.+$'.
 
-    " Local Variable Names
     DATA mv_local_data              TYPE string    VALUE '^L._.+$'.
     DATA mv_local_constant          TYPE string    VALUE '^LC_.+$'.
     DATA mv_local_fs                TYPE string    VALUE '^<L._.+>$'.
     DATA mv_local_statics           TYPE string    VALUE '^S._.+$'.
 
-    " Class Names (abaplint unified pattern style)
     DATA mv_class_global            TYPE string    VALUE '^ZC(L|X)_.+$'.
     DATA mv_class_local             TYPE string    VALUE '^LC(L|X)_.+$'.
     DATA mv_class_test              TYPE string    VALUE '^LTCL_.+$'.
 
-    " Selection Screen Names
     DATA mv_sscreen_parameter       TYPE string    VALUE '^P_.+$'.
     DATA mv_sscreen_select_option   TYPE string    VALUE '^S_.+$'.
 
-    " Types Naming
     DATA mv_types_pattern           TYPE string    VALUE '^TY_.+$'.
 
-    " Macro Naming
     DATA mv_macro_pattern           TYPE string    VALUE '^_.+$'.
 
-    " Form Naming
     DATA mv_form_pattern            TYPE string    VALUE '^F_.+$'.
 
-    " Function Module Naming
     DATA mv_function_pattern        TYPE string    VALUE '^Z.*$'.
 
-    " Interface Naming
     DATA mv_intf_local              TYPE string    VALUE '^LIF_.+$'.
     DATA mv_intf_global             TYPE string    VALUE '^ZIF_.+$'.
 
-    " Event Naming
     DATA mv_event_name              TYPE string    VALUE '^[A-Z][A-Z0-9_]+$'.
     DATA mv_event_handler           TYPE string    VALUE '^ON_.+$'.
 
-    " Test Method Naming
     DATA mv_test_method             TYPE string    VALUE '^(TEST|SHOULD)_.+$'.
 
-    " Program & Function Group Naming
     DATA mv_program_pattern         TYPE string    VALUE '^Z.+$'.
     DATA mv_fugr_pattern            TYPE string    VALUE '^Z.+$'.
 

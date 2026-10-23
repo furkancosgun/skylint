@@ -117,21 +117,18 @@ CLASS zcl_skylint_pref_tab_expr IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    " Must be READ TABLE
     IF zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
                                                iv_index     = 2
                                                iv_expected  = `TABLE` ) = abap_false.
       RETURN.
     ENDIF.
 
-    " Ignore BINARY SEARCH (requires sorted table or explicit sort)
     lv_bin_pos = zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
                                                             it_expected  = VALUE #( ( `BINARY` ) ( `SEARCH` ) ) ).
     IF lv_bin_pos > 0.
       RETURN.
     ENDIF.
 
-    " Ignore TRANSPORTING NO FIELDS (covered by prefer-line-exists)
     lv_no_fld_pos = zcl_skylint_ast_util=>find_token_sequence(
                         is_statement = is_statement
                         it_expected  = VALUE #( ( `TRANSPORTING` ) ( `NO` ) ( `FIELDS` ) ) ).
@@ -179,7 +176,7 @@ CLASS zcl_skylint_pref_tab_expr IMPLEMENTATION.
                                                iv_to_idx    = lv_tokens_cnt ).
       rs_info-is_valid  = abap_true.
     ELSEIF lv_key_pos > 0.
-      " WITH KEY ... or WITH TABLE KEY ...
+
       IF zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
                                                  iv_index     = lv_key_pos + 1
                                                  iv_expected  = `KEY` ) = abap_true.
@@ -237,13 +234,13 @@ CLASS zcl_skylint_pref_tab_expr IMPLEMENTATION.
     lv_expr = |{ is_info-table_name }[ { is_info-cond_text } ]|.
 
     IF is_info-is_assign = abap_true.
-      " ASSIGN itab[ ... ] TO <fs>.
+
       APPEND |{ lv_indent }ASSIGN { lv_expr } TO { is_info-target_name }.| TO rt_code.
     ELSEIF is_info-is_ref = abap_true.
-      " ref = REF #( itab[ ... ] ).
+
       APPEND |{ lv_indent }{ is_info-target_name } = REF #( { lv_expr } ).| TO rt_code.
     ELSEIF mv_use_optional = abap_true.
-      " target = VALUE #( itab[ ... ] OPTIONAL ).
+
       APPEND |{ lv_indent }{ is_info-target_name } = VALUE #( { lv_expr } OPTIONAL ).| TO rt_code.
     ELSE.
       APPEND |{ lv_indent }{ is_info-target_name } = { lv_expr }.| TO rt_code.

@@ -71,30 +71,30 @@ CLASS zcl_skylint_max_bool_expr IMPLEMENTATION.
     rv_count = 0.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      IF zcl_skylint_ast_util=>token_is_keyword( is_token = <ls_token>
+      IF zcl_skylint_ast_util=>token_is_keyword( is_token  = <ls_token>
                                                  iv_lexeme = 'BETWEEN' ) = abap_true.
         lv_between = abap_true.
         CONTINUE.
       ENDIF.
 
-      IF    zcl_skylint_ast_util=>token_is_keyword( is_token = <ls_token>
-                                                    iv_lexeme = 'AND' ) = abap_true
+      IF     zcl_skylint_ast_util=>token_is_keyword( is_token  = <ls_token>
+                                                     iv_lexeme = 'AND' )    = abap_true
          AND lv_between = abap_true.
         lv_between = abap_false.
         CONTINUE.
       ENDIF.
 
-      IF zcl_skylint_ast_util=>token_is_keyword( is_token = <ls_token>
+      IF zcl_skylint_ast_util=>token_is_keyword( is_token  = <ls_token>
                                                  iv_lexeme = 'AND' ) = abap_true.
-        rv_count = rv_count + 1.
+        rv_count += 1.
         CONTINUE.
       ENDIF.
 
-      IF    zcl_skylint_ast_util=>token_is_keyword( is_token = <ls_token>
-                                                    iv_lexeme = 'OR' ) = abap_true
-         OR zcl_skylint_ast_util=>token_is_keyword( is_token = <ls_token>
-                                                    iv_lexeme = 'EQUIV' ) = abap_true.
-        rv_count = rv_count + 1.
+      IF    zcl_skylint_ast_util=>token_is_keyword( is_token  = <ls_token>
+                                                    iv_lexeme = 'OR' )     = abap_true
+         OR zcl_skylint_ast_util=>token_is_keyword( is_token  = <ls_token>
+                                                    iv_lexeme = 'EQUIV' )  = abap_true.
+        rv_count += 1.
       ENDIF.
     ENDLOOP.
   ENDMETHOD.

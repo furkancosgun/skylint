@@ -35,8 +35,8 @@ CLASS zcl_skylint_no_dup_literals DEFINITION
                 it_counts     TYPE ty_literal_counts.
 
     METHODS is_fixed_string_literal
-      IMPORTING is_token        TYPE if_ci_atc_source_code_provider=>ty_token
-      RETURNING VALUE(rv_yes)   TYPE abap_bool.
+      IMPORTING is_token      TYPE if_ci_atc_source_code_provider=>ty_token
+      RETURNING VALUE(rv_yes) TYPE abap_bool.
 
     METHODS get_literal_content
       IMPORTING is_token          TYPE if_ci_atc_source_code_provider=>ty_token
@@ -46,20 +46,18 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_dup_literals IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Avoid repeating the same string literal'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-duplicate_literal
-                                       severity       = if_ci_atc_check=>finding_severities-warning
-                                       text           = 'Replace repeated literals with a constant'
-                                       pseudo_comment = c_pseudo_comment ) )
-                                 attributes        = VALUE #(
-                                     ( name  = 'MIN_OCCURRENCES'
-                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                                       value = REF #( mv_min_occurrences ) )
-                                     ( name  = 'MIN_LENGTH'
-                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                                       value = REF #( mv_min_length ) ) ) ) ).
+    super->constructor(
+        VALUE #( description       = 'Avoid repeating the same string literal'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #( ( code           = c_finding_codes-duplicate_literal
+                                                severity       = if_ci_atc_check=>finding_severities-warning
+                                                text           = 'Replace repeated literals with a constant'
+                                                pseudo_comment = c_pseudo_comment ) )
+                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                              ( name  = 'MIN_OCCURRENCES'
+                                                value = REF #( mv_min_occurrences ) )
+                                              ( name  = 'MIN_LENGTH'
+                                                value = REF #( mv_min_length ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -99,7 +97,7 @@ CLASS zcl_skylint_no_dup_literals IMPLEMENTATION.
 
         ASSIGN rt_counts[ literal = lv_literal ] TO <ls_counter>.
         IF sy-subrc = 0.
-          <ls_counter>-count = <ls_counter>-count + 1.
+          <ls_counter>-count += 1.
         ELSE.
           APPEND VALUE #( literal = lv_literal
                           count   = 1 ) TO rt_counts.

@@ -150,7 +150,6 @@ CLASS zcl_skylint_pref_cond IMPLEMENTATION.
            ev_valid.
     ev_valid = abap_true.
 
-    " First branch: IF statement
     CLEAR ls_branch.
     ls_branch-branch_idx = iv_if_idx.
     ls_branch-cond_text  = extract_tokens_text( is_statement = is_if_stmt
@@ -331,7 +330,7 @@ CLASS zcl_skylint_pref_cond IMPLEMENTATION.
       ELSE.
         lv_line = |{ lv_indent }  WHEN { <ls_branch>-cond_text } THEN { <ls_branch>-expr_text }|.
         IF sy-tabix = lines( it_branches ).
-          " Last branch without ELSE: retain current value in ELSE
+
           APPEND lv_line TO rt_code.
           APPEND |{ lv_indent }  ELSE { iv_target } ).| TO rt_code.
         ELSE.

@@ -323,7 +323,7 @@ CLASS zcl_skylint_pref_switch IMPLEMENTATION.
       ELSE.
         lv_line = |{ lv_indent }  WHEN { <ls_branch>-cond_text } THEN { <ls_branch>-expr_text }|.
         IF sy-tabix = lines( it_branches ).
-          " Last branch without OTHERS: retain current value in ELSE
+
           APPEND lv_line TO rt_code.
           APPEND |{ lv_indent }  ELSE { iv_target } ).| TO rt_code.
         ELSE.

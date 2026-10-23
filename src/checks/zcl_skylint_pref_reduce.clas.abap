@@ -129,7 +129,6 @@ CLASS zcl_skylint_pref_reduce IMPLEMENTATION.
     CLEAR: es_info,
            ev_endloop_idx.
 
-    " Exactly LOOP statement, body statement, ENDLOOP statement: index + 2 must be ENDLOOP
     IF iv_loop_idx + 2 > iv_total.
       RETURN.
     ENDIF.
@@ -145,7 +144,6 @@ CLASS zcl_skylint_pref_reduce IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    " Ignore GROUP BY or WHERE in LOOP to keep it simple and clean
     lv_where_pos = zcl_skylint_ast_util=>find_token( is_statement = ls_loop_stmt
                                                      iv_lexeme    = 'WHERE' ).
     lv_grp_pos   = zcl_skylint_ast_util=>find_token( is_statement = ls_loop_stmt
@@ -154,7 +152,6 @@ CLASS zcl_skylint_pref_reduce IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    " Must be LOOP AT <itab> INTO <wa> / ASSIGNING <fs>
     IF zcl_skylint_ast_util=>matches_token_at( is_statement = ls_loop_stmt
                                                iv_index     = 2
                                                iv_expected  = `AT` ) = abap_false.
@@ -233,15 +230,14 @@ CLASS zcl_skylint_pref_reduce IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    " Must be simple accumulator update: lv_acc = lv_acc + ... OR lv_acc = lv_acc && ... OR lv_acc = |{ lv_acc }...|
     IF ls_third-lexeme = ls_first-lexeme.
-      " Pattern: acc = acc + item OR acc = acc && item
+
       ev_acc_var  = ls_first-lexeme.
       ev_expr     = lv_expr_text.
       ev_is_valid = abap_true.
     ELSEIF contains( val   = lv_expr_text
                      start = |\|\{ { ls_first-lexeme } \}| ).
-      " String template pattern: acc = |{ acc }...|
+
       ev_acc_var  = ls_first-lexeme.
       ev_expr     = lv_expr_text.
       ev_is_valid = abap_true.

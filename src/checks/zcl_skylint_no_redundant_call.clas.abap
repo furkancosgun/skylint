@@ -136,7 +136,6 @@ CLASS zcl_skylint_no_redundant_call IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      " 1. Check RECEIVING
       IF     mv_check_receiving               = abap_true
          AND has_exceptions( <ls_statement> ) = abap_false
          AND has_receiving( <ls_statement> )  = abap_true.
@@ -148,7 +147,6 @@ CLASS zcl_skylint_no_redundant_call IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      " 2. Check EXPORTING
       IF mv_check_exporting = abap_true AND has_other_sections( <ls_statement> ) = abap_false.
         lv_tok_idx = zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
                                                        iv_lexeme    = 'EXPORTING' ).
@@ -166,7 +164,6 @@ CLASS zcl_skylint_no_redundant_call IMPLEMENTATION.
         ENDIF.
       ENDIF.
 
-      " 3. Check parameter name (no EXPORTING, no other sections)
       IF has_other_sections( <ls_statement> ) = abap_false.
         IF mv_require_param_name = abap_true.
           check_require_param_name( is_statement = <ls_statement>

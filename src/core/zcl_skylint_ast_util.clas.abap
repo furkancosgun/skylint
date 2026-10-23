@@ -105,17 +105,11 @@ CLASS zcl_skylint_ast_util DEFINITION
       IMPORTING is_token      TYPE if_ci_atc_source_code_provider=>ty_token
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
-    "! True when the token opens an inline declaration, i.e. DATA( ) or FINAL( ).
-    "!
-    "! @parameter rv_yes |
     CLASS-METHODS token_is_inline_declaration
       IMPORTING is_token      TYPE if_ci_atc_source_code_provider=>ty_token
                 iv_prefix     TYPE string
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
-    "! Net nesting effect of a token: +1 for each opening and -1 for each closing delimiter.
-    "!
-    "! @parameter rv_delta |
     CLASS-METHODS token_paren_delta
       IMPORTING is_token        TYPE if_ci_atc_source_code_provider=>ty_token
       RETURNING VALUE(rv_delta) TYPE i.
@@ -190,6 +184,13 @@ CLASS zcl_skylint_ast_util DEFINITION
     CLASS-METHODS is_data_usage
       IMPORTING is_reference  TYPE if_ci_atc_source_code_provider=>ty_compiler_reference
       RETURNING VALUE(rv_yes) TYPE abap_bool.
+
+    CLASS-METHODS parse_full_name
+      IMPORTING iv_full_name    TYPE clike
+      EXPORTING ev_program_name TYPE string
+                ev_class_name   TYPE string
+                ev_meth_name    TYPE string
+                ev_data_name    TYPE string.
 
     CLASS-METHODS get_reference_name
       IMPORTING iv_full_name   TYPE if_ci_atc_source_code_provider=>ty_full_name
@@ -837,14 +838,55 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
       AND is_data_definition( is_reference ) = abap_false ).
   ENDMETHOD.
 
+  METHOD parse_full_name.
+    DATA lv_str   TYPE string.
+    DATA lt_parts TYPE STANDARD TABLE OF string WITH EMPTY KEY.
+    DATA lv_part  TYPE string.
+
+    CLEAR: ev_program_name,
+           ev_class_name,
+           ev_meth_name,
+           ev_data_name.
+    lv_str = iv_full_name.
+
+    IF lv_str CS '=>'.
+      SPLIT lv_str AT '=>' INTO ev_class_name ev_meth_name.
+      IF ev_meth_name CS '('.
+        SPLIT ev_meth_name AT '(' INTO ev_meth_name lv_str.
+      ENDIF.
+      RETURN.
+    ENDIF.
+
+    IF lv_str CS '\'.
+      SPLIT lv_str AT '\' INTO TABLE lt_parts.
+      LOOP AT lt_parts INTO lv_part.
+        IF lv_part CP 'PR:*'.
+          ev_program_name = lv_part+3.
+        ELSEIF lv_part CP 'PROGRAM=*'.
+          ev_program_name = lv_part+8.
+        ELSEIF lv_part CP 'TY:*'.
+          ev_class_name = lv_part+3.
+        ELSEIF lv_part CP 'CLASS=*'.
+          ev_class_name = lv_part+6.
+        ELSEIF lv_part CP 'INTF=*'.
+          ev_class_name = lv_part+5.
+        ELSEIF lv_part CP 'ME:*'.
+          ev_meth_name = lv_part+3.
+        ELSEIF lv_part CP 'DA:*'.
+          ev_data_name = lv_part+3.
+        ENDIF.
+      ENDLOOP.
+    ENDIF.
+  ENDMETHOD.
+
   METHOD get_reference_name.
     DATA lv_parsed_name TYPE string.
     DATA lv_off         TYPE i.
     DATA lv_len         TYPE i.
 
     CLEAR rv_name.
-    zcl_skylint_rtti_util=>parse_full_name( EXPORTING iv_full_name = iv_full_name
-                                            IMPORTING ev_data_name = lv_parsed_name ).
+    parse_full_name( EXPORTING iv_full_name = iv_full_name
+                     IMPORTING ev_data_name = lv_parsed_name ).
     IF lv_parsed_name IS NOT INITIAL.
       rv_name = lv_parsed_name.
       RETURN.
