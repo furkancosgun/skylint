@@ -1,8 +1,8 @@
 ---
-description: "Omit redundant EXPORTING and RECEIVING in method calls"
+description: "Omit or require parameter names in method calls"
 ---
 
-# Omit Redundant Call Syntax (EXPORTING / RECEIVING / Single Param)
+# Omit or Require Parameter Names (EXPORTING / RECEIVING / Single Param)
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
@@ -14,16 +14,17 @@ description: "Omit redundant EXPORTING and RECEIVING in method calls"
 
 ## Overview
 
-Omit redundant EXPORTING and RECEIVING in method calls.
+Omit or require parameter names in method calls.
 
 > **ATC Finding Messages:**
 > - `Omit explicit EXPORTING keyword in method invocation`
 > - `Omit RECEIVING keyword; use functional call or omit parameter`
 > - `Omit explicit parameter name in single parameter method call`
+> - `Add explicit parameter name to positional method call`
 
 ## Rationale
 
-In functional calls the EXPORTING and RECEIVING keywords are optional, and a method with a single importing parameter can be called positionally. Repeating the keywords and parameter name adds noise without improving clarity. Omit them when the call is unambiguous, but keep parameter names when several optional parameters could be confused.
+In functional calls the EXPORTING and RECEIVING keywords are optional, and a method with a single importing parameter can be called positionally. By default repeated keywords and parameter names add noise, so they are omitted. Set REQUIRE_PARAM_NAME to enforce the opposite style and insert the parameter name in positional single-parameter calls.
 
 ### Non-Compliant
 
@@ -53,6 +54,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | `CHECK_EXPORTING` | `Boolean` | <code>true</code> |
 | `CHECK_RECEIVING` | `Boolean` | <code>true</code> |
 | `CHECK_PARAM_NAME` | `Boolean` | <code>true</code> |
+| `REQUIRE_PARAM_NAME` | `Boolean` | <code>false</code> |
 
 ## Suppression
 

@@ -25,13 +25,20 @@ const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, '..');
 const fixturesDir = path.join(rootDir, 'test', 'fixtures');
 
+export function fixtureDirForRule(rule) {
+  const shortName = rule.className.toLowerCase().replace(/^zcl_skylint_/, '');
+  const shortDir = path.join(fixturesDir, shortName);
+  if (fs.existsSync(shortDir)) return shortDir;
+  return path.join(fixturesDir, rule.ruleId);
+}
+
 export function loadFixture(key) {
   const rule = typeof key === 'object' && key !== null ? key : resolveRule(key);
   if (!rule) {
     throw new Error(`Rule not found for key: ${JSON.stringify(key)}`);
   }
 
-  const dir = path.join(fixturesDir, rule.ruleId);
+  const dir = fixtureDirForRule(rule);
   if (!fs.existsSync(dir)) {
     throw new Error(`Fixture not found for rule: ${rule.ruleId} at ${dir}`);
   }

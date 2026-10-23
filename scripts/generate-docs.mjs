@@ -115,7 +115,10 @@ for (const rule of RULES) {
   let compliantCode = rule.example?.good || '';
 
   if (!nonCompliantCode || !compliantCode) {
-    const fixtureDir = path.join(fixturesDir, rule.ruleId);
+    const shortName = rule.className.toLowerCase().replace(/^zcl_skylint_/, '');
+    const fixtureDir = fs.existsSync(path.join(fixturesDir, shortName))
+      ? path.join(fixturesDir, shortName)
+      : path.join(fixturesDir, rule.ruleId);
     if (fs.existsSync(fixtureDir)) {
       const sourcePath = path.join(fixtureDir, 'source.abap');
       const expectedPath = path.join(fixtureDir, 'expected.json');

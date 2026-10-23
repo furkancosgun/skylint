@@ -226,13 +226,13 @@
   },
   {
     "ruleId": "no-redundant-method-call",
-    "title": "Omit Redundant Call Syntax (EXPORTING / RECEIVING / Single Param)",
+    "title": "Omit or Require Parameter Names (EXPORTING / RECEIVING / Single Param)",
     "className": "ZCL_SKYLINT_NO_REDUNDANT_CALL",
     "checkName": "ZSKYLINT_NO_REDUNDANT_CALL",
     "category": "anti-patterns",
     "categoryTitle": "Anti-Patterns & Bad Practices",
     "pseudoComment": "EXPORTING",
-    "description": "Omit redundant EXPORTING and RECEIVING in method calls",
+    "description": "Omit or require parameter names in method calls",
     "hasQuickfix": true,
     "remoteEnabled": false,
     "attributes": [
@@ -250,6 +250,11 @@
         "name": "CHECK_PARAM_NAME",
         "kind": "Boolean",
         "defaultValue": "true"
+      },
+      {
+        "name": "REQUIRE_PARAM_NAME",
+        "kind": "Boolean",
+        "defaultValue": "false"
       }
     ],
     "defaultParameters": [
@@ -487,6 +492,20 @@
         "value": "X"
       }
     ]
+  },
+  {
+    "ruleId": "no-identical-contents",
+    "title": "Avoid Identical Statements in IF Branches",
+    "className": "ZCL_SKYLINT_NO_IDENT_CONT",
+    "checkName": "ZSKYLINT_NO_IDENT_CONT",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "NO_IDENT_CONT",
+    "description": "Avoid identical code in IF and ELSE branches",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "defaultParameters": []
   },
   {
     "ruleId": "no-duplicate-conditions",
@@ -1240,6 +1259,34 @@
     "categoryTitle": "Anti-Patterns & Bad Practices",
     "pseudoComment": "SELF_ASSIGN",
     "description": "Detect Identical Self Assignments",
+    "hasQuickfix": true,
+    "remoteEnabled": true,
+    "attributes": [],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "no-shadow",
+    "title": "Avoid Local Variables Shadowing Class Attributes",
+    "className": "ZCL_SKYLINT_NO_SHADOW",
+    "checkName": "ZSKYLINT_NO_SHADOW",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "NO_SHADOW",
+    "description": "Avoid local variables shadowing class attributes",
+    "hasQuickfix": false,
+    "remoteEnabled": false,
+    "attributes": [],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "no-useless-concat",
+    "title": "Avoid Concatenating Adjacent String Literals",
+    "className": "ZCL_SKYLINT_NO_USELESS_CONCAT",
+    "checkName": "ZSKYLINT_NO_USELESS_CONCAT",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "NO_USELESS_CONCAT",
+    "description": "Avoid concatenating string literals",
     "hasQuickfix": true,
     "remoteEnabled": true,
     "attributes": [],
@@ -3115,5 +3162,120 @@
     "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": []
+  },
+  {
+    "ruleId": "no-unfiltered-dml",
+    "title": "Avoid UPDATE or DELETE Without a WHERE Condition",
+    "className": "ZCL_SKYLINT_NO_UNFILT_DML",
+    "checkName": "ZSKYLINT_NO_UNFILT_DML",
+    "category": "performance",
+    "categoryTitle": "Performance & Database",
+    "pseudoComment": "NO_UNFILT_DML",
+    "description": "Flag DML without WHERE on database tables",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "no-string-concat-in-loop",
+    "title": "Avoid String Concatenation Inside Loops",
+    "className": "ZCL_SKYLINT_NO_CONCAT_LOOP",
+    "checkName": "ZSKYLINT_NO_CONCAT_LOOP",
+    "category": "performance",
+    "categoryTitle": "Performance & Database",
+    "pseudoComment": "NO_CONCAT_LOOP",
+    "description": "Avoid string concatenation inside loops",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "no-duplicate-literals",
+    "title": "Avoid Repeating the Same String Literal",
+    "className": "ZCL_SKYLINT_NO_DUP_LITERALS",
+    "checkName": "ZSKYLINT_NO_DUP_LITERALS",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "NO_DUP_LITERALS",
+    "description": "Avoid repeating the same string literal",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "MIN_OCCURRENCES",
+        "kind": "Integer",
+        "defaultValue": "3"
+      },
+      {
+        "name": "MIN_LENGTH",
+        "kind": "Integer",
+        "defaultValue": "3"
+      }
+    ],
+    "defaultParameters": [
+      {
+        "name": "MIN_OCCURRENCES",
+        "value": "3"
+      },
+      {
+        "name": "MIN_LENGTH",
+        "value": "3"
+      }
+    ]
+  },
+  {
+    "ruleId": "prefer-filter",
+    "title": "Prefer FILTER for a Simple LOOP with IF and APPEND",
+    "className": "ZCL_SKYLINT_PREF_FILTER",
+    "checkName": "ZSKYLINT_PREF_FILTER",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "PREF_FILTER",
+    "description": "Prefer FILTER for simple LOOP/IF/APPEND",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "no-negated-condition",
+    "title": "Avoid Negated IF Conditions with ELSE",
+    "className": "ZCL_SKYLINT_NO_NEG_COND",
+    "checkName": "ZSKYLINT_NO_NEG_COND",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "NO_NEG_COND",
+    "description": "Avoid negated IF conditions with ELSE",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "max-boolean-expressions",
+    "title": "Limit the Number of Boolean Expressions in a Condition",
+    "className": "ZCL_SKYLINT_MAX_BOOL_EXPR",
+    "checkName": "ZSKYLINT_MAX_BOOL_EXPR",
+    "category": "metrics",
+    "categoryTitle": "Metrics & Complexity Limits",
+    "pseudoComment": "MAX_BOOL_EXPR",
+    "description": "Limit boolean expressions in conditions",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "MAX_BOOLEAN_EXPRESSIONS",
+        "kind": "Integer",
+        "defaultValue": "4"
+      }
+    ],
+    "defaultParameters": [
+      {
+        "name": "MAX_BOOLEAN_EXPRESSIONS",
+        "value": "4"
+      }
+    ]
   }
 ]

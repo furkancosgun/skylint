@@ -20,18 +20,20 @@ Detect Identical Self Assignments.
 
 ## Rationale
 
-Assigning a variable or component to itself does nothing and is usually left over from refactoring or a typo in the source field. It adds noise and can hide a missing assignment. Assign the intended source value or delete the statement.
+Assigning a variable or component to itself does nothing and is usually left over from refactoring or a typo in the source field. The same is true for MOVE source TO target with identical source and target. It adds noise and can hide a missing assignment. Assign the intended source value or delete the statement.
 
 ### Non-Compliant
 
 ```abap
 ls_order-customer_id = ls_order-customer_id.
+MOVE lv_count TO lv_count.
 ```
 
 ### Compliant
 
 ```abap
 ls_order-customer_id = iv_customer_id.
+MOVE lv_count TO lv_total.
 ```
 
 ## Automated QuickFix

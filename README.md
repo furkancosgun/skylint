@@ -153,7 +153,7 @@ To author a new check rule, follow the standards defined in [AGENTS.md](AGENTS.m
 
 1. **Check Implementation:** Create `src/checks/zcl_skylint_XXX.clas.abap` inheriting from `zcl_skylint_check_base`.
 2. **Class Metadata:** Create `src/checks/zcl_skylint_XXX.clas.xml`.
-3. **Fixture Suite:** Create `test/fixtures/<rule-id>/source.abap` and `test/fixtures/<rule-id>/expected.json` (target-based line assertions).
+3. **Fixture Suite:** Create `test/fixtures/<check-suffix>/source.abap` and `test/fixtures/<check-suffix>/expected.json` (e.g. `test/fixtures/pref_lines/`).
 4. **Catalog Registration:** Register the check metadata and rationale in `scripts/rules-data.mjs`.
 5. **Validation:** Run `npm run index` followed by `npm test` to verify 0 lint errors, green test execution, and valid QuickFix round-trips.
 

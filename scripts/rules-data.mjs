@@ -1447,9 +1447,10 @@ export const RULES = [
 export const RULE_BY_RULE_ID = new Map(RULES.map(r => [r.ruleId, r]));
 export const RULE_BY_CLASS = new Map(RULES.map(r => [r.className.toUpperCase(), r]));
 export const RULE_BY_CLASS_LOWER = new Map(RULES.map(r => [r.className.toLowerCase(), r]));
+export const RULE_BY_SHORT_CLASS = new Map(RULES.map(r => [r.className.toLowerCase().replace(/^zcl_skylint_/, ''), r]));
 
 /**
- * Resolve rule strictly by ruleId (kebab-case) or ABAP class name
+ * Resolve rule strictly by ruleId (kebab-case), ABAP class name, or short class name
  */
 export function resolveRule(input) {
   if (!input) return null;
@@ -1460,5 +1461,7 @@ export function resolveRule(input) {
   if (RULE_BY_CLASS.has(upper)) return RULE_BY_CLASS.get(upper);
   const lower = raw.toLowerCase();
   if (RULE_BY_CLASS_LOWER.has(lower)) return RULE_BY_CLASS_LOWER.get(lower);
+  const shortName = lower.replace(/^zcl_skylint_/, '');
+  if (RULE_BY_SHORT_CLASS.has(shortName)) return RULE_BY_SHORT_CLASS.get(shortName);
   return null;
 }

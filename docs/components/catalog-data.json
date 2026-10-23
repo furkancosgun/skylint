@@ -4,19 +4,19 @@
       "key": "clean-abap",
       "title": "Clean ABAP & Modern Syntax",
       "description": "Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.",
-      "count": 42
+      "count": 44
     },
     {
       "key": "anti-patterns",
       "title": "Anti-Patterns & Bad Practices",
       "description": "Discouraged language constructs, legacy statements, and redundant syntax.",
-      "count": 39
+      "count": 43
     },
     {
       "key": "performance",
       "title": "Performance & Database",
       "description": "Database query efficiency, buffer protection, and internal table operation guidelines.",
-      "count": 7
+      "count": 9
     },
     {
       "key": "security",
@@ -28,7 +28,7 @@
       "key": "metrics",
       "title": "Metrics & Complexity Limits",
       "description": "Quantitative boundaries for method size, nesting depth, parameter counts, and cyclomatic complexity.",
-      "count": 8
+      "count": 9
     }
   ],
   "rules": [
@@ -154,9 +154,9 @@
     },
     {
       "ruleId": "no-redundant-method-call",
-      "title": "Omit Redundant Call Syntax (EXPORTING / RECEIVING / Single Param)",
+      "title": "Omit or Require Parameter Names (EXPORTING / RECEIVING / Single Param)",
       "className": "ZCL_SKYLINT_NO_REDUNDANT_CALL",
-      "description": "Omit redundant EXPORTING and RECEIVING in method calls",
+      "description": "Omit or require parameter names in method calls",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
       "pseudoComment": "EXPORTING",
@@ -247,6 +247,18 @@
       "hasQuickfix": false,
       "remoteEnabled": true,
       "configurable": true
+    },
+    {
+      "ruleId": "no-identical-contents",
+      "title": "Avoid Identical Statements in IF Branches",
+      "className": "ZCL_SKYLINT_NO_IDENT_CONT",
+      "description": "Avoid identical code in IF and ELSE branches",
+      "category": "anti-patterns",
+      "categoryTitle": "Anti-Patterns & Bad Practices",
+      "pseudoComment": "NO_IDENT_CONT",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
     },
     {
       "ruleId": "no-duplicate-conditions",
@@ -460,6 +472,30 @@
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
       "pseudoComment": "SELF_ASSIGN",
+      "hasQuickfix": true,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "no-shadow",
+      "title": "Avoid Local Variables Shadowing Class Attributes",
+      "className": "ZCL_SKYLINT_NO_SHADOW",
+      "description": "Avoid local variables shadowing class attributes",
+      "category": "anti-patterns",
+      "categoryTitle": "Anti-Patterns & Bad Practices",
+      "pseudoComment": "NO_SHADOW",
+      "hasQuickfix": false,
+      "remoteEnabled": false,
+      "configurable": false
+    },
+    {
+      "ruleId": "no-useless-concat",
+      "title": "Avoid Concatenating Adjacent String Literals",
+      "className": "ZCL_SKYLINT_NO_USELESS_CONCAT",
+      "description": "Avoid concatenating string literals",
+      "category": "anti-patterns",
+      "categoryTitle": "Anti-Patterns & Bad Practices",
+      "pseudoComment": "NO_USELESS_CONCAT",
       "hasQuickfix": true,
       "remoteEnabled": true,
       "configurable": false
@@ -1327,6 +1363,78 @@
       "hasQuickfix": true,
       "remoteEnabled": true,
       "configurable": false
+    },
+    {
+      "ruleId": "no-unfiltered-dml",
+      "title": "Avoid UPDATE or DELETE Without a WHERE Condition",
+      "className": "ZCL_SKYLINT_NO_UNFILT_DML",
+      "description": "Flag DML without WHERE on database tables",
+      "category": "performance",
+      "categoryTitle": "Performance & Database",
+      "pseudoComment": "NO_UNFILT_DML",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "no-string-concat-in-loop",
+      "title": "Avoid String Concatenation Inside Loops",
+      "className": "ZCL_SKYLINT_NO_CONCAT_LOOP",
+      "description": "Avoid string concatenation inside loops",
+      "category": "performance",
+      "categoryTitle": "Performance & Database",
+      "pseudoComment": "NO_CONCAT_LOOP",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "no-duplicate-literals",
+      "title": "Avoid Repeating the Same String Literal",
+      "className": "ZCL_SKYLINT_NO_DUP_LITERALS",
+      "description": "Avoid repeating the same string literal",
+      "category": "anti-patterns",
+      "categoryTitle": "Anti-Patterns & Bad Practices",
+      "pseudoComment": "NO_DUP_LITERALS",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "prefer-filter",
+      "title": "Prefer FILTER for a Simple LOOP with IF and APPEND",
+      "className": "ZCL_SKYLINT_PREF_FILTER",
+      "description": "Prefer FILTER for simple LOOP/IF/APPEND",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "PREF_FILTER",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "no-negated-condition",
+      "title": "Avoid Negated IF Conditions with ELSE",
+      "className": "ZCL_SKYLINT_NO_NEG_COND",
+      "description": "Avoid negated IF conditions with ELSE",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "NO_NEG_COND",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "max-boolean-expressions",
+      "title": "Limit the Number of Boolean Expressions in a Condition",
+      "className": "ZCL_SKYLINT_MAX_BOOL_EXPR",
+      "description": "Limit boolean expressions in conditions",
+      "category": "metrics",
+      "categoryTitle": "Metrics & Complexity Limits",
+      "pseudoComment": "MAX_BOOL_EXPR",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
     }
   ]
 }

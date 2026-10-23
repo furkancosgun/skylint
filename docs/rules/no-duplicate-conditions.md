@@ -15,7 +15,9 @@ description: "Avoid duplicate branch conditions in IF and CASE"
 
 Avoid duplicate branch conditions in IF and CASE.
 
-> **ATC Finding Message:** `Identical condition in branch; duplicate branch is unreachable`
+> **ATC Finding Messages:**
+> - `Identical condition in branch; duplicate branch is unreachable`
+> - `Identical operand in condition; remove the duplicate comparison`
 
 ## Rationale
 

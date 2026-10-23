@@ -265,9 +265,9 @@ src/
 │   ├── zcl_skylint_XXX.clas.abap         # 1. Main check implementation
 │   └── zcl_skylint_XXX.clas.xml          # 2. abapGit XML
 test/
-└── fixtures/<rule-id>/
-    ├── source.abap                       # 3. Full test class source
-    └── expected.json                     # 4. Expected findings
+└── fixtures/XXX/                         # 3. Short class name (e.g. pref_lines, no_neg_cond)
+    ├── source.abap                       # Full test class source
+    └── expected.json                     # Expected findings
 ```
 
 ### 1. Main Check Implementation Pattern
@@ -356,7 +356,7 @@ Plain abapGit class XML (no test include — tests live in `test/fixtures/`, not
 </abapGit>
 ```
 
-### 3. Test Fixture (`test/fixtures/<rule-id>/`)
+### 3. Test Fixture (`test/fixtures/XXX/`)
 Each check keeps a fixture directory as test data, executed by the ATC-native
 harness (`test/run.mjs`: fixture → `ty_procedure` → real `if_ci_atc_check~run`
 with JS test doubles for the SAP boundary).
@@ -482,7 +482,7 @@ Follow this exact procedure when adding or modifying check rules:
 2. **Create the Check Class & Files:**
    - Create `src/checks/zcl_skylint_XXX.clas.abap` inheriting from `zcl_skylint_check_base`.
    - Create `src/checks/zcl_skylint_XXX.clas.xml` (plain abapGit class XML, no test include).
-   - Create `test/fixtures/<rule-id>/source.abap` + `expected.json` for the JS harness.
+   - Create `test/fixtures/XXX/source.abap` + `expected.json` for the JS harness (XXX = short class name).
 
 3. **Implement Inspection Logic:**
    - Adhere to the Zero Magic Index and Compiler References standards.
