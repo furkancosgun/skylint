@@ -17,15 +17,16 @@ CLASS zcl_test_prefer_msg_cls IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_002.
+    DATA lv_text TYPE string.
     MESSAGE lv_text TYPE 'S'.
   ENDMETHOD.
 
   METHOD test_003.
-    MESSAGE e001(zbc_msg).
+    MESSAGE e001(00).
   ENDMETHOD.
 
   METHOD test_004.
-    MESSAGE ID zbc_msg TYPE 'E' NUMBER 001.
+    MESSAGE ID '00' TYPE 'E' NUMBER '001'.
   ENDMETHOD.
 
   METHOD test_006.
