@@ -9,6 +9,10 @@ CLASS zcl_test_no_self_assignment DEFINITION
     METHODS test_004.
     METHODS test_005.
     METHODS test_006.
+    METHODS test_007.
+    METHODS test_008.
+    METHODS test_009.
+    METHODS test_010.
 ENDCLASS.
 
 
@@ -51,6 +55,31 @@ CLASS zcl_test_no_self_assignment IMPLEMENTATION.
            END OF ty_struct.
     DATA ls_data TYPE ty_struct.
     ls_data-comp1 = ls_data-comp2.
+  ENDMETHOD.
+
+  METHOD test_007.
+    DATA lv_a TYPE i.
+    MOVE lv_a TO lv_a.
+  ENDMETHOD.
+
+  METHOD test_008.
+    DATA lv_a TYPE i.
+    DATA lv_b TYPE i.
+    MOVE lv_a TO lv_b.
+  ENDMETHOD.
+
+  METHOD test_009.
+    TYPES: BEGIN OF ty_struct,
+             comp1 TYPE i,
+             comp2 TYPE i,
+           END OF ty_struct.
+    DATA ls_data TYPE ty_struct.
+    MOVE ls_data-comp1 TO ls_data-comp1.
+  ENDMETHOD.
+
+  METHOD test_010.
+    DATA lv_a TYPE i.
+    MOVE EXACT lv_a TO lv_a.
   ENDMETHOD.
 ENDCLASS.
 

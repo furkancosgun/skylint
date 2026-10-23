@@ -7,6 +7,7 @@ CLASS zcl_skylint_no_dup_cond DEFINITION
     CONSTANTS:
       BEGIN OF c_finding_codes,
         identical_condition TYPE if_ci_atc_check=>ty_finding_code VALUE 'DUPCOND',
+        duplicate_operand   TYPE if_ci_atc_check=>ty_finding_code VALUE 'DUPOPER',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -27,6 +28,9 @@ CLASS zcl_skylint_no_dup_cond DEFINITION
                 is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
                 is_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure.
 
+    METHODS check_duplicate_operands
+      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
+
     METHODS get_condition_string
       IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_cond) TYPE string.
@@ -39,10 +43,12 @@ CLASS zcl_skylint_no_dup_cond IMPLEMENTATION.
     super->constructor( VALUE #( description       = 'Avoid duplicate branch conditions in IF and CASE'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-identical_condition
-                                       severity       = if_ci_atc_check=>finding_severities-warning
-                                       text           = 'Identical condition in branch; duplicate branch is unreachable'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                                     severity       = if_ci_atc_check=>finding_severities-warning
+                                     pseudo_comment = c_pseudo_comment
+                                     ( code = c_finding_codes-identical_condition
+                                       text = 'Identical condition in branch; duplicate branch is unreachable' )
+                                     ( code = c_finding_codes-duplicate_operand
+                                       text = 'Identical operand in condition; remove the duplicate comparison' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -57,11 +63,15 @@ CLASS zcl_skylint_no_dup_cond IMPLEMENTATION.
           check_duplicate_elseif( iv_idx       = lv_idx
                                   is_statement = <ls_statement>
                                   is_procedure = is_procedure ).
+          check_duplicate_operands( <ls_statement> ).
 
         WHEN 'WHEN'.
           check_duplicate_when( iv_idx       = lv_idx
                                 is_statement = <ls_statement>
                                 is_procedure = is_procedure ).
+
+        WHEN 'IF' OR 'WHILE' OR 'CHECK'.
+          check_duplicate_operands( <ls_statement> ).
       ENDCASE.
     ENDLOOP.
   ENDMETHOD.
@@ -156,6 +166,106 @@ CLASS zcl_skylint_no_dup_cond IMPLEMENTATION.
       ENDCASE.
 
       lv_back_idx -= 1.
+    ENDWHILE.
+  ENDMETHOD.
+
+  METHOD check_duplicate_operands.
+    DATA lv_tok_cnt  TYPE i.
+    DATA lv_idx      TYPE i.
+    DATA lv_depth    TYPE i.
+    DATA lv_between  TYPE abap_bool.
+    DATA lv_operator TYPE string.
+    DATA lv_token_op TYPE string.
+    DATA lv_lexeme   TYPE string.
+    DATA lv_operand  TYPE string.
+    DATA lv_other    TYPE string.
+    DATA lt_operands TYPE string_table.
+    DATA ls_token    TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_i        TYPE i.
+    DATA lv_j        TYPE i.
+    DATA lv_count    TYPE i.
+
+    lv_tok_cnt = zcl_skylint_ast_util=>token_count( is_statement ).
+    IF lv_tok_cnt < 2.
+      RETURN.
+    ENDIF.
+
+    lv_idx = 2.
+    WHILE lv_idx <= lv_tok_cnt.
+      ls_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                  iv_index     = lv_idx ).
+      lv_lexeme = to_upper( ls_token-lexeme ).
+
+      IF ls_token-references IS INITIAL AND lv_lexeme = '('.
+        lv_depth += 1.
+      ELSEIF ls_token-references IS INITIAL AND lv_lexeme = ')'.
+        lv_depth -= 1.
+      ENDIF.
+
+      lv_token_op = ''.
+      IF     ls_token-references IS INITIAL
+         AND lv_depth             = 0
+         AND lv_lexeme            = 'BETWEEN'.
+        lv_between = abap_true.
+      ELSEIF     ls_token-references IS INITIAL
+             AND lv_depth             = 0
+             AND lv_lexeme            = 'AND'
+             AND lv_between           = abap_true.
+        lv_between = abap_false.
+      ELSEIF     ls_token-references IS INITIAL
+             AND lv_depth             = 0
+             AND ( lv_lexeme = 'AND' OR lv_lexeme = 'OR' OR lv_lexeme = 'EQUIV' ).
+        lv_token_op = lv_lexeme.
+      ENDIF.
+
+      IF lv_token_op IS NOT INITIAL.
+        IF lv_operator IS INITIAL.
+          lv_operator = lv_token_op.
+        ELSEIF lv_operator <> lv_token_op.
+          RETURN.
+        ENDIF.
+        IF lv_operand IS NOT INITIAL.
+          APPEND lv_operand TO lt_operands.
+        ENDIF.
+        CLEAR lv_operand.
+      ELSEIF lv_operand IS INITIAL.
+        lv_operand = ls_token-lexeme.
+      ELSE.
+        lv_operand = |{ lv_operand } { ls_token-lexeme }|.
+      ENDIF.
+
+      lv_idx += 1.
+    ENDWHILE.
+
+    IF lv_operand IS NOT INITIAL.
+      APPEND lv_operand TO lt_operands.
+    ENDIF.
+
+    lv_count = lines( lt_operands ).
+    IF lv_count < 2.
+      RETURN.
+    ENDIF.
+
+    lv_i = 1.
+    WHILE lv_i < lv_count.
+      READ TABLE lt_operands INTO lv_operand INDEX lv_i.
+      IF sy-subrc <> 0.
+        RETURN.
+      ENDIF.
+      lv_j = lv_i + 1.
+      WHILE lv_j <= lv_count.
+        READ TABLE lt_operands INTO lv_other INDEX lv_j.
+        IF sy-subrc <> 0.
+          RETURN.
+        ENDIF.
+        IF lv_operand = lv_other.
+          report_statement( is_statement    = is_statement
+                            iv_finding_code = c_finding_codes-duplicate_operand ).
+          RETURN.
+        ENDIF.
+        lv_j += 1.
+      ENDWHILE.
+      lv_i += 1.
     ENDWHILE.
   ENDMETHOD.
 

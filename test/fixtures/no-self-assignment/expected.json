@@ -37,5 +37,36 @@
   {
     "target": "TEST_006",
     "code": null
+  },
+  {
+    "target": "TEST_007",
+    "code": "IDENTMOVE",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "DELIDENT"
+    ]
+  },
+  {
+    "target": "TEST_008",
+    "code": null
+  },
+  {
+    "target": "TEST_009",
+    "code": "IDENTMOVE",
+    "line": 7,
+    "column": 4,
+    "quickfixes": [
+      "DELIDENT"
+    ]
+  },
+  {
+    "target": "TEST_010",
+    "code": "IDENTMOVE",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "DELIDENT"
+    ]
   }
 ]

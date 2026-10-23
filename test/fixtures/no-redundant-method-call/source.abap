@@ -14,6 +14,13 @@ CLASS zcl_test_no_exporting DEFINITION
     METHODS test_009.
     METHODS test_010.
     METHODS test_011.
+    METHODS test_012.
+    METHODS test_013.
+    METHODS test_014.
+    METHODS test_015.
+    METHODS test_016.
+    METHODS test_017.
+    METHODS test_018.
     METHODS run IMPORTING iv_in TYPE i OPTIONAL RETURNING VALUE(rv_val) TYPE i.
     METHODS calc
       IMPORTING iv_in TYPE i
@@ -21,6 +28,9 @@ CLASS zcl_test_no_exporting DEFINITION
     METHODS modify
       IMPORTING iv_in TYPE i
       CHANGING cv_val TYPE i.
+    METHODS mixed
+      IMPORTING iv_a TYPE i
+                iv_b TYPE i OPTIONAL.
 ENDCLASS.
 
 CLASS zcl_test_no_exporting IMPLEMENTATION.
@@ -33,6 +43,10 @@ CLASS zcl_test_no_exporting IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD modify.
+    RETURN.
+  ENDMETHOD.
+
+  METHOD mixed.
     RETURN.
   ENDMETHOD.
 
@@ -96,6 +110,45 @@ CLASS zcl_test_no_exporting IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_011.
+    DATA lo_obj TYPE REF TO zcl_test_no_exporting.
+    DATA lv_x TYPE i.
+    lv_x = lo_obj->run( lv_x ).
+  ENDMETHOD.
+
+  METHOD test_012.
+    DATA lo_obj TYPE REF TO zcl_test_no_exporting.
+    DATA lv_x TYPE i.
+    lo_obj->run( lv_x ).
+  ENDMETHOD.
+
+  METHOD test_013.
+    DATA lo_obj TYPE REF TO zcl_test_no_exporting.
+    DATA lv_x TYPE i.
+    lo_obj->run( iv_in = lv_x ).
+  ENDMETHOD.
+
+  METHOD test_014.
+    DATA lo_obj TYPE REF TO zcl_test_no_exporting.
+    DATA lv_res TYPE i.
+    lo_obj->calc( EXPORTING iv_in = 1 IMPORTING ev_out = lv_res ).
+  ENDMETHOD.
+
+  METHOD test_015.
+    DATA lo_obj TYPE REF TO zcl_test_no_exporting.
+    lo_obj->run( 42 ).
+  ENDMETHOD.
+
+  METHOD test_016.
+    DATA lo_obj TYPE REF TO zcl_test_no_exporting.
+    lo_obj->run( ).
+  ENDMETHOD.
+
+  METHOD test_017.
+    DATA lo_obj TYPE REF TO zcl_test_no_exporting.
+    lo_obj->mixed( 1 ).
+  ENDMETHOD.
+
+  METHOD test_018.
     DATA lo_obj TYPE REF TO zcl_test_no_exporting.
     DATA lv_x TYPE i.
     lv_x = lo_obj->run( lv_x ).

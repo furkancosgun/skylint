@@ -145,6 +145,9 @@
       ]
     },
     {
+      "checkName": "ZSKYLINT_NO_IDENT_CONT"
+    },
+    {
       "checkName": "ZSKYLINT_NO_DUP_COND"
     },
     {
@@ -427,6 +430,12 @@
     },
     {
       "checkName": "ZSKYLINT_NO_SELF_ASSIGN"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_SHADOW"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_USELESS_CONCAT"
     },
     {
       "checkName": "ZSKYLINT_PREF_FULL_TYPED"

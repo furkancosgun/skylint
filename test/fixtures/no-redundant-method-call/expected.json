@@ -72,5 +72,69 @@
   {
     "target": "TEST_011",
     "code": null
+  },
+  {
+    "target": "TEST_012",
+    "code": "REQPARM",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "REQPNAME"
+    ],
+    "attributes": {
+      "REQUIRE_PARAM_NAME": true
+    }
+  },
+  {
+    "target": "TEST_013",
+    "code": null,
+    "attributes": {
+      "REQUIRE_PARAM_NAME": true
+    }
+  },
+  {
+    "target": "TEST_014",
+    "code": null,
+    "attributes": {
+      "REQUIRE_PARAM_NAME": true
+    }
+  },
+  {
+    "target": "TEST_015",
+    "code": "REQPARM",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "REQPNAME"
+    ],
+    "attributes": {
+      "REQUIRE_PARAM_NAME": true
+    }
+  },
+  {
+    "target": "TEST_016",
+    "code": null,
+    "attributes": {
+      "REQUIRE_PARAM_NAME": true
+    }
+  },
+  {
+    "target": "TEST_017",
+    "code": null,
+    "attributes": {
+      "REQUIRE_PARAM_NAME": true
+    }
+  },
+  {
+    "target": "TEST_018",
+    "code": "REQPARM",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "REQPNAME"
+    ],
+    "attributes": {
+      "REQUIRE_PARAM_NAME": true
+    }
   }
 ]

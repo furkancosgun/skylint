@@ -38,8 +38,6 @@ CLASS zcl_skylint_max_line_len IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    " TODO: variable is assigned but never used (ABAP cleaner)
-    DATA lv_line        TYPE i.
     DATA lv_end_col     TYPE i.
     DATA lv_token_count TYPE i.
     DATA lv_token_idx   TYPE i.
@@ -56,7 +54,6 @@ CLASS zcl_skylint_max_line_len IMPLEMENTATION.
 
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
         lv_token_idx += 1.
-        lv_line    = <ls_token>-position-line.
         lv_end_col = <ls_token>-position-column + strlen( <ls_token>-lexeme ) - 1.
         IF lv_token_idx = lv_token_count.
           lv_end_col += 1.

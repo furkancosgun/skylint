@@ -154,8 +154,8 @@ export const RULES = [
   },
   {
     ruleId: 'no-redundant-method-call',
-    title: 'Omit Redundant Call Syntax (EXPORTING / RECEIVING / Single Param)',
-    rationale: 'In functional calls the EXPORTING and RECEIVING keywords are optional, and a method with a single importing parameter can be called positionally. Repeating the keywords and parameter name adds noise without improving clarity. Omit them when the call is unambiguous, but keep parameter names when several optional parameters could be confused.',
+    title: 'Omit or Require Parameter Names (EXPORTING / RECEIVING / Single Param)',
+    rationale: 'In functional calls the EXPORTING and RECEIVING keywords are optional, and a method with a single importing parameter can be called positionally. By default repeated keywords and parameter names add noise, so they are omitted. Set REQUIRE_PARAM_NAME to enforce the opposite style and insert the parameter name in positional single-parameter calls.',
     className: 'ZCL_SKYLINT_NO_REDUNDANT_CALL',
     pseudoComment: 'EXPORTING',
     category: 'anti-patterns',
@@ -249,6 +249,18 @@ export const RULES = [
     },
   },
 
+  {
+    ruleId: 'no-identical-contents',
+    title: 'Avoid Identical Statements in IF Branches',
+    rationale: 'Statements repeated in every branch of an IF/ELSEIF/ELSE carry no branch-specific meaning and duplicate maintenance. If the same statement starts or ends every branch, extract it before or after the IF so it is written once and stays in sync.',
+    className: 'ZCL_SKYLINT_NO_IDENT_CONT',
+    pseudoComment: 'NO_IDENT_CONT',
+    category: 'anti-patterns',
+    example: {
+      bad: `IF lv_is_active = abap_true.\n  process( ).\nELSE.\n  process( ).\nENDIF.`,
+      good: `IF lv_is_active = abap_true.\n  process_active( ).\nELSE.\n  process_inactive( ).\nENDIF.`,
+    },
+  },
   {
     ruleId: 'no-duplicate-conditions',
     title: 'Avoid Duplicate Branch Conditions',
@@ -456,13 +468,37 @@ export const RULES = [
   {
     ruleId: 'no-self-assignment',
     title: 'Avoid Redundant Self-Assignments',
-    rationale: 'Assigning a variable or component to itself does nothing and is usually left over from refactoring or a typo in the source field. It adds noise and can hide a missing assignment. Assign the intended source value or delete the statement.',
+    rationale: 'Assigning a variable or component to itself does nothing and is usually left over from refactoring or a typo in the source field. The same is true for MOVE source TO target with identical source and target. It adds noise and can hide a missing assignment. Assign the intended source value or delete the statement.',
     className: 'ZCL_SKYLINT_NO_SELF_ASSIGN',
     pseudoComment: 'SELF_ASSIGN',
     category: 'anti-patterns',
     example: {
-      bad: `ls_order-customer_id = ls_order-customer_id.`,
-      good: `ls_order-customer_id = iv_customer_id.`,
+      bad: `ls_order-customer_id = ls_order-customer_id.\nMOVE lv_count TO lv_count.`,
+      good: `ls_order-customer_id = iv_customer_id.\nMOVE lv_count TO lv_total.`,
+    },
+  },
+  {
+    ruleId: 'no-shadow',
+    title: 'Avoid Local Variables Shadowing Class Attributes',
+    rationale: 'A local variable that repeats a class attribute name silently hides the member inside the method. Readers can no longer tell whether the code changes the object state or only a temporary copy, and a later refactoring may keep the wrong reference. Rename the local or use a distinct name that states its purpose.',
+    className: 'ZCL_SKYLINT_NO_SHADOW',
+    pseudoComment: 'NO_SHADOW',
+    category: 'anti-patterns',
+    example: {
+      bad: `DATA mv_status TYPE string.\nmv_status = 'OPEN'.`,
+      good: `DATA lv_status TYPE string.\nlv_status = 'OPEN'.`,
+    },
+  },
+  {
+    ruleId: 'no-useless-concat',
+    title: 'Avoid Concatenating Adjacent String Literals',
+    rationale: 'Joining two or more literals with && produces one constant value at runtime, so the operator adds no information and only fragments the text. Folding the literals makes the final string visible and removes a pointless expression. Keep && only when at least one operand is dynamic.',
+    className: 'ZCL_SKYLINT_NO_USELESS_CONCAT',
+    pseudoComment: 'NO_USELESS_CONCAT',
+    category: 'anti-patterns',
+    example: {
+      bad: `lv_path = 'orders' && '/' && 'open'.`,
+      good: `lv_path = 'orders/open'.`,
     },
   },
   {

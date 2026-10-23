@@ -7,6 +7,13 @@ CLASS zcl_test_no_duplicate_conditio DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
+    METHODS test_005.
+    METHODS test_006.
+    METHODS test_007.
+    METHODS test_008.
+    METHODS test_009.
+    METHODS test_010.
+    METHODS test_011.
 ENDCLASS.
 
 
@@ -53,6 +60,59 @@ CLASS zcl_test_no_duplicate_conditio IMPLEMENTATION.
     WHEN 2.
     lv_x = 2.
     ENDCASE.
+  ENDMETHOD.
+
+  METHOD test_005.
+    DATA lv_a TYPE i.
+    DATA lv_b TYPE i.
+    IF lv_a = 1 OR lv_b = 2 OR lv_a = 1.
+    lv_a = 2.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_006.
+    DATA lv_a TYPE i.
+    DATA lv_b TYPE i.
+    IF lv_a = 1 OR lv_b = 2.
+    lv_a = 2.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_007.
+    DATA lv_a TYPE i.
+    DATA lv_b TYPE i.
+    IF lv_a = 1 AND lv_b = 2 OR lv_a = 1.
+    lv_a = 2.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_008.
+    DATA lv_a TYPE i.
+    DATA lv_b TYPE i.
+    IF ( lv_a = 1 OR lv_b = 2 ) OR ( lv_a = 1 OR lv_b = 2 ).
+    lv_a = 2.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_009.
+    DATA lv_a TYPE i.
+    DATA lv_b TYPE i.
+    IF lv_a BETWEEN 1 AND 5 AND lv_b = 2.
+    lv_a = 2.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_010.
+    DATA lv_a TYPE i.
+    CHECK lv_a = 1 OR lv_a = 1.
+    lv_a = 2.
+  ENDMETHOD.
+
+  METHOD test_011.
+    DATA lv_a TYPE i.
+    WHILE lv_a = 1 OR lv_a = 1.
+    lv_a = 2.
+    ENDWHILE.
   ENDMETHOD.
 ENDCLASS.
 

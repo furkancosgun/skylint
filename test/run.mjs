@@ -69,6 +69,36 @@ function readFindingDetails(g) {
   return { codes: [], fixes: [] };
 }
 
+const defaultAttributes = new WeakMap();
+
+async function applyAttributes(inst, overrides) {
+  const metaData = await inst['if_ci_atc_check$get_meta_data']();
+  const attributes = await metaData.get()['if_ci_atc_check_meta_data$get_attributes']();
+  const rows = attributes.array();
+
+  if (!defaultAttributes.has(inst)) {
+    const snapshot = new Map();
+    for (const row of rows) {
+      const attr = row.get();
+      snapshot.set(attr.name.get(), attr.value.dereference().get());
+    }
+    defaultAttributes.set(inst, snapshot);
+  }
+
+  const snapshot = defaultAttributes.get(inst);
+  for (const row of rows) {
+    const attr = row.get();
+    const name = attr.name.get();
+    const target = attr.value.dereference();
+    if (Object.prototype.hasOwnProperty.call(overrides, name)) {
+      const raw = overrides[name];
+      target.set(typeof raw === 'boolean' ? (raw ? 'X' : ' ') : String(raw));
+    } else {
+      target.set(snapshot.get(name));
+    }
+  }
+}
+
 /**
  * Runs a single expected row assertion against the ATC check instance.
  */
@@ -110,6 +140,7 @@ export async function runRow({ abap, getCheck, rule, fullLines, row, proceduresC
   const fakes = createFakes(abap, proceduresTable, objectName);
 
   const { inst } = await getCheck(rule);
+  await applyAttributes(inst, row.attributes || {});
   await inst['if_ci_atc_check$set_assistant_factory']({ factory: fakes.factory });
   const res = await inst['if_ci_atc_check$run']({
     object: buildObjectValue(abap, objectName),

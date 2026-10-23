@@ -15,6 +15,10 @@ CLASS zcl_skylint_rtti_util DEFINITION
       IMPORTING iv_class_name           TYPE clike
       RETURNING VALUE(rt_super_classes) TYPE string_table.
 
+    CLASS-METHODS get_attribute_names
+      IMPORTING iv_class_name   TYPE clike
+      RETURNING VALUE(rt_names) TYPE string_table.
+
     CLASS-METHODS get_method_descr
       IMPORTING iv_full_name TYPE clike
       EXPORTING es_method    TYPE abap_methdescr
@@ -122,6 +126,22 @@ CLASS zcl_skylint_rtti_util IMPLEMENTATION.
       lv_super_name = lo_super->get_relative_name( ).
       INSERT lv_super_name INTO TABLE rt_super_classes.
     ENDWHILE.
+  ENDMETHOD.
+
+  METHOD get_attribute_names.
+    DATA lo_class TYPE REF TO cl_abap_classdescr.
+    DATA lv_name  TYPE string.
+    FIELD-SYMBOLS <ls_attribute> TYPE abap_attrdescr.
+
+    lo_class = describe_class( iv_class_name ).
+    IF lo_class IS NOT BOUND.
+      RETURN.
+    ENDIF.
+
+    LOOP AT lo_class->attributes ASSIGNING <ls_attribute>.
+      lv_name = <ls_attribute>-name.
+      INSERT lv_name INTO TABLE rt_names.
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD parse_full_name.

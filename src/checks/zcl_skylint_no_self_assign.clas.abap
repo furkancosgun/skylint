@@ -33,6 +33,14 @@ CLASS zcl_skylint_no_self_assign DEFINITION
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
+    METHODS is_identical_move
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_res) TYPE abap_bool.
+
+    METHODS find_move_to
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_idx) TYPE i.
+
 ENDCLASS.
 
 
@@ -50,23 +58,32 @@ CLASS zcl_skylint_no_self_assign IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_stmt_idx TYPE i.
-    DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
+    DATA lv_stmt_idx  TYPE i.
+    DATA lv_identical TYPE abap_bool.
+    DATA ls_quickfix  TYPE zcl_skylint_check_base=>ty_quickfix.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF <ls_statement>-keyword <> 'COMPUTE'.
+      CASE <ls_statement>-keyword.
+        WHEN 'COMPUTE'.
+          lv_identical = is_identical_assignment( <ls_statement> ).
+        WHEN 'MOVE'.
+          lv_identical = is_identical_move( <ls_statement> ).
+        WHEN OTHERS.
+          CONTINUE.
+      ENDCASE.
+
+      IF lv_identical = abap_false.
         CONTINUE.
       ENDIF.
+
       lv_stmt_idx = sy-tabix.
-      IF is_identical_assignment( <ls_statement> ) = abap_true.
-        ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-delete_self
-                                        iv_statement_from = lv_stmt_idx
-                                        it_new_code       = VALUE #( ) ).
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-identical_move
-                          is_quickfix     = ls_quickfix ).
-      ENDIF.
+      ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-delete_self
+                                      iv_statement_from = lv_stmt_idx
+                                      it_new_code       = VALUE #( ) ).
+      report_statement( is_statement    = <ls_statement>
+                        iv_finding_code = c_finding_codes-identical_move
+                        is_quickfix     = ls_quickfix ).
     ENDLOOP.
   ENDMETHOD.
 
@@ -138,5 +155,75 @@ CLASS zcl_skylint_no_self_assign IMPLEMENTATION.
        AND lv_lhs_symbol  = lv_rhs_symbol.
       rv_res = abap_true.
     ENDIF.
+  ENDMETHOD.
+
+  METHOD is_identical_move.
+    DATA lv_tok_cnt    TYPE i.
+    DATA lv_to_idx     TYPE i.
+    DATA lv_src_idx    TYPE i.
+    DATA lv_tgt_idx    TYPE i.
+    DATA ls_token      TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok_src    TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok_tgt    TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_src_symbol TYPE string.
+    DATA lv_tgt_symbol TYPE string.
+
+    rv_res = abap_false.
+    lv_tok_cnt = zcl_skylint_ast_util=>token_count( is_statement ).
+    lv_to_idx = find_move_to( is_statement ).
+    IF lv_to_idx < 3.
+      RETURN.
+    ENDIF.
+
+    lv_src_idx = 2.
+    ls_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                iv_index     = lv_src_idx ).
+    IF to_upper( ls_token-lexeme ) = 'EXACT'.
+      lv_src_idx += 1.
+    ENDIF.
+
+    IF lv_to_idx <> lv_src_idx + 1.
+      RETURN.
+    ENDIF.
+
+    lv_tgt_idx = lv_to_idx + 1.
+    IF lv_tgt_idx <> lv_tok_cnt.
+      RETURN.
+    ENDIF.
+
+    ls_tok_src = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                  iv_index     = lv_src_idx ).
+    ls_tok_tgt = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                  iv_index     = lv_tgt_idx ).
+
+    lv_src_symbol = get_read_symbol( ls_tok_src ).
+    lv_tgt_symbol = get_written_symbol( ls_tok_tgt ).
+
+    IF     lv_src_symbol IS NOT INITIAL
+       AND lv_src_symbol  = lv_tgt_symbol.
+      rv_res = abap_true.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD find_move_to.
+    DATA lv_idx   TYPE i.
+    DATA lv_cnt   TYPE i.
+    DATA lv_lex   TYPE string.
+    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    rv_idx = 0.
+    lv_cnt = zcl_skylint_ast_util=>token_count( is_statement ).
+    lv_idx = 2.
+
+    WHILE lv_idx <= lv_cnt.
+      ls_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                  iv_index     = lv_idx ).
+      lv_lex = to_upper( ls_token-lexeme ).
+      IF ls_token-references IS INITIAL AND ( lv_lex = 'TO' OR lv_lex = '?TO' ).
+        rv_idx = lv_idx.
+        RETURN.
+      ENDIF.
+      lv_idx += 1.
+    ENDWHILE.
   ENDMETHOD.
 ENDCLASS.

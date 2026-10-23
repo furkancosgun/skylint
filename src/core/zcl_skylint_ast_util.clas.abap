@@ -107,8 +107,6 @@ CLASS zcl_skylint_ast_util DEFINITION
 
     "! True when the token opens an inline declaration, i.e. DATA( ) or FINAL( ).
     "!
-    "! @parameter is_token |
-    "! @parameter iv_prefix |
     "! @parameter rv_yes |
     CLASS-METHODS token_is_inline_declaration
       IMPORTING is_token      TYPE if_ci_atc_source_code_provider=>ty_token
@@ -117,7 +115,6 @@ CLASS zcl_skylint_ast_util DEFINITION
 
     "! Net nesting effect of a token: +1 for each opening and -1 for each closing delimiter.
     "!
-    "! @parameter is_token |
     "! @parameter rv_delta |
     CLASS-METHODS token_paren_delta
       IMPORTING is_token        TYPE if_ci_atc_source_code_provider=>ty_token
