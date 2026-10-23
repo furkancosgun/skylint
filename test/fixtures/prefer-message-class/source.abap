@@ -40,6 +40,6 @@ CLASS zcl_test_prefer_msg_cls IMPLEMENTATION.
 
   METHOD test_007.
     DATA lx_error TYPE REF TO cx_root.
-    MESSAGE lx_error.
+    MESSAGE lx_error TYPE 'I'.
   ENDMETHOD.
 ENDCLASS.

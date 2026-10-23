@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_max_line_len DEFINITION
+.
   PUBLIC SECTION.
     METHODS test_001.
     METHODS test_002.

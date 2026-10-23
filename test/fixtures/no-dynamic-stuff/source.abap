@@ -29,7 +29,7 @@ CLASS zcl_test_no_dynamic_stuff IMPLEMENTATION.
   METHOD test_004.
     DATA lo TYPE REF TO object.
     DATA lv_m TYPE string VALUE 'DO_WORK'.
-    lo->(lv_m)( ).
+    CALL METHOD lo->(lv_m).
   ENDMETHOD.
 
   METHOD test_005.

@@ -18,7 +18,7 @@ ENDCLASS.
 CLASS zcl_test_no_neg_cond IMPLEMENTATION.
   METHOD test_001.
     DATA lv_flag TYPE abap_bool.
-    IF NOT lv_flag.
+    IF NOT lv_flag = abap_true.
       lv_flag = abap_true.
     ELSE.
       lv_flag = abap_false.
@@ -27,7 +27,7 @@ CLASS zcl_test_no_neg_cond IMPLEMENTATION.
 
   METHOD test_002.
     DATA lv_flag TYPE abap_bool.
-    IF NOT lv_flag.
+    IF NOT lv_flag = abap_true.
       lv_flag = abap_true.
     ENDIF.
   ENDMETHOD.
@@ -83,9 +83,9 @@ CLASS zcl_test_no_neg_cond IMPLEMENTATION.
   METHOD test_008.
     DATA lv_flag  TYPE abap_bool.
     DATA lv_other TYPE abap_bool.
-    IF NOT lv_flag.
+    IF NOT lv_flag = abap_true.
       lv_flag = abap_true.
-    ELSEIF lv_other.
+    ELSEIF lv_other = abap_true.
       lv_flag = abap_false.
     ELSE.
       lv_flag = abap_true.
@@ -96,7 +96,7 @@ CLASS zcl_test_no_neg_cond IMPLEMENTATION.
     DATA lv_flag TYPE abap_bool.
     DATA lv_a    TYPE i.
     DATA lv_b    TYPE i.
-    IF NOT lv_flag.
+    IF NOT lv_flag = abap_true.
       IF lv_a = lv_b.
         lv_a = 1.
       ELSE.
@@ -109,7 +109,7 @@ CLASS zcl_test_no_neg_cond IMPLEMENTATION.
 
   METHOD test_010.
     DATA lv_flag TYPE abap_bool.
-    IF NOT ( lv_flag ).
+    IF NOT ( lv_flag = abap_true ).
       lv_flag = abap_true.
     ELSE.
       lv_flag = abap_false.

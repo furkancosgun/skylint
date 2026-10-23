@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_pref_naming DEFINITION
+.
   PUBLIC SECTION.
     METHODS test_001.
     METHODS test_002.

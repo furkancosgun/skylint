@@ -47,9 +47,7 @@ CLASS zcl_test_no_many_parens IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_006.
-    IF lv_a IN ( 'A', 'B' ).
-      WRITE lv_a.
-    ENDIF.
+    SELECT SINGLE mandt FROM t000 WHERE mandt IN ( '100', '200' ) INTO @DATA(lv_mandt).
   ENDMETHOD.
 
   METHOD test_007.

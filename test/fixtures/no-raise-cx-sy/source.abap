@@ -31,6 +31,6 @@ CLASS zcl_test_no_raise_cx_sy IMPLEMENTATION.
   METHOD test_005.
     DATA cx_sy_help TYPE i.
     cx_sy_help = 1.
-    RAISE EXCEPTION TYPE zcx_custom WITH cx_sy_help.
+    RAISE EXCEPTION TYPE zcx_custom MESSAGE e001(00) WITH cx_sy_help.
   ENDMETHOD.
 ENDCLASS.

@@ -16,7 +16,7 @@ import {
   buildObjectValue,
   createFakes,
 } from '../lib/bridge/abap-fakes.mjs';
-import { validateFix } from '../lib/roundtrip.mjs';
+import { validateFix, validateFixtureSyntax } from '../lib/roundtrip.mjs';
 import { initRuntime, createLoader } from '../lib/bridge/abap-runtime.mjs';
 import { RULES, resolveRule } from '../scripts/rules-data.mjs';
 
@@ -216,6 +216,16 @@ export async function runRow({ abap, getCheck, rule, fullLines, row, proceduresC
 
 async function runCheck({ abap, getCheck, rule, verbose = false }) {
   const { lines, expected } = loadFixture(rule);
+  const fullSource = lines.join('\n');
+  const syntaxErrors = await validateFixtureSyntax(fullSource);
+  if (syntaxErrors.length > 0) {
+    return {
+      passed: 0,
+      failed: 1,
+      failures: [`${rule.ruleId}: fixture source has syntax error: ${syntaxErrors.join('; ')}`],
+    };
+  }
+
   const procedures = extractAllProcedures(lines);
   const failures = [];
   let passed = 0;

@@ -123,13 +123,6 @@
     "code": null
   },
   {
-    "target": "TEST_019",
-    "code": "OBSOLETE",
-    "line": 5,
-    "column": 4,
-    "quickfixes": []
-  },
-  {
     "target": "TEST_020",
     "code": "OBSOLETE",
     "line": 2,
@@ -160,28 +153,7 @@
     ]
   },
   {
-    "target": "TEST_024",
-    "code": "OBSOLETE",
-    "line": 2,
-    "column": 4,
-    "quickfixes": []
-  },
-  {
-    "target": "TEST_025",
-    "code": "OBSOLETE",
-    "line": 2,
-    "column": 4,
-    "quickfixes": []
-  },
-  {
     "target": "TEST_026",
-    "code": "OBSOLETE",
-    "line": 2,
-    "column": 4,
-    "quickfixes": []
-  },
-  {
-    "target": "TEST_027",
     "code": "OBSOLETE",
     "line": 2,
     "column": 4,
@@ -255,20 +227,6 @@
     "target": "TEST_039",
     "code": "OBSOLETE",
     "line": 2,
-    "column": 4,
-    "quickfixes": []
-  },
-  {
-    "target": "TEST_040",
-    "code": "OBSOLETE",
-    "line": 2,
-    "column": 4,
-    "quickfixes": []
-  },
-  {
-    "target": "TEST_041",
-    "code": "OBSOLETE",
-    "line": 3,
     "column": 4,
     "quickfixes": []
   },

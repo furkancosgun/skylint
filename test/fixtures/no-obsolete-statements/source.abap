@@ -21,15 +21,11 @@ CLASS zcl_test_no_obsolete_statement DEFINITION
     METHODS test_016.
     METHODS test_017.
     METHODS test_018.
-    METHODS test_019.
     METHODS test_020.
     METHODS test_021.
     METHODS test_022.
     METHODS test_023.
-    METHODS test_024.
-    METHODS test_025.
     METHODS test_026.
-    METHODS test_027.
     METHODS test_028.
     METHODS test_029.
     METHODS test_030.
@@ -42,8 +38,6 @@ CLASS zcl_test_no_obsolete_statement DEFINITION
     METHODS test_037.
     METHODS test_038.
     METHODS test_039.
-    METHODS test_040.
-    METHODS test_041.
     METHODS test_042.
     METHODS test_043.
     METHODS test_044.
@@ -153,13 +147,6 @@ CLASS zcl_test_no_obsolete_statement IMPLEMENTATION.
     FREE MEMORY ID 'KEY'.
   ENDMETHOD.
 
-  METHOD test_019.
-    DATA lt_t1 TYPE STANDARD TABLE OF i WITH DEFAULT KEY.
-    DATA lt_t2 TYPE STANDARD TABLE OF i WITH DEFAULT KEY.
-    DATA ls_wa TYPE i.
-    PROVIDE field1 FROM lt_t1 INTO ls_wa.
-    ENDPROVIDE.
-  ENDMETHOD.
 
   METHOD test_020.
     CONTEXTS my_context.
@@ -182,19 +169,10 @@ CLASS zcl_test_no_obsolete_statement IMPLEMENTATION.
     GET REFERENCE OF lv_src INTO lr_ref.
   ENDMETHOD.
 
-  METHOD test_024.
-    INFOTYPES spfli.
-  ENDMETHOD.
 
-  METHOD test_025.
-    COMMUNICATION INIT DESTINATION 'X'.
-  ENDMETHOD.
 
   METHOD test_026.
     SET EXTENDED CHECK ON.
-  ENDMETHOD.
-  METHOD test_027.
-    FIELD-SYMBOLS <fs> STRUCTURE mara.
   ENDMETHOD.
 
   METHOD test_028.
@@ -248,14 +226,7 @@ CLASS zcl_test_no_obsolete_statement IMPLEMENTATION.
     cl_abap_regex=>create_posix( pattern = `a` ).
   ENDMETHOD.
 
-  METHOD test_040.
-    REPLACE OCCURENCES OF 'a' IN 'abc' WITH 'b'.
-  ENDMETHOD.
 
-  METHOD test_041.
-    DATA ls_values TYPE mara.
-    REPLACE INTO mara VALUES ls_values.
-  ENDMETHOD.
 
   METHOD test_042.
     LOOP.

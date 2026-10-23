@@ -110,7 +110,7 @@ CLASS zcl_test_pref_filter IMPLEMENTATION.
     DATA ls_row TYPE i.
     LOOP AT lt_src INTO ls_row.
       IF ls_row > 0.
-        APPEND ls_row TO lt_dst INDEX 1.
+        INSERT ls_row INTO lt_dst INDEX 1.
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
