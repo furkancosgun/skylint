@@ -534,7 +534,6 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
        AND statement_has_reference( is_statement = is_statement
                                     iv_kind      = if_ci_atc_source_code_provider=>compiler_reference_kinds-type ) = abap_true.
       rv_yes = abap_true.
-      RETURN.
     ENDIF.
   ENDMETHOD.
 

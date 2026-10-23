@@ -7,5 +7,5 @@
   },
   "category": "ZSKYLINT",
   "implementingClass": "ZCL_SKYLINT_PREF_MSG_CLS",
-  "checkType": "local"
+  "checkType": "remoteEnabled"
 }

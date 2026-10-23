@@ -20,17 +20,9 @@
     "code": null
   },
   {
-    "target": "TEST_005",
-    "code": null
-  },
-  {
     "target": "TEST_006",
     "code": "PREF_MSG",
     "line": 2,
     "column": 4
-  },
-  {
-    "target": "TEST_007",
-    "code": null
   }
 ]

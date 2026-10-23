@@ -8,9 +8,7 @@ CLASS zcl_test_prefer_msg_cls DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
-    METHODS test_005.
     METHODS test_006.
-    METHODS test_007.
 ENDCLASS.
 
 CLASS zcl_test_prefer_msg_cls IMPLEMENTATION.
@@ -30,16 +28,7 @@ CLASS zcl_test_prefer_msg_cls IMPLEMENTATION.
     MESSAGE ID zbc_msg TYPE 'E' NUMBER 001.
   ENDMETHOD.
 
-  METHOD test_005.
-    DATA lx_error TYPE REF TO cx_root.
-    MESSAGE lx_error TYPE 'E'.
-  ENDMETHOD.
   METHOD test_006.
     MESSAGE 'Error' TYPE 'E' DISPLAY LIKE 'S'.
-  ENDMETHOD.
-
-  METHOD test_007.
-    DATA lx_error TYPE REF TO cx_root.
-    MESSAGE lx_error TYPE 'I'.
   ENDMETHOD.
 ENDCLASS.
