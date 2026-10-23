@@ -1050,6 +1050,40 @@
     },
     {
       "checkName": "ZSKYLINT_PREF_SY"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_UNFILT_DML"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_CONCAT_LOOP"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_DUP_LITERALS",
+      "parameters": [
+        {
+          "name": "MIN_OCCURRENCES",
+          "value": "3"
+        },
+        {
+          "name": "MIN_LENGTH",
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_FILTER"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_NEG_COND"
+    },
+    {
+      "checkName": "ZSKYLINT_MAX_BOOL_EXPR",
+      "parameters": [
+        {
+          "name": "MAX_BOOLEAN_EXPRESSIONS",
+          "value": "4"
+        }
+      ]
     }
   ]
 }

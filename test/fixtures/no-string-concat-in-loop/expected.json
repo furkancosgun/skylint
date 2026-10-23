@@ -1,0 +1,9 @@
+[
+  { "target": "TEST_001", "code": "CONCATLP", "line": 6, "column": 6 },
+  { "target": "TEST_002", "code": null },
+  { "target": "TEST_003", "code": "CONCATLP", "line": 6, "column": 6 },
+  { "target": "TEST_004", "code": null },
+  { "target": "TEST_005", "code": "CONCATLP", "line": 6, "column": 6 },
+  { "target": "TEST_006", "code": null },
+  { "target": "TEST_007", "code": null }
+]

@@ -1370,6 +1370,78 @@ export const RULES = [
       good: `lv_user = sy-uname.`,
     },
   },
+  {
+    ruleId: 'no-unfiltered-dml',
+    title: 'Avoid UPDATE or DELETE Without a WHERE Condition',
+    rationale: 'An UPDATE or DELETE that targets a database table without a top-level WHERE condition affects every row in the table. Such statements are dangerous in production and often indicate a missing restriction. Add a WHERE condition, or use the matching internal-table statement when no database table is intended.',
+    className: 'ZCL_SKYLINT_NO_UNFILT_DML',
+    pseudoComment: 'NO_UNFILT_DML',
+    category: 'performance',
+    example: {
+      bad: `DELETE FROM zorders.\nUPDATE zorders SET status = 'X'.`,
+      good: `DELETE FROM zorders WHERE status = 'C'.\nUPDATE zorders SET status = 'X' WHERE order_id = lv_id.`,
+    },
+  },
+  {
+    ruleId: 'no-string-concat-in-loop',
+    title: 'Avoid String Concatenation Inside Loops',
+    rationale: 'Repeatedly appending to the same string inside a loop copies the accumulated result on every iteration, which turns a linear operation into a quadratic one for large tables. Collect the parts in a string table and join them once, or use a suitable aggregation. Keep the concatenation outside the loop whenever possible.',
+    className: 'ZCL_SKYLINT_NO_CONCAT_LOOP',
+    pseudoComment: 'NO_CONCAT_LOOP',
+    category: 'performance',
+    example: {
+      bad: `LOOP AT lt_names INTO lv_name.\n  lv_result = lv_result && lv_name.\nENDLOOP.`,
+      good: `LOOP AT lt_names INTO lv_name.\n  APPEND lv_name TO lt_parts.\nENDLOOP.\nlv_result = concat_lines_of( table = lt_parts ).`,
+    },
+  },
+  {
+    ruleId: 'no-duplicate-literals',
+    title: 'Avoid Repeating the Same String Literal',
+    rationale: 'Repeating the same string literal in several places couples unrelated code to an unnamed value and makes a later change error-prone. Define a constant with a meaningful name and reuse it. The check focuses on fixed string literals that occur at least three times.',
+    className: 'ZCL_SKYLINT_NO_DUP_LITERALS',
+    pseudoComment: 'NO_DUP_LITERALS',
+    category: 'anti-patterns',
+    example: {
+      bad: `IF lv_status = 'ACTIVE'.\n  lv_text = 'ACTIVE'.\nENDIF.`,
+      good: `CONSTANTS c_active TYPE string VALUE 'ACTIVE'.\nIF lv_status = c_active.\n  lv_text = c_active.\nENDIF.`,
+    },
+  },
+  {
+    ruleId: 'prefer-filter',
+    title: 'Prefer FILTER for a Simple LOOP with IF and APPEND',
+    rationale: 'A LOOP that only copies rows matching one condition into another table is a filter expressed as imperative control flow. FILTER builds the result directly and states the intent without a work area. This rule only targets the simple LOOP AT, IF, APPEND pattern; keep loops that contain extra logic, indexes, or multiple statements.',
+    className: 'ZCL_SKYLINT_PREF_FILTER',
+    pseudoComment: 'PREF_FILTER',
+    category: 'clean-abap',
+    example: {
+      bad: `LOOP AT lt_orders INTO ls_order.\n  IF ls_order-status = 'O'.\n    APPEND ls_order TO lt_open.\n  ENDIF.\nENDLOOP.`,
+      good: `lt_open = FILTER #( lt_orders USING KEY primary_key WHERE status = 'O' ).`,
+    },
+  },
+  {
+    ruleId: 'no-negated-condition',
+    title: 'Avoid Negated IF Conditions with ELSE',
+    rationale: 'A negated condition with an ELSE branch forces readers to negate the expression mentally before understanding the main path. Invert the condition and swap the branches, so the positive case comes first. This rule ignores ELSEIF chains and IS NOT predicates handled by the dedicated rule.',
+    className: 'ZCL_SKYLINT_NO_NEG_COND',
+    pseudoComment: 'NO_NEG_COND',
+    category: 'clean-abap',
+    example: {
+      bad: `IF NOT lv_is_valid.\n  handle_error( ).\nELSE.\n  process( ).\nENDIF.`,
+      good: `IF lv_is_valid.\n  process( ).\nELSE.\n  handle_error( ).\nENDIF.`,
+    },
+  },
+  {
+    ruleId: 'max-boolean-expressions',
+    title: 'Limit the Number of Boolean Expressions in a Condition',
+    rationale: 'Long boolean conditions combine many independent decisions and are difficult to review and test. Split the condition into named helper methods or intermediate variables, or restructure the control flow. The default limit is four operands per IF, ELSEIF, WHILE, or CHECK statement.',
+    className: 'ZCL_SKYLINT_MAX_BOOL_EXPR',
+    pseudoComment: 'MAX_BOOL_EXPR',
+    category: 'metrics',
+    example: {
+      bad: `IF a = 1 AND b = 2 AND c = 3 AND d = 4 AND e = 5.`,
+      good: `IF is_valid_header( ) AND is_valid_items( ).`,
+    },
+  },
 ];
 
 export const RULE_BY_RULE_ID = new Map(RULES.map(r => [r.ruleId, r]));

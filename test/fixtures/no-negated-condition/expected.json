@@ -1,0 +1,12 @@
+[
+  { "target": "TEST_001", "code": "NEGCOND", "line": 3, "column": 4 },
+  { "target": "TEST_002", "code": null },
+  { "target": "TEST_003", "code": "NEGCOND", "line": 4, "column": 4 },
+  { "target": "TEST_004", "code": "NEGCOND", "line": 4, "column": 4 },
+  { "target": "TEST_005", "code": null },
+  { "target": "TEST_006", "code": null },
+  { "target": "TEST_007", "code": null },
+  { "target": "TEST_008", "code": null },
+  { "target": "TEST_009", "code": "NEGCOND", "line": 5, "column": 4 },
+  { "target": "TEST_010", "code": "NEGCOND", "line": 3, "column": 4 }
+]
