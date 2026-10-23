@@ -5,7 +5,7 @@ CLASS zcl_test_no_empty_fae DEFINITION
   PUBLIC SECTION.
     TYPES:
       BEGIN OF ty_entry,
-        field1 TYPE c LENGTH 10,
+        arbgb TYPE arbgb,
       END OF ty_entry.
     TYPES tt_entry TYPE STANDARD TABLE OF ty_entry WITH DEFAULT KEY.
 
@@ -22,62 +22,62 @@ ENDCLASS.
 CLASS zcl_test_no_empty_fae IMPLEMENTATION.
   METHOD test_001.
     DATA s TYPE tt_entry.
-    DATA r TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
-    SELECT * FROM zskylint_dummy INTO TABLE @r FOR ALL ENTRIES IN @s WHERE field1 = @s-field1.
+    DATA r TYPE STANDARD TABLE OF t100 WITH DEFAULT KEY.
+    SELECT * FROM t100 INTO TABLE @r FOR ALL ENTRIES IN @s WHERE arbgb = @s-arbgb.
   ENDMETHOD.
 
   METHOD test_002.
     DATA s TYPE tt_entry.
-    DATA r TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
+    DATA r TYPE STANDARD TABLE OF t100 WITH DEFAULT KEY.
     IF s IS NOT INITIAL.
-      SELECT * FROM zskylint_dummy INTO TABLE @r FOR ALL ENTRIES IN @s WHERE field1 = @s-field1.
+      SELECT * FROM t100 INTO TABLE @r FOR ALL ENTRIES IN @s WHERE arbgb = @s-arbgb.
     ENDIF.
   ENDMETHOD.
 
   METHOD test_003.
     DATA t TYPE tt_entry.
-    DATA r2 TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
-    SELECT * FROM zskylint_dummy INTO TABLE @r2 FOR ALL ENTRIES IN @t WHERE field1 = @t-field1.
+    DATA r2 TYPE STANDARD TABLE OF t100 WITH DEFAULT KEY.
+    SELECT * FROM t100 INTO TABLE @r2 FOR ALL ENTRIES IN @t WHERE arbgb = @t-arbgb.
   ENDMETHOD.
 
   METHOD test_004.
     DATA s TYPE tt_entry.
-    DATA r TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
+    DATA r TYPE STANDARD TABLE OF t100 WITH DEFAULT KEY.
     IF lines( s ) > 0.
-      SELECT * FROM zskylint_dummy INTO TABLE @r FOR ALL ENTRIES IN @s WHERE field1 = @s-field1.
+      SELECT * FROM t100 INTO TABLE @r FOR ALL ENTRIES IN @s WHERE arbgb = @s-arbgb.
     ENDIF.
   ENDMETHOD.
 
   METHOD test_005.
     DATA s TYPE tt_entry.
-    DATA r TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
+    DATA r TYPE STANDARD TABLE OF t100 WITH DEFAULT KEY.
     CHECK s IS NOT INITIAL.
-    SELECT * FROM zskylint_dummy INTO TABLE @r FOR ALL ENTRIES IN @s WHERE field1 = @s-field1.
+    SELECT * FROM t100 INTO TABLE @r FOR ALL ENTRIES IN @s WHERE arbgb = @s-arbgb.
   ENDMETHOD.
 
   METHOD test_006.
     DATA s TYPE tt_entry.
-    DATA r TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
+    DATA r TYPE STANDARD TABLE OF t100 WITH DEFAULT KEY.
     IF s IS INITIAL.
       RETURN.
     ENDIF.
-    SELECT * FROM zskylint_dummy INTO TABLE @r FOR ALL ENTRIES IN @s WHERE field1 = @s-field1.
+    SELECT * FROM t100 INTO TABLE @r FOR ALL ENTRIES IN @s WHERE arbgb = @s-arbgb.
   ENDMETHOD.
 
   METHOD test_007.
     DATA s TYPE tt_entry.
-    DATA r TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
+    DATA r TYPE STANDARD TABLE OF t100 WITH DEFAULT KEY.
     IF s IS NOT INITIAL.
       " closed block
     ENDIF.
-    SELECT * FROM zskylint_dummy INTO TABLE @r FOR ALL ENTRIES IN @s WHERE field1 = @s-field1.
+    SELECT * FROM t100 INTO TABLE @r FOR ALL ENTRIES IN @s WHERE arbgb = @s-arbgb.
   ENDMETHOD.
 
   METHOD test_008.
     DATA s TYPE tt_entry.
-    DATA r TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
+    DATA r TYPE STANDARD TABLE OF t100 WITH DEFAULT KEY.
     IF s IS INITIAL.
-      SELECT * FROM zskylint_dummy INTO TABLE @r FOR ALL ENTRIES IN @s WHERE field1 = @s-field1.
+      SELECT * FROM t100 INTO TABLE @r FOR ALL ENTRIES IN @s WHERE arbgb = @s-arbgb.
     ENDIF.
   ENDMETHOD.
 ENDCLASS.

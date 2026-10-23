@@ -306,8 +306,12 @@ CLASS zcl_skylint_pref_naming IMPLEMENTATION.
     lv_pat = to_upper( condense( iv_pattern ) ).
 
     TRY.
-        rv_matches = matches( val  = lv_val
-                              pcre = lv_pat ).
+        IF matches( val  = lv_val
+                    pcre = lv_pat ).
+          rv_matches = abap_true.
+        ELSE.
+          rv_matches = abap_false.
+        ENDIF.
       CATCH cx_root.
         rv_matches = abap_true.
     ENDTRY.

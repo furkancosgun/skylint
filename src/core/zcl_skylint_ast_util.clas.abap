@@ -514,11 +514,28 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD statement_is_db_access.
-    rv_yes = xsdbool(
-         statement_has_reference( is_statement  = is_statement
-                                  iv_usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_database )  = abap_true
-      OR statement_has_reference( is_statement  = is_statement
-                                  iv_usage_mode = if_ci_atc_source_code_provider=>usage_modes-write_database ) = abap_true ).
+    IF statement_has_reference( is_statement  = is_statement
+                                iv_usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_database ) = abap_true
+       OR statement_has_reference( is_statement  = is_statement
+                                   iv_usage_mode = if_ci_atc_source_code_provider=>usage_modes-write_database ) = abap_true.
+      rv_yes = abap_true.
+      RETURN.
+    ENDIF.
+
+    IF is_statement-keyword = 'SELECT'.
+      rv_yes = abap_true.
+      RETURN.
+    ENDIF.
+
+    IF ( is_statement-keyword = 'DELETE'
+         OR is_statement-keyword = 'UPDATE'
+         OR is_statement-keyword = 'INSERT'
+         OR is_statement-keyword = 'MODIFY' )
+       AND statement_has_reference( is_statement = is_statement
+                                    iv_kind      = if_ci_atc_source_code_provider=>compiler_reference_kinds-type ) = abap_true.
+      rv_yes = abap_true.
+      RETURN.
+    ENDIF.
   ENDMETHOD.
 
   METHOD is_assignment.

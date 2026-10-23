@@ -29,7 +29,7 @@ CLASS zcl_test_require_fully_typed IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_005.
-    DATA type TYPE i.
+    CONSTANTS type TYPE i VALUE 1.
     CONSTANTS gc_c VALUE type.
   ENDMETHOD.
 ENDCLASS.

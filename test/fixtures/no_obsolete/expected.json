@@ -33,13 +33,6 @@
     "quickfixes": []
   },
   {
-    "target": "TEST_006",
-    "code": "OBSOLETE",
-    "line": 2,
-    "column": 4,
-    "quickfixes": []
-  },
-  {
     "target": "TEST_007",
     "code": "OBSOLETE",
     "line": 3,
@@ -75,13 +68,6 @@
     "quickfixes": [
       "REPLACE_OB"
     ]
-  },
-  {
-    "target": "TEST_012",
-    "code": "OBSOLETE",
-    "line": 2,
-    "column": 4,
-    "quickfixes": []
   },
   {
     "target": "TEST_013",

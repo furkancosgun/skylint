@@ -61,9 +61,9 @@ CLASS zcl_test_prefer_xsdbool IMPLEMENTATION.
     DATA lv_a TYPE i.
     DATA lv_b TYPE i.
     DATA lv_flag TYPE abap_bool.
-    DATA space TYPE string.
+    DATA lv_val TYPE string.
     IF lv_a = lv_b.
-    lv_flag = space.
+    lv_flag = lv_val.
     ELSE.
     lv_flag = abap_false.
     ENDIF.

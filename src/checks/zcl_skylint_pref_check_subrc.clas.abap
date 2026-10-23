@@ -62,16 +62,19 @@ CLASS zcl_skylint_pref_check_subrc IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
+    DATA lv_stmt_idx  TYPE i.
     DATA ls_next_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      lv_stmt_idx = sy-tabix.
+
       IF statement_sets_subrc( <ls_statement> ) = abap_false.
         CONTINUE.
       ENDIF.
 
       ls_next_stmt = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_procedure-statements
-                                                               iv_current_index = sy-tabix ).
+                                                               iv_current_index = lv_stmt_idx ).
 
       IF ls_next_stmt-keyword IS INITIAL OR checks_sy_subrc( ls_next_stmt ) = abap_false.
         report_statement( is_statement    = <ls_statement>
@@ -138,12 +141,15 @@ CLASS zcl_skylint_pref_check_subrc IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_subrc_token.
-    DATA ls_ref TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
-    ls_ref = zcl_skylint_ast_util=>get_reference(
-                 is_token      = is_token
-                 iv_kind       = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-                 iv_usage_mode = if_ci_atc_source_code_provider=>usage_modes-read ).
-    rv_is = xsdbool( ls_ref-full_name = '\DA:SY\DA:SUBRC' OR ls_ref-full_name = '\DA:SYST\DA:SUBRC' ).
+    rv_is = abap_false.
+    LOOP AT is_token-references ASSIGNING <ls_ref>.
+      IF <ls_ref>-kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+         AND ( <ls_ref>-full_name = '\DA:SY\DA:SUBRC' OR <ls_ref>-full_name = '\DA:SYST\DA:SUBRC' ).
+        rv_is = abap_true.
+        RETURN.
+      ENDIF.
+    ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

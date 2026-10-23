@@ -1,4 +1,4 @@
-.
+CLASS zcl_skylint_test_downport DEFINITION.
   PUBLIC SECTION.
     METHODS test_001.
     METHODS test_002.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_test_downport IMPLEMENTATION.
     " Compliant: default attributes are all abap_false
     new = 1.
     new += 2.
-    lv_text = VALUE string_table( ( |Line: { new }| ) ).
+    lt_data = VALUE string_table( ( |Line: { new }| ) ).
     lt_data = VALUE #( ( `Item` ) ).
   ENDMETHOD.
 

@@ -16,15 +16,15 @@ CLASS zcl_test_no_unfilt_dml IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_002.
-    DELETE FROM ztab WHERE field1 = 1.
+    DELETE FROM ztab WHERE arbgb = 1.
   ENDMETHOD.
 
   METHOD test_003.
-    UPDATE ztab SET field1 = 1.
+    UPDATE ztab SET arbgb = 1.
   ENDMETHOD.
 
   METHOD test_004.
-    UPDATE ztab SET field1 = 1 WHERE field1 = 1.
+    UPDATE ztab SET arbgb = 1 WHERE arbgb = 1.
   ENDMETHOD.
 
   METHOD test_005.

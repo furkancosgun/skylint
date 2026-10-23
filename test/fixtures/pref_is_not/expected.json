@@ -20,9 +20,5 @@
     "quickfixes": [
       "ISNOT"
     ]
-  },
-  {
-    "target": "TEST_005",
-    "code": null
   }
 ]

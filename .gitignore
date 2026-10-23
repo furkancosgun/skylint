@@ -13,3 +13,7 @@ tmp/
 
 # generated
 lib/checks-registry.mjs
+
+# remote test scripts (local only)
+scripts/export-fixtures.mjs
+scripts/run-remote-tests.mjs

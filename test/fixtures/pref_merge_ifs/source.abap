@@ -7,6 +7,12 @@ CLASS zcl_test_merge_nested_ifs DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
+    METHODS test_005.
+    METHODS test_006.
+    METHODS test_007.
+    METHODS test_008.
+    METHODS test_009.
+    METHODS test_010.
 ENDCLASS.
 
 

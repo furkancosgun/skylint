@@ -7,7 +7,6 @@ CLASS zcl_test_prefer_is_not DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
-    METHODS test_005.
 ENDCLASS.
 
 CLASS zcl_test_prefer_is_not IMPLEMENTATION.
@@ -31,15 +30,6 @@ CLASS zcl_test_prefer_is_not IMPLEMENTATION.
   METHOD test_004.
     DATA lo_obj TYPE REF TO zcl_test_prefer_is_not.
     IF lo_obj IS BOUND.
-    ENDIF.
-  ENDMETHOD.
-
-  METHOD test_005.
-    DATA not TYPE string.
-    DATA initial TYPE i.
-    IF not IS INITIAL.
-    ENDIF.
-    IF not = initial.
     ENDIF.
   ENDMETHOD.
 ENDCLASS.

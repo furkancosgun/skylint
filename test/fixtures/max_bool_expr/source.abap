@@ -49,7 +49,7 @@ CLASS zcl_test_max_bool_expr IMPLEMENTATION.
     DATA lv_b TYPE i.
     DATA lv_c TYPE i.
     DATA lv_d TYPE i.
-    IF lv_a = 1 AND lv_b = 2 AND lv_c = 3.
+    IF lv_a = 1 AND lv_b = 2 AND lv_c = 3 AND lv_d = 4 AND lv_a = 5.
       lv_a = 1.
     ENDIF.
   ENDMETHOD.

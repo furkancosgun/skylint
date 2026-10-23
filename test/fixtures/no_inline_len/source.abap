@@ -3,6 +3,7 @@ CLASS zcl_test_no_inline_length DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
+    CONSTANTS lv_len TYPE i VALUE 10.
     METHODS test_001.
     METHODS test_002.
     METHODS test_003.
@@ -47,6 +48,6 @@ CLASS zcl_test_no_inline_length IMPLEMENTATION.
 
   METHOD test_008.
     DATA lv_text TYPE c LENGTH 10.
-    DATA lv_like(5) LIKE lv_text.
+    DATA lv_like(5) TYPE c.
   ENDMETHOD.
 ENDCLASS.

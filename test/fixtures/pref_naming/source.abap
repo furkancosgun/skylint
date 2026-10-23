@@ -1,7 +1,7 @@
 .
   PUBLIC SECTION.
-    METHODS test_001.
-    METHODS test_002.
+    CLASS-METHODS test_001.
+    CLASS-METHODS test_002.
     METHODS test_003.
 ENDCLASS.
 

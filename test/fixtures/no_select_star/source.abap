@@ -12,30 +12,30 @@ ENDCLASS.
 
 CLASS zcl_test_no_select_star IMPLEMENTATION.
   METHOD test_001.
-    SELECT * FROM zskylint_dummy INTO @DATA(ls_row).
+    SELECT * FROM t100 INTO @DATA(ls_row).
     ENDSELECT.
   ENDMETHOD.
 
   METHOD test_002.
-    DATA lt_tab TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
-    SELECT field1 FROM zskylint_dummy INTO TABLE @lt_tab.
+    DATA lt_tab TYPE STANDARD TABLE OF t100 WITH DEFAULT KEY.
+    SELECT arbgb FROM t100 INTO TABLE @lt_tab.
   ENDMETHOD.
 
   METHOD test_003.
-    DATA ls_row TYPE zskylint_dummy.
+    DATA ls_row TYPE t100.
     DATA ls_key TYPE string.
-    SELECT SINGLE * FROM zskylint_dummy INTO @ls_row WHERE field1 = @ls_key.
+    SELECT SINGLE * FROM t100 INTO @ls_row WHERE arbgb = @ls_key.
   ENDMETHOD.
 
   METHOD test_004.
-    DATA ls_row TYPE zskylint_dummy.
+    DATA ls_row TYPE t100.
     DATA ls_key TYPE string.
-    SELECT SINGLE field1 FROM zskylint_dummy INTO @ls_row WHERE field1 = @ls_key.
+    SELECT SINGLE arbgb FROM t100 INTO @ls_row WHERE arbgb = @ls_key.
   ENDMETHOD.
 
   METHOD test_005.
-    DATA lt_tab TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
-    SELECT field1 FROM zskylint_dummy INTO TABLE @lt_tab PACKAGE SIZE 100.
+    DATA lt_tab TYPE STANDARD TABLE OF t100 WITH DEFAULT KEY.
+    SELECT arbgb FROM t100 INTO TABLE @lt_tab PACKAGE SIZE 100.
     ENDSELECT.
   ENDMETHOD.
 ENDCLASS.

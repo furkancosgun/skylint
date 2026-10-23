@@ -30,20 +30,20 @@ CLASS zcl_test_prefer_inl_cast IMPLEMENTATION.
   METHOD test_001.
     DATA(lo_object) = NEW lcl_node( ).
     DATA(lv_helper) = CAST lcl_node( lo_object ).
-    lv_result = lv_helper->get_tokens( ).
+    DATA(lv_result) = lv_helper->get_tokens( ).
   ENDMETHOD.
 
   METHOD test_002.
     DATA(lo_object) = NEW lcl_node( ).
     DATA(lv_helper) = CAST lcl_node( lo_object ).
-    lv_result = lv_helper.
+    DATA(lv_result) = lv_helper.
   ENDMETHOD.
 
   METHOD test_003.
     DATA(lo_object) = NEW lcl_node( ).
     DATA(lv_helper) = CAST lcl_node( lo_object ).
-    lv_other = lv_helper->get_tokens( ).
-    lv_result = lv_helper->get_tokens( ).
+    DATA(lv_other) = lv_helper->get_tokens( ).
+    DATA(lv_result) = lv_helper->get_tokens( ).
   ENDMETHOD.
 
   METHOD test_004.
@@ -54,15 +54,15 @@ CLASS zcl_test_prefer_inl_cast IMPLEMENTATION.
   METHOD test_005.
     DATA(lo_object) = NEW lcl_node( ).
     DATA(lv_helper) = CAST lcl_node( lo_object ).
-    lv_result = lv_helper->get_tokens( ).
-    lv_other = lv_helper->get_tokens( ).
+    DATA(lv_result) = lv_helper->get_tokens( ).
+    DATA(lv_other) = lv_helper->get_tokens( ).
   ENDMETHOD.
 
   METHOD test_006.
     DATA(lo_object) = NEW lcl_node( ).
     DATA(lv_helper) = CAST lcl_node( lo_object ).
     lv_helper = NEW lcl_node( ).
-    lv_result = lv_helper->get_tokens( ).
+    DATA(lv_result) = lv_helper->get_tokens( ).
   ENDMETHOD.
 
   METHOD test_007.

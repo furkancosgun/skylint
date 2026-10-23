@@ -85,22 +85,7 @@ CLASS zcl_skylint_pref_msg_cls IMPLEMENTATION.
       rv_yes = abap_true.
       RETURN.
     ENDIF.
-
-    LOOP AT ls_token-references ASSIGNING <ls_ref>.
-      IF zcl_skylint_rtti_util=>describe_object( <ls_ref>-full_name ) IS BOUND.
-        rv_yes = abap_true.
-        RETURN.
-      ENDIF.
-      IF <ls_ref>-kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
-        lv_type = zcl_skylint_ast_util=>get_declared_type( it_statements = it_statements
-                                                           iv_full_name  = <ls_ref>-full_name ).
-        IF lv_type IS NOT INITIAL AND zcl_skylint_rtti_util=>describe_object( lv_type ) IS BOUND.
-          rv_yes = abap_true.
-          RETURN.
-        ENDIF.
-      ENDIF.
-    ENDLOOP.
-
+    
     rv_yes = abap_false.
   ENDMETHOD.
 ENDCLASS.

@@ -4,6 +4,7 @@ CLASS zcl_test_no_rfc_err DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
+    DATA lv_group TYPE string.
     METHODS test_001.
     METHODS test_002.
     METHODS test_003.

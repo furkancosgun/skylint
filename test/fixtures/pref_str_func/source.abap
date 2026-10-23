@@ -42,7 +42,7 @@ CLASS zcl_test_prefer_string_functio IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_005.
-    DATA lv_text TYPE string.
+    DATA lv_text TYPE c LENGTH 10.
     TRANSLATE lv_text USING 'abxy'.
   ENDMETHOD.
 
@@ -54,12 +54,12 @@ CLASS zcl_test_prefer_string_functio IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_007.
-    DATA lv_text TYPE string.
+    DATA lv_text TYPE c LENGTH 10.
     SEARCH lv_text FOR 'ABC'.
   ENDMETHOD.
 
   METHOD test_008.
-    DATA lv_text TYPE string.
+    DATA lv_text TYPE c LENGTH 10.
     OVERLAY lv_text WITH '1234'.
   ENDMETHOD.
 
@@ -75,7 +75,7 @@ CLASS zcl_test_prefer_string_functio IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_011.
-    DATA lv_text TYPE string.
+    DATA lv_text TYPE c LENGTH 10.
     DATA lv_len TYPE i.
     DESCRIBE FIELD lv_text LENGTH lv_len IN CHARACTER MODE.
   ENDMETHOD.

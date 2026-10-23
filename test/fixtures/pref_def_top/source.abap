@@ -3,6 +3,7 @@ CLASS zcl_test_prefer_def_top DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
+    DATA lv_a TYPE i.
     METHODS test_001.
     METHODS test_002.
     METHODS test_003.

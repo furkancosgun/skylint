@@ -44,10 +44,10 @@ CLASS zcl_test_no_boolean_comparison IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_005.
-    DATA space TYPE string.
+    DATA eq TYPE string.
     DATA ne TYPE i.
     DATA lv_x TYPE i.
-    IF lv_x = space.
+    IF lv_x = eq.
     ENDIF.
     IF lv_x = ne.
     ENDIF.

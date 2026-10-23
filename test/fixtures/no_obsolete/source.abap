@@ -8,13 +8,11 @@ CLASS zcl_test_no_obsolete_statement DEFINITION
     METHODS test_003.
     METHODS test_004.
     METHODS test_005.
-    METHODS test_006.
     METHODS test_007.
     METHODS test_008.
     METHODS test_009.
     METHODS test_010.
     METHODS test_011.
-    METHODS test_012.
     METHODS test_013.
     METHODS test_014.
     METHODS test_015.
@@ -73,13 +71,9 @@ CLASS zcl_test_no_obsolete_statement IMPLEMENTATION.
     BREAK-POINT.
   ENDMETHOD.
 
-  METHOD test_006.
-    STATICS sv_stat TYPE i.
-  ENDMETHOD.
-
   METHOD test_007.
     DATA lv_val TYPE i.
-    EXPORT lv_val TO MEMORY ID 'KEY'.
+    EXPORT val = lv_val TO MEMORY ID 'KEY'.
   ENDMETHOD.
 
   METHOD test_008.
@@ -107,10 +101,6 @@ CLASS zcl_test_no_obsolete_statement IMPLEMENTATION.
     DATA lv_x TYPE i.
     DATA lv_y TYPE i.
     ADD lv_x TO lv_y.
-  ENDMETHOD.
-
-  METHOD test_012.
-    TABLES spfli.
   ENDMETHOD.
 
   METHOD test_013.

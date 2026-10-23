@@ -7,7 +7,6 @@ CLASS zcl_test_no_me_reference DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
-    METHODS test_005.
     METHODS run.
     METHODS constructor.
 ENDCLASS.

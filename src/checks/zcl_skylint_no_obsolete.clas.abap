@@ -592,6 +592,7 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
     DATA lv_lexeme TYPE string.
     DATA lv_next   TYPE string.
     DATA lv_next2  TYPE string.
+    DATA lv_index  TYPE i.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_is = abap_false.
@@ -611,10 +612,11 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
         rv_is = abap_true.
         RETURN.
       ENDIF.
+      lv_index = sy-tabix.
       lv_next  = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                         iv_index     = sy-tabix + 1 ).
+                                                         iv_index     = lv_index + 1 ).
       lv_next2 = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                         iv_index     = sy-tabix + 2 ).
+                                                         iv_index     = lv_index + 2 ).
       IF lv_next = '*' AND lv_next2 = ')'.
         rv_is = abap_true.
         RETURN.

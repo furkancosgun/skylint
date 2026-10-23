@@ -4,6 +4,15 @@ CLASS zcl_test_no_many_parens DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
+    DATA: lv_a TYPE i,
+          lv_b TYPE i,
+          lv_c TYPE i,
+          lv_d TYPE i,
+          lv_e TYPE i,
+          lv_f TYPE i,
+          lv_x TYPE i,
+          lv_y TYPE i,
+          lv_z TYPE i.
     METHODS test_001.
     METHODS test_002.
     METHODS test_003.

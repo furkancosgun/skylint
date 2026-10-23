@@ -71,6 +71,7 @@ CLASS zcl_skylint_pref_is_supplied IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD collect_overrides.
+    DATA lv_curr_idx  TYPE i.
     DATA lv_prev      TYPE string.
     DATA lv_prev_prev TYPE string.
 
@@ -78,20 +79,22 @@ CLASS zcl_skylint_pref_is_supplied IMPLEMENTATION.
 
     CLEAR rt_found.
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      IF <ls_token>-lexeme <> 'REQUESTED' OR <ls_token>-references IS NOT INITIAL.
+      lv_curr_idx = sy-tabix.
+
+      IF <ls_token>-lexeme <> 'REQUESTED'.
         CONTINUE.
       ENDIF.
 
       lv_prev = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                        iv_index     = sy-tabix - 1 ).
+                                                        iv_index     = lv_curr_idx - 1 ).
       lv_prev_prev = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                             iv_index     = sy-tabix - 2 ).
+                                                             iv_index     = lv_curr_idx - 2 ).
       IF     lv_prev <> 'IS'
          AND ( lv_prev <> 'NOT' OR lv_prev_prev <> 'IS' ).
         CONTINUE.
       ENDIF.
 
-      APPEND VALUE #( index  = sy-tabix
+      APPEND VALUE #( index  = lv_curr_idx
                       lexeme = 'SUPPLIED' ) TO rt_found.
     ENDLOOP.
   ENDMETHOD.

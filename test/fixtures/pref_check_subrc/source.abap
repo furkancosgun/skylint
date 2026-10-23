@@ -38,6 +38,6 @@ CLASS zcl_test_require_subrc_check IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_005.
-    UPDATE zskylint_dummy SET field1 = 'A'.
+    UPDATE t100 SET arbgb = 'A'.
   ENDMETHOD.
 ENDCLASS.
