@@ -22,7 +22,7 @@
       "key": "security",
       "title": "Security & Robustness",
       "description": "Authorizations, dynamic execution sanitation, error handling, and runtime safety.",
-      "count": 12
+      "count": 11
     },
     {
       "key": "metrics",
@@ -822,18 +822,6 @@
       "pseudoComment": "CLIENT_SPEC",
       "hasQuickfix": true,
       "remoteEnabled": true,
-      "configurable": false
-    },
-    {
-      "ruleId": "no-commit-work",
-      "title": "Avoid Explicit COMMIT WORK in Business Logic",
-      "className": "ZCL_SKYLINT_NO_COMMIT_WORK",
-      "description": "Avoid COMMIT and ROLLBACK in application logic",
-      "category": "security",
-      "categoryTitle": "Security & Robustness",
-      "pseudoComment": "COMMIT_WORK",
-      "hasQuickfix": false,
-      "remoteEnabled": false,
       "configurable": false
     },
     {

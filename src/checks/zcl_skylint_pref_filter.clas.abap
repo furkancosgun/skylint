@@ -52,6 +52,7 @@ CLASS zcl_skylint_pref_filter IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
+    DATA lv_idx TYPE i.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
@@ -59,9 +60,13 @@ CLASS zcl_skylint_pref_filter IMPLEMENTATION.
     ENDIF.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF     <ls_statement>-keyword = 'LOOP'
-         AND is_simple_filter( it_statements = is_procedure-statements
-                               iv_index      = sy-tabix )              = abap_true.
+      lv_idx = sy-tabix.
+      IF <ls_statement>-keyword <> 'LOOP'.
+        CONTINUE.
+      ENDIF.
+
+      IF is_simple_filter( it_statements = is_procedure-statements
+                           iv_index      = lv_idx ) = abap_true.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-prefer_filter ).
       ENDIF.
@@ -125,11 +130,11 @@ CLASS zcl_skylint_pref_filter IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    IF lv_append_src <> lv_work_area.
+    IF to_upper( lv_append_src ) <> to_upper( lv_work_area ).
       RETURN.
     ENDIF.
 
-    IF lv_source = lv_destination.
+    IF to_upper( lv_source ) = to_upper( lv_destination ).
       RETURN.
     ENDIF.
 
@@ -143,12 +148,17 @@ CLASS zcl_skylint_pref_filter IMPLEMENTATION.
     CLEAR: ev_source,
            ev_work_area.
 
-    IF zcl_skylint_ast_util=>token_count( is_statement ) <> 5.
+    IF zcl_skylint_ast_util=>match_token_sequence( is_statement = is_statement
+                                                   it_expected  = VALUE #( ( `LOOP` ) ( `AT` ) ) ) = abap_false.
       RETURN.
     ENDIF.
 
-    IF zcl_skylint_ast_util=>match_token_sequence( is_statement = is_statement
-                                                   it_expected  = VALUE #( ( `LOOP` ) ( `AT` ) ) ) = abap_false.
+    IF    zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                 iv_lexeme    = 'GROUP' ) = abap_true
+       OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                 iv_lexeme    = 'FROM' ) = abap_true
+       OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                 iv_lexeme    = 'TO' ) = abap_true.
       RETURN.
     ENDIF.
 
@@ -183,12 +193,12 @@ CLASS zcl_skylint_pref_filter IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    IF zcl_skylint_ast_util=>token_count( is_statement ) <> 4.
-      RETURN.
-    ENDIF.
-
-    IF zcl_skylint_ast_util=>find_token( is_statement = is_statement
-                                         iv_lexeme    = 'TO' ) <> 3.
+    IF    zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                 iv_lexeme    = 'INITIAL' ) = abap_true
+       OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                 iv_lexeme    = 'ASSIGNING' ) = abap_true
+       OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                 iv_lexeme    = 'SORTED' ) = abap_true.
       RETURN.
     ENDIF.
 
@@ -213,7 +223,7 @@ CLASS zcl_skylint_pref_filter IMPLEMENTATION.
     rv_yes = abap_false.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      IF <ls_token>-lexeme CP 'SY-*'.
+      IF <ls_token>-lexeme CP 'SY-*' OR <ls_token>-lexeme CP 'SYST-*'.
         rv_yes = abap_true.
         RETURN.
       ENDIF.

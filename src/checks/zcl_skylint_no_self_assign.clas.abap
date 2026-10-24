@@ -150,7 +150,8 @@ CLASS zcl_skylint_no_self_assign IMPLEMENTATION.
 
     IF     lv_lhs_symbol IS NOT INITIAL
        AND lv_rhs_symbol IS NOT INITIAL
-       AND lv_lhs_symbol  = lv_rhs_symbol.
+       AND lv_lhs_symbol  = lv_rhs_symbol
+       AND ls_tok_left-lexeme = ls_tok_right-lexeme.
       rv_res = abap_true.
     ENDIF.
   ENDMETHOD.
@@ -198,7 +199,8 @@ CLASS zcl_skylint_no_self_assign IMPLEMENTATION.
     lv_tgt_symbol = get_written_symbol( ls_tok_tgt ).
 
     IF     lv_src_symbol IS NOT INITIAL
-       AND lv_src_symbol  = lv_tgt_symbol.
+       AND lv_src_symbol  = lv_tgt_symbol
+       AND ls_tok_src-lexeme = ls_tok_tgt-lexeme.
       rv_res = abap_true.
     ENDIF.
   ENDMETHOD.

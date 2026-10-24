@@ -1968,20 +1968,6 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "no-commit-work",
-    "title": "Avoid Explicit COMMIT WORK in Business Logic",
-    "className": "ZCL_SKYLINT_NO_COMMIT_WORK",
-    "checkName": "ZSKYLINT_NO_COMMIT_WORK",
-    "category": "security",
-    "categoryTitle": "Security & Robustness",
-    "pseudoComment": "COMMIT_WORK",
-    "description": "Avoid COMMIT and ROLLBACK in application logic",
-    "hasQuickfix": false,
-    "remoteEnabled": false,
-    "attributes": [],
-    "defaultParameters": []
-  },
-  {
     "ruleId": "prefer-transporting",
     "title": "Specify TRANSPORTING in MODIFY / READ TABLE",
     "className": "ZCL_SKYLINT_PREF_TRANSPORT",

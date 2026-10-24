@@ -28,10 +28,6 @@
     "quickfixes": []
   },
   {
-    "target": "ZCL_TEST_NO_UNUSED_VARIABLES",
-    "code": null
-  },
-  {
     "target": "TEST_005",
     "code": "UNUSED_VAR",
     "line": 2,

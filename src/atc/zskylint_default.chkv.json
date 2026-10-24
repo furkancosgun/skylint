@@ -661,9 +661,6 @@
       "checkName": "ZSKYLINT_NO_CLIENT_SPEC"
     },
     {
-      "checkName": "ZSKYLINT_NO_COMMIT_WORK"
-    },
-    {
       "checkName": "ZSKYLINT_PREF_TRANSPORT"
     },
     {

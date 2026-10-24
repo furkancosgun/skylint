@@ -696,8 +696,9 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
       IF iv_usage_grade IS NOT INITIAL AND <ls_ref>-usage_grade <> iv_usage_grade.
         CONTINUE.
       ENDIF.
-      rs_reference = <ls_ref>.
-      RETURN.
+      IF rs_reference IS INITIAL OR strlen( <ls_ref>-full_name ) > strlen( rs_reference-full_name ).
+        rs_reference = <ls_ref>.
+      ENDIF.
     ENDLOOP.
   ENDMETHOD.
 
@@ -889,6 +890,8 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
         ELSEIF lv_part CP 'ME:*'.
           ev_meth_name = lv_part+3.
         ELSEIF lv_part CP 'DA:*'.
+          ev_data_name = lv_part+3.
+        ELSEIF lv_part CP 'DA=*'.
           ev_data_name = lv_part+3.
         ENDIF.
       ENDLOOP.

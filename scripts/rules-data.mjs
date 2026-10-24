@@ -828,18 +828,6 @@ export const RULES = [
     },
   },
   {
-    ruleId: 'no-commit-work',
-    title: 'Avoid Explicit COMMIT WORK in Business Logic',
-    rationale: 'COMMIT WORK inside business logic ends the SAP LUW at an arbitrary point, so later failures cannot roll back earlier changes. Frameworks such as RAP manage the save sequence and commit for you. Let the framework commit and keep the business logic transactional.',
-    className: 'ZCL_SKYLINT_NO_COMMIT_WORK',
-    pseudoComment: 'COMMIT_WORK',
-    category: 'security',
-    example: {
-      bad: `METHOD save_order.\n  UPDATE zorder SET status = @lv_status WHERE order_id = @lv_id.\n  COMMIT WORK.\nENDMETHOD.`,
-      good: `METHOD save_order.\n  UPDATE zorder SET status = @lv_status WHERE order_id = @lv_id.\nENDMETHOD.`,
-    },
-  },
-  {
     ruleId: 'prefer-transporting',
     title: 'Specify TRANSPORTING in MODIFY / READ TABLE',
     rationale: 'MODIFY without TRANSPORTING copies the entire table line from the work area, even when only one field changed. On wide tables this costs extra memory and CPU for every row. Name the changed fields in TRANSPORTING so only the relevant data is written.',
