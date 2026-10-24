@@ -158,7 +158,7 @@ CLASS zcl_skylint_no_useless_concat IMPLEMENTATION.
         EXIT.
       ENDIF.
       ls_tok_prev = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                    iv_index     = lv_curr_op - 1 ).
+                                                     iv_index     = lv_curr_op - 1 ).
       IF ls_tok_prev-lexeme = '|'.
         IF lv_curr_op >= 4 AND zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
                                                                        iv_index     = lv_curr_op - 3 ) = '|'.
@@ -176,7 +176,7 @@ CLASS zcl_skylint_no_useless_concat IMPLEMENTATION.
       ev_start = lv_left_st.
       IF     lv_left_st >= 2
          AND is_concat_operator( zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                                  iv_index     = lv_left_st - 1 ) ) = abap_true.
+                                                                  iv_index     = lv_left_st - 1 ) )  = abap_true.
         lv_curr_op = lv_left_st - 1.
         CONTINUE.
       ENDIF.
@@ -190,13 +190,14 @@ CLASS zcl_skylint_no_useless_concat IMPLEMENTATION.
         EXIT.
       ENDIF.
       ls_tok_next = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                    iv_index     = lv_curr_op + 1 ).
+                                                     iv_index     = lv_curr_op + 1 ).
       IF ls_tok_next-lexeme = '|'.
         IF lv_curr_op + 3 <= lv_tok_count AND zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                                                       iv_index     = lv_curr_op + 3 ) = '|'.
+                                                                                      iv_index     = lv_curr_op + 3 ) = '|'.
           lv_right_end = lv_curr_op + 3.
-        ELSEIF lv_curr_op + 2 <= lv_tok_count AND zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                                                           iv_index     = lv_curr_op + 2 ) = '|'.
+        ELSEIF lv_curr_op + 2 <= lv_tok_count AND zcl_skylint_ast_util=>get_token_lexeme(
+                                                      is_statement = is_statement
+                                                      iv_index     = lv_curr_op + 2 ) = '|'.
           lv_right_end = lv_curr_op + 2.
         ELSE.
           lv_right_end = lv_curr_op + 1.
@@ -208,7 +209,7 @@ CLASS zcl_skylint_no_useless_concat IMPLEMENTATION.
       ev_end = lv_right_end.
       IF     lv_right_end + 1 <= lv_tok_count
          AND is_concat_operator( zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                                  iv_index     = lv_right_end + 1 ) ) = abap_true.
+                                                                  iv_index     = lv_right_end + 1 ) )  = abap_true.
         lv_curr_op = lv_right_end + 1.
         CONTINUE.
       ENDIF.

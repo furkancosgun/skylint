@@ -514,8 +514,8 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD statement_is_db_access.
-    IF statement_has_reference( is_statement  = is_statement
-                                iv_usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_database ) = abap_true
+    IF    statement_has_reference( is_statement  = is_statement
+                                   iv_usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_database )  = abap_true
        OR statement_has_reference( is_statement  = is_statement
                                    iv_usage_mode = if_ci_atc_source_code_provider=>usage_modes-write_database ) = abap_true.
       rv_yes = abap_true.
@@ -527,10 +527,10 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    IF ( is_statement-keyword = 'DELETE'
-         OR is_statement-keyword = 'UPDATE'
-         OR is_statement-keyword = 'INSERT'
-         OR is_statement-keyword = 'MODIFY' )
+    IF     (    is_statement-keyword = 'DELETE'
+             OR is_statement-keyword = 'UPDATE'
+             OR is_statement-keyword = 'INSERT'
+             OR is_statement-keyword = 'MODIFY' )
        AND statement_has_reference( is_statement = is_statement
                                     iv_kind      = if_ci_atc_source_code_provider=>compiler_reference_kinds-type ) = abap_true.
       rv_yes = abap_true.
@@ -874,28 +874,30 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    IF lv_str CS '\'.
-      SPLIT lv_str AT '\' INTO TABLE lt_parts.
-      LOOP AT lt_parts INTO lv_part.
-        IF lv_part CP 'PR:*'.
-          ev_program_name = lv_part+3.
-        ELSEIF lv_part CP 'PROGRAM=*'.
-          ev_program_name = lv_part+8.
-        ELSEIF lv_part CP 'TY:*'.
-          ev_class_name = lv_part+3.
-        ELSEIF lv_part CP 'CLASS=*'.
-          ev_class_name = lv_part+6.
-        ELSEIF lv_part CP 'INTF=*'.
-          ev_class_name = lv_part+5.
-        ELSEIF lv_part CP 'ME:*'.
-          ev_meth_name = lv_part+3.
-        ELSEIF lv_part CP 'DA:*'.
-          ev_data_name = lv_part+3.
-        ELSEIF lv_part CP 'DA=*'.
-          ev_data_name = lv_part+3.
-        ENDIF.
-      ENDLOOP.
+    IF lv_str NS '\'.
+      RETURN.
     ENDIF.
+
+    SPLIT lv_str AT '\' INTO TABLE lt_parts.
+    LOOP AT lt_parts INTO lv_part.
+      IF lv_part CP 'PR:*'.
+        ev_program_name = lv_part+3.
+      ELSEIF lv_part CP 'PROGRAM=*'.
+        ev_program_name = lv_part+8.
+      ELSEIF lv_part CP 'TY:*'.
+        ev_class_name = lv_part+3.
+      ELSEIF lv_part CP 'CLASS=*'.
+        ev_class_name = lv_part+6.
+      ELSEIF lv_part CP 'INTF=*'.
+        ev_class_name = lv_part+5.
+      ELSEIF lv_part CP 'ME:*'.
+        ev_meth_name = lv_part+3.
+      ELSEIF lv_part CP 'DA:*'.
+        ev_data_name = lv_part+3.
+      ELSEIF lv_part CP 'DA=*'.
+        ev_data_name = lv_part+3.
+      ENDIF.
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD get_reference_name.

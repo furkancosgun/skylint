@@ -154,11 +154,11 @@ CLASS zcl_skylint_pref_filter IMPLEMENTATION.
     ENDIF.
 
     IF    zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                 iv_lexeme    = 'GROUP' ) = abap_true
+                                                  iv_lexeme    = 'GROUP' )    = abap_true
        OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                 iv_lexeme    = 'FROM' ) = abap_true
+                                                  iv_lexeme    = 'FROM' )     = abap_true
        OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                 iv_lexeme    = 'TO' ) = abap_true.
+                                                  iv_lexeme    = 'TO' )       = abap_true.
       RETURN.
     ENDIF.
 
@@ -194,11 +194,11 @@ CLASS zcl_skylint_pref_filter IMPLEMENTATION.
     ENDIF.
 
     IF    zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                 iv_lexeme    = 'INITIAL' ) = abap_true
+                                                  iv_lexeme    = 'INITIAL' )   = abap_true
        OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                 iv_lexeme    = 'ASSIGNING' ) = abap_true
+                                                  iv_lexeme    = 'ASSIGNING' ) = abap_true
        OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                 iv_lexeme    = 'SORTED' ) = abap_true.
+                                                  iv_lexeme    = 'SORTED' )    = abap_true.
       RETURN.
     ENDIF.
 
