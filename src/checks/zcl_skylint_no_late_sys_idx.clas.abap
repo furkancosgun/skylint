@@ -46,16 +46,15 @@ CLASS zcl_skylint_no_late_sys_idx IMPLEMENTATION.
     ENDIF.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      ls_prev_stmt = zcl_skylint_ast_util=>get_previous_statement(
-                         it_statements    = is_procedure-statements
-                         iv_current_index = sy-tabix ).
+      ls_prev_stmt = zcl_skylint_ast_util=>get_previous_statement( it_statements    = is_procedure-statements
+                                                                   iv_current_index = sy-tabix ).
 
       IF lv_loop_depth > 0 AND ls_prev_stmt-keyword <> 'LOOP'.
         inspect_statement( is_statement  = <ls_statement>
                            iv_field_name = 'TABIX' ).
       ENDIF.
 
-      IF     lv_do_depth > 0
+      IF     lv_do_depth           > 0
          AND ls_prev_stmt-keyword <> 'DO'
          AND ls_prev_stmt-keyword <> 'WHILE'.
         inspect_statement( is_statement  = <ls_statement>

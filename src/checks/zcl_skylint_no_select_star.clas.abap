@@ -76,10 +76,26 @@ CLASS zcl_skylint_no_select_star IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_select_star.
-    FIELD-SYMBOLS <ls_token> LIKE LINE OF is_statement-tokens.
+    DATA lv_paren_depth TYPE i.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      IF <ls_token>-lexeme = '*' OR <ls_token>-lexeme CP '*~#**'.
+      IF <ls_token>-references IS INITIAL.
+        CASE <ls_token>-lexeme.
+          WHEN '('.
+            lv_paren_depth += 1.
+          WHEN ')'.
+            IF lv_paren_depth > 0.
+              lv_paren_depth -= 1.
+            ENDIF.
+          WHEN 'FROM'.
+            IF lv_paren_depth = 0.
+              EXIT.
+            ENDIF.
+        ENDCASE.
+      ENDIF.
+
+      IF lv_paren_depth = 0 AND ( <ls_token>-lexeme = '*' OR <ls_token>-lexeme CP '*~#**' ).
         rv_res = abap_true.
         RETURN.
       ENDIF.

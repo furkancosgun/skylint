@@ -47,7 +47,7 @@ CLASS zcl_skylint_no_unnec_return IMPLEMENTATION.
     ENDIF.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_stmt>.
-      IF <ls_stmt>-keyword = 'RETURN' AND lines( is_procedure-statements ) < sy-tabix + 2.
+      IF <ls_stmt>-keyword = 'RETURN' AND sy-tabix = lines( is_procedure-statements ) - 1.
         ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-remove_return
                                         iv_statement_from = sy-tabix
                                         it_new_code       = VALUE #( ) ).

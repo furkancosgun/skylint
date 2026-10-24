@@ -152,6 +152,6 @@ CLASS zcl_skylint_no_overw_builtin IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_builtin_name.
-    rv_yes = xsdbool( line_exists( gt_builtin[ table_line = iv_name ] ) ).
+    rv_yes = xsdbool( line_exists( gt_builtin[ table_line = to_upper( iv_name ) ] ) ).
   ENDMETHOD.
 ENDCLASS.

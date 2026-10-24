@@ -162,13 +162,15 @@ CLASS zcl_skylint_no_unreachable IMPLEMENTATION.
                                                    iv_index     = 2
                                                    iv_expected  = `SHORTDUMP` ) = abap_true.
           rv_res = abap_true.
-        ELSEIF zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                                                       iv_index     = 2
-                                                       iv_expected  = `EXCEPTION` ) = abap_true.
+        ELSEIF    zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
+                                                          iv_index     = 2
+                                                          iv_expected  = `EXCEPTION` ) = abap_true
+               OR zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
+                                                          iv_index     = 2
+                                                          iv_expected  = `RESUMABLE` ) = abap_true.
           rv_res = abap_true.
-          IF zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                                                     iv_index     = 3
-                                                     iv_expected  = `RESUMABLE` ) = abap_true.
+          IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                     iv_lexeme    = 'RESUMABLE' ) = abap_true.
             rv_res = abap_false.
           ENDIF.
         ENDIF.

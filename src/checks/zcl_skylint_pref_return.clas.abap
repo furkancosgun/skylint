@@ -51,7 +51,17 @@ CLASS zcl_skylint_pref_return IMPLEMENTATION.
         WHEN 'LOOP' OR 'DO' OR 'WHILE'.
           lv_loop_depth += 1.
 
-        WHEN 'ENDLOOP' OR 'ENDDO' OR 'ENDWHILE'.
+        WHEN 'SELECT'.
+          IF     zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                         iv_lexeme    = 'SINGLE' ) = abap_false
+             AND zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
+                                                            it_expected  = VALUE #( ( `INTO` ) ( `TABLE` ) ) )      = 0
+             AND zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
+                                                            it_expected  = VALUE #( ( `APPENDING` ) ( `TABLE` ) ) ) = 0.
+            lv_loop_depth += 1.
+          ENDIF.
+
+        WHEN 'ENDLOOP' OR 'ENDDO' OR 'ENDWHILE' OR 'ENDSELECT'.
           IF lv_loop_depth > 0.
             lv_loop_depth -= 1.
           ENDIF.

@@ -1428,7 +1428,7 @@
       "ruleId": "no-late-sys-idx",
       "title": "Avoid Late Access to sy-tabix or sy-index Outside Loops",
       "className": "ZCL_SKYLINT_NO_LATE_SYS_IDX",
-      "description": "Avoid late access to sy-tabix or sy-index outside loops",
+      "description": "Avoid late access to sy-tabix or sy-index inside loops",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
       "pseudoComment": "NO_LATE_SYS_IDX",

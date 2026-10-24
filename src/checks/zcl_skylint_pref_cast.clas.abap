@@ -81,14 +81,16 @@ CLASS zcl_skylint_pref_cast IMPLEMENTATION.
       IF <ls_statement>-keyword = 'MOVE'.
         lv_tok_idx = zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
                                                        iv_lexeme    = '?TO' ).
-        IF lv_tok_idx > 2 AND lines( <ls_statement>-tokens ) >= lv_tok_idx + 1.
-          ls_quickfix = build_move_cast_quickfix( is_statement = <ls_statement>
-                                                  iv_stmt_idx  = lv_stmt_idx
-                                                  iv_to_idx    = lv_tok_idx ).
-          report_statement( is_statement    = <ls_statement>
-                            iv_finding_code = c_finding_codes-prefer_cast
-                            is_quickfix     = ls_quickfix ).
+        IF lv_tok_idx <= 2 OR lines( <ls_statement>-tokens ) < lv_tok_idx + 1.
+          CONTINUE.
         ENDIF.
+
+        ls_quickfix = build_move_cast_quickfix( is_statement = <ls_statement>
+                                                iv_stmt_idx  = lv_stmt_idx
+                                                iv_to_idx    = lv_tok_idx ).
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-prefer_cast
+                          is_quickfix     = ls_quickfix ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.

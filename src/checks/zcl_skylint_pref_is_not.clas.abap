@@ -52,7 +52,7 @@ CLASS zcl_skylint_pref_is_not IMPLEMENTATION.
     DATA lv_line      TYPE string.
     DATA ls_quickfix  TYPE zcl_skylint_check_base=>ty_quickfix.
     DATA lt_overrides TYPE zcl_skylint_ast_util=>ty_token_overrides.
-    FIELD-SYMBOLS <ls_statement> LIKE LINE OF is_procedure-statements.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF     <ls_statement>-keyword <> 'IF'

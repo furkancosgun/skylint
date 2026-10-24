@@ -276,7 +276,7 @@ CLASS zcl_skylint_pref_cond IMPLEMENTATION.
     ls_second = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                  iv_index     = 2 ).
 
-    IF ls_second-lexeme <> '='.
+    IF ls_second-lexeme <> '=' OR ls_second-references IS NOT INITIAL.
       RETURN.
     ENDIF.
 
@@ -327,15 +327,14 @@ CLASS zcl_skylint_pref_cond IMPLEMENTATION.
       IF <ls_branch>-is_else = abap_true.
         APPEND |{ lv_indent }  ELSE { <ls_branch>-expr_text } ).| TO rt_code.
         RETURN.
-      ELSE.
-        lv_line = |{ lv_indent }  WHEN { <ls_branch>-cond_text } THEN { <ls_branch>-expr_text }|.
-        IF sy-tabix = lines( it_branches ).
+      ENDIF.
 
-          APPEND lv_line TO rt_code.
-          APPEND |{ lv_indent }  ELSE { iv_target } ).| TO rt_code.
-        ELSE.
-          APPEND lv_line TO rt_code.
-        ENDIF.
+      lv_line = |{ lv_indent }  WHEN { <ls_branch>-cond_text } THEN { <ls_branch>-expr_text }|.
+      IF sy-tabix = lines( it_branches ).
+        APPEND lv_line TO rt_code.
+        APPEND |{ lv_indent }  ELSE { iv_target } ).| TO rt_code.
+      ELSE.
+        APPEND lv_line TO rt_code.
       ENDIF.
     ENDLOOP.
   ENDMETHOD.

@@ -81,21 +81,19 @@ CLASS zcl_skylint_no_check_stmt IMPLEMENTATION.
           ENDIF.
 
         WHEN 'CHECK'.
-          IF lv_loop_depth > 0.
-            IF mv_check_in_loop = abap_true.
-              CLEAR ls_quickfix.
-              lt_new_code = build_guard_lines( is_statement = <ls_statement>
-                                               iv_in_loop   = abap_true ).
-              IF lt_new_code IS NOT INITIAL.
-                ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-use_continue
-                                                iv_statement_from = lv_stmt_idx
-                                                it_new_code       = lt_new_code ).
-              ENDIF.
-              report_statement( is_statement    = <ls_statement>
-                                iv_finding_code = c_finding_codes-check_in_loop
-                                is_quickfix     = ls_quickfix ).
+          IF lv_loop_depth > 0 AND mv_check_in_loop = abap_true.
+            CLEAR ls_quickfix.
+            lt_new_code = build_guard_lines( is_statement = <ls_statement>
+                                             iv_in_loop   = abap_true ).
+            IF lt_new_code IS NOT INITIAL.
+              ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-use_continue
+                                              iv_statement_from = lv_stmt_idx
+                                              it_new_code       = lt_new_code ).
             ENDIF.
-          ELSEIF mv_check_outside_loop = abap_true.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-check_in_loop
+                              is_quickfix     = ls_quickfix ).
+          ELSEIF lv_loop_depth = 0 AND mv_check_outside_loop = abap_true.
             CLEAR ls_quickfix.
             lt_new_code = build_guard_lines( is_statement = <ls_statement>
                                              iv_in_loop   = abap_false ).

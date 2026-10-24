@@ -1,5 +1,5 @@
 ---
-description: "Avoid late access to sy-tabix or sy-index outside loops"
+description: "Avoid late access to sy-tabix or sy-index inside loops"
 ---
 
 # Avoid Late Access to sy-tabix or sy-index Outside Loops
@@ -13,9 +13,9 @@ description: "Avoid late access to sy-tabix or sy-index outside loops"
 
 ## Overview
 
-Avoid late access to sy-tabix or sy-index outside loops.
+Avoid late access to sy-tabix or sy-index inside loops.
 
-> **ATC Finding Message:** `Avoid accessing sy-tabix or sy-index outside loop`
+> **ATC Finding Message:** `Copy sy-tabix or sy-index immediately at loop start`
 
 ## Rationale
 

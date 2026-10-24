@@ -46,7 +46,6 @@ CLASS zcl_skylint_pref_case IMPLEMENTATION.
     DATA lv_depth        TYPE i.
     DATA lv_total        TYPE i.
     DATA lv_var          TYPE string.
-    DATA lv_branch_var   TYPE string.
     DATA lv_branch_count TYPE i.
     DATA ls_stmt         TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
@@ -75,11 +74,8 @@ CLASS zcl_skylint_pref_case IMPLEMENTATION.
           WHEN 'ENDIF'.
             lv_depth -= 1.
           WHEN 'ELSEIF'.
-            IF lv_depth = 1.
-              lv_branch_var = get_compared_variable( ls_stmt ).
-              IF lv_branch_var = lv_var.
-                lv_branch_count += 1.
-              ENDIF.
+            IF lv_depth = 1 AND get_compared_variable( ls_stmt ) = lv_var.
+              lv_branch_count += 1.
             ENDIF.
         ENDCASE.
         lv_idx += 1.

@@ -44,6 +44,12 @@ CLASS zcl_skylint_max_cyclo_comp IMPLEMENTATION.
     DATA lv_cc         TYPE i.
     DATA ls_first_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    IF     is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-method
+       AND is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-form_routine
+       AND is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-function.
+      RETURN.
+    ENDIF.
+
     lv_cc = calculate_complexity( is_procedure ).
 
     IF lv_cc > mv_max_complexity.
@@ -58,8 +64,9 @@ CLASS zcl_skylint_max_cyclo_comp IMPLEMENTATION.
 
   METHOD calculate_complexity.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_lex TYPE string.
+    DATA ls_tok     TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_lex     TYPE string.
+    DATA lv_between TYPE abap_bool.
 
     rv_comp = 1.
 
@@ -69,10 +76,19 @@ CLASS zcl_skylint_max_cyclo_comp IMPLEMENTATION.
           rv_comp += 1.
       ENDCASE.
 
+      lv_between = abap_false.
       LOOP AT <ls_stmt>-tokens INTO ls_tok WHERE references IS INITIAL.
         lv_lex = ls_tok-lexeme.
         CASE lv_lex.
-          WHEN 'AND' OR 'OR' OR 'COND' OR 'SWITCH'.
+          WHEN 'BETWEEN'.
+            lv_between = abap_true.
+          WHEN 'AND'.
+            IF lv_between = abap_true.
+              lv_between = abap_false.
+            ELSE.
+              rv_comp += 1.
+            ENDIF.
+          WHEN 'OR' OR 'COND' OR 'SWITCH'.
             rv_comp += 1.
         ENDCASE.
       ENDLOOP.

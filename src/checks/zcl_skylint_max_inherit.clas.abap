@@ -53,15 +53,17 @@ CLASS zcl_skylint_max_inherit IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    lo_class = zcl_skylint_rtti_util=>describe_class( is_procedure-id-main_unit-name ).
-    IF lo_class IS NOT BOUND.
-      RETURN.
-    ENDIF.
+    TRY.
+        lo_class = zcl_skylint_rtti_util=>describe_class( is_procedure-id-main_unit-name ).
+        IF lo_class IS NOT BOUND.
+          RETURN.
+        ENDIF.
 
-    lt_supers = zcl_skylint_rtti_util=>get_super_classes( is_procedure-id-main_unit-name ).
+        lt_supers = zcl_skylint_rtti_util=>get_super_classes( is_procedure-id-main_unit-name ).
+      CATCH cx_root.
+        RETURN.
+    ENDTRY.
 
-    ls_statement = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                        iv_index      = 1 ).
     IF lines( lt_supers ) > mv_max_depth AND ls_statement-keyword IS NOT INITIAL.
       report_statement( is_statement    = ls_statement
                         iv_finding_code = c_finding_codes-deep_inheritance ).

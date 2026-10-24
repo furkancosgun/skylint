@@ -70,20 +70,21 @@ CLASS zcl_skylint_pref_inl_cast IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_index     TYPE i.
-    DATA lv_cast_idx  TYPE i.
-    DATA lv_assign    TYPE i.
-    DATA lv_full_name TYPE if_ci_atc_source_code_provider=>ty_full_name.
-    DATA lv_name      TYPE string.
-    DATA lv_cast      TYPE string.
-    DATA lv_new_line  TYPE string.
-    DATA lv_has_write TYPE abap_bool.
-    DATA lt_usages    TYPE ty_usages.
-    DATA ls_usage     TYPE ty_usage.
-    DATA ls_next      TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_quickfix  TYPE zcl_skylint_check_base=>ty_quickfix.
-    DATA ls_token     TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_ref       TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    DATA lv_index        TYPE i.
+    DATA lv_cast_idx     TYPE i.
+    DATA lv_assign       TYPE i.
+    DATA lv_full_name    TYPE if_ci_atc_source_code_provider=>ty_full_name.
+    DATA lv_name         TYPE string.
+    DATA lv_cast         TYPE string.
+    DATA lv_new_line     TYPE string.
+    DATA lv_has_write    TYPE abap_bool.
+    DATA lt_usages       TYPE ty_usages.
+    DATA ls_usage        TYPE ty_usage.
+    DATA ls_next         TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_usage_result TYPE ty_usage_result.
+    DATA ls_quickfix     TYPE zcl_skylint_check_base=>ty_quickfix.
+    DATA ls_token        TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_ref          TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
@@ -124,8 +125,8 @@ CLASS zcl_skylint_pref_inl_cast IMPLEMENTATION.
 
       CLEAR lv_has_write.
       CLEAR lt_usages.
-      DATA(ls_usage_result) = collect_usages( it_statements = is_procedure-statements
-                                              iv_full_name  = lv_full_name ).
+      ls_usage_result = collect_usages( it_statements = is_procedure-statements
+                                        iv_full_name  = lv_full_name ).
       lt_usages    = ls_usage_result-usages.
       lv_has_write = ls_usage_result-has_write.
       IF lv_has_write = abap_true OR lines( lt_usages ) <> 1.

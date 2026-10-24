@@ -86,7 +86,8 @@ CLASS zcl_skylint_no_rfc_err IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD has_exception.
-    rv_has = xsdbool( zcl_skylint_ast_util=>find_token( is_statement = is_statement
-                                                        iv_lexeme    = iv_exc_name ) > iv_exc_idx ).
+    rv_has = xsdbool( zcl_skylint_ast_util=>find_token( is_statement   = is_statement
+                                                        iv_lexeme      = iv_exc_name
+                                                        iv_start_index = iv_exc_idx ) > 0 ).
   ENDMETHOD.
 ENDCLASS.

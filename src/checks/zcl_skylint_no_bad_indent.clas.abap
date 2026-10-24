@@ -71,17 +71,18 @@ CLASS zcl_skylint_no_bad_indent IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      IF <ls_statement>-keyword = 'ENDMETHOD' OR <ls_statement>-keyword = 'ENDFORM' OR <ls_statement>-keyword = 'ENDFUNCTION'.
-        IF lv_base_col >= 0 AND lv_stmt_col <> lv_base_col.
-          lt_new_code = build_indent_fix( is_statement  = <ls_statement>
-                                          iv_target_col = lv_base_col ).
-          ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-indent_stmt
-                                          iv_statement_from = lv_stmt_idx
-                                          it_new_code       = lt_new_code ).
-          report_statement( is_statement    = <ls_statement>
-                            iv_finding_code = c_finding_codes-bad_indent
-                            is_quickfix     = ls_quickfix ).
-        ENDIF.
+      IF     ( <ls_statement>-keyword = 'ENDMETHOD' OR <ls_statement>-keyword = 'ENDFORM' OR <ls_statement>-keyword = 'ENDFUNCTION' )
+         AND lv_base_col >= 0 AND lv_stmt_col <> lv_base_col.
+        lt_new_code = build_indent_fix( is_statement  = <ls_statement>
+                                        iv_target_col = lv_base_col ).
+        ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-indent_stmt
+                                        iv_statement_from = lv_stmt_idx
+                                        it_new_code       = lt_new_code ).
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-bad_indent
+                          is_quickfix     = ls_quickfix ).
+        CONTINUE.
+      ELSEIF <ls_statement>-keyword = 'ENDMETHOD' OR <ls_statement>-keyword = 'ENDFORM' OR <ls_statement>-keyword = 'ENDFUNCTION'.
         CONTINUE.
       ENDIF.
 

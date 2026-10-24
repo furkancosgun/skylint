@@ -3272,7 +3272,7 @@
     "category": "anti-patterns",
     "categoryTitle": "Anti-Patterns & Bad Practices",
     "pseudoComment": "NO_LATE_SYS_IDX",
-    "description": "Avoid late access to sy-tabix or sy-index outside loops",
+    "description": "Avoid late access to sy-tabix or sy-index inside loops",
     "hasQuickfix": false,
     "remoteEnabled": true,
     "attributes": [],

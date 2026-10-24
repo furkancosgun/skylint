@@ -191,22 +191,21 @@ CLASS zcl_skylint_no_many_parens IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    IF lv_has_or = abap_true.
-      IF iv_open > 1.
-        ls_prev = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                   iv_index     = iv_open - 1 ).
-        IF zcl_skylint_ast_util=>token_is_keyword( is_token  = ls_prev
-                                                   iv_lexeme = 'AND' ) = abap_true.
-          RETURN.
-        ENDIF.
+    IF lv_has_or = abap_true AND iv_open > 1.
+      ls_prev = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                 iv_index     = iv_open - 1 ).
+      IF zcl_skylint_ast_util=>token_is_keyword( is_token  = ls_prev
+                                                 iv_lexeme = 'AND' ) = abap_true.
+        RETURN.
       ENDIF.
-      IF iv_close < lv_count.
-        ls_next = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                   iv_index     = iv_close + 1 ).
-        IF zcl_skylint_ast_util=>token_is_keyword( is_token  = ls_next
-                                                   iv_lexeme = 'AND' ) = abap_true.
-          RETURN.
-        ENDIF.
+    ENDIF.
+
+    IF lv_has_or = abap_true AND iv_close < lv_count.
+      ls_next = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                 iv_index     = iv_close + 1 ).
+      IF zcl_skylint_ast_util=>token_is_keyword( is_token  = ls_next
+                                                 iv_lexeme = 'AND' ) = abap_true.
+        RETURN.
       ENDIF.
     ENDIF.
 

@@ -66,9 +66,13 @@ CLASS zcl_skylint_no_ignored_return IMPLEMENTATION.
 
       CLEAR: ls_meth,
              lv_found.
-      zcl_skylint_rtti_util=>get_method_descr( EXPORTING iv_full_name = lv_full_name
-                                               IMPORTING es_method    = ls_meth
-                                                         ev_found     = lv_found ).
+      TRY.
+          zcl_skylint_rtti_util=>get_method_descr( EXPORTING iv_full_name = lv_full_name
+                                                   IMPORTING es_method    = ls_meth
+                                                             ev_found     = lv_found ).
+        CATCH cx_root.
+          CONTINUE.
+      ENDTRY.
       IF lv_found = abap_false.
         CONTINUE.
       ENDIF.

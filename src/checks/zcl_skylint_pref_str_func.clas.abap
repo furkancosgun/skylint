@@ -344,14 +344,20 @@ CLASS zcl_skylint_pref_str_func IMPLEMENTATION.
   METHOD quickfix_describe_field.
     DATA ls_field TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA ls_len   TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_func  TYPE string VALUE 'strlen'.
 
     CLEAR rv_line.
+    IF zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
+                                                  it_expected  = VALUE #( ( `IN` ) ( `BYTE` ) ( `MODE` ) ) ) > 0.
+      lv_func = 'xstrlen'.
+    ENDIF.
+
     ls_field = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
                                                       iv_lexeme    = 'FIELD' ).
     ls_len = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
                                                     iv_lexeme    = 'LENGTH' ).
     IF ls_field-lexeme IS NOT INITIAL AND ls_len-lexeme IS NOT INITIAL.
-      rv_line = |{ ls_len-lexeme } = strlen( { ls_field-lexeme } ).|.
+      rv_line = |{ ls_len-lexeme } = { lv_func }( { ls_field-lexeme } ).|.
     ENDIF.
   ENDMETHOD.
 ENDCLASS.

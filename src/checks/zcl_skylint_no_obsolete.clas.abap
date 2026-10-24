@@ -626,7 +626,6 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
 
   METHOD sort_by_field_symbol.
     DATA lv_index  TYPE i.
-    DATA lv_count  TYPE i.
     DATA lv_lexeme TYPE string.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
@@ -637,17 +636,14 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    lv_count = lines( is_statement-tokens ).
     lv_index += 1.
-    WHILE lv_index <= lv_count.
-      ASSIGN is_statement-tokens[ lv_index ] TO <ls_token>.
+    LOOP AT is_statement-tokens ASSIGNING <ls_token> FROM lv_index.
       lv_lexeme = <ls_token>-lexeme.
       IF strlen( lv_lexeme ) >= 2 AND lv_lexeme(1) = '<'.
         rv_is = abap_true.
         RETURN.
       ENDIF.
-      lv_index += 1.
-    ENDWHILE.
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD sort_is_dataset.

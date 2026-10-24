@@ -49,6 +49,10 @@ CLASS zcl_skylint_pref_transport IMPLEMENTATION.
 
         WHEN 'MODIFY'.
           IF lv_in_loop > 0.
+            IF zcl_skylint_ast_util=>statement_is_db_access( <ls_statement> ) = abap_true.
+              CONTINUE.
+            ENDIF.
+
             lv_has_transporting = zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
                                                                           iv_lexeme    = 'TRANSPORTING' ).
             lv_is_itab_modify = xsdbool(

@@ -152,6 +152,7 @@ CLASS zcl_skylint_pref_calc_op IMPLEMENTATION.
     DATA lv_source TYPE string.
     DATA lv_op     TYPE string.
     DATA lv_value  TYPE string.
+    DATA ls_op_tok TYPE if_ci_atc_source_code_provider=>ty_token.
 
     CLEAR rv_code.
 
@@ -174,11 +175,12 @@ CLASS zcl_skylint_pref_calc_op IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    lv_op = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                    iv_index     = 4 ).
-    IF is_calc_operator( lv_op ) = abap_false.
+    ls_op_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                 iv_index     = 4 ).
+    IF ls_op_tok-references IS NOT INITIAL OR is_calc_operator( ls_op_tok-lexeme ) = abap_false.
       RETURN.
     ENDIF.
+    lv_op = ls_op_tok-lexeme.
 
     lv_value = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
                                                        iv_index     = 5 ).

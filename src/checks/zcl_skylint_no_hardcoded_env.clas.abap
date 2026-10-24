@@ -103,29 +103,23 @@ CLASS zcl_skylint_no_hardcoded_env IMPLEMENTATION.
   METHOD is_env_var_token.
     rv_env_var = c_env_vars-none.
 
-    IF zcl_skylint_ast_util=>match_system_field(
-           is_token      = is_token
-           iv_field_name = 'SYSID' ) = abap_true.
+    IF zcl_skylint_ast_util=>match_system_field( is_token      = is_token
+                                                 iv_field_name = 'SYSID' ) = abap_true.
       rv_env_var = c_env_vars-sysid.
-    ELSEIF zcl_skylint_ast_util=>match_system_field(
-               is_token      = is_token
-               iv_field_name = 'MANDT' ) = abap_true.
+    ELSEIF zcl_skylint_ast_util=>match_system_field( is_token      = is_token
+                                                     iv_field_name = 'MANDT' ) = abap_true.
       rv_env_var = c_env_vars-mandt.
-    ELSEIF zcl_skylint_ast_util=>match_system_field(
-               is_token      = is_token
-               iv_field_name = 'HOST' ) = abap_true.
+    ELSEIF zcl_skylint_ast_util=>match_system_field( is_token      = is_token
+                                                     iv_field_name = 'HOST' ) = abap_true.
       rv_env_var = c_env_vars-host.
-    ELSEIF zcl_skylint_ast_util=>match_system_field(
-               is_token      = is_token
-               iv_field_name = 'DBSYS' ) = abap_true.
+    ELSEIF zcl_skylint_ast_util=>match_system_field( is_token      = is_token
+                                                     iv_field_name = 'DBSYS' ) = abap_true.
       rv_env_var = c_env_vars-dbsys.
-    ELSEIF zcl_skylint_ast_util=>match_system_field(
-               is_token      = is_token
-               iv_field_name = 'OPSYS' ) = abap_true.
+    ELSEIF zcl_skylint_ast_util=>match_system_field( is_token      = is_token
+                                                     iv_field_name = 'OPSYS' ) = abap_true.
       rv_env_var = c_env_vars-opsys.
-    ELSEIF zcl_skylint_ast_util=>match_system_field(
-               is_token      = is_token
-               iv_field_name = 'UNAME' ) = abap_true.
+    ELSEIF zcl_skylint_ast_util=>match_system_field( is_token      = is_token
+                                                     iv_field_name = 'UNAME' ) = abap_true.
       rv_env_var = c_env_vars-uname.
     ENDIF.
   ENDMETHOD.

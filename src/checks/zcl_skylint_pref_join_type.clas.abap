@@ -89,12 +89,16 @@ CLASS zcl_skylint_pref_join_type IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_explicit_join.
-    DATA lv_prev TYPE string.
+    DATA ls_prev TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_is = abap_false.
-    lv_prev = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                      iv_index     = iv_token_idx - 1 ).
-    CASE lv_prev.
+    ls_prev = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                               iv_index     = iv_token_idx - 1 ).
+    IF ls_prev-references IS NOT INITIAL.
+      RETURN.
+    ENDIF.
+
+    CASE ls_prev-lexeme.
       WHEN 'INNER' OR 'OUTER' OR 'LEFT' OR 'RIGHT' OR 'CROSS'.
         rv_is = abap_true.
     ENDCASE.

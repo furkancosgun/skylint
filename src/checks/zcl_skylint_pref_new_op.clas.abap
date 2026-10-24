@@ -137,8 +137,8 @@ CLASS zcl_skylint_pref_new_op IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                              iv_index     = 3 ).
+    ls_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                    iv_lexeme    = 'OBJECT' ).
     lv_tok = ls_tok-lexeme.
     IF ls_tok-lexeme IS NOT INITIAL AND ( lv_tok(1) = `'` OR lv_tok(1) = '`' ).
       RETURN.
@@ -178,8 +178,8 @@ CLASS zcl_skylint_pref_new_op IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    lv_target = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                        iv_index     = 3 ).
+    lv_target = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                       iv_lexeme    = 'OBJECT' )-lexeme.
     IF lv_target IS INITIAL.
       RETURN.
     ENDIF.
@@ -276,8 +276,8 @@ CLASS zcl_skylint_pref_new_op IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    lv_class = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                       iv_index     = 4 ).
+    lv_class = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                      iv_lexeme    = 'TYPE' )-lexeme.
     IF lv_class IS INITIAL OR lv_class CS '('.
       RETURN.
     ENDIF.

@@ -65,8 +65,8 @@ CLASS zcl_skylint_pref_auth_check IMPLEMENTATION.
 
       CLEAR ls_quickfix.
       lv_flat = zcl_skylint_ast_util=>flatten_statement( <ls_statement> ).
-      lv_tcode = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
-                                                         iv_index     = 3 ).
+      lv_tcode = zcl_skylint_ast_util=>get_token_after( is_statement = <ls_statement>
+                                                        iv_lexeme    = 'TRANSACTION' )-lexeme.
       IF lv_tcode IS NOT INITIAL.
         REPLACE FIRST OCCURRENCE OF lv_tcode IN lv_flat WITH |{ lv_tcode } WITH AUTHORITY-CHECK|.
         IF sy-subrc = 0.

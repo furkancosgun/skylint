@@ -158,8 +158,8 @@ CLASS zcl_skylint_pref_reduce IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    ls_tok = zcl_skylint_ast_util=>get_token( is_statement = ls_loop_stmt
-                                              iv_index     = 3 ).
+    ls_tok = zcl_skylint_ast_util=>get_token_after( is_statement = ls_loop_stmt
+                                                    iv_lexeme    = 'AT' ).
     es_info-table_name = ls_tok-lexeme.
 
     lv_into_pos   = zcl_skylint_ast_util=>find_token( is_statement = ls_loop_stmt

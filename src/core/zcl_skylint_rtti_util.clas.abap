@@ -65,35 +65,41 @@ CLASS zcl_skylint_rtti_util IMPLEMENTATION.
       lv_class = iv_name.
     ENDIF.
 
-    IF lv_program IS NOT INITIAL.
-      cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = |\\PROGRAM={ lv_program }\\CLASS={ lv_class }|
-                                           RECEIVING  p_descr_ref    = lo_descr
-                                           EXCEPTIONS type_not_found = 1
-                                                      OTHERS         = 2 ).
-      IF sy-subrc <> 0 OR lo_descr IS NOT BOUND.
-        cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = |\\PROGRAM={ lv_program }\\INTF={ lv_class }|
-                                             RECEIVING  p_descr_ref    = lo_descr
-                                             EXCEPTIONS type_not_found = 1
-                                                        OTHERS         = 2 ).
-      ENDIF.
-      IF ( sy-subrc <> 0 OR lo_descr IS NOT BOUND ) AND lv_class IS NOT INITIAL.
-        cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = lv_class
-                                             RECEIVING  p_descr_ref    = lo_descr
-                                             EXCEPTIONS type_not_found = 1
-                                                        OTHERS         = 2 ).
-      ENDIF.
-    ELSE.
-      cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = lv_class
-                                           RECEIVING  p_descr_ref    = lo_descr
-                                           EXCEPTIONS type_not_found = 1
-                                                      OTHERS         = 2 ).
-    ENDIF.
+    TRY.
+        IF lv_program IS NOT INITIAL.
+          cl_abap_typedescr=>describe_by_name(
+            EXPORTING  p_name         = |\\PROGRAM={ lv_program }\\CLASS={ lv_class }|
+            RECEIVING  p_descr_ref    = lo_descr
+            EXCEPTIONS type_not_found = 1
+                       OTHERS         = 2 ).
+          IF sy-subrc <> 0 OR lo_descr IS NOT BOUND.
+            cl_abap_typedescr=>describe_by_name(
+              EXPORTING  p_name         = |\\PROGRAM={ lv_program }\\INTF={ lv_class }|
+              RECEIVING  p_descr_ref    = lo_descr
+              EXCEPTIONS type_not_found = 1
+                         OTHERS         = 2 ).
+          ENDIF.
+          IF ( sy-subrc <> 0 OR lo_descr IS NOT BOUND ) AND lv_class IS NOT INITIAL.
+            cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = lv_class
+                                                 RECEIVING  p_descr_ref    = lo_descr
+                                                 EXCEPTIONS type_not_found = 1
+                                                            OTHERS         = 2 ).
+          ENDIF.
+        ELSE.
+          cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = lv_class
+                                               RECEIVING  p_descr_ref    = lo_descr
+                                               EXCEPTIONS type_not_found = 1
+                                                          OTHERS         = 2 ).
+        ENDIF.
 
-    IF sy-subrc <> 0 OR lo_descr IS NOT BOUND OR (     lo_descr->kind <> cl_abap_typedescr=>kind_class
-                                                   AND lo_descr->kind <> cl_abap_typedescr=>kind_intf ).
-      RETURN.
-    ENDIF.
-    ro_objdescr ?= lo_descr.
+        IF sy-subrc <> 0 OR lo_descr IS NOT BOUND OR (     lo_descr->kind <> cl_abap_typedescr=>kind_class
+                                                       AND lo_descr->kind <> cl_abap_typedescr=>kind_intf ).
+          RETURN.
+        ENDIF.
+        ro_objdescr ?= lo_descr.
+      CATCH cx_root.
+        CLEAR ro_objdescr.
+    ENDTRY.
   ENDMETHOD.
 
   METHOD describe_class.
@@ -101,7 +107,11 @@ CLASS zcl_skylint_rtti_util IMPLEMENTATION.
 
     lo_obj = describe_object( iv_class_name ).
     IF lo_obj IS BOUND AND lo_obj->kind = cl_abap_typedescr=>kind_class.
-      ro_classdescr ?= lo_obj.
+      TRY.
+          ro_classdescr ?= lo_obj.
+        CATCH cx_root.
+          CLEAR ro_classdescr.
+      ENDTRY.
     ENDIF.
   ENDMETHOD.
 

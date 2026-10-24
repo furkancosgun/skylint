@@ -50,7 +50,10 @@ CLASS zcl_skylint_no_static_cls IMPLEMENTATION.
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'CLASS-METHODS'.
-          lv_static_cnt += 1.
+          IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                     iv_lexeme    = 'CLASS_CONSTRUCTOR' ) = abap_false.
+            lv_static_cnt += 1.
+          ENDIF.
         WHEN 'METHODS'.
           IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
                                                      iv_lexeme    = 'CONSTRUCTOR' ) = abap_false.

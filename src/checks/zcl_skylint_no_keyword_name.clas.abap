@@ -49,8 +49,8 @@ CLASS zcl_skylint_no_keyword_name IMPLEMENTATION.
                                                       iv_index     = 2 ).
           lv_name = to_upper( ls_token-lexeme ).
           IF lv_name = 'BEGIN'.
-            ls_token = zcl_skylint_ast_util=>get_token( is_statement = <ls_statement>
-                                                        iv_index     = 4 ).
+            ls_token = zcl_skylint_ast_util=>get_token_after( is_statement = <ls_statement>
+                                                              iv_lexeme    = 'OF' ).
             lv_name = to_upper( ls_token-lexeme ).
           ENDIF.
 

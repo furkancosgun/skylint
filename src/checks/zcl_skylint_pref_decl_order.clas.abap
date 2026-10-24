@@ -53,13 +53,15 @@ CLASS zcl_skylint_pref_decl_order IMPLEMENTATION.
           lv_curr_rank = 4.
       ENDCASE.
 
-      IF lv_curr_rank > 0.
-        IF lv_curr_rank < lv_max_rank.
-          report_statement( is_statement    = <ls_stmt>
-                            iv_finding_code = c_finding_codes-decl_order ).
-        ELSE.
-          lv_max_rank = lv_curr_rank.
-        ENDIF.
+      IF lv_curr_rank = 0.
+        CONTINUE.
+      ENDIF.
+
+      IF lv_curr_rank < lv_max_rank.
+        report_statement( is_statement    = <ls_stmt>
+                          iv_finding_code = c_finding_codes-decl_order ).
+      ELSE.
+        lv_max_rank = lv_curr_rank.
       ENDIF.
     ENDLOOP.
   ENDMETHOD.

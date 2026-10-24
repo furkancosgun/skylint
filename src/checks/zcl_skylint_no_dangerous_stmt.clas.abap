@@ -115,139 +115,133 @@ CLASS zcl_skylint_no_dangerous_stmt IMPLEMENTATION.
     ENDIF.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF     mv_check_raise_shortdump = abap_true
-         AND <ls_statement>-keyword = 'RAISE'
-         AND zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                     iv_lexeme    = 'SHORTDUMP' )  = abap_true.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-raise_shortdump ).
-        CONTINUE.
-      ENDIF.
+      CASE <ls_statement>-keyword.
+        WHEN 'RAISE'.
+          IF     mv_check_raise_shortdump = abap_true
+             AND zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                         iv_lexeme    = 'SHORTDUMP' )  = abap_true.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-raise_shortdump ).
+          ENDIF.
 
-      IF mv_check_prod_assert = abap_true AND <ls_statement>-keyword = 'ASSERT'.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-prod_assert ).
-        CONTINUE.
-      ENDIF.
-      IF mv_check_system_call = abap_true AND <ls_statement>-keyword = 'SYSTEM-CALL'.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-dangerous_statement ).
-        CONTINUE.
-      ENDIF.
+        WHEN 'ASSERT'.
+          IF mv_check_prod_assert = abap_true.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-prod_assert ).
+          ENDIF.
 
-      IF mv_check_syntax_check = abap_true AND <ls_statement>-keyword = 'SYNTAX-CHECK'.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-dangerous_statement ).
-        CONTINUE.
-      ENDIF.
+        WHEN 'SYSTEM-CALL'.
+          IF mv_check_system_call = abap_true.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-dangerous_statement ).
+          ENDIF.
 
-      IF     mv_check_exec_sql = abap_true
-         AND <ls_statement>-keyword = 'EXEC'
-         AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
-                                                     iv_index     = 2
-                                                     iv_expected  = `SQL` )        = abap_true.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-dangerous_statement ).
-        CONTINUE.
-      ENDIF.
+        WHEN 'SYNTAX-CHECK'.
+          IF mv_check_syntax_check = abap_true.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-dangerous_statement ).
+          ENDIF.
 
-      IF     mv_check_kernel_call = abap_true
-         AND <ls_statement>-keyword = 'CALL'
-         AND zcl_skylint_ast_util=>token_is_literal( zcl_skylint_ast_util=>get_token( is_statement = <ls_statement>
-                                                                                      iv_index     = 2 ) )          = abap_true.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-dangerous_statement ).
-        CONTINUE.
-      ENDIF.
+        WHEN 'EXEC'.
+          IF     mv_check_exec_sql = abap_true
+             AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
+                                                         iv_index     = 2
+                                                         iv_expected  = `SQL` )        = abap_true.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-dangerous_statement ).
+          ENDIF.
 
-      IF     mv_check_generate_subroutine = abap_true
-         AND zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
-                                                        it_expected  = VALUE #( ( `GENERATE` ) ( `SUBROUTINE` ) ) ) > 0.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-dangerous_statement ).
-        CONTINUE.
-      ENDIF.
+        WHEN 'CALL'.
+          IF     mv_check_kernel_call = abap_true
+             AND zcl_skylint_ast_util=>token_is_literal( zcl_skylint_ast_util=>get_token( is_statement = <ls_statement>
+                                                                                          iv_index     = 2 ) )          = abap_true.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-dangerous_statement ).
+          ENDIF.
 
-      IF     mv_check_generate_report = abap_true
-         AND zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
-                                                        it_expected  = VALUE #( ( `GENERATE` ) ( `REPORT` ) ) ) > 0.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-dangerous_statement ).
-        CONTINUE.
-      ENDIF.
+        WHEN 'GENERATE'.
+          IF    (     mv_check_generate_subroutine = abap_true
+                  AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
+                                                              iv_index     = 2
+                                                              iv_expected  = `SUBROUTINE` ) = abap_true )
+             OR (     mv_check_generate_report = abap_true
+                  AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
+                                                              iv_index     = 2
+                                                              iv_expected  = `REPORT` )     = abap_true )
+             OR (     mv_check_generate_dynpro = abap_true
+                  AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
+                                                              iv_index     = 2
+                                                              iv_expected  = `DYNPRO` )     = abap_true ).
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-dangerous_statement ).
+          ENDIF.
 
-      IF     mv_check_generate_dynpro = abap_true
-         AND zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
-                                                        it_expected  = VALUE #( ( `GENERATE` ) ( `DYNPRO` ) ) ) > 0.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-dangerous_statement ).
-        CONTINUE.
-      ENDIF.
+        WHEN 'INSERT'.
+          IF    (     mv_check_insert_report = abap_true
+                  AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
+                                                              iv_index     = 2
+                                                              iv_expected  = `REPORT` )     = abap_true )
+             OR (     mv_check_insert_textpool = abap_true
+                  AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
+                                                              iv_index     = 2
+                                                              iv_expected  = `TEXTPOOL` )   = abap_true ).
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-dangerous_statement ).
+          ELSEIF     mv_check_dynamic_sql             = abap_true
+                 AND lv_ignore_dyn_sql                = abap_false
+                 AND is_dynamic_sql( <ls_statement> ) = abap_true.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-dangerous_statement ).
+          ENDIF.
 
-      IF     mv_check_insert_report = abap_true
-         AND zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
-                                                        it_expected  = VALUE #( ( `INSERT` ) ( `REPORT` ) ) ) > 0.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-dangerous_statement ).
-        CONTINUE.
-      ENDIF.
+        WHEN 'DELETE'.
+          IF    (     mv_check_delete_report = abap_true
+                  AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
+                                                              iv_index     = 2
+                                                              iv_expected  = `REPORT` )     = abap_true )
+             OR (     mv_check_delete_textpool = abap_true
+                  AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
+                                                              iv_index     = 2
+                                                              iv_expected  = `TEXTPOOL` )   = abap_true )
+             OR (     mv_check_delete_dynpro = abap_true
+                  AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
+                                                              iv_index     = 2
+                                                              iv_expected  = `DYNPRO` )     = abap_true ).
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-dangerous_statement ).
+          ELSEIF     mv_check_dynamic_sql             = abap_true
+                 AND lv_ignore_dyn_sql                = abap_false
+                 AND is_dynamic_sql( <ls_statement> ) = abap_true.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-dangerous_statement ).
+          ENDIF.
 
-      IF     mv_check_delete_report = abap_true
-         AND zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
-                                                        it_expected  = VALUE #( ( `DELETE` ) ( `REPORT` ) ) ) > 0.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-dangerous_statement ).
-        CONTINUE.
-      ENDIF.
+        WHEN 'EXPORT'.
+          IF     mv_check_export_dynpro = abap_true
+             AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
+                                                         iv_index     = 2
+                                                         iv_expected  = `DYNPRO` )     = abap_true.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-dangerous_statement ).
+          ENDIF.
 
-      IF     mv_check_delete_textpool = abap_true
-         AND zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
-                                                        it_expected  = VALUE #( ( `DELETE` ) ( `TEXTPOOL` ) ) ) > 0.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-dangerous_statement ).
-        CONTINUE.
-      ENDIF.
+        WHEN 'EDITOR-CALL'.
+          IF     mv_check_editor_call = abap_true
+             AND zcl_skylint_ast_util=>find_token_sequence(
+                     is_statement = <ls_statement>
+                     it_expected  = VALUE #( ( `EDITOR-CALL` ) ( `FOR` ) ( `REPORT` ) ) ) > 0.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-dangerous_statement ).
+          ENDIF.
 
-      IF     mv_check_insert_textpool = abap_true
-         AND zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
-                                                        it_expected  = VALUE #( ( `INSERT` ) ( `TEXTPOOL` ) ) ) > 0.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-dangerous_statement ).
-        CONTINUE.
-      ENDIF.
-
-      IF     mv_check_delete_dynpro = abap_true
-         AND zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
-                                                        it_expected  = VALUE #( ( `DELETE` ) ( `DYNPRO` ) ) ) > 0.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-dangerous_statement ).
-        CONTINUE.
-      ENDIF.
-
-      IF     mv_check_export_dynpro = abap_true
-         AND zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
-                                                        it_expected  = VALUE #( ( `EXPORT` ) ( `DYNPRO` ) ) ) > 0.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-dangerous_statement ).
-        CONTINUE.
-      ENDIF.
-
-      IF     mv_check_editor_call = abap_true
-         AND zcl_skylint_ast_util=>find_token_sequence(
-                 is_statement = <ls_statement>
-                 it_expected  = VALUE #( ( `EDITOR-CALL` ) ( `FOR` ) ( `REPORT` ) ) ) > 0.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-dangerous_statement ).
-        CONTINUE.
-      ENDIF.
-
-      IF     mv_check_dynamic_sql             = abap_true
-         AND lv_ignore_dyn_sql                = abap_false
-         AND is_dynamic_sql( <ls_statement> ) = abap_true.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-dangerous_statement ).
-        CONTINUE.
-      ENDIF.
+        WHEN 'SELECT' OR 'UPDATE' OR 'MODIFY'.
+          IF     mv_check_dynamic_sql             = abap_true
+             AND lv_ignore_dyn_sql                = abap_false
+             AND is_dynamic_sql( <ls_statement> ) = abap_true.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-dangerous_statement ).
+          ENDIF.
+      ENDCASE.
     ENDLOOP.
   ENDMETHOD.
 

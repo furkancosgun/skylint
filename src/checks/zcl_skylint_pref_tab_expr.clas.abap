@@ -99,7 +99,6 @@ CLASS zcl_skylint_pref_tab_expr IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD parse_read_table.
-    DATA lv_idx_table  TYPE i.
     DATA lv_into_pos   TYPE i.
     DATA lv_assign_pos TYPE i.
     DATA lv_ref_pos    TYPE i.
@@ -136,9 +135,8 @@ CLASS zcl_skylint_pref_tab_expr IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    lv_idx_table = 3.
-    ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                              iv_index     = lv_idx_table ).
+    ls_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                    iv_lexeme    = 'TABLE' ).
     rs_info-table_name = ls_tok-lexeme.
 
     lv_into_pos   = zcl_skylint_ast_util=>find_token( is_statement = is_statement
