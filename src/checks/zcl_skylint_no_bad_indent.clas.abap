@@ -65,13 +65,13 @@ CLASS zcl_skylint_no_bad_indent IMPLEMENTATION.
       lv_stmt_idx = sy-tabix.
       lv_stmt_col = <ls_statement>-position-column.
 
-      IF <ls_statement>-keyword = 'METHOD'.
+      IF <ls_statement>-keyword = 'METHOD' OR <ls_statement>-keyword = 'FORM' OR <ls_statement>-keyword = 'FUNCTION'.
         lv_base_col = lv_stmt_col.
         lv_expected = lv_base_col + mv_indent_step.
         CONTINUE.
       ENDIF.
 
-      IF <ls_statement>-keyword = 'ENDMETHOD'.
+      IF <ls_statement>-keyword = 'ENDMETHOD' OR <ls_statement>-keyword = 'ENDFORM' OR <ls_statement>-keyword = 'ENDFUNCTION'.
         IF lv_base_col >= 0 AND lv_stmt_col <> lv_base_col.
           lt_new_code = build_indent_fix( is_statement  = <ls_statement>
                                           iv_target_col = lv_base_col ).

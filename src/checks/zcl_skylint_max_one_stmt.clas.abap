@@ -41,10 +41,6 @@ CLASS zcl_skylint_max_one_stmt IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF lines( <ls_statement>-tokens ) = 0.
-        CONTINUE.
-      ENDIF.
-
       ls_tok_first = zcl_skylint_ast_util=>get_first_token( <ls_statement> ).
       ls_tok_last  = zcl_skylint_ast_util=>get_last_token( <ls_statement> ).
 

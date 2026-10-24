@@ -63,10 +63,6 @@ CLASS zcl_skylint_no_dup_literals IMPLEMENTATION.
   METHOD check.
     DATA lt_counts TYPE ty_literal_counts.
 
-    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
-      RETURN.
-    ENDIF.
-
     lt_counts = count_literals( is_procedure-statements ).
     IF lt_counts IS INITIAL.
       RETURN.

@@ -38,33 +38,37 @@ CLASS zcl_skylint_max_method_len IMPLEMENTATION.
 
   METHOD check.
     DATA lv_count TYPE i.
+    DATA lv_total TYPE i.
     DATA ls_first TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_last  TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+    lv_total = lines( is_procedure-statements ).
+    IF lv_total < 2.
       RETURN.
     ENDIF.
 
-    lv_count = 0.
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF     <ls_statement>-keyword <> 'METHOD'
-         AND <ls_statement>-keyword <> 'ENDMETHOD'
-         AND <ls_statement>-keyword <> 'FORM'
-         AND <ls_statement>-keyword <> 'ENDFORM'
-         AND <ls_statement>-keyword <> 'FUNCTION'
-         AND <ls_statement>-keyword <> 'ENDFUNCTION'.
-        lv_count += 1.
-      ENDIF.
-    ENDLOOP.
+    ls_first = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+                                                    iv_index      = 1 ).
+    ls_last  = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+                                                    iv_index      = lv_total ).
 
+    IF     ls_first-keyword <> 'METHOD'
+       AND ls_first-keyword <> 'FORM'
+       AND ls_first-keyword <> 'FUNCTION'.
+      RETURN.
+    ENDIF.
+
+    IF     ls_last-keyword <> 'ENDMETHOD'
+       AND ls_last-keyword <> 'ENDFORM'
+       AND ls_last-keyword <> 'ENDFUNCTION'.
+      RETURN.
+    ENDIF.
+
+    lv_count = lv_total - 2.
     IF lv_count <= mv_max_statements.
       RETURN.
     ENDIF.
-    ls_first = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                    iv_index      = 1 ).
-    IF ls_first-keyword IS INITIAL.
-      RETURN.
-    ENDIF.
+
     report_statement( is_statement    = ls_first
                       iv_finding_code = c_finding_codes-method_length ).
   ENDMETHOD.

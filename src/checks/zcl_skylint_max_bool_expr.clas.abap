@@ -45,10 +45,6 @@ CLASS zcl_skylint_max_bool_expr IMPLEMENTATION.
     DATA lv_operands  TYPE i.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
-      RETURN.
-    ENDIF.
-
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'IF' OR 'ELSEIF' OR 'WHILE' OR 'CHECK'.

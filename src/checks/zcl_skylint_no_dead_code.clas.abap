@@ -98,8 +98,8 @@ CLASS zcl_skylint_no_dead_code IMPLEMENTATION.
     lv_tok_cnt = lines( is_statement-tokens ).
 
     IF lv_tok_cnt = 2.
-      lv_op1 = to_upper( zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                                 iv_index     = 2 ) ).
+      lv_op1 = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
+                                                       iv_index     = 2 ).
       IF lv_op1 = 'ABAP_FALSE'.
         rv_res = abap_true.
         RETURN.
@@ -110,12 +110,12 @@ CLASS zcl_skylint_no_dead_code IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    lv_op1 = to_upper( zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                               iv_index     = 2 ) ).
-    lv_operator = to_upper( zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                                    iv_index     = 3 ) ).
-    lv_op2 = to_upper( zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                               iv_index     = 4 ) ).
+    lv_op1 = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
+                                                     iv_index     = 2 ).
+    lv_operator = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
+                                                          iv_index     = 3 ).
+    lv_op2 = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
+                                                     iv_index     = 4 ).
 
     IF is_literal_or_constant( lv_op1 ) = abap_false OR is_literal_or_constant( lv_op2 ) = abap_false.
       RETURN.
