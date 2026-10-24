@@ -4,13 +4,13 @@
       "key": "clean-abap",
       "title": "Clean ABAP & Modern Syntax",
       "description": "Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.",
-      "count": 44
+      "count": 45
     },
     {
       "key": "anti-patterns",
       "title": "Anti-Patterns & Bad Practices",
       "description": "Discouraged language constructs, legacy statements, and redundant syntax.",
-      "count": 43
+      "count": 44
     },
     {
       "key": "performance",
@@ -1420,6 +1420,30 @@
       "category": "metrics",
       "categoryTitle": "Metrics & Complexity Limits",
       "pseudoComment": "MAX_BOOL_EXPR",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "no-late-sys-idx",
+      "title": "Avoid Late Access to sy-tabix or sy-index Outside Loops",
+      "className": "ZCL_SKYLINT_NO_LATE_SYS_IDX",
+      "description": "Avoid late access to sy-tabix or sy-index outside loops",
+      "category": "anti-patterns",
+      "categoryTitle": "Anti-Patterns & Bad Practices",
+      "pseudoComment": "NO_LATE_SYS_IDX",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "no-unhandled-eml",
+      "title": "Provide FAILED and REPORTED in RAP EML Statements",
+      "className": "ZCL_SKYLINT_NO_UNHANDLED_EML",
+      "description": "Provide FAILED and REPORTED in RAP EML statements",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "EML_RESPONSE",
       "hasQuickfix": false,
       "remoteEnabled": true,
       "configurable": true

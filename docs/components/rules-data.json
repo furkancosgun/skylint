@@ -3263,5 +3263,53 @@
         "value": "4"
       }
     ]
+  },
+  {
+    "ruleId": "no-late-sys-idx",
+    "title": "Avoid Late Access to sy-tabix or sy-index Outside Loops",
+    "className": "ZCL_SKYLINT_NO_LATE_SYS_IDX",
+    "checkName": "ZSKYLINT_NO_LATE_SYS_IDX",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "NO_LATE_SYS_IDX",
+    "description": "Avoid late access to sy-tabix or sy-index outside loops",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "no-unhandled-eml",
+    "title": "Provide FAILED and REPORTED in RAP EML Statements",
+    "className": "ZCL_SKYLINT_NO_UNHANDLED_EML",
+    "checkName": "ZSKYLINT_NO_UNHANDLED_EML",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "EML_RESPONSE",
+    "description": "Provide FAILED and REPORTED in RAP EML statements",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "CHECK_MODIFY",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_READ",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "defaultParameters": [
+      {
+        "name": "CHECK_MODIFY",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_READ",
+        "value": "X"
+      }
+    ]
   }
 ]

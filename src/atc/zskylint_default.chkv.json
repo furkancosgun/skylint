@@ -1081,6 +1081,22 @@
           "value": "4"
         }
       ]
+    },
+    {
+      "checkName": "ZSKYLINT_NO_LATE_SYS_IDX"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_UNHANDLED_EML",
+      "parameters": [
+        {
+          "name": "CHECK_MODIFY",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_READ",
+          "value": "X"
+        }
+      ]
     }
   ]
 }

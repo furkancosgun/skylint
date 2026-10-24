@@ -1,0 +1,19 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Provide FAILED and REPORTED in RAP EML statements",
+    "originalLanguage": "en",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "category": "ZSKYLINT",
+  "implementingClass": "ZCL_SKYLINT_NO_UNHANDLED_EML",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "CHECK_MODIFY"
+    },
+    {
+      "name": "CHECK_READ"
+    }
+  ]
+}

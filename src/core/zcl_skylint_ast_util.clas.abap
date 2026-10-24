@@ -196,6 +196,11 @@ CLASS zcl_skylint_ast_util DEFINITION
       IMPORTING iv_full_name   TYPE if_ci_atc_source_code_provider=>ty_full_name
       RETURNING VALUE(rv_name) TYPE string.
 
+    CLASS-METHODS match_system_field
+      IMPORTING is_token          TYPE if_ci_atc_source_code_provider=>ty_token
+                iv_field_name     TYPE string
+      RETURNING VALUE(rv_matched) TYPE abap_bool.
+
     CLASS-METHODS has_data_read_usage
       IMPORTING it_statements TYPE if_ci_atc_source_code_provider=>ty_statements
                 iv_full_name  TYPE string
@@ -896,6 +901,25 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
         ev_data_name = lv_part+3.
       ELSEIF lv_part CP 'DA=*'.
         ev_data_name = lv_part+3.
+      ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD match_system_field.
+    DATA lv_target TYPE string.
+    FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+
+    rv_matched = abap_false.
+    lv_target  = to_upper( iv_field_name ).
+
+    LOOP AT is_token-references ASSIGNING <ls_ref>
+         WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
+      IF    <ls_ref>-full_name = |\\DA:SY\\DA:{ lv_target }|
+         OR <ls_ref>-full_name = |\\DA:SYST\\DA:{ lv_target }|
+         OR <ls_ref>-full_name = |\\DA=SY\\DA={ lv_target }|
+         OR <ls_ref>-full_name = |\\DA=SYST\\DA={ lv_target }|.
+        rv_matched = abap_true.
+        RETURN.
       ENDIF.
     ENDLOOP.
   ENDMETHOD.

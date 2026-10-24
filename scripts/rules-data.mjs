@@ -1430,6 +1430,30 @@ export const RULES = [
       good: `IF is_valid_header( ) AND is_valid_items( ).`,
     },
   },
+  {
+    ruleId: 'no-late-sys-idx',
+    title: 'Avoid Late Access to sy-tabix or sy-index Outside Loops',
+    rationale: 'System fields sy-tabix and sy-index are global and mutable. Reading them outside their originating LOOP, DO, or WHILE blocks creates fragile temporal coupling that breaks easily when refactoring. Inside loops, capture index into an explicit local variable, or use line_index( ) instead of relying on sy-tabix outside.',
+    className: 'ZCL_SKYLINT_NO_LATE_SYS_IDX',
+    pseudoComment: 'NO_LATE_SYS_IDX',
+    category: 'anti-patterns',
+    example: {
+      bad: `LOOP AT lt_items INTO ls_item.\nENDLOOP.\nlv_last_idx = sy-tabix.`,
+      good: `DATA lv_last_idx TYPE i.\nLOOP AT lt_items INTO ls_item.\n  lv_last_idx = sy-tabix.\nENDLOOP.`,
+    },
+  },
+  {
+    ruleId: 'no-unhandled-eml',
+    title: 'Provide FAILED and REPORTED in RAP EML Statements',
+    rationale: 'In ABAP RESTful Application Programming Model (RAP), Entity Manipulation Language (EML) statements process transactional data. Omitting FAILED and REPORTED clauses causes silent failures, lost error messages, and unhandled business exceptions. Always provide both response parameters to safely inspect and propagate issues.',
+    className: 'ZCL_SKYLINT_NO_UNHANDLED_EML',
+    pseudoComment: 'EML_RESPONSE',
+    category: 'clean-abap',
+    example: {
+      bad: `MODIFY ENTITIES OF z_root\n  ENTITY travel\n  UPDATE FIELDS ( description ) WITH lt_update.`,
+      good: `MODIFY ENTITIES OF z_root\n  ENTITY travel\n  UPDATE FIELDS ( description ) WITH lt_update\n  FAILED DATA(lt_failed)\n  REPORTED DATA(lt_reported).`,
+    },
+  },
 ];
 
 export const RULE_BY_RULE_ID = new Map(RULES.map(r => [r.ruleId, r]));
