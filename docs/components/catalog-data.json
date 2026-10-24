@@ -957,10 +957,10 @@
       "configurable": false
     },
     {
-      "ruleId": "no-dash-in-names",
-      "title": "Avoid Obsolete Dash (-) in Program Identifiers",
-      "className": "ZCL_SKYLINT_NO_DASH_IN_NAMES",
-      "description": "No Dashes in Variable and Form Names",
+      "ruleId": "no-dash-in-form",
+      "title": "Avoid Obsolete Dash (-) in Form Names",
+      "className": "ZCL_SKYLINT_NO_DASH_IN_FORM",
+      "description": "No Dashes in Form Names",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
       "pseudoComment": "NO_DASH",
@@ -1013,7 +1013,7 @@
       "categoryTitle": "Clean ABAP & Modern Syntax",
       "pseudoComment": "MSG_CLASS",
       "hasQuickfix": false,
-      "remoteEnabled": false,
+      "remoteEnabled": true,
       "configurable": false
     },
     {

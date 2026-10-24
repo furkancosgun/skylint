@@ -7,12 +7,10 @@ CLASS zcl_skylint_test_mod_loop DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
-    METHODS test_005.
     METHODS test_006.
     METHODS test_007.
     METHODS test_008.
     METHODS test_009.
-    METHODS test_010.
     METHODS test_011.
     METHODS test_012.
 
@@ -48,13 +46,6 @@ CLASS zcl_skylint_test_mod_loop IMPLEMENTATION.
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD test_005.
-    DATA lt_items TYPE string_table.
-    LOOP AT lt_items INTO DATA(lv_item).
-      CLEAR lt_items.
-    ENDLOOP.
-  ENDMETHOD.
-
   METHOD test_006.
     DATA lt_items TYPE string_table.
     DATA lt_other TYPE string_table.
@@ -78,18 +69,11 @@ CLASS zcl_skylint_test_mod_loop IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_009.
-    DATA lt_items TYPE string_table.
-    LOOP AT lt_items INTO DATA(lv_item) GROUP BY lv_item INTO DATA(lv_group).
-      LOOP AT GROUP lv_group INTO DATA(lv_grp_item).
+    DATA: lt_items TYPE string_table, lt_inner TYPE string_table.
+    LOOP AT lt_items INTO DATA(lv_item).
+      LOOP AT lt_inner INTO DATA(lv_inner).
       ENDLOOP.
       APPEND lv_item TO lt_items.
-    ENDLOOP.
-  ENDMETHOD.
-
-  METHOD test_010.
-    DATA lt_items TYPE string_table.
-    LOOP AT lt_items INTO DATA(lv_item).
-      SORT lt_items.
     ENDLOOP.
   ENDMETHOD.
 
@@ -108,3 +92,17 @@ CLASS zcl_skylint_test_mod_loop IMPLEMENTATION.
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.
+
+FORM test_005.
+  DATA lt_items TYPE string_table.
+  LOOP AT lt_items INTO DATA(lv_item).
+      CLEAR lt_items.
+  ENDLOOP.
+ENDFORM.
+
+FORM test_010.
+  DATA lt_items TYPE string_table.
+  LOOP AT lt_items INTO DATA(lv_item).
+      SORT lt_items.
+  ENDLOOP.
+ENDFORM.

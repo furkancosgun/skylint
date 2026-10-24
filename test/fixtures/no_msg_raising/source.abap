@@ -1,35 +1,21 @@
-CLASS zcl_test_no_message_raising DEFINITION
-  PUBLIC FINAL
-  CREATE PUBLIC.
-
-  PUBLIC SECTION.
-    METHODS test_001 EXCEPTIONS error.
-    METHODS test_002.
-    METHODS test_003 EXCEPTIONS error.
-    METHODS test_004.
-    METHODS test_005.
-ENDCLASS.
-
-CLASS zcl_test_no_message_raising IMPLEMENTATION.
-  METHOD test_001.
+FORM test_001.
     MESSAGE e001(00) WITH 'test' RAISING error.
-  ENDMETHOD.
+ENDFORM.
 
-  METHOD test_002.
+FORM test_002.
     MESSAGE 'clean' TYPE 'I'.
-  ENDMETHOD.
+ENDFORM.
 
-  METHOD test_003.
+FORM test_003.
     MESSAGE w001(00) WITH 'warn' RAISING error.
-  ENDMETHOD.
+ENDFORM.
 
-  METHOD test_004.
+FORM test_004.
     MESSAGE s001(00) WITH 'ok'.
-  ENDMETHOD.
+ENDFORM.
 
-  METHOD test_005.
-    DATA raising TYPE string.
-    raising = 'x'.
-    MESSAGE s001(00) WITH raising.
-  ENDMETHOD.
-ENDCLASS.
+FORM test_005.
+    DATA !raising TYPE string.
+    !raising = 'x'.
+    MESSAGE s001(00) WITH !raising.
+ENDFORM.

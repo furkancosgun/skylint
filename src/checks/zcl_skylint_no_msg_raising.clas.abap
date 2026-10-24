@@ -33,16 +33,20 @@ CLASS zcl_skylint_no_msg_raising IMPLEMENTATION.
 
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF <ls_statement>-keyword <> 'MESSAGE'.
         CONTINUE.
       ENDIF.
-      IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                 iv_lexeme    = 'RAISING' ) = abap_true.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-msg_raise ).
-      ENDIF.
+      LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
+        IF zcl_skylint_ast_util=>token_is_keyword( is_token  = <ls_token>
+                                                   iv_lexeme = 'RAISING' ) = abap_true.
+          report_statement( is_statement    = <ls_statement>
+                            iv_finding_code = c_finding_codes-msg_raise ).
+          EXIT.
+        ENDIF.
+      ENDLOOP.
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

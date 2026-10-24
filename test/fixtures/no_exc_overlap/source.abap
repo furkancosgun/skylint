@@ -4,6 +4,7 @@ CLASS zcl_test_no_exc_overlap DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
+    DATA lv_message TYPE c LENGTH 80.
     METHODS test_001.
     METHODS test_002.
     METHODS test_003.
@@ -14,7 +15,7 @@ ENDCLASS.
 
 CLASS zcl_test_no_exc_overlap IMPLEMENTATION.
   METHOD test_001.
-    CALL FUNCTION 'SOMETHING'
+    CALL FUNCTION 'SOMETHING' DESTINATION 'NONE'
       EXCEPTIONS
         system_failure        = 1 MESSAGE lv_message
         communication_failure = 1 MESSAGE lv_message
@@ -22,7 +23,7 @@ CLASS zcl_test_no_exc_overlap IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_002.
-    CALL FUNCTION 'SOMETHING'
+    CALL FUNCTION 'SOMETHING' DESTINATION 'NONE'
       EXCEPTIONS
         system_failure        = 1 MESSAGE lv_message
         communication_failure = 2 MESSAGE lv_message

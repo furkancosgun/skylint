@@ -8,9 +8,13 @@ CLASS zcl_test_no_dynamic_stuff DEFINITION PUBLIC FINAL CREATE PUBLIC.
     METHODS test_006.
     METHODS test_007.
     METHODS test_008.
+    METHODS do_work.
 ENDCLASS.
 
 CLASS zcl_test_no_dynamic_stuff IMPLEMENTATION.
+  METHOD do_work.
+  ENDMETHOD.
+
   METHOD test_001.
     DATA lv_func TYPE string VALUE 'FM_NAME'.
     CALL FUNCTION lv_func.
@@ -33,7 +37,7 @@ CLASS zcl_test_no_dynamic_stuff IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_005.
-    DATA lo TYPE REF TO object.
+    DATA lo TYPE REF TO zcl_test_no_dynamic_stuff.
     CALL METHOD lo->do_work.
   ENDMETHOD.
 
@@ -49,7 +53,7 @@ CLASS zcl_test_no_dynamic_stuff IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_008.
-    DATA lv_rep TYPE string VALUE 'ZREP'.
+    DATA lv_rep TYPE c LENGTH 30 VALUE 'ZREP'.
     SUBMIT (lv_rep).
   ENDMETHOD.
 ENDCLASS.

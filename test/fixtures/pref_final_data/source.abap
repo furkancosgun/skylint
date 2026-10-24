@@ -1,26 +1,17 @@
-CLASS ty_pair DEFINITION
-  PUBLIC FINAL
-  CREATE PUBLIC.
-  PUBLIC SECTION.
-    TYPES: BEGIN OF ty_pair,
-             item TYPE i,
-           END OF ty_pair.
-ENDCLASS.
-
-CLASS ty_pair IMPLEMENTATION.
-ENDCLASS.
-
 CLASS zcl_test_prefer_final_data DEFINITION
   PUBLIC
   FINAL
   CREATE PUBLIC.
 
   PUBLIC SECTION.
+    TYPES: BEGIN OF ty_pair,
+             item TYPE i,
+           END OF ty_pair.
     METHODS test_001.
     METHODS test_002.
     METHODS test_003.
+    DATA lv_flag TYPE abap_bool.
     METHODS test_004.
-    METHODS test_005.
     METHODS test_006.
     METHODS test_007.
     METHODS test_008.
@@ -55,13 +46,8 @@ CLASS zcl_test_prefer_final_data IMPLEMENTATION.
     WRITE ls_pair-item.
   ENDMETHOD.
 
-  METHOD test_005.
-    FINAL(lv_count) = 10.
-    WRITE lv_count.
-  ENDMETHOD.
-
   METHOD test_006.
-    DATA(lv_count) = 10. " #EC PREF_FINAL
+    DATA(lv_count) = 10. "#EC PREF_FINAL
     WRITE lv_count.
   ENDMETHOD.
   METHOD test_007.

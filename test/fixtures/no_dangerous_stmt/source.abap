@@ -39,12 +39,12 @@ CLASS zcl_test_dangerous_statement IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_005.
-    DATA lv_tab TYPE string.
-    SELECT * FROM (lv_tab) INTO TABLE @DATA(lt_cust).
+    DATA: lv_tab TYPE string, lt_cust TYPE STANDARD TABLE OF t100.
+    SELECT * FROM (lv_tab) INTO TABLE @lt_cust.
   ENDMETHOD.
 
   METHOD test_006.
-    SELECT * FROM /dmo/customer INTO TABLE @DATA(lt_cust).
+    SELECT * FROM t100 INTO TABLE @DATA(lt_cust).
   ENDMETHOD.
 
   METHOD test_007.

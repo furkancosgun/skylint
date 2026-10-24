@@ -77,55 +77,13 @@
     "quickfixes": []
   },
   {
-    "target": "TEST_014",
-    "code": "OBSOLETE",
-    "line": 4,
-    "column": 4,
-    "quickfixes": []
-  },
-  {
-    "target": "TEST_015",
-    "code": "OBSOLETE",
-    "line": 4,
-    "column": 4,
-    "quickfixes": []
-  },
-  {
-    "target": "TEST_016",
-    "code": "OBSOLETE",
-    "line": 3,
-    "column": 4,
-    "quickfixes": []
-  },
-  {
-    "target": "TEST_017",
-    "code": "OBSOLETE",
-    "line": 2,
-    "column": 4,
-    "quickfixes": []
-  },
-  {
     "target": "TEST_018",
     "code": null
-  },
-  {
-    "target": "TEST_020",
-    "code": "OBSOLETE",
-    "line": 2,
-    "column": 4,
-    "quickfixes": []
   },
   {
     "target": "TEST_021",
     "code": "OBSOLETE",
     "line": 2,
-    "column": 4,
-    "quickfixes": []
-  },
-  {
-    "target": "TEST_022",
-    "code": "OBSOLETE",
-    "line": 3,
     "column": 4,
     "quickfixes": []
   },
@@ -150,57 +108,8 @@
     "code": null
   },
   {
-    "target": "TEST_029",
-    "code": "OBSOLETE",
-    "line": 2,
-    "column": 4,
-    "quickfixes": [
-      "REPLACE_OB"
-    ]
-  },
-  {
-    "target": "TEST_030",
-    "code": "OBSOLETE",
-    "line": 2,
-    "column": 4,
-    "quickfixes": []
-  },
-  {
-    "target": "TEST_031",
-    "code": null
-  },
-  {
-    "target": "TEST_032",
-    "code": null
-  },
-  {
     "target": "TEST_033",
     "code": null
-  },
-  {
-    "target": "TEST_034",
-    "code": "OBSOLETE",
-    "line": 2,
-    "column": 4,
-    "quickfixes": []
-  },
-  {
-    "target": "TEST_035",
-    "code": "OBSOLETE",
-    "line": 4,
-    "column": 4,
-    "quickfixes": []
-  },
-  {
-    "target": "TEST_036",
-    "code": null
-  },
-  {
-    "target": "TEST_037",
-    "code": "OBSOLETE",
-    "line": 2,
-    "column": 4,
-    "quickfixes": []
   },
   {
     "target": "TEST_038",
@@ -211,48 +120,6 @@
   },
   {
     "target": "TEST_039",
-    "code": "OBSOLETE",
-    "line": 2,
-    "column": 4,
-    "quickfixes": []
-  },
-  {
-    "target": "TEST_042",
-    "code": "OBSOLETE",
-    "line": 2,
-    "column": 4,
-    "quickfixes": []
-  },
-  {
-    "target": "TEST_043",
-    "code": "OBSOLETE",
-    "line": 2,
-    "column": 4,
-    "quickfixes": []
-  },
-  {
-    "target": "TEST_044",
-    "code": "OBSOLETE",
-    "line": 2,
-    "column": 4,
-    "quickfixes": []
-  },
-  {
-    "target": "TEST_045",
-    "code": "OBSOLETE",
-    "line": 2,
-    "column": 4,
-    "quickfixes": []
-  },
-  {
-    "target": "TEST_046",
-    "code": "OBSOLETE",
-    "line": 2,
-    "column": 4,
-    "quickfixes": []
-  },
-  {
-    "target": "TEST_047",
     "code": "OBSOLETE",
     "line": 2,
     "column": 4,

@@ -740,7 +740,7 @@
       "checkName": "ZSKYLINT_MAX_ONE_STMT"
     },
     {
-      "checkName": "ZSKYLINT_NO_DASH_IN_NAMES"
+      "checkName": "ZSKYLINT_NO_DASH_IN_FORM"
     },
     {
       "checkName": "ZSKYLINT_PREF_INLINE"

@@ -1,0 +1,12 @@
+[
+  {
+    "target": "TEST-001",
+    "code": "NO_DASH",
+    "line": 1,
+    "column": 0
+  },
+  {
+    "target": "TEST_002",
+    "code": null
+  }
+]

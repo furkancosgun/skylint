@@ -2218,14 +2218,14 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "no-dash-in-names",
-    "title": "Avoid Obsolete Dash (-) in Program Identifiers",
-    "className": "ZCL_SKYLINT_NO_DASH_IN_NAMES",
-    "checkName": "ZSKYLINT_NO_DASH_IN_NAMES",
+    "ruleId": "no-dash-in-form",
+    "title": "Avoid Obsolete Dash (-) in Form Names",
+    "className": "ZCL_SKYLINT_NO_DASH_IN_FORM",
+    "checkName": "ZSKYLINT_NO_DASH_IN_FORM",
     "category": "anti-patterns",
     "categoryTitle": "Anti-Patterns & Bad Practices",
     "pseudoComment": "NO_DASH",
-    "description": "No Dashes in Variable and Form Names",
+    "description": "No Dashes in Form Names",
     "hasQuickfix": false,
     "remoteEnabled": true,
     "attributes": [],
@@ -2283,7 +2283,7 @@
     "pseudoComment": "MSG_CLASS",
     "description": "Use a message class instead of inline message text",
     "hasQuickfix": false,
-    "remoteEnabled": false,
+    "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": []
   },

@@ -8,10 +8,19 @@ CLASS zcl_test_no_magic_numbers DEFINITION
     METHODS test_003.
     METHODS test_004.
     METHODS test_005.
+    DATA iv_spras TYPE string.
+    DATA rv_spras TYPE string.
+    METHODS language_sap1_to_sap2
+      IMPORTING im_lang_sap1 TYPE string OPTIONAL
+      RETURNING VALUE(re_lang_sap2) TYPE string
+      EXCEPTIONS no_assignment.
 ENDCLASS.
 
 
 CLASS zcl_test_no_magic_numbers IMPLEMENTATION.
+  METHOD language_sap1_to_sap2.
+  ENDMETHOD.
+
   METHOD test_001.
     DATA lv_val TYPE i.
     lv_val = 42.

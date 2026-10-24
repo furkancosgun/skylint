@@ -37,7 +37,7 @@ CLASS zcl_test_no_catch_cx_root IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_005.
-    DATA cx_root TYPE REF TO cx_static_check.
+    DATA cx_root TYPE REF TO cx_sy_no_handler.
     TRY.
     CATCH cx_sy_no_handler INTO cx_root.
     ENDTRY.

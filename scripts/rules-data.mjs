@@ -963,15 +963,15 @@ export const RULES = [
     },
   },
   {
-    ruleId: 'no-dash-in-names',
-    title: 'Avoid Obsolete Dash (-) in Program Identifiers',
-    rationale: 'A hyphen inside an identifier is legacy ABAP and is easily confused with the component selector for structures. It also complicates searching, refactoring, and tooling that treats the name as an expression. Use underscores in identifier names and reserve hyphens for component access.',
-    className: 'ZCL_SKYLINT_NO_DASH_IN_NAMES',
+    ruleId: 'no-dash-in-form',
+    title: 'Avoid Obsolete Dash (-) in Form Names',
+    rationale: 'A hyphen inside a form name is legacy ABAP and is easily confused with the component selector for structures. Use underscores in form names and reserve hyphens for component access.',
+    className: 'ZCL_SKYLINT_NO_DASH_IN_FORM',
     pseudoComment: 'NO_DASH',
     category: 'anti-patterns',
     example: {
-      bad: `DATA customer-name TYPE string.`,
-      good: `DATA customer_name TYPE string.`,
+      bad: `FORM check-auth.\nENDFORM.`,
+      good: `FORM check_auth.\nENDFORM.`,
     },
   },
   {

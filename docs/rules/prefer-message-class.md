@@ -8,7 +8,7 @@ description: "Use a message class instead of inline message text"
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="danger" text="#EC MSG_CLASS" />
-  <Badge type="warning" text="Local Only" />
+  <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview
