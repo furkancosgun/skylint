@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_downport DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        downport_incompatible TYPE if_ci_atc_check=>ty_finding_code VALUE 'DOWNPORT',
+        downport_incompatible TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_DWNPT',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_pref_downport DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'DOWNPORT_COMPAT'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_DOWNPORT'.
 
     DATA mv_check_constructors TYPE abap_bool VALUE abap_false.
     DATA mv_check_table_expr   TYPE abap_bool VALUE abap_false.

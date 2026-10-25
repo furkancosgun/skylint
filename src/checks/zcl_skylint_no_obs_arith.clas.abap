@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_obs_arith DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        obsolete_arithmetic TYPE if_ci_atc_check=>ty_finding_code VALUE 'OBS_ARITH',
+        obsolete_arithmetic TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_OBS_ART',
       END OF c_finding_codes.
     CONSTANTS:
       BEGIN OF c_quickfix_codes,
@@ -19,7 +19,7 @@ CLASS zcl_skylint_no_obs_arith DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'OBSOLETE_ARITH'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_OBS_ARITH'.
 
     DATA mv_check_add      TYPE abap_bool VALUE abap_true.
     DATA mv_check_add_corr TYPE abap_bool VALUE abap_true.
@@ -37,7 +37,7 @@ ENDCLASS.
 CLASS zcl_skylint_no_obs_arith IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Obsolete Arithmetic and Assignment Statements'
+        VALUE #( description       = 'Obsolete Arithmetic and Assignment Statements'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-obsolete_arithmetic

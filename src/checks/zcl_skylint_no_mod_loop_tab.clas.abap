@@ -6,8 +6,8 @@ CLASS zcl_skylint_no_mod_loop_tab DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        modify_loop_table TYPE if_ci_atc_check=>ty_finding_code VALUE 'MOD_LOOPTB',
-        sort_in_loop      TYPE if_ci_atc_check=>ty_finding_code VALUE 'SORT_INLP',
+        modify_loop_table TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_MOD_LTB',
+        sort_in_loop      TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_SORT_LP',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -18,7 +18,7 @@ CLASS zcl_skylint_no_mod_loop_tab DEFINITION
   PRIVATE SECTION.
     TYPES ty_loop_contexts TYPE STANDARD TABLE OF string WITH EMPTY KEY.
 
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'LOOP_MODIFY'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_MOD_LOOP_TAB'.
 
     DATA mv_check_append   TYPE abap_bool VALUE abap_true.
     DATA mv_check_insert   TYPE abap_bool VALUE abap_true.

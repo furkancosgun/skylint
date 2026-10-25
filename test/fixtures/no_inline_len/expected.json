@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "PAREN_LEN",
+    "code": "NO_INL_LEN",
     "line": 2,
     "column": 4,
     "quickfixes": [
@@ -14,7 +14,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "PAREN_LEN",
+    "code": "NO_INL_LEN",
     "line": 2,
     "column": 4,
     "quickfixes": [
@@ -27,7 +27,7 @@
   },
   {
     "target": "TEST_005",
-    "code": "PAREN_LEN",
+    "code": "NO_INL_LEN",
     "line": 3,
     "column": 4,
     "quickfixes": [
@@ -36,7 +36,7 @@
   },
   {
     "target": "TEST_006",
-    "code": "PAREN_LEN",
+    "code": "NO_INL_LEN",
     "line": 2,
     "column": 4,
     "quickfixes": [
@@ -45,7 +45,7 @@
   },
   {
     "target": "TEST_007",
-    "code": "PAREN_LEN",
+    "code": "NO_INL_LEN",
     "line": 2,
     "column": 4,
     "quickfixes": [
@@ -54,7 +54,7 @@
   },
   {
     "target": "TEST_008",
-    "code": "PAREN_LEN",
+    "code": "NO_INL_LEN",
     "line": 3,
     "column": 4,
     "quickfixes": [

@@ -6,8 +6,8 @@ CLASS zcl_skylint_pref_downcast DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_cast TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFCAST',
-        inline_cast TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_ICST',
+        prefer_cast TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_CAST',
+        inline_cast TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_INLCS',
       END OF c_finding_codes.
 
     CONSTANTS:
@@ -22,8 +22,8 @@ CLASS zcl_skylint_pref_downcast DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment_cast TYPE string VALUE 'PREF_CAST'.
-    CONSTANTS c_pseudo_comment_inl  TYPE string VALUE 'INLINE_CAST'.
+    CONSTANTS c_pseudo_comment_cast TYPE string VALUE 'PREF_DOWNCAST'.
+    CONSTANTS c_pseudo_comment_inl  TYPE string VALUE 'PREF_INLINE_CAST'.
 
     DATA mv_check_cast_syntax TYPE abap_bool VALUE abap_true.
     DATA mv_check_inline_cast TYPE abap_bool VALUE abap_true.
@@ -71,7 +71,7 @@ ENDCLASS.
 CLASS zcl_skylint_pref_downcast IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Modernize Downcasting (CAST #( ) & inlining)'
+        VALUE #( description       = 'Modernize Downcasting (CAST #( ) & inlining)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      severity = if_ci_atc_check=>finding_severities-warning

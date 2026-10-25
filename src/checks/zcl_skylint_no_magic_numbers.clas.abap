@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_magic_numbers DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        magic_number TYPE if_ci_atc_check=>ty_finding_code VALUE 'MAGIC_NUM',
+        magic_number TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_MAGIC_N',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_no_magic_numbers DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'MAGIC_NUMBERS'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_MAGIC_NUMBERS'.
 ENDCLASS.
 
 

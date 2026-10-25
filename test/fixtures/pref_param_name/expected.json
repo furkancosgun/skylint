@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "OMITPARM",
+    "code": "PREF_OMIT",
     "line": 4,
     "column": 4,
     "quickfixes": [
@@ -14,7 +14,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "OMITPARM",
+    "code": "PREF_OMIT",
     "line": 4,
     "column": 4,
     "quickfixes": [
@@ -23,7 +23,7 @@
   },
   {
     "target": "TEST_004",
-    "code": "REQPARM",
+    "code": "PREF_REQ_P",
     "line": 4,
     "column": 4,
     "quickfixes": [
@@ -35,7 +35,7 @@
   },
   {
     "target": "TEST_005",
-    "code": "REQPARM",
+    "code": "PREF_REQ_P",
     "line": 3,
     "column": 4,
     "quickfixes": [

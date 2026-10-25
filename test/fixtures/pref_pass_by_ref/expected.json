@@ -1,7 +1,7 @@
 [
   {
     "target": "LCL_BAD",
-    "code": "SLOW_PASS",
+    "code": "PREF_PASRF",
     "line": 3,
     "column": 4,
     "quickfixes": []

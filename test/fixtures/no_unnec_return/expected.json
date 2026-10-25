@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "UNNEC_RET",
+    "code": "NO_UNN_RET",
     "line": 4,
     "column": 4,
     "quickfixes": [
@@ -18,7 +18,7 @@
   },
   {
     "target": "TEST_004",
-    "code": "UNNEC_RET",
+    "code": "NO_UNN_RET",
     "line": 3,
     "column": 4,
     "quickfixes": [

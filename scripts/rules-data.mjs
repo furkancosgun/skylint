@@ -1040,7 +1040,7 @@ export const RULES = [
     rationale: 'Two statements on one line are easy to miss during review and produce coarse Git diffs. Debugger stepping and code coverage also become harder to follow when multiple statements share a line. Put each statement on its own line.',
     className: 'ZCL_SKYLINT_MAX_ONE_STMT',
     pseudoComment: 'ONE_STMT',
-    category: 'clean-abap',
+    category: 'metrics',
     example: {
       bad: `lv_count = 0. lv_total = 0.`,
       good: `lv_count = 0.\nlv_total = 0.`,
@@ -1448,7 +1448,7 @@ export const RULES = [
     rationale: 'An UPDATE or DELETE that targets a database table without a top-level WHERE condition affects every row in the table. Such statements are dangerous in production and often indicate a missing restriction. Add a WHERE condition, or use the matching internal-table statement when no database table is intended.',
     className: 'ZCL_SKYLINT_NO_UNFILT_DML',
     pseudoComment: 'NO_UNFILT_DML',
-    category: 'performance',
+    category: 'security',
     example: {
       bad: `DELETE FROM zorders.\nUPDATE zorders SET status = 'X'.`,
       good: `DELETE FROM zorders WHERE status = 'C'.\nUPDATE zorders SET status = 'X' WHERE order_id = lv_id.`,
@@ -1532,7 +1532,7 @@ export const RULES = [
     rationale: 'In ABAP RESTful Application Programming Model (RAP), Entity Manipulation Language (EML) statements process transactional data. Omitting FAILED and REPORTED clauses causes silent failures, lost error messages, and unhandled business exceptions. Always provide both response parameters to safely inspect and propagate issues.',
     className: 'ZCL_SKYLINT_NO_UNHANDLED_EML',
     pseudoComment: 'EML_RESPONSE',
-    category: 'clean-abap',
+    category: 'security',
     example: {
       bad: `MODIFY ENTITIES OF z_root\n  ENTITY travel\n  UPDATE FIELDS ( description ) WITH lt_update.`,
       good: `MODIFY ENTITIES OF z_root\n  ENTITY travel\n  UPDATE FIELDS ( description ) WITH lt_update\n  FAILED DATA(lt_failed)\n  REPORTED DATA(lt_reported).`,

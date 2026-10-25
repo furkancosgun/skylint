@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "CHKINLOOP",
+    "code": "NO_CHK_LP",
     "line": 6,
     "column": 6,
     "quickfixes": [
@@ -10,7 +10,7 @@
   },
   {
     "target": "TEST_002",
-    "code": "CHKOUTLOOP",
+    "code": "NO_CHK_OUT",
     "line": 3,
     "column": 4,
     "quickfixes": [
@@ -19,7 +19,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "CHKINLOOP",
+    "code": "NO_CHK_LP",
     "line": 4,
     "column": 6,
     "quickfixes": [

@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "CALC_ASSGN",
+    "code": "PREF_CALOP",
     "line": 3,
     "column": 4,
     "quickfixes": [
@@ -14,7 +14,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "CALC_ASSGN",
+    "code": "PREF_CALOP",
     "line": 3,
     "column": 4,
     "quickfixes": [

@@ -19,7 +19,7 @@ CLASS zcl_skylint_pref_is_initial DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_INIT'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_IS_INITIAL'.
 
     METHODS check_lines_pattern
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement

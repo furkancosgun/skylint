@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_xsdbool DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_xsdbool TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFERXSDB',
+        prefer_xsdbool TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_XSDBL',
       END OF c_finding_codes.
     CONSTANTS:
       BEGIN OF c_quickfix_codes,
@@ -19,7 +19,7 @@ CLASS zcl_skylint_pref_xsdbool DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'XSDBOOL'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_XSDBOOL'.
 
     METHODS is_boolean_assignment
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement

@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "IDCONT",
+    "code": "NO_IDN_CNT",
     "line": 3,
     "column": 4,
     "quickfixes": []
@@ -12,14 +12,14 @@
   },
   {
     "target": "TEST_003",
-    "code": "IDCONT",
+    "code": "NO_IDN_CNT",
     "line": 3,
     "column": 4,
     "quickfixes": []
   },
   {
     "target": "TEST_004",
-    "code": "IDCONT",
+    "code": "NO_IDN_CNT",
     "line": 3,
     "column": 4,
     "quickfixes": []
@@ -30,7 +30,7 @@
   },
   {
     "target": "TEST_006",
-    "code": "IDCONT",
+    "code": "NO_IDN_CNT",
     "line": 3,
     "column": 4,
     "quickfixes": []
@@ -41,7 +41,7 @@
   },
   {
     "target": "TEST_008",
-    "code": "IDCONT",
+    "code": "NO_IDN_CNT",
     "line": 5,
     "column": 6,
     "quickfixes": []

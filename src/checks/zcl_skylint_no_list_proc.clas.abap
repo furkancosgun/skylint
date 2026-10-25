@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_list_proc DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        list_processing TYPE if_ci_atc_check=>ty_finding_code VALUE 'LIST_PROC',
+        list_processing TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_LIST_PR',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_no_list_proc DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'LIST_PROC'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_LIST_PROC'.
 
     DATA mv_check_write     TYPE abap_bool VALUE abap_true.
     DATA mv_check_uline     TYPE abap_bool VALUE abap_true.
@@ -30,7 +30,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_list_proc IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Prohibit classic list processing statements'
+    super->constructor( VALUE #( description       = 'Prohibit classic list processing statements'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-list_processing

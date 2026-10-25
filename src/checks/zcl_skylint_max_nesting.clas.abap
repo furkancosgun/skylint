@@ -6,7 +6,7 @@ CLASS zcl_skylint_max_nesting DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        nesting_depth TYPE if_ci_atc_check=>ty_finding_code VALUE 'NESTING_DP',
+        nesting_depth TYPE if_ci_atc_check=>ty_finding_code VALUE 'MAX_NEST',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_max_nesting DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'NESTING'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'MAX_NESTING'.
 
     DATA mv_max_depth TYPE i VALUE 3.
 
@@ -33,7 +33,7 @@ ENDCLASS.
 CLASS zcl_skylint_max_nesting IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Nesting Depth Limit (excessive control block nesting)'
+        VALUE #( description       = 'Nesting Depth Limit (excessive control block nesting)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #( ( code           = c_finding_codes-nesting_depth
                                                 severity       = if_ci_atc_check=>finding_severities-warning

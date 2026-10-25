@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_obs_control DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        obsolete_control TYPE if_ci_atc_check=>ty_finding_code VALUE 'OBS_CTRL',
+        obsolete_control TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_OBS_CTR',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_no_obs_control DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'OBSOLETE_CTRL'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_OBS_CONTROL'.
 
     DATA mv_check_form           TYPE abap_bool VALUE abap_true.
     DATA mv_check_loop_ctl       TYPE abap_bool VALUE abap_true.
@@ -46,7 +46,7 @@ ENDCLASS.
 CLASS zcl_skylint_no_obs_control IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Obsolete Control Flow and Procedural Statements'
+        VALUE #( description       = 'Obsolete Control Flow and Procedural Statements'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-obsolete_control

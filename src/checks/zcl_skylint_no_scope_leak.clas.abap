@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_scope_leak DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        scope_leak TYPE if_ci_atc_check=>ty_finding_code VALUE 'SCOPELEAK',
+        scope_leak TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_SCP_LEK',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_no_scope_leak DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'SCOPE_LEAK'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_SCOPE_LEAK'.
 
     TYPES: BEGIN OF ty_scoped_var,
              full_name TYPE if_ci_atc_source_code_provider=>ty_full_name,

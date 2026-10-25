@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_dup_literals DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        duplicate_literal TYPE if_ci_atc_check=>ty_finding_code VALUE 'DUPLIT',
+        duplicate_literal TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_DUP_LIT',
       END OF c_finding_codes.
 
     METHODS constructor.

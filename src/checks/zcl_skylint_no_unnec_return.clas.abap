@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_unnec_return DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        unnecessary_return TYPE if_ci_atc_check=>ty_finding_code VALUE 'UNNEC_RET',
+        unnecessary_return TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_UNN_RET',
       END OF c_finding_codes.
     CONSTANTS:
       BEGIN OF c_quickfix_codes,
@@ -27,7 +27,7 @@ ENDCLASS.
 CLASS zcl_skylint_no_unnec_return IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Omit unnecessary RETURN at end of routine'
+        VALUE #( description       = 'Omit unnecessary RETURN at end of routine'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-unnecessary_return

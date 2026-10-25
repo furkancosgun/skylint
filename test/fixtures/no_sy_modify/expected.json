@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "SYS_VAR_MD",
+    "code": "NO_SY_MOD",
     "line": 2,
     "column": 4,
     "quickfixes": []
@@ -12,7 +12,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "SYS_VAR_MD",
+    "code": "NO_SY_MOD",
     "line": 2,
     "column": 4,
     "quickfixes": []
@@ -23,7 +23,7 @@
   },
   {
     "target": "TEST_005",
-    "code": "SYS_VAR_MD",
+    "code": "NO_SY_MOD",
     "line": 2,
     "column": 4,
     "quickfixes": []

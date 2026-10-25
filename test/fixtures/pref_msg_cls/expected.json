@@ -1,13 +1,13 @@
 [
   {
     "target": "TEST_001",
-    "code": "PREF_MSG",
+    "code": "PREF_MSGCL",
     "line": 2,
     "column": 4
   },
   {
     "target": "TEST_002",
-    "code": "PREF_MSG",
+    "code": "PREF_MSGCL",
     "line": 3,
     "column": 4
   },
@@ -21,7 +21,7 @@
   },
   {
     "target": "TEST_006",
-    "code": "PREF_MSG",
+    "code": "PREF_MSGCL",
     "line": 2,
     "column": 4
   }

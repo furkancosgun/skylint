@@ -1,9 +1,9 @@
 [
-  { "target": "TEST_001", "code": "DUPLIT", "line": 3, "column": 14 },
+  { "target": "TEST_001", "code": "NO_DUP_LIT", "line": 3, "column": 14 },
   { "target": "TEST_002", "code": null },
   { "target": "TEST_003", "code": null },
   { "target": "TEST_004", "code": null },
-  { "target": "TEST_005", "code": "DUPLIT", "line": 3, "column": 14 },
+  { "target": "TEST_005", "code": "NO_DUP_LIT", "line": 3, "column": 14 },
   { "target": "TEST_006", "code": null },
   { "target": "TEST_007", "code": null },
   { "target": "TEST_008", "code": null }

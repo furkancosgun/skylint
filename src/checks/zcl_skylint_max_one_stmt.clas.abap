@@ -6,7 +6,7 @@ CLASS zcl_skylint_max_one_stmt DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        max_one_statement TYPE if_ci_atc_check=>ty_finding_code VALUE 'ONE_STMT',
+        max_one_statement TYPE if_ci_atc_check=>ty_finding_code VALUE 'MAX_1STMT',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,14 +15,14 @@ CLASS zcl_skylint_max_one_stmt DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'ONE_STMT'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'MAX_ONE_STMT'.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_max_one_stmt IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Max One Statement Per Line'
+    super->constructor( VALUE #( description       = 'Max One Statement Per Line'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-max_one_statement

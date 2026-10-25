@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "BOOLCOMP",
+    "code": "NO_BOOL_CM",
     "line": 3,
     "column": 4,
     "quickfixes": [
@@ -14,7 +14,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "BOOLCOMP",
+    "code": "NO_BOOL_CM",
     "line": 3,
     "column": 4,
     "quickfixes": [

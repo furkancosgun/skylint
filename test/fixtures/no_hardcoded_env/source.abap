@@ -57,7 +57,7 @@ CLASS zcl_skylint_test_hardcoded_env IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_008.
-    IF sy-sysid = 'PRD'. "#EC HARDCODED_ENV
+    IF sy-sysid = 'PRD'. "#EC NO_HARDCODED_ENV
     ENDIF.
   ENDMETHOD.
 

@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_unused_vars DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        unused_var TYPE if_ci_atc_check=>ty_finding_code VALUE 'UNUSED_VAR',
+        unused_var TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_UNUS_VR',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -24,7 +24,7 @@ CLASS zcl_skylint_no_unused_vars DEFINITION
       END OF ty_variable_decl,
       ty_variable_decls TYPE STANDARD TABLE OF ty_variable_decl WITH EMPTY KEY.
 
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'NEEDED'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_UNUSED_VARS'.
 
     METHODS collect_declarations
       IMPORTING it_statements   TYPE if_ci_atc_source_code_provider=>ty_statements

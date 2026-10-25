@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_client_spec DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        client_spec TYPE if_ci_atc_check=>ty_finding_code VALUE 'CLIENT_SPE',
+        client_spec TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_CLNT_SP',
       END OF c_finding_codes.
     CONSTANTS:
       BEGIN OF c_quickfix_codes,
@@ -19,7 +19,7 @@ CLASS zcl_skylint_no_client_spec DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'CLIENT_SPEC'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_CLIENT_SPEC'.
 ENDCLASS.
 
 

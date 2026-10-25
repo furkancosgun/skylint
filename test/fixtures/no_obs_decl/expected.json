@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "OBS_DECL",
+    "code": "NO_OBS_DCL",
     "line": 3,
     "column": 4,
     "quickfixes": [
@@ -14,35 +14,35 @@
   },
   {
     "target": "TEST_003",
-    "code": "OBS_DECL",
+    "code": "NO_OBS_DCL",
     "line": 2,
     "column": 4,
     "quickfixes": []
   },
   {
     "target": "TEST_004",
-    "code": "OBS_DECL",
+    "code": "NO_OBS_DCL",
     "line": 2,
     "column": 4,
     "quickfixes": []
   },
   {
     "target": "TEST_005",
-    "code": "OBS_DECL",
+    "code": "NO_OBS_DCL",
     "line": 2,
     "column": 4,
     "quickfixes": []
   },
   {
     "target": "TEST_006",
-    "code": "OBS_DECL",
+    "code": "NO_OBS_DCL",
     "line": 2,
     "column": 4,
     "quickfixes": []
   },
   {
     "target": "TEST_007",
-    "code": "OBS_DECL",
+    "code": "NO_OBS_DCL",
     "line": 2,
     "column": 4,
     "quickfixes": []

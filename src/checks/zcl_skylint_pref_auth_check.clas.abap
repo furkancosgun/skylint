@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_auth_check DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        missing_auth_check TYPE if_ci_atc_check=>ty_finding_code VALUE 'AUTH_CHECK',
+        missing_auth_check TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_AUTH',
       END OF c_finding_codes.
     CONSTANTS:
       BEGIN OF c_quickfix_codes,
@@ -19,7 +19,7 @@ CLASS zcl_skylint_pref_auth_check DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'AUTH_CHECK'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_AUTH_CHECK'.
 
     METHODS is_call_transaction
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
@@ -34,7 +34,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_pref_auth_check IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Call Transaction Authority Check'
+    super->constructor( VALUE #( description       = 'Call Transaction Authority Check'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-missing_auth_check

@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "AUTH_SUBRC",
+    "code": "PREF_AUTHS",
     "line": 2,
     "column": 4,
     "quickfixes": []

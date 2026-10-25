@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_late_sys_idx DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        late_sys_idx TYPE if_ci_atc_check=>ty_finding_code VALUE 'LATE_INDEX',
+        late_sys_idx TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_LATE_SY',
       END OF c_finding_codes.
 
     METHODS constructor.

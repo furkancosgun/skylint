@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_call_receiving DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        omit_receiving TYPE if_ci_atc_check=>ty_finding_code VALUE 'OMITRECEIV',
+        omit_receiving TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_CALL_RC',
       END OF c_finding_codes.
 
     CONSTANTS:
@@ -20,7 +20,7 @@ CLASS zcl_skylint_no_call_receiving DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'RECEIVING'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_CALL_RECEIVING'.
 
     METHODS has_receiving
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
@@ -40,7 +40,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_call_receiving IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Omit RECEIVING in Method Invocations'
+    super->constructor( VALUE #( description       = 'Omit RECEIVING in Method Invocations'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-omit_receiving

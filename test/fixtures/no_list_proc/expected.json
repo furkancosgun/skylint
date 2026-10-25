@@ -1,19 +1,19 @@
 [
   {
     "target": "TEST_001",
-    "code": "LIST_PROC",
+    "code": "NO_LIST_PR",
     "line": 3,
     "column": 4
   },
   {
     "target": "TEST_001",
-    "code": "LIST_PROC",
+    "code": "NO_LIST_PR",
     "line": 4,
     "column": 4
   },
   {
     "target": "TEST_001",
-    "code": "LIST_PROC",
+    "code": "NO_LIST_PR",
     "line": 5,
     "column": 4
   },
@@ -27,19 +27,19 @@
   },
   {
     "target": "TEST_004",
-    "code": "LIST_PROC",
+    "code": "NO_LIST_PR",
     "line": 3,
     "column": 4
   },
   {
     "target": "TEST_004",
-    "code": "LIST_PROC",
+    "code": "NO_LIST_PR",
     "line": 4,
     "column": 4
   },
   {
     "target": "TEST_004",
-    "code": "LIST_PROC",
+    "code": "NO_LIST_PR",
     "line": 5,
     "column": 4
   }

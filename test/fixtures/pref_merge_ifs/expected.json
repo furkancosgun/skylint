@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "NESTEDIF",
+    "code": "PREF_MRGIF",
     "line": 5,
     "column": 4,
     "quickfixes": []
@@ -12,14 +12,14 @@
   },
   {
     "target": "TEST_003",
-    "code": "NESTEDIF",
+    "code": "PREF_MRGIF",
     "line": 5,
     "column": 4,
     "quickfixes": []
   },
   {
     "target": "TEST_005",
-    "code": "ELSEIF",
+    "code": "PREF_ELSIF",
     "line": 7,
     "column": 4,
     "quickfixes": [
@@ -44,7 +44,7 @@
   },
   {
     "target": "TEST_010",
-    "code": "ELSEIF",
+    "code": "PREF_ELSIF",
     "line": 8,
     "column": 4,
     "quickfixes": [

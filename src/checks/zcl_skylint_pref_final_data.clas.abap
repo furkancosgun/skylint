@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_final_data DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_final TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_FIN',
+        prefer_final TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_FNDAT',
       END OF c_finding_codes.
     CONSTANTS:
       BEGIN OF c_quickfix_codes,
@@ -19,7 +19,7 @@ CLASS zcl_skylint_pref_final_data DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_FINAL'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_FINAL_DATA'.
 
     METHODS is_written
       IMPORTING it_statements     TYPE if_ci_atc_source_code_provider=>ty_statements
@@ -37,7 +37,7 @@ ENDCLASS.
 CLASS zcl_skylint_pref_final_data IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Declare inline variables as FINAL when never written again'
+        VALUE #( description       = 'Declare inline variables as FINAL when never written again'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-prefer_final

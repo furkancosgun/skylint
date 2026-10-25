@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "MANY_PAREN",
+    "code": "NO_MNY_PAR",
     "line": 2,
     "column": 7,
     "quickfixes": [
@@ -10,7 +10,7 @@
   },
   {
     "target": "TEST_002",
-    "code": "MANY_PAREN",
+    "code": "NO_MNY_PAR",
     "line": 2,
     "column": 23,
     "quickfixes": [
@@ -51,7 +51,7 @@
   },
   {
     "target": "TEST_011",
-    "code": "MANY_PAREN",
+    "code": "NO_MNY_PAR",
     "line": 2,
     "column": 7,
     "quickfixes": [

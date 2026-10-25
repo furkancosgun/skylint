@@ -6,7 +6,7 @@ CLASS zcl_skylint_max_line_len DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        line_length TYPE if_ci_atc_check=>ty_finding_code VALUE 'LINE_LEN',
+        line_length TYPE if_ci_atc_check=>ty_finding_code VALUE 'MAX_LINLEN',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_max_line_len DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'LINE_LEN'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'MAX_LINE_LEN'.
 
     DATA mv_max_length TYPE i VALUE 120.
 
@@ -24,7 +24,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_max_line_len IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Maximum Line Length'
+    super->constructor( VALUE #( description       = 'Maximum Line Length'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-line_length

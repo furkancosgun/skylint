@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_expand_macro DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        expand_macro TYPE if_ci_atc_check=>ty_finding_code VALUE 'EXPMACRO',
+        expand_macro TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_EXMAC',
       END OF c_finding_codes.
 
     CONSTANTS:
@@ -20,7 +20,7 @@ CLASS zcl_skylint_pref_expand_macro DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'EXPAND_MACROS'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_EXPAND_MACRO'.
 
     TYPES:
       BEGIN OF ty_macro_stmt,
@@ -52,7 +52,7 @@ CLASS zcl_skylint_pref_expand_macro IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
         VALUE #(
-            description       = 'skylint: Expand Macro Calls'
+            description       = 'Expand Macro Calls'
             remote_enablement = abap_true
             finding_codes     = VALUE #( ( code           = c_finding_codes-expand_macro
                                            severity       = if_ci_atc_check=>finding_severities-warning

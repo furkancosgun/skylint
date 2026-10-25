@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_msg_raising DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        msg_raise TYPE if_ci_atc_check=>ty_finding_code VALUE 'MSG_RAISE',
+        msg_raise TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_MSG_RSG',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_no_msg_raising DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'MSG_RAISING'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_MSG_RAISING'.
 ENDCLASS.
 
 

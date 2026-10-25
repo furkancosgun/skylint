@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_filter DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_filter TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFILTER',
+        prefer_filter TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_FILTR',
       END OF c_finding_codes.
 
     METHODS constructor.

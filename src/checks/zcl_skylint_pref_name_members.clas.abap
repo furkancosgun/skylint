@@ -6,9 +6,9 @@ CLASS zcl_skylint_pref_name_members DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        class_attribute  TYPE if_ci_atc_check=>ty_finding_code VALUE 'ATTR_NAME',
-        method_parameter TYPE if_ci_atc_check=>ty_finding_code VALUE 'PARAM_NAME',
-        selection_screen TYPE if_ci_atc_check=>ty_finding_code VALUE 'SCSCR_NAME',
+        class_attribute  TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_NMATR',
+        method_parameter TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_NMPAR',
+        selection_screen TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_NAMSS',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -17,7 +17,7 @@ CLASS zcl_skylint_pref_name_members DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'NAMING_MEM'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_NAME_MEMBERS'.
 
     DATA mv_attr_ignore_exceptions  TYPE abap_bool VALUE abap_true.
     DATA mv_attr_ignore_local       TYPE abap_bool VALUE abap_true.
@@ -88,7 +88,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_pref_name_members IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Class Attribute and Parameter Naming Conventions'
+    super->constructor( VALUE #( description       = 'Class Attribute and Parameter Naming Conventions'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      severity       = if_ci_atc_check=>finding_severities-warning

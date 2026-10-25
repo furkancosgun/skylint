@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_single_when DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        short_case TYPE if_ci_atc_check=>ty_finding_code VALUE 'SHORTCASE',
+        short_case TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_SGL_WHN',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_no_single_when DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'SINGLE_WHEN'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_SINGLE_WHEN'.
 
     METHODS is_when_others
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement

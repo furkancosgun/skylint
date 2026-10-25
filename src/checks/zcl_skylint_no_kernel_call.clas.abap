@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_kernel_call DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        kernel_call TYPE if_ci_atc_check=>ty_finding_code VALUE 'KERNELCALL',
+        kernel_call TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_KERNEL',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,14 +15,14 @@ CLASS zcl_skylint_no_kernel_call DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'KERNEL_CALL'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_KERNEL_CALL'.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_no_kernel_call IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Avoid Kernel and Native Calls'
+    super->constructor( VALUE #( description       = 'Avoid Kernel and Native Calls'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-kernel_call

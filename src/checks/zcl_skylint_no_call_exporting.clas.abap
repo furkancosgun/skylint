@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_call_exporting DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        omit_exporting TYPE if_ci_atc_check=>ty_finding_code VALUE 'OMITEXPORT',
+        omit_exporting TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_CALL_EX',
       END OF c_finding_codes.
 
     CONSTANTS:
@@ -20,7 +20,7 @@ CLASS zcl_skylint_no_call_exporting DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'EXPORTING'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_CALL_EXPORTING'.
 
     METHODS has_other_sections
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
@@ -31,7 +31,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_call_exporting IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Omit Redundant EXPORTING in Method Calls'
+    super->constructor( VALUE #( description       = 'Omit Redundant EXPORTING in Method Calls'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-omit_exporting

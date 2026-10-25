@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_many_parens DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        many_parentheses TYPE if_ci_atc_check=>ty_finding_code VALUE 'MANY_PAREN',
+        many_parentheses TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_MNY_PAR',
       END OF c_finding_codes.
     CONSTANTS:
       BEGIN OF c_quickfix_codes,
@@ -19,7 +19,7 @@ CLASS zcl_skylint_no_many_parens DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'MANY_PARENS'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_MANY_PARENS'.
 
     METHODS find_matching_close
       IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
@@ -37,7 +37,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_many_parens IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Remove redundant parentheses'
+    super->constructor( VALUE #( description       = 'Remove redundant parentheses'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-many_parentheses

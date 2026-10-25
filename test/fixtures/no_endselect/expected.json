@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "ENDSELECT",
+    "code": "NO_ENDSEL",
     "line": 3,
     "column": 4,
     "quickfixes": []

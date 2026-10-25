@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "CHECKSUBRC",
+    "code": "PREF_CHKSC",
     "line": 3,
     "column": 4,
     "quickfixes": []
@@ -12,14 +12,14 @@
   },
   {
     "target": "TEST_003",
-    "code": "CHECKSUBRC",
+    "code": "PREF_CHKSC",
     "line": 4,
     "column": 4,
     "quickfixes": []
   },
   {
     "target": "TEST_005",
-    "code": "CHECKSUBRC",
+    "code": "PREF_CHKSC",
     "line": 2,
     "column": 4,
     "quickfixes": []

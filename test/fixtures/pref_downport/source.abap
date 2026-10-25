@@ -30,7 +30,7 @@ CLASS zcl_skylint_test_downport IMPLEMENTATION.
     DATA lv_text TYPE string.
 
     " Suppressed via pseudo comment
-    lv_text = VALUE #( ). "#EC DOWNPORT_COMPAT
+    lv_text = VALUE #( ). "#EC PREF_DOWNPORT
   ENDMETHOD.
 
 ENDCLASS.

@@ -19,7 +19,7 @@ CLASS zcl_skylint_pref_insert DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'INSERT_INTO'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_INSERT'.
 
     METHODS find_top_level_to
       IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement

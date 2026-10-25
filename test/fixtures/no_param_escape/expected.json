@@ -1,7 +1,7 @@
 [
   {
     "target": "LCL_BAD",
-    "code": "PARAM_ESCP",
+    "code": "NO_PARM_ES",
     "line": 3,
     "column": 4,
     "quickfixes": [
@@ -14,7 +14,7 @@
   },
   {
     "target": "LCL_BAD2",
-    "code": "PARAM_ESCP",
+    "code": "NO_PARM_ES",
     "line": 3,
     "column": 4,
     "quickfixes": [

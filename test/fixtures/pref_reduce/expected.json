@@ -1,5 +1,5 @@
 [
-  { "target": "TEST_001", "code": "PREFREDUCE", "line": 6, "column": 4, "quickfixes": ["USEREDUCE"] },
+  { "target": "TEST_001", "code": "PREF_REDUC", "line": 6, "column": 4, "quickfixes": ["USEREDUCE"] },
   { "target": "TEST_002", "code": null },
   { "target": "TEST_003", "code": null },
   { "target": "TEST_004", "code": null },

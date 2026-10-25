@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_std_table DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        std_table TYPE if_ci_atc_check=>ty_finding_code VALUE 'STD_TABLE',
+        std_table TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_STDTB',
       END OF c_finding_codes.
 
     CONSTANTS:

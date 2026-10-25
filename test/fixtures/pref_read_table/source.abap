@@ -46,7 +46,7 @@ CLASS zcl_skylint_test_pref_tab_expr IMPLEMENTATION.
     DATA ls_item  TYPE string.
 
     " Suppressed via pseudo comment
-    READ TABLE lt_items INTO ls_item INDEX 1. "#EC PREF_TAB_EXPR
+    READ TABLE lt_items INTO ls_item INDEX 1. "#EC PREF_TABLE_EXPR
   ENDMETHOD.
 
   METHOD test_006.

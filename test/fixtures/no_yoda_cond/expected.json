@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "YODACOND",
+    "code": "NO_YODA_CN",
     "line": 3,
     "column": 4,
     "quickfixes": [
@@ -14,7 +14,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "YODACOND",
+    "code": "NO_YODA_CN",
     "line": 3,
     "column": 4,
     "quickfixes": [
@@ -23,7 +23,7 @@
   },
   {
     "target": "TEST_005",
-    "code": "YODACOND",
+    "code": "NO_YODA_CN",
     "line": 3,
     "column": 4,
     "quickfixes": [
@@ -36,13 +36,13 @@
   },
   {
     "target": "TEST_007",
-    "code": "YODACOND",
+    "code": "NO_YODA_CN",
     "line": 3,
     "column": 4
   },
   {
     "target": "TEST_008",
-    "code": "YODACOND",
+    "code": "NO_YODA_CN",
     "line": 3,
     "column": 4,
     "quickfixes": [
@@ -51,7 +51,7 @@
   },
   {
     "target": "TEST_009",
-    "code": "YODACOND",
+    "code": "NO_YODA_CN",
     "line": 3,
     "column": 4
   }

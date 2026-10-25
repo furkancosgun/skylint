@@ -5,7 +5,7 @@
   },
   {
     "target": "BAD_CLASS",
-    "code": "LCLS_NAME",
+    "code": "PREF_LCLS",
     "line": 1,
     "column": 0
   },
@@ -15,19 +15,19 @@
   },
   {
     "target": "BAD_INTF",
-    "code": "INTF_NAME",
+    "code": "PREF_LINTF",
     "line": 1,
     "column": 0
   },
   {
     "target": "BAD_GLOBAL",
-    "code": "GCLS_NAME",
+    "code": "PREF_GCLS",
     "line": 1,
     "column": 0
   },
   {
     "target": "BAD_GINTF",
-    "code": "GINTF_NAME",
+    "code": "PREF_GINTF",
     "line": 1,
     "column": 0
   }

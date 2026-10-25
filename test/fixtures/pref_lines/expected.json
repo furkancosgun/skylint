@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "DESCRIBELN",
+    "code": "PREF_LINES",
     "line": 4,
     "column": 4,
     "quickfixes": [
@@ -14,7 +14,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "DESCRIBELN",
+    "code": "PREF_LINES",
     "line": 4,
     "column": 4,
     "quickfixes": [

@@ -1,16 +1,16 @@
 [
-  { "target": "TEST_001", "code": "USELESSCAT", "line": 3, "column": 22, "quickfixes": ["FOLDLIT"] },
+  { "target": "TEST_001", "code": "NO_USL_CAT", "line": 3, "column": 22, "quickfixes": ["FOLDLIT"] },
   { "target": "TEST_002", "code": null },
   { "target": "TEST_003", "code": null },
-  { "target": "TEST_004", "code": "USELESSCAT", "line": 3, "column": 18, "quickfixes": ["FOLDLIT"] },
-  { "target": "TEST_005", "code": "USELESSCAT", "line": 3, "column": 17, "quickfixes": ["FOLDLIT"] },
-  { "target": "TEST_006", "code": "USELESSCAT", "line": 3, "column": 22, "quickfixes": [] },
+  { "target": "TEST_004", "code": "NO_USL_CAT", "line": 3, "column": 18, "quickfixes": ["FOLDLIT"] },
+  { "target": "TEST_005", "code": "NO_USL_CAT", "line": 3, "column": 17, "quickfixes": ["FOLDLIT"] },
+  { "target": "TEST_006", "code": "NO_USL_CAT", "line": 3, "column": 22, "quickfixes": [] },
   { "target": "TEST_007", "code": null },
   { "target": "TEST_008", "code": null },
-  { "target": "TEST_009", "code": "USELESSCAT", "line": 3, "column": 22, "quickfixes": ["FOLDLIT"] },
+  { "target": "TEST_009", "code": "NO_USL_CAT", "line": 3, "column": 22, "quickfixes": ["FOLDLIT"] },
   { "target": "TEST_010", "code": null },
   { "target": "TEST_011", "code": null },
-  { "target": "TEST_012", "code": "USELESSCAT", "line": 3, "column": 22, "quickfixes": [] },
-  { "target": "TEST_013", "code": "USELESSCAT", "line": 3, "column": 22, "quickfixes": [] },
-  { "target": "TEST_014", "code": "USELESSCAT", "line": 3, "column": 22, "quickfixes": ["FOLDLIT"] }
+  { "target": "TEST_012", "code": "NO_USL_CAT", "line": 3, "column": 22, "quickfixes": [] },
+  { "target": "TEST_013", "code": "NO_USL_CAT", "line": 3, "column": 22, "quickfixes": [] },
+  { "target": "TEST_014", "code": "NO_USL_CAT", "line": 3, "column": 22, "quickfixes": ["FOLDLIT"] }
 ]

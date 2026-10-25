@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_ident_cont DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        identical_contents TYPE if_ci_atc_check=>ty_finding_code VALUE 'IDCONT',
+        identical_contents TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_IDN_CNT',
       END OF c_finding_codes.
 
     METHODS constructor.

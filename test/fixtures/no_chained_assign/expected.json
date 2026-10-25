@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "ASSIGNCHN",
+    "code": "NO_CHN_ASG",
     "line": 5,
     "column": 4,
     "quickfixes": [

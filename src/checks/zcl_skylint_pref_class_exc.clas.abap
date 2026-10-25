@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_class_exc DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        class_based_exceptions TYPE if_ci_atc_check=>ty_finding_code VALUE 'CLASS_EXC',
+        class_based_exceptions TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_CLEXC',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_pref_class_exc DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'CLASS_EXC'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_CLASS_EXC'.
 
     METHODS has_classic_exceptions
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
@@ -27,7 +27,7 @@ ENDCLASS.
 CLASS zcl_skylint_pref_class_exc IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Prefer Class-Based Exceptions over Classic EXCEPTIONS'
+        VALUE #( description       = 'Prefer Class-Based Exceptions over Classic EXCEPTIONS'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-class_based_exceptions

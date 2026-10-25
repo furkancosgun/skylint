@@ -1,19 +1,19 @@
 [
   {
     "target": "TEST_001",
-    "code": "NOT_OWN_TB",
+    "code": "NO_MOD_STD",
     "line": 2,
     "column": 4
   },
   {
     "target": "TEST_003",
-    "code": "NOT_OWN_TB",
+    "code": "NO_MOD_STD",
     "line": 2,
     "column": 4
   },
   {
     "target": "TEST_005",
-    "code": "NOT_OWN_TB",
+    "code": "NO_MOD_STD",
     "line": 2,
     "column": 4
   },

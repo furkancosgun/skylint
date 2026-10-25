@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "PREFER_COR",
+    "code": "PREF_CORR",
     "line": 4,
     "column": 4,
     "quickfixes": [
@@ -14,7 +14,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "PREFER_COR",
+    "code": "PREF_CORR",
     "line": 4,
     "column": 4,
     "quickfixes": [

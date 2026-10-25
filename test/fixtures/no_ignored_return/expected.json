@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "IGNRET",
+    "code": "NO_IGN_RET",
     "line": 3,
     "column": 4
   },
@@ -19,7 +19,7 @@
   },
   {
     "target": "TEST_005",
-    "code": "IGNRET",
+    "code": "NO_IGN_RET",
     "line": 3,
     "column": 4
   },

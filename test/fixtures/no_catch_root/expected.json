@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "CATCH_ROOT",
+    "code": "NO_CAT_ROT",
     "line": 3,
     "column": 4,
     "quickfixes": []
@@ -12,7 +12,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "CATCH_ROOT",
+    "code": "NO_CAT_ROT",
     "line": 4,
     "column": 4,
     "quickfixes": []

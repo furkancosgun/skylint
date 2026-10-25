@@ -1,7 +1,7 @@
 [
-  { "target": "TEST_001", "code": "UNFILTDML", "line": 2, "column": 4 },
+  { "target": "TEST_001", "code": "NO_UNF_DML", "line": 2, "column": 4 },
   { "target": "TEST_002", "code": null },
-  { "target": "TEST_003", "code": "UNFILTDML", "line": 2, "column": 4 },
+  { "target": "TEST_003", "code": "NO_UNF_DML", "line": 2, "column": 4 },
   { "target": "TEST_004", "code": null },
   { "target": "TEST_005", "code": null }
 ]

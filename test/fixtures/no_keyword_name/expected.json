@@ -1,5 +1,5 @@
 [
-  { "target": "TEST_001", "code": "KEYWORDNM", "line": 2, "column": 9 },
-  { "target": "TEST_002", "code": "KEYWORDNM", "line": 3, "column": 4 },
+  { "target": "TEST_001", "code": "NO_KWD_NAM", "line": 2, "column": 9 },
+  { "target": "TEST_002", "code": "NO_KWD_NAM", "line": 3, "column": 4 },
   { "target": "TEST_003", "code": null }
 ]

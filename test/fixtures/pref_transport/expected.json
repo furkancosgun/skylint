@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "FULL_MODIF",
+    "code": "PREF_TRNSP",
     "line": 5,
     "column": 6,
     "quickfixes": []
@@ -12,14 +12,14 @@
   },
   {
     "target": "TEST_003",
-    "code": "FULL_MODIF",
+    "code": "PREF_TRNSP",
     "line": 5,
     "column": 6,
     "quickfixes": []
   },
   {
     "target": "TEST_005",
-    "code": "FULL_MODIF",
+    "code": "PREF_TRNSP",
     "line": 5,
     "column": 6,
     "quickfixes": []

@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_sy_modify DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        system_var_mod TYPE if_ci_atc_check=>ty_finding_code VALUE 'SYS_VAR_MD',
+        system_var_mod TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_SY_MOD',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_no_sy_modify DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'SY_MODIFY'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_SY_MODIFY'.
 
     METHODS modifies_system_field
       IMPORTING is_statement       TYPE if_ci_atc_source_code_provider=>ty_statement
@@ -31,7 +31,7 @@ ENDCLASS.
 CLASS zcl_skylint_no_sy_modify IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Avoid sy-* System Variable Modification'
+        VALUE #( description       = 'Avoid sy-* System Variable Modification'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-system_var_mod

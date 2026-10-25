@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_pub_ctor DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        constructor_not_public TYPE if_ci_atc_check=>ty_finding_code VALUE 'CTOR_PUB',
+        constructor_not_public TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_PBCTR',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,14 +15,14 @@ CLASS zcl_skylint_pref_pub_ctor DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'PUB_CTOR'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_PUB_CTOR'.
 ENDCLASS.
 
 
 CLASS zcl_skylint_pref_pub_ctor IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Declare Constructor in PUBLIC SECTION'
+        VALUE #( description       = 'Declare Constructor in PUBLIC SECTION'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-constructor_not_public

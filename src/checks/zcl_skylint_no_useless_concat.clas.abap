@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_useless_concat DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        useless_concat TYPE if_ci_atc_check=>ty_finding_code VALUE 'USELESSCAT',
+        useless_concat TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_USL_CAT',
       END OF c_finding_codes.
     CONSTANTS:
       BEGIN OF c_quickfix_codes,

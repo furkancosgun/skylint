@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "AVOID_LIKE",
+    "code": "NO_LIKE_OB",
     "line": 3,
     "column": 4,
     "quickfixes": []
@@ -12,7 +12,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "AVOID_LIKE",
+    "code": "NO_LIKE_OB",
     "line": 3,
     "column": 4,
     "quickfixes": []

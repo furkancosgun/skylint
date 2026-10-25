@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "USE_CASE",
+    "code": "PREF_CASE",
     "line": 3,
     "column": 4,
     "quickfixes": []

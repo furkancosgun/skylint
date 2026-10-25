@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "OBS_MEM",
+    "code": "NO_OBS_MEM",
     "line": 3,
     "column": 4,
     "quickfixes": []
@@ -12,7 +12,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "OBS_MEM",
+    "code": "NO_OBS_MEM",
     "line": 2,
     "column": 4,
     "quickfixes": []

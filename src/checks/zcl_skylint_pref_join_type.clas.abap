@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_join_type DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        join_type TYPE if_ci_atc_check=>ty_finding_code VALUE 'JOIN_TYPE',
+        join_type TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_JOINT',
       END OF c_finding_codes.
 
     CONSTANTS:
@@ -20,7 +20,7 @@ CLASS zcl_skylint_pref_join_type DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'JOIN_TYPE'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_JOIN_TYPE'.
 
     METHODS is_explicit_join
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement

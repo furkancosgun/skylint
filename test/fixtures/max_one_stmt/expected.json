@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "ONE_STMT",
+    "code": "MAX_1STMT",
     "line": 2,
     "column": 22
   },

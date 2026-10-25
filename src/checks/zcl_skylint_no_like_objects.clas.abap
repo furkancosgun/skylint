@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_like_objects DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        avoid_like TYPE if_ci_atc_check=>ty_finding_code VALUE 'AVOID_LIKE',
+        avoid_like TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_LIKE_OB',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_no_like_objects DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'LIKE_OBJECTS'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_LIKE_OBJECTS'.
 ENDCLASS.
 
 

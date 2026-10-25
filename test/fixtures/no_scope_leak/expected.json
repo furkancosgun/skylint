@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "SCOPELEAK",
+    "code": "NO_SCP_LEK",
     "line": 6,
     "column": 4,
     "quickfixes": []
@@ -12,7 +12,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "SCOPELEAK",
+    "code": "NO_SCP_LEK",
     "line": 7,
     "column": 4,
     "quickfixes": []
@@ -23,7 +23,7 @@
   },
   {
     "target": "TEST_005",
-    "code": "SCOPELEAK",
+    "code": "NO_SCP_LEK",
     "line": 6,
     "column": 4,
     "quickfixes": []

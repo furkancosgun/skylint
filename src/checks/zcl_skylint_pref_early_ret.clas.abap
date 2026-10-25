@@ -6,8 +6,8 @@ CLASS zcl_skylint_pref_early_ret DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        guard_method TYPE if_ci_atc_check=>ty_finding_code VALUE 'GUARD_METH',
-        guard_loop   TYPE if_ci_atc_check=>ty_finding_code VALUE 'GUARD_LOOP',
+        guard_method TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_GRDMT',
+        guard_loop   TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_GRDLP',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -18,8 +18,8 @@ CLASS zcl_skylint_pref_early_ret DEFINITION
   PRIVATE SECTION.
     CONSTANTS:
       BEGIN OF c_pseudo_comments,
-        early_return   TYPE string VALUE 'EARLY_RETURN',
-        early_continue TYPE string VALUE 'EARLY_CONTINUE',
+        early_return   TYPE string VALUE 'PREF_GUARD_METHOD',
+        early_continue TYPE string VALUE 'PREF_GUARD_LOOP',
       END OF c_pseudo_comments.
 
     DATA mv_check_method_return TYPE abap_bool VALUE abap_true.

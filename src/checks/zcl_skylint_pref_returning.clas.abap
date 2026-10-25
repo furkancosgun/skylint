@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_returning DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_returning TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFER_RET',
+        prefer_returning TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_RETNG',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_pref_returning DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'RETURNING'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_RETURNING'.
 
     METHODS is_single_exporting
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
@@ -26,7 +26,7 @@ ENDCLASS.
 CLASS zcl_skylint_pref_returning IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Prefer RETURNING over single EXPORTING'
+        VALUE #( description       = 'Prefer RETURNING over single EXPORTING'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-prefer_returning

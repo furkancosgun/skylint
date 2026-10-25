@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_raise_shortdump DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        raise_shortdump TYPE if_ci_atc_check=>ty_finding_code VALUE 'SHORTDUMP',
+        raise_shortdump TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_DUMP',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,14 +15,14 @@ CLASS zcl_skylint_no_raise_shortdump DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'SHORTDUMP'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_RAISE_SHORTDUMP'.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_no_raise_shortdump IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Avoid RAISE SHORTDUMP'
+    super->constructor( VALUE #( description       = 'Avoid RAISE SHORTDUMP'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-raise_shortdump

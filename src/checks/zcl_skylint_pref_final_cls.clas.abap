@@ -6,8 +6,8 @@ CLASS zcl_skylint_pref_final_cls DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        class_not_final  TYPE if_ci_atc_check=>ty_finding_code VALUE 'NOT_FINAL',
-        method_not_final TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_FINAL',
+        class_not_final  TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_FCLS',
+        method_not_final TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_FMETH',
       END OF c_finding_codes.
     CONSTANTS:
       BEGIN OF c_quickfix_codes,
@@ -22,8 +22,8 @@ CLASS zcl_skylint_pref_final_cls DEFINITION
   PRIVATE SECTION.
     CONSTANTS:
       BEGIN OF c_pseudo_comments,
-        final_cls  TYPE string VALUE 'FINAL_CLS',
-        final_meth TYPE string VALUE 'FINAL_METHOD',
+        final_cls  TYPE string VALUE 'PREF_FINAL_CLASS',
+        final_meth TYPE string VALUE 'PREF_FINAL_METHOD',
       END OF c_pseudo_comments.
 
     DATA mv_check_classes TYPE abap_bool VALUE abap_true.
@@ -39,7 +39,7 @@ ENDCLASS.
 CLASS zcl_skylint_pref_final_cls IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Prefer FINAL classes and methods by default'
+        VALUE #( description       = 'Prefer FINAL classes and methods by default'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      severity = if_ci_atc_check=>finding_severities-warning

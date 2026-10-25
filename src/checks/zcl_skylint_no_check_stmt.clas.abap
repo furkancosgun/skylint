@@ -6,8 +6,8 @@ CLASS zcl_skylint_no_check_stmt DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        check_in_loop      TYPE if_ci_atc_check=>ty_finding_code VALUE 'CHKINLOOP',
-        check_outside_loop TYPE if_ci_atc_check=>ty_finding_code VALUE 'CHKOUTLOOP',
+        check_in_loop      TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_CHK_LP',
+        check_outside_loop TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_CHK_OUT',
       END OF c_finding_codes.
     CONSTANTS:
       BEGIN OF c_quickfix_codes,
@@ -23,8 +23,8 @@ CLASS zcl_skylint_no_check_stmt DEFINITION
   PRIVATE SECTION.
     CONSTANTS:
       BEGIN OF c_pseudo_comments,
-        check_in_loop      TYPE string VALUE 'CHECK_IN_LOOP',
-        check_outside_loop TYPE string VALUE 'CHECK_OUT_LOOP',
+        check_in_loop      TYPE string VALUE 'NO_CHECK_IN_LOOP',
+        check_outside_loop TYPE string VALUE 'NO_CHECK_OUTSIDE_LOOP',
       END OF c_pseudo_comments.
 
     DATA mv_check_in_loop      TYPE abap_bool VALUE abap_true.

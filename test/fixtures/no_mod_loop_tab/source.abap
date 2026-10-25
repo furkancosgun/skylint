@@ -64,7 +64,7 @@ CLASS zcl_skylint_test_mod_loop IMPLEMENTATION.
   METHOD test_008.
     DATA lt_items TYPE string_table.
     LOOP AT lt_items INTO DATA(lv_item).
-      APPEND lv_item TO lt_items. "#EC LOOP_MODIFY
+      APPEND lv_item TO lt_items. "#EC NO_MOD_LOOP_TAB
     ENDLOOP.
   ENDMETHOD.
 

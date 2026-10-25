@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_mod_std_table DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        modify_own_tables TYPE if_ci_atc_check=>ty_finding_code VALUE 'NOT_OWN_TB',
+        modify_own_tables TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_MOD_STD',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_no_mod_std_table DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'OWN_TABLES'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_MOD_STD_TABLE'.
 
     DATA mv_own_tables     TYPE string    VALUE '^[yz/]'.
     DATA mv_report_dynamic TYPE abap_bool VALUE abap_true.
@@ -32,7 +32,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_mod_std_table IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Modify Only Own Database Tables'
+    super->constructor( VALUE #( description       = 'Modify Only Own Database Tables'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-modify_own_tables

@@ -6,8 +6,8 @@ CLASS zcl_skylint_pref_param_name DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        omit_param    TYPE if_ci_atc_check=>ty_finding_code VALUE 'OMITPARM',
-        require_param TYPE if_ci_atc_check=>ty_finding_code VALUE 'REQPARM',
+        omit_param    TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_OMIT',
+        require_param TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_REQ_P',
       END OF c_finding_codes.
 
     CONSTANTS:
@@ -22,7 +22,7 @@ CLASS zcl_skylint_pref_param_name DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'PARAM_NAME'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_PARAM_NAME'.
 
     DATA mv_check_param_name   TYPE abap_bool VALUE abap_true.
     DATA mv_require_param_name TYPE abap_bool VALUE abap_false.
@@ -55,7 +55,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_pref_param_name IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Method Call Parameter Naming Style'
+    super->constructor( VALUE #( description       = 'Method Call Parameter Naming Style'
                                  remote_enablement = abap_false
                                  finding_codes     = VALUE #(
                                      severity       = if_ci_atc_check=>finding_severities-warning

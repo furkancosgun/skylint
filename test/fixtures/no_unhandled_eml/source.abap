@@ -56,6 +56,6 @@ CLASS zcl_test_no_unhandled_eml IMPLEMENTATION.
   METHOD test_005.
     " Compliant: pseudo-comment suppression
     DATA lt_keys TYPE string_table.
-    MODIFY ENTITY z_entity EXECUTE action_name FROM lt_keys. "#EC EML_RESPONSE
+    MODIFY ENTITY z_entity EXECUTE action_name FROM lt_keys. "#EC NO_UNHANDLED_EML
   ENDMETHOD.
 ENDCLASS.

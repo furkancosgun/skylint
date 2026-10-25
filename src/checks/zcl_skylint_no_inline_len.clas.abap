@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_inline_len DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        paren_length TYPE if_ci_atc_check=>ty_finding_code VALUE 'PAREN_LEN',
+        paren_length TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_INL_LEN',
       END OF c_finding_codes.
     CONSTANTS:
       BEGIN OF c_quickfix_codes,
@@ -19,7 +19,7 @@ CLASS zcl_skylint_no_inline_len DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'PAREN_LEN'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_INLINE_LEN'.
 
     METHODS parse_length_spec
       IMPORTING iv_lexeme   TYPE string

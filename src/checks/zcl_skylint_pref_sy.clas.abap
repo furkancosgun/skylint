@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_sy DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        use_sy TYPE if_ci_atc_check=>ty_finding_code VALUE 'USE_SY',
+        use_sy TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_SY',
       END OF c_finding_codes.
 
     CONSTANTS:

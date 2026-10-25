@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_full_typed DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        fully_typed TYPE if_ci_atc_check=>ty_finding_code VALUE 'FULLYTYPED',
+        fully_typed TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_TYPED',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_pref_full_typed DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'FULL_TYPED'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_FULL_TYPED'.
 
     METHODS is_untyped_constant
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement

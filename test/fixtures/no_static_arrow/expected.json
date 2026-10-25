@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "STATICVIAI",
+    "code": "NO_STAT_AR",
     "line": 3,
     "column": 4,
     "quickfixes": [
@@ -14,7 +14,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "STATICVIAI",
+    "code": "NO_STAT_AR",
     "line": 3,
     "column": 4,
     "quickfixes": [

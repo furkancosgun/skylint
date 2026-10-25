@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_composition DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_composition TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_COMP',
+        prefer_composition TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_COMPO',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -29,7 +29,7 @@ ENDCLASS.
 CLASS zcl_skylint_pref_composition IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Prefer composition over inheritance'
+        VALUE #( description       = 'Prefer composition over inheritance'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-prefer_composition

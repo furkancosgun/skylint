@@ -15,14 +15,14 @@ CLASS zcl_skylint_no_friends DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'FRIENDS'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_FRIENDS'.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_no_friends IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Avoid FRIENDS in class definitions'
+    super->constructor( VALUE #( description       = 'Avoid FRIENDS in class definitions'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-friends

@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "SELECTSTAR",
+    "code": "NO_SEL_STR",
     "line": 2,
     "column": 4,
     "quickfixes": []
@@ -12,7 +12,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "SELECTSTAR",
+    "code": "NO_SEL_STR",
     "line": 4,
     "column": 4,
     "quickfixes": []

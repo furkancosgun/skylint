@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_auth_subrc DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        missing_subrc TYPE if_ci_atc_check=>ty_finding_code VALUE 'AUTH_SUBRC',
+        missing_subrc TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_AUTHS',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_pref_auth_subrc DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'AUTH_SUBRC'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_AUTH_SUBRC'.
 
     METHODS checks_sy_subrc
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement

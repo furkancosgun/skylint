@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "NESTED_TRY",
+    "code": "NO_NESTTRY",
     "line": 3,
     "column": 6,
     "quickfixes": []
@@ -12,7 +12,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "NESTED_TRY",
+    "code": "NO_NESTTRY",
     "line": 4,
     "column": 6,
     "quickfixes": []

@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_yoda_cond DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        yoda_condition TYPE if_ci_atc_check=>ty_finding_code VALUE 'YODACOND',
+        yoda_condition TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_YODA_CN',
       END OF c_finding_codes.
     CONSTANTS:
       BEGIN OF c_quickfix_codes,
@@ -19,7 +19,7 @@ CLASS zcl_skylint_no_yoda_cond DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'YODA_COND'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_YODA_COND'.
 
     METHODS is_yoda_at
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement

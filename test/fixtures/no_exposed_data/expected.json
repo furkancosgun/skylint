@@ -1,7 +1,7 @@
 [
   {
     "target": "LCL_MUTABLE",
-    "code": "NOPUBATTR",
+    "code": "NO_PUB_ATR",
     "line": 3,
     "column": 4,
     "quickfixes": []
@@ -12,7 +12,7 @@
   },
   {
     "target": "LCL_EXTRA_BAD",
-    "code": "NOPUBATTR",
+    "code": "NO_PUB_ATR",
     "line": 3,
     "column": 4,
     "quickfixes": []
@@ -23,7 +23,7 @@
   },
   {
     "target": "LIF_TEST",
-    "code": "INTF_DATA",
+    "code": "NO_INTF_DA",
     "line": 2,
     "column": 2,
     "quickfixes": []
@@ -34,7 +34,7 @@
   },
   {
     "target": "LIF_STATE2",
-    "code": "INTF_DATA",
+    "code": "NO_INTF_DA",
     "line": 2,
     "column": 2,
     "quickfixes": []

@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_endselect DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        select_endselect TYPE if_ci_atc_check=>ty_finding_code VALUE 'ENDSELECT',
+        select_endselect TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_ENDSEL',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,14 +15,14 @@ CLASS zcl_skylint_no_endselect DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'ENDSELECT'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_ENDSELECT'.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_no_endselect IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Avoid SELECT ... ENDSELECT Loops'
+    super->constructor( VALUE #( description       = 'Avoid SELECT ... ENDSELECT Loops'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-select_endselect

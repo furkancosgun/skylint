@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "OBS_ARITH",
+    "code": "NO_OBS_ART",
     "line": 4,
     "column": 4,
     "quickfixes": [
@@ -14,7 +14,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "OBS_ARITH",
+    "code": "NO_OBS_ART",
     "line": 4,
     "column": 4,
     "quickfixes": [
@@ -27,7 +27,7 @@
   },
   {
     "target": "TEST_005",
-    "code": "OBS_ARITH",
+    "code": "NO_OBS_ART",
     "line": 3,
     "column": 4,
     "quickfixes": [
@@ -36,7 +36,7 @@
   },
   {
     "target": "TEST_006",
-    "code": "OBS_ARITH",
+    "code": "NO_OBS_ART",
     "line": 4,
     "column": 4,
     "quickfixes": [
@@ -45,7 +45,7 @@
   },
   {
     "target": "TEST_007",
-    "code": "OBS_ARITH",
+    "code": "NO_OBS_ART",
     "line": 4,
     "column": 4,
     "quickfixes": []

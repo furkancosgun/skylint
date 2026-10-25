@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_cond DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_cond TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFCOND',
+        prefer_cond TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_COND',
       END OF c_finding_codes.
 
     CONSTANTS:

@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_prod_assert DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prod_assert TYPE if_ci_atc_check=>ty_finding_code VALUE 'PROD_ASSRT',
+        prod_assert TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_PRD_AST',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_no_prod_assert DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'PROD_ASSERT'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_PROD_ASSERT'.
 
 ENDCLASS.
 
@@ -23,7 +23,7 @@ ENDCLASS.
 CLASS zcl_skylint_no_prod_assert IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Native ASSERT in Production Logic'
+        VALUE #( description       = 'Native ASSERT in Production Logic'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-prod_assert

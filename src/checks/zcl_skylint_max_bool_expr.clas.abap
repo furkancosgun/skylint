@@ -6,7 +6,7 @@ CLASS zcl_skylint_max_bool_expr DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        too_many_operands TYPE if_ci_atc_check=>ty_finding_code VALUE 'MAXBOOL',
+        too_many_operands TYPE if_ci_atc_check=>ty_finding_code VALUE 'MAX_BOOL',
       END OF c_finding_codes.
 
     METHODS constructor.

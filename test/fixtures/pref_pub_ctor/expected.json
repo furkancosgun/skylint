@@ -1,7 +1,7 @@
 [
   {
     "target": "LCL_BAD",
-    "code": "CTOR_PUB",
+    "code": "PREF_PBCTR",
     "line": 3,
     "column": 4,
     "quickfixes": []

@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_case DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        change_if_to_case TYPE if_ci_atc_check=>ty_finding_code VALUE 'USE_CASE',
+        change_if_to_case TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_CASE',
       END OF c_finding_codes.
 
     METHODS constructor.

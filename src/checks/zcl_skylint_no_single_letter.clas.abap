@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_single_letter DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        single_letter TYPE if_ci_atc_check=>ty_finding_code VALUE 'SINGLE_LTR',
+        single_letter TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_SGL_LTR',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -39,7 +39,7 @@ ENDCLASS.
 CLASS zcl_skylint_no_single_letter IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Avoid single-letter variable names'
+        VALUE #( description       = 'Avoid single-letter variable names'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-single_letter

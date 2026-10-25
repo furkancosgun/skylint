@@ -47,7 +47,7 @@ CLASS zcl_test_prefer_final_data IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_006.
-    DATA(lv_count) = 10. "#EC PREF_FINAL
+    DATA(lv_count) = 10. "#EC PREF_FINAL_DATA
     WRITE lv_count.
   ENDMETHOD.
   METHOD test_007.

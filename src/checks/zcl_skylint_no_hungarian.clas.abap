@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_hungarian DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        hungarian TYPE if_ci_atc_check=>ty_finding_code VALUE 'HUNGARIAN',
+        hungarian TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_HUNGAR',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -44,7 +44,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_hungarian IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Avoid Hungarian notation and encoding prefixes'
+    super->constructor( VALUE #( description       = 'Avoid Hungarian notation and encoding prefixes'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-hungarian

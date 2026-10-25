@@ -1,7 +1,7 @@
 [
   {
     "target": "LCL_BAD",
-    "code": "CLASS_EXC",
+    "code": "PREF_CLEXC",
     "line": 3,
     "column": 4,
     "quickfixes": []
@@ -12,7 +12,7 @@
   },
   {
     "target": "LCL_BAD2",
-    "code": "CLASS_EXC",
+    "code": "PREF_CLEXC",
     "line": 3,
     "column": 4,
     "quickfixes": []

@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "PREFERNEW",
+    "code": "PREF_NEW",
     "line": 3,
     "column": 4,
     "quickfixes": [
@@ -14,7 +14,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "PREFERNEW",
+    "code": "PREF_NEW",
     "line": 3,
     "column": 4,
     "quickfixes": [
@@ -27,7 +27,7 @@
   },
   {
     "target": "TEST_005",
-    "code": "RAISEEXCNE",
+    "code": "PREF_RSNEW",
     "line": 2,
     "column": 4,
     "quickfixes": [

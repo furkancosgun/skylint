@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_pred_name DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        bool_method_name TYPE if_ci_atc_check=>ty_finding_code VALUE 'BOOL_NAME',
+        bool_method_name TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_PREDN',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_pref_pred_name DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'PRED_NAME'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_PRED_NAME'.
 
     METHODS has_boolean_return
       IMPORTING is_statement       TYPE if_ci_atc_source_code_provider=>ty_statement

@@ -6,8 +6,8 @@ CLASS zcl_skylint_pref_declarations DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        definitions_top TYPE if_ci_atc_check=>ty_finding_code VALUE 'DEF_TOP',
-        decl_order      TYPE if_ci_atc_check=>ty_finding_code VALUE 'DECL_ORDER',
+        definitions_top TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_TOP',
+        decl_order      TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_ORDER',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -16,8 +16,8 @@ CLASS zcl_skylint_pref_declarations DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment_top   TYPE string VALUE 'DEF_TOP'.
-    CONSTANTS c_pseudo_comment_order TYPE string VALUE 'DECL_ORDER'.
+    CONSTANTS c_pseudo_comment_top   TYPE string VALUE 'PREF_DEFINITIONS_TOP'.
+    CONSTANTS c_pseudo_comment_order TYPE string VALUE 'PREF_DECLARATION_ORDER'.
 
     DATA mv_check_def_top    TYPE abap_bool VALUE abap_true.
     DATA mv_check_decl_order TYPE abap_bool VALUE abap_true.
@@ -28,7 +28,7 @@ ENDCLASS.
 CLASS zcl_skylint_pref_declarations IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Routine Declaration Hygiene (top placement & order)'
+        VALUE #( description       = 'Routine Declaration Hygiene (top placement & order)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      severity = if_ci_atc_check=>finding_severities-warning

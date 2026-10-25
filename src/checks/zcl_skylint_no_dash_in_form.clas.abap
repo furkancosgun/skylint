@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_dash_in_form DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        names_no_dash TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_DASH',
+        names_no_dash TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_DASH_FM',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,14 +15,14 @@ CLASS zcl_skylint_no_dash_in_form DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_DASH'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_DASH_IN_FORM'.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_no_dash_in_form IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: No Dashes in Form Names'
+    super->constructor( VALUE #( description       = 'No Dashes in Form Names'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-names_no_dash

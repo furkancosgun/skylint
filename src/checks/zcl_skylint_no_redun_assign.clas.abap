@@ -6,9 +6,9 @@ CLASS zcl_skylint_no_redun_assign DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        identical_move  TYPE if_ci_atc_check=>ty_finding_code VALUE 'IDENTMOVE',
-        redundant_clear TYPE if_ci_atc_check=>ty_finding_code VALUE 'REDUNCLEAR',
-        clear_at_end    TYPE if_ci_atc_check=>ty_finding_code VALUE 'CLEAR_END',
+        identical_move  TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_IDN_MOV',
+        redundant_clear TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_RED_CLR',
+        clear_at_end    TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_CLR_END',
       END OF c_finding_codes.
 
     CONSTANTS:
@@ -23,8 +23,8 @@ CLASS zcl_skylint_no_redun_assign DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment_self  TYPE string VALUE 'SELF_ASSIGN'.
-    CONSTANTS c_pseudo_comment_clear TYPE string VALUE 'REDUNDANT_CLEAR'.
+    CONSTANTS c_pseudo_comment_self  TYPE string VALUE 'NO_IDENTICAL_MOVE'.
+    CONSTANTS c_pseudo_comment_clear TYPE string VALUE 'NO_REDUNDANT_CLEAR'.
 
     DATA mv_check_self_assign  TYPE abap_bool VALUE abap_true.
     DATA mv_check_before_write TYPE abap_bool VALUE abap_true.
@@ -82,7 +82,7 @@ ENDCLASS.
 CLASS zcl_skylint_no_redun_assign IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Remove Redundant Assignments & CLEARs'
+        VALUE #( description       = 'Remove Redundant Assignments & CLEARs'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      severity = if_ci_atc_check=>finding_severities-warning

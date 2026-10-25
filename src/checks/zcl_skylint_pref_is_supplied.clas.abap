@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_is_supplied DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        is_supplied TYPE if_ci_atc_check=>ty_finding_code VALUE 'SUPPLIED',
+        is_supplied TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_ISSUP',
       END OF c_finding_codes.
 
     CONSTANTS:

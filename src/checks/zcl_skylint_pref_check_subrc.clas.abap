@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_check_subrc DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        check_subrc TYPE if_ci_atc_check=>ty_finding_code VALUE 'CHECKSUBRC',
+        check_subrc TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_CHKSC',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_pref_check_subrc DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'CHECK_SUBRC'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_CHECK_SUBRC'.
 
     DATA mv_check_select_single TYPE abap_bool VALUE abap_true.
     DATA mv_check_read_table    TYPE abap_bool VALUE abap_true.

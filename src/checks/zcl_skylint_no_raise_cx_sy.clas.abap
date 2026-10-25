@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_raise_cx_sy DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        raise_sys TYPE if_ci_atc_check=>ty_finding_code VALUE 'RAISE_SYS',
+        raise_sys TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_RAIS_SY',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_no_raise_cx_sy DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'RAISE_CX_SY'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_RAISE_CX_SY'.
 
     METHODS raises_system_exception
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement

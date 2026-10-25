@@ -5,7 +5,7 @@
   },
   {
     "target": "TEST_002",
-    "code": "LINE_LEN",
+    "code": "MAX_LINLEN",
     "line": 2,
     "column": 4
   }

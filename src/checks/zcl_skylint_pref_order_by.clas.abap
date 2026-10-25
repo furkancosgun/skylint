@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_order_by DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        missing_order_by TYPE if_ci_atc_check=>ty_finding_code VALUE 'SELECT_UP',
+        missing_order_by TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_ORDBY',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_pref_order_by DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'ORDER_BY'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_ORDER_BY'.
 
     METHODS is_unorder_select_up_to
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
@@ -27,7 +27,7 @@ ENDCLASS.
 CLASS zcl_skylint_pref_order_by IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: SELECT UP TO 1 ROWS requires ORDER BY'
+        VALUE #( description       = 'SELECT UP TO 1 ROWS requires ORDER BY'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-missing_order_by

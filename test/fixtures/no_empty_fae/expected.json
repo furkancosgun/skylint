@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "FAENOCHECK",
+    "code": "NO_EMPTFAE",
     "line": 4,
     "column": 4,
     "quickfixes": [
@@ -14,7 +14,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "FAENOCHECK",
+    "code": "NO_EMPTFAE",
     "line": 4,
     "column": 4,
     "quickfixes": [
@@ -35,7 +35,7 @@
   },
   {
     "target": "TEST_007",
-    "code": "FAENOCHECK",
+    "code": "NO_EMPTFAE",
     "line": 7,
     "column": 4,
     "quickfixes": [
@@ -44,7 +44,7 @@
   },
   {
     "target": "TEST_008",
-    "code": "FAENOCHECK",
+    "code": "NO_EMPTFAE",
     "line": 5,
     "column": 6,
     "quickfixes": [

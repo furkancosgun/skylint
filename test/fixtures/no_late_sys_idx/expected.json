@@ -3,8 +3,8 @@
   { "target": "TEST_002", "code": null },
   { "target": "TEST_003", "code": null },
   { "target": "TEST_004", "code": null },
-  { "target": "TEST_005", "code": "LATE_INDEX", "line": 8, "column": 15 },
-  { "target": "TEST_006", "code": "LATE_INDEX", "line": 7, "column": 15 },
-  { "target": "TEST_007", "code": "LATE_INDEX", "line": 9, "column": 15 },
+  { "target": "TEST_005", "code": "NO_LATE_SY", "line": 8, "column": 15 },
+  { "target": "TEST_006", "code": "NO_LATE_SY", "line": 7, "column": 15 },
+  { "target": "TEST_007", "code": "NO_LATE_SY", "line": 9, "column": 15 },
   { "target": "TEST_008", "code": null }
 ]

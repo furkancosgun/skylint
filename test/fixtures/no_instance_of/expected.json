@@ -1,5 +1,5 @@
 [
-  { "target": "BAD_001", "code": "INSTANCEOF", "line": 2, "column": 4 },
-  { "target": "BAD_002", "code": "INSTANCEOF", "line": 2, "column": 4 },
+  { "target": "BAD_001", "code": "NO_INST_OF", "line": 2, "column": 4 },
+  { "target": "BAD_002", "code": "NO_INST_OF", "line": 2, "column": 4 },
   { "target": "GOOD_001", "code": null }
 ]

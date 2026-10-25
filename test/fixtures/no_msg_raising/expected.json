@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "MSG_RAISE",
+    "code": "NO_MSG_RSG",
     "line": 2,
     "column": 4,
     "quickfixes": []
@@ -12,7 +12,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "MSG_RAISE",
+    "code": "NO_MSG_RSG",
     "line": 2,
     "column": 4,
     "quickfixes": []

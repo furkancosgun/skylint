@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_factory_name DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        factory_name TYPE if_ci_atc_check=>ty_finding_code VALUE 'FACT_NAME',
+        factory_name TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_FCTNM',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -25,7 +25,7 @@ ENDCLASS.
 CLASS zcl_skylint_pref_factory_name IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Factory methods should start with CREATE_'
+        VALUE #( description       = 'Factory methods should start with CREATE_'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-factory_name

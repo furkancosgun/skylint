@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "OMITRECEIV",
+    "code": "NO_CALL_RC",
     "line": 4,
     "column": 4,
     "quickfixes": [

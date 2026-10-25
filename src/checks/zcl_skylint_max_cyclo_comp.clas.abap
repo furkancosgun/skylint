@@ -6,7 +6,7 @@ CLASS zcl_skylint_max_cyclo_comp DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        cyclomatic_complexity TYPE if_ci_atc_check=>ty_finding_code VALUE 'CYCLO_COMP',
+        cyclomatic_complexity TYPE if_ci_atc_check=>ty_finding_code VALUE 'MAX_CYCLO',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_max_cyclo_comp DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'CYCLO_COMP'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'MAX_CYCLO_COMP'.
 
     DATA mv_max_complexity TYPE i VALUE 5.
 
@@ -29,7 +29,7 @@ ENDCLASS.
 CLASS zcl_skylint_max_cyclo_comp IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Cyclomatic Complexity Threshold'
+        VALUE #( description       = 'Cyclomatic Complexity Threshold'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #( ( code           = c_finding_codes-cyclomatic_complexity
                                                 severity       = if_ci_atc_check=>finding_severities-warning

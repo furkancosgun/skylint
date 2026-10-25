@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_return DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        exit_outside_loop TYPE if_ci_atc_check=>ty_finding_code VALUE 'EXITOUTLP',
+        exit_outside_loop TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_RET',
       END OF c_finding_codes.
     CONSTANTS:
       BEGIN OF c_quickfix_codes,
@@ -19,7 +19,7 @@ CLASS zcl_skylint_pref_return DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'RETURN'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_RETURN'.
 ENDCLASS.
 
 

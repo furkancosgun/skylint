@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "USE_SY",
+    "code": "PREF_SY",
     "line": 2,
     "column": 4,
     "quickfixes": [
@@ -14,7 +14,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "USE_SY",
+    "code": "PREF_SY",
     "line": 3,
     "column": 4,
     "quickfixes": [

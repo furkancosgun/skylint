@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "JOIN_TYPE",
+    "code": "PREF_JOINT",
     "line": 2,
     "column": 4,
     "quickfixes": [

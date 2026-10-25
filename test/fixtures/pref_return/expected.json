@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "EXITOUTLP",
+    "code": "PREF_RET",
     "line": 2,
     "column": 4,
     "quickfixes": [
@@ -14,7 +14,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "EXITOUTLP",
+    "code": "PREF_RET",
     "line": 4,
     "column": 6,
     "quickfixes": [

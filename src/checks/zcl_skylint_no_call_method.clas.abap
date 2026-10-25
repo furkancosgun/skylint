@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_call_method DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        call_method TYPE if_ci_atc_check=>ty_finding_code VALUE 'CALLMETHOD',
+        call_method TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_CALL_MT',
       END OF c_finding_codes.
     CONSTANTS:
       BEGIN OF c_quickfix_codes,
@@ -19,7 +19,7 @@ CLASS zcl_skylint_no_call_method DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'CALL_METH'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_CALL_METHOD'.
 
     METHODS is_dynamic_call
       IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement

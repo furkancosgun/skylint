@@ -6,7 +6,7 @@ CLASS zcl_skylint_max_returns DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        too_many_returns TYPE if_ci_atc_check=>ty_finding_code VALUE 'MAX_RETURN',
+        too_many_returns TYPE if_ci_atc_check=>ty_finding_code VALUE 'MAX_RET',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -24,7 +24,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_max_returns IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Limit number of RETURN statements (PLR0911)'
+    super->constructor( VALUE #( description       = 'Limit number of RETURN statements (PLR0911)'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-too_many_returns

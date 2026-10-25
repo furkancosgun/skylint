@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "RAISE_SYS",
+    "code": "NO_RAIS_SY",
     "line": 2,
     "column": 4,
     "quickfixes": []
@@ -12,7 +12,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "RAISE_SYS",
+    "code": "NO_RAIS_SY",
     "line": 2,
     "column": 4,
     "quickfixes": []

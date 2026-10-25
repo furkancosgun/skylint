@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_bad_indent DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        bad_indent TYPE if_ci_atc_check=>ty_finding_code VALUE 'BADINDENT',
+        bad_indent TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_BAD_IND',
       END OF c_finding_codes.
 
     CONSTANTS:
@@ -20,7 +20,7 @@ CLASS zcl_skylint_no_bad_indent DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'BAD_INDENT'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_BAD_INDENT'.
 
     DATA mv_indent_step TYPE i VALUE 2.
 
@@ -35,7 +35,7 @@ ENDCLASS.
 CLASS zcl_skylint_no_bad_indent IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Bad Statement Indentation'
+        VALUE #( description       = 'Bad Statement Indentation'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #( ( code           = c_finding_codes-bad_indent
                                                 severity       = if_ci_atc_check=>finding_severities-warning

@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_lines DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        describe_lines TYPE if_ci_atc_check=>ty_finding_code VALUE 'DESCRIBELN',
+        describe_lines TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_LINES',
       END OF c_finding_codes.
     CONSTANTS:
       BEGIN OF c_quickfix_codes,
@@ -19,7 +19,7 @@ CLASS zcl_skylint_pref_lines DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'LINES'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_LINES'.
 
     METHODS build_lines_quickfix
       IMPORTING iv_stmt_idx        TYPE i

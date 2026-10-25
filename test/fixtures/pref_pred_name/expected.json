@@ -1,7 +1,7 @@
 [
   {
     "target": "LCL_BAD",
-    "code": "BOOL_NAME",
+    "code": "PREF_PREDN",
     "line": 3,
     "column": 4,
     "quickfixes": []
@@ -12,7 +12,7 @@
   },
   {
     "target": "LCL_CALC",
-    "code": "BOOL_NAME",
+    "code": "PREF_PREDN",
     "line": 3,
     "column": 4,
     "quickfixes": []

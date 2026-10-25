@@ -1,14 +1,14 @@
 [
   {
     "target": "LCL_BAD",
-    "code": "PREFER_RET",
+    "code": "PREF_RETNG",
     "line": 3,
     "column": 4,
     "quickfixes": []
   },
   {
     "target": "LCL_BAD",
-    "code": "PREFER_RET",
+    "code": "PREF_RETNG",
     "line": 4,
     "column": 4,
     "quickfixes": []
@@ -19,7 +19,7 @@
   },
   {
     "target": "LCL_BAD2",
-    "code": "PREFER_RET",
+    "code": "PREF_RETNG",
     "line": 3,
     "column": 4,
     "quickfixes": []

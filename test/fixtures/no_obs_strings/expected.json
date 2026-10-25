@@ -1,14 +1,14 @@
 [
   {
     "target": "TEST_001",
-    "code": "OBS_STR",
+    "code": "NO_OBS_STR",
     "line": 2,
     "column": 4,
     "quickfixes": []
   },
   {
     "target": "TEST_002",
-    "code": "OBS_STR",
+    "code": "NO_OBS_STR",
     "line": 2,
     "column": 4,
     "quickfixes": []
@@ -19,14 +19,14 @@
   },
   {
     "target": "TEST_004",
-    "code": "OBS_STR",
+    "code": "NO_OBS_STR",
     "line": 4,
     "column": 4,
     "quickfixes": []
   },
   {
     "target": "TEST_005",
-    "code": "OBS_STR",
+    "code": "NO_OBS_STR",
     "line": 4,
     "column": 4,
     "quickfixes": []

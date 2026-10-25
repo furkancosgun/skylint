@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "DUPCOND",
+    "code": "NO_DUP_CND",
     "line": 7,
     "column": 4,
     "quickfixes": []
@@ -12,7 +12,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "DUPCOND",
+    "code": "NO_DUP_CND",
     "line": 7,
     "column": 4,
     "quickfixes": []
@@ -23,7 +23,7 @@
   },
   {
     "target": "TEST_005",
-    "code": "DUPOPER",
+    "code": "NO_DUP_OPR",
     "line": 4,
     "column": 4,
     "quickfixes": []
@@ -38,7 +38,7 @@
   },
   {
     "target": "TEST_008",
-    "code": "DUPOPER",
+    "code": "NO_DUP_OPR",
     "line": 4,
     "column": 4,
     "quickfixes": []
@@ -49,14 +49,14 @@
   },
   {
     "target": "TEST_010",
-    "code": "DUPOPER",
+    "code": "NO_DUP_OPR",
     "line": 3,
     "column": 4,
     "quickfixes": []
   },
   {
     "target": "TEST_011",
-    "code": "DUPOPER",
+    "code": "NO_DUP_OPR",
     "line": 3,
     "column": 4,
     "quickfixes": []

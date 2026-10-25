@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "IDENTMOVE",
+    "code": "NO_IDN_MOV",
     "line": 3,
     "column": 4,
     "quickfixes": [
@@ -14,7 +14,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "IDENTMOVE",
+    "code": "NO_IDN_MOV",
     "line": 3,
     "column": 4,
     "quickfixes": [
@@ -27,7 +27,7 @@
   },
   {
     "target": "TEST_005",
-    "code": "IDENTMOVE",
+    "code": "NO_IDN_MOV",
     "line": 7,
     "column": 4,
     "quickfixes": [
@@ -40,7 +40,7 @@
   },
   {
     "target": "TEST_007",
-    "code": "IDENTMOVE",
+    "code": "NO_IDN_MOV",
     "line": 3,
     "column": 4,
     "quickfixes": [
@@ -53,7 +53,7 @@
   },
   {
     "target": "TEST_009",
-    "code": "IDENTMOVE",
+    "code": "NO_IDN_MOV",
     "line": 7,
     "column": 4,
     "quickfixes": [
@@ -62,7 +62,7 @@
   },
   {
     "target": "TEST_010",
-    "code": "IDENTMOVE",
+    "code": "NO_IDN_MOV",
     "line": 3,
     "column": 4,
     "quickfixes": [
@@ -71,7 +71,7 @@
   },
   {
     "target": "TEST_011",
-    "code": "REDUNCLEAR",
+    "code": "NO_RED_CLR",
     "line": 3,
     "column": 4,
     "quickfixes": [
@@ -80,7 +80,7 @@
   },
   {
     "target": "TEST_012",
-    "code": "REDUNCLEAR",
+    "code": "NO_RED_CLR",
     "line": 4,
     "column": 4,
     "quickfixes": [
@@ -89,7 +89,7 @@
   },
   {
     "target": "TEST_012",
-    "code": "REDUNCLEAR",
+    "code": "NO_RED_CLR",
     "line": 5,
     "column": 4,
     "quickfixes": [
@@ -106,7 +106,7 @@
   },
   {
     "target": "TEST_015",
-    "code": "REDUNCLEAR",
+    "code": "NO_RED_CLR",
     "line": 3,
     "column": 4,
     "quickfixes": [
@@ -115,7 +115,7 @@
   },
   {
     "target": "TEST_016",
-    "code": "CLEAR_END",
+    "code": "NO_CLR_END",
     "line": 4,
     "column": 4,
     "quickfixes": [
@@ -124,7 +124,7 @@
   },
   {
     "target": "TEST_017",
-    "code": "CLEAR_END",
+    "code": "NO_CLR_END",
     "line": 4,
     "column": 4,
     "quickfixes": [

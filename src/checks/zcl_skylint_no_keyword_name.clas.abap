@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_keyword_name DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        keyword_name TYPE if_ci_atc_check=>ty_finding_code VALUE 'KEYWORDNM',
+        keyword_name TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_KWD_NAM',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_no_keyword_name DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'KEYWORD_NAME'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_KEYWORD_NAME'.
 
     METHODS check_decl_statement
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
@@ -33,7 +33,7 @@ ENDCLASS.
 CLASS zcl_skylint_no_keyword_name IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Avoid Using ABAP Keywords as Identifier Names'
+        VALUE #( description       = 'Avoid Using ABAP Keywords as Identifier Names'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #( ( code           = c_finding_codes-keyword_name
                                                 severity       = if_ci_atc_check=>finding_severities-warning

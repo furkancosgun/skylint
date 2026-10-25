@@ -5,7 +5,7 @@
   },
   {
     "target": "BAD_CLASS",
-    "code": "PARAM_NAME",
+    "code": "PREF_NMPAR",
     "line": 3,
     "column": 4
   },
@@ -15,7 +15,7 @@
   },
   {
     "target": "BAD_GLOBAL",
-    "code": "ATTR_NAME",
+    "code": "PREF_NMATR",
     "line": 3,
     "column": 4
   }

@@ -6,8 +6,8 @@ CLASS zcl_skylint_no_exposed_data DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        public_attribute TYPE if_ci_atc_check=>ty_finding_code VALUE 'NOPUBATTR',
-        interface_data   TYPE if_ci_atc_check=>ty_finding_code VALUE 'INTF_DATA',
+        public_attribute TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_PUB_ATR',
+        interface_data   TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_INTF_DA',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -16,8 +16,8 @@ CLASS zcl_skylint_no_exposed_data DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment_attr TYPE string VALUE 'PUBLIC_ATTR'.
-    CONSTANTS c_pseudo_comment_intf TYPE string VALUE 'INTF_DATA'.
+    CONSTANTS c_pseudo_comment_attr TYPE string VALUE 'NO_PUBLIC_ATTR'.
+    CONSTANTS c_pseudo_comment_intf TYPE string VALUE 'NO_INTERFACE_DATA'.
 
     DATA mv_check_public_attr TYPE abap_bool VALUE abap_true.
     DATA mv_check_intf_data   TYPE abap_bool VALUE abap_true.

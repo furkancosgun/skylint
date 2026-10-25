@@ -1,7 +1,7 @@
 [
   {
     "target": "LCL_MANY_PARAMS",
-    "code": "PARAMCOUNT",
+    "code": "MAX_PARAMS",
     "line": 3,
     "column": 4,
     "quickfixes": []
@@ -12,7 +12,7 @@
   },
   {
     "target": "LCL_MANY_TWO",
-    "code": "PARAMCOUNT",
+    "code": "MAX_PARAMS",
     "line": 3,
     "column": 4,
     "quickfixes": []
@@ -23,14 +23,14 @@
   },
   {
     "target": "LCL_BAD_LINE",
-    "code": "PARAM_LINE",
+    "code": "MAX_PARM_L",
     "line": 3,
     "column": 4,
     "quickfixes": []
   },
   {
     "target": "LCL_BAD_LINE",
-    "code": "PARAM_LINE",
+    "code": "MAX_PARM_L",
     "line": 6,
     "column": 4,
     "quickfixes": []

@@ -1,35 +1,35 @@
 [
   {
     "target": "TEST_001",
-    "code": "UNUSED_VAR",
+    "code": "NO_UNUS_VR",
     "line": 2,
     "column": 4,
     "quickfixes": []
   },
   {
     "target": "TEST_002",
-    "code": "UNUSED_VAR",
+    "code": "NO_UNUS_VR",
     "line": 2,
     "column": 4,
     "quickfixes": []
   },
   {
     "target": "TEST_003",
-    "code": "UNUSED_VAR",
+    "code": "NO_UNUS_VR",
     "line": 2,
     "column": 4,
     "quickfixes": []
   },
   {
     "target": "TEST_004",
-    "code": "UNUSED_VAR",
+    "code": "NO_UNUS_VR",
     "line": 2,
     "column": 4,
     "quickfixes": []
   },
   {
     "target": "TEST_005",
-    "code": "UNUSED_VAR",
+    "code": "NO_UNUS_VR",
     "line": 2,
     "column": 4,
     "quickfixes": []
@@ -40,7 +40,7 @@
   },
   {
     "target": "TEST_007",
-    "code": "UNUSED_VAR",
+    "code": "NO_UNUS_VR",
     "line": 2,
     "column": 4,
     "quickfixes": []

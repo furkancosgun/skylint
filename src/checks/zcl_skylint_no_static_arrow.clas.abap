@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_static_arrow DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        static_call_via_instance TYPE if_ci_atc_check=>ty_finding_code VALUE 'STATICVIAI',
+        static_call_via_instance TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_STAT_AR',
       END OF c_finding_codes.
     CONSTANTS:
       BEGIN OF c_quickfix_codes,
@@ -19,7 +19,7 @@ CLASS zcl_skylint_no_static_arrow DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'STATIC_ARROW'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_STATIC_ARROW'.
 
     METHODS class_of_static_call
       IMPORTING is_token        TYPE if_ci_atc_source_code_provider=>ty_token

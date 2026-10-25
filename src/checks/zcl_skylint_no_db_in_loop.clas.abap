@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_db_in_loop DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        db_in_loop TYPE if_ci_atc_check=>ty_finding_code VALUE 'DBINLOOP',
+        db_in_loop TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_DB_LOOP',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_no_db_in_loop DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'DB_IN_LOOP'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_DB_IN_LOOP'.
 
 ENDCLASS.
 

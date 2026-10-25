@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "OMITEXPORT",
+    "code": "NO_CALL_EX",
     "line": 4,
     "column": 4,
     "quickfixes": [

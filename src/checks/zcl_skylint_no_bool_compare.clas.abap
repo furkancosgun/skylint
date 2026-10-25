@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_bool_compare DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        bool_comparison TYPE if_ci_atc_check=>ty_finding_code VALUE 'BOOLCOMP',
+        bool_comparison TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_BOOL_CM',
       END OF c_finding_codes.
     CONSTANTS:
       BEGIN OF c_quickfix_codes,
@@ -26,7 +26,7 @@ CLASS zcl_skylint_no_bool_compare DEFINITION
         can_drop TYPE abap_bool,
       END OF ty_bool_comp.
 
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'BOOL_COMPARE'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_BOOL_COMPARE'.
 
     METHODS find_boolean_comparison
       IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement

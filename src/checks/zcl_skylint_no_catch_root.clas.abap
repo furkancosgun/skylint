@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_catch_root DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        catch_root TYPE if_ci_atc_check=>ty_finding_code VALUE 'CATCH_ROOT',
+        catch_root TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_CAT_ROT',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_no_catch_root DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'CATCH_ROOT'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_CATCH_ROOT'.
 ENDCLASS.
 
 

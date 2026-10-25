@@ -1,14 +1,14 @@
 [
   {
     "target": "LCL_BAD",
-    "code": "MIX_RET",
+    "code": "NO_MIX_RET",
     "line": 3,
     "column": 4,
     "quickfixes": []
   },
   {
     "target": "LCL_BAD",
-    "code": "MIX_RET",
+    "code": "NO_MIX_RET",
     "line": 6,
     "column": 4,
     "quickfixes": []

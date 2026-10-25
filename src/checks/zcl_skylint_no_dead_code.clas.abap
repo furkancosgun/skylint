@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_dead_code DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        dead_code TYPE if_ci_atc_check=>ty_finding_code VALUE 'DEADCODE',
+        dead_code TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_DEAD_CD',
       END OF c_finding_codes.
 
     CONSTANTS:
@@ -36,7 +36,7 @@ ENDCLASS.
 CLASS zcl_skylint_no_dead_code IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Detect Dead Code with Constant Condition'
+        VALUE #( description       = 'Detect Dead Code with Constant Condition'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #( ( code           = c_finding_codes-dead_code
                                                 severity       = if_ci_atc_check=>finding_severities-warning

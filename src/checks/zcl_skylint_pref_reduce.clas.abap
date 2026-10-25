@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_reduce DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_reduce TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFREDUCE',
+        prefer_reduce TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_REDUC',
       END OF c_finding_codes.
 
     CONSTANTS:

@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_empty_override DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        empty_override TYPE if_ci_atc_check=>ty_finding_code VALUE 'EMPTY_OVR',
+        empty_override TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_EMP_OVR',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -29,7 +29,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_empty_override IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Avoid method override that only calls super'
+    super->constructor( VALUE #( description       = 'Avoid method override that only calls super'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-empty_override

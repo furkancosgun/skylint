@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "DEF_TOP",
+    "code": "PREF_TOP",
     "line": 3,
     "column": 4,
     "quickfixes": []
@@ -12,14 +12,14 @@
   },
   {
     "target": "TEST_003",
-    "code": "DEF_TOP",
+    "code": "PREF_TOP",
     "line": 4,
     "column": 4,
     "quickfixes": []
   },
   {
     "target": "TEST_004",
-    "code": "DECL_ORDER",
+    "code": "PREF_ORDER",
     "line": 3,
     "column": 4,
     "quickfixes": []
@@ -30,7 +30,7 @@
   },
   {
     "target": "TEST_006",
-    "code": "DECL_ORDER",
+    "code": "PREF_ORDER",
     "line": 3,
     "column": 4,
     "quickfixes": []

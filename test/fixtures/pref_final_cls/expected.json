@@ -1,7 +1,7 @@
 [
   {
     "target": "LCL_NOT_FINAL",
-    "code": "NOT_FINAL",
+    "code": "PREF_FCLS",
     "line": 1,
     "column": 0,
     "quickfixes": []
@@ -12,7 +12,7 @@
   },
   {
     "target": "LCL_CHILD2",
-    "code": "NOT_FINAL",
+    "code": "PREF_FCLS",
     "line": 1,
     "column": 0,
     "quickfixes": []

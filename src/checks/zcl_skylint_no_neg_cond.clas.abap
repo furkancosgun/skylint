@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_neg_cond DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        negated_condition TYPE if_ci_atc_check=>ty_finding_code VALUE 'NEGCOND',
+        negated_condition TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_NEG_CND',
       END OF c_finding_codes.
 
     METHODS constructor.

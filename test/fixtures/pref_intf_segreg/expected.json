@@ -1,4 +1,4 @@
 [
-  { "target": "LIF_BLOATED", "code": "INTF_SEGR", "line": 1, "column": 0 },
+  { "target": "LIF_BLOATED", "code": "PREF_INTFS", "line": 1, "column": 0 },
   { "target": "LIF_LEAN", "code": null }
 ]

@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_symbol_op DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_operator TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFEROP',
+        prefer_operator TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_SYMOP',
       END OF c_finding_codes.
     CONSTANTS:
       BEGIN OF c_quickfix_codes,
@@ -19,7 +19,7 @@ CLASS zcl_skylint_pref_symbol_op DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'SYMBOL_OP'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_SYMBOL_OP'.
 
     METHODS is_legacy_operator
       IMPORTING iv_lexeme    TYPE string

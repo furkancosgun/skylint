@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "PREFCAST",
+    "code": "PREF_CAST",
     "line": 4,
     "column": 4,
     "quickfixes": [
@@ -14,7 +14,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "PREFCAST",
+    "code": "PREF_CAST",
     "line": 4,
     "column": 4,
     "quickfixes": [
@@ -27,7 +27,7 @@
   },
   {
     "target": "TEST_005",
-    "code": "PREF_ICST",
+    "code": "PREF_INLCS",
     "line": 3,
     "column": 4,
     "quickfixes": [
@@ -36,7 +36,7 @@
   },
   {
     "target": "TEST_006",
-    "code": "PREF_ICST",
+    "code": "PREF_INLCS",
     "line": 3,
     "column": 4,
     "quickfixes": [

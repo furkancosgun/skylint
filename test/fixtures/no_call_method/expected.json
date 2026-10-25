@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "CALLMETHOD",
+    "code": "NO_CALL_MT",
     "line": 3,
     "column": 4,
     "quickfixes": [
@@ -14,7 +14,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "CALLMETHOD",
+    "code": "NO_CALL_MT",
     "line": 3,
     "column": 4,
     "quickfixes": [

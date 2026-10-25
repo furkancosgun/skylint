@@ -4,7 +4,7 @@
       "key": "clean-abap",
       "title": "Clean ABAP & Modern Syntax",
       "description": "Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.",
-      "count": 51
+      "count": 49
     },
     {
       "key": "anti-patterns",
@@ -16,19 +16,19 @@
       "key": "performance",
       "title": "Performance & Database",
       "description": "Database query efficiency, buffer protection, and internal table operation guidelines.",
-      "count": 10
+      "count": 9
     },
     {
       "key": "security",
       "title": "Security & Robustness",
       "description": "Authorizations, dynamic execution sanitation, error handling, and runtime safety.",
-      "count": 14
+      "count": 16
     },
     {
       "key": "metrics",
       "title": "Metrics & Complexity Limits",
       "description": "Quantitative boundaries for method size, nesting depth, parameter counts, and cyclomatic complexity.",
-      "count": 9
+      "count": 10
     }
   ],
   "rules": [
@@ -1033,8 +1033,8 @@
       "title": "Limit One Statement per Source Code Line",
       "className": "ZCL_SKYLINT_MAX_ONE_STMT",
       "description": "Max One Statement Per Line",
-      "category": "clean-abap",
-      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "category": "metrics",
+      "categoryTitle": "Metrics & Complexity Limits",
       "pseudoComment": "ONE_STMT",
       "hasQuickfix": false,
       "remoteEnabled": true,
@@ -1441,8 +1441,8 @@
       "title": "Avoid UPDATE or DELETE Without a WHERE Condition",
       "className": "ZCL_SKYLINT_NO_UNFILT_DML",
       "description": "Flag DML without WHERE on database tables",
-      "category": "performance",
-      "categoryTitle": "Performance & Database",
+      "category": "security",
+      "categoryTitle": "Security & Robustness",
       "pseudoComment": "NO_UNFILT_DML",
       "hasQuickfix": false,
       "remoteEnabled": true,
@@ -1525,8 +1525,8 @@
       "title": "Provide FAILED and REPORTED in RAP EML Statements",
       "className": "ZCL_SKYLINT_NO_UNHANDLED_EML",
       "description": "Provide FAILED and REPORTED in RAP EML statements",
-      "category": "clean-abap",
-      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "category": "security",
+      "categoryTitle": "Security & Robustness",
       "pseudoComment": "EML_RESPONSE",
       "hasQuickfix": false,
       "remoteEnabled": true,

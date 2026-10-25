@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_ignored_return DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        ignored_return_value TYPE if_ci_atc_check=>ty_finding_code VALUE 'IGNRET',
+        ignored_return_value TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_IGN_RET',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_no_ignored_return DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_IGNORED_RET'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_IGNORED_RETURN'.
 
     METHODS get_invoked_method_full_name
       IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement

@@ -15,7 +15,7 @@ CLASS zcl_skylint_no_rfc_err DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'RFC_ERR'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_RFC_ERR'.
 
     METHODS has_exception
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement

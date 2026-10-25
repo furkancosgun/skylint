@@ -6,7 +6,7 @@ description: "Provide FAILED and REPORTED in RAP EML statements"
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
-  <Badge type="tip" text="Clean ABAP & Modern Syntax" />
+  <Badge type="tip" text="Security & Robustness" />
   <Badge type="danger" text="#EC EML_RESPONSE" />
   <Badge type="info" text="Remote Enabled" />
 </div>

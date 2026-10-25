@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_unhandled_eml DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        unhandled_eml TYPE if_ci_atc_check=>ty_finding_code VALUE 'UNHAND_EML',
+        unhandled_eml TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_UNH_EML',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_no_unhandled_eml DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'EML_RESPONSE'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_UNHANDLED_EML'.
 
     DATA mv_check_modify TYPE abap_bool VALUE abap_true.
     DATA mv_check_read   TYPE abap_bool VALUE abap_true.

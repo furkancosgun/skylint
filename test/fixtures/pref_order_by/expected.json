@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "SELECT_UP",
+    "code": "PREF_ORDBY",
     "line": 3,
     "column": 4,
     "quickfixes": []
@@ -12,7 +12,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "SELECT_UP",
+    "code": "PREF_ORDBY",
     "line": 3,
     "column": 4,
     "quickfixes": []

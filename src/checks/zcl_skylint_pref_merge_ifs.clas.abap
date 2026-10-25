@@ -6,8 +6,8 @@ CLASS zcl_skylint_pref_merge_ifs DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        nested_if TYPE if_ci_atc_check=>ty_finding_code VALUE 'NESTEDIF',
-        else_if   TYPE if_ci_atc_check=>ty_finding_code VALUE 'ELSEIF',
+        nested_if TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_MRGIF',
+        else_if   TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_ELSIF',
       END OF c_finding_codes.
 
     CONSTANTS:
@@ -21,7 +21,7 @@ CLASS zcl_skylint_pref_merge_ifs DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'MERGE_IFS'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_MERGE_IFS'.
 
     TYPES: BEGIN OF ty_if_block,
              end_idx    TYPE i,

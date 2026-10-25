@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_dynamic_stmt DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        no_dynamic_stuff TYPE if_ci_atc_check=>ty_finding_code VALUE 'DYN_STUFF',
+        no_dynamic_stuff TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_DYN_STM',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_no_dynamic_stmt DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_DYNAMIC'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_DYNAMIC_STMT'.
 
     DATA mv_check_dynamic_sql         TYPE abap_bool VALUE abap_true.
     DATA mv_ignore_rap_query_provider TYPE abap_bool VALUE abap_true.
@@ -33,7 +33,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_dynamic_stmt IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: No Dynamic Constructs (CALL, ASSIGN, CREATE, etc.)'
+    super->constructor( VALUE #( description       = 'No Dynamic Constructs (CALL, ASSIGN, CREATE, etc.)'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-no_dynamic_stuff

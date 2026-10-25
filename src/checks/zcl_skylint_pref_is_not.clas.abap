@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_is_not DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_is_not TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFERISNT',
+        prefer_is_not TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_ISNOT',
       END OF c_finding_codes.
     CONSTANTS:
       BEGIN OF c_quickfix_codes,
@@ -19,7 +19,7 @@ CLASS zcl_skylint_pref_is_not DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'IS_NOT'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_IS_NOT'.
 
     METHODS has_not_is_pattern
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement

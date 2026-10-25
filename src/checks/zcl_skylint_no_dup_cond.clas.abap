@@ -6,8 +6,8 @@ CLASS zcl_skylint_no_dup_cond DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        identical_condition TYPE if_ci_atc_check=>ty_finding_code VALUE 'DUPCOND',
-        duplicate_operand   TYPE if_ci_atc_check=>ty_finding_code VALUE 'DUPOPER',
+        identical_condition TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_DUP_CND',
+        duplicate_operand   TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_DUP_OPR',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -16,7 +16,7 @@ CLASS zcl_skylint_no_dup_cond DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'DUP_COND'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_DUP_COND'.
 
     METHODS check_duplicate_elseif
       IMPORTING iv_idx       TYPE i

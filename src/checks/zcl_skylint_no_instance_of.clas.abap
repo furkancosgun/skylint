@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_instance_of DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        instance_of TYPE if_ci_atc_check=>ty_finding_code VALUE 'INSTANCEOF',
+        instance_of TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_INST_OF',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -24,7 +24,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_instance_of IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Avoid IS INSTANCE OF / CASE TYPE OF checks'
+    super->constructor( VALUE #( description       = 'Avoid IS INSTANCE OF / CASE TYPE OF checks'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-instance_of

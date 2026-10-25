@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_switch DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_switch TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFSWITCH',
+        prefer_switch TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_SWTCH',
       END OF c_finding_codes.
 
     CONSTANTS:

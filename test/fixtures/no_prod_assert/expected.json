@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "PROD_ASSRT",
+    "code": "NO_PRD_AST",
     "line": 3,
     "column": 4,
     "quickfixes": []

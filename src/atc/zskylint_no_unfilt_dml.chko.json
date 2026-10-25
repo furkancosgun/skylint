@@ -4,7 +4,7 @@
     "description": "Flag DML without WHERE on database tables",
     "originalLanguage": "en"
   },
-  "category": "ZSKYLINT_PERFORMANCE",
+  "category": "ZSKYLINT_SECURITY",
   "implementingClass": "ZCL_SKYLINT_NO_UNFILT_DML",
   "checkType": "remoteEnabled"
 }

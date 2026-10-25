@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_empty_fae DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        unsecure_fae TYPE if_ci_atc_check=>ty_finding_code VALUE 'FAENOCHECK',
+        unsecure_fae TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_EMPTFAE',
       END OF c_finding_codes.
     CONSTANTS:
       BEGIN OF c_quickfix_codes,
@@ -19,7 +19,7 @@ CLASS zcl_skylint_no_empty_fae DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'EMPTY_FAE'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_EMPTY_FAE'.
 
     TYPES:
       BEGIN OF ty_block_frame,

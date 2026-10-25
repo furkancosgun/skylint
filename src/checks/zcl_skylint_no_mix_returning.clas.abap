@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_mix_returning DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        mix_returning TYPE if_ci_atc_check=>ty_finding_code VALUE 'MIX_RET',
+        mix_returning TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_MIX_RET',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -27,7 +27,7 @@ ENDCLASS.
 CLASS zcl_skylint_no_mix_returning IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Do not mix RETURNING with EXPORTING or CHANGING'
+        VALUE #( description       = 'Do not mix RETURNING with EXPORTING or CHANGING'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-mix_returning

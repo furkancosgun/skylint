@@ -6,7 +6,7 @@ description: "Flag DML without WHERE on database tables"
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
-  <Badge type="tip" text="Performance & Database" />
+  <Badge type="tip" text="Security & Robustness" />
   <Badge type="danger" text="#EC NO_UNFILT_DML" />
   <Badge type="info" text="Remote Enabled" />
 </div>

@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "DBINLOOP",
+    "code": "NO_DB_LOOP",
     "line": 6,
     "column": 6,
     "quickfixes": []
@@ -12,7 +12,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "DBINLOOP",
+    "code": "NO_DB_LOOP",
     "line": 6,
     "column": 6,
     "quickfixes": []

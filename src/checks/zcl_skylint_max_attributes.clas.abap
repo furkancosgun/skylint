@@ -6,7 +6,7 @@ CLASS zcl_skylint_max_attributes DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        attribute_count TYPE if_ci_atc_check=>ty_finding_code VALUE 'ATTR_COUNT',
+        attribute_count TYPE if_ci_atc_check=>ty_finding_code VALUE 'MAX_ATTR',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_max_attributes DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'ATTRIBUTES'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'MAX_ATTRIBUTES'.
 
     DATA mv_max_attributes TYPE i VALUE 5.
 

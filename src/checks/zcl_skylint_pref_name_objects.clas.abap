@@ -6,18 +6,18 @@ CLASS zcl_skylint_pref_name_objects DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        local_class      TYPE if_ci_atc_check=>ty_finding_code VALUE 'LCLS_NAME',
-        global_class     TYPE if_ci_atc_check=>ty_finding_code VALUE 'GCLS_NAME',
-        local_interface  TYPE if_ci_atc_check=>ty_finding_code VALUE 'INTF_NAME',
-        global_interface TYPE if_ci_atc_check=>ty_finding_code VALUE 'GINTF_NAME',
-        types            TYPE if_ci_atc_check=>ty_finding_code VALUE 'TYPE_NAME',
-        event            TYPE if_ci_atc_check=>ty_finding_code VALUE 'EVENT_NAME',
-        test_method      TYPE if_ci_atc_check=>ty_finding_code VALUE 'TMETH_NAME',
-        macro            TYPE if_ci_atc_check=>ty_finding_code VALUE 'MACRO_NAME',
-        form             TYPE if_ci_atc_check=>ty_finding_code VALUE 'FORM_NAME',
-        function_module  TYPE if_ci_atc_check=>ty_finding_code VALUE 'FUNC_NAME',
-        function_group   TYPE if_ci_atc_check=>ty_finding_code VALUE 'FUGR_NAME',
-        program          TYPE if_ci_atc_check=>ty_finding_code VALUE 'PROG_NAME',
+        local_class      TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_LCLS',
+        global_class     TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_GCLS',
+        local_interface  TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_LINTF',
+        global_interface TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_GINTF',
+        types            TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_TYP',
+        event            TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_EVT',
+        test_method      TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_TMETH',
+        macro            TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_MACRO',
+        form             TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_FORM',
+        function_module  TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_FUNC',
+        function_group   TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_FUGR',
+        program          TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_PROG',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -26,7 +26,7 @@ CLASS zcl_skylint_pref_name_objects DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'NAMING_OBJ'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_NAME_OBJECTS'.
 
     DATA mv_class_global     TYPE string VALUE '^ZC(L|X)_.+$'.
     DATA mv_class_local      TYPE string VALUE '^LC(L|X)_.+$'.
@@ -88,7 +88,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_pref_name_objects IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Class, Interface, Type and Object Naming'
+    super->constructor( VALUE #( description       = 'Class, Interface, Type and Object Naming'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      severity       = if_ci_atc_check=>finding_severities-warning

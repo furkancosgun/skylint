@@ -1,14 +1,14 @@
 [
   {
     "target": "LCL_BAD",
-    "code": "BUILTIN",
+    "code": "NO_OVR_BLT",
     "line": 3,
     "column": 4,
     "quickfixes": []
   },
   {
     "target": "LCL_BAD",
-    "code": "BUILTIN",
+    "code": "NO_OVR_BLT",
     "line": 4,
     "column": 4,
     "quickfixes": []

@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_param_escape DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        param_escape TYPE if_ci_atc_check=>ty_finding_code VALUE 'PARAM_ESCP',
+        param_escape TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_PARM_ES',
       END OF c_finding_codes.
     CONSTANTS:
       BEGIN OF c_quickfix_codes,
@@ -19,7 +19,7 @@ CLASS zcl_skylint_no_param_escape DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'PARAM_ESCAPE'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_PARAM_ESCAPE'.
 
     METHODS build_unescape_quickfix
       IMPORTING is_statement       TYPE if_ci_atc_source_code_provider=>ty_statement

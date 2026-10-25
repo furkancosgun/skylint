@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "CONCATSTR",
+    "code": "PREF_STMPL",
     "line": 5,
     "column": 4,
     "quickfixes": [
@@ -14,7 +14,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "CONCATSTR",
+    "code": "PREF_STMPL",
     "line": 5,
     "column": 4,
     "quickfixes": [

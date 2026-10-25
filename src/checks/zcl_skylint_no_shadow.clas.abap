@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_shadow DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        shadow TYPE if_ci_atc_check=>ty_finding_code VALUE 'SHADOW',
+        shadow TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_SHADOW',
       END OF c_finding_codes.
 
     METHODS constructor.

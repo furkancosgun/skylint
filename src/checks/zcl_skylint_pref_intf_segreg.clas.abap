@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_intf_segreg DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        interface_segregation TYPE if_ci_atc_check=>ty_finding_code VALUE 'INTF_SEGR',
+        interface_segregation TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_INTFS',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_pref_intf_segreg DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'INTF_SEGREGATION'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_INTF_SEGREG'.
 
     DATA mv_max_methods TYPE i VALUE 5.
 
@@ -28,7 +28,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_pref_intf_segreg IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Prefer interface segregation (small interfaces)'
+    super->constructor( VALUE #( description       = 'Prefer interface segregation (small interfaces)'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-interface_segregation

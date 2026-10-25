@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_select_star DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        select_star TYPE if_ci_atc_check=>ty_finding_code VALUE 'SELECTSTAR',
+        select_star TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_SEL_STR',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_no_select_star DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'SELECT_STAR'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_SELECT_STAR'.
 
     METHODS is_select_star
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
@@ -26,7 +26,7 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_select_star IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Avoid SELECT * (specify columns explicitly)'
+    super->constructor( VALUE #( description       = 'Avoid SELECT * (specify columns explicitly)'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-select_star

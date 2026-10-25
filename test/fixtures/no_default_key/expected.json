@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "DEFAULTKEY",
+    "code": "NO_DEF_KEY",
     "line": 2,
     "column": 4,
     "quickfixes": [
@@ -14,7 +14,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "DEFAULTKEY",
+    "code": "NO_DEF_KEY",
     "line": 2,
     "column": 4,
     "quickfixes": [

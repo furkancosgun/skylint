@@ -1,7 +1,7 @@
 [
   {
     "target": "LCL_CHILD",
-    "code": "DEEP_INHRT",
+    "code": "MAX_INHRT",
     "line": 1,
     "column": 0,
     "quickfixes": []

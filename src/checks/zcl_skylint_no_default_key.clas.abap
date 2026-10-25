@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_default_key DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        default_key TYPE if_ci_atc_check=>ty_finding_code VALUE 'DEFAULTKEY',
+        default_key TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_DEF_KEY',
       END OF c_finding_codes.
     CONSTANTS:
       BEGIN OF c_quickfix_codes,
@@ -19,7 +19,7 @@ CLASS zcl_skylint_no_default_key DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'DEFAULT_KEY'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_DEFAULT_KEY'.
 ENDCLASS.
 
 

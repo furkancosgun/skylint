@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "METAPROG",
+    "code": "NO_METAPRG",
     "line": 6,
     "column": 4,
     "quickfixes": []
@@ -12,7 +12,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "METAPROG",
+    "code": "NO_METAPRG",
     "line": 2,
     "column": 4,
     "quickfixes": []

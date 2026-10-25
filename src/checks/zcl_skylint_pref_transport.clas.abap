@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_transport DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        full_modify TYPE if_ci_atc_check=>ty_finding_code VALUE 'FULL_MODIF',
+        full_modify TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_TRNSP',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_pref_transport DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'TRANSPORTING'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_TRANSPORT'.
 ENDCLASS.
 
 

@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "CYCLO_COMP",
+    "code": "MAX_CYCLO",
     "line": 1,
     "column": 2,
     "quickfixes": []
@@ -12,7 +12,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "CYCLO_COMP",
+    "code": "MAX_CYCLO",
     "line": 1,
     "column": 2,
     "quickfixes": []

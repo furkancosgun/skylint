@@ -1,31 +1,31 @@
 [
   {
     "target": "TEST_001",
-    "code": "MOD_LOOPTB",
+    "code": "NO_MOD_LTB",
     "line": 4,
     "column": 6
   },
   {
     "target": "TEST_002",
-    "code": "MOD_LOOPTB",
+    "code": "NO_MOD_LTB",
     "line": 4,
     "column": 6
   },
   {
     "target": "TEST_003",
-    "code": "MOD_LOOPTB",
+    "code": "NO_MOD_LTB",
     "line": 4,
     "column": 6
   },
   {
     "target": "TEST_004",
-    "code": "MOD_LOOPTB",
+    "code": "NO_MOD_LTB",
     "line": 4,
     "column": 6
   },
   {
     "target": "TEST_005",
-    "code": "MOD_LOOPTB",
+    "code": "NO_MOD_LTB",
     "line": 4,
     "column": 6
   },
@@ -43,25 +43,25 @@
   },
   {
     "target": "TEST_009",
-    "code": "MOD_LOOPTB",
+    "code": "NO_MOD_LTB",
     "line": 6,
     "column": 6
   },
   {
     "target": "TEST_010",
-    "code": "MOD_LOOPTB",
+    "code": "NO_MOD_LTB",
     "line": 4,
     "column": 6
   },
   {
     "target": "TEST_011",
-    "code": "SORT_INLP",
+    "code": "NO_SORT_LP",
     "line": 5,
     "column": 6
   },
   {
     "target": "TEST_012",
-    "code": "MOD_LOOPTB",
+    "code": "NO_MOD_LTB",
     "line": 4,
     "column": 6
   }

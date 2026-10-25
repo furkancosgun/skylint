@@ -6,13 +6,13 @@ CLASS zcl_skylint_pref_str_func DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        condense_stmt  TYPE if_ci_atc_check=>ty_finding_code VALUE 'CONDENSE_S',
-        translate_stmt TYPE if_ci_atc_check=>ty_finding_code VALUE 'TRANSLATE_',
-        shift_stmt     TYPE if_ci_atc_check=>ty_finding_code VALUE 'SHIFT_STMT',
-        search_stmt    TYPE if_ci_atc_check=>ty_finding_code VALUE 'SEARCH_STM',
-        overlay_stmt   TYPE if_ci_atc_check=>ty_finding_code VALUE 'OVERLAY_ST',
-        replace_stmt   TYPE if_ci_atc_check=>ty_finding_code VALUE 'REPLACE_ST',
-        describe_field TYPE if_ci_atc_check=>ty_finding_code VALUE 'DESCRIBE_F',
+        condense_stmt  TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_CNDNS',
+        translate_stmt TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_TRNSL',
+        shift_stmt     TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_SHIFT',
+        search_stmt    TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_SRCH',
+        overlay_stmt   TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_OVRLY',
+        replace_stmt   TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_RPLC',
+        describe_field TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_DSCFD',
       END OF c_finding_codes.
     CONSTANTS:
       BEGIN OF c_quickfix_codes,
@@ -29,7 +29,7 @@ CLASS zcl_skylint_pref_str_func DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'STR_FUNC'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_STR_FUNC'.
 
     DATA mv_check_condense  TYPE abap_bool VALUE abap_true.
     DATA mv_check_translate TYPE abap_bool VALUE abap_true.

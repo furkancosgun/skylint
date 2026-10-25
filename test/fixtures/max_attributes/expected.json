@@ -1,7 +1,7 @@
 [
   {
     "target": "LCL_GOD",
-    "code": "ATTR_COUNT",
+    "code": "MAX_ATTR",
     "line": 1,
     "column": 0,
     "quickfixes": []
@@ -12,7 +12,7 @@
   },
   {
     "target": "LCL_STATIC_GOD",
-    "code": "ATTR_COUNT",
+    "code": "MAX_ATTR",
     "line": 1,
     "column": 0,
     "quickfixes": []

@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_hardcoded_env DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        hardcoded_env TYPE if_ci_atc_check=>ty_finding_code VALUE 'ENV_CHECK',
+        hardcoded_env TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_HARDENV',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_no_hardcoded_env DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'HARDCODED_ENV'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_HARDCODED_ENV'.
 
     CONSTANTS:
       BEGIN OF c_env_vars,

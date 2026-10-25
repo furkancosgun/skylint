@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_overw_builtin DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        overwrites_builtin TYPE if_ci_atc_check=>ty_finding_code VALUE 'BUILTIN',
+        overwrites_builtin TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_OVR_BLT',
       END OF c_finding_codes.
 
     CLASS-METHODS class_constructor.
@@ -113,7 +113,7 @@ CLASS zcl_skylint_no_overw_builtin IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Method name overwrites built-in SAP function'
+    super->constructor( VALUE #( description       = 'Method name overwrites built-in SAP function'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-overwrites_builtin

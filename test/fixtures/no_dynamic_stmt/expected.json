@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "DYN_STUFF",
+    "code": "NO_DYN_STM",
     "line": 3,
     "column": 4
   },
@@ -11,13 +11,13 @@
   },
   {
     "target": "TEST_003",
-    "code": "DYN_STUFF",
+    "code": "NO_DYN_STM",
     "line": 4,
     "column": 4
   },
   {
     "target": "TEST_004",
-    "code": "DYN_STUFF",
+    "code": "NO_DYN_STM",
     "line": 4,
     "column": 4
   },
@@ -27,25 +27,25 @@
   },
   {
     "target": "TEST_006",
-    "code": "DYN_STUFF",
+    "code": "NO_DYN_STM",
     "line": 3,
     "column": 4
   },
   {
     "target": "TEST_007",
-    "code": "DYN_STUFF",
+    "code": "NO_DYN_STM",
     "line": 4,
     "column": 4
   },
   {
     "target": "TEST_008",
-    "code": "DYN_STUFF",
+    "code": "NO_DYN_STM",
     "line": 3,
     "column": 4
   },
   {
     "target": "TEST_009",
-    "code": "DYN_STUFF",
+    "code": "NO_DYN_STM",
     "line": 3,
     "column": 4
   }

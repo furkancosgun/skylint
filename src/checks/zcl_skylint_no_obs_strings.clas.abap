@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_obs_strings DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        obsolete_string TYPE if_ci_atc_check=>ty_finding_code VALUE 'OBS_STR',
+        obsolete_string TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_OBS_STR',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_no_obs_strings DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'OBSOLETE_STR'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_OBS_STRINGS'.
 
     DATA mv_check_pack         TYPE abap_bool VALUE abap_true.
     DATA mv_check_unpack       TYPE abap_bool VALUE abap_true.
@@ -33,7 +33,7 @@ ENDCLASS.
 CLASS zcl_skylint_no_obs_strings IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Obsolete String and Regex Statements'
+        VALUE #( description       = 'Obsolete String and Regex Statements'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-obsolete_string

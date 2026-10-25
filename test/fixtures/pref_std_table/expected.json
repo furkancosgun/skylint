@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "STD_TABLE",
+    "code": "PREF_STDTB",
     "line": 2,
     "column": 4,
     "quickfixes": [
@@ -18,7 +18,7 @@
   },
   {
     "target": "TEST_004",
-    "code": "STD_TABLE",
+    "code": "PREF_STDTB",
     "line": 2,
     "column": 4,
     "quickfixes": [

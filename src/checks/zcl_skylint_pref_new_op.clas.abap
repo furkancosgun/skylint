@@ -6,8 +6,8 @@ CLASS zcl_skylint_pref_new_op DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_new          TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFERNEW',
-        raise_exception_new TYPE if_ci_atc_check=>ty_finding_code VALUE 'RAISEEXCNE',
+        prefer_new          TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_NEW',
+        raise_exception_new TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_RSNEW',
       END OF c_finding_codes.
     CONSTANTS:
       BEGIN OF c_quickfix_codes,
@@ -23,8 +23,8 @@ CLASS zcl_skylint_pref_new_op DEFINITION
   PRIVATE SECTION.
     CONSTANTS:
       BEGIN OF c_pseudo_comments,
-        new_op    TYPE string VALUE 'NEW_OP',
-        raise_new TYPE string VALUE 'RAISE_NEW',
+        new_op    TYPE string VALUE 'PREF_NEW_OPERATOR',
+        raise_new TYPE string VALUE 'PREF_RAISE_EXC_NEW',
       END OF c_pseudo_comments.
 
     DATA mv_check_create_object   TYPE abap_bool VALUE abap_true.

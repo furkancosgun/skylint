@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_obs_memory DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        obsolete_memory TYPE if_ci_atc_check=>ty_finding_code VALUE 'OBS_MEM',
+        obsolete_memory TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_OBS_MEM',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_no_obs_memory DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'OBSOLETE_MEM'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_OBS_MEMORY'.
 
     DATA mv_check_export_memory TYPE abap_bool VALUE abap_true.
     DATA mv_check_free_memory   TYPE abap_bool VALUE abap_true.
@@ -31,7 +31,7 @@ ENDCLASS.
 CLASS zcl_skylint_no_obs_memory IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Obsolete Memory and Context Statements'
+        VALUE #( description       = 'Obsolete Memory and Context Statements'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-obsolete_memory

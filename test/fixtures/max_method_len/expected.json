@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "METHOD_LEN",
+    "code": "MAX_METH_L",
     "line": 1,
     "column": 2,
     "quickfixes": []
@@ -12,14 +12,14 @@
   },
   {
     "target": "TEST_003",
-    "code": "METHOD_LEN",
+    "code": "MAX_METH_L",
     "line": 1,
     "column": 2,
     "quickfixes": []
   },
   {
     "target": "LCL_BAD_CTOR=>CONSTRUCTOR",
-    "code": "CTOR_LOGIC",
+    "code": "MAX_CTOR",
     "line": 1,
     "column": 2,
     "quickfixes": []

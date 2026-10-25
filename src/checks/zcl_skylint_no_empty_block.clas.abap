@@ -6,8 +6,8 @@ CLASS zcl_skylint_no_empty_block DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        empty_control_block TYPE if_ci_atc_check=>ty_finding_code VALUE 'EMPTYCTRL',
-        try_without_catch   TYPE if_ci_atc_check=>ty_finding_code VALUE 'TRYWITHOUT',
+        empty_control_block TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_EMPTY_B',
+        try_without_catch   TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_TRY_WO',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -16,7 +16,7 @@ CLASS zcl_skylint_no_empty_block DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'EMPTY_BLOCK'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_EMPTY_BLOCK'.
 
     DATA mv_check_if           TYPE abap_bool VALUE abap_true.
     DATA mv_check_loop         TYPE abap_bool VALUE abap_true.

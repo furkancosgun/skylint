@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "AVOIDME",
+    "code": "NO_ME_REF",
     "line": 2,
     "column": 4,
     "quickfixes": []
@@ -12,7 +12,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "AVOIDME",
+    "code": "NO_ME_REF",
     "line": 2,
     "column": 4,
     "quickfixes": []

@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "MAGIC_NUM",
+    "code": "NO_MAGIC_N",
     "line": 3,
     "column": 4,
     "quickfixes": []
@@ -12,7 +12,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "MAGIC_NUM",
+    "code": "NO_MAGIC_N",
     "line": 3,
     "column": 4,
     "quickfixes": []

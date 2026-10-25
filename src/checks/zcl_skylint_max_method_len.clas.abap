@@ -6,8 +6,8 @@ CLASS zcl_skylint_max_method_len DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        method_length     TYPE if_ci_atc_check=>ty_finding_code VALUE 'METHOD_LEN',
-        constructor_logic TYPE if_ci_atc_check=>ty_finding_code VALUE 'CTOR_LOGIC',
+        method_length     TYPE if_ci_atc_check=>ty_finding_code VALUE 'MAX_METH_L',
+        constructor_logic TYPE if_ci_atc_check=>ty_finding_code VALUE 'MAX_CTOR',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -16,8 +16,8 @@ CLASS zcl_skylint_max_method_len DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment      TYPE string VALUE 'METHOD_LEN'.
-    CONSTANTS c_pseudo_comment_ctor TYPE string VALUE 'CLEAN_CTOR'.
+    CONSTANTS c_pseudo_comment      TYPE string VALUE 'MAX_METHOD_LEN'.
+    CONSTANTS c_pseudo_comment_ctor TYPE string VALUE 'MAX_CTOR_LOGIC'.
 
     DATA mv_max_statements      TYPE i VALUE 5.
     DATA mv_max_ctor_statements TYPE i VALUE 10.
@@ -28,7 +28,7 @@ ENDCLASS.
 CLASS zcl_skylint_max_method_len IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Method and Constructor Length Limits'
+        VALUE #( description       = 'Method and Constructor Length Limits'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      severity = if_ci_atc_check=>finding_severities-warning

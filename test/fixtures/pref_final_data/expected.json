@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "PREF_FIN",
+    "code": "PREF_FNDAT",
     "line": 2,
     "column": 4,
     "quickfixes": [
@@ -26,7 +26,7 @@
   },
   {
     "target": "TEST_007",
-    "code": "PREF_FIN",
+    "code": "PREF_FNDAT",
     "line": 2,
     "column": 4,
     "quickfixes": [
@@ -39,7 +39,7 @@
   },
   {
     "target": "TEST_009",
-    "code": "PREF_FIN",
+    "code": "PREF_FNDAT",
     "line": 2,
     "column": 4,
     "quickfixes": [
@@ -48,7 +48,7 @@
   },
   {
     "target": "TEST_010",
-    "code": "PREF_FIN",
+    "code": "PREF_FNDAT",
     "line": 2,
     "column": 4,
     "quickfixes": [

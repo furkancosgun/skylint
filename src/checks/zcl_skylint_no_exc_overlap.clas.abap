@@ -15,14 +15,14 @@ CLASS zcl_skylint_no_exc_overlap DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'EXC_OVERLAP'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_EXC_OVERLAP'.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_no_exc_overlap IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Classic EXCEPTIONS must not overlap'
+    super->constructor( VALUE #( description       = 'Classic EXCEPTIONS must not overlap'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-overlap

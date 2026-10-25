@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_corresp DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_corresponding TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFER_COR',
+        prefer_corresponding TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_CORR',
       END OF c_finding_codes.
     CONSTANTS:
       BEGIN OF c_quickfix_codes,
@@ -19,14 +19,14 @@ CLASS zcl_skylint_pref_corresp DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'CORRESP'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_CORRESP'.
 ENDCLASS.
 
 
 CLASS zcl_skylint_pref_corresp IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Prefer CORRESPONDING Expression over MOVE-CORRESPONDING'
+        VALUE #( description       = 'Prefer CORRESPONDING Expression over MOVE-CORRESPONDING'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-prefer_corresponding

@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "UNREACHCD",
+    "code": "NO_UNREACH",
     "line": 4,
     "column": 4,
     "quickfixes": [
@@ -14,7 +14,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "UNREACHCD",
+    "code": "NO_UNREACH",
     "line": 6,
     "column": 6,
     "quickfixes": [

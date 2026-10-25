@@ -1,4 +1,4 @@
 [
-  { "target": "TEST_001", "code": "DEADCODE", "line": 2, "column": 4, "quickfixes": ["DELDEAD"] },
+  { "target": "TEST_001", "code": "NO_DEAD_CD", "line": 2, "column": 4, "quickfixes": ["DELDEAD"] },
   { "target": "TEST_002", "code": null }
 ]

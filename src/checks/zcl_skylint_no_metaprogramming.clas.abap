@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_metaprogramming DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        metaprogramming TYPE if_ci_atc_check=>ty_finding_code VALUE 'METAPROG',
+        metaprogramming TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_METAPRG',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,14 +15,14 @@ CLASS zcl_skylint_no_metaprogramming DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'METAPROGRAM'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_METAPROGRAMMING'.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_no_metaprogramming IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Metaprogramming and Dynamic Code Generation'
+    super->constructor( VALUE #( description       = 'Metaprogramming and Dynamic Code Generation'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-metaprogramming

@@ -6,8 +6,8 @@ CLASS zcl_skylint_pref_read_table DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_tab_expr    TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFTABEXP',
-        prefer_line_exists TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREFLINEX',
+        prefer_tab_expr    TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_TABEX',
+        prefer_line_exists TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_LNEXS',
       END OF c_finding_codes.
 
     CONSTANTS:
@@ -21,8 +21,8 @@ CLASS zcl_skylint_pref_read_table DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment_expr TYPE string VALUE 'PREF_TAB_EXPR'.
-    CONSTANTS c_pseudo_comment_line TYPE string VALUE 'LINE_EXISTS'.
+    CONSTANTS c_pseudo_comment_expr TYPE string VALUE 'PREF_TABLE_EXPR'.
+    CONSTANTS c_pseudo_comment_line TYPE string VALUE 'PREF_LINE_EXISTS'.
 
     DATA mv_use_optional      TYPE abap_bool VALUE abap_true.
     DATA mv_check_tab_expr    TYPE abap_bool VALUE abap_true.
@@ -64,7 +64,7 @@ ENDCLASS.
 CLASS zcl_skylint_pref_read_table IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Modernize READ TABLE (table expressions & line_exists)'
+        VALUE #( description       = 'Modernize READ TABLE (table expressions & line_exists)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      severity = if_ci_atc_check=>finding_severities-warning

@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_naming_vars DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        local_variable TYPE if_ci_atc_check=>ty_finding_code VALUE 'LVAR_NAME',
+        local_variable TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_NAMVR',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_pref_naming_vars DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'NAMING_VAR'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_NAMING_VARS'.
 
     DATA mv_local_data     TYPE string VALUE '^L._.+$'.
     DATA mv_local_constant TYPE string VALUE '^LC_.+$'.
@@ -54,7 +54,7 @@ ENDCLASS.
 CLASS zcl_skylint_pref_naming_vars IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Local Variable and Field-Symbol Naming Conventions'
+        VALUE #( description       = 'Local Variable and Field-Symbol Naming Conventions'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-local_variable

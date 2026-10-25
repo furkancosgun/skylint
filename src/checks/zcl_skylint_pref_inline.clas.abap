@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_inline DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        prefer_inline TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_INL',
+        prefer_inline TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_INLIN',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,14 +15,14 @@ CLASS zcl_skylint_pref_inline DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREFER_INLINE'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_INLINE'.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_pref_inline IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Prefer Inline Declarations'
+    super->constructor( VALUE #( description       = 'Prefer Inline Declarations'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-prefer_inline

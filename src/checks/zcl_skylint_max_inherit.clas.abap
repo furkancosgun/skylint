@@ -6,7 +6,7 @@ CLASS zcl_skylint_max_inherit DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        deep_inheritance TYPE if_ci_atc_check=>ty_finding_code VALUE 'DEEP_INHRT',
+        deep_inheritance TYPE if_ci_atc_check=>ty_finding_code VALUE 'MAX_INHRT',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_max_inherit DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'INHERIT_DEPTH'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'MAX_INHERIT'.
 
     DATA mv_max_depth TYPE i VALUE 3.
 

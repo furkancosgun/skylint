@@ -1,7 +1,7 @@
 [
   {
     "target": "LCL_HELPER",
-    "code": "STAT_CLASS",
+    "code": "NO_STAT_CL",
     "line": 1,
     "column": 0,
     "quickfixes": []
@@ -12,7 +12,7 @@
   },
   {
     "target": "LCL_UTIL2",
-    "code": "STAT_CLASS",
+    "code": "NO_STAT_CL",
     "line": 1,
     "column": 0,
     "quickfixes": []

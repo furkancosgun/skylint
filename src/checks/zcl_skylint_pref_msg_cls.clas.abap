@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_msg_cls DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        message_class TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_MSG',
+        message_class TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_MSGCL',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_pref_msg_cls DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'MSG_CLASS'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_MSG_CLS'.
 
     METHODS uses_message_class
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
@@ -28,7 +28,7 @@ CLASS zcl_skylint_pref_msg_cls IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
         VALUE #(
-            description       = 'skylint: Use a message class instead of inline message text'
+            description       = 'Use a message class instead of inline message text'
             remote_enablement = abap_true
             finding_codes     = VALUE #( ( code           = c_finding_codes-message_class
                                            severity       = if_ci_atc_check=>finding_severities-warning

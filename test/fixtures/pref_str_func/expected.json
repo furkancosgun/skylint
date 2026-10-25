@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "CONDENSE_S",
+    "code": "PREF_CNDNS",
     "line": 3,
     "column": 4,
     "quickfixes": [
@@ -10,7 +10,7 @@
   },
   {
     "target": "TEST_001",
-    "code": "TRANSLATE_",
+    "code": "PREF_TRNSL",
     "line": 4,
     "column": 4,
     "quickfixes": [
@@ -23,7 +23,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "CONDENSE_S",
+    "code": "PREF_CNDNS",
     "line": 3,
     "column": 4,
     "quickfixes": [
@@ -36,7 +36,7 @@
   },
   {
     "target": "TEST_005",
-    "code": "TRANSLATE_",
+    "code": "PREF_TRNSL",
     "line": 3,
     "column": 4,
     "quickfixes": [
@@ -45,7 +45,7 @@
   },
   {
     "target": "TEST_006",
-    "code": "SHIFT_STMT",
+    "code": "PREF_SHIFT",
     "line": 3,
     "column": 4,
     "quickfixes": [
@@ -54,7 +54,7 @@
   },
   {
     "target": "TEST_006",
-    "code": "SHIFT_STMT",
+    "code": "PREF_SHIFT",
     "line": 4,
     "column": 4,
     "quickfixes": [
@@ -63,7 +63,7 @@
   },
   {
     "target": "TEST_006",
-    "code": "SHIFT_STMT",
+    "code": "PREF_SHIFT",
     "line": 5,
     "column": 4,
     "quickfixes": [
@@ -72,13 +72,13 @@
   },
   {
     "target": "TEST_007",
-    "code": "SEARCH_STM",
+    "code": "PREF_SRCH",
     "line": 3,
     "column": 4
   },
   {
     "target": "TEST_008",
-    "code": "OVERLAY_ST",
+    "code": "PREF_OVRLY",
     "line": 3,
     "column": 4
   },
@@ -88,7 +88,7 @@
   },
   {
     "target": "TEST_010",
-    "code": "REPLACE_ST",
+    "code": "PREF_RPLC",
     "line": 3,
     "column": 4,
     "quickfixes": [
@@ -97,7 +97,7 @@
   },
   {
     "target": "TEST_011",
-    "code": "DESCRIBE_F",
+    "code": "PREF_DSCFD",
     "line": 4,
     "column": 4,
     "quickfixes": [

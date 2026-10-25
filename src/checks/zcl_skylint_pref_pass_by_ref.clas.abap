@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_pass_by_ref DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        slow_param_passing TYPE if_ci_atc_check=>ty_finding_code VALUE 'SLOW_PASS',
+        slow_param_passing TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_PASRF',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,14 +15,14 @@ CLASS zcl_skylint_pref_pass_by_ref DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'SLOW_PARAM'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_PASS_BY_REF'.
 
 ENDCLASS.
 
 
 CLASS zcl_skylint_pref_pass_by_ref IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Slow Parameter Passing'
+    super->constructor( VALUE #( description       = 'Slow Parameter Passing'
                                  remote_enablement = abap_true
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-slow_param_passing

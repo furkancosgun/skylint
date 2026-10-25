@@ -6,8 +6,8 @@ CLASS zcl_skylint_max_params DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        too_many_parameters TYPE if_ci_atc_check=>ty_finding_code VALUE 'PARAMCOUNT',
-        multiple_params     TYPE if_ci_atc_check=>ty_finding_code VALUE 'PARAM_LINE',
+        too_many_parameters TYPE if_ci_atc_check=>ty_finding_code VALUE 'MAX_PARAMS',
+        multiple_params     TYPE if_ci_atc_check=>ty_finding_code VALUE 'MAX_PARM_L',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -16,8 +16,8 @@ CLASS zcl_skylint_max_params DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment      TYPE string VALUE 'MAX_PARAMS'.
-    CONSTANTS c_pseudo_comment_line TYPE string VALUE 'MAX_PARAM_LINE'.
+    CONSTANTS c_pseudo_comment      TYPE string VALUE 'MAX_PARAMS_COUNT'.
+    CONSTANTS c_pseudo_comment_line TYPE string VALUE 'MAX_PARAMS_LINE'.
 
     DATA mv_max_parameters   TYPE i         VALUE 8.
     DATA mv_check_param_line TYPE abap_bool VALUE abap_true.
@@ -36,7 +36,7 @@ ENDCLASS.
 CLASS zcl_skylint_max_params IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'skylint: Method parameter limits (count and lines)'
+        VALUE #( description       = 'Method parameter limits (count and lines)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      severity = if_ci_atc_check=>finding_severities-warning

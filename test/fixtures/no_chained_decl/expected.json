@@ -1,7 +1,7 @@
 [
   {
     "target": "TEST_001",
-    "code": "CHAINDECL",
+    "code": "NO_CHN_DCL",
     "line": 3,
     "column": 4,
     "quickfixes": [
@@ -14,7 +14,7 @@
   },
   {
     "target": "TEST_003",
-    "code": "CHAINDECL",
+    "code": "NO_CHN_DCL",
     "line": 3,
     "column": 4,
     "quickfixes": [
@@ -27,7 +27,7 @@
   },
   {
     "target": "TEST_005",
-    "code": "CHAINDECL",
+    "code": "NO_CHN_DCL",
     "line": 3,
     "column": 4,
     "quickfixes": [

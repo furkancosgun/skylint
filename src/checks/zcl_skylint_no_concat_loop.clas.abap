@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_concat_loop DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        concat_in_loop TYPE if_ci_atc_check=>ty_finding_code VALUE 'CONCATLP',
+        concat_in_loop TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_CC_LOOP',
       END OF c_finding_codes.
 
     METHODS constructor.

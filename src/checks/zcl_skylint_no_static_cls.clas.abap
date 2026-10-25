@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_static_cls DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        static_class TYPE if_ci_atc_check=>ty_finding_code VALUE 'STAT_CLASS',
+        static_class TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_STAT_CL',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_no_static_cls DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'STATIC_CLS'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_STATIC_CLS'.
 ENDCLASS.
 
 
