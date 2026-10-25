@@ -1104,6 +1104,10 @@
         {
           "name": "IGNORE_CTOR",
           "value": "X"
+        },
+        {
+          "name": "IGNORE_CHECK",
+          "value": "X"
         }
       ]
     },

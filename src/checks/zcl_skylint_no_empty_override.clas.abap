@@ -17,7 +17,8 @@ CLASS zcl_skylint_no_empty_override DEFINITION
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_EMPTY_OVERRIDE'.
 
-    DATA mv_ignore_ctor TYPE abap_bool VALUE abap_true.
+    DATA mv_ignore_ctor  TYPE abap_bool VALUE abap_true.
+    DATA mv_ignore_check TYPE abap_bool VALUE abap_true.
 
     METHODS is_super_call
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
@@ -39,7 +40,9 @@ CLASS zcl_skylint_no_empty_override IMPLEMENTATION.
                  attributes        = VALUE #(
                      kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
                      ( name  = 'IGNORE_CTOR'
-                       value = REF #( mv_ignore_ctor ) ) ) ) ).
+                       value = REF #( mv_ignore_ctor ) )
+                     ( name  = 'IGNORE_CHECK'
+                       value = REF #( mv_ignore_check ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -66,7 +69,10 @@ CLASS zcl_skylint_no_empty_override IMPLEMENTATION.
       IF sy-tabix = 1 OR sy-tabix = lines( is_procedure-statements ).
         CONTINUE.
       ENDIF.
-      IF <ls_stmt>-keyword = 'RETURN' AND sy-tabix = lines( is_procedure-statements ) - 1.
+      IF <ls_stmt>-keyword = 'RETURN' OR <ls_stmt>-keyword = 'EXIT'.
+        CONTINUE.
+      ENDIF.
+      IF mv_ignore_check = abap_true AND <ls_stmt>-keyword = 'CHECK'.
         CONTINUE.
       ENDIF.
       APPEND <ls_stmt> TO lt_body_stmts.

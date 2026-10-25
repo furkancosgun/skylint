@@ -11,6 +11,9 @@
   "parameters": [
     {
       "name": "IGNORE_CTOR"
+    },
+    {
+      "name": "IGNORE_CHECK"
     }
   ]
 }
