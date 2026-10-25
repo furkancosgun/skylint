@@ -19,10 +19,6 @@ CLASS zcl_skylint_no_instance_of DEFINITION
 
     DATA mv_check_case_type_of TYPE abap_bool VALUE abap_true.
 
-    METHODS is_case_type_of
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_yes) TYPE abap_bool.
-
 ENDCLASS.
 
 
@@ -46,45 +42,22 @@ CLASS zcl_skylint_no_instance_of IMPLEMENTATION.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_stmt>.
-      IF zcl_skylint_ast_util=>find_token_sequence(
+      IF zcl_skylint_ast_util=>match_token_sequence(
              is_statement = <ls_stmt>
-             it_expected  = VALUE #( ( `IS` ) ( `INSTANCE` ) ( `OF` ) ) ) > 0.
+             it_expected  = VALUE #( ( `IS` ) ( `INSTANCE` ) ( `OF` ) ) ) = abap_true.
         report_statement( is_statement    = <ls_stmt>
                           iv_finding_code = c_finding_codes-instance_of ).
         CONTINUE.
       ENDIF.
 
       IF     mv_check_case_type_of = abap_true
-         AND is_case_type_of( <ls_stmt> ) = abap_true.
+         AND zcl_skylint_ast_util=>match_token_sequence(
+                 is_statement = <ls_stmt>
+                 it_expected  = VALUE #( ( `CASE` ) ( `TYPE` ) ( `OF` ) ) ) = abap_true.
         report_statement( is_statement    = <ls_stmt>
                           iv_finding_code = c_finding_codes-instance_of ).
         CONTINUE.
       ENDIF.
     ENDLOOP.
-  ENDMETHOD.
-
-  METHOD is_case_type_of.
-    DATA ls_tok1 TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_tok2 TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_tok3 TYPE if_ci_atc_source_code_provider=>ty_token.
-
-    rv_yes = abap_false.
-    IF is_statement-keyword <> 'CASE'.
-      RETURN.
-    ENDIF.
-
-    IF lines( is_statement-tokens ) < 3.
-      RETURN.
-    ENDIF.
-
-    ls_tok1 = is_statement-tokens[ 1 ].
-    ls_tok2 = is_statement-tokens[ 2 ].
-    ls_tok3 = is_statement-tokens[ 3 ].
-
-    IF     to_upper( ls_tok1-lexeme ) = 'CASE'
-       AND to_upper( ls_tok2-lexeme ) = 'TYPE'
-       AND to_upper( ls_tok3-lexeme ) = 'OF'.
-      rv_yes = abap_true.
-    ENDIF.
   ENDMETHOD.
 ENDCLASS.
