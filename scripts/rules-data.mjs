@@ -23,6 +23,62 @@ export const CATEGORIES = {
 
 export const RULES = [
   {
+    "ruleId": "pref-paren-and-or",
+    "title": "Parenthesize Combinations of AND and OR",
+    "rationale": "Different programming languages and databases have varying operator precedences for logical operators. Unparenthesized conditions mixing AND and OR (such as a AND b OR c) are ambiguous to human readers and easily hide critical branching bugs. Explicitly parenthesize combinations as ( a AND b ) OR c to make evaluation precedence unmistakable.",
+    "className": "ZCL_SKYLINT_PREF_PAREN_AND_OR",
+    "pseudoComment": "PREF_PAREN_AND_OR",
+    "category": "clean-abap",
+    "example": {
+      "bad": "IF cond_a AND cond_b OR cond_c.\n  step( ).\nENDIF.",
+      "good": "IF ( cond_a AND cond_b ) OR cond_c.\n  step( ).\nENDIF."
+    },
+    "seo": {
+      "description": "Parenthesize Combinations of AND and OR - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud.",
+      "keywords": [
+        "Clean ABAP",
+        "SAP ATC Check",
+        "ABAP Cloud",
+        "S/4HANA Readiness",
+        "pref-paren-and-or",
+        "clean-abap"
+      ]
+    },
+    "relatedRules": [
+      "max-bool-expr",
+      "no-dup-cond",
+      "no-bool-compare"
+    ]
+  },
+  {
+    "ruleId": "no-useless-cont",
+    "title": "Avoid Redundant CONTINUE at End of Loop",
+    "rationale": "A CONTINUE statement located immediately before ENDLOOP, ENDWHILE, or ENDDO has zero effect because loop execution naturally cycles at the end of the block. Remove redundant trailing CONTINUE statements to keep loop bodies concise and avoid misleading code reviewers into expecting remaining logic.",
+    "className": "ZCL_SKYLINT_NO_USELESS_CONT",
+    "pseudoComment": "NO_USELESS_CONT",
+    "category": "clean-abap",
+    "example": {
+      "bad": "LOOP AT lt_items ASSIGNING <ls_item>.\n  do_work( <ls_item> ).\n  CONTINUE.\nENDLOOP.",
+      "good": "LOOP AT lt_items ASSIGNING <ls_item>.\n  do_work( <ls_item> ).\nENDLOOP."
+    },
+    "seo": {
+      "description": "Avoid Redundant CONTINUE at End of Loop - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud.",
+      "keywords": [
+        "Clean ABAP",
+        "SAP ATC Check",
+        "ABAP Cloud",
+        "S/4HANA Readiness",
+        "no-useless-cont",
+        "clean-abap"
+      ]
+    },
+    "relatedRules": [
+      "no-single-iter",
+      "no-dead-code",
+      "no-unreachable"
+    ]
+  },
+  {
     "ruleId": "no-nested-cond",
     "title": "Avoid Nested COND or SWITCH Expressions",
     "rationale": "Nesting COND or SWITCH constructor expressions inside each other creates deeply indented, hard-to-read expression trees. Modern Clean ABAP guidelines explicitly recommend avoiding nested constructor expressions; instead, separate complex decision branches into focused helper methods or classic CASE constructs.",

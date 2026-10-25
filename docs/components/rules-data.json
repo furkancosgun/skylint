@@ -1,5 +1,43 @@
 [
   {
+    "ruleId": "pref-paren-and-or",
+    "title": "Parenthesize Combinations of AND and OR",
+    "className": "ZCL_SKYLINT_PREF_PAREN_AND_OR",
+    "checkName": "ZSKYLINT_PREF_PAREN_AND_OR",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "PREF_PAREN_AND_OR",
+    "description": "Parenthesize Combinations of AND and OR",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "relatedRules": [
+      "max-bool-expr",
+      "no-dup-cond",
+      "no-bool-compare"
+    ],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "no-useless-cont",
+    "title": "Avoid Redundant CONTINUE at End of Loop",
+    "className": "ZCL_SKYLINT_NO_USELESS_CONT",
+    "checkName": "ZSKYLINT_NO_USELESS_CONT",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "NO_USELESS_CONT",
+    "description": "Avoid Redundant CONTINUE at End of Loop",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "relatedRules": [
+      "no-single-iter",
+      "no-dead-code",
+      "no-unreachable"
+    ],
+    "defaultParameters": []
+  },
+  {
     "ruleId": "no-nested-cond",
     "title": "Avoid Nested COND or SWITCH Expressions",
     "className": "ZCL_SKYLINT_NO_NESTED_COND",

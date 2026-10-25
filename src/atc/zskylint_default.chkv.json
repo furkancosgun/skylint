@@ -6,6 +6,12 @@
   },
   "selectedChecks": [
     {
+      "checkName": "ZSKYLINT_PREF_PAREN_AND_OR"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_USELESS_CONT"
+    },
+    {
       "checkName": "ZSKYLINT_NO_NESTED_COND"
     },
     {

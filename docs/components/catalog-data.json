@@ -4,7 +4,7 @@
       "key": "clean-abap",
       "title": "Clean ABAP & Modern Syntax",
       "description": "Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.",
-      "count": 50
+      "count": 52
     },
     {
       "key": "anti-patterns",
@@ -32,6 +32,30 @@
     }
   ],
   "rules": [
+    {
+      "ruleId": "pref-paren-and-or",
+      "title": "Parenthesize Combinations of AND and OR",
+      "className": "ZCL_SKYLINT_PREF_PAREN_AND_OR",
+      "description": "Parenthesize Combinations of AND and OR",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "PREF_PAREN_AND_OR",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "no-useless-cont",
+      "title": "Avoid Redundant CONTINUE at End of Loop",
+      "className": "ZCL_SKYLINT_NO_USELESS_CONT",
+      "description": "Avoid Redundant CONTINUE at End of Loop",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "NO_USELESS_CONT",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
     {
       "ruleId": "no-nested-cond",
       "title": "Avoid Nested COND or SWITCH Expressions",
