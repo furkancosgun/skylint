@@ -39,14 +39,13 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_nested_cond IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Avoid Nested COND or SWITCH Expressions'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-nested_cond
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Avoid nesting COND or SWITCH expressions inside each other'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'Avoid Nested COND or SWITCH Expressions'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-nested_cond
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Avoid nesting COND or SWITCH expressions inside each other'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

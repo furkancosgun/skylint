@@ -1,23 +1,22 @@
 ---
-title: "Clean ABAP & Modern Syntax (51 Rules)"
+title: "Clean ABAP & Modern Syntax (50 Rules)"
 description: "Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices. Comprehensive reference, finding codes, and Clean ABAP examples for Clean ABAP & Modern Syntax."
 category: "clean-abap"
 keywords: "Clean ABAP, ABAP Cloud, SAP ATC, Clean ABAP & Modern Syntax, S/4HANA Readiness, SAP BTP, Steampunk"
 ---
 
-# Clean ABAP & Modern Syntax (51 Rules)
+# Clean ABAP & Modern Syntax (50 Rules)
 
 Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.
 
 ::: tip Category Overview
-This category enforces **51 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
+This category enforces **50 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
 :::
 
 ## Rules in this Category
 
 | Rule Name | Native ATC Class | Suppression Tag | Automated QuickFix |
 |---|---|:---:|:---:|
-| [Chain Caught Exceptions When Raising (PREVIOUS)](/rules/no-unchained-exc) | `ZCL_SKYLINT_NO_UNCHAINED_EXC` | <code>#EC NO_UNCHAINED_EXC</code> | - |
 | [Avoid Nested COND or SWITCH Expressions](/rules/no-nested-cond) | `ZCL_SKYLINT_NO_NESTED_COND` | <code>#EC NO_NESTED_COND</code> | - |
 | [Check Downport Compatibility (7.40+ Modern Constructs)](/rules/pref-downport) | `ZCL_SKYLINT_PREF_DOWNPORT` | <code>#EC PREF_DOWNPORT</code> | - |
 | [Prefer REDUCE #( ) Expression over Simple Aggregation LOOP](/rules/pref-reduce) | `ZCL_SKYLINT_PREF_REDUCE` | <code>#EC PREF_REDUCE</code> | ⚡ Ready |

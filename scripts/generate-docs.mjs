@@ -557,6 +557,7 @@ export default defineConfig({
   vite: {
     build: {
       target: 'esnext',
+      chunkSizeWarningLimit: 1500,
     },
     esbuild: {
       target: 'esnext',

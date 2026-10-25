@@ -23,34 +23,6 @@ export const CATEGORIES = {
 
 export const RULES = [
   {
-    "ruleId": "no-unchained-exc",
-    "title": "Chain Caught Exceptions When Raising (PREVIOUS)",
-    "rationale": "When catching an exception and raising a new domain exception, omitting the PREVIOUS parameter discards the root cause, original system message, and kernel call stack. Always chain the caught exception instance into the new exception via EXPORTING previous = lx_err to preserve end-to-end diagnostic observability.",
-    "className": "ZCL_SKYLINT_NO_UNCHAINED_EXC",
-    "pseudoComment": "NO_UNCHAINED_EXC",
-    "category": "clean-abap",
-    "example": {
-      "bad": "TRY.\n  step( ).\nCATCH cx_sql INTO DATA(lx_sql).\n  RAISE EXCEPTION NEW zcx_order_error( ).\nENDTRY.",
-      "good": "TRY.\n  step( ).\nCATCH cx_sql INTO DATA(lx_sql).\n  RAISE EXCEPTION NEW zcx_order_error( previous = lx_sql ).\nENDTRY."
-    },
-    "seo": {
-      "description": "Chain Caught Exceptions When Raising (PREVIOUS) - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud.",
-      "keywords": [
-        "Clean ABAP",
-        "SAP ATC Check",
-        "ABAP Cloud",
-        "S/4HANA Readiness",
-        "no-unchained-exc",
-        "clean-abap"
-      ]
-    },
-    "relatedRules": [
-      "no-catch-root",
-      "no-raise-cx-sy",
-      "pref-class-exc"
-    ]
-  },
-  {
     "ruleId": "no-nested-cond",
     "title": "Avoid Nested COND or SWITCH Expressions",
     "rationale": "Nesting COND or SWITCH constructor expressions inside each other creates deeply indented, hard-to-read expression trees. Modern Clean ABAP guidelines explicitly recommend avoiding nested constructor expressions; instead, separate complex decision branches into focused helper methods or classic CASE constructs.",

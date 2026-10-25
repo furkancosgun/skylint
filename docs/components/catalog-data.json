@@ -4,7 +4,7 @@
       "key": "clean-abap",
       "title": "Clean ABAP & Modern Syntax",
       "description": "Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.",
-      "count": 51
+      "count": 50
     },
     {
       "key": "anti-patterns",
@@ -32,18 +32,6 @@
     }
   ],
   "rules": [
-    {
-      "ruleId": "no-unchained-exc",
-      "title": "Chain Caught Exceptions When Raising (PREVIOUS)",
-      "className": "ZCL_SKYLINT_NO_UNCHAINED_EXC",
-      "description": "Chain Caught Exceptions When Raising (PREVIOUS)",
-      "category": "clean-abap",
-      "categoryTitle": "Clean ABAP & Modern Syntax",
-      "pseudoComment": "NO_UNCHAINED_EXC",
-      "hasQuickfix": false,
-      "remoteEnabled": true,
-      "configurable": false
-    },
     {
       "ruleId": "no-nested-cond",
       "title": "Avoid Nested COND or SWITCH Expressions",
