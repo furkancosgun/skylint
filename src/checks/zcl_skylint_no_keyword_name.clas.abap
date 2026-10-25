@@ -17,10 +17,6 @@ CLASS zcl_skylint_no_keyword_name DEFINITION
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'KEYWORD_NAME'.
 
-    METHODS is_abap_keyword
-      IMPORTING iv_name      TYPE string
-      RETURNING VALUE(rv_is) TYPE abap_bool.
-
     METHODS check_decl_statement
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
 
@@ -87,7 +83,7 @@ CLASS zcl_skylint_no_keyword_name IMPLEMENTATION.
       REPLACE ALL OCCURRENCES OF '>' IN lv_name WITH ''.
     ENDIF.
 
-    IF lv_name IS NOT INITIAL AND is_abap_keyword( lv_name ) = abap_true.
+    IF lv_name IS NOT INITIAL AND zcl_skylint_ast_util=>is_abap_keyword( lv_name ) = abap_true.
       report_token( is_statement    = is_statement
                     is_token        = ls_token
                     iv_finding_code = c_finding_codes-keyword_name ).
@@ -115,7 +111,7 @@ CLASS zcl_skylint_no_keyword_name IMPLEMENTATION.
             REPLACE ALL OCCURRENCES OF '>' IN lv_name WITH ''.
           ENDIF.
 
-          IF lv_name IS NOT INITIAL AND is_abap_keyword( lv_name ) = abap_true.
+          IF lv_name IS NOT INITIAL AND zcl_skylint_ast_util=>is_abap_keyword( lv_name ) = abap_true.
             report_token( is_statement    = is_statement
                           is_token        = <ls_token>
                           iv_finding_code = c_finding_codes-keyword_name ).
@@ -124,24 +120,6 @@ CLASS zcl_skylint_no_keyword_name IMPLEMENTATION.
         ENDIF.
       ENDLOOP.
     ENDLOOP.
-  ENDMETHOD.
-
-  METHOD is_abap_keyword.
-    DATA lv_upper TYPE string.
-
-    lv_upper = to_upper( iv_name ).
-
-    CASE lv_upper.
-      WHEN 'CLASS' OR 'METHOD' OR 'TYPE' OR 'DATA' OR 'TABLE' OR 'SELECT' OR 'UPDATE'
-        OR 'INSERT' OR 'DELETE' OR 'MODIFY' OR 'CHECK' OR 'CLEAR' OR 'LOOP' OR 'IF'
-        OR 'CASE' OR 'WHEN' OR 'DO' OR 'WHILE' OR 'RETURN' OR 'EXIT' OR 'CONTINUE'
-        OR 'TRY' OR 'CATCH' OR 'CLEANUP' OR 'RAISE' OR 'PERFORM' OR 'FORM' OR 'CALL'
-        OR 'ASSIGN' OR 'CONSTANTS' OR 'STATICS' OR 'INTERFACE' OR 'FUNCTION' OR 'READ'
-        OR 'WRITE' OR 'APPEND' OR 'SORT' OR 'SPLIT' OR 'CONCATENATE' OR 'REPLACE'
-        OR 'TRANSLATE' OR 'CONDENSE' OR 'COLLECT' OR 'DESCRIBE' OR 'FIND' OR 'COMMIT'
-        OR 'ROLLBACK'.
-        rv_is = abap_true.
-    ENDCASE.
   ENDMETHOD.
 
   METHOD extract_name_from_paren.

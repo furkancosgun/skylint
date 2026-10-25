@@ -158,6 +158,10 @@ CLASS zcl_skylint_ast_util DEFINITION
                 iv_lexeme     TYPE string OPTIONAL
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
+    CLASS-METHODS is_abap_keyword
+      IMPORTING iv_name      TYPE string
+      RETURNING VALUE(rv_is) TYPE abap_bool.
+
     CLASS-METHODS get_declared_type
       IMPORTING it_statements  TYPE if_ci_atc_source_code_provider=>ty_statements
                 iv_full_name   TYPE if_ci_atc_source_code_provider=>ty_full_name
@@ -762,6 +766,27 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
     ELSEIF to_upper( is_token-lexeme ) = to_upper( iv_lexeme ).
       rv_yes = abap_true.
     ENDIF.
+  ENDMETHOD.
+
+  METHOD is_abap_keyword.
+    DATA lv_clean TYPE string.
+
+    rv_is = abap_false.
+    lv_clean = to_upper( condense( iv_name ) ).
+
+    CASE lv_clean.
+      WHEN 'CLASS' OR 'METHOD' OR 'TYPE' OR 'DATA' OR 'TABLE' OR 'SELECT' OR 'UPDATE'
+        OR 'INSERT' OR 'DELETE' OR 'MODIFY' OR 'CHECK' OR 'CLEAR' OR 'LOOP' OR 'IF'
+        OR 'CASE' OR 'WHEN' OR 'DO' OR 'WHILE' OR 'RETURN' OR 'EXIT' OR 'CONTINUE'
+        OR 'TRY' OR 'CATCH' OR 'CLEANUP' OR 'RAISE' OR 'PERFORM' OR 'FORM' OR 'CALL'
+        OR 'ASSIGN' OR 'CONSTANTS' OR 'STATICS' OR 'INTERFACE' OR 'FUNCTION' OR 'READ'
+        OR 'WRITE' OR 'APPEND' OR 'SORT' OR 'SPLIT' OR 'CONCATENATE' OR 'REPLACE'
+        OR 'TRANSLATE' OR 'CONDENSE' OR 'COLLECT' OR 'DESCRIBE' OR 'FIND' OR 'COMMIT'
+        OR 'ROLLBACK' OR 'KEY' OR 'DEFAULT' OR 'VALUE' OR 'RESULT' OR 'IMPORTING'
+        OR 'EXPORTING' OR 'CHANGING' OR 'RETURNING' OR 'RAISING' OR 'EXCEPTIONS'
+        OR 'TABLES' OR 'LIKE' OR 'REF'.
+        rv_is = abap_true.
+    ENDCASE.
   ENDMETHOD.
 
   METHOD get_declared_type.
