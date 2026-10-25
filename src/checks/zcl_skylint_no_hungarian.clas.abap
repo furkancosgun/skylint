@@ -48,22 +48,20 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_hungarian IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'skylint: Avoid Hungarian notation and encoding prefixes'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-hungarian
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Avoid Hungarian notation and encoding prefixes in names'
-                       pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                     ( name  = 'CHECK_ATTR'
-                       value = REF #( mv_check_attributes ) )
-                     ( name  = 'CHECK_LOCAL'
-                       value = REF #( mv_check_locals ) )
-                     ( name  = 'CHECK_PARAM'
-                       value = REF #( mv_check_params ) ) ) ) ).
+    super->constructor( VALUE #( description       = 'skylint: Avoid Hungarian notation and encoding prefixes'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-hungarian
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Avoid Hungarian notation and encoding prefixes in names'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                                              ( name  = 'CHECK_ATTR'
+                                                                value = REF #( mv_check_attributes ) )
+                                                              ( name  = 'CHECK_LOCAL'
+                                                                value = REF #( mv_check_locals ) )
+                                                              ( name  = 'CHECK_PARAM'
+                                                                value = REF #( mv_check_params ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -95,30 +93,24 @@ CLASS zcl_skylint_no_hungarian IMPLEMENTATION.
     DATA lv_name     TYPE string.
     DATA lv_type     TYPE string.
 
-    IF zcl_skylint_ast_util=>find_token_sequence(
-           is_statement = is_statement
-           it_expected  = VALUE #( ( `BEGIN` ) ( `OF` ) ) ) > 0.
-      ls_tok = zcl_skylint_ast_util=>get_token_after(
-          is_statement = is_statement
-          iv_lexeme    = 'OF' ).
+    IF zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
+                                                  it_expected  = VALUE #( ( `BEGIN` ) ( `OF` ) ) ) > 0.
+      ls_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                      iv_lexeme    = 'OF' ).
       lv_name = ls_tok-lexeme.
-    ELSEIF zcl_skylint_ast_util=>find_token_sequence(
-               is_statement = is_statement
-               it_expected  = VALUE #( ( `END` ) ( `OF` ) ) ) > 0.
+    ELSEIF zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
+                                                      it_expected  = VALUE #( ( `END` ) ( `OF` ) ) ) > 0.
       RETURN.
     ELSE.
-      ls_tok = zcl_skylint_ast_util=>get_token_after(
-          is_statement = is_statement
-          iv_lexeme    = is_statement-keyword ).
+      ls_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                      iv_lexeme    = is_statement-keyword ).
       lv_name = ls_tok-lexeme.
 
-      ls_type_tok = zcl_skylint_ast_util=>get_token_after(
-          is_statement = is_statement
-          iv_lexeme    = 'TYPE' ).
+      ls_type_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                           iv_lexeme    = 'TYPE' ).
       IF ls_type_tok-lexeme IS INITIAL.
-        ls_type_tok = zcl_skylint_ast_util=>get_token_after(
-            is_statement = is_statement
-            iv_lexeme    = 'LIKE' ).
+        ls_type_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                             iv_lexeme    = 'LIKE' ).
       ENDIF.
       lv_type = ls_type_tok-lexeme.
     ENDIF.
