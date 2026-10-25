@@ -2,6 +2,8 @@
 title: "Avoid Calling Static Methods via Instance References (->)"
 description: "Avoid Calling Static Methods via Instance References (->) - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-static-arrow, anti-patterns"
+category: "anti-patterns"
+ruleId: "no-static-arrow"
 ---
 
 # Avoid Calling Static Methods via Instance References (->)

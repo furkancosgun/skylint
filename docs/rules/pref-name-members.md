@@ -2,6 +2,8 @@
 title: "Enforce Class Attribute and Method Parameter Naming Conventions"
 description: "Enforce Class Attribute and Method Parameter Naming Conventions - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-name-members, clean-abap"
+category: "clean-abap"
+ruleId: "pref-name-members"
 ---
 
 # Enforce Class Attribute and Method Parameter Naming Conventions

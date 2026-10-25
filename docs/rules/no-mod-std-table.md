@@ -2,6 +2,8 @@
 title: "Only Modify Tables Defined in Your Own Package/Component"
 description: "Protect SAP database integrity and preserve Clean Core support by updating standard tables via official BAPIs and RAP interfaces."
 keywords: "Modify SAP standard tables, Clean Core ABAP, Direct Table Mutation Integrity, SAP S/4HANA Support Guidelines"
+category: "security"
+ruleId: "no-mod-std-table"
 ---
 
 # Only Modify Tables Defined in Your Own Package/Component

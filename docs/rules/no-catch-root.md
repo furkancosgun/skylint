@@ -2,6 +2,8 @@
 title: "Avoid Catching Generic CX_ROOT (Catch Specific Exceptions)"
 description: "Eliminate black hole exception handling in SAP ABAP by catching specific domain exceptions instead of generic CX_ROOT."
 keywords: "CATCH CX_ROOT ABAP, Black Hole Exception SAP, Clean ABAP Exception Handling"
+category: "security"
+ruleId: "no-catch-root"
 ---
 
 # Avoid Catching Generic CX_ROOT (Catch Specific Exceptions)

@@ -2,6 +2,8 @@
 title: "Do Not Mutate the Internal Table Currently Being Looped (Iterator Invalidation)"
 description: "Prevent internal table iterator corruption in ABAP by avoiding APPEND, INSERT, DELETE, or SORT on tables currently being traversed."
 keywords: "MODIFY in LOOP ABAP, SORT in LOOP Bug, Iterator Invalidation SAP, Clean ABAP Loop Integrity"
+category: "performance"
+ruleId: "no-mod-loop-tab"
 ---
 
 # Do Not Mutate the Internal Table Currently Being Looped (Iterator Invalidation)

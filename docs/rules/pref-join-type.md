@@ -2,6 +2,8 @@
 title: "Prefer an Explicit JOIN Type"
 description: "Prefer an Explicit JOIN Type - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-join-type, clean-abap"
+category: "clean-abap"
+ruleId: "pref-join-type"
 ---
 
 # Prefer an Explicit JOIN Type

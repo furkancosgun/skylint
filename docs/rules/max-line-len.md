@@ -2,6 +2,8 @@
 title: "Limit Source Code Line Length (Avoid Horizontal Scrolling)"
 description: "Ensure clean side-by-side Git diffs in SAP ABAP by enforcing a 120-character line length limit."
 keywords: "ABAP Line length limit, Horizontal scrolling code review, Clean ABAP Formatting, Eclipse ADT Formatting Rules"
+category: "metrics"
+ruleId: "max-line-len"
 ---
 
 # Limit Source Code Line Length (Avoid Horizontal Scrolling)

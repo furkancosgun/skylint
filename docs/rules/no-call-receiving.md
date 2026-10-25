@@ -2,6 +2,8 @@
 title: "Omit RECEIVING in Method Invocations"
 description: "Omit RECEIVING in Method Invocations - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-call-receiving, anti-patterns"
+category: "anti-patterns"
+ruleId: "no-call-receiving"
 ---
 
 # Omit RECEIVING in Method Invocations

@@ -2,6 +2,8 @@
 title: "Avoid CASE with a Single WHEN Branch"
 description: "Avoid CASE with a Single WHEN Branch - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-single-when, anti-patterns"
+category: "anti-patterns"
+ruleId: "no-single-when"
 ---
 
 # Avoid CASE with a Single WHEN Branch

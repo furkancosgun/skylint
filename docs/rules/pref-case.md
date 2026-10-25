@@ -2,6 +2,8 @@
 title: "Prefer CASE over Multiple IF / ELSEIF on the Same Variable"
 description: "Prefer CASE over Multiple IF / ELSEIF on the Same Variable - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-case, clean-abap"
+category: "clean-abap"
+ruleId: "pref-case"
 ---
 
 # Prefer CASE over Multiple IF / ELSEIF on the Same Variable

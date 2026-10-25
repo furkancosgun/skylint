@@ -2,6 +2,8 @@
 title: "Avoid Empty Control Blocks"
 description: "Avoid Empty Control Blocks - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-empty-block, anti-patterns"
+category: "anti-patterns"
+ruleId: "no-empty-block"
 ---
 
 # Avoid Empty Control Blocks

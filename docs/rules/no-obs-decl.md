@@ -2,6 +2,8 @@
 title: "Avoid Obsolete Declarations and Table Headers"
 description: "Avoid Obsolete Declarations and Table Headers - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-obs-decl, anti-patterns"
+category: "anti-patterns"
+ruleId: "no-obs-decl"
 ---
 
 # Avoid Obsolete Declarations and Table Headers

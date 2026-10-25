@@ -2,6 +2,8 @@
 title: "Provide FAILED and REPORTED in RAP EML Statements (Silent Transaction Failure Prevention)"
 description: "Prevent silent data corruption in ABAP RAP by requiring FAILED and REPORTED clauses in all EML statements."
 keywords: "ABAP RAP EML Statements, FAILED REPORTED RAP, Silent Transaction Failure SAP, Clean ABAP Cloud RAP"
+category: "security"
+ruleId: "no-unhandled-eml"
 ---
 
 # Provide FAILED and REPORTED in RAP EML Statements (Silent Transaction Failure Prevention)

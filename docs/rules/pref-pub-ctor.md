@@ -2,6 +2,8 @@
 title: "Declare Constructor in PUBLIC SECTION"
 description: "Declare Constructor in PUBLIC SECTION - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-pub-ctor, clean-abap"
+category: "clean-abap"
+ruleId: "pref-pub-ctor"
 ---
 
 # Declare Constructor in PUBLIC SECTION

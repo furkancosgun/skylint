@@ -2,6 +2,8 @@
 title: "Prefer Class-Based Exceptions over Classic EXCEPTIONS"
 description: "Prefer Class-Based Exceptions over Classic EXCEPTIONS - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-class-exc, clean-abap"
+category: "clean-abap"
+ruleId: "pref-class-exc"
 ---
 
 # Prefer Class-Based Exceptions over Classic EXCEPTIONS

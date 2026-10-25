@@ -2,6 +2,8 @@
 title: "Avoid Comparing to abap_true / abap_false"
 description: "Avoid Comparing to abap_true / abap_false - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-bool-compare, anti-patterns"
+category: "anti-patterns"
+ruleId: "no-bool-compare"
 ---
 
 # Avoid Comparing to abap_true / abap_false

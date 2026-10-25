@@ -2,6 +2,8 @@
 title: "Limit Control Flow Nesting Depth (Guard Clause Enforcement)"
 description: "Eliminate arrow antipattern in ABAP by enforcing control flow nesting depth limits and adopting guard clauses."
 keywords: "Control flow nesting ABAP, Arrow Antipattern SAP, Guard Clauses ABAP, Clean ABAP Nesting Limits"
+category: "metrics"
+ruleId: "max-nesting"
 ---
 
 # Limit Control Flow Nesting Depth (Guard Clause Enforcement)

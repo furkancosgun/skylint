@@ -2,6 +2,8 @@
 title: "Do Not Ignore Return Value of Functional Methods"
 description: "Do Not Ignore Return Value of Functional Methods - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-ignored-return, anti-patterns"
+category: "anti-patterns"
+ruleId: "no-ignored-return"
 ---
 
 # Do Not Ignore Return Value of Functional Methods

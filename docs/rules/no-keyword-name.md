@@ -2,6 +2,8 @@
 title: "Avoid Using ABAP Keywords as Identifier Names"
 description: "Avoid Using ABAP Keywords as Identifier Names - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-keyword-name, anti-patterns"
+category: "anti-patterns"
+ruleId: "no-keyword-name"
 ---
 
 # Avoid Using ABAP Keywords as Identifier Names

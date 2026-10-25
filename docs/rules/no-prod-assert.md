@@ -2,6 +2,8 @@
 title: "Avoid Native ASSERT in Production Code (Prevent Unrecoverable Dumps)"
 description: "Prevent production short dumps in SAP ABAP by replacing uncatchable ASSERT statements with structured exception handling."
 keywords: "ASSERTION_FAILED dump ABAP, Avoid ASSERT in production SAP, Clean ABAP Exception Handling"
+category: "security"
+ruleId: "no-prod-assert"
 ---
 
 # Avoid Native ASSERT in Production Code (Prevent Unrecoverable Dumps)

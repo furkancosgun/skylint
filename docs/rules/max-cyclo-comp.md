@@ -2,6 +2,8 @@
 title: "Limit Cyclomatic Complexity (McCabe Complexity Metric)"
 description: "Control McCabe cyclomatic complexity in ABAP code to reduce defect density and improve automated unit test coverage."
 keywords: "Cyclomatic Complexity ABAP, McCabe Metric SAP, Clean ABAP Code Quality, Branch Coverage ATC"
+category: "metrics"
+ruleId: "max-cyclo-comp"
 ---
 
 # Limit Cyclomatic Complexity (McCabe Complexity Metric)

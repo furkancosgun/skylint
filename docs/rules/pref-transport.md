@@ -2,6 +2,8 @@
 title: "Specify TRANSPORTING in Internal Table MODIFY and READ Operations"
 description: "Speed up internal table updates in ABAP by specifying TRANSPORTING fields in MODIFY statements to prevent full-structure copy overhead."
 keywords: "MODIFY itab TRANSPORTING, Internal Table Performance ABAP, Clean ABAP Table Mutations, SAP Memory Optimization"
+category: "performance"
+ruleId: "pref-transport"
 ---
 
 # Specify TRANSPORTING in Internal Table MODIFY and READ Operations

@@ -2,6 +2,8 @@
 title: "Prefer TYPE STANDARD TABLE OF over TYPE TABLE OF"
 description: "Prefer TYPE STANDARD TABLE OF over TYPE TABLE OF - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-std-table, clean-abap"
+category: "clean-abap"
+ruleId: "pref-std-table"
 ---
 
 # Prefer TYPE STANDARD TABLE OF over TYPE TABLE OF

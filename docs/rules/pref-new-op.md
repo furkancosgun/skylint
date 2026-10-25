@@ -2,6 +2,8 @@
 title: "Prefer NEW #( ) over CREATE OBJECT"
 description: "Prefer NEW #( ) over CREATE OBJECT - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-new-op, clean-abap"
+category: "clean-abap"
+ruleId: "pref-new-op"
 ---
 
 # Prefer NEW #( ) over CREATE OBJECT

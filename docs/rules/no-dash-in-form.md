@@ -2,6 +2,8 @@
 title: "Avoid Obsolete Dash (-) in Form Names"
 description: "Avoid Obsolete Dash (-) in Form Names - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-dash-in-form, anti-patterns"
+category: "anti-patterns"
+ruleId: "no-dash-in-form"
 ---
 
 # Avoid Obsolete Dash (-) in Form Names

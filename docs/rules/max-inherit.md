@@ -2,6 +2,8 @@
 title: "Limit Class Inheritance Depth (Favor Composition over Inheritance)"
 description: "Prevent fragile base class antipatterns in ABAP OOP by limiting inheritance depth and favoring object composition."
 keywords: "Inheritance depth limit ABAP, Favor composition over inheritance SAP, Clean ABAP OOP Design, ATC OOP Metrics"
+category: "metrics"
+ruleId: "max-inherit"
 ---
 
 # Limit Class Inheritance Depth (Favor Composition over Inheritance)

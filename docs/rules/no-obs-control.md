@@ -2,6 +2,8 @@
 title: "Avoid Obsolete Control Flow and Procedural Forms"
 description: "Avoid Obsolete Control Flow and Procedural Forms - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-obs-control, anti-patterns"
+category: "anti-patterns"
+ruleId: "no-obs-control"
 ---
 
 # Avoid Obsolete Control Flow and Procedural Forms

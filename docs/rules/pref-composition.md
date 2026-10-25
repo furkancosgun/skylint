@@ -2,6 +2,8 @@
 title: "Prefer Composition over Inheritance"
 description: "Prefer Composition over Inheritance - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-composition, clean-abap"
+category: "clean-abap"
+ruleId: "pref-composition"
 ---
 
 # Prefer Composition over Inheritance

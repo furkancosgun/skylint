@@ -2,6 +2,8 @@
 title: "Avoid Raising System Exceptions Directly (CX_SY_*)"
 description: "Maintain clear exception boundaries in ABAP by defining custom domain exceptions instead of raising internal CX_SY_* classes."
 keywords: "CX_SY_* exceptions ABAP, Clean ABAP Domain Exceptions, Error Handling Best Practices SAP"
+category: "security"
+ruleId: "no-raise-cx-sy"
 ---
 
 # Avoid Raising System Exceptions Directly (CX_SY_*)

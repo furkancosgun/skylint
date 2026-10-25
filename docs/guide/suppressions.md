@@ -27,17 +27,17 @@ Place the pseudo-comment at the end of the flagged ABAP statement (after the per
 
 ```abap
 " Flagged by rule 'prefer-lines'
-DESCRIBE TABLE lt_customers LINES lv_count. "#EC LINES
+DESCRIBE TABLE lt_customers LINES lv_count. "#EC PREF_LINES
 
 " Traditional SAP ATC prefix is also recognized
-DESCRIBE TABLE lt_customers LINES lv_count. "#EC CI_LINES
+DESCRIBE TABLE lt_customers LINES lv_count. "#EC CI_PREF_LINES
 ```
 
 ### Multiple Pseudo-Comments on One Statement
 If a single statement triggers multiple checks, you can combine pseudo-comments separated by spaces or commas:
 
 ```abap
-DESCRIBE TABLE lt_data LINES lv_count. "#EC LINES, NO_DESCRIBE
+DESCRIBE TABLE lt_data LINES lv_count. "#EC PREF_LINES, NO_UNUSED_VARS
 ```
 
 ---
@@ -56,7 +56,7 @@ Therefore, for all custom ATC check suites including Skylint:
 Every Skylint check inherits from `zcl_skylint_check_base`. When a statement or token is reported:
 
 1. Skylint inspects the statement's associated `pseudo_comments` table provided by the ATC framework (`if_ci_atc_source_code_provider=>ty_statement`).
-2. It evaluates whether either the registered tag (e.g. `LINES`) or its `CI_` prefixed counterpart (e.g. `CI_LINES`) is attached.
+2. It evaluates whether either the registered tag (e.g. `PREF_LINES`) or its `CI_` prefixed counterpart (e.g. `CI_PREF_LINES`) is attached.
 3. If a match is found, the finding is suppressed automatically, preventing false alarms in your ATC run and CI/CD pipelines.
 
 ---
@@ -68,7 +68,7 @@ Every Skylint check inherits from `zcl_skylint_check_base`. When a statement or 
 2. **Document the rationale:** Whenever you add a pseudo-comment or pragma, accompany it with a brief explanatory comment explaining *why* the rule was bypassed:
    ```abap
    " External RFC interface requires classical EXPORTING syntax
-   lo_proxy->call_legacy_endpoint( EXPORTING iv_data = lv_payload ) ##CI_NO_EXPORTING.
+   lo_proxy->call_legacy_endpoint( EXPORTING iv_data = lv_payload ). "#EC NO_CALL_EXPORTING
    ```
 3. **Do not blanket-suppress:** Suppress only the exact offending statement. Avoid wide-ranging suppression where possible.
 :::

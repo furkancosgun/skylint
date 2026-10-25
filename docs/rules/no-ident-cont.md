@@ -2,6 +2,8 @@
 title: "Avoid Identical Statements in IF Branches"
 description: "Avoid Identical Statements in IF Branches - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-ident-cont, anti-patterns"
+category: "anti-patterns"
+ruleId: "no-ident-cont"
 ---
 
 # Avoid Identical Statements in IF Branches

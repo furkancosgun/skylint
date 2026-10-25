@@ -2,6 +2,8 @@
 title: "Avoid Obsolete Inline Length Specifications (var(len))"
 description: "Avoid Obsolete Inline Length Specifications (var(len)) - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-inline-len, anti-patterns"
+category: "anti-patterns"
+ruleId: "no-inline-len"
 ---
 
 # Avoid Obsolete Inline Length Specifications (var(len))

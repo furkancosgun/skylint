@@ -2,6 +2,8 @@
 title: "Avoid Method Names That Overwrite Built-in Functions"
 description: "Avoid Method Names That Overwrite Built-in Functions - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-overw-builtin, anti-patterns"
+category: "anti-patterns"
+ruleId: "no-overw-builtin"
 ---
 
 # Avoid Method Names That Overwrite Built-in Functions

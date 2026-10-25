@@ -2,6 +2,8 @@
 title: "Avoid Dynamic Metaprogramming and Code Generation (Remote Code Execution Risk)"
 description: "Mitigate CWE-94 code injection vulnerabilities in SAP ABAP by avoiding GENERATE SUBROUTINE POOL and dynamic code execution."
 keywords: "CWE-94 ABAP, GENERATE SUBROUTINE POOL vulnerability, Code Injection SAP, ABAP Cloud Security"
+category: "security"
+ruleId: "no-metaprogramming"
 ---
 
 # Avoid Dynamic Metaprogramming and Code Generation (Remote Code Execution Risk)

@@ -2,6 +2,8 @@
 title: "Enforce Class, Interface, Type and Object Naming Conventions"
 description: "Enforce Class, Interface, Type and Object Naming Conventions - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-name-objects, clean-abap"
+category: "clean-abap"
+ruleId: "pref-name-objects"
 ---
 
 # Enforce Class, Interface, Type and Object Naming Conventions

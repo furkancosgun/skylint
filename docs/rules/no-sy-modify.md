@@ -2,6 +2,8 @@
 title: "Avoid Directly Modifying System Fields (sy-subrc, sy-tabix)"
 description: "Preserve kernel integrity in SAP ABAP by forbidding direct assignment to system fields like sy-subrc and sy-tabix."
 keywords: "sy-subrc assignment ABAP, System fields modification SAP, Clean ABAP Code Integrity"
+category: "security"
+ruleId: "no-sy-modify"
 ---
 
 # Avoid Directly Modifying System Fields (sy-subrc, sy-tabix)

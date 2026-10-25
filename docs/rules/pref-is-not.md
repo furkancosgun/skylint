@@ -2,6 +2,8 @@
 title: "Prefer IS NOT over NOT ... IS"
 description: "Prefer IS NOT over NOT ... IS - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-is-not, clean-abap"
+category: "clean-abap"
+ruleId: "pref-is-not"
 ---
 
 # Prefer IS NOT over NOT ... IS

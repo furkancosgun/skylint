@@ -2,6 +2,8 @@
 title: "Prefer lines( ) over DESCRIBE TABLE"
 description: "Prefer lines( ) over DESCRIBE TABLE - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-lines, clean-abap"
+category: "clean-abap"
+ruleId: "pref-lines"
 ---
 
 # Prefer lines( ) over DESCRIBE TABLE

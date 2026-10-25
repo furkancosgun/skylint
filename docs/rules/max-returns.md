@@ -2,6 +2,8 @@
 title: "Limit Multiple Return Statements per Method Body"
 description: "Balance guard clauses with predictable method exits in ABAP. Prevent scattered return statements across large procedures."
 keywords: "Multiple return statements ABAP, Guard Clauses vs Single Exit, Clean ABAP Control Flow, ATC Metrics"
+category: "metrics"
+ruleId: "max-returns"
 ---
 
 # Limit Multiple Return Statements per Method Body

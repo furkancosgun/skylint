@@ -2,6 +2,8 @@
 title: "Expand Macro Calls into Explicit Statements"
 description: "Expand Macro Calls into Explicit Statements - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-expand-macro, anti-patterns"
+category: "anti-patterns"
+ruleId: "pref-expand-macro"
 ---
 
 # Expand Macro Calls into Explicit Statements

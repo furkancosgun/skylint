@@ -2,6 +2,8 @@
 title: "Use Predicate Naming for Boolean Methods (is_, has_, can_)"
 description: "Use Predicate Naming for Boolean Methods (is_, has_, can_) - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-pred-name, clean-abap"
+category: "clean-abap"
+ruleId: "pref-pred-name"
 ---
 
 # Use Predicate Naming for Boolean Methods (is_, has_, can_)

@@ -2,6 +2,8 @@
 title: "Prefer the Short System Field Alias SY over SYST"
 description: "Prefer the Short System Field Alias SY over SYST - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-sy, clean-abap"
+category: "clean-abap"
+ruleId: "pref-sy"
 ---
 
 # Prefer the Short System Field Alias SY over SYST

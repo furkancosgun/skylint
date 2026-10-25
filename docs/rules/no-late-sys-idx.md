@@ -2,6 +2,8 @@
 title: "Avoid Late Access to sy-tabix or sy-index Outside Loops"
 description: "Avoid Late Access to sy-tabix or sy-index Outside Loops - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-late-sys-idx, anti-patterns"
+category: "anti-patterns"
+ruleId: "no-late-sys-idx"
 ---
 
 # Avoid Late Access to sy-tabix or sy-index Outside Loops

@@ -2,6 +2,8 @@
 title: "Avoid Chained Assignments (a = b = c = 1)"
 description: "Avoid Chained Assignments (a = b = c = 1) - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-chained-assign, anti-patterns"
+category: "anti-patterns"
+ruleId: "no-chained-assign"
 ---
 
 # Avoid Chained Assignments (a = b = c = 1)

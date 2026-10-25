@@ -2,6 +2,8 @@
 title: "Prefer Built-in String Functions over SEARCH/SHIFT"
 description: "Prefer Built-in String Functions over SEARCH/SHIFT - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-str-func, clean-abap"
+category: "clean-abap"
+ruleId: "pref-str-func"
 ---
 
 # Prefer Built-in String Functions over SEARCH/SHIFT

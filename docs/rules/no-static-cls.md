@@ -2,6 +2,8 @@
 title: "Avoid Purely Static Utility Classes"
 description: "Avoid Purely Static Utility Classes - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-static-cls, anti-patterns"
+category: "anti-patterns"
+ruleId: "no-static-cls"
 ---
 
 # Avoid Purely Static Utility Classes

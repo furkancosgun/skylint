@@ -2,6 +2,8 @@
 title: "Avoid SELECT * in OpenSQL Queries (Minimize Memory & Network Overhead)"
 description: "Optimize SAP HANA column store performance in ABAP by avoiding SELECT * and explicitly declaring required columns in OpenSQL queries."
 keywords: "Avoid SELECT star ABAP, SAP HANA Column Store Optimization, Clean ABAP Query Guidelines, Memory Footprint Reduction SAP"
+category: "performance"
+ruleId: "no-select-star"
 ---
 
 # Avoid SELECT * in OpenSQL Queries (Minimize Memory & Network Overhead)

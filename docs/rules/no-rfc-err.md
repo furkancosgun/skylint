@@ -2,6 +2,8 @@
 title: "Handle System and Communication Failures in Remote Function Calls (RFC)"
 description: "Prevent short dumps during remote SAP integration by handling COMMUNICATION_FAILURE and SYSTEM_FAILURE in RFC calls."
 keywords: "RFC Exception Handling ABAP, COMMUNICATION_FAILURE SAP, SYSTEM_FAILURE RFC, Resilient SAP Integration"
+category: "security"
+ruleId: "no-rfc-err"
 ---
 
 # Handle System and Communication Failures in Remote Function Calls (RFC)

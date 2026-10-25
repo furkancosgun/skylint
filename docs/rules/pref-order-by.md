@@ -2,6 +2,8 @@
 title: "Require Explicit ORDER BY for Deterministic SELECT Queries"
 description: "Ensure deterministic query results on SAP S/4HANA by enforcing explicit ORDER BY clauses in ABAP queries that limit rows."
 keywords: "ORDER BY ABAP, Deterministic SQL SAP HANA, UP TO 1 ROWS bug, Clean ABAP Sorting Guidelines"
+category: "performance"
+ruleId: "pref-order-by"
 ---
 
 # Require Explicit ORDER BY for Deterministic SELECT Queries

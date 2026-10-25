@@ -2,6 +2,8 @@
 title: "Prefer COND #( ) Expression over IF/ELSEIF/ELSE"
 description: "Prefer COND #( ) Expression over IF/ELSEIF/ELSE - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-cond, clean-abap"
+category: "clean-abap"
+ruleId: "pref-cond"
 ---
 
 # Prefer COND #( ) Expression over IF/ELSEIF/ELSE

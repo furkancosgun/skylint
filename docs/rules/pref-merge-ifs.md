@@ -2,6 +2,8 @@
 title: "Merge Nested IF Statements"
 description: "Merge Nested IF Statements - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-merge-ifs, clean-abap"
+category: "clean-abap"
+ruleId: "pref-merge-ifs"
 ---
 
 # Merge Nested IF Statements

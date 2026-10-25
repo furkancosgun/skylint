@@ -2,6 +2,8 @@
 title: "Prefer FILTER for a Simple LOOP with IF and APPEND"
 description: "Prefer FILTER for a Simple LOOP with IF and APPEND - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-filter, clean-abap"
+category: "clean-abap"
+ruleId: "pref-filter"
 ---
 
 # Prefer FILTER for a Simple LOOP with IF and APPEND

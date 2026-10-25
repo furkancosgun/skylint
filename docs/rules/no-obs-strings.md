@@ -2,6 +2,8 @@
 title: "Avoid Obsolete String and POSIX Regex Statements"
 description: "Avoid Obsolete String and POSIX Regex Statements - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-obs-strings, anti-patterns"
+category: "anti-patterns"
+ruleId: "no-obs-strings"
 ---
 
 # Avoid Obsolete String and POSIX Regex Statements

@@ -2,6 +2,8 @@
 title: "Prefer RETURN over EXIT in Methods"
 description: "Prefer RETURN over EXIT in Methods - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-return, clean-abap"
+category: "clean-abap"
+ruleId: "pref-return"
 ---
 
 # Prefer RETURN over EXIT in Methods

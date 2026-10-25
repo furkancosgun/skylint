@@ -2,6 +2,8 @@
 title: "Avoid CLIENT SPECIFIED / USING CLIENT in Cloud (Multi-Tenant Isolation)"
 description: "Preserve multi-tenant data privacy in SAP BTP by avoiding CLIENT SPECIFIED and USING CLIENT in OpenSQL."
 keywords: "CLIENT SPECIFIED ABAP Cloud, Multi-tenant isolation SAP BTP, GDPR Data Isolation ABAP"
+category: "security"
+ruleId: "no-client-spec"
 ---
 
 # Avoid CLIENT SPECIFIED / USING CLIENT in Cloud (Multi-Tenant Isolation)

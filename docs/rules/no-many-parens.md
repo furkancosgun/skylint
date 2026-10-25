@@ -2,6 +2,8 @@
 title: "Remove redundant parentheses"
 description: "Remove redundant parentheses - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-many-parens, anti-patterns"
+category: "anti-patterns"
+ruleId: "no-many-parens"
 ---
 
 # Remove redundant parentheses

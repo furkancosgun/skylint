@@ -2,6 +2,8 @@
 title: "Avoid Classic List Processing Statements"
 description: "Avoid Classic List Processing Statements - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-list-proc, anti-patterns"
+category: "anti-patterns"
+ruleId: "no-list-proc"
 ---
 
 # Avoid Classic List Processing Statements

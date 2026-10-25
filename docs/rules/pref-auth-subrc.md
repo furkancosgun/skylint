@@ -2,6 +2,8 @@
 title: "Check sy-subrc Promptly After AUTHORITY-CHECK (CWE-862 Authorization Bypass)"
 description: "Prevent CWE-862 authorization bypass vulnerabilities in SAP ABAP by verifying sy-subrc immediately following AUTHORITY-CHECK statements."
 keywords: "CWE-862 ABAP, AUTHORITY-CHECK sy-subrc, SAP Security Audit Log, Clean ABAP Authorization, Privilege Escalation SAP"
+category: "security"
+ruleId: "pref-auth-subrc"
 ---
 
 # Check sy-subrc Promptly After AUTHORITY-CHECK (CWE-862 Authorization Bypass)

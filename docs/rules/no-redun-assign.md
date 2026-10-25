@@ -2,6 +2,8 @@
 title: "Remove Redundant Self-Assignments and CLEAR Statements"
 description: "Remove Redundant Self-Assignments and CLEAR Statements - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-redun-assign, anti-patterns"
+category: "anti-patterns"
+ruleId: "no-redun-assign"
 ---
 
 # Remove Redundant Self-Assignments and CLEAR Statements

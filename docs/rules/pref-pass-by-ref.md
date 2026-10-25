@@ -2,6 +2,8 @@
 title: "Prefer Pass-by-Reference for Internal Tables in Method Signatures"
 description: "Eliminate deep copy memory overhead in SAP ABAP methods by passing internal tables by reference instead of by value."
 keywords: "Pass by reference ABAP, Pass by value memory copy, Clean ABAP Method Parameters, SAP Memory Management"
+category: "performance"
+ruleId: "pref-pass-by-ref"
 ---
 
 # Prefer Pass-by-Reference for Internal Tables in Method Signatures

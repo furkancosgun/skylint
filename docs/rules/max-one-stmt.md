@@ -2,6 +2,8 @@
 title: "Limit One Statement per Source Code Line (No Inline Colon Chains)"
 description: "Improve code readability and Git diff clarity in ABAP by requiring exactly one statement per source line."
 keywords: "One statement per line ABAP, Colon chaining Clean ABAP, Debugger Line Stepping SAP, Clean Code Formatting"
+category: "metrics"
+ruleId: "max-one-stmt"
 ---
 
 # Limit One Statement per Source Code Line (No Inline Colon Chains)

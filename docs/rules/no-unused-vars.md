@@ -2,6 +2,8 @@
 title: "Eliminate Unused Local Variables and Symbols"
 description: "Eliminate Unused Local Variables and Symbols - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-unused-vars, anti-patterns"
+category: "anti-patterns"
+ruleId: "no-unused-vars"
 ---
 
 # Eliminate Unused Local Variables and Symbols

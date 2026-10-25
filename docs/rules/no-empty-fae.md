@@ -2,6 +2,8 @@
 title: "Prevent Empty Driver Tables in FOR ALL ENTRIES (Full Table Scan Bug)"
 description: "Avoid full table scan database crashes in SAP ABAP by ensuring FOR ALL ENTRIES driver tables are checked for initial state before querying."
 keywords: "SAP FOR ALL ENTRIES empty, Full Table Scan ABAP, TSV_TNEW_PAGE_ALLOC_FAILED, Clean ABAP FAE Check, S/4HANA Database Stability"
+category: "performance"
+ruleId: "no-empty-fae"
 ---
 
 # Prevent Empty Driver Tables in FOR ALL ENTRIES (Full Table Scan Bug)

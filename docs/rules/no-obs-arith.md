@@ -2,6 +2,8 @@
 title: "Avoid Obsolete Arithmetic and Assignment Statements"
 description: "Avoid Obsolete Arithmetic and Assignment Statements - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-obs-arith, anti-patterns"
+category: "anti-patterns"
+ruleId: "no-obs-arith"
 ---
 
 # Avoid Obsolete Arithmetic and Assignment Statements

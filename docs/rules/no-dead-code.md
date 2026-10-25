@@ -2,6 +2,8 @@
 title: "Avoid Dead Code with Constant Conditions"
 description: "Avoid Dead Code with Constant Conditions - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-dead-code, anti-patterns"
+category: "anti-patterns"
+ruleId: "no-dead-code"
 ---
 
 # Avoid Dead Code with Constant Conditions

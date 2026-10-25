@@ -2,6 +2,8 @@
 title: "Enforce Local Variable and Field-Symbol Naming Conventions"
 description: "Enforce Local Variable and Field-Symbol Naming Conventions - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-naming-vars, clean-abap"
+category: "clean-abap"
+ruleId: "pref-naming-vars"
 ---
 
 # Enforce Local Variable and Field-Symbol Naming Conventions

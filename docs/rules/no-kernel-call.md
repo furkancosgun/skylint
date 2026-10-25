@@ -2,6 +2,8 @@
 title: "Avoid Kernel and Native Database Calls (SYSTEM-CALL, EXEC SQL)"
 description: "Ensure cross-platform compatibility and cloud compliance by avoiding SYSTEM-CALL and native EXEC SQL in ABAP."
 keywords: "SYSTEM-CALL ABAP, EXEC SQL SAP Security, Clean Core Cloud Compliance"
+category: "security"
+ruleId: "no-kernel-call"
 ---
 
 # Avoid Kernel and Native Database Calls (SYSTEM-CALL, EXEC SQL)

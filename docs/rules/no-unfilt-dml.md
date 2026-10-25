@@ -2,6 +2,8 @@
 title: "Avoid UPDATE or DELETE Without a WHERE Condition (Catastrophic Data Wipe Prevention)"
 description: "Prevent catastrophic full-table deletion and modification in SAP ABAP by requiring WHERE clauses on all OpenSQL UPDATE and DELETE statements."
 keywords: "Unfiltered UPDATE ABAP, DELETE without WHERE SAP, Catastrophic Data Loss Prevention, OpenSQL Data Integrity"
+category: "security"
+ruleId: "no-unfilt-dml"
 ---
 
 # Avoid UPDATE or DELETE Without a WHERE Condition (Catastrophic Data Wipe Prevention)

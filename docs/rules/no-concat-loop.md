@@ -2,6 +2,8 @@
 title: "Avoid String Concatenation Inside Loops (Quadratic Memory Allocation)"
 description: "Prevent quadratic memory allocation in ABAP string loops by collecting fragments in string tables and using concat_lines_of."
 keywords: "String concatenation in loop ABAP, Quadratic Memory Allocation SAP, concat_lines_of Clean ABAP, String Buffer Performance"
+category: "performance"
+ruleId: "no-concat-loop"
 ---
 
 # Avoid String Concatenation Inside Loops (Quadratic Memory Allocation)

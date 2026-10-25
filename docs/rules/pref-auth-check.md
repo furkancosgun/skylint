@@ -2,6 +2,8 @@
 title: "Ensure AUTHORITY-CHECK Precedes Sensitive Business Operations"
 description: "Ensure role-based authorization checks precede sensitive database modifications and financial records in SAP ABAP."
 keywords: "SAP Authorization Check, Role-Based Access Control ABAP, Data Security SAP, ATC Security Check"
+category: "security"
+ruleId: "pref-auth-check"
 ---
 
 # Ensure AUTHORITY-CHECK Precedes Sensitive Business Operations

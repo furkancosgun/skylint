@@ -2,6 +2,8 @@
 title: "Limit Method and Constructor Statement Length"
 description: "Enforce Clean ABAP method length limits and keep constructors minimal. Prevent God Methods and improve testability in SAP ABAP."
 keywords: "Method length limit ABAP, Clean ABAP Method Size, Constructor Logic Antipattern, Single Responsibility ABAP, ATC Code Metrics"
+category: "metrics"
+ruleId: "max-method-len"
 ---
 
 # Limit Method and Constructor Statement Length

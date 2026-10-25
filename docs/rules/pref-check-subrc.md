@@ -2,6 +2,8 @@
 title: "Verify sy-subrc Promptly After Data Retrieval and Search"
 description: "Verify sy-subrc Promptly After Data Retrieval and Search - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-check-subrc, clean-abap"
+category: "clean-abap"
+ruleId: "pref-check-subrc"
 ---
 
 # Verify sy-subrc Promptly After Data Retrieval and Search

@@ -2,6 +2,8 @@
 title: "Limit Boolean Expression Complexity in Conditional Statements"
 description: "Simplify complex boolean logic in ABAP IF statements. Extract intricate conditions into named predicate methods."
 keywords: "Boolean expression complexity ABAP, Predicate methods Clean ABAP, Operator Precedence SAP, Clean Code Logic"
+category: "metrics"
+ruleId: "max-bool-expr"
 ---
 
 # Limit Boolean Expression Complexity in Conditional Statements

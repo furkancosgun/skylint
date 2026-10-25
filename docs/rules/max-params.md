@@ -2,6 +2,8 @@
 title: "Limit Method Parameter Count and Require Multi-Line Signatures"
 description: "Enforce clean method signatures in ABAP. Limit parameter count and format signatures with one parameter per line for readable Git diffs."
 keywords: "ABAP Method Parameters Limit, Clean ABAP Signatures, Parameter Object Pattern SAP, ATC Clean Code Metrics"
+category: "metrics"
+ruleId: "max-params"
 ---
 
 # Limit Method Parameter Count and Require Multi-Line Signatures

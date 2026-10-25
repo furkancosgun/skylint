@@ -2,6 +2,8 @@
 title: "Avoid Obsolete ABAP Memory and Context Statements"
 description: "Avoid Obsolete ABAP Memory and Context Statements - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-obs-memory, anti-patterns"
+category: "anti-patterns"
+ruleId: "no-obs-memory"
 ---
 
 # Avoid Obsolete ABAP Memory and Context Statements

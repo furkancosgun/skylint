@@ -2,6 +2,8 @@
 title: "Prefer INSERT ... INTO TABLE over APPEND"
 description: "Prefer INSERT ... INTO TABLE over APPEND - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-insert, clean-abap"
+category: "clean-abap"
+ruleId: "pref-insert"
 ---
 
 # Prefer INSERT ... INTO TABLE over APPEND

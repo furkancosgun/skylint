@@ -2,6 +2,8 @@
 title: "Do Not Mix RETURNING with EXPORTING or CHANGING"
 description: "Do Not Mix RETURNING with EXPORTING or CHANGING - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-mix-returning, anti-patterns"
+category: "anti-patterns"
+ruleId: "no-mix-returning"
 ---
 
 # Do Not Mix RETURNING with EXPORTING or CHANGING

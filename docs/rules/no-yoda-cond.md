@@ -2,6 +2,8 @@
 title: "Avoid Yoda Conditions"
 description: "Avoid Yoda Conditions - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-yoda-cond, anti-patterns"
+category: "anti-patterns"
+ruleId: "no-yoda-cond"
 ---
 
 # Avoid Yoda Conditions

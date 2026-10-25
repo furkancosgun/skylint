@@ -2,6 +2,8 @@
 title: "Limit Class Member Attribute Count (Prevent God Classes)"
 description: "Prevent God Object antipatterns in ABAP by restricting member attribute counts and promoting cohesive domain class design."
 keywords: "God Class ABAP, Class member attributes limit, Clean ABAP Cohesion, Single Responsibility Principle SAP"
+category: "metrics"
+ruleId: "max-attributes"
 ---
 
 # Limit Class Member Attribute Count (Prevent God Classes)

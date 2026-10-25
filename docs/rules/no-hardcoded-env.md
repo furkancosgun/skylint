@@ -2,6 +2,8 @@
 title: "Avoid Hardcoding System & Tenant Environment Checks (sy-sysid, sy-mandt)"
 description: "Eliminate hardcoded sy-sysid and sy-mandt checks in ABAP. Ensure Clean Core cloud readiness and multi-tenant isolation."
 keywords: "Hardcoded sy-sysid ABAP, Tenant Isolation BTP, sy-mandt Clean Core, SAP S/4HANA Cloud Readiness"
+category: "security"
+ruleId: "no-hardcoded-env"
 ---
 
 # Avoid Hardcoding System & Tenant Environment Checks (sy-sysid, sy-mandt)

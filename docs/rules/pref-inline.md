@@ -2,6 +2,8 @@
 title: "Prefer Modern Inline Declarations in ABAP 7.40+"
 description: "Prefer Modern Inline Declarations in ABAP 7.40+ - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-inline, clean-abap"
+category: "clean-abap"
+ruleId: "pref-inline"
 ---
 
 # Prefer Modern Inline Declarations in ABAP 7.40+

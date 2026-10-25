@@ -2,6 +2,8 @@
 title: "Prefer CREATE_* Prefix for Factory Methods Returning Own Class"
 description: "Prefer CREATE_* Prefix for Factory Methods Returning Own Class - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-factory-name, clean-abap"
+category: "clean-abap"
+ruleId: "pref-factory-name"
 ---
 
 # Prefer CREATE_* Prefix for Factory Methods Returning Own Class

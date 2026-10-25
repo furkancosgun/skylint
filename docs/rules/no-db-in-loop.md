@@ -2,6 +2,8 @@
 title: "Avoid Database Access Inside Loops (N+1 Query Antipattern)"
 description: "Eliminate N+1 database queries in SAP ABAP. Optimize performance by pre-fetching data in bulk with FOR ALL ENTRIES or SQL Joins before processing in loops."
 keywords: "ABAP Performance, N+1 Query SAP, SELECT in LOOP, Clean ABAP Database, S/4HANA SQL Optimization, ATC Check Database"
+category: "performance"
+ruleId: "no-db-in-loop"
 ---
 
 # Avoid Database Access Inside Loops (N+1 Query Antipattern)

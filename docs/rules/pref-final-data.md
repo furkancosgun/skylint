@@ -2,6 +2,8 @@
 title: "Prefer FINAL( ) over DATA( ) when the variable is never written again"
 description: "Prefer FINAL( ) over DATA( ) when the variable is never written again - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-final-data, clean-abap"
+category: "clean-abap"
+ruleId: "pref-final-data"
 ---
 
 # Prefer FINAL( ) over DATA( ) when the variable is never written again

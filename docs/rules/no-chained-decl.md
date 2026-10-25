@@ -2,6 +2,8 @@
 title: "Avoid Chained Declarations (DATA:, CONSTANTS:, TYPES:)"
 description: "Avoid Chained Declarations (DATA:, CONSTANTS:, TYPES:) - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-chained-decl, anti-patterns"
+category: "anti-patterns"
+ruleId: "no-chained-decl"
 ---
 
 # Avoid Chained Declarations (DATA:, CONSTANTS:, TYPES:)

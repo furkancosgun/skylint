@@ -2,6 +2,8 @@
 title: "Prefer SWITCH #( ) Expression over CASE Statement"
 description: "Prefer SWITCH #( ) Expression over CASE Statement - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-switch, clean-abap"
+category: "clean-abap"
+ruleId: "pref-switch"
 ---
 
 # Prefer SWITCH #( ) Expression over CASE Statement

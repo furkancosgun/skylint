@@ -2,6 +2,8 @@
 title: "Prefer REDUCE #( ) Expression over Simple Aggregation LOOP"
 description: "Prefer REDUCE #( ) Expression over Simple Aggregation LOOP - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-reduce, clean-abap"
+category: "clean-abap"
+ruleId: "pref-reduce"
 ---
 
 # Prefer REDUCE #( ) Expression over Simple Aggregation LOOP

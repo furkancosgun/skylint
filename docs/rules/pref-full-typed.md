@@ -2,6 +2,8 @@
 title: "Require Fully Typed Variables and Parameters"
 description: "Require Fully Typed Variables and Parameters - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-full-typed, clean-abap"
+category: "clean-abap"
+ruleId: "pref-full-typed"
 ---
 
 # Require Fully Typed Variables and Parameters

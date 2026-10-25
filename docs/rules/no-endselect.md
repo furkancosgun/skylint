@@ -2,6 +2,8 @@
 title: "Avoid SELECT ... ENDSELECT Row-by-Row Cursor Loops"
 description: "Eliminate database cursor leaks and slow row-by-row fetching by replacing SELECT ... ENDSELECT with array fetches into internal tables."
 keywords: "SELECT ENDSELECT ABAP, Database Cursor Leak SAP, Array Fetch OpenSQL, Clean ABAP Database Best Practices"
+category: "performance"
+ruleId: "no-endselect"
 ---
 
 # Avoid SELECT ... ENDSELECT Row-by-Row Cursor Loops

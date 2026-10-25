@@ -2,6 +2,8 @@
 title: "Prefer CORRESPONDING #( ) Operator"
 description: "Prefer CORRESPONDING #( ) Operator - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-corresp, clean-abap"
+category: "clean-abap"
+ruleId: "pref-corresp"
 ---
 
 # Prefer CORRESPONDING #( ) Operator

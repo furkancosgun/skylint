@@ -2,6 +2,8 @@
 title: "Avoid Redundant ME-> Self Reference"
 description: "Avoid Redundant ME-> Self Reference - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-me-reference, anti-patterns"
+category: "anti-patterns"
+ruleId: "no-me-reference"
 ---
 
 # Avoid Redundant ME-> Self Reference

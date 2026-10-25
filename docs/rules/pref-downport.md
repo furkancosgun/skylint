@@ -2,6 +2,8 @@
 title: "Check Downport Compatibility (7.40+ Modern Constructs)"
 description: "Check Downport Compatibility (7.40+ Modern Constructs) - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-downport, clean-abap"
+category: "clean-abap"
+ruleId: "pref-downport"
 ---
 
 # Check Downport Compatibility (7.40+ Modern Constructs)

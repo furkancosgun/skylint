@@ -2,6 +2,8 @@
 title: "Avoid IS INSTANCE OF and CASE TYPE OF Type Tests"
 description: "Avoid IS INSTANCE OF and CASE TYPE OF Type Tests - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-instance-of, clean-abap"
+category: "clean-abap"
+ruleId: "no-instance-of"
 ---
 
 # Avoid IS INSTANCE OF and CASE TYPE OF Type Tests

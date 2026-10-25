@@ -2,6 +2,8 @@
 title: "Avoid Single-Letter Variable Names"
 description: "Avoid Single-Letter Variable Names - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-single-letter, clean-abap"
+category: "clean-abap"
+ruleId: "no-single-letter"
 ---
 
 # Avoid Single-Letter Variable Names

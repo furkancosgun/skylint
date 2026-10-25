@@ -62,7 +62,7 @@ CLASS zcl_skylint_max_method_len IMPLEMENTATION.
     lv_total = lines( is_procedure-statements ).
     lv_stmt_count = lv_total - 2.
 
-    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-method
+    IF     is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-method
        AND ( is_procedure-id-name CP '*=>CONSTRUCTOR' OR is_procedure-id-name = 'CONSTRUCTOR' ).
       IF lv_stmt_count > mv_max_ctor_statements.
         report_statement( is_statement    = <ls_statement>

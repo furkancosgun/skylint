@@ -2,6 +2,8 @@
 title: "Omit Redundant EXPORTING in Method Calls"
 description: "Omit Redundant EXPORTING in Method Calls - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-call-exporting, anti-patterns"
+category: "anti-patterns"
+ruleId: "no-call-exporting"
 ---
 
 # Omit Redundant EXPORTING in Method Calls

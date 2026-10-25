@@ -2,6 +2,8 @@
 title: "Prefer Functional RETURNING Parameters"
 description: "Prefer Functional RETURNING Parameters - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-returning, clean-abap"
+category: "clean-abap"
+ruleId: "pref-returning"
 ---
 
 # Prefer Functional RETURNING Parameters

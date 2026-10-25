@@ -2,6 +2,8 @@
 title: "Avoid Unnecessary Dynamic Programming Constructs (SQL Injection Prevention)"
 description: "Prevent SQL injection and runtime type mismatches in SAP ABAP by avoiding unverified dynamic programming constructs."
 keywords: "CWE-89 SQL Injection ABAP, Dynamic SQL Security SAP, cl_abap_dyn_prg, Clean ABAP Static Typing"
+category: "security"
+ruleId: "no-dynamic-stmt"
 ---
 
 # Avoid Unnecessary Dynamic Programming Constructs (SQL Injection Prevention)

@@ -2,6 +2,8 @@
 title: "Avoid Explicit RAISE SHORTDUMP in Application Logic"
 description: "Eliminate deliberate crash statements in ABAP by replacing RAISE SHORTDUMP with structured class-based exceptions."
 keywords: "RAISE SHORTDUMP ABAP, ST22 Dump Elimination, Clean ABAP Resilience"
+category: "security"
+ruleId: "no-raise-shortdump"
 ---
 
 # Avoid Explicit RAISE SHORTDUMP in Application Logic

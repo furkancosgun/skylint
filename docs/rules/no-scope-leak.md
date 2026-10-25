@@ -2,6 +2,8 @@
 title: "Avoid Variable Scope Leaking from Inner Blocks"
 description: "Avoid Variable Scope Leaking from Inner Blocks - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-scope-leak, anti-patterns"
+category: "anti-patterns"
+ruleId: "no-scope-leak"
 ---
 
 # Avoid Variable Scope Leaking from Inner Blocks

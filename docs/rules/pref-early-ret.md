@@ -2,6 +2,8 @@
 title: "Prefer Early Return to Reduce Nesting (Guard Clauses)"
 description: "Prefer Early Return to Reduce Nesting (Guard Clauses) - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-early-ret, clean-abap"
+category: "clean-abap"
+ruleId: "pref-early-ret"
 ---
 
 # Prefer Early Return to Reduce Nesting (Guard Clauses)
