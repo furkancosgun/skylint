@@ -52,7 +52,7 @@
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
       "pseudoComment": "NO_USELESS_CONT",
-      "hasQuickfix": false,
+      "hasQuickfix": true,
       "remoteEnabled": true,
       "configurable": false
     },
@@ -196,7 +196,7 @@
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
       "pseudoComment": "NO_ME_REFERENCE",
-      "hasQuickfix": false,
+      "hasQuickfix": true,
       "remoteEnabled": true,
       "configurable": true
     },
@@ -316,7 +316,7 @@
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
       "pseudoComment": "NO_EMPTY_BLOCK",
-      "hasQuickfix": false,
+      "hasQuickfix": true,
       "remoteEnabled": true,
       "configurable": true
     },
@@ -484,7 +484,7 @@
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
       "pseudoComment": "NO_OBS_CONTROL",
-      "hasQuickfix": false,
+      "hasQuickfix": true,
       "remoteEnabled": true,
       "configurable": true
     },
@@ -1096,7 +1096,7 @@
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
       "pseudoComment": "NO_DASH_IN_FORM",
-      "hasQuickfix": false,
+      "hasQuickfix": true,
       "remoteEnabled": true,
       "configurable": false
     },

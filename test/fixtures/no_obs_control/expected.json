@@ -4,7 +4,9 @@
     "code": "NO_OBS_CTR",
     "line": 2,
     "column": 4,
-    "quickfixes": []
+    "quickfixes": [
+      "RMBRK"
+    ]
   },
   {
     "target": "TEST_002",
@@ -43,6 +45,8 @@
     "code": "NO_OBS_CTR",
     "line": 2,
     "column": 4,
-    "quickfixes": []
+    "quickfixes": [
+      "RMEXTCHK"
+    ]
   }
 ]

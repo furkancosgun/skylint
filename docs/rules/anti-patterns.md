@@ -20,14 +20,14 @@ This category enforces **50 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Avoid Loops That Execute At Most Once](/rules/no-single-iter) | `ZCL_SKYLINT_NO_SINGLE_ITER` | <code>#EC NO_SINGLE_ITER</code> | - |
 | [Avoid Obsolete CALL METHOD](/rules/no-call-method) | `ZCL_SKYLINT_NO_CALL_METHOD` | <code>#EC NO_CALL_METHOD</code> | ⚡ Ready |
 | [Avoid WITH DEFAULT KEY](/rules/no-default-key) | `ZCL_SKYLINT_NO_DEFAULT_KEY` | <code>#EC NO_DEFAULT_KEY</code> | ⚡ Ready |
-| [Avoid Redundant ME-> Self Reference](/rules/no-me-reference) | `ZCL_SKYLINT_NO_ME_REFERENCE` | <code>#EC NO_ME_REFERENCE</code> | - |
+| [Avoid Redundant ME-> Self Reference](/rules/no-me-reference) | `ZCL_SKYLINT_NO_ME_REFERENCE` | <code>#EC NO_ME_REFERENCE</code> | ⚡ Ready |
 | [Omit RECEIVING in Method Invocations](/rules/no-call-receiving) | `ZCL_SKYLINT_NO_CALL_RECEIVING` | <code>#EC NO_CALL_RECEIVING</code> | ⚡ Ready |
 | [Omit Redundant EXPORTING in Method Calls](/rules/no-call-exporting) | `ZCL_SKYLINT_NO_CALL_EXPORTING` | <code>#EC NO_CALL_EXPORTING</code> | ⚡ Ready |
 | [Avoid Chained Declarations (DATA:, CONSTANTS:, TYPES:)](/rules/no-chained-decl) | `ZCL_SKYLINT_NO_CHAINED_DECL` | <code>#EC NO_CHAINED_DECL</code> | ⚡ Ready |
 | [Avoid Chained Assignments (a = b = c = 1)](/rules/no-chained-assign) | `ZCL_SKYLINT_NO_CHAINED_ASSIGN` | <code>#EC NO_CHAINED_ASSIGN</code> | ⚡ Ready |
 | [Avoid Comparing to abap_true / abap_false](/rules/no-bool-compare) | `ZCL_SKYLINT_NO_BOOL_COMPARE` | <code>#EC NO_BOOL_COMPARE</code> | ⚡ Ready |
 | [Avoid CHECK Statements](/rules/no-check-stmt) | `ZCL_SKYLINT_NO_CHECK_STMT` | <code>#EC NO_CHECK_IN_LOOP</code> | ⚡ Ready |
-| [Avoid Empty Control Blocks](/rules/no-empty-block) | `ZCL_SKYLINT_NO_EMPTY_BLOCK` | <code>#EC NO_EMPTY_BLOCK</code> | - |
+| [Avoid Empty Control Blocks](/rules/no-empty-block) | `ZCL_SKYLINT_NO_EMPTY_BLOCK` | <code>#EC NO_EMPTY_BLOCK</code> | ⚡ Ready |
 | [Avoid Identical Statements in IF Branches](/rules/no-ident-cont) | `ZCL_SKYLINT_NO_IDENT_CONT` | <code>#EC NO_IDENT_CONT</code> | - |
 | [Avoid Duplicate Branch Conditions](/rules/no-dup-cond) | `ZCL_SKYLINT_NO_DUP_COND` | <code>#EC NO_DUP_COND</code> | - |
 | [Avoid Dead / Unreachable Code](/rules/no-unreachable) | `ZCL_SKYLINT_NO_UNREACHABLE` | <code>#EC NO_UNREACHABLE</code> | ⚡ Ready |
@@ -37,7 +37,7 @@ This category enforces **50 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Avoid Exposed Mutable Data in Classes and Interfaces](/rules/no-exposed-data) | `ZCL_SKYLINT_NO_EXPOSED_DATA` | <code>#EC PUBLIC_ATTR</code> | - |
 | [Avoid Obsolete Arithmetic and Assignment Statements](/rules/no-obs-arith) | `ZCL_SKYLINT_NO_OBS_ARITH` | <code>#EC NO_OBS_ARITH</code> | ⚡ Ready |
 | [Avoid Obsolete Declarations and Table Headers](/rules/no-obs-decl) | `ZCL_SKYLINT_NO_OBS_DECL` | <code>#EC NO_OBS_DECL</code> | ⚡ Ready |
-| [Avoid Obsolete Control Flow and Procedural Forms](/rules/no-obs-control) | `ZCL_SKYLINT_NO_OBS_CONTROL` | <code>#EC NO_OBS_CONTROL</code> | - |
+| [Avoid Obsolete Control Flow and Procedural Forms](/rules/no-obs-control) | `ZCL_SKYLINT_NO_OBS_CONTROL` | <code>#EC NO_OBS_CONTROL</code> | ⚡ Ready |
 | [Avoid Obsolete ABAP Memory and Context Statements](/rules/no-obs-memory) | `ZCL_SKYLINT_NO_OBS_MEMORY` | <code>#EC NO_OBS_MEMORY</code> | - |
 | [Avoid Obsolete String and POSIX Regex Statements](/rules/no-obs-strings) | `ZCL_SKYLINT_NO_OBS_STRINGS` | <code>#EC NO_OBS_STRINGS</code> | - |
 | [Avoid Classic List Processing Statements](/rules/no-list-proc) | `ZCL_SKYLINT_NO_LIST_PROC` | <code>#EC NO_LIST_PROC</code> | - |
@@ -53,7 +53,7 @@ This category enforces **50 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Eliminate Unused Local Variables and Symbols](/rules/no-unused-vars) | `ZCL_SKYLINT_NO_UNUSED_VARS` | <code>#EC NO_UNUSED_VARS</code> | - |
 | [Avoid Obsolete ! Escape Prefix in Parameter Names](/rules/no-param-escape) | `ZCL_SKYLINT_NO_PARAM_ESCAPE` | <code>#EC NO_PARAM_ESCAPE</code> | ⚡ Ready |
 | [Avoid Obsolete Inline Length Specifications (var(len))](/rules/no-inline-len) | `ZCL_SKYLINT_NO_INLINE_LEN` | <code>#EC NO_INLINE_LEN</code> | ⚡ Ready |
-| [Avoid Obsolete Dash (-) in Form Names](/rules/no-dash-in-form) | `ZCL_SKYLINT_NO_DASH_IN_FORM` | <code>#EC NO_DASH_IN_FORM</code> | - |
+| [Avoid Obsolete Dash (-) in Form Names](/rules/no-dash-in-form) | `ZCL_SKYLINT_NO_DASH_IN_FORM` | <code>#EC NO_DASH_IN_FORM</code> | ⚡ Ready |
 | [Avoid FRIENDS in class definitions](/rules/no-friends) | `ZCL_SKYLINT_NO_FRIENDS` | <code>#EC NO_FRIENDS</code> | - |
 | [Classic EXCEPTIONS must not map two errors to the same number](/rules/no-exc-overlap) | `ZCL_SKYLINT_NO_EXC_OVERLAP` | <code>#EC NO_EXC_OVERLAP</code> | - |
 | [Remove redundant parentheses](/rules/no-many-parens) | `ZCL_SKYLINT_NO_MANY_PARENS` | <code>#EC NO_MANY_PARENS</code> | ⚡ Ready |

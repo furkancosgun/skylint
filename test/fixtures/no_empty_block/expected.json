@@ -4,7 +4,7 @@
     "code": "NO_EMPTY_B",
     "line": 3,
     "column": 4,
-    "quickfixes": []
+    "quickfixes": ["RMBLOCK"]
   },
   {
     "target": "TEST_002",
@@ -15,7 +15,7 @@
     "code": "NO_EMPTY_B",
     "line": 4,
     "column": 4,
-    "quickfixes": []
+    "quickfixes": ["RMBLOCK"]
   },
   {
     "target": "TEST_004",

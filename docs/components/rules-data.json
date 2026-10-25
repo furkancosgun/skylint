@@ -27,7 +27,7 @@
     "categoryTitle": "Clean ABAP & Modern Syntax",
     "pseudoComment": "NO_USELESS_CONT",
     "description": "Avoid Redundant CONTINUE at End of Loop",
-    "hasQuickfix": false,
+    "hasQuickfix": true,
     "remoteEnabled": true,
     "attributes": [],
     "relatedRules": [
@@ -347,7 +347,7 @@
     "categoryTitle": "Anti-Patterns & Bad Practices",
     "pseudoComment": "NO_ME_REFERENCE",
     "description": "Avoid self-reference ME->",
-    "hasQuickfix": false,
+    "hasQuickfix": true,
     "remoteEnabled": true,
     "attributes": [
       {
@@ -595,7 +595,7 @@
     "categoryTitle": "Anti-Patterns & Bad Practices",
     "pseudoComment": "NO_EMPTY_BLOCK",
     "description": "Avoid empty control blocks (IF, CASE, LOOP, TRY, etc.)",
-    "hasQuickfix": false,
+    "hasQuickfix": true,
     "remoteEnabled": true,
     "attributes": [
       {
@@ -1132,7 +1132,7 @@
     "categoryTitle": "Anti-Patterns & Bad Practices",
     "pseudoComment": "NO_OBS_CONTROL",
     "description": "Obsolete Control Flow and Procedural Statements",
-    "hasQuickfix": false,
+    "hasQuickfix": true,
     "remoteEnabled": true,
     "attributes": [
       {
@@ -2637,7 +2637,7 @@
     "categoryTitle": "Anti-Patterns & Bad Practices",
     "pseudoComment": "NO_DASH_IN_FORM",
     "description": "No Dashes in Form Names",
-    "hasQuickfix": false,
+    "hasQuickfix": true,
     "remoteEnabled": true,
     "attributes": [],
     "relatedRules": [

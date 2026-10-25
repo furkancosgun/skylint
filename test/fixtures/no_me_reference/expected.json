@@ -4,7 +4,7 @@
     "code": "NO_ME_REF",
     "line": 2,
     "column": 4,
-    "quickfixes": []
+    "quickfixes": ["OMITME"]
   },
   {
     "target": "TEST_002",
@@ -15,7 +15,7 @@
     "code": "NO_ME_REF",
     "line": 2,
     "column": 4,
-    "quickfixes": []
+    "quickfixes": ["OMITME"]
   },
   {
     "target": "CONSTRUCTOR",

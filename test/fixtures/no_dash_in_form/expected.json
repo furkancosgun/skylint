@@ -3,7 +3,8 @@
     "target": "TEST-001",
     "code": "NO_DASH_FM",
     "line": 1,
-    "column": 0
+    "column": 0,
+    "quickfixes": ["DASH2UND"]
   },
   {
     "target": "TEST_002",

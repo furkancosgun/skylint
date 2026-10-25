@@ -8,6 +8,11 @@ CLASS zcl_skylint_no_obs_control DEFINITION
       BEGIN OF c_finding_codes,
         obsolete_control TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_OBS_CTR',
       END OF c_finding_codes.
+    CONSTANTS:
+      BEGIN OF c_quickfix_codes,
+        remove_break     TYPE cl_ci_atc_quickfixes=>ty_quickfix_code VALUE 'RMBRK',
+        remove_ext_check TYPE cl_ci_atc_quickfixes=>ty_quickfix_code VALUE 'RMEXTCHK',
+      END OF c_quickfix_codes.
 
     METHODS constructor.
 
@@ -53,6 +58,11 @@ CLASS zcl_skylint_no_obs_control IMPLEMENTATION.
                        severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Avoid obsolete control flow (FORM, AT NEW, BREAK, DEFINE, etc.)'
                        pseudo_comment = c_pseudo_comment ) )
+                 quickfix_codes    = VALUE #(
+                     ( code       = c_quickfix_codes-remove_break
+                       short_text = 'Remove BREAK-POINT' )
+                     ( code       = c_quickfix_codes-remove_ext_check
+                       short_text = 'Remove SET EXTENDED CHECK' ) )
                  attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
                                               ( name  = 'CHECK_FORM'
                                                 value = REF #( mv_check_form ) )
@@ -77,9 +87,12 @@ CLASS zcl_skylint_no_obs_control IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
+    DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      CLEAR ls_quickfix.
+
       CASE <ls_statement>-keyword.
         WHEN 'PERFORM' OR 'FORM'.
           IF mv_check_form = abap_true.
@@ -89,8 +102,12 @@ CLASS zcl_skylint_no_obs_control IMPLEMENTATION.
 
         WHEN 'BREAK-POINT' OR 'BREAK'.
           IF mv_check_break = abap_true.
+            ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-remove_break
+                                            iv_statement_from = sy-tabix
+                                            it_new_code       = VALUE #( ) ).
             report_statement( is_statement    = <ls_statement>
-                              iv_finding_code = c_finding_codes-obsolete_control ).
+                              iv_finding_code = c_finding_codes-obsolete_control
+                              is_quickfix     = ls_quickfix ).
           ENDIF.
 
         WHEN 'DEFINE'.
@@ -145,8 +162,12 @@ CLASS zcl_skylint_no_obs_control IMPLEMENTATION.
           IF     mv_check_set_ext_check = abap_true
              AND zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
                                                             it_expected  = VALUE #( ( `EXTENDED` ) ( `CHECK` ) ) ) > 0.
+            ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-remove_ext_check
+                                            iv_statement_from = sy-tabix
+                                            it_new_code       = VALUE #( ) ).
             report_statement( is_statement    = <ls_statement>
-                              iv_finding_code = c_finding_codes-obsolete_control ).
+                              iv_finding_code = c_finding_codes-obsolete_control
+                              is_quickfix     = ls_quickfix ).
           ENDIF.
 
         WHEN 'EXIT'.

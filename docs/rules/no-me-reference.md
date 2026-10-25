@@ -11,6 +11,7 @@ ruleId: "no-me-reference"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC NO_ME_REFERENCE" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -38,6 +39,13 @@ me->save( ).
 mv_order_count = mv_order_count + 1.
 save( ).
 ```
+
+## Automated QuickFix
+
+This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
+1. Position the cursor on the flagged statement.
+2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
+3. Select the automated refactoring to apply the clean syntax immediately.
 
 ## Configuration & Thresholds
 
