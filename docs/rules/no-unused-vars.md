@@ -1,5 +1,7 @@
 ---
-description: "Detect unused local variables and field symbols"
+title: "Eliminate Unused Local Variables and Symbols"
+description: "Eliminate Unused Local Variables and Symbols - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-unused-vars, anti-patterns"
 ---
 
 # Eliminate Unused Local Variables and Symbols
@@ -7,7 +9,7 @@ description: "Detect unused local variables and field symbols"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="danger" text="#EC NEEDED" />
+  <Badge type="danger" text="#EC NO_UNUSED_VARS" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -42,11 +44,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC NEEDED
+... "#EC NO_UNUSED_VARS
 
 " SAP CI_ prefix format:
-... "#EC CI_NEEDED
+... "#EC CI_NO_UNUSED_VARS
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

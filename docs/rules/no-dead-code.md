@@ -1,5 +1,7 @@
 ---
-description: "Detect Dead Code with Constant Condition"
+title: "Avoid Dead Code with Constant Conditions"
+description: "Avoid Dead Code with Constant Conditions - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-dead-code, anti-patterns"
 ---
 
 # Avoid Dead Code with Constant Conditions
@@ -56,6 +58,11 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 " SAP CI_ prefix format:
 ... "#EC CI_NO_DEAD_CODE
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

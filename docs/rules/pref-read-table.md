@@ -1,5 +1,7 @@
 ---
-description: "Modernize READ TABLE (table expressions & line_exists)"
+title: "Modernize READ TABLE (Table Expressions & line_exists)"
+description: "Modernize READ TABLE (Table Expressions & line_exists) - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-read-table, clean-abap"
 ---
 
 # Modernize READ TABLE (Table Expressions & line_exists)
@@ -54,11 +56,11 @@ This rule provides an **automated QuickFix** directly in Eclipse ABAP Developmen
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value |
-|---|---|:---:|
-| `USE_OPTIONAL` | `Boolean` | <code>true</code> |
-| `CHECK_TAB_EXPR` | `Boolean` | <code>true</code> |
-| `CHECK_LINE_EXISTS` | `Boolean` | <code>true</code> |
+| Parameter Name | Data Type | Default Value | Description & Guidance |
+|---|---|:---:|---|
+| `USE_OPTIONAL` | `Boolean` | <code>true</code> | Suggest OPTIONAL addition in table expressions to prevent CX_SY_ITAB_LINE_NOT_FOUND dumps |
+| `CHECK_TAB_EXPR` | `Boolean` | <code>true</code> | Suggest table expressions (lt_tab[ ... ]) instead of READ TABLE INTO |
+| `CHECK_LINE_EXISTS` | `Boolean` | <code>true</code> | Suggest line_exists( ) instead of READ TABLE TRANSPORTING NO FIELDS |
 
 ## Suppression
 
@@ -71,6 +73,11 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 " SAP CI_ prefix format:
 ... "#EC CI_PREF_TAB_EXPR
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

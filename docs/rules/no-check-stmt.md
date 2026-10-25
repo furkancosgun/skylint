@@ -1,5 +1,7 @@
 ---
-description: "Avoid CHECK statements; prefer IF with RETURN or CONTINUE"
+title: "Avoid CHECK Statements"
+description: "Avoid CHECK Statements - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-check-stmt, anti-patterns"
 ---
 
 # Avoid CHECK Statements
@@ -8,7 +10,7 @@ description: "Avoid CHECK statements; prefer IF with RETURN or CONTINUE"
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="warning" text="QuickFix Ready" />
-  <Badge type="danger" text="#EC CHECK_STMT" />
+  <Badge type="danger" text="#EC NO_CHECK_IN_LOOP" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -55,10 +57,10 @@ This rule provides an **automated QuickFix** directly in Eclipse ABAP Developmen
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value |
-|---|---|:---:|
-| `CHECK_IN_LOOP` | `Boolean` | <code>true</code> |
-| `CHECK_OUTSIDE_LOOP` | `Boolean` | <code>true</code> |
+| Parameter Name | Data Type | Default Value | Description & Guidance |
+|---|---|:---:|---|
+| `CHECK_IN_LOOP` | `Boolean` | <code>true</code> | Detect CHECK inside loops and suggest IF NOT ... CONTINUE guard clause |
+| `CHECK_OUTSIDE_LOOP` | `Boolean` | <code>true</code> | Detect CHECK outside loops and suggest IF NOT ... RETURN guard clause |
 
 ## Suppression
 
@@ -66,11 +68,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC CHECK_STMT
+... "#EC NO_CHECK_IN_LOOP
 
 " SAP CI_ prefix format:
-... "#EC CI_CHECK_STMT
+... "#EC CI_NO_CHECK_IN_LOOP
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

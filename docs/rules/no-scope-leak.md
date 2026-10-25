@@ -1,5 +1,7 @@
 ---
-description: "Avoid variable usage outside its declaring control block"
+title: "Avoid Variable Scope Leaking from Inner Blocks"
+description: "Avoid Variable Scope Leaking from Inner Blocks - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-scope-leak, anti-patterns"
 ---
 
 # Avoid Variable Scope Leaking from Inner Blocks
@@ -7,7 +9,7 @@ description: "Avoid variable usage outside its declaring control block"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="danger" text="#EC SCOPE_LEAK" />
+  <Badge type="danger" text="#EC NO_SCOPE_LEAK" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -46,11 +48,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC SCOPE_LEAK
+... "#EC NO_SCOPE_LEAK
 
 " SAP CI_ prefix format:
-... "#EC CI_SCOPE_LEAK
+... "#EC CI_NO_SCOPE_LEAK
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

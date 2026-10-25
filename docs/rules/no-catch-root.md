@@ -1,13 +1,15 @@
 ---
-description: "Catch specific exceptions instead of generic cx_root"
+title: "Avoid Catching Generic CX_ROOT (Catch Specific Exceptions)"
+description: "Eliminate black hole exception handling in SAP ABAP by catching specific domain exceptions instead of generic CX_ROOT."
+keywords: "CATCH CX_ROOT ABAP, Black Hole Exception SAP, Clean ABAP Exception Handling"
 ---
 
-# Avoid Catching Generic CX_ROOT
+# Avoid Catching Generic CX_ROOT (Catch Specific Exceptions)
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Security & Robustness" />
-  <Badge type="danger" text="#EC CATCH_ROOT" />
+  <Badge type="danger" text="#EC NO_CATCH_ROOT" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -19,25 +21,31 @@ Catch specific exceptions instead of generic cx_root.
 
 ## Rationale
 
-Catching CX_ROOT catches programming errors, resource shortages, and runtime failures together with expected business exceptions. The handler cannot respond correctly to all of them and may hide serious defects. Catch only the specific exception types you can handle and let everything else propagate.
+Catching the root exception class `CX_ROOT` indiscriminately traps all exceptions, including catastrophic system resource exhaustion (`CX_SY_RESOURCE_FAILURE`), database disconnections, and critical assertion failures. Catching `CX_ROOT` without re-raising creates the "Black Hole Exception Antipattern", masking fatal bugs and allowing corrupted processes to continue running.
+
+**Best Practice:** Always catch specific, expected exception classes (`CATCH zcx_order_not_found zcx_pricing_failed`).
 
 ### Non-Compliant
 
 ```abap
+" Anti-pattern: Swallows fatal database disconnection and memory errors silently
 TRY.
-  process_order( ).
-CATCH cx_root.
-  " swallowed
+    process_order( ).
+  CATCH cx_root.
+    " Swallowed! Program continues with corrupt state.
 ENDTRY.
 ```
 
 ### Compliant
 
 ```abap
+" Clean ABAP: Catch specific anticipated domain exceptions only
 TRY.
-  process_order( ).
-CATCH cx_order_failed INTO DATA(lx_order).
-  logger->record( lx_order ).
+    process_order( ).
+  CATCH zcx_invalid_order_status INTO DATA(lx_status).
+    mo_logger->warn( lx_status->get_text( ) ).
+  CATCH zcx_credit_limit_exceeded INTO DATA(lx_credit).
+    mo_order_queue->hold( is_order ).
 ENDTRY.
 ```
 
@@ -47,11 +55,15 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC CATCH_ROOT
+... "#EC NO_CATCH_ROOT
 
 " SAP CI_ prefix format:
-... "#EC CI_CATCH_ROOT
+... "#EC CI_NO_CATCH_ROOT
 ```
+
+## References & Standards
+
+* [Clean ABAP: Catch Specific Exceptions](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#catch-specific-exceptions)
 
 ## Technical Details
 

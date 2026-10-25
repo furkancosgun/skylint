@@ -1,5 +1,7 @@
 ---
-description: "Class Attribute and Parameter Naming Conventions"
+title: "Enforce Class Attribute and Method Parameter Naming Conventions"
+description: "Enforce Class Attribute and Method Parameter Naming Conventions - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-name-members, clean-abap"
 ---
 
 # Enforce Class Attribute and Method Parameter Naming Conventions
@@ -7,7 +9,7 @@ description: "Class Attribute and Parameter Naming Conventions"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="danger" text="#EC NAMING_MEM" />
+  <Badge type="danger" text="#EC PREF_NAME_MEMBERS" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -44,21 +46,21 @@ METHODS execute
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value |
-|---|---|:---:|
-| `ATTR_IGN_EXC` | `Boolean` | <code>true</code> |
-| `ATTR_IGN_LOCAL` | `Boolean` | <code>true</code> |
-| `ATTR_IGN_INTF` | `Boolean` | <code>false</code> |
-| `ATTR_STATICS` | `String` | <code>^G._.+$</code> |
-| `ATTR_INSTANCE` | `String` | <code>^M._.+$</code> |
-| `ATTR_CONSTANTS` | `String` | <code></code> |
-| `PARAM_IGN_EXC` | `Boolean` | <code>true</code> |
-| `PARAM_IMPORTING` | `String` | <code>^I._.+$</code> |
-| `PARAM_RETURNING` | `String` | <code>^R._.+$</code> |
-| `PARAM_CHANGING` | `String` | <code>^C._.+$</code> |
-| `PARAM_EXPORTING` | `String` | <code>^E._.+$</code> |
-| `SSCR_PARAM` | `String` | <code>^P_.+$</code> |
-| `SSCR_SELOPT` | `String` | <code>^S_.+$</code> |
+| Parameter Name | Data Type | Default Value | Description & Guidance |
+|---|---|:---:|---|
+| `ATTR_IGN_EXC` | `Boolean` | <code>true</code> | Ignore exception class attributes (cx_*) |
+| `ATTR_IGN_LOCAL` | `Boolean` | <code>true</code> | Ignore attributes in local test classes |
+| `ATTR_IGN_INTF` | `Boolean` | <code>false</code> | Ignore interface component naming |
+| `ATTR_STATICS` | `String` | <code>^G._.+$</code> | Regex pattern for static class attributes (default: ^G._.+$) |
+| `ATTR_INSTANCE` | `String` | <code>^M._.+$</code> | Regex pattern for instance class attributes (default: ^M._.+$) |
+| `ATTR_CONSTANTS` | `String` | <code></code> | Regex pattern for class constants (default: ^C._.+$) |
+| `PARAM_IGN_EXC` | `Boolean` | <code>true</code> | Ignore parameter naming in exception classes |
+| `PARAM_IMPORTING` | `String` | <code>^I._.+$</code> | Regex pattern for importing parameters (default: ^I._.+$) |
+| `PARAM_RETURNING` | `String` | <code>^R._.+$</code> | Regex pattern for returning parameters (default: ^R._.+$) |
+| `PARAM_CHANGING` | `String` | <code>^C._.+$</code> | Regex pattern for changing parameters (default: ^C._.+$) |
+| `PARAM_EXPORTING` | `String` | <code>^E._.+$</code> | Regex pattern for exporting parameters (default: ^E._.+$) |
+| `SSCR_PARAM` | `String` | <code>^P_.+$</code> | Regex pattern for selection screen parameters (default: ^P_.+$) |
+| `SSCR_SELOPT` | `String` | <code>^S_.+$</code> | Regex pattern for select-options (default: ^S_.+$) |
 
 ## Suppression
 
@@ -66,11 +68,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC NAMING_MEM
+... "#EC PREF_NAME_MEMBERS
 
 " SAP CI_ prefix format:
-... "#EC CI_NAMING_MEM
+... "#EC CI_PREF_NAME_MEMBERS
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

@@ -1,13 +1,15 @@
 ---
-description: "Max One Statement Per Line"
+title: "Limit One Statement per Source Code Line (No Inline Colon Chains)"
+description: "Improve code readability and Git diff clarity in ABAP by requiring exactly one statement per source line."
+keywords: "One statement per line ABAP, Colon chaining Clean ABAP, Debugger Line Stepping SAP, Clean Code Formatting"
 ---
 
-# Limit One Statement per Source Code Line
+# Limit One Statement per Source Code Line (No Inline Colon Chains)
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Metrics & Complexity Limits" />
-  <Badge type="danger" text="#EC ONE_STMT" />
+  <Badge type="danger" text="#EC MAX_ONE_STMT" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -19,19 +21,24 @@ Max One Statement Per Line.
 
 ## Rationale
 
-Two statements on one line are easy to miss during review and produce coarse Git diffs. Debugger stepping and code coverage also become harder to follow when multiple statements share a line. Put each statement on its own line.
+Placing multiple statements on a single line (either via semicolons, colons, or simple chaining like `a = 1. b = 2.`) compromises readability, impairs debugger single-stepping, and destroys Git line-by-line diff precision. When a runtime error occurs, the debugger stops on the line without clarifying which of the statements failed.
+
+**Clean ABAP Guideline:** Write exactly one ABAP statement per source code line.
 
 ### Non-Compliant
 
 ```abap
-lv_count = 0. lv_total = 0.
+" Anti-pattern: Multiple statements on one line
+lv_status = 'OPEN'. lv_count = 0. CLEAR ls_header.
 ```
 
 ### Compliant
 
 ```abap
+" Clean ABAP: Dedicated line for each statement
+lv_status = 'OPEN'.
 lv_count = 0.
-lv_total = 0.
+CLEAR ls_header.
 ```
 
 ## Suppression
@@ -40,11 +47,15 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC ONE_STMT
+... "#EC MAX_ONE_STMT
 
 " SAP CI_ prefix format:
-... "#EC CI_ONE_STMT
+... "#EC CI_MAX_ONE_STMT
 ```
+
+## References & Standards
+
+* [Clean ABAP: One Statement per Line](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#one-statement-per-line)
 
 ## Technical Details
 

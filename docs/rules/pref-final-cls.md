@@ -1,5 +1,7 @@
 ---
-description: "Prefer FINAL classes and methods by default"
+title: "Design for Inheritance or Prohibit It (FINAL)"
+description: "Design for Inheritance or Prohibit It (FINAL) - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-final-cls, clean-abap"
 ---
 
 # Design for Inheritance or Prohibit It (FINAL)
@@ -8,7 +10,7 @@ description: "Prefer FINAL classes and methods by default"
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="QuickFix Ready" />
-  <Badge type="danger" text="#EC FINAL_CLS" />
+  <Badge type="danger" text="#EC PREF_FINAL_CLASS" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -55,10 +57,10 @@ This rule provides an **automated QuickFix** directly in Eclipse ABAP Developmen
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value |
-|---|---|:---:|
-| `CHECK_CLASSES` | `Boolean` | <code>true</code> |
-| `CHECK_METHODS` | `Boolean` | <code>true</code> |
+| Parameter Name | Data Type | Default Value | Description & Guidance |
+|---|---|:---:|---|
+| `CHECK_CLASSES` | `Boolean` | <code>true</code> | Enforce FINAL on classes not designed for inheritance |
+| `CHECK_METHODS` | `Boolean` | <code>true</code> | Enforce FINAL on methods not designed to be redefined |
 
 ## Suppression
 
@@ -66,11 +68,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC FINAL_CLS
+... "#EC PREF_FINAL_CLASS
 
 " SAP CI_ prefix format:
-... "#EC CI_FINAL_CLS
+... "#EC CI_PREF_FINAL_CLASS
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

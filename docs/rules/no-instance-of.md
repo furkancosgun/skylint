@@ -1,5 +1,7 @@
 ---
-description: "Avoid IS INSTANCE OF / CASE TYPE OF checks"
+title: "Avoid IS INSTANCE OF and CASE TYPE OF Type Tests"
+description: "Avoid IS INSTANCE OF and CASE TYPE OF Type Tests - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-instance-of, clean-abap"
 ---
 
 # Avoid IS INSTANCE OF and CASE TYPE OF Type Tests
@@ -39,9 +41,9 @@ io_shape->render( ).
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value |
-|---|---|:---:|
-| `CHECK_CASE_TYPE` | `Boolean` | <code>true</code> |
+| Parameter Name | Data Type | Default Value | Description & Guidance |
+|---|---|:---:|---|
+| `CHECK_CASE_TYPE` | `Boolean` | <code>true</code> | Report CASE TYPE OF type tests in addition to IS INSTANCE OF |
 
 ## Suppression
 
@@ -54,6 +56,11 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 " SAP CI_ prefix format:
 ... "#EC CI_NO_INSTANCE_OF
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

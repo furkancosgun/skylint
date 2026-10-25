@@ -1,5 +1,7 @@
 ---
-description: "Avoid duplicate branch conditions in IF and CASE"
+title: "Avoid Duplicate Branch Conditions"
+description: "Avoid Duplicate Branch Conditions - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-dup-cond, anti-patterns"
 ---
 
 # Avoid Duplicate Branch Conditions
@@ -7,7 +9,7 @@ description: "Avoid duplicate branch conditions in IF and CASE"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="danger" text="#EC DUP_COND" />
+  <Badge type="danger" text="#EC NO_DUP_COND" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -49,11 +51,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC DUP_COND
+... "#EC NO_DUP_COND
 
 " SAP CI_ prefix format:
-... "#EC CI_DUP_COND
+... "#EC CI_NO_DUP_COND
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

@@ -1,5 +1,7 @@
 ---
-description: "Enforce predicate naming (IS_, HAS_) on boolean methods"
+title: "Use Predicate Naming for Boolean Methods (is_, has_, can_)"
+description: "Use Predicate Naming for Boolean Methods (is_, has_, can_) - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-pred-name, clean-abap"
 ---
 
 # Use Predicate Naming for Boolean Methods (is_, has_, can_)
@@ -7,7 +9,7 @@ description: "Enforce predicate naming (IS_, HAS_) on boolean methods"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="danger" text="#EC PRED_NAME" />
+  <Badge type="danger" text="#EC PREF_PRED_NAME" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -41,11 +43,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC PRED_NAME
+... "#EC PREF_PRED_NAME
 
 " SAP CI_ prefix format:
-... "#EC CI_PRED_NAME
+... "#EC CI_PREF_PRED_NAME
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

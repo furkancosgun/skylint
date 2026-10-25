@@ -1,13 +1,15 @@
 ---
-description: "Method parameter limits (count and lines)"
+title: "Limit Method Parameter Count and Require Multi-Line Signatures"
+description: "Enforce clean method signatures in ABAP. Limit parameter count and format signatures with one parameter per line for readable Git diffs."
+keywords: "ABAP Method Parameters Limit, Clean ABAP Signatures, Parameter Object Pattern SAP, ATC Clean Code Metrics"
 ---
 
-# Limit Method Parameter Count and Parameters Per Line
+# Limit Method Parameter Count and Require Multi-Line Signatures
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Metrics & Complexity Limits" />
-  <Badge type="danger" text="#EC MAX_PARAMS" />
+  <Badge type="danger" text="#EC MAX_PARAMS_COUNT" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -21,31 +23,36 @@ Method parameter limits (count and lines).
 
 ## Rationale
 
-Long parameter lists complicate method invocations and signal excessive responsibilities. Furthermore, placing multiple parameter definitions on a single line impairs code readability and produces noisy version control diffs. Restrict the total parameter count (max 8) and declare at most one parameter definition per line.
+Methods with excessive parameter signatures (more than 3-5 parameters) are a sign of weak abstraction. Callers struggle to remember parameter order, optional flags multiply, and method calls become unreadable. Furthermore, declaring multiple parameters on a single line clutters Git diffs and hinders peer review.
+
+**Clean ABAP Guideline:** Prefer 0 to 3 parameters. If more data is needed, bundle logically related fields into a dedicated parameter structure or options object. Place each parameter on its own line.
 
 ### Non-Compliant
 
 ```abap
-METHODS execute IMPORTING iv_id TYPE string iv_status TYPE c LENGTH 1.
+" Anti-pattern: 7 primitive parameters declared on one cramped line
+METHODS create_invoice IMPORTING iv_cust TYPE kunnr iv_amt TYPE netpr iv_cur TYPE waers iv_date TYPE datum iv_tax TYPE mwskz iv_type TYPE fkart iv_desc TYPE string.
 ```
 
 ### Compliant
 
 ```abap
-METHODS execute
+" Clean ABAP: Clean parameter structure, each parameter on a dedicated line
+METHODS create_invoice
   IMPORTING
-    iv_id     TYPE string
-    iv_status TYPE c LENGTH 1.
+    is_invoice_request TYPE ty_invoice_request
+  RETURNING
+    VALUE(rv_invoice_id) TYPE ty_invoice_id.
 ```
 
 ## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value |
-|---|---|:---:|
-| `MAX_PARAMETERS` | `Integer` | <code>8</code> |
-| `CHECK_PARAM_LINE` | `Boolean` | <code>true</code> |
+| Parameter Name | Data Type | Default Value | Description & Guidance |
+|---|---|:---:|---|
+| `MAX_PARAMETERS` | `Integer` | <code>8</code> | Maximum allowed total parameters (IMPORTING, EXPORTING, CHANGING, RETURNING) |
+| `CHECK_PARAM_LINE` | `Boolean` | <code>true</code> | Enforce one parameter per line in method definitions and invocations |
 
 ## Suppression
 
@@ -53,11 +60,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC MAX_PARAMS
+... "#EC MAX_PARAMS_COUNT
 
 " SAP CI_ prefix format:
-... "#EC CI_MAX_PARAMS
+... "#EC CI_MAX_PARAMS_COUNT
 ```
+
+## References & Standards
+
+* [Clean ABAP: Take No More Than 3 to 5 Parameters](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#take-no-more-than-3-to-5-parameters)
+* [Clean ABAP: One Parameter per Line](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#one-parameter-per-line)
 
 ## Technical Details
 

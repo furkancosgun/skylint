@@ -1,5 +1,7 @@
 ---
-description: "Prefer RETURN over EXIT outside loop constructs"
+title: "Prefer RETURN over EXIT in Methods"
+description: "Prefer RETURN over EXIT in Methods - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-return, clean-abap"
 ---
 
 # Prefer RETURN over EXIT in Methods
@@ -8,7 +10,7 @@ description: "Prefer RETURN over EXIT outside loop constructs"
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="QuickFix Ready" />
-  <Badge type="danger" text="#EC RETURN" />
+  <Badge type="danger" text="#EC PREF_RETURN" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -53,11 +55,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC RETURN
+... "#EC PREF_RETURN
 
 " SAP CI_ prefix format:
-... "#EC CI_RETURN
+... "#EC CI_PREF_RETURN
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

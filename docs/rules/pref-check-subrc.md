@@ -1,5 +1,7 @@
 ---
-description: "Check sy-subrc after DB, table and string operations"
+title: "Verify sy-subrc Promptly After Data Retrieval and Search"
+description: "Verify sy-subrc Promptly After Data Retrieval and Search - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-check-subrc, clean-abap"
 ---
 
 # Verify sy-subrc Promptly After Data Retrieval and Search
@@ -7,7 +9,7 @@ description: "Check sy-subrc after DB, table and string operations"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="danger" text="#EC CHECK_SUBRC" />
+  <Badge type="danger" text="#EC PREF_CHECK_SUBRC" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -45,12 +47,12 @@ ENDIF.
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value |
-|---|---|:---:|
-| `CHECK_SELECT_SINGLE` | `Boolean` | <code>true</code> |
-| `CHECK_READ_TABLE` | `Boolean` | <code>true</code> |
-| `CHECK_FIND_SEARCH` | `Boolean` | <code>true</code> |
-| `CHECK_ASSIGN` | `Boolean` | <code>true</code> |
+| Parameter Name | Data Type | Default Value | Description & Guidance |
+|---|---|:---:|---|
+| `CHECK_SELECT_SINGLE` | `Boolean` | <code>true</code> | Require sy-subrc check after SELECT SINGLE |
+| `CHECK_READ_TABLE` | `Boolean` | <code>true</code> | Require sy-subrc check after READ TABLE |
+| `CHECK_FIND_SEARCH` | `Boolean` | <code>true</code> | Require sy-subrc check after FIND or SEARCH |
+| `CHECK_ASSIGN` | `Boolean` | <code>true</code> | Require sy-subrc check after dynamic ASSIGN |
 
 ## Suppression
 
@@ -58,11 +60,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC CHECK_SUBRC
+... "#EC PREF_CHECK_SUBRC
 
 " SAP CI_ prefix format:
-... "#EC CI_CHECK_SUBRC
+... "#EC CI_PREF_CHECK_SUBRC
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

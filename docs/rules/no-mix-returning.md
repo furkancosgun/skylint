@@ -1,5 +1,7 @@
 ---
-description: "Do not mix RETURNING with EXPORTING or CHANGING"
+title: "Do Not Mix RETURNING with EXPORTING or CHANGING"
+description: "Do Not Mix RETURNING with EXPORTING or CHANGING - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-mix-returning, anti-patterns"
 ---
 
 # Do Not Mix RETURNING with EXPORTING or CHANGING
@@ -47,6 +49,11 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 " SAP CI_ prefix format:
 ... "#EC CI_NO_MIX_RETURNING
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

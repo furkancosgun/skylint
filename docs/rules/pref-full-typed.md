@@ -1,5 +1,7 @@
 ---
-description: "Enforce fully typed constant declarations"
+title: "Require Fully Typed Variables and Parameters"
+description: "Require Fully Typed Variables and Parameters - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-full-typed, clean-abap"
 ---
 
 # Require Fully Typed Variables and Parameters
@@ -7,7 +9,7 @@ description: "Enforce fully typed constant declarations"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="danger" text="#EC FULL_TYPED" />
+  <Badge type="danger" text="#EC PREF_FULL_TYPED" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -39,11 +41,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC FULL_TYPED
+... "#EC PREF_FULL_TYPED
 
 " SAP CI_ prefix format:
-... "#EC CI_FULL_TYPED
+... "#EC CI_PREF_FULL_TYPED
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

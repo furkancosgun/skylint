@@ -1,13 +1,15 @@
 ---
-description: "Avoid RAISE SHORTDUMP"
+title: "Avoid Explicit RAISE SHORTDUMP in Application Logic"
+description: "Eliminate deliberate crash statements in ABAP by replacing RAISE SHORTDUMP with structured class-based exceptions."
+keywords: "RAISE SHORTDUMP ABAP, ST22 Dump Elimination, Clean ABAP Resilience"
 ---
 
-# Avoid RAISE SHORTDUMP in Application Logic
+# Avoid Explicit RAISE SHORTDUMP in Application Logic
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Security & Robustness" />
-  <Badge type="danger" text="#EC SHORTDUMP" />
+  <Badge type="danger" text="#EC NO_RAISE_SHORTDUMP" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -19,18 +21,22 @@ Avoid RAISE SHORTDUMP.
 
 ## Rationale
 
-RAISE SHORTDUMP intentionally causes a runtime error (DUMP) and terminates the LUW abruptly. In modern enterprise applications and ABAP Cloud, failures must be communicated back to callers or framework layers using catchable class-based exceptions rather than uncatchable crash commands.
+The statement `RAISE SHORTDUMP` deliberately triggers an instant runtime crash and short dump in transaction ST22. Triggering intentional crashes bypasses standard cleanup handlers, cancels asynchronous update tasks, and leaves database locks dangling.
+
+**Best Practice:** Raise standard class-based exceptions inheriting from `CX_STATIC_CHECK` or `CX_NO_CHECK`. Allow the caller or global exception boundary to handle the incident gracefully.
 
 ### Non-Compliant
 
 ```abap
-RAISE SHORTDUMP TYPE cx_sy_zerodivide.
+" Anti-pattern: Forces instant ST22 crash
+RAISE SHORTDUMP TYPE zcx_fatal_error.
 ```
 
 ### Compliant
 
 ```abap
-RAISE EXCEPTION TYPE cx_sy_zerodivide.
+" Clean ABAP: Structured exception allowing caller recovery
+RAISE EXCEPTION NEW zcx_fatal_error( textid = zcx_fatal_error=>c_system_unavailable ).
 ```
 
 ## Suppression
@@ -39,11 +45,15 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC SHORTDUMP
+... "#EC NO_RAISE_SHORTDUMP
 
 " SAP CI_ prefix format:
-... "#EC CI_SHORTDUMP
+... "#EC CI_NO_RAISE_SHORTDUMP
 ```
+
+## References & Standards
+
+* [Clean ABAP: Prefer Exceptions Over Shortdumps](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
 
 ## Technical Details
 

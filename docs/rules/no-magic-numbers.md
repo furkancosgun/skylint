@@ -1,5 +1,7 @@
 ---
-description: "Avoid magic numbers in code; use named constants"
+title: "Avoid Magic Numbers; Use Named Constants"
+description: "Avoid Magic Numbers; Use Named Constants - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-magic-numbers, anti-patterns"
 ---
 
 # Avoid Magic Numbers; Use Named Constants
@@ -7,7 +9,7 @@ description: "Avoid magic numbers in code; use named constants"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="danger" text="#EC MAGIC_NUMBERS" />
+  <Badge type="danger" text="#EC NO_MAGIC_NUMBERS" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -44,11 +46,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC MAGIC_NUMBERS
+... "#EC NO_MAGIC_NUMBERS
 
 " SAP CI_ prefix format:
-... "#EC CI_MAGIC_NUMBERS
+... "#EC CI_NO_MAGIC_NUMBERS
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

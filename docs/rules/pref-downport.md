@@ -1,5 +1,7 @@
 ---
-description: "Detect 7.40+ syntax incompatible with downport targets"
+title: "Check Downport Compatibility (7.40+ Modern Constructs)"
+description: "Check Downport Compatibility (7.40+ Modern Constructs) - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-downport, clean-abap"
 ---
 
 # Check Downport Compatibility (7.40+ Modern Constructs)
@@ -7,7 +9,7 @@ description: "Detect 7.40+ syntax incompatible with downport targets"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="danger" text="#EC DOWNPORT_COMPAT" />
+  <Badge type="danger" text="#EC PREF_DOWNPORT" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -42,18 +44,18 @@ ENDIF.
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value |
-|---|---|:---:|
-| `CHECK_CONSTRUCTORS` | `Boolean` | <code>false</code> |
-| `CHECK_TABLE_EXPR` | `Boolean` | <code>false</code> |
-| `CHECK_INLINE_DECL` | `Boolean` | <code>false</code> |
-| `CHECK_STRING_TEMPL` | `Boolean` | <code>false</code> |
-| `CHECK_CHAINING` | `Boolean` | <code>false</code> |
-| `CHECK_EMPTY_KEY` | `Boolean` | <code>false</code> |
-| `CHECK_CALC_ASSIGN` | `Boolean` | <code>false</code> |
-| `CHECK_LINE_FUNCS` | `Boolean` | <code>false</code> |
-| `CHECK_STRICT_SQL` | `Boolean` | <code>false</code> |
-| `CHECK_RAISE_MESSAGE` | `Boolean` | <code>false</code> |
+| Parameter Name | Data Type | Default Value | Description & Guidance |
+|---|---|:---:|---|
+| `CHECK_CONSTRUCTORS` | `Boolean` | <code>false</code> | Check constructor expressions (NEW, VALUE, CORRESPONDING, COND, SWITCH) |
+| `CHECK_TABLE_EXPR` | `Boolean` | <code>false</code> | Check table expressions (lt_tab[ ... ]) incompatible with legacy releases |
+| `CHECK_INLINE_DECL` | `Boolean` | <code>false</code> | Check inline declarations (DATA(...), FIELD-SYMBOL(...)) |
+| `CHECK_STRING_TEMPL` | `Boolean` | <code>false</code> | Check string templates (&#124;...&#124;) |
+| `CHECK_CHAINING` | `Boolean` | <code>false</code> | Check functional method call chaining (lo->m1( )->m2( )) |
+| `CHECK_EMPTY_KEY` | `Boolean` | <code>false</code> | Check WITH EMPTY KEY additions on internal tables |
+| `CHECK_CALC_ASSIGN` | `Boolean` | <code>false</code> | Check calculation assignment operators (+=, -=, *=, /=) |
+| `CHECK_LINE_FUNCS` | `Boolean` | <code>false</code> | Check built-in line functions (line_exists, line_index, lines) |
+| `CHECK_STRICT_SQL` | `Boolean` | <code>false</code> | Check modern OpenSQL syntax (@ escaping and comma-separated projection) |
+| `CHECK_RAISE_MESSAGE` | `Boolean` | <code>false</code> | Check modern RAISE EXCEPTION MESSAGE syntax |
 
 ## Suppression
 
@@ -61,11 +63,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC DOWNPORT_COMPAT
+... "#EC PREF_DOWNPORT
 
 " SAP CI_ prefix format:
-... "#EC CI_DOWNPORT_COMPAT
+... "#EC CI_PREF_DOWNPORT
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

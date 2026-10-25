@@ -1,5 +1,7 @@
 ---
-description: "Disallow ignoring the return value of functional methods"
+title: "Do Not Ignore Return Value of Functional Methods"
+description: "Do Not Ignore Return Value of Functional Methods - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-ignored-return, anti-patterns"
 ---
 
 # Do Not Ignore Return Value of Functional Methods
@@ -7,7 +9,7 @@ description: "Disallow ignoring the return value of functional methods"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="danger" text="#EC NO_IGNORED_RET" />
+  <Badge type="danger" text="#EC NO_IGNORED_RETURN" />
   <Badge type="warning" text="Local Only" />
 </div>
 
@@ -39,11 +41,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC NO_IGNORED_RET
+... "#EC NO_IGNORED_RETURN
 
 " SAP CI_ prefix format:
-... "#EC CI_NO_IGNORED_RET
+... "#EC CI_NO_IGNORED_RETURN
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

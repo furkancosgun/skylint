@@ -1,5 +1,7 @@
 ---
-description: "Prefer lines( ) over DESCRIBE TABLE ... LINES"
+title: "Prefer lines( ) over DESCRIBE TABLE"
+description: "Prefer lines( ) over DESCRIBE TABLE - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-lines, clean-abap"
 ---
 
 # Prefer lines( ) over DESCRIBE TABLE
@@ -8,7 +10,7 @@ description: "Prefer lines( ) over DESCRIBE TABLE ... LINES"
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="QuickFix Ready" />
-  <Badge type="danger" text="#EC LINES" />
+  <Badge type="danger" text="#EC PREF_LINES" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -52,11 +54,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC LINES
+... "#EC PREF_LINES
 
 " SAP CI_ prefix format:
-... "#EC CI_LINES
+... "#EC CI_PREF_LINES
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

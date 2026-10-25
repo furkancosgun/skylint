@@ -1,5 +1,7 @@
 ---
-description: "Avoid mutable data in public classes and interfaces"
+title: "Avoid Exposed Mutable Data in Classes and Interfaces"
+description: "Avoid Exposed Mutable Data in Classes and Interfaces - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-exposed-data, anti-patterns"
 ---
 
 # Avoid Exposed Mutable Data in Classes and Interfaces
@@ -52,10 +54,10 @@ ENDINTERFACE.
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value |
-|---|---|:---:|
-| `CHECK_PUBLIC_ATTR` | `Boolean` | <code>true</code> |
-| `CHECK_INTF_DATA` | `Boolean` | <code>true</code> |
+| Parameter Name | Data Type | Default Value | Description & Guidance |
+|---|---|:---:|---|
+| `CHECK_PUBLIC_ATTR` | `Boolean` | <code>true</code> | Report public data attributes in classes (encapsulation violation) |
+| `CHECK_INTF_DATA` | `Boolean` | <code>true</code> | Report data variable declarations inside interfaces (should contain only types, constants, methods) |
 
 ## Suppression
 
@@ -68,6 +70,11 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 " SAP CI_ prefix format:
 ... "#EC CI_PUBLIC_ATTR
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

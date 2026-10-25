@@ -1,5 +1,7 @@
 ---
-description: "Avoid repeating the same string literal"
+title: "Avoid Repeating the Same String Literal"
+description: "Avoid Repeating the Same String Literal - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-dup-literals, anti-patterns"
 ---
 
 # Avoid Repeating the Same String Literal
@@ -42,10 +44,10 @@ ENDIF.
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value |
-|---|---|:---:|
-| `MIN_OCCURRENCES` | `Integer` | <code>3</code> |
-| `MIN_LENGTH` | `Integer` | <code>3</code> |
+| Parameter Name | Data Type | Default Value | Description & Guidance |
+|---|---|:---:|---|
+| `MIN_OCCURRENCES` | `Integer` | <code>3</code> | Minimum occurrences of identical string literal before reporting (default: 3) |
+| `MIN_LENGTH` | `Integer` | <code>3</code> | Minimum character length of string literal to inspect (default: 3) |
 
 ## Suppression
 
@@ -58,6 +60,11 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 " SAP CI_ prefix format:
 ... "#EC CI_NO_DUP_LITERALS
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

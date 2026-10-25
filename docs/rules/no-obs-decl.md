@@ -1,5 +1,7 @@
 ---
-description: "Obsolete Data and Type Declarations"
+title: "Avoid Obsolete Declarations and Table Headers"
+description: "Avoid Obsolete Declarations and Table Headers - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-obs-decl, anti-patterns"
 ---
 
 # Avoid Obsolete Declarations and Table Headers
@@ -8,7 +10,7 @@ description: "Obsolete Data and Type Declarations"
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="warning" text="QuickFix Ready" />
-  <Badge type="danger" text="#EC OBSOLETE_DECL" />
+  <Badge type="danger" text="#EC NO_OBS_DECL" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -48,20 +50,20 @@ This rule provides an **automated QuickFix** directly in Eclipse ABAP Developmen
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value |
-|---|---|:---:|
-| `CHECK_TABLES` | `Boolean` | <code>true</code> |
-| `CHECK_TYPE_POOLS` | `Boolean` | <code>true</code> |
-| `CHECK_RANGES` | `Boolean` | <code>true</code> |
-| `CHECK_HEADER_LINE` | `Boolean` | <code>true</code> |
-| `CHECK_OCCURS` | `Boolean` | <code>true</code> |
-| `CHECK_INITIAL_SIZE` | `Boolean` | <code>true</code> |
-| `CHECK_COMMON_PART` | `Boolean` | <code>true</code> |
-| `CHECK_STATICS` | `Boolean` | <code>true</code> |
-| `CHECK_FS_STRUCTURE` | `Boolean` | <code>true</code> |
-| `CHECK_LOAD` | `Boolean` | <code>true</code> |
-| `CHECK_PARAMETER` | `Boolean` | <code>true</code> |
-| `CHECK_REFRESH` | `Boolean` | <code>true</code> |
+| Parameter Name | Data Type | Default Value | Description & Guidance |
+|---|---|:---:|---|
+| `CHECK_TABLES` | `Boolean` | <code>true</code> | Detect obsolete TABLES declaration statement |
+| `CHECK_TYPE_POOLS` | `Boolean` | <code>true</code> | Detect obsolete TYPE-POOLS declaration statement |
+| `CHECK_RANGES` | `Boolean` | <code>true</code> | Detect obsolete RANGES declaration statement |
+| `CHECK_HEADER_LINE` | `Boolean` | <code>true</code> | Detect internal tables with obsolete header lines (WITH HEADER LINE) |
+| `CHECK_OCCURS` | `Boolean` | <code>true</code> | Detect obsolete INITIAL SIZE / OCCURS syntax |
+| `CHECK_INITIAL_SIZE` | `Boolean` | <code>true</code> | Detect obsolete INITIAL SIZE additions |
+| `CHECK_COMMON_PART` | `Boolean` | <code>true</code> | Detect obsolete DATA COMMON PART statements |
+| `CHECK_STATICS` | `Boolean` | <code>true</code> | Detect STATICS declarations inside instance methods |
+| `CHECK_FS_STRUCTURE` | `Boolean` | <code>true</code> | Detect FIELD-SYMBOLS with obsolete structure typing |
+| `CHECK_LOAD` | `Boolean` | <code>true</code> | Detect obsolete LOAD-OF-PROGRAM statements |
+| `CHECK_PARAMETER` | `Boolean` | <code>true</code> | Detect obsolete PARAMETER additions in selection screens |
+| `CHECK_REFRESH` | `Boolean` | <code>true</code> | Detect obsolete REFRESH statement (prefer CLEAR) |
 
 ## Suppression
 
@@ -69,11 +71,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC OBSOLETE_DECL
+... "#EC NO_OBS_DECL
 
 " SAP CI_ prefix format:
-... "#EC CI_OBSOLETE_DECL
+... "#EC CI_NO_OBS_DECL
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

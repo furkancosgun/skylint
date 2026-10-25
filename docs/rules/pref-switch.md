@@ -1,5 +1,7 @@
 ---
-description: "Prefer SWITCH #( ) expression over CASE statement"
+title: "Prefer SWITCH #( ) Expression over CASE Statement"
+description: "Prefer SWITCH #( ) Expression over CASE Statement - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-switch, clean-abap"
 ---
 
 # Prefer SWITCH #( ) Expression over CASE Statement
@@ -55,9 +57,9 @@ This rule provides an **automated QuickFix** directly in Eclipse ABAP Developmen
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value |
-|---|---|:---:|
-| `REQUIRE_OTHERS` | `Boolean` | <code>false</code> |
+| Parameter Name | Data Type | Default Value | Description & Guidance |
+|---|---|:---:|---|
+| `REQUIRE_OTHERS` | `Boolean` | <code>false</code> | Require explicit WHEN OTHERS branch in SWITCH #( ... ) to handle missing states |
 
 ## Suppression
 
@@ -70,6 +72,11 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 " SAP CI_ prefix format:
 ... "#EC CI_PREF_SWITCH
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

@@ -1,5 +1,7 @@
 ---
-description: "Routine Declaration Hygiene (top placement & order)"
+title: "Routine Declaration Hygiene (Top Placement & Order)"
+description: "Routine Declaration Hygiene (Top Placement & Order) - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-declarations, clean-abap"
 ---
 
 # Routine Declaration Hygiene (Top Placement & Order)
@@ -50,10 +52,10 @@ ENDMETHOD.
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value |
-|---|---|:---:|
-| `CHECK_DEF_TOP` | `Boolean` | <code>true</code> |
-| `CHECK_DECL_ORDER` | `Boolean` | <code>true</code> |
+| Parameter Name | Data Type | Default Value | Description & Guidance |
+|---|---|:---:|---|
+| `CHECK_DEF_TOP` | `Boolean` | <code>true</code> | Enforce all local declarations (DATA, TYPES, CONSTANTS) at top of method body |
+| `CHECK_DECL_ORDER` | `Boolean` | <code>true</code> | Enforce declaration order: TYPES first, then CONSTANTS, then DATA |
 
 ## Suppression
 
@@ -66,6 +68,11 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 " SAP CI_ prefix format:
 ... "#EC CI_DEF_TOP
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

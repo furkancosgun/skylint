@@ -1,13 +1,15 @@
 ---
-description: "Avoid SELECT * (specify columns explicitly)"
+title: "Avoid SELECT * in OpenSQL Queries (Minimize Memory & Network Overhead)"
+description: "Optimize SAP HANA column store performance in ABAP by avoiding SELECT * and explicitly declaring required columns in OpenSQL queries."
+keywords: "Avoid SELECT star ABAP, SAP HANA Column Store Optimization, Clean ABAP Query Guidelines, Memory Footprint Reduction SAP"
 ---
 
-# Avoid SELECT * Queries
+# Avoid SELECT * in OpenSQL Queries (Minimize Memory & Network Overhead)
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Performance & Database" />
-  <Badge type="danger" text="#EC SELECT_STAR" />
+  <Badge type="danger" text="#EC NO_SELECT_STAR" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -19,21 +21,28 @@ Avoid SELECT * (specify columns explicitly).
 
 ## Rationale
 
-SELECT * reads every column even when only a few fields are used, increasing network traffic and memory consumption. It also prevents efficient covering-index access and makes the code break when the table structure changes. List the required columns explicitly so the query stays stable and efficient.
+Using `SELECT *` forces the SAP database interface and database engine to retrieve and transfer every single column defined on the database table, including heavy text fields, binary blobs, and irrelevant business attributes. In modern columnar databases like SAP HANA, fetching unneeded columns defeats column-store compression, inflates application server heap usage, and causes unnecessary memory allocations.
+
+**Best Practice:** Explicitly project only the exact fields required by your business process into a typed structure or inline table expression.
 
 ### Non-Compliant
 
 ```abap
-SELECT * FROM /dmo/customer WHERE country = 'DE' INTO TABLE @lt_customers.
+" Anti-pattern: Pulls all 80+ fields of MARA including binary blobs and administrative logs
+SELECT *
+  FROM mara
+  WHERE matnr = @lv_matnr
+  INTO @DATA(ls_material).
 ```
 
 ### Compliant
 
 ```abap
-SELECT customer_id, first_name, last_name
-  FROM /dmo/customer
-  WHERE country = 'DE'
-  INTO TABLE @lt_customers.
+" Clean ABAP: Project only required business fields
+SELECT matnr, mtart, meins
+  FROM mara
+  WHERE matnr = @lv_matnr
+  INTO @DATA(ls_material).
 ```
 
 ## Suppression
@@ -42,11 +51,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC SELECT_STAR
+... "#EC NO_SELECT_STAR
 
 " SAP CI_ prefix format:
-... "#EC CI_SELECT_STAR
+... "#EC CI_NO_SELECT_STAR
 ```
+
+## References & Standards
+
+* [Clean ABAP: Select Only Needed Columns](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#select-only-needed-columns)
+* [SAP HANA Performance Guide for ABAP](https://help.sap.com)
 
 ## Technical Details
 

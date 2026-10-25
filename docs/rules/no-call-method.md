@@ -1,5 +1,7 @@
 ---
-description: "Avoid static CALL METHOD statements"
+title: "Avoid Obsolete CALL METHOD"
+description: "Avoid Obsolete CALL METHOD - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-call-method, anti-patterns"
 ---
 
 # Avoid Obsolete CALL METHOD
@@ -8,7 +10,7 @@ description: "Avoid static CALL METHOD statements"
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="warning" text="QuickFix Ready" />
-  <Badge type="danger" text="#EC CALL_METH" />
+  <Badge type="danger" text="#EC NO_CALL_METHOD" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -51,11 +53,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC CALL_METH
+... "#EC NO_CALL_METHOD
 
 " SAP CI_ prefix format:
-... "#EC CI_CALL_METH
+... "#EC CI_NO_CALL_METHOD
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

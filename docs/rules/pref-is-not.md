@@ -1,5 +1,7 @@
 ---
-description: "Prefer IS NOT over NOT ... IS"
+title: "Prefer IS NOT over NOT ... IS"
+description: "Prefer IS NOT over NOT ... IS - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-is-not, clean-abap"
 ---
 
 # Prefer IS NOT over NOT ... IS
@@ -8,7 +10,7 @@ description: "Prefer IS NOT over NOT ... IS"
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="QuickFix Ready" />
-  <Badge type="danger" text="#EC IS_NOT" />
+  <Badge type="danger" text="#EC PREF_IS_NOT" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -51,11 +53,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC IS_NOT
+... "#EC PREF_IS_NOT
 
 " SAP CI_ prefix format:
-... "#EC CI_IS_NOT
+... "#EC CI_PREF_IS_NOT
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

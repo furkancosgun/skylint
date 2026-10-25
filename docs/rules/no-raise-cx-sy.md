@@ -1,13 +1,15 @@
 ---
-description: "Avoid raising SAP internal system exceptions (cx_sy_*)"
+title: "Avoid Raising System Exceptions Directly (CX_SY_*)"
+description: "Maintain clear exception boundaries in ABAP by defining custom domain exceptions instead of raising internal CX_SY_* classes."
+keywords: "CX_SY_* exceptions ABAP, Clean ABAP Domain Exceptions, Error Handling Best Practices SAP"
 ---
 
-# Avoid Explicitly Raising System Exceptions (CX_SY_*)
+# Avoid Raising System Exceptions Directly (CX_SY_*)
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Security & Robustness" />
-  <Badge type="danger" text="#EC RAISE_CX_SY" />
+  <Badge type="danger" text="#EC NO_RAISE_CX_SY" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -19,18 +21,22 @@ Avoid raising SAP internal system exceptions (cx_sy_*).
 
 ## Rationale
 
-CX_SY_* exceptions describe failures detected by the ABAP runtime, such as invalid table access or division by zero. Applications should not fabricate those conditions because callers cannot distinguish them from real runtime faults. Define and raise a custom exception class for application errors instead.
+Classes in the `CX_SY_*` namespace (such as `CX_SY_ZERODIVIDE`, `CX_SY_REF_IS_INITIAL`) are reserved for the ABAP runtime engine and virtual machine. Raising them manually in business application logic confuses callers, pollutes error logs, and obscures the true origin of technical errors.
+
+**Best Practice:** Define dedicated domain exception classes inheriting from `CX_STATIC_CHECK` or `zcx_application_error`.
 
 ### Non-Compliant
 
 ```abap
-RAISE EXCEPTION NEW cx_sy_zerodivide( ).
+" Anti-pattern: Raising internal kernel exception
+RAISE EXCEPTION TYPE cx_sy_itab_line_not_found.
 ```
 
 ### Compliant
 
 ```abap
-RAISE EXCEPTION NEW cx_invalid_amount( ).
+" Clean ABAP: Custom domain exception expressing business context
+RAISE EXCEPTION NEW zcx_customer_not_found( iv_customer_id ).
 ```
 
 ## Suppression
@@ -39,11 +45,15 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC RAISE_CX_SY
+... "#EC NO_RAISE_CX_SY
 
 " SAP CI_ prefix format:
-... "#EC CI_RAISE_CX_SY
+... "#EC CI_NO_RAISE_CX_SY
 ```
+
+## References & Standards
+
+* [Clean ABAP: Define Dedicated Exception Classes](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
 
 ## Technical Details
 

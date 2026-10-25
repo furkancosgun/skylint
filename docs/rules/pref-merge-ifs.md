@@ -1,5 +1,7 @@
 ---
-description: "Merge consecutive nested IF blocks using boolean AND"
+title: "Merge Nested IF Statements"
+description: "Merge Nested IF Statements - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-merge-ifs, clean-abap"
 ---
 
 # Merge Nested IF Statements
@@ -8,7 +10,7 @@ description: "Merge consecutive nested IF blocks using boolean AND"
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="QuickFix Ready" />
-  <Badge type="danger" text="#EC MERGE_IFS" />
+  <Badge type="danger" text="#EC PREF_MERGE_IFS" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -55,11 +57,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC MERGE_IFS
+... "#EC PREF_MERGE_IFS
 
 " SAP CI_ prefix format:
-... "#EC CI_MERGE_IFS
+... "#EC CI_PREF_MERGE_IFS
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

@@ -1,13 +1,15 @@
 ---
-description: "Native ASSERT in Production Logic"
+title: "Avoid Native ASSERT in Production Code (Prevent Unrecoverable Dumps)"
+description: "Prevent production short dumps in SAP ABAP by replacing uncatchable ASSERT statements with structured exception handling."
+keywords: "ASSERTION_FAILED dump ABAP, Avoid ASSERT in production SAP, Clean ABAP Exception Handling"
 ---
 
-# Avoid Native ASSERT in Production Code
+# Avoid Native ASSERT in Production Code (Prevent Unrecoverable Dumps)
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Security & Robustness" />
-  <Badge type="danger" text="#EC PROD_ASSERT" />
+  <Badge type="danger" text="#EC NO_PROD_ASSERT" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -19,19 +21,23 @@ Native ASSERT in Production Logic.
 
 ## Rationale
 
-Native ASSERT statements terminate execution immediately with a runtime error when their condition evaluates to false. In production environments, unhandled assertion failures cause system short dumps, corrupting end-user sessions and transaction consistency. Always use structured class-based exceptions (CX_*) or logging mechanisms to handle unexpected conditions gracefully.
+The ABAP statement `ASSERT condition` immediately raises an uncatchable short dump (`ASSERTION_FAILED`) if the condition evaluates to false. While useful in unit test classes, using unconditioned assertions in production application logic abruptly terminates end-user sessions, loses uncommitted data, and creates emergency incidents.
+
+**Best Practice:** Check conditions gracefully and raise recoverable class-based exceptions with informative error messages. Reserve `ASSERT` strictly for ABAP Unit test includes (`LCL_TEST`).
 
 ### Non-Compliant
 
 ```abap
-ASSERT lv_amount > 0.
+" Dangerous: Causes catastrophic user session crash in production
+ASSERT iv_amount > 0.
 ```
 
 ### Compliant
 
 ```abap
-IF lv_amount <= 0.
-  RAISE EXCEPTION TYPE cx_invalid_amount.
+" Clean ABAP: Graceful validation with recoverable domain exception
+IF iv_amount <= 0.
+  RAISE EXCEPTION NEW zcx_invalid_amount( iv_amount ).
 ENDIF.
 ```
 
@@ -41,11 +47,15 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC PROD_ASSERT
+... "#EC NO_PROD_ASSERT
 
 " SAP CI_ prefix format:
-... "#EC CI_PROD_ASSERT
+... "#EC CI_NO_PROD_ASSERT
 ```
+
+## References & Standards
+
+* [Clean ABAP: Use Assertions Only in Tests](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
 
 ## Technical Details
 

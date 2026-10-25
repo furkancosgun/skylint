@@ -1,5 +1,7 @@
 ---
-description: "Class, Interface, Type and Object Naming"
+title: "Enforce Class, Interface, Type and Object Naming Conventions"
+description: "Enforce Class, Interface, Type and Object Naming Conventions - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-name-objects, clean-abap"
 ---
 
 # Enforce Class, Interface, Type and Object Naming Conventions
@@ -7,7 +9,7 @@ description: "Class, Interface, Type and Object Naming"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="danger" text="#EC NAMING_OBJ" />
+  <Badge type="danger" text="#EC PREF_NAME_OBJECTS" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -53,22 +55,22 @@ TYPES ty_item TYPE string.
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value |
-|---|---|:---:|
-| `CLASS_LOCAL` | `String` | <code>^LC(L&#124;X)_.+$</code> |
-| `CLASS_TEST` | `String` | <code>^LTCL_.+$</code> |
-| `CLASS_GLOBAL` | `String` | <code>^ZC(L&#124;X)_.+$</code> |
-| `INTF_LOCAL` | `String` | <code>^LIF_.+$</code> |
-| `INTF_GLOBAL` | `String` | <code>^ZIF_.+$</code> |
-| `TYPES_PATTERN` | `String` | <code>^TY_.+$</code> |
-| `MACRO_PATTERN` | `String` | <code>^_.+$</code> |
-| `FORM_PATTERN` | `String` | <code>^F_.+$</code> |
-| `FUNCTION_PATTERN` | `String` | <code>^Z.*$</code> |
-| `EVENT_NAME` | `String` | <code>^[A-Z][A-Z0-9_]+$</code> |
-| `EVENT_HANDLER` | `String` | <code>^ON_.+$</code> |
-| `TEST_METHOD` | `String` | <code>^(TEST&#124;SHOULD)_.+$</code> |
-| `PROG_PATTERN` | `String` | <code>^Z.+$</code> |
-| `FUGR_PATTERN` | `String` | <code>^Z.+$</code> |
+| Parameter Name | Data Type | Default Value | Description & Guidance |
+|---|---|:---:|---|
+| `CLASS_LOCAL` | `String` | <code>^LC(L&#124;X)_.+$</code> | Regex pattern for local class names (default: ^LC(L&#124;X)_.+$) |
+| `CLASS_TEST` | `String` | <code>^LTCL_.+$</code> | Regex pattern for test class names (default: ^LTCL_.+$) |
+| `CLASS_GLOBAL` | `String` | <code>^ZC(L&#124;X)_.+$</code> | Regex pattern for global class names (default: ^ZC(L&#124;X)_.+$) |
+| `INTF_LOCAL` | `String` | <code>^LIF_.+$</code> | Regex pattern for local interface names (default: ^LIF_.+$) |
+| `INTF_GLOBAL` | `String` | <code>^ZIF_.+$</code> | Regex pattern for global interface names (default: ^ZIF_.+$) |
+| `TYPES_PATTERN` | `String` | <code>^TY_.+$</code> | Regex pattern for type definitions (default: ^TY_.+$) |
+| `MACRO_PATTERN` | `String` | <code>^_.+$</code> | Regex pattern for macros (default: ^_.+$) |
+| `FORM_PATTERN` | `String` | <code>^F_.+$</code> | Regex pattern for form routines (default: ^F_.+$) |
+| `FUNCTION_PATTERN` | `String` | <code>^Z.*$</code> | Regex pattern for function modules (default: ^Z.*$) |
+| `EVENT_NAME` | `String` | <code>^[A-Z][A-Z0-9_]+$</code> | Regex pattern for event names |
+| `EVENT_HANDLER` | `String` | <code>^ON_.+$</code> | Regex pattern for event handlers (default: ^ON_.+$) |
+| `TEST_METHOD` | `String` | <code>^(TEST&#124;SHOULD)_.+$</code> | Regex pattern for test method names (default: ^(TEST&#124;SHOULD)_.+$) |
+| `PROG_PATTERN` | `String` | <code>^Z.+$</code> | Regex pattern for program names (default: ^Z.+$) |
+| `FUGR_PATTERN` | `String` | <code>^Z.+$</code> | Regex pattern for function groups (default: ^Z.+$) |
 
 ## Suppression
 
@@ -76,11 +78,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC NAMING_OBJ
+... "#EC PREF_NAME_OBJECTS
 
 " SAP CI_ prefix format:
-... "#EC CI_NAMING_OBJ
+... "#EC CI_PREF_NAME_OBJECTS
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

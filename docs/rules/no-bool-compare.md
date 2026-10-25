@@ -1,5 +1,7 @@
 ---
-description: "Avoid comparing boolean method calls to boolean literals"
+title: "Avoid Comparing to abap_true / abap_false"
+description: "Avoid Comparing to abap_true / abap_false - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-bool-compare, anti-patterns"
 ---
 
 # Avoid Comparing to abap_true / abap_false
@@ -8,7 +10,7 @@ description: "Avoid comparing boolean method calls to boolean literals"
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="warning" text="QuickFix Ready" />
-  <Badge type="danger" text="#EC BOOL_COMPARE" />
+  <Badge type="danger" text="#EC NO_BOOL_COMPARE" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -51,11 +53,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC BOOL_COMPARE
+... "#EC NO_BOOL_COMPARE
 
 " SAP CI_ prefix format:
-... "#EC CI_BOOL_COMPARE
+... "#EC CI_NO_BOOL_COMPARE
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

@@ -1,5 +1,7 @@
 ---
-description: "Prefer NEW operator over CREATE OBJECT and RAISE EXCEPTION"
+title: "Prefer NEW #( ) over CREATE OBJECT"
+description: "Prefer NEW #( ) over CREATE OBJECT - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-new-op, clean-abap"
 ---
 
 # Prefer NEW #( ) over CREATE OBJECT
@@ -8,7 +10,7 @@ description: "Prefer NEW operator over CREATE OBJECT and RAISE EXCEPTION"
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="QuickFix Ready" />
-  <Badge type="danger" text="#EC NEW_OP" />
+  <Badge type="danger" text="#EC PREF_NEW_OPERATOR" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -49,10 +51,10 @@ This rule provides an **automated QuickFix** directly in Eclipse ABAP Developmen
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value |
-|---|---|:---:|
-| `CHECK_CREATE_OBJECT` | `Boolean` | <code>true</code> |
-| `CHECK_RAISE_EXCEPTION` | `Boolean` | <code>true</code> |
+| Parameter Name | Data Type | Default Value | Description & Guidance |
+|---|---|:---:|---|
+| `CHECK_CREATE_OBJECT` | `Boolean` | <code>true</code> | Suggest NEW #( ... ) over CREATE OBJECT |
+| `CHECK_RAISE_EXCEPTION` | `Boolean` | <code>true</code> | Suggest RAISE EXCEPTION NEW over CREATE OBJECT followed by RAISE |
 
 ## Suppression
 
@@ -60,11 +62,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC NEW_OP
+... "#EC PREF_NEW_OPERATOR
 
 " SAP CI_ prefix format:
-... "#EC CI_NEW_OP
+... "#EC CI_PREF_NEW_OPERATOR
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

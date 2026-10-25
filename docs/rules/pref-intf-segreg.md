@@ -1,5 +1,7 @@
 ---
-description: "Prefer interface segregation (small interfaces)"
+title: "Prefer Interface Segregation (Small, Focused Interfaces)"
+description: "Prefer Interface Segregation (Small, Focused Interfaces) - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-intf-segreg, clean-abap"
 ---
 
 # Prefer Interface Segregation (Small, Focused Interfaces)
@@ -7,7 +9,7 @@ description: "Prefer interface segregation (small interfaces)"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="danger" text="#EC INTF_SEGREGATION" />
+  <Badge type="danger" text="#EC PREF_INTF_SEGREG" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -44,9 +46,9 @@ ENDINTERFACE.
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value |
-|---|---|:---:|
-| `MAX_METHODS` | `Integer` | <code>5</code> |
+| Parameter Name | Data Type | Default Value | Description & Guidance |
+|---|---|:---:|---|
+| `MAX_METHODS` | `Integer` | <code>5</code> | Maximum number of methods allowed in a single interface (Interface Segregation Principle, default: 5) |
 
 ## Suppression
 
@@ -54,11 +56,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC INTF_SEGREGATION
+... "#EC PREF_INTF_SEGREG
 
 " SAP CI_ prefix format:
-... "#EC CI_INTF_SEGREGATION
+... "#EC CI_PREF_INTF_SEGREG
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

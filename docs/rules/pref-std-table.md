@@ -1,5 +1,7 @@
 ---
-description: "Prefer explicit TYPE STANDARD TABLE OF over TYPE TABLE OF"
+title: "Prefer TYPE STANDARD TABLE OF over TYPE TABLE OF"
+description: "Prefer TYPE STANDARD TABLE OF over TYPE TABLE OF - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-std-table, clean-abap"
 ---
 
 # Prefer TYPE STANDARD TABLE OF over TYPE TABLE OF
@@ -52,6 +54,11 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 " SAP CI_ prefix format:
 ... "#EC CI_PREF_STD_TABLE
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

@@ -1,5 +1,7 @@
 ---
-description: "Prefer early return or continue over nested IF blocks"
+title: "Prefer Early Return to Reduce Nesting (Guard Clauses)"
+description: "Prefer Early Return to Reduce Nesting (Guard Clauses) - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-early-ret, clean-abap"
 ---
 
 # Prefer Early Return to Reduce Nesting (Guard Clauses)
@@ -7,7 +9,7 @@ description: "Prefer early return or continue over nested IF blocks"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="danger" text="#EC EARLY_RETURN" />
+  <Badge type="danger" text="#EC PREF_GUARD_METHOD" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -50,10 +52,10 @@ ENDMETHOD.
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value |
-|---|---|:---:|
-| `CHECK_METHOD_RETURN` | `Boolean` | <code>true</code> |
-| `CHECK_LOOP_CONTINUE` | `Boolean` | <code>true</code> |
+| Parameter Name | Data Type | Default Value | Description & Guidance |
+|---|---|:---:|---|
+| `CHECK_METHOD_RETURN` | `Boolean` | <code>true</code> | Suggest early RETURN guard clause for top-level method validation IFs |
+| `CHECK_LOOP_CONTINUE` | `Boolean` | <code>true</code> | Suggest early CONTINUE guard clause for loop item validation IFs |
 
 ## Suppression
 
@@ -61,11 +63,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC EARLY_RETURN
+... "#EC PREF_GUARD_METHOD
 
 " SAP CI_ prefix format:
-... "#EC CI_EARLY_RETURN
+... "#EC CI_PREF_GUARD_METHOD
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

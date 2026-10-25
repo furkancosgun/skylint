@@ -1,5 +1,7 @@
 ---
-description: "Prefer an explicit JOIN type such as INNER JOIN"
+title: "Prefer an Explicit JOIN Type"
+description: "Prefer an Explicit JOIN Type - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-join-type, clean-abap"
 ---
 
 # Prefer an Explicit JOIN Type
@@ -8,7 +10,7 @@ description: "Prefer an explicit JOIN type such as INNER JOIN"
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="QuickFix Ready" />
-  <Badge type="danger" text="#EC JOIN_TYPE" />
+  <Badge type="danger" text="#EC PREF_JOIN_TYPE" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -51,11 +53,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC JOIN_TYPE
+... "#EC PREF_JOIN_TYPE
 
 " SAP CI_ prefix format:
-... "#EC CI_JOIN_TYPE
+... "#EC CI_PREF_JOIN_TYPE
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

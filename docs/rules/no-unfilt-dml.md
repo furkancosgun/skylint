@@ -1,8 +1,10 @@
 ---
-description: "Flag DML without WHERE on database tables"
+title: "Avoid UPDATE or DELETE Without a WHERE Condition (Catastrophic Data Wipe Prevention)"
+description: "Prevent catastrophic full-table deletion and modification in SAP ABAP by requiring WHERE clauses on all OpenSQL UPDATE and DELETE statements."
+keywords: "Unfiltered UPDATE ABAP, DELETE without WHERE SAP, Catastrophic Data Loss Prevention, OpenSQL Data Integrity"
 ---
 
-# Avoid UPDATE or DELETE Without a WHERE Condition
+# Avoid UPDATE or DELETE Without a WHERE Condition (Catastrophic Data Wipe Prevention)
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
@@ -19,20 +21,26 @@ Flag DML without WHERE on database tables.
 
 ## Rationale
 
-An UPDATE or DELETE that targets a database table without a top-level WHERE condition affects every row in the table. Such statements are dangerous in production and often indicate a missing restriction. Add a WHERE condition, or use the matching internal-table statement when no database table is intended.
+Executing an `UPDATE` or `DELETE` statement targeting a database table without an explicit `WHERE` clause modifies or truncates every single record in the entire table. In production environments, this causes catastrophic data loss, brings business operations to a halt, and requires emergency point-in-time database restoration.
+
+**Safety Standard:** Always provide a restrictive `WHERE` condition on every database DML statement. If a full-table operation is genuinely required (e.g., in staging tables), enforce it through explicit administrative procedures.
 
 ### Non-Compliant
 
 ```abap
-DELETE FROM zorders.
-UPDATE zorders SET status = 'X'.
+" Disaster: Wipes all customer purchase history in the entire system!
+DELETE FROM zorder_items.
 ```
 
 ### Compliant
 
 ```abap
-DELETE FROM zorders WHERE status = 'C'.
-UPDATE zorders SET status = 'X' WHERE order_id = lv_id.
+" Safe: Scoped deletion with mandatory WHERE condition
+DELETE FROM zorder_items
+  WHERE order_id = @iv_order_id.
+IF sy-subrc <> 0.
+  " Handle not found or log
+ENDIF.
 ```
 
 ## Suppression
@@ -46,6 +54,10 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 " SAP CI_ prefix format:
 ... "#EC CI_NO_UNFILT_DML
 ```
+
+## References & Standards
+
+* [Clean ABAP: Safe DML Operations](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
 
 ## Technical Details
 

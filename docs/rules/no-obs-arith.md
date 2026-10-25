@@ -1,5 +1,7 @@
 ---
-description: "Obsolete Arithmetic and Assignment Statements"
+title: "Avoid Obsolete Arithmetic and Assignment Statements"
+description: "Avoid Obsolete Arithmetic and Assignment Statements - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-obs-arith, anti-patterns"
 ---
 
 # Avoid Obsolete Arithmetic and Assignment Statements
@@ -8,7 +10,7 @@ description: "Obsolete Arithmetic and Assignment Statements"
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="warning" text="QuickFix Ready" />
-  <Badge type="danger" text="#EC OBSOLETE_ARITH" />
+  <Badge type="danger" text="#EC NO_OBS_ARITH" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -49,13 +51,13 @@ This rule provides an **automated QuickFix** directly in Eclipse ABAP Developmen
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value |
-|---|---|:---:|
-| `CHECK_ADD` | `Boolean` | <code>true</code> |
-| `CHECK_ADD_CORR` | `Boolean` | <code>true</code> |
-| `CHECK_COMPUTE` | `Boolean` | <code>true</code> |
-| `CHECK_MOVE` | `Boolean` | <code>true</code> |
-| `CHECK_GET_REF` | `Boolean` | <code>true</code> |
+| Parameter Name | Data Type | Default Value | Description & Guidance |
+|---|---|:---:|---|
+| `CHECK_ADD` | `Boolean` | <code>true</code> | Detect obsolete ADD ... TO and SUBTRACT ... FROM statements |
+| `CHECK_ADD_CORR` | `Boolean` | <code>true</code> | Detect obsolete ADD-CORRESPONDING statements |
+| `CHECK_COMPUTE` | `Boolean` | <code>true</code> | Detect obsolete COMPUTE keyword |
+| `CHECK_MOVE` | `Boolean` | <code>true</code> | Detect obsolete MOVE ... TO statements (prefer =) |
+| `CHECK_GET_REF` | `Boolean` | <code>true</code> | Detect obsolete GET REFERENCE OF statement (prefer REF #( )) |
 
 ## Suppression
 
@@ -63,11 +65,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC OBSOLETE_ARITH
+... "#EC NO_OBS_ARITH
 
 " SAP CI_ prefix format:
-... "#EC CI_OBSOLETE_ARITH
+... "#EC CI_NO_OBS_ARITH
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

@@ -1,5 +1,7 @@
 ---
-description: "Prefer Inline Declarations"
+title: "Prefer Modern Inline Declarations in ABAP 7.40+"
+description: "Prefer Modern Inline Declarations in ABAP 7.40+ - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-inline, clean-abap"
 ---
 
 # Prefer Modern Inline Declarations in ABAP 7.40+
@@ -7,7 +9,7 @@ description: "Prefer Inline Declarations"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="danger" text="#EC PREFER_INLINE" />
+  <Badge type="danger" text="#EC PREF_INLINE" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -40,11 +42,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC PREFER_INLINE
+... "#EC PREF_INLINE
 
 " SAP CI_ prefix format:
-... "#EC CI_PREFER_INLINE
+... "#EC CI_PREF_INLINE
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

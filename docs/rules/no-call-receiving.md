@@ -1,5 +1,7 @@
 ---
-description: "Omit RECEIVING in Method Invocations"
+title: "Omit RECEIVING in Method Invocations"
+description: "Omit RECEIVING in Method Invocations - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-call-receiving, anti-patterns"
 ---
 
 # Omit RECEIVING in Method Invocations
@@ -8,7 +10,7 @@ description: "Omit RECEIVING in Method Invocations"
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="warning" text="QuickFix Ready" />
-  <Badge type="danger" text="#EC RECEIVING" />
+  <Badge type="danger" text="#EC NO_CALL_RECEIVING" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -47,11 +49,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC RECEIVING
+... "#EC NO_CALL_RECEIVING
 
 " SAP CI_ prefix format:
-... "#EC CI_RECEIVING
+... "#EC CI_NO_CALL_RECEIVING
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

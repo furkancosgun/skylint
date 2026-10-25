@@ -1,5 +1,7 @@
 ---
-description: "Prefer CORRESPONDING Expression over MOVE-CORRESPONDING"
+title: "Prefer CORRESPONDING #( ) Operator"
+description: "Prefer CORRESPONDING #( ) Operator - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-corresp, clean-abap"
 ---
 
 # Prefer CORRESPONDING #( ) Operator
@@ -8,7 +10,7 @@ description: "Prefer CORRESPONDING Expression over MOVE-CORRESPONDING"
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="QuickFix Ready" />
-  <Badge type="danger" text="#EC CORRESP" />
+  <Badge type="danger" text="#EC PREF_CORRESP" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -47,11 +49,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC CORRESP
+... "#EC PREF_CORRESP
 
 " SAP CI_ prefix format:
-... "#EC CI_CORRESP
+... "#EC CI_PREF_CORRESP
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

@@ -1,5 +1,7 @@
 ---
-description: "Avoid Chained Declarations"
+title: "Avoid Chained Declarations (DATA:, CONSTANTS:, TYPES:)"
+description: "Avoid Chained Declarations (DATA:, CONSTANTS:, TYPES:) - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-chained-decl, anti-patterns"
 ---
 
 # Avoid Chained Declarations (DATA:, CONSTANTS:, TYPES:)
@@ -8,7 +10,7 @@ description: "Avoid Chained Declarations"
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="warning" text="QuickFix Ready" />
-  <Badge type="danger" text="#EC CHAIN_DECL" />
+  <Badge type="danger" text="#EC NO_CHAINED_DECL" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -47,9 +49,9 @@ This rule provides an **automated QuickFix** directly in Eclipse ABAP Developmen
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value |
-|---|---|:---:|
-| `ALLOW_STRUCTURE_CHAINS` | `Boolean` | <code>true</code> |
+| Parameter Name | Data Type | Default Value | Description & Guidance |
+|---|---|:---:|---|
+| `ALLOW_STRUCTURE_CHAINS` | `Boolean` | <code>true</code> | Allow chained declarations exclusively inside BEGIN OF ... END OF structure definitions |
 
 ## Suppression
 
@@ -57,11 +59,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC CHAIN_DECL
+... "#EC NO_CHAINED_DECL
 
 " SAP CI_ prefix format:
-... "#EC CI_CHAIN_DECL
+... "#EC CI_NO_CHAINED_DECL
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

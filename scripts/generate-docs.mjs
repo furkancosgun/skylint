@@ -143,10 +143,16 @@ for (const rule of RULES) {
   const categoryInfo = CATEGORIES[rule.category] || { title: rule.category };
 
   // Rule Page Title with SEO frontmatter
-  const cleanDesc = (classDesc || '').replace(/"/g, '\\"');
+  const seoDesc = (rule.seo?.description || classDesc || '').replace(/"/g, '\\"');
+  const seoTitle = (meta.title || '').replace(/"/g, '\\"');
+  const seoKeywords = rule.seo?.keywords ? rule.seo.keywords.join(', ') : '';
   const severityType = severity === 'error' ? 'danger' : severity === 'note' ? 'info' : 'warning';
   const severityLabel = severity.charAt(0).toUpperCase() + severity.slice(1);
-  let ruleDoc = `---\ndescription: "${cleanDesc}"\n---\n\n# ${meta.title}\n\n`;
+  let ruleDoc = `---\ntitle: "${seoTitle}"\ndescription: "${seoDesc}"\n`;
+  if (seoKeywords) {
+    ruleDoc += `keywords: "${seoKeywords.replace(/"/g, '\\"')}"\n`;
+  }
+  ruleDoc += `---\n\n# ${meta.title}\n\n`;
 
   // Badge bar wrapper with inline margin
   ruleDoc += `<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">\n`;
@@ -197,13 +203,24 @@ for (const rule of RULES) {
 
   // Configuration Table & Attributes
   if (attributes.length > 0) {
+    const hasParamDesc = attributes.some(attr => (rule.parameters && rule.parameters[attr.name]));
     ruleDoc += `## Configuration & Thresholds\n\n`;
     ruleDoc += `This check can be fine-tuned directly in the ATC Check Variant Editor (\`CHKV\`) in Eclipse ADT:\n\n`;
-    ruleDoc += `| Parameter Name | Data Type | Default Value |\n`;
-    ruleDoc += `|---|---|:---:|\n`;
-    for (const attr of attributes) {
-      const escapedDefault = attr.defaultValue.replace(/\|/g, '&#124;');
-      ruleDoc += `| \`${attr.name}\` | \`${attr.kind}\` | <code>${escapedDefault}</code> |\n`;
+    if (hasParamDesc) {
+      ruleDoc += `| Parameter Name | Data Type | Default Value | Description & Guidance |\n`;
+      ruleDoc += `|---|---|:---:|---|\n`;
+      for (const attr of attributes) {
+        const escapedDefault = attr.defaultValue.replace(/\|/g, '&#124;');
+        const pDesc = (rule.parameters && rule.parameters[attr.name]) ? rule.parameters[attr.name].replace(/\|/g, '&#124;') : '-';
+        ruleDoc += `| \`${attr.name}\` | \`${attr.kind}\` | <code>${escapedDefault}</code> | ${pDesc} |\n`;
+      }
+    } else {
+      ruleDoc += `| Parameter Name | Data Type | Default Value |\n`;
+      ruleDoc += `|---|---|:---:|\n`;
+      for (const attr of attributes) {
+        const escapedDefault = attr.defaultValue.replace(/\|/g, '&#124;');
+        ruleDoc += `| \`${attr.name}\` | \`${attr.kind}\` | <code>${escapedDefault}</code> |\n`;
+      }
     }
     ruleDoc += `\n`;
   }
@@ -212,6 +229,15 @@ for (const rule of RULES) {
   ruleDoc += `## Suppression\n\n`;
   ruleDoc += `To suppress findings for this rule, append the pseudo-comment to the statement:\n\n`;
   ruleDoc += `\`\`\`abap\n" Standard pseudo-comment:\n... "#EC ${rule.pseudoComment}\n\n" SAP CI_ prefix format:\n... "#EC CI_${rule.pseudoComment}\n\`\`\`\n\n`;
+
+  // References
+  if (rule.references && rule.references.length > 0) {
+    ruleDoc += `## References & Standards\n\n`;
+    for (const ref of rule.references) {
+      ruleDoc += `* [${ref.title}](${ref.url})\n`;
+    }
+    ruleDoc += `\n`;
+  }
 
   // ABAP Class Details
   ruleDoc += `## Technical Details\n\n`;

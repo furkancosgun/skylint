@@ -1,5 +1,7 @@
 ---
-description: "Avoid Hungarian notation and encoding prefixes"
+title: "Avoid Hungarian Notation and Type Prefixes"
+description: "Avoid Hungarian Notation and Type Prefixes - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-hungarian, clean-abap"
 ---
 
 # Avoid Hungarian Notation and Type Prefixes
@@ -41,11 +43,11 @@ METHODS process IMPORTING input TYPE string.
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value |
-|---|---|:---:|
-| `CHECK_ATTR` | `Boolean` | <code>true</code> |
-| `CHECK_LOCAL` | `Boolean` | <code>true</code> |
-| `CHECK_PARAM` | `Boolean` | <code>true</code> |
+| Parameter Name | Data Type | Default Value | Description & Guidance |
+|---|---|:---:|---|
+| `CHECK_ATTR` | `Boolean` | <code>true</code> | Report legacy Hungarian notation type prefixes on class attributes |
+| `CHECK_LOCAL` | `Boolean` | <code>true</code> | Report legacy Hungarian notation type prefixes on local variables |
+| `CHECK_PARAM` | `Boolean` | <code>true</code> | Report legacy Hungarian notation type prefixes on method parameters |
 
 ## Suppression
 
@@ -58,6 +60,11 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 " SAP CI_ prefix format:
 ... "#EC CI_NO_HUNGARIAN
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

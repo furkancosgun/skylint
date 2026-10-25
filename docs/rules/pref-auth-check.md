@@ -1,14 +1,16 @@
 ---
-description: "Call Transaction Authority Check"
+title: "Ensure AUTHORITY-CHECK Precedes Sensitive Business Operations"
+description: "Ensure role-based authorization checks precede sensitive database modifications and financial records in SAP ABAP."
+keywords: "SAP Authorization Check, Role-Based Access Control ABAP, Data Security SAP, ATC Security Check"
 ---
 
-# Ensure AUTHORITY-CHECK Before Sensitive Operations
+# Ensure AUTHORITY-CHECK Precedes Sensitive Business Operations
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Security & Robustness" />
   <Badge type="warning" text="QuickFix Ready" />
-  <Badge type="danger" text="#EC AUTH_CHECK" />
+  <Badge type="danger" text="#EC PREF_AUTH_CHECK" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -20,18 +22,27 @@ Call Transaction Authority Check.
 
 ## Rationale
 
-Starting a transaction or sensitive operation without an authority check lets any user who reaches the code perform protected actions. Authorization must be verified before the operation, not assumed from the surrounding UI. Add WITH AUTHORITY-CHECK to the CALL TRANSACTION or perform an explicit AUTHORITY-CHECK first.
+Accessing or modifying sensitive business entities (such as financials, HR master data, and sales pricing) without prior authorization verification allows unauthorized users to read or tamper with protected company assets. Every business service, remote-enabled function module, or RAP BO handler must enforce an explicit authorization check at the entry point of sensitive operations.
 
 ### Non-Compliant
 
 ```abap
-CALL TRANSACTION 'ME21N'.
+" Insecure: Direct update to payroll records without verifying user permissions
+UPDATE pa0008 SET betrg = @iv_new_salary WHERE pernr = @iv_employee_id.
 ```
 
 ### Compliant
 
 ```abap
-CALL TRANSACTION 'ME21N' WITH AUTHORITY-CHECK.
+" Secure: Authorization check precedes data modification
+AUTHORITY-CHECK OBJECT 'P_ORGIN'
+  ID 'INFTY' FIELD '0008'
+  ID 'AUTHC' FIELD 'W'.
+IF sy-subrc <> 0.
+  RAISE EXCEPTION NEW zcx_no_authorization( ).
+ENDIF.
+
+UPDATE pa0008 SET betrg = @iv_new_salary WHERE pernr = @iv_employee_id.
 ```
 
 ## Automated QuickFix
@@ -47,11 +58,15 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC AUTH_CHECK
+... "#EC PREF_AUTH_CHECK
 
 " SAP CI_ prefix format:
-... "#EC CI_AUTH_CHECK
+... "#EC CI_PREF_AUTH_CHECK
 ```
+
+## References & Standards
+
+* [SAP Help: Implementing Authorization Checks](https://help.sap.com)
 
 ## Technical Details
 

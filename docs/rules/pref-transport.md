@@ -1,13 +1,15 @@
 ---
-description: "Avoid MODIFY itab in LOOP without TRANSPORTING clause"
+title: "Specify TRANSPORTING in Internal Table MODIFY and READ Operations"
+description: "Speed up internal table updates in ABAP by specifying TRANSPORTING fields in MODIFY statements to prevent full-structure copy overhead."
+keywords: "MODIFY itab TRANSPORTING, Internal Table Performance ABAP, Clean ABAP Table Mutations, SAP Memory Optimization"
 ---
 
-# Specify TRANSPORTING in MODIFY / READ TABLE
+# Specify TRANSPORTING in Internal Table MODIFY and READ Operations
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Performance & Database" />
-  <Badge type="danger" text="#EC TRANSPORTING" />
+  <Badge type="danger" text="#EC PREF_TRANSPORT" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -19,24 +21,27 @@ Avoid MODIFY itab in LOOP without TRANSPORTING clause.
 
 ## Rationale
 
-MODIFY without TRANSPORTING copies the entire table line from the work area, even when only one field changed. On wide tables this costs extra memory and CPU for every row. Name the changed fields in TRANSPORTING so only the relevant data is written.
+When updating internal table rows using `MODIFY itab FROM workarea`, ABAP by default copies every single field from the work area into the internal table row. If the table row contains wide structures, nested tables, or large string fields, copying unchanged fields incurs severe CPU cache misses and memory reallocation overhead.
+
+**Best Practice:** Use the `TRANSPORTING` addition to explicitly specify only the specific columns being modified.
 
 ### Non-Compliant
 
 ```abap
-LOOP AT lt_items INTO ls_item.
-  ls_item-status = 'DONE'.
-  MODIFY lt_items FROM ls_item.
-ENDLOOP.
+" Anti-pattern: Deep copies all 60 columns of ls_customer back into the table row
+ls_customer-status = 'ACTIVE'.
+MODIFY lt_customers FROM ls_customer INDEX lv_tabix.
 ```
 
 ### Compliant
 
 ```abap
-LOOP AT lt_items INTO ls_item.
-  ls_item-status = 'DONE'.
-  MODIFY lt_items FROM ls_item TRANSPORTING status.
-ENDLOOP.
+" Clean ABAP: Only transfers the modified status column (zero overhead on other fields)
+ls_customer-status = 'ACTIVE'.
+MODIFY lt_customers FROM ls_customer INDEX lv_tabix TRANSPORTING status.
+
+" Even better: Mutate directly in-place via field symbol (zero copy)
+<ls_customer>-status = 'ACTIVE'.
 ```
 
 ## Suppression
@@ -45,11 +50,15 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC TRANSPORTING
+... "#EC PREF_TRANSPORT
 
 " SAP CI_ prefix format:
-... "#EC CI_TRANSPORTING
+... "#EC CI_PREF_TRANSPORT
 ```
+
+## References & Standards
+
+* [Clean ABAP: Use TRANSPORTING when Modifying Internal Tables](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
 
 ## Technical Details
 

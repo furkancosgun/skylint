@@ -1,5 +1,7 @@
 ---
-description: "Avoid empty control blocks (IF, CASE, LOOP, TRY, etc.)"
+title: "Avoid Empty Control Blocks"
+description: "Avoid Empty Control Blocks - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-empty-block, anti-patterns"
 ---
 
 # Avoid Empty Control Blocks
@@ -7,7 +9,7 @@ description: "Avoid empty control blocks (IF, CASE, LOOP, TRY, etc.)"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="danger" text="#EC EMPTY_BLOCK" />
+  <Badge type="danger" text="#EC NO_EMPTY_BLOCK" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -45,16 +47,16 @@ ENDIF.
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value |
-|---|---|:---:|
-| `CHECK_IF` | `Boolean` | <code>true</code> |
-| `CHECK_LOOP` | `Boolean` | <code>true</code> |
-| `CHECK_CASE` | `Boolean` | <code>true</code> |
-| `CHECK_TRY` | `Boolean` | <code>true</code> |
-| `CHECK_CATCH` | `Boolean` | <code>true</code> |
-| `CHECK_TRY_NO_CATCH` | `Boolean` | <code>true</code> |
-| `CHECK_DO` | `Boolean` | <code>true</code> |
-| `CHECK_WHILE` | `Boolean` | <code>true</code> |
+| Parameter Name | Data Type | Default Value | Description & Guidance |
+|---|---|:---:|---|
+| `CHECK_IF` | `Boolean` | <code>true</code> | Detect empty IF / ELSEIF / ELSE blocks |
+| `CHECK_LOOP` | `Boolean` | <code>true</code> | Detect empty LOOP blocks |
+| `CHECK_CASE` | `Boolean` | <code>true</code> | Detect empty CASE / WHEN blocks |
+| `CHECK_TRY` | `Boolean` | <code>true</code> | Detect empty TRY blocks |
+| `CHECK_CATCH` | `Boolean` | <code>true</code> | Detect empty CATCH blocks with no handling or comments |
+| `CHECK_TRY_NO_CATCH` | `Boolean` | <code>true</code> | Detect TRY blocks that have no CATCH or CLEANUP clause |
+| `CHECK_DO` | `Boolean` | <code>true</code> | Detect empty DO blocks |
+| `CHECK_WHILE` | `Boolean` | <code>true</code> | Detect empty WHILE blocks |
 
 ## Suppression
 
@@ -62,11 +64,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC EMPTY_BLOCK
+... "#EC NO_EMPTY_BLOCK
 
 " SAP CI_ prefix format:
-... "#EC CI_EMPTY_BLOCK
+... "#EC CI_NO_EMPTY_BLOCK
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

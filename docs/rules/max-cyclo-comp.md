@@ -1,13 +1,15 @@
 ---
-description: "Cyclomatic Complexity Threshold"
+title: "Limit Cyclomatic Complexity (McCabe Complexity Metric)"
+description: "Control McCabe cyclomatic complexity in ABAP code to reduce defect density and improve automated unit test coverage."
+keywords: "Cyclomatic Complexity ABAP, McCabe Metric SAP, Clean ABAP Code Quality, Branch Coverage ATC"
 ---
 
-# Limit Cyclomatic Complexity
+# Limit Cyclomatic Complexity (McCabe Complexity Metric)
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Metrics & Complexity Limits" />
-  <Badge type="danger" text="#EC CYCLO_COMP" />
+  <Badge type="danger" text="#EC MAX_CYCLO_COMP" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -19,38 +21,32 @@ Cyclomatic Complexity Threshold.
 
 ## Rationale
 
-Cyclomatic complexity counts the independent decision paths through a method, so a high value means many branches need separate tests. Such methods are hard to understand and easy to break when one condition changes. Split the decisions into cohesive helper methods or strategy objects.
+Cyclomatic Complexity measures the number of linearly independent paths through a procedure's source code (branch points like `IF`, `ELSEIF`, `WHEN`, `WHILE`, `AND`, `OR`, `CATCH`). High complexity correlates directly with high defect density, regression risks during refactoring, and poor unit test branch coverage.
+
+**Clean ABAP Guideline:** Keep cyclomatic complexity under 10 (or maximum 15 for large state dispatches). Extract branches into polymorphically dispatched strategy classes or smaller helper methods.
 
 ### Non-Compliant
 
 ```abap
-METHOD check_order.
-  IF is_blocked( ).
-    RETURN.
+" Anti-pattern: Massive branching complexity score (>20) with nested conditionals
+METHOD calculate_discount.
+  IF iv_region = 'EU'.
+    IF iv_cust_tier = 'VIP' AND iv_amount > 1000.
+      rv_disc = 20.
+    ELSEIF iv_cust_tier = 'GOLD' OR iv_amount > 500.
+      rv_disc = 15.
+    ...
   ENDIF.
-  IF has_no_stock( ).
-    RETURN.
-  ENDIF.
-  IF is_over_limit( ).
-    RETURN.
-  ENDIF.
-  IF needs_approval( ).
-    approve( ).
-  ENDIF.
-  IF is_priority( ).
-    expedite( ).
-  ENDIF.
-  release( ).
 ENDMETHOD.
 ```
 
 ### Compliant
 
 ```abap
-METHOD check_order.
-  validate_order( ).
-  approve_order( ).
-  release_order( ).
+" Clean ABAP: Delegate calculations to cohesive strategy pattern or rule table
+METHOD calculate_discount.
+  DATA(lo_strategy) = mo_discount_factory->get_strategy( iv_region ).
+  rv_disc = lo_strategy->calculate( iv_tier = iv_cust_tier iv_amount = iv_amount ).
 ENDMETHOD.
 ```
 
@@ -58,9 +54,9 @@ ENDMETHOD.
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value |
-|---|---|:---:|
-| `MAX_COMPLEXITY` | `Integer` | <code>5</code> |
+| Parameter Name | Data Type | Default Value | Description & Guidance |
+|---|---|:---:|---|
+| `MAX_COMPLEXITY` | `Integer` | <code>5</code> | Maximum allowed cyclomatic complexity score per method (default threshold: 10) |
 
 ## Suppression
 
@@ -68,11 +64,15 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC CYCLO_COMP
+... "#EC MAX_CYCLO_COMP
 
 " SAP CI_ prefix format:
-... "#EC CI_CYCLO_COMP
+... "#EC CI_MAX_CYCLO_COMP
 ```
+
+## References & Standards
+
+* [Clean ABAP: Keep Complexity Low](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
 
 ## Technical Details
 

@@ -1,5 +1,7 @@
 ---
-description: "Bad Statement Indentation"
+title: "Statement Indentation Must Match Block Nesting"
+description: "Statement Indentation Must Match Block Nesting - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-bad-indent, clean-abap"
 ---
 
 # Statement Indentation Must Match Block Nesting
@@ -8,7 +10,7 @@ description: "Bad Statement Indentation"
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="QuickFix Ready" />
-  <Badge type="danger" text="#EC BAD_INDENT" />
+  <Badge type="danger" text="#EC NO_BAD_INDENT" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -55,9 +57,9 @@ This rule provides an **automated QuickFix** directly in Eclipse ABAP Developmen
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value |
-|---|---|:---:|
-| `INDENT_STEP` | `Integer` | <code>2</code> |
+| Parameter Name | Data Type | Default Value | Description & Guidance |
+|---|---|:---:|---|
+| `INDENT_STEP` | `Integer` | <code>2</code> | Standard indentation step per nested block level (default: 2 spaces) |
 
 ## Suppression
 
@@ -65,11 +67,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC BAD_INDENT
+... "#EC NO_BAD_INDENT
 
 " SAP CI_ prefix format:
-... "#EC CI_BAD_INDENT
+... "#EC CI_NO_BAD_INDENT
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

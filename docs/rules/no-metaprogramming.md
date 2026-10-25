@@ -1,13 +1,15 @@
 ---
-description: "Metaprogramming and Dynamic Code Generation"
+title: "Avoid Dynamic Metaprogramming and Code Generation (Remote Code Execution Risk)"
+description: "Mitigate CWE-94 code injection vulnerabilities in SAP ABAP by avoiding GENERATE SUBROUTINE POOL and dynamic code execution."
+keywords: "CWE-94 ABAP, GENERATE SUBROUTINE POOL vulnerability, Code Injection SAP, ABAP Cloud Security"
 ---
 
-# Avoid Metaprogramming and Dynamic Code Generation
+# Avoid Dynamic Metaprogramming and Code Generation (Remote Code Execution Risk)
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Security & Robustness" />
-  <Badge type="danger" text="#EC METAPROGRAM" />
+  <Badge type="danger" text="#EC NO_METAPROGRAMMING" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -19,19 +21,24 @@ Metaprogramming and Dynamic Code Generation.
 
 ## Rationale
 
-Statements such as SYNTAX-CHECK, GENERATE REPORT/SUBROUTINE, INSERT/DELETE REPORT or TEXTPOOL, and EDITOR-CALL perform dynamic code manipulation at runtime. They introduce major security risks (code injection), bypass static ATC analysis, are completely forbidden in ABAP Cloud, and compromise system auditability.
+Statements like `GENERATE SUBROUTINE POOL`, `INSERT REPORT`, and dynamic `SYNTAX-CHECK` create and execute uncompiled ABAP code at runtime. Metaprogramming introduces severe **Remote Code Execution (RCE)** vulnerabilities (CWE-94), defeats static analysis in ATC, and is completely blocked in ABAP Cloud and SAP BTP.
+
+**Cloud Standard:** Use object-oriented polymorphism, strategy design patterns, or BAdIs instead of generating code dynamically.
 
 ### Non-Compliant
 
 ```abap
-SYNTAX-CHECK FOR lt_prog MESSAGE lv_msg LINE lv_lin WORD lv_wrd.
-DELETE REPORT 'ZTEMP_PROG'.
+" Critical Security Vulnerability: Dynamic code execution from string buffer
+GENERATE SUBROUTINE POOL lt_source_code NAME DATA(lv_prog).
+PERFORM execute IN PROGRAM (lv_prog).
 ```
 
 ### Compliant
 
 ```abap
-" Refactor to statically compiled classes, interfaces, or standard factory patterns.
+" Clean ABAP Cloud: Object-oriented strategy pattern
+DATA(lo_calculator) = zcl_calculator_factory=>get_strategy( iv_calc_type ).
+DATA(lv_result) = lo_calculator->compute( it_data ).
 ```
 
 ## Suppression
@@ -40,11 +47,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC METAPROGRAM
+... "#EC NO_METAPROGRAMMING
 
 " SAP CI_ prefix format:
-... "#EC CI_METAPROGRAM
+... "#EC CI_NO_METAPROGRAMMING
 ```
+
+## References & Standards
+
+* [CWE-94: Improper Control of Generation of Code](https://cwe.mitre.org/data/definitions/94.html)
+* [SAP Clean Core Cloud Guidelines](https://help.sap.com)
 
 ## Technical Details
 

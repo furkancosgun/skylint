@@ -1,5 +1,7 @@
 ---
-description: "Avoid static-only classes; use instantiable classes"
+title: "Avoid Purely Static Utility Classes"
+description: "Avoid Purely Static Utility Classes - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-static-cls, anti-patterns"
 ---
 
 # Avoid Purely Static Utility Classes
@@ -7,7 +9,7 @@ description: "Avoid static-only classes; use instantiable classes"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="danger" text="#EC STATIC_CLS" />
+  <Badge type="danger" text="#EC NO_STATIC_CLS" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -46,11 +48,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC STATIC_CLS
+... "#EC NO_STATIC_CLS
 
 " SAP CI_ prefix format:
-... "#EC CI_STATIC_CLS
+... "#EC CI_NO_STATIC_CLS
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

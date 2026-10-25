@@ -1,13 +1,15 @@
 ---
-description: "RFC calls must handle system failures"
+title: "Handle System and Communication Failures in Remote Function Calls (RFC)"
+description: "Prevent short dumps during remote SAP integration by handling COMMUNICATION_FAILURE and SYSTEM_FAILURE in RFC calls."
+keywords: "RFC Exception Handling ABAP, COMMUNICATION_FAILURE SAP, SYSTEM_FAILURE RFC, Resilient SAP Integration"
 ---
 
-# RFC calls must handle SYSTEM_FAILURE and COMMUNICATION_FAILURE
+# Handle System and Communication Failures in Remote Function Calls (RFC)
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="danger" text="Error" />
   <Badge type="tip" text="Security & Robustness" />
-  <Badge type="danger" text="#EC RFC_ERR" />
+  <Badge type="danger" text="#EC NO_RFC_ERR" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -19,24 +21,37 @@ RFC calls must handle system failures.
 
 ## Rationale
 
-A remote function call can fail because the target system is unavailable or the communication layer breaks, independently of the function logic. Without handlers for SYSTEM_FAILURE and COMMUNICATION_FAILURE, these failures become unhandled dumps or silent errors. Always handle both, plus OTHERS, and evaluate the response.
+When invoking remote SAP systems via `CALL FUNCTION ... DESTINATION`, network timeouts, gateway unreachability, target kernel crashes, and authorization rejections trigger classic exceptions `COMMUNICATION_FAILURE` and `SYSTEM_FAILURE`. Omitting these exception handlers causes the local caller to crash with an unhandled short dump (`CALL_FUNCTION_NOT_FOUND` or `RFC_COMMUNICATION_ERROR`).
+
+**Reliability Standard:** Always catch and log both `COMMUNICATION_FAILURE` and `SYSTEM_FAILURE` with `MESSAGE lv_msg` when calling remote destinations.
 
 ### Non-Compliant
 
 ```abap
-CALL FUNCTION 'Z_RFC'
-  DESTINATION lv_rfc.
+" Fragile: Network glitch crashes the entire batch job with short dump
+CALL FUNCTION 'BAPI_SALESORDER_CREATEFROMDAT2'
+  DESTINATION lv_rfcdest
+  EXPORTING
+    order_header_in = ls_header.
 ```
 
 ### Compliant
 
 ```abap
-CALL FUNCTION 'Z_RFC'
-  DESTINATION lv_rfc
+" Resilient: Catches network and remote kernel failures gracefully
+CALL FUNCTION 'BAPI_SALESORDER_CREATEFROMDAT2'
+  DESTINATION lv_rfcdest
+  EXPORTING
+    order_header_in       = ls_header
   EXCEPTIONS
-    system_failure        = 1 MESSAGE lv_message
-    communication_failure = 2 MESSAGE lv_message
+    communication_failure = 1 MESSAGE lv_comm_error
+    system_failure        = 2 MESSAGE lv_sys_error
     OTHERS                = 3.
+
+IF sy-subrc <> 0.
+  mo_logger->error( |Remote RFC failed: { lv_comm_error } { lv_sys_error }| ).
+  RAISE EXCEPTION NEW zcx_rfc_connection_failed( ).
+ENDIF.
 ```
 
 ## Suppression
@@ -45,11 +60,15 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC RFC_ERR
+... "#EC NO_RFC_ERR
 
 " SAP CI_ prefix format:
-... "#EC CI_RFC_ERR
+... "#EC CI_NO_RFC_ERR
 ```
+
+## References & Standards
+
+* [SAP Help: Reliable RFC Invocations](https://help.sap.com)
 
 ## Technical Details
 

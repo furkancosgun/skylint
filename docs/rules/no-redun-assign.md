@@ -1,5 +1,7 @@
 ---
-description: "Remove Redundant Assignments & CLEARs"
+title: "Remove Redundant Self-Assignments and CLEAR Statements"
+description: "Remove Redundant Self-Assignments and CLEAR Statements - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-redun-assign, anti-patterns"
 ---
 
 # Remove Redundant Self-Assignments and CLEAR Statements
@@ -51,11 +53,11 @@ This rule provides an **automated QuickFix** directly in Eclipse ABAP Developmen
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value |
-|---|---|:---:|
-| `CHECK_SELF_ASSIGN` | `Boolean` | <code>true</code> |
-| `CHECK_BEFORE_WRITE` | `Boolean` | <code>true</code> |
-| `CHECK_WITHOUT_READ` | `Boolean` | <code>true</code> |
+| Parameter Name | Data Type | Default Value | Description & Guidance |
+|---|---|:---:|---|
+| `CHECK_SELF_ASSIGN` | `Boolean` | <code>true</code> | Detect identical assignments where variable is assigned to itself (a = a) |
+| `CHECK_BEFORE_WRITE` | `Boolean` | <code>true</code> | Detect redundant CLEAR statements immediately followed by variable write/overwrite |
+| `CHECK_WITHOUT_READ` | `Boolean` | <code>true</code> | Detect redundant CLEAR at the very end of procedure where variable is never read again |
 
 ## Suppression
 
@@ -68,6 +70,11 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 " SAP CI_ prefix format:
 ... "#EC CI_SELF_ASSIGN
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

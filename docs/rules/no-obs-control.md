@@ -1,5 +1,7 @@
 ---
-description: "Obsolete Control Flow and Procedural Statements"
+title: "Avoid Obsolete Control Flow and Procedural Forms"
+description: "Avoid Obsolete Control Flow and Procedural Forms - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-obs-control, anti-patterns"
 ---
 
 # Avoid Obsolete Control Flow and Procedural Forms
@@ -7,7 +9,7 @@ description: "Obsolete Control Flow and Procedural Statements"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="danger" text="#EC OBSOLETE_CTRL" />
+  <Badge type="danger" text="#EC NO_OBS_CONTROL" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -41,18 +43,18 @@ LOOP AT lt_orders INTO DATA(ls_order) GROUP BY ls_order-order_id ...
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value |
-|---|---|:---:|
-| `CHECK_FORM` | `Boolean` | <code>true</code> |
-| `CHECK_LOOP_CTL` | `Boolean` | <code>true</code> |
-| `CHECK_BREAK` | `Boolean` | <code>true</code> |
-| `CHECK_DEFINE` | `Boolean` | <code>true</code> |
-| `CHECK_TEST_SEAMS` | `Boolean` | <code>true</code> |
-| `CHECK_CATCH_SYSTEM` | `Boolean` | <code>true</code> |
-| `CHECK_SET_EXT_CHECK` | `Boolean` | <code>true</code> |
-| `CHECK_SELECT_NO_INTO` | `Boolean` | <code>true</code> |
-| `CHECK_EXIT_SQL` | `Boolean` | <code>true</code> |
-| `CHECK_SORT_BY_FS` | `Boolean` | <code>true</code> |
+| Parameter Name | Data Type | Default Value | Description & Guidance |
+|---|---|:---:|---|
+| `CHECK_FORM` | `Boolean` | <code>true</code> | Detect obsolete PERFORM / FORM subroutine routines |
+| `CHECK_LOOP_CTL` | `Boolean` | <code>true</code> | Detect obsolete control break statements (ON CHANGE OF, EXIT FROM STEP-LOOP) |
+| `CHECK_BREAK` | `Boolean` | <code>true</code> | Detect unconditioned BREAK-POINT statements in non-test code |
+| `CHECK_DEFINE` | `Boolean` | <code>true</code> | Detect DEFINE macro declarations |
+| `CHECK_TEST_SEAMS` | `Boolean` | <code>true</code> | Detect TEST-SEAM injection blocks in production logic |
+| `CHECK_CATCH_SYSTEM` | `Boolean` | <code>true</code> | Detect obsolete CATCH SYSTEM-EXCEPTIONS syntax |
+| `CHECK_SET_EXT_CHECK` | `Boolean` | <code>true</code> | Detect obsolete SET EXTENDED CHECK statements |
+| `CHECK_SELECT_NO_INTO` | `Boolean` | <code>true</code> | Detect obsolete SELECT without INTO statements |
+| `CHECK_EXIT_SQL` | `Boolean` | <code>true</code> | Detect obsolete EXIT FROM SQL statements |
+| `CHECK_SORT_BY_FS` | `Boolean` | <code>true</code> | Detect obsolete dynamic SORT BY field symbol syntax |
 
 ## Suppression
 
@@ -60,11 +62,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC OBSOLETE_CTRL
+... "#EC NO_OBS_CONTROL
 
 " SAP CI_ prefix format:
-... "#EC CI_OBSOLETE_CTRL
+... "#EC CI_NO_OBS_CONTROL
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

@@ -1,8 +1,10 @@
 ---
-description: "Limit number of RETURN statements (PLR0911)"
+title: "Limit Multiple Return Statements per Method Body"
+description: "Balance guard clauses with predictable method exits in ABAP. Prevent scattered return statements across large procedures."
+keywords: "Multiple return statements ABAP, Guard Clauses vs Single Exit, Clean ABAP Control Flow, ATC Metrics"
 ---
 
-# Limit Number of RETURN Statements in Method
+# Limit Multiple Return Statements per Method Body
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
@@ -19,26 +21,36 @@ Limit number of RETURN statements (PLR0911).
 
 ## Rationale
 
-Methods with many return statements are difficult to understand, trace, and test comprehensively. Functions should have a small number of exit points; split complex conditional returns into helper methods or simplify control flow.
+While early return guard clauses at the top of a method are encouraged by Clean ABAP, scattering a dozen `RETURN` or `EXIT` statements throughout the middle and end of a long procedure makes control flow unpredictable. It becomes difficult to ensure that cleanup logic or post-conditions are reliably reached.
+
+**Clean ABAP Guideline:** Use early returns strictly for parameter and state validation guards at the entry point of the method. Keep the core execution flow to a single, predictable exit point.
 
 ### Non-Compliant
 
 ```abap
-METHOD process.
-  IF a = 1. RETURN. ENDIF.
-  IF b = 2. RETURN. ENDIF.
-  " ... 5 more returns ...
+" Anti-pattern: 8 scattered return points throughout 100 lines of logic
+METHOD calculate_tax.
+  ...
+  IF condition_a. RETURN. ENDIF.
+  ...
+  IF condition_b. RETURN. ENDIF.
+  ...
+  IF condition_c. RETURN. ENDIF.
+  ...
 ENDMETHOD.
 ```
 
 ### Compliant
 
 ```abap
-METHOD process.
-  IF is_invalid_input( ).
+" Clean ABAP: Grouped guard clauses at top, single deterministic computation exit
+METHOD calculate_tax.
+  IF is_tax_exempt( is_customer ).
+    rv_tax = 0.
     RETURN.
   ENDIF.
-  execute_logic( ).
+
+  rv_tax = compute_standard_rate( is_customer ).
 ENDMETHOD.
 ```
 
@@ -46,9 +58,9 @@ ENDMETHOD.
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value |
-|---|---|:---:|
-| `MAX_RETURNS` | `Integer` | <code>6</code> |
+| Parameter Name | Data Type | Default Value | Description & Guidance |
+|---|---|:---:|---|
+| `MAX_RETURNS` | `Integer` | <code>6</code> | Maximum allowed total return points (RETURN, EXIT) within a single method |
 
 ## Suppression
 
@@ -61,6 +73,10 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 " SAP CI_ prefix format:
 ... "#EC CI_MAX_RETURNS
 ```
+
+## References & Standards
+
+* [Clean ABAP: Return Early When Nothing Else to Do](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#return-early-when-nothing-else-to-do)
 
 ## Technical Details
 

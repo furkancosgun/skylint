@@ -1,5 +1,7 @@
 ---
-description: "Declare inline variables as FINAL when never written again"
+title: "Prefer FINAL( ) over DATA( ) when the variable is never written again"
+description: "Prefer FINAL( ) over DATA( ) when the variable is never written again - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-final-data, clean-abap"
 ---
 
 # Prefer FINAL( ) over DATA( ) when the variable is never written again
@@ -8,7 +10,7 @@ description: "Declare inline variables as FINAL when never written again"
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="QuickFix Ready" />
-  <Badge type="danger" text="#EC PREF_FINAL" />
+  <Badge type="danger" text="#EC PREF_FINAL_DATA" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -49,11 +51,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC PREF_FINAL
+... "#EC PREF_FINAL_DATA
 
 " SAP CI_ prefix format:
-... "#EC CI_PREF_FINAL
+... "#EC CI_PREF_FINAL_DATA
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

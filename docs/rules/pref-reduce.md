@@ -1,5 +1,7 @@
 ---
-description: "Prefer REDUCE #( ) expression over simple aggregation LOOP"
+title: "Prefer REDUCE #( ) Expression over Simple Aggregation LOOP"
+description: "Prefer REDUCE #( ) Expression over Simple Aggregation LOOP - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-reduce, clean-abap"
 ---
 
 # Prefer REDUCE #( ) Expression over Simple Aggregation LOOP
@@ -56,6 +58,11 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 " SAP CI_ prefix format:
 ... "#EC CI_PREF_REDUCE
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

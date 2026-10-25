@@ -1,5 +1,7 @@
 ---
-description: "Detect obsolete string statements; prefer built-in functions"
+title: "Prefer Built-in String Functions over SEARCH/SHIFT"
+description: "Prefer Built-in String Functions over SEARCH/SHIFT - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-str-func, clean-abap"
 ---
 
 # Prefer Built-in String Functions over SEARCH/SHIFT
@@ -8,7 +10,7 @@ description: "Detect obsolete string statements; prefer built-in functions"
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="QuickFix Ready" />
-  <Badge type="danger" text="#EC STR_FUNC" />
+  <Badge type="danger" text="#EC PREF_STR_FUNC" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -54,15 +56,15 @@ This rule provides an **automated QuickFix** directly in Eclipse ABAP Developmen
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value |
-|---|---|:---:|
-| `CHECK_CONDENSE` | `Boolean` | <code>true</code> |
-| `CHECK_TRANSLATE` | `Boolean` | <code>true</code> |
-| `CHECK_SHIFT` | `Boolean` | <code>true</code> |
-| `CHECK_SEARCH` | `Boolean` | <code>true</code> |
-| `CHECK_OVERLAY` | `Boolean` | <code>true</code> |
-| `CHECK_REPLACE` | `Boolean` | <code>true</code> |
-| `CHECK_DESCRIBE` | `Boolean` | <code>true</code> |
+| Parameter Name | Data Type | Default Value | Description & Guidance |
+|---|---|:---:|---|
+| `CHECK_CONDENSE` | `Boolean` | <code>true</code> | Suggest condense( ) function over CONDENSE statement |
+| `CHECK_TRANSLATE` | `Boolean` | <code>true</code> | Suggest to_upper( ) / to_lower( ) over TRANSLATE statement |
+| `CHECK_SHIFT` | `Boolean` | <code>true</code> | Suggest substring / shift functions over SHIFT statement |
+| `CHECK_SEARCH` | `Boolean` | <code>true</code> | Suggest find( ) function over SEARCH statement |
+| `CHECK_OVERLAY` | `Boolean` | <code>true</code> | Suggest string templates over OVERLAY statement |
+| `CHECK_REPLACE` | `Boolean` | <code>true</code> | Suggest replace( ) function over REPLACE statement |
+| `CHECK_DESCRIBE` | `Boolean` | <code>true</code> | Suggest describe_by_data( ) over DESCRIBE FIELD |
 
 ## Suppression
 
@@ -70,11 +72,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC STR_FUNC
+... "#EC PREF_STR_FUNC
 
 " SAP CI_ prefix format:
-... "#EC CI_STR_FUNC
+... "#EC CI_PREF_STR_FUNC
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

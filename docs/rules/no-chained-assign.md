@@ -1,5 +1,7 @@
 ---
-description: "Avoid Chained Assignments"
+title: "Avoid Chained Assignments (a = b = c = 1)"
+description: "Avoid Chained Assignments (a = b = c = 1) - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-chained-assign, anti-patterns"
 ---
 
 # Avoid Chained Assignments (a = b = c = 1)
@@ -8,7 +10,7 @@ description: "Avoid Chained Assignments"
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="warning" text="QuickFix Ready" />
-  <Badge type="danger" text="#EC CHAIN_ASSIGN" />
+  <Badge type="danger" text="#EC NO_CHAINED_ASSIGN" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -49,11 +51,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC CHAIN_ASSIGN
+... "#EC NO_CHAINED_ASSIGN
 
 " SAP CI_ prefix format:
-... "#EC CI_CHAIN_ASSIGN
+... "#EC CI_NO_CHAINED_ASSIGN
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 

@@ -1,5 +1,7 @@
 ---
-description: "Obsolete Memory and Context Statements"
+title: "Avoid Obsolete ABAP Memory and Context Statements"
+description: "Avoid Obsolete ABAP Memory and Context Statements - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-obs-memory, anti-patterns"
 ---
 
 # Avoid Obsolete ABAP Memory and Context Statements
@@ -7,7 +9,7 @@ description: "Obsolete Memory and Context Statements"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
-  <Badge type="danger" text="#EC OBSOLETE_MEM" />
+  <Badge type="danger" text="#EC NO_OBS_MEMORY" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -38,15 +40,15 @@ FREE MEMORY ID 'USR_CTX'.
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
-| Parameter Name | Data Type | Default Value |
-|---|---|:---:|
-| `CHECK_EXPORT_MEMORY` | `Boolean` | <code>true</code> |
-| `CHECK_FREE_MEMORY` | `Boolean` | <code>true</code> |
-| `CHECK_PROVIDE` | `Boolean` | <code>true</code> |
-| `CHECK_CONTEXTS` | `Boolean` | <code>true</code> |
-| `CHECK_INFOTYPES` | `Boolean` | <code>true</code> |
-| `CHECK_COMMUNICATION` | `Boolean` | <code>true</code> |
-| `CHECK_CALL_TRANSF` | `Boolean` | <code>true</code> |
+| Parameter Name | Data Type | Default Value | Description & Guidance |
+|---|---|:---:|---|
+| `CHECK_EXPORT_MEMORY` | `Boolean` | <code>true</code> | Detect obsolete EXPORT TO MEMORY statements |
+| `CHECK_FREE_MEMORY` | `Boolean` | <code>true</code> | Detect obsolete FREE MEMORY statements |
+| `CHECK_PROVIDE` | `Boolean` | <code>true</code> | Detect obsolete PROVIDE statements |
+| `CHECK_CONTEXTS` | `Boolean` | <code>true</code> | Detect obsolete CONTEXTS statements |
+| `CHECK_INFOTYPES` | `Boolean` | <code>true</code> | Detect obsolete INFOTYPES statements |
+| `CHECK_COMMUNICATION` | `Boolean` | <code>true</code> | Detect obsolete COMMUNICATION statements |
+| `CHECK_CALL_TRANSF` | `Boolean` | <code>true</code> | Detect obsolete CALL TRANSFORMATION XML statements |
 
 ## Suppression
 
@@ -54,11 +56,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC OBSOLETE_MEM
+... "#EC NO_OBS_MEMORY
 
 " SAP CI_ prefix format:
-... "#EC CI_OBSOLETE_MEM
+... "#EC CI_NO_OBS_MEMORY
 ```
+
+## References & Standards
+
+* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
+* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
 
 ## Technical Details
 
