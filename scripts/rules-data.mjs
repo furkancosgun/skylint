@@ -1528,7 +1528,7 @@ export const RULES = [
   },
   {
     ruleId: 'max-returns',
-    title: 'Limit Number of RETURN Statements in Method (PLR0911)',
+    title: 'Limit Number of RETURN Statements in Method',
     rationale: 'Methods with many return statements are difficult to understand, trace, and test comprehensively. Functions should have a small number of exit points; split complex conditional returns into helper methods or simplify control flow.',
     className: 'ZCL_SKYLINT_MAX_RETURNS',
     pseudoComment: 'MAX_RETURNS',

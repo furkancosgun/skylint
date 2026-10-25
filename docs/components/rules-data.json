@@ -3311,5 +3311,227 @@
         "value": "X"
       }
     ]
+  },
+  {
+    "ruleId": "no-empty-override",
+    "title": "Avoid Method Override That Only Delegates to Super",
+    "className": "ZCL_SKYLINT_NO_EMPTY_OVERRIDE",
+    "checkName": "ZSKYLINT_NO_EMPTY_OVERRIDE",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "NO_EMPTY_OVERRIDE",
+    "description": "Avoid method override that only calls super",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "IGNORE_CTOR",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "IGNORE_CHECK",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "defaultParameters": [
+      {
+        "name": "IGNORE_CTOR",
+        "value": "X"
+      },
+      {
+        "name": "IGNORE_CHECK",
+        "value": "X"
+      }
+    ]
+  },
+  {
+    "ruleId": "prefer-composition",
+    "title": "Prefer Composition over Inheritance",
+    "className": "ZCL_SKYLINT_PREF_COMPOSITION",
+    "checkName": "ZSKYLINT_PREF_COMPOSITION",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "PREF_COMPOSITION",
+    "description": "Prefer composition over inheritance",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "ALLOW_TEST_CLASSES",
+        "kind": "Boolean",
+        "defaultValue": "false"
+      }
+    ],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "prefer-interface-segregation",
+    "title": "Prefer Interface Segregation (Small, Focused Interfaces)",
+    "className": "ZCL_SKYLINT_PREF_INTF_SEGREG",
+    "checkName": "ZSKYLINT_PREF_INTF_SEGREG",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "INTF_SEGREGATION",
+    "description": "Prefer interface segregation (small interfaces)",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "MAX_METHODS",
+        "kind": "Integer",
+        "defaultValue": "5"
+      }
+    ],
+    "defaultParameters": [
+      {
+        "name": "MAX_METHODS",
+        "value": "5"
+      }
+    ]
+  },
+  {
+    "ruleId": "no-single-letter",
+    "title": "Avoid Single-Letter Variable Names",
+    "className": "ZCL_SKYLINT_NO_SINGLE_LETTER",
+    "checkName": "ZSKYLINT_NO_SINGLE_LETTER",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "NO_SINGLE_LETTER",
+    "description": "Avoid single-letter variable names",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "MIN_NAME_LEN",
+        "kind": "Integer",
+        "defaultValue": "2"
+      }
+    ],
+    "defaultParameters": [
+      {
+        "name": "MIN_NAME_LEN",
+        "value": "2"
+      }
+    ]
+  },
+  {
+    "ruleId": "prefer-factory-name",
+    "title": "Prefer CREATE_* Prefix for Factory Methods Returning Own Class",
+    "className": "ZCL_SKYLINT_PREF_FACTORY_NAME",
+    "checkName": "ZSKYLINT_PREF_FACTORY_NAME",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "PREF_FACTORY_NAME",
+    "description": "Factory methods should start with CREATE_",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "PREFIX",
+        "kind": "String",
+        "defaultValue": "CREATE_"
+      }
+    ],
+    "defaultParameters": [
+      {
+        "name": "PREFIX",
+        "value": "CREATE_"
+      }
+    ]
+  },
+  {
+    "ruleId": "no-hungarian",
+    "title": "Avoid Hungarian Notation and Type Prefixes",
+    "className": "ZCL_SKYLINT_NO_HUNGARIAN",
+    "checkName": "ZSKYLINT_NO_HUNGARIAN",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "NO_HUNGARIAN",
+    "description": "Avoid Hungarian notation and encoding prefixes",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "CHECK_ATTR",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_LOCAL",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_PARAM",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "defaultParameters": [
+      {
+        "name": "CHECK_ATTR",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_LOCAL",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_PARAM",
+        "value": "X"
+      }
+    ]
+  },
+  {
+    "ruleId": "max-returns",
+    "title": "Limit Number of RETURN Statements in Method",
+    "className": "ZCL_SKYLINT_MAX_RETURNS",
+    "checkName": "ZSKYLINT_MAX_RETURNS",
+    "category": "metrics",
+    "categoryTitle": "Metrics & Complexity Limits",
+    "pseudoComment": "MAX_RETURNS",
+    "description": "Limit number of RETURN statements (PLR0911)",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "MAX_RETURNS",
+        "kind": "Integer",
+        "defaultValue": "6"
+      }
+    ],
+    "defaultParameters": [
+      {
+        "name": "MAX_RETURNS",
+        "value": "6"
+      }
+    ]
+  },
+  {
+    "ruleId": "no-instance-of",
+    "title": "Avoid IS INSTANCE OF and CASE TYPE OF Type Tests",
+    "className": "ZCL_SKYLINT_NO_INSTANCE_OF",
+    "checkName": "ZSKYLINT_NO_INSTANCE_OF",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "NO_INSTANCE_OF",
+    "description": "Avoid IS INSTANCE OF / CASE TYPE OF checks",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "CHECK_CASE_TYPE",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "defaultParameters": [
+      {
+        "name": "CHECK_CASE_TYPE",
+        "value": "X"
+      }
+    ]
   }
 ]

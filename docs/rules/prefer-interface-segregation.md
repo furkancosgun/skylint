@@ -1,0 +1,66 @@
+---
+description: "Prefer interface segregation (small interfaces)"
+---
+
+# Prefer Interface Segregation (Small, Focused Interfaces)
+
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
+  <Badge type="tip" text="Clean ABAP & Modern Syntax" />
+  <Badge type="danger" text="#EC INTF_SEGREGATION" />
+  <Badge type="info" text="Remote Enabled" />
+</div>
+
+## Overview
+
+Prefer interface segregation (small interfaces).
+
+> **ATC Finding Message:** `Interface has too many methods; prefer interface segregation`
+
+## Rationale
+
+Fat interfaces force implementers to depend on methods they do not need and make test mock creation cumbersome. Break large interfaces into small, cohesive, role-based contracts adhering to the Interface Segregation Principle (ISP).
+
+### Non-Compliant
+
+```abap
+INTERFACE lif_everything.
+  METHODS: read, write, print, send_email, archive, validate.
+ENDINTERFACE.
+```
+
+### Compliant
+
+```abap
+INTERFACE lif_reader.
+  METHODS read.
+ENDINTERFACE.
+INTERFACE lif_writer.
+  METHODS write.
+ENDINTERFACE.
+```
+
+## Configuration & Thresholds
+
+This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
+
+| Parameter Name | Data Type | Default Value |
+|---|---|:---:|
+| `MAX_METHODS` | `Integer` | <code>5</code> |
+
+## Suppression
+
+To suppress findings for this rule, append the pseudo-comment to the statement:
+
+```abap
+" Standard pseudo-comment:
+... "#EC INTF_SEGREGATION
+
+" SAP CI_ prefix format:
+... "#EC CI_INTF_SEGREGATION
+```
+
+## Technical Details
+
+* **Native ATC Class:** `ZCL_SKYLINT_PREF_INTF_SEGREG`
+* **Implementation File:** [zcl_skylint_pref_intf_segreg.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_pref_intf_segreg.clas.abap)

@@ -4,13 +4,13 @@
       "key": "clean-abap",
       "title": "Clean ABAP & Modern Syntax",
       "description": "Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.",
-      "count": 45
+      "count": 51
     },
     {
       "key": "anti-patterns",
       "title": "Anti-Patterns & Bad Practices",
       "description": "Discouraged language constructs, legacy statements, and redundant syntax.",
-      "count": 44
+      "count": 45
     },
     {
       "key": "performance",
@@ -28,7 +28,7 @@
       "key": "metrics",
       "title": "Metrics & Complexity Limits",
       "description": "Quantitative boundaries for method size, nesting depth, parameter counts, and cyclomatic complexity.",
-      "count": 9
+      "count": 10
     }
   ],
   "rules": [
@@ -1444,6 +1444,102 @@
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
       "pseudoComment": "EML_RESPONSE",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "no-empty-override",
+      "title": "Avoid Method Override That Only Delegates to Super",
+      "className": "ZCL_SKYLINT_NO_EMPTY_OVERRIDE",
+      "description": "Avoid method override that only calls super",
+      "category": "anti-patterns",
+      "categoryTitle": "Anti-Patterns & Bad Practices",
+      "pseudoComment": "NO_EMPTY_OVERRIDE",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "prefer-composition",
+      "title": "Prefer Composition over Inheritance",
+      "className": "ZCL_SKYLINT_PREF_COMPOSITION",
+      "description": "Prefer composition over inheritance",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "PREF_COMPOSITION",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "prefer-interface-segregation",
+      "title": "Prefer Interface Segregation (Small, Focused Interfaces)",
+      "className": "ZCL_SKYLINT_PREF_INTF_SEGREG",
+      "description": "Prefer interface segregation (small interfaces)",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "INTF_SEGREGATION",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "no-single-letter",
+      "title": "Avoid Single-Letter Variable Names",
+      "className": "ZCL_SKYLINT_NO_SINGLE_LETTER",
+      "description": "Avoid single-letter variable names",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "NO_SINGLE_LETTER",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "prefer-factory-name",
+      "title": "Prefer CREATE_* Prefix for Factory Methods Returning Own Class",
+      "className": "ZCL_SKYLINT_PREF_FACTORY_NAME",
+      "description": "Factory methods should start with CREATE_",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "PREF_FACTORY_NAME",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "no-hungarian",
+      "title": "Avoid Hungarian Notation and Type Prefixes",
+      "className": "ZCL_SKYLINT_NO_HUNGARIAN",
+      "description": "Avoid Hungarian notation and encoding prefixes",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "NO_HUNGARIAN",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "max-returns",
+      "title": "Limit Number of RETURN Statements in Method",
+      "className": "ZCL_SKYLINT_MAX_RETURNS",
+      "description": "Limit number of RETURN statements (PLR0911)",
+      "category": "metrics",
+      "categoryTitle": "Metrics & Complexity Limits",
+      "pseudoComment": "MAX_RETURNS",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "no-instance-of",
+      "title": "Avoid IS INSTANCE OF and CASE TYPE OF Type Tests",
+      "className": "ZCL_SKYLINT_NO_INSTANCE_OF",
+      "description": "Avoid IS INSTANCE OF / CASE TYPE OF checks",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "NO_INSTANCE_OF",
       "hasQuickfix": false,
       "remoteEnabled": true,
       "configurable": true
