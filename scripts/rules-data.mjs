@@ -1527,18 +1527,6 @@ export const RULES = [
     },
   },
   {
-    ruleId: 'no-redundant-final',
-    title: 'Avoid Redundant FINAL Modifier on Methods in FINAL Classes',
-    rationale: 'When a class is declared FINAL, all of its methods are implicitly final and cannot be redefined. Explicitly marking methods as FINAL in a FINAL class is redundant and should be omitted.',
-    className: 'ZCL_SKYLINT_NO_REDUNDANT_FINAL',
-    pseudoComment: 'NO_REDUNDANT_FINAL',
-    category: 'clean-abap',
-    example: {
-      bad: `CLASS lcl_service DEFINITION FINAL.\n  PUBLIC SECTION.\n    METHODS do_work FINAL.\nENDCLASS.`,
-      good: `CLASS lcl_service DEFINITION FINAL.\n  PUBLIC SECTION.\n    METHODS do_work.\nENDCLASS.`,
-    },
-  },
-  {
     ruleId: 'max-returns',
     title: 'Limit Number of RETURN Statements in Method (PLR0911)',
     rationale: 'Methods with many return statements are difficult to understand, trace, and test comprehensively. Functions should have a small number of exit points; split complex conditional returns into helper methods or simplify control flow.',

@@ -12,19 +12,19 @@ ENDCLASS.
 
 CLASS zcl_test_no_unfilt_dml IMPLEMENTATION.
   METHOD test_001.
-    DELETE FROM ztab.
+    DELETE FROM t100.
   ENDMETHOD.
 
   METHOD test_002.
-    DELETE FROM ztab WHERE arbgb = 1.
+    DELETE FROM t100 WHERE arbgb = '00'.
   ENDMETHOD.
 
   METHOD test_003.
-    UPDATE ztab SET arbgb = 1.
+    UPDATE t100 SET arbgb = '00'.
   ENDMETHOD.
 
   METHOD test_004.
-    UPDATE ztab SET arbgb = 1 WHERE arbgb = 1.
+    UPDATE t100 SET arbgb = '00' WHERE arbgb = '00'.
   ENDMETHOD.
 
   METHOD test_005.

@@ -1,6 +1,10 @@
 [
-  { "target": "ZCL_TEST_EMPTY_OVR=>BAD_001", "code": "EMPTY_OVR", "line": 2, "column": 4 },
-  { "target": "ZCL_TEST_EMPTY_OVR=>BAD_002", "code": "EMPTY_OVR", "line": 2, "column": 4 },
-  { "target": "ZCL_TEST_EMPTY_OVR=>BAD_003", "code": "EMPTY_OVR", "line": 3, "column": 4 },
-  { "target": "ZCL_TEST_EMPTY_OVR=>GOOD_001", "code": null }
+  { "target": "LCL_SUPER=>BAD_001", "code": null },
+  { "target": "LCL_SUPER=>BAD_002", "code": null },
+  { "target": "LCL_SUPER=>BAD_003", "code": null },
+  { "target": "LCL_SUPER=>GOOD_001", "code": null },
+  { "target": "LCL_TEST_EMPTY_OVR=>BAD_001", "code": "EMPTY_OVR", "line": 2, "column": 4 },
+  { "target": "LCL_TEST_EMPTY_OVR=>BAD_002", "code": "EMPTY_OVR", "line": 2, "column": 4 },
+  { "target": "LCL_TEST_EMPTY_OVR=>BAD_003", "code": "EMPTY_OVR", "line": 3, "column": 4 },
+  { "target": "LCL_TEST_EMPTY_OVR=>GOOD_001", "code": null }
 ]

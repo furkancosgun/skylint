@@ -20,7 +20,7 @@ CLASS lcl_super IMPLEMENTATION.
   ENDMETHOD.
 ENDCLASS.
 
-CLASS zcl_test_empty_ovr DEFINITION INHERITING FROM lcl_super.
+CLASS lcl_test_empty_ovr DEFINITION INHERITING FROM lcl_super.
   PUBLIC SECTION.
     METHODS bad_001 REDEFINITION.
     METHODS bad_002 REDEFINITION.
@@ -28,7 +28,7 @@ CLASS zcl_test_empty_ovr DEFINITION INHERITING FROM lcl_super.
     METHODS good_001 REDEFINITION.
     METHODS do_something.
 ENDCLASS.
-CLASS zcl_test_empty_ovr IMPLEMENTATION.
+CLASS lcl_test_empty_ovr IMPLEMENTATION.
   METHOD bad_001.
     super->bad_001( ).
   ENDMETHOD.
@@ -39,7 +39,7 @@ CLASS zcl_test_empty_ovr IMPLEMENTATION.
   METHOD bad_003.
     CHECK 1 = 1.
     super->bad_003( ).
-    EXIT.
+    RETURN.
   ENDMETHOD.
   METHOD good_001.
     super->good_001( ).

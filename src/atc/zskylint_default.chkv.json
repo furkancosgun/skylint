@@ -1159,9 +1159,6 @@
       ]
     },
     {
-      "checkName": "ZSKYLINT_NO_REDUNDANT_FINAL"
-    },
-    {
       "checkName": "ZSKYLINT_MAX_RETURNS",
       "parameters": [
         {

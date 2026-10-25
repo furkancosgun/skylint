@@ -11,22 +11,22 @@ ENDCLASS.
 
 CLASS zcl_test_no_client_specified IMPLEMENTATION.
   METHOD test_001.
-    DATA lt_tab TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
-    SELECT * FROM zskylint_dummy USING CLIENT '100' INTO TABLE @lt_tab.
+    DATA lt_tab TYPE STANDARD TABLE OF t001 WITH DEFAULT KEY.
+    SELECT * FROM t001 USING CLIENT '100' INTO TABLE @lt_tab.
   ENDMETHOD.
 
   METHOD test_002.
-    DATA lt_tab TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
-    SELECT * FROM zskylint_dummy INTO TABLE @lt_tab.
+    DATA lt_tab TYPE STANDARD TABLE OF t001 WITH DEFAULT KEY.
+    SELECT * FROM t001 INTO TABLE @lt_tab.
   ENDMETHOD.
 
   METHOD test_003.
-    DATA lt_tab TYPE STANDARD TABLE OF zskylint_dummy WITH DEFAULT KEY.
-    SELECT * FROM zskylint_dummy CLIENT SPECIFIED INTO TABLE @lt_tab WHERE mandt = '100'.
+    DATA lt_tab TYPE STANDARD TABLE OF t001 WITH DEFAULT KEY.
+    SELECT * FROM t001 CLIENT SPECIFIED INTO TABLE @lt_tab WHERE mandt = '100'.
   ENDMETHOD.
 
   METHOD test_004.
-    DATA ls_row TYPE zskylint_dummy.
-    SELECT SINGLE * FROM zskylint_dummy INTO @ls_row.
+    DATA ls_row TYPE t001.
+    SELECT SINGLE * FROM t001 INTO @ls_row.
   ENDMETHOD.
 ENDCLASS.
