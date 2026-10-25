@@ -63,6 +63,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_RETURN
 ```
 
+
+## Related Rules
+
+* [Do Not Ignore Return Value of Functional Methods](/rules/no-ignored-return) — <code>#EC NO_IGNORED_RETURN</code>
+* [Omit Unnecessary RETURN Statement](/rules/no-unnec-return) — <code>#EC NO_UNNEC_RETURN</code>
+* [Prefer Early Return to Reduce Nesting (Guard Clauses)](/rules/pref-early-ret) — <code>#EC PREF_GUARD_METHOD</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_RETURN`

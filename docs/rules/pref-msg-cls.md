@@ -49,6 +49,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_MSG_CLS
 ```
 
+
+## Related Rules
+
+* [Avoid Obsolete MESSAGE ... RAISING in Methods](/rules/no-msg-raising) — <code>#EC NO_MSG_RAISING</code>
+* [Prefer String Templates over CONCATENATE](/rules/pref-str-tmpl) — <code>#EC PREF_STR_TMPL</code>
+* [Prefer Built-in String Functions over SEARCH/SHIFT](/rules/pref-str-func) — <code>#EC PREF_STR_FUNC</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_MSG_CLS`

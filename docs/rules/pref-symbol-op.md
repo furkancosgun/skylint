@@ -61,6 +61,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_SYMBOL_OP
 ```
 
+
+## Related Rules
+
+* [Prefer Calculation Assignment Operators (+=, -=, *=)](/rules/pref-calc-op) — <code>#EC PREF_CALC_OP</code>
+* [Check Downport Compatibility (7.40+ Modern Constructs)](/rules/pref-downport) — <code>#EC PREF_DOWNPORT</code>
+* [Prefer the Short System Field Alias SY over SYST](/rules/pref-sy) — <code>#EC PREF_SY</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_SYMBOL_OP`

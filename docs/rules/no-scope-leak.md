@@ -56,6 +56,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_SCOPE_LEAK
 ```
 
+
+## Related Rules
+
+* [Prefer FINAL( ) over DATA( ) when the variable is never written again](/rules/pref-final-data) — <code>#EC PREF_FINAL_DATA</code>
+* [Enforce Local Variable and Field-Symbol Naming Conventions](/rules/pref-naming-vars) — <code>#EC PREF_NAMING_VARS</code>
+* [Avoid Single-Letter Variable Names](/rules/no-single-letter) — <code>#EC NO_SINGLE_LETTER</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_SCOPE_LEAK`

@@ -61,6 +61,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_IS_NOT
 ```
 
+
+## Related Rules
+
+* [Prefer IS [NOT] INITIAL over lines( ) or Literal Comparisons](/rules/pref-is-initial) — <code>#EC PREF_IS_INITIAL</code>
+* [Prefer CASE over Multiple IF / ELSEIF on the Same Variable](/rules/pref-case) — <code>#EC PREF_CASE</code>
+* [Prefer COND #( ) Expression over IF/ELSEIF/ELSE](/rules/pref-cond) — <code>#EC PREF_COND</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_IS_NOT`

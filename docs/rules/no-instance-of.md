@@ -59,6 +59,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_INSTANCE_OF
 ```
 
+
+## Related Rules
+
+* [Avoid Calling Static Methods via Instance References (->)](/rules/no-static-arrow) — <code>#EC NO_STATIC_ARROW</code>
+* [Avoid Exposed Mutable Data in Classes and Interfaces](/rules/no-exposed-data) — <code>#EC PUBLIC_ATTR</code>
+* [Prefer NEW #( ) over CREATE OBJECT](/rules/pref-new-op) — <code>#EC PREF_NEW_OPERATOR</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_INSTANCE_OF`

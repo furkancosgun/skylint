@@ -66,6 +66,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_MAX_BOOL_EXPR
 ```
 
+
+## Related Rules
+
+* [Limit Cyclomatic Complexity (McCabe Complexity Metric)](/rules/max-cyclo-comp) — <code>#EC MAX_CYCLO_COMP</code>
+* [Avoid Comparing to abap_true / abap_false](/rules/no-bool-compare) — <code>#EC NO_BOOL_COMPARE</code>
+* [Limit Control Flow Nesting Depth (Guard Clause Enforcement)](/rules/max-nesting) — <code>#EC MAX_NESTING</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_MAX_BOOL_EXPR`

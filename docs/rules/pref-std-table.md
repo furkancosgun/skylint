@@ -57,6 +57,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_STD_TABLE
 ```
 
+
+## Related Rules
+
+* [Only Modify Tables Defined in Your Own Package/Component](/rules/no-mod-std-table) — <code>#EC NO_MOD_STD_TABLE</code>
+* [Modernize READ TABLE (Table Expressions & line_exists)](/rules/pref-read-table) — <code>#EC PREF_TAB_EXPR</code>
+* [Prefer lines( ) over DESCRIBE TABLE](/rules/pref-lines) — <code>#EC PREF_LINES</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_STD_TABLE`

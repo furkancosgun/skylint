@@ -61,6 +61,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_CALL_METHOD
 ```
 
+
+## Related Rules
+
+* [Omit Redundant EXPORTING in Method Calls](/rules/no-call-exporting) — <code>#EC NO_CALL_EXPORTING</code>
+* [Omit RECEIVING in Method Invocations](/rules/no-call-receiving) — <code>#EC NO_CALL_RECEIVING</code>
+* [Avoid Redundant ME-> Self Reference](/rules/no-me-reference) — <code>#EC NO_ME_REFERENCE</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_CALL_METHOD`

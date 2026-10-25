@@ -53,6 +53,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_RAISE_SHORTDUMP
 ```
 
+
+## Related Rules
+
+* [Avoid Raising System Exceptions Directly (CX_SY_*)](/rules/no-raise-cx-sy) — <code>#EC NO_RAISE_CX_SY</code>
+* [Ensure AUTHORITY-CHECK Precedes Sensitive Business Operations](/rules/pref-auth-check) — <code>#EC PREF_AUTH_CHECK</code>
+* [Check sy-subrc Promptly After AUTHORITY-CHECK (CWE-862 Authorization Bypass)](/rules/pref-auth-subrc) — <code>#EC PREF_AUTH_SUBRC</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_RAISE_SHORTDUMP`

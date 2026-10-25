@@ -57,6 +57,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_USELESS_CONCAT
 ```
 
+
+## Related Rules
+
+* [Avoid Obsolete String and POSIX Regex Statements](/rules/no-obs-strings) — <code>#EC NO_OBS_STRINGS</code>
+* [Avoid Repeating the Same String Literal](/rules/no-dup-literals) — <code>#EC NO_DUP_LITERALS</code>
+* [Prefer String Templates over CONCATENATE](/rules/pref-str-tmpl) — <code>#EC PREF_STR_TMPL</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_USELESS_CONCAT`

@@ -51,6 +51,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_RETURNING
 ```
 
+
+## Related Rules
+
+* [Do Not Mix RETURNING with EXPORTING or CHANGING](/rules/no-mix-returning) — <code>#EC NO_MIX_RETURNING</code>
+* [Do Not Ignore Return Value of Functional Methods](/rules/no-ignored-return) — <code>#EC NO_IGNORED_RETURN</code>
+* [Method Call Parameter Naming Style (Omit or Require)](/rules/pref-param-name) — <code>#EC PREF_PARAM_NAME</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_RETURNING`

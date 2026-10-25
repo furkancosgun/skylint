@@ -54,6 +54,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_LATE_SYS_IDX
 ```
 
+
+## Related Rules
+
+* [Avoid String Concatenation Inside Loops (Quadratic Memory Allocation)](/rules/no-concat-loop) — <code>#EC NO_CONCAT_LOOP</code>
+* [Avoid WITH DEFAULT KEY](/rules/no-default-key) — <code>#EC NO_DEFAULT_KEY</code>
+* [Prefer lines( ) over DESCRIBE TABLE](/rules/pref-lines) — <code>#EC PREF_LINES</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_LATE_SYS_IDX`

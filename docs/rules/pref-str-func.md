@@ -80,6 +80,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_STR_FUNC
 ```
 
+
+## Related Rules
+
+* [Prefer String Templates over CONCATENATE](/rules/pref-str-tmpl) — <code>#EC PREF_STR_TMPL</code>
+* [Avoid Concatenating Adjacent String Literals](/rules/no-useless-concat) — <code>#EC NO_USELESS_CONCAT</code>
+* [Avoid Obsolete String and POSIX Regex Statements](/rules/no-obs-strings) — <code>#EC NO_OBS_STRINGS</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_STR_FUNC`

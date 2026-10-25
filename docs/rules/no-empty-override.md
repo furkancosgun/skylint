@@ -60,6 +60,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_EMPTY_OVERRIDE
 ```
 
+
+## Related Rules
+
+* [Avoid FRIENDS in class definitions](/rules/no-friends) — <code>#EC NO_FRIENDS</code>
+* [Avoid Purely Static Utility Classes](/rules/no-static-cls) — <code>#EC NO_STATIC_CLS</code>
+* [Avoid Calling Static Methods via Instance References (->)](/rules/no-static-arrow) — <code>#EC NO_STATIC_ARROW</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_EMPTY_OVERRIDE`

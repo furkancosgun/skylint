@@ -56,6 +56,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_STATIC_CLS
 ```
 
+
+## Related Rules
+
+* [Avoid Calling Static Methods via Instance References (->)](/rules/no-static-arrow) — <code>#EC NO_STATIC_ARROW</code>
+* [Design for Inheritance or Prohibit It (FINAL)](/rules/pref-final-cls) — <code>#EC PREF_FINAL_CLASS</code>
+* [Avoid Exposed Mutable Data in Classes and Interfaces](/rules/no-exposed-data) — <code>#EC PUBLIC_ATTR</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_STATIC_CLS`

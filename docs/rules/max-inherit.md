@@ -72,6 +72,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_MAX_INHERIT
 ```
 
+
+## Related Rules
+
+* [Limit Class Member Attribute Count (Prevent God Classes)](/rules/max-attributes) — <code>#EC MAX_ATTRIBUTES</code>
+* [Limit Control Flow Nesting Depth (Guard Clause Enforcement)](/rules/max-nesting) — <code>#EC MAX_NESTING</code>
+* [Prefer Composition over Inheritance](/rules/pref-composition) — <code>#EC PREF_COMPOSITION</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_MAX_INHERIT`

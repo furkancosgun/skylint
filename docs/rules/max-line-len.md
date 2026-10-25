@@ -64,6 +64,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_MAX_LINE_LEN
 ```
 
+
+## Related Rules
+
+* [Limit Method and Constructor Statement Length](/rules/max-method-len) — <code>#EC MAX_METHOD_LEN</code>
+* [Limit One Statement per Source Code Line (No Inline Colon Chains)](/rules/max-one-stmt) — <code>#EC MAX_ONE_STMT</code>
+* [Limit Method Parameter Count and Require Multi-Line Signatures](/rules/max-params) — <code>#EC MAX_PARAMS_COUNT</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_MAX_LINE_LEN`

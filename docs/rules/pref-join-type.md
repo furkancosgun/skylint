@@ -61,6 +61,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_JOIN_TYPE
 ```
 
+
+## Related Rules
+
+* [Require Explicit ORDER BY for Deterministic SELECT Queries](/rules/pref-order-by) — <code>#EC PREF_ORDER_BY</code>
+* [Avoid Database Access Inside Loops (N+1 Query Antipattern)](/rules/no-db-in-loop) — <code>#EC NO_DB_IN_LOOP</code>
+* [Prevent Empty Driver Tables in FOR ALL ENTRIES (Full Table Scan Bug)](/rules/no-empty-fae) — <code>#EC NO_EMPTY_FAE</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_JOIN_TYPE`

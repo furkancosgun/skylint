@@ -57,6 +57,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_INLINE_LEN
 ```
 
+
+## Related Rules
+
+* [Prefer Modern Inline Declarations in ABAP 7.40+](/rules/pref-inline) — <code>#EC PREF_INLINE</code>
+* [Avoid Chained Declarations (DATA:, CONSTANTS:, TYPES:)](/rules/no-chained-decl) — <code>#EC NO_CHAINED_DECL</code>
+* [Avoid Chained Assignments (a = b = c = 1)](/rules/no-chained-assign) — <code>#EC NO_CHAINED_ASSIGN</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_INLINE_LEN`

@@ -76,6 +76,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_MOD_LOOP_TAB
 ```
 
+
+## Related Rules
+
+* [Avoid String Concatenation Inside Loops (Quadratic Memory Allocation)](/rules/no-concat-loop) — <code>#EC NO_CONCAT_LOOP</code>
+* [Only Modify Tables Defined in Your Own Package/Component](/rules/no-mod-std-table) — <code>#EC NO_MOD_STD_TABLE</code>
+* [Specify TRANSPORTING in Internal Table MODIFY and READ Operations](/rules/pref-transport) — <code>#EC PREF_TRANSPORT</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_MOD_LOOP_TAB`

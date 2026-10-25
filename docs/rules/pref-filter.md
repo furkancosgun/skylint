@@ -53,6 +53,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_FILTER
 ```
 
+
+## Related Rules
+
+* [Prefer REDUCE #( ) Expression over Simple Aggregation LOOP](/rules/pref-reduce) — <code>#EC PREF_REDUCE</code>
+* [Prefer INSERT ... INTO TABLE over APPEND](/rules/pref-insert) — <code>#EC PREF_INSERT</code>
+* [Specify TRANSPORTING in Internal Table MODIFY and READ Operations](/rules/pref-transport) — <code>#EC PREF_TRANSPORT</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_FILTER`

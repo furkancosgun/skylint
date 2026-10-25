@@ -61,6 +61,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_CONCAT_LOOP
 ```
 
+
+## Related Rules
+
+* [Do Not Mutate the Internal Table Currently Being Looped (Iterator Invalidation)](/rules/no-mod-loop-tab) — <code>#EC NO_MOD_LOOP_TAB</code>
+* [Avoid Late Access to sy-tabix or sy-index Outside Loops](/rules/no-late-sys-idx) — <code>#EC NO_LATE_SYS_IDX</code>
+* [Specify TRANSPORTING in Internal Table MODIFY and READ Operations](/rules/pref-transport) — <code>#EC PREF_TRANSPORT</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_CONCAT_LOOP`

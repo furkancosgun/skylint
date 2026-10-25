@@ -76,6 +76,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_TAB_EXPR
 ```
 
+
+## Related Rules
+
+* [Prefer lines( ) over DESCRIBE TABLE](/rules/pref-lines) — <code>#EC PREF_LINES</code>
+* [Prefer FILTER for a Simple LOOP with IF and APPEND](/rules/pref-filter) — <code>#EC PREF_FILTER</code>
+* [Avoid WITH DEFAULT KEY](/rules/no-default-key) — <code>#EC NO_DEFAULT_KEY</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_READ_TABLE`

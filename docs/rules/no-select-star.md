@@ -59,6 +59,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_SELECT_STAR
 ```
 
+
+## Related Rules
+
+* [Avoid Database Access Inside Loops (N+1 Query Antipattern)](/rules/no-db-in-loop) — <code>#EC NO_DB_IN_LOOP</code>
+* [Avoid SELECT ... ENDSELECT Row-by-Row Cursor Loops](/rules/no-endselect) — <code>#EC NO_ENDSELECT</code>
+* [Require Explicit ORDER BY for Deterministic SELECT Queries](/rules/pref-order-by) — <code>#EC PREF_ORDER_BY</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_SELECT_STAR`

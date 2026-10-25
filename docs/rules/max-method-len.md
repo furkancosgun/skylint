@@ -77,6 +77,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_MAX_METHOD_LEN
 ```
 
+
+## Related Rules
+
+* [Limit Source Code Line Length (Avoid Horizontal Scrolling)](/rules/max-line-len) — <code>#EC MAX_LINE_LEN</code>
+* [Limit Method Parameter Count and Require Multi-Line Signatures](/rules/max-params) — <code>#EC MAX_PARAMS_COUNT</code>
+* [Limit Multiple Return Statements per Method Body](/rules/max-returns) — <code>#EC MAX_RETURNS</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_MAX_METHOD_LEN`

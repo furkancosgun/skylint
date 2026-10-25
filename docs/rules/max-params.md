@@ -68,6 +68,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_MAX_PARAMS_COUNT
 ```
 
+
+## Related Rules
+
+* [Limit Method and Constructor Statement Length](/rules/max-method-len) — <code>#EC MAX_METHOD_LEN</code>
+* [Method Call Parameter Naming Style (Omit or Require)](/rules/pref-param-name) — <code>#EC PREF_PARAM_NAME</code>
+* [Limit Multiple Return Statements per Method Body](/rules/max-returns) — <code>#EC MAX_RETURNS</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_MAX_PARAMS`

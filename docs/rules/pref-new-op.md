@@ -70,6 +70,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_NEW_OPERATOR
 ```
 
+
+## Related Rules
+
+* [Declare Constructor in PUBLIC SECTION](/rules/pref-pub-ctor) — <code>#EC PREF_PUB_CTOR</code>
+* [Prefer CREATE_* Prefix for Factory Methods Returning Own Class](/rules/pref-factory-name) — <code>#EC PREF_FACTORY_NAME</code>
+* [Design for Inheritance or Prohibit It (FINAL)](/rules/pref-final-cls) — <code>#EC PREF_FINAL_CLASS</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_NEW_OP`

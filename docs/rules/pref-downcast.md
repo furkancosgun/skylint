@@ -71,6 +71,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_CAST
 ```
 
+
+## Related Rules
+
+* [Prefer NEW #( ) over CREATE OBJECT](/rules/pref-new-op) — <code>#EC PREF_NEW_OPERATOR</code>
+* [Declare Constructor in PUBLIC SECTION](/rules/pref-pub-ctor) — <code>#EC PREF_PUB_CTOR</code>
+* [Prefer CREATE_* Prefix for Factory Methods Returning Own Class](/rules/pref-factory-name) — <code>#EC PREF_FACTORY_NAME</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_DOWNCAST`

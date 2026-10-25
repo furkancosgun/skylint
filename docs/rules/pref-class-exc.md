@@ -51,6 +51,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_CLASS_EXC
 ```
 
+
+## Related Rules
+
+* [Classic EXCEPTIONS must not map two errors to the same number](/rules/no-exc-overlap) — <code>#EC NO_EXC_OVERLAP</code>
+* [Avoid Catching Generic CX_ROOT (Catch Specific Exceptions)](/rules/no-catch-root) — <code>#EC NO_CATCH_ROOT</code>
+* [Avoid Raising System Exceptions Directly (CX_SY_*)](/rules/no-raise-cx-sy) — <code>#EC NO_RAISE_CX_SY</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_CLASS_EXC`

@@ -73,6 +73,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_EMPTY_FAE
 ```
 
+
+## Related Rules
+
+* [Require Explicit ORDER BY for Deterministic SELECT Queries](/rules/pref-order-by) — <code>#EC PREF_ORDER_BY</code>
+* [Avoid Database Access Inside Loops (N+1 Query Antipattern)](/rules/no-db-in-loop) — <code>#EC NO_DB_IN_LOOP</code>
+* [Avoid SELECT * in OpenSQL Queries (Minimize Memory & Network Overhead)](/rules/no-select-star) — <code>#EC NO_SELECT_STAR</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_EMPTY_FAE`

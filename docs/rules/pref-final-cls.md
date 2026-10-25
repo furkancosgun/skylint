@@ -76,6 +76,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_FINAL_CLASS
 ```
 
+
+## Related Rules
+
+* [Limit Class Inheritance Depth (Favor Composition over Inheritance)](/rules/max-inherit) — <code>#EC MAX_INHERIT</code>
+* [Prefer CREATE_* Prefix for Factory Methods Returning Own Class](/rules/pref-factory-name) — <code>#EC PREF_FACTORY_NAME</code>
+* [Prefer Composition over Inheritance](/rules/pref-composition) — <code>#EC PREF_COMPOSITION</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_FINAL_CLS`

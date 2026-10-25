@@ -63,6 +63,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_CATCH_ROOT
 ```
 
+
+## Related Rules
+
+* [Prefer Class-Based Exceptions over Classic EXCEPTIONS](/rules/pref-class-exc) — <code>#EC PREF_CLASS_EXC</code>
+* [Avoid Raising System Exceptions Directly (CX_SY_*)](/rules/no-raise-cx-sy) — <code>#EC NO_RAISE_CX_SY</code>
+* [Avoid Deeply Nested TRY ... CATCH Blocks](/rules/no-nested-try) — <code>#EC NO_NESTED_TRY</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_CATCH_ROOT`

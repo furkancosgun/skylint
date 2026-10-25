@@ -75,6 +75,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_UNHANDLED_EML
 ```
 
+
+## Related Rules
+
+* [Avoid Unnecessary Dynamic Programming Constructs (SQL Injection Prevention)](/rules/no-dynamic-stmt) — <code>#EC NO_DYNAMIC_STMT</code>
+* [Avoid Dynamic Metaprogramming and Code Generation (Remote Code Execution Risk)](/rules/no-metaprogramming) — <code>#EC NO_METAPROGRAMMING</code>
+* [Avoid Kernel and Native Database Calls (SYSTEM-CALL, EXEC SQL)](/rules/no-kernel-call) — <code>#EC NO_KERNEL_CALL</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_UNHANDLED_EML`

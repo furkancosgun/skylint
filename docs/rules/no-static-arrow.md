@@ -58,6 +58,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_STATIC_ARROW
 ```
 
+
+## Related Rules
+
+* [Avoid Purely Static Utility Classes](/rules/no-static-cls) — <code>#EC NO_STATIC_CLS</code>
+* [Prefer CREATE_* Prefix for Factory Methods Returning Own Class](/rules/pref-factory-name) — <code>#EC PREF_FACTORY_NAME</code>
+* [Avoid IS INSTANCE OF and CASE TYPE OF Type Tests](/rules/no-instance-of) — <code>#EC NO_INSTANCE_OF</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_STATIC_ARROW`

@@ -50,6 +50,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_INLINE
 ```
 
+
+## Related Rules
+
+* [Avoid Obsolete Inline Length Specifications (var(len))](/rules/no-inline-len) — <code>#EC NO_INLINE_LEN</code>
+* [Avoid Chained Declarations (DATA:, CONSTANTS:, TYPES:)](/rules/no-chained-decl) — <code>#EC NO_CHAINED_DECL</code>
+* [Routine Declaration Hygiene (Top Placement & Order)](/rules/pref-declarations) — <code>#EC DEF_TOP</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_INLINE`

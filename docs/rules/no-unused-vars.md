@@ -52,6 +52,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_UNUSED_VARS
 ```
 
+
+## Related Rules
+
+* [Enforce Local Variable and Field-Symbol Naming Conventions](/rules/pref-naming-vars) — <code>#EC PREF_NAMING_VARS</code>
+* [Avoid Local Variables Shadowing Class Attributes](/rules/no-shadow) — <code>#EC NO_SHADOW</code>
+* [Require Fully Typed Variables and Parameters](/rules/pref-full-typed) — <code>#EC PREF_FULL_TYPED</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_UNUSED_VARS`

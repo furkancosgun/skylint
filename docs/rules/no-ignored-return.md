@@ -49,6 +49,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_IGNORED_RETURN
 ```
 
+
+## Related Rules
+
+* [Prefer RETURN over EXIT in Methods](/rules/pref-return) — <code>#EC PREF_RETURN</code>
+* [Omit Unnecessary RETURN Statement](/rules/no-unnec-return) — <code>#EC NO_UNNEC_RETURN</code>
+* [Do Not Mix RETURNING with EXPORTING or CHANGING](/rules/no-mix-returning) — <code>#EC NO_MIX_RETURNING</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_IGNORED_RETURN`

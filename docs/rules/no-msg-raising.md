@@ -49,6 +49,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_MSG_RAISING
 ```
 
+
+## Related Rules
+
+* [Use a message class (SE91) instead of inline message text](/rules/pref-msg-cls) — <code>#EC PREF_MSG_CLS</code>
+* [Avoid Obsolete String and POSIX Regex Statements](/rules/no-obs-strings) — <code>#EC NO_OBS_STRINGS</code>
+* [Avoid Concatenating Adjacent String Literals](/rules/no-useless-concat) — <code>#EC NO_USELESS_CONCAT</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_MSG_RAISING`

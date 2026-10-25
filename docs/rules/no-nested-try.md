@@ -63,6 +63,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_NESTED_TRY
 ```
 
+
+## Related Rules
+
+* [Avoid Catching Generic CX_ROOT (Catch Specific Exceptions)](/rules/no-catch-root) — <code>#EC NO_CATCH_ROOT</code>
+* [Classic EXCEPTIONS must not map two errors to the same number](/rules/no-exc-overlap) — <code>#EC NO_EXC_OVERLAP</code>
+* [Ensure AUTHORITY-CHECK Precedes Sensitive Business Operations](/rules/pref-auth-check) — <code>#EC PREF_AUTH_CHECK</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_NESTED_TRY`

@@ -73,6 +73,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_OBS_ARITH
 ```
 
+
+## Related Rules
+
+* [Avoid Obsolete Control Flow and Procedural Forms](/rules/no-obs-control) — <code>#EC NO_OBS_CONTROL</code>
+* [Avoid Obsolete Declarations and Table Headers](/rules/no-obs-decl) — <code>#EC NO_OBS_DECL</code>
+* [Avoid Obsolete ABAP Memory and Context Statements](/rules/no-obs-memory) — <code>#EC NO_OBS_MEMORY</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_OBS_ARITH`

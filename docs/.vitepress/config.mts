@@ -22,7 +22,12 @@ export default defineConfig({
     },
   },
   head: [
+    ['link', { rel: 'icon', type: 'image/x-icon', href: `${base}favicon.ico` }],
+    ['link', { rel: 'icon', type: 'image/png', sizes: '48x48', href: `${base}favicon-48x48.png` }],
     ['link', { rel: 'icon', type: 'image/svg+xml', href: `${base}logo.svg` }],
+    ['link', { rel: 'apple-touch-icon', sizes: '180x180', href: `${base}apple-touch-icon.png` }],
+    ['link', { rel: 'manifest', href: `${base}site.webmanifest` }],
+    ['meta', { name: 'theme-color', content: '#0ea5e9' }],
     ['link', { rel: 'sitemap', type: 'application/xml', title: 'Sitemap', href: 'https://skylint.org/sitemap.xml' }],
     ['meta', { name: 'robots', content: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' }],
     ['meta', { name: 'google-site-verification', content: 'googlebe62f3b9b7abdd43' }],
@@ -37,21 +42,23 @@ export default defineConfig({
     ['style', {}, '@media (max-width: 768px) { .vp-doc { font-size: 15px; } }'],
   ],
   transformHead: ({ pageData, title, description }) => {
-    if (pageData.isNotFound) {
-      return [
-        ['meta', { name: 'robots', content: 'noindex, nofollow' }],
-      ];
-    }
-
     const canonicalHostname = 'https://skylint.org';
     const cleanPath = pageData.relativePath
       .replace(/\.md$/, '')
       .replace(/(^|\/)index$/, '$1');
     const url = (canonicalHostname + '/' + cleanPath).replace(/\/+$/, '') + (cleanPath === '' || cleanPath.endsWith('/') ? '/' : '');
 
+    if (pageData.isNotFound || cleanPath === '404') {
+      return [
+        ['meta', { name: 'robots', content: 'noindex, nofollow' }],
+        ['script', {}, 'if (typeof window !== "undefined" && location.pathname.length > 1 && location.pathname.endsWith("/")) { location.replace(location.pathname.slice(0, -1) + location.search + location.hash); }'],
+      ];
+    }
+
     const ogTitle = title === 'Skylint' ? 'Skylint - Enterprise Clean ABAP & Cloud ATC Linter' : (title || 'Skylint');
     const ogDescription = pageData.frontmatter?.description || description || 'Enterprise Clean ABAP & Cloud ATC Linter Engine with 133+ Native Rules';
-    const isRulePage = cleanPath.startsWith('rules/') && cleanPath !== 'rules';
+    const isCategoryPage = ['clean-abap', 'anti-patterns', 'performance', 'security', 'metrics'].some(cat => cleanPath === `rules/${cat}`);
+    const isRulePage = cleanPath.startsWith('rules/') && cleanPath !== 'rules' && !isCategoryPage;
     const isGuidePage = cleanPath.startsWith('guide/');
 
     const tags = [
@@ -153,6 +160,27 @@ export default defineConfig({
           ]
         })
       ]);
+    } else if (isCategoryPage) {
+      tags.push(['meta', { property: 'og:type', content: 'website' }]);
+      tags.push([
+        'script',
+        { type: 'application/ld+json' },
+        JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'CollectionPage',
+          'name': ogTitle,
+          'description': ogDescription,
+          'url': url,
+          'breadcrumb': {
+            '@type': 'BreadcrumbList',
+            'itemListElement': [
+              { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://skylint.org/' },
+              { '@type': 'ListItem', 'position': 2, 'name': 'Rules Catalog', 'item': 'https://skylint.org/rules/' },
+              { '@type': 'ListItem', 'position': 3, 'name': ogTitle, 'item': url }
+            ]
+          }
+        })
+      ]);
     } else if (cleanPath === 'rules') {
       tags.push(['meta', { property: 'og:type', content: 'website' }]);
       tags.push([
@@ -211,6 +239,51 @@ export default defineConfig({
                 'name': 'Furkan COSGUN',
                 'url': 'https://github.com/furkancosgun'
               }
+            },
+            {
+              '@type': 'FAQPage',
+              'mainEntity': [
+                {
+                  '@type': 'Question',
+                  'name': 'What is Skylint and how does it integrate with SAP ATC?',
+                  'acceptedAnswer': {
+                    '@type': 'Answer',
+                    'text': 'Skylint is a 100% native ABAP Test Cockpit (ATC) static code analysis framework implementing IF_CI_ATC_CHECK directly. It runs natively in Eclipse ADT and SAP GUI without external adapters.'
+                  }
+                },
+                {
+                  '@type': 'Question',
+                  'name': 'How do I install Skylint in an SAP development system?',
+                  'acceptedAnswer': {
+                    '@type': 'Answer',
+                    'text': 'Skylint is delivered as standard ABAP Cloud open-source code and can be cloned directly into your SAP system via abapGit from https://github.com/furkancosgun/skylint.'
+                  }
+                },
+                {
+                  '@type': 'Question',
+                  'name': 'How do automated QuickFixes work in Eclipse ADT?',
+                  'acceptedAnswer': {
+                    '@type': 'Answer',
+                    'text': 'In Eclipse ADT, position your cursor on any flagged statement, press Ctrl + 1 (Quick Assist), and select the recommended Skylint QuickFix to rewrite your code into modern Clean ABAP syntax automatically.'
+                  }
+                },
+                {
+                  '@type': 'Question',
+                  'name': 'How do I suppress a Skylint ATC finding?',
+                  'acceptedAnswer': {
+                    '@type': 'Answer',
+                    'text': 'Append the rule specific pseudo-comment to the statement, for example "#EC PREF_LINES" or "#EC CI_PREF_LINES". Skylint natively supports both formats.'
+                  }
+                },
+                {
+                  '@type': 'Question',
+                  'name': 'Can Skylint run in offline CI/CD pipelines without a live SAP system?',
+                  'acceptedAnswer': {
+                    '@type': 'Answer',
+                    'text': 'Yes, Skylint includes an offline Node.js transpiled test harness using @abaplint/transpiler that validates 133 checks and 680+ assertions in GitHub Actions or any CI/CD environment.'
+                  }
+                }
+              ]
             }
           ]
         })
@@ -268,24 +341,24 @@ export default defineConfig({
         { text: 'All Rules Overview', link: '/rules/' },
         ...[
   {
-    "text": "Clean ABAP & Modern Syntax",
-    "link": "/rules/#clean-abap"
+    "text": "Clean ABAP & Modern Syntax (49)",
+    "link": "/rules/clean-abap"
   },
   {
-    "text": "Anti-Patterns & Bad Practices",
-    "link": "/rules/#anti-patterns"
+    "text": "Anti-Patterns & Bad Practices (49)",
+    "link": "/rules/anti-patterns"
   },
   {
-    "text": "Performance & Database",
-    "link": "/rules/#performance"
+    "text": "Performance & Database (9)",
+    "link": "/rules/performance"
   },
   {
-    "text": "Security & Robustness",
-    "link": "/rules/#security"
+    "text": "Security & Robustness (16)",
+    "link": "/rules/security"
   },
   {
-    "text": "Metrics & Complexity Limits",
-    "link": "/rules/#metrics"
+    "text": "Metrics & Complexity Limits (10)",
+    "link": "/rules/metrics"
   }
 ]
       ],

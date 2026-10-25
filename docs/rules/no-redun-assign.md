@@ -73,6 +73,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_SELF_ASSIGN
 ```
 
+
+## Related Rules
+
+* [Avoid Chained Assignments (a = b = c = 1)](/rules/no-chained-assign) — <code>#EC NO_CHAINED_ASSIGN</code>
+* [Eliminate Unused Local Variables and Symbols](/rules/no-unused-vars) — <code>#EC NO_UNUSED_VARS</code>
+* [Avoid Hungarian Notation and Type Prefixes](/rules/no-hungarian) — <code>#EC NO_HUNGARIAN</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_REDUN_ASSIGN`

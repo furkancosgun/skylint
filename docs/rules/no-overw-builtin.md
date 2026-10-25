@@ -51,6 +51,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_OVERW_BUILTIN
 ```
 
+
+## Related Rules
+
+* [Avoid Obsolete Dash (-) in Form Names](/rules/no-dash-in-form) — <code>#EC NO_DASH_IN_FORM</code>
+* [Avoid Obsolete Arithmetic and Assignment Statements](/rules/no-obs-arith) — <code>#EC NO_OBS_ARITH</code>
+* [Avoid Obsolete Control Flow and Procedural Forms](/rules/no-obs-control) — <code>#EC NO_OBS_CONTROL</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_OVERW_BUILTIN`

@@ -55,7 +55,12 @@ export const RULES = [
         "pref-downport",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-calc-op",
+      "pref-symbol-op",
+      "pref-sy"
+    ]
   },
   {
     "ruleId": "pref-reduce",
@@ -78,7 +83,12 @@ export const RULES = [
         "pref-reduce",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-filter",
+      "pref-lines",
+      "pref-read-table"
+    ]
   },
   {
     "ruleId": "pref-read-table",
@@ -106,7 +116,12 @@ export const RULES = [
         "pref-read-table",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-lines",
+      "pref-filter",
+      "no-default-key"
+    ]
   },
   {
     "ruleId": "pref-cond",
@@ -132,7 +147,12 @@ export const RULES = [
         "pref-cond",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-neg-cond",
+      "pref-case",
+      "pref-switch"
+    ]
   },
   {
     "ruleId": "pref-switch",
@@ -158,7 +178,12 @@ export const RULES = [
         "pref-switch",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-case",
+      "pref-cond",
+      "no-single-when"
+    ]
   },
   {
     "ruleId": "pref-lines",
@@ -181,7 +206,12 @@ export const RULES = [
         "pref-lines",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-read-table",
+      "pref-filter",
+      "pref-reduce"
+    ]
   },
   {
     "ruleId": "no-call-method",
@@ -204,7 +234,12 @@ export const RULES = [
         "no-call-method",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-call-exporting",
+      "no-call-receiving",
+      "no-me-reference"
+    ]
   },
   {
     "ruleId": "no-default-key",
@@ -227,7 +262,12 @@ export const RULES = [
         "no-default-key",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-std-table",
+      "no-mod-std-table",
+      "pref-lines"
+    ]
   },
   {
     "ruleId": "pref-is-not",
@@ -250,7 +290,12 @@ export const RULES = [
         "pref-is-not",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-is-initial",
+      "pref-case",
+      "pref-cond"
+    ]
   },
   {
     "ruleId": "no-me-reference",
@@ -276,7 +321,12 @@ export const RULES = [
         "no-me-reference",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-call-method",
+      "pref-name-members",
+      "no-static-arrow"
+    ]
   },
   {
     "ruleId": "no-call-receiving",
@@ -299,7 +349,12 @@ export const RULES = [
         "no-call-receiving",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-call-method",
+      "no-call-exporting",
+      "pref-returning"
+    ]
   },
   {
     "ruleId": "no-call-exporting",
@@ -322,7 +377,12 @@ export const RULES = [
         "no-call-exporting",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-call-method",
+      "no-call-receiving",
+      "pref-returning"
+    ]
   },
   {
     "ruleId": "pref-param-name",
@@ -349,7 +409,12 @@ export const RULES = [
         "pref-param-name",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "max-params",
+      "no-param-escape",
+      "no-call-method"
+    ]
   },
   {
     "ruleId": "no-chained-decl",
@@ -375,7 +440,12 @@ export const RULES = [
         "no-chained-decl",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-chained-assign",
+      "pref-inline",
+      "pref-final-data"
+    ]
   },
   {
     "ruleId": "no-chained-assign",
@@ -398,7 +468,12 @@ export const RULES = [
         "no-chained-assign",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-chained-decl",
+      "no-redun-assign",
+      "no-unused-vars"
+    ]
   },
   {
     "ruleId": "pref-str-tmpl",
@@ -421,7 +496,12 @@ export const RULES = [
         "pref-str-tmpl",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-str-func",
+      "no-useless-concat",
+      "no-obs-strings"
+    ]
   },
   {
     "ruleId": "no-bool-compare",
@@ -444,7 +524,12 @@ export const RULES = [
         "no-bool-compare",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "max-bool-expr",
+      "no-single-when",
+      "no-check-stmt"
+    ]
   },
   {
     "ruleId": "pref-return",
@@ -467,7 +552,12 @@ export const RULES = [
         "pref-return",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-ignored-return",
+      "no-unnec-return",
+      "pref-early-ret"
+    ]
   },
   {
     "ruleId": "no-check-stmt",
@@ -494,7 +584,12 @@ export const RULES = [
         "no-check-stmt",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-single-when",
+      "no-bool-compare",
+      "no-yoda-cond"
+    ]
   },
   {
     "ruleId": "no-empty-block",
@@ -527,7 +622,12 @@ export const RULES = [
         "no-empty-block",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "max-nesting",
+      "no-single-when",
+      "no-check-stmt"
+    ]
   },
   {
     "ruleId": "no-ident-cont",
@@ -550,7 +650,12 @@ export const RULES = [
         "no-ident-cont",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-single-when",
+      "no-check-stmt",
+      "no-bool-compare"
+    ]
   },
   {
     "ruleId": "no-dup-cond",
@@ -573,7 +678,12 @@ export const RULES = [
         "no-dup-cond",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-yoda-cond",
+      "no-neg-cond",
+      "pref-cond"
+    ]
   },
   {
     "ruleId": "pref-merge-ifs",
@@ -596,7 +706,12 @@ export const RULES = [
         "pref-merge-ifs",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-case",
+      "pref-cond",
+      "pref-switch"
+    ]
   },
   {
     "ruleId": "no-unreachable",
@@ -619,7 +734,12 @@ export const RULES = [
         "no-unreachable",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-dead-code",
+      "no-magic-numbers",
+      "max-method-len"
+    ]
   },
   {
     "ruleId": "no-single-when",
@@ -642,7 +762,12 @@ export const RULES = [
         "no-single-when",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-dup-cond",
+      "pref-case",
+      "pref-switch"
+    ]
   },
   {
     "ruleId": "no-yoda-cond",
@@ -665,7 +790,12 @@ export const RULES = [
         "no-yoda-cond",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-dup-cond",
+      "no-neg-cond",
+      "pref-cond"
+    ]
   },
   {
     "ruleId": "pref-symbol-op",
@@ -688,7 +818,12 @@ export const RULES = [
         "pref-symbol-op",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-calc-op",
+      "pref-downport",
+      "pref-sy"
+    ]
   },
   {
     "ruleId": "pref-new-op",
@@ -715,7 +850,12 @@ export const RULES = [
         "pref-new-op",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-pub-ctor",
+      "pref-factory-name",
+      "pref-final-cls"
+    ]
   },
   {
     "ruleId": "pref-xsdbool",
@@ -738,7 +878,12 @@ export const RULES = [
         "pref-xsdbool",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "max-bool-expr",
+      "pref-case",
+      "pref-cond"
+    ]
   },
   {
     "ruleId": "no-static-arrow",
@@ -761,7 +906,12 @@ export const RULES = [
         "no-static-arrow",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-static-cls",
+      "pref-factory-name",
+      "no-instance-of"
+    ]
   },
   {
     "ruleId": "no-exposed-data",
@@ -788,7 +938,12 @@ export const RULES = [
         "no-exposed-data",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-static-cls",
+      "pref-intf-segreg",
+      "no-instance-of"
+    ]
   },
   {
     "ruleId": "no-obs-arith",
@@ -818,7 +973,12 @@ export const RULES = [
         "no-obs-arith",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-obs-control",
+      "no-obs-decl",
+      "no-obs-memory"
+    ]
   },
   {
     "ruleId": "no-obs-decl",
@@ -855,7 +1015,12 @@ export const RULES = [
         "no-obs-decl",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-obs-arith",
+      "no-obs-control",
+      "no-obs-memory"
+    ]
   },
   {
     "ruleId": "no-obs-control",
@@ -890,7 +1055,12 @@ export const RULES = [
         "no-obs-control",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-obs-arith",
+      "no-obs-decl",
+      "no-obs-memory"
+    ]
   },
   {
     "ruleId": "no-obs-memory",
@@ -922,7 +1092,12 @@ export const RULES = [
         "no-obs-memory",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-obs-arith",
+      "no-obs-control",
+      "no-obs-decl"
+    ]
   },
   {
     "ruleId": "no-obs-strings",
@@ -952,7 +1127,12 @@ export const RULES = [
         "no-obs-strings",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-obs-arith",
+      "no-obs-control",
+      "no-obs-decl"
+    ]
   },
   {
     "ruleId": "no-list-proc",
@@ -984,7 +1164,12 @@ export const RULES = [
         "no-list-proc",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-obs-arith",
+      "no-obs-control",
+      "no-obs-decl"
+    ]
   },
   {
     "ruleId": "max-params",
@@ -1009,7 +1194,12 @@ export const RULES = [
     "parameters": {
       "MAX_PARAMETERS": "Maximum allowed total parameters (IMPORTING, EXPORTING, CHANGING, RETURNING)",
       "CHECK_PARAM_LINE": "Enforce one parameter per line in method definitions and invocations"
-    }
+    },
+    "relatedRules": [
+      "max-method-len",
+      "pref-param-name",
+      "max-returns"
+    ]
   },
   {
     "ruleId": "no-db-in-loop",
@@ -1032,7 +1222,12 @@ export const RULES = [
         "S/4HANA SQL Optimization",
         "ATC Check Database"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-select-star",
+      "no-unfilt-dml",
+      "no-empty-fae"
+    ]
   },
   {
     "ruleId": "no-empty-fae",
@@ -1054,7 +1249,12 @@ export const RULES = [
         "Clean ABAP FAE Check",
         "S/4HANA Database Stability"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-order-by",
+      "no-db-in-loop",
+      "no-select-star"
+    ]
   },
   {
     "ruleId": "no-select-star",
@@ -1075,7 +1275,12 @@ export const RULES = [
         "Clean ABAP Query Guidelines",
         "Memory Footprint Reduction SAP"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-db-in-loop",
+      "no-endselect",
+      "pref-order-by"
+    ]
   },
   {
     "ruleId": "no-endselect",
@@ -1096,7 +1301,12 @@ export const RULES = [
         "Array Fetch OpenSQL",
         "Clean ABAP Database Best Practices"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-db-in-loop",
+      "no-select-star",
+      "pref-order-by"
+    ]
   },
   {
     "ruleId": "no-scope-leak",
@@ -1119,7 +1329,12 @@ export const RULES = [
         "no-scope-leak",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-final-data",
+      "pref-naming-vars",
+      "no-single-letter"
+    ]
   },
   {
     "ruleId": "no-redun-assign",
@@ -1147,7 +1362,12 @@ export const RULES = [
         "no-redun-assign",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-chained-assign",
+      "no-unused-vars",
+      "no-hungarian"
+    ]
   },
   {
     "ruleId": "no-shadow",
@@ -1170,7 +1390,12 @@ export const RULES = [
         "no-shadow",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-unused-vars",
+      "pref-naming-vars",
+      "pref-name-members"
+    ]
   },
   {
     "ruleId": "no-useless-concat",
@@ -1193,7 +1418,12 @@ export const RULES = [
         "no-useless-concat",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-obs-strings",
+      "no-dup-literals",
+      "pref-str-tmpl"
+    ]
   },
   {
     "ruleId": "pref-full-typed",
@@ -1216,7 +1446,12 @@ export const RULES = [
         "pref-full-typed",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-unused-vars",
+      "no-hungarian",
+      "pref-naming-vars"
+    ]
   },
   {
     "ruleId": "pref-corresp",
@@ -1239,7 +1474,12 @@ export const RULES = [
         "pref-corresp",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-declarations",
+      "pref-inline",
+      "pref-final-data"
+    ]
   },
   {
     "ruleId": "max-method-len",
@@ -1265,7 +1505,12 @@ export const RULES = [
     "parameters": {
       "MAX_STATEMENTS": "Maximum executable ABAP statements allowed in regular method bodies",
       "MAX_CTOR_STATEMENTS": "Maximum statements allowed in CONSTRUCTOR methods (guards against heavy setup logic)"
-    }
+    },
+    "relatedRules": [
+      "max-line-len",
+      "max-params",
+      "max-returns"
+    ]
   },
   {
     "ruleId": "max-nesting",
@@ -1289,7 +1534,12 @@ export const RULES = [
     },
     "parameters": {
       "MAX_DEPTH": "Maximum allowable nesting depth of IF/CASE/LOOP/DO/WHILE/TRY control blocks"
-    }
+    },
+    "relatedRules": [
+      "max-inherit",
+      "max-bool-expr",
+      "max-cyclo-comp"
+    ]
   },
   {
     "ruleId": "no-sy-modify",
@@ -1309,7 +1559,12 @@ export const RULES = [
         "System fields modification SAP",
         "Clean ABAP Code Integrity"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-sy",
+      "no-obs-arith",
+      "no-obs-control"
+    ]
   },
   {
     "ruleId": "pref-returning",
@@ -1332,7 +1587,12 @@ export const RULES = [
         "pref-returning",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-mix-returning",
+      "no-ignored-return",
+      "pref-param-name"
+    ]
   },
   {
     "ruleId": "pref-class-exc",
@@ -1355,7 +1615,12 @@ export const RULES = [
         "pref-class-exc",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-exc-overlap",
+      "no-catch-root",
+      "no-raise-cx-sy"
+    ]
   },
   {
     "ruleId": "no-prod-assert",
@@ -1375,7 +1640,12 @@ export const RULES = [
         "Avoid ASSERT in production SAP",
         "Clean ABAP Exception Handling"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-kernel-call",
+      "pref-auth-check",
+      "pref-auth-subrc"
+    ]
   },
   {
     "ruleId": "no-raise-shortdump",
@@ -1395,7 +1665,12 @@ export const RULES = [
         "ST22 Dump Elimination",
         "Clean ABAP Resilience"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-raise-cx-sy",
+      "pref-auth-check",
+      "pref-auth-subrc"
+    ]
   },
   {
     "ruleId": "no-metaprogramming",
@@ -1416,7 +1691,12 @@ export const RULES = [
         "Code Injection SAP",
         "ABAP Cloud Security"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-rfc-err",
+      "no-unhandled-eml",
+      "no-dynamic-stmt"
+    ]
   },
   {
     "ruleId": "no-kernel-call",
@@ -1436,7 +1716,12 @@ export const RULES = [
         "EXEC SQL SAP Security",
         "Clean Core Cloud Compliance"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-rfc-err",
+      "no-unhandled-eml",
+      "no-raise-cx-sy"
+    ]
   },
   {
     "ruleId": "pref-auth-check",
@@ -1457,7 +1742,12 @@ export const RULES = [
         "Data Security SAP",
         "ATC Security Check"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-auth-subrc",
+      "pref-check-subrc",
+      "no-unhandled-eml"
+    ]
   },
   {
     "ruleId": "pref-order-by",
@@ -1478,7 +1768,12 @@ export const RULES = [
         "UP TO 1 ROWS bug",
         "Clean ABAP Sorting Guidelines"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-select-star",
+      "no-empty-fae",
+      "no-endselect"
+    ]
   },
   {
     "ruleId": "max-cyclo-comp",
@@ -1502,7 +1797,12 @@ export const RULES = [
     },
     "parameters": {
       "MAX_COMPLEXITY": "Maximum allowed cyclomatic complexity score per method (default threshold: 10)"
-    }
+    },
+    "relatedRules": [
+      "max-bool-expr",
+      "max-nesting",
+      "max-method-len"
+    ]
   },
   {
     "ruleId": "pref-final-cls",
@@ -1529,7 +1829,12 @@ export const RULES = [
         "pref-final-cls",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "max-inherit",
+      "pref-factory-name",
+      "pref-composition"
+    ]
   },
   {
     "ruleId": "no-magic-numbers",
@@ -1552,7 +1857,12 @@ export const RULES = [
         "no-magic-numbers",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-dead-code",
+      "no-unreachable",
+      "max-method-len"
+    ]
   },
   {
     "ruleId": "pref-insert",
@@ -1575,7 +1885,12 @@ export const RULES = [
         "pref-insert",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-filter",
+      "pref-lines",
+      "pref-read-table"
+    ]
   },
   {
     "ruleId": "no-like-objects",
@@ -1598,7 +1913,12 @@ export const RULES = [
         "no-like-objects",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-name-objects",
+      "no-chained-decl",
+      "no-chained-assign"
+    ]
   },
   {
     "ruleId": "no-static-cls",
@@ -1621,7 +1941,12 @@ export const RULES = [
         "no-static-cls",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-static-arrow",
+      "pref-final-cls",
+      "no-exposed-data"
+    ]
   },
   {
     "ruleId": "pref-pred-name",
@@ -1644,7 +1969,12 @@ export const RULES = [
         "pref-pred-name",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-name-members",
+      "pref-name-objects",
+      "pref-naming-vars"
+    ]
   },
   {
     "ruleId": "max-inherit",
@@ -1668,7 +1998,12 @@ export const RULES = [
     },
     "parameters": {
       "MAX_DEPTH": "Maximum allowable inheritance depth levels from standard root object"
-    }
+    },
+    "relatedRules": [
+      "max-attributes",
+      "max-nesting",
+      "pref-composition"
+    ]
   },
   {
     "ruleId": "max-attributes",
@@ -1692,7 +2027,12 @@ export const RULES = [
     },
     "parameters": {
       "MAX_ATTRIBUTES": "Maximum allowed instance and static attributes per class"
-    }
+    },
+    "relatedRules": [
+      "max-inherit",
+      "max-params",
+      "max-method-len"
+    ]
   },
   {
     "ruleId": "no-catch-root",
@@ -1712,7 +2052,12 @@ export const RULES = [
         "Black Hole Exception SAP",
         "Clean ABAP Exception Handling"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-class-exc",
+      "no-raise-cx-sy",
+      "no-nested-try"
+    ]
   },
   {
     "ruleId": "no-msg-raising",
@@ -1735,7 +2080,12 @@ export const RULES = [
         "no-msg-raising",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-msg-cls",
+      "no-obs-strings",
+      "no-useless-concat"
+    ]
   },
   {
     "ruleId": "no-nested-try",
@@ -1758,7 +2108,12 @@ export const RULES = [
         "no-nested-try",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-catch-root",
+      "no-exc-overlap",
+      "pref-auth-check"
+    ]
   },
   {
     "ruleId": "no-raise-cx-sy",
@@ -1778,7 +2133,12 @@ export const RULES = [
         "Clean ABAP Domain Exceptions",
         "Error Handling Best Practices SAP"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-class-exc",
+      "no-raise-shortdump",
+      "no-catch-root"
+    ]
   },
   {
     "ruleId": "pref-check-subrc",
@@ -1807,7 +2167,12 @@ export const RULES = [
         "pref-check-subrc",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-auth-subrc",
+      "pref-auth-check",
+      "no-unhandled-eml"
+    ]
   },
   {
     "ruleId": "pref-auth-subrc",
@@ -1829,7 +2194,12 @@ export const RULES = [
         "Clean ABAP Authorization",
         "Privilege Escalation SAP"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-check-subrc",
+      "pref-auth-check",
+      "no-unhandled-eml"
+    ]
   },
   {
     "ruleId": "no-client-spec",
@@ -1849,7 +2219,12 @@ export const RULES = [
         "Multi-tenant isolation SAP BTP",
         "GDPR Data Isolation ABAP"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-unfilt-dml",
+      "no-db-in-loop",
+      "no-empty-fae"
+    ]
   },
   {
     "ruleId": "pref-transport",
@@ -1870,7 +2245,12 @@ export const RULES = [
         "Clean ABAP Table Mutations",
         "SAP Memory Optimization"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-mod-loop-tab",
+      "pref-read-table",
+      "pref-filter"
+    ]
   },
   {
     "ruleId": "pref-str-func",
@@ -1902,7 +2282,12 @@ export const RULES = [
         "pref-str-func",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-str-tmpl",
+      "no-useless-concat",
+      "no-obs-strings"
+    ]
   },
   {
     "ruleId": "pref-calc-op",
@@ -1925,7 +2310,12 @@ export const RULES = [
         "pref-calc-op",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-symbol-op",
+      "no-obs-arith",
+      "pref-downport"
+    ]
   },
   {
     "ruleId": "pref-early-ret",
@@ -1952,7 +2342,12 @@ export const RULES = [
         "pref-early-ret",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-return",
+      "no-ignored-return",
+      "no-unnec-return"
+    ]
   },
   {
     "ruleId": "no-unused-vars",
@@ -1975,7 +2370,12 @@ export const RULES = [
         "no-unused-vars",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-naming-vars",
+      "no-shadow",
+      "pref-full-typed"
+    ]
   },
   {
     "ruleId": "no-param-escape",
@@ -1998,7 +2398,12 @@ export const RULES = [
         "no-param-escape",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-param-name",
+      "no-call-method",
+      "max-params"
+    ]
   },
   {
     "ruleId": "pref-case",
@@ -2024,7 +2429,12 @@ export const RULES = [
         "pref-case",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-cond",
+      "pref-switch",
+      "no-single-when"
+    ]
   },
   {
     "ruleId": "no-inline-len",
@@ -2047,7 +2457,12 @@ export const RULES = [
         "no-inline-len",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-inline",
+      "no-chained-decl",
+      "no-chained-assign"
+    ]
   },
   {
     "ruleId": "max-one-stmt",
@@ -2068,7 +2483,12 @@ export const RULES = [
         "Debugger Line Stepping SAP",
         "Clean Code Formatting"
       ]
-    }
+    },
+    "relatedRules": [
+      "max-line-len",
+      "max-params",
+      "max-returns"
+    ]
   },
   {
     "ruleId": "no-dash-in-form",
@@ -2091,7 +2511,12 @@ export const RULES = [
         "no-dash-in-form",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-obs-arith",
+      "no-obs-control",
+      "no-obs-decl"
+    ]
   },
   {
     "ruleId": "pref-inline",
@@ -2114,7 +2539,12 @@ export const RULES = [
         "pref-inline",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-inline-len",
+      "no-chained-decl",
+      "pref-declarations"
+    ]
   },
   {
     "ruleId": "pref-final-data",
@@ -2137,7 +2567,12 @@ export const RULES = [
         "pref-final-data",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-naming-vars",
+      "no-single-letter",
+      "no-chained-decl"
+    ]
   },
   {
     "ruleId": "no-friends",
@@ -2160,7 +2595,12 @@ export const RULES = [
         "no-friends",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-factory-name",
+      "max-inherit",
+      "max-attributes"
+    ]
   },
   {
     "ruleId": "pref-msg-cls",
@@ -2183,7 +2623,12 @@ export const RULES = [
         "pref-msg-cls",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-msg-raising",
+      "pref-str-tmpl",
+      "pref-str-func"
+    ]
   },
   {
     "ruleId": "no-exc-overlap",
@@ -2206,7 +2651,12 @@ export const RULES = [
         "no-exc-overlap",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-class-exc",
+      "no-catch-root",
+      "no-raise-cx-sy"
+    ]
   },
   {
     "ruleId": "no-rfc-err",
@@ -2227,7 +2677,12 @@ export const RULES = [
         "SYSTEM_FAILURE RFC",
         "Resilient SAP Integration"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-kernel-call",
+      "no-metaprogramming",
+      "no-unhandled-eml"
+    ]
   },
   {
     "ruleId": "no-many-parens",
@@ -2250,7 +2705,12 @@ export const RULES = [
         "no-many-parens",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-single-when",
+      "no-check-stmt",
+      "no-bool-compare"
+    ]
   },
   {
     "ruleId": "pref-pass-by-ref",
@@ -2271,7 +2731,12 @@ export const RULES = [
         "Clean ABAP Method Parameters",
         "SAP Memory Management"
       ]
-    }
+    },
+    "relatedRules": [
+      "max-params",
+      "no-call-method",
+      "no-call-exporting"
+    ]
   },
   {
     "ruleId": "no-mod-std-table",
@@ -2296,7 +2761,12 @@ export const RULES = [
     "parameters": {
       "OWN_TABLES": "Regex pattern matching custom namespace tables permitted for direct mutation (default: ^[yz/])",
       "REPORT_DYNAMIC": "Report dynamic database statements targeting unverified table variables"
-    }
+    },
+    "relatedRules": [
+      "pref-std-table",
+      "pref-read-table",
+      "no-mod-loop-tab"
+    ]
   },
   {
     "ruleId": "no-dynamic-stmt",
@@ -2321,7 +2791,12 @@ export const RULES = [
     "parameters": {
       "CHECK_DYNAMIC_SQL": "Detect dynamic table names, column projections, and WHERE clauses in OpenSQL",
       "IGNORE_RAP_QUERY_PROVIDER": "Allow dynamic queries inside custom RAP query provider implementations (IF_RAP_QUERY_PROVIDER)"
-    }
+    },
+    "relatedRules": [
+      "no-unhandled-eml",
+      "no-metaprogramming",
+      "no-kernel-call"
+    ]
   },
   {
     "ruleId": "pref-pub-ctor",
@@ -2344,7 +2819,12 @@ export const RULES = [
         "pref-pub-ctor",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-new-op",
+      "pref-factory-name",
+      "pref-final-cls"
+    ]
   },
   {
     "ruleId": "pref-declarations",
@@ -2371,7 +2851,12 @@ export const RULES = [
         "pref-declarations",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-inline",
+      "pref-final-data",
+      "no-hungarian"
+    ]
   },
   {
     "ruleId": "no-unnec-return",
@@ -2394,7 +2879,12 @@ export const RULES = [
         "no-unnec-return",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-ignored-return",
+      "pref-return",
+      "no-call-exporting"
+    ]
   },
   {
     "ruleId": "no-mix-returning",
@@ -2417,7 +2907,12 @@ export const RULES = [
         "no-mix-returning",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-returning",
+      "no-call-exporting",
+      "no-ignored-return"
+    ]
   },
   {
     "ruleId": "no-overw-builtin",
@@ -2440,7 +2935,12 @@ export const RULES = [
         "no-overw-builtin",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-dash-in-form",
+      "no-obs-arith",
+      "no-obs-control"
+    ]
   },
   {
     "ruleId": "pref-is-initial",
@@ -2463,7 +2963,12 @@ export const RULES = [
         "pref-is-initial",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-is-not",
+      "pref-case",
+      "pref-cond"
+    ]
   },
   {
     "ruleId": "no-ignored-return",
@@ -2486,7 +2991,12 @@ export const RULES = [
         "no-ignored-return",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-return",
+      "no-unnec-return",
+      "no-mix-returning"
+    ]
   },
   {
     "ruleId": "pref-downcast",
@@ -2513,7 +3023,12 @@ export const RULES = [
         "pref-downcast",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-new-op",
+      "pref-pub-ctor",
+      "pref-factory-name"
+    ]
   },
   {
     "ruleId": "no-mod-loop-tab",
@@ -2544,7 +3059,12 @@ export const RULES = [
       "CHECK_SORT": "Detect SORT statements targeting the loop table",
       "CHECK_SORT_ANY": "Detect SORT statements on any table inside a loop",
       "CHECK_COLLECT": "Detect COLLECT statements targeting the loop table"
-    }
+    },
+    "relatedRules": [
+      "no-concat-loop",
+      "no-mod-std-table",
+      "pref-transport"
+    ]
   },
   {
     "ruleId": "no-hardcoded-env",
@@ -2574,7 +3094,12 @@ export const RULES = [
       "CHECK_OPSYS": "Detect operating system checks (sy-opsys)",
       "CHECK_UNAME": "Detect hardcoded user names (sy-uname) in conditional branches",
       "ONLY_CONDITIONAL": "Only flag occurrences when used inside conditional comparisons (IF, CASE)"
-    }
+    },
+    "relatedRules": [
+      "no-raise-cx-sy",
+      "no-kernel-call",
+      "no-rfc-err"
+    ]
   },
   {
     "ruleId": "max-line-len",
@@ -2598,7 +3123,12 @@ export const RULES = [
     },
     "parameters": {
       "MAX_LENGTH": "Maximum allowed character length per source code line (industry standard: 120)"
-    }
+    },
+    "relatedRules": [
+      "max-method-len",
+      "max-one-stmt",
+      "max-params"
+    ]
   },
   {
     "ruleId": "pref-naming-vars",
@@ -2627,7 +3157,12 @@ export const RULES = [
         "pref-naming-vars",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-name-members",
+      "pref-name-objects",
+      "no-unused-vars"
+    ]
   },
   {
     "ruleId": "pref-name-members",
@@ -2665,7 +3200,12 @@ export const RULES = [
         "pref-name-members",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-name-objects",
+      "pref-naming-vars",
+      "pref-pred-name"
+    ]
   },
   {
     "ruleId": "pref-name-objects",
@@ -2704,7 +3244,12 @@ export const RULES = [
         "pref-name-objects",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-name-members",
+      "pref-naming-vars",
+      "pref-pred-name"
+    ]
   },
   {
     "ruleId": "pref-expand-macro",
@@ -2727,7 +3272,12 @@ export const RULES = [
         "pref-expand-macro",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-obs-arith",
+      "no-obs-control",
+      "no-obs-decl"
+    ]
   },
   {
     "ruleId": "no-bad-indent",
@@ -2753,7 +3303,12 @@ export const RULES = [
         "no-bad-indent",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "max-nesting",
+      "max-method-len",
+      "max-line-len"
+    ]
   },
   {
     "ruleId": "no-dead-code",
@@ -2776,7 +3331,12 @@ export const RULES = [
         "no-dead-code",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-unreachable",
+      "no-magic-numbers",
+      "max-method-len"
+    ]
   },
   {
     "ruleId": "no-keyword-name",
@@ -2799,7 +3359,12 @@ export const RULES = [
         "no-keyword-name",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-name-members",
+      "pref-name-objects",
+      "pref-pred-name"
+    ]
   },
   {
     "ruleId": "pref-join-type",
@@ -2822,7 +3387,12 @@ export const RULES = [
         "pref-join-type",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-order-by",
+      "no-db-in-loop",
+      "no-empty-fae"
+    ]
   },
   {
     "ruleId": "pref-std-table",
@@ -2845,7 +3415,12 @@ export const RULES = [
         "pref-std-table",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-mod-std-table",
+      "pref-read-table",
+      "pref-lines"
+    ]
   },
   {
     "ruleId": "pref-is-supplied",
@@ -2868,7 +3443,12 @@ export const RULES = [
         "pref-is-supplied",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-returning",
+      "pref-param-name",
+      "pref-return"
+    ]
   },
   {
     "ruleId": "pref-sy",
@@ -2891,7 +3471,12 @@ export const RULES = [
         "pref-sy",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-sy-modify",
+      "pref-calc-op",
+      "pref-symbol-op"
+    ]
   },
   {
     "ruleId": "no-unfilt-dml",
@@ -2912,7 +3497,12 @@ export const RULES = [
         "Catastrophic Data Loss Prevention",
         "OpenSQL Data Integrity"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-db-in-loop",
+      "no-select-star",
+      "pref-check-subrc"
+    ]
   },
   {
     "ruleId": "no-concat-loop",
@@ -2933,7 +3523,12 @@ export const RULES = [
         "concat_lines_of Clean ABAP",
         "String Buffer Performance"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-mod-loop-tab",
+      "no-late-sys-idx",
+      "pref-transport"
+    ]
   },
   {
     "ruleId": "no-dup-literals",
@@ -2960,7 +3555,12 @@ export const RULES = [
         "no-dup-literals",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-useless-concat",
+      "no-obs-strings",
+      "pref-str-tmpl"
+    ]
   },
   {
     "ruleId": "pref-filter",
@@ -2983,7 +3583,12 @@ export const RULES = [
         "pref-filter",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-reduce",
+      "pref-insert",
+      "pref-transport"
+    ]
   },
   {
     "ruleId": "no-neg-cond",
@@ -3006,7 +3611,12 @@ export const RULES = [
         "no-neg-cond",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-cond",
+      "no-yoda-cond",
+      "no-dup-cond"
+    ]
   },
   {
     "ruleId": "max-bool-expr",
@@ -3030,7 +3640,12 @@ export const RULES = [
     },
     "parameters": {
       "MAX_BOOLEAN_EXPRESSIONS": "Maximum allowed boolean operators (AND, OR, NOT) in a single condition"
-    }
+    },
+    "relatedRules": [
+      "max-cyclo-comp",
+      "no-bool-compare",
+      "max-nesting"
+    ]
   },
   {
     "ruleId": "no-late-sys-idx",
@@ -3053,7 +3668,12 @@ export const RULES = [
         "no-late-sys-idx",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-concat-loop",
+      "no-default-key",
+      "pref-lines"
+    ]
   },
   {
     "ruleId": "no-unhandled-eml",
@@ -3078,7 +3698,12 @@ export const RULES = [
     "parameters": {
       "CHECK_MODIFY": "Enforce FAILED and REPORTED on MODIFY ENTITY / ENTITIES statements",
       "CHECK_READ": "Enforce FAILED and REPORTED on READ ENTITY / ENTITIES statements"
-    }
+    },
+    "relatedRules": [
+      "no-dynamic-stmt",
+      "no-metaprogramming",
+      "no-kernel-call"
+    ]
   },
   {
     "ruleId": "no-empty-override",
@@ -3105,7 +3730,12 @@ export const RULES = [
         "no-empty-override",
         "anti-patterns"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-friends",
+      "no-static-cls",
+      "no-static-arrow"
+    ]
   },
   {
     "ruleId": "pref-composition",
@@ -3131,7 +3761,12 @@ export const RULES = [
         "pref-composition",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "max-inherit",
+      "pref-final-cls",
+      "pref-new-op"
+    ]
   },
   {
     "ruleId": "pref-intf-segreg",
@@ -3157,7 +3792,12 @@ export const RULES = [
         "pref-intf-segreg",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-exposed-data",
+      "pref-new-op",
+      "pref-pub-ctor"
+    ]
   },
   {
     "ruleId": "no-single-letter",
@@ -3183,7 +3823,12 @@ export const RULES = [
         "no-single-letter",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-final-data",
+      "pref-naming-vars",
+      "no-scope-leak"
+    ]
   },
   {
     "ruleId": "pref-factory-name",
@@ -3209,7 +3854,12 @@ export const RULES = [
         "pref-factory-name",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-final-cls",
+      "no-friends",
+      "no-static-arrow"
+    ]
   },
   {
     "ruleId": "no-hungarian",
@@ -3237,7 +3887,12 @@ export const RULES = [
         "no-hungarian",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-name-objects",
+      "pref-naming-vars",
+      "pref-name-members"
+    ]
   },
   {
     "ruleId": "max-returns",
@@ -3261,7 +3916,12 @@ export const RULES = [
     },
     "parameters": {
       "MAX_RETURNS": "Maximum allowed total return points (RETURN, EXIT) within a single method"
-    }
+    },
+    "relatedRules": [
+      "max-params",
+      "max-method-len",
+      "max-one-stmt"
+    ]
   },
   {
     "ruleId": "no-instance-of",
@@ -3287,7 +3947,12 @@ export const RULES = [
         "no-instance-of",
         "clean-abap"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-static-arrow",
+      "no-exposed-data",
+      "pref-new-op"
+    ]
   }
 ];
 

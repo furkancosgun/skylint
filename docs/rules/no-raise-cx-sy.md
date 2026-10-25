@@ -53,6 +53,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_RAISE_CX_SY
 ```
 
+
+## Related Rules
+
+* [Prefer Class-Based Exceptions over Classic EXCEPTIONS](/rules/pref-class-exc) — <code>#EC PREF_CLASS_EXC</code>
+* [Avoid Explicit RAISE SHORTDUMP in Application Logic](/rules/no-raise-shortdump) — <code>#EC NO_RAISE_SHORTDUMP</code>
+* [Avoid Catching Generic CX_ROOT (Catch Specific Exceptions)](/rules/no-catch-root) — <code>#EC NO_CATCH_ROOT</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_RAISE_CX_SY`

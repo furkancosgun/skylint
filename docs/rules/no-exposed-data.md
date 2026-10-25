@@ -73,6 +73,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PUBLIC_ATTR
 ```
 
+
+## Related Rules
+
+* [Avoid Purely Static Utility Classes](/rules/no-static-cls) — <code>#EC NO_STATIC_CLS</code>
+* [Prefer Interface Segregation (Small, Focused Interfaces)](/rules/pref-intf-segreg) — <code>#EC PREF_INTF_SEGREG</code>
+* [Avoid IS INSTANCE OF and CASE TYPE OF Type Tests](/rules/no-instance-of) — <code>#EC NO_INSTANCE_OF</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_EXPOSED_DATA`

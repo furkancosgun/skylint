@@ -61,6 +61,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_IS_SUPPLIED
 ```
 
+
+## Related Rules
+
+* [Prefer Functional RETURNING Parameters](/rules/pref-returning) — <code>#EC PREF_RETURNING</code>
+* [Method Call Parameter Naming Style (Omit or Require)](/rules/pref-param-name) — <code>#EC PREF_PARAM_NAME</code>
+* [Prefer RETURN over EXIT in Methods](/rules/pref-return) — <code>#EC PREF_RETURN</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_IS_SUPPLIED`

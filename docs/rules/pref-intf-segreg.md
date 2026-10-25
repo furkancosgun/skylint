@@ -64,6 +64,13 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_INTF_SEGREG
 ```
 
+
+## Related Rules
+
+* [Avoid Exposed Mutable Data in Classes and Interfaces](/rules/no-exposed-data) — <code>#EC PUBLIC_ATTR</code>
+* [Prefer NEW #( ) over CREATE OBJECT](/rules/pref-new-op) — <code>#EC PREF_NEW_OPERATOR</code>
+* [Declare Constructor in PUBLIC SECTION](/rules/pref-pub-ctor) — <code>#EC PREF_PUB_CTOR</code>
+
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_INTF_SEGREG`
