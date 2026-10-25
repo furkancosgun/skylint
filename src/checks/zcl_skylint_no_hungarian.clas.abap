@@ -23,6 +23,11 @@ CLASS zcl_skylint_no_hungarian DEFINITION
 
     METHODS is_hungarian
       IMPORTING iv_name      TYPE string
+                iv_type      TYPE string DEFAULT ''
+      RETURNING VALUE(rv_is) TYPE abap_bool.
+
+    METHODS is_boolean_type
+      IMPORTING iv_type      TYPE string
       RETURNING VALUE(rv_is) TYPE abap_bool.
 
     METHODS check_decl_name
@@ -97,8 +102,10 @@ CLASS zcl_skylint_no_hungarian IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check_decl_name.
-    DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_name TYPE string.
+    DATA ls_tok      TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_type_tok TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_name     TYPE string.
+    DATA lv_type     TYPE string.
 
     IF zcl_skylint_ast_util=>find_token_sequence(
            is_statement = is_statement
@@ -116,9 +123,20 @@ CLASS zcl_skylint_no_hungarian IMPLEMENTATION.
           is_statement = is_statement
           iv_lexeme    = is_statement-keyword ).
       lv_name = ls_tok-lexeme.
+
+      ls_type_tok = zcl_skylint_ast_util=>get_token_after(
+          is_statement = is_statement
+          iv_lexeme    = 'TYPE' ).
+      IF ls_type_tok-lexeme IS INITIAL.
+        ls_type_tok = zcl_skylint_ast_util=>get_token_after(
+            is_statement = is_statement
+            iv_lexeme    = 'LIKE' ).
+      ENDIF.
+      lv_type = ls_type_tok-lexeme.
     ENDIF.
 
-    IF lv_name IS NOT INITIAL AND is_hungarian( lv_name ) = abap_true.
+    IF lv_name IS NOT INITIAL AND is_hungarian( iv_name = lv_name
+                                                iv_type = lv_type ) = abap_true.
       report_statement( is_statement    = is_statement
                         iv_finding_code = c_finding_codes-hungarian ).
     ENDIF.
@@ -127,7 +145,9 @@ CLASS zcl_skylint_no_hungarian IMPLEMENTATION.
   METHOD check_method_parameters.
     DATA lv_in_clause TYPE abap_bool.
     DATA ls_prev_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_type_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_name      TYPE string.
+    DATA lv_type      TYPE string.
     FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_tok>.
@@ -146,7 +166,13 @@ CLASS zcl_skylint_no_hungarian IMPLEMENTATION.
         WHEN 'TYPE' OR 'LIKE'.
           IF lv_in_clause = abap_true AND ls_prev_tok-lexeme IS NOT INITIAL.
             lv_name = extract_name_from_paren( ls_prev_tok-lexeme ).
-            IF is_hungarian( lv_name ) = abap_true.
+            ls_type_tok = zcl_skylint_ast_util=>get_token(
+                is_statement = is_statement
+                iv_index     = sy-tabix + 1 ).
+            lv_type = ls_type_tok-lexeme.
+
+            IF is_hungarian( iv_name = lv_name
+                             iv_type = lv_type ) = abap_true.
               report_statement( is_statement    = is_statement
                                 iv_finding_code = c_finding_codes-hungarian ).
               RETURN.
@@ -182,6 +208,17 @@ CLASS zcl_skylint_no_hungarian IMPLEMENTATION.
     ENDLOOP.
   ENDMETHOD.
 
+  METHOD is_boolean_type.
+    DATA lv_clean TYPE string.
+
+    rv_is = abap_false.
+    lv_clean = to_upper( condense( iv_type ) ).
+    CASE lv_clean.
+      WHEN 'ABAP_BOOL' OR 'ABAP_BOOLEAN' OR 'FLAG' OR 'XFLAG' OR 'BOOLEAN' OR 'CHAR1' OR 'XFELD'.
+        rv_is = abap_true.
+    ENDCASE.
+  ENDMETHOD.
+
   METHOD is_hungarian.
     DATA lv_clean TYPE string.
 
@@ -195,9 +232,7 @@ CLASS zcl_skylint_no_hungarian IMPLEMENTATION.
       REPLACE ALL OCCURRENCES OF '>' IN lv_clean WITH ''.
     ENDIF.
 
-    IF    lv_clean CP 'IS_VALID*' OR lv_clean CP 'IS_ACTIVE*' OR lv_clean CP 'IS_INITIAL*'
-       OR lv_clean CP 'IS_EMPTY*' OR lv_clean CP 'IS_ENABLED*' OR lv_clean CP 'IS_FOUND*'
-       OR lv_clean CP 'IS_BOUND*' OR lv_clean CP 'IS_OK*' OR lv_clean CP 'IS_SET*'.
+    IF lv_clean CP 'IS_*' AND is_boolean_type( iv_type ) = abap_true.
       RETURN.
     ENDIF.
 
