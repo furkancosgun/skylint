@@ -20,5 +20,23 @@
   {
     "target": "LCL_TIDY",
     "code": null
+  },
+  {
+    "target": "LCL_BAD_LINE",
+    "code": "PARAM_LINE",
+    "line": 3,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "LCL_BAD_LINE",
+    "code": "PARAM_LINE",
+    "line": 6,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "LCL_GOOD_LINE",
+    "code": null
   }
 ]

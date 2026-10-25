@@ -1,0 +1,35 @@
+CLASS lcl_good DEFINITION.
+  PUBLIC SECTION.
+    EVENTS state_changed.
+    METHODS on_state_changed FOR EVENT state_changed OF lcl_good.
+ENDCLASS.
+
+CLASS lcl_good IMPLEMENTATION.
+  METHOD on_state_changed.
+  ENDMETHOD.
+ENDCLASS.
+
+CLASS bad_class DEFINITION.
+  PUBLIC SECTION.
+    EVENTS bad_event.
+ENDCLASS.
+
+CLASS bad_class IMPLEMENTATION.
+ENDCLASS.
+
+INTERFACE lif_good.
+  METHODS execute.
+ENDINTERFACE.
+
+INTERFACE bad_intf.
+  METHODS run.
+ENDINTERFACE.
+
+CLASS bad_global DEFINITION PUBLIC.
+ENDCLASS.
+
+CLASS bad_global IMPLEMENTATION.
+ENDCLASS.
+
+INTERFACE bad_gintf PUBLIC.
+ENDINTERFACE.

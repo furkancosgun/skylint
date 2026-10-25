@@ -1,0 +1,17 @@
+[
+  {
+    "target": "TEST_001",
+    "code": "ENDSELECT",
+    "line": 3,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_002",
+    "code": null
+  },
+  {
+    "target": "TEST_003",
+    "code": null
+  }
+]

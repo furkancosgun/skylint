@@ -1,0 +1,35 @@
+CLASS lcl_mutable DEFINITION.
+  PUBLIC SECTION.
+    DATA mv_attr TYPE i.
+ENDCLASS.
+
+CLASS lcl_clean DEFINITION.
+  PUBLIC SECTION.
+    DATA mv_attr TYPE i READ-ONLY.
+ENDCLASS.
+
+CLASS lcl_extra_bad DEFINITION.
+  PUBLIC SECTION.
+    DATA mv_extra TYPE string.
+ENDCLASS.
+
+CLASS lcl_extra_clean DEFINITION.
+  PRIVATE SECTION.
+    DATA mv_priv TYPE i.
+ENDCLASS.
+
+INTERFACE lif_test.
+  DATA mv_state TYPE i.
+ENDINTERFACE.
+
+INTERFACE lif_clean.
+  CONSTANTS c_version TYPE i VALUE 1.
+ENDINTERFACE.
+
+INTERFACE lif_state2.
+  CLASS-DATA gv_counter TYPE i.
+ENDINTERFACE.
+
+INTERFACE lif_consts2.
+  CONSTANTS c_max TYPE i VALUE 100.
+ENDINTERFACE.

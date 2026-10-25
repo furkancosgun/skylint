@@ -1,0 +1,18 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Avoid mutable data in public classes and interfaces",
+    "originalLanguage": "en"
+  },
+  "category": "ZSKYLINT_ANTI_PATTERNS",
+  "implementingClass": "ZCL_SKYLINT_NO_EXPOSED_DATA",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "CHECK_PUBLIC_ATTR"
+    },
+    {
+      "name": "CHECK_INTF_DATA"
+    }
+  ]
+}

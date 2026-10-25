@@ -1,0 +1,54 @@
+[
+  {
+    "target": "TEST_001",
+    "code": "PREFCAST",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "TOCAST"
+    ]
+  },
+  {
+    "target": "TEST_002",
+    "code": null
+  },
+  {
+    "target": "TEST_003",
+    "code": "PREFCAST",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "TOCAST"
+    ]
+  },
+  {
+    "target": "TEST_004",
+    "code": null
+  },
+  {
+    "target": "TEST_005",
+    "code": "PREF_ICST",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "INLINECST"
+    ]
+  },
+  {
+    "target": "TEST_006",
+    "code": "PREF_ICST",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "INLINECST"
+    ]
+  },
+  {
+    "target": "TEST_007",
+    "code": null
+  },
+  {
+    "target": "TEST_008",
+    "code": null
+  }
+]

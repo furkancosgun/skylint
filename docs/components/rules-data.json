@@ -79,14 +79,14 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "pref-tab-expr",
-    "title": "Prefer Table Expression itab[ ... ] over READ TABLE",
-    "className": "ZCL_SKYLINT_PREF_TAB_EXPR",
-    "checkName": "ZSKYLINT_PREF_TAB_EXPR",
+    "ruleId": "pref-read-table",
+    "title": "Modernize READ TABLE (Table Expressions & line_exists)",
+    "className": "ZCL_SKYLINT_PREF_READ_TABLE",
+    "checkName": "ZSKYLINT_PREF_READ_TABLE",
     "category": "clean-abap",
     "categoryTitle": "Clean ABAP & Modern Syntax",
     "pseudoComment": "PREF_TAB_EXPR",
-    "description": "Prefer table expression itab[ ... ] over READ TABLE",
+    "description": "Modernize READ TABLE (table expressions & line_exists)",
     "hasQuickfix": true,
     "remoteEnabled": true,
     "attributes": [
@@ -94,11 +94,29 @@
         "name": "USE_OPTIONAL",
         "kind": "Boolean",
         "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_TAB_EXPR",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_LINE_EXISTS",
+        "kind": "Boolean",
+        "defaultValue": "true"
       }
     ],
     "defaultParameters": [
       {
         "name": "USE_OPTIONAL",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_TAB_EXPR",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_LINE_EXISTS",
         "value": "X"
       }
     ]
@@ -225,27 +243,45 @@
     ]
   },
   {
-    "ruleId": "no-redundant-call",
-    "title": "Omit or Require Parameter Names (EXPORTING / RECEIVING / Single Param)",
-    "className": "ZCL_SKYLINT_NO_REDUNDANT_CALL",
-    "checkName": "ZSKYLINT_NO_REDUNDANT_CALL",
+    "ruleId": "no-call-receiving",
+    "title": "Omit RECEIVING in Method Invocations",
+    "className": "ZCL_SKYLINT_NO_CALL_RECEIVING",
+    "checkName": "ZSKYLINT_NO_CALL_RECEIVING",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "RECEIVING",
+    "description": "Omit RECEIVING in Method Invocations",
+    "hasQuickfix": true,
+    "remoteEnabled": true,
+    "attributes": [],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "no-call-exporting",
+    "title": "Omit Redundant EXPORTING in Method Calls",
+    "className": "ZCL_SKYLINT_NO_CALL_EXPORTING",
+    "checkName": "ZSKYLINT_NO_CALL_EXPORTING",
     "category": "anti-patterns",
     "categoryTitle": "Anti-Patterns & Bad Practices",
     "pseudoComment": "EXPORTING",
-    "description": "Omit or require parameter names in method calls",
+    "description": "Omit Redundant EXPORTING in Method Calls",
+    "hasQuickfix": true,
+    "remoteEnabled": true,
+    "attributes": [],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "pref-param-name",
+    "title": "Method Call Parameter Naming Style (Omit or Require)",
+    "className": "ZCL_SKYLINT_PREF_PARAM_NAME",
+    "checkName": "ZSKYLINT_PREF_PARAM_NAME",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "PARAM_NAME",
+    "description": "Method Call Parameter Naming Style",
     "hasQuickfix": true,
     "remoteEnabled": false,
     "attributes": [
-      {
-        "name": "CHECK_EXPORTING",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_RECEIVING",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
       {
         "name": "CHECK_PARAM_NAME",
         "kind": "Boolean",
@@ -259,43 +295,25 @@
     ],
     "defaultParameters": [
       {
-        "name": "CHECK_EXPORTING",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_RECEIVING",
-        "value": "X"
-      },
-      {
         "name": "CHECK_PARAM_NAME",
         "value": "X"
       }
     ]
   },
   {
-    "ruleId": "no-chained-stmt",
-    "title": "Avoid Chained Declarations & Assignments",
-    "className": "ZCL_SKYLINT_NO_CHAINED_STMT",
-    "checkName": "ZSKYLINT_NO_CHAINED_STMT",
+    "ruleId": "no-chained-decl",
+    "title": "Avoid Chained Declarations (DATA:, CONSTANTS:, TYPES:)",
+    "className": "ZCL_SKYLINT_NO_CHAINED_DECL",
+    "checkName": "ZSKYLINT_NO_CHAINED_DECL",
     "category": "anti-patterns",
     "categoryTitle": "Anti-Patterns & Bad Practices",
     "pseudoComment": "CHAIN_DECL",
-    "description": "Avoid chained declarations and chained assignments",
+    "description": "Avoid Chained Declarations",
     "hasQuickfix": true,
     "remoteEnabled": true,
     "attributes": [
       {
         "name": "ALLOW_STRUCTURE_CHAINS",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_CHAINED_DECL",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_CHAINED_ASSIGN",
         "kind": "Boolean",
         "defaultValue": "true"
       }
@@ -304,16 +322,22 @@
       {
         "name": "ALLOW_STRUCTURE_CHAINS",
         "value": "X"
-      },
-      {
-        "name": "CHECK_CHAINED_DECL",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_CHAINED_ASSIGN",
-        "value": "X"
       }
     ]
+  },
+  {
+    "ruleId": "no-chained-assign",
+    "title": "Avoid Chained Assignments (a = b = c = 1)",
+    "className": "ZCL_SKYLINT_NO_CHAINED_ASSIGN",
+    "checkName": "ZSKYLINT_NO_CHAINED_ASSIGN",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "CHAIN_ASSIGN",
+    "description": "Avoid Chained Assignments",
+    "hasQuickfix": true,
+    "remoteEnabled": true,
+    "attributes": [],
+    "defaultParameters": []
   },
   {
     "ruleId": "pref-str-tmpl",
@@ -339,20 +363,6 @@
     "pseudoComment": "BOOL_COMPARE",
     "description": "Avoid comparing boolean method calls to boolean literals",
     "hasQuickfix": true,
-    "remoteEnabled": true,
-    "attributes": [],
-    "defaultParameters": []
-  },
-  {
-    "ruleId": "pref-line-exists",
-    "title": "Prefer line_exists( ) over READ TABLE TRANSPORTING NO FIELDS",
-    "className": "ZCL_SKYLINT_PREF_LINE_EXISTS",
-    "checkName": "ZSKYLINT_PREF_LINE_EXISTS",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "LINE_EXISTS",
-    "description": "Prefer line_exists( ) over READ TABLE with NO FIELDS",
-    "hasQuickfix": false,
     "remoteEnabled": true,
     "attributes": [],
     "defaultParameters": []
@@ -654,254 +664,84 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "no-public-attr",
-    "title": "Avoid Public Attributes in Classes",
-    "className": "ZCL_SKYLINT_NO_PUBLIC_ATTR",
-    "checkName": "ZSKYLINT_NO_PUBLIC_ATTR",
+    "ruleId": "no-exposed-data",
+    "title": "Avoid Exposed Mutable Data in Classes and Interfaces",
+    "className": "ZCL_SKYLINT_NO_EXPOSED_DATA",
+    "checkName": "ZSKYLINT_NO_EXPOSED_DATA",
     "category": "anti-patterns",
     "categoryTitle": "Anti-Patterns & Bad Practices",
     "pseudoComment": "PUBLIC_ATTR",
-    "description": "Avoid mutable public attributes in classes",
+    "description": "Avoid mutable data in public classes and interfaces",
     "hasQuickfix": false,
-    "remoteEnabled": true,
-    "attributes": [],
-    "defaultParameters": []
-  },
-  {
-    "ruleId": "no-obsolete",
-    "title": "Avoid Obsolete & Forbidden Statements",
-    "className": "ZCL_SKYLINT_NO_OBSOLETE",
-    "checkName": "ZSKYLINT_NO_OBSOLETE",
-    "category": "anti-patterns",
-    "categoryTitle": "Anti-Patterns & Bad Practices",
-    "pseudoComment": "OBSOLETE",
-    "description": "Avoid obsolete statements (MOVE, REFRESH, FORM, etc.)",
-    "hasQuickfix": true,
     "remoteEnabled": true,
     "attributes": [
       {
-        "name": "CHECK_MOVE",
+        "name": "CHECK_PUBLIC_ATTR",
         "kind": "Boolean",
         "defaultValue": "true"
       },
       {
-        "name": "CHECK_REFRESH",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_COMPUTE",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_TABLES",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_FIELD_GROUPS",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_TEST_SEAMS",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_BREAK",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_STATICS",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_DEFINE",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_EXPORT_MEMORY",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_FORM",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_LOOP_CTL",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_ADD",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_ADD_CORR",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_TYPE_POOLS",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_RANGES",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_HEADER_LINE",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_LOAD",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_PACK",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_UNPACK",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_EXTRACT",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_COMMON_PART",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_FREE_MEMORY",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_PROVIDE",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_CONTEXTS",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_INITIAL_SIZE",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_CATCH_SYSTEM",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_GET_REFERENCE",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_INFOTYPES",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_COMMUNICATION",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_SET_EXT_CHECK",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_OCCURS",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_FS_STRUCTURE",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_PARAMETER",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_SELECT_NO_INTO",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_EXIT_SQL",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_SORT_BY_FS",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_CALL_TRANSF",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_REGEX",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_OCCURENCES",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_REPLACE_INTO",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_LOOP_EXTRACT",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_SORT_EXTRACT",
+        "name": "CHECK_INTF_DATA",
         "kind": "Boolean",
         "defaultValue": "true"
       }
     ],
     "defaultParameters": [
       {
-        "name": "CHECK_MOVE",
+        "name": "CHECK_PUBLIC_ATTR",
         "value": "X"
       },
       {
-        "name": "CHECK_REFRESH",
+        "name": "CHECK_INTF_DATA",
+        "value": "X"
+      }
+    ]
+  },
+  {
+    "ruleId": "no-obs-arith",
+    "title": "Avoid Obsolete Arithmetic and Assignment Statements",
+    "className": "ZCL_SKYLINT_NO_OBS_ARITH",
+    "checkName": "ZSKYLINT_NO_OBS_ARITH",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "OBSOLETE_ARITH",
+    "description": "Obsolete Arithmetic and Assignment Statements",
+    "hasQuickfix": true,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "CHECK_ADD",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_ADD_CORR",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_COMPUTE",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_MOVE",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_GET_REF",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "defaultParameters": [
+      {
+        "name": "CHECK_ADD",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_ADD_CORR",
         "value": "X"
       },
       {
@@ -909,47 +749,91 @@
         "value": "X"
       },
       {
+        "name": "CHECK_MOVE",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_GET_REF",
+        "value": "X"
+      }
+    ]
+  },
+  {
+    "ruleId": "no-obs-decl",
+    "title": "Avoid Obsolete Declarations and Table Headers",
+    "className": "ZCL_SKYLINT_NO_OBS_DECL",
+    "checkName": "ZSKYLINT_NO_OBS_DECL",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "OBSOLETE_DECL",
+    "description": "Obsolete Data and Type Declarations",
+    "hasQuickfix": true,
+    "remoteEnabled": true,
+    "attributes": [
+      {
         "name": "CHECK_TABLES",
-        "value": "X"
+        "kind": "Boolean",
+        "defaultValue": "true"
       },
       {
-        "name": "CHECK_FIELD_GROUPS",
-        "value": "X"
+        "name": "CHECK_TYPE_POOLS",
+        "kind": "Boolean",
+        "defaultValue": "true"
       },
       {
-        "name": "CHECK_TEST_SEAMS",
-        "value": "X"
+        "name": "CHECK_RANGES",
+        "kind": "Boolean",
+        "defaultValue": "true"
       },
       {
-        "name": "CHECK_BREAK",
-        "value": "X"
+        "name": "CHECK_HEADER_LINE",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_OCCURS",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_INITIAL_SIZE",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_COMMON_PART",
+        "kind": "Boolean",
+        "defaultValue": "true"
       },
       {
         "name": "CHECK_STATICS",
-        "value": "X"
+        "kind": "Boolean",
+        "defaultValue": "true"
       },
       {
-        "name": "CHECK_DEFINE",
-        "value": "X"
+        "name": "CHECK_FS_STRUCTURE",
+        "kind": "Boolean",
+        "defaultValue": "true"
       },
       {
-        "name": "CHECK_EXPORT_MEMORY",
-        "value": "X"
+        "name": "CHECK_LOAD",
+        "kind": "Boolean",
+        "defaultValue": "true"
       },
       {
-        "name": "CHECK_FORM",
-        "value": "X"
+        "name": "CHECK_PARAMETER",
+        "kind": "Boolean",
+        "defaultValue": "true"
       },
       {
-        "name": "CHECK_LOOP_CTL",
-        "value": "X"
-      },
+        "name": "CHECK_REFRESH",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "defaultParameters": [
       {
-        "name": "CHECK_ADD",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_ADD_CORR",
+        "name": "CHECK_TABLES",
         "value": "X"
       },
       {
@@ -965,23 +849,196 @@
         "value": "X"
       },
       {
-        "name": "CHECK_LOAD",
+        "name": "CHECK_OCCURS",
         "value": "X"
       },
       {
-        "name": "CHECK_PACK",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_UNPACK",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_EXTRACT",
+        "name": "CHECK_INITIAL_SIZE",
         "value": "X"
       },
       {
         "name": "CHECK_COMMON_PART",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_STATICS",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_FS_STRUCTURE",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_LOAD",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_PARAMETER",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_REFRESH",
+        "value": "X"
+      }
+    ]
+  },
+  {
+    "ruleId": "no-obs-control",
+    "title": "Avoid Obsolete Control Flow and Procedural Forms",
+    "className": "ZCL_SKYLINT_NO_OBS_CONTROL",
+    "checkName": "ZSKYLINT_NO_OBS_CONTROL",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "OBSOLETE_CTRL",
+    "description": "Obsolete Control Flow and Procedural Statements",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "CHECK_FORM",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_LOOP_CTL",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_BREAK",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_DEFINE",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_TEST_SEAMS",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_CATCH_SYSTEM",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_SET_EXT_CHECK",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_SELECT_NO_INTO",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_EXIT_SQL",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_SORT_BY_FS",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "defaultParameters": [
+      {
+        "name": "CHECK_FORM",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_LOOP_CTL",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_BREAK",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_DEFINE",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_TEST_SEAMS",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_CATCH_SYSTEM",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_SET_EXT_CHECK",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_SELECT_NO_INTO",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_EXIT_SQL",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_SORT_BY_FS",
+        "value": "X"
+      }
+    ]
+  },
+  {
+    "ruleId": "no-obs-memory",
+    "title": "Avoid Obsolete ABAP Memory and Context Statements",
+    "className": "ZCL_SKYLINT_NO_OBS_MEMORY",
+    "checkName": "ZSKYLINT_NO_OBS_MEMORY",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "OBSOLETE_MEM",
+    "description": "Obsolete Memory and Context Statements",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "CHECK_EXPORT_MEMORY",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_FREE_MEMORY",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_PROVIDE",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_CONTEXTS",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_INFOTYPES",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_COMMUNICATION",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_CALL_TRANSF",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "defaultParameters": [
+      {
+        "name": "CHECK_EXPORT_MEMORY",
         "value": "X"
       },
       {
@@ -997,18 +1054,6 @@
         "value": "X"
       },
       {
-        "name": "CHECK_INITIAL_SIZE",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_CATCH_SYSTEM",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_GET_REFERENCE",
-        "value": "X"
-      },
-      {
         "name": "CHECK_INFOTYPES",
         "value": "X"
       },
@@ -1017,35 +1062,56 @@
         "value": "X"
       },
       {
-        "name": "CHECK_SET_EXT_CHECK",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_OCCURS",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_FS_STRUCTURE",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_PARAMETER",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_SELECT_NO_INTO",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_EXIT_SQL",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_SORT_BY_FS",
-        "value": "X"
-      },
-      {
         "name": "CHECK_CALL_TRANSF",
+        "value": "X"
+      }
+    ]
+  },
+  {
+    "ruleId": "no-obs-strings",
+    "title": "Avoid Obsolete String and POSIX Regex Statements",
+    "className": "ZCL_SKYLINT_NO_OBS_STRINGS",
+    "checkName": "ZSKYLINT_NO_OBS_STRINGS",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "OBSOLETE_STR",
+    "description": "Obsolete String and Regex Statements",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "CHECK_PACK",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_UNPACK",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_REGEX",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_OCCURENCES",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_REPLACE_INTO",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "defaultParameters": [
+      {
+        "name": "CHECK_PACK",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_UNPACK",
         "value": "X"
       },
       {
@@ -1058,14 +1124,6 @@
       },
       {
         "name": "CHECK_REPLACE_INTO",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_LOOP_EXTRACT",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_SORT_EXTRACT",
         "value": "X"
       }
     ]
@@ -1151,13 +1209,13 @@
   },
   {
     "ruleId": "max-params",
-    "title": "Limit Method Parameter Count",
+    "title": "Limit Method Parameter Count and Parameters Per Line",
     "className": "ZCL_SKYLINT_MAX_PARAMS",
     "checkName": "ZSKYLINT_MAX_PARAMS",
     "category": "metrics",
     "categoryTitle": "Metrics & Complexity Limits",
     "pseudoComment": "MAX_PARAMS",
-    "description": "Method signature cleanliness (excessive parameter count)",
+    "description": "Method parameter limits (count and lines)",
     "hasQuickfix": false,
     "remoteEnabled": true,
     "attributes": [
@@ -1165,12 +1223,21 @@
         "name": "MAX_PARAMETERS",
         "kind": "Integer",
         "defaultValue": "8"
+      },
+      {
+        "name": "CHECK_PARAM_LINE",
+        "kind": "Boolean",
+        "defaultValue": "true"
       }
     ],
     "defaultParameters": [
       {
         "name": "MAX_PARAMETERS",
         "value": "8"
+      },
+      {
+        "name": "CHECK_PARAM_LINE",
+        "value": "X"
       }
     ]
   },
@@ -1210,31 +1277,25 @@
     "category": "performance",
     "categoryTitle": "Performance & Database",
     "pseudoComment": "SELECT_STAR",
-    "description": "Select performance (Avoid SELECT * and SELECT ... ENDSELECT)",
+    "description": "Avoid SELECT * (specify columns explicitly)",
     "hasQuickfix": false,
     "remoteEnabled": true,
-    "attributes": [
-      {
-        "name": "CHECK_SELECT_STAR",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_ENDSELECT",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      }
-    ],
-    "defaultParameters": [
-      {
-        "name": "CHECK_SELECT_STAR",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_ENDSELECT",
-        "value": "X"
-      }
-    ]
+    "attributes": [],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "no-endselect",
+    "title": "Avoid SELECT ... ENDSELECT Row-by-Row Cursor Loops",
+    "className": "ZCL_SKYLINT_NO_ENDSELECT",
+    "checkName": "ZSKYLINT_NO_ENDSELECT",
+    "category": "performance",
+    "categoryTitle": "Performance & Database",
+    "pseudoComment": "ENDSELECT",
+    "description": "Avoid SELECT ... ENDSELECT Loops",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "defaultParameters": []
   },
   {
     "ruleId": "no-scope-leak",
@@ -1251,18 +1312,47 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "no-self-assign",
-    "title": "Avoid Redundant Self-Assignments",
-    "className": "ZCL_SKYLINT_NO_SELF_ASSIGN",
-    "checkName": "ZSKYLINT_NO_SELF_ASSIGN",
+    "ruleId": "no-redun-assign",
+    "title": "Remove Redundant Self-Assignments and CLEAR Statements",
+    "className": "ZCL_SKYLINT_NO_REDUN_ASSIGN",
+    "checkName": "ZSKYLINT_NO_REDUN_ASSIGN",
     "category": "anti-patterns",
     "categoryTitle": "Anti-Patterns & Bad Practices",
     "pseudoComment": "SELF_ASSIGN",
-    "description": "Detect Identical Self Assignments",
+    "description": "Remove Redundant Assignments & CLEARs",
     "hasQuickfix": true,
     "remoteEnabled": true,
-    "attributes": [],
-    "defaultParameters": []
+    "attributes": [
+      {
+        "name": "CHECK_SELF_ASSIGN",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_BEFORE_WRITE",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_WITHOUT_READ",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "defaultParameters": [
+      {
+        "name": "CHECK_SELF_ASSIGN",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_BEFORE_WRITE",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_WITHOUT_READ",
+        "value": "X"
+      }
+    ]
   },
   {
     "ruleId": "no-shadow",
@@ -1322,13 +1412,13 @@
   },
   {
     "ruleId": "max-method-len",
-    "title": "Limit Method Length (Statements)",
+    "title": "Limit Method and Constructor Statement Counts",
     "className": "ZCL_SKYLINT_MAX_METHOD_LEN",
     "checkName": "ZSKYLINT_MAX_METHOD_LEN",
     "category": "metrics",
     "categoryTitle": "Metrics & Complexity Limits",
     "pseudoComment": "METHOD_LEN",
-    "description": "Method Length Limit (excessive statement count)",
+    "description": "Method and Constructor Length Limits",
     "hasQuickfix": false,
     "remoteEnabled": true,
     "attributes": [
@@ -1336,12 +1426,21 @@
         "name": "MAX_STATEMENTS",
         "kind": "Integer",
         "defaultValue": "5"
+      },
+      {
+        "name": "MAX_CTOR_STATEMENTS",
+        "kind": "Integer",
+        "defaultValue": "10"
       }
     ],
     "defaultParameters": [
       {
         "name": "MAX_STATEMENTS",
         "value": "5"
+      },
+      {
+        "name": "MAX_CTOR_STATEMENTS",
+        "value": "10"
       }
     ]
   },
@@ -1413,182 +1512,60 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "no-dangerous-stmt",
-    "title": "Avoid Dangerous & Dynamic Native Statements",
-    "className": "ZCL_SKYLINT_NO_DANGEROUS_STMT",
-    "checkName": "ZSKYLINT_NO_DANGEROUS_STMT",
+    "ruleId": "no-prod-assert",
+    "title": "Avoid Native ASSERT in Production Code",
+    "className": "ZCL_SKYLINT_NO_PROD_ASSERT",
+    "checkName": "ZSKYLINT_NO_PROD_ASSERT",
     "category": "security",
     "categoryTitle": "Security & Robustness",
-    "pseudoComment": "DANGEROUS_STMT",
-    "description": "Dangerous Statements (abaplint dangerous_statement)",
+    "pseudoComment": "PROD_ASSERT",
+    "description": "Native ASSERT in Production Logic",
     "hasQuickfix": false,
     "remoteEnabled": true,
-    "attributes": [
-      {
-        "name": "CHECK_EXEC_SQL",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_KERNEL_CALL",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_SYSTEM_CALL",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_SYNTAX_CHECK",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_INSERT_REPORT",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_GENERATE_DYNPRO",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_GENERATE_REPORT",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_GENERATE_SUBROUTINE",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_DELETE_REPORT",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_DELETE_TEXTPOOL",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_INSERT_TEXTPOOL",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_DELETE_DYNPRO",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_EXPORT_DYNPRO",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_EDITOR_CALL",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_DYNAMIC_SQL",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_RAISE_SHORTDUMP",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_PROD_ASSERT",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "IGNORE_RAP_QUERY_PROVIDER",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      }
-    ],
-    "defaultParameters": [
-      {
-        "name": "CHECK_EXEC_SQL",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_KERNEL_CALL",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_SYSTEM_CALL",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_SYNTAX_CHECK",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_INSERT_REPORT",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_GENERATE_DYNPRO",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_GENERATE_REPORT",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_GENERATE_SUBROUTINE",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_DELETE_REPORT",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_DELETE_TEXTPOOL",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_INSERT_TEXTPOOL",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_DELETE_DYNPRO",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_EXPORT_DYNPRO",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_EDITOR_CALL",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_DYNAMIC_SQL",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_RAISE_SHORTDUMP",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_PROD_ASSERT",
-        "value": "X"
-      },
-      {
-        "name": "IGNORE_RAP_QUERY_PROVIDER",
-        "value": "X"
-      }
-    ]
+    "attributes": [],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "no-raise-shortdump",
+    "title": "Avoid RAISE SHORTDUMP in Application Logic",
+    "className": "ZCL_SKYLINT_NO_RAISE_SHORTDUMP",
+    "checkName": "ZSKYLINT_NO_RAISE_SHORTDUMP",
+    "category": "security",
+    "categoryTitle": "Security & Robustness",
+    "pseudoComment": "SHORTDUMP",
+    "description": "Avoid RAISE SHORTDUMP",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "no-metaprogramming",
+    "title": "Avoid Metaprogramming and Dynamic Code Generation",
+    "className": "ZCL_SKYLINT_NO_METAPROGRAMMING",
+    "checkName": "ZSKYLINT_NO_METAPROGRAMMING",
+    "category": "security",
+    "categoryTitle": "Security & Robustness",
+    "pseudoComment": "METAPROGRAM",
+    "description": "Metaprogramming and Dynamic Code Generation",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "no-kernel-call",
+    "title": "Avoid Kernel and Native Database Calls",
+    "className": "ZCL_SKYLINT_NO_KERNEL_CALL",
+    "checkName": "ZSKYLINT_NO_KERNEL_CALL",
+    "category": "security",
+    "categoryTitle": "Security & Robustness",
+    "pseudoComment": "KERNEL_CALL",
+    "description": "Avoid Kernel and Native Calls",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "defaultParameters": []
   },
   {
     "ruleId": "pref-auth-check",
@@ -1720,31 +1697,6 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "max-ctor-stmts",
-    "title": "Keep Constructors Clean & Lightweight",
-    "className": "ZCL_SKYLINT_MAX_CTOR_STMTS",
-    "checkName": "ZSKYLINT_MAX_CTOR_STMTS",
-    "category": "metrics",
-    "categoryTitle": "Metrics & Complexity Limits",
-    "pseudoComment": "CLEAN_CTOR",
-    "description": "Keep constructors clean; avoid heavy logic and DB",
-    "hasQuickfix": false,
-    "remoteEnabled": true,
-    "attributes": [
-      {
-        "name": "MAX_STATEMENTS",
-        "kind": "Integer",
-        "defaultValue": "10"
-      }
-    ],
-    "defaultParameters": [
-      {
-        "name": "MAX_STATEMENTS",
-        "value": "10"
-      }
-    ]
-  },
-  {
     "ruleId": "no-static-cls",
     "title": "Avoid Purely Static Utility Classes",
     "className": "ZCL_SKYLINT_NO_STATIC_CLS",
@@ -1823,20 +1775,6 @@
     ]
   },
   {
-    "ruleId": "no-intf-data",
-    "title": "Avoid DATA Attributes in Interfaces",
-    "className": "ZCL_SKYLINT_NO_INTF_DATA",
-    "checkName": "ZSKYLINT_NO_INTF_DATA",
-    "category": "anti-patterns",
-    "categoryTitle": "Anti-Patterns & Bad Practices",
-    "pseudoComment": "INTF_DATA",
-    "description": "Avoid mutable DATA in interfaces; allow only CONSTANTS",
-    "hasQuickfix": false,
-    "remoteEnabled": true,
-    "attributes": [],
-    "defaultParameters": []
-  },
-  {
     "ruleId": "no-catch-root",
     "title": "Avoid Catching Generic CX_ROOT",
     "className": "ZCL_SKYLINT_NO_CATCH_ROOT",
@@ -1894,11 +1832,11 @@
   },
   {
     "ruleId": "pref-check-subrc",
-    "title": "Verify sy-subrc Promptly After System Calls",
+    "title": "Verify sy-subrc Promptly After Data Retrieval and Search",
     "className": "ZCL_SKYLINT_PREF_CHECK_SUBRC",
     "checkName": "ZSKYLINT_PREF_CHECK_SUBRC",
-    "category": "security",
-    "categoryTitle": "Security & Robustness",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
     "pseudoComment": "CHECK_SUBRC",
     "description": "Check sy-subrc after DB, table and string operations",
     "hasQuickfix": false,
@@ -1911,11 +1849,6 @@
       },
       {
         "name": "CHECK_READ_TABLE",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_AUTHORITY_CHECK",
         "kind": "Boolean",
         "defaultValue": "true"
       },
@@ -1940,10 +1873,6 @@
         "value": "X"
       },
       {
-        "name": "CHECK_AUTHORITY_CHECK",
-        "value": "X"
-      },
-      {
         "name": "CHECK_FIND_SEARCH",
         "value": "X"
       },
@@ -1952,6 +1881,20 @@
         "value": "X"
       }
     ]
+  },
+  {
+    "ruleId": "auth-check-subrc",
+    "title": "Check sy-subrc Promptly After AUTHORITY-CHECK (CWE-862)",
+    "className": "ZCL_SKYLINT_AUTH_CHECK_SUBRC",
+    "checkName": "ZSKYLINT_AUTH_CHECK_SUBRC",
+    "category": "security",
+    "categoryTitle": "Security & Robustness",
+    "pseudoComment": "AUTH_SUBRC",
+    "description": "Check sy-subrc immediately after AUTHORITY-CHECK",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "defaultParameters": []
   },
   {
     "ruleId": "no-client-spec",
@@ -2123,20 +2066,6 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "pref-decl-order",
-    "title": "Order Declarations (TYPES, CONSTANTS, DATA)",
-    "className": "ZCL_SKYLINT_PREF_DECL_ORDER",
-    "checkName": "ZSKYLINT_PREF_DECL_ORDER",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "DECL_ORDER",
-    "description": "Enforce declaration order (TYPES, CONSTANTS, DATA, FS)",
-    "hasQuickfix": false,
-    "remoteEnabled": true,
-    "attributes": [],
-    "defaultParameters": []
-  },
-  {
     "ruleId": "no-param-escape",
     "title": "Avoid Obsolete ! Escape Prefix in Parameter Names",
     "className": "ZCL_SKYLINT_NO_PARAM_ESCAPE",
@@ -2274,20 +2203,6 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "pref-inl-cast",
-    "title": "Inline a CAST helper that is only read once",
-    "className": "ZCL_SKYLINT_PREF_INL_CAST",
-    "checkName": "ZSKYLINT_PREF_INL_CAST",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "INLINE_CAST",
-    "description": "Inline a CAST helper that is only read once",
-    "hasQuickfix": true,
-    "remoteEnabled": true,
-    "attributes": [],
-    "defaultParameters": []
-  },
-  {
     "ruleId": "no-exc-overlap",
     "title": "Classic EXCEPTIONS must not map two errors to the same number",
     "className": "ZCL_SKYLINT_NO_EXC_OVERLAP",
@@ -2388,8 +2303,28 @@
     "description": "No Dynamic Constructs (CALL, ASSIGN, CREATE, etc.)",
     "hasQuickfix": false,
     "remoteEnabled": true,
-    "attributes": [],
-    "defaultParameters": []
+    "attributes": [
+      {
+        "name": "CHECK_DYNAMIC_SQL",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "IGNORE_RAP_QUERY_PROVIDER",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "defaultParameters": [
+      {
+        "name": "CHECK_DYNAMIC_SQL",
+        "value": "X"
+      },
+      {
+        "name": "IGNORE_RAP_QUERY_PROVIDER",
+        "value": "X"
+      }
+    ]
   },
   {
     "ruleId": "pref-pub-ctor",
@@ -2406,18 +2341,38 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "pref-def-top",
-    "title": "Place Definitions at Top of Routine",
-    "className": "ZCL_SKYLINT_PREF_DEF_TOP",
-    "checkName": "ZSKYLINT_PREF_DEF_TOP",
+    "ruleId": "pref-declarations",
+    "title": "Routine Declaration Hygiene (Top Placement & Order)",
+    "className": "ZCL_SKYLINT_PREF_DECLARATIONS",
+    "checkName": "ZSKYLINT_PREF_DECLARATIONS",
     "category": "clean-abap",
     "categoryTitle": "Clean ABAP & Modern Syntax",
     "pseudoComment": "DEF_TOP",
-    "description": "Place definitions at beginning of routine",
+    "description": "Routine Declaration Hygiene (top placement & order)",
     "hasQuickfix": false,
     "remoteEnabled": true,
-    "attributes": [],
-    "defaultParameters": []
+    "attributes": [
+      {
+        "name": "CHECK_DEF_TOP",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_DECL_ORDER",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "defaultParameters": [
+      {
+        "name": "CHECK_DEF_TOP",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_DECL_ORDER",
+        "value": "X"
+      }
+    ]
   },
   {
     "ruleId": "no-unnec-return",
@@ -2462,20 +2417,6 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "max-param-line",
-    "title": "Max One Method Parameter Definition Per Line",
-    "className": "ZCL_SKYLINT_MAX_PARAM_LINE",
-    "checkName": "ZSKYLINT_MAX_PARAM_LINE",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "MAX_PARAM_LINE",
-    "description": "Max one method parameter definition per line",
-    "hasQuickfix": false,
-    "remoteEnabled": true,
-    "attributes": [],
-    "defaultParameters": []
-  },
-  {
     "ruleId": "pref-is-initial",
     "title": "Prefer IS [NOT] INITIAL over lines( ) or Literal Comparisons",
     "className": "ZCL_SKYLINT_PREF_IS_INITIAL",
@@ -2504,49 +2445,35 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "pref-cast",
-    "title": "Prefer CAST #( ) over ?=",
-    "className": "ZCL_SKYLINT_PREF_CAST",
-    "checkName": "ZSKYLINT_PREF_CAST",
+    "ruleId": "pref-downcast",
+    "title": "Modernize Downcasting (CAST #( ) Expression & Inlining)",
+    "className": "ZCL_SKYLINT_PREF_DOWNCAST",
+    "checkName": "ZSKYLINT_PREF_DOWNCAST",
     "category": "clean-abap",
     "categoryTitle": "Clean ABAP & Modern Syntax",
     "pseudoComment": "PREF_CAST",
-    "description": "Prefer modern CAST #( ) expression over ?=",
-    "hasQuickfix": true,
-    "remoteEnabled": true,
-    "attributes": [],
-    "defaultParameters": []
-  },
-  {
-    "ruleId": "no-redundant-clear",
-    "title": "Do Not CLEAR Variables Directly After Declaration",
-    "className": "ZCL_SKYLINT_NO_REDUNDANT_CLEAR",
-    "checkName": "ZSKYLINT_NO_REDUNDANT_CLEAR",
-    "category": "anti-patterns",
-    "categoryTitle": "Anti-Patterns & Bad Practices",
-    "pseudoComment": "REDUNDANT_CLEAR",
-    "description": "Do not CLEAR or FREE variables redundantly",
+    "description": "Modernize Downcasting (CAST #( ) & inlining)",
     "hasQuickfix": true,
     "remoteEnabled": true,
     "attributes": [
       {
-        "name": "CHECK_BEFORE_WRITE",
+        "name": "CHECK_CAST_SYNTAX",
         "kind": "Boolean",
         "defaultValue": "true"
       },
       {
-        "name": "CHECK_WITHOUT_READ",
+        "name": "CHECK_INLINE_CAST",
         "kind": "Boolean",
         "defaultValue": "true"
       }
     ],
     "defaultParameters": [
       {
-        "name": "CHECK_BEFORE_WRITE",
+        "name": "CHECK_CAST_SYNTAX",
         "value": "X"
       },
       {
-        "name": "CHECK_WITHOUT_READ",
+        "name": "CHECK_INLINE_CAST",
         "value": "X"
       }
     ]
@@ -2740,14 +2667,66 @@
     ]
   },
   {
-    "ruleId": "pref-naming",
-    "title": "Enforce Naming Conventions",
-    "className": "ZCL_SKYLINT_PREF_NAMING",
-    "checkName": "ZSKYLINT_PREF_NAMING",
+    "ruleId": "naming-variables",
+    "title": "Enforce Local Variable and Field-Symbol Naming Conventions",
+    "className": "ZCL_SKYLINT_NAMING_VARIABLES",
+    "checkName": "ZSKYLINT_NAMING_VARIABLES",
     "category": "clean-abap",
     "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "NAMING",
-    "description": "Standard Naming Conventions",
+    "pseudoComment": "NAMING_VAR",
+    "description": "Local Variable and Field-Symbol Naming Conventions",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "LOCAL_DATA",
+        "kind": "String",
+        "defaultValue": "^L._.+$"
+      },
+      {
+        "name": "LOCAL_CONST",
+        "kind": "String",
+        "defaultValue": "^LC_.+$"
+      },
+      {
+        "name": "LOCAL_FS",
+        "kind": "String",
+        "defaultValue": "^<L._.+>$"
+      },
+      {
+        "name": "LOCAL_STATICS",
+        "kind": "String",
+        "defaultValue": "^S._.+$"
+      }
+    ],
+    "defaultParameters": [
+      {
+        "name": "LOCAL_DATA",
+        "value": "^L._.+$"
+      },
+      {
+        "name": "LOCAL_CONST",
+        "value": "^LC_.+$"
+      },
+      {
+        "name": "LOCAL_FS",
+        "value": "^<L._.+>$"
+      },
+      {
+        "name": "LOCAL_STATICS",
+        "value": "^S._.+$"
+      }
+    ]
+  },
+  {
+    "ruleId": "naming-members",
+    "title": "Enforce Class Attribute and Method Parameter Naming Conventions",
+    "className": "ZCL_SKYLINT_NAMING_MEMBERS",
+    "checkName": "ZSKYLINT_NAMING_MEMBERS",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "NAMING_MEM",
+    "description": "Class Attribute and Parameter Naming Conventions",
     "hasQuickfix": false,
     "remoteEnabled": true,
     "attributes": [
@@ -2807,41 +2786,6 @@
         "defaultValue": "^E._.+$"
       },
       {
-        "name": "LOCAL_DATA",
-        "kind": "String",
-        "defaultValue": "^L._.+$"
-      },
-      {
-        "name": "LOCAL_CONST",
-        "kind": "String",
-        "defaultValue": "^LC_.+$"
-      },
-      {
-        "name": "LOCAL_FS",
-        "kind": "String",
-        "defaultValue": "^<L._.+>$"
-      },
-      {
-        "name": "LOCAL_STATICS",
-        "kind": "String",
-        "defaultValue": "^S._.+$"
-      },
-      {
-        "name": "CLASS_LOCAL",
-        "kind": "String",
-        "defaultValue": "^LC(L|X)_.+$"
-      },
-      {
-        "name": "CLASS_TEST",
-        "kind": "String",
-        "defaultValue": "^LTCL_.+$"
-      },
-      {
-        "name": "CLASS_GLOBAL",
-        "kind": "String",
-        "defaultValue": "^ZC(L|X)_.+$"
-      },
-      {
         "name": "SSCR_PARAM",
         "kind": "String",
         "defaultValue": "^P_.+$"
@@ -2850,61 +2794,6 @@
         "name": "SSCR_SELOPT",
         "kind": "String",
         "defaultValue": "^S_.+$"
-      },
-      {
-        "name": "TYPES_PATTERN",
-        "kind": "String",
-        "defaultValue": "^TY_.+$"
-      },
-      {
-        "name": "MACRO_PATTERN",
-        "kind": "String",
-        "defaultValue": "^_.+$"
-      },
-      {
-        "name": "FORM_PATTERN",
-        "kind": "String",
-        "defaultValue": "^F_.+$"
-      },
-      {
-        "name": "FUNCTION_PATTERN",
-        "kind": "String",
-        "defaultValue": "^Z.*$"
-      },
-      {
-        "name": "INTF_LOCAL",
-        "kind": "String",
-        "defaultValue": "^LIF_.+$"
-      },
-      {
-        "name": "INTF_GLOBAL",
-        "kind": "String",
-        "defaultValue": "^ZIF_.+$"
-      },
-      {
-        "name": "EVENT_NAME",
-        "kind": "String",
-        "defaultValue": "^[A-Z][A-Z0-9_]+$"
-      },
-      {
-        "name": "EVENT_HANDLER",
-        "kind": "String",
-        "defaultValue": "^ON_.+$"
-      },
-      {
-        "name": "TEST_METHOD",
-        "kind": "String",
-        "defaultValue": "^(TEST|SHOULD)_.+$"
-      },
-      {
-        "name": "PROG_PATTERN",
-        "kind": "String",
-        "defaultValue": "^Z.+$"
-      },
-      {
-        "name": "FUGR_PATTERN",
-        "kind": "String",
-        "defaultValue": "^Z.+$"
       }
     ],
     "defaultParameters": [
@@ -2945,21 +2834,99 @@
         "value": "^E._.+$"
       },
       {
-        "name": "LOCAL_DATA",
-        "value": "^L._.+$"
+        "name": "SSCR_PARAM",
+        "value": "^P_.+$"
       },
       {
-        "name": "LOCAL_CONST",
-        "value": "^LC_.+$"
+        "name": "SSCR_SELOPT",
+        "value": "^S_.+$"
+      }
+    ]
+  },
+  {
+    "ruleId": "naming-objects",
+    "title": "Enforce Class, Interface, Type and Object Naming Conventions",
+    "className": "ZCL_SKYLINT_NAMING_OBJECTS",
+    "checkName": "ZSKYLINT_NAMING_OBJECTS",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "NAMING_OBJ",
+    "description": "Class, Interface, Type and Object Naming",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "CLASS_LOCAL",
+        "kind": "String",
+        "defaultValue": "^LC(L|X)_.+$"
       },
       {
-        "name": "LOCAL_FS",
-        "value": "^<L._.+>$"
+        "name": "CLASS_TEST",
+        "kind": "String",
+        "defaultValue": "^LTCL_.+$"
       },
       {
-        "name": "LOCAL_STATICS",
-        "value": "^S._.+$"
+        "name": "CLASS_GLOBAL",
+        "kind": "String",
+        "defaultValue": "^ZC(L|X)_.+$"
       },
+      {
+        "name": "INTF_LOCAL",
+        "kind": "String",
+        "defaultValue": "^LIF_.+$"
+      },
+      {
+        "name": "INTF_GLOBAL",
+        "kind": "String",
+        "defaultValue": "^ZIF_.+$"
+      },
+      {
+        "name": "TYPES_PATTERN",
+        "kind": "String",
+        "defaultValue": "^TY_.+$"
+      },
+      {
+        "name": "MACRO_PATTERN",
+        "kind": "String",
+        "defaultValue": "^_.+$"
+      },
+      {
+        "name": "FORM_PATTERN",
+        "kind": "String",
+        "defaultValue": "^F_.+$"
+      },
+      {
+        "name": "FUNCTION_PATTERN",
+        "kind": "String",
+        "defaultValue": "^Z.*$"
+      },
+      {
+        "name": "EVENT_NAME",
+        "kind": "String",
+        "defaultValue": "^[A-Z][A-Z0-9_]+$"
+      },
+      {
+        "name": "EVENT_HANDLER",
+        "kind": "String",
+        "defaultValue": "^ON_.+$"
+      },
+      {
+        "name": "TEST_METHOD",
+        "kind": "String",
+        "defaultValue": "^(TEST|SHOULD)_.+$"
+      },
+      {
+        "name": "PROG_PATTERN",
+        "kind": "String",
+        "defaultValue": "^Z.+$"
+      },
+      {
+        "name": "FUGR_PATTERN",
+        "kind": "String",
+        "defaultValue": "^Z.+$"
+      }
+    ],
+    "defaultParameters": [
       {
         "name": "CLASS_LOCAL",
         "value": "^LC(L|X)_.+$"
@@ -2973,12 +2940,12 @@
         "value": "^ZC(L|X)_.+$"
       },
       {
-        "name": "SSCR_PARAM",
-        "value": "^P_.+$"
+        "name": "INTF_LOCAL",
+        "value": "^LIF_.+$"
       },
       {
-        "name": "SSCR_SELOPT",
-        "value": "^S_.+$"
+        "name": "INTF_GLOBAL",
+        "value": "^ZIF_.+$"
       },
       {
         "name": "TYPES_PATTERN",
@@ -2995,14 +2962,6 @@
       {
         "name": "FUNCTION_PATTERN",
         "value": "^Z.*$"
-      },
-      {
-        "name": "INTF_LOCAL",
-        "value": "^LIF_.+$"
-      },
-      {
-        "name": "INTF_GLOBAL",
-        "value": "^ZIF_.+$"
       },
       {
         "name": "EVENT_NAME",

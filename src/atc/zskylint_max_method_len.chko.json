@@ -1,7 +1,7 @@
 {
   "formatVersion": "1",
   "header": {
-    "description": "Method Length Limit (excessive statement count)",
+    "description": "Method and Constructor Length Limits",
     "originalLanguage": "en"
   },
   "category": "ZSKYLINT_METRICS",
@@ -10,6 +10,9 @@
   "parameters": [
     {
       "name": "MAX_STATEMENTS"
+    },
+    {
+      "name": "MAX_CTOR_STATEMENTS"
     }
   ]
 }

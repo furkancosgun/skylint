@@ -4,7 +4,7 @@
     "description": "Check sy-subrc after DB, table and string operations",
     "originalLanguage": "en"
   },
-  "category": "ZSKYLINT_SECURITY",
+  "category": "ZSKYLINT_CLEAN_ABAP",
   "implementingClass": "ZCL_SKYLINT_PREF_CHECK_SUBRC",
   "checkType": "remoteEnabled",
   "parameters": [
@@ -13,9 +13,6 @@
     },
     {
       "name": "CHECK_READ_TABLE"
-    },
-    {
-      "name": "CHECK_AUTHORITY_CHECK"
     },
     {
       "name": "CHECK_FIND_SEARCH"

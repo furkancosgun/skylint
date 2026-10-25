@@ -1,0 +1,36 @@
+CLASS lcl_good DEFINITION.
+  PUBLIC SECTION.
+    DATA mv_data TYPE i.
+    METHODS do_work
+      IMPORTING iv_param TYPE i
+      RETURNING VALUE(rv_res) TYPE i.
+ENDCLASS.
+
+CLASS lcl_good IMPLEMENTATION.
+  METHOD do_work.
+    rv_res = iv_param.
+  ENDMETHOD.
+ENDCLASS.
+
+CLASS bad_class DEFINITION.
+  PUBLIC SECTION.
+    METHODS bad_meth
+      IMPORTING bad_param TYPE i.
+ENDCLASS.
+
+CLASS bad_class IMPLEMENTATION.
+  METHOD bad_meth.
+  ENDMETHOD.
+ENDCLASS.
+
+INTERFACE lif_good.
+  METHODS execute.
+ENDINTERFACE.
+
+CLASS bad_global DEFINITION PUBLIC.
+  PUBLIC SECTION.
+    DATA bad_attr TYPE i.
+ENDCLASS.
+
+CLASS bad_global IMPLEMENTATION.
+ENDCLASS.

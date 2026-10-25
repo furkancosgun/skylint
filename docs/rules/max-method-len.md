@@ -1,8 +1,8 @@
 ---
-description: "Method Length Limit (excessive statement count)"
+description: "Method and Constructor Length Limits"
 ---
 
-# Limit Method Length (Statements)
+# Limit Method and Constructor Statement Counts
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
@@ -13,35 +13,33 @@ description: "Method Length Limit (excessive statement count)"
 
 ## Overview
 
-Method Length Limit (excessive statement count).
+Method and Constructor Length Limits.
 
-> **ATC Finding Message:** `Method length exceeds maximum allowed statement limit`
+> **ATC Finding Messages:**
+> - `Method length exceeds maximum allowed statement limit`
+> - `Avoid heavy business logic/loops in constructor; use injection only`
 
 ## Rationale
 
-A method with many statements usually carries several responsibilities and accumulates local state that is hard to follow. Long methods are difficult to unit test, review, and reuse, and they tend to change for unrelated reasons. Extract cohesive steps into small named methods so each one has a single purpose.
+A routine with excessive statements usually carries multiple responsibilities and accumulates hard-to-follow local state. Similarly, constructors overloaded with business logic or database queries impair testability. Keep methods focused on a single responsibility (max 5 statements) and constructors dedicated to lightweight dependency injection (max 10 statements).
 
 ### Non-Compliant
 
 ```abap
-METHOD post_order.
-  DATA lv_total TYPE i.
-  lv_total = ls_order-quantity * ls_order-price.
-  check_credit( ls_order-customer_id ).
-  save_header( ls_order ).
-  save_items( ls_order ).
-  update_status( ls_order ).
-  log_created( ls_order ).
+METHOD constructor.
+  super->constructor( ).
+  mv_id = iv_id.
+  " 10+ initialization statements and business queries...
 ENDMETHOD.
 ```
 
 ### Compliant
 
 ```abap
-METHOD post_order.
-  prepare_order( ls_order ).
-  save_order( ls_order ).
-  log_created( ls_order ).
+METHOD constructor.
+  super->constructor( ).
+  mo_gateway = io_gateway.
+  mv_id = iv_id.
 ENDMETHOD.
 ```
 
@@ -52,6 +50,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | Parameter Name | Data Type | Default Value |
 |---|---|:---:|
 | `MAX_STATEMENTS` | `Integer` | <code>5</code> |
+| `MAX_CTOR_STATEMENTS` | `Integer` | <code>10</code> |
 
 ## Suppression
 

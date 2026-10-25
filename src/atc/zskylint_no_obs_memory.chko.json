@@ -1,0 +1,33 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Obsolete Memory and Context Statements",
+    "originalLanguage": "en"
+  },
+  "category": "ZSKYLINT_ANTI_PATTERNS",
+  "implementingClass": "ZCL_SKYLINT_NO_OBS_MEMORY",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "CHECK_EXPORT_MEMORY"
+    },
+    {
+      "name": "CHECK_FREE_MEMORY"
+    },
+    {
+      "name": "CHECK_PROVIDE"
+    },
+    {
+      "name": "CHECK_CONTEXTS"
+    },
+    {
+      "name": "CHECK_INFOTYPES"
+    },
+    {
+      "name": "CHECK_COMMUNICATION"
+    },
+    {
+      "name": "CHECK_CALL_TRANSF"
+    }
+  ]
+}

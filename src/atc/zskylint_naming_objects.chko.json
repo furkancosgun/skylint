@@ -1,0 +1,54 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Class, Interface, Type and Object Naming",
+    "originalLanguage": "en"
+  },
+  "category": "ZSKYLINT_CLEAN_ABAP",
+  "implementingClass": "ZCL_SKYLINT_NAMING_OBJECTS",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "CLASS_LOCAL"
+    },
+    {
+      "name": "CLASS_TEST"
+    },
+    {
+      "name": "CLASS_GLOBAL"
+    },
+    {
+      "name": "INTF_LOCAL"
+    },
+    {
+      "name": "INTF_GLOBAL"
+    },
+    {
+      "name": "TYPES_PATTERN"
+    },
+    {
+      "name": "MACRO_PATTERN"
+    },
+    {
+      "name": "FORM_PATTERN"
+    },
+    {
+      "name": "FUNCTION_PATTERN"
+    },
+    {
+      "name": "EVENT_NAME"
+    },
+    {
+      "name": "EVENT_HANDLER"
+    },
+    {
+      "name": "TEST_METHOD"
+    },
+    {
+      "name": "PROG_PATTERN"
+    },
+    {
+      "name": "FUGR_PATTERN"
+    }
+  ]
+}

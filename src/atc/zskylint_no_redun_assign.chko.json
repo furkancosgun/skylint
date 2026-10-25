@@ -1,0 +1,21 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Remove Redundant Assignments & CLEARs",
+    "originalLanguage": "en"
+  },
+  "category": "ZSKYLINT_ANTI_PATTERNS",
+  "implementingClass": "ZCL_SKYLINT_NO_REDUN_ASSIGN",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "CHECK_SELF_ASSIGN"
+    },
+    {
+      "name": "CHECK_BEFORE_WRITE"
+    },
+    {
+      "name": "CHECK_WITHOUT_READ"
+    }
+  ]
+}

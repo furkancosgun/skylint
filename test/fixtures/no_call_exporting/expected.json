@@ -1,0 +1,23 @@
+[
+  {
+    "target": "TEST_001",
+    "code": "OMITEXPORT",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "OMIT_EXP"
+    ]
+  },
+  {
+    "target": "TEST_002",
+    "code": null
+  },
+  {
+    "target": "TEST_003",
+    "code": null
+  },
+  {
+    "target": "TEST_004",
+    "code": null
+  }
+]

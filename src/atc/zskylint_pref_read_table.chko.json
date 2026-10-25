@@ -1,0 +1,21 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Modernize READ TABLE (table expressions & line_exists)",
+    "originalLanguage": "en"
+  },
+  "category": "ZSKYLINT_CLEAN_ABAP",
+  "implementingClass": "ZCL_SKYLINT_PREF_READ_TABLE",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "USE_OPTIONAL"
+    },
+    {
+      "name": "CHECK_TAB_EXPR"
+    },
+    {
+      "name": "CHECK_LINE_EXISTS"
+    }
+  ]
+}

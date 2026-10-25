@@ -1,0 +1,42 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Obsolete Control Flow and Procedural Statements",
+    "originalLanguage": "en"
+  },
+  "category": "ZSKYLINT_ANTI_PATTERNS",
+  "implementingClass": "ZCL_SKYLINT_NO_OBS_CONTROL",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "CHECK_FORM"
+    },
+    {
+      "name": "CHECK_LOOP_CTL"
+    },
+    {
+      "name": "CHECK_BREAK"
+    },
+    {
+      "name": "CHECK_DEFINE"
+    },
+    {
+      "name": "CHECK_TEST_SEAMS"
+    },
+    {
+      "name": "CHECK_CATCH_SYSTEM"
+    },
+    {
+      "name": "CHECK_SET_EXT_CHECK"
+    },
+    {
+      "name": "CHECK_SELECT_NO_INTO"
+    },
+    {
+      "name": "CHECK_EXIT_SQL"
+    },
+    {
+      "name": "CHECK_SORT_BY_FS"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+[
+  {
+    "target": "LCL_GOOD",
+    "code": null
+  },
+  {
+    "target": "BAD_CLASS",
+    "code": "LCLS_NAME",
+    "line": 1,
+    "column": 0
+  },
+  {
+    "target": "LIF_GOOD",
+    "code": null
+  },
+  {
+    "target": "BAD_INTF",
+    "code": "INTF_NAME",
+    "line": 1,
+    "column": 0
+  },
+  {
+    "target": "BAD_GLOBAL",
+    "code": "GCLS_NAME",
+    "line": 1,
+    "column": 0
+  },
+  {
+    "target": "BAD_GINTF",
+    "code": "GINTF_NAME",
+    "line": 1,
+    "column": 0
+  }
+]

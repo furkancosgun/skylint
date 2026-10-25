@@ -1,0 +1,55 @@
+[
+  {
+    "target": "TEST_001",
+    "code": "OMITPARM",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "OMITPNAME"
+    ]
+  },
+  {
+    "target": "TEST_002",
+    "code": null
+  },
+  {
+    "target": "TEST_003",
+    "code": "OMITPARM",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "OMITPNAME"
+    ]
+  },
+  {
+    "target": "TEST_004",
+    "code": "REQPARM",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "REQPNAME"
+    ],
+    "attributes": {
+      "REQUIRE_PARAM_NAME": true
+    }
+  },
+  {
+    "target": "TEST_005",
+    "code": "REQPARM",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "REQPNAME"
+    ],
+    "attributes": {
+      "REQUIRE_PARAM_NAME": true
+    }
+  },
+  {
+    "target": "TEST_006",
+    "code": null,
+    "attributes": {
+      "REQUIRE_PARAM_NAME": true
+    }
+  }
+]

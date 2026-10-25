@@ -1,0 +1,10 @@
+[
+  { "target": "TEST_001", "code": "PREFTABEXP", "line": 5, "column": 4, "quickfixes": ["USETABEXP"] },
+  { "target": "TEST_002", "code": "PREFTABEXP", "line": 5, "column": 4, "quickfixes": ["USETABEXP"] },
+  { "target": "TEST_003", "code": "PREFLINEX", "line": 5, "column": 4, "quickfixes": [] },
+  { "target": "TEST_004", "code": null },
+  { "target": "TEST_005", "code": null },
+  { "target": "TEST_006", "code": null },
+  { "target": "TEST_007", "code": null },
+  { "target": "TEST_008", "code": null }
+]

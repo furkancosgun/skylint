@@ -10,25 +10,25 @@
       "key": "anti-patterns",
       "title": "Anti-Patterns & Bad Practices",
       "description": "Discouraged language constructs, legacy statements, and redundant syntax.",
-      "count": 45
+      "count": 49
     },
     {
       "key": "performance",
       "title": "Performance & Database",
       "description": "Database query efficiency, buffer protection, and internal table operation guidelines.",
-      "count": 9
+      "count": 10
     },
     {
       "key": "security",
       "title": "Security & Robustness",
       "description": "Authorizations, dynamic execution sanitation, error handling, and runtime safety.",
-      "count": 11
+      "count": 14
     },
     {
       "key": "metrics",
       "title": "Metrics & Complexity Limits",
       "description": "Quantitative boundaries for method size, nesting depth, parameter counts, and cyclomatic complexity.",
-      "count": 10
+      "count": 9
     }
   ],
   "rules": [
@@ -57,10 +57,10 @@
       "configurable": false
     },
     {
-      "ruleId": "pref-tab-expr",
-      "title": "Prefer Table Expression itab[ ... ] over READ TABLE",
-      "className": "ZCL_SKYLINT_PREF_TAB_EXPR",
-      "description": "Prefer table expression itab[ ... ] over READ TABLE",
+      "ruleId": "pref-read-table",
+      "title": "Modernize READ TABLE (Table Expressions & line_exists)",
+      "className": "ZCL_SKYLINT_PREF_READ_TABLE",
+      "description": "Modernize READ TABLE (table expressions & line_exists)",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
       "pseudoComment": "PREF_TAB_EXPR",
@@ -153,28 +153,64 @@
       "configurable": true
     },
     {
-      "ruleId": "no-redundant-call",
-      "title": "Omit or Require Parameter Names (EXPORTING / RECEIVING / Single Param)",
-      "className": "ZCL_SKYLINT_NO_REDUNDANT_CALL",
-      "description": "Omit or require parameter names in method calls",
+      "ruleId": "no-call-receiving",
+      "title": "Omit RECEIVING in Method Invocations",
+      "className": "ZCL_SKYLINT_NO_CALL_RECEIVING",
+      "description": "Omit RECEIVING in Method Invocations",
+      "category": "anti-patterns",
+      "categoryTitle": "Anti-Patterns & Bad Practices",
+      "pseudoComment": "RECEIVING",
+      "hasQuickfix": true,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "no-call-exporting",
+      "title": "Omit Redundant EXPORTING in Method Calls",
+      "className": "ZCL_SKYLINT_NO_CALL_EXPORTING",
+      "description": "Omit Redundant EXPORTING in Method Calls",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
       "pseudoComment": "EXPORTING",
+      "hasQuickfix": true,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "pref-param-name",
+      "title": "Method Call Parameter Naming Style (Omit or Require)",
+      "className": "ZCL_SKYLINT_PREF_PARAM_NAME",
+      "description": "Method Call Parameter Naming Style",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "PARAM_NAME",
       "hasQuickfix": true,
       "remoteEnabled": false,
       "configurable": true
     },
     {
-      "ruleId": "no-chained-stmt",
-      "title": "Avoid Chained Declarations & Assignments",
-      "className": "ZCL_SKYLINT_NO_CHAINED_STMT",
-      "description": "Avoid chained declarations and chained assignments",
+      "ruleId": "no-chained-decl",
+      "title": "Avoid Chained Declarations (DATA:, CONSTANTS:, TYPES:)",
+      "className": "ZCL_SKYLINT_NO_CHAINED_DECL",
+      "description": "Avoid Chained Declarations",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
       "pseudoComment": "CHAIN_DECL",
       "hasQuickfix": true,
       "remoteEnabled": true,
       "configurable": true
+    },
+    {
+      "ruleId": "no-chained-assign",
+      "title": "Avoid Chained Assignments (a = b = c = 1)",
+      "className": "ZCL_SKYLINT_NO_CHAINED_ASSIGN",
+      "description": "Avoid Chained Assignments",
+      "category": "anti-patterns",
+      "categoryTitle": "Anti-Patterns & Bad Practices",
+      "pseudoComment": "CHAIN_ASSIGN",
+      "hasQuickfix": true,
+      "remoteEnabled": true,
+      "configurable": false
     },
     {
       "ruleId": "pref-str-tmpl",
@@ -197,18 +233,6 @@
       "categoryTitle": "Anti-Patterns & Bad Practices",
       "pseudoComment": "BOOL_COMPARE",
       "hasQuickfix": true,
-      "remoteEnabled": true,
-      "configurable": false
-    },
-    {
-      "ruleId": "pref-line-exists",
-      "title": "Prefer line_exists( ) over READ TABLE TRANSPORTING NO FIELDS",
-      "className": "ZCL_SKYLINT_PREF_LINE_EXISTS",
-      "description": "Prefer line_exists( ) over READ TABLE with NO FIELDS",
-      "category": "clean-abap",
-      "categoryTitle": "Clean ABAP & Modern Syntax",
-      "pseudoComment": "LINE_EXISTS",
-      "hasQuickfix": false,
       "remoteEnabled": true,
       "configurable": false
     },
@@ -369,26 +393,74 @@
       "configurable": false
     },
     {
-      "ruleId": "no-public-attr",
-      "title": "Avoid Public Attributes in Classes",
-      "className": "ZCL_SKYLINT_NO_PUBLIC_ATTR",
-      "description": "Avoid mutable public attributes in classes",
+      "ruleId": "no-exposed-data",
+      "title": "Avoid Exposed Mutable Data in Classes and Interfaces",
+      "className": "ZCL_SKYLINT_NO_EXPOSED_DATA",
+      "description": "Avoid mutable data in public classes and interfaces",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
       "pseudoComment": "PUBLIC_ATTR",
       "hasQuickfix": false,
       "remoteEnabled": true,
-      "configurable": false
+      "configurable": true
     },
     {
-      "ruleId": "no-obsolete",
-      "title": "Avoid Obsolete & Forbidden Statements",
-      "className": "ZCL_SKYLINT_NO_OBSOLETE",
-      "description": "Avoid obsolete statements (MOVE, REFRESH, FORM, etc.)",
+      "ruleId": "no-obs-arith",
+      "title": "Avoid Obsolete Arithmetic and Assignment Statements",
+      "className": "ZCL_SKYLINT_NO_OBS_ARITH",
+      "description": "Obsolete Arithmetic and Assignment Statements",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
-      "pseudoComment": "OBSOLETE",
+      "pseudoComment": "OBSOLETE_ARITH",
       "hasQuickfix": true,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "no-obs-decl",
+      "title": "Avoid Obsolete Declarations and Table Headers",
+      "className": "ZCL_SKYLINT_NO_OBS_DECL",
+      "description": "Obsolete Data and Type Declarations",
+      "category": "anti-patterns",
+      "categoryTitle": "Anti-Patterns & Bad Practices",
+      "pseudoComment": "OBSOLETE_DECL",
+      "hasQuickfix": true,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "no-obs-control",
+      "title": "Avoid Obsolete Control Flow and Procedural Forms",
+      "className": "ZCL_SKYLINT_NO_OBS_CONTROL",
+      "description": "Obsolete Control Flow and Procedural Statements",
+      "category": "anti-patterns",
+      "categoryTitle": "Anti-Patterns & Bad Practices",
+      "pseudoComment": "OBSOLETE_CTRL",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "no-obs-memory",
+      "title": "Avoid Obsolete ABAP Memory and Context Statements",
+      "className": "ZCL_SKYLINT_NO_OBS_MEMORY",
+      "description": "Obsolete Memory and Context Statements",
+      "category": "anti-patterns",
+      "categoryTitle": "Anti-Patterns & Bad Practices",
+      "pseudoComment": "OBSOLETE_MEM",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "no-obs-strings",
+      "title": "Avoid Obsolete String and POSIX Regex Statements",
+      "className": "ZCL_SKYLINT_NO_OBS_STRINGS",
+      "description": "Obsolete String and Regex Statements",
+      "category": "anti-patterns",
+      "categoryTitle": "Anti-Patterns & Bad Practices",
+      "pseudoComment": "OBSOLETE_STR",
+      "hasQuickfix": false,
       "remoteEnabled": true,
       "configurable": true
     },
@@ -406,9 +478,9 @@
     },
     {
       "ruleId": "max-params",
-      "title": "Limit Method Parameter Count",
+      "title": "Limit Method Parameter Count and Parameters Per Line",
       "className": "ZCL_SKYLINT_MAX_PARAMS",
-      "description": "Method signature cleanliness (excessive parameter count)",
+      "description": "Method parameter limits (count and lines)",
       "category": "metrics",
       "categoryTitle": "Metrics & Complexity Limits",
       "pseudoComment": "MAX_PARAMS",
@@ -444,13 +516,25 @@
       "ruleId": "no-select-star",
       "title": "Avoid SELECT * Queries",
       "className": "ZCL_SKYLINT_NO_SELECT_STAR",
-      "description": "Select performance (Avoid SELECT * and SELECT ... ENDSELECT)",
+      "description": "Avoid SELECT * (specify columns explicitly)",
       "category": "performance",
       "categoryTitle": "Performance & Database",
       "pseudoComment": "SELECT_STAR",
       "hasQuickfix": false,
       "remoteEnabled": true,
-      "configurable": true
+      "configurable": false
+    },
+    {
+      "ruleId": "no-endselect",
+      "title": "Avoid SELECT ... ENDSELECT Row-by-Row Cursor Loops",
+      "className": "ZCL_SKYLINT_NO_ENDSELECT",
+      "description": "Avoid SELECT ... ENDSELECT Loops",
+      "category": "performance",
+      "categoryTitle": "Performance & Database",
+      "pseudoComment": "ENDSELECT",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
     },
     {
       "ruleId": "no-scope-leak",
@@ -465,16 +549,16 @@
       "configurable": false
     },
     {
-      "ruleId": "no-self-assign",
-      "title": "Avoid Redundant Self-Assignments",
-      "className": "ZCL_SKYLINT_NO_SELF_ASSIGN",
-      "description": "Detect Identical Self Assignments",
+      "ruleId": "no-redun-assign",
+      "title": "Remove Redundant Self-Assignments and CLEAR Statements",
+      "className": "ZCL_SKYLINT_NO_REDUN_ASSIGN",
+      "description": "Remove Redundant Assignments & CLEARs",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
       "pseudoComment": "SELF_ASSIGN",
       "hasQuickfix": true,
       "remoteEnabled": true,
-      "configurable": false
+      "configurable": true
     },
     {
       "ruleId": "no-shadow",
@@ -526,9 +610,9 @@
     },
     {
       "ruleId": "max-method-len",
-      "title": "Limit Method Length (Statements)",
+      "title": "Limit Method and Constructor Statement Counts",
       "className": "ZCL_SKYLINT_MAX_METHOD_LEN",
-      "description": "Method Length Limit (excessive statement count)",
+      "description": "Method and Constructor Length Limits",
       "category": "metrics",
       "categoryTitle": "Metrics & Complexity Limits",
       "pseudoComment": "METHOD_LEN",
@@ -585,16 +669,52 @@
       "configurable": false
     },
     {
-      "ruleId": "no-dangerous-stmt",
-      "title": "Avoid Dangerous & Dynamic Native Statements",
-      "className": "ZCL_SKYLINT_NO_DANGEROUS_STMT",
-      "description": "Dangerous Statements (abaplint dangerous_statement)",
+      "ruleId": "no-prod-assert",
+      "title": "Avoid Native ASSERT in Production Code",
+      "className": "ZCL_SKYLINT_NO_PROD_ASSERT",
+      "description": "Native ASSERT in Production Logic",
       "category": "security",
       "categoryTitle": "Security & Robustness",
-      "pseudoComment": "DANGEROUS_STMT",
+      "pseudoComment": "PROD_ASSERT",
       "hasQuickfix": false,
       "remoteEnabled": true,
-      "configurable": true
+      "configurable": false
+    },
+    {
+      "ruleId": "no-raise-shortdump",
+      "title": "Avoid RAISE SHORTDUMP in Application Logic",
+      "className": "ZCL_SKYLINT_NO_RAISE_SHORTDUMP",
+      "description": "Avoid RAISE SHORTDUMP",
+      "category": "security",
+      "categoryTitle": "Security & Robustness",
+      "pseudoComment": "SHORTDUMP",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "no-metaprogramming",
+      "title": "Avoid Metaprogramming and Dynamic Code Generation",
+      "className": "ZCL_SKYLINT_NO_METAPROGRAMMING",
+      "description": "Metaprogramming and Dynamic Code Generation",
+      "category": "security",
+      "categoryTitle": "Security & Robustness",
+      "pseudoComment": "METAPROGRAM",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "no-kernel-call",
+      "title": "Avoid Kernel and Native Database Calls",
+      "className": "ZCL_SKYLINT_NO_KERNEL_CALL",
+      "description": "Avoid Kernel and Native Calls",
+      "category": "security",
+      "categoryTitle": "Security & Robustness",
+      "pseudoComment": "KERNEL_CALL",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
     },
     {
       "ruleId": "pref-auth-check",
@@ -681,18 +801,6 @@
       "configurable": false
     },
     {
-      "ruleId": "max-ctor-stmts",
-      "title": "Keep Constructors Clean & Lightweight",
-      "className": "ZCL_SKYLINT_MAX_CTOR_STMTS",
-      "description": "Keep constructors clean; avoid heavy logic and DB",
-      "category": "metrics",
-      "categoryTitle": "Metrics & Complexity Limits",
-      "pseudoComment": "CLEAN_CTOR",
-      "hasQuickfix": false,
-      "remoteEnabled": true,
-      "configurable": true
-    },
-    {
       "ruleId": "no-static-cls",
       "title": "Avoid Purely Static Utility Classes",
       "className": "ZCL_SKYLINT_NO_STATIC_CLS",
@@ -739,18 +847,6 @@
       "hasQuickfix": false,
       "remoteEnabled": true,
       "configurable": true
-    },
-    {
-      "ruleId": "no-intf-data",
-      "title": "Avoid DATA Attributes in Interfaces",
-      "className": "ZCL_SKYLINT_NO_INTF_DATA",
-      "description": "Avoid mutable DATA in interfaces; allow only CONSTANTS",
-      "category": "anti-patterns",
-      "categoryTitle": "Anti-Patterns & Bad Practices",
-      "pseudoComment": "INTF_DATA",
-      "hasQuickfix": false,
-      "remoteEnabled": true,
-      "configurable": false
     },
     {
       "ruleId": "no-catch-root",
@@ -802,15 +898,27 @@
     },
     {
       "ruleId": "pref-check-subrc",
-      "title": "Verify sy-subrc Promptly After System Calls",
+      "title": "Verify sy-subrc Promptly After Data Retrieval and Search",
       "className": "ZCL_SKYLINT_PREF_CHECK_SUBRC",
       "description": "Check sy-subrc after DB, table and string operations",
-      "category": "security",
-      "categoryTitle": "Security & Robustness",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
       "pseudoComment": "CHECK_SUBRC",
       "hasQuickfix": false,
       "remoteEnabled": true,
       "configurable": true
+    },
+    {
+      "ruleId": "auth-check-subrc",
+      "title": "Check sy-subrc Promptly After AUTHORITY-CHECK (CWE-862)",
+      "className": "ZCL_SKYLINT_AUTH_CHECK_SUBRC",
+      "description": "Check sy-subrc immediately after AUTHORITY-CHECK",
+      "category": "security",
+      "categoryTitle": "Security & Robustness",
+      "pseudoComment": "AUTH_SUBRC",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
     },
     {
       "ruleId": "no-client-spec",
@@ -880,18 +988,6 @@
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
       "pseudoComment": "NEEDED",
-      "hasQuickfix": false,
-      "remoteEnabled": true,
-      "configurable": false
-    },
-    {
-      "ruleId": "pref-decl-order",
-      "title": "Order Declarations (TYPES, CONSTANTS, DATA)",
-      "className": "ZCL_SKYLINT_PREF_DECL_ORDER",
-      "description": "Enforce declaration order (TYPES, CONSTANTS, DATA, FS)",
-      "category": "clean-abap",
-      "categoryTitle": "Clean ABAP & Modern Syntax",
-      "pseudoComment": "DECL_ORDER",
       "hasQuickfix": false,
       "remoteEnabled": true,
       "configurable": false
@@ -1005,18 +1101,6 @@
       "configurable": false
     },
     {
-      "ruleId": "pref-inl-cast",
-      "title": "Inline a CAST helper that is only read once",
-      "className": "ZCL_SKYLINT_PREF_INL_CAST",
-      "description": "Inline a CAST helper that is only read once",
-      "category": "clean-abap",
-      "categoryTitle": "Clean ABAP & Modern Syntax",
-      "pseudoComment": "INLINE_CAST",
-      "hasQuickfix": true,
-      "remoteEnabled": true,
-      "configurable": false
-    },
-    {
       "ruleId": "no-exc-overlap",
       "title": "Classic EXCEPTIONS must not map two errors to the same number",
       "className": "ZCL_SKYLINT_NO_EXC_OVERLAP",
@@ -1086,7 +1170,7 @@
       "pseudoComment": "NO_DYNAMIC",
       "hasQuickfix": false,
       "remoteEnabled": true,
-      "configurable": false
+      "configurable": true
     },
     {
       "ruleId": "pref-pub-ctor",
@@ -1101,16 +1185,16 @@
       "configurable": false
     },
     {
-      "ruleId": "pref-def-top",
-      "title": "Place Definitions at Top of Routine",
-      "className": "ZCL_SKYLINT_PREF_DEF_TOP",
-      "description": "Place definitions at beginning of routine",
+      "ruleId": "pref-declarations",
+      "title": "Routine Declaration Hygiene (Top Placement & Order)",
+      "className": "ZCL_SKYLINT_PREF_DECLARATIONS",
+      "description": "Routine Declaration Hygiene (top placement & order)",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
       "pseudoComment": "DEF_TOP",
       "hasQuickfix": false,
       "remoteEnabled": true,
-      "configurable": false
+      "configurable": true
     },
     {
       "ruleId": "no-unnec-return",
@@ -1149,18 +1233,6 @@
       "configurable": false
     },
     {
-      "ruleId": "max-param-line",
-      "title": "Max One Method Parameter Definition Per Line",
-      "className": "ZCL_SKYLINT_MAX_PARAM_LINE",
-      "description": "Max one method parameter definition per line",
-      "category": "clean-abap",
-      "categoryTitle": "Clean ABAP & Modern Syntax",
-      "pseudoComment": "MAX_PARAM_LINE",
-      "hasQuickfix": false,
-      "remoteEnabled": true,
-      "configurable": false
-    },
-    {
       "ruleId": "pref-is-initial",
       "title": "Prefer IS [NOT] INITIAL over lines( ) or Literal Comparisons",
       "className": "ZCL_SKYLINT_PREF_IS_INITIAL",
@@ -1185,25 +1257,13 @@
       "configurable": false
     },
     {
-      "ruleId": "pref-cast",
-      "title": "Prefer CAST #( ) over ?=",
-      "className": "ZCL_SKYLINT_PREF_CAST",
-      "description": "Prefer modern CAST #( ) expression over ?=",
+      "ruleId": "pref-downcast",
+      "title": "Modernize Downcasting (CAST #( ) Expression & Inlining)",
+      "className": "ZCL_SKYLINT_PREF_DOWNCAST",
+      "description": "Modernize Downcasting (CAST #( ) & inlining)",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
       "pseudoComment": "PREF_CAST",
-      "hasQuickfix": true,
-      "remoteEnabled": true,
-      "configurable": false
-    },
-    {
-      "ruleId": "no-redundant-clear",
-      "title": "Do Not CLEAR Variables Directly After Declaration",
-      "className": "ZCL_SKYLINT_NO_REDUNDANT_CLEAR",
-      "description": "Do not CLEAR or FREE variables redundantly",
-      "category": "anti-patterns",
-      "categoryTitle": "Anti-Patterns & Bad Practices",
-      "pseudoComment": "REDUNDANT_CLEAR",
       "hasQuickfix": true,
       "remoteEnabled": true,
       "configurable": true
@@ -1245,13 +1305,37 @@
       "configurable": true
     },
     {
-      "ruleId": "pref-naming",
-      "title": "Enforce Naming Conventions",
-      "className": "ZCL_SKYLINT_PREF_NAMING",
-      "description": "Standard Naming Conventions",
+      "ruleId": "naming-variables",
+      "title": "Enforce Local Variable and Field-Symbol Naming Conventions",
+      "className": "ZCL_SKYLINT_NAMING_VARIABLES",
+      "description": "Local Variable and Field-Symbol Naming Conventions",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
-      "pseudoComment": "NAMING",
+      "pseudoComment": "NAMING_VAR",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "naming-members",
+      "title": "Enforce Class Attribute and Method Parameter Naming Conventions",
+      "className": "ZCL_SKYLINT_NAMING_MEMBERS",
+      "description": "Class Attribute and Parameter Naming Conventions",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "NAMING_MEM",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "naming-objects",
+      "title": "Enforce Class, Interface, Type and Object Naming Conventions",
+      "className": "ZCL_SKYLINT_NAMING_OBJECTS",
+      "description": "Class, Interface, Type and Object Naming",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "NAMING_OBJ",
       "hasQuickfix": false,
       "remoteEnabled": true,
       "configurable": true

@@ -1,0 +1,46 @@
+[
+  {
+    "target": "LCL_MUTABLE",
+    "code": "NOPUBATTR",
+    "line": 3,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "LCL_CLEAN",
+    "code": null
+  },
+  {
+    "target": "LCL_EXTRA_BAD",
+    "code": "NOPUBATTR",
+    "line": 3,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "LCL_EXTRA_CLEAN",
+    "code": null
+  },
+  {
+    "target": "LIF_TEST",
+    "code": "INTF_DATA",
+    "line": 2,
+    "column": 2,
+    "quickfixes": []
+  },
+  {
+    "target": "LIF_CLEAN",
+    "code": null
+  },
+  {
+    "target": "LIF_STATE2",
+    "code": "INTF_DATA",
+    "line": 2,
+    "column": 2,
+    "quickfixes": []
+  },
+  {
+    "target": "LIF_CONSTS2",
+    "code": null
+  }
+]

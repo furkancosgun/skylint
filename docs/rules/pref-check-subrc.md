@@ -2,11 +2,11 @@
 description: "Check sy-subrc after DB, table and string operations"
 ---
 
-# Verify sy-subrc Promptly After System Calls
+# Verify sy-subrc Promptly After Data Retrieval and Search
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
-  <Badge type="tip" text="Security & Robustness" />
+  <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="danger" text="#EC CHECK_SUBRC" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -15,11 +15,11 @@ description: "Check sy-subrc after DB, table and string operations"
 
 Check sy-subrc after DB, table and string operations.
 
-> **ATC Finding Message:** `Check sy-subrc after SELECT SINGLE, READ, AUTHORITY-CHECK, FIND, SEARCH`
+> **ATC Finding Message:** `Check sy-subrc after SELECT SINGLE, READ, FIND, SEARCH`
 
 ## Rationale
 
-Statements such as SELECT SINGLE, READ TABLE, and AUTHORITY-CHECK report success through sy-subrc. If another statement runs first, the return code is overwritten and the failure is silently ignored. Check sy-subrc immediately, or use a modern expression that handles absence explicitly.
+Statements such as SELECT SINGLE, READ TABLE, FIND, and SEARCH report success through sy-subrc. If intervening statements execute before inspection, sy-subrc is overwritten and failure states are silently ignored. Check sy-subrc immediately after execution.
 
 ### Non-Compliant
 
@@ -49,7 +49,6 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 |---|---|:---:|
 | `CHECK_SELECT_SINGLE` | `Boolean` | <code>true</code> |
 | `CHECK_READ_TABLE` | `Boolean` | <code>true</code> |
-| `CHECK_AUTHORITY_CHECK` | `Boolean` | <code>true</code> |
 | `CHECK_FIND_SEARCH` | `Boolean` | <code>true</code> |
 | `CHECK_ASSIGN` | `Boolean` | <code>true</code> |
 

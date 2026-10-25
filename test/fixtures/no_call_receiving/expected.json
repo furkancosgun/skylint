@@ -1,0 +1,19 @@
+[
+  {
+    "target": "TEST_001",
+    "code": "OMITRECEIV",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "OMITRECV"
+    ]
+  },
+  {
+    "target": "TEST_002",
+    "code": null
+  },
+  {
+    "target": "TEST_003",
+    "code": null
+  }
+]

@@ -1,8 +1,8 @@
 ---
-description: "Method signature cleanliness (excessive parameter count)"
+description: "Method parameter limits (count and lines)"
 ---
 
-# Limit Method Parameter Count
+# Limit Method Parameter Count and Parameters Per Line
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
@@ -13,36 +13,29 @@ description: "Method signature cleanliness (excessive parameter count)"
 
 ## Overview
 
-Method signature cleanliness (excessive parameter count).
+Method parameter limits (count and lines).
 
-> **ATC Finding Message:** `Method signature has too many parameters; consider grouping into structures`
+> **ATC Finding Messages:**
+> - `Method signature has too many parameters; consider grouping into structures`
+> - `Keep max one method parameter definition per line`
 
 ## Rationale
 
-A long parameter list is hard to call correctly because positional order and optional parameters are easy to mix up. It usually means the method has too many responsibilities and must change whenever a new input is needed. Group related inputs into a structure or parameter object so the signature stays small and self-documenting.
+Long parameter lists complicate method invocations and signal excessive responsibilities. Furthermore, placing multiple parameter definitions on a single line impairs code readability and produces noisy version control diffs. Restrict the total parameter count (max 8) and declare at most one parameter definition per line.
 
 ### Non-Compliant
 
 ```abap
-METHODS create_order
-  IMPORTING
-    iv_customer_id TYPE string
-    iv_material    TYPE string
-    iv_quantity    TYPE i
-    iv_unit        TYPE meins
-    iv_plant       TYPE werks_d
-    iv_delivery    TYPE datum
-    iv_price       TYPE netpr
-    iv_currency    TYPE waers
-    iv_note        TYPE string.
+METHODS execute IMPORTING iv_id TYPE string iv_status TYPE c LENGTH 1.
 ```
 
 ### Compliant
 
 ```abap
-METHODS create_order
+METHODS execute
   IMPORTING
-    is_order TYPE ty_order_input.
+    iv_id     TYPE string
+    iv_status TYPE c LENGTH 1.
 ```
 
 ## Configuration & Thresholds
@@ -52,6 +45,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | Parameter Name | Data Type | Default Value |
 |---|---|:---:|
 | `MAX_PARAMETERS` | `Integer` | <code>8</code> |
+| `CHECK_PARAM_LINE` | `Boolean` | <code>true</code> |
 
 ## Suppression
 

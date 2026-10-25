@@ -1,0 +1,15 @@
+[
+  {
+    "target": "TEST_001",
+    "code": "ASSIGNCHN",
+    "line": 5,
+    "column": 4,
+    "quickfixes": [
+      "SPLITASG"
+    ]
+  },
+  {
+    "target": "TEST_002",
+    "code": null
+  }
+]

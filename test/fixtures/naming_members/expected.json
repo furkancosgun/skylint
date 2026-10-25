@@ -1,0 +1,22 @@
+[
+  {
+    "target": "LCL_GOOD",
+    "code": null
+  },
+  {
+    "target": "BAD_CLASS",
+    "code": "PARAM_NAME",
+    "line": 3,
+    "column": 4
+  },
+  {
+    "target": "LIF_GOOD",
+    "code": null
+  },
+  {
+    "target": "BAD_GLOBAL",
+    "code": "ATTR_NAME",
+    "line": 3,
+    "column": 4
+  }
+]

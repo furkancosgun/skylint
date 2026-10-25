@@ -33,6 +33,15 @@ CALL FUNCTION lv_function_name.
 CALL FUNCTION 'BAPI_USER_GET_DETAIL'.
 ```
 
+## Configuration & Thresholds
+
+This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
+
+| Parameter Name | Data Type | Default Value |
+|---|---|:---:|
+| `CHECK_DYNAMIC_SQL` | `Boolean` | <code>true</code> |
+| `IGNORE_RAP_QUERY_PROVIDER` | `Boolean` | <code>true</code> |
+
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

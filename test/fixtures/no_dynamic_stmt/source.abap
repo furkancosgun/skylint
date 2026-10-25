@@ -8,6 +8,7 @@ CLASS zcl_test_no_dynamic_stuff DEFINITION PUBLIC FINAL CREATE PUBLIC.
     METHODS test_006.
     METHODS test_007.
     METHODS test_008.
+    METHODS test_009.
     METHODS do_work.
 ENDCLASS.
 
@@ -55,5 +56,10 @@ CLASS zcl_test_no_dynamic_stuff IMPLEMENTATION.
   METHOD test_008.
     DATA lv_rep TYPE c LENGTH 30 VALUE 'ZREP'.
     SUBMIT (lv_rep).
+  ENDMETHOD.
+
+  METHOD test_009.
+    DATA: lv_tab TYPE string, lt_cust TYPE STANDARD TABLE OF t100.
+    SELECT * FROM (lv_tab) INTO TABLE @lt_cust.
   ENDMETHOD.
 ENDCLASS.

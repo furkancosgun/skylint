@@ -1,0 +1,51 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Class Attribute and Parameter Naming Conventions",
+    "originalLanguage": "en"
+  },
+  "category": "ZSKYLINT_CLEAN_ABAP",
+  "implementingClass": "ZCL_SKYLINT_NAMING_MEMBERS",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "ATTR_IGN_EXC"
+    },
+    {
+      "name": "ATTR_IGN_LOCAL"
+    },
+    {
+      "name": "ATTR_IGN_INTF"
+    },
+    {
+      "name": "ATTR_STATICS"
+    },
+    {
+      "name": "ATTR_INSTANCE"
+    },
+    {
+      "name": "ATTR_CONSTANTS"
+    },
+    {
+      "name": "PARAM_IGN_EXC"
+    },
+    {
+      "name": "PARAM_IMPORTING"
+    },
+    {
+      "name": "PARAM_RETURNING"
+    },
+    {
+      "name": "PARAM_CHANGING"
+    },
+    {
+      "name": "PARAM_EXPORTING"
+    },
+    {
+      "name": "SSCR_PARAM"
+    },
+    {
+      "name": "SSCR_SELOPT"
+    }
+  ]
+}

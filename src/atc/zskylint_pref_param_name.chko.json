@@ -1,0 +1,18 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Method Call Parameter Naming Style",
+    "originalLanguage": "en"
+  },
+  "category": "ZSKYLINT_CLEAN_ABAP",
+  "implementingClass": "ZCL_SKYLINT_PREF_PARAM_NAME",
+  "checkType": "local",
+  "parameters": [
+    {
+      "name": "CHECK_PARAM_NAME"
+    },
+    {
+      "name": "REQUIRE_PARAM_NAME"
+    }
+  ]
+}

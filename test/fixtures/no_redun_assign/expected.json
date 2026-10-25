@@ -1,0 +1,134 @@
+[
+  {
+    "target": "TEST_001",
+    "code": "IDENTMOVE",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "DELIDENT"
+    ]
+  },
+  {
+    "target": "TEST_002",
+    "code": null
+  },
+  {
+    "target": "TEST_003",
+    "code": "IDENTMOVE",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "DELIDENT"
+    ]
+  },
+  {
+    "target": "TEST_004",
+    "code": null
+  },
+  {
+    "target": "TEST_005",
+    "code": "IDENTMOVE",
+    "line": 7,
+    "column": 4,
+    "quickfixes": [
+      "DELIDENT"
+    ]
+  },
+  {
+    "target": "TEST_006",
+    "code": null
+  },
+  {
+    "target": "TEST_007",
+    "code": "IDENTMOVE",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "DELIDENT"
+    ]
+  },
+  {
+    "target": "TEST_008",
+    "code": null
+  },
+  {
+    "target": "TEST_009",
+    "code": "IDENTMOVE",
+    "line": 7,
+    "column": 4,
+    "quickfixes": [
+      "DELIDENT"
+    ]
+  },
+  {
+    "target": "TEST_010",
+    "code": "IDENTMOVE",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "DELIDENT"
+    ]
+  },
+  {
+    "target": "TEST_011",
+    "code": "REDUNCLEAR",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "RMV_CLEAR"
+    ]
+  },
+  {
+    "target": "TEST_012",
+    "code": "REDUNCLEAR",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "RMV_CLEAR"
+    ]
+  },
+  {
+    "target": "TEST_012",
+    "code": "REDUNCLEAR",
+    "line": 5,
+    "column": 4,
+    "quickfixes": [
+      "RMV_CLEAR"
+    ]
+  },
+  {
+    "target": "TEST_013",
+    "code": null
+  },
+  {
+    "target": "TEST_014",
+    "code": null
+  },
+  {
+    "target": "TEST_015",
+    "code": "REDUNCLEAR",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "RMV_CLEAR"
+    ]
+  },
+  {
+    "target": "TEST_016",
+    "code": "CLEAR_END",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "RMV_CLEAR"
+    ]
+  },
+  {
+    "target": "TEST_017",
+    "code": "CLEAR_END",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "RMV_CLEAR"
+    ]
+  }
+]

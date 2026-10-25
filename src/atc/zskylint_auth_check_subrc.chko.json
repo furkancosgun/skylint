@@ -1,0 +1,10 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Check sy-subrc immediately after AUTHORITY-CHECK",
+    "originalLanguage": "en"
+  },
+  "category": "ZSKYLINT_SECURITY",
+  "implementingClass": "ZCL_SKYLINT_AUTH_CHECK_SUBRC",
+  "checkType": "remoteEnabled"
+}

@@ -42,5 +42,11 @@
     "code": "DYN_STUFF",
     "line": 3,
     "column": 4
+  },
+  {
+    "target": "TEST_009",
+    "code": "DYN_STUFF",
+    "line": 3,
+    "column": 4
   }
 ]

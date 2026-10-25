@@ -1,8 +1,0 @@
-[
-  { "target": "TEST_001", "code": "PREFTABEXP", "line": 5, "column": 4, "quickfixes": ["USETABEXP"] },
-  { "target": "TEST_002", "code": "PREFTABEXP", "line": 5, "column": 4, "quickfixes": ["USETABEXP"] },
-  { "target": "TEST_003", "code": null },
-  { "target": "TEST_004", "code": null },
-  { "target": "TEST_005", "code": null },
-  { "target": "TEST_006", "code": null }
-]

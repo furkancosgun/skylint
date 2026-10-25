@@ -1,5 +1,5 @@
 ---
-description: "Select performance (Avoid SELECT * and SELECT ... ENDSELECT)"
+description: "Avoid SELECT * (specify columns explicitly)"
 ---
 
 # Avoid SELECT * Queries
@@ -13,11 +13,9 @@ description: "Select performance (Avoid SELECT * and SELECT ... ENDSELECT)"
 
 ## Overview
 
-Select performance (Avoid SELECT * and SELECT ... ENDSELECT).
+Avoid SELECT * (specify columns explicitly).
 
-> **ATC Finding Messages:**
-> - `Avoid SELECT *; specify required columns explicitly`
-> - `Avoid SELECT ... ENDSELECT loop; use array fetch INTO TABLE`
+> **ATC Finding Message:** `Avoid SELECT *; specify required columns explicitly`
 
 ## Rationale
 
@@ -37,15 +35,6 @@ SELECT customer_id, first_name, last_name
   WHERE country = 'DE'
   INTO TABLE @lt_customers.
 ```
-
-## Configuration & Thresholds
-
-This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
-
-| Parameter Name | Data Type | Default Value |
-|---|---|:---:|
-| `CHECK_SELECT_STAR` | `Boolean` | <code>true</code> |
-| `CHECK_ENDSELECT` | `Boolean` | <code>true</code> |
 
 ## Suppression
 

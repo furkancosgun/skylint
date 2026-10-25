@@ -1,0 +1,10 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Native ASSERT in Production Logic",
+    "originalLanguage": "en"
+  },
+  "category": "ZSKYLINT_SECURITY",
+  "implementingClass": "ZCL_SKYLINT_NO_PROD_ASSERT",
+  "checkType": "remoteEnabled"
+}

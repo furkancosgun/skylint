@@ -1,0 +1,53 @@
+[
+  {
+    "target": "TEST_001",
+    "code": "OBS_ARITH",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "REPLACE_AR"
+    ]
+  },
+  {
+    "target": "TEST_002",
+    "code": null
+  },
+  {
+    "target": "TEST_003",
+    "code": "OBS_ARITH",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "REPLACE_AR"
+    ]
+  },
+  {
+    "target": "TEST_004",
+    "code": null
+  },
+  {
+    "target": "TEST_005",
+    "code": "OBS_ARITH",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "REPLACE_AR"
+    ]
+  },
+  {
+    "target": "TEST_006",
+    "code": "OBS_ARITH",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "REPLACE_AR"
+    ]
+  },
+  {
+    "target": "TEST_007",
+    "code": "OBS_ARITH",
+    "line": 4,
+    "column": 4,
+    "quickfixes": []
+  }
+]

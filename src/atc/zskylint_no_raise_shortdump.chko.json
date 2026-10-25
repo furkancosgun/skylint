@@ -1,0 +1,10 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Avoid RAISE SHORTDUMP",
+    "originalLanguage": "en"
+  },
+  "category": "ZSKYLINT_SECURITY",
+  "implementingClass": "ZCL_SKYLINT_NO_RAISE_SHORTDUMP",
+  "checkType": "remoteEnabled"
+}

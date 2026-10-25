@@ -1,0 +1,24 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Local Variable and Field-Symbol Naming Conventions",
+    "originalLanguage": "en"
+  },
+  "category": "ZSKYLINT_CLEAN_ABAP",
+  "implementingClass": "ZCL_SKYLINT_NAMING_VARIABLES",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "LOCAL_DATA"
+    },
+    {
+      "name": "LOCAL_CONST"
+    },
+    {
+      "name": "LOCAL_FS"
+    },
+    {
+      "name": "LOCAL_STATICS"
+    }
+  ]
+}

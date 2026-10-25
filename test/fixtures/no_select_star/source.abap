@@ -7,7 +7,6 @@ CLASS zcl_test_no_select_star DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
-    METHODS test_005.
 ENDCLASS.
 
 CLASS zcl_test_no_select_star IMPLEMENTATION.
@@ -31,11 +30,5 @@ CLASS zcl_test_no_select_star IMPLEMENTATION.
     DATA ls_row TYPE t100.
     DATA ls_key TYPE string.
     SELECT SINGLE arbgb FROM t100 INTO @ls_row WHERE arbgb = @ls_key.
-  ENDMETHOD.
-
-  METHOD test_005.
-    DATA lt_tab TYPE STANDARD TABLE OF t100 WITH DEFAULT KEY.
-    SELECT arbgb FROM t100 INTO TABLE @lt_tab PACKAGE SIZE 100.
-    ENDSELECT.
   ENDMETHOD.
 ENDCLASS.

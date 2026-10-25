@@ -1,0 +1,32 @@
+CLASS zcl_test_no_kernel_call DEFINITION
+  PUBLIC FINAL
+  CREATE PUBLIC.
+
+  PUBLIC SECTION.
+    METHODS test_001.
+    METHODS test_002.
+    METHODS test_003.
+    METHODS test_004.
+ENDCLASS.
+
+CLASS zcl_test_no_kernel_call IMPLEMENTATION.
+  METHOD test_001.
+    SYSTEM-CALL OBJMGR CLONE.
+  ENDMETHOD.
+
+  METHOD test_002.
+    CALL 'C_DIR_READ_FINISH'.
+  ENDMETHOD.
+
+  METHOD test_003.
+    EXEC SQL.
+      SELECT SYSDATE FROM DUAL;
+    ENDEXEC.
+  ENDMETHOD.
+
+  METHOD test_004.
+    DATA lv_flag TYPE abap_bool.
+    IF lv_flag = abap_true.
+    ENDIF.
+  ENDMETHOD.
+ENDCLASS.

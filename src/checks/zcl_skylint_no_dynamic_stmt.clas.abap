@@ -17,7 +17,14 @@ CLASS zcl_skylint_no_dynamic_stmt DEFINITION
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_DYNAMIC'.
 
+    DATA mv_check_dynamic_sql         TYPE abap_bool VALUE abap_true.
+    DATA mv_ignore_rap_query_provider TYPE abap_bool VALUE abap_true.
+
     METHODS is_dynamic_construct
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_yes) TYPE abap_bool.
+
+    METHODS is_dynamic_sql
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
@@ -32,14 +39,31 @@ CLASS zcl_skylint_no_dynamic_stmt IMPLEMENTATION.
                                      ( code           = c_finding_codes-no_dynamic_stuff
                                        severity       = if_ci_atc_check=>finding_severities-warning
                                        text           = 'Avoid dynamic calls and language constructs'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 attributes        = VALUE #(
+                                     kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                     ( name  = 'CHECK_DYNAMIC_SQL'
+                                       value = REF #( mv_check_dynamic_sql ) )
+                                     ( name  = 'IGNORE_RAP_QUERY_PROVIDER'
+                                       value = REF #( mv_ignore_rap_query_provider ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
+    DATA lv_ignore_dyn_sql TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+
+    lv_ignore_dyn_sql = abap_false.
+    IF mv_ignore_rap_query_provider = abap_true AND is_procedure-id-name CP '*IF_RAP_QUERY_PROVIDER~SELECT'.
+      lv_ignore_dyn_sql = abap_true.
+    ENDIF.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF is_dynamic_construct( <ls_statement> ) = abap_true.
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-no_dynamic_stuff ).
+      ELSEIF     mv_check_dynamic_sql             = abap_true
+             AND lv_ignore_dyn_sql                = abap_false
+             AND is_dynamic_sql( <ls_statement> ) = abap_true.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-no_dynamic_stuff ).
       ENDIF.
@@ -127,5 +151,22 @@ CLASS zcl_skylint_no_dynamic_stmt IMPLEMENTATION.
           ENDIF.
         ENDIF.
     ENDCASE.
+  ENDMETHOD.
+
+  METHOD is_dynamic_sql.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    rv_yes = abap_false.
+
+    IF zcl_skylint_ast_util=>statement_is_db_access( is_statement ) = abap_false.
+      RETURN.
+    ENDIF.
+
+    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
+      IF <ls_token>-lexeme CP '(*)' AND <ls_token>-lexeme <> '(*)'.
+        rv_yes = abap_true.
+        RETURN.
+      ENDIF.
+    ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

@@ -1,0 +1,48 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Obsolete Data and Type Declarations",
+    "originalLanguage": "en"
+  },
+  "category": "ZSKYLINT_ANTI_PATTERNS",
+  "implementingClass": "ZCL_SKYLINT_NO_OBS_DECL",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "CHECK_TABLES"
+    },
+    {
+      "name": "CHECK_TYPE_POOLS"
+    },
+    {
+      "name": "CHECK_RANGES"
+    },
+    {
+      "name": "CHECK_HEADER_LINE"
+    },
+    {
+      "name": "CHECK_OCCURS"
+    },
+    {
+      "name": "CHECK_INITIAL_SIZE"
+    },
+    {
+      "name": "CHECK_COMMON_PART"
+    },
+    {
+      "name": "CHECK_STATICS"
+    },
+    {
+      "name": "CHECK_FS_STRUCTURE"
+    },
+    {
+      "name": "CHECK_LOAD"
+    },
+    {
+      "name": "CHECK_PARAMETER"
+    },
+    {
+      "name": "CHECK_REFRESH"
+    }
+  ]
+}

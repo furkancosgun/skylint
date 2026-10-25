@@ -1,0 +1,13 @@
+[
+  {
+    "target": "TEST_001",
+    "code": "PROD_ASSRT",
+    "line": 3,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_002",
+    "code": null
+  }
+]
