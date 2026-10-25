@@ -44,12 +44,6 @@ CLASS zcl_skylint_max_cyclo_comp IMPLEMENTATION.
     DATA lv_cc         TYPE i.
     DATA ls_first_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    IF     is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-method
-       AND is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-form_routine
-       AND is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-function.
-      RETURN.
-    ENDIF.
-
     lv_cc = calculate_complexity( is_procedure ).
 
     IF lv_cc > mv_max_complexity.
