@@ -1,4 +1,4 @@
-CLASS zcl_skylint_naming_members DEFINITION
+CLASS zcl_skylint_pref_name_members DEFINITION
   PUBLIC
   INHERITING FROM zcl_skylint_check_base
   CREATE PUBLIC.
@@ -86,7 +86,7 @@ CLASS zcl_skylint_naming_members DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_naming_members IMPLEMENTATION.
+CLASS zcl_skylint_pref_name_members IMPLEMENTATION.
   METHOD constructor.
     super->constructor( VALUE #( description       = 'skylint: Class Attribute and Parameter Naming Conventions'
                                  remote_enablement = abap_true

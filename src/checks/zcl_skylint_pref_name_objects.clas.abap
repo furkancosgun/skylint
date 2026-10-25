@@ -1,4 +1,4 @@
-CLASS zcl_skylint_naming_objects DEFINITION
+CLASS zcl_skylint_pref_name_objects DEFINITION
   PUBLIC
   INHERITING FROM zcl_skylint_check_base
   CREATE PUBLIC.
@@ -86,7 +86,7 @@ CLASS zcl_skylint_naming_objects DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_naming_objects IMPLEMENTATION.
+CLASS zcl_skylint_pref_name_objects IMPLEMENTATION.
   METHOD constructor.
     super->constructor( VALUE #( description       = 'skylint: Class, Interface, Type and Object Naming'
                                  remote_enablement = abap_true

@@ -912,10 +912,10 @@ export const RULES = [
     },
   },
   {
-    ruleId: 'auth-check-subrc',
+    ruleId: 'pref-auth-subrc',
     title: 'Check sy-subrc Promptly After AUTHORITY-CHECK (CWE-862)',
     rationale: 'Executing an AUTHORITY-CHECK statement without immediately evaluating sy-subrc completely defeats the authorization check, allowing unauthorized actors to perform privileged actions. Immediate evaluation of sy-subrc with an authorization rejection response is mandatory.',
-    className: 'ZCL_SKYLINT_AUTH_CHECK_SUBRC',
+    className: 'ZCL_SKYLINT_PREF_AUTH_SUBRC',
     pseudoComment: 'AUTH_SUBRC',
     category: 'security',
     example: {
@@ -1311,10 +1311,10 @@ export const RULES = [
     },
   },
   {
-    ruleId: 'naming-variables',
+    ruleId: 'pref-naming-vars',
     title: 'Enforce Local Variable and Field-Symbol Naming Conventions',
     rationale: 'Local variables, constants, statics, and field-symbols must follow distinct naming conventions (such as `lv_*`, `lc_*`, `sv_*`, `<ls_*>`, `<lv_*>`) to ensure clear scope boundaries, prevent unintended variable shadowing, and eliminate ambiguity during code reviews and debugging.',
-    className: 'ZCL_SKYLINT_NAMING_VARIABLES',
+    className: 'ZCL_SKYLINT_PREF_NAMING_VARS',
     pseudoComment: 'NAMING_VAR',
     category: 'clean-abap',
     example: {
@@ -1323,10 +1323,10 @@ export const RULES = [
     },
   },
   {
-    ruleId: 'naming-members',
+    ruleId: 'pref-name-members',
     title: 'Enforce Class Attribute and Method Parameter Naming Conventions',
     rationale: 'Member variables and method signatures communicate the contract of object-oriented components. Enforcing prefixes (mv_* for instance attributes, gv_* for static attributes, iv_* for importing, ev_* for exporting, cv_* for changing, and rv_* for returning parameters) clarifies usage semantics across callers.',
-    className: 'ZCL_SKYLINT_NAMING_MEMBERS',
+    className: 'ZCL_SKYLINT_PREF_NAME_MEMBERS',
     pseudoComment: 'NAMING_MEM',
     category: 'clean-abap',
     example: {
@@ -1335,10 +1335,10 @@ export const RULES = [
     },
   },
   {
-    ruleId: 'naming-objects',
+    ruleId: 'pref-name-objects',
     title: 'Enforce Class, Interface, Type and Object Naming Conventions',
     rationale: 'Object-oriented entities and global artifacts must maintain standardized prefixes (such as zcl_ / lcl_ for classes, zif_ / lif_ for interfaces, ty_ for type definitions, and on_* for event handlers). This standard maintains harmony across packages, enhances IDE searchability, and reinforces Clean ABAP architecture.',
-    className: 'ZCL_SKYLINT_NAMING_OBJECTS',
+    className: 'ZCL_SKYLINT_PREF_NAME_OBJECTS',
     pseudoComment: 'NAMING_OBJ',
     category: 'clean-abap',
     example: {

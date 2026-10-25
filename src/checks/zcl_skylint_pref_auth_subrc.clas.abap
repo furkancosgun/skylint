@@ -1,4 +1,4 @@
-CLASS zcl_skylint_auth_check_subrc DEFINITION
+CLASS zcl_skylint_pref_auth_subrc DEFINITION
   PUBLIC
   INHERITING FROM zcl_skylint_check_base
   CREATE PUBLIC.
@@ -28,7 +28,7 @@ CLASS zcl_skylint_auth_check_subrc DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_auth_check_subrc IMPLEMENTATION.
+CLASS zcl_skylint_pref_auth_subrc IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
         VALUE #(

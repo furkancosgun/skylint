@@ -5,6 +5,6 @@
     "originalLanguage": "en"
   },
   "category": "ZSKYLINT_SECURITY",
-  "implementingClass": "ZCL_SKYLINT_AUTH_CHECK_SUBRC",
+  "implementingClass": "ZCL_SKYLINT_PREF_AUTH_SUBRC",
   "checkType": "remoteEnabled"
 }

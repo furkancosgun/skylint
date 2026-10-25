@@ -1,4 +1,4 @@
-CLASS zcl_skylint_naming_variables DEFINITION
+CLASS zcl_skylint_pref_naming_vars DEFINITION
   PUBLIC
   INHERITING FROM zcl_skylint_check_base
   CREATE PUBLIC.
@@ -51,7 +51,7 @@ CLASS zcl_skylint_naming_variables DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_naming_variables IMPLEMENTATION.
+CLASS zcl_skylint_pref_naming_vars IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
         VALUE #( description       = 'skylint: Local Variable and Field-Symbol Naming Conventions'

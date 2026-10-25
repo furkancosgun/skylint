@@ -1883,10 +1883,10 @@
     ]
   },
   {
-    "ruleId": "auth-check-subrc",
+    "ruleId": "pref-auth-subrc",
     "title": "Check sy-subrc Promptly After AUTHORITY-CHECK (CWE-862)",
-    "className": "ZCL_SKYLINT_AUTH_CHECK_SUBRC",
-    "checkName": "ZSKYLINT_AUTH_CHECK_SUBRC",
+    "className": "ZCL_SKYLINT_PREF_AUTH_SUBRC",
+    "checkName": "ZSKYLINT_PREF_AUTH_SUBRC",
     "category": "security",
     "categoryTitle": "Security & Robustness",
     "pseudoComment": "AUTH_SUBRC",
@@ -2667,10 +2667,10 @@
     ]
   },
   {
-    "ruleId": "naming-variables",
+    "ruleId": "pref-naming-vars",
     "title": "Enforce Local Variable and Field-Symbol Naming Conventions",
-    "className": "ZCL_SKYLINT_NAMING_VARIABLES",
-    "checkName": "ZSKYLINT_NAMING_VARIABLES",
+    "className": "ZCL_SKYLINT_PREF_NAMING_VARS",
+    "checkName": "ZSKYLINT_PREF_NAMING_VARS",
     "category": "clean-abap",
     "categoryTitle": "Clean ABAP & Modern Syntax",
     "pseudoComment": "NAMING_VAR",
@@ -2719,10 +2719,10 @@
     ]
   },
   {
-    "ruleId": "naming-members",
+    "ruleId": "pref-name-members",
     "title": "Enforce Class Attribute and Method Parameter Naming Conventions",
-    "className": "ZCL_SKYLINT_NAMING_MEMBERS",
-    "checkName": "ZSKYLINT_NAMING_MEMBERS",
+    "className": "ZCL_SKYLINT_PREF_NAME_MEMBERS",
+    "checkName": "ZSKYLINT_PREF_NAME_MEMBERS",
     "category": "clean-abap",
     "categoryTitle": "Clean ABAP & Modern Syntax",
     "pseudoComment": "NAMING_MEM",
@@ -2844,10 +2844,10 @@
     ]
   },
   {
-    "ruleId": "naming-objects",
+    "ruleId": "pref-name-objects",
     "title": "Enforce Class, Interface, Type and Object Naming Conventions",
-    "className": "ZCL_SKYLINT_NAMING_OBJECTS",
-    "checkName": "ZSKYLINT_NAMING_OBJECTS",
+    "className": "ZCL_SKYLINT_PREF_NAME_OBJECTS",
+    "checkName": "ZSKYLINT_PREF_NAME_OBJECTS",
     "category": "clean-abap",
     "categoryTitle": "Clean ABAP & Modern Syntax",
     "pseudoComment": "NAMING_OBJ",

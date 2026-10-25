@@ -603,7 +603,7 @@
       ]
     },
     {
-      "checkName": "ZSKYLINT_AUTH_CHECK_SUBRC"
+      "checkName": "ZSKYLINT_PREF_AUTH_SUBRC"
     },
     {
       "checkName": "ZSKYLINT_NO_CLIENT_SPEC"
@@ -854,7 +854,7 @@
       ]
     },
     {
-      "checkName": "ZSKYLINT_NAMING_VARIABLES",
+      "checkName": "ZSKYLINT_PREF_NAMING_VARS",
       "parameters": [
         {
           "name": "LOCAL_DATA",
@@ -875,7 +875,7 @@
       ]
     },
     {
-      "checkName": "ZSKYLINT_NAMING_MEMBERS",
+      "checkName": "ZSKYLINT_PREF_NAME_MEMBERS",
       "parameters": [
         {
           "name": "ATTR_IGN_EXC",
@@ -924,7 +924,7 @@
       ]
     },
     {
-      "checkName": "ZSKYLINT_NAMING_OBJECTS",
+      "checkName": "ZSKYLINT_PREF_NAME_OBJECTS",
       "parameters": [
         {
           "name": "CLASS_LOCAL",

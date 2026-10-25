@@ -3,9 +3,9 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <VSEOCLASS>
-    <CLSNAME>ZCL_SKYLINT_AUTH_CHECK_SUBRC</CLSNAME>
+    <CLSNAME>ZCL_SKYLINT_PREF_NAMING_VARS</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Authority-Check sy-subrc</DESCRIPT>
+    <DESCRIPT>skylint: Local Variable and Field-Symbol Naming Conventions</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

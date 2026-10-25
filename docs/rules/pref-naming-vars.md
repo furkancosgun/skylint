@@ -60,5 +60,5 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ## Technical Details
 
-* **Native ATC Class:** `ZCL_SKYLINT_NAMING_VARIABLES`
-* **Implementation File:** [zcl_skylint_naming_variables.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_naming_variables.clas.abap)
+* **Native ATC Class:** `ZCL_SKYLINT_PREF_NAMING_VARS`
+* **Implementation File:** [zcl_skylint_pref_naming_vars.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_pref_naming_vars.clas.abap)

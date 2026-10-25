@@ -3,9 +3,9 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <VSEOCLASS>
-    <CLSNAME>ZCL_SKYLINT_NAMING_VARIABLES</CLSNAME>
+    <CLSNAME>ZCL_SKYLINT_PREF_NAME_OBJECTS</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Local Variable and Field-Symbol Naming Conventions</DESCRIPT>
+    <DESCRIPT>skylint: Class, Interface, Type and Object Naming</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

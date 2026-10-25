@@ -5,7 +5,7 @@
     "originalLanguage": "en"
   },
   "category": "ZSKYLINT_CLEAN_ABAP",
-  "implementingClass": "ZCL_SKYLINT_NAMING_MEMBERS",
+  "implementingClass": "ZCL_SKYLINT_PREF_NAME_MEMBERS",
   "checkType": "remoteEnabled",
   "parameters": [
     {

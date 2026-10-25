@@ -3,9 +3,9 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <VSEOCLASS>
-    <CLSNAME>ZCL_SKYLINT_NAMING_OBJECTS</CLSNAME>
+    <CLSNAME>ZCL_SKYLINT_PREF_AUTH_SUBRC</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>skylint: Class, Interface, Type and Object Naming</DESCRIPT>
+    <DESCRIPT>skylint: Authority-Check sy-subrc</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

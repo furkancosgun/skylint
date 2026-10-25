@@ -84,5 +84,5 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ## Technical Details
 
-* **Native ATC Class:** `ZCL_SKYLINT_NAMING_OBJECTS`
-* **Implementation File:** [zcl_skylint_naming_objects.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_naming_objects.clas.abap)
+* **Native ATC Class:** `ZCL_SKYLINT_PREF_NAME_OBJECTS`
+* **Implementation File:** [zcl_skylint_pref_name_objects.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_pref_name_objects.clas.abap)
