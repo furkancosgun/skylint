@@ -61,10 +61,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_CATCH_ROOT
 ```
 
-## References & Standards
-
-* [Clean ABAP: Catch Specific Exceptions](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#catch-specific-exceptions)
-
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_CATCH_ROOT`

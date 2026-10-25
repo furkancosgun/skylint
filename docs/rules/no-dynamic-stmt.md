@@ -64,11 +64,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_DYNAMIC_STMT
 ```
 
-## References & Standards
-
-* [CWE-89: SQL Injection](https://cwe.mitre.org/data/definitions/89.html)
-* [Clean ABAP: Prefer Static Over Dynamic](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
-
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_DYNAMIC_STMT`

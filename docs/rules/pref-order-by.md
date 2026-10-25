@@ -60,10 +60,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_ORDER_BY
 ```
 
-## References & Standards
-
-* [Clean ABAP: Order by in Queries](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#order-by-in-queries)
-
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_ORDER_BY`

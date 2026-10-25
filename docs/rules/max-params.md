@@ -66,11 +66,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_MAX_PARAMS_COUNT
 ```
 
-## References & Standards
-
-* [Clean ABAP: Take No More Than 3 to 5 Parameters](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#take-no-more-than-3-to-5-parameters)
-* [Clean ABAP: One Parameter per Line](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#one-parameter-per-line)
-
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_MAX_PARAMS`

@@ -51,10 +51,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_SY_MODIFY
 ```
 
-## References & Standards
-
-* [Clean ABAP: Do Not Overwrite System Fields](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
-
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_SY_MODIFY`

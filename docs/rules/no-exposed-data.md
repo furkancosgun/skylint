@@ -71,11 +71,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PUBLIC_ATTR
 ```
 
-## References & Standards
-
-* [Official SAP Clean ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
-* [SAP ABAP Keyword Documentation](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
-
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_EXPOSED_DATA`

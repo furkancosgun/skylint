@@ -74,10 +74,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_MOD_LOOP_TAB
 ```
 
-## References & Standards
-
-* [Clean ABAP: Do Not Change the Table You Are Looping](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#do-not-change-the-table-you-are-looping)
-
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_MOD_LOOP_TAB`

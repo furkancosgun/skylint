@@ -64,10 +64,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_AUTH_CHECK
 ```
 
-## References & Standards
-
-* [SAP Help: Implementing Authorization Checks](https://help.sap.com)
-
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_AUTH_CHECK`

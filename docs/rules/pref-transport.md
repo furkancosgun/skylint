@@ -56,10 +56,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_TRANSPORT
 ```
 
-## References & Standards
-
-* [Clean ABAP: Use TRANSPORTING when Modifying Internal Tables](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
-
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_TRANSPORT`

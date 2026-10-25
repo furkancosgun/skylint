@@ -66,10 +66,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_RFC_ERR
 ```
 
-## References & Standards
-
-* [SAP Help: Reliable RFC Invocations](https://help.sap.com)
-
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_RFC_ERR`

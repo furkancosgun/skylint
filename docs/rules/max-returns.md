@@ -74,10 +74,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_MAX_RETURNS
 ```
 
-## References & Standards
-
-* [Clean ABAP: Return Early When Nothing Else to Do](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#return-early-when-nothing-else-to-do)
-
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_MAX_RETURNS`

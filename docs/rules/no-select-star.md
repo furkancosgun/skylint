@@ -57,11 +57,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_SELECT_STAR
 ```
 
-## References & Standards
-
-* [Clean ABAP: Select Only Needed Columns](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#select-only-needed-columns)
-* [SAP HANA Performance Guide for ABAP](https://help.sap.com)
-
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_SELECT_STAR`

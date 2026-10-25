@@ -53,11 +53,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_METAPROGRAMMING
 ```
 
-## References & Standards
-
-* [CWE-94: Improper Control of Generation of Code](https://cwe.mitre.org/data/definitions/94.html)
-* [SAP Clean Core Cloud Guidelines](https://help.sap.com)
-
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_METAPROGRAMMING`

@@ -72,11 +72,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_DB_IN_LOOP
 ```
 
-## References & Standards
-
-* [Clean ABAP: Prefer Bulk Reads Over Reads in Loop](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#prefer-bulk-reads-over-reads-in-loop)
-* [SAP Help: Open SQL Performance Considerations](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm)
-
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_DB_IN_LOOP`

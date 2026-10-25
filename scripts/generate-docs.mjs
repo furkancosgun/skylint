@@ -29,6 +29,162 @@ for (const file of fs.readdirSync(rulesDocsDir)) {
   }
 }
 
+function validateRulesCompleteness() {
+  const errors = [];
+  const validCategories = new Set(Object.keys(CATEGORIES));
+
+  // 1. Check all ABAP class files vs rules-data
+  const checkFiles = fs.readdirSync(checksDir).filter(f => f.endsWith('.clas.abap'));
+  const utilityClasses = new Set([
+    'zcl_skylint_check_base.clas.abap',
+    'zcl_skylint_check_meta_data.clas.abap',
+    'zcl_skylint_ast_util.clas.abap',
+    'zcl_skylint_rtti_util.clas.abap'
+  ]);
+  const registeredClassMap = new Map(RULES.map(r => [r.className.toLowerCase(), r]));
+
+  // Check for check files on disk that are NOT registered in rules-data.mjs
+  for (const file of checkFiles) {
+    if (utilityClasses.has(file)) continue;
+    const classNameLower = file.replace(/\.clas\.abap$/, '');
+    if (!registeredClassMap.has(classNameLower)) {
+      errors.push(`[UNREGISTERED CHECK] Found check class '${file}' in src/checks/ but it is NOT registered in rules-data.mjs!`);
+    }
+  }
+
+  // 2. Comprehensive check for each rule in rules-data.mjs
+  for (const rule of RULES) {
+    const abapFile = path.join(checksDir, `${rule.className.toLowerCase()}.clas.abap`);
+    const xmlFile = path.join(checksDir, `${rule.className.toLowerCase()}.clas.xml`);
+
+    if (!fs.existsSync(abapFile)) {
+      errors.push(`[MISSING ABAP FILE] Rule '${rule.ruleId}' specifies class '${rule.className}' but '${abapFile}' does not exist!`);
+      continue;
+    }
+    if (!fs.existsSync(xmlFile)) {
+      errors.push(`[MISSING XML FILE] Rule '${rule.ruleId}' specifies class '${rule.className}' but '${xmlFile}' does not exist!`);
+      continue;
+    }
+
+    const abapContent = fs.readFileSync(abapFile, 'utf8');
+    const xmlContent = fs.readFileSync(xmlFile, 'utf8');
+
+    // Category validity
+    if (!validCategories.has(rule.category)) {
+      errors.push(`[INVALID CATEGORY] Rule '${rule.ruleId}' has invalid category '${rule.category}'!`);
+    }
+
+    // Pseudo-comment match between ABAP constant and rules-data
+    const pcomMatch = abapContent.match(/c_pseudo_comment\s+TYPE\s+string\s+VALUE\s+'([^']+)'/);
+    if (pcomMatch) {
+      const classPcom = pcomMatch[1].trim();
+      if (classPcom !== rule.pseudoComment) {
+        errors.push(`[PSEUDO-COMMENT MISMATCH] Rule '${rule.ruleId}': ABAP class defines '${classPcom}', but rules-data.mjs has '${rule.pseudoComment}'!`);
+      }
+    }
+
+    // XML CLSNAME match
+    const clsMatch = xmlContent.match(/<CLSNAME>([^<]+)<\/CLSNAME>/);
+    if (clsMatch && clsMatch[1].trim() !== rule.className) {
+      errors.push(`[XML CLSNAME MISMATCH] Rule '${rule.ruleId}': XML CLSNAME is '${clsMatch[1].trim()}', but class is '${rule.className}'!`);
+    }
+
+    // Finding code length & prefix in ABAP class
+    const codeValMatch = abapContent.match(/c_finding_codes[\s\S]*?VALUE\s*'([A-Za-z0-9_]+)'/);
+    if (codeValMatch) {
+      const fc = codeValMatch[1].trim();
+      if (fc.length > 10) {
+        errors.push(`[FINDING CODE TOO LONG] Finding code '${fc}' exceeds SAP ATC 10-char limit in ${rule.className}!`);
+      }
+      if (!/^(PREF_|NO_|MAX_)/.test(fc)) {
+        errors.push(`[INVALID FINDING CODE PREFIX] Finding code '${fc}' must start with PREF_, NO_, or MAX_ in ${rule.className}!`);
+      }
+    }
+
+    // Constructor description length and prefix
+    const descMatch = abapContent.match(/description\s*=\s*'([^']+)'/);
+    if (descMatch) {
+      const desc = descMatch[1];
+      if (desc.startsWith('skylint:')) {
+        errors.push(`[CONSTRUCTOR PREFIX INVALID] Description in ${rule.className} constructor should not start with 'skylint:'!`);
+      }
+      if (desc.length > 60) {
+        errors.push(`[CONSTRUCTOR DESC TOO LONG] Description in ${rule.className} constructor exceeds 60 chars (${desc.length})!`);
+      }
+    }
+
+    // XML description prefix
+    const xmlDescMatch = xmlContent.match(/<DESCRIPT>([^<]+)<\/DESCRIPT>/);
+    if (xmlDescMatch && !xmlDescMatch[1].trim().startsWith('skylint:')) {
+      errors.push(`[XML DESC MISSING PREFIX] Description in ${rule.className}.clas.xml must start with 'skylint:'!`);
+    }
+
+    // Bidirectional parameter parity!
+    const attrs = extractAttributes(abapContent);
+    const classParamNames = new Set(attrs.map(a => a.name));
+    const ruleParamNames = new Set(Object.keys(rule.parameters || {}));
+
+    // Missing parameter in rules-data
+    for (const p of classParamNames) {
+      if (!ruleParamNames.has(p)) {
+        errors.push(`[MISSING PARAMETER GUIDANCE] Rule '${rule.ruleId}' (${rule.className}) parameter '${p}' is defined in ABAP but missing in rules-data.mjs!`);
+      } else {
+        const desc = rule.parameters[p];
+        if (typeof desc !== 'string' || desc.trim().length < 10) {
+          errors.push(`[PARAMETER GUIDANCE TOO SHORT] Rule '${rule.ruleId}' parameter '${p}' guidance is too brief/placeholder!`);
+        }
+      }
+    }
+
+    // Stale parameter in rules-data that was removed/renamed from class
+    for (const p of ruleParamNames) {
+      if (!classParamNames.has(p)) {
+        errors.push(`[STALE PARAMETER] Rule '${rule.ruleId}' documents parameter '${p}' in rules-data.mjs, but it was REMOVED from ${rule.className}!`);
+      }
+    }
+
+    // Parameters declared on non-parameterized class
+    if (attrs.length === 0 && rule.parameters && Object.keys(rule.parameters).length > 0) {
+      errors.push(`[EXTRANEOUS PARAMETERS] Rule '${rule.ruleId}' has parameters in rules-data.mjs, but ${rule.className} has 0 attributes!`);
+    }
+
+    // SEO metadata checks
+    if (!rule.seo) {
+      errors.push(`[MISSING SEO] Rule '${rule.ruleId}' is missing the 'seo' metadata object!`);
+    } else {
+      if (!rule.seo.description || typeof rule.seo.description !== 'string' || rule.seo.description.trim().length < 40) {
+        errors.push(`[SEO DESCRIPTION TOO SHORT] Rule '${rule.ruleId}' requires a comprehensive meta description (>= 40 chars)!`);
+      }
+      if (!Array.isArray(rule.seo.keywords) || rule.seo.keywords.length < 3) {
+        errors.push(`[SEO KEYWORDS INSUFFICIENT] Rule '${rule.ruleId}' must have at least 3 relevant SEO keywords!`);
+      }
+    }
+
+    // Core content checks
+    if (!rule.title || rule.title.trim().length < 10) {
+      errors.push(`[TITLE TOO SHORT] Rule '${rule.ruleId}' requires a clear, informative title (>= 10 chars)!`);
+    }
+    if (!rule.rationale || rule.rationale.trim().length < 30) {
+      errors.push(`[RATIONALE TOO SHORT] Rule '${rule.ruleId}' requires a substantive architectural rationale (>= 30 chars)!`);
+    }
+    if (!rule.example || !rule.example.bad || !rule.example.good) {
+      errors.push(`[MISSING EXAMPLES] Rule '${rule.ruleId}' must include both 'bad' and 'good' code examples!`);
+    }
+  }
+
+  if (errors.length > 0) {
+    console.error(`\n❌ Comprehensive validation failed with ${errors.length} error(s):`);
+    for (const err of errors) {
+      console.error(`  - ${err}`);
+    }
+    process.exit(1);
+  }
+
+  console.log(`✓ Validation passed: all ${RULES.length} rules verified (all registered, SEO tags complete, parameter parity 100%).`);
+}
+
+validateRulesCompleteness();
+
 function extractSnippet(lines, methodName) {
   const upper = methodName.toUpperCase();
   let inside = false;
@@ -230,14 +386,6 @@ for (const rule of RULES) {
   ruleDoc += `To suppress findings for this rule, append the pseudo-comment to the statement:\n\n`;
   ruleDoc += `\`\`\`abap\n" Standard pseudo-comment:\n... "#EC ${rule.pseudoComment}\n\n" SAP CI_ prefix format:\n... "#EC CI_${rule.pseudoComment}\n\`\`\`\n\n`;
 
-  // References
-  if (rule.references && rule.references.length > 0) {
-    ruleDoc += `## References & Standards\n\n`;
-    for (const ref of rule.references) {
-      ruleDoc += `* [${ref.title}](${ref.url})\n`;
-    }
-    ruleDoc += `\n`;
-  }
 
   // ABAP Class Details
   ruleDoc += `## Technical Details\n\n`;

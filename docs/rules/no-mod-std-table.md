@@ -65,10 +65,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_MOD_STD_TABLE
 ```
 
-## References & Standards
-
-* [Clean Core Extensibility Guide](https://help.sap.com)
-
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_MOD_STD_TABLE`

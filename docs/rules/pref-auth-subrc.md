@@ -63,11 +63,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_AUTH_SUBRC
 ```
 
-## References & Standards
-
-* [CWE-862: Missing Authorization](https://cwe.mitre.org/data/definitions/862.html)
-* [Clean ABAP: Check sy-subrc Promptly](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#check-sy-subrc-promptly)
-
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_AUTH_SUBRC`

@@ -81,10 +81,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_MAX_NESTING
 ```
 
-## References & Standards
-
-* [Clean ABAP: Keep Nesting Depth Low](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#keep-nesting-depth-low)
-
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_MAX_NESTING`

@@ -64,10 +64,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_MAX_BOOL_EXPR
 ```
 
-## References & Standards
-
-* [Clean ABAP: Decompose Complex Conditions](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#decompose-complex-conditions)
-
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_MAX_BOOL_EXPR`

@@ -1,6 +1,3 @@
-// Skylint Rules Catalog Database (133 Rules)
-// Domain-driven categorizations, rich SEO metadata, and Clean ABAP enterprise standards.
-
 export const CATEGORIES = {
   "clean-abap": {
     "title": "Clean ABAP & Modern Syntax",
@@ -58,17 +55,7 @@ export const RULES = [
         "pref-downport",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-reduce",
@@ -91,17 +78,7 @@ export const RULES = [
         "pref-reduce",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-read-table",
@@ -129,17 +106,7 @@ export const RULES = [
         "pref-read-table",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-cond",
@@ -165,17 +132,7 @@ export const RULES = [
         "pref-cond",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-switch",
@@ -201,17 +158,7 @@ export const RULES = [
         "pref-switch",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-lines",
@@ -234,17 +181,7 @@ export const RULES = [
         "pref-lines",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-call-method",
@@ -267,17 +204,7 @@ export const RULES = [
         "no-call-method",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-default-key",
@@ -300,17 +227,7 @@ export const RULES = [
         "no-default-key",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-is-not",
@@ -333,17 +250,7 @@ export const RULES = [
         "pref-is-not",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-me-reference",
@@ -369,17 +276,7 @@ export const RULES = [
         "no-me-reference",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-call-receiving",
@@ -402,17 +299,7 @@ export const RULES = [
         "no-call-receiving",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-call-exporting",
@@ -435,17 +322,7 @@ export const RULES = [
         "no-call-exporting",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-param-name",
@@ -472,17 +349,7 @@ export const RULES = [
         "pref-param-name",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-chained-decl",
@@ -508,17 +375,7 @@ export const RULES = [
         "no-chained-decl",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-chained-assign",
@@ -541,17 +398,7 @@ export const RULES = [
         "no-chained-assign",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-str-tmpl",
@@ -574,17 +421,7 @@ export const RULES = [
         "pref-str-tmpl",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-bool-compare",
@@ -607,17 +444,7 @@ export const RULES = [
         "no-bool-compare",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-return",
@@ -640,17 +467,7 @@ export const RULES = [
         "pref-return",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-check-stmt",
@@ -677,17 +494,7 @@ export const RULES = [
         "no-check-stmt",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-empty-block",
@@ -720,17 +527,7 @@ export const RULES = [
         "no-empty-block",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-ident-cont",
@@ -753,17 +550,7 @@ export const RULES = [
         "no-ident-cont",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-dup-cond",
@@ -786,17 +573,7 @@ export const RULES = [
         "no-dup-cond",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-merge-ifs",
@@ -819,17 +596,7 @@ export const RULES = [
         "pref-merge-ifs",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-unreachable",
@@ -852,17 +619,7 @@ export const RULES = [
         "no-unreachable",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-single-when",
@@ -885,17 +642,7 @@ export const RULES = [
         "no-single-when",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-yoda-cond",
@@ -918,17 +665,7 @@ export const RULES = [
         "no-yoda-cond",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-symbol-op",
@@ -951,17 +688,7 @@ export const RULES = [
         "pref-symbol-op",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-new-op",
@@ -988,17 +715,7 @@ export const RULES = [
         "pref-new-op",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-xsdbool",
@@ -1021,17 +738,7 @@ export const RULES = [
         "pref-xsdbool",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-static-arrow",
@@ -1054,17 +761,7 @@ export const RULES = [
         "no-static-arrow",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-exposed-data",
@@ -1091,17 +788,7 @@ export const RULES = [
         "no-exposed-data",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-obs-arith",
@@ -1131,17 +818,7 @@ export const RULES = [
         "no-obs-arith",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-obs-decl",
@@ -1178,17 +855,7 @@ export const RULES = [
         "no-obs-decl",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-obs-control",
@@ -1223,17 +890,7 @@ export const RULES = [
         "no-obs-control",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-obs-memory",
@@ -1265,17 +922,7 @@ export const RULES = [
         "no-obs-memory",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-obs-strings",
@@ -1305,17 +952,7 @@ export const RULES = [
         "no-obs-strings",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-list-proc",
@@ -1347,17 +984,7 @@ export const RULES = [
         "no-list-proc",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "max-params",
@@ -1382,17 +1009,7 @@ export const RULES = [
     "parameters": {
       "MAX_PARAMETERS": "Maximum allowed total parameters (IMPORTING, EXPORTING, CHANGING, RETURNING)",
       "CHECK_PARAM_LINE": "Enforce one parameter per line in method definitions and invocations"
-    },
-    "references": [
-      {
-        "title": "Clean ABAP: Take No More Than 3 to 5 Parameters",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#take-no-more-than-3-to-5-parameters"
-      },
-      {
-        "title": "Clean ABAP: One Parameter per Line",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#one-parameter-per-line"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-db-in-loop",
@@ -1415,17 +1032,7 @@ export const RULES = [
         "S/4HANA SQL Optimization",
         "ATC Check Database"
       ]
-    },
-    "references": [
-      {
-        "title": "Clean ABAP: Prefer Bulk Reads Over Reads in Loop",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#prefer-bulk-reads-over-reads-in-loop"
-      },
-      {
-        "title": "SAP Help: Open SQL Performance Considerations",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-empty-fae",
@@ -1447,17 +1054,7 @@ export const RULES = [
         "Clean ABAP FAE Check",
         "S/4HANA Database Stability"
       ]
-    },
-    "references": [
-      {
-        "title": "Clean ABAP: Check Before FOR ALL ENTRIES",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#check-before-for-all-entries"
-      },
-      {
-        "title": "SAP Note 48230: FOR ALL ENTRIES with empty table",
-        "url": "https://me.sap.com/notes/48230"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-select-star",
@@ -1478,17 +1075,7 @@ export const RULES = [
         "Clean ABAP Query Guidelines",
         "Memory Footprint Reduction SAP"
       ]
-    },
-    "references": [
-      {
-        "title": "Clean ABAP: Select Only Needed Columns",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#select-only-needed-columns"
-      },
-      {
-        "title": "SAP HANA Performance Guide for ABAP",
-        "url": "https://help.sap.com"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-endselect",
@@ -1509,13 +1096,7 @@ export const RULES = [
         "Array Fetch OpenSQL",
         "Clean ABAP Database Best Practices"
       ]
-    },
-    "references": [
-      {
-        "title": "Clean ABAP: Avoid SELECT ... ENDSELECT",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#avoid-select--endselect"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-scope-leak",
@@ -1538,17 +1119,7 @@ export const RULES = [
         "no-scope-leak",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-redun-assign",
@@ -1576,17 +1147,7 @@ export const RULES = [
         "no-redun-assign",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-shadow",
@@ -1609,17 +1170,7 @@ export const RULES = [
         "no-shadow",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-useless-concat",
@@ -1642,17 +1193,7 @@ export const RULES = [
         "no-useless-concat",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-full-typed",
@@ -1675,17 +1216,7 @@ export const RULES = [
         "pref-full-typed",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-corresp",
@@ -1708,17 +1239,7 @@ export const RULES = [
         "pref-corresp",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "max-method-len",
@@ -1744,17 +1265,7 @@ export const RULES = [
     "parameters": {
       "MAX_STATEMENTS": "Maximum executable ABAP statements allowed in regular method bodies",
       "MAX_CTOR_STATEMENTS": "Maximum statements allowed in CONSTRUCTOR methods (guards against heavy setup logic)"
-    },
-    "references": [
-      {
-        "title": "Clean ABAP: Keep Methods Small",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#keep-methods-small"
-      },
-      {
-        "title": "Clean ABAP: Do Not Put Logic in Constructors",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#do-not-put-logic-in-constructors"
-      }
-    ]
+    }
   },
   {
     "ruleId": "max-nesting",
@@ -1778,13 +1289,7 @@ export const RULES = [
     },
     "parameters": {
       "MAX_DEPTH": "Maximum allowable nesting depth of IF/CASE/LOOP/DO/WHILE/TRY control blocks"
-    },
-    "references": [
-      {
-        "title": "Clean ABAP: Keep Nesting Depth Low",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#keep-nesting-depth-low"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-sy-modify",
@@ -1804,13 +1309,7 @@ export const RULES = [
         "System fields modification SAP",
         "Clean ABAP Code Integrity"
       ]
-    },
-    "references": [
-      {
-        "title": "Clean ABAP: Do Not Overwrite System Fields",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-returning",
@@ -1833,17 +1332,7 @@ export const RULES = [
         "pref-returning",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-class-exc",
@@ -1866,17 +1355,7 @@ export const RULES = [
         "pref-class-exc",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-prod-assert",
@@ -1896,13 +1375,7 @@ export const RULES = [
         "Avoid ASSERT in production SAP",
         "Clean ABAP Exception Handling"
       ]
-    },
-    "references": [
-      {
-        "title": "Clean ABAP: Use Assertions Only in Tests",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-raise-shortdump",
@@ -1922,13 +1395,7 @@ export const RULES = [
         "ST22 Dump Elimination",
         "Clean ABAP Resilience"
       ]
-    },
-    "references": [
-      {
-        "title": "Clean ABAP: Prefer Exceptions Over Shortdumps",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-metaprogramming",
@@ -1949,17 +1416,7 @@ export const RULES = [
         "Code Injection SAP",
         "ABAP Cloud Security"
       ]
-    },
-    "references": [
-      {
-        "title": "CWE-94: Improper Control of Generation of Code",
-        "url": "https://cwe.mitre.org/data/definitions/94.html"
-      },
-      {
-        "title": "SAP Clean Core Cloud Guidelines",
-        "url": "https://help.sap.com"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-kernel-call",
@@ -1979,13 +1436,7 @@ export const RULES = [
         "EXEC SQL SAP Security",
         "Clean Core Cloud Compliance"
       ]
-    },
-    "references": [
-      {
-        "title": "SAP Clean Core Guide for ABAP Cloud",
-        "url": "https://help.sap.com"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-auth-check",
@@ -2006,13 +1457,7 @@ export const RULES = [
         "Data Security SAP",
         "ATC Security Check"
       ]
-    },
-    "references": [
-      {
-        "title": "SAP Help: Implementing Authorization Checks",
-        "url": "https://help.sap.com"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-order-by",
@@ -2033,13 +1478,7 @@ export const RULES = [
         "UP TO 1 ROWS bug",
         "Clean ABAP Sorting Guidelines"
       ]
-    },
-    "references": [
-      {
-        "title": "Clean ABAP: Order by in Queries",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#order-by-in-queries"
-      }
-    ]
+    }
   },
   {
     "ruleId": "max-cyclo-comp",
@@ -2063,13 +1502,7 @@ export const RULES = [
     },
     "parameters": {
       "MAX_COMPLEXITY": "Maximum allowed cyclomatic complexity score per method (default threshold: 10)"
-    },
-    "references": [
-      {
-        "title": "Clean ABAP: Keep Complexity Low",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-final-cls",
@@ -2096,17 +1529,7 @@ export const RULES = [
         "pref-final-cls",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-magic-numbers",
@@ -2129,17 +1552,7 @@ export const RULES = [
         "no-magic-numbers",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-insert",
@@ -2162,17 +1575,7 @@ export const RULES = [
         "pref-insert",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-like-objects",
@@ -2195,17 +1598,7 @@ export const RULES = [
         "no-like-objects",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-static-cls",
@@ -2228,17 +1621,7 @@ export const RULES = [
         "no-static-cls",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-pred-name",
@@ -2261,17 +1644,7 @@ export const RULES = [
         "pref-pred-name",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "max-inherit",
@@ -2295,13 +1668,7 @@ export const RULES = [
     },
     "parameters": {
       "MAX_DEPTH": "Maximum allowable inheritance depth levels from standard root object"
-    },
-    "references": [
-      {
-        "title": "Clean ABAP: Favor Composition Over Inheritance",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#favor-composition-over-inheritance"
-      }
-    ]
+    }
   },
   {
     "ruleId": "max-attributes",
@@ -2325,13 +1692,7 @@ export const RULES = [
     },
     "parameters": {
       "MAX_ATTRIBUTES": "Maximum allowed instance and static attributes per class"
-    },
-    "references": [
-      {
-        "title": "Clean ABAP: Keep Classes Small and Cohesive",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-catch-root",
@@ -2351,13 +1712,7 @@ export const RULES = [
         "Black Hole Exception SAP",
         "Clean ABAP Exception Handling"
       ]
-    },
-    "references": [
-      {
-        "title": "Clean ABAP: Catch Specific Exceptions",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#catch-specific-exceptions"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-msg-raising",
@@ -2380,17 +1735,7 @@ export const RULES = [
         "no-msg-raising",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-nested-try",
@@ -2413,17 +1758,7 @@ export const RULES = [
         "no-nested-try",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-raise-cx-sy",
@@ -2443,13 +1778,7 @@ export const RULES = [
         "Clean ABAP Domain Exceptions",
         "Error Handling Best Practices SAP"
       ]
-    },
-    "references": [
-      {
-        "title": "Clean ABAP: Define Dedicated Exception Classes",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-check-subrc",
@@ -2478,17 +1807,7 @@ export const RULES = [
         "pref-check-subrc",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-auth-subrc",
@@ -2510,17 +1829,7 @@ export const RULES = [
         "Clean ABAP Authorization",
         "Privilege Escalation SAP"
       ]
-    },
-    "references": [
-      {
-        "title": "CWE-862: Missing Authorization",
-        "url": "https://cwe.mitre.org/data/definitions/862.html"
-      },
-      {
-        "title": "Clean ABAP: Check sy-subrc Promptly",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#check-sy-subrc-promptly"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-client-spec",
@@ -2540,13 +1849,7 @@ export const RULES = [
         "Multi-tenant isolation SAP BTP",
         "GDPR Data Isolation ABAP"
       ]
-    },
-    "references": [
-      {
-        "title": "SAP Help: Client Handling in ABAP Cloud",
-        "url": "https://help.sap.com"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-transport",
@@ -2567,13 +1870,7 @@ export const RULES = [
         "Clean ABAP Table Mutations",
         "SAP Memory Optimization"
       ]
-    },
-    "references": [
-      {
-        "title": "Clean ABAP: Use TRANSPORTING when Modifying Internal Tables",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-str-func",
@@ -2605,17 +1902,7 @@ export const RULES = [
         "pref-str-func",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-calc-op",
@@ -2638,17 +1925,7 @@ export const RULES = [
         "pref-calc-op",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-early-ret",
@@ -2675,17 +1952,7 @@ export const RULES = [
         "pref-early-ret",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-unused-vars",
@@ -2708,17 +1975,7 @@ export const RULES = [
         "no-unused-vars",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-param-escape",
@@ -2741,17 +1998,7 @@ export const RULES = [
         "no-param-escape",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-case",
@@ -2777,17 +2024,7 @@ export const RULES = [
         "pref-case",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-inline-len",
@@ -2810,17 +2047,7 @@ export const RULES = [
         "no-inline-len",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "max-one-stmt",
@@ -2841,13 +2068,7 @@ export const RULES = [
         "Debugger Line Stepping SAP",
         "Clean Code Formatting"
       ]
-    },
-    "references": [
-      {
-        "title": "Clean ABAP: One Statement per Line",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#one-statement-per-line"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-dash-in-form",
@@ -2870,17 +2091,7 @@ export const RULES = [
         "no-dash-in-form",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-inline",
@@ -2903,17 +2114,7 @@ export const RULES = [
         "pref-inline",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-final-data",
@@ -2936,17 +2137,7 @@ export const RULES = [
         "pref-final-data",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-friends",
@@ -2969,17 +2160,7 @@ export const RULES = [
         "no-friends",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-msg-cls",
@@ -3002,17 +2183,7 @@ export const RULES = [
         "pref-msg-cls",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-exc-overlap",
@@ -3035,17 +2206,7 @@ export const RULES = [
         "no-exc-overlap",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-rfc-err",
@@ -3066,13 +2227,7 @@ export const RULES = [
         "SYSTEM_FAILURE RFC",
         "Resilient SAP Integration"
       ]
-    },
-    "references": [
-      {
-        "title": "SAP Help: Reliable RFC Invocations",
-        "url": "https://help.sap.com"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-many-parens",
@@ -3095,17 +2250,7 @@ export const RULES = [
         "no-many-parens",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-pass-by-ref",
@@ -3126,13 +2271,7 @@ export const RULES = [
         "Clean ABAP Method Parameters",
         "SAP Memory Management"
       ]
-    },
-    "references": [
-      {
-        "title": "Clean ABAP: Pass by Reference for Performance",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#pass-by-reference-for-performance"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-mod-std-table",
@@ -3157,13 +2296,7 @@ export const RULES = [
     "parameters": {
       "OWN_TABLES": "Regex pattern matching custom namespace tables permitted for direct mutation (default: ^[yz/])",
       "REPORT_DYNAMIC": "Report dynamic database statements targeting unverified table variables"
-    },
-    "references": [
-      {
-        "title": "Clean Core Extensibility Guide",
-        "url": "https://help.sap.com"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-dynamic-stmt",
@@ -3188,17 +2321,7 @@ export const RULES = [
     "parameters": {
       "CHECK_DYNAMIC_SQL": "Detect dynamic table names, column projections, and WHERE clauses in OpenSQL",
       "IGNORE_RAP_QUERY_PROVIDER": "Allow dynamic queries inside custom RAP query provider implementations (IF_RAP_QUERY_PROVIDER)"
-    },
-    "references": [
-      {
-        "title": "CWE-89: SQL Injection",
-        "url": "https://cwe.mitre.org/data/definitions/89.html"
-      },
-      {
-        "title": "Clean ABAP: Prefer Static Over Dynamic",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-pub-ctor",
@@ -3221,17 +2344,7 @@ export const RULES = [
         "pref-pub-ctor",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-declarations",
@@ -3258,17 +2371,7 @@ export const RULES = [
         "pref-declarations",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-unnec-return",
@@ -3291,17 +2394,7 @@ export const RULES = [
         "no-unnec-return",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-mix-returning",
@@ -3324,17 +2417,7 @@ export const RULES = [
         "no-mix-returning",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-overw-builtin",
@@ -3357,17 +2440,7 @@ export const RULES = [
         "no-overw-builtin",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-is-initial",
@@ -3390,17 +2463,7 @@ export const RULES = [
         "pref-is-initial",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-ignored-return",
@@ -3423,17 +2486,7 @@ export const RULES = [
         "no-ignored-return",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-downcast",
@@ -3460,17 +2513,7 @@ export const RULES = [
         "pref-downcast",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-mod-loop-tab",
@@ -3501,13 +2544,7 @@ export const RULES = [
       "CHECK_SORT": "Detect SORT statements targeting the loop table",
       "CHECK_SORT_ANY": "Detect SORT statements on any table inside a loop",
       "CHECK_COLLECT": "Detect COLLECT statements targeting the loop table"
-    },
-    "references": [
-      {
-        "title": "Clean ABAP: Do Not Change the Table You Are Looping",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#do-not-change-the-table-you-are-looping"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-hardcoded-env",
@@ -3537,13 +2574,7 @@ export const RULES = [
       "CHECK_OPSYS": "Detect operating system checks (sy-opsys)",
       "CHECK_UNAME": "Detect hardcoded user names (sy-uname) in conditional branches",
       "ONLY_CONDITIONAL": "Only flag occurrences when used inside conditional comparisons (IF, CASE)"
-    },
-    "references": [
-      {
-        "title": "SAP Clean Core Strategy Guide",
-        "url": "https://help.sap.com"
-      }
-    ]
+    }
   },
   {
     "ruleId": "max-line-len",
@@ -3567,13 +2598,7 @@ export const RULES = [
     },
     "parameters": {
       "MAX_LENGTH": "Maximum allowed character length per source code line (industry standard: 120)"
-    },
-    "references": [
-      {
-        "title": "Clean ABAP: Keep Line Length Reasonable",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-naming-vars",
@@ -3602,17 +2627,7 @@ export const RULES = [
         "pref-naming-vars",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-name-members",
@@ -3650,17 +2665,7 @@ export const RULES = [
         "pref-name-members",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-name-objects",
@@ -3699,17 +2704,7 @@ export const RULES = [
         "pref-name-objects",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-expand-macro",
@@ -3732,17 +2727,7 @@ export const RULES = [
         "pref-expand-macro",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-bad-indent",
@@ -3768,17 +2753,7 @@ export const RULES = [
         "no-bad-indent",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-dead-code",
@@ -3801,17 +2776,7 @@ export const RULES = [
         "no-dead-code",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-keyword-name",
@@ -3834,17 +2799,7 @@ export const RULES = [
         "no-keyword-name",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-join-type",
@@ -3867,17 +2822,7 @@ export const RULES = [
         "pref-join-type",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-std-table",
@@ -3900,17 +2845,7 @@ export const RULES = [
         "pref-std-table",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-is-supplied",
@@ -3933,17 +2868,7 @@ export const RULES = [
         "pref-is-supplied",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-sy",
@@ -3966,17 +2891,7 @@ export const RULES = [
         "pref-sy",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-unfilt-dml",
@@ -3997,13 +2912,7 @@ export const RULES = [
         "Catastrophic Data Loss Prevention",
         "OpenSQL Data Integrity"
       ]
-    },
-    "references": [
-      {
-        "title": "Clean ABAP: Safe DML Operations",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-concat-loop",
@@ -4024,13 +2933,7 @@ export const RULES = [
         "concat_lines_of Clean ABAP",
         "String Buffer Performance"
       ]
-    },
-    "references": [
-      {
-        "title": "Clean ABAP: Avoid String Concatenation in Loops",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-dup-literals",
@@ -4057,17 +2960,7 @@ export const RULES = [
         "no-dup-literals",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-filter",
@@ -4090,17 +2983,7 @@ export const RULES = [
         "pref-filter",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-neg-cond",
@@ -4123,17 +3006,7 @@ export const RULES = [
         "no-neg-cond",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "max-bool-expr",
@@ -4157,13 +3030,7 @@ export const RULES = [
     },
     "parameters": {
       "MAX_BOOLEAN_EXPRESSIONS": "Maximum allowed boolean operators (AND, OR, NOT) in a single condition"
-    },
-    "references": [
-      {
-        "title": "Clean ABAP: Decompose Complex Conditions",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#decompose-complex-conditions"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-late-sys-idx",
@@ -4186,17 +3053,7 @@ export const RULES = [
         "no-late-sys-idx",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-unhandled-eml",
@@ -4221,13 +3078,7 @@ export const RULES = [
     "parameters": {
       "CHECK_MODIFY": "Enforce FAILED and REPORTED on MODIFY ENTITY / ENTITIES statements",
       "CHECK_READ": "Enforce FAILED and REPORTED on READ ENTITY / ENTITIES statements"
-    },
-    "references": [
-      {
-        "title": "SAP Help: Handling Responses in RAP EML",
-        "url": "https://help.sap.com"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-empty-override",
@@ -4254,17 +3105,7 @@ export const RULES = [
         "no-empty-override",
         "anti-patterns"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-composition",
@@ -4290,17 +3131,7 @@ export const RULES = [
         "pref-composition",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-intf-segreg",
@@ -4326,17 +3157,7 @@ export const RULES = [
         "pref-intf-segreg",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-single-letter",
@@ -4362,17 +3183,7 @@ export const RULES = [
         "no-single-letter",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "pref-factory-name",
@@ -4398,17 +3209,7 @@ export const RULES = [
         "pref-factory-name",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-hungarian",
@@ -4436,17 +3237,7 @@ export const RULES = [
         "no-hungarian",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   },
   {
     "ruleId": "max-returns",
@@ -4470,13 +3261,7 @@ export const RULES = [
     },
     "parameters": {
       "MAX_RETURNS": "Maximum allowed total return points (RETURN, EXIT) within a single method"
-    },
-    "references": [
-      {
-        "title": "Clean ABAP: Return Early When Nothing Else to Do",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#return-early-when-nothing-else-to-do"
-      }
-    ]
+    }
   },
   {
     "ruleId": "no-instance-of",
@@ -4502,17 +3287,7 @@ export const RULES = [
         "no-instance-of",
         "clean-abap"
       ]
-    },
-    "references": [
-      {
-        "title": "Official SAP Clean ABAP Style Guide",
-        "url": "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
-      },
-      {
-        "title": "SAP ABAP Keyword Documentation",
-        "url": "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/index.htm"
-      }
-    ]
+    }
   }
 ];
 

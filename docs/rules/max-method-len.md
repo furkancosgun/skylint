@@ -75,11 +75,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_MAX_METHOD_LEN
 ```
 
-## References & Standards
-
-* [Clean ABAP: Keep Methods Small](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#keep-methods-small)
-* [Clean ABAP: Do Not Put Logic in Constructors](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#do-not-put-logic-in-constructors)
-
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_MAX_METHOD_LEN`

@@ -70,10 +70,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_MAX_CYCLO_COMP
 ```
 
-## References & Standards
-
-* [Clean ABAP: Keep Complexity Low](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md)
-
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_MAX_CYCLO_COMP`

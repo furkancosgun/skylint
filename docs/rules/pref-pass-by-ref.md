@@ -55,10 +55,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_PASS_BY_REF
 ```
 
-## References & Standards
-
-* [Clean ABAP: Pass by Reference for Performance](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#pass-by-reference-for-performance)
-
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_PREF_PASS_BY_REF`

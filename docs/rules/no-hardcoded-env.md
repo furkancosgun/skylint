@@ -73,10 +73,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_HARDCODED_ENV
 ```
 
-## References & Standards
-
-* [SAP Clean Core Strategy Guide](https://help.sap.com)
-
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_HARDCODED_ENV`

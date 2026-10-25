@@ -49,10 +49,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_KERNEL_CALL
 ```
 
-## References & Standards
-
-* [SAP Clean Core Guide for ABAP Cloud](https://help.sap.com)
-
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_KERNEL_CALL`

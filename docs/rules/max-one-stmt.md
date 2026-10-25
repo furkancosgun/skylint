@@ -53,10 +53,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_MAX_ONE_STMT
 ```
 
-## References & Standards
-
-* [Clean ABAP: One Statement per Line](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#one-statement-per-line)
-
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_MAX_ONE_STMT`

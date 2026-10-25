@@ -73,10 +73,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_UNHANDLED_EML
 ```
 
-## References & Standards
-
-* [SAP Help: Handling Responses in RAP EML](https://help.sap.com)
-
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_UNHANDLED_EML`

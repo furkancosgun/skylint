@@ -71,11 +71,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_EMPTY_FAE
 ```
 
-## References & Standards
-
-* [Clean ABAP: Check Before FOR ALL ENTRIES](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#check-before-for-all-entries)
-* [SAP Note 48230: FOR ALL ENTRIES with empty table](https://me.sap.com/notes/48230)
-
 ## Technical Details
 
 * **Native ATC Class:** `ZCL_SKYLINT_NO_EMPTY_FAE`
