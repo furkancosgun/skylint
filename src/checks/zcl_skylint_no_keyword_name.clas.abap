@@ -21,6 +21,16 @@ CLASS zcl_skylint_no_keyword_name DEFINITION
       IMPORTING iv_name      TYPE string
       RETURNING VALUE(rv_is) TYPE abap_bool.
 
+    METHODS check_decl_statement
+      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
+
+    METHODS check_inline_declarations
+      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
+
+    METHODS extract_name_from_paren
+      IMPORTING iv_lexeme      TYPE string
+      RETURNING VALUE(rv_name) TYPE string.
+
 ENDCLASS.
 
 
@@ -36,68 +46,83 @@ CLASS zcl_skylint_no_keyword_name IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_name  TYPE string.
-    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_inner TYPE string.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
-        WHEN 'DATA' OR 'CONSTANTS' OR 'STATICS' OR 'TYPES'.
-          ls_token = zcl_skylint_ast_util=>get_token( is_statement = <ls_statement>
-                                                      iv_index     = 2 ).
-          lv_name = to_upper( ls_token-lexeme ).
-          IF lv_name = 'BEGIN'.
-            ls_token = zcl_skylint_ast_util=>get_token_after( is_statement = <ls_statement>
-                                                              iv_lexeme    = 'OF' ).
-            lv_name = to_upper( ls_token-lexeme ).
-          ENDIF.
-
-          IF lv_name IS NOT INITIAL AND is_abap_keyword( lv_name ) = abap_true.
-            report_token( is_statement    = <ls_statement>
-                          is_token        = ls_token
-                          iv_finding_code = c_finding_codes-keyword_name ).
-          ENDIF.
-
-        WHEN 'FIELD-SYMBOLS'.
-          ls_token = zcl_skylint_ast_util=>get_token( is_statement = <ls_statement>
-                                                      iv_index     = 2 ).
-          lv_name = to_upper( ls_token-lexeme ).
-          REPLACE ALL OCCURRENCES OF '<' IN lv_name WITH ''.
-          REPLACE ALL OCCURRENCES OF '>' IN lv_name WITH ''.
-          IF lv_name IS NOT INITIAL AND is_abap_keyword( lv_name ) = abap_true.
-            report_token( is_statement    = <ls_statement>
-                          is_token        = ls_token
-                          iv_finding_code = c_finding_codes-keyword_name ).
-          ENDIF.
+        WHEN 'DATA' OR 'CONSTANTS' OR 'STATICS' OR 'TYPES' OR 'FIELD-SYMBOLS'.
+          check_decl_statement( <ls_statement> ).
 
         WHEN OTHERS.
-          LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-            lv_name = to_upper( <ls_token>-lexeme ).
-            IF matches( val   = lv_name
-                        regex = '^DATA\(.+\)$' ).
-              lv_inner = substring( val = lv_name
-                                    off = 5
-                                    len = strlen( lv_name ) - 6 ).
-              IF is_abap_keyword( lv_inner ) = abap_true.
-                report_token( is_statement    = <ls_statement>
-                              is_token        = <ls_token>
-                              iv_finding_code = c_finding_codes-keyword_name ).
-              ENDIF.
-            ELSEIF matches( val   = lv_name
-                            regex = '^FIELD-SYMBOL\(<.+>\)$' ).
-              lv_inner = substring( val = lv_name
-                                    off = 14
-                                    len = strlen( lv_name ) - 16 ).
-              IF is_abap_keyword( lv_inner ) = abap_true.
-                report_token( is_statement    = <ls_statement>
-                              is_token        = <ls_token>
-                              iv_finding_code = c_finding_codes-keyword_name ).
-              ENDIF.
-            ENDIF.
-          ENDLOOP.
+          check_inline_declarations( <ls_statement> ).
       ENDCASE.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD check_decl_statement.
+    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_name  TYPE string.
+
+    IF zcl_skylint_ast_util=>find_token_sequence(
+           is_statement = is_statement
+           it_expected  = VALUE #( ( `BEGIN` ) ( `OF` ) ) ) > 0.
+      ls_token = zcl_skylint_ast_util=>get_token_after(
+          is_statement = is_statement
+          iv_lexeme    = 'OF' ).
+    ELSEIF zcl_skylint_ast_util=>find_token_sequence(
+               is_statement = is_statement
+               it_expected  = VALUE #( ( `END` ) ( `OF` ) ) ) > 0.
+      RETURN.
+    ELSE.
+      ls_token = zcl_skylint_ast_util=>get_token_after(
+          is_statement = is_statement
+          iv_lexeme    = is_statement-keyword ).
+    ENDIF.
+
+    lv_name = to_upper( ls_token-lexeme ).
+    IF lv_name CS '<'.
+      REPLACE ALL OCCURRENCES OF '<' IN lv_name WITH ''.
+    ENDIF.
+    IF lv_name CS '>'.
+      REPLACE ALL OCCURRENCES OF '>' IN lv_name WITH ''.
+    ENDIF.
+
+    IF lv_name IS NOT INITIAL AND is_abap_keyword( lv_name ) = abap_true.
+      report_token( is_statement    = is_statement
+                    is_token        = ls_token
+                    iv_finding_code = c_finding_codes-keyword_name ).
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD check_inline_declarations.
+    DATA lv_name TYPE string.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_ref>   TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+
+    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
+      LOOP AT <ls_token>-references ASSIGNING <ls_ref>.
+        IF <ls_ref>-kind <> if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
+          CONTINUE.
+        ENDIF.
+
+        IF    <ls_ref>-usage_mode = if_ci_atc_source_code_provider=>usage_modes-definition_with_write
+           OR <ls_ref>-usage_mode = if_ci_atc_source_code_provider=>usage_modes-definition_with_assign.
+          lv_name = extract_name_from_paren( <ls_token>-lexeme ).
+          IF lv_name CS '<'.
+            REPLACE ALL OCCURRENCES OF '<' IN lv_name WITH ''.
+          ENDIF.
+          IF lv_name CS '>'.
+            REPLACE ALL OCCURRENCES OF '>' IN lv_name WITH ''.
+          ENDIF.
+
+          IF lv_name IS NOT INITIAL AND is_abap_keyword( lv_name ) = abap_true.
+            report_token( is_statement    = is_statement
+                          is_token        = <ls_token>
+                          iv_finding_code = c_finding_codes-keyword_name ).
+            RETURN.
+          ENDIF.
+        ENDIF.
+      ENDLOOP.
     ENDLOOP.
   ENDMETHOD.
 
@@ -117,5 +142,33 @@ CLASS zcl_skylint_no_keyword_name IMPLEMENTATION.
         OR 'ROLLBACK'.
         rv_is = abap_true.
     ENDCASE.
+  ENDMETHOD.
+
+  METHOD extract_name_from_paren.
+    DATA lv_len TYPE i.
+    DATA lv_pos TYPE i.
+
+    rv_name = iv_lexeme.
+    lv_pos = find( val = iv_lexeme
+                   sub = '(' ).
+    IF lv_pos < 0.
+      RETURN.
+    ENDIF.
+
+    lv_pos += 1.
+    lv_len = strlen( iv_lexeme ) - lv_pos.
+    IF     lv_len > 0
+       AND substring( val = iv_lexeme
+                      off = strlen( iv_lexeme ) - 1
+                      len = 1 ) = ')'.
+      lv_len -= 1.
+    ENDIF.
+
+    IF lv_len > 0.
+      rv_name = substring( val = iv_lexeme
+                           off = lv_pos
+                           len = lv_len ).
+    ENDIF.
+    rv_name = condense( rv_name ).
   ENDMETHOD.
 ENDCLASS.
