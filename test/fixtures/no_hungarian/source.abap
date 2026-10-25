@@ -1,3 +1,5 @@
+TYPES ty_order TYPE i.
+
 CLASS lcl_bad_naming DEFINITION.
   PUBLIC SECTION.
     DATA mv_value TYPE i.
