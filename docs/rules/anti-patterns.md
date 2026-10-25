@@ -1,22 +1,23 @@
 ---
-title: "Anti-Patterns & Bad Practices (49 Rules)"
+title: "Anti-Patterns & Bad Practices (50 Rules)"
 description: "Discouraged language constructs, legacy statements, and redundant syntax. Comprehensive reference, finding codes, and Clean ABAP examples for Anti-Patterns & Bad Practices."
 category: "anti-patterns"
 keywords: "Clean ABAP, ABAP Cloud, SAP ATC, Anti-Patterns & Bad Practices, S/4HANA Readiness, SAP BTP, Steampunk"
 ---
 
-# Anti-Patterns & Bad Practices (49 Rules)
+# Anti-Patterns & Bad Practices (50 Rules)
 
 Discouraged language constructs, legacy statements, and redundant syntax.
 
 ::: tip Category Overview
-This category enforces **49 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
+This category enforces **50 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
 :::
 
 ## Rules in this Category
 
 | Rule Name | Native ATC Class | Suppression Tag | Automated QuickFix |
 |---|---|:---:|:---:|
+| [Avoid Loops That Execute At Most Once](/rules/no-single-iter) | `ZCL_SKYLINT_NO_SINGLE_ITER` | <code>#EC NO_SINGLE_ITER</code> | - |
 | [Avoid Obsolete CALL METHOD](/rules/no-call-method) | `ZCL_SKYLINT_NO_CALL_METHOD` | <code>#EC NO_CALL_METHOD</code> | ⚡ Ready |
 | [Avoid WITH DEFAULT KEY](/rules/no-default-key) | `ZCL_SKYLINT_NO_DEFAULT_KEY` | <code>#EC NO_DEFAULT_KEY</code> | ⚡ Ready |
 | [Avoid Redundant ME-> Self Reference](/rules/no-me-reference) | `ZCL_SKYLINT_NO_ME_REFERENCE` | <code>#EC NO_ME_REFERENCE</code> | - |

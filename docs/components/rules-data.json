@@ -1,5 +1,62 @@
 [
   {
+    "ruleId": "no-unchained-exc",
+    "title": "Chain Caught Exceptions When Raising (PREVIOUS)",
+    "className": "ZCL_SKYLINT_NO_UNCHAINED_EXC",
+    "checkName": "ZSKYLINT_NO_UNCHAINED_EXC",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "NO_UNCHAINED_EXC",
+    "description": "Chain Caught Exceptions When Raising (PREVIOUS)",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "relatedRules": [
+      "no-catch-root",
+      "no-raise-cx-sy",
+      "pref-class-exc"
+    ],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "no-nested-cond",
+    "title": "Avoid Nested COND or SWITCH Expressions",
+    "className": "ZCL_SKYLINT_NO_NESTED_COND",
+    "checkName": "ZSKYLINT_NO_NESTED_COND",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "NO_NESTED_COND",
+    "description": "Avoid Nested COND or SWITCH Expressions",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "relatedRules": [
+      "pref-cond",
+      "pref-switch",
+      "max-nesting"
+    ],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "no-single-iter",
+    "title": "Avoid Loops That Execute At Most Once",
+    "className": "ZCL_SKYLINT_NO_SINGLE_ITER",
+    "checkName": "ZSKYLINT_NO_SINGLE_ITER",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "NO_SINGLE_ITER",
+    "description": "Avoid Loops That Execute At Most Once",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "relatedRules": [
+      "no-dead-code",
+      "no-unreachable",
+      "pref-early-ret"
+    ],
+    "defaultParameters": []
+  },
+  {
     "ruleId": "pref-downport",
     "title": "Check Downport Compatibility (7.40+ Modern Constructs)",
     "className": "ZCL_SKYLINT_PREF_DOWNPORT",

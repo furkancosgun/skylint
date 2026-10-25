@@ -1,0 +1,6 @@
+[
+  { "target": "TEST_001", "code": "NO_NEST_CD", "line": 5, "column": 37 },
+  { "target": "TEST_002", "code": "NO_NEST_CD", "line": 5, "column": 37 },
+  { "target": "TEST_003", "code": null },
+  { "target": "TEST_004", "code": null }
+]

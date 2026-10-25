@@ -6,6 +6,15 @@
   },
   "selectedChecks": [
     {
+      "checkName": "ZSKYLINT_NO_UNCHAINED_EXC"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_NESTED_COND"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_SINGLE_ITER"
+    },
+    {
       "checkName": "ZSKYLINT_PREF_DOWNPORT"
     },
     {

@@ -1,0 +1,7 @@
+[
+  { "target": "TEST_001", "code": "NO_1_LOOP", "line": 5, "column": 6 },
+  { "target": "TEST_002", "code": "NO_1_LOOP", "line": 3, "column": 6 },
+  { "target": "TEST_003", "code": null },
+  { "target": "TEST_004", "code": null },
+  { "target": "TEST_005", "code": null }
+]

@@ -4,13 +4,13 @@
       "key": "clean-abap",
       "title": "Clean ABAP & Modern Syntax",
       "description": "Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.",
-      "count": 49
+      "count": 51
     },
     {
       "key": "anti-patterns",
       "title": "Anti-Patterns & Bad Practices",
       "description": "Discouraged language constructs, legacy statements, and redundant syntax.",
-      "count": 49
+      "count": 50
     },
     {
       "key": "performance",
@@ -32,6 +32,42 @@
     }
   ],
   "rules": [
+    {
+      "ruleId": "no-unchained-exc",
+      "title": "Chain Caught Exceptions When Raising (PREVIOUS)",
+      "className": "ZCL_SKYLINT_NO_UNCHAINED_EXC",
+      "description": "Chain Caught Exceptions When Raising (PREVIOUS)",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "NO_UNCHAINED_EXC",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "no-nested-cond",
+      "title": "Avoid Nested COND or SWITCH Expressions",
+      "className": "ZCL_SKYLINT_NO_NESTED_COND",
+      "description": "Avoid Nested COND or SWITCH Expressions",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "NO_NESTED_COND",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "no-single-iter",
+      "title": "Avoid Loops That Execute At Most Once",
+      "className": "ZCL_SKYLINT_NO_SINGLE_ITER",
+      "description": "Avoid Loops That Execute At Most Once",
+      "category": "anti-patterns",
+      "categoryTitle": "Anti-Patterns & Bad Practices",
+      "pseudoComment": "NO_SINGLE_ITER",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
     {
       "ruleId": "pref-downport",
       "title": "Check Downport Compatibility (7.40+ Modern Constructs)",

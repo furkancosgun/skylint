@@ -23,6 +23,90 @@ export const CATEGORIES = {
 
 export const RULES = [
   {
+    "ruleId": "no-unchained-exc",
+    "title": "Chain Caught Exceptions When Raising (PREVIOUS)",
+    "rationale": "When catching an exception and raising a new domain exception, omitting the PREVIOUS parameter discards the root cause, original system message, and kernel call stack. Always chain the caught exception instance into the new exception via EXPORTING previous = lx_err to preserve end-to-end diagnostic observability.",
+    "className": "ZCL_SKYLINT_NO_UNCHAINED_EXC",
+    "pseudoComment": "NO_UNCHAINED_EXC",
+    "category": "clean-abap",
+    "example": {
+      "bad": "TRY.\n  step( ).\nCATCH cx_sql INTO DATA(lx_sql).\n  RAISE EXCEPTION NEW zcx_order_error( ).\nENDTRY.",
+      "good": "TRY.\n  step( ).\nCATCH cx_sql INTO DATA(lx_sql).\n  RAISE EXCEPTION NEW zcx_order_error( previous = lx_sql ).\nENDTRY."
+    },
+    "seo": {
+      "description": "Chain Caught Exceptions When Raising (PREVIOUS) - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud.",
+      "keywords": [
+        "Clean ABAP",
+        "SAP ATC Check",
+        "ABAP Cloud",
+        "S/4HANA Readiness",
+        "no-unchained-exc",
+        "clean-abap"
+      ]
+    },
+    "relatedRules": [
+      "no-catch-root",
+      "no-raise-cx-sy",
+      "pref-class-exc"
+    ]
+  },
+  {
+    "ruleId": "no-nested-cond",
+    "title": "Avoid Nested COND or SWITCH Expressions",
+    "rationale": "Nesting COND or SWITCH constructor expressions inside each other creates deeply indented, hard-to-read expression trees. Modern Clean ABAP guidelines explicitly recommend avoiding nested constructor expressions; instead, separate complex decision branches into focused helper methods or classic CASE constructs.",
+    "className": "ZCL_SKYLINT_NO_NESTED_COND",
+    "pseudoComment": "NO_NESTED_COND",
+    "category": "clean-abap",
+    "example": {
+      "bad": "lv_val = COND #( WHEN cond1 THEN COND #( WHEN cond2 THEN 'A' ELSE 'B' ) ELSE 'C' ).",
+      "good": "lv_val = COND #( WHEN cond1 AND cond2 THEN 'A'\n                 WHEN cond1           THEN 'B'\n                 ELSE                      'C' )."
+    },
+    "seo": {
+      "description": "Avoid Nested COND or SWITCH Expressions - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud.",
+      "keywords": [
+        "Clean ABAP",
+        "SAP ATC Check",
+        "ABAP Cloud",
+        "S/4HANA Readiness",
+        "no-nested-cond",
+        "clean-abap"
+      ]
+    },
+    "relatedRules": [
+      "pref-cond",
+      "pref-switch",
+      "max-nesting"
+    ]
+  },
+  {
+    "ruleId": "no-single-iter",
+    "title": "Avoid Loops That Execute At Most Once",
+    "rationale": "A loop statement (LOOP, WHILE, or DO) containing an unconditional EXIT or RETURN at its top nesting level will execute at most once. This usually indicates an algorithmic bug, a leftover prototyping construct, or the misuse of a loop instead of a conditional block or helper method.",
+    "className": "ZCL_SKYLINT_NO_SINGLE_ITER",
+    "pseudoComment": "NO_SINGLE_ITER",
+    "category": "anti-patterns",
+    "example": {
+      "bad": "LOOP AT lt_items ASSIGNING <ls_item>.\n  process( <ls_item> ).\n  EXIT.\nENDLOOP.",
+      "good": "IF line_exists( lt_items[ 1 ] ).\n  process( lt_items[ 1 ] ).\nENDIF."
+    },
+    "seo": {
+      "description": "Avoid Loops That Execute At Most Once - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud.",
+      "keywords": [
+        "Clean ABAP",
+        "SAP ATC Check",
+        "ABAP Cloud",
+        "S/4HANA Readiness",
+        "no-single-iter",
+        "anti-patterns"
+      ]
+    },
+    "relatedRules": [
+      "no-dead-code",
+      "no-unreachable",
+      "pref-early-ret"
+    ]
+  },
+  {
     "ruleId": "pref-downport",
     "title": "Check Downport Compatibility (7.40+ Modern Constructs)",
     "rationale": "Modern ABAP constructs such as constructor expressions, table expressions, inline declarations, string templates, and functional method chaining do not compile on legacy NetWeaver releases. When a project must remain downport-compatible, these constructs silently raise the required kernel and syntax level. The check keeps that incompatibility visible by reporting each modern construct; it is disabled by default so modern development is unaffected.",
