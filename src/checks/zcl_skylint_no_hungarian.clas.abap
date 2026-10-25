@@ -26,10 +26,6 @@ CLASS zcl_skylint_no_hungarian DEFINITION
                 iv_type      TYPE string DEFAULT ''
       RETURNING VALUE(rv_is) TYPE abap_bool.
 
-    METHODS is_boolean_type
-      IMPORTING iv_type      TYPE string
-      RETURNING VALUE(rv_is) TYPE abap_bool.
-
     METHODS check_decl_name
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
 
@@ -190,17 +186,6 @@ CLASS zcl_skylint_no_hungarian IMPLEMENTATION.
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD is_boolean_type.
-    DATA lv_clean TYPE string.
-
-    rv_is = abap_false.
-    lv_clean = to_upper( condense( iv_type ) ).
-    CASE lv_clean.
-      WHEN 'ABAP_BOOL' OR 'ABAP_BOOLEAN' OR 'FLAG' OR 'XFLAG' OR 'BOOLEAN' OR 'CHAR1' OR 'XFELD'.
-        rv_is = abap_true.
-    ENDCASE.
-  ENDMETHOD.
-
   METHOD is_hungarian.
     DATA lv_clean TYPE string.
 
@@ -214,7 +199,7 @@ CLASS zcl_skylint_no_hungarian IMPLEMENTATION.
       REPLACE ALL OCCURRENCES OF '>' IN lv_clean WITH ''.
     ENDIF.
 
-    IF lv_clean CP 'IS_*' AND is_boolean_type( iv_type ) = abap_true.
+    IF lv_clean CP 'IS_*' AND iv_type = 'ABAP_BOOL'.
       RETURN.
     ENDIF.
 
