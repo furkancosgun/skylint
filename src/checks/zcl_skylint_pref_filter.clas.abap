@@ -126,11 +126,11 @@ CLASS zcl_skylint_pref_filter IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    IF to_upper( lv_append_src ) <> to_upper( lv_work_area ).
+    IF lv_append_src <> lv_work_area.
       RETURN.
     ENDIF.
 
-    IF to_upper( lv_source ) = to_upper( lv_destination ).
+    IF lv_source = lv_destination.
       RETURN.
     ENDIF.
 

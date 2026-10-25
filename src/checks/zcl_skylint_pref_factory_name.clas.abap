@@ -55,9 +55,9 @@ CLASS zcl_skylint_pref_factory_name IMPLEMENTATION.
                                                        iv_index      = 1 ).
     ls_cls_tok = zcl_skylint_ast_util=>get_token_after( is_statement = ls_cls_stmt
                                                         iv_lexeme    = 'CLASS' ).
-    lv_class_name = to_upper( ls_cls_tok-lexeme ).
+    lv_class_name = ls_cls_tok-lexeme.
     IF lv_class_name IS INITIAL.
-      lv_class_name = to_upper( is_procedure-id-main_unit-name ).
+      lv_class_name = is_procedure-id-main_unit-name.
     ENDIF.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_stmt>.
@@ -78,16 +78,15 @@ CLASS zcl_skylint_pref_factory_name IMPLEMENTATION.
       ls_type_tok = zcl_skylint_ast_util=>get_token_after_sequence(
                         is_statement = <ls_stmt>
                         it_expected  = VALUE #( ( `TYPE` ) ( `REF` ) ( `TO` ) ) ).
-      lv_type = to_upper( ls_type_tok-lexeme ).
+      lv_type = ls_type_tok-lexeme.
       IF lv_type <> lv_class_name.
         CONTINUE.
       ENDIF.
 
       ls_meth_tok = zcl_skylint_ast_util=>get_token_after( is_statement = <ls_stmt>
                                                            iv_lexeme    = 'CLASS-METHODS' ).
-      lv_method_name = to_upper( ls_meth_tok-lexeme ).
-
-      IF lv_method_name CP |{ to_upper( mv_prefix ) }*|.
+      lv_method_name = ls_meth_tok-lexeme.
+      IF lv_method_name CP |{ mv_prefix }*|.
         CONTINUE.
       ENDIF.
 

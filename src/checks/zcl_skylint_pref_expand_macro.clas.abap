@@ -82,8 +82,8 @@ CLASS zcl_skylint_pref_expand_macro IMPLEMENTATION.
       IF <ls_statement>-keyword = 'DEFINE'.
         lv_in_macro = abap_true.
         CLEAR ls_macro.
-        ls_macro-name = to_upper( zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
-                                                                          iv_index     = 2 ) ).
+        ls_macro-name = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
+                                                                iv_index     = 2 ).
         CONTINUE.
       ENDIF.
 
@@ -101,8 +101,8 @@ CLASS zcl_skylint_pref_expand_macro IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      lv_macro_name = to_upper( zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
-                                                                        iv_index     = 1 ) ).
+      lv_macro_name = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
+                                                              iv_index     = 1 ).
       IF lv_macro_name IS INITIAL.
         CONTINUE.
       ENDIF.

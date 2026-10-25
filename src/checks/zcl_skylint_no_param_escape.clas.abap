@@ -98,8 +98,8 @@ CLASS zcl_skylint_no_param_escape IMPLEMENTATION.
     rv_idx = 0.
     LOOP AT is_statement-tokens ASSIGNING <ls_tok>.
       IF <ls_tok>-lexeme CP '!*'.
-        lv_raw = to_upper( substring( val = <ls_tok>-lexeme
-                                      off = 1 ) ).
+        lv_raw = substring( val = <ls_tok>-lexeme
+                            off = 1 ).
         IF zcl_skylint_ast_util=>is_abap_keyword( lv_raw ) = abap_true.
           CONTINUE.
         ENDIF.

@@ -670,7 +670,7 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
         IF <ls_ref>-kind <> if_ci_atc_source_code_provider=>compiler_reference_kinds-method.
           CONTINUE.
         ENDIF.
-        lv_full_name = to_upper( <ls_ref>-full_name ).
+        lv_full_name = <ls_ref>-full_name.
         IF    lv_full_name = '\TY:CL_ABAP_REGEX\ME:CREATE_POSIX'
            OR (     lv_full_name CP '\TY:CL_ABAP_MATCHER\ME:*'
                 AND contains( val = lv_full_name
@@ -682,7 +682,7 @@ CLASS zcl_skylint_no_obsolete IMPLEMENTATION.
     ENDLOOP.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      lv_lexeme = to_upper( <ls_token>-lexeme ).
+      lv_lexeme = <ls_token>-lexeme.
       IF    lv_lexeme CP 'CL_ABAP_REGEX=>CREATE_POSIX*'
          OR lv_lexeme CP 'CL_ABAP_MATCHER=>*POSIX*'.
         rv_is = abap_true.

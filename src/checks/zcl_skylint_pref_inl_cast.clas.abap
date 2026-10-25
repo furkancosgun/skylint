@@ -262,7 +262,7 @@ CLASS zcl_skylint_pref_inl_cast IMPLEMENTATION.
     IF strlen( lv_lex ) <= lv_len.
       RETURN.
     ENDIF.
-    IF to_upper( lv_lex(lv_len) ) <> to_upper( iv_name ).
+    IF lv_lex(lv_len) <> iv_name.
       RETURN.
     ENDIF.
 

@@ -194,7 +194,7 @@ CLASS zcl_skylint_no_dup_cond IMPLEMENTATION.
     WHILE lv_idx <= lv_tok_cnt.
       ls_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                   iv_index     = lv_idx ).
-      lv_lexeme = to_upper( ls_token-lexeme ).
+      lv_lexeme = ls_token-lexeme.
 
       IF ls_token-references IS INITIAL AND lv_lexeme = '('.
         lv_depth += 1.

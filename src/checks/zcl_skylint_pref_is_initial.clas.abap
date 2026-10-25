@@ -80,7 +80,7 @@ CLASS zcl_skylint_pref_is_initial IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    lv_clean = to_upper( is_token-lexeme ).
+    lv_clean = is_token-lexeme.
 
     IF is_token-lexeme = `''` OR is_token-lexeme = '``' OR is_token-lexeme = `' '`.
       rv_yes = abap_true.
@@ -106,7 +106,7 @@ CLASS zcl_skylint_pref_is_initial IMPLEMENTATION.
     FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_tok>.
-      IF to_upper( <ls_tok>-lexeme ) <> 'LINES('.
+      IF <ls_tok>-lexeme <> 'LINES('.
         CONTINUE.
       ENDIF.
 
@@ -245,7 +245,7 @@ CLASS zcl_skylint_pref_is_initial IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      IF to_upper( lv_var_lex ) CP 'SY-*' OR to_upper( lv_var_lex ) CP 'SYST-*'.
+      IF lv_var_lex CP 'SY-*' OR lv_var_lex CP 'SYST-*'.
         CONTINUE.
       ENDIF.
 

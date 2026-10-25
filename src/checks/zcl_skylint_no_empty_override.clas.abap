@@ -56,8 +56,8 @@ CLASS zcl_skylint_no_empty_override IMPLEMENTATION.
 
     ls_first_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
                                                          iv_index      = 1 ).
-    lv_method_name = to_upper( zcl_skylint_ast_util=>get_token_lexeme( is_statement = ls_first_stmt
-                                                                       iv_index     = 2 ) ).
+    lv_method_name = zcl_skylint_ast_util=>get_token_lexeme( is_statement = ls_first_stmt
+                                                             iv_index     = 2 ).
 
     IF mv_ignore_ctor = abap_true AND lv_method_name = 'CONSTRUCTOR'.
       RETURN.
@@ -97,7 +97,7 @@ CLASS zcl_skylint_no_empty_override IMPLEMENTATION.
     ENDIF.
 
     LOOP AT is_statement-tokens INTO ls_tok.
-      IF to_upper( ls_tok-lexeme ) CP 'SUPER->*'.
+      IF ls_tok-lexeme CP 'SUPER->*'.
         rv_yes = abap_true.
         RETURN.
       ENDIF.

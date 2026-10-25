@@ -177,7 +177,7 @@ CLASS zcl_skylint_no_self_assign IMPLEMENTATION.
     lv_src_idx = 2.
     ls_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                 iv_index     = lv_src_idx ).
-    IF to_upper( ls_token-lexeme ) = 'EXACT'.
+    IF ls_token-lexeme = 'EXACT'.
       lv_src_idx += 1.
     ENDIF.
 
@@ -218,7 +218,7 @@ CLASS zcl_skylint_no_self_assign IMPLEMENTATION.
     WHILE lv_idx <= lv_cnt.
       ls_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                   iv_index     = lv_idx ).
-      lv_lex = to_upper( ls_token-lexeme ).
+      lv_lex = ls_token-lexeme.
       IF ls_token-references IS INITIAL AND ( lv_lex = 'TO' OR lv_lex = '?TO' ).
         rv_idx = lv_idx.
         RETURN.

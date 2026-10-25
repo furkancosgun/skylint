@@ -156,7 +156,7 @@ CLASS zcl_skylint_no_empty_fae IMPLEMENTATION.
   METHOD clean_table_name.
     DATA lv_len TYPE i.
 
-    rv_name = to_upper( iv_lexeme ).
+    rv_name = iv_lexeme.
     IF rv_name CP '@*'.
       rv_name = rv_name+1.
     ENDIF.

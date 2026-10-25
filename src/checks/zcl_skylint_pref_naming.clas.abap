@@ -302,8 +302,8 @@ CLASS zcl_skylint_pref_naming IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    lv_val = to_upper( condense( iv_text ) ).
-    lv_pat = to_upper( condense( iv_pattern ) ).
+    lv_val = iv_text.
+    lv_pat = iv_pattern.
 
     TRY.
         rv_matches = xsdbool( matches( val  = lv_val
@@ -366,11 +366,11 @@ CLASS zcl_skylint_pref_naming IMPLEMENTATION.
     rv_global = abap_false.
     LOOP AT is_statement-tokens ASSIGNING <ls_tok>.
       IF <ls_tok>-references IS INITIAL.
-        IF to_upper( <ls_tok>-lexeme ) = 'PUBLIC' AND lv_prev <> 'CREATE'.
+        IF <ls_tok>-lexeme = 'PUBLIC' AND lv_prev <> 'CREATE'.
           rv_global = abap_true.
           RETURN.
         ENDIF.
-        lv_prev = to_upper( <ls_tok>-lexeme ).
+        lv_prev = <ls_tok>-lexeme.
       ELSE.
         CLEAR lv_prev.
       ENDIF.
@@ -390,7 +390,7 @@ CLASS zcl_skylint_pref_naming IMPLEMENTATION.
                                                   it_expected  = VALUE #( ( `INHERITING` ) ( `FROM` ) ) ) > 0.
       ls_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
                                                       iv_lexeme    = 'FROM' ).
-      IF to_upper( ls_tok-lexeme ) CP '*CX_*' OR to_upper( ls_tok-lexeme ) = 'CX_ROOT'.
+      IF ls_tok-lexeme CP '*CX_*' OR ls_tok-lexeme = 'CX_ROOT'.
         rv_exception = abap_true.
       ENDIF.
     ENDIF.

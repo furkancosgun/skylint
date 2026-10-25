@@ -63,7 +63,7 @@ CLASS zcl_skylint_pref_composition IMPLEMENTATION.
       ls_super_tok = zcl_skylint_ast_util=>get_token_after_sequence(
                          is_statement = <ls_stmt>
                          it_expected  = VALUE #( ( `INHERITING` ) ( `FROM` ) ) ).
-      lv_super_name = to_upper( ls_super_tok-lexeme ).
+      lv_super_name = ls_super_tok-lexeme.
 
       IF is_exception_class( lv_super_name ) = abap_true.
         CONTINUE.

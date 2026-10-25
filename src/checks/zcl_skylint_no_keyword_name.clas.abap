@@ -71,7 +71,7 @@ CLASS zcl_skylint_no_keyword_name IMPLEMENTATION.
                                                         iv_lexeme    = is_statement-keyword ).
     ENDIF.
 
-    lv_name = to_upper( ls_token-lexeme ).
+    lv_name = ls_token-lexeme.
     IF lv_name CS '<'.
       REPLACE ALL OCCURRENCES OF '<' IN lv_name WITH ''.
     ENDIF.

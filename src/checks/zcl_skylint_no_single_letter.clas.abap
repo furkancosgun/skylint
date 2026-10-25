@@ -118,7 +118,7 @@ CLASS zcl_skylint_no_single_letter IMPLEMENTATION.
     DATA lv_idx   TYPE i.
 
     rv_is = abap_false.
-    lv_clean = to_upper( condense( iv_name ) ).
+    lv_clean = condense( iv_name ).
 
     IF lv_clean CS '<'.
       REPLACE ALL OCCURRENCES OF '<' IN lv_clean WITH ''.
