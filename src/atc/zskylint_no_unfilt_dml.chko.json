@@ -2,8 +2,7 @@
   "formatVersion": "1",
   "header": {
     "description": "Flag DML without WHERE on database tables",
-    "originalLanguage": "en",
-    "abapLanguageVersion": "cloudDevelopment"
+    "originalLanguage": "en"
   },
   "category": "ZSKYLINT_PERFORMANCE",
   "implementingClass": "ZCL_SKYLINT_NO_UNFILT_DML",

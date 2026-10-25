@@ -2,8 +2,7 @@
   "formatVersion": "1",
   "header": {
     "description": "Avoid self-reference ME->",
-    "originalLanguage": "en",
-    "abapLanguageVersion": "cloudDevelopment"
+    "originalLanguage": "en"
   },
   "category": "ZSKYLINT_ANTI_PATTERNS",
   "implementingClass": "ZCL_SKYLINT_NO_ME_REFERENCE",

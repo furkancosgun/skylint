@@ -2,8 +2,7 @@
   "formatVersion": "1",
   "header": {
     "description": "Avoid USING CLIENT or CLIENT SPECIFIED in ABAP SQL",
-    "originalLanguage": "en",
-    "abapLanguageVersion": "cloudDevelopment"
+    "originalLanguage": "en"
   },
   "category": "ZSKYLINT_SECURITY",
   "implementingClass": "ZCL_SKYLINT_NO_CLIENT_SPEC",

@@ -2,8 +2,7 @@
   "formatVersion": "1",
   "header": {
     "description": "Select performance (Avoid SELECT * and SELECT ... ENDSELECT)",
-    "originalLanguage": "en",
-    "abapLanguageVersion": "cloudDevelopment"
+    "originalLanguage": "en"
   },
   "category": "ZSKYLINT_PERFORMANCE",
   "implementingClass": "ZCL_SKYLINT_NO_SELECT_STAR",

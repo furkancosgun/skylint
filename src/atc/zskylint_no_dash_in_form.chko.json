@@ -2,8 +2,7 @@
   "formatVersion": "1",
   "header": {
     "description": "No Dashes in Form Names",
-    "originalLanguage": "en",
-    "abapLanguageVersion": "cloudDevelopment"
+    "originalLanguage": "en"
   },
   "category": "ZSKYLINT_ANTI_PATTERNS",
   "implementingClass": "ZCL_SKYLINT_NO_DASH_IN_FORM",

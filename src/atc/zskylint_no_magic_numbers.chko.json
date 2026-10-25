@@ -2,8 +2,7 @@
   "formatVersion": "1",
   "header": {
     "description": "Avoid magic numbers in code; use named constants",
-    "originalLanguage": "en",
-    "abapLanguageVersion": "cloudDevelopment"
+    "originalLanguage": "en"
   },
   "category": "ZSKYLINT_ANTI_PATTERNS",
   "implementingClass": "ZCL_SKYLINT_NO_MAGIC_NUMBERS",

@@ -2,8 +2,7 @@
   "formatVersion": "1",
   "header": {
     "description": "Avoid MODIFY itab in LOOP without TRANSPORTING clause",
-    "originalLanguage": "en",
-    "abapLanguageVersion": "cloudDevelopment"
+    "originalLanguage": "en"
   },
   "category": "ZSKYLINT_PERFORMANCE",
   "implementingClass": "ZCL_SKYLINT_PREF_TRANSPORT",

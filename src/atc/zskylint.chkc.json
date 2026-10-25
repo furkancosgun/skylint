@@ -2,7 +2,6 @@
   "formatVersion": "1",
   "header": {
     "description": "Skylint Clean ABAP Checks",
-    "originalLanguage": "en",
-    "abapLanguageVersion": "cloudDevelopment"
+    "originalLanguage": "en"
   }
 }

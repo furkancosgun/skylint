@@ -2,8 +2,7 @@
   "formatVersion": "1",
   "header": {
     "description": "Skylint: Security & Robustness",
-    "originalLanguage": "en",
-    "abapLanguageVersion": "cloudDevelopment"
+    "originalLanguage": "en"
   },
   "parentCategory": "ZSKYLINT"
 }

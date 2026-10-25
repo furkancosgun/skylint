@@ -2,8 +2,7 @@
   "formatVersion": "1",
   "header": {
     "description": "Disallow ignoring the return value of functional methods",
-    "originalLanguage": "en",
-    "abapLanguageVersion": "cloudDevelopment"
+    "originalLanguage": "en"
   },
   "category": "ZSKYLINT_ANTI_PATTERNS",
   "implementingClass": "ZCL_SKYLINT_NO_IGNORED_RETURN",

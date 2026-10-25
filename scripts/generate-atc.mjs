@@ -72,7 +72,6 @@ export function generateAtcObjects() {
     header: {
       description: 'Skylint Clean ABAP Checks',
       originalLanguage: 'en',
-      abapLanguageVersion: 'cloudDevelopment',
     },
   };
   fs.writeFileSync(path.join(atcDir, 'zskylint.chkc.json'), JSON.stringify(rootCategoryJson, null, 2) + '\n', 'utf8');
@@ -84,7 +83,6 @@ export function generateAtcObjects() {
       header: {
         description: cat.description,
         originalLanguage: 'en',
-        abapLanguageVersion: 'cloudDevelopment',
       },
       parentCategory: 'ZSKYLINT',
     };
@@ -107,7 +105,6 @@ export function generateAtcObjects() {
       header: {
         description: desc,
         originalLanguage: 'en',
-        abapLanguageVersion: 'cloudDevelopment',
       },
       category: catInfo.code,
       implementingClass: rule.className,
@@ -138,7 +135,6 @@ export function generateAtcObjects() {
     header: {
       description: 'Skylint Default Variant (All Rules)',
       originalLanguage: 'en',
-      abapLanguageVersion: 'cloudDevelopment',
     },
     selectedChecks,
   };

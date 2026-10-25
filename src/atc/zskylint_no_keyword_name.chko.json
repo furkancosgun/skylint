@@ -2,8 +2,7 @@
   "formatVersion": "1",
   "header": {
     "description": "Avoid Using ABAP Keywords as Identifier Names",
-    "originalLanguage": "en",
-    "abapLanguageVersion": "cloudDevelopment"
+    "originalLanguage": "en"
   },
   "category": "ZSKYLINT_ANTI_PATTERNS",
   "implementingClass": "ZCL_SKYLINT_NO_KEYWORD_NAME",

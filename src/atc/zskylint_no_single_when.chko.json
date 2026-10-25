@@ -2,8 +2,7 @@
   "formatVersion": "1",
   "header": {
     "description": "Avoid CASE statements with only one WHEN branch",
-    "originalLanguage": "en",
-    "abapLanguageVersion": "cloudDevelopment"
+    "originalLanguage": "en"
   },
   "category": "ZSKYLINT_ANTI_PATTERNS",
   "implementingClass": "ZCL_SKYLINT_NO_SINGLE_WHEN",

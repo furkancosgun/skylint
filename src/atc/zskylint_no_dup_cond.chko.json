@@ -2,8 +2,7 @@
   "formatVersion": "1",
   "header": {
     "description": "Avoid duplicate branch conditions in IF and CASE",
-    "originalLanguage": "en",
-    "abapLanguageVersion": "cloudDevelopment"
+    "originalLanguage": "en"
   },
   "category": "ZSKYLINT_ANTI_PATTERNS",
   "implementingClass": "ZCL_SKYLINT_NO_DUP_COND",

@@ -2,8 +2,7 @@
   "formatVersion": "1",
   "header": {
     "description": "Unsecure FOR ALL ENTRIES (Missing empty itab check)",
-    "originalLanguage": "en",
-    "abapLanguageVersion": "cloudDevelopment"
+    "originalLanguage": "en"
   },
   "category": "ZSKYLINT_PERFORMANCE",
   "implementingClass": "ZCL_SKYLINT_NO_EMPTY_FAE",

@@ -2,8 +2,7 @@
   "formatVersion": "1",
   "header": {
     "description": "Skylint: Anti-Patterns & Bad Practices",
-    "originalLanguage": "en",
-    "abapLanguageVersion": "cloudDevelopment"
+    "originalLanguage": "en"
   },
   "parentCategory": "ZSKYLINT"
 }

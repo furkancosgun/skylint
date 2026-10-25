@@ -2,8 +2,7 @@
   "formatVersion": "1",
   "header": {
     "description": "Detect Dead Code with Constant Condition",
-    "originalLanguage": "en",
-    "abapLanguageVersion": "cloudDevelopment"
+    "originalLanguage": "en"
   },
   "category": "ZSKYLINT_ANTI_PATTERNS",
   "implementingClass": "ZCL_SKYLINT_NO_DEAD_CODE",

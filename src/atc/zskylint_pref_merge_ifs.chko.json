@@ -2,8 +2,7 @@
   "formatVersion": "1",
   "header": {
     "description": "Merge consecutive nested IF blocks using boolean AND",
-    "originalLanguage": "en",
-    "abapLanguageVersion": "cloudDevelopment"
+    "originalLanguage": "en"
   },
   "category": "ZSKYLINT_CLEAN_ABAP",
   "implementingClass": "ZCL_SKYLINT_PREF_MERGE_IFS",

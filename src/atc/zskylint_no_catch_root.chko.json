@@ -2,8 +2,7 @@
   "formatVersion": "1",
   "header": {
     "description": "Catch specific exceptions instead of generic cx_root",
-    "originalLanguage": "en",
-    "abapLanguageVersion": "cloudDevelopment"
+    "originalLanguage": "en"
   },
   "category": "ZSKYLINT_SECURITY",
   "implementingClass": "ZCL_SKYLINT_NO_CATCH_ROOT",

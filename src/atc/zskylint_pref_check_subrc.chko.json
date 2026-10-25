@@ -2,8 +2,7 @@
   "formatVersion": "1",
   "header": {
     "description": "Check sy-subrc after DB, table and string operations",
-    "originalLanguage": "en",
-    "abapLanguageVersion": "cloudDevelopment"
+    "originalLanguage": "en"
   },
   "category": "ZSKYLINT_SECURITY",
   "implementingClass": "ZCL_SKYLINT_PREF_CHECK_SUBRC",

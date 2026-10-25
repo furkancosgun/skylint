@@ -2,8 +2,7 @@
   "formatVersion": "1",
   "header": {
     "description": "Dangerous Statements (abaplint dangerous_statement)",
-    "originalLanguage": "en",
-    "abapLanguageVersion": "cloudDevelopment"
+    "originalLanguage": "en"
   },
   "category": "ZSKYLINT_SECURITY",
   "implementingClass": "ZCL_SKYLINT_NO_DANGEROUS_STMT",

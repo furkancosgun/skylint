@@ -2,8 +2,7 @@
   "formatVersion": "1",
   "header": {
     "description": "Max one method parameter definition per line",
-    "originalLanguage": "en",
-    "abapLanguageVersion": "cloudDevelopment"
+    "originalLanguage": "en"
   },
   "category": "ZSKYLINT_CLEAN_ABAP",
   "implementingClass": "ZCL_SKYLINT_MAX_PARAM_LINE",

@@ -2,8 +2,7 @@
   "formatVersion": "1",
   "header": {
     "description": "Avoid reading environment system fields (sy-sysid, etc.)",
-    "originalLanguage": "en",
-    "abapLanguageVersion": "cloudDevelopment"
+    "originalLanguage": "en"
   },
   "category": "ZSKYLINT_SECURITY",
   "implementingClass": "ZCL_SKYLINT_NO_HARDCODED_ENV",

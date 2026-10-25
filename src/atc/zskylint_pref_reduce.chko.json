@@ -2,8 +2,7 @@
   "formatVersion": "1",
   "header": {
     "description": "Prefer REDUCE #( ) expression over simple aggregation LOOP",
-    "originalLanguage": "en",
-    "abapLanguageVersion": "cloudDevelopment"
+    "originalLanguage": "en"
   },
   "category": "ZSKYLINT_CLEAN_ABAP",
   "implementingClass": "ZCL_SKYLINT_PREF_REDUCE",

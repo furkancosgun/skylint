@@ -2,8 +2,7 @@
   "formatVersion": "1",
   "header": {
     "description": "SELECT UP TO 1 ROWS requires ORDER BY",
-    "originalLanguage": "en",
-    "abapLanguageVersion": "cloudDevelopment"
+    "originalLanguage": "en"
   },
   "category": "ZSKYLINT_PERFORMANCE",
   "implementingClass": "ZCL_SKYLINT_PREF_ORDER_BY",

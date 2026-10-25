@@ -2,8 +2,7 @@
   "formatVersion": "1",
   "header": {
     "description": "Method Length Limit (excessive statement count)",
-    "originalLanguage": "en",
-    "abapLanguageVersion": "cloudDevelopment"
+    "originalLanguage": "en"
   },
   "category": "ZSKYLINT_METRICS",
   "implementingClass": "ZCL_SKYLINT_MAX_METHOD_LEN",

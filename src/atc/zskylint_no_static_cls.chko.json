@@ -2,8 +2,7 @@
   "formatVersion": "1",
   "header": {
     "description": "Avoid static-only classes; use instantiable classes",
-    "originalLanguage": "en",
-    "abapLanguageVersion": "cloudDevelopment"
+    "originalLanguage": "en"
   },
   "category": "ZSKYLINT_ANTI_PATTERNS",
   "implementingClass": "ZCL_SKYLINT_NO_STATIC_CLS",
