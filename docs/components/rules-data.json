@@ -1,5 +1,54 @@
 [
   {
+    "ruleId": "pref-func-module",
+    "title": "Prefer Modern Class-Based APIs over Obsolete Function Modules",
+    "className": "ZCL_SKYLINT_PREF_FUNC_MODULE",
+    "checkName": "ZSKYLINT_PREF_FUNC_MODULE",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "PREF_FUNC_MOD",
+    "description": "Prefer class-based APIs over obsolete function modules",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "relatedRules": [
+      "no-call-method",
+      "pref-class-exc",
+      "no-obs-control"
+    ],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "no-custom-pattern",
+    "title": "Disallow Configured Custom Regex Patterns",
+    "className": "ZCL_SKYLINT_NO_CUSTOM_PATTERN",
+    "checkName": "ZSKYLINT_NO_CUSTOM_PATTERN",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "NO_CUSTOM_PATTERN",
+    "description": "Disallow configured custom regex patterns",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "PATTERN",
+        "kind": "String",
+        "defaultValue": "TODO|FIXME|XXX"
+      }
+    ],
+    "relatedRules": [
+      "no-keyword-name",
+      "no-hardcoded-env",
+      "no-dead-code"
+    ],
+    "defaultParameters": [
+      {
+        "name": "PATTERN",
+        "value": "TODO|FIXME|XXX"
+      }
+    ]
+  },
+  {
     "ruleId": "pref-paren-and-or",
     "title": "Parenthesize Combinations of AND and OR",
     "className": "ZCL_SKYLINT_PREF_PAREN_AND_OR",

@@ -6,6 +6,18 @@
   },
   "selectedChecks": [
     {
+      "checkName": "ZSKYLINT_PREF_FUNC_MODULE"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_CUSTOM_PATTERN",
+      "parameters": [
+        {
+          "name": "PATTERN",
+          "value": "TODO|FIXME|XXX"
+        }
+      ]
+    },
+    {
       "checkName": "ZSKYLINT_PREF_PAREN_AND_OR"
     },
     {

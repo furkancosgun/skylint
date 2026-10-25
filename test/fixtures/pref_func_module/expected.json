@@ -1,0 +1,26 @@
+[
+  {
+    "target": "TEST_001",
+    "code": "PREF_FM",
+    "line": 3,
+    "column": 18
+  },
+  {
+    "target": "TEST_002",
+    "code": null
+  },
+  {
+    "target": "TEST_003",
+    "code": "PREF_FM",
+    "line": 3,
+    "column": 18
+  },
+  {
+    "target": "TEST_004",
+    "code": null
+  },
+  {
+    "target": "TEST_005",
+    "code": null
+  }
+]

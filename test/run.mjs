@@ -87,7 +87,12 @@ async function applyAttributes(inst, overrides) {
     const snapshot = new Map();
     for (const row of rows) {
       const attr = row.get();
-      snapshot.set(attr.name.get(), attr.value.dereference().get());
+      const target = attr.value.dereference();
+      if (typeof target.array === 'function') {
+        snapshot.set(attr.name.get(), target.array().map((r) => r.get()));
+      } else {
+        snapshot.set(attr.name.get(), target.get());
+      }
     }
     defaultAttributes.set(inst, snapshot);
   }
@@ -99,9 +104,31 @@ async function applyAttributes(inst, overrides) {
     const target = attr.value.dereference();
     if (Object.prototype.hasOwnProperty.call(overrides, name)) {
       const raw = overrides[name];
-      target.set(typeof raw === 'boolean' ? (raw ? 'X' : ' ') : String(raw));
+      if (typeof target.array === 'function') {
+        target.clear();
+        const items = Array.isArray(raw) ? raw : [raw];
+        for (const item of items) {
+          const rowType = target.getRowType();
+          const newRow = typeof rowType === 'function' ? new rowType() : rowType.clone();
+          newRow.set(String(item));
+          target.append(newRow);
+        }
+      } else {
+        target.set(typeof raw === 'boolean' ? (raw ? 'X' : ' ') : String(raw));
+      }
     } else {
-      target.set(snapshot.get(name));
+      const val = snapshot.get(name);
+      if (typeof target.array === 'function') {
+        target.clear();
+        for (const item of val || []) {
+          const rowType = target.getRowType();
+          const newRow = typeof rowType === 'function' ? new rowType() : rowType.clone();
+          newRow.set(String(item));
+          target.append(newRow);
+        }
+      } else {
+        target.set(val);
+      }
     }
   }
 }

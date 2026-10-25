@@ -1,0 +1,22 @@
+[
+  {
+    "target": "TEST_001",
+    "code": "NO_CUSTOM",
+    "line": 2,
+    "column": 9
+  },
+  {
+    "target": "TEST_002",
+    "code": null
+  },
+  {
+    "target": "TEST_003",
+    "code": "NO_CUSTOM",
+    "line": 2,
+    "column": 9
+  },
+  {
+    "target": "TEST_004",
+    "code": null
+  }
+]

@@ -23,6 +23,65 @@ export const CATEGORIES = {
 
 export const RULES = [
   {
+    "ruleId": "pref-func-module",
+    "title": "Prefer Modern Class-Based APIs over Obsolete Function Modules",
+    "rationale": "Classic function modules are non-object-oriented procedural constructs. Modern ABAP provides robust, object-oriented class libraries (such as CL_SYSTEM_UUID, CL_ABAP_TSTMP, CL_ABAP_MESSAGE_DIGEST, and CL_BCS) that improve testability, type safety, and ABAP Cloud compatibility. Prefer recommended class-based APIs over obsolete function modules.",
+    "className": "ZCL_SKYLINT_PREF_FUNC_MODULE",
+    "pseudoComment": "PREF_FUNC_MOD",
+    "category": "clean-abap",
+    "example": {
+      "bad": "CALL FUNCTION 'GUID_CREATE'\n  IMPORTING\n    ev_guid_32 = lv_guid.",
+      "good": "lv_guid = cl_system_uuid=>create_uuid_c32_static( )."
+    },
+    "seo": {
+      "description": "Prefer Modern Class-Based APIs over Obsolete Function Modules - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud.",
+      "keywords": [
+        "Clean ABAP",
+        "SAP ATC Check",
+        "ABAP Cloud",
+        "S/4HANA Readiness",
+        "pref-func-module",
+        "clean-abap"
+      ]
+    },
+    "relatedRules": [
+      "no-call-method",
+      "pref-class-exc",
+      "no-obs-control"
+    ]
+  },
+  {
+    "ruleId": "no-custom-pattern",
+    "title": "Disallow Configured Custom Regex Patterns",
+    "rationale": "Enterprise coding standards often require banning specific placeholder comments (such as TODO, FIXME, XXX), temporary variable patterns (such as TMP_* or DEBUG_*), sensitive keywords, or prohibited terminology. This check inspects all tokens against a configurable table of regular expressions, reporting any prohibited matches.",
+    "className": "ZCL_SKYLINT_NO_CUSTOM_PATTERN",
+    "pseudoComment": "NO_CUSTOM_PATTERN",
+    "category": "anti-patterns",
+    "example": {
+      "bad": "\" Flagged when 'TODO' is configured in PATTERNS\nDATA lv_todo_item TYPE i.",
+      "good": "DATA lv_clean_item TYPE i."
+    },
+    "parameters": {
+      "PATTERN": "Regular expression pattern to disallow (defaults to TODO|FIXME|XXX)"
+    },
+    "seo": {
+      "description": "Disallow Configured Custom Regex Patterns - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud.",
+      "keywords": [
+        "Clean ABAP",
+        "SAP ATC Check",
+        "ABAP Cloud",
+        "S/4HANA Readiness",
+        "no-custom-pattern",
+        "anti-patterns"
+      ]
+    },
+    "relatedRules": [
+      "no-keyword-name",
+      "no-hardcoded-env",
+      "no-dead-code"
+    ]
+  },
+  {
     "ruleId": "pref-paren-and-or",
     "title": "Parenthesize Combinations of AND and OR",
     "rationale": "Different programming languages and databases have varying operator precedences for logical operators. Unparenthesized conditions mixing AND and OR (such as a AND b OR c) are ambiguous to human readers and easily hide critical branching bugs. Explicitly parenthesize combinations as ( a AND b ) OR c to make evaluation precedence unmistakable.",

@@ -4,13 +4,13 @@
       "key": "clean-abap",
       "title": "Clean ABAP & Modern Syntax",
       "description": "Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.",
-      "count": 52
+      "count": 53
     },
     {
       "key": "anti-patterns",
       "title": "Anti-Patterns & Bad Practices",
       "description": "Discouraged language constructs, legacy statements, and redundant syntax.",
-      "count": 50
+      "count": 51
     },
     {
       "key": "performance",
@@ -32,6 +32,30 @@
     }
   ],
   "rules": [
+    {
+      "ruleId": "pref-func-module",
+      "title": "Prefer Modern Class-Based APIs over Obsolete Function Modules",
+      "className": "ZCL_SKYLINT_PREF_FUNC_MODULE",
+      "description": "Prefer class-based APIs over obsolete function modules",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "PREF_FUNC_MOD",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "no-custom-pattern",
+      "title": "Disallow Configured Custom Regex Patterns",
+      "className": "ZCL_SKYLINT_NO_CUSTOM_PATTERN",
+      "description": "Disallow configured custom regex patterns",
+      "category": "anti-patterns",
+      "categoryTitle": "Anti-Patterns & Bad Practices",
+      "pseudoComment": "NO_CUSTOM_PATTERN",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
     {
       "ruleId": "pref-paren-and-or",
       "title": "Parenthesize Combinations of AND and OR",
