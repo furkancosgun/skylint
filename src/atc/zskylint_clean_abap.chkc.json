@@ -1,0 +1,9 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Skylint: Clean ABAP & Modern Syntax",
+    "originalLanguage": "en",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "parentCategory": "ZSKYLINT"
+}

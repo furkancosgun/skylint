@@ -5,7 +5,7 @@
     "originalLanguage": "en",
     "abapLanguageVersion": "cloudDevelopment"
   },
-  "category": "ZSKYLINT",
+  "category": "ZSKYLINT_CLEAN_ABAP",
   "implementingClass": "ZCL_SKYLINT_PREF_SWITCH",
   "checkType": "remoteEnabled",
   "parameters": [

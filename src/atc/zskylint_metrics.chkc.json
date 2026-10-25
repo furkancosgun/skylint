@@ -1,0 +1,9 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Skylint: Metrics & Complexity Limits",
+    "originalLanguage": "en",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "parentCategory": "ZSKYLINT"
+}

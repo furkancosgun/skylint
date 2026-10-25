@@ -5,7 +5,7 @@
     "originalLanguage": "en",
     "abapLanguageVersion": "cloudDevelopment"
   },
-  "category": "ZSKYLINT",
+  "category": "ZSKYLINT_SECURITY",
   "implementingClass": "ZCL_SKYLINT_NO_HARDCODED_ENV",
   "checkType": "remoteEnabled",
   "parameters": [

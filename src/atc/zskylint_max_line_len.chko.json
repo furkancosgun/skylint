@@ -5,7 +5,7 @@
     "originalLanguage": "en",
     "abapLanguageVersion": "cloudDevelopment"
   },
-  "category": "ZSKYLINT",
+  "category": "ZSKYLINT_METRICS",
   "implementingClass": "ZCL_SKYLINT_MAX_LINE_LEN",
   "checkType": "remoteEnabled",
   "parameters": [

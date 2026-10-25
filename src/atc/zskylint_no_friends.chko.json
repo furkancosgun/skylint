@@ -5,7 +5,7 @@
     "originalLanguage": "en",
     "abapLanguageVersion": "cloudDevelopment"
   },
-  "category": "ZSKYLINT",
+  "category": "ZSKYLINT_ANTI_PATTERNS",
   "implementingClass": "ZCL_SKYLINT_NO_FRIENDS",
   "checkType": "remoteEnabled"
 }

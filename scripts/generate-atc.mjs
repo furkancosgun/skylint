@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { RULES } from './rules-data.mjs';
+import { RULES, CATEGORIES } from './rules-data.mjs';
 import { getCheckDescription, getCheckParameters, isRemoteEnabled } from './check-metadata.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -12,8 +12,33 @@ const checksDir = path.join(srcDir, 'checks');
 const coreDir = path.join(srcDir, 'core');
 const atcDir = path.join(srcDir, 'atc');
 
-
-
+const ATC_CATEGORIES = {
+  'clean-abap': {
+    code: 'ZSKYLINT_CLEAN_ABAP',
+    fileName: 'zskylint_clean_abap.chkc.json',
+    description: 'Skylint: Clean ABAP & Modern Syntax',
+  },
+  'anti-patterns': {
+    code: 'ZSKYLINT_ANTI_PATTERNS',
+    fileName: 'zskylint_anti_patterns.chkc.json',
+    description: 'Skylint: Anti-Patterns & Bad Practices',
+  },
+  'performance': {
+    code: 'ZSKYLINT_PERFORMANCE',
+    fileName: 'zskylint_performance.chkc.json',
+    description: 'Skylint: Performance & Database',
+  },
+  'security': {
+    code: 'ZSKYLINT_SECURITY',
+    fileName: 'zskylint_security.chkc.json',
+    description: 'Skylint: Security & Robustness',
+  },
+  'metrics': {
+    code: 'ZSKYLINT_METRICS',
+    fileName: 'zskylint_metrics.chkc.json',
+    description: 'Skylint: Metrics & Complexity Limits',
+  },
+};
 
 export function generateAtcObjects() {
   console.log(`Generating ATC CHKC, CHKO, and CHKV objects for ${RULES.length} rules under src/atc/...`);
@@ -41,8 +66,8 @@ export function generateAtcObjects() {
     }
   }
 
-  // 1. Generate Category: src/atc/zskylint.chkc.json
-  const categoryJson = {
+  // 1. Generate Root Category: src/atc/zskylint.chkc.json
+  const rootCategoryJson = {
     formatVersion: '1',
     header: {
       description: 'Skylint Clean ABAP Checks',
@@ -50,7 +75,21 @@ export function generateAtcObjects() {
       abapLanguageVersion: 'cloudDevelopment',
     },
   };
-  fs.writeFileSync(path.join(atcDir, 'zskylint.chkc.json'), JSON.stringify(categoryJson, null, 2) + '\n', 'utf8');
+  fs.writeFileSync(path.join(atcDir, 'zskylint.chkc.json'), JSON.stringify(rootCategoryJson, null, 2) + '\n', 'utf8');
+
+  // 1b. Generate Domain Sub-Categories (matching website categories 1:1)
+  for (const cat of Object.values(ATC_CATEGORIES)) {
+    const catJson = {
+      formatVersion: '1',
+      header: {
+        description: cat.description,
+        originalLanguage: 'en',
+        abapLanguageVersion: 'cloudDevelopment',
+      },
+      parentCategory: 'ZSKYLINT',
+    };
+    fs.writeFileSync(path.join(atcDir, cat.fileName), JSON.stringify(catJson, null, 2) + '\n', 'utf8');
+  }
 
   // 2. Generate Check Objects (CHKO) in src/atc/
   const selectedChecks = [];
@@ -61,6 +100,7 @@ export function generateAtcObjects() {
     const fileName = `zskylint_${suffix.toLowerCase()}.chko.json`;
     const desc = getCheckDescription(rule);
     const params = getCheckParameters(rule);
+    const catInfo = ATC_CATEGORIES[rule.category] || { code: 'ZSKYLINT' };
 
     const chko = {
       formatVersion: '1',
@@ -69,7 +109,7 @@ export function generateAtcObjects() {
         originalLanguage: 'en',
         abapLanguageVersion: 'cloudDevelopment',
       },
-      category: 'ZSKYLINT',
+      category: catInfo.code,
       implementingClass: rule.className,
       checkType: isRemoteEnabled(rule) ? 'remoteEnabled' : 'local',
     };
