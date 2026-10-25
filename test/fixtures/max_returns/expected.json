@@ -1,0 +1,4 @@
+[
+  { "target": "BAD_METHOD", "code": "MAX_RETURN", "line": 1, "column": 2 },
+  { "target": "GOOD_METHOD", "code": null }
+]

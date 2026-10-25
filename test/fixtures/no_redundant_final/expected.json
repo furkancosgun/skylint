@@ -1,0 +1,4 @@
+[
+  { "target": "LCL_FINAL_CLASS", "code": "REDUN_FIN", "line": 3, "column": 4, "quickfixes": ["REMOVFINAL"] },
+  { "target": "LCL_OPEN_CLASS", "code": null }
+]

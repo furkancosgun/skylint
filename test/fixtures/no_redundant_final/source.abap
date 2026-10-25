@@ -1,0 +1,9 @@
+CLASS lcl_final_class DEFINITION FINAL.
+  PUBLIC SECTION.
+    METHODS bad_meth FINAL.
+    METHODS good_meth.
+ENDCLASS.
+CLASS lcl_open_class DEFINITION.
+  PUBLIC SECTION.
+    METHODS ok_meth FINAL.
+ENDCLASS.

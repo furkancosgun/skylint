@@ -1,0 +1,22 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Avoid Hungarian notation and encoding prefixes",
+    "originalLanguage": "en",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "category": "ZSKYLINT",
+  "implementingClass": "ZCL_SKYLINT_NO_HUNGARIAN",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "CHECK_ATTR"
+    },
+    {
+      "name": "CHECK_LOCAL"
+    },
+    {
+      "name": "CHECK_PARAM"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+[
+  { "target": "BAD_001", "code": "EMPTY_OVR", "line": 2, "column": 4 },
+  { "target": "GOOD_001", "code": null }
+]

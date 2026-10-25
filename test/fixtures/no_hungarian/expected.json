@@ -1,0 +1,7 @@
+[
+  { "target": "LCL_BAD_NAMING", "code": "HUNGARIAN", "line": 3, "column": 4 },
+  { "target": "LCL_BAD_NAMING", "code": "HUNGARIAN", "line": 4, "column": 4 },
+  { "target": "LCL_GOOD_NAMING", "code": null },
+  { "target": "TEST_001", "code": "HUNGARIAN", "line": 2, "column": 4 },
+  { "target": "TEST_002", "code": null }
+]

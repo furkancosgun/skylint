@@ -1,0 +1,16 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Avoid single-letter variable names",
+    "originalLanguage": "en",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "category": "ZSKYLINT",
+  "implementingClass": "ZCL_SKYLINT_NO_SINGLE_LETTER",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "MIN_NAME_LEN"
+    }
+  ]
+}

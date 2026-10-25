@@ -1,0 +1,5 @@
+[
+  { "target": "TEST_001", "code": "SINGLE_LTR", "line": 2, "column": 4 },
+  { "target": "TEST_001", "code": "SINGLE_LTR", "line": 3, "column": 4 },
+  { "target": "TEST_002", "code": null }
+]

@@ -1097,6 +1097,83 @@
           "value": "X"
         }
       ]
+    },
+    {
+      "checkName": "ZSKYLINT_NO_EMPTY_OVERRIDE",
+      "parameters": [
+        {
+          "name": "IGNORE_CTOR",
+          "value": "X"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_COMPOSITION"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_INTF_SEGREG",
+      "parameters": [
+        {
+          "name": "MAX_METHODS",
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_NO_SINGLE_LETTER",
+      "parameters": [
+        {
+          "name": "MIN_NAME_LEN",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_FACTORY_NAME",
+      "parameters": [
+        {
+          "name": "PREFIX",
+          "value": "CREATE_"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_NO_HUNGARIAN",
+      "parameters": [
+        {
+          "name": "CHECK_ATTR",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_LOCAL",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_PARAM",
+          "value": "X"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_NO_REDUNDANT_FINAL"
+    },
+    {
+      "checkName": "ZSKYLINT_MAX_RETURNS",
+      "parameters": [
+        {
+          "name": "MAX_RETURNS",
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_NO_INSTANCE_OF",
+      "parameters": [
+        {
+          "name": "CHECK_CASE_TYPE",
+          "value": "X"
+        }
+      ]
     }
   ]
 }

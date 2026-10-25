@@ -1,0 +1,5 @@
+[
+  { "target": "LCL_BAD_CHILD", "code": "PREF_COMP", "line": 1, "column": 0 },
+  { "target": "LCL_EXC_CHILD", "code": null },
+  { "target": "LCL_GOOD", "code": null }
+]
