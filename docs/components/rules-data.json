@@ -1,6 +1,6 @@
 [
   {
-    "ruleId": "downport-compat",
+    "ruleId": "pref-downport",
     "title": "Check Downport Compatibility (7.40+ Modern Constructs)",
     "className": "ZCL_SKYLINT_PREF_DOWNPORT",
     "checkName": "ZSKYLINT_PREF_DOWNPORT",
@@ -65,7 +65,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-reduce",
+    "ruleId": "pref-reduce",
     "title": "Prefer REDUCE #( ) Expression over Simple Aggregation LOOP",
     "className": "ZCL_SKYLINT_PREF_REDUCE",
     "checkName": "ZSKYLINT_PREF_REDUCE",
@@ -79,7 +79,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-tab-expr",
+    "ruleId": "pref-tab-expr",
     "title": "Prefer Table Expression itab[ ... ] over READ TABLE",
     "className": "ZCL_SKYLINT_PREF_TAB_EXPR",
     "checkName": "ZSKYLINT_PREF_TAB_EXPR",
@@ -104,7 +104,7 @@
     ]
   },
   {
-    "ruleId": "prefer-cond",
+    "ruleId": "pref-cond",
     "title": "Prefer COND #( ) Expression over IF/ELSEIF/ELSE",
     "className": "ZCL_SKYLINT_PREF_COND",
     "checkName": "ZSKYLINT_PREF_COND",
@@ -124,7 +124,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-switch",
+    "ruleId": "pref-switch",
     "title": "Prefer SWITCH #( ) Expression over CASE Statement",
     "className": "ZCL_SKYLINT_PREF_SWITCH",
     "checkName": "ZSKYLINT_PREF_SWITCH",
@@ -144,7 +144,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-lines",
+    "ruleId": "pref-lines",
     "title": "Prefer lines( ) over DESCRIBE TABLE",
     "className": "ZCL_SKYLINT_PREF_LINES",
     "checkName": "ZSKYLINT_PREF_LINES",
@@ -186,7 +186,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-is-not",
+    "ruleId": "pref-is-not",
     "title": "Prefer IS NOT over NOT ... IS",
     "className": "ZCL_SKYLINT_PREF_IS_NOT",
     "checkName": "ZSKYLINT_PREF_IS_NOT",
@@ -225,7 +225,7 @@
     ]
   },
   {
-    "ruleId": "no-redundant-method-call",
+    "ruleId": "no-redundant-call",
     "title": "Omit or Require Parameter Names (EXPORTING / RECEIVING / Single Param)",
     "className": "ZCL_SKYLINT_NO_REDUNDANT_CALL",
     "checkName": "ZSKYLINT_NO_REDUNDANT_CALL",
@@ -273,7 +273,7 @@
     ]
   },
   {
-    "ruleId": "no-chained-statements",
+    "ruleId": "no-chained-stmt",
     "title": "Avoid Chained Declarations & Assignments",
     "className": "ZCL_SKYLINT_NO_CHAINED_STMT",
     "checkName": "ZSKYLINT_NO_CHAINED_STMT",
@@ -316,7 +316,7 @@
     ]
   },
   {
-    "ruleId": "prefer-string-template",
+    "ruleId": "pref-str-tmpl",
     "title": "Prefer String Templates over CONCATENATE",
     "className": "ZCL_SKYLINT_PREF_STR_TMPL",
     "checkName": "ZSKYLINT_PREF_STR_TMPL",
@@ -330,7 +330,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "no-boolean-comparison",
+    "ruleId": "no-bool-compare",
     "title": "Avoid Comparing to abap_true / abap_false",
     "className": "ZCL_SKYLINT_NO_BOOL_COMPARE",
     "checkName": "ZSKYLINT_NO_BOOL_COMPARE",
@@ -344,7 +344,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-line-exists",
+    "ruleId": "pref-line-exists",
     "title": "Prefer line_exists( ) over READ TABLE TRANSPORTING NO FIELDS",
     "className": "ZCL_SKYLINT_PREF_LINE_EXISTS",
     "checkName": "ZSKYLINT_PREF_LINE_EXISTS",
@@ -358,7 +358,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-return",
+    "ruleId": "pref-return",
     "title": "Prefer RETURN over EXIT in Methods",
     "className": "ZCL_SKYLINT_PREF_RETURN",
     "checkName": "ZSKYLINT_PREF_RETURN",
@@ -372,7 +372,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "no-check-statement",
+    "ruleId": "no-check-stmt",
     "title": "Avoid CHECK Statements",
     "className": "ZCL_SKYLINT_NO_CHECK_STMT",
     "checkName": "ZSKYLINT_NO_CHECK_STMT",
@@ -494,7 +494,7 @@
     ]
   },
   {
-    "ruleId": "no-identical-contents",
+    "ruleId": "no-ident-cont",
     "title": "Avoid Identical Statements in IF Branches",
     "className": "ZCL_SKYLINT_NO_IDENT_CONT",
     "checkName": "ZSKYLINT_NO_IDENT_CONT",
@@ -508,7 +508,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "no-duplicate-conditions",
+    "ruleId": "no-dup-cond",
     "title": "Avoid Duplicate Branch Conditions",
     "className": "ZCL_SKYLINT_NO_DUP_COND",
     "checkName": "ZSKYLINT_NO_DUP_COND",
@@ -522,7 +522,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-merged-ifs",
+    "ruleId": "pref-merge-ifs",
     "title": "Merge Nested IF Statements",
     "className": "ZCL_SKYLINT_PREF_MERGE_IFS",
     "checkName": "ZSKYLINT_PREF_MERGE_IFS",
@@ -536,7 +536,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "no-unreachable-code",
+    "ruleId": "no-unreachable",
     "title": "Avoid Dead / Unreachable Code",
     "className": "ZCL_SKYLINT_NO_UNREACHABLE",
     "checkName": "ZSKYLINT_NO_UNREACHABLE",
@@ -564,7 +564,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "no-yoda-conditions",
+    "ruleId": "no-yoda-cond",
     "title": "Avoid Yoda Conditions",
     "className": "ZCL_SKYLINT_NO_YODA_COND",
     "checkName": "ZSKYLINT_NO_YODA_COND",
@@ -578,7 +578,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-symbol-operators",
+    "ruleId": "pref-symbol-op",
     "title": "Prefer Symbol Comparison Operators (=, <>, <, >)",
     "className": "ZCL_SKYLINT_PREF_SYMBOL_OP",
     "checkName": "ZSKYLINT_PREF_SYMBOL_OP",
@@ -592,7 +592,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-new-operator",
+    "ruleId": "pref-new-op",
     "title": "Prefer NEW #( ) over CREATE OBJECT",
     "className": "ZCL_SKYLINT_PREF_NEW_OP",
     "checkName": "ZSKYLINT_PREF_NEW_OP",
@@ -626,7 +626,7 @@
     ]
   },
   {
-    "ruleId": "prefer-xsdbool",
+    "ruleId": "pref-xsdbool",
     "title": "Prefer xsdbool( ) for Boolean Assignments",
     "className": "ZCL_SKYLINT_PREF_XSDBOOL",
     "checkName": "ZSKYLINT_PREF_XSDBOOL",
@@ -640,7 +640,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "no-static-via-instance",
+    "ruleId": "no-static-arrow",
     "title": "Avoid Calling Static Methods via Instance References (->)",
     "className": "ZCL_SKYLINT_NO_STATIC_ARROW",
     "checkName": "ZSKYLINT_NO_STATIC_ARROW",
@@ -654,7 +654,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "no-public-attributes",
+    "ruleId": "no-public-attr",
     "title": "Avoid Public Attributes in Classes",
     "className": "ZCL_SKYLINT_NO_PUBLIC_ATTR",
     "checkName": "ZSKYLINT_NO_PUBLIC_ATTR",
@@ -668,7 +668,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "no-obsolete-statements",
+    "ruleId": "no-obsolete",
     "title": "Avoid Obsolete & Forbidden Statements",
     "className": "ZCL_SKYLINT_NO_OBSOLETE",
     "checkName": "ZSKYLINT_NO_OBSOLETE",
@@ -1071,7 +1071,7 @@
     ]
   },
   {
-    "ruleId": "no-list-processing",
+    "ruleId": "no-list-proc",
     "title": "Avoid Classic List Processing Statements",
     "className": "ZCL_SKYLINT_NO_LIST_PROC",
     "checkName": "ZSKYLINT_NO_LIST_PROC",
@@ -1251,7 +1251,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "no-self-assignment",
+    "ruleId": "no-self-assign",
     "title": "Avoid Redundant Self-Assignments",
     "className": "ZCL_SKYLINT_NO_SELF_ASSIGN",
     "checkName": "ZSKYLINT_NO_SELF_ASSIGN",
@@ -1293,7 +1293,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-fully-typed",
+    "ruleId": "pref-full-typed",
     "title": "Require Fully Typed Variables and Parameters",
     "className": "ZCL_SKYLINT_PREF_FULL_TYPED",
     "checkName": "ZSKYLINT_PREF_FULL_TYPED",
@@ -1307,7 +1307,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-corresponding",
+    "ruleId": "pref-corresp",
     "title": "Prefer CORRESPONDING #( ) Operator",
     "className": "ZCL_SKYLINT_PREF_CORRESP",
     "checkName": "ZSKYLINT_PREF_CORRESP",
@@ -1321,7 +1321,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "max-method-length",
+    "ruleId": "max-method-len",
     "title": "Limit Method Length (Statements)",
     "className": "ZCL_SKYLINT_MAX_METHOD_LEN",
     "checkName": "ZSKYLINT_MAX_METHOD_LEN",
@@ -1346,7 +1346,7 @@
     ]
   },
   {
-    "ruleId": "max-nesting-depth",
+    "ruleId": "max-nesting",
     "title": "Limit Control Flow Nesting Depth",
     "className": "ZCL_SKYLINT_MAX_NESTING",
     "checkName": "ZSKYLINT_MAX_NESTING",
@@ -1385,7 +1385,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-returning",
+    "ruleId": "pref-returning",
     "title": "Prefer Functional RETURNING Parameters",
     "className": "ZCL_SKYLINT_PREF_RETURNING",
     "checkName": "ZSKYLINT_PREF_RETURNING",
@@ -1399,7 +1399,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-class-exceptions",
+    "ruleId": "pref-class-exc",
     "title": "Prefer Class-Based Exceptions over Classic EXCEPTIONS",
     "className": "ZCL_SKYLINT_PREF_CLASS_EXC",
     "checkName": "ZSKYLINT_PREF_CLASS_EXC",
@@ -1413,7 +1413,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "no-dangerous-statements",
+    "ruleId": "no-dangerous-stmt",
     "title": "Avoid Dangerous & Dynamic Native Statements",
     "className": "ZCL_SKYLINT_NO_DANGEROUS_STMT",
     "checkName": "ZSKYLINT_NO_DANGEROUS_STMT",
@@ -1591,7 +1591,7 @@
     ]
   },
   {
-    "ruleId": "prefer-auth-check",
+    "ruleId": "pref-auth-check",
     "title": "Ensure AUTHORITY-CHECK Before Sensitive Operations",
     "className": "ZCL_SKYLINT_PREF_AUTH_CHECK",
     "checkName": "ZSKYLINT_PREF_AUTH_CHECK",
@@ -1605,7 +1605,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-order-by",
+    "ruleId": "pref-order-by",
     "title": "Require ORDER BY for Deterministic SELECT Results",
     "className": "ZCL_SKYLINT_PREF_ORDER_BY",
     "checkName": "ZSKYLINT_PREF_ORDER_BY",
@@ -1619,7 +1619,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "max-cyclomatic-complexity",
+    "ruleId": "max-cyclo-comp",
     "title": "Limit Cyclomatic Complexity",
     "className": "ZCL_SKYLINT_MAX_CYCLO_COMP",
     "checkName": "ZSKYLINT_MAX_CYCLO_COMP",
@@ -1644,7 +1644,7 @@
     ]
   },
   {
-    "ruleId": "prefer-final-class",
+    "ruleId": "pref-final-cls",
     "title": "Design for Inheritance or Prohibit It (FINAL)",
     "className": "ZCL_SKYLINT_PREF_FINAL_CLS",
     "checkName": "ZSKYLINT_PREF_FINAL_CLS",
@@ -1692,7 +1692,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-insert-into",
+    "ruleId": "pref-insert",
     "title": "Prefer INSERT ... INTO TABLE over APPEND",
     "className": "ZCL_SKYLINT_PREF_INSERT",
     "checkName": "ZSKYLINT_PREF_INSERT",
@@ -1720,7 +1720,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "max-constructor-statements",
+    "ruleId": "max-ctor-stmts",
     "title": "Keep Constructors Clean & Lightweight",
     "className": "ZCL_SKYLINT_MAX_CTOR_STMTS",
     "checkName": "ZSKYLINT_MAX_CTOR_STMTS",
@@ -1745,7 +1745,7 @@
     ]
   },
   {
-    "ruleId": "no-static-classes",
+    "ruleId": "no-static-cls",
     "title": "Avoid Purely Static Utility Classes",
     "className": "ZCL_SKYLINT_NO_STATIC_CLS",
     "checkName": "ZSKYLINT_NO_STATIC_CLS",
@@ -1759,7 +1759,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-predicate-names",
+    "ruleId": "pref-pred-name",
     "title": "Use Predicate Naming for Boolean Methods (is_, has_, can_)",
     "className": "ZCL_SKYLINT_PREF_PRED_NAME",
     "checkName": "ZSKYLINT_PREF_PRED_NAME",
@@ -1773,7 +1773,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "max-inheritance-depth",
+    "ruleId": "max-inherit",
     "title": "Limit Inheritance Depth",
     "className": "ZCL_SKYLINT_MAX_INHERIT",
     "checkName": "ZSKYLINT_MAX_INHERIT",
@@ -1823,7 +1823,7 @@
     ]
   },
   {
-    "ruleId": "no-interface-data",
+    "ruleId": "no-intf-data",
     "title": "Avoid DATA Attributes in Interfaces",
     "className": "ZCL_SKYLINT_NO_INTF_DATA",
     "checkName": "ZSKYLINT_NO_INTF_DATA",
@@ -1837,7 +1837,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "no-catch-cx-root",
+    "ruleId": "no-catch-root",
     "title": "Avoid Catching Generic CX_ROOT",
     "className": "ZCL_SKYLINT_NO_CATCH_ROOT",
     "checkName": "ZSKYLINT_NO_CATCH_ROOT",
@@ -1851,7 +1851,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "no-message-raising",
+    "ruleId": "no-msg-raising",
     "title": "Avoid Obsolete MESSAGE ... RAISING in Methods",
     "className": "ZCL_SKYLINT_NO_MSG_RAISING",
     "checkName": "ZSKYLINT_NO_MSG_RAISING",
@@ -1893,7 +1893,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-subrc-check",
+    "ruleId": "pref-check-subrc",
     "title": "Verify sy-subrc Promptly After System Calls",
     "className": "ZCL_SKYLINT_PREF_CHECK_SUBRC",
     "checkName": "ZSKYLINT_PREF_CHECK_SUBRC",
@@ -1954,7 +1954,7 @@
     ]
   },
   {
-    "ruleId": "no-client-specified",
+    "ruleId": "no-client-spec",
     "title": "Avoid CLIENT SPECIFIED / USING CLIENT in Cloud",
     "className": "ZCL_SKYLINT_NO_CLIENT_SPEC",
     "checkName": "ZSKYLINT_NO_CLIENT_SPEC",
@@ -1968,7 +1968,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-transporting",
+    "ruleId": "pref-transport",
     "title": "Specify TRANSPORTING in MODIFY / READ TABLE",
     "className": "ZCL_SKYLINT_PREF_TRANSPORT",
     "checkName": "ZSKYLINT_PREF_TRANSPORT",
@@ -1982,7 +1982,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-string-functions",
+    "ruleId": "pref-str-func",
     "title": "Prefer Built-in String Functions over SEARCH/SHIFT",
     "className": "ZCL_SKYLINT_PREF_STR_FUNC",
     "checkName": "ZSKYLINT_PREF_STR_FUNC",
@@ -2061,7 +2061,7 @@
     ]
   },
   {
-    "ruleId": "prefer-calc-assign-op",
+    "ruleId": "pref-calc-op",
     "title": "Prefer Calculation Assignment Operators (+=, -=, *=)",
     "className": "ZCL_SKYLINT_PREF_CALC_OP",
     "checkName": "ZSKYLINT_PREF_CALC_OP",
@@ -2075,7 +2075,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-early-return",
+    "ruleId": "pref-early-ret",
     "title": "Prefer Early Return to Reduce Nesting (Guard Clauses)",
     "className": "ZCL_SKYLINT_PREF_EARLY_RET",
     "checkName": "ZSKYLINT_PREF_EARLY_RET",
@@ -2109,7 +2109,7 @@
     ]
   },
   {
-    "ruleId": "no-unused-variables",
+    "ruleId": "no-unused-vars",
     "title": "Eliminate Unused Local Variables and Symbols",
     "className": "ZCL_SKYLINT_NO_UNUSED_VARS",
     "checkName": "ZSKYLINT_NO_UNUSED_VARS",
@@ -2123,7 +2123,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-decl-order",
+    "ruleId": "pref-decl-order",
     "title": "Order Declarations (TYPES, CONSTANTS, DATA)",
     "className": "ZCL_SKYLINT_PREF_DECL_ORDER",
     "checkName": "ZSKYLINT_PREF_DECL_ORDER",
@@ -2151,7 +2151,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-case",
+    "ruleId": "pref-case",
     "title": "Prefer CASE over Multiple IF / ELSEIF on the Same Variable",
     "className": "ZCL_SKYLINT_PREF_CASE",
     "checkName": "ZSKYLINT_PREF_CASE",
@@ -2176,7 +2176,7 @@
     ]
   },
   {
-    "ruleId": "no-inline-length",
+    "ruleId": "no-inline-len",
     "title": "Avoid Obsolete Inline Length Specifications (var(len))",
     "className": "ZCL_SKYLINT_NO_INLINE_LEN",
     "checkName": "ZSKYLINT_NO_INLINE_LEN",
@@ -2190,7 +2190,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "max-one-statement",
+    "ruleId": "max-one-stmt",
     "title": "Limit One Statement per Source Code Line",
     "className": "ZCL_SKYLINT_MAX_ONE_STMT",
     "checkName": "ZSKYLINT_MAX_ONE_STMT",
@@ -2218,7 +2218,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-inline",
+    "ruleId": "pref-inline",
     "title": "Prefer Modern Inline Declarations in ABAP 7.40+",
     "className": "ZCL_SKYLINT_PREF_INLINE",
     "checkName": "ZSKYLINT_PREF_INLINE",
@@ -2232,7 +2232,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-final-data",
+    "ruleId": "pref-final-data",
     "title": "Prefer FINAL( ) over DATA( ) when the variable is never written again",
     "className": "ZCL_SKYLINT_PREF_FINAL_DATA",
     "checkName": "ZSKYLINT_PREF_FINAL_DATA",
@@ -2260,7 +2260,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-message-class",
+    "ruleId": "pref-msg-cls",
     "title": "Use a message class (SE91) instead of inline message text",
     "className": "ZCL_SKYLINT_PREF_MSG_CLS",
     "checkName": "ZSKYLINT_PREF_MSG_CLS",
@@ -2274,7 +2274,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-inline-cast",
+    "ruleId": "pref-inl-cast",
     "title": "Inline a CAST helper that is only read once",
     "className": "ZCL_SKYLINT_PREF_INL_CAST",
     "checkName": "ZSKYLINT_PREF_INL_CAST",
@@ -2288,7 +2288,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "no-exception-overlap",
+    "ruleId": "no-exc-overlap",
     "title": "Classic EXCEPTIONS must not map two errors to the same number",
     "className": "ZCL_SKYLINT_NO_EXC_OVERLAP",
     "checkName": "ZSKYLINT_NO_EXC_OVERLAP",
@@ -2302,7 +2302,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "no-rfc-error-handling",
+    "ruleId": "no-rfc-err",
     "title": "RFC calls must handle SYSTEM_FAILURE and COMMUNICATION_FAILURE",
     "className": "ZCL_SKYLINT_NO_RFC_ERR",
     "checkName": "ZSKYLINT_NO_RFC_ERR",
@@ -2316,7 +2316,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "no-many-parentheses",
+    "ruleId": "no-many-parens",
     "title": "Remove redundant parentheses",
     "className": "ZCL_SKYLINT_NO_MANY_PARENS",
     "checkName": "ZSKYLINT_NO_MANY_PARENS",
@@ -2330,7 +2330,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-pass-by-reference",
+    "ruleId": "pref-pass-by-ref",
     "title": "Avoid Unnecessary Pass-by-Value for Large Tables",
     "className": "ZCL_SKYLINT_PREF_PASS_BY_REF",
     "checkName": "ZSKYLINT_PREF_PASS_BY_REF",
@@ -2344,7 +2344,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "no-modify-standard-tables",
+    "ruleId": "no-mod-std-table",
     "title": "Only Modify Tables Defined in Your Own Package/Component",
     "className": "ZCL_SKYLINT_NO_MOD_STD_TABLE",
     "checkName": "ZSKYLINT_NO_MOD_STD_TABLE",
@@ -2378,7 +2378,7 @@
     ]
   },
   {
-    "ruleId": "no-dynamic-stuff",
+    "ruleId": "no-dynamic-stmt",
     "title": "Avoid Unnecessary Dynamic Programming Constructs",
     "className": "ZCL_SKYLINT_NO_DYNAMIC_STMT",
     "checkName": "ZSKYLINT_NO_DYNAMIC_STMT",
@@ -2392,7 +2392,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-public-constructor",
+    "ruleId": "pref-pub-ctor",
     "title": "Declare Constructor in PUBLIC SECTION",
     "className": "ZCL_SKYLINT_PREF_PUB_CTOR",
     "checkName": "ZSKYLINT_PREF_PUB_CTOR",
@@ -2406,7 +2406,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-definitions-top",
+    "ruleId": "pref-def-top",
     "title": "Place Definitions at Top of Routine",
     "className": "ZCL_SKYLINT_PREF_DEF_TOP",
     "checkName": "ZSKYLINT_PREF_DEF_TOP",
@@ -2420,7 +2420,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "no-unnecessary-return",
+    "ruleId": "no-unnec-return",
     "title": "Omit Unnecessary RETURN Statement",
     "className": "ZCL_SKYLINT_NO_UNNEC_RETURN",
     "checkName": "ZSKYLINT_NO_UNNEC_RETURN",
@@ -2434,7 +2434,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "mix-returning",
+    "ruleId": "no-mix-returning",
     "title": "Do Not Mix RETURNING with EXPORTING or CHANGING",
     "className": "ZCL_SKYLINT_NO_MIX_RETURNING",
     "checkName": "ZSKYLINT_NO_MIX_RETURNING",
@@ -2448,7 +2448,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "method-overwrites-builtin",
+    "ruleId": "no-overw-builtin",
     "title": "Avoid Method Names That Overwrite Built-in Functions",
     "className": "ZCL_SKYLINT_NO_OVERW_BUILTIN",
     "checkName": "ZSKYLINT_NO_OVERW_BUILTIN",
@@ -2462,7 +2462,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "max-one-method-parameter-per-line",
+    "ruleId": "max-param-line",
     "title": "Max One Method Parameter Definition Per Line",
     "className": "ZCL_SKYLINT_MAX_PARAM_LINE",
     "checkName": "ZSKYLINT_MAX_PARAM_LINE",
@@ -2476,7 +2476,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-is-initial",
+    "ruleId": "pref-is-initial",
     "title": "Prefer IS [NOT] INITIAL over lines( ) or Literal Comparisons",
     "className": "ZCL_SKYLINT_PREF_IS_INITIAL",
     "checkName": "ZSKYLINT_PREF_IS_INITIAL",
@@ -2490,7 +2490,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "no-ignored-return-value",
+    "ruleId": "no-ignored-return",
     "title": "Do Not Ignore Return Value of Functional Methods",
     "className": "ZCL_SKYLINT_NO_IGNORED_RETURN",
     "checkName": "ZSKYLINT_NO_IGNORED_RETURN",
@@ -2504,7 +2504,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-cast",
+    "ruleId": "pref-cast",
     "title": "Prefer CAST #( ) over ?=",
     "className": "ZCL_SKYLINT_PREF_CAST",
     "checkName": "ZSKYLINT_PREF_CAST",
@@ -2552,7 +2552,7 @@
     ]
   },
   {
-    "ruleId": "no-modify-loop-table",
+    "ruleId": "no-mod-loop-tab",
     "title": "Do Not Mutate the Internal Table Currently Being Looped",
     "className": "ZCL_SKYLINT_NO_MOD_LOOP_TAB",
     "checkName": "ZSKYLINT_NO_MOD_LOOP_TAB",
@@ -2640,7 +2640,7 @@
     ]
   },
   {
-    "ruleId": "no-hardcoded-env-checks",
+    "ruleId": "no-hardcoded-env",
     "title": "Avoid Hardcoding System & Tenant Environment Checks",
     "className": "ZCL_SKYLINT_NO_HARDCODED_ENV",
     "checkName": "ZSKYLINT_NO_HARDCODED_ENV",
@@ -2715,7 +2715,7 @@
     ]
   },
   {
-    "ruleId": "max-line-length",
+    "ruleId": "max-line-len",
     "title": "Limit Line Length",
     "className": "ZCL_SKYLINT_MAX_LINE_LEN",
     "checkName": "ZSKYLINT_MAX_LINE_LEN",
@@ -2740,7 +2740,7 @@
     ]
   },
   {
-    "ruleId": "prefer-naming",
+    "ruleId": "pref-naming",
     "title": "Enforce Naming Conventions",
     "className": "ZCL_SKYLINT_PREF_NAMING",
     "checkName": "ZSKYLINT_PREF_NAMING",
@@ -3027,7 +3027,7 @@
     ]
   },
   {
-    "ruleId": "expand-macros",
+    "ruleId": "pref-expand-macro",
     "title": "Expand Macro Calls into Explicit Statements",
     "className": "ZCL_SKYLINT_PREF_EXPAND_MACRO",
     "checkName": "ZSKYLINT_PREF_EXPAND_MACRO",
@@ -3041,7 +3041,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "bad-indent",
+    "ruleId": "no-bad-indent",
     "title": "Statement Indentation Must Match Block Nesting",
     "className": "ZCL_SKYLINT_NO_BAD_INDENT",
     "checkName": "ZSKYLINT_NO_BAD_INDENT",
@@ -3080,7 +3080,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "keyword-name",
+    "ruleId": "no-keyword-name",
     "title": "Avoid Using ABAP Keywords as Identifier Names",
     "className": "ZCL_SKYLINT_NO_KEYWORD_NAME",
     "checkName": "ZSKYLINT_NO_KEYWORD_NAME",
@@ -3094,7 +3094,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-join-type",
+    "ruleId": "pref-join-type",
     "title": "Prefer an Explicit JOIN Type",
     "className": "ZCL_SKYLINT_PREF_JOIN_TYPE",
     "checkName": "ZSKYLINT_PREF_JOIN_TYPE",
@@ -3108,7 +3108,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-standard-table",
+    "ruleId": "pref-std-table",
     "title": "Prefer TYPE STANDARD TABLE OF over TYPE TABLE OF",
     "className": "ZCL_SKYLINT_PREF_STD_TABLE",
     "checkName": "ZSKYLINT_PREF_STD_TABLE",
@@ -3122,7 +3122,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-is-supplied",
+    "ruleId": "pref-is-supplied",
     "title": "Prefer IS SUPPLIED over IS REQUESTED",
     "className": "ZCL_SKYLINT_PREF_IS_SUPPLIED",
     "checkName": "ZSKYLINT_PREF_IS_SUPPLIED",
@@ -3136,7 +3136,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-sy",
+    "ruleId": "pref-sy",
     "title": "Prefer the Short System Field Alias SY over SYST",
     "className": "ZCL_SKYLINT_PREF_SY",
     "checkName": "ZSKYLINT_PREF_SY",
@@ -3150,7 +3150,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "no-unfiltered-dml",
+    "ruleId": "no-unfilt-dml",
     "title": "Avoid UPDATE or DELETE Without a WHERE Condition",
     "className": "ZCL_SKYLINT_NO_UNFILT_DML",
     "checkName": "ZSKYLINT_NO_UNFILT_DML",
@@ -3164,7 +3164,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "no-string-concat-in-loop",
+    "ruleId": "no-concat-loop",
     "title": "Avoid String Concatenation Inside Loops",
     "className": "ZCL_SKYLINT_NO_CONCAT_LOOP",
     "checkName": "ZSKYLINT_NO_CONCAT_LOOP",
@@ -3178,7 +3178,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "no-duplicate-literals",
+    "ruleId": "no-dup-literals",
     "title": "Avoid Repeating the Same String Literal",
     "className": "ZCL_SKYLINT_NO_DUP_LITERALS",
     "checkName": "ZSKYLINT_NO_DUP_LITERALS",
@@ -3212,7 +3212,7 @@
     ]
   },
   {
-    "ruleId": "prefer-filter",
+    "ruleId": "pref-filter",
     "title": "Prefer FILTER for a Simple LOOP with IF and APPEND",
     "className": "ZCL_SKYLINT_PREF_FILTER",
     "checkName": "ZSKYLINT_PREF_FILTER",
@@ -3226,7 +3226,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "no-negated-condition",
+    "ruleId": "no-neg-cond",
     "title": "Avoid Negated IF Conditions with ELSE",
     "className": "ZCL_SKYLINT_NO_NEG_COND",
     "checkName": "ZSKYLINT_NO_NEG_COND",
@@ -3240,7 +3240,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "max-boolean-expressions",
+    "ruleId": "max-bool-expr",
     "title": "Limit the Number of Boolean Expressions in a Condition",
     "className": "ZCL_SKYLINT_MAX_BOOL_EXPR",
     "checkName": "ZSKYLINT_MAX_BOOL_EXPR",
@@ -3347,7 +3347,7 @@
     ]
   },
   {
-    "ruleId": "prefer-composition",
+    "ruleId": "pref-composition",
     "title": "Prefer Composition over Inheritance",
     "className": "ZCL_SKYLINT_PREF_COMPOSITION",
     "checkName": "ZSKYLINT_PREF_COMPOSITION",
@@ -3367,7 +3367,7 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "prefer-interface-segregation",
+    "ruleId": "pref-intf-segreg",
     "title": "Prefer Interface Segregation (Small, Focused Interfaces)",
     "className": "ZCL_SKYLINT_PREF_INTF_SEGREG",
     "checkName": "ZSKYLINT_PREF_INTF_SEGREG",
@@ -3417,7 +3417,7 @@
     ]
   },
   {
-    "ruleId": "prefer-factory-name",
+    "ruleId": "pref-factory-name",
     "title": "Prefer CREATE_* Prefix for Factory Methods Returning Own Class",
     "className": "ZCL_SKYLINT_PREF_FACTORY_NAME",
     "checkName": "ZSKYLINT_PREF_FACTORY_NAME",
