@@ -17,11 +17,16 @@ CLASS zcl_skylint_pref_func_module DEFINITION
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_FUNC_MOD'.
 
-    TYPES ty_function_names TYPE HASHED TABLE OF string WITH UNIQUE KEY table_line.
+    TYPES:
+      BEGIN OF ty_recommendation,
+        name    TYPE string,
+        replace TYPE string,
+      END OF ty_recommendation,
+      ty_recommendations TYPE HASHED TABLE OF ty_recommendation WITH UNIQUE KEY name.
 
-    DATA mt_forbidden_fms TYPE ty_function_names.
+    DATA mt_recommendations TYPE ty_recommendations.
 
-    METHODS init_function_names.
+    METHODS init_recommendations.
 
     METHODS extract_function_name
       IMPORTING is_token       TYPE if_ci_atc_source_code_provider=>ty_token
@@ -32,31 +37,30 @@ ENDCLASS.
 
 CLASS zcl_skylint_pref_func_module IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Prefer class-based APIs over obsolete function modules'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-recommendation
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Use modern class-based API instead of obsolete function module'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'Prefer class-based APIs over obsolete function modules'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-recommendation
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Legacy function &1 is obsolete; migrate to &2'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
 
-    init_function_names( ).
+    init_recommendations( ).
   ENDMETHOD.
 
   METHOD check.
     DATA ls_func_tok TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_name     TYPE string.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_rec>  TYPE ty_recommendation.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_stmt>.
       IF <ls_stmt>-keyword <> 'CALL'.
         CONTINUE.
       ENDIF.
 
-      IF zcl_skylint_ast_util=>match_token_sequence(
-             is_statement = <ls_stmt>
-             it_expected  = VALUE #( ( `CALL` ) ( `FUNCTION` ) ) ) = abap_false.
+      IF zcl_skylint_ast_util=>match_token_sequence( is_statement = <ls_stmt>
+                                                     it_expected  = VALUE #( ( `CALL` ) ( `FUNCTION` ) ) ) = abap_false.
         CONTINUE.
       ENDIF.
 
@@ -71,10 +75,13 @@ CLASS zcl_skylint_pref_func_module IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      IF line_exists( mt_forbidden_fms[ table_line = lv_name ] ).
+      ASSIGN mt_recommendations[ name = lv_name ] TO <ls_rec>.
+      IF sy-subrc = 0.
         report_token( is_statement    = <ls_stmt>
                       is_token        = ls_func_tok
-                      iv_finding_code = c_finding_codes-recommendation ).
+                      iv_finding_code = c_finding_codes-recommendation
+                      is_parameters   = VALUE #( param_1 = lv_name
+                                                 param_2 = <ls_rec>-replace ) ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
@@ -105,75 +112,75 @@ CLASS zcl_skylint_pref_func_module IMPLEMENTATION.
                                    len = lv_len - 2 ) ).
   ENDMETHOD.
 
-  METHOD init_function_names.
-    mt_forbidden_fms = VALUE #(
-        ( `CALCULATE_HASH_FOR_CHAR` )
-        ( `CALCULATE_HASH_FOR_RAW` )
-        ( `CCU_TIMESTAMP_DIFFERENCE` )
-        ( `CLPB_EXPORT` )
-        ( `CLPB_IMPORT` )
-        ( `CONVERT_DATE_TO_EXTERNAL` )
-        ( `CONVERT_TIME_INPUT` )
-        ( `DOWNLOAD` )
-        ( `ECATT_CONV_XSTRING_TO_STRING` )
-        ( `F4_FILENAME` )
-        ( `FUNCTION_EXISTS` )
-        ( `GUI_CREATE_DIRECTORY` )
-        ( `GUI_DELETE_FILE` )
-        ( `GUI_DOWNLOAD` )
-        ( `GUI_EXEC` )
-        ( `GUI_FB_USAGE` )
-        ( `GUI_FILE_LOAD_DIALOG` )
-        ( `GUI_FILE_SAVE_DIALOG` )
-        ( `GUI_GET_DESKTOP_INFO` )
-        ( `GUI_GET_FILE_INFO` )
-        ( `GUI_GET_REGVALUE` )
-        ( `GUI_MULTIPLE_FILE_LOAD_DIALOG` )
-        ( `GUI_REMOVE_DIRECTORY` )
-        ( `GUI_RUN` )
-        ( `GUI_SET_REGVALUE` )
-        ( `GUI_UPLOAD` )
-        ( `GUI_VSS_DOWNLOAD` )
-        ( `GUI_VSS_UPLOAD` )
-        ( `GUID_CREATE` )
-        ( `IGN_TIMESTAMP_DIFFERENCE` )
-        ( `IGN_TIMESTAMP_PLUSMINUS` )
-        ( `ISM_SD_GET_PRICING_CONDITIONS` )
-        ( `JOB_CREATE` )
-        ( `JOB_SUBMIT` )
-        ( `MD5_CALCULATE_HASH_FOR_CHAR` )
-        ( `MD5_CALCULATE_HASH_FOR_RAW` )
-        ( `POPUP_TO_CONFIRM_LOSS_OF_DATA` )
-        ( `POPUP_TO_CONFIRM_STEP` )
-        ( `POPUP_TO_CONFIRM_WITH_MESSAGE` )
-        ( `POPUP_TO_CONFIRM_WITH_VALUE` )
-        ( `POPUP_TO_CONFIRM_WITH_VALUE_2` )
-        ( `POPUP_TO_DECIDE` )
-        ( `POPUP_TO_DECIDE_INFO` )
-        ( `POPUP_TO_DECIDE_WITH_MESSAGE` )
-        ( `POPUP_TO_GET_VALUE` )
-        ( `QF05_RANDOM_INTEGER` )
-        ( `REGISTRY_GET` )
-        ( `REGISTRY_SET` )
-        ( `REUSE_ALV_GRID_DISPLAY` )
-        ( `ROUND` )
-        ( `SAPGUI_PROGRESS_INDICATOR` )
-        ( `SCMS_BASE64_DECODE_STR` )
-        ( `SCMS_STRING_TO_XSTRING` )
-        ( `SO_NEW_DOCUMENT_ATT_SEND_API1` )
-        ( `SSFC_BASE64_DECODE` )
-        ( `SSFC_BASE64_ENCODE` )
-        ( `SUBST_GET_FILE_LIST` )
-        ( `SYSTEM_GET_UNIQUE_ID` )
-        ( `SYSTEM_UUID_C_CREATE` )
-        ( `UPLOAD` )
-        ( `WS_DOWNLOAD` )
-        ( `WS_EXECUTE` )
-        ( `WS_FILENAME_GET` )
-        ( `WS_FILE_ATTRIB` )
-        ( `WS_FILE_COPY` )
-        ( `WS_FILE_DELETE` )
-        ( `WS_QUERY` )
-        ( `WS_UPLOAD` ) ).
+  METHOD init_recommendations.
+    mt_recommendations = VALUE #(
+        ( name = `CALCULATE_HASH_FOR_CHAR` replace = `CL_ABAP_MESSAGE_DIGEST` )
+        ( name = `CALCULATE_HASH_FOR_RAW` replace = `CL_ABAP_HMAC or CL_ABAP_MESSAGE_DIGEST` )
+        ( name = `CCU_TIMESTAMP_DIFFERENCE` replace = `CL_ABAP_TSTMP` )
+        ( name = `CLPB_EXPORT` replace = `CL_GUI_FRONTEND_SERVICES` )
+        ( name = `CLPB_IMPORT` replace = `CL_GUI_FRONTEND_SERVICES` )
+        ( name = `CONVERT_DATE_TO_EXTERNAL` replace = `CL_ABAP_DATFM` )
+        ( name = `CONVERT_TIME_INPUT` replace = `CL_ABAP_TIMEFM` )
+        ( name = `DOWNLOAD` replace = `CL_GUI_FRONTEND_SERVICES` )
+        ( name = `ECATT_CONV_XSTRING_TO_STRING` replace = `CL_BINARY_CONVERT` )
+        ( name = `F4_FILENAME` replace = `CL_GUI_FRONTEND_SERVICES` )
+        ( name = `FUNCTION_EXISTS` replace = `TRY..CATCH cx_sy_dyn_call_illegal_func` )
+        ( name = `GUI_CREATE_DIRECTORY` replace = `CL_GUI_FRONTEND_SERVICES` )
+        ( name = `GUI_DELETE_FILE` replace = `CL_GUI_FRONTEND_SERVICES` )
+        ( name = `GUI_DOWNLOAD` replace = `CL_GUI_FRONTEND_SERVICES` )
+        ( name = `GUI_EXEC` replace = `CL_GUI_FRONTEND_SERVICES` )
+        ( name = `GUI_FB_USAGE` replace = `CL_GUI_FRONTEND_SERVICES` )
+        ( name = `GUI_FILE_LOAD_DIALOG` replace = `CL_GUI_FRONTEND_SERVICES` )
+        ( name = `GUI_FILE_SAVE_DIALOG` replace = `CL_GUI_FRONTEND_SERVICES` )
+        ( name = `GUI_GET_DESKTOP_INFO` replace = `CL_GUI_FRONTEND_SERVICES` )
+        ( name = `GUI_GET_FILE_INFO` replace = `CL_GUI_FRONTEND_SERVICES` )
+        ( name = `GUI_GET_REGVALUE` replace = `CL_GUI_FRONTEND_SERVICES` )
+        ( name = `GUI_MULTIPLE_FILE_LOAD_DIALOG` replace = `CL_GUI_FRONTEND_SERVICES` )
+        ( name = `GUI_REMOVE_DIRECTORY` replace = `CL_GUI_FRONTEND_SERVICES` )
+        ( name = `GUI_RUN` replace = `CL_GUI_FRONTEND_SERVICES` )
+        ( name = `GUI_SET_REGVALUE` replace = `CL_GUI_FRONTEND_SERVICES` )
+        ( name = `GUI_UPLOAD` replace = `CL_GUI_FRONTEND_SERVICES` )
+        ( name = `GUI_VSS_DOWNLOAD` replace = `CL_GUI_FRONTEND_SERVICES` )
+        ( name = `GUI_VSS_UPLOAD` replace = `CL_GUI_FRONTEND_SERVICES` )
+        ( name = `GUID_CREATE` replace = `CL_SYSTEM_UUID` )
+        ( name = `IGN_TIMESTAMP_DIFFERENCE` replace = `CL_ABAP_TSTMP` )
+        ( name = `IGN_TIMESTAMP_PLUSMINUS` replace = `CL_ABAP_TSTMP` )
+        ( name = `ISM_SD_GET_PRICING_CONDITIONS` replace = `CL_PRC_RESULT_FACTORY (SAP Note 2220005)` )
+        ( name = `JOB_CREATE` replace = `CL_BP_ABAP_JOB` )
+        ( name = `JOB_SUBMIT` replace = `CL_BP_ABAP_JOB` )
+        ( name = `MD5_CALCULATE_HASH_FOR_CHAR` replace = `CL_ABAP_MESSAGE_DIGEST` )
+        ( name = `MD5_CALCULATE_HASH_FOR_RAW` replace = `CL_ABAP_MESSAGE_DIGEST` )
+        ( name = `POPUP_TO_CONFIRM_LOSS_OF_DATA` replace = `POPUP_TO_CONFIRM` )
+        ( name = `POPUP_TO_CONFIRM_STEP` replace = `POPUP_TO_CONFIRM` )
+        ( name = `POPUP_TO_CONFIRM_WITH_MESSAGE` replace = `POPUP_TO_CONFIRM` )
+        ( name = `POPUP_TO_CONFIRM_WITH_VALUE` replace = `POPUP_TO_CONFIRM` )
+        ( name = `POPUP_TO_CONFIRM_WITH_VALUE_2` replace = `POPUP_TO_CONFIRM` )
+        ( name = `POPUP_TO_DECIDE` replace = `POPUP_TO_CONFIRM` )
+        ( name = `POPUP_TO_DECIDE_INFO` replace = `POPUP_TO_CONFIRM` )
+        ( name = `POPUP_TO_DECIDE_WITH_MESSAGE` replace = `POPUP_TO_CONFIRM` )
+        ( name = `POPUP_TO_GET_VALUE` replace = `POPUP_GET_VALUES` )
+        ( name = `QF05_RANDOM_INTEGER` replace = `CL_ABAP_RANDOM_INT` )
+        ( name = `REGISTRY_GET` replace = `CL_GUI_FRONTEND_SERVICES` )
+        ( name = `REGISTRY_SET` replace = `CL_GUI_FRONTEND_SERVICES` )
+        ( name = `REUSE_ALV_GRID_DISPLAY` replace = `CL_SALV_TABLE=>FACTORY or CL_GUI_ALV_GRID` )
+        ( name = `ROUND` replace = `built-in function round( )` )
+        ( name = `SAPGUI_PROGRESS_INDICATOR` replace = `CL_PROGRESS_INDICATOR` )
+        ( name = `SCMS_BASE64_DECODE_STR` replace = `CL_HTTP_UTILITY` )
+        ( name = `SCMS_STRING_TO_XSTRING` replace = `CL_BINARY_CONVERT` )
+        ( name = `SO_NEW_DOCUMENT_ATT_SEND_API1` replace = `CL_BCS` )
+        ( name = `SSFC_BASE64_DECODE` replace = `CL_HTTP_UTILITY` )
+        ( name = `SSFC_BASE64_ENCODE` replace = `CL_HTTP_UTILITY` )
+        ( name = `SUBST_GET_FILE_LIST` replace = `SAP Note 1686357` )
+        ( name = `SYSTEM_GET_UNIQUE_ID` replace = `CL_SYSTEM_UUID` )
+        ( name = `SYSTEM_UUID_C_CREATE` replace = `CL_SYSTEM_UUID` )
+        ( name = `UPLOAD` replace = `CL_GUI_FRONTEND_SERVICES` )
+        ( name = `WS_DOWNLOAD` replace = `CL_GUI_FRONTEND_SERVICES` )
+        ( name = `WS_EXECUTE` replace = `CL_GUI_FRONTEND_SERVICES` )
+        ( name = `WS_FILENAME_GET` replace = `CL_GUI_FRONTEND_SERVICES` )
+        ( name = `WS_FILE_ATTRIB` replace = `CL_GUI_FRONTEND_SERVICES` )
+        ( name = `WS_FILE_COPY` replace = `CL_GUI_FRONTEND_SERVICES` )
+        ( name = `WS_FILE_DELETE` replace = `CL_GUI_FRONTEND_SERVICES` )
+        ( name = `WS_QUERY` replace = `CL_GUI_FRONTEND_SERVICES` )
+        ( name = `WS_UPLOAD` replace = `CL_GUI_FRONTEND_SERVICES` ) ).
   ENDMETHOD.
 ENDCLASS.

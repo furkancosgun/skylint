@@ -405,6 +405,11 @@ for (const rule of RULES) {
   ruleDoc += `To suppress findings for this rule, append the pseudo-comment to the statement:\n\n`;
   ruleDoc += `\`\`\`abap\n" Standard pseudo-comment:\n... "#EC ${rule.pseudoComment}\n\n" SAP CI_ prefix format:\n... "#EC CI_${rule.pseudoComment}\n\`\`\`\n\n`;
 
+  // Custom section if provided (e.g. reference tables)
+  if (rule.customSection) {
+    ruleDoc += `${rule.customSection.trim()}\n\n`;
+  }
+
 
   // Related Rules from rules-data.mjs
   if (Array.isArray(rule.relatedRules) && rule.relatedRules.length > 0) {

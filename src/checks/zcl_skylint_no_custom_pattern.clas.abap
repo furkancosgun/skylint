@@ -28,18 +28,17 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_custom_pattern IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Disallow configured custom regex patterns'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-forbidden_pattern
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Source code matches forbidden custom regex pattern'
-                       pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     ( name  = 'PATTERN'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                       value = REF #( mv_pattern ) ) ) ) ).
+    super->constructor( VALUE #( description       = 'Disallow configured custom regex patterns'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-forbidden_pattern
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Source code matches forbidden custom regex pattern'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 attributes        = VALUE #(
+                                     ( name  = 'PATTERN'
+                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                       value = REF #( mv_pattern ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

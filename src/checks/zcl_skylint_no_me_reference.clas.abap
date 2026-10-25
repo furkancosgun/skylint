@@ -64,23 +64,25 @@ CLASS zcl_skylint_no_me_reference IMPLEMENTATION.
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
         lv_tok_idx = sy-tabix.
         lv_lexeme = <ls_token>-lexeme.
-        IF lv_lexeme CP 'ME->*'.
-          lv_replace = substring( val = lv_lexeme
-                                  off = 4 ).
-          lt_overrides = VALUE #( ( index  = lv_tok_idx
-                                    lexeme = lv_replace ) ).
-          lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_statement>
-                                                             it_overrides = lt_overrides
-                                                             iv_suffix    = '.' ).
-          ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-omit_me
-                                          iv_statement_from = lv_stmt_idx
-                                          it_new_code       = VALUE #( ( lv_line ) ) ).
-
-          report_token( is_token        = <ls_token>
-                        is_statement    = <ls_statement>
-                        iv_finding_code = c_finding_codes-avoid_me
-                        is_quickfix     = ls_quickfix ).
+        IF lv_lexeme NP 'ME->*'.
+          CONTINUE.
         ENDIF.
+
+        lv_replace = substring( val = lv_lexeme
+                                off = 4 ).
+        lt_overrides = VALUE #( ( index  = lv_tok_idx
+                                  lexeme = lv_replace ) ).
+        lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_statement>
+                                                           it_overrides = lt_overrides
+                                                           iv_suffix    = '.' ).
+        ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-omit_me
+                                        iv_statement_from = lv_stmt_idx
+                                        it_new_code       = VALUE #( ( lv_line ) ) ).
+
+        report_token( is_token        = <ls_token>
+                      is_statement    = <ls_statement>
+                      iv_finding_code = c_finding_codes-avoid_me
+                      is_quickfix     = ls_quickfix ).
       ENDLOOP.
     ENDLOOP.
   ENDMETHOD.

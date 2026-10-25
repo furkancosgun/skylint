@@ -27,17 +27,15 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_dash_in_form IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'No Dashes in Form Names'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-names_no_dash
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Avoid dashes in FORM names'
-                       pseudo_comment = c_pseudo_comment ) )
-                 quickfix_codes    = VALUE #(
-                     ( code       = c_quickfix_codes-dash_to_underscore
-                       short_text = 'Replace dash with underscore' ) ) ) ).
+    super->constructor( VALUE #( description       = 'No Dashes in Form Names'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-names_no_dash
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Avoid dashes in FORM names'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-dash_to_underscore
+                                                                short_text = 'Replace dash with underscore' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -61,25 +59,27 @@ CLASS zcl_skylint_no_dash_in_form IMPLEMENTATION.
       lv_idx = sy-tabix.
       lv_name = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
                                                         iv_index     = 2 ).
-      IF contains( val = lv_name
-                   sub = '-' ).
-        lv_clean = replace( val  = lv_name
-                            sub  = '-'
-                            with = '_'
-                            occ  = 0 ).
-        lt_overrides = VALUE #( ( index  = 2
-                                  lexeme = lv_clean ) ).
-        lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_statement>
-                                                           it_overrides = lt_overrides
-                                                           iv_suffix    = '.' ).
-        ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-dash_to_underscore
-                                        iv_statement_from = lv_idx
-                                        it_new_code       = VALUE #( ( lv_line ) ) ).
-
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-names_no_dash
-                          is_quickfix     = ls_quickfix ).
+      IF NOT contains( val = lv_name
+                       sub = '-' ).
+        CONTINUE.
       ENDIF.
+
+      lv_clean = replace( val  = lv_name
+                          sub  = '-'
+                          with = '_'
+                          occ  = 0 ).
+      lt_overrides = VALUE #( ( index  = 2
+                                lexeme = lv_clean ) ).
+      lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_statement>
+                                                         it_overrides = lt_overrides
+                                                         iv_suffix    = '.' ).
+      ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-dash_to_underscore
+                                      iv_statement_from = lv_idx
+                                      it_new_code       = VALUE #( ( lv_line ) ) ).
+
+      report_statement( is_statement    = <ls_statement>
+                        iv_finding_code = c_finding_codes-names_no_dash
+                        is_quickfix     = ls_quickfix ).
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

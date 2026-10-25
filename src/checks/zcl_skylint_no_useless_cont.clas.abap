@@ -31,17 +31,15 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_useless_cont IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Avoid Redundant CONTINUE at End of Loop'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-useless_continue
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'CONTINUE immediately before loop end is redundant'
-                       pseudo_comment = c_pseudo_comment ) )
-                 quickfix_codes    = VALUE #(
-                     ( code       = c_quickfix_codes-remove_continue
-                       short_text = 'Remove redundant CONTINUE' ) ) ) ).
+    super->constructor( VALUE #( description       = 'Avoid Redundant CONTINUE at End of Loop'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-useless_continue
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'CONTINUE immediately before loop end is redundant'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-remove_continue
+                                                                short_text = 'Remove redundant CONTINUE' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

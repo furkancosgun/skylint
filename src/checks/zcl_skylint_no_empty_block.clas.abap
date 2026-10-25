@@ -47,37 +47,34 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_empty_block IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Avoid empty control blocks (IF, CASE, LOOP, TRY, etc.)'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     severity       = if_ci_atc_check=>finding_severities-warning
-                     pseudo_comment = c_pseudo_comment
-                     ( code = c_finding_codes-empty_control_block
-                       text = 'Empty control block detected; remove redundant control statement' )
-                     ( code = c_finding_codes-try_without_catch
-                       text = 'TRY block without CATCH is superfluous' ) )
-                 quickfix_codes    = VALUE #(
-                     ( code       = c_quickfix_codes-remove_empty_block
-                       short_text = 'Remove empty control block' ) )
-                 attributes        = VALUE #(
-                     kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                     ( name  = 'CHECK_IF'
-                       value = REF #( mv_check_if ) )
-                     ( name  = 'CHECK_LOOP'
-                       value = REF #( mv_check_loop ) )
-                     ( name  = 'CHECK_CASE'
-                       value = REF #( mv_check_case ) )
-                     ( name  = 'CHECK_TRY'
-                       value = REF #( mv_check_try ) )
-                     ( name  = 'CHECK_CATCH'
-                       value = REF #( mv_check_catch ) )
-                     ( name  = 'CHECK_TRY_NO_CATCH'
-                       value = REF #( mv_check_try_no_catch ) )
-                     ( name  = 'CHECK_DO'
-                       value = REF #( mv_check_do ) )
-                     ( name  = 'CHECK_WHILE'
-                       value = REF #( mv_check_while ) ) ) ) ).
+    super->constructor( VALUE #( description       = 'Avoid empty control blocks (IF, CASE, LOOP, TRY, etc.)'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     severity       = if_ci_atc_check=>finding_severities-warning
+                                     pseudo_comment = c_pseudo_comment
+                                     ( code = c_finding_codes-empty_control_block
+                                       text = 'Empty control block detected; remove redundant control statement' )
+                                     ( code = c_finding_codes-try_without_catch
+                                       text = 'TRY block without CATCH is superfluous' ) )
+                                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-remove_empty_block
+                                                                short_text = 'Remove empty control block' ) )
+                                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                                              ( name  = 'CHECK_IF'
+                                                                value = REF #( mv_check_if ) )
+                                                              ( name  = 'CHECK_LOOP'
+                                                                value = REF #( mv_check_loop ) )
+                                                              ( name  = 'CHECK_CASE'
+                                                                value = REF #( mv_check_case ) )
+                                                              ( name  = 'CHECK_TRY'
+                                                                value = REF #( mv_check_try ) )
+                                                              ( name  = 'CHECK_CATCH'
+                                                                value = REF #( mv_check_catch ) )
+                                                              ( name  = 'CHECK_TRY_NO_CATCH'
+                                                                value = REF #( mv_check_try_no_catch ) )
+                                                              ( name  = 'CHECK_DO'
+                                                                value = REF #( mv_check_do ) )
+                                                              ( name  = 'CHECK_WHILE'
+                                                                value = REF #( mv_check_while ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -139,11 +136,11 @@ CLASS zcl_skylint_no_empty_block IMPLEMENTATION.
           ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-remove_empty_block
                                           iv_statement_from = lv_stmt_idx
                                           it_new_code       = VALUE #( ) ).
-        ELSEIF    ( <ls_statement>-keyword = 'IF' AND ls_next_stmt-keyword = 'ENDIF' )
-               OR ( <ls_statement>-keyword = 'LOOP' AND ls_next_stmt-keyword = 'ENDLOOP' )
-               OR ( <ls_statement>-keyword = 'DO' AND ls_next_stmt-keyword = 'ENDDO' )
+        ELSEIF    ( <ls_statement>-keyword = 'IF'    AND ls_next_stmt-keyword = 'ENDIF' )
+               OR ( <ls_statement>-keyword = 'LOOP'  AND ls_next_stmt-keyword = 'ENDLOOP' )
+               OR ( <ls_statement>-keyword = 'DO'    AND ls_next_stmt-keyword = 'ENDDO' )
                OR ( <ls_statement>-keyword = 'WHILE' AND ls_next_stmt-keyword = 'ENDWHILE' )
-               OR ( <ls_statement>-keyword = 'CASE' AND ls_next_stmt-keyword = 'ENDCASE' ).
+               OR ( <ls_statement>-keyword = 'CASE'  AND ls_next_stmt-keyword = 'ENDCASE' ).
           ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-remove_empty_block
                                           iv_statement_from = lv_stmt_idx
                                           iv_statement_to   = lv_stmt_idx + 1

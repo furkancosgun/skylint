@@ -58,11 +58,10 @@ CLASS zcl_skylint_no_obs_control IMPLEMENTATION.
                        severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Avoid obsolete control flow (FORM, AT NEW, BREAK, DEFINE, etc.)'
                        pseudo_comment = c_pseudo_comment ) )
-                 quickfix_codes    = VALUE #(
-                     ( code       = c_quickfix_codes-remove_break
-                       short_text = 'Remove BREAK-POINT' )
-                     ( code       = c_quickfix_codes-remove_ext_check
-                       short_text = 'Remove SET EXTENDED CHECK' ) )
+                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-remove_break
+                                                short_text = 'Remove BREAK-POINT' )
+                                              ( code       = c_quickfix_codes-remove_ext_check
+                                                short_text = 'Remove SET EXTENDED CHECK' ) )
                  attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
                                               ( name  = 'CHECK_FORM'
                                                 value = REF #( mv_check_form ) )
