@@ -48,47 +48,37 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_hungarian IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'skylint: Avoid Hungarian notation and encoding prefixes'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-hungarian
-                                       severity       = if_ci_atc_check=>finding_severities-warning
-                                       text           = 'Avoid Hungarian notation and encoding prefixes in names'
-                                       pseudo_comment = c_pseudo_comment ) )
-                                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                                                              ( name  = 'CHECK_ATTR'
-                                                                value = REF #( mv_check_attributes ) )
-                                                              ( name  = 'CHECK_LOCAL'
-                                                                value = REF #( mv_check_locals ) )
-                                                              ( name  = 'CHECK_PARAM'
-                                                                value = REF #( mv_check_params ) ) ) ) ).
+    super->constructor(
+        VALUE #( description       = 'skylint: Avoid Hungarian notation and encoding prefixes'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #(
+                     ( code           = c_finding_codes-hungarian
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Avoid Hungarian notation and encoding prefixes in names'
+                       pseudo_comment = c_pseudo_comment ) )
+                 attributes        = VALUE #(
+                     kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                     ( name  = 'CHECK_ATTR'
+                       value = REF #( mv_check_attributes ) )
+                     ( name  = 'CHECK_LOCAL'
+                       value = REF #( mv_check_locals ) )
+                     ( name  = 'CHECK_PARAM'
+                       value = REF #( mv_check_params ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
-      LOOP AT is_procedure-statements ASSIGNING <ls_stmt>.
-        CASE <ls_stmt>-keyword.
-          WHEN 'DATA' OR 'CLASS-DATA' OR 'STATICS'.
-            IF mv_check_attributes = abap_true.
-              check_decl_name( <ls_stmt> ).
-            ENDIF.
-
-          WHEN 'METHODS' OR 'CLASS-METHODS'.
-            IF mv_check_params = abap_true.
-              check_method_parameters( <ls_stmt> ).
-            ENDIF.
-        ENDCASE.
-      ENDLOOP.
-      RETURN.
-    ENDIF.
-
     LOOP AT is_procedure-statements ASSIGNING <ls_stmt>.
       CASE <ls_stmt>-keyword.
-        WHEN 'DATA' OR 'STATICS' OR 'FIELD-SYMBOLS'.
-          IF mv_check_locals = abap_true.
+        WHEN 'DATA' OR 'CLASS-DATA' OR 'STATICS' OR 'CONSTANTS' OR 'FIELD-SYMBOLS'.
+          IF mv_check_attributes = abap_true OR mv_check_locals = abap_true.
             check_decl_name( <ls_stmt> ).
+          ENDIF.
+
+        WHEN 'METHODS' OR 'CLASS-METHODS'.
+          IF mv_check_params = abap_true.
+            check_method_parameters( <ls_stmt> ).
           ENDIF.
 
         WHEN OTHERS.
@@ -105,24 +95,30 @@ CLASS zcl_skylint_no_hungarian IMPLEMENTATION.
     DATA lv_name     TYPE string.
     DATA lv_type     TYPE string.
 
-    IF zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
-                                                  it_expected  = VALUE #( ( `BEGIN` ) ( `OF` ) ) ) > 0.
-      ls_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
-                                                      iv_lexeme    = 'OF' ).
+    IF zcl_skylint_ast_util=>find_token_sequence(
+           is_statement = is_statement
+           it_expected  = VALUE #( ( `BEGIN` ) ( `OF` ) ) ) > 0.
+      ls_tok = zcl_skylint_ast_util=>get_token_after(
+          is_statement = is_statement
+          iv_lexeme    = 'OF' ).
       lv_name = ls_tok-lexeme.
-    ELSEIF zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
-                                                      it_expected  = VALUE #( ( `END` ) ( `OF` ) ) ) > 0.
+    ELSEIF zcl_skylint_ast_util=>find_token_sequence(
+               is_statement = is_statement
+               it_expected  = VALUE #( ( `END` ) ( `OF` ) ) ) > 0.
       RETURN.
     ELSE.
-      ls_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
-                                                      iv_lexeme    = is_statement-keyword ).
+      ls_tok = zcl_skylint_ast_util=>get_token_after(
+          is_statement = is_statement
+          iv_lexeme    = is_statement-keyword ).
       lv_name = ls_tok-lexeme.
 
-      ls_type_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
-                                                           iv_lexeme    = 'TYPE' ).
+      ls_type_tok = zcl_skylint_ast_util=>get_token_after(
+          is_statement = is_statement
+          iv_lexeme    = 'TYPE' ).
       IF ls_type_tok-lexeme IS INITIAL.
-        ls_type_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
-                                                             iv_lexeme    = 'LIKE' ).
+        ls_type_tok = zcl_skylint_ast_util=>get_token_after(
+            is_statement = is_statement
+            iv_lexeme    = 'LIKE' ).
       ENDIF.
       lv_type = ls_type_tok-lexeme.
     ENDIF.
@@ -140,9 +136,12 @@ CLASS zcl_skylint_no_hungarian IMPLEMENTATION.
     DATA ls_type_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_name      TYPE string.
     DATA lv_type      TYPE string.
+    DATA lv_tabix     TYPE i.
     FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_tok>.
+      lv_tabix = sy-tabix.
+
       IF <ls_tok>-references IS NOT INITIAL.
         ls_prev_tok = <ls_tok>.
         CONTINUE.
@@ -159,7 +158,7 @@ CLASS zcl_skylint_no_hungarian IMPLEMENTATION.
           IF lv_in_clause = abap_true AND ls_prev_tok-lexeme IS NOT INITIAL.
             lv_name = extract_name_from_paren( ls_prev_tok-lexeme ).
             ls_type_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                           iv_index     = sy-tabix + 1 ).
+                                                           iv_index     = lv_tabix + 1 ).
             lv_type = ls_type_tok-lexeme.
 
             IF is_hungarian( iv_name = lv_name
