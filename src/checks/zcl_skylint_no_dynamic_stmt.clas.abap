@@ -40,12 +40,11 @@ CLASS zcl_skylint_no_dynamic_stmt IMPLEMENTATION.
                                        severity       = if_ci_atc_check=>finding_severities-warning
                                        text           = 'Avoid dynamic calls and language constructs'
                                        pseudo_comment = c_pseudo_comment ) )
-                                 attributes        = VALUE #(
-                                     kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                                     ( name  = 'CHECK_DYNAMIC_SQL'
-                                       value = REF #( mv_check_dynamic_sql ) )
-                                     ( name  = 'IGNORE_RAP_QUERY_PROVIDER'
-                                       value = REF #( mv_ignore_rap_query_provider ) ) ) ) ).
+                                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                                              ( name  = 'CHECK_DYNAMIC_SQL'
+                                                                value = REF #( mv_check_dynamic_sql ) )
+                                                              ( name  = 'IGNORE_RAP_QUERY_PROVIDER'
+                                                                value = REF #( mv_ignore_rap_query_provider ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

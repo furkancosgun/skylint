@@ -31,16 +31,15 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_call_exporting IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'skylint: Omit Redundant EXPORTING in Method Calls'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-omit_exporting
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Omit explicit EXPORTING keyword in method invocation'
-                       pseudo_comment = c_pseudo_comment ) )
-                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-omit_exporting
-                                                short_text = 'Remove EXPORTING keyword' ) ) ) ).
+    super->constructor( VALUE #( description       = 'skylint: Omit Redundant EXPORTING in Method Calls'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-omit_exporting
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Omit explicit EXPORTING keyword in method invocation'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-omit_exporting
+                                                                short_text = 'Remove EXPORTING keyword' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -62,20 +61,22 @@ CLASS zcl_skylint_no_call_exporting IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      IF has_other_sections( <ls_statement> ) = abap_false.
-        lv_tok_idx = zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
-                                                       iv_lexeme    = 'EXPORTING' ).
-        IF lv_tok_idx > 0.
-          ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-omit_exporting
-                                          iv_statement_from = lv_stmt_idx
-                                          iv_token_from     = lv_tok_idx
-                                          iv_token_to       = lv_tok_idx
-                                          it_new_code       = lt_empty_code ).
+      IF has_other_sections( <ls_statement> ) = abap_true.
+        CONTINUE.
+      ENDIF.
 
-          report_statement( is_statement    = <ls_statement>
-                            iv_finding_code = c_finding_codes-omit_exporting
-                            is_quickfix     = ls_quickfix ).
-        ENDIF.
+      lv_tok_idx = zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
+                                                     iv_lexeme    = 'EXPORTING' ).
+      IF lv_tok_idx > 0.
+        ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-omit_exporting
+                                        iv_statement_from = lv_stmt_idx
+                                        iv_token_from     = lv_tok_idx
+                                        iv_token_to       = lv_tok_idx
+                                        it_new_code       = lt_empty_code ).
+
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-omit_exporting
+                          is_quickfix     = ls_quickfix ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.

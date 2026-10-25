@@ -22,14 +22,13 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_metaprogramming IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'skylint: Metaprogramming and Dynamic Code Generation'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-metaprogramming
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Avoid dynamic code generation and metaprogramming constructs'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'skylint: Metaprogramming and Dynamic Code Generation'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-metaprogramming
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Avoid dynamic code generation and metaprogramming constructs'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -58,10 +57,10 @@ CLASS zcl_skylint_no_metaprogramming IMPLEMENTATION.
         WHEN 'INSERT'.
           IF    zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
                                                         iv_index     = 2
-                                                        iv_expected  = `REPORT` )   = abap_true
+                                                        iv_expected  = `REPORT` )     = abap_true
              OR zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
                                                         iv_index     = 2
-                                                        iv_expected  = `TEXTPOOL` ) = abap_true.
+                                                        iv_expected  = `TEXTPOOL` )   = abap_true.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-metaprogramming ).
           ENDIF.
@@ -69,13 +68,13 @@ CLASS zcl_skylint_no_metaprogramming IMPLEMENTATION.
         WHEN 'DELETE'.
           IF    zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
                                                         iv_index     = 2
-                                                        iv_expected  = `REPORT` )   = abap_true
+                                                        iv_expected  = `REPORT` )     = abap_true
              OR zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
                                                         iv_index     = 2
-                                                        iv_expected  = `TEXTPOOL` ) = abap_true
+                                                        iv_expected  = `TEXTPOOL` )   = abap_true
              OR zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
                                                         iv_index     = 2
-                                                        iv_expected  = `DYNPRO` )   = abap_true.
+                                                        iv_expected  = `DYNPRO` )     = abap_true.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-metaprogramming ).
           ENDIF.

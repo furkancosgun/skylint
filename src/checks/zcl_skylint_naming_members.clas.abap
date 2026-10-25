@@ -88,58 +88,57 @@ ENDCLASS.
 
 CLASS zcl_skylint_naming_members IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'skylint: Class Attribute and Parameter Naming Conventions'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     severity       = if_ci_atc_check=>finding_severities-warning
-                     pseudo_comment = c_pseudo_comment
-                     ( code = c_finding_codes-class_attribute
-                       text = 'Class attribute name does not match configured pattern' )
-                     ( code = c_finding_codes-method_parameter
-                       text = 'Method parameter name does not match configured pattern' )
-                     ( code = c_finding_codes-selection_screen
-                       text = 'Selection screen element name does not match configured pattern' ) )
-                 attributes        = VALUE #(
-                     ( name  = 'ATTR_IGN_EXC'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                       value = REF #( mv_attr_ignore_exceptions ) )
-                     ( name  = 'ATTR_IGN_LOCAL'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                       value = REF #( mv_attr_ignore_local ) )
-                     ( name  = 'ATTR_IGN_INTF'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                       value = REF #( mv_attr_ignore_interfaces ) )
-                     ( name  = 'ATTR_STATICS'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                       value = REF #( mv_attr_statics ) )
-                     ( name  = 'ATTR_INSTANCE'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                       value = REF #( mv_attr_instance ) )
-                     ( name  = 'ATTR_CONSTANTS'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                       value = REF #( mv_attr_constants ) )
-                     ( name  = 'PARAM_IGN_EXC'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                       value = REF #( mv_param_ignore_exceptions ) )
-                     ( name  = 'PARAM_IMPORTING'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                       value = REF #( mv_param_importing ) )
-                     ( name  = 'PARAM_RETURNING'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                       value = REF #( mv_param_returning ) )
-                     ( name  = 'PARAM_CHANGING'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                       value = REF #( mv_param_changing ) )
-                     ( name  = 'PARAM_EXPORTING'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                       value = REF #( mv_param_exporting ) )
-                     ( name  = 'SSCR_PARAM'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                       value = REF #( mv_sscreen_parameter ) )
-                     ( name  = 'SSCR_SELOPT'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                       value = REF #( mv_sscreen_select_option ) ) ) ) ).
+    super->constructor( VALUE #( description       = 'skylint: Class Attribute and Parameter Naming Conventions'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     severity       = if_ci_atc_check=>finding_severities-warning
+                                     pseudo_comment = c_pseudo_comment
+                                     ( code = c_finding_codes-class_attribute
+                                       text = 'Class attribute name does not match configured pattern' )
+                                     ( code = c_finding_codes-method_parameter
+                                       text = 'Method parameter name does not match configured pattern' )
+                                     ( code = c_finding_codes-selection_screen
+                                       text = 'Selection screen element name does not match configured pattern' ) )
+                                 attributes        = VALUE #(
+                                     ( name  = 'ATTR_IGN_EXC'
+                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                       value = REF #( mv_attr_ignore_exceptions ) )
+                                     ( name  = 'ATTR_IGN_LOCAL'
+                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                       value = REF #( mv_attr_ignore_local ) )
+                                     ( name  = 'ATTR_IGN_INTF'
+                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                       value = REF #( mv_attr_ignore_interfaces ) )
+                                     ( name  = 'ATTR_STATICS'
+                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                       value = REF #( mv_attr_statics ) )
+                                     ( name  = 'ATTR_INSTANCE'
+                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                       value = REF #( mv_attr_instance ) )
+                                     ( name  = 'ATTR_CONSTANTS'
+                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                       value = REF #( mv_attr_constants ) )
+                                     ( name  = 'PARAM_IGN_EXC'
+                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                       value = REF #( mv_param_ignore_exceptions ) )
+                                     ( name  = 'PARAM_IMPORTING'
+                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                       value = REF #( mv_param_importing ) )
+                                     ( name  = 'PARAM_RETURNING'
+                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                       value = REF #( mv_param_returning ) )
+                                     ( name  = 'PARAM_CHANGING'
+                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                       value = REF #( mv_param_changing ) )
+                                     ( name  = 'PARAM_EXPORTING'
+                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                       value = REF #( mv_param_exporting ) )
+                                     ( name  = 'SSCR_PARAM'
+                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                       value = REF #( mv_sscreen_parameter ) )
+                                     ( name  = 'SSCR_SELOPT'
+                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                       value = REF #( mv_sscreen_select_option ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -358,7 +357,7 @@ CLASS zcl_skylint_naming_members IMPLEMENTATION.
     ENDIF.
 
     IF    zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
-                                                     it_expected  = VALUE #( ( `FOR` ) ( `EVENT` ) ) ) > 0
+                                                     it_expected  = VALUE #( ( `FOR` ) ( `EVENT` ) ) )   > 0
        OR zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
                                                      it_expected  = VALUE #( ( `FOR` ) ( `TESTING` ) ) ) > 0.
       RETURN.

@@ -31,13 +31,14 @@ ENDCLASS.
 CLASS zcl_skylint_auth_check_subrc IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Check sy-subrc immediately after AUTHORITY-CHECK'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-missing_subrc
-                       severity       = if_ci_atc_check=>finding_severities-error
-                       text           = 'AUTHORITY-CHECK sy-subrc must be checked immediately; failing to check bypasses authorization'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+        VALUE #(
+            description       = 'Check sy-subrc immediately after AUTHORITY-CHECK'
+            remote_enablement = abap_true
+            finding_codes     = VALUE #(
+                ( code           = c_finding_codes-missing_subrc
+                  severity       = if_ci_atc_check=>finding_severities-error
+                  text           = 'AUTHORITY-CHECK sy-subrc must be checked immediately; failing to check bypasses authorization'
+                  pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

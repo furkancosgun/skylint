@@ -19,7 +19,7 @@ CLASS zcl_skylint_max_params DEFINITION
     CONSTANTS c_pseudo_comment      TYPE string VALUE 'MAX_PARAMS'.
     CONSTANTS c_pseudo_comment_line TYPE string VALUE 'MAX_PARAM_LINE'.
 
-    DATA mv_max_parameters   TYPE i VALUE 8.
+    DATA mv_max_parameters   TYPE i         VALUE 8.
     DATA mv_check_param_line TYPE abap_bool VALUE abap_true.
 
     METHODS count_parameters
@@ -39,21 +39,19 @@ CLASS zcl_skylint_max_params IMPLEMENTATION.
         VALUE #( description       = 'skylint: Method parameter limits (count and lines)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
+                     severity = if_ci_atc_check=>finding_severities-warning
                      ( code           = c_finding_codes-too_many_parameters
-                       severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Method signature has too many parameters; consider grouping into structures'
                        pseudo_comment = c_pseudo_comment )
                      ( code           = c_finding_codes-multiple_params
-                       severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Keep max one method parameter definition per line'
                        pseudo_comment = c_pseudo_comment_line ) )
-                 attributes        = VALUE #(
-                     ( name  = 'MAX_PARAMETERS'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                       value = REF #( mv_max_parameters ) )
-                     ( name  = 'CHECK_PARAM_LINE'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                       value = REF #( mv_check_param_line ) ) ) ) ).
+                 attributes        = VALUE #( ( name  = 'MAX_PARAMETERS'
+                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                                value = REF #( mv_max_parameters ) )
+                                              ( name  = 'CHECK_PARAM_LINE'
+                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                                value = REF #( mv_check_param_line ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

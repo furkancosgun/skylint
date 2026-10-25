@@ -19,7 +19,7 @@ CLASS zcl_skylint_pref_declarations DEFINITION
     CONSTANTS c_pseudo_comment_top   TYPE string VALUE 'DEF_TOP'.
     CONSTANTS c_pseudo_comment_order TYPE string VALUE 'DECL_ORDER'.
 
-    DATA mv_check_def_top   TYPE abap_bool VALUE abap_true.
+    DATA mv_check_def_top    TYPE abap_bool VALUE abap_true.
     DATA mv_check_decl_order TYPE abap_bool VALUE abap_true.
 
 ENDCLASS.
@@ -31,26 +31,23 @@ CLASS zcl_skylint_pref_declarations IMPLEMENTATION.
         VALUE #( description       = 'skylint: Routine Declaration Hygiene (top placement & order)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
+                     severity = if_ci_atc_check=>finding_severities-warning
                      ( code           = c_finding_codes-definitions_top
-                       severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Reorder definitions to beginning of routine; avoid scattered declarations'
                        pseudo_comment = c_pseudo_comment_top )
                      ( code           = c_finding_codes-decl_order
-                       severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Declare local TYPES before CONSTANTS before DATA before FIELD-SYMBOLS'
                        pseudo_comment = c_pseudo_comment_order ) )
-                 attributes        = VALUE #(
-                     ( name  = 'CHECK_DEF_TOP'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                       value = REF #( mv_check_def_top ) )
-                     ( name  = 'CHECK_DECL_ORDER'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                       value = REF #( mv_check_decl_order ) ) ) ) ).
+                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                              ( name  = 'CHECK_DEF_TOP'
+                                                value = REF #( mv_check_def_top ) )
+                                              ( name  = 'CHECK_DECL_ORDER'
+                                                value = REF #( mv_check_decl_order ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     DATA lv_seen_executable TYPE abap_bool VALUE abap_false.
-    DATA lv_max_rank        TYPE i VALUE 0.
+    DATA lv_max_rank        TYPE i         VALUE 0.
     DATA lv_curr_rank       TYPE i.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
 

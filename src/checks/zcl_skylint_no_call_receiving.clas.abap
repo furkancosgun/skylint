@@ -40,16 +40,15 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_call_receiving IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'skylint: Omit RECEIVING in Method Invocations'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-omit_receiving
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Omit RECEIVING keyword; use functional call or omit parameter'
-                       pseudo_comment = c_pseudo_comment ) )
-                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-omit_receiving
-                                                short_text = 'Hoist RECEIVING to LHS' ) ) ) ).
+    super->constructor( VALUE #( description       = 'skylint: Omit RECEIVING in Method Invocations'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-omit_receiving
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Omit RECEIVING keyword; use functional call or omit parameter'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-omit_receiving
+                                                                short_text = 'Hoist RECEIVING to LHS' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

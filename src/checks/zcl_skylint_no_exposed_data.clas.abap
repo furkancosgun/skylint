@@ -35,21 +35,18 @@ CLASS zcl_skylint_no_exposed_data IMPLEMENTATION.
         VALUE #( description       = 'Avoid mutable data in public classes and interfaces'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
+                     severity = if_ci_atc_check=>finding_severities-warning
                      ( code           = c_finding_codes-public_attribute
-                       severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Avoid public attributes; use private/protected with getters or READ-ONLY'
                        pseudo_comment = c_pseudo_comment_attr )
                      ( code           = c_finding_codes-interface_data
-                       severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Avoid mutable DATA in interfaces; declare CONSTANTS or move to class'
                        pseudo_comment = c_pseudo_comment_intf ) )
-                 attributes        = VALUE #(
-                     ( name  = 'CHECK_PUBLIC_ATTR'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                       value = REF #( mv_check_public_attr ) )
-                     ( name  = 'CHECK_INTF_DATA'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                       value = REF #( mv_check_intf_data ) ) ) ) ).
+                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                              ( name  = 'CHECK_PUBLIC_ATTR'
+                                                value = REF #( mv_check_public_attr ) )
+                                              ( name  = 'CHECK_INTF_DATA'
+                                                value = REF #( mv_check_intf_data ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -96,7 +93,7 @@ CLASS zcl_skylint_no_exposed_data IMPLEMENTATION.
         WHEN 'DATA' OR 'CLASS-DATA'.
           IF     lv_in_public = abap_true
              AND zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                         iv_lexeme    = 'READ-ONLY' ) = abap_false.
+                                                         iv_lexeme    = 'READ-ONLY' )  = abap_false.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-public_attribute ).
           ENDIF.

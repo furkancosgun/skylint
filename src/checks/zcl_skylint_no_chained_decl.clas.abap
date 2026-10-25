@@ -60,10 +60,9 @@ CLASS zcl_skylint_no_chained_decl IMPLEMENTATION.
                        pseudo_comment = c_pseudo_comment ) )
                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-resolve_chain
                                                 short_text = 'Resolve chain into single declarations' ) )
-                 attributes        = VALUE #(
-                     ( name  = 'ALLOW_STRUCTURE_CHAINS'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                       value = REF #( mv_allow_structure_chains ) ) ) ) ).
+                 attributes        = VALUE #( ( name  = 'ALLOW_STRUCTURE_CHAINS'
+                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                                value = REF #( mv_allow_structure_chains ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

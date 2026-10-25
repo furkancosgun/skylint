@@ -40,18 +40,17 @@ CLASS zcl_skylint_no_obs_strings IMPLEMENTATION.
                        severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Avoid obsolete string statements (PACK, UNPACK, POSIX REGEX, etc.)'
                        pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                     ( name  = 'CHECK_PACK'
-                       value = REF #( mv_check_pack ) )
-                     ( name  = 'CHECK_UNPACK'
-                       value = REF #( mv_check_unpack ) )
-                     ( name  = 'CHECK_REGEX'
-                       value = REF #( mv_check_regex ) )
-                     ( name  = 'CHECK_OCCURENCES'
-                       value = REF #( mv_check_occurences ) )
-                     ( name  = 'CHECK_REPLACE_INTO'
-                       value = REF #( mv_check_replace_into ) ) ) ) ).
+                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                              ( name  = 'CHECK_PACK'
+                                                value = REF #( mv_check_pack ) )
+                                              ( name  = 'CHECK_UNPACK'
+                                                value = REF #( mv_check_unpack ) )
+                                              ( name  = 'CHECK_REGEX'
+                                                value = REF #( mv_check_regex ) )
+                                              ( name  = 'CHECK_OCCURENCES'
+                                                value = REF #( mv_check_occurences ) )
+                                              ( name  = 'CHECK_REPLACE_INTO'
+                                                value = REF #( mv_check_replace_into ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -74,7 +73,7 @@ CLASS zcl_skylint_no_obs_strings IMPLEMENTATION.
         WHEN 'FIND' OR 'REPLACE'.
           IF     mv_check_regex = abap_true
              AND zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
-                                                   iv_lexeme    = 'REGEX' ) > 0.
+                                                   iv_lexeme    = 'REGEX' )      > 0.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_string ).
           ELSEIF     mv_check_occurences = abap_true
@@ -85,7 +84,7 @@ CLASS zcl_skylint_no_obs_strings IMPLEMENTATION.
           ELSEIF     mv_check_replace_into = abap_true
                  AND <ls_statement>-keyword = 'REPLACE'
                  AND zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
-                                                       iv_lexeme    = 'INTO' ) > 0.
+                                                       iv_lexeme    = 'INTO' )       > 0.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_string ).
           ENDIF.

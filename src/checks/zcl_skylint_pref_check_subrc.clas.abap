@@ -39,23 +39,22 @@ ENDCLASS.
 
 CLASS zcl_skylint_pref_check_subrc IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Check sy-subrc after DB, table and string operations'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-check_subrc
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Check sy-subrc after SELECT SINGLE, READ, FIND, SEARCH'
-                       pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                                              ( name  = 'CHECK_SELECT_SINGLE'
-                                                value = REF #( mv_check_select_single ) )
-                                              ( name  = 'CHECK_READ_TABLE'
-                                                value = REF #( mv_check_read_table ) )
-                                              ( name  = 'CHECK_FIND_SEARCH'
-                                                value = REF #( mv_check_find_search ) )
-                                              ( name  = 'CHECK_ASSIGN'
-                                                value = REF #( mv_check_assign ) ) ) ) ).
+    super->constructor( VALUE #( description       = 'Check sy-subrc after DB, table and string operations'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-check_subrc
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Check sy-subrc after SELECT SINGLE, READ, FIND, SEARCH'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                                              ( name  = 'CHECK_SELECT_SINGLE'
+                                                                value = REF #( mv_check_select_single ) )
+                                                              ( name  = 'CHECK_READ_TABLE'
+                                                                value = REF #( mv_check_read_table ) )
+                                                              ( name  = 'CHECK_FIND_SEARCH'
+                                                                value = REF #( mv_check_find_search ) )
+                                                              ( name  = 'CHECK_ASSIGN'
+                                                                value = REF #( mv_check_assign ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

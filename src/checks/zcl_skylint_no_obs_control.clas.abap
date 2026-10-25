@@ -53,28 +53,27 @@ CLASS zcl_skylint_no_obs_control IMPLEMENTATION.
                        severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Avoid obsolete control flow (FORM, AT NEW, BREAK, DEFINE, etc.)'
                        pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                     ( name  = 'CHECK_FORM'
-                       value = REF #( mv_check_form ) )
-                     ( name  = 'CHECK_LOOP_CTL'
-                       value = REF #( mv_check_loop_ctl ) )
-                     ( name  = 'CHECK_BREAK'
-                       value = REF #( mv_check_break ) )
-                     ( name  = 'CHECK_DEFINE'
-                       value = REF #( mv_check_define ) )
-                     ( name  = 'CHECK_TEST_SEAMS'
-                       value = REF #( mv_check_test_seams ) )
-                     ( name  = 'CHECK_CATCH_SYSTEM'
-                       value = REF #( mv_check_catch_system ) )
-                     ( name  = 'CHECK_SET_EXT_CHECK'
-                       value = REF #( mv_check_set_ext_check ) )
-                     ( name  = 'CHECK_SELECT_NO_INTO'
-                       value = REF #( mv_check_select_no_into ) )
-                     ( name  = 'CHECK_EXIT_SQL'
-                       value = REF #( mv_check_exit_sql ) )
-                     ( name  = 'CHECK_SORT_BY_FS'
-                       value = REF #( mv_check_sort_by_fs ) ) ) ) ).
+                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                              ( name  = 'CHECK_FORM'
+                                                value = REF #( mv_check_form ) )
+                                              ( name  = 'CHECK_LOOP_CTL'
+                                                value = REF #( mv_check_loop_ctl ) )
+                                              ( name  = 'CHECK_BREAK'
+                                                value = REF #( mv_check_break ) )
+                                              ( name  = 'CHECK_DEFINE'
+                                                value = REF #( mv_check_define ) )
+                                              ( name  = 'CHECK_TEST_SEAMS'
+                                                value = REF #( mv_check_test_seams ) )
+                                              ( name  = 'CHECK_CATCH_SYSTEM'
+                                                value = REF #( mv_check_catch_system ) )
+                                              ( name  = 'CHECK_SET_EXT_CHECK'
+                                                value = REF #( mv_check_set_ext_check ) )
+                                              ( name  = 'CHECK_SELECT_NO_INTO'
+                                                value = REF #( mv_check_select_no_into ) )
+                                              ( name  = 'CHECK_EXIT_SQL'
+                                                value = REF #( mv_check_exit_sql ) )
+                                              ( name  = 'CHECK_SORT_BY_FS'
+                                                value = REF #( mv_check_sort_by_fs ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -115,21 +114,21 @@ CLASS zcl_skylint_no_obs_control IMPLEMENTATION.
         WHEN 'ON'.
           IF     mv_check_loop_ctl = abap_true
              AND zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
-                                                   iv_lexeme    = 'CHANGE' ) > 0.
+                                                   iv_lexeme    = 'CHANGE' )     > 0.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_control ).
           ENDIF.
 
         WHEN 'AT'.
-          IF mv_check_loop_ctl = abap_true
+          IF     mv_check_loop_ctl = abap_true
              AND (    zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
-                                                        iv_lexeme    = 'NEW' ) > 0
+                                                        iv_lexeme    = 'NEW' )        > 0
                    OR zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
-                                                        iv_lexeme    = 'END' ) > 0
+                                                        iv_lexeme    = 'END' )        > 0
                    OR zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
-                                                        iv_lexeme    = 'FIRST' ) > 0
+                                                        iv_lexeme    = 'FIRST' )      > 0
                    OR zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
-                                                        iv_lexeme    = 'LAST' ) > 0 ).
+                                                        iv_lexeme    = 'LAST' )       > 0 ).
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_control ).
           ENDIF.
@@ -144,31 +143,29 @@ CLASS zcl_skylint_no_obs_control IMPLEMENTATION.
 
         WHEN 'SET'.
           IF     mv_check_set_ext_check = abap_true
-             AND zcl_skylint_ast_util=>find_token_sequence(
-                     is_statement = <ls_statement>
-                     it_expected  = VALUE #( ( `EXTENDED` ) ( `CHECK` ) ) ) > 0.
+             AND zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
+                                                            it_expected  = VALUE #( ( `EXTENDED` ) ( `CHECK` ) ) ) > 0.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_control ).
           ENDIF.
 
         WHEN 'EXIT'.
           IF     mv_check_exit_sql = abap_true
-             AND zcl_skylint_ast_util=>find_token_sequence(
-                     is_statement = <ls_statement>
-                     it_expected  = VALUE #( ( `FROM` ) ( `SQL` ) ) ) > 0.
+             AND zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
+                                                            it_expected  = VALUE #( ( `FROM` ) ( `SQL` ) ) ) > 0.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_control ).
           ENDIF.
 
         WHEN 'SORT'.
-          IF     mv_check_sort_by_fs                  = abap_true
+          IF     mv_check_sort_by_fs                    = abap_true
              AND sort_by_field_symbol( <ls_statement> ) = abap_true.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_control ).
           ENDIF.
 
         WHEN 'SELECT'.
-          IF     mv_check_select_no_into             = abap_true
+          IF     mv_check_select_no_into               = abap_true
              AND select_without_into( <ls_statement> ) = abap_true.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_control ).

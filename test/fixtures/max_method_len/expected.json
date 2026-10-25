@@ -20,8 +20,8 @@
   {
     "target": "LCL_BAD_CTOR=>CONSTRUCTOR",
     "code": "CTOR_LOGIC",
-    "line": 13,
-    "column": 4,
+    "line": 1,
+    "column": 2,
     "quickfixes": []
   },
   {

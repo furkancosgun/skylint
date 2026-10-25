@@ -61,16 +61,15 @@ CLASS zcl_skylint_naming_variables IMPLEMENTATION.
                        severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Local variable or field-symbol name does not match configured pattern'
                        pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     kind = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                     ( name  = 'LOCAL_DATA'
-                       value = REF #( mv_local_data ) )
-                     ( name  = 'LOCAL_CONST'
-                       value = REF #( mv_local_constant ) )
-                     ( name  = 'LOCAL_FS'
-                       value = REF #( mv_local_fs ) )
-                     ( name  = 'LOCAL_STATICS'
-                       value = REF #( mv_local_statics ) ) ) ) ).
+                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                              ( name  = 'LOCAL_DATA'
+                                                value = REF #( mv_local_data ) )
+                                              ( name  = 'LOCAL_CONST'
+                                                value = REF #( mv_local_constant ) )
+                                              ( name  = 'LOCAL_FS'
+                                                value = REF #( mv_local_fs ) )
+                                              ( name  = 'LOCAL_STATICS'
+                                                value = REF #( mv_local_statics ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

@@ -67,26 +67,22 @@ CLASS zcl_skylint_pref_read_table IMPLEMENTATION.
         VALUE #( description       = 'skylint: Modernize READ TABLE (table expressions & line_exists)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
+                     severity = if_ci_atc_check=>finding_severities-warning
                      ( code           = c_finding_codes-prefer_tab_expr
-                       severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Prefer table expression itab[ ... ] over READ TABLE'
                        pseudo_comment = c_pseudo_comment_expr )
                      ( code           = c_finding_codes-prefer_line_exists
-                       severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Prefer line_exists( ... ) instead of READ TABLE ... TRANSPORTING NO FIELDS'
                        pseudo_comment = c_pseudo_comment_line ) )
                  quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-use_tab_expr
                                                 short_text = 'Replace READ TABLE with table expression' ) )
-                 attributes        = VALUE #(
-                     ( name  = 'USE_OPTIONAL'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                       value = REF #( mv_use_optional ) )
-                     ( name  = 'CHECK_TAB_EXPR'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                       value = REF #( mv_check_tab_expr ) )
-                     ( name  = 'CHECK_LINE_EXISTS'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                       value = REF #( mv_check_line_exists ) ) ) ) ).
+                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                              ( name  = 'USE_OPTIONAL'
+                                                value = REF #( mv_use_optional ) )
+                                              ( name  = 'CHECK_TAB_EXPR'
+                                                value = REF #( mv_check_tab_expr ) )
+                                              ( name  = 'CHECK_LINE_EXISTS'
+                                                value = REF #( mv_check_line_exists ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -107,20 +103,22 @@ CLASS zcl_skylint_pref_read_table IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      IF mv_check_tab_expr = abap_true AND <ls_statement>-keyword = 'READ'.
-        ls_info = parse_read_table( <ls_statement> ).
-        IF ls_info-is_valid = abap_true.
-          lt_new_code = build_tab_expr_code( is_statement = <ls_statement>
-                                             is_info      = ls_info ).
+      IF NOT ( mv_check_tab_expr = abap_true AND <ls_statement>-keyword = 'READ' ).
+        CONTINUE.
+      ENDIF.
 
-          ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-use_tab_expr
-                                          iv_statement_from = lv_stmt_idx
-                                          it_new_code       = lt_new_code ).
+      ls_info = parse_read_table( <ls_statement> ).
+      IF ls_info-is_valid = abap_true.
+        lt_new_code = build_tab_expr_code( is_statement = <ls_statement>
+                                           is_info      = ls_info ).
 
-          report_statement( is_statement    = <ls_statement>
-                            iv_finding_code = c_finding_codes-prefer_tab_expr
-                            is_quickfix     = ls_quickfix ).
-        ENDIF.
+        ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-use_tab_expr
+                                        iv_statement_from = lv_stmt_idx
+                                        it_new_code       = lt_new_code ).
+
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-prefer_tab_expr
+                          is_quickfix     = ls_quickfix ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
@@ -210,10 +208,10 @@ CLASS zcl_skylint_pref_read_table IMPLEMENTATION.
         rs_info-is_valid  = abap_true.
       ELSEIF     zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
                                                          iv_index     = lv_key_pos + 1
-                                                         iv_expected  = `TABLE` ) = abap_true
+                                                         iv_expected  = `TABLE` )      = abap_true
              AND zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
                                                          iv_index     = lv_key_pos + 2
-                                                         iv_expected  = `KEY` )   = abap_true.
+                                                         iv_expected  = `KEY` )        = abap_true.
         rs_info-cond_text = extract_tokens_text( is_statement = is_statement
                                                  iv_from_idx  = lv_key_pos + 3
                                                  iv_to_idx    = lv_tokens_cnt ).
@@ -240,7 +238,7 @@ CLASS zcl_skylint_pref_read_table IMPLEMENTATION.
     ENDWHILE.
 
     rv_text = concat_lines_of( table = lt_parts
-                              sep   = ` ` ).
+                               sep   = ` ` ).
   ENDMETHOD.
 
   METHOD build_tab_expr_code.

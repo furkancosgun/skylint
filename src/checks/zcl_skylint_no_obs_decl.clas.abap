@@ -47,35 +47,33 @@ CLASS zcl_skylint_no_obs_decl IMPLEMENTATION.
                        severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Avoid obsolete declaration constructs (TABLES, RANGES, TYPE-POOLS, etc.)'
                        pseudo_comment = c_pseudo_comment ) )
-                 quickfix_codes    = VALUE #(
-                     ( code       = c_quickfix_codes-replace_declaration
-                       short_text = 'Replace obsolete declaration with modern equivalent' ) )
-                 attributes        = VALUE #(
-                     kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                     ( name  = 'CHECK_TABLES'
-                       value = REF #( mv_check_tables ) )
-                     ( name  = 'CHECK_TYPE_POOLS'
-                       value = REF #( mv_check_type_pools ) )
-                     ( name  = 'CHECK_RANGES'
-                       value = REF #( mv_check_ranges ) )
-                     ( name  = 'CHECK_HEADER_LINE'
-                       value = REF #( mv_check_header_line ) )
-                     ( name  = 'CHECK_OCCURS'
-                       value = REF #( mv_check_occurs ) )
-                     ( name  = 'CHECK_INITIAL_SIZE'
-                       value = REF #( mv_check_initial_size ) )
-                     ( name  = 'CHECK_COMMON_PART'
-                       value = REF #( mv_check_common_part ) )
-                     ( name  = 'CHECK_STATICS'
-                       value = REF #( mv_check_statics ) )
-                     ( name  = 'CHECK_FS_STRUCTURE'
-                       value = REF #( mv_check_fs_structure ) )
-                     ( name  = 'CHECK_LOAD'
-                       value = REF #( mv_check_load ) )
-                     ( name  = 'CHECK_PARAMETER'
-                       value = REF #( mv_check_parameter ) )
-                     ( name  = 'CHECK_REFRESH'
-                       value = REF #( mv_check_refresh ) ) ) ) ).
+                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-replace_declaration
+                                                short_text = 'Replace obsolete declaration with modern equivalent' ) )
+                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                              ( name  = 'CHECK_TABLES'
+                                                value = REF #( mv_check_tables ) )
+                                              ( name  = 'CHECK_TYPE_POOLS'
+                                                value = REF #( mv_check_type_pools ) )
+                                              ( name  = 'CHECK_RANGES'
+                                                value = REF #( mv_check_ranges ) )
+                                              ( name  = 'CHECK_HEADER_LINE'
+                                                value = REF #( mv_check_header_line ) )
+                                              ( name  = 'CHECK_OCCURS'
+                                                value = REF #( mv_check_occurs ) )
+                                              ( name  = 'CHECK_INITIAL_SIZE'
+                                                value = REF #( mv_check_initial_size ) )
+                                              ( name  = 'CHECK_COMMON_PART'
+                                                value = REF #( mv_check_common_part ) )
+                                              ( name  = 'CHECK_STATICS'
+                                                value = REF #( mv_check_statics ) )
+                                              ( name  = 'CHECK_FS_STRUCTURE'
+                                                value = REF #( mv_check_fs_structure ) )
+                                              ( name  = 'CHECK_LOAD'
+                                                value = REF #( mv_check_load ) )
+                                              ( name  = 'CHECK_PARAMETER'
+                                                value = REF #( mv_check_parameter ) )
+                                              ( name  = 'CHECK_REFRESH'
+                                                value = REF #( mv_check_refresh ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -87,7 +85,8 @@ CLASS zcl_skylint_no_obs_decl IMPLEMENTATION.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_stmt_idx = sy-tabix.
-      CLEAR: ls_quickfix, lv_line.
+      CLEAR: ls_quickfix,
+             lv_line.
 
       IF     mv_check_occurs = abap_true
          AND (    <ls_statement>-keyword = 'DATA'
@@ -166,15 +165,13 @@ CLASS zcl_skylint_no_obs_decl IMPLEMENTATION.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_declaration ).
           ELSEIF     mv_check_common_part = abap_true
-                 AND zcl_skylint_ast_util=>find_token_sequence(
-                         is_statement = <ls_statement>
-                         it_expected  = VALUE #( ( `COMMON` ) ( `PART` ) ) ) > 0.
+                 AND zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
+                                                                it_expected  = VALUE #( ( `COMMON` ) ( `PART` ) ) ) > 0.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_declaration ).
           ELSEIF     mv_check_initial_size = abap_true
-                 AND zcl_skylint_ast_util=>find_token_sequence(
-                         is_statement = <ls_statement>
-                         it_expected  = VALUE #( ( `INITIAL` ) ( `SIZE` ) ) ) > 0.
+                 AND zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
+                                                                it_expected  = VALUE #( ( `INITIAL` ) ( `SIZE` ) ) ) > 0.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_declaration ).
           ENDIF.
@@ -182,7 +179,7 @@ CLASS zcl_skylint_no_obs_decl IMPLEMENTATION.
         WHEN 'FIELD-SYMBOLS'.
           IF     mv_check_fs_structure = abap_true
              AND zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
-                                                   iv_lexeme    = 'STRUCTURE' ) > 0.
+                                                   iv_lexeme    = 'STRUCTURE' )  > 0.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_declaration ).
           ENDIF.
@@ -190,7 +187,7 @@ CLASS zcl_skylint_no_obs_decl IMPLEMENTATION.
         WHEN 'CLASS' OR 'INTERFACE'.
           IF     mv_check_load = abap_true
              AND zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
-                                                   iv_lexeme    = 'LOAD' ) > 0.
+                                                   iv_lexeme    = 'LOAD' )       > 0.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_declaration ).
           ENDIF.

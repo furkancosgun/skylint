@@ -85,33 +85,27 @@ CLASS zcl_skylint_no_redun_assign IMPLEMENTATION.
         VALUE #( description       = 'skylint: Remove Redundant Assignments & CLEARs'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
+                     severity = if_ci_atc_check=>finding_severities-warning
                      ( code           = c_finding_codes-identical_move
-                       severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Identical assignment has no effect; remove redundant statement'
                        pseudo_comment = c_pseudo_comment_self )
                      ( code           = c_finding_codes-redundant_clear
-                       severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Do not CLEAR or FREE variables after declaration; they are already initial'
                        pseudo_comment = c_pseudo_comment_clear )
                      ( code           = c_finding_codes-clear_at_end
-                       severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Variable is CLEARed or FREEd but never read again before procedure ends'
                        pseudo_comment = c_pseudo_comment_clear ) )
-                 quickfix_codes    = VALUE #(
-                     ( code       = c_quickfix_codes-delete_self
-                       short_text = 'Delete self-assignment' )
-                     ( code       = c_quickfix_codes-remove_clear
-                       short_text = 'Remove redundant statement' ) )
-                 attributes        = VALUE #(
-                     ( name  = 'CHECK_SELF_ASSIGN'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                       value = REF #( mv_check_self_assign ) )
-                     ( name  = 'CHECK_BEFORE_WRITE'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                       value = REF #( mv_check_before_write ) )
-                     ( name  = 'CHECK_WITHOUT_READ'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                       value = REF #( mv_check_without_read ) ) ) ) ).
+                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-delete_self
+                                                short_text = 'Delete self-assignment' )
+                                              ( code       = c_quickfix_codes-remove_clear
+                                                short_text = 'Remove redundant statement' ) )
+                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                              ( name  = 'CHECK_SELF_ASSIGN'
+                                                value = REF #( mv_check_self_assign ) )
+                                              ( name  = 'CHECK_BEFORE_WRITE'
+                                                value = REF #( mv_check_before_write ) )
+                                              ( name  = 'CHECK_WITHOUT_READ'
+                                                value = REF #( mv_check_without_read ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -162,51 +156,53 @@ CLASS zcl_skylint_no_redun_assign IMPLEMENTATION.
         ENDIF.
       ENDIF.
 
-      IF ( <ls_statement>-keyword = 'CLEAR' OR <ls_statement>-keyword = 'FREE' ) AND lv_loop_depth = 0.
-        IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                   iv_lexeme    = 'WITH' ) = abap_true.
+      IF NOT ( ( <ls_statement>-keyword = 'CLEAR' OR <ls_statement>-keyword = 'FREE' ) AND lv_loop_depth = 0 ).
+        CONTINUE.
+      ENDIF.
+
+      IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                 iv_lexeme    = 'WITH' ) = abap_true.
+        CONTINUE.
+      ENDIF.
+
+      ls_ref = zcl_skylint_ast_util=>statement_get_reference(
+                   is_statement = <ls_statement>
+                   iv_kind      = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
+      IF ls_ref-full_name IS INITIAL.
+        CONTINUE.
+      ENDIF.
+
+      ASSIGN lt_decls[ full_name = ls_ref-full_name ] TO <ls_decl>.
+      IF sy-subrc = 0 AND lv_stmt_idx > <ls_decl>-stmt_idx.
+        IF     mv_check_before_write = abap_true
+           AND <ls_decl>-has_value = abap_false
+           AND is_variable_written( it_statements = is_procedure-statements
+                                    iv_from_idx   = <ls_decl>-stmt_idx + 1
+                                    iv_to_idx     = lv_stmt_idx - 1
+                                    iv_full_name  = <ls_decl>-full_name )   = abap_false.
+
+          ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-remove_clear
+                                          iv_statement_from = lv_stmt_idx
+                                          it_new_code       = VALUE #( ) ).
+          report_statement( is_statement    = <ls_statement>
+                            iv_finding_code = c_finding_codes-redundant_clear
+                            is_quickfix     = ls_quickfix ).
           CONTINUE.
         ENDIF.
 
-        ls_ref = zcl_skylint_ast_util=>statement_get_reference(
-                     is_statement = <ls_statement>
-                     iv_kind      = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
-        IF ls_ref-full_name IS INITIAL.
+        IF     mv_check_without_read = abap_true
+           AND is_variable_read( it_statements = is_procedure-statements
+                                 iv_from_idx   = lv_stmt_idx + 1
+                                 iv_to_idx     = lines( is_procedure-statements )
+                                 iv_full_name  = <ls_decl>-full_name )            = abap_false.
+
+          ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-remove_clear
+                                          iv_statement_from = lv_stmt_idx
+                                          it_new_code       = VALUE #( ) ).
+          report_statement( is_statement    = <ls_statement>
+                            iv_finding_code = c_finding_codes-clear_at_end
+                            is_quickfix     = ls_quickfix ).
           CONTINUE.
-        ENDIF.
-
-        ASSIGN lt_decls[ full_name = ls_ref-full_name ] TO <ls_decl>.
-        IF sy-subrc = 0 AND lv_stmt_idx > <ls_decl>-stmt_idx.
-          IF     mv_check_before_write = abap_true
-             AND <ls_decl>-has_value = abap_false
-             AND is_variable_written( it_statements = is_procedure-statements
-                                      iv_from_idx   = <ls_decl>-stmt_idx + 1
-                                      iv_to_idx     = lv_stmt_idx - 1
-                                      iv_full_name  = <ls_decl>-full_name ) = abap_false.
-
-            ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-remove_clear
-                                            iv_statement_from = lv_stmt_idx
-                                            it_new_code       = VALUE #( ) ).
-            report_statement( is_statement    = <ls_statement>
-                              iv_finding_code = c_finding_codes-redundant_clear
-                              is_quickfix     = ls_quickfix ).
-            CONTINUE.
-          ENDIF.
-
-          IF     mv_check_without_read = abap_true
-             AND is_variable_read( it_statements = is_procedure-statements
-                                   iv_from_idx   = lv_stmt_idx + 1
-                                   iv_to_idx     = lines( is_procedure-statements )
-                                   iv_full_name  = <ls_decl>-full_name ) = abap_false.
-
-            ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-remove_clear
-                                            iv_statement_from = lv_stmt_idx
-                                            it_new_code       = VALUE #( ) ).
-            report_statement( is_statement    = <ls_statement>
-                              iv_finding_code = c_finding_codes-clear_at_end
-                              is_quickfix     = ls_quickfix ).
-            CONTINUE.
-          ENDIF.
         ENDIF.
       ENDIF.
     ENDLOOP.

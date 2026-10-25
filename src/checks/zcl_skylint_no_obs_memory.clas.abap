@@ -38,22 +38,21 @@ CLASS zcl_skylint_no_obs_memory IMPLEMENTATION.
                        severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Avoid obsolete memory, context, and legacy data-sharing constructs'
                        pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                     ( name  = 'CHECK_EXPORT_MEMORY'
-                       value = REF #( mv_check_export_memory ) )
-                     ( name  = 'CHECK_FREE_MEMORY'
-                       value = REF #( mv_check_free_memory ) )
-                     ( name  = 'CHECK_PROVIDE'
-                       value = REF #( mv_check_provide ) )
-                     ( name  = 'CHECK_CONTEXTS'
-                       value = REF #( mv_check_contexts ) )
-                     ( name  = 'CHECK_INFOTYPES'
-                       value = REF #( mv_check_infotypes ) )
-                     ( name  = 'CHECK_COMMUNICATION'
-                       value = REF #( mv_check_communication ) )
-                     ( name  = 'CHECK_CALL_TRANSF'
-                       value = REF #( mv_check_call_transf ) ) ) ) ).
+                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                              ( name  = 'CHECK_EXPORT_MEMORY'
+                                                value = REF #( mv_check_export_memory ) )
+                                              ( name  = 'CHECK_FREE_MEMORY'
+                                                value = REF #( mv_check_free_memory ) )
+                                              ( name  = 'CHECK_PROVIDE'
+                                                value = REF #( mv_check_provide ) )
+                                              ( name  = 'CHECK_CONTEXTS'
+                                                value = REF #( mv_check_contexts ) )
+                                              ( name  = 'CHECK_INFOTYPES'
+                                                value = REF #( mv_check_infotypes ) )
+                                              ( name  = 'CHECK_COMMUNICATION'
+                                                value = REF #( mv_check_communication ) )
+                                              ( name  = 'CHECK_CALL_TRANSF'
+                                                value = REF #( mv_check_call_transf ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -64,9 +63,9 @@ CLASS zcl_skylint_no_obs_memory IMPLEMENTATION.
         WHEN 'EXPORT'.
           IF     mv_check_export_memory = abap_true
              AND (    zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                              iv_lexeme    = 'MEMORY' )   = abap_true
+                                                              iv_lexeme    = 'MEMORY' )     = abap_true
                    OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                              iv_lexeme    = 'DATABASE' ) = abap_true ).
+                                                              iv_lexeme    = 'DATABASE' )   = abap_true ).
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_memory ).
           ENDIF.
@@ -75,7 +74,7 @@ CLASS zcl_skylint_no_obs_memory IMPLEMENTATION.
           IF     mv_check_free_memory = abap_true
              AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
                                                          iv_index     = 2
-                                                         iv_expected  = `MEMORY` ) = abap_true.
+                                                         iv_expected  = `MEMORY` )     = abap_true.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_memory ).
           ENDIF.
@@ -106,9 +105,8 @@ CLASS zcl_skylint_no_obs_memory IMPLEMENTATION.
 
         WHEN 'CALL'.
           IF     mv_check_call_transf = abap_true
-             AND zcl_skylint_ast_util=>find_token_sequence(
-                     is_statement = <ls_statement>
-                     it_expected  = VALUE #( ( `CALL` ) ( `TRANSFORMATION` ) ) ) > 0
+             AND zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
+                                                            it_expected  = VALUE #( ( `CALL` ) ( `TRANSFORMATION` ) ) ) > 0
              AND zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
                                                    iv_lexeme    = 'OBJECTS' ) > 0.
             report_statement( is_statement    = <ls_statement>

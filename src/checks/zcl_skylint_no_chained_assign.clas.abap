@@ -56,18 +56,20 @@ CLASS zcl_skylint_no_chained_assign IMPLEMENTATION.
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_idx = sy-tabix.
 
-      IF <ls_statement>-keyword = 'COMPUTE' AND has_assignment_chain( <ls_statement> ) = abap_true.
-        CLEAR ls_quickfix.
-        lt_new_code = split_chain( <ls_statement> ).
-        IF lt_new_code IS NOT INITIAL.
-          ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-split_assign
-                                          iv_statement_from = lv_idx
-                                          it_new_code       = lt_new_code ).
-        ENDIF.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-assignment_chaining
-                          is_quickfix     = ls_quickfix ).
+      IF NOT ( <ls_statement>-keyword = 'COMPUTE' AND has_assignment_chain( <ls_statement> ) = abap_true ).
+        CONTINUE.
       ENDIF.
+
+      CLEAR ls_quickfix.
+      lt_new_code = split_chain( <ls_statement> ).
+      IF lt_new_code IS NOT INITIAL.
+        ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-split_assign
+                                        iv_statement_from = lv_idx
+                                        it_new_code       = lt_new_code ).
+      ENDIF.
+      report_statement( is_statement    = <ls_statement>
+                        iv_finding_code = c_finding_codes-assignment_chaining
+                        is_quickfix     = ls_quickfix ).
     ENDLOOP.
   ENDMETHOD.
 

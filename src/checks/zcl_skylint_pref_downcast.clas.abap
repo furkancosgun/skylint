@@ -63,7 +63,7 @@ CLASS zcl_skylint_pref_downcast DEFINITION
     METHODS is_supported_use
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
                 iv_index      TYPE i
-                RETURNING VALUE(rv_yes) TYPE abap_bool.
+      RETURNING VALUE(rv_yes) TYPE abap_bool.
 
 ENDCLASS.
 
@@ -74,26 +74,22 @@ CLASS zcl_skylint_pref_downcast IMPLEMENTATION.
         VALUE #( description       = 'skylint: Modernize Downcasting (CAST #( ) & inlining)'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
+                     severity = if_ci_atc_check=>finding_severities-warning
                      ( code           = c_finding_codes-prefer_cast
-                       severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Prefer CAST #( ) constructor expression over ?= downcast'
                        pseudo_comment = c_pseudo_comment_cast )
                      ( code           = c_finding_codes-inline_cast
-                       severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'CAST helper is read exactly once in the next statement; inline it'
                        pseudo_comment = c_pseudo_comment_inl ) )
-                 quickfix_codes    = VALUE #(
-                     ( code       = c_quickfix_codes-use_cast
-                       short_text = 'Use CAST #( )' )
-                     ( code       = c_quickfix_codes-inline_cast
-                       short_text = 'Inline CAST into next statement' ) )
-                 attributes        = VALUE #(
-                     ( name  = 'CHECK_CAST_SYNTAX'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                       value = REF #( mv_check_cast_syntax ) )
-                     ( name  = 'CHECK_INLINE_CAST'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                       value = REF #( mv_check_inline_cast ) ) ) ) ).
+                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-use_cast
+                                                short_text = 'Use CAST #( )' )
+                                              ( code       = c_quickfix_codes-inline_cast
+                                                short_text = 'Inline CAST into next statement' ) )
+                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                              ( name  = 'CHECK_CAST_SYNTAX'
+                                                value = REF #( mv_check_cast_syntax ) )
+                                              ( name  = 'CHECK_INLINE_CAST'
+                                                value = REF #( mv_check_inline_cast ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -159,83 +155,85 @@ CLASS zcl_skylint_pref_downcast IMPLEMENTATION.
         ENDIF.
       ENDIF.
 
-      IF mv_check_inline_cast = abap_true.
-        lv_cast_idx = zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
-                                                        iv_lexeme    = 'CAST' ).
-        IF lv_cast_idx = 0.
-          CONTINUE.
-        ENDIF.
-
-        CLEAR lv_full_name.
-        LOOP AT <ls_statement>-tokens INTO ls_tok.
-          ls_ref = zcl_skylint_ast_util=>get_reference(
-                       is_token      = ls_tok
-                       iv_kind       = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-                       iv_usage_mode = if_ci_atc_source_code_provider=>usage_modes-definition_with_write ).
-          IF     ls_ref-full_name IS NOT INITIAL
-             AND zcl_skylint_ast_util=>token_is_inline_declaration( is_token  = ls_tok
-                                                                    iv_prefix = 'DATA' ) = abap_true.
-            lv_full_name = ls_ref-full_name.
-            EXIT.
-          ENDIF.
-        ENDLOOP.
-
-        IF lv_full_name IS INITIAL.
-          CONTINUE.
-        ENDIF.
-
-        lv_assign = zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
-                                                      iv_lexeme    = '=' ).
-        IF lv_assign = 0 OR lv_cast_idx <> lv_assign + 1 OR lv_stmt_idx + 1 > lines( is_procedure-statements ).
-          CONTINUE.
-        ENDIF.
-
-        CLEAR lv_has_write.
-        CLEAR lt_usages.
-        ls_usage_result = collect_usages( it_statements = is_procedure-statements
-                                          iv_full_name  = lv_full_name ).
-        lt_usages    = ls_usage_result-usages.
-        lv_has_write = ls_usage_result-has_write.
-
-        IF lv_has_write = abap_true OR lines( lt_usages ) <> 1.
-          CONTINUE.
-        ENDIF.
-
-        READ TABLE lt_usages INTO ls_usage INDEX 1.
-        IF sy-subrc <> 0 OR ls_usage-statement_index <> lv_stmt_idx + 1.
-          CONTINUE.
-        ENDIF.
-
-        ls_next = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                       iv_index      = ls_usage-statement_index ).
-        IF is_supported_use( is_statement = ls_next
-                             iv_index     = ls_usage-token_index ) = abap_false.
-          CONTINUE.
-        ENDIF.
-
-        lv_cast = get_cast_expression( <ls_statement> ).
-        lv_name = zcl_skylint_ast_util=>get_reference_name( lv_full_name ).
-        IF lv_cast IS INITIAL OR lv_name IS INITIAL.
-          CONTINUE.
-        ENDIF.
-
-        lv_new_line = zcl_skylint_ast_util=>flatten_statement(
-                          is_statement = ls_next
-                          it_overrides = VALUE #( ( index  = ls_usage-token_index
-                                                    lexeme = lv_cast && get_call_suffix(
-                                                                            is_statement = ls_next
-                                                                            iv_index     = ls_usage-token_index
-                                                                            iv_name      = lv_name ) ) )
-                          iv_suffix    = `.` ).
-        ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-inline_cast
-                                        iv_statement_from = lv_stmt_idx
-                                        iv_statement_to   = lv_stmt_idx + 1
-                                        it_new_code       = VALUE #( ( lv_new_line ) ) ).
-
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-inline_cast
-                          is_quickfix     = ls_quickfix ).
+      IF mv_check_inline_cast = abap_false.
+        CONTINUE.
       ENDIF.
+
+      lv_cast_idx = zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
+                                                      iv_lexeme    = 'CAST' ).
+      IF lv_cast_idx = 0.
+        CONTINUE.
+      ENDIF.
+
+      CLEAR lv_full_name.
+      LOOP AT <ls_statement>-tokens INTO ls_tok.
+        ls_ref = zcl_skylint_ast_util=>get_reference(
+                     is_token      = ls_tok
+                     iv_kind       = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+                     iv_usage_mode = if_ci_atc_source_code_provider=>usage_modes-definition_with_write ).
+        IF     ls_ref-full_name IS NOT INITIAL
+           AND zcl_skylint_ast_util=>token_is_inline_declaration( is_token  = ls_tok
+                                                                  iv_prefix = 'DATA' )  = abap_true.
+          lv_full_name = ls_ref-full_name.
+          EXIT.
+        ENDIF.
+      ENDLOOP.
+
+      IF lv_full_name IS INITIAL.
+        CONTINUE.
+      ENDIF.
+
+      lv_assign = zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
+                                                    iv_lexeme    = '=' ).
+      IF lv_assign = 0 OR lv_cast_idx <> lv_assign + 1 OR lv_stmt_idx + 1 > lines( is_procedure-statements ).
+        CONTINUE.
+      ENDIF.
+
+      CLEAR lv_has_write.
+      CLEAR lt_usages.
+      ls_usage_result = collect_usages( it_statements = is_procedure-statements
+                                        iv_full_name  = lv_full_name ).
+      lt_usages    = ls_usage_result-usages.
+      lv_has_write = ls_usage_result-has_write.
+
+      IF lv_has_write = abap_true OR lines( lt_usages ) <> 1.
+        CONTINUE.
+      ENDIF.
+
+      READ TABLE lt_usages INTO ls_usage INDEX 1.
+      IF sy-subrc <> 0 OR ls_usage-statement_index <> lv_stmt_idx + 1.
+        CONTINUE.
+      ENDIF.
+
+      ls_next = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+                                                     iv_index      = ls_usage-statement_index ).
+      IF is_supported_use( is_statement = ls_next
+                           iv_index     = ls_usage-token_index ) = abap_false.
+        CONTINUE.
+      ENDIF.
+
+      lv_cast = get_cast_expression( <ls_statement> ).
+      lv_name = zcl_skylint_ast_util=>get_reference_name( lv_full_name ).
+      IF lv_cast IS INITIAL OR lv_name IS INITIAL.
+        CONTINUE.
+      ENDIF.
+
+      lv_new_line = zcl_skylint_ast_util=>flatten_statement(
+                        is_statement = ls_next
+                        it_overrides = VALUE #( ( index  = ls_usage-token_index
+                                                  lexeme = lv_cast && get_call_suffix(
+                                                                          is_statement = ls_next
+                                                                          iv_index     = ls_usage-token_index
+                                                                          iv_name      = lv_name ) ) )
+                        iv_suffix    = `.` ).
+      ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-inline_cast
+                                      iv_statement_from = lv_stmt_idx
+                                      iv_statement_to   = lv_stmt_idx + 1
+                                      it_new_code       = VALUE #( ( lv_new_line ) ) ).
+
+      report_statement( is_statement    = <ls_statement>
+                        iv_finding_code = c_finding_codes-inline_cast
+                        is_quickfix     = ls_quickfix ).
     ENDLOOP.
   ENDMETHOD.
 

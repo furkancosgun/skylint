@@ -88,66 +88,65 @@ ENDCLASS.
 
 CLASS zcl_skylint_naming_objects IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'skylint: Class, Interface, Type and Object Naming'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     severity       = if_ci_atc_check=>finding_severities-warning
-                     pseudo_comment = c_pseudo_comment
-                     ( code = c_finding_codes-local_class
-                       text = 'Local class name does not match configured pattern' )
-                     ( code = c_finding_codes-global_class
-                       text = 'Global class name does not match configured pattern' )
-                     ( code = c_finding_codes-local_interface
-                       text = 'Local interface name does not match configured pattern' )
-                     ( code = c_finding_codes-global_interface
-                       text = 'Global interface name does not match configured pattern' )
-                     ( code = c_finding_codes-types
-                       text = 'Type name does not match configured pattern' )
-                     ( code = c_finding_codes-event
-                       text = 'Event or event handler name does not match configured pattern' )
-                     ( code = c_finding_codes-test_method
-                       text = 'Test method name does not match configured pattern' )
-                     ( code = c_finding_codes-macro
-                       text = 'Macro name does not match configured pattern' )
-                     ( code = c_finding_codes-form
-                       text = 'Form routine name does not match configured pattern' )
-                     ( code = c_finding_codes-function_module
-                       text = 'Function module name does not match configured pattern' )
-                     ( code = c_finding_codes-function_group
-                       text = 'Function group name does not match configured pattern' )
-                     ( code = c_finding_codes-program
-                       text = 'Program name does not match configured pattern' ) )
-                 attributes        = VALUE #(
-                     kind = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                     ( name  = 'CLASS_LOCAL'
-                       value = REF #( mv_class_local ) )
-                     ( name  = 'CLASS_TEST'
-                       value = REF #( mv_class_test ) )
-                     ( name  = 'CLASS_GLOBAL'
-                       value = REF #( mv_class_global ) )
-                     ( name  = 'INTF_LOCAL'
-                       value = REF #( mv_intf_local ) )
-                     ( name  = 'INTF_GLOBAL'
-                       value = REF #( mv_intf_global ) )
-                     ( name  = 'TYPES_PATTERN'
-                       value = REF #( mv_types_pattern ) )
-                     ( name  = 'MACRO_PATTERN'
-                       value = REF #( mv_macro_pattern ) )
-                     ( name  = 'FORM_PATTERN'
-                       value = REF #( mv_form_pattern ) )
-                     ( name  = 'FUNCTION_PATTERN'
-                       value = REF #( mv_function_pattern ) )
-                     ( name  = 'EVENT_NAME'
-                       value = REF #( mv_event_name ) )
-                     ( name  = 'EVENT_HANDLER'
-                       value = REF #( mv_event_handler ) )
-                     ( name  = 'TEST_METHOD'
-                       value = REF #( mv_test_method ) )
-                     ( name  = 'PROG_PATTERN'
-                       value = REF #( mv_program_pattern ) )
-                     ( name  = 'FUGR_PATTERN'
-                       value = REF #( mv_fugr_pattern ) ) ) ) ).
+    super->constructor( VALUE #( description       = 'skylint: Class, Interface, Type and Object Naming'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     severity       = if_ci_atc_check=>finding_severities-warning
+                                     pseudo_comment = c_pseudo_comment
+                                     ( code = c_finding_codes-local_class
+                                       text = 'Local class name does not match configured pattern' )
+                                     ( code = c_finding_codes-global_class
+                                       text = 'Global class name does not match configured pattern' )
+                                     ( code = c_finding_codes-local_interface
+                                       text = 'Local interface name does not match configured pattern' )
+                                     ( code = c_finding_codes-global_interface
+                                       text = 'Global interface name does not match configured pattern' )
+                                     ( code = c_finding_codes-types
+                                       text = 'Type name does not match configured pattern' )
+                                     ( code = c_finding_codes-event
+                                       text = 'Event or event handler name does not match configured pattern' )
+                                     ( code = c_finding_codes-test_method
+                                       text = 'Test method name does not match configured pattern' )
+                                     ( code = c_finding_codes-macro
+                                       text = 'Macro name does not match configured pattern' )
+                                     ( code = c_finding_codes-form
+                                       text = 'Form routine name does not match configured pattern' )
+                                     ( code = c_finding_codes-function_module
+                                       text = 'Function module name does not match configured pattern' )
+                                     ( code = c_finding_codes-function_group
+                                       text = 'Function group name does not match configured pattern' )
+                                     ( code = c_finding_codes-program
+                                       text = 'Program name does not match configured pattern' ) )
+                                 attributes        = VALUE #(
+                                     kind = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                     ( name  = 'CLASS_LOCAL'
+                                       value = REF #( mv_class_local ) )
+                                     ( name  = 'CLASS_TEST'
+                                       value = REF #( mv_class_test ) )
+                                     ( name  = 'CLASS_GLOBAL'
+                                       value = REF #( mv_class_global ) )
+                                     ( name  = 'INTF_LOCAL'
+                                       value = REF #( mv_intf_local ) )
+                                     ( name  = 'INTF_GLOBAL'
+                                       value = REF #( mv_intf_global ) )
+                                     ( name  = 'TYPES_PATTERN'
+                                       value = REF #( mv_types_pattern ) )
+                                     ( name  = 'MACRO_PATTERN'
+                                       value = REF #( mv_macro_pattern ) )
+                                     ( name  = 'FORM_PATTERN'
+                                       value = REF #( mv_form_pattern ) )
+                                     ( name  = 'FUNCTION_PATTERN'
+                                       value = REF #( mv_function_pattern ) )
+                                     ( name  = 'EVENT_NAME'
+                                       value = REF #( mv_event_name ) )
+                                     ( name  = 'EVENT_HANDLER'
+                                       value = REF #( mv_event_handler ) )
+                                     ( name  = 'TEST_METHOD'
+                                       value = REF #( mv_test_method ) )
+                                     ( name  = 'PROG_PATTERN'
+                                       value = REF #( mv_program_pattern ) )
+                                     ( name  = 'FUGR_PATTERN'
+                                       value = REF #( mv_fugr_pattern ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -374,9 +373,8 @@ CLASS zcl_skylint_naming_objects IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    IF     zcl_skylint_ast_util=>find_token_sequence(
-               is_statement = is_statement
-               it_expected  = VALUE #( ( `FOR` ) ( `TESTING` ) ) ) > 0
+    IF     zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
+                                                      it_expected  = VALUE #( ( `FOR` ) ( `TESTING` ) ) ) > 0
        AND matches_pattern( iv_text    = lv_name
                             iv_pattern = mv_test_method ) = abap_false.
       report_statement( is_statement    = is_statement

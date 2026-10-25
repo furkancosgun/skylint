@@ -55,30 +55,24 @@ ENDCLASS.
 
 CLASS zcl_skylint_pref_param_name IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'skylint: Method Call Parameter Naming Style'
-                 remote_enablement = abap_false
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-omit_param
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Omit explicit parameter name in single parameter method call'
-                       pseudo_comment = c_pseudo_comment )
-                     ( code           = c_finding_codes-require_param
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Add explicit parameter name to positional method call'
-                       pseudo_comment = c_pseudo_comment ) )
-                 quickfix_codes    = VALUE #(
-                     ( code       = c_quickfix_codes-omit_param
-                       short_text = 'Drop parameter name' )
-                     ( code       = c_quickfix_codes-require_param
-                       short_text = 'Add parameter name' ) )
-                 attributes        = VALUE #(
-                     ( name  = 'CHECK_PARAM_NAME'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                       value = REF #( mv_check_param_name ) )
-                     ( name  = 'REQUIRE_PARAM_NAME'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                       value = REF #( mv_require_param_name ) ) ) ) ).
+    super->constructor( VALUE #( description       = 'skylint: Method Call Parameter Naming Style'
+                                 remote_enablement = abap_false
+                                 finding_codes     = VALUE #(
+                                     severity       = if_ci_atc_check=>finding_severities-warning
+                                     pseudo_comment = c_pseudo_comment
+                                     ( code = c_finding_codes-omit_param
+                                       text = 'Omit explicit parameter name in single parameter method call' )
+                                     ( code = c_finding_codes-require_param
+                                       text = 'Add explicit parameter name to positional method call' ) )
+                                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-omit_param
+                                                                short_text = 'Drop parameter name' )
+                                                              ( code       = c_quickfix_codes-require_param
+                                                                short_text = 'Add parameter name' ) )
+                                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                                              ( name  = 'CHECK_PARAM_NAME'
+                                                                value = REF #( mv_check_param_name ) )
+                                                              ( name  = 'REQUIRE_PARAM_NAME'
+                                                                value = REF #( mv_require_param_name ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
