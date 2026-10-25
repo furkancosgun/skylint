@@ -20,7 +20,7 @@ CLASS zcl_skylint_pref_composition DEFINITION
     DATA mv_allow_test_classes TYPE abap_bool VALUE abap_false.
 
     METHODS is_exception_class
-      IMPORTING iv_super_name   TYPE string
+      IMPORTING iv_super_name    TYPE string
       RETURNING VALUE(rv_is_exc) TYPE abap_bool.
 
 ENDCLASS.
@@ -36,10 +36,9 @@ CLASS zcl_skylint_pref_composition IMPLEMENTATION.
                        severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Prefer composition over inheritance; only CX_* classes should inherit'
                        pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                     ( name  = 'ALLOW_TEST_CLASSES'
-                       value = REF #( mv_allow_test_classes ) ) ) ) ).
+                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                              ( name  = 'ALLOW_TEST_CLASSES'
+                                                value = REF #( mv_allow_test_classes ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -56,15 +55,14 @@ CLASS zcl_skylint_pref_composition IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      IF zcl_skylint_ast_util=>find_token_sequence(
-             is_statement = <ls_stmt>
-             it_expected  = VALUE #( ( `INHERITING` ) ( `FROM` ) ) ) = 0.
+      IF zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_stmt>
+                                                    it_expected  = VALUE #( ( `INHERITING` ) ( `FROM` ) ) ) = 0.
         CONTINUE.
       ENDIF.
 
       ls_super_tok = zcl_skylint_ast_util=>get_token_after_sequence(
-          is_statement = <ls_stmt>
-          it_expected  = VALUE #( ( `INHERITING` ) ( `FROM` ) ) ).
+                         is_statement = <ls_stmt>
+                         it_expected  = VALUE #( ( `INHERITING` ) ( `FROM` ) ) ).
       lv_super_name = to_upper( ls_super_tok-lexeme ).
 
       IF is_exception_class( lv_super_name ) = abap_true.

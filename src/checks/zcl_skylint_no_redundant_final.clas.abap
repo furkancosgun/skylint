@@ -26,24 +26,22 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_redundant_final IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'skylint: Avoid redundant FINAL on methods in FINAL classes'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-redundant_final
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Redundant FINAL on method; enclosing class is already FINAL'
-                       pseudo_comment = c_pseudo_comment ) )
-                 quickfix_codes    = VALUE #(
-                     ( code       = c_quickfix_codes-remove_final
-                       short_text = 'Remove redundant FINAL' ) ) ) ).
+    super->constructor( VALUE #( description       = 'skylint: Avoid redundant FINAL on methods in FINAL classes'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-redundant_final
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Redundant FINAL on method; enclosing class is already FINAL'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-remove_final
+                                                                short_text = 'Remove redundant FINAL' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA ls_cls_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_cls_stmt  TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA lv_final_idx TYPE i.
-    DATA lv_new_line TYPE string.
-    DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
+    DATA lv_new_line  TYPE string.
+    DATA ls_quickfix  TYPE zcl_skylint_check_base=>ty_quickfix.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
@@ -68,15 +66,13 @@ CLASS zcl_skylint_no_redundant_final IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      lv_new_line = zcl_skylint_ast_util=>flatten_statement(
-          is_statement = <ls_stmt>
-          it_deletions = VALUE #( ( lv_final_idx ) )
-          iv_suffix    = '.' ).
+      lv_new_line = zcl_skylint_ast_util=>flatten_statement( is_statement = <ls_stmt>
+                                                             it_deletions = VALUE #( ( lv_final_idx ) )
+                                                             iv_suffix    = '.' ).
 
-      ls_quickfix = quickfix_replace(
-          iv_quickfix_code  = c_quickfix_codes-remove_final
-          iv_statement_from = sy-tabix
-          it_new_code       = VALUE #( ( lv_new_line ) ) ).
+      ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-remove_final
+                                      iv_statement_from = sy-tabix
+                                      it_new_code       = VALUE #( ( lv_new_line ) ) ).
 
       report_statement( is_statement    = <ls_stmt>
                         iv_finding_code = c_finding_codes-redundant_final

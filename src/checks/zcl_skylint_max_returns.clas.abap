@@ -24,30 +24,23 @@ ENDCLASS.
 
 CLASS zcl_skylint_max_returns IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'skylint: Limit number of RETURN statements (PLR0911)'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-too_many_returns
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Method has too many RETURN statements; consider refactoring'
-                       pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     kind = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                     ( name  = 'MAX_RETURNS'
-                       value = REF #( mv_max_returns ) ) ) ) ).
+    super->constructor( VALUE #( description       = 'skylint: Limit number of RETURN statements (PLR0911)'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-too_many_returns
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Method has too many RETURN statements; consider refactoring'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 attributes        = VALUE #(
+                                     kind = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                     ( name  = 'MAX_RETURNS'
+                                       value = REF #( mv_max_returns ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
     DATA ls_first_stmt    TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA lv_returns_count TYPE i.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
-
-    IF     is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-method
-       AND is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-form_routine
-       AND is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-function.
-      RETURN.
-    ENDIF.
 
     lv_returns_count = 0.
     LOOP AT is_procedure-statements ASSIGNING <ls_stmt>.

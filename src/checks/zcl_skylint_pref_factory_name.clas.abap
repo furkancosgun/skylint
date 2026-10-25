@@ -32,10 +32,9 @@ CLASS zcl_skylint_pref_factory_name IMPLEMENTATION.
                        severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Factory method returning own class type should start with prefix'
                        pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     kind = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                     ( name  = 'PREFIX'
-                       value = REF #( mv_prefix ) ) ) ) ).
+                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                              ( name  = 'PREFIX'
+                                                value = REF #( mv_prefix ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -71,15 +70,14 @@ CLASS zcl_skylint_pref_factory_name IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      IF zcl_skylint_ast_util=>find_token_sequence(
-             is_statement = <ls_stmt>
-             it_expected  = VALUE #( ( `TYPE` ) ( `REF` ) ( `TO` ) ) ) = 0.
+      IF zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_stmt>
+                                                    it_expected  = VALUE #( ( `TYPE` ) ( `REF` ) ( `TO` ) ) ) = 0.
         CONTINUE.
       ENDIF.
 
       ls_type_tok = zcl_skylint_ast_util=>get_token_after_sequence(
-          is_statement = <ls_stmt>
-          it_expected  = VALUE #( ( `TYPE` ) ( `REF` ) ( `TO` ) ) ).
+                        is_statement = <ls_stmt>
+                        it_expected  = VALUE #( ( `TYPE` ) ( `REF` ) ( `TO` ) ) ).
       lv_type = to_upper( ls_type_tok-lexeme ).
       IF lv_type <> lv_class_name.
         CONTINUE.

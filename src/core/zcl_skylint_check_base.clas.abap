@@ -306,6 +306,12 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
     ENDTRY.
 
     LOOP AT lr_procedures->* ASSIGNING <ls_procedure>.
+      IF     <ls_procedure>-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-method
+         AND <ls_procedure>-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-form_routine
+         AND <ls_procedure>-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-function
+         AND <ls_procedure>-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+        CONTINUE.
+      ENDIF.
       check( <ls_procedure> ).
       LOOP AT mt_reported ASSIGNING <ls_rep>
            WHERE procedure_id IS INITIAL.

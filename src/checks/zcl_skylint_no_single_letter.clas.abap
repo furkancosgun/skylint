@@ -46,10 +46,9 @@ CLASS zcl_skylint_no_single_letter IMPLEMENTATION.
                        severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Avoid single-letter variable names; use descriptive identifiers'
                        pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     kind = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                     ( name  = 'MIN_NAME_LEN'
-                       value = REF #( mv_min_name_len ) ) ) ) ).
+                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                              ( name  = 'MIN_NAME_LEN'
+                                                value = REF #( mv_min_name_len ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -70,21 +69,17 @@ CLASS zcl_skylint_no_single_letter IMPLEMENTATION.
     DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_name TYPE string.
 
-    IF zcl_skylint_ast_util=>find_token_sequence(
-           is_statement = is_statement
-           it_expected  = VALUE #( ( `BEGIN` ) ( `OF` ) ) ) > 0.
-      ls_tok = zcl_skylint_ast_util=>get_token_after(
-          is_statement = is_statement
-          iv_lexeme    = 'OF' ).
+    IF zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
+                                                  it_expected  = VALUE #( ( `BEGIN` ) ( `OF` ) ) ) > 0.
+      ls_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                      iv_lexeme    = 'OF' ).
       lv_name = ls_tok-lexeme.
-    ELSEIF zcl_skylint_ast_util=>find_token_sequence(
-               is_statement = is_statement
-               it_expected  = VALUE #( ( `END` ) ( `OF` ) ) ) > 0.
+    ELSEIF zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
+                                                      it_expected  = VALUE #( ( `END` ) ( `OF` ) ) ) > 0.
       RETURN.
     ELSE.
-      ls_tok = zcl_skylint_ast_util=>get_token_after(
-          is_statement = is_statement
-          iv_lexeme    = is_statement-keyword ).
+      ls_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                      iv_lexeme    = is_statement-keyword ).
       lv_name = ls_tok-lexeme.
     ENDIF.
 

@@ -29,20 +29,18 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_empty_override IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'skylint: Avoid method override that only calls super'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-empty_override
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Empty method override; method only delegates to super'
-                       pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                     ( name  = 'IGNORE_CTOR'
-                       value = REF #( mv_ignore_ctor ) )
-                     ( name  = 'IGNORE_CHECK'
-                       value = REF #( mv_ignore_check ) ) ) ) ).
+    super->constructor( VALUE #( description       = 'skylint: Avoid method override that only calls super'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-empty_override
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Empty method override; method only delegates to super'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                                              ( name  = 'IGNORE_CTOR'
+                                                                value = REF #( mv_ignore_ctor ) )
+                                                              ( name  = 'IGNORE_CHECK'
+                                                                value = REF #( mv_ignore_check ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

@@ -28,18 +28,17 @@ ENDCLASS.
 
 CLASS zcl_skylint_pref_intf_segreg IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'skylint: Prefer interface segregation (small interfaces)'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-interface_segregation
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Interface has too many methods; prefer interface segregation'
-                       pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     kind = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                     ( name  = 'MAX_METHODS'
-                       value = REF #( mv_max_methods ) ) ) ) ).
+    super->constructor( VALUE #( description       = 'skylint: Prefer interface segregation (small interfaces)'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-interface_segregation
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Interface has too many methods; prefer interface segregation'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 attributes        = VALUE #(
+                                     kind = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                     ( name  = 'MAX_METHODS'
+                                       value = REF #( mv_max_methods ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
