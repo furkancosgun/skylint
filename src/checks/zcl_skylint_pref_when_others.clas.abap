@@ -29,11 +29,11 @@ CLASS zcl_skylint_pref_when_others DEFINITION
 
     CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_WHEN_OTHERS'.
 
-    DATA mv_min_branches TYPE i VALUE 2.
+    DATA mv_min_branches TYPE i         VALUE 2.
     DATA mv_require_last TYPE abap_bool VALUE abap_true.
 
     METHODS is_when_others
-      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
 ENDCLASS.
@@ -44,22 +44,18 @@ CLASS zcl_skylint_pref_when_others IMPLEMENTATION.
     super->constructor(
         VALUE #( description       = 'Require WHEN OTHERS as the last CASE branch'
                  remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-missing_others
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'CASE statement has no WHEN OTHERS fallback branch'
-                       pseudo_comment = c_pseudo_comment )
-                     ( code           = c_finding_codes-others_position
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'WHEN OTHERS should be the last branch of the CASE statement'
-                       pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     ( name  = 'MIN_BRANCHES'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                       value = REF #( mv_min_branches ) )
-                     ( name  = 'REQUIRE_LAST'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                       value = REF #( mv_require_last ) ) ) ) ).
+                 finding_codes     = VALUE #( severity       = if_ci_atc_check=>finding_severities-warning
+                                              pseudo_comment = c_pseudo_comment
+                                              ( code = c_finding_codes-missing_others
+                                                text = 'CASE statement has no WHEN OTHERS fallback branch' )
+                                              ( code = c_finding_codes-others_position
+                                                text = 'WHEN OTHERS should be the last branch of the CASE statement' ) )
+                 attributes        = VALUE #( ( name  = 'MIN_BRANCHES'
+                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                                value = REF #( mv_min_branches ) )
+                                              ( name  = 'REQUIRE_LAST'
+                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                                value = REF #( mv_require_last ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -76,7 +72,7 @@ CLASS zcl_skylint_pref_when_others IMPLEMENTATION.
           IF lines( lt_stack ) = 0.
             CONTINUE.
           ENDIF.
-          READ TABLE lt_stack ASSIGNING <ls_context> INDEX lines( lt_stack ).
+          ASSIGN lt_stack[ lines( lt_stack ) ] TO <ls_context>.
           IF sy-subrc <> 0.
             CONTINUE.
           ENDIF.
@@ -92,16 +88,16 @@ CLASS zcl_skylint_pref_when_others IMPLEMENTATION.
           IF lines( lt_stack ) = 0.
             CONTINUE.
           ENDIF.
-          READ TABLE lt_stack ASSIGNING <ls_context> INDEX lines( lt_stack ).
+          ASSIGN lt_stack[ lines( lt_stack ) ] TO <ls_context>.
           IF sy-subrc <> 0.
             CONTINUE.
           ENDIF.
-          IF     <ls_context>-has_others = abap_false
+          IF     <ls_context>-has_others      = abap_false
              AND <ls_context>-explicit_count >= mv_min_branches.
             report_statement( is_statement    = <ls_context>-statement
                               iv_finding_code = c_finding_codes-missing_others ).
-          ELSEIF     <ls_context>-has_others = abap_true
-                 AND mv_require_last = abap_true
+          ELSEIF     <ls_context>-has_others   = abap_true
+                 AND mv_require_last           = abap_true
                  AND <ls_context>-others_index < <ls_context>-branch_count.
             report_statement( is_statement    = <ls_context>-others_statement
                               iv_finding_code = c_finding_codes-others_position ).

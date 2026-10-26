@@ -35,17 +35,15 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_redun_assign IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Detect identical assignments and moves'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-identical_move
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Identical assignment has no effect; remove redundant statement'
-                       pseudo_comment = c_pseudo_comment ) )
-                 quickfix_codes    = VALUE #(
-                     ( code       = c_quickfix_codes-delete_self
-                       short_text = 'Delete self-assignment' ) ) ) ).
+    super->constructor( VALUE #( description       = 'Detect identical assignments and moves'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-identical_move
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Identical assignment has no effect; remove redundant statement'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-delete_self
+                                                                short_text = 'Delete self-assignment' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -88,6 +86,7 @@ CLASS zcl_skylint_no_redun_assign IMPLEMENTATION.
     DATA ls_op     TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA ls_left   TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA ls_right  TYPE if_ci_atc_source_code_provider=>ty_token.
+    " TODO: variable is assigned but never used (ABAP cleaner)
     DATA ls_last   TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_res = abap_false.
@@ -98,9 +97,8 @@ CLASS zcl_skylint_no_redun_assign IMPLEMENTATION.
           RETURN.
         ENDIF.
 
-        ls_op = zcl_skylint_ast_util=>get_token(
-                    is_statement = is_statement
-                    iv_index     = 2 ).
+        ls_op = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                 iv_index     = 2 ).
 
         IF ls_op-lexeme <> '=' AND ls_op-lexeme <> '?='.
           RETURN.
@@ -112,19 +110,16 @@ CLASS zcl_skylint_no_redun_assign IMPLEMENTATION.
 
       WHEN 'MOVE'.
         lv_lexeme = 'TO'.
-        IF zcl_skylint_ast_util=>has_token_lexeme(
-               is_statement = is_statement
-               iv_lexeme    = '?TO' ) = abap_true.
+        IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                   iv_lexeme    = '?TO' ) = abap_true.
           lv_lexeme = '?TO'.
         ENDIF.
 
-        ls_left  = zcl_skylint_ast_util=>get_token_after(
-                       is_statement = is_statement
-                       iv_lexeme    = lv_lexeme ).
+        ls_left  = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                          iv_lexeme    = lv_lexeme ).
 
-        ls_right = zcl_skylint_ast_util=>get_token_before(
-                       is_statement = is_statement
-                       iv_lexeme    = lv_lexeme ).
+        ls_right = zcl_skylint_ast_util=>get_token_before( is_statement = is_statement
+                                                           iv_lexeme    = lv_lexeme ).
 
         ls_last  = zcl_skylint_ast_util=>get_last_token( is_statement ).
 

@@ -8,5 +8,8 @@
   { "target": "TEST_007", "code": null },
   { "target": "TEST_008", "code": null },
   { "target": "TEST_009", "code": "NO_NEG_CND", "line": 5, "column": 4 },
-  { "target": "TEST_010", "code": "NO_NEG_CND", "line": 3, "column": 4 }
+  { "target": "TEST_010", "code": "NO_NEG_CND", "line": 3, "column": 4 },
+  { "target": "TEST_011", "code": "NO_NEG_CND", "line": 4, "column": 4 },
+  { "target": "TEST_012", "code": null },
+  { "target": "TEST_013", "code": null }
 ]

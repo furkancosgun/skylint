@@ -26,20 +26,25 @@ CLASS zcl_skylint_no_dead_code DEFINITION
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_res) TYPE abap_bool.
 
+    METHODS strip_outer_parens
+      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
+      CHANGING  cv_from      TYPE i
+                cv_to        TYPE i.
+
     METHODS is_literal_or_constant
-      IMPORTING iv_lexeme     TYPE string
+      IMPORTING is_token      TYPE if_ci_atc_source_code_provider=>ty_token
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
     METHODS is_dead_pair
-      IMPORTING iv_left       TYPE string
-                iv_operator   TYPE string
-                iv_right      TYPE string
+      IMPORTING iv_left        TYPE string
+                iv_operator    TYPE string
+                iv_right       TYPE string
       RETURNING VALUE(rv_dead) TYPE abap_bool.
 
     METHODS is_dead_between
-      IMPORTING iv_operand    TYPE string
-                iv_low        TYPE string
-                iv_high       TYPE string
+      IMPORTING iv_operand     TYPE string
+                iv_low         TYPE string
+                iv_high        TYPE string
       RETURNING VALUE(rv_dead) TYPE abap_bool.
 
     METHODS is_number
@@ -93,16 +98,27 @@ CLASS zcl_skylint_no_dead_code IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_literal_or_constant.
+    DATA lv_lexeme TYPE string.
+
     rv_yes = abap_false.
-    IF iv_lexeme = 'ABAP_TRUE' OR iv_lexeme = 'ABAP_FALSE' OR iv_lexeme = 'SPACE'.
+    lv_lexeme = is_token-lexeme.
+
+    IF lv_lexeme = 'ABAP_TRUE' OR lv_lexeme = 'ABAP_FALSE'.
       rv_yes = abap_true.
       RETURN.
     ENDIF.
-    IF is_number( iv_lexeme ) = abap_true.
+
+    IF lv_lexeme = 'SPACE' AND is_token-references IS INITIAL.
       rv_yes = abap_true.
       RETURN.
     ENDIF.
-    IF is_string_literal( iv_lexeme ) = abap_true.
+
+    IF is_number( lv_lexeme ) = abap_true.
+      rv_yes = abap_true.
+      RETURN.
+    ENDIF.
+
+    IF is_string_literal( lv_lexeme ) = abap_true.
       rv_yes = abap_true.
     ENDIF.
   ENDMETHOD.
@@ -171,9 +187,9 @@ CLASS zcl_skylint_no_dead_code IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    IF     is_string_literal( iv_operand ) = abap_false
-        OR is_string_literal( iv_low )     = abap_false
-        OR is_string_literal( iv_high )    = abap_false.
+    IF    is_string_literal( iv_operand ) = abap_false
+       OR is_string_literal( iv_low )     = abap_false
+       OR is_string_literal( iv_high )    = abap_false.
       RETURN.
     ENDIF.
 
@@ -184,63 +200,113 @@ CLASS zcl_skylint_no_dead_code IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_constant_false_condition.
-    DATA lv_tok_cnt  TYPE i.
-    DATA lv_op1      TYPE string.
-    DATA lv_op2      TYPE string.
-    DATA lv_operator TYPE string.
+    DATA lv_tok_cnt TYPE i.
+    DATA lv_from    TYPE i.
+    DATA lv_to      TYPE i.
+    DATA ls_t1      TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_t2      TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_t3      TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_t4      TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_t5      TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    lv_tok_cnt = lines( is_statement-tokens ).
+    lv_tok_cnt = zcl_skylint_ast_util=>token_count( is_statement ).
+    IF lv_tok_cnt < 2.
+      RETURN.
+    ENDIF.
 
-    IF lv_tok_cnt = 2.
-      lv_op1 = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                       iv_index     = 2 ).
-      IF lv_op1 = 'ABAP_FALSE'.
+    lv_from = 2.
+    lv_to   = lv_tok_cnt.
+    strip_outer_parens( EXPORTING is_statement = is_statement
+                        CHANGING  cv_from      = lv_from
+                                  cv_to        = lv_to ).
+
+    IF lv_from = lv_to.
+      ls_t1 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                               iv_index     = lv_from ).
+      IF ls_t1-lexeme = 'ABAP_FALSE'.
         rv_res = abap_true.
       ENDIF.
       RETURN.
     ENDIF.
 
-    IF lv_tok_cnt = 6.
-      lv_op1      = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                             iv_index     = 2 ).
-      lv_operator = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                            iv_index     = 3 ).
-      lv_op2      = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                            iv_index     = 4 ).
-      IF     lv_operator = 'BETWEEN'
-         AND zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                     iv_index     = 5 ) = 'AND'.
-        IF     is_literal_or_constant( lv_op1 ) = abap_true
-           AND is_literal_or_constant( lv_op2 ) = abap_true
-           AND is_literal_or_constant( zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                                               iv_index     = 6 ) ) = abap_true.
-          rv_res = is_dead_between( iv_operand = lv_op1
-                                    iv_low     = lv_op2
-                                    iv_high    = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                                                         iv_index     = 6 ) ).
+    IF lv_to = lv_from + 2.
+      ls_t1 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                               iv_index     = lv_from ).
+      ls_t2 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                               iv_index     = lv_from + 1 ).
+      ls_t3 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                               iv_index     = lv_to ).
+
+      IF is_literal_or_constant( ls_t1 ) = abap_false OR is_literal_or_constant( ls_t3 ) = abap_false.
+        RETURN.
+      ENDIF.
+
+      rv_res = is_dead_pair( iv_left     = ls_t1-lexeme
+                             iv_operator = ls_t2-lexeme
+                             iv_right    = ls_t3-lexeme ).
+      RETURN.
+    ENDIF.
+
+    IF lv_to = lv_from + 4.
+      ls_t1 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                               iv_index     = lv_from ).
+      ls_t2 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                               iv_index     = lv_from + 1 ).
+      ls_t3 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                               iv_index     = lv_from + 2 ).
+      ls_t4 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                               iv_index     = lv_from + 3 ).
+      ls_t5 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                               iv_index     = lv_to ).
+
+      IF ls_t2-lexeme = 'BETWEEN' AND ls_t4-lexeme = 'AND'.
+        IF     is_literal_or_constant( ls_t1 ) = abap_true
+           AND is_literal_or_constant( ls_t3 ) = abap_true
+           AND is_literal_or_constant( ls_t5 ) = abap_true.
+          rv_res = is_dead_between( iv_operand = ls_t1-lexeme
+                                    iv_low     = ls_t3-lexeme
+                                    iv_high    = ls_t5-lexeme ).
         ENDIF.
       ENDIF.
-      RETURN.
     ENDIF.
+  ENDMETHOD.
 
-    IF lv_tok_cnt <> 4.
-      RETURN.
-    ENDIF.
+  METHOD strip_outer_parens.
+    DATA lv_depth TYPE i.
+    DATA lv_idx   TYPE i.
+    DATA ls_tok   TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    lv_op1 = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                     iv_index     = 2 ).
-    lv_operator = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                          iv_index     = 3 ).
-    lv_op2 = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                     iv_index     = 4 ).
+    WHILE cv_from < cv_to.
+      ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                iv_index     = cv_from ).
+      IF ls_tok-lexeme <> '('.
+        EXIT.
+      ENDIF.
+      ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                iv_index     = cv_to ).
+      IF ls_tok-lexeme <> ')'.
+        EXIT.
+      ENDIF.
 
-    IF is_literal_or_constant( lv_op1 ) = abap_false OR is_literal_or_constant( lv_op2 ) = abap_false.
-      RETURN.
-    ENDIF.
+      lv_depth = 0.
+      lv_idx   = cv_from.
+      DO cv_to - cv_from TIMES.
+        ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                  iv_index     = lv_idx ).
+        lv_depth += zcl_skylint_ast_util=>token_paren_delta( ls_tok ).
+        IF lv_depth = 0.
+          EXIT.
+        ENDIF.
+        lv_idx += 1.
+      ENDDO.
 
-    rv_res = is_dead_pair( iv_left     = lv_op1
-                           iv_operator = lv_operator
-                           iv_right    = lv_op2 ).
+      IF lv_depth = 1.
+        cv_from += 1.
+        cv_to   -= 1.
+      ELSE.
+        EXIT.
+      ENDIF.
+    ENDWHILE.
   ENDMETHOD.
 
   METHOD is_number.

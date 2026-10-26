@@ -61,5 +61,9 @@
     "line": 5,
     "column": 4,
     "quickfixes": []
+  },
+  {
+    "target": "TEST_012",
+    "code": null
   }
 ]

@@ -28,7 +28,7 @@ CLASS zcl_skylint_pref_reduce DEFINITION
         target_name TYPE string,
         is_assign   TYPE abap_bool,
         acc_var     TYPE string,
-        expr_text   TYPE string,
+        body_stmt   TYPE if_ci_atc_source_code_provider=>ty_statement,
         is_valid    TYPE abap_bool,
       END OF ty_loop_info.
 
@@ -43,19 +43,23 @@ CLASS zcl_skylint_pref_reduce DEFINITION
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
                 iv_item_var  TYPE string
       EXPORTING ev_acc_var   TYPE string
-                ev_expr      TYPE string
                 ev_is_valid  TYPE abap_bool.
-
-    METHODS extract_tokens_text
-      IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
-                iv_from_idx    TYPE i
-                iv_to_idx      TYPE i
-      RETURNING VALUE(rv_text) TYPE string.
 
     METHODS build_reduce_code
       IMPORTING is_loop_stmt   TYPE if_ci_atc_source_code_provider=>ty_statement
                 is_info        TYPE ty_loop_info
       RETURNING VALUE(rt_code) TYPE zcl_skylint_check_base=>ty_code_lines.
+
+    METHODS build_reduce_expr
+      IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_from        TYPE i
+                iv_to          TYPE i
+                iv_acc_var     TYPE string
+      RETURNING VALUE(rv_expr) TYPE string.
+
+    METHODS clean_target_name
+      IMPORTING iv_raw          TYPE string
+      RETURNING VALUE(rv_clean) TYPE string.
 
 ENDCLASS.
 
@@ -170,12 +174,12 @@ CLASS zcl_skylint_pref_reduce IMPLEMENTATION.
     IF lv_into_pos > 0.
       ls_tok = zcl_skylint_ast_util=>get_token( is_statement = ls_loop_stmt
                                                 iv_index     = lv_into_pos + 1 ).
-      es_info-target_name = ls_tok-lexeme.
+      es_info-target_name = clean_target_name( ls_tok-lexeme ).
     ELSEIF lv_assign_pos > 0.
       es_info-is_assign = abap_true.
       ls_tok = zcl_skylint_ast_util=>get_token( is_statement = ls_loop_stmt
                                                 iv_index     = lv_assign_pos + 1 ).
-      es_info-target_name = ls_tok-lexeme.
+      es_info-target_name = clean_target_name( ls_tok-lexeme ).
     ELSE.
       RETURN.
     ENDIF.
@@ -183,11 +187,11 @@ CLASS zcl_skylint_pref_reduce IMPLEMENTATION.
     parse_aggregation_stmt( EXPORTING is_statement = ls_body_stmt
                                       iv_item_var  = es_info-target_name
                             IMPORTING ev_acc_var   = es_info-acc_var
-                                      ev_expr      = es_info-expr_text
                                       ev_is_valid  = es_info-is_valid ).
 
     IF es_info-is_valid = abap_true.
-      ev_endloop_idx = iv_loop_idx + 2.
+      es_info-body_stmt = ls_body_stmt.
+      ev_endloop_idx    = iv_loop_idx + 2.
     ENDIF.
   ENDMETHOD.
 
@@ -196,10 +200,10 @@ CLASS zcl_skylint_pref_reduce IMPLEMENTATION.
     DATA ls_first     TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA ls_second    TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA ls_third     TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_expr_text TYPE string.
+    DATA lv_found     TYPE abap_bool.
+    FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     CLEAR: ev_acc_var,
-           ev_expr,
            ev_is_valid.
 
     IF is_statement-keyword <> 'COMPUTE'.
@@ -221,54 +225,51 @@ CLASS zcl_skylint_pref_reduce IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    lv_expr_text = extract_tokens_text( is_statement = is_statement
-                                        iv_from_idx  = 3
-                                        iv_to_idx    = lv_tok_count ).
+    lv_found = abap_false.
+    LOOP AT is_statement-tokens FROM 3 ASSIGNING <ls_tok>.
+      IF <ls_tok>-lexeme = iv_item_var OR <ls_tok>-lexeme CP |{ iv_item_var }-*|.
+        lv_found = abap_true.
+        EXIT.
+      ENDIF.
+    ENDLOOP.
 
-    IF NOT contains( val = lv_expr_text
-                     sub = iv_item_var ).
+    IF lv_found = abap_false.
       RETURN.
     ENDIF.
 
     IF ls_third-lexeme = ls_first-lexeme.
-
       ev_acc_var  = ls_first-lexeme.
-      ev_expr     = lv_expr_text.
-      ev_is_valid = abap_true.
-    ELSEIF contains( val   = lv_expr_text
-                     start = |\|\{ { ls_first-lexeme } \}| ).
-
-      ev_acc_var  = ls_first-lexeme.
-      ev_expr     = lv_expr_text.
       ev_is_valid = abap_true.
     ENDIF.
   ENDMETHOD.
 
-  METHOD extract_tokens_text.
-    DATA lv_curr_idx TYPE i.
-    DATA ls_token    TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lt_parts    TYPE STANDARD TABLE OF string WITH EMPTY KEY.
+  METHOD clean_target_name.
+    DATA lv_len TYPE i.
+    DATA lv_end TYPE string.
 
-    CLEAR rv_text.
-    lv_curr_idx = iv_from_idx.
+    rv_clean = iv_raw.
+    IF iv_raw NP 'DATA(*'.
+      RETURN.
+    ENDIF.
 
-    WHILE lv_curr_idx <= iv_to_idx.
-      ls_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                  iv_index     = lv_curr_idx ).
-      IF ls_token-lexeme IS NOT INITIAL.
-        APPEND ls_token-lexeme TO lt_parts.
+    lv_len = strlen( iv_raw ).
+    IF lv_len > 6.
+      lv_end = substring( val = iv_raw
+                          off = lv_len - 1
+                          len = 1 ).
+      IF lv_end = ')'.
+        rv_clean = substring( val = iv_raw
+                              off = 5
+                              len = lv_len - 6 ).
       ENDIF.
-      lv_curr_idx += 1.
-    ENDWHILE.
-
-    rv_text = concat_lines_of( table = lt_parts
-                               sep   = ` ` ).
+    ENDIF.
   ENDMETHOD.
 
   METHOD build_reduce_code.
     DATA ls_first_tok TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_indent    TYPE string.
     DATA lv_replaced  TYPE string.
+    DATA lv_tok_count TYPE i.
 
     CLEAR rt_code.
     ls_first_tok = zcl_skylint_ast_util=>get_first_token( is_loop_stmt ).
@@ -277,13 +278,45 @@ CLASS zcl_skylint_pref_reduce IMPLEMENTATION.
                           occ = ls_first_tok-position-column - 1 ).
     ENDIF.
 
-    lv_replaced = replace( val  = is_info-expr_text
-                           sub  = is_info-acc_var
-                           with = `res` ).
+    lv_tok_count = lines( is_info-body_stmt-tokens ).
+    lv_replaced = build_reduce_expr( is_statement = is_info-body_stmt
+                                     iv_from      = 3
+                                     iv_to        = lv_tok_count
+                                     iv_acc_var   = is_info-acc_var ).
 
     APPEND |{ lv_indent }{ is_info-acc_var } = REDUCE #( | TO rt_code.
     APPEND |{ lv_indent }  INIT res = { is_info-acc_var }| TO rt_code.
     APPEND |{ lv_indent }  FOR { is_info-target_name } IN { is_info-table_name }| TO rt_code.
     APPEND |{ lv_indent }  NEXT res = { lv_replaced } ).| TO rt_code.
+  ENDMETHOD.
+
+  METHOD build_reduce_expr.
+    DATA ls_prev TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_part TYPE string.
+    FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    LOOP AT is_statement-tokens FROM iv_from TO iv_to ASSIGNING <ls_tok>.
+      CLEAR ls_prev.
+      IF sy-tabix > iv_from.
+        ls_prev = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                   iv_index     = sy-tabix - 1 ).
+      ENDIF.
+
+      IF <ls_tok>-lexeme = iv_acc_var AND ls_prev-lexeme <> '-' AND ls_prev-lexeme <> '->'.
+        lv_part = 'res'.
+      ELSE.
+        lv_part = <ls_tok>-lexeme.
+      ENDIF.
+
+      IF rv_expr IS INITIAL.
+        rv_expr = lv_part.
+      ELSEIF lv_part = '-' OR lv_part = '->' OR lv_part = '=>'.
+        rv_expr = |{ rv_expr }{ lv_part }|.
+      ELSEIF ls_prev-lexeme = '-' OR ls_prev-lexeme = '->' OR ls_prev-lexeme = '=>'.
+        rv_expr = |{ rv_expr }{ lv_part }|.
+      ELSE.
+        rv_expr = |{ rv_expr } { lv_part }|.
+      ENDIF.
+    ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

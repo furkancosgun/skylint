@@ -4,6 +4,7 @@ CLASS zcl_skylint_test_pref_switch DEFINITION.
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
+    METHODS test_005.
 ENDCLASS.
 
 CLASS zcl_skylint_test_pref_switch IMPLEMENTATION.
@@ -59,6 +60,23 @@ CLASS zcl_skylint_test_pref_switch IMPLEMENTATION.
       WHEN 'O' THEN 'Open'
       WHEN 'C' THEN 'Closed'
       ELSE 'Unknown' ).
+  ENDMETHOD.
+
+  METHOD test_005.
+    TYPES: BEGIN OF ty_data,
+             text TYPE string,
+           END OF ty_data.
+    DATA ls_data TYPE ty_data.
+    DATA lv_status TYPE c LENGTH 1 VALUE 'O'.
+
+    CASE lv_status.
+      WHEN 'O'.
+        ls_data-text = 'Open'.
+      WHEN 'C'.
+        ls_data-text = 'Closed'.
+      WHEN OTHERS.
+        ls_data-text = 'Unknown'.
+    ENDCASE.
   ENDMETHOD.
 
 ENDCLASS.

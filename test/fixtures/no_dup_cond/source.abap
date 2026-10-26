@@ -14,6 +14,9 @@ CLASS zcl_test_no_duplicate_conditio DEFINITION
     METHODS test_009.
     METHODS test_010.
     METHODS test_011.
+    METHODS test_012.
+    METHODS test_013.
+    METHODS test_014.
 ENDCLASS.
 
 
@@ -114,5 +117,29 @@ CLASS zcl_test_no_duplicate_conditio IMPLEMENTATION.
     lv_a = 2.
     ENDWHILE.
   ENDMETHOD.
-ENDCLASS.
 
+  METHOD test_012.
+    DATA lv_a TYPE i.
+    IF ( lv_a = 1 AND lv_a = 1 ).
+    lv_a = 2.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_013.
+    DATA lv_a TYPE i.
+    DATA lv_b TYPE i.
+    DATA lv_c TYPE i.
+    IF lv_a = 1.
+    lv_b = 2.
+    ELSEIF ( lv_a = 1 ).
+    lv_c = 3.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_014.
+    DATA lv_a TYPE i.
+    IF ( lv_a = 1 ) AND ( lv_a = 1 ).
+    lv_a = 2.
+    ENDIF.
+  ENDMETHOD.
+ENDCLASS.

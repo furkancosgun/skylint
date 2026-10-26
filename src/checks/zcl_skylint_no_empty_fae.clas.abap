@@ -199,35 +199,31 @@ CLASS zcl_skylint_no_empty_fae IMPLEMENTATION.
     DATA lt_stack         TYPE ty_block_stack.
     DATA ls_frame         TYPE ty_block_frame.
     DATA lv_outer_guarded TYPE abap_bool VALUE abap_false.
-    DATA lv_idx           TYPE i.
-    DATA ls_stmt          TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA lv_stack_len     TYPE i.
-    FIELD-SYMBOLS <ls_top> TYPE ty_block_frame.
+    FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_top>  TYPE ty_block_frame.
 
     rv_yes = abap_false.
 
-    DO iv_select_idx - 1 TIMES.
-      lv_idx = sy-index.
-      ls_stmt = zcl_skylint_ast_util=>get_statement( it_statements = it_statements
-                                                     iv_index      = lv_idx ).
+    LOOP AT it_statements TO iv_select_idx - 1 ASSIGNING <ls_stmt>.
       lv_stack_len = lines( lt_stack ).
 
-      CASE ls_stmt-keyword.
+      CASE <ls_stmt>-keyword.
         WHEN 'IF'.
           CLEAR ls_frame.
           ls_frame-keyword      = 'IF'.
-          ls_frame-is_protected = is_positive_check( is_statement = ls_stmt
+          ls_frame-is_protected = is_positive_check( is_statement = <ls_stmt>
                                                      iv_tab_name  = iv_tab_name ).
-          ls_frame-is_negative  = is_negative_check( is_statement = ls_stmt
+          ls_frame-is_negative  = is_negative_check( is_statement = <ls_stmt>
                                                      iv_tab_name  = iv_tab_name ).
           INSERT ls_frame INTO TABLE lt_stack.
 
         WHEN 'ELSEIF'.
           IF lv_stack_len > 0.
             ASSIGN lt_stack[ lv_stack_len ] TO <ls_top>.
-            <ls_top>-is_protected = is_positive_check( is_statement = ls_stmt
+            <ls_top>-is_protected = is_positive_check( is_statement = <ls_stmt>
                                                        iv_tab_name  = iv_tab_name ).
-            <ls_top>-is_negative  = is_negative_check( is_statement = ls_stmt
+            <ls_top>-is_negative  = is_negative_check( is_statement = <ls_stmt>
                                                        iv_tab_name  = iv_tab_name ).
             <ls_top>-has_exit     = abap_false.
           ENDIF.
@@ -256,7 +252,7 @@ CLASS zcl_skylint_no_empty_fae IMPLEMENTATION.
 
         WHEN 'LOOP' OR 'WHILE' OR 'DO' OR 'CASE' OR 'TRY'.
           CLEAR ls_frame.
-          ls_frame-keyword = ls_stmt-keyword.
+          ls_frame-keyword = <ls_stmt>-keyword.
           INSERT ls_frame INTO TABLE lt_stack.
 
         WHEN 'ENDLOOP' OR 'ENDWHILE' OR 'ENDDO' OR 'ENDCASE' OR 'ENDTRY'.
@@ -265,7 +261,7 @@ CLASS zcl_skylint_no_empty_fae IMPLEMENTATION.
           ENDIF.
 
         WHEN 'CHECK'.
-          IF is_positive_check( is_statement = ls_stmt
+          IF is_positive_check( is_statement = <ls_stmt>
                                 iv_tab_name  = iv_tab_name ) = abap_true.
             IF lv_stack_len = 0.
               lv_outer_guarded = abap_true.
@@ -281,7 +277,7 @@ CLASS zcl_skylint_no_empty_fae IMPLEMENTATION.
             <ls_top>-has_exit = abap_true.
           ENDIF.
       ENDCASE.
-    ENDDO.
+    ENDLOOP.
 
     IF lv_outer_guarded = abap_true.
       rv_yes = abap_true.

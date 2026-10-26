@@ -76,7 +76,6 @@ CLASS zcl_skylint_no_chained_assign IMPLEMENTATION.
   METHOD has_assignment_chain.
     DATA lv_depth        TYPE i.
     DATA lv_equals_count TYPE i.
-    DATA lv_lexeme       TYPE string.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_chain = abap_false.
@@ -84,22 +83,10 @@ CLASS zcl_skylint_no_chained_assign IMPLEMENTATION.
     lv_equals_count = 0.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      lv_lexeme = <ls_token>-lexeme.
-
-      IF    lv_lexeme CP '*(' OR lv_lexeme CP '*[' OR lv_lexeme CP '*{'
-         OR lv_lexeme  = '('  OR lv_lexeme  = '['  OR lv_lexeme  = '{'.
-        lv_depth += 1.
-      ENDIF.
-
-      IF lv_depth = 0 AND lv_lexeme = '='.
+      IF lv_depth = 0 AND <ls_token>-references IS INITIAL AND <ls_token>-lexeme = '='.
         lv_equals_count += 1.
       ENDIF.
-
-      IF     (    lv_lexeme CP '*)' OR lv_lexeme CP '*]' OR lv_lexeme CP '*}'
-               OR lv_lexeme  = ')'  OR lv_lexeme  = ']'  OR lv_lexeme  = '}' )
-         AND lv_depth > 0.
-        lv_depth -= 1.
-      ENDIF.
+      lv_depth += zcl_skylint_ast_util=>token_paren_delta( <ls_token> ).
     ENDLOOP.
 
     IF lv_equals_count > 1.
@@ -109,7 +96,6 @@ CLASS zcl_skylint_no_chained_assign IMPLEMENTATION.
 
   METHOD split_chain.
     DATA lv_depth    TYPE i.
-    DATA lv_lexeme   TYPE string.
     DATA lv_segment  TYPE string.
     DATA lt_segments TYPE string_table.
     DATA lv_idx      TYPE i.
@@ -120,27 +106,15 @@ CLASS zcl_skylint_no_chained_assign IMPLEMENTATION.
     lv_segment = ''.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      lv_lexeme = <ls_token>-lexeme.
-
-      IF    lv_lexeme CP '*(' OR lv_lexeme CP '*[' OR lv_lexeme CP '*{'
-         OR lv_lexeme  = '('  OR lv_lexeme  = '['  OR lv_lexeme  = '{'.
-        lv_depth += 1.
-      ENDIF.
-
-      IF lv_depth = 0 AND lv_lexeme = '='.
+      IF lv_depth = 0 AND <ls_token>-references IS INITIAL AND <ls_token>-lexeme = '='.
         APPEND condense( lv_segment ) TO lt_segments.
         CLEAR lv_segment.
       ELSE.
         lv_segment = COND #( WHEN lv_segment IS INITIAL
-                             THEN lv_lexeme
-                             ELSE |{ lv_segment } { lv_lexeme }| ).
+                             THEN <ls_token>-lexeme
+                             ELSE |{ lv_segment } { <ls_token>-lexeme }| ).
       ENDIF.
-
-      IF     (    lv_lexeme CP '*)' OR lv_lexeme CP '*]' OR lv_lexeme CP '*}'
-               OR lv_lexeme  = ')'  OR lv_lexeme  = ']'  OR lv_lexeme  = '}' )
-         AND lv_depth > 0.
-        lv_depth -= 1.
-      ENDIF.
+      lv_depth += zcl_skylint_ast_util=>token_paren_delta( <ls_token> ).
     ENDLOOP.
     APPEND condense( lv_segment ) TO lt_segments.
 

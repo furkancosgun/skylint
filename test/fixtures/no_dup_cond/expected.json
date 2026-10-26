@@ -60,5 +60,26 @@
     "line": 3,
     "column": 4,
     "quickfixes": []
+  },
+  {
+    "target": "TEST_012",
+    "code": "NO_DUP_OPR",
+    "line": 3,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_013",
+    "code": "NO_DUP_CND",
+    "line": 7,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_014",
+    "code": "NO_DUP_OPR",
+    "line": 3,
+    "column": 4,
+    "quickfixes": []
   }
 ]

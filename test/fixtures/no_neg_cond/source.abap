@@ -13,6 +13,9 @@ CLASS zcl_test_no_neg_cond DEFINITION
     METHODS test_008.
     METHODS test_009.
     METHODS test_010.
+    METHODS test_011.
+    METHODS test_012.
+    METHODS test_013.
 ENDCLASS.
 
 CLASS zcl_test_no_neg_cond IMPLEMENTATION.
@@ -113,6 +116,35 @@ CLASS zcl_test_no_neg_cond IMPLEMENTATION.
       lv_flag = abap_true.
     ELSE.
       lv_flag = abap_false.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_011.
+    DATA lv_a TYPE i.
+    DATA lv_b TYPE i.
+    IF ( lv_a <> lv_b ).
+      lv_a = lv_b.
+    ELSE.
+      lv_a = lv_b + 1.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_012.
+    DATA lv_a TYPE i.
+    DATA lv_b TYPE i.
+    IF lv_a = 1 AND lv_b <> 2.
+      lv_a = 2.
+    ELSE.
+      lv_a = 1.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_013.
+    DATA lv_a TYPE i.
+    IF boolc( lv_a <> 0 ) = abap_true.
+      lv_a = 1.
+    ELSE.
+      lv_a = 0.
     ENDIF.
   ENDMETHOD.
 ENDCLASS.

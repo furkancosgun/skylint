@@ -22,17 +22,37 @@ CLASS zcl_skylint_pref_between DEFINITION
     METHODS inspect_condition
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    METHODS get_symbol
-      IMPORTING is_token         TYPE if_ci_atc_source_code_provider=>ty_token
+    METHODS extract_clause_operands
+      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_from      TYPE i
+                iv_to        TYPE i
+      EXPORTING ev_op        TYPE string
+                ev_op_idx    TYPE i
+                ev_left      TYPE string
+                ev_right     TYPE string.
+
+    METHODS build_operand_symbol
+      IMPORTING is_statement     TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_from          TYPE i
+                iv_to            TYPE i
       RETURNING VALUE(rv_symbol) TYPE string.
+
+    METHODS strip_outer_parens
+      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
+      CHANGING  cv_from      TYPE i
+                cv_to        TYPE i.
 
     METHODS is_range_operator
       IMPORTING iv_lexeme     TYPE string
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
-    METHODS matches_range_operators
-      IMPORTING iv_first      TYPE string
-                iv_second     TYPE string
+    METHODS is_valid_range
+      IMPORTING iv_op1        TYPE string
+                iv_op2        TYPE string
+                iv_left1      TYPE string
+                iv_right1     TYPE string
+                iv_left2      TYPE string
+                iv_right2     TYPE string
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
 ENDCLASS.
@@ -40,18 +60,17 @@ ENDCLASS.
 
 CLASS zcl_skylint_pref_between IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Prefer BETWEEN for inclusive range checks'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-range_check
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Combine the duplicated range comparison with BETWEEN'
-                       pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     ( name  = 'STRICT_RANGE'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                       value = REF #( mv_strict_range ) ) ) ) ).
+    super->constructor( VALUE #( description       = 'Prefer BETWEEN for inclusive range checks'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-range_check
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Combine the duplicated range comparison with BETWEEN'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 attributes        = VALUE #(
+                                     ( name  = 'STRICT_RANGE'
+                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                       value = REF #( mv_strict_range ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -71,105 +90,182 @@ CLASS zcl_skylint_pref_between IMPLEMENTATION.
 
   METHOD inspect_condition.
     DATA lv_count   TYPE i.
+    DATA lv_from    TYPE i.
+    DATA lv_to      TYPE i.
+    DATA lv_depth   TYPE i.
     DATA lv_and_idx TYPE i.
-    DATA lv_op1_idx TYPE i.
-    DATA lv_op2_idx TYPE i.
     DATA lv_op1     TYPE string.
     DATA lv_op2     TYPE string.
-    DATA ls_token   TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_left1   TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_right1  TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_left2   TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_right2  TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_op1_idx TYPE i.
+    DATA lv_op2_idx TYPE i.
+    DATA lv_left1   TYPE string.
+    DATA lv_right1  TYPE string.
+    DATA lv_left2   TYPE string.
+    DATA lv_right2  TYPE string.
+    FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     lv_count = zcl_skylint_ast_util=>token_count( is_statement ).
     IF lv_count < 8.
       RETURN.
     ENDIF.
 
-    IF     zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                   iv_lexeme    = 'BETWEEN' ) = abap_true
-        OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                   iv_lexeme    = 'OR' ) = abap_true.
+    lv_from = 2.
+    lv_to   = lv_count.
+    strip_outer_parens( EXPORTING is_statement = is_statement
+                        CHANGING  cv_from      = lv_from
+                                  cv_to        = lv_to ).
+
+    IF lv_to < lv_from + 6.
       RETURN.
     ENDIF.
 
-    lv_and_idx = zcl_skylint_ast_util=>find_token( is_statement = is_statement
-                                                   iv_lexeme    = 'AND' ).
-    IF lv_and_idx <= 3.
-      RETURN.
-    ENDIF.
-
-    " Ensure only single AND in condition
-    IF zcl_skylint_ast_util=>find_token( is_statement   = is_statement
-                                         iv_lexeme      = 'AND'
-                                         iv_start_index = lv_and_idx + 1 ) > 0.
-      RETURN.
-    ENDIF.
-
-    " Find first comparison operator (before AND)
-    DO lv_and_idx - 2 TIMES.
-      ls_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                  iv_index     = sy-index + 1 ).
-      IF is_range_operator( ls_token-lexeme ) = abap_true.
-        lv_op1_idx = sy-index + 1.
-        lv_op1     = ls_token-lexeme.
-        EXIT.
+    lv_depth = 0.
+    LOOP AT is_statement-tokens FROM lv_from TO lv_to ASSIGNING <ls_tok>.
+      IF lv_depth = 0 AND <ls_tok>-references IS INITIAL.
+        IF <ls_tok>-lexeme = 'BETWEEN' OR <ls_tok>-lexeme = 'OR'.
+          RETURN.
+        ENDIF.
+        IF <ls_tok>-lexeme = 'AND'.
+          IF lv_and_idx > 0.
+            RETURN.
+          ENDIF.
+          lv_and_idx = sy-tabix.
+        ENDIF.
       ENDIF.
-    ENDDO.
+      lv_depth += zcl_skylint_ast_util=>token_paren_delta( <ls_tok> ).
+    ENDLOOP.
 
-    " Find second comparison operator (after AND)
-    DO lv_count - lv_and_idx TIMES.
-      ls_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                  iv_index     = lv_and_idx + sy-index ).
-      IF is_range_operator( ls_token-lexeme ) = abap_true.
-        lv_op2_idx = lv_and_idx + sy-index.
-        lv_op2     = ls_token-lexeme.
-        EXIT.
-      ENDIF.
-    ENDDO.
+    IF lv_and_idx <= lv_from + 2 OR lv_and_idx >= lv_to - 2.
+      RETURN.
+    ENDIF.
+
+    extract_clause_operands( EXPORTING is_statement = is_statement
+                                       iv_from      = lv_from
+                                       iv_to        = lv_and_idx - 1
+                             IMPORTING ev_op        = lv_op1
+                                       ev_op_idx    = lv_op1_idx
+                                       ev_left      = lv_left1
+                                       ev_right     = lv_right1 ).
+
+    extract_clause_operands( EXPORTING is_statement = is_statement
+                                       iv_from      = lv_and_idx + 1
+                                       iv_to        = lv_to
+                             IMPORTING ev_op        = lv_op2
+                                       ev_op_idx    = lv_op2_idx
+                                       ev_left      = lv_left2
+                                       ev_right     = lv_right2 ).
 
     IF lv_op1_idx = 0 OR lv_op2_idx = 0.
       RETURN.
     ENDIF.
 
-    IF matches_range_operators( iv_first  = lv_op1
-                                iv_second = lv_op2 ) = abap_false.
-      RETURN.
-    ENDIF.
-
-    ls_left1  = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                 iv_index     = lv_op1_idx - 1 ).
-    ls_right1 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                 iv_index     = lv_op1_idx + 1 ).
-    ls_left2  = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                 iv_index     = lv_op2_idx - 1 ).
-    ls_right2 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                 iv_index     = lv_op2_idx + 1 ).
-
-    IF     get_symbol( ls_left1 ) = get_symbol( ls_left2 )
-       AND get_symbol( ls_left1 ) IS NOT INITIAL.
-      report_statement( is_statement    = is_statement
-                        iv_finding_code = c_finding_codes-range_check ).
-    ELSEIF get_symbol( ls_right1 ) = get_symbol( ls_right2 )
-       AND get_symbol( ls_right1 ) IS NOT INITIAL.
+    IF is_valid_range( iv_op1    = lv_op1
+                       iv_op2    = lv_op2
+                       iv_left1  = lv_left1
+                       iv_right1 = lv_right1
+                       iv_left2  = lv_left2
+                       iv_right2 = lv_right2 ) = abap_true.
       report_statement( is_statement    = is_statement
                         iv_finding_code = c_finding_codes-range_check ).
     ENDIF.
   ENDMETHOD.
 
-  METHOD get_symbol.
-    DATA ls_ref TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+  METHOD extract_clause_operands.
+    DATA lv_from  TYPE i.
+    DATA lv_to    TYPE i.
+    DATA lv_depth TYPE i.
+    FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    ls_ref = zcl_skylint_ast_util=>get_reference(
-                 is_token = is_token
-                 iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
+    lv_from = iv_from.
+    lv_to   = iv_to.
+    strip_outer_parens( EXPORTING is_statement = is_statement
+                        CHANGING  cv_from      = lv_from
+                                  cv_to        = lv_to ).
 
-    IF ls_ref-full_name IS NOT INITIAL.
-      rv_symbol = ls_ref-full_name.
-    ELSE.
-      rv_symbol = is_token-lexeme.
+    IF lv_to < lv_from + 2.
+      RETURN.
     ENDIF.
+
+    lv_depth = 0.
+    LOOP AT is_statement-tokens FROM lv_from TO lv_to ASSIGNING <ls_tok>.
+      IF     lv_depth = 0
+         AND <ls_tok>-references                  IS INITIAL
+         AND is_range_operator( <ls_tok>-lexeme )  = abap_true.
+        ev_op = <ls_tok>-lexeme.
+        ev_op_idx = sy-tabix.
+        EXIT.
+      ENDIF.
+      lv_depth += zcl_skylint_ast_util=>token_paren_delta( <ls_tok> ).
+    ENDLOOP.
+
+    IF ev_op_idx <= lv_from OR ev_op_idx >= lv_to.
+      RETURN.
+    ENDIF.
+
+    ev_left  = build_operand_symbol( is_statement = is_statement
+                                     iv_from      = lv_from
+                                     iv_to        = ev_op_idx - 1 ).
+    ev_right = build_operand_symbol( is_statement = is_statement
+                                     iv_from      = ev_op_idx + 1
+                                     iv_to        = lv_to ).
+  ENDMETHOD.
+
+  METHOD build_operand_symbol.
+    DATA lv_from TYPE i.
+    DATA lv_to   TYPE i.
+    DATA ls_ref  TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    lv_from = iv_from.
+    lv_to   = iv_to.
+    strip_outer_parens( EXPORTING is_statement = is_statement
+                        CHANGING  cv_from      = lv_from
+                                  cv_to        = lv_to ).
+
+    LOOP AT is_statement-tokens FROM lv_from TO lv_to ASSIGNING <ls_tok>.
+      ls_ref = zcl_skylint_ast_util=>get_reference(
+                   is_token = <ls_tok>
+                   iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
+      IF ls_ref-full_name IS NOT INITIAL.
+        rv_symbol = |{ rv_symbol } { ls_ref-full_name }|.
+      ELSE.
+        rv_symbol = |{ rv_symbol } { <ls_tok>-lexeme }|.
+      ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD strip_outer_parens.
+    DATA lv_depth TYPE i.
+    FIELD-SYMBOLS <ls_open>  TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_close> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_tok>   TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    WHILE cv_from < cv_to.
+      ASSIGN is_statement-tokens[ cv_from ] TO <ls_open>.
+      IF sy-subrc <> 0 OR <ls_open>-lexeme <> '(' OR <ls_open>-references IS NOT INITIAL.
+        EXIT.
+      ENDIF.
+
+      ASSIGN is_statement-tokens[ cv_to ] TO <ls_close>.
+      IF sy-subrc <> 0 OR <ls_close>-lexeme <> ')' OR <ls_close>-references IS NOT INITIAL.
+        EXIT.
+      ENDIF.
+
+      lv_depth = 0.
+      LOOP AT is_statement-tokens FROM cv_from TO cv_to - 1 ASSIGNING <ls_tok>.
+        lv_depth += zcl_skylint_ast_util=>token_paren_delta( <ls_tok> ).
+        IF lv_depth = 0.
+          EXIT.
+        ENDIF.
+      ENDLOOP.
+
+      IF lv_depth = 1.
+        cv_from += 1.
+        cv_to   -= 1.
+      ELSE.
+        EXIT.
+      ENDIF.
+    ENDWHILE.
   ENDMETHOD.
 
   METHOD is_range_operator.
@@ -179,12 +275,48 @@ CLASS zcl_skylint_pref_between IMPLEMENTATION.
                       OR iv_lexeme = '>' ).
   ENDMETHOD.
 
-  METHOD matches_range_operators.
-    rv_yes = xsdbool(
-            (    ( iv_first = '>=' AND iv_second = '<=' )
-              OR ( iv_first = '<=' AND iv_second = '>=' ) )
-         OR ( mv_strict_range = abap_true
-          AND (    ( iv_first = '>' AND iv_second = '<' )
-                OR ( iv_first = '<' AND iv_second = '>' ) ) ) ).
+  METHOD is_valid_range.
+    IF     iv_left1  = iv_left2
+       AND iv_left1 IS NOT INITIAL
+       AND (    (     iv_op1          = '>='      AND iv_op2 = '<=' )
+             OR (     iv_op1          = '<='      AND iv_op2 = '>=' )
+             OR (     mv_strict_range = abap_true
+                  AND (    ( iv_op1 = '>' AND iv_op2 = '<' )
+                        OR ( iv_op1 = '<' AND iv_op2 = '>' ) ) ) ).
+      rv_yes = abap_true.
+      RETURN.
+    ENDIF.
+
+    IF     iv_right1  = iv_right2
+       AND iv_right1 IS NOT INITIAL
+       AND (    (     iv_op1          = '<='      AND iv_op2 = '>=' )
+             OR (     iv_op1          = '>='      AND iv_op2 = '<=' )
+             OR (     mv_strict_range = abap_true
+                  AND (    ( iv_op1 = '<' AND iv_op2 = '>' )
+                        OR ( iv_op1 = '>' AND iv_op2 = '<' ) ) ) ).
+      rv_yes = abap_true.
+      RETURN.
+    ENDIF.
+
+    IF     iv_right1  = iv_left2
+       AND iv_right1 IS NOT INITIAL
+       AND (    (     iv_op1          = '<='      AND iv_op2 = '<=' )
+             OR (     iv_op1          = '>='      AND iv_op2 = '>=' )
+             OR (     mv_strict_range = abap_true
+                  AND (    ( iv_op1 = '<' AND iv_op2 = '<' )
+                        OR ( iv_op1 = '>' AND iv_op2 = '>' ) ) ) ).
+      rv_yes = abap_true.
+      RETURN.
+    ENDIF.
+
+    IF     iv_left1  = iv_right2
+       AND iv_left1 IS NOT INITIAL
+       AND (    (     iv_op1          = '<='      AND iv_op2 = '<=' )
+             OR (     iv_op1          = '>='      AND iv_op2 = '>=' )
+             OR (     mv_strict_range = abap_true
+                  AND (    ( iv_op1 = '<' AND iv_op2 = '<' )
+                        OR ( iv_op1 = '>' AND iv_op2 = '>' ) ) ) ).
+      rv_yes = abap_true.
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.

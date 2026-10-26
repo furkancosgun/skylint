@@ -30,18 +30,17 @@ ENDCLASS.
 
 CLASS zcl_skylint_max_fanout IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Limit type fan-out per procedure'
-                 remote_enablement = abap_false
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-type_fanout
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Procedure depends on too many distinct classes or interfaces'
-                       pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     ( name  = 'MAX_FANOUT'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                       value = REF #( mv_max_fanout ) ) ) ) ).
+    super->constructor( VALUE #( description       = 'Limit type fan-out per procedure'
+                                 remote_enablement = abap_false
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-type_fanout
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Procedure depends on too many distinct classes or interfaces'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 attributes        = VALUE #(
+                                     ( name  = 'MAX_FANOUT'
+                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                       value = REF #( mv_max_fanout ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -58,9 +57,8 @@ CLASS zcl_skylint_max_fanout IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    ls_first_stmt = zcl_skylint_ast_util=>get_statement(
-                        it_statements = is_procedure-statements
-                        iv_index      = 1 ).
+    ls_first_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+                                                         iv_index      = 1 ).
     IF ls_first_stmt-keyword IS NOT INITIAL.
       report_statement( is_statement    = ls_first_stmt
                         iv_finding_code = c_finding_codes-type_fanout ).
@@ -85,9 +83,8 @@ CLASS zcl_skylint_max_fanout IMPLEMENTATION.
           ENDIF.
 
           lv_class = ``.
-          zcl_skylint_ast_util=>parse_full_name(
-              EXPORTING iv_full_name  = <ls_reference>-full_name
-              IMPORTING ev_class_name = lv_class ).
+          zcl_skylint_ast_util=>parse_full_name( EXPORTING iv_full_name  = <ls_reference>-full_name
+                                                 IMPORTING ev_class_name = lv_class ).
 
           IF lv_class IS INITIAL.
             CONTINUE.

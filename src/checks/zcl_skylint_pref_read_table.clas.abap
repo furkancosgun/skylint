@@ -49,6 +49,13 @@ CLASS zcl_skylint_pref_read_table DEFINITION
                 iv_to_idx      TYPE i
       RETURNING VALUE(rv_text) TYPE string.
 
+    METHODS find_clause_end
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_start      TYPE i
+                iv_max        TYPE i
+                it_keywords   TYPE string_table
+      RETURNING VALUE(rv_end) TYPE i.
+
     METHODS build_tab_expr_code
       IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
                 is_info        TYPE ty_read_table_info
@@ -124,16 +131,21 @@ CLASS zcl_skylint_pref_read_table IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD parse_read_table.
-    DATA lv_into_pos   TYPE i.
-    DATA lv_assign_pos TYPE i.
-    DATA lv_ref_pos    TYPE i.
-    DATA lv_target_pos TYPE i.
-    DATA lv_key_pos    TYPE i.
-    DATA lv_index_pos  TYPE i.
-    DATA lv_bin_pos    TYPE i.
-    DATA lv_no_fld_pos TYPE i.
-    DATA lv_tokens_cnt TYPE i.
-    DATA ls_tok        TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_into_pos     TYPE i.
+    DATA lv_assign_pos   TYPE i.
+    DATA lv_ref_pos      TYPE i.
+    DATA lv_target_start TYPE i.
+    DATA lv_target_end   TYPE i.
+    DATA lv_key_pos      TYPE i.
+    DATA lv_index_pos    TYPE i.
+    DATA lv_bin_pos      TYPE i.
+    DATA lv_no_fld_pos   TYPE i.
+    DATA lv_tokens_cnt   TYPE i.
+    DATA lv_cond_start   TYPE i.
+    DATA lv_cond_end     TYPE i.
+    DATA ls_tok          TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lt_cond_terms   TYPE string_table.
+    DATA lt_target_terms TYPE string_table.
 
     CLEAR rs_info.
     lv_tokens_cnt = lines( is_statement-tokens ).
@@ -172,52 +184,98 @@ CLASS zcl_skylint_pref_read_table IMPLEMENTATION.
                                                                it_expected  = VALUE #( ( `REFERENCE` ) ( `INTO` ) ) ).
 
     IF lv_into_pos > 0.
-      lv_target_pos = lv_into_pos + 1.
+      lv_target_start = lv_into_pos + 1.
     ELSEIF lv_assign_pos > 0.
       rs_info-is_assign = abap_true.
-      lv_target_pos = lv_assign_pos + 1.
+      lv_target_start = lv_assign_pos + 1.
     ELSEIF lv_ref_pos > 0.
       rs_info-is_ref = abap_true.
-      lv_target_pos = lv_ref_pos + 2.
+      lv_target_start = lv_ref_pos + 2.
     ELSE.
       RETURN.
     ENDIF.
 
-    ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                              iv_index     = lv_target_pos ).
-    rs_info-target_name = ls_tok-lexeme.
+    lt_target_terms = VALUE #( ( `WITH` ) ( `INDEX` ) ( `BINARY` ) ( `TRANSPORTING` ) ).
+    lv_target_end = find_clause_end( is_statement = is_statement
+                                     iv_start     = lv_target_start
+                                     iv_max       = lv_tokens_cnt
+                                     it_keywords  = lt_target_terms ).
+    IF lv_target_end < lv_target_start.
+      RETURN.
+    ENDIF.
+    rs_info-target_name = extract_tokens_text( is_statement = is_statement
+                                               iv_from_idx  = lv_target_start
+                                               iv_to_idx    = lv_target_end ).
 
     lv_index_pos = zcl_skylint_ast_util=>find_token( is_statement = is_statement
                                                      iv_lexeme    = 'INDEX' ).
     lv_key_pos   = zcl_skylint_ast_util=>find_token( is_statement = is_statement
                                                      iv_lexeme    = 'WITH' ).
 
+    lt_cond_terms = VALUE #( ( `INTO` ) ( `ASSIGNING` ) ( `REFERENCE` ) ( `BINARY` ) ( `TRANSPORTING` ) ).
+
     IF lv_index_pos > 0 AND lv_index_pos < lv_tokens_cnt.
-      rs_info-is_index  = abap_true.
-      rs_info-cond_text = extract_tokens_text( is_statement = is_statement
-                                               iv_from_idx  = lv_index_pos + 1
-                                               iv_to_idx    = lv_tokens_cnt ).
-      rs_info-is_valid  = abap_true.
+      rs_info-is_index = abap_true.
+      lv_cond_start    = lv_index_pos + 1.
+      lv_cond_end      = find_clause_end( is_statement = is_statement
+                                          iv_start     = lv_cond_start
+                                          iv_max       = lv_tokens_cnt
+                                          it_keywords  = lt_cond_terms ).
+      IF lv_cond_end >= lv_cond_start.
+        rs_info-cond_text = extract_tokens_text( is_statement = is_statement
+                                                 iv_from_idx  = lv_cond_start
+                                                 iv_to_idx    = lv_cond_end ).
+        rs_info-is_valid  = abap_true.
+      ENDIF.
     ELSEIF lv_key_pos > 0.
       IF zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
                                                  iv_index     = lv_key_pos + 1
                                                  iv_expected  = `KEY` ) = abap_true.
-        rs_info-cond_text = extract_tokens_text( is_statement = is_statement
-                                                 iv_from_idx  = lv_key_pos + 2
-                                                 iv_to_idx    = lv_tokens_cnt ).
-        rs_info-is_valid  = abap_true.
+        lv_cond_start = lv_key_pos + 2.
       ELSEIF     zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
                                                          iv_index     = lv_key_pos + 1
                                                          iv_expected  = `TABLE` )      = abap_true
              AND zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
                                                          iv_index     = lv_key_pos + 2
                                                          iv_expected  = `KEY` )        = abap_true.
-        rs_info-cond_text = extract_tokens_text( is_statement = is_statement
-                                                 iv_from_idx  = lv_key_pos + 3
-                                                 iv_to_idx    = lv_tokens_cnt ).
-        rs_info-is_valid  = abap_true.
+        lv_cond_start = lv_key_pos + 3.
+      ENDIF.
+
+      IF lv_cond_start > 0 AND lv_cond_start <= lv_tokens_cnt.
+        lv_cond_end = find_clause_end( is_statement = is_statement
+                                       iv_start     = lv_cond_start
+                                       iv_max       = lv_tokens_cnt
+                                       it_keywords  = lt_cond_terms ).
+        IF lv_cond_end >= lv_cond_start.
+          rs_info-cond_text = extract_tokens_text( is_statement = is_statement
+                                                   iv_from_idx  = lv_cond_start
+                                                   iv_to_idx    = lv_cond_end ).
+          rs_info-is_valid  = abap_true.
+        ENDIF.
       ENDIF.
     ENDIF.
+  ENDMETHOD.
+
+  METHOD find_clause_end.
+    DATA lv_idx   TYPE i.
+    DATA lv_depth TYPE i.
+    DATA ls_tok   TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    rv_end = iv_max.
+    lv_idx = iv_start.
+    lv_depth = 0.
+    WHILE lv_idx <= iv_max.
+      ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                iv_index     = lv_idx ).
+      IF     lv_depth           = 0
+         AND ls_tok-references IS INITIAL
+         AND line_exists( it_keywords[ table_line = ls_tok-lexeme ] ).
+        rv_end = lv_idx - 1.
+        RETURN.
+      ENDIF.
+      lv_depth += zcl_skylint_ast_util=>token_paren_delta( ls_tok ).
+      lv_idx += 1.
+    ENDWHILE.
   ENDMETHOD.
 
   METHOD extract_tokens_text.
@@ -267,8 +325,6 @@ CLASS zcl_skylint_pref_read_table IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD has_transporting_no_fields.
-    DATA lv_seq_index TYPE i.
-
     rv_has = abap_false.
 
     IF zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
@@ -281,10 +337,8 @@ CLASS zcl_skylint_pref_read_table IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    lv_seq_index = zcl_skylint_ast_util=>find_token_sequence(
-                       is_statement = is_statement
-                       it_expected  = VALUE #( ( `TRANSPORTING` ) ( `NO` ) ( `FIELDS` ) ) ).
-    IF lv_seq_index > 0.
+    IF zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
+                                                  it_expected  = VALUE #( ( `TRANSPORTING` ) ( `NO` ) ( `FIELDS` ) ) ) > 0.
       rv_has = abap_true.
     ENDIF.
   ENDMETHOD.

@@ -23,6 +23,11 @@ CLASS zcl_skylint_pref_case DEFINITION
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_var) TYPE string.
 
+    METHODS strip_outer_parens
+      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
+      CHANGING  cv_from      TYPE i
+                cv_to        TYPE i.
+
 ENDCLASS.
 
 
@@ -89,22 +94,91 @@ CLASS zcl_skylint_pref_case IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD get_compared_variable.
-    DATA ls_tok2 TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_tok3 TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_count TYPE i.
+    DATA lv_from  TYPE i.
+    DATA lv_to    TYPE i.
+    DATA lv_depth TYPE i.
+    DATA lv_op    TYPE i.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     CLEAR rv_var.
-    IF zcl_skylint_ast_util=>token_count( is_statement ) < 4.
+    lv_count = zcl_skylint_ast_util=>token_count( is_statement ).
+    IF lv_count < 4.
       RETURN.
     ENDIF.
 
-    ls_tok2 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                               iv_index     = 2 ).
-    ls_tok3 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                               iv_index     = 3 ).
+    lv_from = 2.
+    lv_to   = lv_count.
+    strip_outer_parens( EXPORTING is_statement = is_statement
+                        CHANGING  cv_from      = lv_from
+                                  cv_to        = lv_to ).
 
-    IF     zcl_skylint_ast_util=>token_is_keyword( ls_tok3 ) = abap_true
-       AND ( ls_tok3-lexeme = '=' OR ls_tok3-lexeme = 'EQ' ).
-      rv_var = ls_tok2-lexeme.
+    IF lv_to < lv_from + 2.
+      RETURN.
     ENDIF.
+
+    lv_depth = 0.
+    LOOP AT is_statement-tokens FROM lv_from TO lv_to ASSIGNING <ls_token>.
+      IF lv_depth = 0 AND <ls_token>-references IS INITIAL.
+        IF    <ls_token>-lexeme = 'AND'
+           OR <ls_token>-lexeme = 'OR'
+           OR <ls_token>-lexeme = 'EQUIV'.
+          RETURN.
+        ENDIF.
+        IF <ls_token>-lexeme = '=' OR <ls_token>-lexeme = 'EQ'.
+          IF lv_op > 0.
+            RETURN.
+          ENDIF.
+          lv_op = sy-tabix.
+        ENDIF.
+      ENDIF.
+      lv_depth += zcl_skylint_ast_util=>token_paren_delta( <ls_token> ).
+    ENDLOOP.
+
+    IF lv_op <= lv_from OR lv_op >= lv_to.
+      RETURN.
+    ENDIF.
+
+    LOOP AT is_statement-tokens FROM lv_from TO lv_op - 1 ASSIGNING <ls_token>.
+      IF rv_var IS INITIAL.
+        rv_var = <ls_token>-lexeme.
+      ELSE.
+        rv_var = |{ rv_var }{ <ls_token>-lexeme }|.
+      ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD strip_outer_parens.
+    DATA lv_depth TYPE i.
+    FIELD-SYMBOLS <ls_open>  TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_close> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_tok>   TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    WHILE cv_from < cv_to.
+      ASSIGN is_statement-tokens[ cv_from ] TO <ls_open>.
+      IF sy-subrc <> 0 OR <ls_open>-lexeme <> '(' OR <ls_open>-references IS NOT INITIAL.
+        EXIT.
+      ENDIF.
+
+      ASSIGN is_statement-tokens[ cv_to ] TO <ls_close>.
+      IF sy-subrc <> 0 OR <ls_close>-lexeme <> ')' OR <ls_close>-references IS NOT INITIAL.
+        EXIT.
+      ENDIF.
+
+      lv_depth = 0.
+      LOOP AT is_statement-tokens FROM cv_from TO cv_to - 1 ASSIGNING <ls_tok>.
+        lv_depth += zcl_skylint_ast_util=>token_paren_delta( <ls_tok> ).
+        IF lv_depth = 0.
+          EXIT.
+        ENDIF.
+      ENDLOOP.
+
+      IF lv_depth = 1.
+        cv_from += 1.
+        cv_to   -= 1.
+      ELSE.
+        EXIT.
+      ENDIF.
+    ENDWHILE.
   ENDMETHOD.
 ENDCLASS.

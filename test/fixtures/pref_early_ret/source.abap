@@ -19,6 +19,8 @@ CLASS zcl_test_prefer_early_return DEFINITION
     METHODS test_009.
     METHODS test_010.
     METHODS test_011.
+    METHODS test_012.
+    EVENTS my_event.
 ENDCLASS.
 
 CLASS zcl_test_prefer_early_return IMPLEMENTATION.
@@ -117,6 +119,15 @@ CLASS zcl_test_prefer_early_return IMPLEMENTATION.
     DATA lv_flag TYPE abap_bool.
     IF lv_flag = abap_true.
       RAISE EXCEPTION TYPE cx_root.
+    ELSE.
+      lv_flag = abap_false.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_012.
+    DATA lv_flag TYPE abap_bool.
+    IF lv_flag = abap_true.
+      RAISE EVENT my_event.
     ELSE.
       lv_flag = abap_false.
     ENDIF.

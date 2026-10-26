@@ -10,6 +10,9 @@ CLASS zcl_skylint_test_no_dead_code DEFINITION PUBLIC CREATE PUBLIC.
     METHODS test_008.
     METHODS test_009.
     METHODS test_010.
+    METHODS test_011.
+    METHODS test_012.
+    METHODS test_013.
 ENDCLASS.
 
 CLASS zcl_skylint_test_no_dead_code IMPLEMENTATION.
@@ -72,6 +75,24 @@ CLASS zcl_skylint_test_no_dead_code IMPLEMENTATION.
     DATA lv_j TYPE i.
     IF lv_j BETWEEN 1 AND 3.
       lv_j = 1.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_011.
+    IF ( 1 = 2 ).
+      DATA lv_k TYPE i.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_012.
+    IF ( 'A' = 'B' ).
+      DATA lv_l TYPE i.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_013.
+    IF ( 5 BETWEEN 1 AND 3 ).
+      DATA lv_m TYPE i.
     ENDIF.
   ENDMETHOD.
 ENDCLASS.

@@ -2,5 +2,6 @@
   { "target": "TEST_001", "code": "PREF_COND", "line": 5, "column": 4, "quickfixes": ["USECOND"] },
   { "target": "TEST_002", "code": null },
   { "target": "TEST_003", "code": null },
-  { "target": "TEST_004", "code": null }
+  { "target": "TEST_004", "code": null },
+  { "target": "TEST_005", "code": "PREF_COND", "line": 8, "column": 4, "quickfixes": ["USECOND"] }
 ]

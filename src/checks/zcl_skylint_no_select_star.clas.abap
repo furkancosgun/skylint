@@ -47,29 +47,56 @@ CLASS zcl_skylint_no_select_star IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_select_star.
-    DATA lv_paren_depth TYPE i.
+    DATA lv_in_fields   TYPE abap_bool.
+    DATA lv_prev_lexeme TYPE string.
+    DATA lv_len         TYPE i.
+    DATA lv_suffix      TYPE string.
+    DATA lv_last_char   TYPE string.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
       IF <ls_token>-references IS INITIAL.
         CASE <ls_token>-lexeme.
-          WHEN '('.
-            lv_paren_depth += 1.
-          WHEN ')'.
-            IF lv_paren_depth > 0.
-              lv_paren_depth -= 1.
-            ENDIF.
-          WHEN 'FROM'.
-            IF lv_paren_depth = 0.
-              EXIT.
-            ENDIF.
+          WHEN 'SELECT' OR 'FIELDS'.
+            lv_in_fields = abap_true.
+          WHEN 'FROM' OR 'WHERE' OR 'GROUP' OR 'HAVING' OR 'ORDER' OR 'INTO' OR 'UP' OR 'UNION'.
+            lv_in_fields = abap_false.
         ENDCASE.
       ENDIF.
 
-      IF lv_paren_depth = 0 AND ( <ls_token>-lexeme = '*' OR <ls_token>-lexeme CP '*~#**' ).
-        rv_res = abap_true.
-        RETURN.
+      IF lv_in_fields = abap_true.
+        lv_len = strlen( <ls_token>-lexeme ).
+        IF lv_len >= 2.
+          lv_suffix = substring( val = <ls_token>-lexeme
+                                 off = lv_len - 2
+                                 len = 2 ).
+          IF lv_suffix = '~*'.
+            rv_res = abap_true.
+            RETURN.
+          ENDIF.
+        ENDIF.
+
+        IF <ls_token>-lexeme = '*'.
+          IF strlen( lv_prev_lexeme ) >= 1.
+            lv_last_char = substring( val = lv_prev_lexeme
+                                      off = strlen( lv_prev_lexeme ) - 1
+                                      len = 1 ).
+          ELSE.
+            CLEAR lv_last_char.
+          ENDIF.
+
+          IF    lv_prev_lexeme = 'SELECT'
+             OR lv_prev_lexeme = 'SINGLE'
+             OR lv_prev_lexeme = 'FIELDS'
+             OR lv_prev_lexeme = 'DISTINCT'
+             OR lv_last_char   = ','.
+            rv_res = abap_true.
+            RETURN.
+          ENDIF.
+        ENDIF.
       ENDIF.
+
+      lv_prev_lexeme = <ls_token>-lexeme.
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

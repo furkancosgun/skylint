@@ -22,14 +22,13 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_loop_into IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Prefer ASSIGNING over LOOP INTO copy targets'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-loop_copy
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Loop copies each row; use ASSIGNING with a field symbol'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'Prefer ASSIGNING over LOOP INTO copy targets'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-loop_copy
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Loop copies each row; use ASSIGNING with a field symbol'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -41,13 +40,13 @@ CLASS zcl_skylint_no_loop_into IMPLEMENTATION.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement> WHERE keyword = 'LOOP'.
       IF     zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                     iv_lexeme    = 'AT' ) = abap_true
+                                                     iv_lexeme    = 'AT' )         = abap_true
          AND zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                     iv_lexeme    = 'INTO' ) = abap_true
+                                                     iv_lexeme    = 'INTO' )       = abap_true
          AND zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                     iv_lexeme    = 'ASSIGNING' ) = abap_false
+                                                     iv_lexeme    = 'ASSIGNING' )  = abap_false
          AND zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                     iv_lexeme    = 'REFERENCE' ) = abap_false.
+                                                     iv_lexeme    = 'REFERENCE' )  = abap_false.
 
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-loop_copy ).

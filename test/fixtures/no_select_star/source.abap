@@ -7,6 +7,10 @@ CLASS zcl_test_no_select_star DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
+    METHODS test_005.
+    METHODS test_006.
+    METHODS test_007.
+    METHODS test_008.
 ENDCLASS.
 
 CLASS zcl_test_no_select_star IMPLEMENTATION.
@@ -30,5 +34,25 @@ CLASS zcl_test_no_select_star IMPLEMENTATION.
     DATA ls_row TYPE t100.
     DATA ls_key TYPE string.
     SELECT SINGLE arbgb FROM t100 INTO @ls_row WHERE arbgb = @ls_key.
+  ENDMETHOD.
+
+  METHOD test_005.
+    DATA lt_tab TYPE STANDARD TABLE OF t100 WITH DEFAULT KEY.
+    SELECT FROM t100 FIELDS * INTO TABLE @lt_tab.
+  ENDMETHOD.
+
+  METHOD test_006.
+    DATA lv_val TYPE i.
+    SELECT SINGLE price * 2 FROM t100 INTO @lv_val.
+  ENDMETHOD.
+
+  METHOD test_007.
+    DATA lt_tab TYPE STANDARD TABLE OF t100 WITH DEFAULT KEY.
+    SELECT tab~* FROM t100 AS tab INTO TABLE @lt_tab.
+  ENDMETHOD.
+
+  METHOD test_008.
+    DATA lt_tab TYPE STANDARD TABLE OF t100 WITH DEFAULT KEY.
+    SELECT FROM t100 FIELDS arbgb INTO TABLE @lt_tab.
   ENDMETHOD.
 ENDCLASS.

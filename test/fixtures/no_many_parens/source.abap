@@ -24,6 +24,7 @@ CLASS zcl_test_no_many_parens DEFINITION
     METHODS test_009.
     METHODS test_010.
     METHODS test_011.
+    METHODS test_012.
 ENDCLASS.
 
 CLASS zcl_test_no_many_parens IMPLEMENTATION.
@@ -80,6 +81,12 @@ CLASS zcl_test_no_many_parens IMPLEMENTATION.
 
   METHOD test_011.
     IF ( lv_a = lv_b AND lv_c = lv_d ).
+      WRITE lv_a.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_012.
+    IF ( ( lv_a = lv_b ) ).
       WRITE lv_a.
     ENDIF.
   ENDMETHOD.

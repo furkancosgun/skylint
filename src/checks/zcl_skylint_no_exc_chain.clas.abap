@@ -40,10 +40,9 @@ CLASS zcl_skylint_no_exc_chain IMPLEMENTATION.
                        severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Converted exception does not follow the PREVIOUS chaining policy'
                        pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     ( name  = 'REQUIRE_PREVIOUS'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                       value = REF #( mv_require_previous ) ) ) ) ).
+                 attributes        = VALUE #( ( name  = 'REQUIRE_PREVIOUS'
+                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                                value = REF #( mv_require_previous ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -58,9 +57,8 @@ CLASS zcl_skylint_no_exc_chain IMPLEMENTATION.
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'CATCH'.
-          lv_in_catch = xsdbool( zcl_skylint_ast_util=>has_token_lexeme(
-                                     is_statement = <ls_statement>
-                                     iv_lexeme    = 'INTO' ) = abap_true ).
+          lv_in_catch = xsdbool( zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                                         iv_lexeme    = 'INTO' ) = abap_true ).
 
         WHEN 'ENDTRY'.
           lv_in_catch = abap_false.
@@ -69,8 +67,8 @@ CLASS zcl_skylint_no_exc_chain IMPLEMENTATION.
           IF lv_in_catch = abap_true AND is_raise_exception( <ls_statement> ) = abap_true.
             lv_has_previous = has_previous_equal( <ls_statement> ).
 
-            IF     ( mv_require_previous = abap_true  AND lv_has_previous = abap_false )
-                OR ( mv_require_previous = abap_false AND lv_has_previous = abap_true ).
+            IF    ( mv_require_previous = abap_true  AND lv_has_previous = abap_false )
+               OR ( mv_require_previous = abap_false AND lv_has_previous = abap_true ).
               report_statement( is_statement    = <ls_statement>
                                 iv_finding_code = c_finding_codes-missing_previous ).
             ENDIF.
@@ -87,20 +85,17 @@ CLASS zcl_skylint_no_exc_chain IMPLEMENTATION.
     lt_new  = VALUE #( ( `RAISE` ) ( `EXCEPTION` ) ( `NEW` ) ).
 
     rv_is = xsdbool(
-        zcl_skylint_ast_util=>match_token_sequence(
-            is_statement = is_statement
-            it_expected  = lt_type ) = abap_true
-        OR zcl_skylint_ast_util=>match_token_sequence(
-            is_statement = is_statement
-            it_expected  = lt_new ) = abap_true ).
+           zcl_skylint_ast_util=>match_token_sequence( is_statement = is_statement
+                                                       it_expected  = lt_type )    = abap_true
+        OR zcl_skylint_ast_util=>match_token_sequence( is_statement = is_statement
+                                                       it_expected  = lt_new )     = abap_true ).
   ENDMETHOD.
 
   METHOD has_previous_equal.
     DATA lt_expected TYPE zcl_skylint_ast_util=>ty_token_lexemes.
 
     lt_expected = VALUE #( ( `PREVIOUS` ) ( `=` ) ).
-    rv_has = xsdbool( zcl_skylint_ast_util=>find_token_sequence(
-                          is_statement = is_statement
-                          it_expected  = lt_expected ) > 0 ).
+    rv_has = xsdbool( zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
+                                                                 it_expected  = lt_expected ) > 0 ).
   ENDMETHOD.
 ENDCLASS.

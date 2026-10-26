@@ -12,6 +12,10 @@ CLASS zcl_skylint_test_no_self_compare DEFINITION
     METHODS test_007.
     METHODS test_008.
     METHODS test_009.
+    METHODS test_010.
+    METHODS test_011.
+    METHODS test_012.
+    METHODS test_013.
 ENDCLASS.
 
 CLASS zcl_skylint_test_no_self_compare IMPLEMENTATION.
@@ -71,5 +75,33 @@ CLASS zcl_skylint_test_no_self_compare IMPLEMENTATION.
     DATA lv_x TYPE i.
     DATA lv_y TYPE i.
     lv_y = lv_x - lv_y.
+  ENDMETHOD.
+
+  METHOD test_010.
+    DATA lv_a TYPE i.
+    IF ( lv_a = lv_a ).
+      lv_a = 1.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_011.
+    DATA lv_a TYPE i.
+    IF ( ( lv_a = lv_a ) ).
+      lv_a = 1.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_012.
+    DATA lv_x   TYPE i.
+    DATA lv_res TYPE i.
+    lv_res = ( lv_x - lv_x ).
+  ENDMETHOD.
+
+  METHOD test_013.
+    DATA lv_a TYPE i.
+    DATA lv_b TYPE i.
+    IF ( lv_a = lv_b ).
+      lv_a = 1.
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.

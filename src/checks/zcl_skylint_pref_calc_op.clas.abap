@@ -33,6 +33,12 @@ CLASS zcl_skylint_pref_calc_op DEFINITION
       IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_code) TYPE string.
 
+    METHODS extract_range_code
+      IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_from        TYPE i
+                iv_to          TYPE i
+      RETURNING VALUE(rv_code) TYPE string.
+
     METHODS is_calc_operator
       IMPORTING iv_op        TYPE string
       RETURNING VALUE(rv_is) TYPE abap_bool.
@@ -59,6 +65,14 @@ CLASS zcl_skylint_pref_calc_op IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF     <ls_statement>-keyword <> 'ADD'
+         AND <ls_statement>-keyword <> 'SUBTRACT'
+         AND <ls_statement>-keyword <> 'MULTIPLY'
+         AND <ls_statement>-keyword <> 'DIVIDE'
+         AND <ls_statement>-keyword <> 'COMPUTE'.
+        CONTINUE.
+      ENDIF.
+
       lv_replacement = build_replacement_code( <ls_statement> ).
       IF lv_replacement IS INITIAL.
         CONTINUE.
@@ -80,7 +94,7 @@ CLASS zcl_skylint_pref_calc_op IMPLEMENTATION.
     CASE is_statement-keyword.
       WHEN 'ADD' OR 'SUBTRACT' OR 'MULTIPLY' OR 'DIVIDE'.
         rv_code = build_obsolete_replacement( is_statement ).
-      WHEN OTHERS.
+      WHEN 'COMPUTE'.
         rv_code = build_self_assign_replacement( is_statement ).
     ENDCASE.
   ENDMETHOD.
@@ -148,47 +162,73 @@ CLASS zcl_skylint_pref_calc_op IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD build_self_assign_replacement.
-    DATA lv_target TYPE string.
-    DATA lv_source TYPE string.
-    DATA lv_op     TYPE string.
-    DATA lv_value  TYPE string.
-    DATA ls_op_tok TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_count      TYPE i.
+    DATA lv_eq_idx     TYPE i.
+    DATA lv_target_len TYPE i.
+    DATA lv_op_idx     TYPE i.
+    DATA lv_target     TYPE string.
+    DATA lv_source     TYPE string.
+    DATA lv_op         TYPE string.
+    DATA lv_value      TYPE string.
+    DATA ls_op_tok     TYPE if_ci_atc_source_code_provider=>ty_token.
 
     CLEAR rv_code.
-
-    IF zcl_skylint_ast_util=>token_count( is_statement ) <> 5.
+    lv_count = lines( is_statement-tokens ).
+    IF lv_count < 5.
       RETURN.
     ENDIF.
 
-    IF zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                                               iv_index     = 2
-                                               iv_expected  = `=` ) = abap_false.
+    lv_eq_idx = zcl_skylint_ast_util=>find_token( is_statement   = is_statement
+                                                  iv_lexeme      = '='
+                                                  iv_start_index = 2 ).
+    IF lv_eq_idx <= 1.
       RETURN.
     ENDIF.
 
-    lv_target = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                        iv_index     = 1 ).
-    lv_source = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                        iv_index     = 3 ).
+    lv_target_len = lv_eq_idx - 1.
+    lv_op_idx = lv_eq_idx + lv_target_len + 1.
+    IF lv_op_idx >= lv_count.
+      RETURN.
+    ENDIF.
 
-    IF lv_target <> lv_source OR lv_target IS INITIAL.
+    lv_target = extract_range_code( is_statement = is_statement
+                                    iv_from      = 1
+                                    iv_to        = lv_eq_idx - 1 ).
+    lv_source = extract_range_code( is_statement = is_statement
+                                    iv_from      = lv_eq_idx + 1
+                                    iv_to        = lv_eq_idx + lv_target_len ).
+
+    IF lv_target IS INITIAL OR lv_target <> lv_source.
       RETURN.
     ENDIF.
 
     ls_op_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                 iv_index     = 4 ).
-    IF ls_op_tok-references IS NOT INITIAL OR is_calc_operator( ls_op_tok-lexeme ) = abap_false.
+                                                 iv_index     = lv_op_idx ).
+    IF is_calc_operator( ls_op_tok-lexeme ) = abap_false.
       RETURN.
     ENDIF.
     lv_op = ls_op_tok-lexeme.
 
-    lv_value = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                       iv_index     = 5 ).
+    lv_value = extract_range_code( is_statement = is_statement
+                                   iv_from      = lv_op_idx + 1
+                                   iv_to        = lv_count ).
     IF lv_value IS INITIAL.
       RETURN.
     ENDIF.
 
     rv_code = |{ lv_target } { lv_op }= { lv_value }.|.
+  ENDMETHOD.
+
+  METHOD extract_range_code.
+    FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    LOOP AT is_statement-tokens FROM iv_from TO iv_to ASSIGNING <ls_tok>.
+      IF rv_code IS INITIAL.
+        rv_code = <ls_tok>-lexeme.
+      ELSE.
+        rv_code = |{ rv_code } { <ls_tok>-lexeme }|.
+      ENDIF.
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD is_calc_operator.

@@ -20,5 +20,27 @@
   {
     "target": "TEST_004",
     "code": null
+  },
+  {
+    "target": "TEST_005",
+    "code": "NO_SEL_STR",
+    "line": 3,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_006",
+    "code": null
+  },
+  {
+    "target": "TEST_007",
+    "code": "NO_SEL_STR",
+    "line": 3,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_008",
+    "code": null
   }
 ]

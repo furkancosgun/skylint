@@ -136,15 +136,16 @@ CLASS zcl_skylint_no_many_parens IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_safe_to_remove.
-    DATA lv_count    TYPE i.
-    DATA lv_idx      TYPE i.
-    DATA lv_depth    TYPE i.
-    DATA lv_has_cond TYPE abap_bool.
-    DATA lv_has_or   TYPE abap_bool.
-    DATA lv_has_and  TYPE abap_bool.
-    DATA ls_tok      TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_prev     TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_next     TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_count       TYPE i.
+    DATA lv_idx         TYPE i.
+    DATA lv_depth       TYPE i.
+    DATA lv_has_cond    TYPE abap_bool.
+    DATA lv_has_or      TYPE abap_bool.
+    DATA lv_has_and     TYPE abap_bool.
+    DATA lv_inner_close TYPE i.
+    DATA ls_tok         TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_prev        TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_next        TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_yes = abap_false.
     lv_count = zcl_skylint_ast_util=>token_count( is_statement ).
@@ -156,6 +157,29 @@ CLASS zcl_skylint_no_many_parens IMPLEMENTATION.
                                                  iv_lexeme = 'NOT' ) = abap_true.
         RETURN.
       ENDIF.
+    ENDIF.
+
+    IF iv_close > iv_open + 2.
+      ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                iv_index     = iv_open + 1 ).
+      IF ls_tok-lexeme = '('.
+        lv_inner_close = find_matching_close( is_statement = is_statement
+                                              iv_open      = iv_open + 1 ).
+        IF lv_inner_close = iv_close - 1.
+          rv_yes = abap_true.
+          RETURN.
+        ENDIF.
+      ENDIF.
+    ENDIF.
+
+    IF     iv_open  = 2
+       AND iv_close = lv_count
+       AND (    is_statement-keyword = 'IF'
+             OR is_statement-keyword = 'ELSEIF'
+             OR is_statement-keyword = 'WHILE'
+             OR is_statement-keyword = 'CHECK' ).
+      rv_yes = abap_true.
+      RETURN.
     ENDIF.
 
     lv_idx = iv_open + 1.
@@ -183,11 +207,6 @@ CLASS zcl_skylint_no_many_parens IMPLEMENTATION.
     ENDWHILE.
 
     IF lv_has_cond = abap_false.
-      RETURN.
-    ENDIF.
-
-    IF iv_open = 2 AND iv_close = lv_count.
-      rv_yes = abap_true.
       RETURN.
     ENDIF.
 

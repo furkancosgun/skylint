@@ -255,9 +255,10 @@ CLASS zcl_skylint_pref_cond IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD parse_assignment.
-    DATA lv_tok_count TYPE i.
-    DATA ls_first     TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_second    TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_tok_count   TYPE i.
+    DATA lv_paren_depth TYPE i.
+    DATA lv_eq_idx      TYPE i.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     CLEAR: ev_target,
            ev_expr,
@@ -272,17 +273,23 @@ CLASS zcl_skylint_pref_cond IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    ls_first = zcl_skylint_ast_util=>get_first_token( is_statement ).
-    ls_second = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                 iv_index     = 2 ).
+    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
+      lv_paren_depth += zcl_skylint_ast_util=>token_paren_delta( <ls_token> ).
+      IF lv_paren_depth = 0 AND <ls_token>-lexeme = '=' AND <ls_token>-references IS INITIAL.
+        lv_eq_idx = sy-tabix.
+        EXIT.
+      ENDIF.
+    ENDLOOP.
 
-    IF ls_second-lexeme <> '=' OR ls_second-references IS NOT INITIAL.
+    IF lv_eq_idx < 2 OR lv_eq_idx >= lv_tok_count.
       RETURN.
     ENDIF.
 
-    ev_target = ls_first-lexeme.
+    ev_target = extract_tokens_text( is_statement = is_statement
+                                     iv_from_idx  = 1
+                                     iv_to_idx    = lv_eq_idx - 1 ).
     ev_expr   = extract_tokens_text( is_statement = is_statement
-                                     iv_from_idx  = 3
+                                     iv_from_idx  = lv_eq_idx + 1
                                      iv_to_idx    = lv_tok_count ).
     ev_is_assign = abap_true.
   ENDMETHOD.

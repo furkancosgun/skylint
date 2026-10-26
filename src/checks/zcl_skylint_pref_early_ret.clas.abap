@@ -26,7 +26,7 @@ CLASS zcl_skylint_pref_early_ret DEFINITION
 
     DATA mv_check_method_return TYPE abap_bool VALUE abap_true.
     DATA mv_check_loop_continue TYPE abap_bool VALUE abap_true.
-    DATA mv_report_elseif TYPE abap_bool VALUE abap_false.
+    DATA mv_report_elseif       TYPE abap_bool VALUE abap_false.
 
     METHODS is_after_terminator
       IMPORTING it_statements TYPE if_ci_atc_source_code_provider=>ty_statements
@@ -34,7 +34,7 @@ CLASS zcl_skylint_pref_early_ret DEFINITION
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
     METHODS is_terminator
-      IMPORTING iv_keyword    TYPE string
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
     METHODS get_first_executable_stmt
@@ -126,7 +126,7 @@ CLASS zcl_skylint_pref_early_ret IMPLEMENTATION.
         WHEN 'ELSEIF'.
           IF     mv_report_elseif = abap_true
              AND is_after_terminator( it_statements = is_procedure-statements
-                                      iv_index      = sy-tabix ) = abap_true.
+                                      iv_index      = sy-tabix )              = abap_true.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-else_exit ).
           ENDIF.
@@ -137,35 +137,29 @@ CLASS zcl_skylint_pref_early_ret IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD get_first_executable_stmt.
-    DATA lv_max  TYPE i.
-    DATA lv_idx  TYPE i.
-    DATA ls_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     CLEAR ev_index.
     CLEAR es_statement.
 
-    lv_max = zcl_skylint_ast_util=>statement_count( it_statements ).
-    IF lv_max < 3.
+    IF lines( it_statements ) < 3.
       RETURN.
     ENDIF.
 
-    DO lv_max TIMES.
-      lv_idx = sy-index.
-      ls_stmt = zcl_skylint_ast_util=>get_statement( it_statements = it_statements
-                                                     iv_index      = lv_idx ).
-      IF ls_stmt-keyword IS INITIAL.
+    LOOP AT it_statements ASSIGNING <ls_stmt>.
+      IF <ls_stmt>-keyword IS INITIAL.
         CONTINUE.
       ENDIF.
 
-      CASE ls_stmt-keyword.
+      CASE <ls_stmt>-keyword.
         WHEN 'METHOD' OR 'DATA' OR 'TYPES' OR 'CONSTANTS' OR 'STATICS' OR 'FIELD-SYMBOLS'.
           CONTINUE.
         WHEN OTHERS.
-          es_statement = ls_stmt.
-          ev_index     = lv_idx.
+          es_statement = <ls_stmt>.
+          ev_index     = sy-tabix.
           RETURN.
       ENDCASE.
-    ENDDO.
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD if_wraps_method_end.
@@ -275,17 +269,23 @@ CLASS zcl_skylint_pref_early_ret IMPLEMENTATION.
 
     rv_yes = abap_false.
     ls_previous = zcl_skylint_ast_util=>get_previous_statement( it_statements    = it_statements
-                                                                 iv_current_index = iv_index ).
+                                                                iv_current_index = iv_index ).
     IF ls_previous-keyword IS INITIAL.
       RETURN.
     ENDIF.
-    rv_yes = is_terminator( ls_previous-keyword ).
+    rv_yes = is_terminator( ls_previous ).
   ENDMETHOD.
 
   METHOD is_terminator.
-    CASE iv_keyword.
-      WHEN 'RETURN' OR 'RAISE' OR 'EXIT' OR 'CONTINUE' OR 'LEAVE'.
+    DATA ls_second TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    CASE is_statement-keyword.
+      WHEN 'RETURN' OR 'EXIT' OR 'CONTINUE' OR 'LEAVE'.
         rv_yes = abap_true.
+      WHEN 'RAISE'.
+        ls_second = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                     iv_index     = 2 ).
+        rv_yes = xsdbool( ls_second-lexeme <> 'EVENT' OR ls_second-references IS NOT INITIAL ).
       WHEN OTHERS.
         rv_yes = abap_false.
     ENDCASE.

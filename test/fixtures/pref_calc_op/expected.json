@@ -20,5 +20,27 @@
     "quickfixes": [
       "CALCASGN"
     ]
+  },
+  {
+    "target": "TEST_004",
+    "code": null
+  },
+  {
+    "target": "TEST_005",
+    "code": "PREF_CALOP",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "CALCASGN"
+    ]
+  },
+  {
+    "target": "TEST_006",
+    "code": "PREF_CALOP",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "CALCASGN"
+    ]
   }
 ]

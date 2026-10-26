@@ -5,6 +5,7 @@ CLASS zcl_skylint_test_pref_reduce DEFINITION.
     METHODS test_003.
     METHODS test_004.
     METHODS test_005.
+    METHODS test_006.
 ENDCLASS.
 
 CLASS zcl_skylint_test_pref_reduce IMPLEMENTATION.
@@ -65,6 +66,19 @@ CLASS zcl_skylint_test_pref_reduce IMPLEMENTATION.
       INIT res = 0
       FOR n IN lt_numbers
       NEXT res = res + n ).
+  ENDMETHOD.
+
+  METHOD test_006.
+    TYPES: BEGIN OF ty_row,
+             lv_sum_total TYPE i,
+           END OF ty_row.
+    DATA lt_rows TYPE STANDARD TABLE OF ty_row WITH EMPTY KEY.
+    DATA ls_row  TYPE ty_row.
+    DATA lv_sum  TYPE i.
+
+    LOOP AT lt_rows INTO ls_row.
+      lv_sum = lv_sum + ls_row-lv_sum_total.
+    ENDLOOP.
   ENDMETHOD.
 
 ENDCLASS.

@@ -24,7 +24,7 @@ CLASS zcl_skylint_max_cognitive DEFINITION
       RETURNING VALUE(rv_score) TYPE i.
 
     METHODS has_logical_operator
-      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
 ENDCLASS.
@@ -32,18 +32,17 @@ ENDCLASS.
 
 CLASS zcl_skylint_max_cognitive IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Limit cognitive complexity per procedure'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-cognitive_complexity
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Procedure cognitive complexity exceeds threshold'
-                       pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     ( name  = 'MAX_COGNITIVE'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                       value = REF #( mv_max_cognitive ) ) ) ) ).
+    super->constructor( VALUE #( description       = 'Limit cognitive complexity per procedure'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-cognitive_complexity
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Procedure cognitive complexity exceeds threshold'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 attributes        = VALUE #(
+                                     ( name  = 'MAX_COGNITIVE'
+                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                       value = REF #( mv_max_cognitive ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -96,22 +95,16 @@ CLASS zcl_skylint_max_cognitive IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD has_logical_operator.
-    DATA lv_count   TYPE i.
-    DATA lv_idx     TYPE i.
     DATA lv_depth   TYPE i.
     DATA lv_between TYPE abap_bool.
-    DATA ls_token   TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_yes = abap_false.
-    lv_count = zcl_skylint_ast_util=>token_count( is_statement ).
     lv_depth = 0.
 
-    DO lv_count TIMES.
-      lv_idx = sy-index.
-      ls_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                  iv_index     = lv_idx ).
-      IF lv_depth = 0 AND ls_token-references IS INITIAL.
-        CASE ls_token-lexeme.
+    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
+      IF lv_depth = 0 AND <ls_token>-references IS INITIAL.
+        CASE <ls_token>-lexeme.
           WHEN 'BETWEEN'.
             lv_between = abap_true.
           WHEN 'AND'.
@@ -126,7 +119,7 @@ CLASS zcl_skylint_max_cognitive IMPLEMENTATION.
             RETURN.
         ENDCASE.
       ENDIF.
-      lv_depth += zcl_skylint_ast_util=>token_paren_delta( ls_token ).
-    ENDDO.
+      lv_depth += zcl_skylint_ast_util=>token_paren_delta( <ls_token> ).
+    ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

@@ -27,14 +27,13 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_catch_reraise IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Detect CATCH blocks that only re-raise the same exception'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-redundant_handler
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'CATCH block only re-raises the same exception; remove it'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'Detect CATCH blocks that only re-raise the same exception'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-redundant_handler
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'CATCH block only re-raises the same exception; remove it'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -57,9 +56,8 @@ CLASS zcl_skylint_no_catch_reraise IMPLEMENTATION.
       lv_idx = sy-tabix + 1.
 
       WHILE lv_idx <= lv_total.
-        ls_body = zcl_skylint_ast_util=>get_statement(
-                      it_statements = is_procedure-statements
-                      iv_index      = lv_idx ).
+        ls_body = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+                                                       iv_index      = lv_idx ).
 
         CASE ls_body-keyword.
           WHEN 'CATCH' OR 'CLEANUP' OR 'ENDTRY'.
@@ -94,13 +92,11 @@ CLASS zcl_skylint_no_catch_reraise IMPLEMENTATION.
     rv_yes = abap_false.
 
     " Case 1: CATCH ... INTO lx_err -> RAISE EXCEPTION lx_err.
-    ls_into_var = zcl_skylint_ast_util=>get_token_after(
-                      is_statement = is_catch
-                      iv_lexeme    = 'INTO' ).
+    ls_into_var = zcl_skylint_ast_util=>get_token_after( is_statement = is_catch
+                                                         iv_lexeme    = 'INTO' ).
 
-    ls_var = zcl_skylint_ast_util=>get_token_after(
-                 is_statement = is_raise
-                 iv_lexeme    = 'EXCEPTION' ).
+    ls_var = zcl_skylint_ast_util=>get_token_after( is_statement = is_raise
+                                                    iv_lexeme    = 'EXCEPTION' ).
 
     IF ls_into_var-lexeme IS NOT INITIAL AND ls_into_var-lexeme = ls_var-lexeme.
       rv_yes = abap_true.
@@ -109,20 +105,18 @@ CLASS zcl_skylint_no_catch_reraise IMPLEMENTATION.
 
     " Case 2: CATCH cx_type -> RAISE EXCEPTION TYPE cx_type (without PREVIOUS / EXPORTING)
     IF ls_var-lexeme = 'TYPE'.
-      IF     zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_raise
-                                                     iv_lexeme    = 'PREVIOUS' ) = abap_true
-          OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_raise
-                                                     iv_lexeme    = 'EXPORTING' ) = abap_true.
+      IF    zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_raise
+                                                    iv_lexeme    = 'PREVIOUS' )  = abap_true
+         OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_raise
+                                                    iv_lexeme    = 'EXPORTING' ) = abap_true.
         RETURN.
       ENDIF.
 
-      ls_caught_type = zcl_skylint_ast_util=>get_token_after(
-                           is_statement = is_catch
-                           iv_lexeme    = 'CATCH' ).
+      ls_caught_type = zcl_skylint_ast_util=>get_token_after( is_statement = is_catch
+                                                              iv_lexeme    = 'CATCH' ).
 
-      ls_raised_type = zcl_skylint_ast_util=>get_token_after(
-                           is_statement = is_raise
-                           iv_lexeme    = 'TYPE' ).
+      ls_raised_type = zcl_skylint_ast_util=>get_token_after( is_statement = is_raise
+                                                              iv_lexeme    = 'TYPE' ).
 
       IF ls_caught_type-lexeme IS NOT INITIAL AND ls_caught_type-lexeme = ls_raised_type-lexeme.
         rv_yes = abap_true.

@@ -5,5 +5,9 @@
   { "target": "TEST_004", "code": null },
   { "target": "TEST_005", "code": null },
   { "target": "TEST_006", "code": "PREF_BETWN", "line": 3, "column": 4, "quickfixes": [] },
-  { "target": "TEST_007", "code": null }
+  { "target": "TEST_007", "code": null },
+  { "target": "TEST_008", "code": "PREF_BETWN", "line": 3, "column": 4, "quickfixes": [] },
+  { "target": "TEST_009", "code": "PREF_BETWN", "line": 3, "column": 4, "quickfixes": [] },
+  { "target": "TEST_010", "code": "PREF_BETWN", "line": 3, "column": 4, "quickfixes": [] },
+  { "target": "TEST_011", "code": "PREF_BETWN", "line": 3, "column": 4, "quickfixes": [] }
 ]

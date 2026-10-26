@@ -21,6 +21,13 @@ CLASS zcl_skylint_no_neg_cond DEFINITION
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
+    METHODS strip_outer_parens
+      IMPORTING it_tokens TYPE if_ci_atc_source_code_provider=>ty_tokens
+                iv_from   TYPE i
+                iv_to     TYPE i
+      EXPORTING ev_from   TYPE i
+                ev_to     TYPE i.
+
     METHODS is_prefer_is_not
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
                 iv_index      TYPE i
@@ -66,43 +73,112 @@ CLASS zcl_skylint_no_neg_cond IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_negated_condition.
-    DATA lv_idx  TYPE i.
-    DATA ls_prev TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_count       TYPE i.
+    DATA lv_from        TYPE i.
+    DATA lv_to          TYPE i.
+    DATA lv_paren_depth TYPE i.
+    DATA lv_has_and_or  TYPE abap_bool.
+    DATA lv_has_neg_op  TYPE abap_bool.
+    DATA ls_prev        TYPE if_ci_atc_source_code_provider=>ty_token.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_yes = abap_false.
+    lv_count = lines( is_statement-tokens ).
+    IF lv_count < 2.
+      RETURN.
+    ENDIF.
 
-    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      lv_idx = sy-tabix.
+    lv_from = 2.
+    lv_to   = lv_count.
 
-      IF    zcl_skylint_ast_util=>token_is_keyword( is_token  = <ls_token>
-                                                    iv_lexeme = '<>' )     = abap_true
-         OR zcl_skylint_ast_util=>token_is_keyword( is_token  = <ls_token>
-                                                    iv_lexeme = 'NE' )     = abap_true.
-        rv_yes = abap_true.
-        RETURN.
-      ENDIF.
+    strip_outer_parens( EXPORTING it_tokens = is_statement-tokens
+                                  iv_from   = lv_from
+                                  iv_to     = lv_to
+                        IMPORTING ev_from   = lv_from
+                                  ev_to     = lv_to ).
 
-      IF zcl_skylint_ast_util=>token_is_keyword( is_token  = <ls_token>
-                                                 iv_lexeme = 'NOT' ) = abap_false.
-        CONTINUE.
-      ENDIF.
-
-      ls_prev = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                 iv_index     = lv_idx - 1 ).
-      IF zcl_skylint_ast_util=>token_is_keyword( is_token  = ls_prev
-                                                 iv_lexeme = 'IS' ) = abap_true.
-        CONTINUE.
-      ENDIF.
-
-      IF is_prefer_is_not( is_statement = is_statement
-                           iv_index     = lv_idx ) = abap_true.
-        CONTINUE.
-      ENDIF.
-
+    ASSIGN is_statement-tokens[ lv_from ] TO <ls_token>.
+    IF     sy-subrc = 0
+       AND zcl_skylint_ast_util=>token_is_keyword( is_token  = <ls_token>
+                                                   iv_lexeme = 'NOT' )    = abap_true
+       AND is_prefer_is_not( is_statement = is_statement
+                             iv_index     = lv_from ) = abap_false.
       rv_yes = abap_true.
       RETURN.
+    ENDIF.
+
+    lv_paren_depth = 0.
+    LOOP AT is_statement-tokens FROM lv_from TO lv_to ASSIGNING <ls_token>.
+      IF lv_paren_depth = 0.
+        IF    zcl_skylint_ast_util=>token_is_keyword( is_token  = <ls_token>
+                                                      iv_lexeme = 'AND' )    = abap_true
+           OR zcl_skylint_ast_util=>token_is_keyword( is_token  = <ls_token>
+                                                      iv_lexeme = 'OR' )     = abap_true.
+          lv_has_and_or = abap_true.
+        ELSEIF    zcl_skylint_ast_util=>token_is_keyword( is_token  = <ls_token>
+                                                          iv_lexeme = '<>' )     = abap_true
+               OR zcl_skylint_ast_util=>token_is_keyword( is_token  = <ls_token>
+                                                          iv_lexeme = 'NE' )     = abap_true.
+          lv_has_neg_op = abap_true.
+        ELSEIF zcl_skylint_ast_util=>token_is_keyword( is_token  = <ls_token>
+                                                       iv_lexeme = 'NOT' ) = abap_true.
+          ls_prev = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                     iv_index     = sy-tabix - 1 ).
+          IF     zcl_skylint_ast_util=>token_is_keyword( is_token  = ls_prev
+                                                         iv_lexeme = 'IS' )  = abap_false
+             AND is_prefer_is_not( is_statement = is_statement
+                                   iv_index     = sy-tabix )                 = abap_false.
+            lv_has_neg_op = abap_true.
+          ENDIF.
+        ENDIF.
+      ENDIF.
+
+      lv_paren_depth += zcl_skylint_ast_util=>token_paren_delta( <ls_token> ).
     ENDLOOP.
+
+    IF lv_has_neg_op = abap_true AND lv_has_and_or = abap_false.
+      rv_yes = abap_true.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD strip_outer_parens.
+    DATA lv_depth TYPE i.
+    DATA lv_idx   TYPE i.
+    FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    ev_from = iv_from.
+    ev_to   = iv_to.
+
+    WHILE ev_from < ev_to.
+      ASSIGN it_tokens[ ev_from ] TO <ls_tok>.
+      IF sy-subrc <> 0 OR <ls_tok>-lexeme <> '(' OR <ls_tok>-references IS NOT INITIAL.
+        EXIT.
+      ENDIF.
+      ASSIGN it_tokens[ ev_to ] TO <ls_tok>.
+      IF sy-subrc <> 0 OR <ls_tok>-lexeme <> ')' OR <ls_tok>-references IS NOT INITIAL.
+        EXIT.
+      ENDIF.
+
+      lv_depth = 0.
+      lv_idx = ev_from.
+      WHILE lv_idx < ev_to.
+        ASSIGN it_tokens[ lv_idx ] TO <ls_tok>.
+        IF sy-subrc = 0.
+          lv_depth += zcl_skylint_ast_util=>token_paren_delta( <ls_tok> ).
+          IF lv_depth = 0.
+            EXIT.
+          ENDIF.
+        ENDIF.
+        lv_idx += 1.
+      ENDWHILE.
+
+      IF lv_depth <> 1.
+        EXIT.
+      ENDIF.
+
+      ev_from += 1.
+      ev_to   -= 1.
+    ENDWHILE.
   ENDMETHOD.
 
   METHOD is_prefer_is_not.

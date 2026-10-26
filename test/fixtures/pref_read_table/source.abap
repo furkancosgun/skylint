@@ -8,6 +8,8 @@ CLASS zcl_skylint_test_pref_tab_expr DEFINITION.
     METHODS test_006.
     METHODS test_007.
     METHODS test_008.
+    METHODS test_009.
+    METHODS test_010.
 ENDCLASS.
 
 CLASS zcl_skylint_test_pref_tab_expr IMPLEMENTATION.
@@ -67,6 +69,20 @@ CLASS zcl_skylint_test_pref_tab_expr IMPLEMENTATION.
     DATA lt_tab TYPE string_table.
     LOOP AT lt_tab TRANSPORTING NO FIELDS WHERE table_line = 'A'.
     ENDLOOP.
+  ENDMETHOD.
+
+  METHOD test_009.
+    DATA lt_items TYPE string_table.
+    DATA ls_item  TYPE string.
+
+    READ TABLE lt_items WITH KEY table_line = 'A' INTO ls_item.
+  ENDMETHOD.
+
+  METHOD test_010.
+    DATA lt_items TYPE string_table.
+    DATA ls_item  TYPE string.
+
+    READ TABLE lt_items INDEX 1 INTO ls_item.
   ENDMETHOD.
 
 ENDCLASS.

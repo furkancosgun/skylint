@@ -8,5 +8,8 @@
   { "target": "TEST_007", "code": "NO_DEAD_CD", "line": 2, "column": 4, "quickfixes": ["DELDEAD"] },
   { "target": "TEST_008", "code": null },
   { "target": "TEST_009", "code": "NO_DEAD_CD", "line": 2, "column": 4, "quickfixes": ["DELDEAD"] },
-  { "target": "TEST_010", "code": null }
+  { "target": "TEST_010", "code": null },
+  { "target": "TEST_011", "code": "NO_DEAD_CD", "line": 2, "column": 4, "quickfixes": ["DELDEAD"] },
+  { "target": "TEST_012", "code": "NO_DEAD_CD", "line": 2, "column": 4, "quickfixes": ["DELDEAD"] },
+  { "target": "TEST_013", "code": "NO_DEAD_CD", "line": 2, "column": 4, "quickfixes": ["DELDEAD"] }
 ]

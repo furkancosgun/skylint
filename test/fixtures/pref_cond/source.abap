@@ -4,6 +4,7 @@ CLASS zcl_skylint_test_pref_cond DEFINITION.
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
+    METHODS test_005.
 ENDCLASS.
 
 CLASS zcl_skylint_test_pref_cond IMPLEMENTATION.
@@ -56,6 +57,20 @@ CLASS zcl_skylint_test_pref_cond IMPLEMENTATION.
       WHEN lv_score >= 90 THEN 'A'
       WHEN lv_score >= 80 THEN 'B'
       ELSE 'C' ).
+  ENDMETHOD.
+
+  METHOD test_005.
+    TYPES: BEGIN OF ty_data,
+             grade TYPE string,
+           END OF ty_data.
+    DATA ls_data TYPE ty_data.
+    DATA lv_score TYPE i VALUE 85.
+
+    IF lv_score >= 90.
+      ls_data-grade = 'A'.
+    ELSE.
+      ls_data-grade = 'B'.
+    ENDIF.
   ENDMETHOD.
 
 ENDCLASS.

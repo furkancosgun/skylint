@@ -11,5 +11,27 @@
   {
     "target": "TEST_002",
     "code": null
+  },
+  {
+    "target": "TEST_003",
+    "code": "NO_CHN_ASG",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "SPLITASG"
+    ]
+  },
+  {
+    "target": "TEST_004",
+    "code": null
+  },
+  {
+    "target": "TEST_005",
+    "code": "NO_CHN_ASG",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "SPLITASG"
+    ]
   }
 ]
