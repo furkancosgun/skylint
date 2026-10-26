@@ -1,25 +1,41 @@
+CLASS zcl_fan_01 DEFINITION. PUBLIC SECTION. ENDCLASS.
+CLASS zcl_fan_01 IMPLEMENTATION. ENDCLASS.
+CLASS zcl_fan_02 DEFINITION. PUBLIC SECTION. ENDCLASS.
+CLASS zcl_fan_02 IMPLEMENTATION. ENDCLASS.
+CLASS zcl_fan_03 DEFINITION. PUBLIC SECTION. ENDCLASS.
+CLASS zcl_fan_03 IMPLEMENTATION. ENDCLASS.
+CLASS zcl_fan_04 DEFINITION. PUBLIC SECTION. ENDCLASS.
+CLASS zcl_fan_04 IMPLEMENTATION. ENDCLASS.
+CLASS zcl_fan_05 DEFINITION. PUBLIC SECTION. ENDCLASS.
+CLASS zcl_fan_05 IMPLEMENTATION. ENDCLASS.
+CLASS zcl_fan_06 DEFINITION. PUBLIC SECTION. ENDCLASS.
+CLASS zcl_fan_06 IMPLEMENTATION. ENDCLASS.
+CLASS zcl_fan_07 DEFINITION. PUBLIC SECTION. ENDCLASS.
+CLASS zcl_fan_07 IMPLEMENTATION. ENDCLASS.
+CLASS zcl_fan_08 DEFINITION. PUBLIC SECTION. ENDCLASS.
+CLASS zcl_fan_08 IMPLEMENTATION. ENDCLASS.
+CLASS zcl_fan_09 DEFINITION. PUBLIC SECTION. ENDCLASS.
+CLASS zcl_fan_09 IMPLEMENTATION. ENDCLASS.
+CLASS zcl_fan_10 DEFINITION. PUBLIC SECTION. ENDCLASS.
+CLASS zcl_fan_10 IMPLEMENTATION. ENDCLASS.
+CLASS zcl_fan_11 DEFINITION. PUBLIC SECTION. ENDCLASS.
+CLASS zcl_fan_11 IMPLEMENTATION. ENDCLASS.
+CLASS zcl_fan_12 DEFINITION. PUBLIC SECTION. ENDCLASS.
+CLASS zcl_fan_12 IMPLEMENTATION. ENDCLASS.
+CLASS zcl_fan_13 DEFINITION. PUBLIC SECTION. ENDCLASS.
+CLASS zcl_fan_13 IMPLEMENTATION. ENDCLASS.
+CLASS zcl_fan_14 DEFINITION. PUBLIC SECTION. ENDCLASS.
+CLASS zcl_fan_14 IMPLEMENTATION. ENDCLASS.
+CLASS zcl_fan_15 DEFINITION. PUBLIC SECTION. ENDCLASS.
+CLASS zcl_fan_15 IMPLEMENTATION. ENDCLASS.
+CLASS zcl_fan_16 DEFINITION. PUBLIC SECTION. ENDCLASS.
+CLASS zcl_fan_16 IMPLEMENTATION. ENDCLASS.
+
 CLASS zcl_skylint_test_max_fanout DEFINITION
   PUBLIC FINAL
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    TYPES zcl_fan_01 TYPE i.
-    TYPES zcl_fan_02 TYPE i.
-    TYPES zcl_fan_03 TYPE i.
-    TYPES zcl_fan_04 TYPE i.
-    TYPES zcl_fan_05 TYPE i.
-    TYPES zcl_fan_06 TYPE i.
-    TYPES zcl_fan_07 TYPE i.
-    TYPES zcl_fan_08 TYPE i.
-    TYPES zcl_fan_09 TYPE i.
-    TYPES zcl_fan_10 TYPE i.
-    TYPES zcl_fan_11 TYPE i.
-    TYPES zcl_fan_12 TYPE i.
-    TYPES zcl_fan_13 TYPE i.
-    TYPES zcl_fan_14 TYPE i.
-    TYPES zcl_fan_15 TYPE i.
-    TYPES zcl_fan_16 TYPE i.
-
     METHODS test_001.
     METHODS test_002.
     METHODS test_003.
@@ -27,49 +43,45 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_max_fanout IMPLEMENTATION.
   METHOD test_001.
-    DATA lv_01 TYPE zcl_fan_01.
-    DATA lv_02 TYPE zcl_fan_02.
-    lv_01 = 1.
-    lv_02 = 2.
+    DATA lo_01 TYPE REF TO zcl_fan_01.
+    DATA lo_02 TYPE REF TO zcl_fan_02.
   ENDMETHOD.
 
   METHOD test_002.
-    DATA lv_01 TYPE zcl_fan_01.
-    DATA lv_02 TYPE zcl_fan_02.
-    DATA lv_03 TYPE zcl_fan_03.
-    DATA lv_04 TYPE zcl_fan_04.
-    DATA lv_05 TYPE zcl_fan_05.
-    DATA lv_06 TYPE zcl_fan_06.
-    DATA lv_07 TYPE zcl_fan_07.
-    DATA lv_08 TYPE zcl_fan_08.
-    DATA lv_09 TYPE zcl_fan_09.
-    DATA lv_10 TYPE zcl_fan_10.
-    DATA lv_11 TYPE zcl_fan_11.
-    DATA lv_12 TYPE zcl_fan_12.
-    DATA lv_13 TYPE zcl_fan_13.
-    DATA lv_14 TYPE zcl_fan_14.
-    DATA lv_15 TYPE zcl_fan_15.
-    DATA lv_16 TYPE zcl_fan_16.
-    lv_01 = 1.
+    DATA lo_01 TYPE REF TO zcl_fan_01.
+    DATA lo_02 TYPE REF TO zcl_fan_02.
+    DATA lo_03 TYPE REF TO zcl_fan_03.
+    DATA lo_04 TYPE REF TO zcl_fan_04.
+    DATA lo_05 TYPE REF TO zcl_fan_05.
+    DATA lo_06 TYPE REF TO zcl_fan_06.
+    DATA lo_07 TYPE REF TO zcl_fan_07.
+    DATA lo_08 TYPE REF TO zcl_fan_08.
+    DATA lo_09 TYPE REF TO zcl_fan_09.
+    DATA lo_10 TYPE REF TO zcl_fan_10.
+    DATA lo_11 TYPE REF TO zcl_fan_11.
+    DATA lo_12 TYPE REF TO zcl_fan_12.
+    DATA lo_13 TYPE REF TO zcl_fan_13.
+    DATA lo_14 TYPE REF TO zcl_fan_14.
+    DATA lo_15 TYPE REF TO zcl_fan_15.
+    DATA lo_16 TYPE REF TO zcl_fan_16.
   ENDMETHOD.
 
   METHOD test_003.
-    DATA lv_01 TYPE zcl_fan_01.
-    DATA lv_02 TYPE zcl_fan_02.
-    DATA lv_03 TYPE zcl_fan_03.
-    DATA lv_04 TYPE zcl_fan_04.
-    DATA lv_05 TYPE zcl_fan_05.
-    DATA lv_06 TYPE zcl_fan_06.
-    DATA lv_07 TYPE zcl_fan_07.
-    DATA lv_08 TYPE zcl_fan_08.
-    DATA lv_09 TYPE zcl_fan_09.
-    DATA lv_10 TYPE zcl_fan_10.
-    DATA lv_11 TYPE zcl_fan_11.
-    DATA lv_12 TYPE zcl_fan_12.
-    DATA lv_13 TYPE zcl_fan_13.
-    DATA lv_14 TYPE zcl_fan_14.
-    DATA lv_15 TYPE zcl_fan_15.
-    DATA lv_16 TYPE zcl_fan_16.
-    lv_01 = 1.
+    DATA lo_01 TYPE REF TO zcl_fan_01.
+    DATA lo_02 TYPE REF TO zcl_fan_02.
+    DATA lo_03 TYPE REF TO zcl_fan_03.
+    DATA lo_04 TYPE REF TO zcl_fan_04.
+    DATA lo_05 TYPE REF TO zcl_fan_05.
+    DATA lo_06 TYPE REF TO zcl_fan_06.
+    DATA lo_07 TYPE REF TO zcl_fan_07.
+    DATA lo_08 TYPE REF TO zcl_fan_08.
+    DATA lo_09 TYPE REF TO zcl_fan_09.
+    DATA lo_10 TYPE REF TO zcl_fan_10.
+    DATA lo_11 TYPE REF TO zcl_fan_11.
+    DATA lo_12 TYPE REF TO zcl_fan_12.
+    DATA lo_13 TYPE REF TO zcl_fan_13.
+    DATA lo_14 TYPE REF TO zcl_fan_14.
+    DATA lo_15 TYPE REF TO zcl_fan_15.
+    DATA lo_16 TYPE REF TO zcl_fan_16.
   ENDMETHOD.
 ENDCLASS.
