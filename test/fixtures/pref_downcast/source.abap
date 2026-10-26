@@ -70,8 +70,8 @@ CLASS zcl_test_prefer_cast IMPLEMENTATION.
 
   METHOD test_009.
     DATA lo_child TYPE REF TO zcl_test_prefer_cast.
-    DATA lo_parent TYPE REF TO object.
-    lo_child ?= ( lo_parent ).
+    DATA lo_parent TYPE REF TO zcl_test_prefer_cast.
+    lo_child ?= lo_parent->get_sub( ).
   ENDMETHOD.
 
   METHOD test_010.

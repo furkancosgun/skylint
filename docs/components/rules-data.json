@@ -1044,6 +1044,44 @@
     ]
   },
   {
+    "ruleId": "no-unclosed-res",
+    "title": "Ensure Opened Datasets and Cursors are Closed",
+    "className": "ZCL_SKYLINT_NO_UNCLOSED_RES",
+    "checkName": "ZSKYLINT_NO_UNCLOSED_RES",
+    "category": "security",
+    "categoryTitle": "Security & Robustness",
+    "pseudoComment": "NO_UNCLOSED_RES",
+    "description": "Ensure opened datasets and cursors are closed",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "CHECK_DATASET",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_CURSOR",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "relatedRules": [
+      "no-db-in-loop",
+      "no-obs-memory"
+    ],
+    "defaultParameters": [
+      {
+        "name": "CHECK_DATASET",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_CURSOR",
+        "value": "X"
+      }
+    ]
+  },
+  {
     "ruleId": "no-obs-decl",
     "title": "Avoid Obsolete Declarations and Table Headers",
     "className": "ZCL_SKYLINT_NO_OBS_DECL",
@@ -2013,6 +2051,37 @@
       {
         "name": "MAX_COMPLEXITY",
         "value": "5"
+      }
+    ]
+  },
+  {
+    "ruleId": "max-npath",
+    "title": "Limit NPath Complexity per Method",
+    "className": "ZCL_SKYLINT_MAX_NPATH",
+    "checkName": "ZSKYLINT_MAX_NPATH",
+    "category": "metrics",
+    "categoryTitle": "Metrics & Complexity Limits",
+    "pseudoComment": "MAX_NPATH",
+    "description": "Limit NPath complexity per procedure",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "MAX_NPATH",
+        "kind": "Integer",
+        "defaultValue": "200"
+      }
+    ],
+    "relatedRules": [
+      "max-cyclo-comp",
+      "max-cognitive",
+      "max-nesting",
+      "max-method-len"
+    ],
+    "defaultParameters": [
+      {
+        "name": "MAX_NPATH",
+        "value": "200"
       }
     ]
   },

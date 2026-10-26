@@ -321,7 +321,7 @@ export default defineConfig({
     logo: { src: '/logo.svg', alt: 'Skylint Logo' },
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
-      { text: 'Rules (148)', link: '/rules/' },
+      { text: 'Rules (150)', link: '/rules/' },
       { text: 'Variant Builder', link: '/variant-builder' },
       { text: 'GitHub', link: 'https://github.com/furkancosgun/skylint' },
     ],
@@ -354,11 +354,11 @@ export default defineConfig({
     "link": "/rules/performance"
   },
   {
-    "text": "Security & Robustness (16)",
+    "text": "Security & Robustness (17)",
     "link": "/rules/security"
   },
   {
-    "text": "Metrics & Complexity Limits (13)",
+    "text": "Metrics & Complexity Limits (14)",
     "link": "/rules/metrics"
   }
 ]

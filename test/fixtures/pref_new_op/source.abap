@@ -7,7 +7,9 @@ CLASS zcl_test_prefer_new_operator DEFINITION
       IMPORTING
         iv_val TYPE i OPTIONAL
         iv_txt TYPE string OPTIONAL
-        io_sub TYPE REF TO zcl_test_prefer_new_operator OPTIONAL.
+        io_sub TYPE REF TO zcl_test_prefer_new_operator OPTIONAL
+      EXCEPTIONS
+        failed.
     METHODS test_001.
     METHODS test_002.
     METHODS test_003.
@@ -77,13 +79,14 @@ CLASS zcl_test_prefer_new_operator IMPLEMENTATION.
 
   METHOD test_010.
     DATA lo_obj TYPE REF TO zcl_test_prefer_new_operator.
-    CREATE OBJECT lo_obj EXPORTING io_sub = ( NEW zcl_test_prefer_new_operator( ) ).
+    CREATE OBJECT lo_obj EXPORTING io_sub = NEW zcl_test_prefer_new_operator( ).
   ENDMETHOD.
 
   METHOD test_011.
     DATA lo_obj TYPE REF TO zcl_test_prefer_new_operator.
     DATA lt_ptab TYPE abap_parmbind_tab.
-    CREATE OBJECT lo_obj PARAMETER-TABLE lt_ptab.
+    DATA lv_cls TYPE string VALUE 'ZCL_TEST_PREFER_NEW_OPERATOR'.
+    CREATE OBJECT lo_obj TYPE (lv_cls) PARAMETER-TABLE lt_ptab.
   ENDMETHOD.
 
   METHOD test_012.
@@ -91,7 +94,7 @@ CLASS zcl_test_prefer_new_operator IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_013.
-    RAISE EXCEPTION TYPE cx_sy_zerodivide MESSAGE e001(sy).
+    RAISE EXCEPTION TYPE zcx_custom MESSAGE e001(sy).
   ENDMETHOD.
 
   METHOD test_014.
@@ -100,7 +103,7 @@ CLASS zcl_test_prefer_new_operator IMPLEMENTATION.
 
   METHOD test_015.
     DATA lo_obj TYPE REF TO zcl_test_prefer_new_operator.
-    lo_obj = ( NEW zcl_test_prefer_new_operator( ) ).
+    lo_obj = NEW zcl_test_prefer_new_operator( ).
   ENDMETHOD.
 
   METHOD test_016.

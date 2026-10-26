@@ -1,22 +1,23 @@
 ---
-title: "Security & Robustness (16 Rules)"
+title: "Security & Robustness (17 Rules)"
 description: "Authorizations, dynamic execution sanitation, error handling, and runtime safety. Comprehensive reference, finding codes, and Clean ABAP examples for Security & Robustness."
 category: "security"
 keywords: "Clean ABAP, ABAP Cloud, SAP ATC, Security & Robustness, S/4HANA Readiness, SAP BTP, Steampunk"
 ---
 
-# Security & Robustness (16 Rules)
+# Security & Robustness (17 Rules)
 
 Authorizations, dynamic execution sanitation, error handling, and runtime safety.
 
 ::: tip Category Overview
-This category enforces **16 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
+This category enforces **17 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
 :::
 
 ## Rules in this Category
 
 | Rule Name | Native ATC Class | Suppression Tag | Automated QuickFix |
 |---|---|:---:|:---:|
+| [Ensure Opened Datasets and Cursors are Closed](/rules/no-unclosed-res) | `ZCL_SKYLINT_NO_UNCLOSED_RES` | <code>#EC NO_UNCLOSED_RES</code> | - |
 | [Avoid Directly Modifying System Fields (sy-subrc, sy-tabix)](/rules/no-sy-modify) | `ZCL_SKYLINT_NO_SY_MODIFY` | <code>#EC NO_SY_MODIFY</code> | - |
 | [Avoid Native ASSERT in Production Code (Prevent Unrecoverable Dumps)](/rules/no-prod-assert) | `ZCL_SKYLINT_NO_PROD_ASSERT` | <code>#EC NO_PROD_ASSERT</code> | - |
 | [Avoid Explicit RAISE SHORTDUMP in Application Logic](/rules/no-raise-shortdump) | `ZCL_SKYLINT_NO_RAISE_SHORTDUMP` | <code>#EC NO_RAISE_SHORTDUMP</code> | - |

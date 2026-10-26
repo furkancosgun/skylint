@@ -21,56 +21,56 @@ CLASS zcl_skylint_test_no_exc_chain IMPLEMENTATION.
   METHOD test_001.
     DATA lx_err TYPE REF TO cx_root.
     TRY.
-        RAISE EXCEPTION NEW cx_root( ).
+        RAISE EXCEPTION NEW cx_sy_zerodivide( ).
       CATCH cx_root INTO lx_err.
-        RAISE EXCEPTION NEW cx_root( ).
+        RAISE EXCEPTION NEW cx_sy_zerodivide( ).
     ENDTRY.
   ENDMETHOD.
 
   METHOD test_002.
     DATA lx_err TYPE REF TO cx_root.
     TRY.
-        RAISE EXCEPTION NEW cx_root( ).
+        RAISE EXCEPTION NEW cx_sy_zerodivide( ).
       CATCH cx_root INTO lx_err.
-        RAISE EXCEPTION NEW cx_root( previous = lx_err ).
+        RAISE EXCEPTION NEW cx_sy_zerodivide( previous = lx_err ).
     ENDTRY.
   ENDMETHOD.
 
   METHOD test_003.
     DATA lx_err TYPE REF TO cx_root.
     TRY.
-        RAISE EXCEPTION NEW cx_root( ).
+        RAISE EXCEPTION NEW cx_sy_zerodivide( ).
       CATCH cx_root INTO lx_err.
-        RAISE EXCEPTION TYPE cx_root.
+        RAISE EXCEPTION TYPE cx_sy_zerodivide.
     ENDTRY.
   ENDMETHOD.
 
   METHOD test_004.
     DATA lx_err TYPE REF TO cx_root.
     TRY.
-        RAISE EXCEPTION NEW cx_root( ).
+        RAISE EXCEPTION NEW cx_sy_zerodivide( ).
       CATCH cx_root INTO lx_err.
-        RAISE EXCEPTION TYPE cx_root EXPORTING previous = lx_err.
+        RAISE EXCEPTION TYPE cx_sy_zerodivide EXPORTING previous = lx_err.
     ENDTRY.
   ENDMETHOD.
 
   METHOD test_005.
-    RAISE EXCEPTION TYPE cx_root.
+    RAISE EXCEPTION TYPE cx_sy_zerodivide.
   ENDMETHOD.
 
   METHOD test_006.
     DATA lx_err TYPE REF TO cx_root.
     TRY.
-        RAISE EXCEPTION NEW cx_root( ).
+        RAISE EXCEPTION NEW cx_sy_zerodivide( ).
       CATCH cx_root INTO lx_err.
-        RAISE EXCEPTION TYPE cx_root EXPORTING previous = lx_err.
+        RAISE EXCEPTION TYPE cx_sy_zerodivide EXPORTING previous = lx_err.
     ENDTRY.
   ENDMETHOD.
 
   METHOD test_007.
     DATA lx_err TYPE REF TO cx_root.
     TRY.
-        RAISE EXCEPTION NEW cx_root( ).
+        RAISE EXCEPTION NEW cx_sy_zerodivide( ).
       CATCH cx_root INTO lx_err.
         RAISE EXCEPTION lx_err.
     ENDTRY.
@@ -90,7 +90,7 @@ CLASS zcl_skylint_test_no_exc_chain IMPLEMENTATION.
     TRY.
         RAISE EXCEPTION NEW cx_sy_itab_line_not_found( ).
       CATCH cx_sy_itab_line_not_found INTO lx_err.
-        RAISE EXCEPTION NEW cx_sy_zerodivide( textid   = ( cx_sy_zerodivide=>cx_sy_zerodivide )
+        RAISE EXCEPTION NEW cx_sy_zerodivide( textid   = cx_sy_zerodivide=>cx_sy_zerodivide
                                               previous = lx_err ).
     ENDTRY.
   ENDMETHOD.
@@ -100,7 +100,7 @@ CLASS zcl_skylint_test_no_exc_chain IMPLEMENTATION.
     TRY.
         RAISE EXCEPTION NEW cx_sy_itab_line_not_found( ).
       CATCH cx_sy_itab_line_not_found INTO lx_err.
-        RAISE EXCEPTION NEW cx_sy_zerodivide( textid = ( cx_sy_zerodivide=>cx_sy_zerodivide ) ).
+        RAISE EXCEPTION NEW cx_sy_zerodivide( textid = cx_sy_zerodivide=>cx_sy_zerodivide ).
     ENDTRY.
   ENDMETHOD.
 
@@ -115,7 +115,7 @@ CLASS zcl_skylint_test_no_exc_chain IMPLEMENTATION.
   METHOD test_012.
     DATA lx_err TYPE REF TO cx_root.
     TRY.
-        RAISE EXCEPTION NEW cx_root( ).
+        RAISE EXCEPTION NEW cx_sy_zerodivide( ).
       CATCH cx_root INTO lx_err.
         CLEAR lx_err.
     ENDTRY.

@@ -16,5 +16,27 @@
     "line": 6,
     "column": 6,
     "quickfixes": []
+  },
+  {
+    "target": "TEST_004",
+    "code": null
+  },
+  {
+    "target": "TEST_005",
+    "code": "NO_DB_LOOP",
+    "line": 4,
+    "column": 6,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_006",
+    "code": "NO_DB_LOOP",
+    "line": 6,
+    "column": 6,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_007",
+    "code": null
   }
 ]

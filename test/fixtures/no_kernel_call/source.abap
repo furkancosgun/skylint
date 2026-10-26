@@ -11,7 +11,8 @@ ENDCLASS.
 
 CLASS zcl_test_no_kernel_call IMPLEMENTATION.
   METHOD test_001.
-    SYSTEM-CALL OBJMGR CLONE.
+    DATA lo TYPE REF TO object.
+    SYSTEM-CALL OBJMGR CLONE lo TO lo.
   ENDMETHOD.
 
   METHOD test_002.
@@ -19,8 +20,9 @@ CLASS zcl_test_no_kernel_call IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_003.
+    DATA lv_d TYPE d.
     EXEC SQL.
-      SELECT SYSDATE FROM DUAL;
+      SELECT SYSDATE INTO :lv_d FROM DUAL;
     ENDEXEC.
   ENDMETHOD.
 

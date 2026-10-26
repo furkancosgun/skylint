@@ -49,8 +49,8 @@ CLASS zcl_test_no_obs_arith IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_007.
-    DATA: BEGIN OF ls_a, f1 TYPE i, END OF ls_a.
-    DATA: BEGIN OF ls_b, f1 TYPE i, END OF ls_b.
-    ADD-CORRESPONDING ls_a TO ls_b.
+    DATA lv_x TYPE i.
+    DATA lv_y TYPE i.
+    SUBTRACT lv_x FROM lv_y.
   ENDMETHOD.
 ENDCLASS.

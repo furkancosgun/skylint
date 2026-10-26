@@ -48,6 +48,8 @@
     "code": "NO_OBS_ART",
     "line": 4,
     "column": 4,
-    "quickfixes": []
+    "quickfixes": [
+      "REPLACE_AR"
+    ]
   }
 ]

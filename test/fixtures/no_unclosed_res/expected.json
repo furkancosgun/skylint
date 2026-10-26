@@ -1,0 +1,43 @@
+[
+  {
+    "target": "TEST_001",
+    "code": "NO_UNCL_DS",
+    "line": 3,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_002",
+    "code": null
+  },
+  {
+    "target": "TEST_003",
+    "code": "NO_UNCL_CR",
+    "line": 3,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_004",
+    "code": null
+  },
+  {
+    "target": "TEST_005",
+    "code": "NO_UNCL_DS",
+    "line": 4,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_006",
+    "code": null
+  },
+  {
+    "target": "TEST_007",
+    "code": null
+  },
+  {
+    "target": "TEST_008",
+    "code": null
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Limit NPath complexity per procedure",
+    "originalLanguage": "en"
+  },
+  "category": "ZSKYLINT_METRICS",
+  "implementingClass": "ZCL_SKYLINT_MAX_NPATH",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "MAX_NPATH"
+    }
+  ]
+}

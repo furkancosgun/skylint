@@ -78,24 +78,43 @@ CLASS zcl_skylint_no_exc_chain IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_raise_exception.
-    DATA lt_type TYPE zcl_skylint_ast_util=>ty_token_lexemes.
-    DATA lt_new  TYPE zcl_skylint_ast_util=>ty_token_lexemes.
+    DATA ls_tok2 TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok3 TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    lt_type = VALUE #( ( `RAISE` ) ( `EXCEPTION` ) ( `TYPE` ) ).
-    lt_new  = VALUE #( ( `RAISE` ) ( `EXCEPTION` ) ( `NEW` ) ).
+    rv_is = abap_false.
+    IF is_statement-keyword <> 'RAISE'.
+      RETURN.
+    ENDIF.
 
-    rv_is = xsdbool(
-           zcl_skylint_ast_util=>match_token_sequence( is_statement = is_statement
-                                                       it_expected  = lt_type )    = abap_true
-        OR zcl_skylint_ast_util=>match_token_sequence( is_statement = is_statement
-                                                       it_expected  = lt_new )     = abap_true ).
+    ls_tok2 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                               iv_index     = 2 ).
+    IF ls_tok2-lexeme <> 'EXCEPTION'.
+      RETURN.
+    ENDIF.
+
+    ls_tok3 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                               iv_index     = 3 ).
+    IF ls_tok3-lexeme = 'TYPE' OR ls_tok3-lexeme = 'NEW'.
+      rv_is = abap_true.
+    ENDIF.
   ENDMETHOD.
 
   METHOD has_previous_equal.
-    DATA lt_expected TYPE zcl_skylint_ast_util=>ty_token_lexemes.
+    DATA lv_idx  TYPE i.
+    DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_next TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    lt_expected = VALUE #( ( `PREVIOUS` ) ( `=` ) ).
-    rv_has = xsdbool( zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
-                                                                 it_expected  = lt_expected ) > 0 ).
+    rv_has = abap_false.
+    LOOP AT is_statement-tokens INTO ls_tok.
+      lv_idx = sy-tabix.
+      IF ls_tok-lexeme = 'PREVIOUS'.
+        ls_next = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                   iv_index     = lv_idx + 1 ).
+        IF ls_next-lexeme = '='.
+          rv_has = abap_true.
+          RETURN.
+        ENDIF.
+      ENDIF.
+    ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

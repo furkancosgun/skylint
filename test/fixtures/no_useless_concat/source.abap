@@ -133,12 +133,12 @@ CLASS zcl_test_no_useless_concat IMPLEMENTATION.
 
   METHOD test_019.
     DATA lv_text TYPE string.
-    lv_text = ( 'Hello' && 'World' ).
+    lv_text = func( iv_val = 'Hello' && 'World' ).
   ENDMETHOD.
 
   METHOD test_020.
     DATA lv_text TYPE string.
-    lv_text = 'Hello' && ( mv_suffix ).
+    lv_text = 'Hello' && mv_suffix.
   ENDMETHOD.
 
   METHOD test_021.

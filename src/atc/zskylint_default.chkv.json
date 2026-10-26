@@ -244,6 +244,19 @@
       ]
     },
     {
+      "checkName": "ZSKYLINT_NO_UNCLOSED_RES",
+      "parameters": [
+        {
+          "name": "CHECK_DATASET",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_CURSOR",
+          "value": "X"
+        }
+      ]
+    },
+    {
       "checkName": "ZSKYLINT_NO_OBS_DECL",
       "parameters": [
         {
@@ -530,6 +543,15 @@
         {
           "name": "MAX_COMPLEXITY",
           "value": "5"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_MAX_NPATH",
+      "parameters": [
+        {
+          "name": "MAX_NPATH",
+          "value": "200"
         }
       ]
     },

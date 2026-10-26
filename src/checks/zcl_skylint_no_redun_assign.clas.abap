@@ -86,8 +86,6 @@ CLASS zcl_skylint_no_redun_assign IMPLEMENTATION.
     DATA ls_op     TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA ls_left   TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA ls_right  TYPE if_ci_atc_source_code_provider=>ty_token.
-    " TODO: variable is assigned but never used (ABAP cleaner)
-    DATA ls_last   TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_res = abap_false.
 
@@ -120,8 +118,6 @@ CLASS zcl_skylint_no_redun_assign IMPLEMENTATION.
 
         ls_right = zcl_skylint_ast_util=>get_token_before( is_statement = is_statement
                                                            iv_lexeme    = lv_lexeme ).
-
-        ls_last  = zcl_skylint_ast_util=>get_last_token( is_statement ).
 
         rv_res = xsdbool( get_symbol( ls_left ) = get_symbol( ls_right ) ).
     ENDCASE.

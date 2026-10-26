@@ -141,7 +141,7 @@ CLASS zcl_skylint_test_pref_reduce IMPLEMENTATION.
     DATA lv_names  TYPE string.
 
     LOOP AT lt_people INTO ls_person.
-      lv_names = lv_names && ( ls_person-first_name && ls_person-last_name ).
+      lv_names = lv_names && ls_person-first_name && ls_person-last_name.
     ENDLOOP.
   ENDMETHOD.
 

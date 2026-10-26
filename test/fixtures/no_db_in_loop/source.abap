@@ -7,6 +7,9 @@ CLASS zcl_test_no_db_in_loop DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
+    METHODS test_005.
+    METHODS test_006.
+    METHODS test_007.
 ENDCLASS.
 
 CLASS zcl_test_no_db_in_loop IMPLEMENTATION.
@@ -37,5 +40,26 @@ CLASS zcl_test_no_db_in_loop IMPLEMENTATION.
   METHOD test_004.
     DATA ls_key TYPE string.
     UPDATE t100 SET arbgb = ls_key WHERE arbgb = ls_key.
+  ENDMETHOD.
+
+  METHOD test_005.
+    DATA lt_keys TYPE string_table.
+    DO 2 TIMES.
+      MODIFY ENTITY z_entity EXECUTE action_name FROM lt_keys.
+    ENDDO.
+  ENDMETHOD.
+
+  METHOD test_006.
+    DATA lt_keys TYPE string_table.
+    DATA lt_result TYPE string_table.
+    DATA lt_failed TYPE string_table.
+    LOOP AT lt_keys INTO DATA(lv_key).
+      READ ENTITIES OF z_root ENTITY z_entity ALL FIELDS WITH lt_keys RESULT lt_result FAILED lt_failed.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD test_007.
+    DATA lt_keys TYPE string_table.
+    MODIFY ENTITY z_entity EXECUTE action_name FROM lt_keys.
   ENDMETHOD.
 ENDCLASS.

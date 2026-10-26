@@ -52,12 +52,14 @@ CLASS zcl_skylint_pref_case IMPLEMENTATION.
     DATA lv_total        TYPE i.
     DATA lv_var          TYPE string.
     DATA lv_branch_count TYPE i.
+    DATA lv_stmt_idx     TYPE i.
     DATA ls_stmt         TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     lv_total = lines( is_procedure-statements ).
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      lv_stmt_idx = sy-tabix.
       IF <ls_statement>-keyword <> 'IF'.
         CONTINUE.
       ENDIF.
@@ -68,7 +70,7 @@ CLASS zcl_skylint_pref_case IMPLEMENTATION.
 
       lv_branch_count = 1.
       lv_depth = 1.
-      lv_idx = sy-tabix + 1.
+      lv_idx = lv_stmt_idx + 1.
 
       WHILE lv_idx <= lv_total AND lv_depth > 0.
         ls_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements

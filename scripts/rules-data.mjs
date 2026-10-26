@@ -1153,6 +1153,36 @@ export const RULES = [
     ]
   },
   {
+    "ruleId": "no-unclosed-res",
+    "title": "Ensure Opened Datasets and Cursors are Closed",
+    "rationale": "Resources opened on the application server (OPEN DATASET) or database (OPEN CURSOR) must always be explicitly closed (CLOSE DATASET, CLOSE CURSOR). Leaving resources open causes operating system file descriptor leaks, persistent file locks, and can trigger the fatal runtime error DBSQL_TOO_MANY_OPEN_CURSOR (maximum 17 open database cursors session limit).",
+    "className": "ZCL_SKYLINT_NO_UNCLOSED_RES",
+    "pseudoComment": "NO_UNCLOSED_RES",
+    "category": "security",
+    "example": {
+      "bad": "OPEN CURSOR @DATA(dbcur) FOR SELECT * FROM t100.\n\" Cursor remains open without CLOSE CURSOR!",
+      "good": "OPEN CURSOR @DATA(dbcur) FOR SELECT * FROM t100.\nFETCH NEXT CURSOR @dbcur INTO TABLE @DATA(lt_data).\nCLOSE CURSOR @dbcur."
+    },
+    "seo": {
+      "description": "Prevent resource leaks in ABAP by ensuring all OPEN DATASET and OPEN CURSOR statements have guaranteed CLOSE counterparts.",
+      "keywords": [
+        "OPEN DATASET CLOSE DATASET ABAP",
+        "OPEN CURSOR CLOSE CURSOR ABAP",
+        "DBSQL_TOO_MANY_OPEN_CURSOR",
+        "ABAP resource leak ATC check",
+        "Clean ABAP resource management"
+      ]
+    },
+    "parameters": {
+      "CHECK_DATASET": "Check unclosed OPEN DATASET statements",
+      "CHECK_CURSOR": "Check unclosed OPEN CURSOR statements"
+    },
+    "relatedRules": [
+      "no-db-in-loop",
+      "no-obs-memory"
+    ]
+  },
+  {
     "ruleId": "no-obs-decl",
     "title": "Avoid Obsolete Declarations and Table Headers",
     "rationale": "Legacy declaration statements like TABLES, RANGES, TYPE-POOLS, and internal tables defined WITH HEADER LINE, OCCURS, or INITIAL SIZE carry significant technical debt and implicit global state. In modern Clean ABAP and ABAP Cloud, use explicit TYPES, DATA statements with modern table types, standard RANGE OF types, and CLEAR instead of REFRESH.",
@@ -1968,6 +1998,37 @@ export const RULES = [
     },
     "relatedRules": [
       "max-bool-expr",
+      "max-nesting",
+      "max-method-len"
+    ]
+  },
+  {
+    "ruleId": "max-npath",
+    "title": "Limit NPath Complexity per Method",
+    "rationale": "NPath complexity measures the total number of acyclic execution paths through a procedure. Unlike cyclomatic complexity which grows linearly with decision points, NPath complexity grows multiplicatively across sequential and nested control structures (IF, CASE, loops, compound boolean expressions). High NPath complexity makes exhaustive testing impossible. Keep NPath under the threshold by breaking large procedures into cohesive helper methods.",
+    "className": "ZCL_SKYLINT_MAX_NPATH",
+    "pseudoComment": "MAX_NPATH",
+    "category": "metrics",
+    "example": {
+      "bad": "METHOD process.\n  IF cond_a = abap_true.\n    ...\n  ENDIF.\n  IF cond_b = abap_true.\n    ...\n  ENDIF.\n  IF cond_c = abap_true.\n    ...\n  ENDIF.\nENDMETHOD.",
+      "good": "METHOD process.\n  handle_condition_a( ).\n  handle_condition_b( ).\n  handle_condition_c( ).\nENDMETHOD."
+    },
+    "seo": {
+      "description": "Limit NPath execution path complexity in ABAP procedures to prevent combinatorial branch explosion and ensure thorough unit testability.",
+      "keywords": [
+        "NPath complexity ABAP",
+        "Checkstyle NPath",
+        "PMD NPath complexity",
+        "SAP ATC complexity check",
+        "acyclic execution paths"
+      ]
+    },
+    "parameters": {
+      "MAX_NPATH": "Maximum allowed NPath execution paths per procedure (default: 200)"
+    },
+    "relatedRules": [
+      "max-cyclo-comp",
+      "max-cognitive",
       "max-nesting",
       "max-method-len"
     ]

@@ -543,6 +543,35 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
        AND statement_has_reference( is_statement = is_statement
                                     iv_kind      = if_ci_atc_source_code_provider=>compiler_reference_kinds-type ) = abap_true.
       rv_yes = abap_true.
+      RETURN.
+    ENDIF.
+
+    IF     (    is_statement-keyword = 'READ' OR is_statement-keyword = 'MODIFY' )
+       AND (    match_token_sequence( is_statement = is_statement
+                                      it_expected  = VALUE #( ( `READ` ) ( `ENTITIES` ) ) )   = abap_true
+             OR match_token_sequence( is_statement = is_statement
+                                      it_expected  = VALUE #( ( `READ` ) ( `ENTITY` ) ) )     = abap_true
+             OR match_token_sequence( is_statement = is_statement
+                                      it_expected  = VALUE #( ( `MODIFY` ) ( `ENTITIES` ) ) ) = abap_true
+             OR match_token_sequence( is_statement = is_statement
+                                      it_expected  = VALUE #( ( `MODIFY` ) ( `ENTITY` ) ) )   = abap_true ).
+      rv_yes = abap_true.
+      RETURN.
+    ENDIF.
+
+    IF     is_statement-keyword = 'COMMIT'
+       AND (    match_token_sequence( is_statement = is_statement
+                                      it_expected  = VALUE #( ( `COMMIT` ) ( `ENTITIES` ) ) ) = abap_true
+             OR match_token_sequence( is_statement = is_statement
+                                      it_expected  = VALUE #( ( `COMMIT` ) ( `ENTITY` ) ) )   = abap_true ).
+      rv_yes = abap_true.
+      RETURN.
+    ENDIF.
+
+    IF     is_statement-keyword = 'EXEC'
+       AND match_token_sequence( is_statement = is_statement
+                                 it_expected  = VALUE #( ( `EXEC` ) ( `SQL` ) ) ) = abap_true.
+      rv_yes = abap_true.
     ENDIF.
   ENDMETHOD.
 

@@ -118,7 +118,7 @@ CLASS zcl_test_prefer_early_return IMPLEMENTATION.
   METHOD test_011.
     DATA lv_flag TYPE abap_bool.
     IF lv_flag = abap_true.
-      RAISE EXCEPTION TYPE cx_root.
+      RAISE EXCEPTION TYPE cx_sy_zerodivide.
     ELSE.
       lv_flag = abap_false.
     ENDIF.

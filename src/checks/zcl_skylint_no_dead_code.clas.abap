@@ -310,8 +310,8 @@ CLASS zcl_skylint_no_dead_code IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_number.
-    rv_yes = matches( val   = iv_lexeme
-                      regex = '^[+-]?\d+(\.\d+)?$' ).
+    rv_yes = xsdbool( matches( val   = iv_lexeme
+                               regex = '^[+-]?\d+(\.\d+)?$' ) ).
   ENDMETHOD.
 
   METHOD is_string_literal.

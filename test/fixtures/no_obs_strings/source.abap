@@ -25,14 +25,12 @@ CLASS zcl_test_no_obs_strings IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_004.
-    DATA lv_p TYPE p.
-    DATA lv_c TYPE c LENGTH 10.
-    PACK lv_c TO lv_p.
+    DATA lv_text TYPE string VALUE 'abc'.
+    REPLACE REGEX 'a' IN lv_text WITH 'x'.
   ENDMETHOD.
 
   METHOD test_005.
-    DATA lv_p TYPE p.
-    DATA lv_c TYPE c LENGTH 10.
-    UNPACK lv_p TO lv_c.
+    DATA lv_m TYPE abap_bool.
+    lv_m = cl_abap_matcher=>matches_posix( pattern = `a` text = `abc` ).
   ENDMETHOD.
 ENDCLASS.

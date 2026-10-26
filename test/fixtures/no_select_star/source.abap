@@ -49,7 +49,7 @@ CLASS zcl_test_no_select_star IMPLEMENTATION.
 
   METHOD test_006.
     DATA lv_val TYPE i.
-    SELECT SINGLE price * 2 FROM t100 INTO @lv_val.
+    SELECT SINGLE price * 2 FROM sflight INTO @lv_val.
   ENDMETHOD.
 
   METHOD test_007.
@@ -69,7 +69,7 @@ CLASS zcl_test_no_select_star IMPLEMENTATION.
 
   METHOD test_010.
     DATA lv_total TYPE i.
-    SELECT SINGLE ( msgnr * 2 ) AS total FROM t100 INTO @lv_total WHERE ( sprsl = 'E' ).
+    SELECT SINGLE ( price * 2 ) AS total FROM sflight INTO @lv_total.
   ENDMETHOD.
 
   METHOD test_011.
@@ -78,8 +78,8 @@ CLASS zcl_test_no_select_star IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_012.
-    DATA lt_tab TYPE STANDARD TABLE OF t100 WITH DEFAULT KEY.
-    SELECT FROM t100 AS a JOIN t100 AS b ON a~msgnr = b~msgnr FIELDS a~*, b~textpool INTO TABLE @lt_tab.
+    DATA lv_dummy TYPE i.
+    SELECT FROM t100 AS a JOIN t100 AS b ON a~msgnr = b~msgnr FIELDS a~*, b~text INTO TABLE @DATA(lt_join).
   ENDMETHOD.
 
   METHOD test_013.

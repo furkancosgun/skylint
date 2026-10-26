@@ -20,14 +20,14 @@
   {
     "target": "TEST_004",
     "code": "NO_OBS_STR",
-    "line": 4,
+    "line": 3,
     "column": 4,
     "quickfixes": []
   },
   {
     "target": "TEST_005",
     "code": "NO_OBS_STR",
-    "line": 4,
+    "line": 3,
     "column": 4,
     "quickfixes": []
   }

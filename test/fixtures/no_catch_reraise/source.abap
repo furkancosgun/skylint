@@ -20,7 +20,7 @@ CLASS zcl_skylint_test_no_catch_reraise IMPLEMENTATION.
   METHOD test_001.
     DATA lx_err TYPE REF TO cx_root.
     TRY.
-        RAISE EXCEPTION NEW cx_root( ).
+        RAISE EXCEPTION NEW cx_sy_zerodivide( ).
       CATCH cx_root INTO lx_err.
         RAISE EXCEPTION lx_err.
     ENDTRY.
@@ -30,7 +30,7 @@ CLASS zcl_skylint_test_no_catch_reraise IMPLEMENTATION.
     DATA lv_flag TYPE abap_bool.
     DATA lx_err TYPE REF TO cx_root.
     TRY.
-        RAISE EXCEPTION NEW cx_root( ).
+        RAISE EXCEPTION NEW cx_sy_zerodivide( ).
       CATCH cx_root INTO lx_err.
         lv_flag = abap_true.
         RAISE EXCEPTION lx_err.
@@ -40,7 +40,7 @@ CLASS zcl_skylint_test_no_catch_reraise IMPLEMENTATION.
   METHOD test_003.
     DATA lx_err TYPE REF TO cx_root.
     TRY.
-        RAISE EXCEPTION NEW cx_root( ).
+        RAISE EXCEPTION NEW cx_sy_zerodivide( ).
       CATCH cx_root INTO lx_err.
         RAISE EXCEPTION TYPE cx_sy_zerodivide.
     ENDTRY.
@@ -57,18 +57,18 @@ CLASS zcl_skylint_test_no_catch_reraise IMPLEMENTATION.
   METHOD test_005.
     DATA lx_err TYPE REF TO cx_root.
     TRY.
-        RAISE EXCEPTION NEW cx_root( ).
+        RAISE EXCEPTION NEW cx_sy_zerodivide( ).
       CATCH cx_root INTO lx_err.
-        RAISE EXCEPTION TYPE cx_root EXPORTING previous = lx_err.
+        RAISE EXCEPTION TYPE cx_sy_zerodivide EXPORTING previous = lx_err.
     ENDTRY.
   ENDMETHOD.
 
   METHOD test_006.
     DATA lx_err TYPE REF TO cx_root.
     TRY.
-        RAISE EXCEPTION NEW cx_root( ).
+        RAISE EXCEPTION NEW cx_sy_zerodivide( ).
       CATCH cx_root INTO lx_err.
-        RAISE EXCEPTION NEW cx_root( ).
+        RAISE EXCEPTION NEW cx_sy_zerodivide( ).
     ENDTRY.
   ENDMETHOD.
 
@@ -76,7 +76,7 @@ CLASS zcl_skylint_test_no_catch_reraise IMPLEMENTATION.
     DATA lx_err TYPE REF TO cx_root.
     DATA lv_cleaned TYPE abap_bool.
     TRY.
-        RAISE EXCEPTION NEW cx_root( ).
+        RAISE EXCEPTION NEW cx_sy_zerodivide( ).
       CATCH cx_root INTO lx_err.
         RAISE EXCEPTION lx_err.
       CLEANUP.
@@ -87,7 +87,7 @@ CLASS zcl_skylint_test_no_catch_reraise IMPLEMENTATION.
   METHOD test_008.
     DATA lx_err TYPE REF TO cx_root.
     TRY.
-        RAISE EXCEPTION NEW cx_root( ).
+        RAISE EXCEPTION NEW cx_sy_zerodivide( ).
       CATCH cx_root INTO lx_err.
         RAISE EXCEPTION NEW cx_sy_zerodivide( previous = lx_err ).
     ENDTRY.
@@ -110,16 +110,16 @@ CLASS zcl_skylint_test_no_catch_reraise IMPLEMENTATION.
   METHOD test_010.
     DATA lx_err TYPE REF TO cx_root.
     TRY.
-        RAISE EXCEPTION NEW cx_root( ).
+        RAISE EXCEPTION NEW cx_sy_zerodivide( ).
       CATCH cx_root INTO lx_err.
-        RAISE EXCEPTION NEW cx_root( textid = ( cx_root=>cx_root ) previous = lx_err ).
+        RAISE EXCEPTION NEW cx_sy_zerodivide( previous = lx_err ).
     ENDTRY.
   ENDMETHOD.
 
   METHOD test_011.
     DATA lx_err TYPE REF TO cx_root.
     TRY.
-        RAISE EXCEPTION NEW cx_root( ).
+        RAISE EXCEPTION NEW cx_sy_zerodivide( ).
       CATCH cx_root INTO lx_err.
     ENDTRY.
   ENDMETHOD.

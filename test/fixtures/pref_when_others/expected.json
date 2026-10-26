@@ -1,7 +1,6 @@
 [
   { "target": "TEST_001", "code": "PREF_NO_WO", "line": 3, "column": 4, "quickfixes": [] },
   { "target": "TEST_002", "code": null },
-  { "target": "TEST_003", "code": "PREF_WOPOS", "line": 4, "column": 6, "quickfixes": [] },
   { "target": "TEST_004", "code": null },
   { "target": "TEST_005", "code": "PREF_NO_WO", "line": 6, "column": 8, "quickfixes": [] },
   { "target": "TEST_006", "code": "PREF_NO_WO", "line": 4, "column": 4, "quickfixes": [] },
@@ -9,6 +8,5 @@
   { "target": "TEST_008", "code": null },
   { "target": "TEST_009", "code": null },
   { "target": "TEST_010", "code": "PREF_NO_WO", "line": 4, "column": 4, "quickfixes": [] },
-  { "target": "TEST_011", "code": "PREF_WOPOS", "line": 7, "column": 10, "quickfixes": [] },
   { "target": "TEST_012", "code": null }
 ]

@@ -22,13 +22,13 @@
       "key": "security",
       "title": "Security & Robustness",
       "description": "Authorizations, dynamic execution sanitation, error handling, and runtime safety.",
-      "count": 16
+      "count": 17
     },
     {
       "key": "metrics",
       "title": "Metrics & Complexity Limits",
       "description": "Quantitative boundaries for method size, nesting depth, parameter counts, and cyclomatic complexity.",
-      "count": 13
+      "count": 14
     }
   ],
   "rules": [
@@ -489,6 +489,18 @@
       "configurable": true
     },
     {
+      "ruleId": "no-unclosed-res",
+      "title": "Ensure Opened Datasets and Cursors are Closed",
+      "className": "ZCL_SKYLINT_NO_UNCLOSED_RES",
+      "description": "Ensure opened datasets and cursors are closed",
+      "category": "security",
+      "categoryTitle": "Security & Robustness",
+      "pseudoComment": "NO_UNCLOSED_RES",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
       "ruleId": "no-obs-decl",
       "title": "Avoid Obsolete Declarations and Table Headers",
       "className": "ZCL_SKYLINT_NO_OBS_DECL",
@@ -820,6 +832,18 @@
       "category": "metrics",
       "categoryTitle": "Metrics & Complexity Limits",
       "pseudoComment": "MAX_CYCLO_COMP",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "max-npath",
+      "title": "Limit NPath Complexity per Method",
+      "className": "ZCL_SKYLINT_MAX_NPATH",
+      "description": "Limit NPath complexity per procedure",
+      "category": "metrics",
+      "categoryTitle": "Metrics & Complexity Limits",
+      "pseudoComment": "MAX_NPATH",
       "hasQuickfix": false,
       "remoteEnabled": true,
       "configurable": true

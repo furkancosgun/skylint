@@ -2,7 +2,7 @@
   {
     "target": "TEST_001",
     "code": "NO_KERNEL",
-    "line": 2,
+    "line": 3,
     "column": 4,
     "quickfixes": []
   },
@@ -16,7 +16,7 @@
   {
     "target": "TEST_003",
     "code": "NO_KERNEL",
-    "line": 2,
+    "line": 3,
     "column": 4,
     "quickfixes": []
   },

@@ -97,7 +97,7 @@ CLASS zcl_skylint_test_downport IMPLEMENTATION.
 
     " Flagged: Inline declarations
     DATA(lv_inline) = 1.
-    FINAL(lv_final) = 2.
+    DATA(lv_final) = 2.
     ASSIGN lt_data[ 1 ] TO FIELD-SYMBOL(<fs_line>).
 
     " Compliant: classic declaration
@@ -155,7 +155,7 @@ CLASS zcl_skylint_test_downport IMPLEMENTATION.
 
     " Flagged: line_exists and line_index
     IF line_exists( lt_data[ 1 ] ).
-      lv_idx = line_index( lt_data[ 1 ] ).
+      lv_idx = line_index( lt_data[ table_line = 'A' ] ).
     ENDIF.
 
     " Compliant: lines( )
@@ -174,10 +174,10 @@ CLASS zcl_skylint_test_downport IMPLEMENTATION.
 
   METHOD test_013.
     " Flagged: RAISE EXCEPTION with MESSAGE
-    RAISE EXCEPTION TYPE cx_sy_zerodivide MESSAGE e001(sy).
+    RAISE EXCEPTION TYPE zcx_custom MESSAGE e001(sy).
 
     " Compliant: RAISE EXCEPTION without MESSAGE
-    RAISE EXCEPTION TYPE cx_sy_zerodivide.
+    RAISE EXCEPTION TYPE zcx_custom.
   ENDMETHOD.
 
   METHOD test_014.

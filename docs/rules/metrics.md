@@ -1,16 +1,16 @@
 ---
-title: "Metrics & Complexity Limits (13 Rules)"
+title: "Metrics & Complexity Limits (14 Rules)"
 description: "Quantitative boundaries for method size, nesting depth, parameter counts, and cyclomatic complexity. Comprehensive reference, finding codes, and Clean ABAP examples for Metrics & Complexity Limits."
 category: "metrics"
 keywords: "Clean ABAP, ABAP Cloud, SAP ATC, Metrics & Complexity Limits, S/4HANA Readiness, SAP BTP, Steampunk"
 ---
 
-# Metrics & Complexity Limits (13 Rules)
+# Metrics & Complexity Limits (14 Rules)
 
 Quantitative boundaries for method size, nesting depth, parameter counts, and cyclomatic complexity.
 
 ::: tip Category Overview
-This category enforces **13 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
+This category enforces **14 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
 :::
 
 ## Rules in this Category
@@ -21,6 +21,7 @@ This category enforces **13 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Limit Method and Constructor Statement Length](/rules/max-method-len) | `ZCL_SKYLINT_MAX_METHOD_LEN` | <code>#EC MAX_METHOD_LEN</code> | - |
 | [Limit Control Flow Nesting Depth (Guard Clause Enforcement)](/rules/max-nesting) | `ZCL_SKYLINT_MAX_NESTING` | <code>#EC MAX_NESTING</code> | - |
 | [Limit Cyclomatic Complexity (McCabe Complexity Metric)](/rules/max-cyclo-comp) | `ZCL_SKYLINT_MAX_CYCLO_COMP` | <code>#EC MAX_CYCLO_COMP</code> | - |
+| [Limit NPath Complexity per Method](/rules/max-npath) | `ZCL_SKYLINT_MAX_NPATH` | <code>#EC MAX_NPATH</code> | - |
 | [Limit Class Inheritance Depth (Favor Composition over Inheritance)](/rules/max-inherit) | `ZCL_SKYLINT_MAX_INHERIT` | <code>#EC MAX_INHERIT</code> | - |
 | [Limit Class Member Attribute Count (Prevent God Classes)](/rules/max-attributes) | `ZCL_SKYLINT_MAX_ATTRIBUTES` | <code>#EC MAX_ATTRIBUTES</code> | - |
 | [Limit One Statement per Source Code Line (No Inline Colon Chains)](/rules/max-one-stmt) | `ZCL_SKYLINT_MAX_ONE_STMT` | <code>#EC MAX_ONE_STMT</code> | - |
