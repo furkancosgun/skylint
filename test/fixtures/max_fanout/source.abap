@@ -39,6 +39,7 @@ CLASS zcl_skylint_test_max_fanout DEFINITION
     METHODS test_001.
     METHODS test_002.
     METHODS test_003.
+    METHODS test_004.
 ENDCLASS.
 
 CLASS zcl_skylint_test_max_fanout IMPLEMENTATION.
@@ -83,5 +84,25 @@ CLASS zcl_skylint_test_max_fanout IMPLEMENTATION.
     DATA lo_14 TYPE REF TO zcl_fan_14.
     DATA lo_15 TYPE REF TO zcl_fan_15.
     DATA lo_16 TYPE REF TO zcl_fan_16.
+  ENDMETHOD.
+
+  METHOD test_004.
+    DATA lo_01 TYPE REF TO zcl_fan_01.
+    DATA lo_02 TYPE REF TO zcl_fan_01.
+    DATA lo_03 TYPE REF TO zcl_fan_01.
+    DATA lo_04 TYPE REF TO zcl_fan_01.
+    DATA lo_05 TYPE REF TO zcl_fan_01.
+    DATA lo_06 TYPE REF TO zcl_fan_01.
+    DATA lo_07 TYPE REF TO zcl_fan_01.
+    DATA lo_08 TYPE REF TO zcl_fan_01.
+    DATA lo_09 TYPE REF TO zcl_fan_01.
+    DATA lo_10 TYPE REF TO zcl_fan_01.
+    DATA lo_11 TYPE REF TO zcl_fan_01.
+    DATA lo_12 TYPE REF TO zcl_fan_01.
+    DATA lo_13 TYPE REF TO zcl_fan_01.
+    DATA lo_14 TYPE REF TO zcl_fan_01.
+    DATA lo_15 TYPE REF TO zcl_fan_01.
+    DATA lo_16 TYPE REF TO zcl_fan_01.
+    DATA lo_17 TYPE REF TO zcl_fan_01.
   ENDMETHOD.
 ENDCLASS.

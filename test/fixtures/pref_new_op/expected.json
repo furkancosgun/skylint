@@ -37,5 +37,77 @@
   {
     "target": "TEST_006",
     "code": null
+  },
+  {
+    "target": "TEST_007",
+    "code": "PREF_NEW",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "TONEW"
+    ]
+  },
+  {
+    "target": "TEST_008",
+    "code": "PREF_NEW",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "TONEW"
+    ]
+  },
+  {
+    "target": "TEST_009",
+    "code": "PREF_NEW",
+    "line": 3,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_010",
+    "code": "PREF_NEW",
+    "line": 3,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_011",
+    "code": null
+  },
+  {
+    "target": "TEST_012",
+    "code": "PREF_RSNEW",
+    "line": 2,
+    "column": 4,
+    "quickfixes": [
+      "RAISENEW"
+    ]
+  },
+  {
+    "target": "TEST_013",
+    "code": "PREF_RSNEW",
+    "line": 2,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_014",
+    "code": null
+  },
+  {
+    "target": "TEST_015",
+    "code": null
+  },
+  {
+    "target": "TEST_016",
+    "code": null
+  },
+  {
+    "target": "TEST_017",
+    "code": null,
+    "attributes": {
+      "CHECK_CREATE_OBJECT": false,
+      "CHECK_RAISE_EXCEPTION": false
+    }
   }
 ]

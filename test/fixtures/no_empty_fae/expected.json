@@ -50,5 +50,43 @@
     "quickfixes": [
       "FAEGUARD"
     ]
+  },
+  {
+    "target": "TEST_009",
+    "code": null
+  },
+  {
+    "target": "TEST_010",
+    "code": null
+  },
+  {
+    "target": "TEST_011",
+    "code": null
+  },
+  {
+    "target": "TEST_012",
+    "code": null
+  },
+  {
+    "target": "TEST_013",
+    "code": null
+  },
+  {
+    "target": "TEST_014",
+    "code": "NO_EMPTFAE",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "FAEGUARD"
+    ]
+  },
+  {
+    "target": "TEST_015",
+    "code": "NO_EMPTFAE",
+    "line": 6,
+    "column": 6,
+    "quickfixes": [
+      "FAEGUARD"
+    ]
   }
 ]

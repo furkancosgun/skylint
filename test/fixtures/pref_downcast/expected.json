@@ -26,6 +26,44 @@
     "code": null
   },
   {
+    "target": "TEST_009",
+    "code": "PREF_CAST",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "TOCAST"
+    ]
+  },
+  {
+    "target": "TEST_010",
+    "code": "PREF_CAST",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "TOCAST"
+    ]
+  },
+  {
+    "target": "TEST_011",
+    "code": "PREF_CAST",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "TOCAST"
+    ]
+  },
+  {
+    "target": "TEST_012",
+    "code": null
+  },
+  {
+    "target": "TEST_013",
+    "code": null,
+    "attributes": {
+      "CHECK_CAST_SYNTAX": false
+    }
+  },
+  {
     "target": "TEST_005",
     "code": "PREF_INLCS",
     "line": 3,
@@ -50,5 +88,46 @@
   {
     "target": "TEST_008",
     "code": null
+  },
+  {
+    "target": "TEST_014",
+    "code": "PREF_INLCS",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "INLINECST"
+    ]
+  },
+  {
+    "target": "TEST_015",
+    "code": "PREF_INLCS",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "INLINECST"
+    ]
+  },
+  {
+    "target": "TEST_016",
+    "code": null
+  },
+  {
+    "target": "TEST_017",
+    "code": null
+  },
+  {
+    "target": "TEST_018",
+    "code": null
+  },
+  {
+    "target": "TEST_019",
+    "code": null
+  },
+  {
+    "target": "TEST_020",
+    "code": null,
+    "attributes": {
+      "CHECK_INLINE_CAST": false
+    }
   }
 ]

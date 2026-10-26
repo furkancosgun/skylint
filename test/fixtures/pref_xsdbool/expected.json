@@ -22,7 +22,87 @@
     ]
   },
   {
+    "target": "TEST_004",
+    "code": null
+  },
+  {
     "target": "TEST_005",
+    "code": null
+  },
+  {
+    "target": "TEST_006",
+    "code": "PREF_XSDBL",
+    "line": 5,
+    "column": 4,
+    "quickfixes": [
+      "TOXSDBOOL"
+    ]
+  },
+  {
+    "target": "TEST_007",
+    "code": "PREF_XSDBL",
+    "line": 5,
+    "column": 4,
+    "quickfixes": [
+      "TOXSDBOOL"
+    ]
+  },
+  {
+    "target": "TEST_008",
+    "code": "PREF_XSDBL",
+    "line": 5,
+    "column": 4,
+    "quickfixes": [
+      "TOXSDBOOL"
+    ]
+  },
+  {
+    "target": "TEST_009",
+    "code": "PREF_XSDBL",
+    "line": 6,
+    "column": 4,
+    "quickfixes": [
+      "TOXSDBOOL"
+    ]
+  },
+  {
+    "target": "TEST_010",
+    "code": "PREF_XSDBL",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "TOXSDBOOL"
+    ]
+  },
+  {
+    "target": "TEST_011",
+    "code": "PREF_XSDBL",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "TOXSDBOOL"
+    ]
+  },
+  {
+    "target": "TEST_012",
+    "code": "PREF_XSDBL",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "TOXSDBOOL"
+    ]
+  },
+  {
+    "target": "TEST_013",
+    "code": "PREF_XSDBL",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "TOXSDBOOL"
+    ]
+  },
+  {
+    "target": "TEST_014",
     "code": null
   }
 ]

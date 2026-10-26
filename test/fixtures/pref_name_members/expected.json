@@ -18,5 +18,59 @@
     "code": "PREF_NMATR",
     "line": 3,
     "column": 4
+  },
+  {
+    "target": "LCL_PARAM_EDGE",
+    "code": "PREF_NMPAR",
+    "line": 8,
+    "column": 4
+  },
+  {
+    "target": "LCL_PARAM_EDGE",
+    "code": "PREF_NMPAR",
+    "line": 10,
+    "column": 4
+  },
+  {
+    "target": "LCL_PARAM_EDGE",
+    "code": "PREF_NMPAR",
+    "line": 12,
+    "column": 4
+  },
+  {
+    "target": "LCL_PARAM_EDGE",
+    "code": "PREF_NMPAR",
+    "line": 14,
+    "column": 4
+  },
+  {
+    "target": "LCL_PARAM_EDGE",
+    "code": "PREF_NMPAR",
+    "line": 17,
+    "column": 4
+  },
+  {
+    "target": "LCL_EVENTS_AND_TESTS",
+    "code": null
+  },
+  {
+    "target": "LCX_CUSTOM_ERROR",
+    "code": null
+  },
+  {
+    "target": "ZCL_GLOBAL_STATICS",
+    "code": "PREF_NMATR",
+    "line": 4,
+    "column": 4
+  },
+  {
+    "target": "ZCL_GLOBAL_STATICS",
+    "code": "PREF_NMATR",
+    "line": 8,
+    "column": 4
+  },
+  {
+    "target": "LCL_LOCAL_ATTRS",
+    "code": null
   }
 ]

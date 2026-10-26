@@ -50,5 +50,64 @@
     "quickfixes": [
       "USE_ELSEIF"
     ]
+  },
+  {
+    "target": "TEST_011",
+    "code": "PREF_MRGIF",
+    "line": 5,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_012",
+    "code": "PREF_MRGIF",
+    "line": 6,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_013",
+    "code": "PREF_MRGIF",
+    "line": 4,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_014",
+    "code": "PREF_MRGIF",
+    "line": 5,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_014",
+    "code": "PREF_MRGIF",
+    "line": 6,
+    "column": 6,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_015",
+    "code": "PREF_ELSIF",
+    "line": 7,
+    "column": 4,
+    "quickfixes": [
+      "USE_ELSEIF"
+    ]
+  },
+  {
+    "target": "TEST_016",
+    "code": null
+  },
+  {
+    "target": "TEST_017",
+    "code": null
+  },
+  {
+    "target": "TEST_018",
+    "code": "PREF_MRGIF",
+    "line": 4,
+    "column": 4,
+    "quickfixes": []
   }
 ]

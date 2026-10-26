@@ -4,5 +4,13 @@
   { "target": "TEST_003", "code": null },
   { "target": "TEST_004", "code": null },
   { "target": "TEST_005", "code": null },
-  { "target": "TEST_006", "code": "PREF_REDUC", "line": 9, "column": 4, "quickfixes": ["USEREDUCE"] }
+  { "target": "TEST_006", "code": "PREF_REDUC", "line": 9, "column": 4, "quickfixes": ["USEREDUCE"] },
+  { "target": "TEST_007", "code": "PREF_REDUC", "line": 10, "column": 4, "quickfixes": ["USEREDUCE"] },
+  { "target": "TEST_008", "code": "PREF_REDUC", "line": 11, "column": 4, "quickfixes": ["USEREDUCE"] },
+  { "target": "TEST_009", "code": "PREF_REDUC", "line": 9, "column": 4, "quickfixes": ["USEREDUCE"] },
+  { "target": "TEST_010", "code": "PREF_REDUC", "line": 10, "column": 4, "quickfixes": ["USEREDUCE"] },
+  { "target": "TEST_011", "code": null },
+  { "target": "TEST_012", "code": null },
+  { "target": "TEST_013", "code": null },
+  { "target": "TEST_014", "code": null }
 ]

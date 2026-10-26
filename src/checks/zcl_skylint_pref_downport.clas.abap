@@ -270,19 +270,19 @@ CLASS zcl_skylint_pref_downport IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD has_method_chaining.
-    DATA lv_arrow_count TYPE i.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_has = abap_false.
-    lv_arrow_count = 0.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      IF <ls_token>-lexeme = '->' OR <ls_token>-lexeme = '=>'.
-        lv_arrow_count += 1.
-        IF lv_arrow_count >= 2.
-          rv_has = abap_true.
-          RETURN.
-        ENDIF.
+      IF zcl_skylint_ast_util=>token_is_literal( <ls_token> ) = abap_true.
+        CONTINUE.
+      ENDIF.
+
+      IF contains( val = <ls_token>-lexeme
+                   sub = ')->' ).
+        rv_has = abap_true.
+        RETURN.
       ENDIF.
     ENDLOOP.
   ENDMETHOD.

@@ -42,5 +42,35 @@
   {
     "target": "TEST_008",
     "code": null
+  },
+  {
+    "target": "TEST_009",
+    "code": "NO_SEL_STR",
+    "line": 3,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_010",
+    "code": null
+  },
+  {
+    "target": "TEST_011",
+    "code": null
+  },
+  {
+    "target": "TEST_012",
+    "code": "NO_SEL_STR",
+    "line": 3,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_013",
+    "code": null
+  },
+  {
+    "target": "TEST_014",
+    "code": null
   }
 ]

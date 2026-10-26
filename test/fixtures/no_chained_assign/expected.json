@@ -1,37 +1,15 @@
 [
-  {
-    "target": "TEST_001",
-    "code": "NO_CHN_ASG",
-    "line": 5,
-    "column": 4,
-    "quickfixes": [
-      "SPLITASG"
-    ]
-  },
-  {
-    "target": "TEST_002",
-    "code": null
-  },
-  {
-    "target": "TEST_003",
-    "code": "NO_CHN_ASG",
-    "line": 4,
-    "column": 4,
-    "quickfixes": [
-      "SPLITASG"
-    ]
-  },
-  {
-    "target": "TEST_004",
-    "code": null
-  },
-  {
-    "target": "TEST_005",
-    "code": "NO_CHN_ASG",
-    "line": 4,
-    "column": 4,
-    "quickfixes": [
-      "SPLITASG"
-    ]
-  }
+  { "target": "TEST_001", "code": "NO_CHN_ASG", "line": 5, "column": 4, "quickfixes": ["SPLITASG"] },
+  { "target": "TEST_002", "code": null },
+  { "target": "TEST_003", "code": "NO_CHN_ASG", "line": 4, "column": 4, "quickfixes": ["SPLITASG"] },
+  { "target": "TEST_004", "code": null },
+  { "target": "TEST_005", "code": "NO_CHN_ASG", "line": 4, "column": 4, "quickfixes": ["SPLITASG"] },
+  { "target": "TEST_006", "code": "NO_CHN_ASG", "line": 6, "column": 4, "quickfixes": ["SPLITASG"] },
+  { "target": "TEST_007", "code": "NO_CHN_ASG", "line": 6, "column": 4, "quickfixes": ["SPLITASG"] },
+  { "target": "TEST_008", "code": "NO_CHN_ASG", "line": 4, "column": 4, "quickfixes": ["SPLITASG"] },
+  { "target": "TEST_009", "code": "NO_CHN_ASG", "line": 4, "column": 4, "quickfixes": ["SPLITASG"] },
+  { "target": "TEST_010", "code": "NO_CHN_ASG", "line": 4, "column": 4, "quickfixes": ["SPLITASG"] },
+  { "target": "TEST_011", "code": null },
+  { "target": "TEST_012", "code": null },
+  { "target": "TEST_013", "code": null }
 ]

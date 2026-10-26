@@ -12,5 +12,14 @@
   { "target": "TEST_011", "code": null },
   { "target": "TEST_012", "code": "NO_USL_CAT", "line": 3, "column": 22, "quickfixes": [] },
   { "target": "TEST_013", "code": "NO_USL_CAT", "line": 3, "column": 22, "quickfixes": [] },
-  { "target": "TEST_014", "code": "NO_USL_CAT", "line": 3, "column": 22, "quickfixes": ["FOLDLIT"] }
+  { "target": "TEST_014", "code": "NO_USL_CAT", "line": 3, "column": 22, "quickfixes": ["FOLDLIT"] },
+  { "target": "TEST_015", "code": null },
+  { "target": "TEST_016", "code": null },
+  { "target": "TEST_017", "code": null },
+  { "target": "TEST_018", "code": "NO_USL_CAT", "line": 3, "column": 28, "quickfixes": ["FOLDLIT"] },
+  { "target": "TEST_019", "code": "NO_USL_CAT", "line": 3, "column": 24, "quickfixes": ["FOLDLIT"] },
+  { "target": "TEST_020", "code": null },
+  { "target": "TEST_021", "code": "NO_USL_CAT", "line": 3, "column": 34, "quickfixes": ["FOLDLIT"] },
+  { "target": "TEST_022", "code": "NO_USL_CAT", "line": 3, "column": 28, "quickfixes": [] },
+  { "target": "TEST_023", "code": "NO_USL_CAT", "line": 2, "column": 19, "quickfixes": ["FOLDLIT"] }
 ]

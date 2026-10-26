@@ -3,5 +3,11 @@
   { "target": "TEST_002", "code": null },
   { "target": "TEST_003", "code": "NO_LOOPIN", "line": 4, "column": 4, "quickfixes": [] },
   { "target": "TEST_004", "code": null },
-  { "target": "TEST_005", "code": "NO_LOOPIN", "line": 3, "column": 4, "quickfixes": [] }
+  { "target": "TEST_005", "code": "NO_LOOPIN", "line": 3, "column": 4, "quickfixes": [] },
+  { "target": "TEST_006", "code": "NO_LOOPIN", "line": 4, "column": 4, "quickfixes": [] },
+  { "target": "TEST_007", "code": null },
+  { "target": "TEST_008", "code": null },
+  { "target": "TEST_009", "code": "NO_LOOPIN", "line": 4, "column": 4, "quickfixes": [] },
+  { "target": "TEST_010", "code": null },
+  { "target": "TEST_011", "code": null }
 ]

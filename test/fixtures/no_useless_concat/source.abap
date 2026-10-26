@@ -17,6 +17,19 @@ CLASS zcl_test_no_useless_concat DEFINITION
     METHODS test_012.
     METHODS test_013.
     METHODS test_014.
+    METHODS test_015.
+    METHODS test_016.
+    METHODS test_017.
+    METHODS test_018.
+    METHODS test_019.
+    METHODS test_020.
+    METHODS test_021.
+    METHODS test_022.
+    METHODS test_023.
+
+    METHODS func
+      IMPORTING iv_val TYPE string
+      RETURNING VALUE(rv_res) TYPE string.
 
   PRIVATE SECTION.
     DATA mv_suffix TYPE string.
@@ -24,6 +37,10 @@ CLASS zcl_test_no_useless_concat DEFINITION
 ENDCLASS.
 
 CLASS zcl_test_no_useless_concat IMPLEMENTATION.
+  METHOD func.
+    rv_res = iv_val.
+  ENDMETHOD.
+
   METHOD test_001.
     DATA lv_text TYPE string.
     lv_text = 'Hello' && 'World'.
@@ -92,5 +109,50 @@ CLASS zcl_test_no_useless_concat IMPLEMENTATION.
   METHOD test_014.
     DATA lv_text TYPE string.
     lv_text = `Hello` && `World`.
+  ENDMETHOD.
+
+  METHOD test_015.
+    DATA lv_text TYPE string.
+    lv_text = |prefix { func( 'abc' ) }| && 'suffix'.
+  ENDMETHOD.
+
+  METHOD test_016.
+    DATA lv_text TYPE string.
+    lv_text = |{ func( func( 'x' ) ) }| && 'suffix'.
+  ENDMETHOD.
+
+  METHOD test_017.
+    DATA lv_text TYPE string.
+    lv_text = |a { func( '1' ) }| && |b { func( '2' ) }|.
+  ENDMETHOD.
+
+  METHOD test_018.
+    DATA lv_text TYPE string.
+    lv_text = func( 'Hello' && 'World' ).
+  ENDMETHOD.
+
+  METHOD test_019.
+    DATA lv_text TYPE string.
+    lv_text = ( 'Hello' && 'World' ).
+  ENDMETHOD.
+
+  METHOD test_020.
+    DATA lv_text TYPE string.
+    lv_text = 'Hello' && ( mv_suffix ).
+  ENDMETHOD.
+
+  METHOD test_021.
+    DATA lv_text TYPE string.
+    lv_text = func( func( 'Hello' && `World` ) ).
+  ENDMETHOD.
+
+  METHOD test_022.
+    DATA lv_text TYPE string.
+    lv_text = func( |Hello| && |World| ).
+  ENDMETHOD.
+
+  METHOD test_023.
+    IF ( func( 'a' && 'b' ) = 'ab' ).
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.

@@ -17,6 +17,13 @@ CLASS zcl_test_no_empty_fae DEFINITION
     METHODS test_006.
     METHODS test_007.
     METHODS test_008.
+    METHODS test_009.
+    METHODS test_010.
+    METHODS test_011.
+    METHODS test_012.
+    METHODS test_013.
+    METHODS test_014.
+    METHODS test_015.
 ENDCLASS.
 
 CLASS zcl_test_no_empty_fae IMPLEMENTATION.
@@ -77,6 +84,62 @@ CLASS zcl_test_no_empty_fae IMPLEMENTATION.
     DATA s TYPE tt_entry.
     DATA r TYPE STANDARD TABLE OF t100 WITH DEFAULT KEY.
     IF s IS INITIAL.
+      SELECT * FROM t100 INTO TABLE @r FOR ALL ENTRIES IN @s WHERE arbgb = @s-arbgb.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_009.
+    DATA s TYPE tt_entry.
+    DATA r TYPE STANDARD TABLE OF t100 WITH DEFAULT KEY.
+    IF ( s IS NOT INITIAL ).
+      SELECT * FROM t100 INTO TABLE @r FOR ALL ENTRIES IN @s WHERE arbgb = @s-arbgb.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_010.
+    DATA s TYPE tt_entry.
+    DATA r TYPE STANDARD TABLE OF t100 WITH DEFAULT KEY.
+    IF ( lines( s ) > 0 ).
+      SELECT * FROM t100 INTO TABLE @r FOR ALL ENTRIES IN @s WHERE arbgb = @s-arbgb.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_011.
+    DATA s TYPE tt_entry.
+    DATA r TYPE STANDARD TABLE OF t100 WITH DEFAULT KEY.
+    IF ( s IS INITIAL ).
+      RETURN.
+    ENDIF.
+    SELECT * FROM t100 INTO TABLE @r FOR ALL ENTRIES IN @s WHERE arbgb = @s-arbgb.
+  ENDMETHOD.
+
+  METHOD test_012.
+    DATA s TYPE tt_entry.
+    DATA r TYPE STANDARD TABLE OF t100 WITH DEFAULT KEY.
+    IF ( lines( s ) = 0 ).
+      RETURN.
+    ENDIF.
+    SELECT * FROM t100 INTO TABLE @r FOR ALL ENTRIES IN @s WHERE arbgb = @s-arbgb.
+  ENDMETHOD.
+
+  METHOD test_013.
+    DATA s TYPE tt_entry.
+    DATA r TYPE STANDARD TABLE OF t100 WITH DEFAULT KEY.
+    CHECK ( s IS NOT INITIAL ).
+    SELECT * FROM t100 INTO TABLE @r FOR ALL ENTRIES IN @s WHERE arbgb = @s-arbgb.
+  ENDMETHOD.
+
+  METHOD test_014.
+    DATA s TYPE tt_entry.
+    DATA r TYPE STANDARD TABLE OF t100 WITH DEFAULT KEY.
+    SELECT * FROM t100 INTO TABLE @r FOR ALL ENTRIES IN @s WHERE ( arbgb = @s-arbgb ).
+  ENDMETHOD.
+
+  METHOD test_015.
+    DATA s TYPE tt_entry.
+    DATA lt_other TYPE tt_entry.
+    DATA r TYPE STANDARD TABLE OF t100 WITH DEFAULT KEY.
+    IF ( lt_other IS NOT INITIAL ).
       SELECT * FROM t100 INTO TABLE @r FOR ALL ENTRIES IN @s WHERE arbgb = @s-arbgb.
     ENDIF.
   ENDMETHOD.

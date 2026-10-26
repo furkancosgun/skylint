@@ -3,15 +3,34 @@ CLASS zcl_test_prefer_new_operator DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
+    METHODS constructor
+      IMPORTING
+        iv_val TYPE i OPTIONAL
+        iv_txt TYPE string OPTIONAL
+        io_sub TYPE REF TO zcl_test_prefer_new_operator OPTIONAL.
     METHODS test_001.
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
     METHODS test_005.
     METHODS test_006.
+    METHODS test_007.
+    METHODS test_008.
+    METHODS test_009.
+    METHODS test_010.
+    METHODS test_011.
+    METHODS test_012.
+    METHODS test_013.
+    METHODS test_014.
+    METHODS test_015.
+    METHODS test_016.
+    METHODS test_017.
 ENDCLASS.
 
 CLASS zcl_test_prefer_new_operator IMPLEMENTATION.
+  METHOD constructor.
+  ENDMETHOD.
+
   METHOD test_001.
     DATA lo_obj TYPE REF TO zcl_test_prefer_new_operator.
     CREATE OBJECT lo_obj.
@@ -39,5 +58,60 @@ CLASS zcl_test_prefer_new_operator IMPLEMENTATION.
 
   METHOD test_006.
     RAISE EXCEPTION NEW cx_sy_zerodivide( ).
+  ENDMETHOD.
+
+  METHOD test_007.
+    DATA lo_obj TYPE REF TO zcl_test_prefer_new_operator.
+    CREATE OBJECT lo_obj TYPE zcl_test_prefer_new_operator EXPORTING iv_val = 10.
+  ENDMETHOD.
+
+  METHOD test_008.
+    DATA lo_obj TYPE REF TO zcl_test_prefer_new_operator.
+    CREATE OBJECT lo_obj EXPORTING iv_val = 1 iv_txt = 'A'.
+  ENDMETHOD.
+
+  METHOD test_009.
+    DATA lo_obj TYPE REF TO zcl_test_prefer_new_operator.
+    CREATE OBJECT lo_obj EXCEPTIONS failed = 1.
+  ENDMETHOD.
+
+  METHOD test_010.
+    DATA lo_obj TYPE REF TO zcl_test_prefer_new_operator.
+    CREATE OBJECT lo_obj EXPORTING io_sub = ( NEW zcl_test_prefer_new_operator( ) ).
+  ENDMETHOD.
+
+  METHOD test_011.
+    DATA lo_obj TYPE REF TO zcl_test_prefer_new_operator.
+    DATA lt_ptab TYPE abap_parmbind_tab.
+    CREATE OBJECT lo_obj PARAMETER-TABLE lt_ptab.
+  ENDMETHOD.
+
+  METHOD test_012.
+    RAISE EXCEPTION TYPE cx_sy_zerodivide EXPORTING textid = cx_sy_zerodivide=>cx_sy_zerodivide.
+  ENDMETHOD.
+
+  METHOD test_013.
+    RAISE EXCEPTION TYPE cx_sy_zerodivide MESSAGE e001(sy).
+  ENDMETHOD.
+
+  METHOD test_014.
+    RAISE RESUMABLE EXCEPTION TYPE cx_sy_zerodivide.
+  ENDMETHOD.
+
+  METHOD test_015.
+    DATA lo_obj TYPE REF TO zcl_test_prefer_new_operator.
+    lo_obj = ( NEW zcl_test_prefer_new_operator( ) ).
+  ENDMETHOD.
+
+  METHOD test_016.
+    DATA lo_obj TYPE REF TO zcl_test_prefer_new_operator.
+    CREATE OBJECT lo_obj. "#EC PREF_NEW_OPERATOR
+    RAISE EXCEPTION TYPE cx_sy_zerodivide. "#EC PREF_RAISE_EXC_NEW
+  ENDMETHOD.
+
+  METHOD test_017.
+    DATA lo_obj TYPE REF TO zcl_test_prefer_new_operator.
+    CREATE OBJECT lo_obj.
+    RAISE EXCEPTION TYPE cx_sy_zerodivide.
   ENDMETHOD.
 ENDCLASS.

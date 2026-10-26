@@ -82,5 +82,103 @@
   {
     "target": "TEST_011",
     "code": null
+  },
+  {
+    "target": "TEST_012",
+    "code": "PREF_INIT",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "REPLINIT"
+    ]
+  },
+  {
+    "target": "TEST_013",
+    "code": "PREF_INIT",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "REPLINIT"
+    ]
+  },
+  {
+    "target": "TEST_014",
+    "code": "PREF_INIT",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "REPLINIT"
+    ]
+  },
+  {
+    "target": "TEST_015",
+    "code": "PREF_INIT",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "REPLINIT"
+    ]
+  },
+  {
+    "target": "TEST_016",
+    "code": "PREF_INIT",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "REPLINIT"
+    ]
+  },
+  {
+    "target": "TEST_017",
+    "code": "PREF_INIT",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "REPLINIT"
+    ]
+  },
+  {
+    "target": "TEST_018",
+    "code": "PREF_INIT",
+    "line": 4,
+    "column": 4,
+    "quickfixes": [
+      "REPLINIT"
+    ]
+  },
+  {
+    "target": "TEST_019",
+    "code": null
+  },
+  {
+    "target": "TEST_020",
+    "code": null
+  },
+  {
+    "target": "TEST_021",
+    "code": "PREF_INIT",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "REPLINIT"
+    ]
+  },
+  {
+    "target": "TEST_022",
+    "code": "PREF_INIT",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "REPLINIT"
+    ]
+  },
+  {
+    "target": "TEST_023",
+    "code": "PREF_INIT",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "REPLINIT"
+    ]
   }
 ]

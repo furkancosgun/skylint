@@ -48,5 +48,67 @@
     "quickfixes": [
       "RMEXTCHK"
     ]
+  },
+  {
+    "target": "TEST_008",
+    "code": "NO_OBS_CTR",
+    "line": 2,
+    "column": 4,
+    "quickfixes": [
+      "RMBRK"
+    ]
+  },
+  {
+    "target": "TEST_009",
+    "code": "NO_OBS_CTR",
+    "line": 5,
+    "column": 6,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_009",
+    "code": "NO_OBS_CTR",
+    "line": 7,
+    "column": 6,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_009",
+    "code": "NO_OBS_CTR",
+    "line": 9,
+    "column": 6,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_010",
+    "code": "NO_OBS_CTR",
+    "line": 2,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_011",
+    "code": "NO_OBS_CTR",
+    "line": 4,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_012",
+    "code": "NO_OBS_CTR",
+    "line": 4,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_013",
+    "code": null
+  },
+  {
+    "target": "TEST_014",
+    "code": "NO_OBS_CTR",
+    "line": 2,
+    "column": 4,
+    "quickfixes": []
   }
 ]

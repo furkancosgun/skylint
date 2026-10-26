@@ -1,46 +1,18 @@
 [
-  {
-    "target": "TEST_001",
-    "code": "PREF_CALOP",
-    "line": 3,
-    "column": 4,
-    "quickfixes": [
-      "CALCASGN"
-    ]
-  },
-  {
-    "target": "TEST_002",
-    "code": null
-  },
-  {
-    "target": "TEST_003",
-    "code": "PREF_CALOP",
-    "line": 3,
-    "column": 4,
-    "quickfixes": [
-      "CALCASGN"
-    ]
-  },
-  {
-    "target": "TEST_004",
-    "code": null
-  },
-  {
-    "target": "TEST_005",
-    "code": "PREF_CALOP",
-    "line": 3,
-    "column": 4,
-    "quickfixes": [
-      "CALCASGN"
-    ]
-  },
-  {
-    "target": "TEST_006",
-    "code": "PREF_CALOP",
-    "line": 3,
-    "column": 4,
-    "quickfixes": [
-      "CALCASGN"
-    ]
-  }
+  { "target": "TEST_001", "code": "PREF_CALOP", "line": 3, "column": 4, "quickfixes": ["CALCASGN"] },
+  { "target": "TEST_002", "code": null },
+  { "target": "TEST_003", "code": "PREF_CALOP", "line": 3, "column": 4, "quickfixes": ["CALCASGN"] },
+  { "target": "TEST_004", "code": null },
+  { "target": "TEST_005", "code": "PREF_CALOP", "line": 3, "column": 4, "quickfixes": ["CALCASGN"] },
+  { "target": "TEST_006", "code": "PREF_CALOP", "line": 3, "column": 4, "quickfixes": ["CALCASGN"] },
+  { "target": "TEST_007", "code": "PREF_CALOP", "line": 3, "column": 4, "quickfixes": ["CALCASGN"] },
+  { "target": "TEST_008", "code": "PREF_CALOP", "line": 3, "column": 4, "quickfixes": ["CALCASGN"] },
+  { "target": "TEST_009", "code": "PREF_CALOP", "line": 3, "column": 4, "quickfixes": ["CALCASGN"] },
+  { "target": "TEST_010", "code": "PREF_CALOP", "line": 3, "column": 4, "quickfixes": ["CALCASGN"] },
+  { "target": "TEST_011", "code": "PREF_CALOP", "line": 3, "column": 4, "quickfixes": ["CALCASGN"] },
+  { "target": "TEST_012", "code": "PREF_CALOP", "line": 3, "column": 4, "quickfixes": ["CALCASGN"] },
+  { "target": "TEST_013", "code": "PREF_CALOP", "line": 4, "column": 4, "quickfixes": ["CALCASGN"] },
+  { "target": "TEST_014", "code": "PREF_CALOP", "line": 4, "column": 4, "quickfixes": ["CALCASGN"] },
+  { "target": "TEST_015", "code": null },
+  { "target": "TEST_016", "code": null }
 ]
