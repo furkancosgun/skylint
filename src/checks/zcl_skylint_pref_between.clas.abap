@@ -22,17 +22,11 @@ CLASS zcl_skylint_pref_between DEFINITION
     METHODS inspect_condition
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    METHODS operand_key
-      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
-                iv_from         TYPE i
-                iv_to           TYPE i
-      RETURNING VALUE(rv_key)   TYPE string.
+    METHODS get_symbol
+      IMPORTING is_token         TYPE if_ci_atc_source_code_provider=>ty_token
+      RETURNING VALUE(rv_symbol) TYPE string.
 
-    METHODS token_key
-      IMPORTING is_token      TYPE if_ci_atc_source_code_provider=>ty_token
-      RETURNING VALUE(rv_key) TYPE string.
-
-    METHODS is_compare_operator
+    METHODS is_range_operator
       IMPORTING iv_lexeme     TYPE string
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
@@ -63,153 +57,126 @@ CLASS zcl_skylint_pref_between IMPLEMENTATION.
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'IF' OR 'ELSEIF' OR 'WHILE' OR 'CHECK'.
           inspect_condition( <ls_statement> ).
-        WHEN OTHERS.
-          CONTINUE.
       ENDCASE.
     ENDLOOP.
   ENDMETHOD.
 
   METHOD inspect_condition.
-    DATA lv_count    TYPE i.
-    DATA lv_idx      TYPE i.
-    DATA lv_depth    TYPE i.
-    DATA lv_and_cnt  TYPE i.
-    DATA lv_and_idx  TYPE i.
-    DATA lv_cmp1     TYPE i.
-    DATA lv_cmp2     TYPE i.
-    DATA lv_op1      TYPE string.
-    DATA lv_op2      TYPE string.
-    DATA lv_key1     TYPE string.
-    DATA lv_key2     TYPE string.
-    DATA lv_key3     TYPE string.
-    DATA lv_key4     TYPE string.
-    DATA lv_shared_left  TYPE abap_bool.
-    DATA lv_shared_right TYPE abap_bool.
-    DATA ls_token    TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_count   TYPE i.
+    DATA lv_and_idx TYPE i.
+    DATA lv_op1_idx TYPE i.
+    DATA lv_op2_idx TYPE i.
+    DATA lv_op1     TYPE string.
+    DATA lv_op2     TYPE string.
+    DATA ls_token   TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_left1   TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_right1  TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_left2   TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_right2  TYPE if_ci_atc_source_code_provider=>ty_token.
 
     lv_count = zcl_skylint_ast_util=>token_count( is_statement ).
     IF lv_count < 8.
       RETURN.
     ENDIF.
 
-    IF zcl_skylint_ast_util=>find_token( is_statement = is_statement
-                                         iv_lexeme    = 'BETWEEN' ) > 0.
+    IF     zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                   iv_lexeme    = 'BETWEEN' ) = abap_true
+        OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                   iv_lexeme    = 'OR' ) = abap_true.
       RETURN.
     ENDIF.
 
-    lv_depth = 0.
-    DO lv_count TIMES.
-      lv_idx = sy-index.
+    lv_and_idx = zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                                   iv_lexeme    = 'AND' ).
+    IF lv_and_idx <= 3.
+      RETURN.
+    ENDIF.
+
+    " Ensure only single AND in condition
+    IF zcl_skylint_ast_util=>find_token( is_statement   = is_statement
+                                         iv_lexeme      = 'AND'
+                                         iv_start_index = lv_and_idx + 1 ) > 0.
+      RETURN.
+    ENDIF.
+
+    " Find first comparison operator (before AND)
+    DO lv_and_idx - 2 TIMES.
       ls_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                  iv_index     = lv_idx ).
-      IF lv_depth = 0 AND lv_idx >= 2 AND ls_token-references IS INITIAL.
-        IF is_compare_operator( ls_token-lexeme ) = abap_true.
-          IF lv_cmp1 <> 0 AND lv_cmp2 <> 0.
-            RETURN.
-          ENDIF.
-          IF lv_cmp1 = 0.
-            lv_cmp1 = lv_idx.
-          ELSE.
-            lv_cmp2 = lv_idx.
-          ENDIF.
-        ELSE.
-          CASE ls_token-lexeme.
-            WHEN 'OR'.
-              RETURN.
-            WHEN 'AND'.
-              lv_and_cnt += 1.
-              lv_and_idx = lv_idx.
-          ENDCASE.
-        ENDIF.
+                                                  iv_index     = sy-index + 1 ).
+      IF is_range_operator( ls_token-lexeme ) = abap_true.
+        lv_op1_idx = sy-index + 1.
+        lv_op1     = ls_token-lexeme.
+        EXIT.
       ENDIF.
-      lv_depth += zcl_skylint_ast_util=>token_paren_delta( ls_token ).
     ENDDO.
 
-    IF     lv_cmp1 = 0
-        OR lv_cmp2 = 0
-        OR lv_and_cnt <> 1
-        OR lv_cmp1 >= lv_and_idx
-        OR lv_and_idx >= lv_cmp2.
+    " Find second comparison operator (after AND)
+    DO lv_count - lv_and_idx TIMES.
+      ls_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                  iv_index     = lv_and_idx + sy-index ).
+      IF is_range_operator( ls_token-lexeme ) = abap_true.
+        lv_op2_idx = lv_and_idx + sy-index.
+        lv_op2     = ls_token-lexeme.
+        EXIT.
+      ENDIF.
+    ENDDO.
+
+    IF lv_op1_idx = 0 OR lv_op2_idx = 0.
       RETURN.
     ENDIF.
 
-    lv_key1 = operand_key( is_statement = is_statement
-                           iv_from      = 2
-                           iv_to        = lv_cmp1 - 1 ).
-    lv_key2 = operand_key( is_statement = is_statement
-                           iv_from      = lv_cmp1 + 1
-                           iv_to        = lv_and_idx - 1 ).
-    lv_key3 = operand_key( is_statement = is_statement
-                           iv_from      = lv_and_idx + 1
-                           iv_to        = lv_cmp2 - 1 ).
-    lv_key4 = operand_key( is_statement = is_statement
-                           iv_from      = lv_cmp2 + 1
-                           iv_to        = lv_count ).
-    IF     lv_key1 IS INITIAL
-        OR lv_key2 IS INITIAL
-        OR lv_key3 IS INITIAL
-        OR lv_key4 IS INITIAL.
-      RETURN.
-    ENDIF.
-
-    lv_shared_left  = xsdbool( lv_key1 = lv_key3 ).
-    lv_shared_right = xsdbool( lv_key2 = lv_key4 ).
-    IF lv_shared_left = lv_shared_right.
-      RETURN.
-    ENDIF.
-
-    lv_op1 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                              iv_index     = lv_cmp1 )-lexeme.
-    lv_op2 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                              iv_index     = lv_cmp2 )-lexeme.
     IF matches_range_operators( iv_first  = lv_op1
                                 iv_second = lv_op2 ) = abap_false.
       RETURN.
     ENDIF.
 
-    report_statement( is_statement    = is_statement
-                      iv_finding_code = c_finding_codes-range_check ).
-  ENDMETHOD.
+    ls_left1  = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                 iv_index     = lv_op1_idx - 1 ).
+    ls_right1 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                 iv_index     = lv_op1_idx + 1 ).
+    ls_left2  = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                 iv_index     = lv_op2_idx - 1 ).
+    ls_right2 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                 iv_index     = lv_op2_idx + 1 ).
 
-  METHOD operand_key.
-    DATA lv_idx TYPE i.
-    DATA lv_key TYPE string.
-    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
-
-    rv_key = ``.
-    IF iv_from <= 0 OR iv_to < iv_from.
-      RETURN.
+    IF     get_symbol( ls_left1 ) = get_symbol( ls_left2 )
+       AND get_symbol( ls_left1 ) IS NOT INITIAL.
+      report_statement( is_statement    = is_statement
+                        iv_finding_code = c_finding_codes-range_check ).
+    ELSEIF get_symbol( ls_right1 ) = get_symbol( ls_right2 )
+       AND get_symbol( ls_right1 ) IS NOT INITIAL.
+      report_statement( is_statement    = is_statement
+                        iv_finding_code = c_finding_codes-range_check ).
     ENDIF.
-
-    DO iv_to - iv_from + 1 TIMES.
-      lv_idx = iv_from + sy-index - 1.
-      ls_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                  iv_index     = lv_idx ).
-      lv_key = token_key( ls_token ).
-      rv_key = |{ rv_key }{ lv_key }|.
-    ENDDO.
   ENDMETHOD.
 
-  METHOD token_key.
-    DATA ls_reference TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+  METHOD get_symbol.
+    DATA ls_ref TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
-    ls_reference = zcl_skylint_ast_util=>get_reference( is_token ).
-    IF ls_reference-full_name IS NOT INITIAL.
-      rv_key = ls_reference-full_name.
+    ls_ref = zcl_skylint_ast_util=>get_reference(
+                 is_token = is_token
+                 iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
+
+    IF ls_ref-full_name IS NOT INITIAL.
+      rv_symbol = ls_ref-full_name.
     ELSE.
-      rv_key = is_token-lexeme.
+      rv_symbol = is_token-lexeme.
     ENDIF.
   ENDMETHOD.
 
-  METHOD is_compare_operator.
-    rv_yes = xsdbool(    iv_lexeme = '='  OR iv_lexeme = '<>' OR iv_lexeme = '<'
-                      OR iv_lexeme = '>'  OR iv_lexeme = '<=' OR iv_lexeme = '>='
-                      OR iv_lexeme = 'EQ' OR iv_lexeme = 'NE' OR iv_lexeme = 'LT'
-                      OR iv_lexeme = 'GT' OR iv_lexeme = 'LE' OR iv_lexeme = 'GE' ).
+  METHOD is_range_operator.
+    rv_yes = xsdbool(    iv_lexeme = '<='
+                      OR iv_lexeme = '>='
+                      OR iv_lexeme = '<'
+                      OR iv_lexeme = '>' ).
   ENDMETHOD.
 
   METHOD matches_range_operators.

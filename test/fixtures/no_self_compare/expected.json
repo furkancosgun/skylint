@@ -4,5 +4,8 @@
   { "target": "TEST_003", "code": "NO_SELFOPR", "line": 4, "column": 4, "quickfixes": [] },
   { "target": "TEST_004", "code": null },
   { "target": "TEST_005", "code": null },
-  { "target": "TEST_006", "code": "NO_SELFCMP", "line": 3, "column": 4, "quickfixes": [] }
+  { "target": "TEST_006", "code": "NO_SELFCMP", "line": 3, "column": 4, "quickfixes": [] },
+  { "target": "TEST_007", "code": null },
+  { "target": "TEST_008", "code": null },
+  { "target": "TEST_009", "code": null }
 ]

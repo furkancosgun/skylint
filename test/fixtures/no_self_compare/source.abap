@@ -9,6 +9,9 @@ CLASS zcl_skylint_test_no_self_compare DEFINITION
     METHODS test_004.
     METHODS test_005.
     METHODS test_006.
+    METHODS test_007.
+    METHODS test_008.
+    METHODS test_009.
 ENDCLASS.
 
 CLASS zcl_skylint_test_no_self_compare IMPLEMENTATION.
@@ -52,5 +55,21 @@ CLASS zcl_skylint_test_no_self_compare IMPLEMENTATION.
     WHILE lv_a < lv_a.
       lv_a = 1.
     ENDWHILE.
+  ENDMETHOD.
+
+  METHOD test_007.
+    DATA lv_a TYPE i.
+    lv_a = lv_a.
+  ENDMETHOD.
+
+  METHOD test_008.
+    DATA lv_a TYPE i.
+    MOVE lv_a TO lv_a.
+  ENDMETHOD.
+
+  METHOD test_009.
+    DATA lv_x TYPE i.
+    DATA lv_y TYPE i.
+    lv_y = lv_x - lv_y.
   ENDMETHOD.
 ENDCLASS.

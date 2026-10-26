@@ -705,9 +705,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
       IF iv_usage_grade IS NOT INITIAL AND <ls_ref>-usage_grade <> iv_usage_grade.
         CONTINUE.
       ENDIF.
-      IF rs_reference IS INITIAL OR strlen( <ls_ref>-full_name ) > strlen( rs_reference-full_name ).
-        rs_reference = <ls_ref>.
-      ENDIF.
+      rs_reference = <ls_ref>.
     ENDLOOP.
   ENDMETHOD.
 

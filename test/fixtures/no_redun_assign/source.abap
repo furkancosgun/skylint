@@ -13,6 +13,13 @@ CLASS zcl_test_no_self_assignment DEFINITION
     METHODS test_008.
     METHODS test_009.
     METHODS test_010.
+    METHODS test_019.
+    METHODS test_020.
+    METHODS test_021.
+    METHODS test_022.
+
+  PRIVATE SECTION.
+    DATA mv_a TYPE i.
 ENDCLASS.
 
 CLASS zcl_test_no_self_assignment IMPLEMENTATION.
@@ -80,64 +87,22 @@ CLASS zcl_test_no_self_assignment IMPLEMENTATION.
     DATA lv_a TYPE i.
     MOVE EXACT lv_a TO lv_a.
   ENDMETHOD.
-ENDCLASS.
 
-CLASS zcl_skylint_test_redun_clear DEFINITION
-  PUBLIC FINAL
-  CREATE PUBLIC.
+  METHOD test_019.
+    DATA lo_ref TYPE REF TO object.
+    lo_ref ?= lo_ref.
+  ENDMETHOD.
 
-  PUBLIC SECTION.
-    METHODS test_011.
-    METHODS test_012.
-    METHODS test_013.
-    METHODS test_014.
-    METHODS test_015.
-    METHODS test_016.
-    METHODS test_017.
-ENDCLASS.
+  METHOD test_020.
+    mv_a = me->mv_a.
+  ENDMETHOD.
 
-CLASS zcl_skylint_test_redun_clear IMPLEMENTATION.
-  METHOD test_011.
+  METHOD test_021.
+    me->mv_a = mv_a.
+  ENDMETHOD.
+
+  METHOD test_022.
     DATA lv_a TYPE i.
-    CLEAR lv_a.
-  ENDMETHOD.
-
-  METHOD test_012.
-    DATA lv_a TYPE i.
-    DATA lv_b TYPE string.
-    CLEAR lv_a.
-    CLEAR lv_b.
-  ENDMETHOD.
-
-  METHOD test_013.
-    DATA lv_a TYPE i VALUE 5.
-    CLEAR lv_a.
-    DATA lv_b TYPE i.
-    lv_b = lv_a.
-  ENDMETHOD.
-
-  METHOD test_014.
-    DATA lv_a TYPE i.
-    lv_a = 5.
-    CLEAR lv_a.
-    DATA lv_b TYPE i.
-    lv_b = lv_a.
-  ENDMETHOD.
-
-  METHOD test_015.
-    DATA lt_data TYPE string_table.
-    FREE lt_data.
-  ENDMETHOD.
-
-  METHOD test_016.
-    DATA lv_a TYPE i.
-    lv_a = 5.
-    CLEAR lv_a.
-  ENDMETHOD.
-
-  METHOD test_017.
-    DATA lt_tab TYPE string_table.
-    lt_tab = VALUE #( ( `TEST` ) ).
-    FREE lt_tab.
+    lv_a = lv_a + 1.
   ENDMETHOD.
 ENDCLASS.

@@ -6,7 +6,7 @@
   },
   "category": "ZSKYLINT_METRICS",
   "implementingClass": "ZCL_SKYLINT_MAX_FANOUT",
-  "checkType": "remoteEnabled",
+  "checkType": "local",
   "parameters": [
     {
       "name": "MAX_FANOUT"

@@ -70,65 +70,34 @@
     ]
   },
   {
-    "target": "TEST_011",
-    "code": "NO_RED_CLR",
+    "target": "TEST_019",
+    "code": "NO_IDN_MOV",
     "line": 3,
     "column": 4,
     "quickfixes": [
-      "RMV_CLEAR"
+      "DELIDENT"
     ]
   },
   {
-    "target": "TEST_012",
-    "code": "NO_RED_CLR",
-    "line": 4,
+    "target": "TEST_020",
+    "code": "NO_IDN_MOV",
+    "line": 2,
     "column": 4,
     "quickfixes": [
-      "RMV_CLEAR"
+      "DELIDENT"
     ]
   },
   {
-    "target": "TEST_012",
-    "code": "NO_RED_CLR",
-    "line": 5,
+    "target": "TEST_021",
+    "code": "NO_IDN_MOV",
+    "line": 2,
     "column": 4,
     "quickfixes": [
-      "RMV_CLEAR"
+      "DELIDENT"
     ]
   },
   {
-    "target": "TEST_013",
+    "target": "TEST_022",
     "code": null
-  },
-  {
-    "target": "TEST_014",
-    "code": null
-  },
-  {
-    "target": "TEST_015",
-    "code": "NO_RED_CLR",
-    "line": 3,
-    "column": 4,
-    "quickfixes": [
-      "RMV_CLEAR"
-    ]
-  },
-  {
-    "target": "TEST_016",
-    "code": "NO_CLR_END",
-    "line": 4,
-    "column": 4,
-    "quickfixes": [
-      "RMV_CLEAR"
-    ]
-  },
-  {
-    "target": "TEST_017",
-    "code": "NO_CLR_END",
-    "line": 4,
-    "column": 4,
-    "quickfixes": [
-      "RMV_CLEAR"
-    ]
   }
 ]

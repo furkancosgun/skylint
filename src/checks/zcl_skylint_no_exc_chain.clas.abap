@@ -15,14 +15,17 @@ CLASS zcl_skylint_no_exc_chain DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    TYPES ty_flags TYPE STANDARD TABLE OF abap_bool WITH EMPTY KEY.
-
     CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_EXC_CHAIN'.
 
     DATA mv_require_previous TYPE abap_bool VALUE abap_true.
 
-    METHODS inspect_raise
-      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
+    METHODS is_raise_exception
+      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_is) TYPE abap_bool.
+
+    METHODS has_previous_equal
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_has) TYPE abap_bool.
 
 ENDCLASS.
 
@@ -44,83 +47,60 @@ CLASS zcl_skylint_no_exc_chain IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lt_flags TYPE ty_flags.
-
+    DATA lv_in_catch     TYPE abap_bool.
+    DATA lv_has_previous TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <lv_in_catch>  TYPE abap_bool.
+
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
-        WHEN 'TRY'.
-          APPEND abap_false TO lt_flags.
         WHEN 'CATCH'.
-          IF lines( lt_flags ) = 0.
-            CONTINUE.
-          ENDIF.
-          READ TABLE lt_flags ASSIGNING <lv_in_catch> INDEX lines( lt_flags ).
-          IF sy-subrc <> 0.
-            CONTINUE.
-          ENDIF.
-          <lv_in_catch> = xsdbool( zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
-                                                                     iv_lexeme    = 'INTO' ) > 0 ).
-        WHEN 'CLEANUP'.
-          IF lines( lt_flags ) = 0.
-            CONTINUE.
-          ENDIF.
-          READ TABLE lt_flags ASSIGNING <lv_in_catch> INDEX lines( lt_flags ).
-          IF sy-subrc <> 0.
-            CONTINUE.
-          ENDIF.
-          <lv_in_catch> = abap_false.
+          lv_in_catch = xsdbool( zcl_skylint_ast_util=>has_token_lexeme(
+                                     is_statement = <ls_statement>
+                                     iv_lexeme    = 'INTO' ) = abap_true ).
+
         WHEN 'ENDTRY'.
-          IF lines( lt_flags ) > 0.
-            DELETE lt_flags INDEX lines( lt_flags ).
-          ENDIF.
+          lv_in_catch = abap_false.
+
         WHEN 'RAISE'.
-          IF lines( lt_flags ) = 0.
-            CONTINUE.
+          IF lv_in_catch = abap_true AND is_raise_exception( <ls_statement> ) = abap_true.
+            lv_has_previous = has_previous_equal( <ls_statement> ).
+
+            IF     ( mv_require_previous = abap_true  AND lv_has_previous = abap_false )
+                OR ( mv_require_previous = abap_false AND lv_has_previous = abap_true ).
+              report_statement( is_statement    = <ls_statement>
+                                iv_finding_code = c_finding_codes-missing_previous ).
+            ENDIF.
           ENDIF.
-          READ TABLE lt_flags ASSIGNING <lv_in_catch> INDEX lines( lt_flags ).
-          IF sy-subrc <> 0.
-            CONTINUE.
-          ENDIF.
-          IF <lv_in_catch> = abap_false.
-            CONTINUE.
-          ENDIF.
-          inspect_raise( <ls_statement> ).
       ENDCASE.
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD inspect_raise.
-    DATA lv_count        TYPE i.
-    DATA lv_has_previous TYPE abap_bool.
-    DATA ls_token        TYPE if_ci_atc_source_code_provider=>ty_token.
+  METHOD is_raise_exception.
+    DATA lt_type TYPE zcl_skylint_ast_util=>ty_token_lexemes.
+    DATA lt_new  TYPE zcl_skylint_ast_util=>ty_token_lexemes.
 
-    lv_count = zcl_skylint_ast_util=>token_count( is_statement ).
-    IF lv_count < 4.
-      RETURN.
-    ENDIF.
+    lt_type = VALUE #( ( `RAISE` ) ( `EXCEPTION` ) ( `TYPE` ) ).
+    lt_new  = VALUE #( ( `RAISE` ) ( `EXCEPTION` ) ( `NEW` ) ).
 
-    ls_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = 2 ).
-    IF ls_token-lexeme <> 'EXCEPTION'.
-      RETURN.
-    ENDIF.
+    rv_is = xsdbool(
+        zcl_skylint_ast_util=>match_token_sequence(
+            is_statement = is_statement
+            it_expected  = lt_type ) = abap_true
+        OR zcl_skylint_ast_util=>match_token_sequence(
+            is_statement = is_statement
+            it_expected  = lt_new ) = abap_true ).
+  ENDMETHOD.
 
-    ls_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = 3 ).
-    CASE ls_token-lexeme.
-      WHEN 'RESUMABLE' OR 'MESSAGE'.
-        RETURN.
-      WHEN 'NEW' OR 'TYPE'.
-        lv_has_previous = xsdbool( zcl_skylint_ast_util=>find_token( is_statement = is_statement
-                                                                      iv_lexeme    = 'PREVIOUS' ) > 0 ).
-        IF     ( mv_require_previous = abap_true  AND lv_has_previous = abap_false )
-            OR ( mv_require_previous = abap_false AND lv_has_previous = abap_true ).
-          report_statement( is_statement    = is_statement
-                            iv_finding_code = c_finding_codes-missing_previous ).
-        ENDIF.
-    ENDCASE.
+  METHOD has_previous_equal.
+    DATA lt_expected TYPE zcl_skylint_ast_util=>ty_token_lexemes.
+
+    lt_expected = VALUE #( ( `PREVIOUS` ) ( `=` ) ).
+    rv_has = xsdbool( zcl_skylint_ast_util=>find_token_sequence(
+                          is_statement = is_statement
+                          it_expected  = lt_expected ) > 0 ).
   ENDMETHOD.
 ENDCLASS.

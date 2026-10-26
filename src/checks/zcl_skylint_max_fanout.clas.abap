@@ -22,12 +22,8 @@ CLASS zcl_skylint_max_fanout DEFINITION
     DATA mv_max_fanout TYPE i VALUE 15.
 
     METHODS collect_types
-      IMPORTING is_procedure     TYPE if_ci_atc_source_code_provider=>ty_procedure
-      RETURNING VALUE(rt_names)  TYPE ty_names.
-
-    METHODS is_class_like
-      IMPORTING iv_name       TYPE string
-      RETURNING VALUE(rv_yes) TYPE abap_bool.
+      IMPORTING is_procedure    TYPE if_ci_atc_source_code_provider=>ty_procedure
+      RETURNING VALUE(rt_names) TYPE ty_names.
 
 ENDCLASS.
 
@@ -36,7 +32,7 @@ CLASS zcl_skylint_max_fanout IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
         VALUE #( description       = 'Limit type fan-out per procedure'
-                 remote_enablement = abap_true
+                 remote_enablement = abap_false
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-type_fanout
                        severity       = if_ci_atc_check=>finding_severities-warning
@@ -62,8 +58,9 @@ CLASS zcl_skylint_max_fanout IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    ls_first_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                         iv_index      = 1 ).
+    ls_first_stmt = zcl_skylint_ast_util=>get_statement(
+                        it_statements = is_procedure-statements
+                        iv_index      = 1 ).
     IF ls_first_stmt-keyword IS NOT INITIAL.
       report_statement( is_statement    = ls_first_stmt
                         iv_finding_code = c_finding_codes-type_fanout ).
@@ -72,6 +69,8 @@ CLASS zcl_skylint_max_fanout IMPLEMENTATION.
 
   METHOD collect_types.
     DATA lv_class TYPE string.
+    DATA lv_name  TYPE string.
+    DATA lo_obj   TYPE REF TO cl_abap_objectdescr.
 
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
@@ -80,34 +79,29 @@ CLASS zcl_skylint_max_fanout IMPLEMENTATION.
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
         LOOP AT <ls_token>-references ASSIGNING <ls_reference>.
-          IF <ls_reference>-kind <> if_ci_atc_source_code_provider=>compiler_reference_kinds-type.
+          IF     <ls_reference>-kind <> if_ci_atc_source_code_provider=>compiler_reference_kinds-type
+             AND <ls_reference>-kind <> if_ci_atc_source_code_provider=>compiler_reference_kinds-method.
             CONTINUE.
           ENDIF.
 
           lv_class = ``.
-          zcl_skylint_ast_util=>parse_full_name( EXPORTING iv_full_name  = <ls_reference>-full_name
-                                                 IMPORTING ev_class_name = lv_class ).
-          IF is_class_like( lv_class ) = abap_false.
+          zcl_skylint_ast_util=>parse_full_name(
+              EXPORTING iv_full_name  = <ls_reference>-full_name
+              IMPORTING ev_class_name = lv_class ).
+
+          IF lv_class IS INITIAL.
             CONTINUE.
           ENDIF.
-          IF line_exists( rt_names[ table_line = lv_class ] ).
-            CONTINUE.
+
+          lo_obj = zcl_skylint_rtti_util=>describe_object( lv_class ).
+          IF lo_obj IS BOUND.
+            lv_name = lo_obj->get_relative_name( ).
+            IF lv_name IS NOT INITIAL.
+              INSERT lv_name INTO TABLE rt_names.
+            ENDIF.
           ENDIF.
-          INSERT lv_class INTO TABLE rt_names.
         ENDLOOP.
       ENDLOOP.
     ENDLOOP.
-  ENDMETHOD.
-
-  METHOD is_class_like.
-    rv_yes = abap_false.
-    IF iv_name IS INITIAL.
-      RETURN.
-    ENDIF.
-    rv_yes = xsdbool(    iv_name CP 'CL_*'
-                      OR iv_name CP 'ZCL_*'
-                      OR iv_name CP 'ZIF_*'
-                      OR iv_name CP 'ZCX_*'
-                      OR iv_name(1) = '/' ).
   ENDMETHOD.
 ENDCLASS.

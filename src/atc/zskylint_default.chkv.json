@@ -461,21 +461,7 @@
       "checkName": "ZSKYLINT_NO_SCOPE_LEAK"
     },
     {
-      "checkName": "ZSKYLINT_NO_REDUN_ASSIGN",
-      "parameters": [
-        {
-          "name": "CHECK_SELF_ASSIGN",
-          "value": "X"
-        },
-        {
-          "name": "CHECK_BEFORE_WRITE",
-          "value": "X"
-        },
-        {
-          "name": "CHECK_WITHOUT_READ",
-          "value": "X"
-        }
-      ]
+      "checkName": "ZSKYLINT_NO_REDUN_ASSIGN"
     },
     {
       "checkName": "ZSKYLINT_NO_SHADOW"
