@@ -1,16 +1,16 @@
 ---
-title: "Clean ABAP & Modern Syntax (53 Rules)"
+title: "Clean ABAP & Modern Syntax (55 Rules)"
 description: "Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices. Comprehensive reference, finding codes, and Clean ABAP examples for Clean ABAP & Modern Syntax."
 category: "clean-abap"
 keywords: "Clean ABAP, ABAP Cloud, SAP ATC, Clean ABAP & Modern Syntax, S/4HANA Readiness, SAP BTP, Steampunk"
 ---
 
-# Clean ABAP & Modern Syntax (53 Rules)
+# Clean ABAP & Modern Syntax (55 Rules)
 
 Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.
 
 ::: tip Category Overview
-This category enforces **53 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
+This category enforces **55 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
 :::
 
 ## Rules in this Category
@@ -70,6 +70,8 @@ This category enforces **53 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Prefer CREATE_* Prefix for Factory Methods Returning Own Class](/rules/pref-factory-name) | `ZCL_SKYLINT_PREF_FACTORY_NAME` | <code>#EC PREF_FACTORY_NAME</code> | - |
 | [Avoid Hungarian Notation and Type Prefixes](/rules/no-hungarian) | `ZCL_SKYLINT_NO_HUNGARIAN` | <code>#EC NO_HUNGARIAN</code> | - |
 | [Avoid IS INSTANCE OF and CASE TYPE OF Type Tests](/rules/no-instance-of) | `ZCL_SKYLINT_NO_INSTANCE_OF` | <code>#EC NO_INSTANCE_OF</code> | - |
+| [Require WHEN OTHERS as the Last Branch of CASE](/rules/pref-when-others) | `ZCL_SKYLINT_PREF_WHEN_OTHERS` | <code>#EC PREF_WHEN_OTHERS</code> | - |
+| [Prefer BETWEEN for Inclusive Range Checks](/rules/pref-between) | `ZCL_SKYLINT_PREF_BETWEEN` | <code>#EC PREF_BETWEEN</code> | - |
 
 ---
 

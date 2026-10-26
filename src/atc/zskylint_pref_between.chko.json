@@ -1,0 +1,15 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Prefer BETWEEN for inclusive range checks",
+    "originalLanguage": "en"
+  },
+  "category": "ZSKYLINT_CLEAN_ABAP",
+  "implementingClass": "ZCL_SKYLINT_PREF_BETWEEN",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "STRICT_RANGE"
+    }
+  ]
+}

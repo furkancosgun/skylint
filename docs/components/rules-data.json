@@ -2553,6 +2553,11 @@
         "name": "CHECK_LOOP_CONTINUE",
         "kind": "Boolean",
         "defaultValue": "true"
+      },
+      {
+        "name": "REPORT_ELSEIF",
+        "kind": "Boolean",
+        "defaultValue": "false"
       }
     ],
     "relatedRules": [
@@ -4280,6 +4285,247 @@
       {
         "name": "CHECK_CASE_TYPE",
         "value": "X"
+      }
+    ]
+  },
+  {
+    "ruleId": "no-self-compare",
+    "title": "Avoid Comparisons and Arithmetic with Identical Operands",
+    "className": "ZCL_SKYLINT_NO_SELF_COMPARE",
+    "checkName": "ZSKYLINT_NO_SELF_COMPARE",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "NO_SELF_COMPARE",
+    "description": "Detect comparisons and arithmetic with identical operands",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "relatedRules": [
+      "no-dead-code",
+      "no-dup-cond",
+      "no-redun-assign"
+    ],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "no-catch-reraise",
+    "title": "Avoid CATCH Blocks That Only Re-raise the Same Exception",
+    "className": "ZCL_SKYLINT_NO_CATCH_RERAISE",
+    "checkName": "ZSKYLINT_NO_CATCH_RERAISE",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "NO_CATCH_RERAISE",
+    "description": "Detect CATCH blocks that only re-raise the same exception",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "relatedRules": [
+      "no-catch-root",
+      "no-exc-chain",
+      "no-empty-block"
+    ],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "pref-when-others",
+    "title": "Require WHEN OTHERS as the Last Branch of CASE",
+    "className": "ZCL_SKYLINT_PREF_WHEN_OTHERS",
+    "checkName": "ZSKYLINT_PREF_WHEN_OTHERS",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "PREF_WHEN_OTHERS",
+    "description": "Require WHEN OTHERS as the last CASE branch",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "MIN_BRANCHES",
+        "kind": "Integer",
+        "defaultValue": "2"
+      },
+      {
+        "name": "REQUIRE_LAST",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "relatedRules": [
+      "pref-case",
+      "no-single-when",
+      "no-empty-block"
+    ],
+    "defaultParameters": [
+      {
+        "name": "MIN_BRANCHES",
+        "value": "2"
+      },
+      {
+        "name": "REQUIRE_LAST",
+        "value": "X"
+      }
+    ]
+  },
+  {
+    "ruleId": "no-exc-chain",
+    "title": "Preserve the Original Exception with PREVIOUS",
+    "className": "ZCL_SKYLINT_NO_EXC_CHAIN",
+    "checkName": "ZSKYLINT_NO_EXC_CHAIN",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "NO_EXC_CHAIN",
+    "description": "Preserve the original exception with PREVIOUS",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "REQUIRE_PREVIOUS",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "relatedRules": [
+      "no-catch-reraise",
+      "no-catch-root",
+      "pref-class-exc"
+    ],
+    "defaultParameters": [
+      {
+        "name": "REQUIRE_PREVIOUS",
+        "value": "X"
+      }
+    ]
+  },
+  {
+    "ruleId": "pref-between",
+    "title": "Prefer BETWEEN for Inclusive Range Checks",
+    "className": "ZCL_SKYLINT_PREF_BETWEEN",
+    "checkName": "ZSKYLINT_PREF_BETWEEN",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "PREF_BETWEEN",
+    "description": "Prefer BETWEEN for inclusive range checks",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "STRICT_RANGE",
+        "kind": "Boolean",
+        "defaultValue": "false"
+      }
+    ],
+    "relatedRules": [
+      "max-bool-expr",
+      "no-many-parens",
+      "no-dup-cond"
+    ],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "no-loop-into",
+    "title": "Prefer ASSIGNING over LOOP INTO Copy Targets",
+    "className": "ZCL_SKYLINT_NO_LOOP_INTO",
+    "checkName": "ZSKYLINT_NO_LOOP_INTO",
+    "category": "performance",
+    "categoryTitle": "Performance & Database",
+    "pseudoComment": "NO_LOOP_INTO",
+    "description": "Prefer ASSIGNING over LOOP INTO copy targets",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "relatedRules": [
+      "no-mod-loop-tab",
+      "pref-read-table",
+      "no-concat-loop"
+    ],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "max-cognitive",
+    "title": "Limit Cognitive Complexity per Method",
+    "className": "ZCL_SKYLINT_MAX_COGNITIVE",
+    "checkName": "ZSKYLINT_MAX_COGNITIVE",
+    "category": "metrics",
+    "categoryTitle": "Metrics & Complexity Limits",
+    "pseudoComment": "MAX_COGNITIVE",
+    "description": "Limit cognitive complexity per procedure",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "MAX_COGNITIVE",
+        "kind": "Integer",
+        "defaultValue": "15"
+      }
+    ],
+    "relatedRules": [
+      "max-cyclo-comp",
+      "max-nesting",
+      "max-bool-expr"
+    ],
+    "defaultParameters": [
+      {
+        "name": "MAX_COGNITIVE",
+        "value": "15"
+      }
+    ]
+  },
+  {
+    "ruleId": "max-locals",
+    "title": "Limit Local Variable Count per Method",
+    "className": "ZCL_SKYLINT_MAX_LOCALS",
+    "checkName": "ZSKYLINT_MAX_LOCALS",
+    "category": "metrics",
+    "categoryTitle": "Metrics & Complexity Limits",
+    "pseudoComment": "MAX_LOCALS",
+    "description": "Limit local variable count per procedure",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "MAX_LOCALS",
+        "kind": "Integer",
+        "defaultValue": "15"
+      }
+    ],
+    "relatedRules": [
+      "no-unused-vars",
+      "max-attributes",
+      "max-method-len"
+    ],
+    "defaultParameters": [
+      {
+        "name": "MAX_LOCALS",
+        "value": "15"
+      }
+    ]
+  },
+  {
+    "ruleId": "max-fanout",
+    "title": "Limit Type Fan-Out per Procedure",
+    "className": "ZCL_SKYLINT_MAX_FANOUT",
+    "checkName": "ZSKYLINT_MAX_FANOUT",
+    "category": "metrics",
+    "categoryTitle": "Metrics & Complexity Limits",
+    "pseudoComment": "MAX_FANOUT",
+    "description": "Limit type fan-out per procedure",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "MAX_FANOUT",
+        "kind": "Integer",
+        "defaultValue": "15"
+      }
+    ],
+    "relatedRules": [
+      "max-inherit",
+      "max-attributes",
+      "max-method-len"
+    ],
+    "defaultParameters": [
+      {
+        "name": "MAX_FANOUT",
+        "value": "15"
       }
     ]
   }

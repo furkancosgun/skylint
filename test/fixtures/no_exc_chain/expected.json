@@ -1,0 +1,9 @@
+[
+  { "target": "TEST_001", "code": "NO_EXCCHN", "line": 6, "column": 8, "quickfixes": [] },
+  { "target": "TEST_002", "code": null },
+  { "target": "TEST_003", "code": "NO_EXCCHN", "line": 6, "column": 8, "quickfixes": [] },
+  { "target": "TEST_004", "code": null },
+  { "target": "TEST_005", "code": null },
+  { "target": "TEST_006", "code": "NO_EXCCHN", "line": 6, "column": 8, "quickfixes": [], "attributes": { "REQUIRE_PREVIOUS": false } },
+  { "target": "TEST_007", "code": null }
+]

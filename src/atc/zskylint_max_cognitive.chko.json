@@ -1,0 +1,15 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Limit cognitive complexity per procedure",
+    "originalLanguage": "en"
+  },
+  "category": "ZSKYLINT_METRICS",
+  "implementingClass": "ZCL_SKYLINT_MAX_COGNITIVE",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "MAX_COGNITIVE"
+    }
+  ]
+}

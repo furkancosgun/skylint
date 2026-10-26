@@ -1,0 +1,5 @@
+[
+  { "target": "TEST_001", "code": null },
+  { "target": "TEST_002", "code": "MAX_COGNIT", "line": 1, "column": 2, "quickfixes": [] },
+  { "target": "TEST_003", "code": null, "attributes": { "MAX_COGNITIVE": 100 } }
+]

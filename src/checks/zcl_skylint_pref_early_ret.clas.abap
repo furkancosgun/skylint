@@ -8,6 +8,7 @@ CLASS zcl_skylint_pref_early_ret DEFINITION
       BEGIN OF c_finding_codes,
         guard_method TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_GRDMT',
         guard_loop   TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_GRDLP',
+        else_exit    TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_ELSEEXT',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -20,10 +21,21 @@ CLASS zcl_skylint_pref_early_ret DEFINITION
       BEGIN OF c_pseudo_comments,
         early_return   TYPE string VALUE 'PREF_GUARD_METHOD',
         early_continue TYPE string VALUE 'PREF_GUARD_LOOP',
+        else_exit      TYPE string VALUE 'PREF_NO_ELSE_EXIT',
       END OF c_pseudo_comments.
 
     DATA mv_check_method_return TYPE abap_bool VALUE abap_true.
     DATA mv_check_loop_continue TYPE abap_bool VALUE abap_true.
+    DATA mv_report_elseif TYPE abap_bool VALUE abap_false.
+
+    METHODS is_after_terminator
+      IMPORTING it_statements TYPE if_ci_atc_source_code_provider=>ty_statements
+                iv_index      TYPE i
+      RETURNING VALUE(rv_yes) TYPE abap_bool.
+
+    METHODS is_terminator
+      IMPORTING iv_keyword    TYPE string
+      RETURNING VALUE(rv_yes) TYPE abap_bool.
 
     METHODS get_first_executable_stmt
       IMPORTING it_statements TYPE if_ci_atc_source_code_provider=>ty_statements
@@ -53,12 +65,17 @@ CLASS zcl_skylint_pref_early_ret IMPLEMENTATION.
                                        pseudo_comment = c_pseudo_comments-early_return )
                                      ( code           = c_finding_codes-guard_loop
                                        text           = 'Invert IF condition and use CONTINUE to reduce nesting in loop'
-                                       pseudo_comment = c_pseudo_comments-early_continue ) )
+                                       pseudo_comment = c_pseudo_comments-early_continue )
+                                     ( code           = c_finding_codes-else_exit
+                                       text           = 'Remove ELSE after a terminating statement'
+                                       pseudo_comment = c_pseudo_comments-else_exit ) )
                                  attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
                                                               ( name  = 'CHECK_METHOD_RETURN'
                                                                 value = REF #( mv_check_method_return ) )
                                                               ( name  = 'CHECK_LOOP_CONTINUE'
-                                                                value = REF #( mv_check_loop_continue ) ) ) ) ).
+                                                                value = REF #( mv_check_loop_continue ) )
+                                                              ( name  = 'REPORT_ELSEIF'
+                                                                value = REF #( mv_report_elseif ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -97,6 +114,26 @@ CLASS zcl_skylint_pref_early_ret IMPLEMENTATION.
         ENDIF.
       ENDLOOP.
     ENDIF.
+
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      CASE <ls_statement>-keyword.
+        WHEN 'ELSE'.
+          IF is_after_terminator( it_statements = is_procedure-statements
+                                  iv_index      = sy-tabix ) = abap_true.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-else_exit ).
+          ENDIF.
+        WHEN 'ELSEIF'.
+          IF     mv_report_elseif = abap_true
+             AND is_after_terminator( it_statements = is_procedure-statements
+                                      iv_index      = sy-tabix ) = abap_true.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-else_exit ).
+          ENDIF.
+        WHEN OTHERS.
+          CONTINUE.
+      ENDCASE.
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD get_first_executable_stmt.
@@ -231,5 +268,26 @@ CLASS zcl_skylint_pref_early_ret IMPLEMENTATION.
       ENDCASE.
       lv_scan_idx += 1.
     ENDWHILE.
+  ENDMETHOD.
+
+  METHOD is_after_terminator.
+    DATA ls_previous TYPE if_ci_atc_source_code_provider=>ty_statement.
+
+    rv_yes = abap_false.
+    ls_previous = zcl_skylint_ast_util=>get_previous_statement( it_statements    = it_statements
+                                                                 iv_current_index = iv_index ).
+    IF ls_previous-keyword IS INITIAL.
+      RETURN.
+    ENDIF.
+    rv_yes = is_terminator( ls_previous-keyword ).
+  ENDMETHOD.
+
+  METHOD is_terminator.
+    CASE iv_keyword.
+      WHEN 'RETURN' OR 'RAISE' OR 'EXIT' OR 'CONTINUE' OR 'LEAVE'.
+        rv_yes = abap_true.
+      WHEN OTHERS.
+        rv_yes = abap_false.
+    ENDCASE.
   ENDMETHOD.
 ENDCLASS.

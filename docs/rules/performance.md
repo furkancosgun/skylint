@@ -1,16 +1,16 @@
 ---
-title: "Performance & Database (9 Rules)"
+title: "Performance & Database (10 Rules)"
 description: "Database query efficiency, buffer protection, and internal table operation guidelines. Comprehensive reference, finding codes, and Clean ABAP examples for Performance & Database."
 category: "performance"
 keywords: "Clean ABAP, ABAP Cloud, SAP ATC, Performance & Database, S/4HANA Readiness, SAP BTP, Steampunk"
 ---
 
-# Performance & Database (9 Rules)
+# Performance & Database (10 Rules)
 
 Database query efficiency, buffer protection, and internal table operation guidelines.
 
 ::: tip Category Overview
-This category enforces **9 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
+This category enforces **10 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
 :::
 
 ## Rules in this Category
@@ -26,6 +26,7 @@ This category enforces **9 native ATC rules** adhering to SAP Clean ABAP and ABA
 | [Prefer Pass-by-Reference for Internal Tables in Method Signatures](/rules/pref-pass-by-ref) | `ZCL_SKYLINT_PREF_PASS_BY_REF` | <code>#EC PREF_PASS_BY_REF</code> | - |
 | [Do Not Mutate the Internal Table Currently Being Looped (Iterator Invalidation)](/rules/no-mod-loop-tab) | `ZCL_SKYLINT_NO_MOD_LOOP_TAB` | <code>#EC NO_MOD_LOOP_TAB</code> | - |
 | [Avoid String Concatenation Inside Loops (Quadratic Memory Allocation)](/rules/no-concat-loop) | `ZCL_SKYLINT_NO_CONCAT_LOOP` | <code>#EC NO_CONCAT_LOOP</code> | - |
+| [Prefer ASSIGNING over LOOP INTO Copy Targets](/rules/no-loop-into) | `ZCL_SKYLINT_NO_LOOP_INTO` | <code>#EC NO_LOOP_INTO</code> | - |
 
 ---
 

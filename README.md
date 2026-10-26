@@ -11,7 +11,7 @@
 <p align="center">
   <a href="https://github.com/furkancosgun/skylint/actions/workflows/ci.yml"><img src="https://github.com/furkancosgun/skylint/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
   <a href="https://skylint.org/"><img src="https://img.shields.io/badge/docs-online-blue.svg" alt="Docs" /></a>
-  <a href="https://skylint.org/rules/"><img src="https://img.shields.io/badge/rules-133-brightgreen.svg" alt="Rules" /></a>
+  <a href="https://skylint.org/rules/"><img src="https://img.shields.io/badge/rules-148-brightgreen.svg" alt="Rules" /></a>
   <img src="https://img.shields.io/badge/target-ABAP%20Cloud-informational.svg" alt="ABAP Cloud" />
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-yellow.svg" alt="License" /></a>
 </p>
@@ -27,7 +27,7 @@
 ## ⚡ Highlights
 
 - **🏛️ Native SAP ATC Core:** Every check implements `if_ci_atc_check` directly and is discoverable by standard ATC transactions (`ATC`, `SCI`) and Eclipse ADT.
-- **☁️ 133 Clean ABAP & Cloud Rules:** Comprehensive coverage across modern ABAP expressions, syntax modernizations, SQL performance, security, and clean architecture.
+- **☁️ 148 Clean ABAP & Cloud Rules:** Comprehensive coverage across modern ABAP expressions, syntax modernizations, SQL performance, security, and clean architecture.
 - **⚡ Instant QuickFixes:** Built-in QuickFix generation for rapid, automated refactoring directly from Eclipse ADT (`Ctrl + 1`).
 - **🛡️ Zero-Boilerplate Architecture:** Shared base class (`zcl_skylint_check_base`) automatically manages statement iteration, checksum calculation, finding locations, and pseudo-comment suppression.
 - **🚀 High-Fidelity Offline CI Harness:** Runs transpiled checks through full AST and compiler-reference resolution pipelines offline, validating 680 test assertions and QuickFix round-trips without requiring a live SAP backend.
@@ -58,14 +58,14 @@ Skylint is distributed as standard ABAP Cloud source code and can be imported di
 skylint/
 ├── src/
 │   ├── core/         # Engine core: Base check class, metadata, AST & RTTI utilities
-│   ├── checks/       # 133 modular check implementations
+│   ├── checks/       # 148 modular check implementations
 │   └── atc/          # Generated SAP ATC objects (CHKC category, CHKO checks, CHKV variant)
 ├── deps/             # Local ATC framework stubs for offline abaplint validation
 ├── docs/             # VitePress enterprise documentation & interactive rule catalog
 ├── lib/              # Test harness internals, AST parser, and QuickFix validator
 ├── scripts/          # Generators for ATC descriptors, documentation, and metadata
 ├── test/
-│   ├── fixtures/     # 133 rule fixture suites (source.abap and expected.json)
+│   ├── fixtures/     # 148 rule fixture suites (source.abap and expected.json)
 │   └── run.mjs       # ATC-native offline test harness
 ├── abaplint.json     # ABAP Cloud validation rules
 └── package.json      # NPM build, test, and documentation scripts
@@ -73,9 +73,9 @@ skylint/
 
 ---
 
-## 📋 Clean ABAP & Cloud Rules (133 Rules)
+## 📋 Clean ABAP & Cloud Rules (148 Rules)
 
-Skylint enforces 133 Clean ABAP, security, and cloud-native rules across 5 core categories.
+Skylint enforces 148 Clean ABAP, security, and cloud-native rules across 5 core categories.
 
 Explore the complete interactive catalog with detailed rationales, configuration attributes, and before/after code examples:
 
@@ -83,11 +83,11 @@ Explore the complete interactive catalog with detailed rationales, configuration
 
 ### Rule Categories
 
-- **Clean ABAP & Modern Syntax (49 Rules)** — Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.
-- **Anti-Patterns & Bad Practices (49 Rules)** — Discouraged language constructs, legacy statements, and redundant syntax.
+- **Clean ABAP & Modern Syntax (55 Rules)** — Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.
+- **Anti-Patterns & Bad Practices (54 Rules)** — Discouraged language constructs, legacy statements, and redundant syntax.
 - **Security & Robustness (16 Rules)** — Authorizations, dynamic execution sanitation, error handling, and runtime safety.
-- **Metrics & Complexity Limits (10 Rules)** — Quantitative boundaries for method size, nesting depth, parameter counts, and cyclomatic complexity.
-- **Performance & Database (9 Rules)** — Database query efficiency, buffer protection, and internal table operation guidelines.
+- **Metrics & Complexity Limits (13 Rules)** — Quantitative boundaries for method size, nesting depth, parameter counts, and cyclomatic complexity.
+- **Performance & Database (10 Rules)** — Database query efficiency, buffer protection, and internal table operation guidelines.
 
 ---
 

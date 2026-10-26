@@ -1,16 +1,16 @@
 ---
-title: "Anti-Patterns & Bad Practices (51 Rules)"
+title: "Anti-Patterns & Bad Practices (54 Rules)"
 description: "Discouraged language constructs, legacy statements, and redundant syntax. Comprehensive reference, finding codes, and Clean ABAP examples for Anti-Patterns & Bad Practices."
 category: "anti-patterns"
 keywords: "Clean ABAP, ABAP Cloud, SAP ATC, Anti-Patterns & Bad Practices, S/4HANA Readiness, SAP BTP, Steampunk"
 ---
 
-# Anti-Patterns & Bad Practices (51 Rules)
+# Anti-Patterns & Bad Practices (54 Rules)
 
 Discouraged language constructs, legacy statements, and redundant syntax.
 
 ::: tip Category Overview
-This category enforces **51 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
+This category enforces **54 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
 :::
 
 ## Rules in this Category
@@ -68,6 +68,9 @@ This category enforces **51 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Avoid Repeating the Same String Literal](/rules/no-dup-literals) | `ZCL_SKYLINT_NO_DUP_LITERALS` | <code>#EC NO_DUP_LITERALS</code> | - |
 | [Avoid Late Access to sy-tabix or sy-index Outside Loops](/rules/no-late-sys-idx) | `ZCL_SKYLINT_NO_LATE_SYS_IDX` | <code>#EC NO_LATE_SYS_IDX</code> | - |
 | [Avoid Method Override That Only Delegates to Super](/rules/no-empty-override) | `ZCL_SKYLINT_NO_EMPTY_OVERRIDE` | <code>#EC NO_EMPTY_OVERRIDE</code> | - |
+| [Avoid Comparisons and Arithmetic with Identical Operands](/rules/no-self-compare) | `ZCL_SKYLINT_NO_SELF_COMPARE` | <code>#EC NO_SELF_COMPARE</code> | - |
+| [Avoid CATCH Blocks That Only Re-raise the Same Exception](/rules/no-catch-reraise) | `ZCL_SKYLINT_NO_CATCH_RERAISE` | <code>#EC NO_CATCH_RERAISE</code> | - |
+| [Preserve the Original Exception with PREVIOUS](/rules/no-exc-chain) | `ZCL_SKYLINT_NO_EXC_CHAIN` | <code>#EC NO_EXC_CHAIN</code> | - |
 
 ---
 

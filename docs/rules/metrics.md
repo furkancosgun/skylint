@@ -1,16 +1,16 @@
 ---
-title: "Metrics & Complexity Limits (10 Rules)"
+title: "Metrics & Complexity Limits (13 Rules)"
 description: "Quantitative boundaries for method size, nesting depth, parameter counts, and cyclomatic complexity. Comprehensive reference, finding codes, and Clean ABAP examples for Metrics & Complexity Limits."
 category: "metrics"
 keywords: "Clean ABAP, ABAP Cloud, SAP ATC, Metrics & Complexity Limits, S/4HANA Readiness, SAP BTP, Steampunk"
 ---
 
-# Metrics & Complexity Limits (10 Rules)
+# Metrics & Complexity Limits (13 Rules)
 
 Quantitative boundaries for method size, nesting depth, parameter counts, and cyclomatic complexity.
 
 ::: tip Category Overview
-This category enforces **10 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
+This category enforces **13 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
 :::
 
 ## Rules in this Category
@@ -27,6 +27,9 @@ This category enforces **10 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Limit Source Code Line Length (Avoid Horizontal Scrolling)](/rules/max-line-len) | `ZCL_SKYLINT_MAX_LINE_LEN` | <code>#EC MAX_LINE_LEN</code> | - |
 | [Limit Boolean Expression Complexity in Conditional Statements](/rules/max-bool-expr) | `ZCL_SKYLINT_MAX_BOOL_EXPR` | <code>#EC MAX_BOOL_EXPR</code> | - |
 | [Limit Multiple Return Statements per Method Body](/rules/max-returns) | `ZCL_SKYLINT_MAX_RETURNS` | <code>#EC MAX_RETURNS</code> | - |
+| [Limit Cognitive Complexity per Method](/rules/max-cognitive) | `ZCL_SKYLINT_MAX_COGNITIVE` | <code>#EC MAX_COGNITIVE</code> | - |
+| [Limit Local Variable Count per Method](/rules/max-locals) | `ZCL_SKYLINT_MAX_LOCALS` | <code>#EC MAX_LOCALS</code> | - |
+| [Limit Type Fan-Out per Procedure](/rules/max-fanout) | `ZCL_SKYLINT_MAX_FANOUT` | <code>#EC MAX_FANOUT</code> | - |
 
 ---
 

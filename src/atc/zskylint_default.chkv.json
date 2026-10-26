@@ -1165,6 +1165,67 @@
           "value": "X"
         }
       ]
+    },
+    {
+      "checkName": "ZSKYLINT_NO_SELF_COMPARE"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_CATCH_RERAISE"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_WHEN_OTHERS",
+      "parameters": [
+        {
+          "name": "MIN_BRANCHES",
+          "value": "2"
+        },
+        {
+          "name": "REQUIRE_LAST",
+          "value": "X"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_NO_EXC_CHAIN",
+      "parameters": [
+        {
+          "name": "REQUIRE_PREVIOUS",
+          "value": "X"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_BETWEEN"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_LOOP_INTO"
+    },
+    {
+      "checkName": "ZSKYLINT_MAX_COGNITIVE",
+      "parameters": [
+        {
+          "name": "MAX_COGNITIVE",
+          "value": "15"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_MAX_LOCALS",
+      "parameters": [
+        {
+          "name": "MAX_LOCALS",
+          "value": "15"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_MAX_FANOUT",
+      "parameters": [
+        {
+          "name": "MAX_FANOUT",
+          "value": "15"
+        }
+      ]
     }
   ]
 }

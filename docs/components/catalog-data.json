@@ -4,19 +4,19 @@
       "key": "clean-abap",
       "title": "Clean ABAP & Modern Syntax",
       "description": "Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.",
-      "count": 53
+      "count": 55
     },
     {
       "key": "anti-patterns",
       "title": "Anti-Patterns & Bad Practices",
       "description": "Discouraged language constructs, legacy statements, and redundant syntax.",
-      "count": 51
+      "count": 54
     },
     {
       "key": "performance",
       "title": "Performance & Database",
       "description": "Database query efficiency, buffer protection, and internal table operation guidelines.",
-      "count": 9
+      "count": 10
     },
     {
       "key": "security",
@@ -28,7 +28,7 @@
       "key": "metrics",
       "title": "Metrics & Complexity Limits",
       "description": "Quantitative boundaries for method size, nesting depth, parameter counts, and cyclomatic complexity.",
-      "count": 10
+      "count": 13
     }
   ],
   "rules": [
@@ -1696,6 +1696,114 @@
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
       "pseudoComment": "NO_INSTANCE_OF",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "no-self-compare",
+      "title": "Avoid Comparisons and Arithmetic with Identical Operands",
+      "className": "ZCL_SKYLINT_NO_SELF_COMPARE",
+      "description": "Detect comparisons and arithmetic with identical operands",
+      "category": "anti-patterns",
+      "categoryTitle": "Anti-Patterns & Bad Practices",
+      "pseudoComment": "NO_SELF_COMPARE",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "no-catch-reraise",
+      "title": "Avoid CATCH Blocks That Only Re-raise the Same Exception",
+      "className": "ZCL_SKYLINT_NO_CATCH_RERAISE",
+      "description": "Detect CATCH blocks that only re-raise the same exception",
+      "category": "anti-patterns",
+      "categoryTitle": "Anti-Patterns & Bad Practices",
+      "pseudoComment": "NO_CATCH_RERAISE",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "pref-when-others",
+      "title": "Require WHEN OTHERS as the Last Branch of CASE",
+      "className": "ZCL_SKYLINT_PREF_WHEN_OTHERS",
+      "description": "Require WHEN OTHERS as the last CASE branch",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "PREF_WHEN_OTHERS",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "no-exc-chain",
+      "title": "Preserve the Original Exception with PREVIOUS",
+      "className": "ZCL_SKYLINT_NO_EXC_CHAIN",
+      "description": "Preserve the original exception with PREVIOUS",
+      "category": "anti-patterns",
+      "categoryTitle": "Anti-Patterns & Bad Practices",
+      "pseudoComment": "NO_EXC_CHAIN",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "pref-between",
+      "title": "Prefer BETWEEN for Inclusive Range Checks",
+      "className": "ZCL_SKYLINT_PREF_BETWEEN",
+      "description": "Prefer BETWEEN for inclusive range checks",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "PREF_BETWEEN",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "no-loop-into",
+      "title": "Prefer ASSIGNING over LOOP INTO Copy Targets",
+      "className": "ZCL_SKYLINT_NO_LOOP_INTO",
+      "description": "Prefer ASSIGNING over LOOP INTO copy targets",
+      "category": "performance",
+      "categoryTitle": "Performance & Database",
+      "pseudoComment": "NO_LOOP_INTO",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "max-cognitive",
+      "title": "Limit Cognitive Complexity per Method",
+      "className": "ZCL_SKYLINT_MAX_COGNITIVE",
+      "description": "Limit cognitive complexity per procedure",
+      "category": "metrics",
+      "categoryTitle": "Metrics & Complexity Limits",
+      "pseudoComment": "MAX_COGNITIVE",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "max-locals",
+      "title": "Limit Local Variable Count per Method",
+      "className": "ZCL_SKYLINT_MAX_LOCALS",
+      "description": "Limit local variable count per procedure",
+      "category": "metrics",
+      "categoryTitle": "Metrics & Complexity Limits",
+      "pseudoComment": "MAX_LOCALS",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "max-fanout",
+      "title": "Limit Type Fan-Out per Procedure",
+      "className": "ZCL_SKYLINT_MAX_FANOUT",
+      "description": "Limit type fan-out per procedure",
+      "category": "metrics",
+      "categoryTitle": "Metrics & Complexity Limits",
+      "pseudoComment": "MAX_FANOUT",
       "hasQuickfix": false,
       "remoteEnabled": true,
       "configurable": true

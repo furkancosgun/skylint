@@ -321,7 +321,7 @@ export default defineConfig({
     logo: { src: '/logo.svg', alt: 'Skylint Logo' },
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
-      { text: 'Rules (139)', link: '/rules/' },
+      { text: 'Rules (148)', link: '/rules/' },
       { text: 'Variant Builder', link: '/variant-builder' },
       { text: 'GitHub', link: 'https://github.com/furkancosgun/skylint' },
     ],
@@ -342,15 +342,15 @@ export default defineConfig({
         { text: 'All Rules Overview', link: '/rules/' },
         ...[
   {
-    "text": "Clean ABAP & Modern Syntax (53)",
+    "text": "Clean ABAP & Modern Syntax (55)",
     "link": "/rules/clean-abap"
   },
   {
-    "text": "Anti-Patterns & Bad Practices (51)",
+    "text": "Anti-Patterns & Bad Practices (54)",
     "link": "/rules/anti-patterns"
   },
   {
-    "text": "Performance & Database (9)",
+    "text": "Performance & Database (10)",
     "link": "/rules/performance"
   },
   {
@@ -358,7 +358,7 @@ export default defineConfig({
     "link": "/rules/security"
   },
   {
-    "text": "Metrics & Complexity Limits (10)",
+    "text": "Metrics & Complexity Limits (13)",
     "link": "/rules/metrics"
   }
 ]

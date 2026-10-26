@@ -1,0 +1,8 @@
+[
+  { "target": "TEST_001", "code": "NO_RETHROW", "line": 5, "column": 6, "quickfixes": [] },
+  { "target": "TEST_002", "code": null },
+  { "target": "TEST_003", "code": null },
+  { "target": "TEST_004", "code": "NO_RETHROW", "line": 4, "column": 6, "quickfixes": [] },
+  { "target": "TEST_005", "code": null },
+  { "target": "TEST_006", "code": null }
+]

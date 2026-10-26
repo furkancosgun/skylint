@@ -1,0 +1,15 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Limit type fan-out per procedure",
+    "originalLanguage": "en"
+  },
+  "category": "ZSKYLINT_METRICS",
+  "implementingClass": "ZCL_SKYLINT_MAX_FANOUT",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "MAX_FANOUT"
+    }
+  ]
+}

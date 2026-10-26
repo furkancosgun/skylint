@@ -22,6 +22,7 @@ Prefer early return or continue over nested IF blocks.
 > **ATC Finding Messages:**
 > - `Invert IF condition and use RETURN to reduce nesting in method`
 > - `Invert IF condition and use CONTINUE to reduce nesting in loop`
+> - `Remove ELSE after a terminating statement`
 
 ## Rationale
 
@@ -58,6 +59,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 |---|---|:---:|---|
 | `CHECK_METHOD_RETURN` | `Boolean` | <code>true</code> | Suggest early RETURN guard clause for top-level method validation IFs |
 | `CHECK_LOOP_CONTINUE` | `Boolean` | <code>true</code> | Suggest early CONTINUE guard clause for loop item validation IFs |
+| `REPORT_ELSEIF` | `Boolean` | <code>false</code> | Also report ELSEIF branches that follow a terminating statement (default: disabled) |
 
 ## Suppression
 

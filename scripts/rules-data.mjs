@@ -2502,7 +2502,8 @@ export const RULES = [
     },
     "parameters": {
       "CHECK_METHOD_RETURN": "Suggest early RETURN guard clause for top-level method validation IFs",
-      "CHECK_LOOP_CONTINUE": "Suggest early CONTINUE guard clause for loop item validation IFs"
+      "CHECK_LOOP_CONTINUE": "Suggest early CONTINUE guard clause for loop item validation IFs",
+      "REPORT_ELSEIF": "Also report ELSEIF branches that follow a terminating statement (default: disabled)"
     },
     "seo": {
       "description": "Prefer Early Return to Reduce Nesting (Guard Clauses) - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud.",
@@ -4124,6 +4125,268 @@ export const RULES = [
       "no-static-arrow",
       "no-exposed-data",
       "pref-new-op"
+    ]
+  },
+  {
+    "ruleId": "no-self-compare",
+    "title": "Avoid Comparisons and Arithmetic with Identical Operands",
+    "rationale": "Comparing an expression with itself (`lv_status = lv_status`) always yields the same result, so the condition or assignment is meaningless and usually hides a copy-paste mistake. The same applies to arithmetic that always collapses to a constant (`lv_diff = lv_x - lv_x`). Operands are resolved through compiler symbols, so shadowed names and textually equal but different symbols are not confused. Statements with an AND/OR chain are left to no-dup-cond to avoid double findings.",
+    "className": "ZCL_SKYLINT_NO_SELF_COMPARE",
+    "pseudoComment": "NO_SELF_COMPARE",
+    "category": "anti-patterns",
+    "example": {
+      "bad": "IF lv_status = lv_status.\n  lv_count = lv_count + 1.\nENDIF.\nlv_diff = lv_x - lv_x.",
+      "good": "IF lv_status = c_status-done.\n  lv_count = lv_count + 1.\nENDIF.\nlv_diff = lv_x - lv_y."
+    },
+    "seo": {
+      "description": "Detect ABAP conditions and arithmetic where both operands resolve to the same symbol, a classic copy-paste defect that makes conditions meaningless.",
+      "keywords": [
+        "ABAP self comparison",
+        "identical operands check",
+        "Clean ABAP anti-pattern",
+        "SAP ATC check",
+        "copy paste bug ABAP"
+      ]
+    },
+    "relatedRules": [
+      "no-dead-code",
+      "no-dup-cond",
+      "no-redun-assign"
+    ]
+  },
+  {
+    "ruleId": "no-catch-reraise",
+    "title": "Avoid CATCH Blocks That Only Re-raise the Same Exception",
+    "rationale": "A CATCH block whose only statement re-raises the identical exception type adds no value: the handler is logically transparent and only adds noise, stack depth and maintenance cost. Either remove the CATCH clause and let the exception propagate, or enrich it with context (`previous`, a domain exception, or message text). This rule only reports blocks that consist of exactly one bare re-raise statement.",
+    "className": "ZCL_SKYLINT_NO_CATCH_RERAISE",
+    "pseudoComment": "NO_CATCH_RERAISE",
+    "category": "anti-patterns",
+    "example": {
+      "bad": "TRY.\n    lo_service->run( ).\n  CATCH zcx_service_error.\n    RAISE EXCEPTION TYPE zcx_service_error.\nENDTRY.",
+      "good": "TRY.\n    lo_service->run( ).\n  CATCH zcx_service_error INTO lx_error.\n    RAISE EXCEPTION NEW zcx_service_error( previous = lx_error ).\nENDTRY."
+    },
+    "seo": {
+      "description": "Find ABAP CATCH blocks that only rethrow the same exception without adding context, so redundant handlers can be removed safely.",
+      "keywords": [
+        "ABAP exception handling",
+        "rethrow exception CATCH",
+        "Clean ABAP TRY CATCH",
+        "SAP ATC exception check",
+        "redundant CATCH block"
+      ]
+    },
+    "relatedRules": [
+      "no-catch-root",
+      "no-exc-chain",
+      "no-empty-block"
+    ]
+  },
+  {
+    "ruleId": "pref-when-others",
+    "title": "Require WHEN OTHERS as the Last Branch of CASE",
+    "rationale": "A CASE statement without WHEN OTHERS silently ignores unexpected values, which turns enum or status changes into hard-to-find bugs. Adding WHEN OTHERS with a RAISE or a safe default makes the state machine total and documents the fallback. WHEN OTHERS should also be the last branch so that readers immediately see the default path instead of hunting for it between explicit branches.",
+    "className": "ZCL_SKYLINT_PREF_WHEN_OTHERS",
+    "pseudoComment": "PREF_WHEN_OTHERS",
+    "category": "clean-abap",
+    "example": {
+      "bad": "CASE lv_status.\n  WHEN c_status-new.\n    process_new( ).\n  WHEN c_status-done.\n    process_done( ).\nENDCASE.",
+      "good": "CASE lv_status.\n  WHEN c_status-new.\n    process_new( ).\n  WHEN c_status-done.\n    process_done( ).\n  WHEN OTHERS.\n    RAISE EXCEPTION NEW zcx_illegal_status( ).\nENDCASE."
+    },
+    "parameters": {
+      "MIN_BRANCHES": "Minimum number of explicit WHEN branches before WHEN OTHERS is required (default: 2)",
+      "REQUIRE_LAST": "Require WHEN OTHERS to be the final branch of the CASE statement (default: enabled)"
+    },
+    "seo": {
+      "description": "Enforce a WHEN OTHERS fallback as the last branch of ABAP CASE statements to avoid silently ignored unexpected values.",
+      "keywords": [
+        "ABAP CASE WHEN OTHERS",
+        "default branch SAP",
+        "Clean ABAP CASE statement",
+        "SAP ATC check",
+        "unexpected value handling ABAP"
+      ]
+    },
+    "relatedRules": [
+      "pref-case",
+      "no-single-when",
+      "no-empty-block"
+    ]
+  },
+  {
+    "ruleId": "no-exc-chain",
+    "title": "Preserve the Original Exception with PREVIOUS",
+    "rationale": "When a handler converts an exception into a new one without setting `previous`, the caller loses the root cause and only sees the outer symptom. Passing the caught exception object through the `previous` attribute keeps the full chain available in the stack trace and in RAP error logs. The rule inspects `RAISE EXCEPTION NEW` and `RAISE EXCEPTION TYPE` inside `CATCH ... INTO` handlers.",
+    "className": "ZCL_SKYLINT_NO_EXC_CHAIN",
+    "pseudoComment": "NO_EXC_CHAIN",
+    "category": "anti-patterns",
+    "example": {
+      "bad": "TRY.\n    lo_http->send( ).\n  CATCH cx_http_error INTO lx_http.\n    RAISE EXCEPTION NEW zcx_upload_failed( ).\nENDTRY.",
+      "good": "TRY.\n    lo_http->send( ).\n  CATCH cx_http_error INTO lx_http.\n    RAISE EXCEPTION NEW zcx_upload_failed( previous = lx_http ).\nENDTRY."
+    },
+    "parameters": {
+      "REQUIRE_PREVIOUS": "Report converted exceptions without PREVIOUS (default); disable to report the opposite style"
+    },
+    "seo": {
+      "description": "Ensure ABAP exception conversions keep the original cause by setting PREVIOUS when raising a new exception inside CATCH.",
+      "keywords": [
+        "ABAP exception chaining",
+        "PREVIOUS exception attribute",
+        "root cause exception ABAP",
+        "SAP ATC exception check",
+        "Clean ABAP error handling"
+      ]
+    },
+    "relatedRules": [
+      "no-catch-reraise",
+      "no-catch-root",
+      "pref-class-exc"
+    ]
+  },
+  {
+    "ruleId": "pref-between",
+    "title": "Prefer BETWEEN for Inclusive Range Checks",
+    "rationale": "`lv_amount >= lv_min AND lv_amount <= lv_max` repeats the same operand and spells out a single inclusive range. `BETWEEN` expresses the intent directly, removes the duplicated operand and makes off-by-one mistakes easier to spot. The rule only reports inclusive `>=`/`<=` pairs by default; strict `>`/`<` pairs are optional because they are not semantically equivalent for fractional values.",
+    "className": "ZCL_SKYLINT_PREF_BETWEEN",
+    "pseudoComment": "PREF_BETWEEN",
+    "category": "clean-abap",
+    "example": {
+      "bad": "IF lv_amount >= lv_min AND lv_amount <= lv_max.\n  approve( ).\nENDIF.",
+      "good": "IF lv_amount BETWEEN lv_min AND lv_max.\n  approve( ).\nENDIF."
+    },
+    "parameters": {
+      "STRICT_RANGE": "Also suggest BETWEEN for strict >/< pairs, which is not equivalent for decimals (default: disabled)"
+    },
+    "seo": {
+      "description": "Simplify ABAP range checks from duplicated comparisons to the readable BETWEEN operator and avoid off-by-one mistakes.",
+      "keywords": [
+        "ABAP BETWEEN operator",
+        "range check ABAP",
+        "Clean ABAP condition simplification",
+        "SAP ATC check",
+        "off by one range ABAP"
+      ]
+    },
+    "relatedRules": [
+      "max-bool-expr",
+      "no-many-parens",
+      "no-dup-cond"
+    ]
+  },
+  {
+    "ruleId": "no-loop-into",
+    "title": "Prefer ASSIGNING over LOOP INTO Copy Targets",
+    "rationale": "`LOOP AT ... INTO ls_row` copies every table row into a work area before the body runs. For read-only loops this allocation and copy is pure overhead; `ASSIGNING FIELD-SYMBOL(<ls_row>)` iterates by reference and keeps the code allocation-free. The rule flags LOOP statements that use INTO without ASSIGNING or REFERENCE INTO, and deliberately leaves READ TABLE ... INTO to pref-read-table to avoid duplicate findings.",
+    "className": "ZCL_SKYLINT_NO_LOOP_INTO",
+    "pseudoComment": "NO_LOOP_INTO",
+    "category": "performance",
+    "example": {
+      "bad": "LOOP AT lt_items INTO ls_item.\n  lv_total = lv_total + ls_item-amount.\nENDLOOP.",
+      "good": "LOOP AT lt_items ASSIGNING FIELD-SYMBOL(<ls_item>).\n  lv_total = lv_total + <ls_item>-amount.\nENDLOOP."
+    },
+    "seo": {
+      "description": "Detect ABAP LOOP AT statements that copy rows with INTO and recommend ASSIGNING field symbols for allocation-free iteration.",
+      "keywords": [
+        "ABAP LOOP AT INTO",
+        "ASSIGNING field symbol",
+        "internal table performance ABAP",
+        "SAP ATC performance check",
+        "Clean ABAP loop target"
+      ]
+    },
+    "relatedRules": [
+      "no-mod-loop-tab",
+      "pref-read-table",
+      "no-concat-loop"
+    ]
+  },
+  {
+    "ruleId": "max-cognitive",
+    "title": "Limit Cognitive Complexity per Method",
+    "rationale": "Cognitive complexity measures how hard a procedure is to understand: every branch adds one point plus the current nesting depth, so deeply nested IFs and loops escalate quickly even when the raw branch count looks acceptable. Unlike cyclomatic complexity it rewards flat guard clauses and early exits. Keep procedures below the configured threshold and extract nested logic into well-named helper methods.",
+    "className": "ZCL_SKYLINT_MAX_COGNITIVE",
+    "pseudoComment": "MAX_COGNITIVE",
+    "category": "metrics",
+    "example": {
+      "bad": "LOOP AT lt_items INTO ls_item.\n  IF ls_item-active = abap_true.\n    IF ls_item-amount > 0.\n      IF ls_item-currency = lv_currency.\n        process( ls_item ).\n      ENDIF.\n    ENDIF.\n  ENDIF.\nENDLOOP.",
+      "good": "LOOP AT lt_items ASSIGNING FIELD-SYMBOL(<ls_item>).\n  IF is_relevant( <ls_item> ) = abap_false.\n    CONTINUE.\n  ENDIF.\n  process( <ls_item> ).\nENDLOOP."
+    },
+    "parameters": {
+      "MAX_COGNITIVE": "Maximum allowed cognitive complexity score per procedure (default: 15)"
+    },
+    "seo": {
+      "description": "Control cognitive complexity in ABAP methods with nesting-aware scoring so deeply nested branches do not become unreadable.",
+      "keywords": [
+        "cognitive complexity ABAP",
+        "Sonar S3776 ABAP",
+        "method readability metric",
+        "SAP ATC complexity check",
+        "nested IF penalty ABAP"
+      ]
+    },
+    "relatedRules": [
+      "max-cyclo-comp",
+      "max-nesting",
+      "max-bool-expr"
+    ]
+  },
+  {
+    "ruleId": "max-locals",
+    "title": "Limit Local Variable Count per Method",
+    "rationale": "A method with many local variables usually does several unrelated things at once and is hard to unit test. The count includes DATA, FIELD-SYMBOLS, STATICS and CONSTANTS declarations as well as inline `DATA(...)` and `FIELD-SYMBOL(...)` definitions, because each declared symbol is another piece of state a reader must track. Extract cohesive blocks into helper methods or introduce a dedicated result structure.",
+    "className": "ZCL_SKYLINT_MAX_LOCALS",
+    "pseudoComment": "MAX_LOCALS",
+    "category": "metrics",
+    "example": {
+      "bad": "METHOD process.\n  DATA lv_a TYPE i.\n  DATA lv_b TYPE i.\n  DATA lv_c TYPE i.\n  DATA lv_d TYPE i.\n  DATA lv_e TYPE i.\nENDMETHOD.",
+      "good": "METHOD process.\n  DATA ls_totals TYPE ty_totals.\n  ls_totals = calculate_totals( ).\n  persist_totals( ls_totals ).\nENDMETHOD."
+    },
+    "parameters": {
+      "MAX_LOCALS": "Maximum allowed number of local declarations per procedure (default: 15)"
+    },
+    "seo": {
+      "description": "Count local DATA, FIELD-SYMBOLS and inline declarations per ABAP method and flag procedures that carry too much local state.",
+      "keywords": [
+        "ABAP too many locals",
+        "method local variables metric",
+        "Clean ABAP method size",
+        "SAP ATC metrics check",
+        "inline declaration count ABAP"
+      ]
+    },
+    "relatedRules": [
+      "no-unused-vars",
+      "max-attributes",
+      "max-method-len"
+    ]
+  },
+  {
+    "ruleId": "max-fanout",
+    "title": "Limit Type Fan-Out per Procedure",
+    "rationale": "A procedure that references many unrelated classes and interfaces is tightly coupled to a large part of the system, which makes it fragile and hard to test in isolation. Counting distinct `kind = type` references gives a lower-bound fan-out metric that never produces false positives: only types that actually appear in the procedure body are considered. Split responsibilities or introduce a facade when the number grows.",
+    "className": "ZCL_SKYLINT_MAX_FANOUT",
+    "pseudoComment": "MAX_FANOUT",
+    "category": "metrics",
+    "example": {
+      "bad": "DATA lo_a TYPE REF TO zcl_a.\nDATA lo_b TYPE REF TO zcl_b.\nDATA lo_c TYPE REF TO zcl_c.\nDATA lo_d TYPE REF TO zcl_d.",
+      "good": "DATA lo_service TYPE REF TO zif_order_service.\nlo_service = mo_service_factory->create( )."
+    },
+    "parameters": {
+      "MAX_FANOUT": "Maximum allowed number of distinct class or interface types per procedure (default: 15)"
+    },
+    "seo": {
+      "description": "Measure ABAP procedure coupling by counting distinct class and interface type references, and flag types that depend on too many collaborators.",
+      "keywords": [
+        "ABAP class coupling metric",
+        "fan-out ABAP",
+        "Sonar S1200 coupling",
+        "SAP ATC metrics check",
+        "type dependencies procedure"
+      ]
+    },
+    "relatedRules": [
+      "max-inherit",
+      "max-attributes",
+      "max-method-len"
     ]
   }
 ];
