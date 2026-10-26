@@ -43,7 +43,7 @@ This category enforces **54 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Avoid Obsolete String and POSIX Regex Statements](/rules/no-obs-strings) | `ZCL_SKYLINT_NO_OBS_STRINGS` | <code>#EC NO_OBS_STRINGS</code> | - |
 | [Avoid Classic List Processing Statements](/rules/no-list-proc) | `ZCL_SKYLINT_NO_LIST_PROC` | <code>#EC NO_LIST_PROC</code> | - |
 | [Avoid Variable Scope Leaking from Inner Blocks](/rules/no-scope-leak) | `ZCL_SKYLINT_NO_SCOPE_LEAK` | <code>#EC NO_SCOPE_LEAK</code> | - |
-| [Remove Redundant Self-Assignments and CLEAR Statements](/rules/no-redun-assign) | `ZCL_SKYLINT_NO_REDUN_ASSIGN` | <code>#EC SELF_ASSIGN</code> | ⚡ Ready |
+| [Remove Redundant Self-Assignments and Identity Moves](/rules/no-redun-assign) | `ZCL_SKYLINT_NO_REDUN_ASSIGN` | <code>#EC NO_IDENTICAL_MOVE</code> | ⚡ Ready |
 | [Avoid Local Variables Shadowing Class Attributes](/rules/no-shadow) | `ZCL_SKYLINT_NO_SHADOW` | <code>#EC NO_SHADOW</code> | - |
 | [Avoid Concatenating Adjacent String Literals](/rules/no-useless-concat) | `ZCL_SKYLINT_NO_USELESS_CONCAT` | <code>#EC NO_USELESS_CONCAT</code> | ⚡ Ready |
 | [Avoid Magic Numbers; Use Named Constants](/rules/no-magic-numbers) | `ZCL_SKYLINT_NO_MAGIC_NUMBERS` | <code>#EC NO_MAGIC_NUMBERS</code> | - |

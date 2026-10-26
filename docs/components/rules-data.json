@@ -1653,51 +1653,22 @@
   },
   {
     "ruleId": "no-redun-assign",
-    "title": "Remove Redundant Self-Assignments and CLEAR Statements",
+    "title": "Remove Redundant Self-Assignments and Identity Moves",
     "className": "ZCL_SKYLINT_NO_REDUN_ASSIGN",
     "checkName": "ZSKYLINT_NO_REDUN_ASSIGN",
     "category": "anti-patterns",
     "categoryTitle": "Anti-Patterns & Bad Practices",
-    "pseudoComment": "SELF_ASSIGN",
-    "description": "Remove Redundant Assignments & CLEARs",
+    "pseudoComment": "NO_IDENTICAL_MOVE",
+    "description": "Detect identical assignments and moves",
     "hasQuickfix": true,
     "remoteEnabled": true,
-    "attributes": [
-      {
-        "name": "CHECK_SELF_ASSIGN",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_BEFORE_WRITE",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_WITHOUT_READ",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      }
-    ],
+    "attributes": [],
     "relatedRules": [
       "no-chained-assign",
       "no-unused-vars",
-      "no-hungarian"
+      "no-self-compare"
     ],
-    "defaultParameters": [
-      {
-        "name": "CHECK_SELF_ASSIGN",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_BEFORE_WRITE",
-        "value": "X"
-      },
-      {
-        "name": "CHECK_WITHOUT_READ",
-        "value": "X"
-      }
-    ]
+    "defaultParameters": []
   },
   {
     "ruleId": "no-shadow",
@@ -4509,7 +4480,7 @@
     "pseudoComment": "MAX_FANOUT",
     "description": "Limit type fan-out per procedure",
     "hasQuickfix": false,
-    "remoteEnabled": true,
+    "remoteEnabled": false,
     "attributes": [
       {
         "name": "MAX_FANOUT",

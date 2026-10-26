@@ -1510,22 +1510,18 @@ export const RULES = [
   },
   {
     "ruleId": "no-redun-assign",
-    "title": "Remove Redundant Self-Assignments and CLEAR Statements",
-    "rationale": "Self-assignments (e.g. a = a or MOVE a TO a) and superfluous CLEAR/FREE operations have zero net effect on program execution state. Clearing variables immediately after declaration is unnecessary because ABAP automatically initializes variables to their type defaults. Similarly, clearing variables at procedure exit when they are never read again is dead code. Remove these redundant statements to improve clarity and reduce noise.",
+    "title": "Remove Redundant Self-Assignments and Identity Moves",
+    "rationale": "Self-assignments (e.g. a = a or MOVE a TO a) have zero net effect on program execution state and indicate either dead code, incomplete copy-paste, or accidental reassignment. Remove these redundant statements to improve code clarity and reduce maintenance overhead.",
     "className": "ZCL_SKYLINT_NO_REDUN_ASSIGN",
-    "pseudoComment": "SELF_ASSIGN",
+    "pseudoComment": "NO_IDENTICAL_MOVE",
     "category": "anti-patterns",
     "example": {
-      "bad": "ls_order-id = ls_order-id.\nDATA lt_items TYPE string_table.\nCLEAR lt_items.",
-      "good": "ls_order-id = iv_id.\nDATA lt_items TYPE string_table."
+      "bad": "ls_order-id = ls_order-id.\nMOVE lv_count TO lv_count.",
+      "good": "ls_order-id = iv_id.\nlv_count = iv_count."
     },
-    "parameters": {
-      "CHECK_SELF_ASSIGN": "Detect identical assignments where variable is assigned to itself (a = a)",
-      "CHECK_BEFORE_WRITE": "Detect redundant CLEAR statements immediately followed by variable write/overwrite",
-      "CHECK_WITHOUT_READ": "Detect redundant CLEAR at the very end of procedure where variable is never read again"
-    },
+    "parameters": {},
     "seo": {
-      "description": "Remove Redundant Self-Assignments and CLEAR Statements - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud.",
+      "description": "Remove Redundant Self-Assignments and Identity Moves - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud.",
       "keywords": [
         "Clean ABAP",
         "SAP ATC Check",
@@ -1538,7 +1534,7 @@ export const RULES = [
     "relatedRules": [
       "no-chained-assign",
       "no-unused-vars",
-      "no-hungarian"
+      "no-self-compare"
     ]
   },
   {

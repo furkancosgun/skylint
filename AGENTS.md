@@ -153,7 +153,7 @@ The split of responsibilities is fixed:
 - abaplint cannot resolve symbols that are unknown to the registry (e.g. `CX_ROOT`,
   database tables that are not part of the scanned project). For those the safe
   fallback of `lib/core/semantic.mjs` complements the references.
-- All 95 checks and 496 fixtures run through this unified pipeline.
+- All 148 checks and 1,013 fixtures run through this unified pipeline.
 
 ### 3. Safe RTTI over String Matching (`zcl_skylint_rtti_util`) & Remote Enablement
 - **Never use string parsing or regex** on `is_procedure-id-name` or `INHERITING FROM` to determine class hierarchies, interfaces, or superclasses.

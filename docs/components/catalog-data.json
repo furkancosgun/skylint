@@ -622,15 +622,15 @@
     },
     {
       "ruleId": "no-redun-assign",
-      "title": "Remove Redundant Self-Assignments and CLEAR Statements",
+      "title": "Remove Redundant Self-Assignments and Identity Moves",
       "className": "ZCL_SKYLINT_NO_REDUN_ASSIGN",
-      "description": "Remove Redundant Assignments & CLEARs",
+      "description": "Detect identical assignments and moves",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
-      "pseudoComment": "SELF_ASSIGN",
+      "pseudoComment": "NO_IDENTICAL_MOVE",
       "hasQuickfix": true,
       "remoteEnabled": true,
-      "configurable": true
+      "configurable": false
     },
     {
       "ruleId": "no-shadow",
@@ -1805,7 +1805,7 @@
       "categoryTitle": "Metrics & Complexity Limits",
       "pseudoComment": "MAX_FANOUT",
       "hasQuickfix": false,
-      "remoteEnabled": true,
+      "remoteEnabled": false,
       "configurable": true
     }
   ]

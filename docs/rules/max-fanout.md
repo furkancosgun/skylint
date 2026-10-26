@@ -12,7 +12,7 @@ ruleId: "max-fanout"
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Metrics & Complexity Limits" />
   <Badge type="danger" text="#EC MAX_FANOUT" />
-  <Badge type="info" text="Remote Enabled" />
+  <Badge type="warning" text="Local Only" />
 </div>
 
 ## Overview

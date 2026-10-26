@@ -62,7 +62,7 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 * [Avoid Dead Code with Constant Conditions](/rules/no-dead-code) — <code>#EC NO_DEAD_CODE</code>
 * [Avoid Duplicate Branch Conditions](/rules/no-dup-cond) — <code>#EC NO_DUP_COND</code>
-* [Remove Redundant Self-Assignments and CLEAR Statements](/rules/no-redun-assign) — <code>#EC SELF_ASSIGN</code>
+* [Remove Redundant Self-Assignments and Identity Moves](/rules/no-redun-assign) — <code>#EC NO_IDENTICAL_MOVE</code>
 
 ## Technical Details
 

@@ -63,7 +63,7 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Related Rules
 
 * [Avoid Chained Declarations (DATA:, CONSTANTS:, TYPES:)](/rules/no-chained-decl) — <code>#EC NO_CHAINED_DECL</code>
-* [Remove Redundant Self-Assignments and CLEAR Statements](/rules/no-redun-assign) — <code>#EC SELF_ASSIGN</code>
+* [Remove Redundant Self-Assignments and Identity Moves](/rules/no-redun-assign) — <code>#EC NO_IDENTICAL_MOVE</code>
 * [Eliminate Unused Local Variables and Symbols](/rules/no-unused-vars) — <code>#EC NO_UNUSED_VARS</code>
 
 ## Technical Details

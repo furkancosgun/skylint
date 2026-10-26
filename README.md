@@ -30,7 +30,7 @@
 - **☁️ 148 Clean ABAP & Cloud Rules:** Comprehensive coverage across modern ABAP expressions, syntax modernizations, SQL performance, security, and clean architecture.
 - **⚡ Instant QuickFixes:** Built-in QuickFix generation for rapid, automated refactoring directly from Eclipse ADT (`Ctrl + 1`).
 - **🛡️ Zero-Boilerplate Architecture:** Shared base class (`zcl_skylint_check_base`) automatically manages statement iteration, checksum calculation, finding locations, and pseudo-comment suppression.
-- **🚀 High-Fidelity Offline CI Harness:** Runs transpiled checks through full AST and compiler-reference resolution pipelines offline, validating 680 test assertions and QuickFix round-trips without requiring a live SAP backend.
+- **🚀 High-Fidelity Offline CI Harness:** Runs transpiled checks through full AST and compiler-reference resolution pipelines offline, validating 1,013 test assertions and QuickFix round-trips without requiring a live SAP backend.
 
 ---
 
