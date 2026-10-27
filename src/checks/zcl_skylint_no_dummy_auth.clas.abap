@@ -59,13 +59,15 @@ CLASS zcl_skylint_no_dummy_auth IMPLEMENTATION.
 
   METHOD find_dummy_token.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_idx TYPE i.
 
     rv_idx = 0.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
+      lv_idx = sy-tabix.
       IF zcl_skylint_ast_util=>token_is_keyword( is_token  = <ls_token>
                                                  iv_lexeme = 'DUMMY' ) = abap_true.
-        rv_idx = sy-tabix.
+        rv_idx = lv_idx.
         RETURN.
       ENDIF.
     ENDLOOP.

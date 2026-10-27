@@ -1,0 +1,91 @@
+[
+  {
+    "target": "TEST_001",
+    "code": "NO_DEAD_ST",
+    "line": 3,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_002",
+    "code": null
+  },
+  {
+    "target": "TEST_003",
+    "code": null
+  },
+  {
+    "target": "TEST_004",
+    "code": null
+  },
+  {
+    "target": "TEST_005",
+    "code": "NO_DEAD_ST",
+    "line": 5,
+    "column": 6,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_006",
+    "code": null
+  },
+  {
+    "target": "TEST_007",
+    "code": "NO_DEAD_ST",
+    "line": 3,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_008",
+    "code": null
+  },
+  {
+    "target": "TEST_009",
+    "code": null
+  },
+  {
+    "target": "TEST_010",
+    "code": "NO_DEAD_ST",
+    "line": 3,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_011",
+    "code": null
+  },
+  {
+    "target": "TEST_012",
+    "code": "NO_DEAD_ST",
+    "line": 3,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_013",
+    "code": "NO_DEAD_ST",
+    "line": 3,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_014",
+    "code": null
+  },
+  {
+    "target": "TEST_015",
+    "code": "NO_DEAD_ST",
+    "line": 4,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_016",
+    "code": null
+  },
+  {
+    "target": "TEST_017",
+    "code": null
+  }
+]

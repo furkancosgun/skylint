@@ -101,12 +101,7 @@ CLASS zcl_skylint_no_bool_blindness IMPLEMENTATION.
   METHOD token_is_abap_bool.
     rv_yes = abap_false.
 
-    IF to_upper( is_token-lexeme ) <> 'ABAP_BOOL'.
-      RETURN.
-    ENDIF.
-
-    IF is_token-references IS INITIAL.
-      rv_yes = abap_true.
+    IF is_token-lexeme <> 'ABAP_BOOL'.
       RETURN.
     ENDIF.
 

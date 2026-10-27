@@ -1,16 +1,16 @@
 ---
-title: "Anti-Patterns & Bad Practices (55 Rules)"
+title: "Anti-Patterns & Bad Practices (56 Rules)"
 description: "Discouraged language constructs, legacy statements, and redundant syntax. Comprehensive reference, finding codes, and Clean ABAP examples for Anti-Patterns & Bad Practices."
 category: "anti-patterns"
 keywords: "Clean ABAP, ABAP Cloud, SAP ATC, Anti-Patterns & Bad Practices, S/4HANA Readiness, SAP BTP, Steampunk"
 ---
 
-# Anti-Patterns & Bad Practices (55 Rules)
+# Anti-Patterns & Bad Practices (56 Rules)
 
 Discouraged language constructs, legacy statements, and redundant syntax.
 
 ::: tip Category Overview
-This category enforces **55 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
+This category enforces **56 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
 :::
 
 ## Rules in this Category
@@ -72,6 +72,7 @@ This category enforces **55 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Avoid CATCH Blocks That Only Re-raise the Same Exception](/rules/no-catch-reraise) | `ZCL_SKYLINT_NO_CATCH_RERAISE` | <code>#EC NO_CATCH_RERAISE</code> | - |
 | [Preserve the Original Exception with PREVIOUS](/rules/no-exc-chain) | `ZCL_SKYLINT_NO_EXC_CHAIN` | <code>#EC NO_EXC_CHAIN</code> | - |
 | [Avoid Static State (CLASS-DATA and STATICS)](/rules/no-static-state) | `ZCL_SKYLINT_NO_STATIC_STATE` | <code>#EC NO_STATIC_STATE</code> | - |
+| [Avoid Assignments Whose Value Is Never Read](/rules/no-dead-store) | `ZCL_SKYLINT_NO_DEAD_STORE` | <code>#EC NO_DEAD_STORE</code> | - |
 
 ---
 

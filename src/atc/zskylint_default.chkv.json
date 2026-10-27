@@ -1253,6 +1253,9 @@
     },
     {
       "checkName": "ZSKYLINT_NO_DUMMY_AUTH"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_DEAD_STORE"
     }
   ]
 }

@@ -10,7 +10,7 @@
       "key": "anti-patterns",
       "title": "Anti-Patterns & Bad Practices",
       "description": "Discouraged language constructs, legacy statements, and redundant syntax.",
-      "count": 55
+      "count": 56
     },
     {
       "key": "performance",
@@ -1864,6 +1864,18 @@
       "category": "security",
       "categoryTitle": "Security & Robustness",
       "pseudoComment": "NO_DUMMY_AUTH",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "no-dead-store",
+      "title": "Avoid Assignments Whose Value Is Never Read",
+      "className": "ZCL_SKYLINT_NO_DEAD_STORE",
+      "description": "Avoid assignments that are never read",
+      "category": "anti-patterns",
+      "categoryTitle": "Anti-Patterns & Bad Practices",
+      "pseudoComment": "NO_DEAD_STORE",
       "hasQuickfix": false,
       "remoteEnabled": true,
       "configurable": false

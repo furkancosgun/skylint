@@ -4530,6 +4530,33 @@ export const RULES = [
       "pref-auth-check",
       "no-dynamic-stmt"
     ]
+  },
+  {
+    "ruleId": "no-dead-store",
+    "title": "Avoid Assignments Whose Value Is Never Read",
+    "rationale": "An assignment whose value is overwritten before any read computes a result nobody uses: the work, the helper call, and the temporary state are all wasted. Such dead stores usually survive a refactor that removed the consuming branch, and they mislead readers into believing the value matters. Either read the value or delete the assignment.",
+    "className": "ZCL_SKYLINT_NO_DEAD_STORE",
+    "pseudoComment": "NO_DEAD_STORE",
+    "category": "anti-patterns",
+    "example": {
+      "bad": "lv_status = 'NEW'.\nlv_status = 'DONE'.\nWRITE lv_status.",
+      "good": "lv_status = 'DONE'.\nWRITE lv_status."
+    },
+    "seo": {
+      "description": "Detect dead stores in ABAP: assignments that are overwritten before any read, wasting computation and hiding leftover refactoring artifacts.",
+      "keywords": [
+        "ABAP dead store",
+        "unused assignment ABAP",
+        "SAP ATC check dead store",
+        "Clean ABAP unused value",
+        "ABAP overwritten variable"
+      ]
+    },
+    "relatedRules": [
+      "no-unused-vars",
+      "no-dead-code",
+      "pref-final-data"
+    ]
   }
 ];
 
