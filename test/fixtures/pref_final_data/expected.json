@@ -66,5 +66,32 @@
   {
     "target": "TEST_013",
     "code": null
+  },
+  {
+    "target": "TEST_014",
+    "code": "PREF_FNDAT",
+    "line": 5,
+    "column": 4,
+    "quickfixes": [
+      "TOFINAL"
+    ]
+  },
+  {
+    "target": "TEST_015",
+    "code": "PREF_FNDAT",
+    "line": 2,
+    "column": 4,
+    "quickfixes": [
+      "TOFINAL"
+    ]
+  },
+  {
+    "target": "TEST_016",
+    "code": "PREF_FNDAT",
+    "line": 2,
+    "column": 4,
+    "quickfixes": [
+      "TOFINAL"
+    ]
   }
 ]

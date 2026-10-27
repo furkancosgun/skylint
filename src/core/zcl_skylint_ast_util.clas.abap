@@ -181,6 +181,26 @@ CLASS zcl_skylint_ast_util DEFINITION
       IMPORTING is_reference  TYPE if_ci_atc_source_code_provider=>ty_compiler_reference
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
+    "! The compiler reports a plain write for whole value replacements (WRITE, and
+    "! READ_AND_WRITE for ADD/APPEND/MODIFY like modifications). Component writes are
+    "! reported as WRITE_PARTIAL on the structure, therefore the root reference must be
+    "! inspected. Offsets and lengths (lv(1), lv+1(1)) are also reported as WRITE, so the
+    "! written token still has to be verified as the complete object.
+    CLASS-METHODS is_full_write_usage
+      IMPORTING is_reference  TYPE if_ci_atc_source_code_provider=>ty_compiler_reference
+      RETURNING VALUE(rv_yes) TYPE abap_bool.
+
+    CLASS-METHODS is_partial_write_usage
+      IMPORTING is_reference  TYPE if_ci_atc_source_code_provider=>ty_compiler_reference
+      RETURNING VALUE(rv_yes) TYPE abap_bool.
+
+    "! A reference belongs to an object if it is the object itself or one of its
+    "! components (the full name of a component carries the object name as prefix).
+    CLASS-METHODS reference_matches
+      IMPORTING iv_full_name TYPE string
+                iv_reference TYPE string
+      RETURNING VALUE(rv_yes) TYPE abap_bool.
+
     CLASS-METHODS is_data_definition
       IMPORTING is_reference  TYPE if_ci_atc_source_code_provider=>ty_compiler_reference
       RETURNING VALUE(rv_yes) TYPE abap_bool.
@@ -895,6 +915,50 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
       WHEN OTHERS.
         rv_yes = abap_false.
     ENDCASE.
+  ENDMETHOD.
+
+  METHOD is_full_write_usage.
+    CASE is_reference-usage_mode.
+      WHEN if_ci_atc_source_code_provider=>usage_modes-write
+        OR if_ci_atc_source_code_provider=>usage_modes-read_and_write.
+        rv_yes = abap_true.
+      WHEN OTHERS.
+        rv_yes = abap_false.
+    ENDCASE.
+  ENDMETHOD.
+
+  METHOD is_partial_write_usage.
+    rv_yes = xsdbool( is_reference-usage_mode = if_ci_atc_source_code_provider=>usage_modes-write_partial ).
+  ENDMETHOD.
+
+  METHOD reference_matches.
+    DATA lv_length    TYPE i.
+    DATA lv_prefix    TYPE string.
+    DATA lv_separator TYPE string.
+
+    rv_yes = abap_false.
+
+    IF iv_full_name IS INITIAL OR iv_reference IS INITIAL.
+      RETURN.
+    ENDIF.
+
+    IF iv_reference = iv_full_name.
+      rv_yes = abap_true.
+      RETURN.
+    ENDIF.
+
+    " A reference to a component carries the name of its structure as prefix
+    lv_length = strlen( iv_full_name ).
+    IF strlen( iv_reference ) <= lv_length.
+      RETURN.
+    ENDIF.
+
+    lv_prefix = substring( val = iv_reference
+                           len = lv_length ).
+    lv_separator = substring( val = iv_reference
+                              off = lv_length
+                              len = 1 ).
+    rv_yes = xsdbool( lv_prefix = iv_full_name AND lv_separator = `\` ).
   ENDMETHOD.
 
   METHOD is_data_definition.

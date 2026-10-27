@@ -33,11 +33,6 @@ CLASS zcl_skylint_no_dead_store DEFINITION
       EXPORTING ev_read      TYPE abap_bool
                 ev_write     TYPE abap_bool.
 
-    METHODS reference_matches
-      IMPORTING iv_full_name TYPE string
-                iv_reference TYPE string
-      RETURNING VALUE(rv_yes) TYPE abap_bool.
-
     METHODS is_whole_object
       IMPORTING is_token     TYPE if_ci_atc_source_code_provider=>ty_token
                 iv_full_name TYPE string
@@ -172,8 +167,8 @@ CLASS zcl_skylint_no_dead_store IMPLEMENTATION.
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
       LOOP AT <ls_token>-references ASSIGNING <ls_ref>.
         IF    <ls_ref>-kind <> if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-           OR reference_matches( iv_full_name = iv_full_name
-                                 iv_reference = <ls_ref>-full_name ) = abap_false.
+           OR zcl_skylint_ast_util=>reference_matches( iv_full_name = iv_full_name
+                                                      iv_reference = <ls_ref>-full_name ) = abap_false.
           CONTINUE.
         ENDIF.
 
@@ -181,8 +176,7 @@ CLASS zcl_skylint_no_dead_store IMPLEMENTATION.
           ev_read = abap_true.
         ENDIF.
 
-        IF    <ls_ref>-usage_mode <> if_ci_atc_source_code_provider=>usage_modes-write
-          AND <ls_ref>-usage_mode <> if_ci_atc_source_code_provider=>usage_modes-read_and_write.
+        IF zcl_skylint_ast_util=>is_full_write_usage( <ls_ref> ) = abap_false.
           CONTINUE.
         ENDIF.
 
@@ -203,32 +197,6 @@ CLASS zcl_skylint_no_dead_store IMPLEMENTATION.
     lv_name = zcl_skylint_ast_util=>get_reference_name( iv_full_name ).
 
     rv_yes = xsdbool( lv_name IS NOT INITIAL AND to_upper( is_token-lexeme ) = lv_name ).
-  ENDMETHOD.
-
-  METHOD reference_matches.
-    DATA lv_length    TYPE i.
-    DATA lv_prefix    TYPE string.
-    DATA lv_separator TYPE string.
-
-    rv_yes = abap_false.
-
-    IF iv_reference = iv_full_name.
-      rv_yes = abap_true.
-      RETURN.
-    ENDIF.
-
-    " A reference to a component carries the name of its structure as prefix
-    lv_length = strlen( iv_full_name ).
-    IF strlen( iv_reference ) <= lv_length.
-      RETURN.
-    ENDIF.
-
-    lv_prefix = substring( val = iv_reference
-                           len = lv_length ).
-    lv_separator = substring( val = iv_reference
-                              off = lv_length
-                              len = 1 ).
-    rv_yes = xsdbool( lv_prefix = iv_full_name AND lv_separator = `\` ).
   ENDMETHOD.
 
   METHOD is_block_boundary.

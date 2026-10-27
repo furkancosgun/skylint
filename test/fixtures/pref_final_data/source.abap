@@ -20,6 +20,9 @@ CLASS zcl_test_prefer_final_data DEFINITION
     METHODS test_011.
     METHODS test_012.
     METHODS test_013.
+    METHODS test_014.
+    METHODS test_015.
+    METHODS test_016.
 ENDCLASS.
 
 CLASS zcl_test_prefer_final_data IMPLEMENTATION.
@@ -90,5 +93,25 @@ CLASS zcl_test_prefer_final_data IMPLEMENTATION.
     DATA(lt_tab) = VALUE string_table( ( `A` ) ).
     DELETE lt_tab INDEX 1.
     WRITE lines( lt_tab ).
+  ENDMETHOD.
+
+  METHOD test_014.
+    DATA lt_tab TYPE string_table.
+    APPEND `A` TO lt_tab.
+    APPEND `B` TO lt_tab.
+    LOOP AT lt_tab INTO DATA(lv_line).
+      WRITE lv_line.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD test_015.
+    SELECT * FROM t000 INTO DATA(ls_row).
+      WRITE sy-subrc.
+    ENDSELECT.
+  ENDMETHOD.
+
+  METHOD test_016.
+    SELECT SINGLE * FROM t000 INTO DATA(ls_row).
+    WRITE sy-subrc.
   ENDMETHOD.
 ENDCLASS.
