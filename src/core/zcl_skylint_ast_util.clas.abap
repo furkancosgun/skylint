@@ -181,11 +181,6 @@ CLASS zcl_skylint_ast_util DEFINITION
       IMPORTING is_reference  TYPE if_ci_atc_source_code_provider=>ty_compiler_reference
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
-    "! The compiler reports a plain write for whole value replacements (WRITE, and
-    "! READ_AND_WRITE for ADD/APPEND/MODIFY like modifications). Component writes are
-    "! reported as WRITE_PARTIAL on the structure, therefore the root reference must be
-    "! inspected. Offsets and lengths (lv(1), lv+1(1)) are also reported as WRITE, so the
-    "! written token still has to be verified as the complete object.
     CLASS-METHODS is_full_write_usage
       IMPORTING is_reference  TYPE if_ci_atc_source_code_provider=>ty_compiler_reference
       RETURNING VALUE(rv_yes) TYPE abap_bool.
@@ -194,8 +189,6 @@ CLASS zcl_skylint_ast_util DEFINITION
       IMPORTING is_reference  TYPE if_ci_atc_source_code_provider=>ty_compiler_reference
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
-    "! A reference belongs to an object if it is the object itself or one of its
-    "! components (the full name of a component carries the object name as prefix).
     CLASS-METHODS reference_matches
       IMPORTING iv_full_name TYPE string
                 iv_reference TYPE string
@@ -270,6 +263,90 @@ CLASS zcl_skylint_ast_util DEFINITION
     CLASS-METHODS build_functional_call
       IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_line) TYPE string.
+
+    CLASS-METHODS strip_outer_parens
+      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement OPTIONAL
+                it_tokens    TYPE if_ci_atc_source_code_provider=>ty_tokens    OPTIONAL
+      CHANGING  cv_from      TYPE i
+                cv_to        TYPE i.
+
+    CLASS-METHODS extract_name_from_paren
+      IMPORTING iv_lexeme      TYPE string
+      RETURNING VALUE(rv_name) TYPE string.
+
+    CLASS-METHODS extract_tokens_text
+      IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_from_idx    TYPE i
+                iv_to_idx      TYPE i
+      RETURNING VALUE(rv_text) TYPE string.
+
+    CLASS-METHODS get_declaration_token
+      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rs_token) TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    CLASS-METHODS get_declaration_name
+      IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_name) TYPE string.
+
+    CLASS-METHODS matches_regex
+      IMPORTING iv_text           TYPE string
+                iv_pattern        TYPE string
+                iv_pcre           TYPE abap_bool DEFAULT abap_true
+      RETURNING VALUE(rv_matches) TYPE abap_bool.
+
+    TYPES:
+      BEGIN OF ty_method_parameter,
+        name      TYPE string,
+        raw_name  TYPE string,
+        section   TYPE string,
+        type_kind TYPE string,
+        type_name TYPE string,
+        token     TYPE if_ci_atc_source_code_provider=>ty_token,
+      END OF ty_method_parameter,
+      ty_method_parameters TYPE STANDARD TABLE OF ty_method_parameter WITH EMPTY KEY.
+
+    CLASS-METHODS get_method_parameters
+      IMPORTING is_statement         TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rt_parameters) TYPE ty_method_parameters.
+
+    CLASS-METHODS statement_checks_sy_subrc
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_yes) TYPE abap_bool.
+
+    CLASS-METHODS statement_references_sys_field
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_field_name TYPE string
+      RETURNING VALUE(rv_yes) TYPE abap_bool.
+
+    CLASS-METHODS find_matching_paren
+      IMPORTING is_statement          TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_open_index         TYPE i
+      RETURNING VALUE(rv_close_index) TYPE i.
+
+    TYPES:
+      BEGIN OF ty_inline_declaration,
+        name       TYPE string,
+        raw_name   TYPE string,
+        usage_mode TYPE if_ci_atc_source_code_provider=>ty_usage_mode,
+        token      TYPE if_ci_atc_source_code_provider=>ty_token,
+      END OF ty_inline_declaration,
+      ty_inline_declarations TYPE STANDARD TABLE OF ty_inline_declaration WITH EMPTY KEY.
+
+    CLASS-METHODS get_inline_declarations
+      IMPORTING is_statement          TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rt_declarations) TYPE ty_inline_declarations.
+
+    CLASS-METHODS statement_is_public_class
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_yes) TYPE abap_bool.
+
+    CLASS-METHODS statement_is_public_interface
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_yes) TYPE abap_bool.
+
+    CLASS-METHODS statement_is_exception_class
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_yes) TYPE abap_bool.
 
   PRIVATE SECTION.
     CLASS-METHODS normalize_identifier_name
@@ -664,20 +741,26 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
 
   METHOD token_is_inline_declaration.
     DATA lv_len TYPE i.
+    DATA lv_lex TYPE string.
 
     CLEAR rv_yes.
     IF is_token-lexeme IS INITIAL OR iv_prefix IS INITIAL.
       RETURN.
     ENDIF.
 
+    lv_lex = to_upper( is_token-lexeme ).
+    IF lv_lex(1) = '@'.
+      lv_lex = lv_lex+1.
+    ENDIF.
+
     lv_len = strlen( iv_prefix ).
-    IF strlen( is_token-lexeme ) <= lv_len.
+    IF strlen( lv_lex ) <= lv_len.
       RETURN.
     ENDIF.
-    IF is_token-lexeme+lv_len(1) <> '('.
+    IF lv_lex+lv_len(1) <> '('.
       RETURN.
     ENDIF.
-    rv_yes = xsdbool( to_upper( is_token-lexeme(lv_len) ) = to_upper( iv_prefix ) ).
+    rv_yes = xsdbool( lv_lex(lv_len) = to_upper( iv_prefix ) ).
   ENDMETHOD.
 
   METHOD token_paren_delta.
@@ -839,8 +922,9 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
   METHOD get_declared_type.
     DATA lv_name TYPE string.
     DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_ref>  TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    FIELD-SYMBOLS <ls_stmt>      TYPE if_ci_atc_source_code_provider=>ty_statement.
+    FIELD-SYMBOLS <ls_ref>       TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    FIELD-SYMBOLS <ls_other_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     CLEAR rv_type.
     lv_name = get_reference_name( iv_full_name ).
@@ -863,6 +947,14 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
                WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-type.
             rv_type = <ls_ref>-full_name.
             RETURN.
+          ENDLOOP.
+
+          LOOP AT <ls_stmt>-tokens ASSIGNING <ls_other_tok>.
+            LOOP AT <ls_other_tok>-references ASSIGNING <ls_ref>
+                 WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-type.
+              rv_type = <ls_ref>-full_name.
+              RETURN.
+            ENDLOOP.
           ENDLOOP.
         ENDIF.
       ENDLOOP.
@@ -1013,9 +1105,9 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
         ev_class_name = lv_part+5.
       ELSEIF lv_part CP 'ME:*'.
         ev_meth_name = lv_part+3.
-      ELSEIF lv_part CP 'DA:*'.
+      ELSEIF lv_part CP 'DA:*' OR lv_part CP 'DA=*'.
         ev_data_name = lv_part+3.
-      ELSEIF lv_part CP 'DA=*'.
+      ELSEIF lv_part CP 'DB:*' OR lv_part CP 'DB=*'.
         ev_data_name = lv_part+3.
       ENDIF.
     ENDLOOP.
@@ -1186,31 +1278,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD normalize_identifier_name.
-    DATA lv_off TYPE i.
-    DATA lv_len TYPE i.
-
-    rv_name = condense( iv_raw  ).
-    IF rv_name IS INITIAL.
-      RETURN.
-    ENDIF.
-    IF rv_name(1) = '@'.
-      rv_name = rv_name+1.
-    ENDIF.
-    lv_off = strlen( rv_name ) - 1.
-    WHILE lv_off >= 0.
-      IF rv_name+lv_off(1) = '('.
-        lv_off += 1.
-        lv_len = strlen( rv_name ) - lv_off.
-        IF lv_len > 0 AND rv_name+lv_off(lv_len) CA ')'.
-          lv_len -= 1.
-        ENDIF.
-        IF lv_len > 0.
-          rv_name = rv_name+lv_off(lv_len).
-        ENDIF.
-        RETURN.
-      ENDIF.
-      lv_off -= 1.
-    ENDWHILE.
+    rv_name = extract_name_from_paren( iv_raw ).
   ENDMETHOD.
 
   METHOD flatten_statement.
@@ -1366,5 +1434,199 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
       WHEN 'EXPORTING' OR 'IMPORTING' OR 'RECEIVING' OR 'EXCEPTIONS' OR 'EXCEPTION-TABLE'.
         rv_is = abap_true.
     ENDCASE.
+  ENDMETHOD.
+
+  METHOD strip_outer_parens.
+    DATA lv_depth TYPE i.
+    FIELD-SYMBOLS <lt_tokens> TYPE if_ci_atc_source_code_provider=>ty_tokens.
+    FIELD-SYMBOLS <ls_open>   TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_close>  TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_tok>    TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    IF it_tokens IS SUPPLIED.
+      ASSIGN it_tokens TO <lt_tokens>.
+    ELSEIF is_statement IS SUPPLIED.
+      ASSIGN is_statement-tokens TO <lt_tokens>.
+    ELSE.
+      RETURN.
+    ENDIF.
+
+    WHILE cv_from < cv_to.
+      ASSIGN <lt_tokens>[ cv_from ] TO <ls_open>.
+      IF sy-subrc <> 0 OR <ls_open>-lexeme <> '(' OR <ls_open>-references IS NOT INITIAL.
+        EXIT.
+      ENDIF.
+
+      ASSIGN <lt_tokens>[ cv_to ] TO <ls_close>.
+      IF sy-subrc <> 0 OR <ls_close>-lexeme <> ')' OR <ls_close>-references IS NOT INITIAL.
+        EXIT.
+      ENDIF.
+
+      lv_depth = 0.
+      LOOP AT <lt_tokens> FROM cv_from TO cv_to - 1 ASSIGNING <ls_tok>.
+        lv_depth += token_paren_delta( <ls_tok> ).
+        IF lv_depth = 0.
+          EXIT.
+        ENDIF.
+      ENDLOOP.
+
+      IF lv_depth = 1.
+        cv_from += 1.
+        cv_to   -= 1.
+      ELSE.
+        EXIT.
+      ENDIF.
+    ENDWHILE.
+  ENDMETHOD.
+
+  METHOD extract_name_from_paren.
+    DATA lv_len TYPE i.
+    DATA lv_pos TYPE i.
+    DATA lv_lex TYPE string.
+
+    lv_lex = condense( iv_lexeme ).
+    IF lv_lex IS NOT INITIAL AND ( lv_lex(1) = '@' OR lv_lex(1) = '!' ).
+      lv_lex = lv_lex+1.
+    ENDIF.
+
+    rv_name = lv_lex.
+    lv_pos  = find( val = lv_lex
+                    sub = '(' ).
+    IF lv_pos < 0.
+      RETURN.
+    ENDIF.
+
+    lv_pos += 1.
+    lv_len = strlen( lv_lex ) - lv_pos.
+    IF     lv_len > 0
+       AND substring( val = lv_lex
+                      off = strlen( lv_lex ) - 1
+                      len = 1 ) = ')'.
+      lv_len -= 1.
+    ENDIF.
+
+    IF lv_len > 0.
+      rv_name = substring( val = lv_lex
+                           off = lv_pos
+                           len = lv_len ).
+      rv_name = condense( rv_name ).
+      IF rv_name IS NOT INITIAL AND rv_name(1) = '!'.
+        rv_name = rv_name+1.
+      ENDIF.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD extract_tokens_text.
+    DATA lv_curr_idx TYPE i.
+    DATA ls_token    TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lt_parts    TYPE STANDARD TABLE OF string WITH EMPTY KEY.
+
+    CLEAR rv_text.
+    lv_curr_idx = iv_from_idx.
+
+    WHILE lv_curr_idx <= iv_to_idx.
+      ls_token = get_token( is_statement = is_statement
+                            iv_index     = lv_curr_idx ).
+      IF ls_token-lexeme IS NOT INITIAL.
+        APPEND ls_token-lexeme TO lt_parts.
+      ENDIF.
+      lv_curr_idx += 1.
+    ENDWHILE.
+
+    rv_text = concat_lines_of( table = lt_parts
+                               sep   = ` ` ).
+  ENDMETHOD.
+
+  METHOD get_declaration_token.
+    CLEAR rs_token.
+
+    IF find_token_sequence( is_statement = is_statement
+                            it_expected  = VALUE #( ( `BEGIN` ) ( `OF` ) ) ) > 0.
+      rs_token = get_token_after( is_statement = is_statement
+                                  iv_lexeme    = 'OF' ).
+    ELSEIF find_token_sequence( is_statement = is_statement
+                                it_expected  = VALUE #( ( `END` ) ( `OF` ) ) ) > 0.
+      RETURN.
+    ELSE.
+      rs_token = get_token_after( is_statement = is_statement
+                                  iv_lexeme    = is_statement-keyword ).
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD get_declaration_name.
+    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    ls_tok = get_declaration_token( is_statement ).
+    rv_name = ls_tok-lexeme.
+  ENDMETHOD.
+
+  METHOD matches_regex.
+    DATA lv_val TYPE string.
+    DATA lv_pat TYPE string.
+
+    IF iv_pattern IS INITIAL.
+      rv_matches = abap_true.
+      RETURN.
+    ENDIF.
+
+    lv_val = iv_text.
+    lv_pat = iv_pattern.
+
+    TRY.
+        IF iv_pcre = abap_true.
+          rv_matches = xsdbool( matches( val  = lv_val
+                                         pcre = lv_pat ) ).
+        ELSE.
+          rv_matches = xsdbool( contains( val   = lv_val
+                                          regex = lv_pat ) ).
+        ENDIF.
+      CATCH cx_root.
+        rv_matches = abap_true.
+    ENDTRY.
+  ENDMETHOD.
+
+  METHOD get_method_parameters.
+    DATA lv_section  TYPE string.
+    DATA ls_prev_tok TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_type_tok TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_tabix    TYPE i.
+    DATA lv_name     TYPE string.
+
+    FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    CLEAR rt_parameters.
+
+    LOOP AT is_statement-tokens ASSIGNING <ls_tok>.
+      lv_tabix = sy-tabix.
+
+      IF <ls_tok>-references IS NOT INITIAL.
+        ls_prev_tok = <ls_tok>.
+        CONTINUE.
+      ENDIF.
+
+      CASE <ls_tok>-lexeme.
+        WHEN 'IMPORTING' OR 'EXPORTING' OR 'CHANGING' OR 'RETURNING'.
+          lv_section = <ls_tok>-lexeme.
+
+        WHEN 'RAISING' OR 'EXCEPTIONS' OR 'FOR' OR 'REDEFINITION' OR 'ABSTRACT' OR 'FINAL'.
+          CLEAR lv_section.
+
+        WHEN 'TYPE' OR 'LIKE'.
+          IF lv_section IS NOT INITIAL AND ls_prev_tok-lexeme IS NOT INITIAL.
+            lv_name     = extract_name_from_paren( ls_prev_tok-lexeme ).
+            ls_type_tok = get_token( is_statement = is_statement
+                                     iv_index     = lv_tabix + 1 ).
+
+            APPEND VALUE #( name      = lv_name
+                            raw_name  = ls_prev_tok-lexeme
+                            section   = lv_section
+                            type_kind = <ls_tok>-lexeme
+                            type_name = ls_type_tok-lexeme
+                            token     = ls_prev_tok ) TO rt_parameters.
+          ENDIF.
+      ENDCASE.
+
+      ls_prev_tok = <ls_tok>.
+    ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

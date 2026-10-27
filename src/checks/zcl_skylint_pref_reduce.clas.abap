@@ -244,25 +244,7 @@ CLASS zcl_skylint_pref_reduce IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD clean_target_name.
-    DATA lv_len TYPE i.
-    DATA lv_end TYPE string.
-
-    rv_clean = iv_raw.
-    IF iv_raw NP 'DATA(*'.
-      RETURN.
-    ENDIF.
-
-    lv_len = strlen( iv_raw ).
-    IF lv_len > 6.
-      lv_end = substring( val = iv_raw
-                          off = lv_len - 1
-                          len = 1 ).
-      IF lv_end = ')'.
-        rv_clean = substring( val = iv_raw
-                              off = 5
-                              len = lv_len - 6 ).
-      ENDIF.
-    ENDIF.
+    rv_clean = zcl_skylint_ast_util=>extract_name_from_paren( iv_raw ).
   ENDMETHOD.
 
   METHOD build_reduce_code.

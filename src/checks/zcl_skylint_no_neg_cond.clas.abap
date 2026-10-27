@@ -144,43 +144,11 @@ CLASS zcl_skylint_no_neg_cond IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD strip_outer_parens.
-    DATA lv_depth TYPE i.
-    DATA lv_idx   TYPE i.
-    FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
-
     ev_from = iv_from.
     ev_to   = iv_to.
-
-    WHILE ev_from < ev_to.
-      ASSIGN it_tokens[ ev_from ] TO <ls_tok>.
-      IF sy-subrc <> 0 OR <ls_tok>-lexeme <> '(' OR <ls_tok>-references IS NOT INITIAL.
-        EXIT.
-      ENDIF.
-      ASSIGN it_tokens[ ev_to ] TO <ls_tok>.
-      IF sy-subrc <> 0 OR <ls_tok>-lexeme <> ')' OR <ls_tok>-references IS NOT INITIAL.
-        EXIT.
-      ENDIF.
-
-      lv_depth = 0.
-      lv_idx = ev_from.
-      WHILE lv_idx < ev_to.
-        ASSIGN it_tokens[ lv_idx ] TO <ls_tok>.
-        IF sy-subrc = 0.
-          lv_depth += zcl_skylint_ast_util=>token_paren_delta( <ls_tok> ).
-          IF lv_depth = 0.
-            EXIT.
-          ENDIF.
-        ENDIF.
-        lv_idx += 1.
-      ENDWHILE.
-
-      IF lv_depth <> 1.
-        EXIT.
-      ENDIF.
-
-      ev_from += 1.
-      ev_to   -= 1.
-    ENDWHILE.
+    zcl_skylint_ast_util=>strip_outer_parens( EXPORTING it_tokens = it_tokens
+                                              CHANGING  cv_from   = ev_from
+                                                        cv_to     = ev_to ).
   ENDMETHOD.
 
   METHOD is_prefer_is_not.

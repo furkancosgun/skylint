@@ -295,24 +295,9 @@ CLASS zcl_skylint_pref_cond IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD extract_tokens_text.
-    DATA lv_curr_idx TYPE i.
-    DATA ls_token    TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lt_parts    TYPE STANDARD TABLE OF string WITH EMPTY KEY.
-
-    CLEAR rv_text.
-    lv_curr_idx = iv_from_idx.
-
-    WHILE lv_curr_idx <= iv_to_idx.
-      ls_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                  iv_index     = lv_curr_idx ).
-      IF ls_token-lexeme IS NOT INITIAL.
-        APPEND ls_token-lexeme TO lt_parts.
-      ENDIF.
-      lv_curr_idx += 1.
-    ENDWHILE.
-
-    rv_text = concat_lines_of( table = lt_parts
-                               sep   = ` ` ).
+    rv_text = zcl_skylint_ast_util=>extract_tokens_text( is_statement = is_statement
+                                                         iv_from_idx  = iv_from_idx
+                                                         iv_to_idx    = iv_to_idx ).
   ENDMETHOD.
 
   METHOD build_cond_code.

@@ -237,18 +237,17 @@ CLASS zcl_skylint_pref_downport IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD has_inline_declaration.
-    DATA lv_lex TYPE string.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_has = abap_false.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      lv_lex = <ls_token>-lexeme.
-      IF    lv_lex CP 'DATA(*'
-         OR lv_lex CP '@DATA(*'
-         OR lv_lex CP 'FINAL(*'
-         OR lv_lex CP '@FINAL(*'
-         OR lv_lex CP 'FIELD-SYMBOL(*'.
+      IF    zcl_skylint_ast_util=>token_is_inline_declaration( is_token  = <ls_token>
+                                                               iv_prefix = 'DATA' )         = abap_true
+         OR zcl_skylint_ast_util=>token_is_inline_declaration( is_token  = <ls_token>
+                                                               iv_prefix = 'FINAL' )        = abap_true
+         OR zcl_skylint_ast_util=>token_is_inline_declaration( is_token  = <ls_token>
+                                                               iv_prefix = 'FIELD-SYMBOL' ) = abap_true.
         rv_has = abap_true.
         RETURN.
       ENDIF.

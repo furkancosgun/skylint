@@ -32,10 +32,6 @@ CLASS zcl_skylint_pref_when_others DEFINITION
     DATA mv_min_branches TYPE i         VALUE 2.
     DATA mv_require_last TYPE abap_bool VALUE abap_true.
 
-    METHODS is_when_others
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_yes) TYPE abap_bool.
-
 ENDCLASS.
 
 
@@ -77,7 +73,9 @@ CLASS zcl_skylint_pref_when_others IMPLEMENTATION.
             CONTINUE.
           ENDIF.
           <ls_context>-branch_count += 1.
-          IF is_when_others( <ls_statement> ) = abap_true.
+          IF zcl_skylint_ast_util=>match_token_sequence(
+                 is_statement = <ls_statement>
+                 it_expected  = VALUE #( ( `WHEN` ) ( `OTHERS` ) ) ) = abap_true.
             <ls_context>-has_others       = abap_true.
             <ls_context>-others_index     = <ls_context>-branch_count.
             <ls_context>-others_statement = <ls_statement>.
@@ -105,19 +103,5 @@ CLASS zcl_skylint_pref_when_others IMPLEMENTATION.
           DELETE lt_stack INDEX lines( lt_stack ).
       ENDCASE.
     ENDLOOP.
-  ENDMETHOD.
-
-  METHOD is_when_others.
-    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
-
-    rv_yes = abap_false.
-    IF zcl_skylint_ast_util=>token_count( is_statement ) < 2.
-      RETURN.
-    ENDIF.
-    ls_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = 2 ).
-    IF ls_token-lexeme = 'OTHERS' AND ls_token-references IS INITIAL.
-      rv_yes = abap_true.
-    ENDIF.
   ENDMETHOD.
 ENDCLASS.

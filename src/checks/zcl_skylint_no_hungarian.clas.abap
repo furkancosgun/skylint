@@ -35,10 +35,6 @@ CLASS zcl_skylint_no_hungarian DEFINITION
     METHODS check_inline_declarations
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    METHODS extract_name_from_paren
-      IMPORTING iv_lexeme      TYPE string
-      RETURNING VALUE(rv_name) TYPE string.
-
 ENDCLASS.
 
 
@@ -89,27 +85,19 @@ CLASS zcl_skylint_no_hungarian IMPLEMENTATION.
     DATA lv_name     TYPE string.
     DATA lv_type     TYPE string.
 
-    IF zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
-                                                  it_expected  = VALUE #( ( `BEGIN` ) ( `OF` ) ) ) > 0.
-      ls_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
-                                                      iv_lexeme    = 'OF' ).
-      lv_name = ls_tok-lexeme.
-    ELSEIF zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
-                                                      it_expected  = VALUE #( ( `END` ) ( `OF` ) ) ) > 0.
+    ls_tok = zcl_skylint_ast_util=>get_declaration_token( is_statement ).
+    IF ls_tok-lexeme IS INITIAL.
       RETURN.
-    ELSE.
-      ls_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
-                                                      iv_lexeme    = is_statement-keyword ).
-      lv_name = ls_tok-lexeme.
-
-      ls_type_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
-                                                           iv_lexeme    = 'TYPE' ).
-      IF ls_type_tok-lexeme IS INITIAL.
-        ls_type_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
-                                                             iv_lexeme    = 'LIKE' ).
-      ENDIF.
-      lv_type = ls_type_tok-lexeme.
     ENDIF.
+    lv_name = ls_tok-lexeme.
+
+    ls_type_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                         iv_lexeme    = 'TYPE' ).
+    IF ls_type_tok-lexeme IS INITIAL.
+      ls_type_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                           iv_lexeme    = 'LIKE' ).
+    ENDIF.
+    lv_type = ls_type_tok-lexeme.
 
     IF lv_name IS NOT INITIAL AND is_hungarian( iv_name = lv_name
                                                 iv_type = lv_type ) = abap_true.
@@ -119,46 +107,17 @@ CLASS zcl_skylint_no_hungarian IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check_method_parameters.
-    DATA lv_in_clause TYPE abap_bool.
-    DATA ls_prev_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_type_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_name      TYPE string.
-    DATA lv_type      TYPE string.
-    DATA lv_tabix     TYPE i.
-    FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lt_params TYPE zcl_skylint_ast_util=>ty_method_parameters.
+    FIELD-SYMBOLS <ls_param> TYPE zcl_skylint_ast_util=>ty_method_parameter.
 
-    LOOP AT is_statement-tokens ASSIGNING <ls_tok>.
-      lv_tabix = sy-tabix.
-
-      IF <ls_tok>-references IS NOT INITIAL.
-        ls_prev_tok = <ls_tok>.
-        CONTINUE.
+    lt_params = zcl_skylint_ast_util=>get_method_parameters( is_statement ).
+    LOOP AT lt_params ASSIGNING <ls_param>.
+      IF is_hungarian( iv_name = <ls_param>-name
+                       iv_type = <ls_param>-type_name ) = abap_true.
+        report_statement( is_statement    = is_statement
+                          iv_finding_code = c_finding_codes-hungarian ).
+        RETURN.
       ENDIF.
-
-      CASE <ls_tok>-lexeme.
-        WHEN 'IMPORTING' OR 'EXPORTING' OR 'CHANGING' OR 'RETURNING'.
-          lv_in_clause = abap_true.
-
-        WHEN 'RAISING' OR 'EXCEPTIONS' OR 'FOR' OR 'REDEFINITION' OR 'ABSTRACT' OR 'FINAL' OR 'DEFAULT'.
-          lv_in_clause = abap_false.
-
-        WHEN 'TYPE' OR 'LIKE'.
-          IF lv_in_clause = abap_true AND ls_prev_tok-lexeme IS NOT INITIAL.
-            lv_name = extract_name_from_paren( ls_prev_tok-lexeme ).
-            ls_type_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                           iv_index     = lv_tabix + 1 ).
-            lv_type = ls_type_tok-lexeme.
-
-            IF is_hungarian( iv_name = lv_name
-                             iv_type = lv_type ) = abap_true.
-              report_statement( is_statement    = is_statement
-                                iv_finding_code = c_finding_codes-hungarian ).
-              RETURN.
-            ENDIF.
-          ENDIF.
-      ENDCASE.
-
-      ls_prev_tok = <ls_tok>.
     ENDLOOP.
   ENDMETHOD.
 
@@ -175,7 +134,7 @@ CLASS zcl_skylint_no_hungarian IMPLEMENTATION.
 
         IF    <ls_ref>-usage_mode = if_ci_atc_source_code_provider=>usage_modes-definition_with_write
            OR <ls_ref>-usage_mode = if_ci_atc_source_code_provider=>usage_modes-definition_with_assign.
-          lv_name = extract_name_from_paren( <ls_tok>-lexeme ).
+          lv_name = zcl_skylint_ast_util=>extract_name_from_paren( <ls_tok>-lexeme ).
           IF lv_name IS NOT INITIAL AND is_hungarian( lv_name ) = abap_true.
             report_statement( is_statement    = is_statement
                               iv_finding_code = c_finding_codes-hungarian ).
@@ -209,33 +168,5 @@ CLASS zcl_skylint_no_hungarian IMPLEMENTATION.
                    regex = '^FS_.*' ).
       rv_is = abap_true.
     ENDIF.
-  ENDMETHOD.
-
-  METHOD extract_name_from_paren.
-    DATA lv_len TYPE i.
-    DATA lv_pos TYPE i.
-
-    rv_name = iv_lexeme.
-    lv_pos = find( val = iv_lexeme
-                   sub = '(' ).
-    IF lv_pos < 0.
-      RETURN.
-    ENDIF.
-
-    lv_pos += 1.
-    lv_len = strlen( iv_lexeme ) - lv_pos.
-    IF     lv_len > 0
-       AND substring( val = iv_lexeme
-                      off = strlen( iv_lexeme ) - 1
-                      len = 1 ) = ')'.
-      lv_len -= 1.
-    ENDIF.
-
-    IF lv_len > 0.
-      rv_name = substring( val = iv_lexeme
-                           off = lv_pos
-                           len = lv_len ).
-    ENDIF.
-    rv_name = condense( rv_name ).
   ENDMETHOD.
 ENDCLASS.

@@ -186,19 +186,6 @@ CLASS zcl_skylint_no_unclosed_res IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD normalize_target.
-    rv_normalized = to_upper( iv_lexeme ).
-
-    IF rv_normalized CP '@*'.
-      rv_normalized = rv_normalized+1.
-    ENDIF.
-
-    IF rv_normalized CP 'DATA(*)*'.
-      rv_normalized = segment( val   = rv_normalized
-                               index = 2
-                               sep   = '(' ).
-      rv_normalized = segment( val   = rv_normalized
-                               index = 1
-                               sep   = ')' ).
-    ENDIF.
+    rv_normalized = to_upper( zcl_skylint_ast_util=>extract_name_from_paren( iv_lexeme ) ).
   ENDMETHOD.
 ENDCLASS.

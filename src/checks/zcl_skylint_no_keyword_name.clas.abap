@@ -23,10 +23,6 @@ CLASS zcl_skylint_no_keyword_name DEFINITION
     METHODS check_inline_declarations
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    METHODS extract_name_from_paren
-      IMPORTING iv_lexeme      TYPE string
-      RETURNING VALUE(rv_name) TYPE string.
-
 ENDCLASS.
 
 
@@ -59,16 +55,9 @@ CLASS zcl_skylint_no_keyword_name IMPLEMENTATION.
     DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_name  TYPE string.
 
-    IF zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
-                                                  it_expected  = VALUE #( ( `BEGIN` ) ( `OF` ) ) ) > 0.
-      ls_token = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
-                                                        iv_lexeme    = 'OF' ).
-    ELSEIF zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
-                                                      it_expected  = VALUE #( ( `END` ) ( `OF` ) ) ) > 0.
+    ls_token = zcl_skylint_ast_util=>get_declaration_token( is_statement ).
+    IF ls_token-lexeme IS INITIAL.
       RETURN.
-    ELSE.
-      ls_token = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
-                                                        iv_lexeme    = is_statement-keyword ).
     ENDIF.
 
     lv_name = ls_token-lexeme.
@@ -102,7 +91,7 @@ CLASS zcl_skylint_no_keyword_name IMPLEMENTATION.
           CONTINUE.
         ENDIF.
 
-        lv_name = extract_name_from_paren( <ls_token>-lexeme ).
+        lv_name = zcl_skylint_ast_util=>extract_name_from_paren( <ls_token>-lexeme ).
         IF lv_name CS '<'.
           REPLACE ALL OCCURRENCES OF '<' IN lv_name WITH ''.
         ENDIF.
@@ -118,33 +107,5 @@ CLASS zcl_skylint_no_keyword_name IMPLEMENTATION.
         ENDIF.
       ENDLOOP.
     ENDLOOP.
-  ENDMETHOD.
-
-  METHOD extract_name_from_paren.
-    DATA lv_len TYPE i.
-    DATA lv_pos TYPE i.
-
-    rv_name = iv_lexeme.
-    lv_pos = find( val = iv_lexeme
-                   sub = '(' ).
-    IF lv_pos < 0.
-      RETURN.
-    ENDIF.
-
-    lv_pos += 1.
-    lv_len = strlen( iv_lexeme ) - lv_pos.
-    IF     lv_len > 0
-       AND substring( val = iv_lexeme
-                      off = strlen( iv_lexeme ) - 1
-                      len = 1 ) = ')'.
-      lv_len -= 1.
-    ENDIF.
-
-    IF lv_len > 0.
-      rv_name = substring( val = iv_lexeme
-                           off = lv_pos
-                           len = lv_len ).
-    ENDIF.
-    rv_name = condense( rv_name ).
   ENDMETHOD.
 ENDCLASS.

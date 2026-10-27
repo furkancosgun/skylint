@@ -44,10 +44,6 @@ CLASS zcl_skylint_pref_name_members DEFINITION
       IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_name) TYPE string.
 
-    METHODS extract_name_from_paren
-      IMPORTING iv_lexeme      TYPE string
-      RETURNING VALUE(rv_name) TYPE string.
-
     METHODS is_global_class
       IMPORTING is_statement     TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_global) TYPE abap_bool.
@@ -72,11 +68,6 @@ CLASS zcl_skylint_pref_name_members DEFINITION
 
     METHODS check_method_parameters
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
-
-    METHODS check_param_by_section
-      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
-                iv_section   TYPE string
-                iv_lexeme    TYPE string.
 
     METHODS check_decl_name
       IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
@@ -164,69 +155,13 @@ CLASS zcl_skylint_pref_name_members IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD matches_pattern.
-    DATA lv_val TYPE string.
-    DATA lv_pat TYPE string.
-
-    IF iv_pattern IS INITIAL.
-      rv_matches = abap_true.
-      RETURN.
-    ENDIF.
-
-    lv_val = iv_text.
-    lv_pat = iv_pattern.
-
-    TRY.
-        rv_matches = xsdbool( matches( val  = lv_val
-                                       pcre = lv_pat ) ).
-      CATCH cx_root.
-        rv_matches = abap_true.
-    ENDTRY.
+    rv_matches = zcl_skylint_ast_util=>matches_regex(
+        iv_text    = iv_text
+        iv_pattern = iv_pattern ).
   ENDMETHOD.
 
   METHOD get_stmt_name.
-    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
-
-    IF zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
-                                                  it_expected  = VALUE #( ( `BEGIN` ) ( `OF` ) ) ) > 0.
-      ls_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
-                                                      iv_lexeme    = 'OF' ).
-      rv_name = ls_tok-lexeme.
-    ELSEIF zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
-                                                      it_expected  = VALUE #( ( `END` ) ( `OF` ) ) ) > 0.
-      RETURN.
-    ELSE.
-      ls_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
-                                                      iv_lexeme    = is_statement-keyword ).
-      rv_name = ls_tok-lexeme.
-    ENDIF.
-  ENDMETHOD.
-
-  METHOD extract_name_from_paren.
-    DATA lv_len TYPE i.
-    DATA lv_pos TYPE i.
-
-    rv_name = iv_lexeme.
-    lv_pos = find( val = iv_lexeme
-                   sub = '(' ).
-    IF lv_pos < 0.
-      RETURN.
-    ENDIF.
-
-    lv_pos += 1.
-    lv_len = strlen( iv_lexeme ) - lv_pos.
-    IF     lv_len > 0
-       AND substring( val = iv_lexeme
-                      off = strlen( iv_lexeme ) - 1
-                      len = 1 ) = ')'.
-      lv_len -= 1.
-    ENDIF.
-
-    IF lv_len > 0.
-      rv_name = substring( val = iv_lexeme
-                           off = lv_pos
-                           len = lv_len ).
-    ENDIF.
-    rv_name = condense( rv_name ).
+    rv_name = zcl_skylint_ast_util=>get_declaration_name( is_statement ).
   ENDMETHOD.
 
   METHOD is_global_class.
@@ -369,65 +304,35 @@ CLASS zcl_skylint_pref_name_members IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check_method_parameters.
-    DATA lv_section  TYPE string.
-    DATA ls_prev_tok TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lt_params  TYPE zcl_skylint_ast_util=>ty_method_parameters.
+    DATA lv_pattern TYPE string.
+    FIELD-SYMBOLS <ls_param> TYPE zcl_skylint_ast_util=>ty_method_parameter.
 
-    LOOP AT is_statement-tokens ASSIGNING <ls_tok>.
-      IF <ls_tok>-references IS NOT INITIAL.
-        ls_prev_tok = <ls_tok>.
-        CONTINUE.
-      ENDIF.
-
-      CASE <ls_tok>-lexeme.
-        WHEN 'IMPORTING' OR 'EXPORTING' OR 'CHANGING' OR 'RETURNING'.
-          lv_section = <ls_tok>-lexeme.
-
-        WHEN 'RAISING' OR 'EXCEPTIONS' OR 'FOR' OR 'REDEFINITION' OR 'ABSTRACT' OR 'FINAL'.
-          CLEAR lv_section.
-
-        WHEN 'TYPE' OR 'LIKE'.
-          IF lv_section IS NOT INITIAL AND ls_prev_tok-lexeme IS NOT INITIAL.
-            check_param_by_section( is_statement = is_statement
-                                    iv_section   = lv_section
-                                    iv_lexeme    = ls_prev_tok-lexeme ).
-          ENDIF.
+    lt_params = zcl_skylint_ast_util=>get_method_parameters( is_statement ).
+    LOOP AT lt_params ASSIGNING <ls_param>.
+      CASE <ls_param>-section.
+        WHEN 'IMPORTING'.
+          lv_pattern = mv_param_importing.
+        WHEN 'EXPORTING'.
+          lv_pattern = mv_param_exporting.
+        WHEN 'CHANGING'.
+          lv_pattern = mv_param_changing.
+        WHEN 'RETURNING'.
+          lv_pattern = mv_param_returning.
       ENDCASE.
 
-      ls_prev_tok = <ls_tok>.
+      IF matches_pattern( iv_text    = <ls_param>-name
+                          iv_pattern = lv_pattern ) = abap_false.
+        report_statement( is_statement    = is_statement
+                          iv_finding_code = c_finding_codes-method_parameter ).
+      ENDIF.
     ENDLOOP.
-  ENDMETHOD.
-
-  METHOD check_param_by_section.
-    DATA lv_name    TYPE string.
-    DATA lv_pattern TYPE string.
-
-    lv_name = extract_name_from_paren( iv_lexeme ).
-    CASE iv_section.
-      WHEN 'IMPORTING'.
-        lv_pattern = mv_param_importing.
-      WHEN 'EXPORTING'.
-        lv_pattern = mv_param_exporting.
-      WHEN 'CHANGING'.
-        lv_pattern = mv_param_changing.
-      WHEN 'RETURNING'.
-        lv_pattern = mv_param_returning.
-    ENDCASE.
-
-    IF matches_pattern( iv_text    = lv_name
-                        iv_pattern = lv_pattern ) = abap_false.
-      report_statement( is_statement    = is_statement
-                        iv_finding_code = c_finding_codes-method_parameter ).
-    ENDIF.
   ENDMETHOD.
 
   METHOD check_decl_name.
     DATA lv_name TYPE string.
-    DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    ls_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
-                                                    iv_lexeme    = is_statement-keyword ).
-    lv_name = ls_tok-lexeme.
+    lv_name = zcl_skylint_ast_util=>get_declaration_name( is_statement ).
     IF lv_name IS INITIAL.
       RETURN.
     ENDIF.

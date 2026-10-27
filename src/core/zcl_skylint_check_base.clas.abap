@@ -96,11 +96,29 @@ CLASS zcl_skylint_check_base DEFINITION
     DATA mt_reported      TYPE ty_reported_tab.
     DATA mo_factory       TYPE REF TO cl_ci_atc_assistant_factory.
     DATA mo_code_provider TYPE REF TO if_ci_atc_source_code_provider.
+    DATA mo_meta_data     TYPE REF TO zcl_skylint_check_meta_data.
 
     METHODS has_valid_pseudo_comment
       IMPORTING is_statement                 TYPE if_ci_atc_source_code_provider=>ty_statement
                 iv_finding_code              TYPE if_ci_atc_check=>ty_finding_code
       RETURNING VALUE(rv_has_pseudo_comment) TYPE abap_bool.
+
+    METHODS build_quickfix
+      IMPORTING iv_quickfix_code   TYPE cl_ci_atc_quickfixes=>ty_quickfix_code
+                iv_mode            TYPE string
+                iv_statement_from  TYPE i
+                iv_statement_to    TYPE i OPTIONAL
+                iv_token_from      TYPE i OPTIONAL
+                iv_token_to        TYPE i OPTIONAL
+                it_new_code        TYPE ty_code_lines
+      RETURNING VALUE(rs_quickfix) TYPE ty_quickfix.
+
+    METHODS append_finding
+      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_finding_code TYPE if_ci_atc_check=>ty_finding_code
+                is_parameters   TYPE if_ci_atc_check=>ty_message_parameters OPTIONAL
+                is_quickfix     TYPE ty_quickfix                             OPTIONAL
+                it_quickfixes   TYPE ty_quickfixes                          OPTIONAL.
 
     METHODS convert_reported
       RETURNING VALUE(rt_findings) TYPE if_ci_atc_check=>ty_findings.
@@ -138,11 +156,11 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
     ENDIF.
   ENDMETHOD.
 
-  METHOD quickfix_replace.
+  METHOD build_quickfix.
     DATA ls_qf TYPE ty_quickfix.
 
     ls_qf-code           = iv_quickfix_code.
-    ls_qf-mode           = c_quickfix_modes-replace.
+    ls_qf-mode           = iv_mode.
     ls_qf-statement_from = iv_statement_from.
     ls_qf-statement_to   = iv_statement_to.
     IF ls_qf-statement_to IS INITIAL.
@@ -156,49 +174,39 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
     ls_qf-new_code = it_new_code.
 
     rs_quickfix = ls_qf.
+  ENDMETHOD.
+
+  METHOD quickfix_replace.
+    rs_quickfix = build_quickfix( iv_quickfix_code  = iv_quickfix_code
+                                  iv_mode           = c_quickfix_modes-replace
+                                  iv_statement_from = iv_statement_from
+                                  iv_statement_to   = iv_statement_to
+                                  iv_token_from     = iv_token_from
+                                  iv_token_to       = iv_token_to
+                                  it_new_code       = it_new_code ).
   ENDMETHOD.
 
   METHOD quickfix_insert_before.
-    DATA ls_qf TYPE ty_quickfix.
-
-    ls_qf-code           = iv_quickfix_code.
-    ls_qf-mode           = c_quickfix_modes-insert_before.
-    ls_qf-statement_from = iv_statement_from.
-    ls_qf-statement_to   = iv_statement_to.
-    IF ls_qf-statement_to IS INITIAL.
-      ls_qf-statement_to = iv_statement_from.
-    ENDIF.
-    ls_qf-token_from = iv_token_from.
-    ls_qf-token_to   = iv_token_to.
-    IF ls_qf-token_from IS NOT INITIAL AND ls_qf-token_to IS INITIAL.
-      ls_qf-token_to = iv_token_from.
-    ENDIF.
-    ls_qf-new_code = it_new_code.
-
-    rs_quickfix = ls_qf.
+    rs_quickfix = build_quickfix( iv_quickfix_code  = iv_quickfix_code
+                                  iv_mode           = c_quickfix_modes-insert_before
+                                  iv_statement_from = iv_statement_from
+                                  iv_statement_to   = iv_statement_to
+                                  iv_token_from     = iv_token_from
+                                  iv_token_to       = iv_token_to
+                                  it_new_code       = it_new_code ).
   ENDMETHOD.
 
   METHOD quickfix_insert_after.
-    DATA ls_qf TYPE ty_quickfix.
-
-    ls_qf-code           = iv_quickfix_code.
-    ls_qf-mode           = c_quickfix_modes-insert_after.
-    ls_qf-statement_from = iv_statement_from.
-    ls_qf-statement_to   = iv_statement_to.
-    IF ls_qf-statement_to IS INITIAL.
-      ls_qf-statement_to = iv_statement_from.
-    ENDIF.
-    ls_qf-token_from = iv_token_from.
-    ls_qf-token_to   = iv_token_to.
-    IF ls_qf-token_from IS NOT INITIAL AND ls_qf-token_to IS INITIAL.
-      ls_qf-token_to = iv_token_from.
-    ENDIF.
-    ls_qf-new_code = it_new_code.
-
-    rs_quickfix = ls_qf.
+    rs_quickfix = build_quickfix( iv_quickfix_code  = iv_quickfix_code
+                                  iv_mode           = c_quickfix_modes-insert_after
+                                  iv_statement_from = iv_statement_from
+                                  iv_statement_to   = iv_statement_to
+                                  iv_token_from     = iv_token_from
+                                  iv_token_to       = iv_token_to
+                                  it_new_code       = it_new_code ).
   ENDMETHOD.
 
-  METHOD report_statement.
+  METHOD append_finding.
     DATA ls_reported TYPE ty_reported.
 
     IF has_valid_pseudo_comment( is_statement    = is_statement
@@ -219,26 +227,25 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
     APPEND ls_reported TO mt_reported.
   ENDMETHOD.
 
+  METHOD report_statement.
+    append_finding( is_statement    = is_statement
+                    iv_finding_code = iv_finding_code
+                    is_parameters   = is_parameters
+                    is_quickfix     = is_quickfix
+                    it_quickfixes   = it_quickfixes ).
+  ENDMETHOD.
+
   METHOD report_token.
-    DATA ls_reported TYPE ty_reported.
+    DATA ls_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    IF has_valid_pseudo_comment( is_statement    = is_statement
-                                 iv_finding_code = iv_finding_code ) = abap_true.
-      RETURN.
-    ENDIF.
+    ls_statement          = is_statement.
+    ls_statement-position = is_token-position.
 
-    ls_reported-code      = iv_finding_code.
-    ls_reported-statement = is_statement.
-    ls_reported-statement-position = is_token-position.
-    ls_reported-parameters         = is_parameters.
-    IF is_quickfix-code IS NOT INITIAL.
-      APPEND is_quickfix TO ls_reported-quickfixes.
-    ENDIF.
-    IF it_quickfixes IS NOT INITIAL.
-      APPEND LINES OF it_quickfixes TO ls_reported-quickfixes.
-    ENDIF.
-
-    APPEND ls_reported TO mt_reported.
+    append_finding( is_statement    = ls_statement
+                    iv_finding_code = iv_finding_code
+                    is_parameters   = is_parameters
+                    is_quickfix     = is_quickfix
+                    it_quickfixes   = it_quickfixes ).
   ENDMETHOD.
 
   METHOD convert_reported.
@@ -288,16 +295,21 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD if_ci_atc_check~get_meta_data.
-    meta_data = NEW zcl_skylint_check_meta_data( iv_description       = ms_config-description
-                                                 it_finding_codes     = ms_config-finding_codes
-                                                 it_quickfix_codes    = ms_config-quickfix_codes
-                                                 it_attributes        = ms_config-attributes
-                                                 iv_remote_enablement = ms_config-remote_enablement ).
+    IF mo_meta_data IS INITIAL.
+      mo_meta_data = NEW zcl_skylint_check_meta_data(
+                             iv_description       = ms_config-description
+                             it_finding_codes     = ms_config-finding_codes
+                             it_quickfix_codes    = ms_config-quickfix_codes
+                             it_attributes        = ms_config-attributes
+                             iv_remote_enablement = ms_config-remote_enablement ).
+    ENDIF.
+    meta_data = mo_meta_data.
   ENDMETHOD.
 
   METHOD if_ci_atc_check~run.
     DATA ls_comp_unit  TYPE if_ci_atc_source_code_provider=>ty_compilation_unit.
     DATA lr_procedures TYPE REF TO if_ci_atc_source_code_provider=>ty_procedures.
+    DATA lv_skip       TYPE abap_bool.
 
     FIELD-SYMBOLS <ls_procedure> TYPE if_ci_atc_source_code_provider=>ty_procedure.
     FIELD-SYMBOLS <ls_rep>       TYPE ty_reported.
@@ -312,10 +324,12 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
     ENDTRY.
 
     LOOP AT lr_procedures->* ASSIGNING <ls_procedure>.
-      IF     <ls_procedure>-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-method
-         AND <ls_procedure>-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-form_routine
-         AND <ls_procedure>-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-function
-         AND <ls_procedure>-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      lv_skip = xsdbool(
+              <ls_procedure>-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-method
+          AND <ls_procedure>-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-form_routine
+          AND <ls_procedure>-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-function
+          AND <ls_procedure>-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition ).
+      IF lv_skip = abap_true.
         CONTINUE.
       ENDIF.
       check( <ls_procedure> ).

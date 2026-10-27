@@ -163,37 +163,9 @@ CLASS zcl_skylint_no_self_compare IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD strip_outer_parens.
-    DATA lv_depth TYPE i.
-    FIELD-SYMBOLS <ls_open>  TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_close> TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_tok>   TYPE if_ci_atc_source_code_provider=>ty_token.
-
-    WHILE cv_from < cv_to.
-      ASSIGN is_statement-tokens[ cv_from ] TO <ls_open>.
-      IF sy-subrc <> 0 OR <ls_open>-lexeme <> '(' OR <ls_open>-references IS NOT INITIAL.
-        EXIT.
-      ENDIF.
-
-      ASSIGN is_statement-tokens[ cv_to ] TO <ls_close>.
-      IF sy-subrc <> 0 OR <ls_close>-lexeme <> ')' OR <ls_close>-references IS NOT INITIAL.
-        EXIT.
-      ENDIF.
-
-      lv_depth = 0.
-      LOOP AT is_statement-tokens FROM cv_from TO cv_to - 1 ASSIGNING <ls_tok>.
-        lv_depth += zcl_skylint_ast_util=>token_paren_delta( <ls_tok> ).
-        IF lv_depth = 0.
-          EXIT.
-        ENDIF.
-      ENDLOOP.
-
-      IF lv_depth = 1.
-        cv_from += 1.
-        cv_to   -= 1.
-      ELSE.
-        EXIT.
-      ENDIF.
-    ENDWHILE.
+    zcl_skylint_ast_util=>strip_outer_parens( EXPORTING is_statement = is_statement
+                                              CHANGING  cv_from      = cv_from
+                                                        cv_to        = cv_to ).
   ENDMETHOD.
 
   METHOD find_top_level_operator.

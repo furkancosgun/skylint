@@ -29,10 +29,6 @@ CLASS zcl_skylint_no_single_letter DEFINITION
     METHODS check_inline_declarations
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    METHODS extract_name_from_paren
-      IMPORTING iv_lexeme      TYPE string
-      RETURNING VALUE(rv_name) TYPE string.
-
 ENDCLASS.
 
 
@@ -69,19 +65,11 @@ CLASS zcl_skylint_no_single_letter IMPLEMENTATION.
     DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_name TYPE string.
 
-    IF zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
-                                                  it_expected  = VALUE #( ( `BEGIN` ) ( `OF` ) ) ) > 0.
-      ls_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
-                                                      iv_lexeme    = 'OF' ).
-      lv_name = ls_tok-lexeme.
-    ELSEIF zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
-                                                      it_expected  = VALUE #( ( `END` ) ( `OF` ) ) ) > 0.
+    ls_tok = zcl_skylint_ast_util=>get_declaration_token( is_statement ).
+    IF ls_tok-lexeme IS INITIAL.
       RETURN.
-    ELSE.
-      ls_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
-                                                      iv_lexeme    = is_statement-keyword ).
-      lv_name = ls_tok-lexeme.
     ENDIF.
+    lv_name = ls_tok-lexeme.
 
     IF lv_name IS NOT INITIAL AND is_single_letter( lv_name ) = abap_true.
       report_statement( is_statement    = is_statement
@@ -102,7 +90,7 @@ CLASS zcl_skylint_no_single_letter IMPLEMENTATION.
 
         IF    <ls_ref>-usage_mode = if_ci_atc_source_code_provider=>usage_modes-definition_with_write
            OR <ls_ref>-usage_mode = if_ci_atc_source_code_provider=>usage_modes-definition_with_assign.
-          lv_name = extract_name_from_paren( <ls_tok>-lexeme ).
+          lv_name = zcl_skylint_ast_util=>extract_name_from_paren( <ls_tok>-lexeme ).
           IF lv_name IS NOT INITIAL AND is_single_letter( lv_name ) = abap_true.
             report_statement( is_statement    = is_statement
                               iv_finding_code = c_finding_codes-single_letter ).
@@ -138,33 +126,5 @@ CLASS zcl_skylint_no_single_letter IMPLEMENTATION.
     IF lv_idx >= 0 AND lv_idx = strlen( lv_clean ) - 2.
       rv_is = abap_true.
     ENDIF.
-  ENDMETHOD.
-
-  METHOD extract_name_from_paren.
-    DATA lv_len TYPE i.
-    DATA lv_pos TYPE i.
-
-    rv_name = iv_lexeme.
-    lv_pos = find( val = iv_lexeme
-                   sub = '(' ).
-    IF lv_pos < 0.
-      RETURN.
-    ENDIF.
-
-    lv_pos += 1.
-    lv_len = strlen( iv_lexeme ) - lv_pos.
-    IF     lv_len > 0
-       AND substring( val = iv_lexeme
-                      off = strlen( iv_lexeme ) - 1
-                      len = 1 ) = ')'.
-      lv_len -= 1.
-    ENDIF.
-
-    IF lv_len > 0.
-      rv_name = substring( val = iv_lexeme
-                           off = lv_pos
-                           len = lv_len ).
-    ENDIF.
-    rv_name = condense( rv_name ).
   ENDMETHOD.
 ENDCLASS.

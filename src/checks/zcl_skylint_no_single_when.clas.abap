@@ -17,10 +17,6 @@ CLASS zcl_skylint_no_single_when DEFINITION
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_SINGLE_WHEN'.
 
-    METHODS is_when_others
-      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_is) TYPE abap_bool.
-
     METHODS count_when_branches
       IMPORTING iv_start_idx  TYPE i
                 is_procedure  TYPE if_ci_atc_source_code_provider=>ty_procedure
@@ -59,12 +55,6 @@ CLASS zcl_skylint_no_single_when IMPLEMENTATION.
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD is_when_others.
-    rv_is = zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
-                                                    iv_index     = 2
-                                                    iv_expected  = `OTHERS` ).
-  ENDMETHOD.
-
   METHOD count_when_branches.
     DATA lv_total    TYPE i.
     DATA lv_fwd_idx  TYPE i.
@@ -95,7 +85,10 @@ CLASS zcl_skylint_no_single_when IMPLEMENTATION.
           ENDIF.
 
         WHEN 'WHEN'.
-          IF lv_depth = 0 AND is_when_others( ls_fwd_stmt ) = abap_false.
+          IF     lv_depth = 0
+             AND zcl_skylint_ast_util=>match_token_sequence(
+                     is_statement = ls_fwd_stmt
+                     it_expected  = VALUE #( ( `WHEN` ) ( `OTHERS` ) ) ) = abap_false.
             rv_cnt += 1.
           ENDIF.
       ENDCASE.

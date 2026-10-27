@@ -272,41 +272,9 @@ CLASS zcl_skylint_no_dead_code IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD strip_outer_parens.
-    DATA lv_depth TYPE i.
-    DATA lv_idx   TYPE i.
-    DATA ls_tok   TYPE if_ci_atc_source_code_provider=>ty_token.
-
-    WHILE cv_from < cv_to.
-      ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = cv_from ).
-      IF ls_tok-lexeme <> '('.
-        EXIT.
-      ENDIF.
-      ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = cv_to ).
-      IF ls_tok-lexeme <> ')'.
-        EXIT.
-      ENDIF.
-
-      lv_depth = 0.
-      lv_idx   = cv_from.
-      DO cv_to - cv_from TIMES.
-        ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                  iv_index     = lv_idx ).
-        lv_depth += zcl_skylint_ast_util=>token_paren_delta( ls_tok ).
-        IF lv_depth = 0.
-          EXIT.
-        ENDIF.
-        lv_idx += 1.
-      ENDDO.
-
-      IF lv_depth = 1.
-        cv_from += 1.
-        cv_to   -= 1.
-      ELSE.
-        EXIT.
-      ENDIF.
-    ENDWHILE.
+    zcl_skylint_ast_util=>strip_outer_parens( EXPORTING is_statement = is_statement
+                                              CHANGING  cv_from      = cv_from
+                                                        cv_to        = cv_to ).
   ENDMETHOD.
 
   METHOD is_number.

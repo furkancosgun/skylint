@@ -46,10 +46,6 @@ CLASS zcl_skylint_pref_switch DEFINITION
                 iv_to_idx      TYPE i
       RETURNING VALUE(rv_text) TYPE string.
 
-    METHODS is_when_others
-      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_is) TYPE abap_bool.
-
     METHODS build_switch_code
       IMPORTING is_case_stmt   TYPE if_ci_atc_source_code_provider=>ty_statement
                 it_branches    TYPE ty_when_branches
@@ -172,7 +168,9 @@ CLASS zcl_skylint_pref_switch IMPLEMENTATION.
       CLEAR ls_branch.
       ls_branch-when_idx = lv_curr.
 
-      IF is_when_others( ls_stmt ) = abap_true.
+      IF zcl_skylint_ast_util=>match_token_sequence(
+             is_statement = ls_stmt
+             it_expected  = VALUE #( ( `WHEN` ) ( `OTHERS` ) ) ) = abap_true.
         ls_branch-is_others = abap_true.
         lv_has_others = abap_true.
       ELSE.
@@ -232,11 +230,6 @@ CLASS zcl_skylint_pref_switch IMPLEMENTATION.
     ENDIF.
   ENDMETHOD.
 
-  METHOD is_when_others.
-    rv_is = xsdbool( zcl_skylint_ast_util=>find_token( is_statement = is_statement
-                                                       iv_lexeme    = 'OTHERS' ) > 0 ).
-  ENDMETHOD.
-
   METHOD parse_assignment.
     DATA lv_tok_count   TYPE i.
     DATA lv_paren_depth TYPE i.
@@ -278,24 +271,9 @@ CLASS zcl_skylint_pref_switch IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD extract_tokens_text.
-    DATA lv_curr_idx TYPE i.
-    DATA ls_token    TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lt_parts    TYPE STANDARD TABLE OF string WITH EMPTY KEY.
-
-    CLEAR rv_text.
-    lv_curr_idx = iv_from_idx.
-
-    WHILE lv_curr_idx <= iv_to_idx.
-      ls_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                  iv_index     = lv_curr_idx ).
-      IF ls_token-lexeme IS NOT INITIAL.
-        APPEND ls_token-lexeme TO lt_parts.
-      ENDIF.
-      lv_curr_idx += 1.
-    ENDWHILE.
-
-    rv_text = concat_lines_of( table = lt_parts
-                               sep   = ` ` ).
+    rv_text = zcl_skylint_ast_util=>extract_tokens_text( is_statement = is_statement
+                                                         iv_from_idx  = iv_from_idx
+                                                         iv_to_idx    = iv_to_idx ).
   ENDMETHOD.
 
   METHOD build_switch_code.

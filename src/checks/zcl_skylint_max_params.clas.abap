@@ -79,35 +79,24 @@ CLASS zcl_skylint_max_params IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD count_parameters.
-    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
-
-    rv_count = 0.
-    LOOP AT is_statement-tokens INTO ls_tok WHERE references IS INITIAL.
-      IF ls_tok-lexeme = 'TYPE' OR ls_tok-lexeme = 'LIKE'.
-        rv_count += 1.
-      ENDIF.
-    ENDLOOP.
+    rv_count = lines( zcl_skylint_ast_util=>get_method_parameters( is_statement ) ).
   ENDMETHOD.
 
   METHOD has_multiple_params_per_line.
+    DATA lt_params    TYPE zcl_skylint_ast_util=>ty_method_parameters.
     DATA lv_prev_line TYPE i VALUE 0.
     DATA lv_line      TYPE i.
-    FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_param> TYPE zcl_skylint_ast_util=>ty_method_parameter.
 
     rv_yes = abap_false.
+    lt_params = zcl_skylint_ast_util=>get_method_parameters( is_statement ).
 
-    LOOP AT is_statement-tokens ASSIGNING <ls_tok>
-         WHERE references IS INITIAL.
-      IF <ls_tok>-lexeme <> 'TYPE' AND <ls_tok>-lexeme <> 'LIKE'.
-        CONTINUE.
-      ENDIF.
-
-      lv_line = <ls_tok>-position-line.
+    LOOP AT lt_params ASSIGNING <ls_param>.
+      lv_line = <ls_param>-token-position-line.
       IF lv_prev_line > 0 AND lv_line = lv_prev_line.
         rv_yes = abap_true.
         RETURN.
       ENDIF.
-
       lv_prev_line = lv_line.
     ENDLOOP.
   ENDMETHOD.

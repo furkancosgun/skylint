@@ -190,41 +190,13 @@ CLASS zcl_skylint_pref_name_objects IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD matches_pattern.
-    DATA lv_val TYPE string.
-    DATA lv_pat TYPE string.
-
-    IF iv_pattern IS INITIAL.
-      rv_matches = abap_true.
-      RETURN.
-    ENDIF.
-
-    lv_val = iv_text.
-    lv_pat = iv_pattern.
-
-    TRY.
-        rv_matches = xsdbool( matches( val  = lv_val
-                                       pcre = lv_pat ) ).
-      CATCH cx_root.
-        rv_matches = abap_true.
-    ENDTRY.
+    rv_matches = zcl_skylint_ast_util=>matches_regex(
+        iv_text    = iv_text
+        iv_pattern = iv_pattern ).
   ENDMETHOD.
 
   METHOD get_stmt_name.
-    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
-
-    IF zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
-                                                  it_expected  = VALUE #( ( `BEGIN` ) ( `OF` ) ) ) > 0.
-      ls_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
-                                                      iv_lexeme    = 'OF' ).
-      rv_name = ls_tok-lexeme.
-    ELSEIF zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
-                                                      it_expected  = VALUE #( ( `END` ) ( `OF` ) ) ) > 0.
-      RETURN.
-    ELSE.
-      ls_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
-                                                      iv_lexeme    = is_statement-keyword ).
-      rv_name = ls_tok-lexeme.
-    ENDIF.
+    rv_name = zcl_skylint_ast_util=>get_declaration_name( is_statement ).
   ENDMETHOD.
 
   METHOD is_global_class.
@@ -399,11 +371,8 @@ CLASS zcl_skylint_pref_name_objects IMPLEMENTATION.
 
   METHOD check_decl_name.
     DATA lv_name TYPE string.
-    DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    ls_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
-                                                    iv_lexeme    = is_statement-keyword ).
-    lv_name = ls_tok-lexeme.
+    lv_name = zcl_skylint_ast_util=>get_declaration_name( is_statement ).
     IF lv_name IS INITIAL.
       RETURN.
     ENDIF.
