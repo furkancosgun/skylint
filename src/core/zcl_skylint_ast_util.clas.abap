@@ -1629,4 +1629,112 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
       ls_prev_tok = <ls_tok>.
     ENDLOOP.
   ENDMETHOD.
+
+  METHOD statement_references_sys_field.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    rv_yes = abap_false.
+    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
+      IF match_system_field( is_token      = <ls_token>
+                             iv_field_name = iv_field_name ) = abap_true.
+        rv_yes = abap_true.
+        RETURN.
+      ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD statement_checks_sy_subrc.
+    rv_yes = statement_references_sys_field(
+        is_statement  = is_statement
+        iv_field_name = 'SUBRC' ).
+  ENDMETHOD.
+
+  METHOD find_matching_paren.
+    DATA lv_count TYPE i.
+    DATA lv_idx   TYPE i.
+    DATA lv_depth TYPE i.
+    DATA ls_tok   TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    rv_close_index = 0.
+    lv_count = token_count( is_statement ).
+    IF iv_open_index <= 0 OR iv_open_index > lv_count.
+      RETURN.
+    ENDIF.
+
+    lv_depth = 0.
+    lv_idx   = iv_open_index.
+
+    WHILE lv_idx <= lv_count.
+      ls_tok = get_token( is_statement = is_statement
+                          iv_index     = lv_idx ).
+      lv_depth += token_paren_delta( ls_tok ).
+      IF lv_depth = 0 AND lv_idx > iv_open_index.
+        rv_close_index = lv_idx.
+        RETURN.
+      ENDIF.
+      IF lv_depth < 0.
+        RETURN.
+      ENDIF.
+      lv_idx += 1.
+    ENDWHILE.
+  ENDMETHOD.
+
+  METHOD get_inline_declarations.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_ref>   TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+
+    CLEAR rt_declarations.
+    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
+      LOOP AT <ls_token>-references ASSIGNING <ls_ref>.
+        IF <ls_ref>-kind <> if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
+          CONTINUE.
+        ENDIF.
+
+        IF    <ls_ref>-usage_mode = if_ci_atc_source_code_provider=>usage_modes-definition_with_write
+           OR <ls_ref>-usage_mode = if_ci_atc_source_code_provider=>usage_modes-definition_with_assign.
+          APPEND VALUE #( name       = extract_name_from_paren( <ls_token>-lexeme )
+                          raw_name   = <ls_token>-lexeme
+                          usage_mode = <ls_ref>-usage_mode
+                          token      = <ls_token> ) TO rt_declarations.
+        ENDIF.
+      ENDLOOP.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD statement_is_public_class.
+    DATA lv_prev TYPE string.
+    FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    rv_yes = abap_false.
+    LOOP AT is_statement-tokens ASSIGNING <ls_tok>.
+      IF <ls_tok>-references IS INITIAL.
+        IF <ls_tok>-lexeme = 'PUBLIC' AND lv_prev <> 'CREATE'.
+          rv_yes = abap_true.
+          RETURN.
+        ENDIF.
+        lv_prev = <ls_tok>-lexeme.
+      ELSE.
+        CLEAR lv_prev.
+      ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD statement_is_public_interface.
+    rv_yes = xsdbool( find_token( is_statement = is_statement
+                                  iv_lexeme    = 'PUBLIC' ) > 0 ).
+  ENDMETHOD.
+
+  METHOD statement_is_exception_class.
+    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    rv_yes = abap_false.
+    IF find_token_sequence( is_statement = is_statement
+                            it_expected  = VALUE #( ( `INHERITING` ) ( `FROM` ) ) ) > 0.
+      ls_tok = get_token_after( is_statement = is_statement
+                                iv_lexeme    = 'FROM' ).
+      IF ls_tok-lexeme CP 'CX_*'.
+        rv_yes = abap_true.
+      ENDIF.
+    ENDIF.
+  ENDMETHOD.
 ENDCLASS.

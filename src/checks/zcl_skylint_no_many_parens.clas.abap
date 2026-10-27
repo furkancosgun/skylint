@@ -21,11 +21,6 @@ CLASS zcl_skylint_no_many_parens DEFINITION
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_MANY_PARENS'.
 
-    METHODS find_matching_close
-      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
-                iv_open         TYPE i
-      RETURNING VALUE(rv_close) TYPE i.
-
     METHODS is_safe_to_remove
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
                 iv_open       TYPE i
@@ -79,8 +74,9 @@ CLASS zcl_skylint_no_many_parens IMPLEMENTATION.
           CONTINUE.
         ENDIF.
 
-        lv_close = find_matching_close( is_statement = <ls_statement>
-                                        iv_open      = lv_open ).
+        lv_close = zcl_skylint_ast_util=>find_matching_paren(
+                       is_statement  = <ls_statement>
+                       iv_open_index = lv_open ).
         IF lv_close = 0.
           lv_index += 1.
           CONTINUE.
@@ -107,32 +103,6 @@ CLASS zcl_skylint_no_many_parens IMPLEMENTATION.
         lv_index = lv_close + 1.
       ENDWHILE.
     ENDLOOP.
-  ENDMETHOD.
-
-  METHOD find_matching_close.
-    DATA lv_count TYPE i.
-    DATA lv_idx   TYPE i.
-    DATA lv_depth TYPE i.
-    DATA ls_tok   TYPE if_ci_atc_source_code_provider=>ty_token.
-
-    rv_close = 0.
-    lv_count = zcl_skylint_ast_util=>token_count( is_statement ).
-    lv_idx = iv_open + 1.
-    lv_depth = 0.
-
-    WHILE lv_idx <= lv_count.
-      ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = lv_idx ).
-      lv_depth += zcl_skylint_ast_util=>token_paren_delta( ls_tok ).
-      IF lv_depth = -1 AND ls_tok-lexeme = ')'.
-        rv_close = lv_idx.
-        RETURN.
-      ENDIF.
-      IF lv_depth < -1.
-        RETURN.
-      ENDIF.
-      lv_idx += 1.
-    ENDWHILE.
   ENDMETHOD.
 
   METHOD is_safe_to_remove.
@@ -163,8 +133,9 @@ CLASS zcl_skylint_no_many_parens IMPLEMENTATION.
       ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                 iv_index     = iv_open + 1 ).
       IF ls_tok-lexeme = '('.
-        lv_inner_close = find_matching_close( is_statement = is_statement
-                                              iv_open      = iv_open + 1 ).
+        lv_inner_close = zcl_skylint_ast_util=>find_matching_paren(
+                             is_statement  = is_statement
+                             iv_open_index = iv_open + 1 ).
         IF lv_inner_close = iv_close - 1.
           rv_yes = abap_true.
           RETURN.

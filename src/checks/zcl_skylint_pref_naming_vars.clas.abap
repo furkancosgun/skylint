@@ -135,36 +135,28 @@ CLASS zcl_skylint_pref_naming_vars IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check_inline_declarations.
-    DATA lv_name TYPE string.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_ref>   TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    DATA lt_inlines TYPE zcl_skylint_ast_util=>ty_inline_declarations.
+    FIELD-SYMBOLS <ls_decl> TYPE zcl_skylint_ast_util=>ty_inline_declaration.
 
-    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      LOOP AT <ls_token>-references ASSIGNING <ls_ref>.
-        IF <ls_ref>-kind <> if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
-          CONTINUE.
-        ENDIF.
+    lt_inlines = zcl_skylint_ast_util=>get_inline_declarations( is_statement ).
+    LOOP AT lt_inlines ASSIGNING <ls_decl>.
+      CASE <ls_decl>-usage_mode.
+        WHEN if_ci_atc_source_code_provider=>usage_modes-definition_with_write.
+          IF matches_pattern( iv_text    = <ls_decl>-name
+                              iv_pattern = mv_local_data ) = abap_false.
+            report_statement( is_statement    = is_statement
+                              iv_finding_code = c_finding_codes-local_variable ).
+            RETURN.
+          ENDIF.
 
-        CASE <ls_ref>-usage_mode.
-          WHEN if_ci_atc_source_code_provider=>usage_modes-definition_with_write.
-            lv_name = zcl_skylint_ast_util=>extract_name_from_paren( <ls_token>-lexeme ).
-            IF matches_pattern( iv_text    = lv_name
-                                iv_pattern = mv_local_data ) = abap_false.
-              report_statement( is_statement    = is_statement
-                                iv_finding_code = c_finding_codes-local_variable ).
-              RETURN.
-            ENDIF.
-
-          WHEN if_ci_atc_source_code_provider=>usage_modes-definition_with_assign.
-            lv_name = zcl_skylint_ast_util=>extract_name_from_paren( <ls_token>-lexeme ).
-            IF matches_pattern( iv_text    = lv_name
-                                iv_pattern = mv_local_fs ) = abap_false.
-              report_statement( is_statement    = is_statement
-                                iv_finding_code = c_finding_codes-local_variable ).
-              RETURN.
-            ENDIF.
-        ENDCASE.
-      ENDLOOP.
+        WHEN if_ci_atc_source_code_provider=>usage_modes-definition_with_assign.
+          IF matches_pattern( iv_text    = <ls_decl>-name
+                              iv_pattern = mv_local_fs ) = abap_false.
+            report_statement( is_statement    = is_statement
+                              iv_finding_code = c_finding_codes-local_variable ).
+            RETURN.
+          ENDIF.
+      ENDCASE.
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

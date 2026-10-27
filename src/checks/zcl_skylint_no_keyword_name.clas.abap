@@ -76,36 +76,26 @@ CLASS zcl_skylint_no_keyword_name IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check_inline_declarations.
-    DATA lv_name TYPE string.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_ref>   TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    DATA lt_inlines TYPE zcl_skylint_ast_util=>ty_inline_declarations.
+    DATA lv_name    TYPE string.
+    FIELD-SYMBOLS <ls_decl> TYPE zcl_skylint_ast_util=>ty_inline_declaration.
 
-    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      LOOP AT <ls_token>-references ASSIGNING <ls_ref>.
-        IF <ls_ref>-kind <> if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
-          CONTINUE.
-        ENDIF.
+    lt_inlines = zcl_skylint_ast_util=>get_inline_declarations( is_statement ).
+    LOOP AT lt_inlines ASSIGNING <ls_decl>.
+      lv_name = <ls_decl>-name.
+      IF lv_name CS '<'.
+        REPLACE ALL OCCURRENCES OF '<' IN lv_name WITH ''.
+      ENDIF.
+      IF lv_name CS '>'.
+        REPLACE ALL OCCURRENCES OF '>' IN lv_name WITH ''.
+      ENDIF.
 
-        IF NOT (    <ls_ref>-usage_mode = if_ci_atc_source_code_provider=>usage_modes-definition_with_write
-                 OR <ls_ref>-usage_mode = if_ci_atc_source_code_provider=>usage_modes-definition_with_assign ).
-          CONTINUE.
-        ENDIF.
-
-        lv_name = zcl_skylint_ast_util=>extract_name_from_paren( <ls_token>-lexeme ).
-        IF lv_name CS '<'.
-          REPLACE ALL OCCURRENCES OF '<' IN lv_name WITH ''.
-        ENDIF.
-        IF lv_name CS '>'.
-          REPLACE ALL OCCURRENCES OF '>' IN lv_name WITH ''.
-        ENDIF.
-
-        IF lv_name IS NOT INITIAL AND zcl_skylint_ast_util=>is_abap_keyword( lv_name ) = abap_true.
-          report_token( is_statement    = is_statement
-                        is_token        = <ls_token>
-                        iv_finding_code = c_finding_codes-keyword_name ).
-          RETURN.
-        ENDIF.
-      ENDLOOP.
+      IF lv_name IS NOT INITIAL AND zcl_skylint_ast_util=>is_abap_keyword( lv_name ) = abap_true.
+        report_token( is_statement    = is_statement
+                      is_token        = <ls_decl>-token
+                      iv_finding_code = c_finding_codes-keyword_name ).
+        RETURN.
+      ENDIF.
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

@@ -78,26 +78,16 @@ CLASS zcl_skylint_no_single_letter IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check_inline_declarations.
-    DATA lv_name TYPE string.
-    FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    DATA lt_inlines TYPE zcl_skylint_ast_util=>ty_inline_declarations.
+    FIELD-SYMBOLS <ls_decl> TYPE zcl_skylint_ast_util=>ty_inline_declaration.
 
-    LOOP AT is_statement-tokens ASSIGNING <ls_tok>.
-      LOOP AT <ls_tok>-references ASSIGNING <ls_ref>.
-        IF <ls_ref>-kind <> if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
-          CONTINUE.
-        ENDIF.
-
-        IF    <ls_ref>-usage_mode = if_ci_atc_source_code_provider=>usage_modes-definition_with_write
-           OR <ls_ref>-usage_mode = if_ci_atc_source_code_provider=>usage_modes-definition_with_assign.
-          lv_name = zcl_skylint_ast_util=>extract_name_from_paren( <ls_tok>-lexeme ).
-          IF lv_name IS NOT INITIAL AND is_single_letter( lv_name ) = abap_true.
-            report_statement( is_statement    = is_statement
-                              iv_finding_code = c_finding_codes-single_letter ).
-            RETURN.
-          ENDIF.
-        ENDIF.
-      ENDLOOP.
+    lt_inlines = zcl_skylint_ast_util=>get_inline_declarations( is_statement ).
+    LOOP AT lt_inlines ASSIGNING <ls_decl>.
+      IF <ls_decl>-name IS NOT INITIAL AND is_single_letter( <ls_decl>-name ) = abap_true.
+        report_statement( is_statement    = is_statement
+                          iv_finding_code = c_finding_codes-single_letter ).
+        RETURN.
+      ENDIF.
     ENDLOOP.
   ENDMETHOD.
 

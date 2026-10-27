@@ -44,18 +44,6 @@ CLASS zcl_skylint_pref_name_members DEFINITION
       IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_name) TYPE string.
 
-    METHODS is_global_class
-      IMPORTING is_statement     TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_global) TYPE abap_bool.
-
-    METHODS is_global_interface
-      IMPORTING is_statement     TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_global) TYPE abap_bool.
-
-    METHODS is_exception_class
-      IMPORTING is_statement        TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_exception) TYPE abap_bool.
-
     METHODS check_class_definition
       IMPORTING it_statements TYPE if_ci_atc_source_code_provider=>ty_statements.
 
@@ -164,43 +152,6 @@ CLASS zcl_skylint_pref_name_members IMPLEMENTATION.
     rv_name = zcl_skylint_ast_util=>get_declaration_name( is_statement ).
   ENDMETHOD.
 
-  METHOD is_global_class.
-    DATA lv_prev TYPE string.
-    FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
-
-    rv_global = abap_false.
-    LOOP AT is_statement-tokens ASSIGNING <ls_tok>.
-      IF <ls_tok>-references IS INITIAL.
-        IF <ls_tok>-lexeme = 'PUBLIC' AND lv_prev <> 'CREATE'.
-          rv_global = abap_true.
-          RETURN.
-        ENDIF.
-        lv_prev = <ls_tok>-lexeme.
-      ELSE.
-        CLEAR lv_prev.
-      ENDIF.
-    ENDLOOP.
-  ENDMETHOD.
-
-  METHOD is_global_interface.
-    rv_global = xsdbool( zcl_skylint_ast_util=>find_token( is_statement = is_statement
-                                                           iv_lexeme    = 'PUBLIC' ) > 0 ).
-  ENDMETHOD.
-
-  METHOD is_exception_class.
-    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
-
-    rv_exception = abap_false.
-    IF zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
-                                                  it_expected  = VALUE #( ( `INHERITING` ) ( `FROM` ) ) ) > 0.
-      ls_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
-                                                      iv_lexeme    = 'FROM' ).
-      IF ls_tok-lexeme CP '*CX_*' OR ls_tok-lexeme = 'CX_ROOT'.
-        rv_exception = abap_true.
-      ENDIF.
-    ENDIF.
-  ENDMETHOD.
-
   METHOD check_class_definition.
     DATA lv_is_intf     TYPE abap_bool.
     DATA lv_is_local    TYPE abap_bool.
@@ -212,13 +163,13 @@ CLASS zcl_skylint_pref_name_members IMPLEMENTATION.
     LOOP AT it_statements ASSIGNING <ls_stmt>.
       IF <ls_stmt>-keyword = 'INTERFACE'.
         lv_is_intf = abap_true.
-        lv_is_local = xsdbool( is_global_interface( <ls_stmt> ) = abap_false ).
+        lv_is_local = xsdbool( zcl_skylint_ast_util=>statement_is_public_interface( <ls_stmt> ) = abap_false ).
         EXIT.
       ELSEIF     <ls_stmt>-keyword = 'CLASS'
              AND zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_stmt>
                                                             it_expected  = VALUE #( ( `DEFINITION` ) ) ) > 0.
-        lv_is_exc = is_exception_class( <ls_stmt> ).
-        lv_is_local = xsdbool( is_global_class( <ls_stmt> ) = abap_false ).
+        lv_is_exc = zcl_skylint_ast_util=>statement_is_exception_class( <ls_stmt> ).
+        lv_is_local = xsdbool( zcl_skylint_ast_util=>statement_is_public_class( <ls_stmt> ) = abap_false ).
         EXIT.
       ENDIF.
     ENDLOOP.

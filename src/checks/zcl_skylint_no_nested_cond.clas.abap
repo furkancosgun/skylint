@@ -29,11 +29,6 @@ CLASS zcl_skylint_no_nested_cond DEFINITION
       IMPORTING is_token      TYPE if_ci_atc_source_code_provider=>ty_token
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
-    METHODS find_matching_close
-      IMPORTING is_statement        TYPE if_ci_atc_source_code_provider=>ty_statement
-                iv_open_idx         TYPE i
-      RETURNING VALUE(rv_close_idx) TYPE i.
-
 ENDCLASS.
 
 
@@ -76,8 +71,9 @@ CLASS zcl_skylint_no_nested_cond IMPLEMENTATION.
         ls_next = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                    iv_index     = lv_open ).
         IF zcl_skylint_ast_util=>token_paren_delta( ls_next ) > 0.
-          lv_close = find_matching_close( is_statement = is_statement
-                                          iv_open_idx  = lv_open ).
+          lv_close = zcl_skylint_ast_util=>find_matching_paren(
+                         is_statement  = is_statement
+                         iv_open_index = lv_open ).
           IF lv_close > lv_open.
             scan_inner_expressions( is_statement = is_statement
                                     iv_from_idx  = lv_open + 1
@@ -117,31 +113,5 @@ CLASS zcl_skylint_no_nested_cond IMPLEMENTATION.
     IF ( is_token-lexeme = 'COND' OR is_token-lexeme = 'SWITCH' ) AND is_token-references IS INITIAL.
       rv_yes = abap_true.
     ENDIF.
-  ENDMETHOD.
-
-  METHOD find_matching_close.
-    DATA lv_tok_cnt TYPE i.
-    DATA lv_idx     TYPE i.
-    DATA lv_depth   TYPE i.
-    DATA ls_tok     TYPE if_ci_atc_source_code_provider=>ty_token.
-
-    rv_close_idx = 0.
-    lv_tok_cnt = zcl_skylint_ast_util=>token_count( is_statement ).
-    lv_depth = 0.
-    lv_idx = iv_open_idx.
-
-    WHILE lv_idx <= lv_tok_cnt.
-      ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = lv_idx ).
-      lv_depth += zcl_skylint_ast_util=>token_paren_delta( ls_tok ).
-      IF lv_depth = 0.
-        rv_close_idx = lv_idx.
-        RETURN.
-      ENDIF.
-      IF lv_depth < 0.
-        RETURN.
-      ENDIF.
-      lv_idx += 1.
-    ENDWHILE.
   ENDMETHOD.
 ENDCLASS.

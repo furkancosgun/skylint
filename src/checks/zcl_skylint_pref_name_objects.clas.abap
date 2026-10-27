@@ -52,14 +52,6 @@ CLASS zcl_skylint_pref_name_objects DEFINITION
       IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_name) TYPE string.
 
-    METHODS is_global_class
-      IMPORTING is_statement     TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_global) TYPE abap_bool.
-
-    METHODS is_global_interface
-      IMPORTING is_statement     TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_global) TYPE abap_bool.
-
     METHODS check_class_definition
       IMPORTING it_statements TYPE if_ci_atc_source_code_provider=>ty_statements.
 
@@ -199,29 +191,6 @@ CLASS zcl_skylint_pref_name_objects IMPLEMENTATION.
     rv_name = zcl_skylint_ast_util=>get_declaration_name( is_statement ).
   ENDMETHOD.
 
-  METHOD is_global_class.
-    DATA lv_prev TYPE string.
-    FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
-
-    rv_global = abap_false.
-    LOOP AT is_statement-tokens ASSIGNING <ls_tok>.
-      IF <ls_tok>-references IS INITIAL.
-        IF <ls_tok>-lexeme = 'PUBLIC' AND lv_prev <> 'CREATE'.
-          rv_global = abap_true.
-          RETURN.
-        ENDIF.
-        lv_prev = <ls_tok>-lexeme.
-      ELSE.
-        CLEAR lv_prev.
-      ENDIF.
-    ENDLOOP.
-  ENDMETHOD.
-
-  METHOD is_global_interface.
-    rv_global = xsdbool( zcl_skylint_ast_util=>find_token( is_statement = is_statement
-                                                           iv_lexeme    = 'PUBLIC' ) > 0 ).
-  ENDMETHOD.
-
   METHOD check_class_definition.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
@@ -269,7 +238,7 @@ CLASS zcl_skylint_pref_name_objects IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    IF is_global_class( is_statement ) = abap_true.
+    IF zcl_skylint_ast_util=>statement_is_public_class( is_statement ) = abap_true.
       IF matches_pattern( iv_text    = lv_name
                           iv_pattern = mv_class_global ) = abap_false.
         report_statement( is_statement    = is_statement
@@ -293,7 +262,7 @@ CLASS zcl_skylint_pref_name_objects IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    IF is_global_interface( is_statement ) = abap_true.
+    IF zcl_skylint_ast_util=>statement_is_public_interface( is_statement ) = abap_true.
       IF matches_pattern( iv_text    = lv_name
                           iv_pattern = mv_intf_global ) = abap_false.
         report_statement( is_statement    = is_statement

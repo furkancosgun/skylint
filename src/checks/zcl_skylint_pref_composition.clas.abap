@@ -19,10 +19,6 @@ CLASS zcl_skylint_pref_composition DEFINITION
 
     DATA mv_allow_test_classes TYPE abap_bool VALUE abap_false.
 
-    METHODS is_exception_class
-      IMPORTING iv_super_name    TYPE string
-      RETURNING VALUE(rv_is_exc) TYPE abap_bool.
-
 ENDCLASS.
 
 
@@ -42,8 +38,6 @@ CLASS zcl_skylint_pref_composition IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA ls_super_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_super_name TYPE string.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
@@ -60,12 +54,7 @@ CLASS zcl_skylint_pref_composition IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      ls_super_tok = zcl_skylint_ast_util=>get_token_after_sequence(
-                         is_statement = <ls_stmt>
-                         it_expected  = VALUE #( ( `INHERITING` ) ( `FROM` ) ) ).
-      lv_super_name = ls_super_tok-lexeme.
-
-      IF is_exception_class( lv_super_name ) = abap_true.
+      IF zcl_skylint_ast_util=>statement_is_exception_class( <ls_stmt> ) = abap_true.
         CONTINUE.
       ENDIF.
 
@@ -78,12 +67,5 @@ CLASS zcl_skylint_pref_composition IMPLEMENTATION.
       report_statement( is_statement    = <ls_stmt>
                         iv_finding_code = c_finding_codes-prefer_composition ).
     ENDLOOP.
-  ENDMETHOD.
-
-  METHOD is_exception_class.
-    rv_is_exc = abap_false.
-    IF iv_super_name CP 'CX_*' OR iv_super_name CP '*/CX_*' OR iv_super_name = 'CX_ROOT'.
-      rv_is_exc = abap_true.
-    ENDIF.
   ENDMETHOD.
 ENDCLASS.
