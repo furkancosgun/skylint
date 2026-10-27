@@ -1234,6 +1234,25 @@
           "value": "15"
         }
       ]
+    },
+    {
+      "checkName": "ZSKYLINT_NO_BOOL_BLINDNESS"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_STATIC_STATE",
+      "parameters": [
+        {
+          "name": "CHECK_CLASS_DATA",
+          "value": "X"
+        },
+        {
+          "name": "CHECK_STATICS",
+          "value": "X"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_NO_DUMMY_AUTH"
     }
   ]
 }

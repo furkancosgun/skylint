@@ -1,0 +1,24 @@
+[
+  {
+    "target": "LCL_BAD",
+    "code": "NO_BOOL_BL",
+    "line": 3,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "LCL_BAD",
+    "code": "NO_BOOL_BL",
+    "line": 5,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "LCL_GOOD",
+    "code": null
+  },
+  {
+    "target": "LIF_GOOD",
+    "code": null
+  }
+]

@@ -1,16 +1,16 @@
 ---
-title: "Clean ABAP & Modern Syntax (55 Rules)"
+title: "Clean ABAP & Modern Syntax (56 Rules)"
 description: "Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices. Comprehensive reference, finding codes, and Clean ABAP examples for Clean ABAP & Modern Syntax."
 category: "clean-abap"
 keywords: "Clean ABAP, ABAP Cloud, SAP ATC, Clean ABAP & Modern Syntax, S/4HANA Readiness, SAP BTP, Steampunk"
 ---
 
-# Clean ABAP & Modern Syntax (55 Rules)
+# Clean ABAP & Modern Syntax (56 Rules)
 
 Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.
 
 ::: tip Category Overview
-This category enforces **55 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
+This category enforces **56 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
 :::
 
 ## Rules in this Category
@@ -72,6 +72,7 @@ This category enforces **55 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Avoid IS INSTANCE OF and CASE TYPE OF Type Tests](/rules/no-instance-of) | `ZCL_SKYLINT_NO_INSTANCE_OF` | <code>#EC NO_INSTANCE_OF</code> | - |
 | [Require WHEN OTHERS as the Last Branch of CASE](/rules/pref-when-others) | `ZCL_SKYLINT_PREF_WHEN_OTHERS` | <code>#EC PREF_WHEN_OTHERS</code> | - |
 | [Prefer BETWEEN for Inclusive Range Checks](/rules/pref-between) | `ZCL_SKYLINT_PREF_BETWEEN` | <code>#EC PREF_BETWEEN</code> | - |
+| [Avoid Boolean Flag Importing Parameters](/rules/no-bool-blindness) | `ZCL_SKYLINT_NO_BOOL_BLINDNESS` | <code>#EC NO_BOOL_BLINDNESS</code> | - |
 
 ---
 

@@ -4568,5 +4568,82 @@
         "value": "15"
       }
     ]
+  },
+  {
+    "ruleId": "no-bool-blindness",
+    "title": "Avoid Boolean Flag Importing Parameters",
+    "className": "ZCL_SKYLINT_NO_BOOL_BLINDNESS",
+    "checkName": "ZSKYLINT_NO_BOOL_BLINDNESS",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "NO_BOOL_BLINDNESS",
+    "description": "Avoid boolean flag importing parameters",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "relatedRules": [
+      "pref-pred-name",
+      "no-bool-compare",
+      "max-params"
+    ],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "no-static-state",
+    "title": "Avoid Static State (CLASS-DATA and STATICS)",
+    "className": "ZCL_SKYLINT_NO_STATIC_STATE",
+    "checkName": "ZSKYLINT_NO_STATIC_STATE",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "NO_STATIC_STATE",
+    "description": "Avoid CLASS-DATA and STATICS state",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "CHECK_CLASS_DATA",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_STATICS",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "relatedRules": [
+      "no-static-arrow",
+      "pref-name-members",
+      "max-attributes"
+    ],
+    "defaultParameters": [
+      {
+        "name": "CHECK_CLASS_DATA",
+        "value": "X"
+      },
+      {
+        "name": "CHECK_STATICS",
+        "value": "X"
+      }
+    ]
+  },
+  {
+    "ruleId": "no-dummy-auth",
+    "title": "Avoid DUMMY Authorization Checks",
+    "className": "ZCL_SKYLINT_NO_DUMMY_AUTH",
+    "checkName": "ZSKYLINT_NO_DUMMY_AUTH",
+    "category": "security",
+    "categoryTitle": "Security & Robustness",
+    "pseudoComment": "NO_DUMMY_AUTH",
+    "description": "Avoid AUTHORITY-CHECK with the DUMMY addition",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "relatedRules": [
+      "pref-auth-subrc",
+      "pref-auth-check",
+      "no-dynamic-stmt"
+    ],
+    "defaultParameters": []
   }
 ]

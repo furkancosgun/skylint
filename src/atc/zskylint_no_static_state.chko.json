@@ -1,0 +1,18 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Avoid CLASS-DATA and STATICS state",
+    "originalLanguage": "en"
+  },
+  "category": "ZSKYLINT_ANTI_PATTERNS",
+  "implementingClass": "ZCL_SKYLINT_NO_STATIC_STATE",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "CHECK_CLASS_DATA"
+    },
+    {
+      "name": "CHECK_STATICS"
+    }
+  ]
+}

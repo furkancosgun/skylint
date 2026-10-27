@@ -1,0 +1,34 @@
+[
+  {
+    "target": "LCL_STATE",
+    "code": "NO_STAT_ST",
+    "line": 3,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "LCL_STATE",
+    "code": "NO_STAT_ST",
+    "line": 4,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "LCL_STATE",
+    "code": "NO_STAT_ST",
+    "line": 7,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "BAD_LOCAL",
+    "code": "NO_STAT_ST",
+    "line": 2,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "GOOD_LOCAL",
+    "code": null
+  }
+]

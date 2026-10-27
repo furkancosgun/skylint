@@ -4,13 +4,13 @@
       "key": "clean-abap",
       "title": "Clean ABAP & Modern Syntax",
       "description": "Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.",
-      "count": 55
+      "count": 56
     },
     {
       "key": "anti-patterns",
       "title": "Anti-Patterns & Bad Practices",
       "description": "Discouraged language constructs, legacy statements, and redundant syntax.",
-      "count": 54
+      "count": 55
     },
     {
       "key": "performance",
@@ -22,7 +22,7 @@
       "key": "security",
       "title": "Security & Robustness",
       "description": "Authorizations, dynamic execution sanitation, error handling, and runtime safety.",
-      "count": 17
+      "count": 18
     },
     {
       "key": "metrics",
@@ -1831,6 +1831,42 @@
       "hasQuickfix": false,
       "remoteEnabled": false,
       "configurable": true
+    },
+    {
+      "ruleId": "no-bool-blindness",
+      "title": "Avoid Boolean Flag Importing Parameters",
+      "className": "ZCL_SKYLINT_NO_BOOL_BLINDNESS",
+      "description": "Avoid boolean flag importing parameters",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "NO_BOOL_BLINDNESS",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "no-static-state",
+      "title": "Avoid Static State (CLASS-DATA and STATICS)",
+      "className": "ZCL_SKYLINT_NO_STATIC_STATE",
+      "description": "Avoid CLASS-DATA and STATICS state",
+      "category": "anti-patterns",
+      "categoryTitle": "Anti-Patterns & Bad Practices",
+      "pseudoComment": "NO_STATIC_STATE",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "no-dummy-auth",
+      "title": "Avoid DUMMY Authorization Checks",
+      "className": "ZCL_SKYLINT_NO_DUMMY_AUTH",
+      "description": "Avoid AUTHORITY-CHECK with the DUMMY addition",
+      "category": "security",
+      "categoryTitle": "Security & Robustness",
+      "pseudoComment": "NO_DUMMY_AUTH",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
     }
   ]
 }

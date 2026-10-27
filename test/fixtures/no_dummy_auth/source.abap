@@ -1,0 +1,29 @@
+CLASS lcl_auth DEFINITION.
+  PUBLIC SECTION.
+    METHODS bad_001.
+    METHODS good_001.
+    METHODS good_002.
+ENDCLASS.
+
+CLASS lcl_auth IMPLEMENTATION.
+  METHOD bad_001.
+    DATA lv_bukrs TYPE bukrs.
+    AUTHORITY-CHECK OBJECT 'Z_FI_BUKRS'
+      ID 'BUKRS' DUMMY.
+  ENDMETHOD.
+
+  METHOD good_001.
+    DATA lv_bukrs TYPE bukrs.
+    AUTHORITY-CHECK OBJECT 'Z_FI_BUKRS'
+      ID 'BUKRS' FIELD lv_bukrs.
+    IF sy-subrc <> 0.
+      RETURN.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD good_002.
+    DATA lv_bukrs TYPE bukrs.
+    AUTHORITY-CHECK OBJECT 'DUMMY'
+      ID 'BUKRS' FIELD lv_bukrs.
+  ENDMETHOD.
+ENDCLASS.

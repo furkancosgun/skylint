@@ -1,16 +1,16 @@
 ---
-title: "Security & Robustness (17 Rules)"
+title: "Security & Robustness (18 Rules)"
 description: "Authorizations, dynamic execution sanitation, error handling, and runtime safety. Comprehensive reference, finding codes, and Clean ABAP examples for Security & Robustness."
 category: "security"
 keywords: "Clean ABAP, ABAP Cloud, SAP ATC, Security & Robustness, S/4HANA Readiness, SAP BTP, Steampunk"
 ---
 
-# Security & Robustness (17 Rules)
+# Security & Robustness (18 Rules)
 
 Authorizations, dynamic execution sanitation, error handling, and runtime safety.
 
 ::: tip Category Overview
-This category enforces **17 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
+This category enforces **18 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
 :::
 
 ## Rules in this Category
@@ -34,6 +34,7 @@ This category enforces **17 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Avoid Hardcoding System & Tenant Environment Checks (sy-sysid, sy-mandt)](/rules/no-hardcoded-env) | `ZCL_SKYLINT_NO_HARDCODED_ENV` | <code>#EC NO_HARDCODED_ENV</code> | - |
 | [Avoid UPDATE or DELETE Without a WHERE Condition (Catastrophic Data Wipe Prevention)](/rules/no-unfilt-dml) | `ZCL_SKYLINT_NO_UNFILT_DML` | <code>#EC NO_UNFILT_DML</code> | - |
 | [Provide FAILED and REPORTED in RAP EML Statements (Silent Transaction Failure Prevention)](/rules/no-unhandled-eml) | `ZCL_SKYLINT_NO_UNHANDLED_EML` | <code>#EC NO_UNHANDLED_EML</code> | - |
+| [Avoid DUMMY Authorization Checks](/rules/no-dummy-auth) | `ZCL_SKYLINT_NO_DUMMY_AUTH` | <code>#EC NO_DUMMY_AUTH</code> | - |
 
 ---
 

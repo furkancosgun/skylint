@@ -4445,6 +4445,91 @@ export const RULES = [
       "max-attributes",
       "max-method-len"
     ]
+  },
+  {
+    "ruleId": "no-bool-blindness",
+    "title": "Avoid Boolean Flag Importing Parameters",
+    "rationale": "A boolean importing parameter turns a method call into a positional switch: callers write do_work( abap_true ) and readers cannot tell what true means without opening the signature. Boolean blindness also pushes every new variation into the same method instead of a dedicated, well-named API. Expose the alternatives as separate methods or as a meaningful typed flag, and keep abap_bool flags out of method interfaces.",
+    "className": "ZCL_SKYLINT_NO_BOOL_BLINDNESS",
+    "pseudoComment": "NO_BOOL_BLINDNESS",
+    "category": "clean-abap",
+    "example": {
+      "bad": "METHODS save_order\n  IMPORTING iv_send_mail TYPE abap_bool.",
+      "good": "METHODS save_order.\nMETHODS save_and_send_order."
+    },
+    "seo": {
+      "description": "Detect boolean flag importing parameters in ABAP method signatures and replace boolean blindness with dedicated, self-explanatory APIs.",
+      "keywords": [
+        "ABAP boolean parameter",
+        "boolean blindness",
+        "Clean ABAP method signature",
+        "SAP ATC check boolean flag",
+        "abap_bool importing parameter"
+      ]
+    },
+    "relatedRules": [
+      "pref-pred-name",
+      "no-bool-compare",
+      "max-params"
+    ]
+  },
+  {
+    "ruleId": "no-static-state",
+    "title": "Avoid Static State (CLASS-DATA and STATICS)",
+    "rationale": "Static state survives between calls and is shared by every caller in the internal session, which makes behavior order-dependent and lets unit tests interfere with each other. CLASS-DATA and STATICS also hide dependencies: a method looks self-contained while it silently reads or mutates global memory. Keep state in instances that are injected, or pass it explicitly, so lifecycles stay visible and tests stay isolated.",
+    "className": "ZCL_SKYLINT_NO_STATIC_STATE",
+    "pseudoComment": "NO_STATIC_STATE",
+    "category": "anti-patterns",
+    "example": {
+      "bad": "CLASS-DATA gv_counter TYPE i.\n\nMETHOD increment.\n  STATICS sv_calls TYPE i.\n  sv_calls = sv_calls + 1.\nENDMETHOD.",
+      "good": "METHOD increment\n  IMPORTING io_counter TYPE REF TO zcl_counter.\n  io_counter->increment( ).\nENDMETHOD."
+    },
+    "parameters": {
+      "CHECK_CLASS_DATA": "Detect CLASS-DATA attributes declared in class definitions",
+      "CHECK_STATICS": "Detect STATICS variables declared inside methods, forms, and function modules"
+    },
+    "seo": {
+      "description": "Detect CLASS-DATA attributes and STATICS variables in ABAP, highlighting hidden global state that breaks test isolation and dependency clarity.",
+      "keywords": [
+        "ABAP CLASS-DATA",
+        "ABAP STATICS",
+        "static state anti-pattern",
+        "SAP ATC check global state",
+        "ABAP test isolation"
+      ]
+    },
+    "relatedRules": [
+      "no-static-arrow",
+      "pref-name-members",
+      "max-attributes"
+    ]
+  },
+  {
+    "ruleId": "no-dummy-auth",
+    "title": "Avoid DUMMY Authorization Checks",
+    "rationale": "The DUMMY addition turns AUTHORITY-CHECK into a no-op: the runtime accepts the statement without evaluating the authorization object, so the protected operation runs for every user. Such dummy checks are frequently added to satisfy scanners or to unblock a test and then remain in production. Remove the DUMMY addition and evaluate sy-subrc so the authorization is genuinely enforced.",
+    "className": "ZCL_SKYLINT_NO_DUMMY_AUTH",
+    "pseudoComment": "NO_DUMMY_AUTH",
+    "category": "security",
+    "example": {
+      "bad": "AUTHORITY-CHECK OBJECT 'Z_FI_BUKRS'\n  ID 'BUKRS' DUMMY.",
+      "good": "AUTHORITY-CHECK OBJECT 'Z_FI_BUKRS'\n  ID 'BUKRS' FIELD lv_bukrs.\nIF sy-subrc <> 0.\n  RAISE EXCEPTION NEW zcx_no_authorization( ).\nENDIF."
+    },
+    "seo": {
+      "description": "Detect AUTHORITY-CHECK statements that use the DUMMY addition, which silently disables the authorization check and exposes protected operations.",
+      "keywords": [
+        "ABAP AUTHORITY-CHECK DUMMY",
+        "ABAP authorization bypass",
+        "SAP ATC security check",
+        "ABAP authorization check",
+        "SAP security anti-pattern"
+      ]
+    },
+    "relatedRules": [
+      "pref-auth-subrc",
+      "pref-auth-check",
+      "no-dynamic-stmt"
+    ]
   }
 ];
 
