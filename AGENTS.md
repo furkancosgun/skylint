@@ -92,47 +92,55 @@ For procedure inspection and unit testing:
 
 ## 🧠 Semantic Analysis & AST Traversal Standards
 
-### 1. Minimum Magic Index Coupling ("Zero Magic Token Index") & `zcl_skylint_ast_util`
-- **Never assume fixed token positions** (e.g. do NOT assume `tokens[ 3 ]` or `tokens[ 4 ]` contains the identifier; source code can contain pragmas, line breaks, comments, or modifier keywords, causing false positives or `CX_SY_ITAB_LINE_NOT_FOUND` dumps).
-- **Rule of Thumb:** Any hardcoded token index greater than 2 is almost always an antipattern.
-- **Prefer `zcl_skylint_ast_util` over direct array access:**
+### 1. Mandatory AST Utility First (`zcl_skylint_ast_util`) — Zero Manual Boilerplate
+- **Never implement manual AST parsing, string splitting, or raw token manipulation in check classes.**
+  All token traversal, lexeme inspection, block parsing, and sequence matching MUST be delegated to `zcl_skylint_ast_util`.
+- **Zero Magic Token Index ("Zero Magic Token Index"):**
+  - **Never assume fixed token positions** (e.g. do NOT assume `tokens[ 3 ]` or `tokens[ 4 ]` contains the identifier; source code can contain pragmas, line breaks, comments, or modifier keywords, causing false positives or `CX_SY_ITAB_LINE_NOT_FOUND` dumps).
+  - **Rule of Thumb:** Any hardcoded token index greater than 2 is almost always an antipattern.
   - Access tokens safely via helper methods: `get_token`, `get_token_lexeme`, `get_first_token`, `get_last_token`, `find_token`, `get_token_before`, `get_token_after`.
   - If direct table reading is ever unavoidable, **always guard boundaries** (`IF lines( is_statement-tokens ) >= N.`).
 - **Use `*sequence` helper methods for consecutive token structures:**
   - When inspecting consecutive token structures (e.g. `TYPE REF TO`, `ASSIGN ... TO`, keyword combinations), **never write manual nested loops** or index arithmetic (`READ TABLE tokens INDEX sy-tabix + 1`).
   - Use `zcl_skylint_ast_util=>find_token_sequence`, `get_token_after_sequence`, or `match_token_sequence`.
   - These sequence utilities automatically verify that each token in the expected sequence matches and has empty references (`references IS INITIAL`).
-- **Allowed Traversal Patterns:**
-  - Token stream traversal using loops (`LOOP AT is_statement-tokens`) with index bounds checking.
-  - Keyword filters on statements (`WHERE keyword = ...`).
-  - Scanning relative to a matched keyword or operator (e.g., finding the token immediately following `'TYPE'` or `'INTO'`).
-  - Tracking delimiter/expression depth for parentheses `( )`, brackets `[ ]`, and braces `{ }`.
-  - Using helper methods from `zcl_skylint_ast_util` (`find_token_sequence`, `statement_is_method_call`, `statement_is_db_access`).
+- **Core `zcl_skylint_ast_util` Method Catalog (Check here BEFORE writing custom logic):**
+  - **Token & Text Extraction:** `get_token`, `get_token_lexeme`, `get_first_token`, `get_last_token`, `find_token`, `get_token_after`, `get_token_before`, `extract_tokens_text`.
+  - **Sequences & Enclosing Blocks:** `find_token_sequence`, `get_token_after_sequence`, `match_token_sequence`, `find_matching_paren`, `strip_outer_parens`.
+  - **Declarations & Signatures:** `get_declaration_token`, `get_declaration_name`, `extract_name_from_paren` (strips `VALUE(...)`, `REFERENCE(...)`, `@`, `!`), `get_inline_declarations`, `get_method_parameters` (parses sections, type names, parameter names).
+  - **High-Level Semantic Inspections:** `statement_is_method_call`, `statement_is_db_access`, `statement_get_db_target`, `call_has_other_sections`, `procedure_is_interface`, `statement_is_public_class`, `statement_is_public_interface`, `statement_is_exception_class`, `parse_assignment`.
+  - **Safe PCRE/Regex:** `matches_regex` (always wrapped with `TRY..CATCH cx_root` to prevent dumps on invalid regex configurations).
+- **Antipattern Alert:** Never declare private helper methods for logic already solved by `zcl_skylint_ast_util` (e.g. `get_method_name`, `is_interface`, `has_other_sections`, `parse_assignment`, `checks_sy_subrc`, `get_db_target`).
 
-### 2. Compiler References over Text Matching (`tokens-references`)
+### 2. Compiler References over Text Matching & Reference APIs
 Compiler symbol resolution is stored in `is_statement-tokens-references` (of type `if_ci_atc_source_code_provider=>ty_compiler_reference`).
-- **Never guess what an identifier represents by matching its text.** Inspect `token-references` to determine whether a token is a method call, variable, type definition, database read, or database write.
+- **Never guess what an identifier represents by matching its text.** Inspect compiler references via `zcl_skylint_ast_util` to determine whether a token is a method call, variable, type definition, database read, or database write.
+- **Prefer High-Level Reference APIs over Raw Nested Loops:**
+  - Instead of writing raw `LOOP AT tokens ... LOOP AT references` in check classes, use:
+    - `zcl_skylint_ast_util=>statement_get_references( is_statement iv_kind )`
+    - `zcl_skylint_ast_util=>get_reference( is_token iv_kind )`
+    - `zcl_skylint_ast_util=>statement_has_reference( is_statement iv_kind iv_usage_mode )`
+    - `zcl_skylint_ast_util=>is_write_usage( is_reference )` / `is_read_usage( is_reference )`
+    - `zcl_skylint_ast_util=>is_data_definition( is_reference )` / `is_data_usage( is_reference )`
+    - `zcl_skylint_ast_util=>match_system_field( is_token iv_field_name )` / `statement_checks_sy_subrc( is_statement )`
 - **Mandatory empty reference check (`references IS INITIAL`) for keywords and operators:**
   - In ABAP, user variables or structure fields can legally share names with ABAP keywords or operators (e.g., `DATA eq TYPE i.`, `DATA type TYPE string.`).
   - A token with text `'EQ'` or `'TYPE'` is **only an operator/keyword when its references are empty** (`token-references IS INITIAL`). If it references a variable, it carries a `DATA` reference (`compiler_reference_kinds-data`).
   - Always confirm that `references IS INITIAL` before treating a token as a keyword or syntax operator.
   - Note: `zcl_skylint_ast_util` helper methods (such as `find_token_sequence`) automatically enforce this check internally.
-- **Reserved builtin exception (only sanctioned case):** `ABAP_TRUE`, `ABAP_FALSE`, `ABAP_UNDEFINED` are matched by closed name set even with references — SAP reserves these names and they always denote the builtin constants. `SPACE` and everything else require empty references.
+- **Reserved builtin exception (only sanctioned case):** `ABAP_TRUE`, `ABAP_FALSE`, `ABAP_UNDEFINED` are matched by closed name set even with references (`\DA:ABAP_TRUE` etc.) — SAP reserves these names and they always denote the builtin constants. `SPACE` and everything else require empty references.
 - **Shadowing requires declaration scan:** when a user identifier can textually equal a keyword (`ME->`, `CX_SY_*`), a reference on the usage token is not enough — scan the block with `zcl_skylint_ast_util=>is_declared_data( it_statements iv_name )` and skip when a `DA` definition with that name exists.
 - **ATC statements have no index field.** Never rely on `statement-index`; inside a `LOOP AT is_procedure-statements` use `sy-tabix` when a statement position is needed (e.g. `quickfix_replace( iv_statement_from = sy-tabix ... )`). Findings carry checksum + location, computed by the base class.
-- Traversal pattern:
+- Recommended Reference Inspection Pattern:
   ```abap
-  FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
-  FIELD-SYMBOLS <ls_ref>   TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+  DATA ls_ref TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
-  LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-    LOOP AT <ls_token>-references ASSIGNING <ls_ref>.
-      IF <ls_ref>-kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-method
-         AND <ls_ref>-usage_mode = if_ci_atc_source_code_provider=>usage_modes-read.
-        " Verified method call
-      ENDIF.
-    ENDLOOP.
-  ENDLOOP.
+  ls_ref = zcl_skylint_ast_util=>get_reference(
+      is_token = <ls_token>
+      iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-method ).
+  IF ls_ref IS NOT INITIAL AND ls_ref-usage_mode = if_ci_atc_source_code_provider=>usage_modes-read.
+    " Verified method call
+  ENDIF.
   ```
 
 ### 2.1 How Compiler References Are Produced (JS Test Process)
@@ -156,11 +164,18 @@ The split of responsibilities is fixed:
 - All 148 checks and 1,013 fixtures run through this unified pipeline.
 
 ### 3. Safe RTTI over String Matching (`zcl_skylint_rtti_util`) & Remote Enablement
-- **Never use string parsing or regex** on `is_procedure-id-name` or `INHERITING FROM` to determine class hierarchies, interfaces, or superclasses.
+- **Never use manual string parsing, string splitting, or regex** on `is_procedure-id-name`, `INHERITING FROM`, or method call lexemes to determine class hierarchies, interfaces, superclasses, or method signatures.
 - **Always use ABAP Run-Time Type Identification (RTTI) via `zcl_skylint_rtti_util`:**
-  - Safe wrappers over `cl_abap_typedescr=>describe_by_name( lv_classname )`.
-  - Inspect superclasses via `zcl_skylint_rtti_util=>get_super_classes( lv_class_name )`.
-  - Always wrap raw RTTI operations in `TRY ... CATCH cx_root` to safely handle dynamic or missing types.
+  - `describe_class( iv_class_name )` / `describe_object( iv_name )`: Safe descriptors returning `cl_abap_classdescr` / `cl_abap_objectdescr`.
+  - `get_super_classes( iv_class_name )`: Retrieves the full inheritance chain table.
+  - `get_attribute_names( iv_class_name )`: Retrieves member attributes of a class/interface.
+  - `get_method_descr( iv_full_name )`: Retrieves the `abap_methdescr` structure for a method.
+  - `is_static_method( iv_full_name )`: Checks if a method is static (`CLASS-METHODS`).
+  - `is_boolean_returning_method( is_method )`: Checks if a method returns a boolean (`RETURNING` parameter of 1-char type).
+  - `get_single_importing_param( iv_full_name )`: Checks if a method has exactly one `IMPORTING` parameter and returns its name.
+  - `parse_full_name( iv_full_name )`: Reliably splits full compiler reference names (`\PR:...\TY:CLASS\ME:METH` or `CLASS=>METHOD`) into program, class, method, and data components.
+- **Always wrap any raw RTTI operations in `TRY ... CATCH cx_root`:**
+  - `zcl_skylint_rtti_util` already wraps internal calls to `cl_abap_typedescr` in `TRY..CATCH cx_root` to safely handle dynamic, mock, or missing types without dumping.
 - **CRITICAL ARCHITECTURAL RULE: Checks using RTTI CANNOT be Remote Enabled:**
   - Any check that invokes RTTI (`zcl_skylint_rtti_util` or `cl_abap_typedescr`) **MUST set `remote_enablement = abap_false`** in its `constructor`.
   - *Why:* In ATC remote execution scenarios (analyzing remote systems via RFC), the local SAP system does not have access to runtime type descriptors of the remote system, which causes runtime errors or inaccurate results. Rules using RTTI can only be executed locally.

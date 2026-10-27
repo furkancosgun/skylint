@@ -190,8 +190,8 @@ CLASS zcl_skylint_ast_util DEFINITION
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
     CLASS-METHODS reference_matches
-      IMPORTING iv_full_name TYPE string
-                iv_reference TYPE string
+      IMPORTING iv_full_name  TYPE string
+                iv_reference  TYPE string
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
     CLASS-METHODS is_data_definition
@@ -333,7 +333,7 @@ CLASS zcl_skylint_ast_util DEFINITION
       ty_inline_declarations TYPE STANDARD TABLE OF ty_inline_declaration WITH EMPTY KEY.
 
     CLASS-METHODS get_inline_declarations
-      IMPORTING is_statement          TYPE if_ci_atc_source_code_provider=>ty_statement
+      IMPORTING is_statement           TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rt_declarations) TYPE ty_inline_declarations.
 
     CLASS-METHODS statement_is_public_class
@@ -347,6 +347,24 @@ CLASS zcl_skylint_ast_util DEFINITION
     CLASS-METHODS statement_is_exception_class
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_yes) TYPE abap_bool.
+
+    CLASS-METHODS call_has_other_sections
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_has) TYPE abap_bool.
+
+    CLASS-METHODS procedure_is_interface
+      IMPORTING is_procedure      TYPE if_ci_atc_source_code_provider=>ty_procedure
+      RETURNING VALUE(rv_is_intf) TYPE abap_bool.
+
+    CLASS-METHODS parse_assignment
+      IMPORTING is_statement     TYPE if_ci_atc_source_code_provider=>ty_statement
+      EXPORTING ev_target        TYPE string
+                ev_expr          TYPE string
+                ev_is_assignment TYPE abap_bool.
+
+    CLASS-METHODS statement_get_db_target
+      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_table) TYPE string.
 
   PRIVATE SECTION.
     CLASS-METHODS normalize_identifier_name
@@ -620,6 +638,11 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD statement_is_db_access.
+    IF statement_get_db_target( is_statement ) IS NOT INITIAL.
+      rv_yes = abap_true.
+      RETURN.
+    ENDIF.
+
     IF    statement_has_reference( is_statement  = is_statement
                                    iv_usage_mode = if_ci_atc_source_code_provider=>usage_modes-read_database )  = abap_true
        OR statement_has_reference( is_statement  = is_statement
@@ -629,16 +652,6 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
     ENDIF.
 
     IF is_statement-keyword = 'SELECT'.
-      rv_yes = abap_true.
-      RETURN.
-    ENDIF.
-
-    IF     (    is_statement-keyword = 'DELETE'
-             OR is_statement-keyword = 'UPDATE'
-             OR is_statement-keyword = 'INSERT'
-             OR is_statement-keyword = 'MODIFY' )
-       AND statement_has_reference( is_statement = is_statement
-                                    iv_kind      = if_ci_atc_source_code_provider=>compiler_reference_kinds-type ) = abap_true.
       rv_yes = abap_true.
       RETURN.
     ENDIF.
@@ -941,22 +954,24 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
         CONTINUE.
       ENDIF.
       LOOP AT <ls_stmt>-tokens INTO ls_tok.
-        IF line_exists( ls_tok-references[ kind      = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-                                           full_name = iv_full_name ] ).
-          LOOP AT ls_tok-references ASSIGNING <ls_ref>
+        IF NOT line_exists( ls_tok-references[ kind      = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
+                                               full_name = iv_full_name ] ).
+          CONTINUE.
+        ENDIF.
+
+        LOOP AT ls_tok-references ASSIGNING <ls_ref>
+             WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-type.
+          rv_type = <ls_ref>-full_name.
+          RETURN.
+        ENDLOOP.
+
+        LOOP AT <ls_stmt>-tokens ASSIGNING <ls_other_tok>.
+          LOOP AT <ls_other_tok>-references ASSIGNING <ls_ref>
                WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-type.
             rv_type = <ls_ref>-full_name.
             RETURN.
           ENDLOOP.
-
-          LOOP AT <ls_stmt>-tokens ASSIGNING <ls_other_tok>.
-            LOOP AT <ls_other_tok>-references ASSIGNING <ls_ref>
-                 WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-type.
-              rv_type = <ls_ref>-full_name.
-              RETURN.
-            ENDLOOP.
-          ENDLOOP.
-        ENDIF.
+        ENDLOOP.
       ENDLOOP.
     ENDLOOP.
   ENDMETHOD.
@@ -1501,7 +1516,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
     IF     lv_len > 0
        AND substring( val = lv_lex
                       off = strlen( lv_lex ) - 1
-                      len = 1 ) = ')'.
+                      len = 1 )                  = ')'.
       lv_len -= 1.
     ENDIF.
 
@@ -1644,9 +1659,8 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD statement_checks_sy_subrc.
-    rv_yes = statement_references_sys_field(
-        is_statement  = is_statement
-        iv_field_name = 'SUBRC' ).
+    rv_yes = statement_references_sys_field( is_statement  = is_statement
+                                             iv_field_name = 'SUBRC' ).
   ENDMETHOD.
 
   METHOD find_matching_paren.
@@ -1736,5 +1750,162 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
         rv_yes = abap_true.
       ENDIF.
     ENDIF.
+  ENDMETHOD.
+
+  METHOD call_has_other_sections.
+    rv_has = abap_false.
+    IF    has_token_lexeme( is_statement = is_statement
+                            iv_lexeme    = 'IMPORTING' )  = abap_true
+       OR has_token_lexeme( is_statement = is_statement
+                            iv_lexeme    = 'CHANGING' )   = abap_true
+       OR has_token_lexeme( is_statement = is_statement
+                            iv_lexeme    = 'RECEIVING' )  = abap_true
+       OR has_token_lexeme( is_statement = is_statement
+                            iv_lexeme    = 'RETURNING' )  = abap_true
+       OR has_token_lexeme( is_statement = is_statement
+                            iv_lexeme    = 'EXCEPTIONS' ) = abap_true.
+      rv_has = abap_true.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD procedure_is_interface.
+    DATA ls_first_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+
+    IF is_procedure-id-main_unit-kind = if_ci_atc_source_code_provider=>compilation_unit_kinds-interface.
+      rv_is_intf = abap_true.
+      RETURN.
+    ENDIF.
+
+    ls_first_stmt = get_statement( it_statements = is_procedure-statements
+                                   iv_index      = 1 ).
+    rv_is_intf = xsdbool( ls_first_stmt-keyword = 'INTERFACE' ).
+  ENDMETHOD.
+
+  METHOD parse_assignment.
+    DATA lv_tok_count   TYPE i.
+    DATA lv_paren_depth TYPE i.
+    DATA lv_eq_idx      TYPE i.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    CLEAR: ev_target,
+           ev_expr,
+           ev_is_assignment.
+
+    IF is_statement-keyword <> 'COMPUTE'.
+      RETURN.
+    ENDIF.
+
+    lv_tok_count = lines( is_statement-tokens ).
+    IF lv_tok_count < 3.
+      RETURN.
+    ENDIF.
+
+    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
+      lv_paren_depth += token_paren_delta( <ls_token> ).
+      IF lv_paren_depth = 0 AND <ls_token>-lexeme = '=' AND <ls_token>-references IS INITIAL.
+        lv_eq_idx = sy-tabix.
+        EXIT.
+      ENDIF.
+    ENDLOOP.
+
+    IF lv_eq_idx < 2 OR lv_eq_idx >= lv_tok_count.
+      RETURN.
+    ENDIF.
+
+    ev_target = extract_tokens_text( is_statement = is_statement
+                                     iv_from_idx  = 1
+                                     iv_to_idx    = lv_eq_idx - 1 ).
+    ev_expr   = extract_tokens_text( is_statement = is_statement
+                                     iv_from_idx  = lv_eq_idx + 1
+                                     iv_to_idx    = lv_tok_count ).
+    ev_is_assignment = abap_true.
+  ENDMETHOD.
+
+  METHOD statement_get_db_target.
+    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_ref TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    DATA lv_idx TYPE i.
+
+    CLEAR rv_table.
+
+    CASE is_statement-keyword.
+      WHEN 'SELECT'.
+        lv_idx = find_token( is_statement = is_statement
+                             iv_lexeme    = 'FROM' ).
+        IF lv_idx > 0.
+          ls_tok = get_token( is_statement = is_statement
+                              iv_index     = lv_idx + 1 ).
+        ENDIF.
+
+      WHEN 'DELETE'.
+        IF match_token_sequence( is_statement = is_statement
+                                 it_expected  = VALUE #( ( `DELETE` ) ( `FROM` ) ) ) = abap_true.
+          ls_tok = get_token( is_statement = is_statement
+                              iv_index     = 3 ).
+        ELSE.
+          ls_tok = get_token( is_statement = is_statement
+                              iv_index     = 2 ).
+        ENDIF.
+
+      WHEN 'UPDATE'.
+        ls_tok = get_token( is_statement = is_statement
+                            iv_index     = 2 ).
+
+      WHEN 'INSERT'.
+        IF match_token_sequence( is_statement = is_statement
+                                 it_expected  = VALUE #( ( `INSERT` ) ( `INTO` ) ) ) = abap_true.
+          IF get_token_lexeme( is_statement = is_statement
+                               iv_index     = 3 ) <> 'TABLE'.
+            ls_tok = get_token( is_statement = is_statement
+                                iv_index     = 3 ).
+          ENDIF.
+        ELSE.
+          ls_tok = get_token( is_statement = is_statement
+                              iv_index     = 2 ).
+        ENDIF.
+
+      WHEN 'MODIFY'.
+        IF     has_token_lexeme( is_statement = is_statement
+                                 iv_lexeme    = 'INDEX' )         = abap_false
+           AND has_token_lexeme( is_statement = is_statement
+                                 iv_lexeme    = 'TRANSPORTING' )  = abap_false
+           AND get_token_lexeme( is_statement = is_statement
+                                 iv_index     = 2 )              <> 'TABLE'
+           AND get_token_lexeme( is_statement = is_statement
+                                 iv_index     = 2 )              <> 'ENTITIES'
+           AND get_token_lexeme( is_statement = is_statement
+                                 iv_index     = 2 )              <> 'ENTITY'.
+          ls_tok = get_token( is_statement = is_statement
+                              iv_index     = 2 ).
+        ENDIF.
+    ENDCASE.
+
+    IF ls_tok-lexeme IS INITIAL.
+      RETURN.
+    ENDIF.
+
+    IF ls_tok-lexeme(1) = '(' OR ls_tok-lexeme(1) = '@'.
+      rv_table = ls_tok-lexeme.
+      RETURN.
+    ENDIF.
+
+    ls_ref = get_reference( ls_tok ).
+    IF ls_ref-full_name CP '\DB:*'.
+      rv_table = substring( val = ls_ref-full_name
+                            off = 4 ).
+      RETURN.
+    ELSEIF     ls_ref-kind       = if_ci_atc_source_code_provider=>compiler_reference_kinds-type
+           AND ls_ref-full_name CP '\TY:*'
+           AND ls_ref-full_name NP '\TY:*\TY:*'.
+      rv_table = substring( val = ls_ref-full_name
+                            off = 4 ).
+      RETURN.
+    ELSEIF ls_ref-kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
+      IF is_statement-keyword = 'MODIFY' OR is_statement-keyword = 'DELETE' OR is_statement-keyword = 'INSERT'.
+        RETURN.
+      ENDIF.
+    ENDIF.
+
+    rv_table = ls_tok-lexeme.
   ENDMETHOD.
 ENDCLASS.

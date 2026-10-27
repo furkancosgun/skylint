@@ -66,38 +66,37 @@ CLASS zcl_skylint_max_fanout IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD collect_types.
+    DATA lt_refs  TYPE if_ci_atc_source_code_provider=>ty_compiler_references.
     DATA lv_class TYPE string.
     DATA lv_name  TYPE string.
     DATA lo_obj   TYPE REF TO cl_abap_objectdescr.
 
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
     FIELD-SYMBOLS <ls_reference> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-        LOOP AT <ls_token>-references ASSIGNING <ls_reference>.
-          IF     <ls_reference>-kind <> if_ci_atc_source_code_provider=>compiler_reference_kinds-type
-             AND <ls_reference>-kind <> if_ci_atc_source_code_provider=>compiler_reference_kinds-method.
-            CONTINUE.
-          ENDIF.
+      lt_refs = zcl_skylint_ast_util=>statement_get_references( <ls_statement> ).
+      LOOP AT lt_refs ASSIGNING <ls_reference>.
+        IF     <ls_reference>-kind <> if_ci_atc_source_code_provider=>compiler_reference_kinds-type
+           AND <ls_reference>-kind <> if_ci_atc_source_code_provider=>compiler_reference_kinds-method.
+          CONTINUE.
+        ENDIF.
 
-          lv_class = ``.
-          zcl_skylint_ast_util=>parse_full_name( EXPORTING iv_full_name  = <ls_reference>-full_name
-                                                 IMPORTING ev_class_name = lv_class ).
+        lv_class = ``.
+        zcl_skylint_ast_util=>parse_full_name( EXPORTING iv_full_name  = <ls_reference>-full_name
+                                               IMPORTING ev_class_name = lv_class ).
 
-          IF lv_class IS INITIAL.
-            CONTINUE.
-          ENDIF.
+        IF lv_class IS INITIAL.
+          CONTINUE.
+        ENDIF.
 
-          lo_obj = zcl_skylint_rtti_util=>describe_object( lv_class ).
-          IF lo_obj IS BOUND.
-            lv_name = lo_obj->get_relative_name( ).
-            IF lv_name IS NOT INITIAL.
-              INSERT lv_name INTO TABLE rt_names.
-            ENDIF.
+        lo_obj = zcl_skylint_rtti_util=>describe_object( lv_class ).
+        IF lo_obj IS BOUND.
+          lv_name = lo_obj->get_relative_name( ).
+          IF lv_name IS NOT INITIAL.
+            INSERT lv_name INTO TABLE rt_names.
           ENDIF.
-        ENDLOOP.
+        ENDIF.
       ENDLOOP.
     ENDLOOP.
   ENDMETHOD.

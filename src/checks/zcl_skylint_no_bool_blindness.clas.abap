@@ -31,13 +31,14 @@ ENDCLASS.
 CLASS zcl_skylint_no_bool_blindness IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Avoid boolean flag importing parameters'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-boolean_flag
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Boolean importing parameters hide intent; use dedicated methods or a typed flag'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+        VALUE #(
+            description       = 'Avoid boolean flag importing parameters'
+            remote_enablement = abap_true
+            finding_codes     = VALUE #(
+                ( code           = c_finding_codes-boolean_flag
+                  severity       = if_ci_atc_check=>finding_severities-warning
+                  text           = 'Boolean importing parameters hide intent; use dedicated methods or a typed flag'
+                  pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -84,8 +85,8 @@ CLASS zcl_skylint_no_bool_blindness IMPLEMENTATION.
             lv_in_importing = abap_false.
           ENDIF.
         WHEN 'TYPE'.
-          IF    zcl_skylint_ast_util=>token_is_keyword( ls_token ) = abap_true
-             AND lv_in_importing                                       = abap_true.
+          IF     zcl_skylint_ast_util=>token_is_keyword( ls_token ) = abap_true
+             AND lv_in_importing = abap_true.
             ls_type_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                              iv_index     = lv_idx + 1 ).
             IF token_is_abap_bool( ls_type_token ) = abap_true.

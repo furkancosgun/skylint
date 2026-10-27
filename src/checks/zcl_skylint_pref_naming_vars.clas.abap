@@ -104,9 +104,8 @@ CLASS zcl_skylint_pref_naming_vars IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD matches_pattern.
-    rv_matches = zcl_skylint_ast_util=>matches_regex(
-        iv_text    = iv_text
-        iv_pattern = iv_pattern ).
+    rv_matches = zcl_skylint_ast_util=>matches_regex( iv_text    = iv_text
+                                                      iv_pattern = iv_pattern ).
   ENDMETHOD.
 
   METHOD get_stmt_name.

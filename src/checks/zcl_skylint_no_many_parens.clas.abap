@@ -74,9 +74,8 @@ CLASS zcl_skylint_no_many_parens IMPLEMENTATION.
           CONTINUE.
         ENDIF.
 
-        lv_close = zcl_skylint_ast_util=>find_matching_paren(
-                       is_statement  = <ls_statement>
-                       iv_open_index = lv_open ).
+        lv_close = zcl_skylint_ast_util=>find_matching_paren( is_statement  = <ls_statement>
+                                                              iv_open_index = lv_open ).
         IF lv_close = 0.
           lv_index += 1.
           CONTINUE.
@@ -133,9 +132,8 @@ CLASS zcl_skylint_no_many_parens IMPLEMENTATION.
       ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                 iv_index     = iv_open + 1 ).
       IF ls_tok-lexeme = '('.
-        lv_inner_close = zcl_skylint_ast_util=>find_matching_paren(
-                             is_statement  = is_statement
-                             iv_open_index = iv_open + 1 ).
+        lv_inner_close = zcl_skylint_ast_util=>find_matching_paren( is_statement  = is_statement
+                                                                    iv_open_index = iv_open + 1 ).
         IF lv_inner_close = iv_close - 1.
           rv_yes = abap_true.
           RETURN.

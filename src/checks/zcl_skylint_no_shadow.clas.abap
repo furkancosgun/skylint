@@ -34,11 +34,10 @@ CLASS zcl_skylint_no_shadow IMPLEMENTATION.
   METHOD check.
     DATA lv_class_name TYPE string.
     DATA lv_name       TYPE string.
-    DATA lv_exists     TYPE abap_bool.
     DATA lt_attributes TYPE string_table.
+    DATA ls_ref        TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_ref>       TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
@@ -56,26 +55,20 @@ CLASS zcl_skylint_no_shadow IMPLEMENTATION.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-        LOOP AT <ls_token>-references ASSIGNING <ls_ref>.
-          IF zcl_skylint_ast_util=>is_data_definition( <ls_ref> ) = abap_false.
-            CONTINUE.
-          ENDIF.
+        ls_ref = zcl_skylint_ast_util=>get_reference(
+                     is_token = <ls_token>
+                     iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
+        IF zcl_skylint_ast_util=>is_data_definition( ls_ref ) = abap_false.
+          CONTINUE.
+        ENDIF.
 
-          lv_name = zcl_skylint_ast_util=>get_reference_name( <ls_ref>-full_name ).
-          IF lv_name IS INITIAL.
-            CONTINUE.
-          ENDIF.
-
-          lv_exists = line_exists( lt_attributes[ table_line = lv_name ] ).
-          IF lv_exists = abap_false.
-            CONTINUE.
-          ENDIF.
-
+        lv_name = zcl_skylint_ast_util=>get_reference_name( ls_ref-full_name ).
+        IF lv_name IS NOT INITIAL AND line_exists( lt_attributes[ table_line = lv_name ] ).
           report_token( is_token        = <ls_token>
                         is_statement    = <ls_statement>
                         iv_finding_code = c_finding_codes-shadow ).
           EXIT.
-        ENDLOOP.
+        ENDIF.
       ENDLOOP.
     ENDLOOP.
   ENDMETHOD.

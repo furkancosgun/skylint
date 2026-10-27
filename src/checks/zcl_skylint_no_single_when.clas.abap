@@ -86,9 +86,8 @@ CLASS zcl_skylint_no_single_when IMPLEMENTATION.
 
         WHEN 'WHEN'.
           IF     lv_depth = 0
-             AND zcl_skylint_ast_util=>match_token_sequence(
-                     is_statement = ls_fwd_stmt
-                     it_expected  = VALUE #( ( `WHEN` ) ( `OTHERS` ) ) ) = abap_false.
+             AND zcl_skylint_ast_util=>match_token_sequence( is_statement = ls_fwd_stmt
+                                                             it_expected  = VALUE #( ( `WHEN` ) ( `OTHERS` ) ) ) = abap_false.
             rv_cnt += 1.
           ENDIF.
       ENDCASE.

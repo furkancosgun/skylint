@@ -34,18 +34,6 @@ CLASS zcl_skylint_pref_switch DEFINITION
       END OF ty_when_branch,
       ty_when_branches TYPE STANDARD TABLE OF ty_when_branch WITH EMPTY KEY.
 
-    METHODS parse_assignment
-      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
-      EXPORTING ev_target    TYPE string
-                ev_expr      TYPE string
-                ev_is_assign TYPE abap_bool.
-
-    METHODS extract_tokens_text
-      IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
-                iv_from_idx    TYPE i
-                iv_to_idx      TYPE i
-      RETURNING VALUE(rv_text) TYPE string.
-
     METHODS build_switch_code
       IMPORTING is_case_stmt   TYPE if_ci_atc_source_code_provider=>ty_statement
                 it_branches    TYPE ty_when_branches
@@ -168,15 +156,14 @@ CLASS zcl_skylint_pref_switch IMPLEMENTATION.
       CLEAR ls_branch.
       ls_branch-when_idx = lv_curr.
 
-      IF zcl_skylint_ast_util=>match_token_sequence(
-             is_statement = ls_stmt
-             it_expected  = VALUE #( ( `WHEN` ) ( `OTHERS` ) ) ) = abap_true.
+      IF zcl_skylint_ast_util=>match_token_sequence( is_statement = ls_stmt
+                                                     it_expected  = VALUE #( ( `WHEN` ) ( `OTHERS` ) ) ) = abap_true.
         ls_branch-is_others = abap_true.
         lv_has_others = abap_true.
       ELSE.
-        ls_branch-cond_text = extract_tokens_text( is_statement = ls_stmt
-                                                   iv_from_idx  = 2
-                                                   iv_to_idx    = lines( ls_stmt-tokens ) ).
+        ls_branch-cond_text = zcl_skylint_ast_util=>extract_tokens_text( is_statement = ls_stmt
+                                                                         iv_from_idx  = 2
+                                                                         iv_to_idx    = lines( ls_stmt-tokens ) ).
       ENDIF.
 
       lv_curr += 1.
@@ -187,10 +174,10 @@ CLASS zcl_skylint_pref_switch IMPLEMENTATION.
 
       ls_body = zcl_skylint_ast_util=>get_statement( it_statements = it_statements
                                                      iv_index      = lv_curr ).
-      parse_assignment( EXPORTING is_statement = ls_body
-                        IMPORTING ev_target    = lv_curr_target
-                                  ev_expr      = lv_curr_expr
-                                  ev_is_assign = lv_is_assign ).
+      zcl_skylint_ast_util=>parse_assignment( EXPORTING is_statement     = ls_body
+                                              IMPORTING ev_target        = lv_curr_target
+                                                        ev_expr          = lv_curr_expr
+                                                        ev_is_assignment = lv_is_assign ).
 
       IF lv_is_assign = abap_false.
         ev_valid = abap_false.
@@ -230,52 +217,6 @@ CLASS zcl_skylint_pref_switch IMPLEMENTATION.
     ENDIF.
   ENDMETHOD.
 
-  METHOD parse_assignment.
-    DATA lv_tok_count   TYPE i.
-    DATA lv_paren_depth TYPE i.
-    DATA lv_eq_idx      TYPE i.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
-
-    CLEAR: ev_target,
-           ev_expr,
-           ev_is_assign.
-
-    IF is_statement-keyword <> 'COMPUTE'.
-      RETURN.
-    ENDIF.
-
-    lv_tok_count = lines( is_statement-tokens ).
-    IF lv_tok_count < 3.
-      RETURN.
-    ENDIF.
-
-    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      lv_paren_depth += zcl_skylint_ast_util=>token_paren_delta( <ls_token> ).
-      IF lv_paren_depth = 0 AND <ls_token>-lexeme = '=' AND <ls_token>-references IS INITIAL.
-        lv_eq_idx = sy-tabix.
-        EXIT.
-      ENDIF.
-    ENDLOOP.
-
-    IF lv_eq_idx < 2 OR lv_eq_idx >= lv_tok_count.
-      RETURN.
-    ENDIF.
-
-    ev_target = extract_tokens_text( is_statement = is_statement
-                                     iv_from_idx  = 1
-                                     iv_to_idx    = lv_eq_idx - 1 ).
-    ev_expr   = extract_tokens_text( is_statement = is_statement
-                                     iv_from_idx  = lv_eq_idx + 1
-                                     iv_to_idx    = lv_tok_count ).
-    ev_is_assign = abap_true.
-  ENDMETHOD.
-
-  METHOD extract_tokens_text.
-    rv_text = zcl_skylint_ast_util=>extract_tokens_text( is_statement = is_statement
-                                                         iv_from_idx  = iv_from_idx
-                                                         iv_to_idx    = iv_to_idx ).
-  ENDMETHOD.
-
   METHOD build_switch_code.
     DATA lv_operand   TYPE string.
     DATA lv_num_tok   TYPE i.
@@ -287,9 +228,9 @@ CLASS zcl_skylint_pref_switch IMPLEMENTATION.
     CLEAR rt_code.
     lv_num_tok = lines( is_case_stmt-tokens ).
     IF lv_num_tok >= 2.
-      lv_operand = extract_tokens_text( is_statement = is_case_stmt
-                                        iv_from_idx  = 2
-                                        iv_to_idx    = lv_num_tok ).
+      lv_operand = zcl_skylint_ast_util=>extract_tokens_text( is_statement = is_case_stmt
+                                                              iv_from_idx  = 2
+                                                              iv_to_idx    = lv_num_tok ).
     ENDIF.
 
     ls_first_tok = zcl_skylint_ast_util=>get_first_token( is_case_stmt ).

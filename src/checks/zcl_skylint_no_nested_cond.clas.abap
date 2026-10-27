@@ -71,9 +71,8 @@ CLASS zcl_skylint_no_nested_cond IMPLEMENTATION.
         ls_next = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                    iv_index     = lv_open ).
         IF zcl_skylint_ast_util=>token_paren_delta( ls_next ) > 0.
-          lv_close = zcl_skylint_ast_util=>find_matching_paren(
-                         is_statement  = is_statement
-                         iv_open_index = lv_open ).
+          lv_close = zcl_skylint_ast_util=>find_matching_paren( is_statement  = is_statement
+                                                                iv_open_index = lv_open ).
           IF lv_close > lv_open.
             scan_inner_expressions( is_statement = is_statement
                                     iv_from_idx  = lv_open + 1

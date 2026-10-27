@@ -34,8 +34,8 @@ CLASS zcl_skylint_no_dead_store DEFINITION
                 ev_write     TYPE abap_bool.
 
     METHODS is_whole_object
-      IMPORTING is_token     TYPE if_ci_atc_source_code_provider=>ty_token
-                iv_full_name TYPE string
+      IMPORTING is_token      TYPE if_ci_atc_source_code_provider=>ty_token
+                iv_full_name  TYPE string
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
     METHODS is_block_boundary
@@ -82,20 +82,21 @@ CLASS zcl_skylint_no_dead_store IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD collect_data_objects.
+    DATA lt_refs TYPE if_ci_atc_source_code_provider=>ty_compiler_references.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
     FIELD-SYMBOLS <ls_ref>       TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     LOOP AT it_statements ASSIGNING <ls_statement>.
-      LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-        LOOP AT <ls_token>-references ASSIGNING <ls_ref>.
-          IF    zcl_skylint_ast_util=>is_data_definition( <ls_ref> ) = abap_false
-             OR <ls_ref>-full_name IS INITIAL
-             OR line_exists( rt_names[ table_line = <ls_ref>-full_name ] ).
-            CONTINUE.
-          ENDIF.
-          APPEND <ls_ref>-full_name TO rt_names.
-        ENDLOOP.
+      lt_refs = zcl_skylint_ast_util=>statement_get_references(
+                    is_statement = <ls_statement>
+                    iv_kind      = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
+      LOOP AT lt_refs ASSIGNING <ls_ref>.
+        IF    zcl_skylint_ast_util=>is_data_definition( <ls_ref> )  = abap_false
+           OR <ls_ref>-full_name IS INITIAL
+           OR line_exists( rt_names[ table_line = <ls_ref>-full_name ] ).
+          CONTINUE.
+        ENDIF.
+        APPEND <ls_ref>-full_name TO rt_names.
       ENDLOOP.
     ENDLOOP.
   ENDMETHOD.
@@ -159,33 +160,31 @@ CLASS zcl_skylint_no_dead_store IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD classify_access.
+    DATA ls_ref TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_ref>   TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
-    CLEAR: ev_read, ev_write.
+    CLEAR: ev_read,
+           ev_write.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      LOOP AT <ls_token>-references ASSIGNING <ls_ref>.
-        IF    <ls_ref>-kind <> if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-           OR zcl_skylint_ast_util=>reference_matches( iv_full_name = iv_full_name
-                                                      iv_reference = <ls_ref>-full_name ) = abap_false.
-          CONTINUE.
-        ENDIF.
+      ls_ref = zcl_skylint_ast_util=>get_reference(
+                   is_token = <ls_token>
+                   iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
+      IF    ls_ref-full_name IS INITIAL
+         OR zcl_skylint_ast_util=>reference_matches( iv_full_name = iv_full_name
+                                                     iv_reference = ls_ref-full_name )  = abap_false.
+        CONTINUE.
+      ENDIF.
 
-        IF zcl_skylint_ast_util=>is_read_usage( <ls_ref> ) = abap_true.
-          ev_read = abap_true.
-        ENDIF.
+      IF zcl_skylint_ast_util=>is_read_usage( ls_ref ) = abap_true.
+        ev_read = abap_true.
+      ENDIF.
 
-        IF zcl_skylint_ast_util=>is_full_write_usage( <ls_ref> ) = abap_false.
-          CONTINUE.
-        ENDIF.
-
-        " Component and offset writes only touch part of the value and never replace it
-        IF is_whole_object( is_token     = <ls_token>
-                            iv_full_name = iv_full_name ) = abap_true.
-          ev_write = abap_true.
-        ENDIF.
-      ENDLOOP.
+      IF     zcl_skylint_ast_util=>is_full_write_usage( ls_ref ) = abap_true
+         AND is_whole_object( is_token     = <ls_token>
+                              iv_full_name = iv_full_name )      = abap_true.
+        ev_write = abap_true.
+      ENDIF.
     ENDLOOP.
   ENDMETHOD.
 

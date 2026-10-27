@@ -73,9 +73,8 @@ CLASS zcl_skylint_pref_when_others IMPLEMENTATION.
             CONTINUE.
           ENDIF.
           <ls_context>-branch_count += 1.
-          IF zcl_skylint_ast_util=>match_token_sequence(
-                 is_statement = <ls_statement>
-                 it_expected  = VALUE #( ( `WHEN` ) ( `OTHERS` ) ) ) = abap_true.
+          IF zcl_skylint_ast_util=>match_token_sequence( is_statement = <ls_statement>
+                                                         it_expected  = VALUE #( ( `WHEN` ) ( `OTHERS` ) ) ) = abap_true.
             <ls_context>-has_others       = abap_true.
             <ls_context>-others_index     = <ls_context>-branch_count.
             <ls_context>-others_statement = <ls_statement>.

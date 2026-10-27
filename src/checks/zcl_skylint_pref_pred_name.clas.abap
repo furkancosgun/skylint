@@ -25,10 +25,6 @@ CLASS zcl_skylint_pref_pred_name DEFINITION
       IMPORTING iv_type           TYPE string
       RETURNING VALUE(rv_is_bool) TYPE abap_bool.
 
-    METHODS get_method_name
-      IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_name) TYPE string.
-
     METHODS is_predicate_name
       IMPORTING iv_method_name TYPE string
       RETURNING VALUE(rv_yes)  TYPE abap_bool.
@@ -63,7 +59,7 @@ CLASS zcl_skylint_pref_pred_name IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      lv_method_name = get_method_name( <ls_statement> ).
+      lv_method_name = zcl_skylint_ast_util=>get_declaration_name( <ls_statement> ).
       IF is_predicate_name( lv_method_name ) = abap_false.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-bool_method_name ).
@@ -101,14 +97,6 @@ CLASS zcl_skylint_pref_pred_name IMPLEMENTATION.
       WHEN OTHERS.
         rv_is_bool = abap_false.
     ENDCASE.
-  ENDMETHOD.
-
-  METHOD get_method_name.
-    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
-
-    ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                              iv_index     = 2 ).
-    rv_name = ls_tok-lexeme.
   ENDMETHOD.
 
   METHOD is_predicate_name.

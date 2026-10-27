@@ -27,10 +27,6 @@ CLASS zcl_skylint_pref_param_name DEFINITION
     DATA mv_check_param_name   TYPE abap_bool VALUE abap_true.
     DATA mv_require_param_name TYPE abap_bool VALUE abap_false.
 
-    METHODS has_other_sections
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_has) TYPE abap_bool.
-
     METHODS is_single_named_param_call
       IMPORTING is_statement          TYPE if_ci_atc_source_code_provider=>ty_statement
                 iv_tok_idx            TYPE i
@@ -91,7 +87,7 @@ CLASS zcl_skylint_pref_param_name IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      IF has_other_sections( <ls_statement> ) = abap_false.
+      IF zcl_skylint_ast_util=>call_has_other_sections( <ls_statement> ) = abap_false.
         IF mv_require_param_name = abap_true.
           check_require_param_name( is_statement = <ls_statement>
                                     iv_stmt_idx  = lv_stmt_idx ).
@@ -228,22 +224,6 @@ CLASS zcl_skylint_pref_param_name IMPLEMENTATION.
                                                    iv_index     = rv_arg_index + 1 ).
     IF ls_next_tok-lexeme = '='.
       rv_arg_index = 0.
-    ENDIF.
-  ENDMETHOD.
-
-  METHOD has_other_sections.
-    rv_has = abap_false.
-    IF    zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                  iv_lexeme    = 'IMPORTING' )  = abap_true
-       OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                  iv_lexeme    = 'CHANGING' )   = abap_true
-       OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                  iv_lexeme    = 'RECEIVING' )  = abap_true
-       OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                  iv_lexeme    = 'RETURNING' )  = abap_true
-       OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                  iv_lexeme    = 'EXCEPTIONS' ) = abap_true.
-      rv_has = abap_true.
     ENDIF.
   ENDMETHOD.
 

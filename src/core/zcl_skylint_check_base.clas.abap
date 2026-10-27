@@ -117,7 +117,7 @@ CLASS zcl_skylint_check_base DEFINITION
       IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
                 iv_finding_code TYPE if_ci_atc_check=>ty_finding_code
                 is_parameters   TYPE if_ci_atc_check=>ty_message_parameters OPTIONAL
-                is_quickfix     TYPE ty_quickfix                             OPTIONAL
+                is_quickfix     TYPE ty_quickfix                            OPTIONAL
                 it_quickfixes   TYPE ty_quickfixes                          OPTIONAL.
 
     METHODS convert_reported
@@ -296,12 +296,11 @@ CLASS zcl_skylint_check_base IMPLEMENTATION.
 
   METHOD if_ci_atc_check~get_meta_data.
     IF mo_meta_data IS INITIAL.
-      mo_meta_data = NEW zcl_skylint_check_meta_data(
-                             iv_description       = ms_config-description
-                             it_finding_codes     = ms_config-finding_codes
-                             it_quickfix_codes    = ms_config-quickfix_codes
-                             it_attributes        = ms_config-attributes
-                             iv_remote_enablement = ms_config-remote_enablement ).
+      mo_meta_data = NEW zcl_skylint_check_meta_data( iv_description       = ms_config-description
+                                                      it_finding_codes     = ms_config-finding_codes
+                                                      it_quickfix_codes    = ms_config-quickfix_codes
+                                                      it_attributes        = ms_config-attributes
+                                                      iv_remote_enablement = ms_config-remote_enablement ).
     ENDIF.
     meta_data = mo_meta_data.
   ENDMETHOD.

@@ -75,20 +75,20 @@ CLASS zcl_skylint_no_concat_loop IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD get_write_target.
+    DATA ls_ref TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_ref>   TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     CLEAR rs_target.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      LOOP AT <ls_token>-references ASSIGNING <ls_ref>.
-        IF     <ls_ref>-kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data
-           AND zcl_skylint_ast_util=>is_write_usage( <ls_ref> ) = abap_true.
-          rs_target-token     = <ls_token>.
-          rs_target-full_name = <ls_ref>-full_name.
-          RETURN.
-        ENDIF.
-      ENDLOOP.
+      ls_ref = zcl_skylint_ast_util=>get_reference(
+                   is_token = <ls_token>
+                   iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
+      IF zcl_skylint_ast_util=>is_write_usage( ls_ref ) = abap_true.
+        rs_target-token     = <ls_token>.
+        rs_target-full_name = ls_ref-full_name.
+        RETURN.
+      ENDIF.
     ENDLOOP.
   ENDMETHOD.
 
@@ -162,23 +162,14 @@ CLASS zcl_skylint_no_concat_loop IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD token_reads_target.
-    FIELD-SYMBOLS <ls_ref> TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    DATA ls_ref TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     rv_yes = abap_false.
-
-    LOOP AT is_token-references ASSIGNING <ls_ref>.
-      IF <ls_ref>-kind <> if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
-        CONTINUE.
-      ENDIF.
-      IF <ls_ref>-full_name <> iv_full_name.
-        CONTINUE.
-      ENDIF.
-      IF zcl_skylint_ast_util=>is_read_usage( <ls_ref> ) = abap_false.
-        CONTINUE.
-      ENDIF.
-
+    ls_ref = zcl_skylint_ast_util=>get_reference(
+                 is_token = is_token
+                 iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
+    IF ls_ref-full_name = iv_full_name AND zcl_skylint_ast_util=>is_read_usage( ls_ref ) = abap_true.
       rv_yes = abap_true.
-      RETURN.
-    ENDLOOP.
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.

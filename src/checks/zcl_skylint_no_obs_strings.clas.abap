@@ -98,6 +98,7 @@ CLASS zcl_skylint_no_obs_strings IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD uses_posix_api.
+    DATA lt_refs      TYPE if_ci_atc_source_code_provider=>ty_compiler_references.
     DATA lv_full_name TYPE string.
     DATA lv_lexeme    TYPE string.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
@@ -105,20 +106,18 @@ CLASS zcl_skylint_no_obs_strings IMPLEMENTATION.
 
     rv_is = abap_false.
 
-    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      LOOP AT <ls_token>-references ASSIGNING <ls_ref>.
-        IF <ls_ref>-kind <> if_ci_atc_source_code_provider=>compiler_reference_kinds-method.
-          CONTINUE.
-        ENDIF.
-        lv_full_name = <ls_ref>-full_name.
-        IF    lv_full_name = '\TY:CL_ABAP_REGEX\ME:CREATE_POSIX'
-           OR (     lv_full_name CP '\TY:CL_ABAP_MATCHER\ME:*'
-                AND contains( val = lv_full_name
-                              sub = 'POSIX' ) ).
-          rv_is = abap_true.
-          RETURN.
-        ENDIF.
-      ENDLOOP.
+    lt_refs = zcl_skylint_ast_util=>statement_get_references(
+                  is_statement = is_statement
+                  iv_kind      = if_ci_atc_source_code_provider=>compiler_reference_kinds-method ).
+    LOOP AT lt_refs ASSIGNING <ls_ref>.
+      lv_full_name = <ls_ref>-full_name.
+      IF    lv_full_name = '\TY:CL_ABAP_REGEX\ME:CREATE_POSIX'
+         OR (     lv_full_name CP '\TY:CL_ABAP_MATCHER\ME:*'
+              AND contains( val = lv_full_name
+                            sub = 'POSIX' ) ).
+        rv_is = abap_true.
+        RETURN.
+      ENDIF.
     ENDLOOP.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.

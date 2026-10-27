@@ -26,18 +26,19 @@ ENDCLASS.
 CLASS zcl_skylint_no_static_state IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Avoid CLASS-DATA and STATICS state'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-static_state
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Static state hides dependencies and survives between calls; inject state instead'
-                       pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                                              ( name  = 'CHECK_CLASS_DATA'
-                                                value = REF #( mv_check_class_data ) )
-                                              ( name  = 'CHECK_STATICS'
-                                                value = REF #( mv_check_statics ) ) ) ) ).
+        VALUE #(
+            description       = 'Avoid CLASS-DATA and STATICS state'
+            remote_enablement = abap_true
+            finding_codes     = VALUE #(
+                ( code           = c_finding_codes-static_state
+                  severity       = if_ci_atc_check=>finding_severities-warning
+                  text           = 'Static state hides dependencies and survives between calls; inject state instead'
+                  pseudo_comment = c_pseudo_comment ) )
+            attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                         ( name  = 'CHECK_CLASS_DATA'
+                                           value = REF #( mv_check_class_data ) )
+                                         ( name  = 'CHECK_STATICS'
+                                           value = REF #( mv_check_statics ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.

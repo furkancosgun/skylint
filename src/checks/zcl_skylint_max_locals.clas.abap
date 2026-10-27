@@ -41,8 +41,6 @@ CLASS zcl_skylint_max_locals IMPLEMENTATION.
     DATA lv_count      TYPE i.
     DATA ls_first_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_ref>       TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
@@ -54,16 +52,7 @@ CLASS zcl_skylint_max_locals IMPLEMENTATION.
           lv_count += 1.
 
         WHEN OTHERS.
-          LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-            LOOP AT <ls_token>-references ASSIGNING <ls_ref>
-                 WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
-
-              IF    <ls_ref>-usage_mode = if_ci_atc_source_code_provider=>usage_modes-definition_with_write
-                 OR <ls_ref>-usage_mode = if_ci_atc_source_code_provider=>usage_modes-definition_with_assign.
-                lv_count += 1.
-              ENDIF.
-            ENDLOOP.
-          ENDLOOP.
+          lv_count += lines( zcl_skylint_ast_util=>get_inline_declarations( <ls_statement> ) ).
       ENDCASE.
     ENDLOOP.
 

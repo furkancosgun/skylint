@@ -22,10 +22,6 @@ CLASS zcl_skylint_no_call_exporting DEFINITION
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_CALL_EXPORTING'.
 
-    METHODS has_other_sections
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-      RETURNING VALUE(rv_has) TYPE abap_bool.
-
 ENDCLASS.
 
 
@@ -61,7 +57,7 @@ CLASS zcl_skylint_no_call_exporting IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      IF has_other_sections( <ls_statement> ) = abap_true.
+      IF zcl_skylint_ast_util=>call_has_other_sections( <ls_statement> ) = abap_true.
         CONTINUE.
       ENDIF.
 
@@ -79,21 +75,5 @@ CLASS zcl_skylint_no_call_exporting IMPLEMENTATION.
                           is_quickfix     = ls_quickfix ).
       ENDIF.
     ENDLOOP.
-  ENDMETHOD.
-
-  METHOD has_other_sections.
-    rv_has = abap_false.
-    IF    zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                  iv_lexeme    = 'IMPORTING' )  = abap_true
-       OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                  iv_lexeme    = 'CHANGING' )   = abap_true
-       OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                  iv_lexeme    = 'RECEIVING' )  = abap_true
-       OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                  iv_lexeme    = 'RETURNING' )  = abap_true
-       OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                  iv_lexeme    = 'EXCEPTIONS' ) = abap_true.
-      rv_has = abap_true.
-    ENDIF.
   ENDMETHOD.
 ENDCLASS.
