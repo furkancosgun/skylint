@@ -81,6 +81,7 @@ CLASS zcl_skylint_no_neg_cond IMPLEMENTATION.
     DATA lv_paren_depth TYPE i.
     DATA lv_has_and_or  TYPE abap_bool.
     DATA lv_has_neg_op  TYPE abap_bool.
+    DATA lv_idx         TYPE i.
     DATA ls_prev        TYPE if_ci_atc_source_code_provider=>ty_token.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
@@ -111,6 +112,7 @@ CLASS zcl_skylint_no_neg_cond IMPLEMENTATION.
 
     lv_paren_depth = 0.
     LOOP AT is_statement-tokens FROM lv_from TO lv_to ASSIGNING <ls_token>.
+      lv_idx = sy-tabix.
       IF lv_paren_depth = 0.
         IF    zcl_skylint_ast_util=>token_is_keyword( is_token  = <ls_token>
                                                       iv_lexeme = 'AND' )    = abap_true
@@ -125,11 +127,11 @@ CLASS zcl_skylint_no_neg_cond IMPLEMENTATION.
         ELSEIF zcl_skylint_ast_util=>token_is_keyword( is_token  = <ls_token>
                                                        iv_lexeme = 'NOT' ) = abap_true.
           ls_prev = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                     iv_index     = sy-tabix - 1 ).
+                                                     iv_index     = lv_idx - 1 ).
           IF     zcl_skylint_ast_util=>token_is_keyword( is_token  = ls_prev
                                                          iv_lexeme = 'IS' )  = abap_false
              AND is_prefer_is_not( is_statement = is_statement
-                                   iv_index     = sy-tabix )                 = abap_false.
+                                   iv_index     = lv_idx )                   = abap_false.
             lv_has_neg_op = abap_true.
           ENDIF.
         ENDIF.
@@ -153,11 +155,13 @@ CLASS zcl_skylint_no_neg_cond IMPLEMENTATION.
 
   METHOD is_prefer_is_not.
     DATA ls_next TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_idx  TYPE i.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_yes = abap_false.
 
     LOOP AT is_statement-tokens FROM iv_index + 1 ASSIGNING <ls_token>.
+      lv_idx = sy-tabix.
       IF zcl_skylint_ast_util=>token_is_keyword( <ls_token> ) = abap_false.
         CONTINUE.
       ENDIF.
@@ -167,7 +171,7 @@ CLASS zcl_skylint_no_neg_cond IMPLEMENTATION.
           RETURN.
         WHEN 'IS'.
           ls_next = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                     iv_index     = sy-tabix + 1 ).
+                                                     iv_index     = lv_idx + 1 ).
           IF zcl_skylint_ast_util=>token_is_keyword( ls_next ) = abap_true.
             CASE ls_next-lexeme.
               WHEN 'INITIAL' OR 'BOUND' OR 'ASSIGNED' OR 'SUPPLIED' OR 'REQUESTED' OR 'INSTANCE'.

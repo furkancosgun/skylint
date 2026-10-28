@@ -48,6 +48,7 @@ CLASS zcl_skylint_no_dash_in_form IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      lv_idx = sy-tabix.
       IF <ls_statement>-keyword <> 'FORM'.
         CONTINUE.
       ENDIF.
@@ -55,8 +56,6 @@ CLASS zcl_skylint_no_dash_in_form IMPLEMENTATION.
       IF lines( <ls_statement>-tokens ) < 2.
         CONTINUE.
       ENDIF.
-
-      lv_idx = sy-tabix.
       lv_name = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
                                                         iv_index     = 2 ).
       IF NOT contains( val = lv_name

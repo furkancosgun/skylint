@@ -42,10 +42,10 @@ CLASS zcl_skylint_no_single_when IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      lv_idx = sy-tabix.
       IF <ls_statement>-keyword <> 'CASE'.
         CONTINUE.
       ENDIF.
-      lv_idx = sy-tabix.
       lv_when_count = count_when_branches( iv_start_idx = lv_idx
                                            is_procedure = is_procedure ).
       IF lv_when_count <= 1.

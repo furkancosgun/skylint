@@ -84,6 +84,7 @@ CLASS zcl_skylint_pref_cond IMPLEMENTATION.
     lv_total = zcl_skylint_ast_util=>statement_count( is_procedure-statements ).
 
     LOOP AT is_procedure-statements ASSIGNING <ls_if>.
+      lv_idx = sy-tabix.
       IF <ls_if>-keyword <> 'IF'.
         CONTINUE.
       ENDIF.
@@ -91,9 +92,6 @@ CLASS zcl_skylint_pref_cond IMPLEMENTATION.
       IF lines( <ls_if>-tokens ) < 2.
         CONTINUE.
       ENDIF.
-
-      lv_idx = sy-tabix.
-
       scan_cond_branches( EXPORTING is_if_stmt    = <ls_if>
                                     iv_if_idx     = lv_idx
                                     it_statements = is_procedure-statements

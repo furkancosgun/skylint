@@ -62,9 +62,11 @@ CLASS zcl_skylint_pref_calc_op IMPLEMENTATION.
   METHOD check.
     DATA lv_replacement TYPE string.
     DATA ls_quickfix    TYPE zcl_skylint_check_base=>ty_quickfix.
+    DATA lv_idx         TYPE i.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      lv_idx = sy-tabix.
       IF     <ls_statement>-keyword <> 'ADD'
          AND <ls_statement>-keyword <> 'SUBTRACT'
          AND <ls_statement>-keyword <> 'MULTIPLY'
@@ -79,7 +81,7 @@ CLASS zcl_skylint_pref_calc_op IMPLEMENTATION.
       ENDIF.
 
       ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-calc_assign
-                                      iv_statement_from = sy-tabix
+                                      iv_statement_from = lv_idx
                                       it_new_code       = VALUE #( ( lv_replacement ) ) ).
 
       report_statement( is_statement    = <ls_statement>

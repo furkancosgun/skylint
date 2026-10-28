@@ -95,10 +95,10 @@ CLASS zcl_skylint_no_empty_fae IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      lv_idx = sy-tabix.
       IF <ls_statement>-keyword <> 'SELECT'.
         CONTINUE.
       ENDIF.
-      lv_idx = sy-tabix.
       lv_fae_tab = extract_fae_table( <ls_statement> ).
 
       IF lv_fae_tab IS INITIAL.
@@ -184,12 +184,14 @@ CLASS zcl_skylint_no_empty_fae IMPLEMENTATION.
 
   METHOD find_table_token_index.
     FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_idx TYPE i.
 
     rv_idx = 0.
     LOOP AT is_statement-tokens ASSIGNING <ls_tok>.
+      lv_idx = sy-tabix.
       IF token_matches_table( is_token    = <ls_tok>
                               iv_tab_name = iv_tab_name ) = abap_true.
-        rv_idx = sy-tabix.
+        rv_idx = lv_idx.
         RETURN.
       ENDIF.
     ENDLOOP.

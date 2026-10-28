@@ -98,6 +98,7 @@ CLASS zcl_skylint_pref_early_ret IMPLEMENTATION.
     DATA lv_endif_idx  TYPE i.
     DATA lv_indent     TYPE string.
     DATA lt_qfs        TYPE ty_quickfixes.
+    DATA lv_stmt_idx   TYPE i.
 
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
@@ -117,13 +118,14 @@ CLASS zcl_skylint_pref_early_ret IMPLEMENTATION.
 
     IF mv_check_loop_continue = abap_true.
       LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+        lv_stmt_idx = sy-tabix.
         IF     <ls_statement>-keyword <> 'LOOP'
            AND <ls_statement>-keyword <> 'DO'
            AND <ls_statement>-keyword <> 'WHILE'.
           CONTINUE.
         ENDIF.
         ls_if = find_wrapping_if( it_statements = is_procedure-statements
-                                  iv_loop_idx   = sy-tabix ).
+                                  iv_loop_idx   = lv_stmt_idx ).
         IF ls_if-keyword = 'IF'.
           report_statement( is_statement    = ls_if
                             iv_finding_code = c_finding_codes-guard_loop ).
@@ -132,13 +134,14 @@ CLASS zcl_skylint_pref_early_ret IMPLEMENTATION.
     ENDIF.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      lv_stmt_idx = sy-tabix.
       CASE <ls_statement>-keyword.
         WHEN 'ELSE'.
           IF is_after_terminator( it_statements = is_procedure-statements
-                                  iv_index      = sy-tabix ) = abap_true.
+                                  iv_index      = lv_stmt_idx ) = abap_true.
             CLEAR lt_qfs.
             lv_endif_idx = find_matching_endif( it_statements = is_procedure-statements
-                                                iv_else_idx   = sy-tabix ).
+                                                iv_else_idx   = lv_stmt_idx ).
             IF lv_endif_idx > 0.
               IF <ls_statement>-position-column > 1.
                 lv_indent = repeat( val = ` `
@@ -147,7 +150,7 @@ CLASS zcl_skylint_pref_early_ret IMPLEMENTATION.
                 lv_indent = ''.
               ENDIF.
               APPEND quickfix_replace( iv_quickfix_code  = c_quickfix_codes-remove_else
-                                       iv_statement_from = sy-tabix
+                                       iv_statement_from = lv_stmt_idx
                                        it_new_code       = VALUE #( ( |{ lv_indent }ENDIF.| ) ) ) TO lt_qfs.
               APPEND quickfix_replace( iv_quickfix_code  = c_quickfix_codes-remove_else
                                        iv_statement_from = lv_endif_idx
@@ -161,7 +164,7 @@ CLASS zcl_skylint_pref_early_ret IMPLEMENTATION.
         WHEN 'ELSEIF'.
           IF     mv_report_elseif = abap_true
              AND is_after_terminator( it_statements = is_procedure-statements
-                                      iv_index      = sy-tabix )              = abap_true.
+                                      iv_index      = lv_stmt_idx )           = abap_true.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-else_exit ).
           ENDIF.
@@ -203,6 +206,7 @@ CLASS zcl_skylint_pref_early_ret IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD get_first_executable_stmt.
+    DATA lv_idx TYPE i.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     CLEAR ev_index.
@@ -213,16 +217,13 @@ CLASS zcl_skylint_pref_early_ret IMPLEMENTATION.
     ENDIF.
 
     LOOP AT it_statements ASSIGNING <ls_stmt>.
-      IF <ls_stmt>-keyword IS INITIAL.
-        CONTINUE.
-      ENDIF.
-
+      lv_idx = sy-tabix.
       CASE <ls_stmt>-keyword.
         WHEN 'METHOD' OR 'DATA' OR 'TYPES' OR 'CONSTANTS' OR 'STATICS' OR 'FIELD-SYMBOLS'.
           CONTINUE.
         WHEN OTHERS.
           es_statement = <ls_stmt>.
-          ev_index     = sy-tabix.
+          ev_index     = lv_idx.
           RETURN.
       ENDCASE.
     ENDLOOP.

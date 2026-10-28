@@ -53,10 +53,10 @@ CLASS zcl_skylint_pref_lines IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      lv_stmt_idx = sy-tabix.
       IF <ls_statement>-keyword <> 'DESCRIBE'.
         CONTINUE.
       ENDIF.
-      lv_stmt_idx = sy-tabix.
 
       IF    zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
                                                     iv_lexeme    = 'KIND' )       = abap_true

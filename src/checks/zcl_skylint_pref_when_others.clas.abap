@@ -64,12 +64,14 @@ CLASS zcl_skylint_pref_when_others IMPLEMENTATION.
     DATA lt_stack  TYPE ty_case_contexts.
     DATA ls_qf     TYPE ty_quickfix.
     DATA lv_indent TYPE string.
+    DATA lv_idx    TYPE i.
     DATA lv_spaces TYPE i.
 
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_context>   TYPE ty_case_context.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      lv_idx = sy-tabix.
       CASE <ls_statement>-keyword.
         WHEN 'CASE'.
           APPEND VALUE #( statement = <ls_statement> ) TO lt_stack.
@@ -107,7 +109,7 @@ CLASS zcl_skylint_pref_when_others IMPLEMENTATION.
             lv_indent = repeat( val = ` `
                                 occ = lv_spaces ).
             ls_qf = quickfix_insert_before( iv_quickfix_code  = c_quickfix_codes-add_when_others
-                                            iv_statement_from = sy-tabix
+                                            iv_statement_from = lv_idx
                                             it_new_code       = VALUE #( ( |{ lv_indent }WHEN OTHERS.| ) ) ).
             report_statement( is_statement    = <ls_context>-statement
                               iv_finding_code = c_finding_codes-missing_others

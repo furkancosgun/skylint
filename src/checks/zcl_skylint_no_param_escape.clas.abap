@@ -47,15 +47,17 @@ CLASS zcl_skylint_no_param_escape IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
+    DATA lv_idx      TYPE sy-tabix.
     DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_stmt>.
+      lv_idx = sy-tabix.
       IF <ls_stmt>-keyword <> 'METHODS' AND <ls_stmt>-keyword <> 'CLASS-METHODS'.
         CONTINUE.
       ENDIF.
       ls_quickfix = build_unescape_quickfix( is_statement = <ls_stmt>
-                                             iv_stmt_idx  = sy-tabix ).
+                                             iv_stmt_idx  = lv_idx ).
       IF ls_quickfix IS NOT INITIAL.
         report_statement( is_statement    = <ls_stmt>
                           iv_finding_code = c_finding_codes-param_escape
@@ -93,17 +95,19 @@ CLASS zcl_skylint_no_param_escape IMPLEMENTATION.
 
   METHOD find_escaped_token_index.
     DATA lv_raw TYPE string.
+    DATA lv_idx TYPE i.
     FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_idx = 0.
     LOOP AT is_statement-tokens ASSIGNING <ls_tok>.
+      lv_idx = sy-tabix.
       IF <ls_tok>-lexeme CP '!*'.
         lv_raw = substring( val = <ls_tok>-lexeme
                             off = 1 ).
         IF zcl_skylint_ast_util=>is_abap_keyword( lv_raw ) = abap_true.
           CONTINUE.
         ENDIF.
-        rv_idx = sy-tabix.
+        rv_idx = lv_idx.
         RETURN.
       ENDIF.
     ENDLOOP.

@@ -54,10 +54,10 @@ CLASS zcl_skylint_pref_auth_check IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      lv_stmt_idx = sy-tabix.
       IF <ls_statement>-keyword <> 'CALL'.
         CONTINUE.
       ENDIF.
-      lv_stmt_idx = sy-tabix.
       IF    is_call_transaction( <ls_statement> )   = abap_false
          OR has_inline_auth_check( <ls_statement> ) = abap_true.
         CONTINUE.

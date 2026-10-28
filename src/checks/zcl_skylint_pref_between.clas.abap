@@ -136,6 +136,7 @@ CLASS zcl_skylint_pref_between IMPLEMENTATION.
     DATA lv_left2    TYPE string.
     DATA lv_right2   TYPE string.
     DATA ls_quickfix TYPE ty_quickfix.
+    DATA lv_idx      TYPE i.
     FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     lv_count = zcl_skylint_ast_util=>token_count( is_statement ).
@@ -155,6 +156,7 @@ CLASS zcl_skylint_pref_between IMPLEMENTATION.
 
     lv_depth = 0.
     LOOP AT is_statement-tokens FROM lv_from TO lv_to ASSIGNING <ls_tok>.
+      lv_idx = sy-tabix.
       IF lv_depth = 0 AND <ls_tok>-references IS INITIAL.
         IF <ls_tok>-lexeme = 'BETWEEN' OR <ls_tok>-lexeme = 'OR'.
           RETURN.
@@ -163,7 +165,7 @@ CLASS zcl_skylint_pref_between IMPLEMENTATION.
           IF lv_and_idx > 0.
             RETURN.
           ENDIF.
-          lv_and_idx = sy-tabix.
+          lv_and_idx = lv_idx.
         ENDIF.
       ENDIF.
       lv_depth += zcl_skylint_ast_util=>token_paren_delta( <ls_tok> ).
@@ -219,6 +221,7 @@ CLASS zcl_skylint_pref_between IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD extract_clause_operands.
+    DATA lv_idx   TYPE i.
     DATA lv_from  TYPE i.
     DATA lv_to    TYPE i.
     DATA lv_depth TYPE i.
@@ -236,11 +239,12 @@ CLASS zcl_skylint_pref_between IMPLEMENTATION.
 
     lv_depth = 0.
     LOOP AT is_statement-tokens FROM lv_from TO lv_to ASSIGNING <ls_tok>.
+      lv_idx = sy-tabix.
       IF     lv_depth = 0
          AND <ls_tok>-references                  IS INITIAL
          AND is_range_operator( <ls_tok>-lexeme )  = abap_true.
         ev_op = <ls_tok>-lexeme.
-        ev_op_idx = sy-tabix.
+        ev_op_idx = lv_idx.
         EXIT.
       ENDIF.
       lv_depth += zcl_skylint_ast_util=>token_paren_delta( <ls_tok> ).

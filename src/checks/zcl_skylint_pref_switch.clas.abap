@@ -82,6 +82,7 @@ CLASS zcl_skylint_pref_switch IMPLEMENTATION.
     lv_total = zcl_skylint_ast_util=>statement_count( is_procedure-statements ).
 
     LOOP AT is_procedure-statements ASSIGNING <ls_case>.
+      lv_idx = sy-tabix.
       IF <ls_case>-keyword <> 'CASE'.
         CONTINUE.
       ENDIF.
@@ -89,9 +90,6 @@ CLASS zcl_skylint_pref_switch IMPLEMENTATION.
       IF lines( <ls_case>-tokens ) < 2.
         CONTINUE.
       ENDIF.
-
-      lv_idx = sy-tabix.
-
       scan_case_branches( EXPORTING iv_case_idx    = lv_idx
                                     it_statements  = is_procedure-statements
                                     iv_total       = lv_total

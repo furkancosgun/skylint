@@ -41,15 +41,17 @@ CLASS zcl_skylint_no_unnec_return IMPLEMENTATION.
   METHOD check.
     DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_stmt_idx TYPE i.
 
     IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_stmt>.
-      IF <ls_stmt>-keyword = 'RETURN' AND sy-tabix = lines( is_procedure-statements ) - 1.
+      lv_stmt_idx = sy-tabix.
+      IF <ls_stmt>-keyword = 'RETURN' AND lv_stmt_idx = lines( is_procedure-statements ) - 1.
         ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-remove_return
-                                        iv_statement_from = sy-tabix
+                                        iv_statement_from = lv_stmt_idx
                                         it_new_code       = VALUE #( ) ).
         report_statement( is_statement    = <ls_stmt>
                           iv_finding_code = c_finding_codes-unnecessary_return

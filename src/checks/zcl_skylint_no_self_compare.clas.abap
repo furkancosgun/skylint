@@ -171,17 +171,19 @@ CLASS zcl_skylint_no_self_compare IMPLEMENTATION.
   METHOD find_top_level_operator.
     DATA lv_depth TYPE i.
     DATA lv_lex   TYPE string.
+    DATA lv_tabix TYPE i.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_index = 0.
     lv_depth = 0.
 
     LOOP AT is_statement-tokens FROM iv_from TO iv_to ASSIGNING <ls_token>.
+      lv_tabix = sy-tabix.
       IF lv_depth = 0 AND <ls_token>-references IS INITIAL.
         lv_lex = <ls_token>-lexeme.
         IF    ( iv_kind = 'COMPARE' AND is_compare_operator( lv_lex ) = abap_true )
            OR ( iv_kind = 'ARITH'   AND is_arith_operator( lv_lex )   = abap_true ).
-          rv_index = sy-tabix.
+          rv_index = lv_tabix.
           RETURN.
         ENDIF.
       ENDIF.

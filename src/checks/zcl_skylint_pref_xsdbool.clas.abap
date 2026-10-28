@@ -76,11 +76,11 @@ CLASS zcl_skylint_pref_xsdbool IMPLEMENTATION.
     lv_max = zcl_skylint_ast_util=>statement_count( is_procedure-statements ).
 
     LOOP AT is_procedure-statements ASSIGNING <ls_stmt_if>.
+      lv_idx = sy-tabix.
       IF <ls_stmt_if>-keyword <> 'IF'.
         CONTINUE.
       ENDIF.
 
-      lv_idx = sy-tabix.
       IF lv_idx + 4 > lv_max.
         CONTINUE.
       ENDIF.

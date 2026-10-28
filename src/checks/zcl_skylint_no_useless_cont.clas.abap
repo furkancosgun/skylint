@@ -49,11 +49,11 @@ CLASS zcl_skylint_no_useless_cont IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      lv_idx = sy-tabix.
       IF <ls_statement>-keyword <> 'CONTINUE'.
         CONTINUE.
       ENDIF.
 
-      lv_idx = sy-tabix.
       ls_next = zcl_skylint_ast_util=>get_next_statement( it_statements    = is_procedure-statements
                                                           iv_current_index = lv_idx ).
       IF is_loop_end_keyword( ls_next-keyword ) = abap_true.

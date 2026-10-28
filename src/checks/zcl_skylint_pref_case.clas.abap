@@ -191,6 +191,7 @@ CLASS zcl_skylint_pref_case IMPLEMENTATION.
     DATA lv_to    TYPE i.
     DATA lv_depth TYPE i.
     DATA lv_op    TYPE i.
+    DATA lv_idx   TYPE i.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     CLEAR rv_var.
@@ -211,6 +212,7 @@ CLASS zcl_skylint_pref_case IMPLEMENTATION.
 
     lv_depth = 0.
     LOOP AT is_statement-tokens FROM lv_from TO lv_to ASSIGNING <ls_token>.
+      lv_idx = sy-tabix.
       IF lv_depth = 0 AND <ls_token>-references IS INITIAL.
         IF    <ls_token>-lexeme = 'AND'
            OR <ls_token>-lexeme = 'OR'
@@ -221,7 +223,7 @@ CLASS zcl_skylint_pref_case IMPLEMENTATION.
           IF lv_op > 0.
             RETURN.
           ENDIF.
-          lv_op = sy-tabix.
+          lv_op = lv_idx.
         ENDIF.
       ENDIF.
       lv_depth += zcl_skylint_ast_util=>token_paren_delta( <ls_token> ).
@@ -246,6 +248,7 @@ CLASS zcl_skylint_pref_case IMPLEMENTATION.
     DATA lv_to    TYPE i.
     DATA lv_depth TYPE i.
     DATA lv_op    TYPE i.
+    DATA lv_idx   TYPE i.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     CLEAR rv_val.
@@ -262,10 +265,11 @@ CLASS zcl_skylint_pref_case IMPLEMENTATION.
 
     lv_depth = 0.
     LOOP AT is_statement-tokens FROM lv_from TO lv_to ASSIGNING <ls_token>.
+      lv_idx = sy-tabix.
       IF     lv_depth               = 0
          AND <ls_token>-references IS INITIAL
          AND ( <ls_token>-lexeme = '=' OR <ls_token>-lexeme = 'EQ' ).
-        lv_op = sy-tabix.
+        lv_op = lv_idx.
         EXIT.
       ENDIF.
       lv_depth += zcl_skylint_ast_util=>token_paren_delta( <ls_token> ).

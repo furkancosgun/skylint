@@ -50,11 +50,10 @@ CLASS zcl_skylint_pref_reduce IMPLEMENTATION.
     lv_total = zcl_skylint_ast_util=>statement_count( is_procedure-statements ).
 
     LOOP AT is_procedure-statements ASSIGNING <ls_loop>.
+      lv_idx = sy-tabix.
       IF <ls_loop>-keyword <> 'LOOP'.
         CONTINUE.
       ENDIF.
-
-      lv_idx = sy-tabix.
 
       IF is_simple_aggregation_loop( iv_loop_idx   = lv_idx
                                      it_statements = is_procedure-statements

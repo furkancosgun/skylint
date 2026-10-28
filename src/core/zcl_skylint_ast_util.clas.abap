@@ -1767,6 +1767,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
     DATA lv_tok_count   TYPE i.
     DATA lv_paren_depth TYPE i.
     DATA lv_eq_idx      TYPE i.
+    DATA lv_idx         TYPE i.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     CLEAR: ev_target,
@@ -1783,9 +1784,10 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
     ENDIF.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
+      lv_idx = sy-tabix.
       lv_paren_depth += token_paren_delta( <ls_token> ).
-      IF lv_paren_depth = 0 AND <ls_token>-lexeme = '=' AND <ls_token>-references IS INITIAL.
-        lv_eq_idx = sy-tabix.
+      IF lv_paren_depth = 0 AND <ls_token>-lexeme = '='.
+        lv_eq_idx = lv_idx.
         EXIT.
       ENDIF.
     ENDLOOP.

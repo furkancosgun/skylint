@@ -223,6 +223,7 @@ CLASS zcl_skylint_no_obs_control IMPLEMENTATION.
     rv_is = abap_false.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
+      lv_index = sy-tabix.
       lv_lexeme = <ls_token>-lexeme.
       IF strlen( lv_lexeme ) < 6 OR lv_lexeme(6) <> 'COUNT('.
         CONTINUE.
@@ -237,7 +238,6 @@ CLASS zcl_skylint_no_obs_control IMPLEMENTATION.
         rv_is = abap_true.
         RETURN.
       ENDIF.
-      lv_index = sy-tabix.
       lv_next  = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
                                                          iv_index     = lv_index + 1 ).
       lv_next2 = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement

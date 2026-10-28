@@ -20,5 +20,20 @@
   {
     "target": "LCL_CLEAN2",
     "code": null
+  },
+  {
+    "target": "LCL_METH_TEST",
+    "code": "PREF_FCLS",
+    "line": 1,
+    "column": 0
+  },
+  {
+    "target": "LCL_METH_TEST",
+    "code": "PREF_FMETH",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "ADDFINAL"
+    ]
   }
 ]

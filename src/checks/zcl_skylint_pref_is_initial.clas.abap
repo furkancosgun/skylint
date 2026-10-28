@@ -55,14 +55,13 @@ CLASS zcl_skylint_pref_is_initial IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      lv_stmt_idx = sy-tabix.
       IF     <ls_statement>-keyword <> 'IF'
          AND <ls_statement>-keyword <> 'ELSEIF'
          AND <ls_statement>-keyword <> 'CHECK'
          AND <ls_statement>-keyword <> 'WHILE'.
         CONTINUE.
       ENDIF.
-
-      lv_stmt_idx = sy-tabix.
 
       check_lines_pattern( is_statement = <ls_statement>
                            iv_stmt_idx  = lv_stmt_idx ).
@@ -106,11 +105,11 @@ CLASS zcl_skylint_pref_is_initial IMPLEMENTATION.
     FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_tok>.
+      lv_lines_idx = sy-tabix.
       IF <ls_tok>-lexeme <> 'LINES('.
         CONTINUE.
       ENDIF.
 
-      lv_lines_idx = sy-tabix.
       lv_close_idx = lv_lines_idx + 2.
 
       IF lines( is_statement-tokens ) < lv_close_idx + 2.

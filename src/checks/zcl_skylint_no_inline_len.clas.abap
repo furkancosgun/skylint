@@ -60,12 +60,12 @@ CLASS zcl_skylint_no_inline_len IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      lv_stmt_idx = sy-tabix.
       IF     <ls_statement>-keyword <> 'DATA'
          AND <ls_statement>-keyword <> 'CONSTANTS'
          AND <ls_statement>-keyword <> 'STATICS'.
         CONTINUE.
       ENDIF.
-      lv_stmt_idx = sy-tabix.
       lv_lexeme = zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
                                                           iv_index     = 2 ).
       parse_length_spec( EXPORTING iv_lexeme   = lv_lexeme
@@ -131,8 +131,9 @@ CLASS zcl_skylint_no_inline_len IMPLEMENTATION.
 
     CLEAR rs_quickfix.
     LOOP AT is_statement-tokens ASSIGNING <ls_tok> WHERE references IS INITIAL.
+      lv_idx = sy-tabix.
       IF <ls_tok>-lexeme = 'TYPE' OR <ls_tok>-lexeme = 'LIKE'.
-        lv_type_pos = sy-tabix.
+        lv_type_pos = lv_idx.
         lv_next_idx = lv_type_pos + 1.
         EXIT.
       ENDIF.

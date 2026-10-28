@@ -77,11 +77,11 @@ CLASS zcl_skylint_pref_merge_ifs IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      lv_idx = sy-tabix.
       IF <ls_statement>-keyword <> 'IF'.
         CONTINUE.
       ENDIF.
 
-      lv_idx = sy-tabix.
       ls_outer = analyze_if( iv_idx       = lv_idx
                              is_procedure = is_procedure ).
       IF ls_outer-end_idx = 0.

@@ -51,9 +51,9 @@ CLASS zcl_skylint_no_catch_reraise IMPLEMENTATION.
     lv_total = zcl_skylint_ast_util=>statement_count( is_procedure-statements ).
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement> WHERE keyword = 'CATCH'.
+      lv_idx = sy-tabix + 1.
       lv_body_count = 0.
       CLEAR ls_single_stmt.
-      lv_idx = sy-tabix + 1.
 
       WHILE lv_idx <= lv_total.
         ls_body = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements

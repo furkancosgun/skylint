@@ -48,6 +48,7 @@ CLASS zcl_skylint_no_redun_assign IMPLEMENTATION.
 
   METHOD check.
     DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
+    DATA lv_stmt_idx TYPE i.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
@@ -55,13 +56,14 @@ CLASS zcl_skylint_no_redun_assign IMPLEMENTATION.
     ENDIF.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      lv_stmt_idx = sy-tabix.
       IF <ls_statement>-keyword <> 'COMPUTE' AND <ls_statement>-keyword <> 'MOVE'.
         CONTINUE.
       ENDIF.
 
       IF is_identical_assignment( <ls_statement> ) = abap_true.
         ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-delete_self
-                                        iv_statement_from = sy-tabix
+                                        iv_statement_from = lv_stmt_idx
                                         it_new_code       = VALUE #( ) ).
 
         report_statement( is_statement    = <ls_statement>

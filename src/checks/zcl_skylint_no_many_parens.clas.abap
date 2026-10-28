@@ -116,6 +116,27 @@ CLASS zcl_skylint_no_many_parens IMPLEMENTATION.
     DATA ls_prev        TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA ls_next        TYPE if_ci_atc_source_code_provider=>ty_token.
 
+    IF    zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                            iv_lexeme    = 'VALUE' )         > 0
+       OR zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                            iv_lexeme    = 'COND' )          > 0
+       OR zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                            iv_lexeme    = 'CONV' )          > 0
+       OR zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                            iv_lexeme    = 'CORRESPONDING' ) > 0
+       OR zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                            iv_lexeme    = 'REDUCE' )        > 0
+       OR zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                            iv_lexeme    = 'FILTER' )        > 0
+       OR zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                            iv_lexeme    = 'EXACT' )         > 0
+       OR zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                            iv_lexeme    = 'SWITCH' )        > 0
+       OR zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                            iv_lexeme    = 'NEW' )           > 0.
+      RETURN.
+    ENDIF.
+
     rv_yes = abap_false.
     lv_count = zcl_skylint_ast_util=>token_count( is_statement ).
 

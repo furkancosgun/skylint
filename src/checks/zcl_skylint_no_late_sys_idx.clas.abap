@@ -40,14 +40,16 @@ CLASS zcl_skylint_no_late_sys_idx IMPLEMENTATION.
     DATA lv_do_depth   TYPE i.
     DATA ls_prev_stmt  TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_stmt_idx TYPE i.
 
     IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      lv_stmt_idx = sy-tabix.
       ls_prev_stmt = zcl_skylint_ast_util=>get_previous_statement( it_statements    = is_procedure-statements
-                                                                   iv_current_index = sy-tabix ).
+                                                                   iv_current_index = lv_stmt_idx ).
 
       IF lv_loop_depth > 0 AND ls_prev_stmt-keyword <> 'LOOP'.
         inspect_statement( is_statement  = <ls_statement>

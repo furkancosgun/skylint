@@ -192,11 +192,13 @@ CLASS zcl_skylint_pref_downport IMPLEMENTATION.
   METHOD has_constructor_expr.
     DATA lv_lex  TYPE string.
     DATA ls_next TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_idx  TYPE i.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_has = abap_false.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
+      lv_idx = sy-tabix.
       IF <ls_token>-references IS NOT INITIAL.
         CONTINUE.
       ENDIF.
@@ -214,7 +216,7 @@ CLASS zcl_skylint_pref_downport IMPLEMENTATION.
          OR lv_lex = 'REF'
          OR lv_lex = 'CAST'.
         ls_next = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                   iv_index     = sy-tabix + 1 ).
+                                                   iv_index     = lv_idx + 1 ).
         IF ls_next-lexeme CP '*('.
           rv_has = abap_true.
           RETURN.

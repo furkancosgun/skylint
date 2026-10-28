@@ -56,9 +56,11 @@ CLASS zcl_skylint_pref_final_data IMPLEMENTATION.
     DATA ls_token       TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA ls_ref         TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
     DATA lv_token_index TYPE i.
+    DATA lv_idx         TYPE sy-tabix.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      lv_idx = sy-tabix.
       CLEAR ls_declaration.
       LOOP AT <ls_statement>-tokens INTO ls_token.
         lv_token_index = sy-tabix.
@@ -101,7 +103,7 @@ CLASS zcl_skylint_pref_final_data IMPLEMENTATION.
                                                   lexeme = |FINAL({ lv_name })| ) )
                         iv_suffix    = `.` ).
       ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-to_final
-                                      iv_statement_from = sy-tabix
+                                      iv_statement_from = lv_idx
                                       it_new_code       = VALUE #( ( lv_line ) ) ).
 
       report_statement( is_statement    = <ls_statement>

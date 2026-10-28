@@ -73,11 +73,13 @@ CLASS zcl_skylint_pref_sy IMPLEMENTATION.
   METHOD collect_overrides.
     DATA ls_ref  TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
     DATA lv_name TYPE string.
+    DATA lv_idx  TYPE i.
 
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     CLEAR rt_found.
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
+      lv_idx = sy-tabix.
       IF <ls_token>-lexeme NP 'SYST*' OR <ls_token>-references IS INITIAL.
         CONTINUE.
       ENDIF.
@@ -92,7 +94,7 @@ CLASS zcl_skylint_pref_sy IMPLEMENTATION.
 
       lv_name = |SY| && substring( val = <ls_token>-lexeme
                                    off = 4 ).
-      APPEND VALUE #( index  = sy-tabix
+      APPEND VALUE #( index  = lv_idx
                       lexeme = lv_name ) TO rt_found.
     ENDLOOP.
   ENDMETHOD.

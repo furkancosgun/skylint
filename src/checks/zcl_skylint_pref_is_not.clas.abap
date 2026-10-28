@@ -55,13 +55,13 @@ CLASS zcl_skylint_pref_is_not IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      lv_stmt_idx = sy-tabix.
       IF     <ls_statement>-keyword <> 'IF'
          AND <ls_statement>-keyword <> 'ELSEIF'
          AND <ls_statement>-keyword <> 'CHECK'
          AND <ls_statement>-keyword <> 'WHILE'.
         CONTINUE.
       ENDIF.
-      lv_stmt_idx = sy-tabix.
       CLEAR ls_quickfix.
 
       has_not_is_pattern( EXPORTING is_statement = <ls_statement>

@@ -48,6 +48,7 @@ CLASS zcl_skylint_pref_join_type IMPLEMENTATION.
     DATA lv_line      TYPE string.
     DATA lt_overrides TYPE zcl_skylint_ast_util=>ty_token_overrides.
     DATA ls_quickfix  TYPE zcl_skylint_check_base=>ty_quickfix.
+    DATA lv_idx       TYPE i.
 
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
@@ -60,14 +61,15 @@ CLASS zcl_skylint_pref_join_type IMPLEMENTATION.
 
       CLEAR lt_overrides.
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
+        lv_idx = sy-tabix.
         IF <ls_token>-lexeme <> 'JOIN' OR <ls_token>-references IS NOT INITIAL.
           CONTINUE.
         ENDIF.
         IF is_explicit_join( is_statement = <ls_statement>
-                             iv_token_idx = sy-tabix ) = abap_true.
+                             iv_token_idx = lv_idx ) = abap_true.
           CONTINUE.
         ENDIF.
-        APPEND VALUE #( index  = sy-tabix
+        APPEND VALUE #( index  = lv_idx
                         lexeme = 'INNER JOIN' ) TO lt_overrides.
       ENDLOOP.
 
