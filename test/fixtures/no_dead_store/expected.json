@@ -16,7 +16,10 @@
   },
   {
     "target": "TEST_004",
-    "code": null
+    "code": "NO_DEAD_ST",
+    "line": 3,
+    "column": 4,
+    "quickfixes": []
   },
   {
     "target": "TEST_005",

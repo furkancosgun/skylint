@@ -180,7 +180,10 @@ CLASS zcl_skylint_pref_is_initial IMPLEMENTATION.
     DATA ls_quickfix  TYPE zcl_skylint_check_base=>ty_quickfix.
     DATA lt_overrides TYPE zcl_skylint_ast_util=>ty_token_overrides.
     DATA lt_deletions TYPE zcl_skylint_ast_util=>ty_token_deletions.
+    DATA lv_found     TYPE abap_bool.
     FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    lv_found = abap_false.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_tok>.
       lv_idx = sy-tabix.
@@ -249,44 +252,46 @@ CLASS zcl_skylint_pref_is_initial IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      CLEAR: lt_overrides,
-             lt_deletions.
-
       IF lv_var_idx < lv_lit_idx.
-        lt_deletions = VALUE #( ( lv_lit_idx ) ).
+        APPEND lv_lit_idx TO lt_deletions.
         IF lv_is_not = abap_true.
-          lt_overrides = VALUE #( ( index  = lv_idx
-                                    lexeme = 'IS NOT INITIAL' ) ).
+          APPEND VALUE #( index  = lv_idx
+                          lexeme = 'IS NOT INITIAL' ) TO lt_overrides.
         ELSE.
-          lt_overrides = VALUE #( ( index  = lv_idx
-                                    lexeme = 'IS INITIAL' ) ).
+          APPEND VALUE #( index  = lv_idx
+                          lexeme = 'IS INITIAL' ) TO lt_overrides.
         ENDIF.
       ELSE.
-        lt_deletions = VALUE #( ( lv_var_idx ) ).
+        APPEND lv_var_idx TO lt_deletions.
         IF lv_is_not = abap_true.
-          lt_overrides = VALUE #( ( index  = lv_lit_idx
-                                    lexeme = lv_var_lex )
-                                  ( index  = lv_idx
-                                    lexeme = 'IS NOT INITIAL' ) ).
+          APPEND VALUE #( index  = lv_lit_idx
+                          lexeme = lv_var_lex ) TO lt_overrides.
+          APPEND VALUE #( index  = lv_idx
+                          lexeme = 'IS NOT INITIAL' ) TO lt_overrides.
         ELSE.
-          lt_overrides = VALUE #( ( index  = lv_lit_idx
-                                    lexeme = lv_var_lex )
-                                  ( index  = lv_idx
-                                    lexeme = 'IS INITIAL' ) ).
+          APPEND VALUE #( index  = lv_lit_idx
+                          lexeme = lv_var_lex ) TO lt_overrides.
+          APPEND VALUE #( index  = lv_idx
+                          lexeme = 'IS INITIAL' ) TO lt_overrides.
         ENDIF.
       ENDIF.
 
-      lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = is_statement
-                                                         it_overrides = lt_overrides
-                                                         it_deletions = lt_deletions ).
-      ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-prefer_is_initial
-                                      iv_statement_from = iv_stmt_idx
-                                      it_new_code       = VALUE #( ( |{ lv_line }.| ) ) ).
-
-      report_statement( is_statement    = is_statement
-                        iv_finding_code = c_finding_codes-prefer_is_initial
-                        is_quickfix     = ls_quickfix ).
-      RETURN.
+      lv_found = abap_true.
     ENDLOOP.
+
+    IF lv_found = abap_false.
+      RETURN.
+    ENDIF.
+
+    lv_line = zcl_skylint_ast_util=>flatten_statement( is_statement = is_statement
+                                                       it_overrides = lt_overrides
+                                                       it_deletions = lt_deletions ).
+    ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-prefer_is_initial
+                                    iv_statement_from = iv_stmt_idx
+                                    it_new_code       = VALUE #( ( |{ lv_line }.| ) ) ).
+
+    report_statement( is_statement    = is_statement
+                      iv_finding_code = c_finding_codes-prefer_is_initial
+                      is_quickfix     = ls_quickfix ).
   ENDMETHOD.
 ENDCLASS.

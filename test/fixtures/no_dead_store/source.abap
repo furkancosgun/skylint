@@ -17,7 +17,7 @@ CLASS lcl_dead_store DEFINITION.
     METHODS test_009.
     METHODS test_010.
     METHODS test_011.
-    METHODS test_012.
+    CLASS-METHODS test_012.
     METHODS test_013.
     METHODS test_014.
     METHODS test_015.

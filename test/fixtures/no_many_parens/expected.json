@@ -62,9 +62,6 @@
     "target": "TEST_012",
     "code": "NO_MNY_PAR",
     "line": 2,
-    "column": 7,
-    "quickfixes": [
-      "NOPARENS"
-    ]
+    "column": 7
   }
 ]

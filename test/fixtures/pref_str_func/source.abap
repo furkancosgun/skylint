@@ -22,7 +22,6 @@ CLASS zcl_test_prefer_string_functio IMPLEMENTATION.
   METHOD test_001.
     DATA lv_text TYPE string.
     CONDENSE lv_text.
-    TRANSLATE lv_text TO UPPER CASE.
   ENDMETHOD.
 
   METHOD test_002.

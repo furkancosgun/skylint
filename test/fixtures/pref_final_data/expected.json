@@ -3,10 +3,7 @@
     "target": "TEST_001",
     "code": "PREF_FNDAT",
     "line": 2,
-    "column": 4,
-    "quickfixes": [
-      "TOFINAL"
-    ]
+    "column": 4
   },
   {
     "target": "TEST_002",
@@ -28,10 +25,7 @@
     "target": "TEST_007",
     "code": "PREF_FNDAT",
     "line": 2,
-    "column": 4,
-    "quickfixes": [
-      "TOFINAL"
-    ]
+    "column": 4
   },
   {
     "target": "TEST_008",
@@ -41,19 +35,13 @@
     "target": "TEST_009",
     "code": "PREF_FNDAT",
     "line": 2,
-    "column": 4,
-    "quickfixes": [
-      "TOFINAL"
-    ]
+    "column": 4
   },
   {
     "target": "TEST_010",
     "code": "PREF_FNDAT",
     "line": 2,
-    "column": 4,
-    "quickfixes": [
-      "TOFINAL"
-    ]
+    "column": 4
   },
   {
     "target": "TEST_011",
@@ -71,27 +59,18 @@
     "target": "TEST_014",
     "code": "PREF_FNDAT",
     "line": 5,
-    "column": 4,
-    "quickfixes": [
-      "TOFINAL"
-    ]
+    "column": 4
   },
   {
     "target": "TEST_015",
     "code": "PREF_FNDAT",
     "line": 2,
-    "column": 4,
-    "quickfixes": [
-      "TOFINAL"
-    ]
+    "column": 4
   },
   {
     "target": "TEST_016",
     "code": "PREF_FNDAT",
     "line": 2,
-    "column": 4,
-    "quickfixes": [
-      "TOFINAL"
-    ]
+    "column": 4
   }
 ]

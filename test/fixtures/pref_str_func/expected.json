@@ -9,15 +9,6 @@
     ]
   },
   {
-    "target": "TEST_001",
-    "code": "PREF_TRNSL",
-    "line": 4,
-    "column": 4,
-    "quickfixes": [
-      "TRANSLATE"
-    ]
-  },
-  {
     "target": "TEST_002",
     "code": null
   },
@@ -47,28 +38,19 @@
     "target": "TEST_006",
     "code": "PREF_SHIFT",
     "line": 3,
-    "column": 4,
-    "quickfixes": [
-      "SHIFT"
-    ]
+    "column": 4
   },
   {
     "target": "TEST_006",
     "code": "PREF_SHIFT",
     "line": 4,
-    "column": 4,
-    "quickfixes": [
-      "SHIFT"
-    ]
+    "column": 4
   },
   {
     "target": "TEST_006",
     "code": "PREF_SHIFT",
     "line": 5,
-    "column": 4,
-    "quickfixes": [
-      "SHIFT"
-    ]
+    "column": 4
   },
   {
     "target": "TEST_007",

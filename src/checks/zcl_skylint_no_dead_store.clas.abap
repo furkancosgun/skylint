@@ -189,8 +189,6 @@ CLASS zcl_skylint_no_dead_store IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_whole_object.
-    " Offsets and lengths (lv(1), lv+1) and components (ls-id) are reported by the
-    " compiler as a plain write to the whole object, so the written token decides.
     DATA lv_name TYPE string.
 
     lv_name = zcl_skylint_ast_util=>get_reference_name( iv_full_name ).

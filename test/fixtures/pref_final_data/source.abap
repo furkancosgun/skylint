@@ -105,13 +105,13 @@ CLASS zcl_test_prefer_final_data IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_015.
-    SELECT * FROM t000 INTO DATA(ls_row).
+    SELECT * FROM t000 INTO @DATA(ls_row).
       WRITE sy-subrc.
     ENDSELECT.
   ENDMETHOD.
 
   METHOD test_016.
-    SELECT SINGLE * FROM t000 INTO DATA(ls_row).
+    SELECT SINGLE * FROM t000 INTO @DATA(ls_row).
     WRITE sy-subrc.
   ENDMETHOD.
 ENDCLASS.

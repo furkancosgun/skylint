@@ -3,6 +3,8 @@ CLASS lcl_state DEFINITION.
     CLASS-DATA gv_counter TYPE i.
     CLASS-DATA gv_flag TYPE abap_bool READ-ONLY.
     DATA mv_instance TYPE i.
+    METHODS good_local.
+    CLASS-METHODS bad_local.
   PRIVATE SECTION.
     CLASS-DATA gv_private TYPE string.
 ENDCLASS.
