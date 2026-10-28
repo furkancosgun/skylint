@@ -40,7 +40,6 @@ CLASS zcl_skylint_no_ignored_return IMPLEMENTATION.
     DATA lv_full_name TYPE string.
     DATA ls_meth      TYPE abap_methdescr.
     DATA lv_found     TYPE abap_bool.
-    DATA lv_is_ret    TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
@@ -77,8 +76,7 @@ CLASS zcl_skylint_no_ignored_return IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      lv_is_ret = line_exists( ls_meth-parameters[ parm_kind = cl_abap_objectdescr=>returning ] ).
-      IF lv_is_ret = abap_true.
+      IF line_exists( ls_meth-parameters[ parm_kind = cl_abap_objectdescr=>returning ] ).
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-ignored_return_value ).
       ENDIF.
