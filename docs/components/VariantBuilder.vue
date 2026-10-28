@@ -13,6 +13,9 @@ const variantName = ref('ZSKYLINT_CUSTOM');
 const variantDescription = ref('Custom Skylint Clean ABAP Variant');
 const abapLanguageVersion = ref('standard');
 
+// Import input reference
+const importInput = ref(null);
+
 // Set of enabled checkNames (default: all enabled)
 const selectedCheckNames = reactive(new Set(rulesData.map((r) => r.checkName)));
 
@@ -27,7 +30,7 @@ for (const r of rulesData) {
       if (defParam) {
         ruleParams[r.checkName][attr.name] = stripQuotes(defParam.value);
       } else if (attr.kind === 'Boolean') {
-        ruleParams[r.checkName][attr.name] = attr.defaultValue === 'true' ? 'X' : '';
+        ruleParams[r.checkName][attr.name] = attr.defaultValue === 'true' ? 'true' : 'false';
       } else {
         ruleParams[r.checkName][attr.name] = stripQuotes(attr.defaultValue || '');
       }
@@ -187,7 +190,7 @@ function resetDefaults() {
         if (defParam) {
           ruleParams[r.checkName][attr.name] = stripQuotes(defParam.value);
         } else if (attr.kind === 'Boolean') {
-          ruleParams[r.checkName][attr.name] = attr.defaultValue === 'true' ? 'X' : '';
+          ruleParams[r.checkName][attr.name] = attr.defaultValue === 'true' ? 'true' : 'false';
         } else {
           ruleParams[r.checkName][attr.name] = stripQuotes(attr.defaultValue || '');
         }
@@ -197,6 +200,70 @@ function resetDefaults() {
   variantName.value = 'ZSKYLINT_CUSTOM';
   variantDescription.value = 'Custom Skylint Clean ABAP Variant';
   abapLanguageVersion.value = 'standard';
+}
+
+function triggerImport() {
+  importInput.value?.click();
+}
+
+function importVariant(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const imported = JSON.parse(e.target.result);
+
+      if (imported.header?.description) {
+        variantDescription.value = imported.header.description;
+      }
+      if (imported.header?.abapLanguageVersion) {
+        abapLanguageVersion.value = imported.header.abapLanguageVersion;
+      }
+      if (imported.header?.variantName) {
+        variantName.value = String(imported.header.variantName).trim().toUpperCase();
+      }
+
+      selectedCheckNames.clear();
+
+      if (Array.isArray(imported.selectedChecks)) {
+        for (const sc of imported.selectedChecks) {
+          const rule = rulesData.find((r) => r.checkName === sc.checkName);
+          if (rule) {
+            selectedCheckNames.add(rule.checkName);
+            if (!ruleParams[rule.checkName]) {
+              ruleParams[rule.checkName] = {};
+            }
+            if (Array.isArray(sc.parameters)) {
+              for (const param of sc.parameters) {
+                const attr = rule.attributes?.find((a) => a.name === param.name);
+                if (attr) {
+                  if (attr.kind === 'Boolean') {
+                    const val = String(param.value ?? '').trim();
+                    if (val === 'X' || val === 'true' || val === true) {
+                      ruleParams[rule.checkName][param.name] = 'true';
+                    } else {
+                      ruleParams[rule.checkName][param.name] = 'false';
+                    }
+                  } else {
+                    ruleParams[rule.checkName][param.name] = stripQuotes(param.value);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      currentStep.value = 2;
+      event.target.value = '';
+    } catch (err) {
+      console.error('Failed to import variant:', err);
+      alert('Failed to import variant JSON. Please check the file format.');
+    }
+  };
+  reader.readAsText(file);
 }
 
 function toggleParamDrawer(checkName) {
@@ -253,7 +320,11 @@ function generateVariantObject() {
         for (const attr of rule.attributes) {
           const val = currentParams[attr.name];
           if (val !== undefined && val !== '') {
-            params.push({ name: attr.name, value: stripQuotes(val) });
+            if (attr.kind === 'Boolean') {
+              params.push({ name: attr.name, value: val === 'true' ? 'true' : 'false' });
+            } else {
+              params.push({ name: attr.name, value: stripQuotes(val) });
+            }
           }
         }
       }
@@ -270,6 +341,7 @@ function generateVariantObject() {
       description: variantDescription.value || 'Custom Skylint Variant',
       originalLanguage: 'en',
       abapLanguageVersion: abapLanguageVersion.value || 'standard',
+      variantName: vName,
     },
     selectedChecks,
   };
@@ -407,12 +479,29 @@ function formatAttrKind(attr) {
             <p class="vb-card-desc">Define your variant metadata and export to standard SAP ATC JSON format.</p>
           </div>
         </div>
-        <button class="vb-btn vb-btn-ghost" type="button" @click="resetDefaults" title="Reset to defaults">
-          <svg class="vb-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5" />
-          </svg>
-          Reset defaults
-        </button>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap">
+          <input
+            ref="importInput"
+            type="file"
+            accept=".json,.chkv.json,application/json"
+            style="display: none"
+            @change="importVariant"
+          />
+          <button class="vb-btn vb-btn-ghost" type="button" @click="triggerImport" title="Import existing variant JSON">
+            <svg class="vb-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+            Import JSON
+          </button>
+          <button class="vb-btn vb-btn-ghost" type="button" @click="resetDefaults" title="Reset to defaults">
+            <svg class="vb-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5" />
+            </svg>
+            Reset defaults
+          </button>
+        </div>
       </div>
 
       <div class="vb-form-grid">
@@ -630,29 +719,30 @@ function formatAttrKind(attr) {
               >
                 <div class="vb-param-label-row">
                   <span class="vb-param-name">{{ attr.name }}</span>
-                  <span class="vb-param-type">{{ formatAttrKind(attr) }}</span>
-                </div>
 
-                <!-- Boolean Parameter (Checkbox / Toggle) -->
-                <div v-if="attr.kind === 'Boolean'">
-                  <label class="vb-checkbox-label">
-                    <input
-                      type="checkbox"
-                      :checked="ruleParams[rule.checkName]?.[attr.name] === 'X'"
-                      @change="ruleParams[rule.checkName][attr.name] = $event.target.checked ? 'X' : ''"
-                    />
-                    <span>Enabled (<code>'X'</code>)</span>
-                  </label>
-                </div>
+                  <div v-if="attr.kind === 'Boolean'">
+                    <div style="display: flex; align-items: center; gap: 0.6rem">
+                      <label class="vb-switch-wrapper" :title="ruleParams[rule.checkName]?.[attr.name] === 'true' ? 'Disable' : 'Enable'">
+                        <input
+                          type="checkbox"
+                          class="vb-switch-input"
+                          :checked="ruleParams[rule.checkName]?.[attr.name] === 'true'"
+                          @change="ruleParams[rule.checkName][attr.name] = $event.target.checked ? 'true' : 'false'"
+                        />
+                        <span class="vb-switch-slider"></span>
+                      </label>
+                    </div>
+                  </div>
 
-                <!-- Elementary / Integer Parameter -->
-                <div v-else>
+                  <!-- Elementary / Integer Parameter -->
+                <div v-else style="display: flex;">
                   <input
                     v-model="ruleParams[rule.checkName][attr.name]"
                     type="text"
                     class="vb-input vb-input-sm"
                     :placeholder="attr.defaultValue"
                   />
+                </div>
                 </div>
               </div>
             </div>
@@ -1318,7 +1408,9 @@ html.dark .vb-tag.local {
 
 .vb-param-label-row {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: flex-start; /* Elemanları zıt uçlara değil, sola yaslar */
+  gap: 1.5rem;                  /* Etiket ile input arasına kontrollü boşluk koyar */
   font-size: 0.75rem;
 }
 
@@ -1326,6 +1418,13 @@ html.dark .vb-tag.local {
   font-family: var(--vp-font-family-mono);
   font-weight: 600;
   color: var(--vp-c-text-1);
+  min-width: 140px;            /* Birden fazla parametre olduğunda inputların başlangıcını aynı hizaya getirir */
+}
+
+.vb-input-sm {
+  padding: 0.3rem 0.5rem;
+  font-size: 0.8rem;
+  width: 280px;                 /* Input kutusunun tüm satıra esnemesini engeller */
 }
 
 .vb-param-type {
@@ -1340,10 +1439,6 @@ html.dark .vb-tag.local {
   cursor: pointer;
 }
 
-.vb-input-sm {
-  padding: 0.3rem 0.5rem;
-  font-size: 0.8rem;
-}
 
 /* Wizard stepper */
 .vb-stepper {

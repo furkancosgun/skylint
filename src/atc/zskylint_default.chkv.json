@@ -30,7 +30,49 @@
       "checkName": "ZSKYLINT_NO_SINGLE_ITER"
     },
     {
-      "checkName": "ZSKYLINT_PREF_DOWNPORT"
+      "checkName": "ZSKYLINT_PREF_DOWNPORT",
+      "parameters": [
+        {
+          "name": "CHECK_CONSTRUCTORS",
+          "value": "false"
+        },
+        {
+          "name": "CHECK_TABLE_EXPR",
+          "value": "false"
+        },
+        {
+          "name": "CHECK_INLINE_DECL",
+          "value": "false"
+        },
+        {
+          "name": "CHECK_STRING_TEMPL",
+          "value": "false"
+        },
+        {
+          "name": "CHECK_CHAINING",
+          "value": "false"
+        },
+        {
+          "name": "CHECK_EMPTY_KEY",
+          "value": "false"
+        },
+        {
+          "name": "CHECK_CALC_ASSIGN",
+          "value": "false"
+        },
+        {
+          "name": "CHECK_LINE_FUNCS",
+          "value": "false"
+        },
+        {
+          "name": "CHECK_STRICT_SQL",
+          "value": "false"
+        },
+        {
+          "name": "CHECK_RAISE_MESSAGE",
+          "value": "false"
+        }
+      ]
     },
     {
       "checkName": "ZSKYLINT_PREF_REDUCE"
@@ -40,19 +82,31 @@
       "parameters": [
         {
           "name": "CHECK_TAB_EXPR",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_LINE_EXISTS",
-          "value": "X"
+          "value": "true"
         }
       ]
     },
     {
-      "checkName": "ZSKYLINT_PREF_COND"
+      "checkName": "ZSKYLINT_PREF_COND",
+      "parameters": [
+        {
+          "name": "REQUIRE_ELSE",
+          "value": "false"
+        }
+      ]
     },
     {
-      "checkName": "ZSKYLINT_PREF_SWITCH"
+      "checkName": "ZSKYLINT_PREF_SWITCH",
+      "parameters": [
+        {
+          "name": "REQUIRE_OTHERS",
+          "value": "false"
+        }
+      ]
     },
     {
       "checkName": "ZSKYLINT_PREF_LINES"
@@ -71,7 +125,7 @@
       "parameters": [
         {
           "name": "ALLOW_IN_CONSTRUCTORS",
-          "value": "X"
+          "value": "true"
         }
       ]
     },
@@ -86,7 +140,11 @@
       "parameters": [
         {
           "name": "CHECK_PARAM_NAME",
-          "value": "X"
+          "value": "true"
+        },
+        {
+          "name": "REQUIRE_PARAM_NAME",
+          "value": "false"
         }
       ]
     },
@@ -95,7 +153,7 @@
       "parameters": [
         {
           "name": "ALLOW_STRUCTURE_CHAINS",
-          "value": "X"
+          "value": "true"
         }
       ]
     },
@@ -116,11 +174,11 @@
       "parameters": [
         {
           "name": "CHECK_IN_LOOP",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_OUTSIDE_LOOP",
-          "value": "X"
+          "value": "true"
         }
       ]
     },
@@ -129,35 +187,35 @@
       "parameters": [
         {
           "name": "CHECK_IF",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_LOOP",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_CASE",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_TRY",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_CATCH",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_TRY_NO_CATCH",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_DO",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_WHILE",
-          "value": "X"
+          "value": "true"
         }
       ]
     },
@@ -187,11 +245,11 @@
       "parameters": [
         {
           "name": "CHECK_CREATE_OBJECT",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_RAISE_EXCEPTION",
-          "value": "X"
+          "value": "true"
         }
       ]
     },
@@ -206,11 +264,11 @@
       "parameters": [
         {
           "name": "CHECK_PUBLIC_ATTR",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_INTF_DATA",
-          "value": "X"
+          "value": "true"
         }
       ]
     },
@@ -219,23 +277,23 @@
       "parameters": [
         {
           "name": "CHECK_ADD",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_ADD_CORR",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_COMPUTE",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_MOVE",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_GET_REF",
-          "value": "X"
+          "value": "true"
         }
       ]
     },
@@ -244,11 +302,11 @@
       "parameters": [
         {
           "name": "CHECK_DATASET",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_CURSOR",
-          "value": "X"
+          "value": "true"
         }
       ]
     },
@@ -257,51 +315,51 @@
       "parameters": [
         {
           "name": "CHECK_TABLES",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_TYPE_POOLS",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_RANGES",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_HEADER_LINE",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_OCCURS",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_INITIAL_SIZE",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_COMMON_PART",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_STATICS",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_FS_STRUCTURE",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_LOAD",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_PARAMETER",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_REFRESH",
-          "value": "X"
+          "value": "true"
         }
       ]
     },
@@ -310,43 +368,43 @@
       "parameters": [
         {
           "name": "CHECK_FORM",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_LOOP_CTL",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_BREAK",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_DEFINE",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_TEST_SEAMS",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_CATCH_SYSTEM",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_SET_EXT_CHECK",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_SELECT_NO_INTO",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_EXIT_SQL",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_SORT_BY_FS",
-          "value": "X"
+          "value": "true"
         }
       ]
     },
@@ -355,31 +413,31 @@
       "parameters": [
         {
           "name": "CHECK_EXPORT_MEMORY",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_FREE_MEMORY",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_PROVIDE",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_CONTEXTS",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_INFOTYPES",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_COMMUNICATION",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_CALL_TRANSF",
-          "value": "X"
+          "value": "true"
         }
       ]
     },
@@ -388,23 +446,23 @@
       "parameters": [
         {
           "name": "CHECK_PACK",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_UNPACK",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_REGEX",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_OCCURENCES",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_REPLACE_INTO",
-          "value": "X"
+          "value": "true"
         }
       ]
     },
@@ -413,31 +471,31 @@
       "parameters": [
         {
           "name": "CHECK_WRITE",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_ULINE",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_SKIP",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_OTHER",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "IGN_WRITE_TO",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_LEAVE",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_REJECT",
-          "value": "X"
+          "value": "true"
         }
       ]
     },
@@ -450,7 +508,7 @@
         },
         {
           "name": "CHECK_PARAM_LINE",
-          "value": "X"
+          "value": "true"
         }
       ]
     },
@@ -556,11 +614,11 @@
       "parameters": [
         {
           "name": "CHECK_CLASSES",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_METHODS",
-          "value": "X"
+          "value": "true"
         }
       ]
     },
@@ -614,19 +672,19 @@
       "parameters": [
         {
           "name": "CHECK_SELECT_SINGLE",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_READ_TABLE",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_FIND_SEARCH",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_ASSIGN",
-          "value": "X"
+          "value": "true"
         }
       ]
     },
@@ -644,31 +702,31 @@
       "parameters": [
         {
           "name": "CHECK_CONDENSE",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_TRANSLATE",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_SHIFT",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_SEARCH",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_OVERLAY",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_REPLACE",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_DESCRIBE",
-          "value": "X"
+          "value": "true"
         }
       ]
     },
@@ -680,11 +738,15 @@
       "parameters": [
         {
           "name": "CHECK_METHOD_RETURN",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_LOOP_CONTINUE",
-          "value": "X"
+          "value": "true"
+        },
+        {
+          "name": "REPORT_ELSEIF",
+          "value": "false"
         }
       ]
     },
@@ -745,7 +807,7 @@
         },
         {
           "name": "REPORT_DYNAMIC",
-          "value": "X"
+          "value": "true"
         }
       ]
     },
@@ -754,11 +816,11 @@
       "parameters": [
         {
           "name": "CHECK_DYNAMIC_SQL",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "IGNORE_RAP_QUERY_PROVIDER",
-          "value": "X"
+          "value": "true"
         }
       ]
     },
@@ -770,11 +832,11 @@
       "parameters": [
         {
           "name": "CHECK_DEF_TOP",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_DECL_ORDER",
-          "value": "X"
+          "value": "true"
         }
       ]
     },
@@ -798,11 +860,11 @@
       "parameters": [
         {
           "name": "CHECK_CAST_SYNTAX",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_INLINE_CAST",
-          "value": "X"
+          "value": "true"
         }
       ]
     },
@@ -811,35 +873,35 @@
       "parameters": [
         {
           "name": "CHECK_APPEND",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_INSERT",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_MODIFY",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_DELETE",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_CLEAR",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_SORT",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_SORT_ANY",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_COLLECT",
-          "value": "X"
+          "value": "true"
         }
       ]
     },
@@ -848,27 +910,31 @@
       "parameters": [
         {
           "name": "CHECK_SYSID",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_MANDT",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_HOST",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_DBSYS",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_OPSYS",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_UNAME",
-          "value": "X"
+          "value": "true"
+        },
+        {
+          "name": "ONLY_CONDITIONAL",
+          "value": "false"
         }
       ]
     },
@@ -907,11 +973,15 @@
       "parameters": [
         {
           "name": "ATTR_IGN_EXC",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "ATTR_IGN_LOCAL",
-          "value": "X"
+          "value": "true"
+        },
+        {
+          "name": "ATTR_IGN_INTF",
+          "value": "false"
         },
         {
           "name": "ATTR_STATICS",
@@ -923,7 +993,7 @@
         },
         {
           "name": "PARAM_IGN_EXC",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "PARAM_IMPORTING",
@@ -1084,11 +1154,11 @@
       "parameters": [
         {
           "name": "CHECK_MODIFY",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_READ",
-          "value": "X"
+          "value": "true"
         }
       ]
     },
@@ -1097,16 +1167,22 @@
       "parameters": [
         {
           "name": "IGNORE_CTOR",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "IGNORE_CHECK",
-          "value": "X"
+          "value": "true"
         }
       ]
     },
     {
-      "checkName": "ZSKYLINT_PREF_COMPOSITION"
+      "checkName": "ZSKYLINT_PREF_COMPOSITION",
+      "parameters": [
+        {
+          "name": "ALLOW_TEST_CLASSES",
+          "value": "false"
+        }
+      ]
     },
     {
       "checkName": "ZSKYLINT_PREF_INTF_SEGREG",
@@ -1140,15 +1216,15 @@
       "parameters": [
         {
           "name": "CHECK_ATTR",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_LOCAL",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_PARAM",
-          "value": "X"
+          "value": "true"
         }
       ]
     },
@@ -1166,7 +1242,7 @@
       "parameters": [
         {
           "name": "CHECK_CASE_TYPE",
-          "value": "X"
+          "value": "true"
         }
       ]
     },
@@ -1185,7 +1261,7 @@
         },
         {
           "name": "REQUIRE_LAST",
-          "value": "X"
+          "value": "true"
         }
       ]
     },
@@ -1194,12 +1270,18 @@
       "parameters": [
         {
           "name": "REQUIRE_PREVIOUS",
-          "value": "X"
+          "value": "true"
         }
       ]
     },
     {
-      "checkName": "ZSKYLINT_PREF_BETWEEN"
+      "checkName": "ZSKYLINT_PREF_BETWEEN",
+      "parameters": [
+        {
+          "name": "STRICT_RANGE",
+          "value": "false"
+        }
+      ]
     },
     {
       "checkName": "ZSKYLINT_NO_LOOP_INTO"
@@ -1239,11 +1321,11 @@
       "parameters": [
         {
           "name": "CHECK_CLASS_DATA",
-          "value": "X"
+          "value": "true"
         },
         {
           "name": "CHECK_STATICS",
-          "value": "X"
+          "value": "true"
         }
       ]
     },

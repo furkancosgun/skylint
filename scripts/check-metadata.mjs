@@ -85,9 +85,9 @@ export function getCheckParameters(rule) {
     const lower = raw.toLowerCase();
     let value = '';
     if (lower === 'abap_true') {
-      value = 'X';
+      value = 'true';
     } else if (lower === 'abap_false') {
-      value = '';
+      value = 'false';
     } else if (raw.startsWith("'")) {
       value = stripAbapQuotes(raw);
     } else {
