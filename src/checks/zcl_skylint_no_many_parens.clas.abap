@@ -52,9 +52,11 @@ CLASS zcl_skylint_no_many_parens IMPLEMENTATION.
     DATA ls_report   TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_line     TYPE string.
     DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
+    DATA lv_tabix    TYPE sy-tabix.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      lv_tabix = sy-tabix.
       IF     <ls_statement>-keyword <> 'IF'
          AND <ls_statement>-keyword <> 'ELSEIF'
          AND <ls_statement>-keyword <> 'WHILE'
@@ -88,7 +90,7 @@ CLASS zcl_skylint_no_many_parens IMPLEMENTATION.
                                                              it_deletions = VALUE #( ( lv_open ) ( lv_close ) )
                                                              iv_suffix    = `.` ).
           ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-remove_parentheses
-                                          iv_statement_from = sy-tabix
+                                          iv_statement_from = lv_tabix
                                           it_new_code       = VALUE #( ( lv_line ) ) ).
 
           ls_report = zcl_skylint_ast_util=>get_token( is_statement = <ls_statement>

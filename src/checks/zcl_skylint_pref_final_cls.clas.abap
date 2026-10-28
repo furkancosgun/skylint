@@ -123,10 +123,10 @@ CLASS zcl_skylint_pref_final_cls IMPLEMENTATION.
       ENDIF.
 
       lv_line = zcl_skylint_ast_util=>flatten_statement(
-          is_statement = <ls_statement>
-          it_overrides = VALUE #( ( index  = lv_meth_idx
-                                    lexeme = |{ ls_meth_tok-lexeme } FINAL| ) )
-          iv_suffix    = `.` ).
+                    is_statement = <ls_statement>
+                    it_overrides = VALUE #( ( index  = lv_meth_idx
+                                              lexeme = |{ ls_meth_tok-lexeme } FINAL| ) )
+                    iv_suffix    = `.` ).
       ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-add_final
                                       iv_statement_from = lv_stmt_idx
                                       it_new_code       = VALUE #( ( lv_line ) ) ).
