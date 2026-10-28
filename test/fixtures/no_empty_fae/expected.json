@@ -3,10 +3,7 @@
     "target": "TEST_001",
     "code": "NO_EMPTFAE",
     "line": 4,
-    "column": 4,
-    "quickfixes": [
-      "FAEGUARD"
-    ]
+    "column": 4
   },
   {
     "target": "TEST_002",
@@ -16,10 +13,7 @@
     "target": "TEST_003",
     "code": "NO_EMPTFAE",
     "line": 4,
-    "column": 4,
-    "quickfixes": [
-      "FAEGUARD"
-    ]
+    "column": 4
   },
   {
     "target": "TEST_004",
@@ -37,19 +31,13 @@
     "target": "TEST_007",
     "code": "NO_EMPTFAE",
     "line": 7,
-    "column": 4,
-    "quickfixes": [
-      "FAEGUARD"
-    ]
+    "column": 4
   },
   {
     "target": "TEST_008",
     "code": "NO_EMPTFAE",
     "line": 5,
-    "column": 6,
-    "quickfixes": [
-      "FAEGUARD"
-    ]
+    "column": 6
   },
   {
     "target": "TEST_009",
@@ -75,18 +63,12 @@
     "target": "TEST_014",
     "code": "NO_EMPTFAE",
     "line": 4,
-    "column": 4,
-    "quickfixes": [
-      "FAEGUARD"
-    ]
+    "column": 4
   },
   {
     "target": "TEST_015",
     "code": "NO_EMPTFAE",
     "line": 6,
-    "column": 6,
-    "quickfixes": [
-      "FAEGUARD"
-    ]
+    "column": 6
   }
 ]

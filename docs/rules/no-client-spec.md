@@ -11,7 +11,6 @@ ruleId: "no-client-spec"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Security & Robustness" />
-  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC NO_CLIENT_SPEC" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -39,13 +38,6 @@ SELECT * FROM zorders CLIENT SPECIFIED WHERE mandt = '200'.
 " Secure: Native automatic client handling preserves tenant sandbox
 SELECT order_id, status FROM zorders WHERE status = 'OPEN'.
 ```
-
-## Automated QuickFix
-
-This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
-1. Position the cursor on the flagged statement.
-2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
-3. Select the automated refactoring to apply the clean syntax immediately.
 
 ## Suppression
 

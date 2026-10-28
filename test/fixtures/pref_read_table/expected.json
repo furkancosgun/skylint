@@ -1,12 +1,52 @@
 [
-  { "target": "TEST_001", "code": "PREF_TABEX", "line": 5, "column": 4, "quickfixes": ["USETABEXP"] },
-  { "target": "TEST_002", "code": "PREF_TABEX", "line": 5, "column": 4, "quickfixes": ["USETABEXP"] },
-  { "target": "TEST_003", "code": "PREF_LNEXS", "line": 5, "column": 4, "quickfixes": [] },
-  { "target": "TEST_004", "code": null },
-  { "target": "TEST_005", "code": null },
-  { "target": "TEST_006", "code": null },
-  { "target": "TEST_007", "code": null },
-  { "target": "TEST_008", "code": null },
-  { "target": "TEST_009", "code": "PREF_TABEX", "line": 5, "column": 4, "quickfixes": ["USETABEXP"] },
-  { "target": "TEST_010", "code": "PREF_TABEX", "line": 5, "column": 4, "quickfixes": ["USETABEXP"] }
+  {
+    "target": "TEST_001",
+    "code": "PREF_TABEX",
+    "line": 5,
+    "column": 4
+  },
+  {
+    "target": "TEST_002",
+    "code": "PREF_TABEX",
+    "line": 5,
+    "column": 4
+  },
+  {
+    "target": "TEST_003",
+    "code": "PREF_LNEXS",
+    "line": 5,
+    "column": 4
+  },
+  {
+    "target": "TEST_004",
+    "code": null
+  },
+  {
+    "target": "TEST_005",
+    "code": null
+  },
+  {
+    "target": "TEST_006",
+    "code": null
+  },
+  {
+    "target": "TEST_007",
+    "code": null
+  },
+  {
+    "target": "TEST_008",
+    "code": null
+  },
+  {
+    "target": "TEST_009",
+    "code": "PREF_TABEX",
+    "line": 5,
+    "column": 4
+  },
+  {
+    "target": "TEST_010",
+    "code": "PREF_TABEX",
+    "line": 5,
+    "column": 4
+  }
 ]

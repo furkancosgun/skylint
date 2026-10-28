@@ -4,7 +4,9 @@
     "code": "PREF_AUTHS",
     "line": 2,
     "column": 4,
-    "quickfixes": []
+    "quickfixes": [
+      "CHK_AUTHS"
+    ]
   },
   {
     "target": "TEST_002",

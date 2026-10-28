@@ -18,12 +18,12 @@ This category enforces **56 native ATC rules** adhering to SAP Clean ABAP and AB
 | Rule Name | Native ATC Class | Suppression Tag | Automated QuickFix |
 |---|---|:---:|:---:|
 | [Prefer Modern Class-Based APIs over Obsolete Function Modules](/rules/pref-func-module) | `ZCL_SKYLINT_PREF_FUNC_MODULE` | <code>#EC PREF_FUNC_MOD</code> | - |
-| [Parenthesize Combinations of AND and OR](/rules/pref-paren-and-or) | `ZCL_SKYLINT_PREF_PAREN_AND_OR` | <code>#EC PREF_PAREN_AND_OR</code> | - |
+| [Parenthesize Combinations of AND and OR](/rules/pref-paren-and-or) | `ZCL_SKYLINT_PREF_PAREN_AND_OR` | <code>#EC PREF_PAREN_AND_OR</code> | ⚡ Ready |
 | [Avoid Redundant CONTINUE at End of Loop](/rules/no-useless-cont) | `ZCL_SKYLINT_NO_USELESS_CONT` | <code>#EC NO_USELESS_CONT</code> | ⚡ Ready |
 | [Avoid Nested COND or SWITCH Expressions](/rules/no-nested-cond) | `ZCL_SKYLINT_NO_NESTED_COND` | <code>#EC NO_NESTED_COND</code> | - |
 | [Check Downport Compatibility (7.40+ Modern Constructs)](/rules/pref-downport) | `ZCL_SKYLINT_PREF_DOWNPORT` | <code>#EC PREF_DOWNPORT</code> | - |
-| [Prefer REDUCE #( ) Expression over Simple Aggregation LOOP](/rules/pref-reduce) | `ZCL_SKYLINT_PREF_REDUCE` | <code>#EC PREF_REDUCE</code> | ⚡ Ready |
-| [Modernize READ TABLE (Table Expressions & line_exists)](/rules/pref-read-table) | `ZCL_SKYLINT_PREF_READ_TABLE` | <code>#EC PREF_TAB_EXPR</code> | ⚡ Ready |
+| [Prefer REDUCE #( ) Expression over Simple Aggregation LOOP](/rules/pref-reduce) | `ZCL_SKYLINT_PREF_REDUCE` | <code>#EC PREF_REDUCE</code> | - |
+| [Modernize READ TABLE (Table Expressions & line_exists)](/rules/pref-read-table) | `ZCL_SKYLINT_PREF_READ_TABLE` | <code>#EC PREF_TAB_EXPR</code> | - |
 | [Prefer COND #( ) Expression over IF/ELSEIF/ELSE](/rules/pref-cond) | `ZCL_SKYLINT_PREF_COND` | <code>#EC PREF_COND</code> | ⚡ Ready |
 | [Prefer SWITCH #( ) Expression over CASE Statement](/rules/pref-switch) | `ZCL_SKYLINT_PREF_SWITCH` | <code>#EC PREF_SWITCH</code> | ⚡ Ready |
 | [Prefer lines( ) over DESCRIBE TABLE](/rules/pref-lines) | `ZCL_SKYLINT_PREF_LINES` | <code>#EC PREF_LINES</code> | ⚡ Ready |
@@ -35,7 +35,7 @@ This category enforces **56 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Prefer Symbol Comparison Operators (=, <>, <, >)](/rules/pref-symbol-op) | `ZCL_SKYLINT_PREF_SYMBOL_OP` | <code>#EC PREF_SYMBOL_OP</code> | ⚡ Ready |
 | [Prefer NEW #( ) over CREATE OBJECT](/rules/pref-new-op) | `ZCL_SKYLINT_PREF_NEW_OP` | <code>#EC PREF_NEW_OPERATOR</code> | ⚡ Ready |
 | [Prefer xsdbool( ) for Boolean Assignments](/rules/pref-xsdbool) | `ZCL_SKYLINT_PREF_XSDBOOL` | <code>#EC PREF_XSDBOOL</code> | ⚡ Ready |
-| [Require Fully Typed Variables and Parameters](/rules/pref-full-typed) | `ZCL_SKYLINT_PREF_FULL_TYPED` | <code>#EC PREF_FULL_TYPED</code> | - |
+| [Require Fully Typed Variables and Parameters](/rules/pref-full-typed) | `ZCL_SKYLINT_PREF_FULL_TYPED` | <code>#EC PREF_FULL_TYPED</code> | ⚡ Ready |
 | [Prefer CORRESPONDING #( ) Operator](/rules/pref-corresp) | `ZCL_SKYLINT_PREF_CORRESP` | <code>#EC PREF_CORRESP</code> | ⚡ Ready |
 | [Prefer Functional RETURNING Parameters](/rules/pref-returning) | `ZCL_SKYLINT_PREF_RETURNING` | <code>#EC PREF_RETURNING</code> | - |
 | [Prefer Class-Based Exceptions over Classic EXCEPTIONS](/rules/pref-class-exc) | `ZCL_SKYLINT_PREF_CLASS_EXC` | <code>#EC PREF_CLASS_EXC</code> | - |
@@ -45,9 +45,9 @@ This category enforces **56 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Verify sy-subrc Promptly After Data Retrieval and Search](/rules/pref-check-subrc) | `ZCL_SKYLINT_PREF_CHECK_SUBRC` | <code>#EC PREF_CHECK_SUBRC</code> | - |
 | [Prefer Built-in String Functions over SEARCH/SHIFT](/rules/pref-str-func) | `ZCL_SKYLINT_PREF_STR_FUNC` | <code>#EC PREF_STR_FUNC</code> | ⚡ Ready |
 | [Prefer Calculation Assignment Operators (+=, -=, *=)](/rules/pref-calc-op) | `ZCL_SKYLINT_PREF_CALC_OP` | <code>#EC PREF_CALC_OP</code> | ⚡ Ready |
-| [Prefer Early Return to Reduce Nesting (Guard Clauses)](/rules/pref-early-ret) | `ZCL_SKYLINT_PREF_EARLY_RET` | <code>#EC PREF_GUARD_METHOD</code> | - |
-| [Prefer CASE over Multiple IF / ELSEIF on the Same Variable](/rules/pref-case) | `ZCL_SKYLINT_PREF_CASE` | <code>#EC PREF_CASE</code> | - |
-| [Prefer Modern Inline Declarations in ABAP 7.40+](/rules/pref-inline) | `ZCL_SKYLINT_PREF_INLINE` | <code>#EC PREF_INLINE</code> | - |
+| [Prefer Early Return to Reduce Nesting (Guard Clauses)](/rules/pref-early-ret) | `ZCL_SKYLINT_PREF_EARLY_RET` | <code>#EC PREF_GUARD_METHOD</code> | ⚡ Ready |
+| [Prefer CASE over Multiple IF / ELSEIF on the Same Variable](/rules/pref-case) | `ZCL_SKYLINT_PREF_CASE` | <code>#EC PREF_CASE</code> | ⚡ Ready |
+| [Prefer Modern Inline Declarations in ABAP 7.40+](/rules/pref-inline) | `ZCL_SKYLINT_PREF_INLINE` | <code>#EC PREF_INLINE</code> | ⚡ Ready |
 | [Prefer FINAL( ) over DATA( ) when the variable is never written again](/rules/pref-final-data) | `ZCL_SKYLINT_PREF_FINAL_DATA` | <code>#EC PREF_FINAL_DATA</code> | ⚡ Ready |
 | [Use a message class (SE91) instead of inline message text](/rules/pref-msg-cls) | `ZCL_SKYLINT_PREF_MSG_CLS` | <code>#EC PREF_MSG_CLS</code> | - |
 | [Declare Constructor in PUBLIC SECTION](/rules/pref-pub-ctor) | `ZCL_SKYLINT_PREF_PUB_CTOR` | <code>#EC PREF_PUB_CTOR</code> | - |
@@ -70,8 +70,8 @@ This category enforces **56 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Prefer CREATE_* Prefix for Factory Methods Returning Own Class](/rules/pref-factory-name) | `ZCL_SKYLINT_PREF_FACTORY_NAME` | <code>#EC PREF_FACTORY_NAME</code> | - |
 | [Avoid Hungarian Notation and Type Prefixes](/rules/no-hungarian) | `ZCL_SKYLINT_NO_HUNGARIAN` | <code>#EC NO_HUNGARIAN</code> | - |
 | [Avoid IS INSTANCE OF and CASE TYPE OF Type Tests](/rules/no-instance-of) | `ZCL_SKYLINT_NO_INSTANCE_OF` | <code>#EC NO_INSTANCE_OF</code> | - |
-| [Require WHEN OTHERS as the Last Branch of CASE](/rules/pref-when-others) | `ZCL_SKYLINT_PREF_WHEN_OTHERS` | <code>#EC PREF_WHEN_OTHERS</code> | - |
-| [Prefer BETWEEN for Inclusive Range Checks](/rules/pref-between) | `ZCL_SKYLINT_PREF_BETWEEN` | <code>#EC PREF_BETWEEN</code> | - |
+| [Require WHEN OTHERS as the Last Branch of CASE](/rules/pref-when-others) | `ZCL_SKYLINT_PREF_WHEN_OTHERS` | <code>#EC PREF_WHEN_OTHERS</code> | ⚡ Ready |
+| [Prefer BETWEEN for Inclusive Range Checks](/rules/pref-between) | `ZCL_SKYLINT_PREF_BETWEEN` | <code>#EC PREF_BETWEEN</code> | ⚡ Ready |
 | [Avoid Boolean Flag Importing Parameters](/rules/no-bool-blindness) | `ZCL_SKYLINT_NO_BOOL_BLINDNESS` | <code>#EC NO_BOOL_BLINDNESS</code> | - |
 
 ---

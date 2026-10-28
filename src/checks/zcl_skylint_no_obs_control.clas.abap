@@ -86,10 +86,12 @@ CLASS zcl_skylint_no_obs_control IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
+    DATA lv_stmt_idx TYPE i.
     DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      lv_stmt_idx = sy-tabix.
       CLEAR ls_quickfix.
 
       CASE <ls_statement>-keyword.
@@ -102,7 +104,7 @@ CLASS zcl_skylint_no_obs_control IMPLEMENTATION.
         WHEN 'BREAK-POINT' OR 'BREAK'.
           IF mv_check_break = abap_true.
             ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-remove_break
-                                            iv_statement_from = sy-tabix
+                                            iv_statement_from = lv_stmt_idx
                                             it_new_code       = VALUE #( ) ).
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_control
@@ -162,7 +164,7 @@ CLASS zcl_skylint_no_obs_control IMPLEMENTATION.
              AND zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
                                                             it_expected  = VALUE #( ( `EXTENDED` ) ( `CHECK` ) ) ) > 0.
             ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-remove_ext_check
-                                            iv_statement_from = sy-tabix
+                                            iv_statement_from = lv_stmt_idx
                                             it_new_code       = VALUE #( ) ).
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_control

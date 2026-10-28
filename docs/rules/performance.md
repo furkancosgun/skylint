@@ -23,7 +23,7 @@ This category enforces **10 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Avoid SELECT ... ENDSELECT Row-by-Row Cursor Loops](/rules/no-endselect) | `ZCL_SKYLINT_NO_ENDSELECT` | <code>#EC NO_ENDSELECT</code> | - |
 | [Require Explicit ORDER BY for Deterministic SELECT Queries](/rules/pref-order-by) | `ZCL_SKYLINT_PREF_ORDER_BY` | <code>#EC PREF_ORDER_BY</code> | - |
 | [Specify TRANSPORTING in Internal Table MODIFY and READ Operations](/rules/pref-transport) | `ZCL_SKYLINT_PREF_TRANSPORT` | <code>#EC PREF_TRANSPORT</code> | - |
-| [Prefer Pass-by-Reference for Internal Tables in Method Signatures](/rules/pref-pass-by-ref) | `ZCL_SKYLINT_PREF_PASS_BY_REF` | <code>#EC PREF_PASS_BY_REF</code> | - |
+| [Prefer Pass-by-Reference for Internal Tables in Method Signatures](/rules/pref-pass-by-ref) | `ZCL_SKYLINT_PREF_PASS_BY_REF` | <code>#EC PREF_PASS_BY_REF</code> | ⚡ Ready |
 | [Do Not Mutate the Internal Table Currently Being Looped (Iterator Invalidation)](/rules/no-mod-loop-tab) | `ZCL_SKYLINT_NO_MOD_LOOP_TAB` | <code>#EC NO_MOD_LOOP_TAB</code> | - |
 | [Avoid String Concatenation Inside Loops (Quadratic Memory Allocation)](/rules/no-concat-loop) | `ZCL_SKYLINT_NO_CONCAT_LOOP` | <code>#EC NO_CONCAT_LOOP</code> | - |
 | [Prefer ASSIGNING over LOOP INTO Copy Targets](/rules/no-loop-into) | `ZCL_SKYLINT_NO_LOOP_INTO` | <code>#EC NO_LOOP_INTO</code> | - |

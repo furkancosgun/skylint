@@ -10,6 +10,11 @@ CLASS zcl_skylint_no_dup_cond DEFINITION
         duplicate_operand   TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_DUP_OPR',
       END OF c_finding_codes.
 
+    CONSTANTS:
+      BEGIN OF c_quickfix_codes,
+        remove_dup_branch TYPE cl_ci_atc_quickfixes=>ty_quickfix_code VALUE 'REM_DUP_BR',
+      END OF c_quickfix_codes.
+
     METHODS constructor.
 
   PROTECTED SECTION.
@@ -17,6 +22,12 @@ CLASS zcl_skylint_no_dup_cond DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_DUP_COND'.
+
+    METHODS find_branch_end_idx
+      IMPORTING it_statements     TYPE if_ci_atc_source_code_provider=>ty_statements
+                iv_start_idx      TYPE i
+                iv_is_case        TYPE abap_bool
+      RETURNING VALUE(rv_end_idx) TYPE i.
 
     METHODS check_duplicate_elseif
       IMPORTING iv_idx       TYPE i
@@ -49,15 +60,18 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_dup_cond IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Avoid duplicate branch conditions in IF and CASE'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     severity       = if_ci_atc_check=>finding_severities-warning
-                                     pseudo_comment = c_pseudo_comment
-                                     ( code = c_finding_codes-identical_condition
-                                       text = 'Identical condition in branch; duplicate branch is unreachable' )
-                                     ( code = c_finding_codes-duplicate_operand
-                                       text = 'Identical operand in condition; remove the duplicate comparison' ) ) ) ).
+    super->constructor( VALUE #(
+                            description       = 'Avoid duplicate branch conditions in IF and CASE'
+                            remote_enablement = abap_true
+                            finding_codes     = VALUE #(
+                                severity       = if_ci_atc_check=>finding_severities-warning
+                                pseudo_comment = c_pseudo_comment
+                                ( code = c_finding_codes-identical_condition
+                                  text = 'Identical condition in branch; duplicate branch is unreachable' )
+                                ( code = c_finding_codes-duplicate_operand
+                                  text = 'Identical operand in condition; remove the duplicate comparison' ) )
+                            quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-remove_dup_branch
+                                                           short_text = 'Remove duplicate unreachable branch' ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -90,7 +104,9 @@ CLASS zcl_skylint_no_dup_cond IMPLEMENTATION.
     DATA lv_prev_cond TYPE string.
     DATA lv_back_idx  TYPE i.
     DATA lv_depth     TYPE i.
+    DATA lv_to_idx    TYPE i.
     DATA ls_back_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_quickfix  TYPE ty_quickfix.
 
     lv_cond = get_condition_string( is_statement ).
     lv_depth = 0.
@@ -111,8 +127,16 @@ CLASS zcl_skylint_no_dup_cond IMPLEMENTATION.
           IF lv_depth = 0.
             lv_prev_cond = get_condition_string( ls_back_stmt ).
             IF lv_prev_cond = lv_cond.
+              lv_to_idx = find_branch_end_idx( it_statements = is_procedure-statements
+                                               iv_start_idx  = iv_idx
+                                               iv_is_case    = abap_false ).
+              ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-remove_dup_branch
+                                              iv_statement_from = iv_idx
+                                              iv_statement_to   = lv_to_idx
+                                              it_new_code       = VALUE #( ) ).
               report_statement( is_statement    = is_statement
-                                iv_finding_code = c_finding_codes-identical_condition ).
+                                iv_finding_code = c_finding_codes-identical_condition
+                                is_quickfix     = ls_quickfix ).
             ENDIF.
             EXIT.
           ELSE.
@@ -123,8 +147,16 @@ CLASS zcl_skylint_no_dup_cond IMPLEMENTATION.
           IF lv_depth = 0.
             lv_prev_cond = get_condition_string( ls_back_stmt ).
             IF lv_prev_cond = lv_cond.
+              lv_to_idx = find_branch_end_idx( it_statements = is_procedure-statements
+                                               iv_start_idx  = iv_idx
+                                               iv_is_case    = abap_false ).
+              ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-remove_dup_branch
+                                              iv_statement_from = iv_idx
+                                              iv_statement_to   = lv_to_idx
+                                              it_new_code       = VALUE #( ) ).
               report_statement( is_statement    = is_statement
-                                iv_finding_code = c_finding_codes-identical_condition ).
+                                iv_finding_code = c_finding_codes-identical_condition
+                                is_quickfix     = ls_quickfix ).
               EXIT.
             ENDIF.
           ENDIF.
@@ -139,7 +171,9 @@ CLASS zcl_skylint_no_dup_cond IMPLEMENTATION.
     DATA lv_prev_cond TYPE string.
     DATA lv_back_idx  TYPE i.
     DATA lv_depth     TYPE i.
+    DATA lv_to_idx    TYPE i.
     DATA ls_back_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_quickfix  TYPE ty_quickfix.
 
     lv_cond = get_condition_string( is_statement ).
     lv_depth = 0.
@@ -167,8 +201,16 @@ CLASS zcl_skylint_no_dup_cond IMPLEMENTATION.
           IF lv_depth = 0.
             lv_prev_cond = get_condition_string( ls_back_stmt ).
             IF lv_prev_cond = lv_cond.
+              lv_to_idx = find_branch_end_idx( it_statements = is_procedure-statements
+                                               iv_start_idx  = iv_idx
+                                               iv_is_case    = abap_true ).
+              ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-remove_dup_branch
+                                              iv_statement_from = iv_idx
+                                              iv_statement_to   = lv_to_idx
+                                              it_new_code       = VALUE #( ) ).
               report_statement( is_statement    = is_statement
-                                iv_finding_code = c_finding_codes-identical_condition ).
+                                iv_finding_code = c_finding_codes-identical_condition
+                                is_quickfix     = ls_quickfix ).
               EXIT.
             ENDIF.
           ENDIF.
@@ -323,5 +365,60 @@ CLASS zcl_skylint_no_dup_cond IMPLEMENTATION.
         ENDIF.
       ENDIF.
     ENDLOOP.
+  ENDMETHOD.
+
+  METHOD find_branch_end_idx.
+    DATA lv_idx   TYPE i.
+    DATA lv_depth TYPE i.
+    DATA ls_stmt  TYPE if_ci_atc_source_code_provider=>ty_statement.
+
+    rv_end_idx = iv_start_idx.
+    lv_depth = 0.
+    lv_idx = iv_start_idx + 1.
+
+    WHILE lv_idx <= lines( it_statements ).
+      ls_stmt = zcl_skylint_ast_util=>get_statement( it_statements = it_statements
+                                                     iv_index      = lv_idx ).
+      IF ls_stmt-keyword IS INITIAL.
+        EXIT.
+      ENDIF.
+
+      IF iv_is_case = abap_true.
+        CASE ls_stmt-keyword.
+          WHEN 'CASE'.
+            lv_depth += 1.
+          WHEN 'ENDCASE'.
+            IF lv_depth = 0.
+              rv_end_idx = lv_idx - 1.
+              RETURN.
+            ELSE.
+              lv_depth -= 1.
+            ENDIF.
+          WHEN 'WHEN'.
+            IF lv_depth = 0.
+              rv_end_idx = lv_idx - 1.
+              RETURN.
+            ENDIF.
+        ENDCASE.
+      ELSE.
+        CASE ls_stmt-keyword.
+          WHEN 'IF'.
+            lv_depth += 1.
+          WHEN 'ENDIF'.
+            IF lv_depth = 0.
+              rv_end_idx = lv_idx - 1.
+              RETURN.
+            ELSE.
+              lv_depth -= 1.
+            ENDIF.
+          WHEN 'ELSEIF' OR 'ELSE'.
+            IF lv_depth = 0.
+              rv_end_idx = lv_idx - 1.
+              RETURN.
+            ENDIF.
+        ENDCASE.
+      ENDIF.
+      lv_idx += 1.
+    ENDWHILE.
   ENDMETHOD.
 ENDCLASS.

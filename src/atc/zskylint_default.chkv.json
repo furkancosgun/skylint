@@ -39,10 +39,6 @@
       "checkName": "ZSKYLINT_PREF_READ_TABLE",
       "parameters": [
         {
-          "name": "USE_OPTIONAL",
-          "value": "X"
-        },
-        {
           "name": "CHECK_TAB_EXPR",
           "value": "X"
         },

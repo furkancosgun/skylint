@@ -11,6 +11,7 @@ ruleId: "pref-paren-and-or"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC PREF_PAREN_AND_OR" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -40,6 +41,13 @@ IF ( cond_a AND cond_b ) OR cond_c.
   step( ).
 ENDIF.
 ```
+
+## Automated QuickFix
+
+This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
+1. Position the cursor on the flagged statement.
+2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
+3. Select the automated refactoring to apply the clean syntax immediately.
 
 ## Suppression
 

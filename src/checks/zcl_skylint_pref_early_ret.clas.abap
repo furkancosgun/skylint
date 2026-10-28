@@ -11,6 +11,11 @@ CLASS zcl_skylint_pref_early_ret DEFINITION
         else_exit    TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_ELSEEXT',
       END OF c_finding_codes.
 
+    CONSTANTS:
+      BEGIN OF c_quickfix_codes,
+        remove_else TYPE cl_ci_atc_quickfixes=>ty_quickfix_code VALUE 'REM_ELSE',
+      END OF c_quickfix_codes.
+
     METHODS constructor.
 
   PROTECTED SECTION.
@@ -27,6 +32,11 @@ CLASS zcl_skylint_pref_early_ret DEFINITION
     DATA mv_check_method_return TYPE abap_bool VALUE abap_true.
     DATA mv_check_loop_continue TYPE abap_bool VALUE abap_true.
     DATA mv_report_elseif       TYPE abap_bool VALUE abap_false.
+
+    METHODS find_matching_endif
+      IMPORTING it_statements       TYPE if_ci_atc_source_code_provider=>ty_statements
+                iv_else_idx         TYPE i
+      RETURNING VALUE(rv_endif_idx) TYPE i.
 
     METHODS is_after_terminator
       IMPORTING it_statements TYPE if_ci_atc_source_code_provider=>ty_statements
@@ -69,6 +79,9 @@ CLASS zcl_skylint_pref_early_ret IMPLEMENTATION.
                                      ( code           = c_finding_codes-else_exit
                                        text           = 'Remove ELSE after a terminating statement'
                                        pseudo_comment = c_pseudo_comments-else_exit ) )
+                                 quickfix_codes    = VALUE #(
+                                     ( code       = c_quickfix_codes-remove_else
+                                       short_text = 'Remove redundant ELSE after terminating statement' ) )
                                  attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
                                                               ( name  = 'CHECK_METHOD_RETURN'
                                                                 value = REF #( mv_check_method_return ) )
@@ -82,6 +95,9 @@ CLASS zcl_skylint_pref_early_ret IMPLEMENTATION.
     DATA lv_first_idx  TYPE i.
     DATA ls_first_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA ls_if         TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_endif_idx  TYPE i.
+    DATA lv_indent     TYPE string.
+    DATA lt_qfs        TYPE ty_quickfixes.
 
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
@@ -120,8 +136,27 @@ CLASS zcl_skylint_pref_early_ret IMPLEMENTATION.
         WHEN 'ELSE'.
           IF is_after_terminator( it_statements = is_procedure-statements
                                   iv_index      = sy-tabix ) = abap_true.
+            CLEAR lt_qfs.
+            lv_endif_idx = find_matching_endif( it_statements = is_procedure-statements
+                                                iv_else_idx   = sy-tabix ).
+            IF lv_endif_idx > 0.
+              IF <ls_statement>-position-column > 1.
+                lv_indent = repeat( val = ` `
+                                    occ = <ls_statement>-position-column - 1 ).
+              ELSE.
+                lv_indent = ''.
+              ENDIF.
+              APPEND quickfix_replace( iv_quickfix_code  = c_quickfix_codes-remove_else
+                                       iv_statement_from = sy-tabix
+                                       it_new_code       = VALUE #( ( |{ lv_indent }ENDIF.| ) ) ) TO lt_qfs.
+              APPEND quickfix_replace( iv_quickfix_code  = c_quickfix_codes-remove_else
+                                       iv_statement_from = lv_endif_idx
+                                       it_new_code       = VALUE #( ) ) TO lt_qfs.
+            ENDIF.
+
             report_statement( is_statement    = <ls_statement>
-                              iv_finding_code = c_finding_codes-else_exit ).
+                              iv_finding_code = c_finding_codes-else_exit
+                              it_quickfixes   = lt_qfs ).
           ENDIF.
         WHEN 'ELSEIF'.
           IF     mv_report_elseif = abap_true
@@ -134,6 +169,37 @@ CLASS zcl_skylint_pref_early_ret IMPLEMENTATION.
           CONTINUE.
       ENDCASE.
     ENDLOOP.
+  ENDMETHOD.
+
+  METHOD find_matching_endif.
+    DATA lv_depth TYPE i.
+    DATA lv_idx   TYPE i.
+    DATA ls_stmt  TYPE if_ci_atc_source_code_provider=>ty_statement.
+
+    rv_endif_idx = 0.
+    lv_depth = 0.
+    lv_idx = iv_else_idx + 1.
+
+    WHILE lv_idx <= lines( it_statements ).
+      ls_stmt = zcl_skylint_ast_util=>get_statement( it_statements = it_statements
+                                                     iv_index      = lv_idx ).
+      IF ls_stmt-keyword IS INITIAL.
+        EXIT.
+      ENDIF.
+
+      CASE ls_stmt-keyword.
+        WHEN 'IF'.
+          lv_depth += 1.
+        WHEN 'ENDIF'.
+          IF lv_depth = 0.
+            rv_endif_idx = lv_idx.
+            RETURN.
+          ELSE.
+            lv_depth -= 1.
+          ENDIF.
+      ENDCASE.
+      lv_idx += 1.
+    ENDWHILE.
   ENDMETHOD.
 
   METHOD get_first_executable_stmt.

@@ -64,7 +64,7 @@
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
       "pseudoComment": "PREF_PAREN_AND_OR",
-      "hasQuickfix": false,
+      "hasQuickfix": true,
       "remoteEnabled": true,
       "configurable": false
     },
@@ -124,7 +124,7 @@
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
       "pseudoComment": "PREF_REDUCE",
-      "hasQuickfix": true,
+      "hasQuickfix": false,
       "remoteEnabled": true,
       "configurable": false
     },
@@ -136,7 +136,7 @@
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
       "pseudoComment": "PREF_TAB_EXPR",
-      "hasQuickfix": true,
+      "hasQuickfix": false,
       "remoteEnabled": true,
       "configurable": true
     },
@@ -364,7 +364,7 @@
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
       "pseudoComment": "NO_DUP_COND",
-      "hasQuickfix": false,
+      "hasQuickfix": true,
       "remoteEnabled": true,
       "configurable": false
     },
@@ -676,7 +676,7 @@
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
       "pseudoComment": "PREF_FULL_TYPED",
-      "hasQuickfix": false,
+      "hasQuickfix": true,
       "remoteEnabled": true,
       "configurable": false
     },
@@ -1012,7 +1012,7 @@
       "category": "security",
       "categoryTitle": "Security & Robustness",
       "pseudoComment": "PREF_AUTH_SUBRC",
-      "hasQuickfix": false,
+      "hasQuickfix": true,
       "remoteEnabled": true,
       "configurable": false
     },
@@ -1024,7 +1024,7 @@
       "category": "security",
       "categoryTitle": "Security & Robustness",
       "pseudoComment": "NO_CLIENT_SPEC",
-      "hasQuickfix": true,
+      "hasQuickfix": false,
       "remoteEnabled": true,
       "configurable": false
     },
@@ -1072,7 +1072,7 @@
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
       "pseudoComment": "PREF_GUARD_METHOD",
-      "hasQuickfix": false,
+      "hasQuickfix": true,
       "remoteEnabled": true,
       "configurable": true
     },
@@ -1108,7 +1108,7 @@
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
       "pseudoComment": "PREF_CASE",
-      "hasQuickfix": false,
+      "hasQuickfix": true,
       "remoteEnabled": true,
       "configurable": true
     },
@@ -1156,7 +1156,7 @@
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
       "pseudoComment": "PREF_INLINE",
-      "hasQuickfix": false,
+      "hasQuickfix": true,
       "remoteEnabled": true,
       "configurable": false
     },
@@ -1240,7 +1240,7 @@
       "category": "performance",
       "categoryTitle": "Performance & Database",
       "pseudoComment": "PREF_PASS_BY_REF",
-      "hasQuickfix": false,
+      "hasQuickfix": true,
       "remoteEnabled": true,
       "configurable": false
     },
@@ -1624,7 +1624,7 @@
       "category": "security",
       "categoryTitle": "Security & Robustness",
       "pseudoComment": "NO_UNHANDLED_EML",
-      "hasQuickfix": false,
+      "hasQuickfix": true,
       "remoteEnabled": true,
       "configurable": true
     },
@@ -1756,7 +1756,7 @@
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
       "pseudoComment": "PREF_WHEN_OTHERS",
-      "hasQuickfix": false,
+      "hasQuickfix": true,
       "remoteEnabled": true,
       "configurable": true
     },
@@ -1768,7 +1768,7 @@
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
       "pseudoComment": "NO_EXC_CHAIN",
-      "hasQuickfix": false,
+      "hasQuickfix": true,
       "remoteEnabled": true,
       "configurable": true
     },
@@ -1780,7 +1780,7 @@
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
       "pseudoComment": "PREF_BETWEEN",
-      "hasQuickfix": false,
+      "hasQuickfix": true,
       "remoteEnabled": true,
       "configurable": true
     },

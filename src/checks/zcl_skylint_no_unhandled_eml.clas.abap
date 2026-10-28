@@ -9,6 +9,11 @@ CLASS zcl_skylint_no_unhandled_eml DEFINITION
         unhandled_eml TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_UNH_EML',
       END OF c_finding_codes.
 
+    CONSTANTS:
+      BEGIN OF c_quickfix_codes,
+        add_eml_responses TYPE cl_ci_atc_quickfixes=>ty_quickfix_code VALUE 'ADD_EML',
+      END OF c_quickfix_codes.
+
     METHODS constructor.
 
   PROTECTED SECTION.
@@ -36,6 +41,8 @@ CLASS zcl_skylint_no_unhandled_eml IMPLEMENTATION.
                                                 severity       = if_ci_atc_check=>finding_severities-warning
                                                 text           = 'Always provide FAILED and REPORTED in EML statements'
                                                 pseudo_comment = c_pseudo_comment ) )
+                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-add_eml_responses
+                                                short_text = 'Add FAILED and REPORTED to EML statement' ) )
                  attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
                                               ( name  = 'CHECK_MODIFY'
                                                 value = REF #( mv_check_modify ) )
@@ -46,6 +53,10 @@ CLASS zcl_skylint_no_unhandled_eml IMPLEMENTATION.
   METHOD check.
     DATA lv_has_failed   TYPE abap_bool.
     DATA lv_has_reported TYPE abap_bool.
+    DATA lv_stmt_idx     TYPE i.
+    DATA lv_append       TYPE string.
+    DATA lv_line         TYPE string.
+    DATA ls_quickfix     TYPE ty_quickfix.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
@@ -54,6 +65,7 @@ CLASS zcl_skylint_no_unhandled_eml IMPLEMENTATION.
     ENDIF.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      lv_stmt_idx = sy-tabix.
       IF is_eml_statement( <ls_statement> ) = abap_false.
         CONTINUE.
       ENDIF.
@@ -72,8 +84,22 @@ CLASS zcl_skylint_no_unhandled_eml IMPLEMENTATION.
       ENDLOOP.
 
       IF lv_has_failed = abap_false OR lv_has_reported = abap_false.
+        CLEAR lv_append.
+        IF lv_has_failed = abap_false.
+          lv_append = | FAILED DATA(failed)|.
+        ENDIF.
+        IF lv_has_reported = abap_false.
+          lv_append = |{ lv_append } REPORTED DATA(reported)|.
+        ENDIF.
+
+        lv_line = |{ zcl_skylint_ast_util=>flatten_statement( <ls_statement> ) }{ lv_append }.|.
+        ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-add_eml_responses
+                                        iv_statement_from = lv_stmt_idx
+                                        it_new_code       = VALUE #( ( lv_line ) ) ).
+
         report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-unhandled_eml ).
+                          iv_finding_code = c_finding_codes-unhandled_eml
+                          is_quickfix     = ls_quickfix ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.

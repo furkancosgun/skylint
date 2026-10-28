@@ -57,7 +57,7 @@
     "categoryTitle": "Clean ABAP & Modern Syntax",
     "pseudoComment": "PREF_PAREN_AND_OR",
     "description": "Parenthesize Combinations of AND and OR",
-    "hasQuickfix": false,
+    "hasQuickfix": true,
     "remoteEnabled": true,
     "attributes": [],
     "relatedRules": [
@@ -203,7 +203,7 @@
     "categoryTitle": "Clean ABAP & Modern Syntax",
     "pseudoComment": "PREF_REDUCE",
     "description": "Prefer REDUCE #( ) expression over simple aggregation LOOP",
-    "hasQuickfix": true,
+    "hasQuickfix": false,
     "remoteEnabled": true,
     "attributes": [],
     "relatedRules": [
@@ -222,14 +222,9 @@
     "categoryTitle": "Clean ABAP & Modern Syntax",
     "pseudoComment": "PREF_TAB_EXPR",
     "description": "Modernize READ TABLE (table expressions & line_exists)",
-    "hasQuickfix": true,
+    "hasQuickfix": false,
     "remoteEnabled": true,
     "attributes": [
-      {
-        "name": "USE_OPTIONAL",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
       {
         "name": "CHECK_TAB_EXPR",
         "kind": "Boolean",
@@ -247,10 +242,6 @@
       "no-default-key"
     ],
     "defaultParameters": [
-      {
-        "name": "USE_OPTIONAL",
-        "value": "X"
-      },
       {
         "name": "CHECK_TAB_EXPR",
         "value": "X"
@@ -756,7 +747,7 @@
     "categoryTitle": "Anti-Patterns & Bad Practices",
     "pseudoComment": "NO_DUP_COND",
     "description": "Avoid duplicate branch conditions in IF and CASE",
-    "hasQuickfix": false,
+    "hasQuickfix": true,
     "remoteEnabled": true,
     "attributes": [],
     "relatedRules": [
@@ -1755,7 +1746,7 @@
     "categoryTitle": "Clean ABAP & Modern Syntax",
     "pseudoComment": "PREF_FULL_TYPED",
     "description": "Enforce fully typed constant declarations",
-    "hasQuickfix": false,
+    "hasQuickfix": true,
     "remoteEnabled": true,
     "attributes": [],
     "relatedRules": [
@@ -2421,7 +2412,7 @@
     "categoryTitle": "Security & Robustness",
     "pseudoComment": "PREF_AUTH_SUBRC",
     "description": "Check sy-subrc immediately after AUTHORITY-CHECK",
-    "hasQuickfix": false,
+    "hasQuickfix": true,
     "remoteEnabled": true,
     "attributes": [],
     "relatedRules": [
@@ -2440,7 +2431,7 @@
     "categoryTitle": "Security & Robustness",
     "pseudoComment": "NO_CLIENT_SPEC",
     "description": "Avoid USING CLIENT or CLIENT SPECIFIED in ABAP SQL",
-    "hasQuickfix": true,
+    "hasQuickfix": false,
     "remoteEnabled": true,
     "attributes": [],
     "relatedRules": [
@@ -2581,7 +2572,7 @@
     "categoryTitle": "Clean ABAP & Modern Syntax",
     "pseudoComment": "PREF_GUARD_METHOD",
     "description": "Prefer early return or continue over nested IF blocks",
-    "hasQuickfix": false,
+    "hasQuickfix": true,
     "remoteEnabled": true,
     "attributes": [
       {
@@ -2663,7 +2654,7 @@
     "categoryTitle": "Clean ABAP & Modern Syntax",
     "pseudoComment": "PREF_CASE",
     "description": "Use CASE instead of IF when checking multiple values",
-    "hasQuickfix": false,
+    "hasQuickfix": true,
     "remoteEnabled": true,
     "attributes": [
       {
@@ -2750,7 +2741,7 @@
     "categoryTitle": "Clean ABAP & Modern Syntax",
     "pseudoComment": "PREF_INLINE",
     "description": "Prefer Inline Declarations",
-    "hasQuickfix": false,
+    "hasQuickfix": true,
     "remoteEnabled": true,
     "attributes": [],
     "relatedRules": [
@@ -2883,7 +2874,7 @@
     "categoryTitle": "Performance & Database",
     "pseudoComment": "PREF_PASS_BY_REF",
     "description": "Slow Parameter Passing",
-    "hasQuickfix": false,
+    "hasQuickfix": true,
     "remoteEnabled": true,
     "attributes": [],
     "relatedRules": [
@@ -4036,7 +4027,7 @@
     "categoryTitle": "Security & Robustness",
     "pseudoComment": "NO_UNHANDLED_EML",
     "description": "Provide FAILED and REPORTED in RAP EML statements",
-    "hasQuickfix": false,
+    "hasQuickfix": true,
     "remoteEnabled": true,
     "attributes": [
       {
@@ -4375,7 +4366,7 @@
     "categoryTitle": "Clean ABAP & Modern Syntax",
     "pseudoComment": "PREF_WHEN_OTHERS",
     "description": "Require WHEN OTHERS as the last CASE branch",
-    "hasQuickfix": false,
+    "hasQuickfix": true,
     "remoteEnabled": true,
     "attributes": [
       {
@@ -4414,7 +4405,7 @@
     "categoryTitle": "Anti-Patterns & Bad Practices",
     "pseudoComment": "NO_EXC_CHAIN",
     "description": "Preserve the original exception with PREVIOUS",
-    "hasQuickfix": false,
+    "hasQuickfix": true,
     "remoteEnabled": true,
     "attributes": [
       {
@@ -4444,7 +4435,7 @@
     "categoryTitle": "Clean ABAP & Modern Syntax",
     "pseudoComment": "PREF_BETWEEN",
     "description": "Prefer BETWEEN for inclusive range checks",
-    "hasQuickfix": false,
+    "hasQuickfix": true,
     "remoteEnabled": true,
     "attributes": [
       {

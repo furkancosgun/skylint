@@ -10,6 +10,11 @@ CLASS zcl_skylint_pref_when_others DEFINITION
         others_position TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_WOPOS',
       END OF c_finding_codes.
 
+    CONSTANTS:
+      BEGIN OF c_quickfix_codes,
+        add_when_others TYPE cl_ci_atc_quickfixes=>ty_quickfix_code VALUE 'ADD_WO',
+      END OF c_quickfix_codes.
+
     METHODS constructor.
 
   PROTECTED SECTION.
@@ -31,7 +36,6 @@ CLASS zcl_skylint_pref_when_others DEFINITION
 
     DATA mv_min_branches TYPE i         VALUE 2.
     DATA mv_require_last TYPE abap_bool VALUE abap_true.
-
 ENDCLASS.
 
 
@@ -46,6 +50,8 @@ CLASS zcl_skylint_pref_when_others IMPLEMENTATION.
                                                 text = 'CASE statement has no WHEN OTHERS fallback branch' )
                                               ( code = c_finding_codes-others_position
                                                 text = 'WHEN OTHERS should be the last branch of the CASE statement' ) )
+                 quickfix_codes    = VALUE #( ( code       = c_quickfix_codes-add_when_others
+                                                short_text = 'Add WHEN OTHERS branch' ) )
                  attributes        = VALUE #( ( name  = 'MIN_BRANCHES'
                                                 kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
                                                 value = REF #( mv_min_branches ) )
@@ -55,7 +61,10 @@ CLASS zcl_skylint_pref_when_others IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lt_stack TYPE ty_case_contexts.
+    DATA lt_stack  TYPE ty_case_contexts.
+    DATA ls_qf     TYPE ty_quickfix.
+    DATA lv_indent TYPE string.
+    DATA lv_spaces TYPE i.
 
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_context>   TYPE ty_case_context.
@@ -91,8 +100,18 @@ CLASS zcl_skylint_pref_when_others IMPLEMENTATION.
           ENDIF.
           IF     <ls_context>-has_others      = abap_false
              AND <ls_context>-explicit_count >= mv_min_branches.
+            lv_spaces = <ls_statement>-position-column + 1.
+            IF lv_spaces < 2.
+              lv_spaces = 2.
+            ENDIF.
+            lv_indent = repeat( val = ` `
+                                occ = lv_spaces ).
+            ls_qf = quickfix_insert_before( iv_quickfix_code  = c_quickfix_codes-add_when_others
+                                            iv_statement_from = sy-tabix
+                                            it_new_code       = VALUE #( ( |{ lv_indent }WHEN OTHERS.| ) ) ).
             report_statement( is_statement    = <ls_context>-statement
-                              iv_finding_code = c_finding_codes-missing_others ).
+                              iv_finding_code = c_finding_codes-missing_others
+                              is_quickfix     = ls_qf ).
           ELSEIF     <ls_context>-has_others   = abap_true
                  AND mv_require_last           = abap_true
                  AND <ls_context>-others_index < <ls_context>-branch_count.

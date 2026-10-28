@@ -11,7 +11,6 @@ ruleId: "pref-read-table"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC PREF_TAB_EXPR" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -47,20 +46,12 @@ IF line_exists( lt_customers[ customer_id = lv_id ] ).
 ENDIF.
 ```
 
-## Automated QuickFix
-
-This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
-1. Position the cursor on the flagged statement.
-2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
-3. Select the automated refactoring to apply the clean syntax immediately.
-
 ## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
 
 | Parameter Name | Data Type | Default Value | Description & Guidance |
 |---|---|:---:|---|
-| `USE_OPTIONAL` | `Boolean` | <code>true</code> | Suggest OPTIONAL addition in table expressions to prevent CX_SY_ITAB_LINE_NOT_FOUND dumps |
 | `CHECK_TAB_EXPR` | `Boolean` | <code>true</code> | Suggest table expressions (lt_tab[ ... ]) instead of READ TABLE INTO |
 | `CHECK_LINE_EXISTS` | `Boolean` | <code>true</code> | Suggest line_exists( ) instead of READ TABLE TRANSPORTING NO FIELDS |
 

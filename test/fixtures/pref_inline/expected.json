@@ -3,7 +3,10 @@
     "target": "TEST_001",
     "code": "PREF_INLIN",
     "line": 2,
-    "column": 4
+    "column": 4,
+    "quickfixes": [
+      "INL_DECL"
+    ]
   },
   {
     "target": "TEST_002",

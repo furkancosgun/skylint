@@ -30,7 +30,7 @@ This category enforces **56 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Avoid CHECK Statements](/rules/no-check-stmt) | `ZCL_SKYLINT_NO_CHECK_STMT` | <code>#EC NO_CHECK_IN_LOOP</code> | ⚡ Ready |
 | [Avoid Empty Control Blocks](/rules/no-empty-block) | `ZCL_SKYLINT_NO_EMPTY_BLOCK` | <code>#EC NO_EMPTY_BLOCK</code> | ⚡ Ready |
 | [Avoid Identical Statements in IF Branches](/rules/no-ident-cont) | `ZCL_SKYLINT_NO_IDENT_CONT` | <code>#EC NO_IDENT_CONT</code> | - |
-| [Avoid Duplicate Branch Conditions](/rules/no-dup-cond) | `ZCL_SKYLINT_NO_DUP_COND` | <code>#EC NO_DUP_COND</code> | - |
+| [Avoid Duplicate Branch Conditions](/rules/no-dup-cond) | `ZCL_SKYLINT_NO_DUP_COND` | <code>#EC NO_DUP_COND</code> | ⚡ Ready |
 | [Avoid Dead / Unreachable Code](/rules/no-unreachable) | `ZCL_SKYLINT_NO_UNREACHABLE` | <code>#EC NO_UNREACHABLE</code> | ⚡ Ready |
 | [Avoid CASE with a Single WHEN Branch](/rules/no-single-when) | `ZCL_SKYLINT_NO_SINGLE_WHEN` | <code>#EC NO_SINGLE_WHEN</code> | - |
 | [Avoid Yoda Conditions](/rules/no-yoda-cond) | `ZCL_SKYLINT_NO_YODA_COND` | <code>#EC NO_YODA_COND</code> | ⚡ Ready |
@@ -70,7 +70,7 @@ This category enforces **56 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Avoid Method Override That Only Delegates to Super](/rules/no-empty-override) | `ZCL_SKYLINT_NO_EMPTY_OVERRIDE` | <code>#EC NO_EMPTY_OVERRIDE</code> | - |
 | [Avoid Comparisons and Arithmetic with Identical Operands](/rules/no-self-compare) | `ZCL_SKYLINT_NO_SELF_COMPARE` | <code>#EC NO_SELF_COMPARE</code> | - |
 | [Avoid CATCH Blocks That Only Re-raise the Same Exception](/rules/no-catch-reraise) | `ZCL_SKYLINT_NO_CATCH_RERAISE` | <code>#EC NO_CATCH_RERAISE</code> | - |
-| [Preserve the Original Exception with PREVIOUS](/rules/no-exc-chain) | `ZCL_SKYLINT_NO_EXC_CHAIN` | <code>#EC NO_EXC_CHAIN</code> | - |
+| [Preserve the Original Exception with PREVIOUS](/rules/no-exc-chain) | `ZCL_SKYLINT_NO_EXC_CHAIN` | <code>#EC NO_EXC_CHAIN</code> | ⚡ Ready |
 | [Avoid Static State (CLASS-DATA and STATICS)](/rules/no-static-state) | `ZCL_SKYLINT_NO_STATIC_STATE` | <code>#EC NO_STATIC_STATE</code> | - |
 | [Avoid Assignments Whose Value Is Never Read](/rules/no-dead-store) | `ZCL_SKYLINT_NO_DEAD_STORE` | <code>#EC NO_DEAD_STORE</code> | - |
 

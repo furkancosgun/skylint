@@ -4,9 +4,7 @@
     "code": "NO_CLNT_SP",
     "line": 3,
     "column": 4,
-    "quickfixes": [
-      "DROPCLNT"
-    ]
+    "quickfixes": []
   },
   {
     "target": "TEST_002",
@@ -17,8 +15,6 @@
     "code": "NO_CLNT_SP",
     "line": 3,
     "column": 4,
-    "quickfixes": [
-      "DROPCLNT"
-    ]
+    "quickfixes": []
   }
 ]

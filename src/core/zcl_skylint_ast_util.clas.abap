@@ -1495,40 +1495,22 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD extract_name_from_paren.
-    DATA lv_len TYPE i.
-    DATA lv_pos TYPE i.
-    DATA lv_lex TYPE string.
-
-    lv_lex = condense( iv_lexeme ).
-    IF lv_lex IS NOT INITIAL AND ( lv_lex(1) = '@' OR lv_lex(1) = '!' ).
-      lv_lex = lv_lex+1.
+    rv_name = translate( val  = iv_lexeme
+                         from = '@!'
+                         to   = '  ' ).
+    IF find( val = rv_name
+             sub = '(' ) > 0.
+      rv_name = segment( val   = rv_name
+                         index = 2
+                         sep   = '(' ).
     ENDIF.
-
-    rv_name = lv_lex.
-    lv_pos  = find( val = lv_lex
-                    sub = '(' ).
-    IF lv_pos < 0.
-      RETURN.
+    IF find( val = rv_name
+             sub = ')' ) > 0.
+      rv_name = segment( val   = rv_name
+                         index = 1
+                         sep   = ')' ).
     ENDIF.
-
-    lv_pos += 1.
-    lv_len = strlen( lv_lex ) - lv_pos.
-    IF     lv_len > 0
-       AND substring( val = lv_lex
-                      off = strlen( lv_lex ) - 1
-                      len = 1 )                  = ')'.
-      lv_len -= 1.
-    ENDIF.
-
-    IF lv_len > 0.
-      rv_name = substring( val = lv_lex
-                           off = lv_pos
-                           len = lv_len ).
-      rv_name = condense( rv_name ).
-      IF rv_name IS NOT INITIAL AND rv_name(1) = '!'.
-        rv_name = rv_name+1.
-      ENDIF.
-    ENDIF.
+    rv_name = condense( rv_name ).
   ENDMETHOD.
 
   METHOD extract_tokens_text.

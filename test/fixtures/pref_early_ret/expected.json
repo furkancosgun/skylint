@@ -37,7 +37,9 @@
     "code": "NO_ELSEEXT",
     "line": 5,
     "column": 4,
-    "quickfixes": []
+    "quickfixes": [
+      "REM_ELSE"
+    ]
   },
   {
     "target": "TEST_008",
@@ -53,14 +55,18 @@
     "line": 5,
     "column": 4,
     "quickfixes": [],
-    "attributes": { "REPORT_ELSEIF": true }
+    "attributes": {
+      "REPORT_ELSEIF": true
+    }
   },
   {
     "target": "TEST_011",
     "code": "NO_ELSEEXT",
     "line": 5,
     "column": 4,
-    "quickfixes": []
+    "quickfixes": [
+      "REM_ELSE"
+    ]
   },
   {
     "target": "TEST_012",

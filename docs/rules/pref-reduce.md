@@ -11,7 +11,6 @@ ruleId: "pref-reduce"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC PREF_REDUCE" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -41,13 +40,6 @@ lv_total = REDUCE i( INIT total = 0
   FOR ls_order IN lt_orders
   NEXT total = total + ls_order-amount ).
 ```
-
-## Automated QuickFix
-
-This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
-1. Position the cursor on the flagged statement.
-2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
-3. Select the automated refactoring to apply the clean syntax immediately.
 
 ## Suppression
 

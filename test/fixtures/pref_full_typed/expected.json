@@ -4,7 +4,9 @@
     "code": "PREF_TYPED",
     "line": 2,
     "column": 4,
-    "quickfixes": []
+    "quickfixes": [
+      "ADD_TYPE"
+    ]
   },
   {
     "target": "TEST_002",
@@ -15,7 +17,9 @@
     "code": "PREF_TYPED",
     "line": 2,
     "column": 4,
-    "quickfixes": []
+    "quickfixes": [
+      "ADD_TYPE"
+    ]
   },
   {
     "target": "TEST_005",

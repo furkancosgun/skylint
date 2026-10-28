@@ -9,9 +9,6 @@
   "checkType": "remoteEnabled",
   "parameters": [
     {
-      "name": "USE_OPTIONAL"
-    },
-    {
       "name": "CHECK_TAB_EXPR"
     },
     {

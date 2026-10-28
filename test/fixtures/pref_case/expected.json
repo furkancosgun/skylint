@@ -4,7 +4,9 @@
     "code": "PREF_CASE",
     "line": 3,
     "column": 4,
-    "quickfixes": []
+    "quickfixes": [
+      "USE_CASE"
+    ]
   },
   {
     "target": "TEST_002",
@@ -15,7 +17,9 @@
     "code": "PREF_CASE",
     "line": 3,
     "column": 4,
-    "quickfixes": []
+    "quickfixes": [
+      "USE_CASE"
+    ]
   },
   {
     "target": "TEST_004",
@@ -26,21 +30,27 @@
     "code": "PREF_CASE",
     "line": 3,
     "column": 4,
-    "quickfixes": []
+    "quickfixes": [
+      "USE_CASE"
+    ]
   },
   {
     "target": "TEST_006",
     "code": "PREF_CASE",
     "line": 3,
     "column": 4,
-    "quickfixes": []
+    "quickfixes": [
+      "USE_CASE"
+    ]
   },
   {
     "target": "TEST_007",
     "code": "PREF_CASE",
     "line": 6,
     "column": 4,
-    "quickfixes": []
+    "quickfixes": [
+      "USE_CASE"
+    ]
   },
   {
     "target": "TEST_008",
@@ -55,7 +65,9 @@
     "code": "PREF_CASE",
     "line": 5,
     "column": 6,
-    "quickfixes": []
+    "quickfixes": [
+      "USE_CASE"
+    ]
   },
   {
     "target": "TEST_011",

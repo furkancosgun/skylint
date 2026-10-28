@@ -4,7 +4,9 @@
     "code": "PREF_PASRF",
     "line": 3,
     "column": 4,
-    "quickfixes": []
+    "quickfixes": [
+      "OMIT_VAL"
+    ]
   },
   {
     "target": "LCL_CLEAN",

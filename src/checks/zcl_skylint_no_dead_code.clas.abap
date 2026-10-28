@@ -59,6 +59,11 @@ CLASS zcl_skylint_no_dead_code DEFINITION
       IMPORTING iv_lexeme     TYPE string
       RETURNING VALUE(rv_val) TYPE string.
 
+    METHODS find_matching_endif
+      IMPORTING it_statements       TYPE if_ci_atc_source_code_provider=>ty_statements
+                iv_if_idx           TYPE i
+      RETURNING VALUE(rv_endif_idx) TYPE i.
+
 ENDCLASS.
 
 
@@ -76,15 +81,16 @@ CLASS zcl_skylint_no_dead_code IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_stmt_idx TYPE i.
-    DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
+    DATA lv_stmt_idx  TYPE i.
+    DATA lv_endif_idx TYPE i.
+    DATA ls_quickfix  TYPE zcl_skylint_check_base=>ty_quickfix.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_stmt_idx = sy-tabix.
 
       CASE <ls_statement>-keyword.
-        WHEN 'IF' OR 'ELSEIF' OR 'CHECK' OR 'WHILE'.
+        WHEN 'CHECK'.
           IF is_constant_false_condition( <ls_statement> ) = abap_true.
             ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-delete_dead
                                             iv_statement_from = lv_stmt_idx
@@ -93,8 +99,60 @@ CLASS zcl_skylint_no_dead_code IMPLEMENTATION.
                               iv_finding_code = c_finding_codes-dead_code
                               is_quickfix     = ls_quickfix ).
           ENDIF.
+
+        WHEN 'IF' OR 'WHILE'.
+          IF is_constant_false_condition( <ls_statement> ) = abap_true.
+            CLEAR ls_quickfix.
+            lv_endif_idx = find_matching_endif( it_statements = is_procedure-statements
+                                                iv_if_idx     = lv_stmt_idx ).
+            IF lv_endif_idx > 0.
+              ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-delete_dead
+                                              iv_statement_from = lv_stmt_idx
+                                              iv_statement_to   = lv_endif_idx
+                                              it_new_code       = VALUE #( ) ).
+            ENDIF.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-dead_code
+                              is_quickfix     = ls_quickfix ).
+          ENDIF.
+
+        WHEN 'ELSEIF'.
+          IF is_constant_false_condition( <ls_statement> ) = abap_true.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-dead_code ).
+          ENDIF.
       ENDCASE.
     ENDLOOP.
+  ENDMETHOD.
+
+  METHOD find_matching_endif.
+    DATA lv_depth TYPE i.
+    DATA lv_idx   TYPE i.
+    DATA ls_stmt  TYPE if_ci_atc_source_code_provider=>ty_statement.
+
+    rv_endif_idx = 0.
+    lv_depth = 0.
+    lv_idx = iv_if_idx.
+
+    WHILE lv_idx <= lines( it_statements ).
+      ls_stmt = zcl_skylint_ast_util=>get_statement( it_statements = it_statements
+                                                     iv_index      = lv_idx ).
+      CASE ls_stmt-keyword.
+        WHEN 'IF' OR 'WHILE'.
+          lv_depth += 1.
+        WHEN 'ENDIF' OR 'ENDWHILE'.
+          lv_depth -= 1.
+          IF lv_depth = 0.
+            rv_endif_idx = lv_idx.
+            RETURN.
+          ENDIF.
+        WHEN 'ELSE' OR 'ELSEIF'.
+          IF lv_depth = 1.
+            RETURN.
+          ENDIF.
+      ENDCASE.
+      lv_idx += 1.
+    ENDWHILE.
   ENDMETHOD.
 
   METHOD is_literal_or_constant.

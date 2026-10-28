@@ -11,6 +11,7 @@ ruleId: "pref-auth-subrc"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="danger" text="Error" />
   <Badge type="tip" text="Security & Robustness" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC PREF_AUTH_SUBRC" />
   <Badge type="info" text="Remote Enabled" />
 </div>
@@ -52,6 +53,13 @@ ENDIF.
 
 SELECT SINGLE * FROM zsens_data INTO @DATA(ls_data).
 ```
+
+## Automated QuickFix
+
+This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
+1. Position the cursor on the flagged statement.
+2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
+3. Select the automated refactoring to apply the clean syntax immediately.
 
 ## Suppression
 

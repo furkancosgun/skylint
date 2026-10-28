@@ -274,7 +274,6 @@ export const RULES = [
       "good": "ls_order = VALUE #( lt_orders[ order_id = lv_id ] OPTIONAL ).\nIF line_exists( lt_customers[ customer_id = lv_id ] ).\n  process( ).\nENDIF."
     },
     "parameters": {
-      "USE_OPTIONAL": "Suggest OPTIONAL addition in table expressions to prevent CX_SY_ITAB_LINE_NOT_FOUND dumps",
       "CHECK_TAB_EXPR": "Suggest table expressions (lt_tab[ ... ]) instead of READ TABLE INTO",
       "CHECK_LINE_EXISTS": "Suggest line_exists( ) instead of READ TABLE TRANSPORTING NO FIELDS"
     },
