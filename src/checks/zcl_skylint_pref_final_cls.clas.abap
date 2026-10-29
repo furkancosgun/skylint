@@ -62,7 +62,7 @@ CLASS zcl_skylint_pref_final_cls IMPLEMENTATION.
     DATA lv_stmt_idx       TYPE i.
     DATA lv_line           TYPE string.
     DATA ls_quickfix       TYPE zcl_skylint_check_base=>ty_quickfix.
-    DATA lv_is_class_final TYPE abap_bool.
+    DATA lv_class_is_final TYPE abap_bool.
     DATA ls_meth_tok       TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_meth_idx       TYPE i.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
@@ -71,68 +71,65 @@ CLASS zcl_skylint_pref_final_cls IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    lv_is_class_final = abap_false.
-
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF <ls_statement>-keyword <> 'CLASS'.
-        CONTINUE.
-      ENDIF.
-      IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                 iv_lexeme    = 'FINAL' ) = abap_true.
-        lv_is_class_final = abap_true.
-      ELSEIF mv_check_classes = abap_true AND is_class_missing_final( <ls_statement> ) = abap_true.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-class_not_final ).
-      ENDIF.
-    ENDLOOP.
-
-    IF lv_is_class_final = abap_true OR mv_check_methods = abap_false.
-      RETURN.
-    ENDIF.
-
+    lv_class_is_final = abap_false.
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_stmt_idx = sy-tabix.
-      IF <ls_statement>-keyword <> 'METHODS'.
-        CONTINUE.
-      ENDIF.
-      IF    zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                    iv_lexeme    = 'FINAL' )        = abap_true
-         OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                    iv_lexeme    = 'ABSTRACT' )     = abap_true
-         OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                    iv_lexeme    = 'REDEFINITION' ) = abap_true
-         OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                    iv_lexeme    = 'FOR' )          = abap_true
-         OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                    iv_lexeme    = 'CONSTRUCTOR' )  = abap_true
-         OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                    iv_lexeme    = 'DEFAULT' )      = abap_true.
-        CONTINUE.
-      ENDIF.
+      CASE <ls_statement>-keyword.
+        WHEN 'CLASS'.
+          lv_class_is_final = zcl_skylint_ast_util=>has_token_lexeme(
+                                  is_statement = <ls_statement>
+                                  iv_lexeme    = 'FINAL' ).
+          IF    lv_class_is_final = abap_false
+             AND mv_check_classes = abap_true
+             AND is_class_missing_final( <ls_statement> ) = abap_true.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-class_not_final ).
+          ENDIF.
+        WHEN 'METHODS'.
+          IF mv_check_methods = abap_false OR lv_class_is_final = abap_true.
+            CONTINUE.
+          ENDIF.
+          IF    zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                        iv_lexeme    = 'FINAL' )        = abap_true
+             OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                        iv_lexeme    = 'ABSTRACT' )     = abap_true
+             OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                        iv_lexeme    = 'REDEFINITION' ) = abap_true
+             OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                        iv_lexeme    = 'FOR' )          = abap_true
+             OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                        iv_lexeme    = 'CONSTRUCTOR' )  = abap_true
+             OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                        iv_lexeme    = 'DEFAULT' )      = abap_true.
+            CONTINUE.
+          ENDIF.
 
-      ls_meth_tok = zcl_skylint_ast_util=>get_token_after( is_statement = <ls_statement>
-                                                           iv_lexeme    = 'METHODS' ).
-      IF ls_meth_tok-lexeme IS INITIAL.
-        CONTINUE.
-      ENDIF.
+          ls_meth_tok = zcl_skylint_ast_util=>get_token_after( is_statement = <ls_statement>
+                                                               iv_lexeme    = 'METHODS' ).
+          IF ls_meth_tok-lexeme IS INITIAL.
+            CONTINUE.
+          ENDIF.
 
-      lv_meth_idx = zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
-                                                      iv_lexeme    = ls_meth_tok-lexeme ).
-      IF lv_meth_idx <= 0.
-        CONTINUE.
-      ENDIF.
+          lv_meth_idx = zcl_skylint_ast_util=>find_token(
+                            is_statement         = <ls_statement>
+                            iv_lexeme            = ls_meth_tok-lexeme
+                            iv_ignore_references = abap_true ).
+          IF lv_meth_idx <= 0.
+            CONTINUE.
+          ENDIF.
 
-      lv_line = zcl_skylint_ast_util=>flatten_statement(
-                    is_statement = <ls_statement>
-                    it_overrides = VALUE #( ( index  = lv_meth_idx
-                                              lexeme = |{ ls_meth_tok-lexeme } FINAL| ) )
-                    iv_suffix    = `.` ).
-      ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-add_final
-                                      iv_statement_from = lv_stmt_idx
-                                      it_new_code       = VALUE #( ( lv_line ) ) ).
-      report_statement( is_statement    = <ls_statement>
-                        iv_finding_code = c_finding_codes-method_not_final
-                        is_quickfix     = ls_quickfix ).
+          lv_line = zcl_skylint_ast_util=>flatten_statement(
+                        is_statement = <ls_statement>
+                        it_overrides = VALUE #( ( index  = lv_meth_idx
+                                                  lexeme = |{ ls_meth_tok-lexeme } FINAL| ) )
+                        iv_suffix    = `.` ).
+          ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-add_final
+                                          iv_statement_from = lv_stmt_idx
+                                          it_new_code       = VALUE #( ( lv_line ) ) ).
+          report_statement( is_statement    = <ls_statement>
+                            iv_finding_code = c_finding_codes-method_not_final
+                            is_quickfix     = ls_quickfix ).
+      ENDCASE.
     ENDLOOP.
   ENDMETHOD.
 

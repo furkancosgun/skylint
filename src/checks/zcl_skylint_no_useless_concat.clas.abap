@@ -102,7 +102,7 @@ CLASS zcl_skylint_no_useless_concat IMPLEMENTATION.
           CONTINUE.
         ENDIF.
 
-        " Continuous && chain found: collect all operands and operators
+
         CLEAR: lt_operands,
                lt_operators.
         APPEND ls_first_op TO lt_operands.
@@ -123,7 +123,7 @@ CLASS zcl_skylint_no_useless_concat IMPLEMENTATION.
           lv_idx = ls_next_op-end_index + 1.
         ENDWHILE.
 
-        " Validate whether ALL operands in the chain are static literals
+
         IF lines( lt_operands ) >= 2.
           lv_all_literals = abap_true.
           lv_all_foldable = abap_true.
@@ -189,7 +189,7 @@ CLASS zcl_skylint_no_useless_concat IMPLEMENTATION.
                           off = lv_len - 1
                           len = 1 ).
 
-    " Case 1: Standard character literal '...'
+
     IF lv_first = `'` AND lv_last = `'` AND lv_len >= 2.
       rs_operand-is_literal  = abap_true.
       rs_operand-is_foldable = abap_true.
@@ -202,7 +202,7 @@ CLASS zcl_skylint_no_useless_concat IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    " Case 2: String literal `...`
+
     IF lv_first = '`' AND lv_last = '`' AND lv_len >= 2.
       rs_operand-is_literal  = abap_true.
       rs_operand-is_foldable = abap_true.
@@ -215,7 +215,7 @@ CLASS zcl_skylint_no_useless_concat IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    " Case 3: Single-token string template |...|
+
     IF lv_first = '|' AND lv_last = '|' AND lv_len >= 2.
       IF ls_tok-lexeme NS '{' AND ls_tok-lexeme NS '}'.
         rs_operand-is_literal  = abap_true.
@@ -224,7 +224,7 @@ CLASS zcl_skylint_no_useless_concat IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    " Case 4: Multi-token string template | ... | (SAP parser tokenization)
+
     IF lv_first = '|'.
       lv_has_exp = abap_false.
       lv_scan    = iv_index + 1.
