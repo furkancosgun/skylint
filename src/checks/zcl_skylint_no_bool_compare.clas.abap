@@ -60,6 +60,10 @@ CLASS zcl_skylint_no_bool_compare IMPLEMENTATION.
     DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_stmt_idx = sy-tabix.
       CASE <ls_statement>-keyword.
@@ -122,11 +126,11 @@ CLASS zcl_skylint_no_bool_compare IMPLEMENTATION.
           IF rs_comp-op_idx > 0.
             CASE ls_tok-lexeme.
               WHEN '=' OR 'EQ'.
-                IF lv_lit_lex = 'ABAP_TRUE' OR lv_lit_lex = '''X''' OR lv_lit_lex = '`X`'.
+                IF lv_lit_lex = 'ABAP_TRUE'.
                   rs_comp-can_drop = abap_true.
                 ENDIF.
               WHEN '<>' OR 'NE' OR '><'.
-                IF lv_lit_lex = 'ABAP_FALSE' OR lv_lit_lex = '''''' OR lv_lit_lex = '``'.
+                IF lv_lit_lex = 'ABAP_FALSE'.
                   rs_comp-can_drop = abap_true.
                 ENDIF.
             ENDCASE.
@@ -137,26 +141,6 @@ CLASS zcl_skylint_no_bool_compare IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_boolean_literal_token.
-    DATA ls_ref TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
-
-    rv_is = abap_false.
-
-    ls_ref = zcl_skylint_ast_util=>get_reference(
-                 is_token = is_token
-                 iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
-    IF    ls_ref-full_name = '\DA:ABAP_TRUE'
-       OR ls_ref-full_name = '\DA:ABAP_FALSE'
-       OR ls_ref-full_name = '\DA:ABAP_UNDEFINED'.
-      rv_is = abap_true.
-      RETURN.
-    ENDIF.
-
-    IF is_token-references IS INITIAL.
-      CASE is_token-lexeme.
-        WHEN 'ABAP_TRUE' OR 'ABAP_FALSE' OR 'ABAP_UNDEFINED' OR 'SPACE'
-          OR '''X''' OR '`X`' OR '''''' OR '``'.
-          rv_is = abap_true.
-      ENDCASE.
-    ENDIF.
+    rv_is = xsdbool( is_token-lexeme = 'ABAP_TRUE' OR is_token-lexeme = 'ABAP_FALSE' ).
   ENDMETHOD.
 ENDCLASS.

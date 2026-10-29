@@ -76,6 +76,10 @@ CLASS zcl_skylint_pref_merge_ifs IMPLEMENTATION.
     DATA lt_qf    TYPE zcl_skylint_check_base=>ty_quickfixes.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_idx = sy-tabix.
       IF <ls_statement>-keyword <> 'IF'.

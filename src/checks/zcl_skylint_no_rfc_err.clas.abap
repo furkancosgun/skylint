@@ -43,8 +43,14 @@ CLASS zcl_skylint_no_rfc_err IMPLEMENTATION.
     DATA lv_exc_idx  TYPE i.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_stmt>
-         WHERE keyword = 'CALL'.
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
+    LOOP AT is_procedure-statements ASSIGNING <ls_stmt>.
+      IF <ls_stmt>-keyword <> 'CALL'.
+        CONTINUE.
+      ENDIF.
 
       IF zcl_skylint_ast_util=>match_token_sequence( is_statement = <ls_stmt>
                                                      it_expected  = VALUE #( ( `CALL` ) ( `FUNCTION` ) ) ) = abap_false.

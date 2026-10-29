@@ -37,90 +37,108 @@ CLASS zcl_skylint_no_catch_reraise IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_idx         TYPE i.
-    DATA lv_total       TYPE i.
-    DATA lv_body_count  TYPE i.
-    DATA ls_single_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA ls_body        TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lv_idx   TYPE i.
+    DATA ls_next1 TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA ls_next2 TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    lv_total = zcl_skylint_ast_util=>statement_count( is_procedure-statements ).
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF <ls_statement>-keyword <> 'CATCH'.
+        CONTINUE.
+      ENDIF.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement> WHERE keyword = 'CATCH'.
-      lv_idx = sy-tabix + 1.
-      lv_body_count = 0.
-      CLEAR ls_single_stmt.
+      lv_idx = sy-tabix.
 
-      WHILE lv_idx <= lv_total.
-        ls_body = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                       iv_index      = lv_idx ).
+      ls_next1 = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+                                                      iv_index      = lv_idx + 1 ).
+      IF ls_next1-keyword <> 'RAISE'.
+        CONTINUE.
+      ENDIF.
 
-        CASE ls_body-keyword.
-          WHEN 'CATCH' OR 'CLEANUP' OR 'ENDTRY'.
-            EXIT.
-          WHEN OTHERS.
-            lv_body_count += 1.
-            IF lv_body_count = 1.
-              ls_single_stmt = ls_body.
-            ENDIF.
-        ENDCASE.
+      ls_next2 = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+                                                      iv_index      = lv_idx + 2 ).
+      IF     ls_next2-keyword <> 'CATCH'
+         AND ls_next2-keyword <> 'CLEANUP'
+         AND ls_next2-keyword <> 'ENDTRY'.
+        CONTINUE.
+      ENDIF.
 
-        lv_idx += 1.
-      ENDWHILE.
-
-      IF     lv_body_count = 1
-         AND ls_single_stmt-keyword = 'RAISE'
-         AND is_bare_reraise( is_catch = <ls_statement>
-                              is_raise = ls_single_stmt ) = abap_true.
-
-        report_statement( is_statement    = <ls_statement>
+      IF is_bare_reraise( is_catch = <ls_statement>
+                          is_raise = ls_next1 ) = abap_true.
+        report_statement( is_statement    = ls_next1
                           iv_finding_code = c_finding_codes-redundant_handler ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
 
   METHOD is_bare_reraise.
-    DATA ls_into_var    TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_var         TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_caught_type TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_into        TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_exc         TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA ls_raised_type TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok         TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_caught_var  TYPE string.
+    DATA lv_idx         TYPE i.
 
     rv_yes = abap_false.
 
-    " Case 1: CATCH ... INTO lx_err -> RAISE EXCEPTION lx_err.
-    ls_into_var = zcl_skylint_ast_util=>get_token_after( is_statement = is_catch
-                                                         iv_lexeme    = 'INTO' ).
+    ls_into = zcl_skylint_ast_util=>get_token_after( is_statement = is_catch
+                                                     iv_lexeme    = 'INTO' ).
+    IF ls_into-lexeme IS NOT INITIAL.
+      lv_caught_var = zcl_skylint_ast_util=>extract_name_from_paren( ls_into-lexeme ).
+    ENDIF.
 
-    ls_var = zcl_skylint_ast_util=>get_token_after( is_statement = is_raise
+    ls_exc = zcl_skylint_ast_util=>get_token_after( is_statement = is_raise
                                                     iv_lexeme    = 'EXCEPTION' ).
-
-    IF ls_into_var-lexeme IS NOT INITIAL AND ls_into_var-lexeme = ls_var-lexeme.
-      rv_yes = abap_true.
+    IF ls_exc IS INITIAL.
       RETURN.
     ENDIF.
 
-    " Case 2: CATCH cx_type -> RAISE EXCEPTION TYPE cx_type (without PREVIOUS / EXPORTING)
-    IF ls_var-lexeme = 'TYPE'.
-      IF    zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_raise
-                                                    iv_lexeme    = 'PREVIOUS' )  = abap_true
-         OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_raise
-                                                    iv_lexeme    = 'EXPORTING' ) = abap_true.
+    IF     ls_exc-references IS NOT INITIAL
+       AND ls_exc-lexeme     <> 'TYPE'
+       AND ls_exc-lexeme     <> 'NEW'.
+      rv_yes = xsdbool( lv_caught_var IS NOT INITIAL AND ls_exc-lexeme = lv_caught_var ).
+      RETURN.
+    ENDIF.
+
+    IF    zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_raise
+                                                  iv_lexeme    = 'EXPORTING' ) = abap_true
+       OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_raise
+                                                  iv_lexeme    = 'MESSAGE' )   = abap_true
+       OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_raise
+                                                  iv_lexeme    = 'PREVIOUS' )  = abap_true.
+      RETURN.
+    ENDIF.
+
+    ls_raised_type = zcl_skylint_ast_util=>get_token_after( is_statement = is_raise
+                                                            iv_lexeme    = ls_exc-lexeme ).
+    IF ls_raised_type IS INITIAL.
+      RETURN.
+    ENDIF.
+
+    IF ls_raised_type-lexeme CA '()'.
+      REPLACE ALL OCCURRENCES OF '(' IN ls_raised_type-lexeme WITH ''.
+      REPLACE ALL OCCURRENCES OF ')' IN ls_raised_type-lexeme WITH ''.
+    ENDIF.
+
+    lv_idx = 2.
+    DO.
+      ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_catch
+                                                iv_index     = lv_idx ).
+
+      IF ls_tok-lexeme IS INITIAL OR ls_tok-lexeme = 'INTO'.
+        EXIT.
+      ENDIF.
+
+      IF ls_tok-lexeme = ls_raised_type-lexeme.
+        rv_yes = abap_true.
         RETURN.
       ENDIF.
 
-      ls_caught_type = zcl_skylint_ast_util=>get_token_after( is_statement = is_catch
-                                                              iv_lexeme    = 'CATCH' ).
-
-      ls_raised_type = zcl_skylint_ast_util=>get_token_after( is_statement = is_raise
-                                                              iv_lexeme    = 'TYPE' ).
-
-      IF ls_caught_type-lexeme IS NOT INITIAL AND ls_caught_type-lexeme = ls_raised_type-lexeme.
-        rv_yes = abap_true.
-      ENDIF.
-    ENDIF.
+      lv_idx += 1.
+    ENDDO.
   ENDMETHOD.
 ENDCLASS.

@@ -54,7 +54,6 @@ CLASS zcl_skylint_no_single_letter IMPLEMENTATION.
       CASE <ls_stmt>-keyword.
         WHEN 'DATA' OR 'CLASS-DATA' OR 'STATICS' OR 'FIELD-SYMBOLS'.
           check_decl_statement( <ls_stmt> ).
-
         WHEN OTHERS.
           check_inline_declarations( <ls_stmt> ).
       ENDCASE.
@@ -62,16 +61,11 @@ CLASS zcl_skylint_no_single_letter IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check_decl_statement.
-    DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_name TYPE string.
+    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
 
     ls_tok = zcl_skylint_ast_util=>get_declaration_token( is_statement ).
-    IF ls_tok-lexeme IS INITIAL.
-      RETURN.
-    ENDIF.
-    lv_name = ls_tok-lexeme.
 
-    IF lv_name IS NOT INITIAL AND is_single_letter( lv_name ) = abap_true.
+    IF ls_tok IS NOT INITIAL AND is_single_letter( ls_tok-lexeme ) = abap_true.
       report_statement( is_statement    = is_statement
                         iv_finding_code = c_finding_codes-single_letter ).
     ENDIF.
@@ -92,29 +86,18 @@ CLASS zcl_skylint_no_single_letter IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_single_letter.
+    DATA lt_parts TYPE STANDARD TABLE OF string WITH EMPTY KEY.
     DATA lv_clean TYPE string.
-    DATA lv_idx   TYPE i.
+    DATA lv_core  TYPE string.
 
-    rv_is = abap_false.
     lv_clean = condense( iv_name ).
+    REPLACE ALL OCCURRENCES OF '<' IN lv_clean WITH ''.
+    REPLACE ALL OCCURRENCES OF '>' IN lv_clean WITH ''.
 
-    IF lv_clean CS '<'.
-      REPLACE ALL OCCURRENCES OF '<' IN lv_clean WITH ''.
-    ENDIF.
-    IF lv_clean CS '>'.
-      REPLACE ALL OCCURRENCES OF '>' IN lv_clean WITH ''.
-    ENDIF.
+    SPLIT lv_clean AT '_' INTO TABLE lt_parts.
 
-    IF strlen( lv_clean ) = 1.
-      rv_is = abap_true.
-      RETURN.
-    ENDIF.
+    lv_core = VALUE #( lt_parts[ lines( lt_parts ) ] DEFAULT lv_clean ).
 
-    lv_idx = find( val = lv_clean
-                   sub = '_'
-                   occ = -1 ).
-    IF lv_idx >= 0 AND lv_idx = strlen( lv_clean ) - 2.
-      rv_is = abap_true.
-    ENDIF.
+    rv_is = xsdbool( strlen( lv_core ) < mv_min_name_len ).
   ENDMETHOD.
 ENDCLASS.

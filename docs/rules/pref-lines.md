@@ -66,8 +66,8 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Related Rules
 
 * [Modernize READ TABLE (Table Expressions & line_exists)](/rules/pref-read-table) — <code>#EC PREF_TAB_EXPR</code>
-* [Prefer FILTER for a Simple LOOP with IF and APPEND](/rules/pref-filter) — <code>#EC PREF_FILTER</code>
 * [Prefer REDUCE #( ) Expression over Simple Aggregation LOOP](/rules/pref-reduce) — <code>#EC PREF_REDUCE</code>
+* [Prefer TYPE STANDARD TABLE OF over TYPE TABLE OF](/rules/pref-std-table) — <code>#EC PREF_STD_TABLE</code>
 
 ## Technical Details
 

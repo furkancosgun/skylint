@@ -54,6 +54,10 @@ CLASS zcl_skylint_pref_func_module IMPLEMENTATION.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_rec>  TYPE ty_recommendation.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     LOOP AT is_procedure-statements ASSIGNING <ls_stmt>.
       IF <ls_stmt>-keyword <> 'CALL'.
         CONTINUE.

@@ -34,6 +34,10 @@ CLASS zcl_skylint_no_raise_shortdump IMPLEMENTATION.
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF     <ls_statement>-keyword = 'RAISE'
          AND zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>

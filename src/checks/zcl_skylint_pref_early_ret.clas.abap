@@ -99,8 +99,11 @@ CLASS zcl_skylint_pref_early_ret IMPLEMENTATION.
     DATA lv_indent     TYPE string.
     DATA lt_qfs        TYPE ty_quickfixes.
     DATA lv_stmt_idx   TYPE i.
-
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
 
     IF mv_check_method_return = abap_true.
       get_first_executable_stmt( EXPORTING it_statements = is_procedure-statements

@@ -70,6 +70,10 @@ CLASS zcl_skylint_pref_when_others IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_context>   TYPE ty_case_context.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_idx = sy-tabix.
       CASE <ls_statement>-keyword.

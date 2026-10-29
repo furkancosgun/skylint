@@ -74,6 +74,10 @@ CLASS zcl_skylint_pref_case IMPLEMENTATION.
     DATA lt_qfs          TYPE ty_quickfixes.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     lv_total = lines( is_procedure-statements ).
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
@@ -81,6 +85,7 @@ CLASS zcl_skylint_pref_case IMPLEMENTATION.
       IF <ls_statement>-keyword <> 'IF'.
         CONTINUE.
       ENDIF.
+
       lv_var = get_compared_variable( <ls_statement> ).
       IF lv_var IS INITIAL.
         CONTINUE.
@@ -216,9 +221,13 @@ CLASS zcl_skylint_pref_case IMPLEMENTATION.
       IF lv_depth = 0 AND <ls_token>-references IS INITIAL.
         IF    <ls_token>-lexeme = 'AND'
            OR <ls_token>-lexeme = 'OR'
-           OR <ls_token>-lexeme = 'EQUIV'.
+           OR <ls_token>-lexeme = 'EQUIV'
+           OR <ls_token>-lexeme = 'BETWEEN'
+           OR <ls_token>-lexeme = 'IN'
+           OR <ls_token>-lexeme = 'IS'.
           RETURN.
         ENDIF.
+
         IF <ls_token>-lexeme = '=' OR <ls_token>-lexeme = 'EQ'.
           IF lv_op > 0.
             RETURN.
@@ -237,9 +246,13 @@ CLASS zcl_skylint_pref_case IMPLEMENTATION.
       IF rv_var IS INITIAL.
         rv_var = <ls_token>-lexeme.
       ELSE.
-        rv_var = |{ rv_var }{ <ls_token>-lexeme }|.
+        rv_var = |{ rv_var } { <ls_token>-lexeme }|.
       ENDIF.
     ENDLOOP.
+
+    rv_var = condense( val  = rv_var
+                       from = ` `
+                       to   = `` ).
   ENDMETHOD.
 
   METHOD get_compared_value.
@@ -290,6 +303,7 @@ CLASS zcl_skylint_pref_case IMPLEMENTATION.
         CLEAR rv_val.
         RETURN.
       ENDIF.
+
       IF rv_val IS INITIAL.
         rv_val = <ls_token>-lexeme.
       ELSE.

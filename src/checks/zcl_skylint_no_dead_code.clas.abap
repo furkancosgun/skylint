@@ -86,6 +86,10 @@ CLASS zcl_skylint_no_dead_code IMPLEMENTATION.
     DATA ls_quickfix  TYPE zcl_skylint_check_base=>ty_quickfix.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_stmt_idx = sy-tabix.
 
@@ -161,12 +165,7 @@ CLASS zcl_skylint_no_dead_code IMPLEMENTATION.
     rv_yes = abap_false.
     lv_lexeme = is_token-lexeme.
 
-    IF lv_lexeme = 'ABAP_TRUE' OR lv_lexeme = 'ABAP_FALSE'.
-      rv_yes = abap_true.
-      RETURN.
-    ENDIF.
-
-    IF lv_lexeme = 'SPACE' AND is_token-references IS INITIAL.
+    IF lv_lexeme = 'ABAP_TRUE' OR lv_lexeme = 'ABAP_FALSE' OR lv_lexeme = 'SPACE'.
       rv_yes = abap_true.
       RETURN.
     ENDIF.

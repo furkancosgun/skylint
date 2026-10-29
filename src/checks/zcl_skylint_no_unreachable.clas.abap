@@ -65,6 +65,10 @@ CLASS zcl_skylint_no_unreachable IMPLEMENTATION.
     DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     lv_depth = 0.
     set_depth_unreachable( EXPORTING iv_depth  = 0
                                      iv_val    = abap_false

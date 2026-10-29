@@ -63,6 +63,10 @@ CLASS zcl_skylint_pref_read_table IMPLEMENTATION.
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF     mv_check_line_exists = abap_true
          AND ( <ls_statement>-keyword = 'READ' OR <ls_statement>-keyword = 'LOOP' )

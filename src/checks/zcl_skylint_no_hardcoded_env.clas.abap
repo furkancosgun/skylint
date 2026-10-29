@@ -83,6 +83,10 @@ CLASS zcl_skylint_no_hardcoded_env IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF mv_only_conditional = abap_true AND is_statement_conditional( <ls_statement> ) = abap_false.
         CONTINUE.

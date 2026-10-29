@@ -59,6 +59,10 @@ CLASS zcl_skylint_pref_symbol_op IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_stmt_idx = sy-tabix.
       IF is_declaration_keyword( <ls_statement>-keyword ) = abap_true.
@@ -114,8 +118,15 @@ CLASS zcl_skylint_pref_symbol_op IMPLEMENTATION.
 
   METHOD is_declaration_keyword.
     CASE iv_keyword.
-      WHEN 'DATA' OR 'TYPES' OR 'CONSTANTS' OR 'STATICS'
-        OR 'PARAMETERS' OR 'FIELD-SYMBOLS' OR 'METHODS' OR 'CLASS-METHODS'.
+      WHEN 'DATA'
+        OR 'TYPES'
+        OR 'CONSTANTS'
+        OR 'STATICS'
+        OR 'PARAMETER'
+        OR 'PARAMETERS'
+        OR 'FIELD-SYMBOLS'
+        OR 'METHODS'
+        OR 'CLASS-METHODS'.
         rv_is = abap_true.
       WHEN OTHERS.
         rv_is = abap_false.

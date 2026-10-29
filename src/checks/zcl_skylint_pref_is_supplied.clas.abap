@@ -50,6 +50,10 @@ CLASS zcl_skylint_pref_is_supplied IMPLEMENTATION.
 
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_stmt_idx = sy-tabix.
       lt_overrides = collect_overrides( <ls_statement> ).
@@ -81,7 +85,7 @@ CLASS zcl_skylint_pref_is_supplied IMPLEMENTATION.
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
       lv_curr_idx = sy-tabix.
 
-      IF <ls_token>-lexeme <> 'REQUESTED'.
+      IF <ls_token>-lexeme <> 'REQUESTED' AND <ls_token>-references IS INITIAL.
         CONTINUE.
       ENDIF.
 
@@ -89,8 +93,7 @@ CLASS zcl_skylint_pref_is_supplied IMPLEMENTATION.
                                                         iv_index     = lv_curr_idx - 1 ).
       lv_prev_prev = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
                                                              iv_index     = lv_curr_idx - 2 ).
-      IF     lv_prev <> 'IS'
-         AND ( lv_prev <> 'NOT' OR lv_prev_prev <> 'IS' ).
+      IF lv_prev <> 'IS' AND ( lv_prev <> 'NOT' OR lv_prev_prev <> 'IS' ).
         CONTINUE.
       ENDIF.
 

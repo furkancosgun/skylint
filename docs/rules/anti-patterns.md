@@ -1,16 +1,16 @@
 ---
-title: "Anti-Patterns & Bad Practices (56 Rules)"
+title: "Anti-Patterns & Bad Practices (55 Rules)"
 description: "Discouraged language constructs, legacy statements, and redundant syntax. Comprehensive reference, finding codes, and Clean ABAP examples for Anti-Patterns & Bad Practices."
 category: "anti-patterns"
 keywords: "Clean ABAP, ABAP Cloud, SAP ATC, Anti-Patterns & Bad Practices, S/4HANA Readiness, SAP BTP, Steampunk"
 ---
 
-# Anti-Patterns & Bad Practices (56 Rules)
+# Anti-Patterns & Bad Practices (55 Rules)
 
 Discouraged language constructs, legacy statements, and redundant syntax.
 
 ::: tip Category Overview
-This category enforces **56 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
+This category enforces **55 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
 :::
 
 ## Rules in this Category
@@ -62,7 +62,6 @@ This category enforces **56 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Do Not Mix RETURNING with EXPORTING or CHANGING](/rules/no-mix-returning) | `ZCL_SKYLINT_NO_MIX_RETURNING` | <code>#EC NO_MIX_RETURNING</code> | - |
 | [Avoid Method Names That Overwrite Built-in Functions](/rules/no-overw-builtin) | `ZCL_SKYLINT_NO_OVERW_BUILTIN` | <code>#EC NO_OVERW_BUILTIN</code> | - |
 | [Do Not Ignore Return Value of Functional Methods](/rules/no-ignored-return) | `ZCL_SKYLINT_NO_IGNORED_RETURN` | <code>#EC NO_IGNORED_RETURN</code> | - |
-| [Expand Macro Calls into Explicit Statements](/rules/pref-expand-macro) | `ZCL_SKYLINT_PREF_EXPAND_MACRO` | <code>#EC PREF_EXPAND_MACRO</code> | ⚡ Ready |
 | [Avoid Dead Code with Constant Conditions](/rules/no-dead-code) | `ZCL_SKYLINT_NO_DEAD_CODE` | <code>#EC NO_DEAD_CODE</code> | ⚡ Ready |
 | [Avoid Using ABAP Keywords as Identifier Names](/rules/no-keyword-name) | `ZCL_SKYLINT_NO_KEYWORD_NAME` | <code>#EC NO_KEYWORD_NAME</code> | - |
 | [Avoid Repeating the Same String Literal](/rules/no-dup-literals) | `ZCL_SKYLINT_NO_DUP_LITERALS` | <code>#EC NO_DUP_LITERALS</code> | - |

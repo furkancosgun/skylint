@@ -50,7 +50,6 @@ CLASS zcl_skylint_max_locals IMPLEMENTATION.
       CASE <ls_statement>-keyword.
         WHEN 'DATA' OR 'FIELD-SYMBOLS'.
           lv_count += 1.
-
         WHEN OTHERS.
           lv_count += lines( zcl_skylint_ast_util=>get_inline_declarations( <ls_statement> ) ).
       ENDCASE.

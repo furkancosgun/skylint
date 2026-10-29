@@ -43,6 +43,10 @@ CLASS zcl_skylint_no_sy_modify IMPLEMENTATION.
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF modifies_system_field( <ls_statement> ) = abap_true.
         report_statement( is_statement    = <ls_statement>
@@ -53,8 +57,6 @@ CLASS zcl_skylint_no_sy_modify IMPLEMENTATION.
 
   METHOD modifies_system_field.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
-
-    rv_modifies = abap_false.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
       IF is_system_write_token( <ls_token> ) = abap_true.
@@ -67,22 +69,17 @@ CLASS zcl_skylint_no_sy_modify IMPLEMENTATION.
   METHOD is_system_write_token.
     DATA ls_ref TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
-    rv_is = abap_false.
-
     ls_ref = zcl_skylint_ast_util=>get_reference(
                  is_token = is_token
                  iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
-    IF ls_ref-full_name IS INITIAL.
+    IF ls_ref IS INITIAL.
       RETURN.
     ENDIF.
 
-    IF     (    ls_ref-full_name CP '\DA:SY\*'
-             OR ls_ref-full_name CP '\DA:SYST\*'
-             OR ls_ref-full_name = '\DA:SY'
-             OR ls_ref-full_name = '\DA:SYST' )
-       AND (    zcl_skylint_ast_util=>is_write_usage( ls_ref )  = abap_true
-             OR ls_ref-usage_grade = if_ci_atc_source_code_provider=>usage_grades-definition ).
-      rv_is = abap_true.
+    IF zcl_skylint_ast_util=>is_write_usage( ls_ref ) = abap_false.
+      RETURN.
     ENDIF.
+
+    rv_is = xsdbool( ls_ref-full_name CP '\DA:SY\*' OR ls_ref-full_name CP '\DA:SYST\*' ).
   ENDMETHOD.
 ENDCLASS.

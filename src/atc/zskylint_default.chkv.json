@@ -1083,9 +1083,6 @@
       ]
     },
     {
-      "checkName": "ZSKYLINT_PREF_EXPAND_MACRO"
-    },
-    {
       "checkName": "ZSKYLINT_NO_BAD_INDENT",
       "parameters": [
         {
@@ -1130,9 +1127,6 @@
           "value": "3"
         }
       ]
-    },
-    {
-      "checkName": "ZSKYLINT_PREF_FILTER"
     },
     {
       "checkName": "ZSKYLINT_NO_NEG_COND"

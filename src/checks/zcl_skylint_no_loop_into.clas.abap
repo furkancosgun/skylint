@@ -38,7 +38,11 @@ CLASS zcl_skylint_no_loop_into IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement> WHERE keyword = 'LOOP'.
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF <ls_statement>-keyword <> 'LOOP'.
+        CONTINUE.
+      ENDIF.
+
       IF     zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
                                                      iv_lexeme    = 'AT' )         = abap_true
          AND zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>

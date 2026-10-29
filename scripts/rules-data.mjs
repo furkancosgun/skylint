@@ -257,9 +257,9 @@ export const RULES = [
       ]
     },
     "relatedRules": [
-      "pref-filter",
       "pref-lines",
-      "pref-read-table"
+      "pref-read-table",
+      "no-loop-into"
     ]
   },
   {
@@ -290,8 +290,8 @@ export const RULES = [
     },
     "relatedRules": [
       "pref-lines",
-      "pref-filter",
-      "no-default-key"
+      "no-default-key",
+      "no-loop-into"
     ]
   },
   {
@@ -380,8 +380,8 @@ export const RULES = [
     },
     "relatedRules": [
       "pref-read-table",
-      "pref-filter",
-      "pref-reduce"
+      "pref-reduce",
+      "pref-std-table"
     ]
   },
   {
@@ -2115,9 +2115,9 @@ export const RULES = [
       ]
     },
     "relatedRules": [
-      "pref-filter",
       "pref-lines",
-      "pref-read-table"
+      "pref-read-table",
+      "pref-transport"
     ]
   },
   {
@@ -2476,8 +2476,8 @@ export const RULES = [
     },
     "relatedRules": [
       "no-mod-loop-tab",
-      "pref-read-table",
-      "pref-filter"
+      "no-loop-into",
+      "pref-read-table"
     ]
   },
   {
@@ -3481,34 +3481,6 @@ export const RULES = [
     ]
   },
   {
-    "ruleId": "pref-expand-macro",
-    "title": "Expand Macro Calls into Explicit Statements",
-    "rationale": "Macros expand textually, so the debugger cannot step into them and syntax errors point at the invocation rather than the definition. They are obsolete and unsupported in ABAP Cloud. Replace each macro call with explicit statements or a method.",
-    "className": "ZCL_SKYLINT_PREF_EXPAND_MACRO",
-    "pseudoComment": "PREF_EXPAND_MACRO",
-    "category": "anti-patterns",
-    "example": {
-      "bad": "DEFINE set_status.\n  lv_status = &1.\nEND-OF-DEFINITION.\nDATA lv_status TYPE string.\nset_status 'A'.",
-      "good": "DATA lv_status TYPE string.\nlv_status = 'A'."
-    },
-    "seo": {
-      "description": "Expand Macro Calls into Explicit Statements - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud.",
-      "keywords": [
-        "Clean ABAP",
-        "SAP ATC Check",
-        "ABAP Cloud",
-        "S/4HANA Readiness",
-        "pref-expand-macro",
-        "anti-patterns"
-      ]
-    },
-    "relatedRules": [
-      "no-obs-arith",
-      "no-obs-control",
-      "no-obs-decl"
-    ]
-  },
-  {
     "ruleId": "no-bad-indent",
     "title": "Statement Indentation Must Match Block Nesting",
     "rationale": "Indentation is the fastest visual cue for block nesting, so inconsistent indentation misleads readers about which statements belong together. It also creates noisy diffs when a formatter runs. Indent each block level consistently.",
@@ -3789,34 +3761,6 @@ export const RULES = [
       "no-useless-concat",
       "no-obs-strings",
       "pref-str-tmpl"
-    ]
-  },
-  {
-    "ruleId": "pref-filter",
-    "title": "Prefer FILTER for a Simple LOOP with IF and APPEND",
-    "rationale": "A LOOP that only copies rows matching one condition into another table is a filter expressed as imperative control flow. FILTER builds the result directly and states the intent without a work area. This rule only targets the simple LOOP AT, IF, APPEND pattern; keep loops that contain extra logic, indexes, or multiple statements.",
-    "className": "ZCL_SKYLINT_PREF_FILTER",
-    "pseudoComment": "PREF_FILTER",
-    "category": "clean-abap",
-    "example": {
-      "bad": "LOOP AT lt_orders INTO ls_order.\n  IF ls_order-status = 'O'.\n    APPEND ls_order TO lt_open.\n  ENDIF.\nENDLOOP.",
-      "good": "lt_open = FILTER #( lt_orders USING KEY primary_key WHERE status = 'O' )."
-    },
-    "seo": {
-      "description": "Prefer FILTER for a Simple LOOP with IF and APPEND - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud.",
-      "keywords": [
-        "Clean ABAP",
-        "SAP ATC Check",
-        "ABAP Cloud",
-        "S/4HANA Readiness",
-        "pref-filter",
-        "clean-abap"
-      ]
-    },
-    "relatedRules": [
-      "pref-reduce",
-      "pref-insert",
-      "pref-transport"
     ]
   },
   {

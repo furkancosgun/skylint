@@ -54,6 +54,10 @@ CLASS zcl_skylint_no_me_reference IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
+    IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-method.
+      RETURN.
+    ENDIF.
+
     IF is_procedure-id-name CP '*=>CONSTRUCTOR' AND mv_allow_in_constructors = abap_true.
       RETURN.
     ENDIF.

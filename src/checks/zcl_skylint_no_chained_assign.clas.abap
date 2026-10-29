@@ -53,10 +53,14 @@ CLASS zcl_skylint_no_chained_assign IMPLEMENTATION.
     DATA lt_new_code TYPE zcl_skylint_check_base=>ty_code_lines.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_idx = sy-tabix.
 
-      IF NOT ( <ls_statement>-keyword = 'COMPUTE' AND has_assignment_chain( <ls_statement> ) = abap_true ).
+      IF <ls_statement>-keyword <> 'COMPUTE' OR has_assignment_chain( <ls_statement> ) = abap_false.
         CONTINUE.
       ENDIF.
 
@@ -74,24 +78,21 @@ CLASS zcl_skylint_no_chained_assign IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD has_assignment_chain.
-    DATA lv_depth        TYPE i.
-    DATA lv_equals_count TYPE i.
+    DATA lv_depth TYPE i.
+    DATA lv_count TYPE i.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    rv_chain = abap_false.
     lv_depth = 0.
-    lv_equals_count = 0.
+    lv_count = 0.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      IF lv_depth = 0 AND <ls_token>-references IS INITIAL AND <ls_token>-lexeme = '='.
-        lv_equals_count += 1.
+      IF lv_depth = 0 AND <ls_token>-lexeme = '='.
+        lv_count += 1.
       ENDIF.
       lv_depth += zcl_skylint_ast_util=>token_paren_delta( <ls_token> ).
     ENDLOOP.
 
-    IF lv_equals_count > 1.
-      rv_chain = abap_true.
-    ENDIF.
+    rv_chain = xsdbool( lv_count > 1 ).
   ENDMETHOD.
 
   METHOD split_chain.
@@ -101,12 +102,10 @@ CLASS zcl_skylint_no_chained_assign IMPLEMENTATION.
     DATA lv_idx      TYPE i.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    CLEAR rt_lines.
     lv_depth = 0.
-    lv_segment = ''.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      IF lv_depth = 0 AND <ls_token>-references IS INITIAL AND <ls_token>-lexeme = '='.
+      IF lv_depth = 0 AND <ls_token>-lexeme = '='.
         APPEND condense( lv_segment ) TO lt_segments.
         CLEAR lv_segment.
       ELSE.
@@ -116,17 +115,13 @@ CLASS zcl_skylint_no_chained_assign IMPLEMENTATION.
       ENDIF.
       lv_depth += zcl_skylint_ast_util=>token_paren_delta( <ls_token> ).
     ENDLOOP.
+
     APPEND condense( lv_segment ) TO lt_segments.
 
-    IF lines( lt_segments ) < 3.
+    IF lines( lt_segments ) < 3 OR line_exists( lt_segments[ table_line = '' ] ).
       CLEAR rt_lines.
       RETURN.
     ENDIF.
-
-    LOOP AT lt_segments TRANSPORTING NO FIELDS WHERE table_line IS INITIAL.
-      CLEAR rt_lines.
-      RETURN.
-    ENDLOOP.
 
     lv_idx = lines( lt_segments ) - 1.
     WHILE lv_idx >= 1.

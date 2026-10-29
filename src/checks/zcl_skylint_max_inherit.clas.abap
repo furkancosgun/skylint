@@ -39,7 +39,6 @@ CLASS zcl_skylint_max_inherit IMPLEMENTATION.
 
   METHOD check.
     DATA ls_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lo_class     TYPE REF TO cl_abap_classdescr.
     DATA lt_supers    TYPE string_table.
 
     IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
@@ -54,11 +53,6 @@ CLASS zcl_skylint_max_inherit IMPLEMENTATION.
     ENDIF.
 
     TRY.
-        lo_class = zcl_skylint_rtti_util=>describe_class( is_procedure-id-main_unit-name ).
-        IF lo_class IS NOT BOUND.
-          RETURN.
-        ENDIF.
-
         lt_supers = zcl_skylint_rtti_util=>get_super_classes( is_procedure-id-main_unit-name ).
       CATCH cx_root.
         RETURN.

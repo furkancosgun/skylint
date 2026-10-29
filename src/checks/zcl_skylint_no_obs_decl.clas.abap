@@ -85,20 +85,8 @@ CLASS zcl_skylint_no_obs_decl IMPLEMENTATION.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_stmt_idx = sy-tabix.
-      CLEAR: ls_quickfix,
-             lv_line.
-
-      IF     mv_check_occurs = abap_true
-         AND (    <ls_statement>-keyword = 'DATA'
-               OR <ls_statement>-keyword = 'TYPES'
-               OR <ls_statement>-keyword = 'DESCRIBE'
-               OR <ls_statement>-keyword = 'RANGES' )
-         AND zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
-                                               iv_lexeme    = 'OCCURS' ) > 0.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-obsolete_declaration ).
-        CONTINUE.
-      ENDIF.
+      CLEAR ls_quickfix.
+      CLEAR lv_line.
 
       CASE <ls_statement>-keyword.
         WHEN 'TABLES'.
@@ -157,25 +145,32 @@ CLASS zcl_skylint_no_obs_decl IMPLEMENTATION.
                               is_quickfix     = ls_quickfix ).
           ENDIF.
 
-        WHEN 'DATA'.
-          IF     mv_check_header_line = abap_true
-             AND zcl_skylint_ast_util=>find_token_sequence(
-                     is_statement = <ls_statement>
-                     it_expected  = VALUE #( ( `WITH` ) ( `HEADER` ) ( `LINE` ) ) ) > 0.
+        WHEN 'DATA' OR 'TYPES'.
+          IF     mv_check_occurs = abap_true
+             AND zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
+                                                   iv_lexeme    = 'OCCURS' )     > 0.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_declaration ).
-          ELSEIF     mv_check_common_part = abap_true
-                 AND zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
-                                                                it_expected  = VALUE #( ( `COMMON` ) ( `PART` ) ) ) > 0.
-            report_statement( is_statement    = <ls_statement>
-                              iv_finding_code = c_finding_codes-obsolete_declaration ).
+
           ELSEIF     mv_check_initial_size = abap_true
                  AND zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
                                                                 it_expected  = VALUE #( ( `INITIAL` ) ( `SIZE` ) ) ) > 0.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_declaration ).
-          ENDIF.
 
+          ELSEIF     mv_check_header_line = abap_true
+                 AND zcl_skylint_ast_util=>find_token_sequence(
+                         is_statement = <ls_statement>
+                         it_expected  = VALUE #( ( `WITH` ) ( `HEADER` ) ( `LINE` ) ) ) > 0.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-obsolete_declaration ).
+
+          ELSEIF     mv_check_common_part = abap_true
+                 AND zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
+                                                                it_expected  = VALUE #( ( `COMMON` ) ( `PART` ) ) ) > 0.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-obsolete_declaration ).
+          ENDIF.
         WHEN 'FIELD-SYMBOLS'.
           IF     mv_check_fs_structure = abap_true
              AND zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>

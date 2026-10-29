@@ -48,6 +48,10 @@ CLASS zcl_skylint_no_mod_std_table IMPLEMENTATION.
     DATA lv_db_table TYPE string.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF zcl_skylint_ast_util=>statement_is_db_access( <ls_statement> ) = abap_false.
         CONTINUE.
@@ -60,7 +64,7 @@ CLASS zcl_skylint_no_mod_std_table IMPLEMENTATION.
             CONTINUE.
           ENDIF.
 
-          IF lv_db_table(1) = '(' OR lv_db_table(1) = '@'.
+          IF lv_db_table(1) = '('.
             IF mv_report_dynamic = abap_true.
               report_statement( is_statement    = <ls_statement>
                                 iv_finding_code = c_finding_codes-modify_own_tables ).

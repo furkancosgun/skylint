@@ -81,6 +81,10 @@ CLASS zcl_skylint_pref_cond IMPLEMENTATION.
     DATA lt_new_code  TYPE zcl_skylint_check_base=>ty_code_lines.
     FIELD-SYMBOLS <ls_if> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     lv_total = zcl_skylint_ast_util=>statement_count( is_procedure-statements ).
 
     LOOP AT is_procedure-statements ASSIGNING <ls_if>.

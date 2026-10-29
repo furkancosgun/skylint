@@ -90,6 +90,10 @@ CLASS zcl_skylint_no_obs_control IMPLEMENTATION.
     DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_stmt_idx = sy-tabix.
       CLEAR ls_quickfix.
@@ -214,35 +218,24 @@ CLASS zcl_skylint_no_obs_control IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD select_is_count_star.
-    DATA lv_lexeme TYPE string.
-    DATA lv_next   TYPE string.
-    DATA lv_next2  TYPE string.
-    DATA lv_index  TYPE i.
+    DATA lv_index TYPE i.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_is = abap_false.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
       lv_index = sy-tabix.
-      lv_lexeme = <ls_token>-lexeme.
-      IF strlen( lv_lexeme ) < 6 OR lv_lexeme(6) <> 'COUNT('.
-        CONTINUE.
-      ENDIF.
-      IF    lv_lexeme(1) = ''''
-         OR lv_lexeme(1) = '`'
-         OR lv_lexeme(1) = '|'.
-        CONTINUE.
-      ENDIF.
-      IF contains( val = lv_lexeme
-                   sub = '*' ).
+
+      IF <ls_token>-lexeme = 'COUNT(*)'.
         rv_is = abap_true.
         RETURN.
       ENDIF.
-      lv_next  = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                         iv_index     = lv_index + 1 ).
-      lv_next2 = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                         iv_index     = lv_index + 2 ).
-      IF lv_next = '*' AND lv_next2 = ')'.
+
+      IF     <ls_token>-lexeme = 'COUNT('
+         AND zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
+                                                     iv_index     = lv_index + 1 ) = '*'
+         AND zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
+                                                     iv_index     = lv_index + 2 ) = ')'.
         rv_is = abap_true.
         RETURN.
       ENDIF.
@@ -250,8 +243,7 @@ CLASS zcl_skylint_no_obs_control IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD sort_by_field_symbol.
-    DATA lv_index  TYPE i.
-    DATA lv_lexeme TYPE string.
+    DATA lv_index TYPE i.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_is = abap_false.
@@ -263,8 +255,7 @@ CLASS zcl_skylint_no_obs_control IMPLEMENTATION.
 
     lv_index += 1.
     LOOP AT is_statement-tokens ASSIGNING <ls_token> FROM lv_index.
-      lv_lexeme = <ls_token>-lexeme.
-      IF strlen( lv_lexeme ) >= 2 AND lv_lexeme(1) = '<'.
+      IF strlen( <ls_token>-lexeme ) >= 2 AND <ls_token>-lexeme(1) = '<'.
         rv_is = abap_true.
         RETURN.
       ENDIF.

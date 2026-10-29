@@ -56,9 +56,9 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ## Related Rules
 
-* [Prefer FILTER for a Simple LOOP with IF and APPEND](/rules/pref-filter) — <code>#EC PREF_FILTER</code>
 * [Prefer lines( ) over DESCRIBE TABLE](/rules/pref-lines) — <code>#EC PREF_LINES</code>
 * [Modernize READ TABLE (Table Expressions & line_exists)](/rules/pref-read-table) — <code>#EC PREF_TAB_EXPR</code>
+* [Prefer ASSIGNING over LOOP INTO Copy Targets](/rules/no-loop-into) — <code>#EC NO_LOOP_INTO</code>
 
 ## Technical Details
 

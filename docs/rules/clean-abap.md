@@ -1,16 +1,16 @@
 ---
-title: "Clean ABAP & Modern Syntax (56 Rules)"
+title: "Clean ABAP & Modern Syntax (55 Rules)"
 description: "Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices. Comprehensive reference, finding codes, and Clean ABAP examples for Clean ABAP & Modern Syntax."
 category: "clean-abap"
 keywords: "Clean ABAP, ABAP Cloud, SAP ATC, Clean ABAP & Modern Syntax, S/4HANA Readiness, SAP BTP, Steampunk"
 ---
 
-# Clean ABAP & Modern Syntax (56 Rules)
+# Clean ABAP & Modern Syntax (55 Rules)
 
 Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.
 
 ::: tip Category Overview
-This category enforces **56 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
+This category enforces **55 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
 :::
 
 ## Rules in this Category
@@ -62,7 +62,6 @@ This category enforces **56 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Prefer TYPE STANDARD TABLE OF over TYPE TABLE OF](/rules/pref-std-table) | `ZCL_SKYLINT_PREF_STD_TABLE` | <code>#EC PREF_STD_TABLE</code> | ⚡ Ready |
 | [Prefer IS SUPPLIED over IS REQUESTED](/rules/pref-is-supplied) | `ZCL_SKYLINT_PREF_IS_SUPPLIED` | <code>#EC PREF_IS_SUPPLIED</code> | ⚡ Ready |
 | [Prefer the Short System Field Alias SY over SYST](/rules/pref-sy) | `ZCL_SKYLINT_PREF_SY` | <code>#EC PREF_SY</code> | ⚡ Ready |
-| [Prefer FILTER for a Simple LOOP with IF and APPEND](/rules/pref-filter) | `ZCL_SKYLINT_PREF_FILTER` | <code>#EC PREF_FILTER</code> | - |
 | [Avoid Negated IF Conditions with ELSE](/rules/no-neg-cond) | `ZCL_SKYLINT_NO_NEG_COND` | <code>#EC NO_NEG_COND</code> | - |
 | [Prefer Composition over Inheritance](/rules/pref-composition) | `ZCL_SKYLINT_PREF_COMPOSITION` | <code>#EC PREF_COMPOSITION</code> | - |
 | [Prefer Interface Segregation (Small, Focused Interfaces)](/rules/pref-intf-segreg) | `ZCL_SKYLINT_PREF_INTF_SEGREG` | <code>#EC PREF_INTF_SEGREG</code> | - |

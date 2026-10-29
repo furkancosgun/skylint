@@ -4,13 +4,13 @@
       "key": "clean-abap",
       "title": "Clean ABAP & Modern Syntax",
       "description": "Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.",
-      "count": 56
+      "count": 55
     },
     {
       "key": "anti-patterns",
       "title": "Anti-Patterns & Bad Practices",
       "description": "Discouraged language constructs, legacy statements, and redundant syntax.",
-      "count": 56
+      "count": 55
     },
     {
       "key": "performance",
@@ -1437,18 +1437,6 @@
       "configurable": true
     },
     {
-      "ruleId": "pref-expand-macro",
-      "title": "Expand Macro Calls into Explicit Statements",
-      "className": "ZCL_SKYLINT_PREF_EXPAND_MACRO",
-      "description": "Expand Macro Calls",
-      "category": "anti-patterns",
-      "categoryTitle": "Anti-Patterns & Bad Practices",
-      "pseudoComment": "PREF_EXPAND_MACRO",
-      "hasQuickfix": true,
-      "remoteEnabled": true,
-      "configurable": false
-    },
-    {
       "ruleId": "no-bad-indent",
       "title": "Statement Indentation Must Match Block Nesting",
       "className": "ZCL_SKYLINT_NO_BAD_INDENT",
@@ -1567,18 +1555,6 @@
       "hasQuickfix": false,
       "remoteEnabled": true,
       "configurable": true
-    },
-    {
-      "ruleId": "pref-filter",
-      "title": "Prefer FILTER for a Simple LOOP with IF and APPEND",
-      "className": "ZCL_SKYLINT_PREF_FILTER",
-      "description": "Prefer FILTER for simple LOOP/IF/APPEND",
-      "category": "clean-abap",
-      "categoryTitle": "Clean ABAP & Modern Syntax",
-      "pseudoComment": "PREF_FILTER",
-      "hasQuickfix": false,
-      "remoteEnabled": true,
-      "configurable": false
     },
     {
       "ruleId": "no-neg-cond",

@@ -59,6 +59,10 @@ CLASS zcl_skylint_pref_final_data IMPLEMENTATION.
     DATA lv_idx         TYPE sy-tabix.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_idx = sy-tabix.
       CLEAR ls_declaration.

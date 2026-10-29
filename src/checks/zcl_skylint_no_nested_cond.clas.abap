@@ -46,6 +46,10 @@ CLASS zcl_skylint_no_nested_cond IMPLEMENTATION.
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       check_statement( <ls_statement> ).
     ENDLOOP.

@@ -34,6 +34,10 @@ CLASS zcl_skylint_no_nested_try IMPLEMENTATION.
     DATA lv_try_depth TYPE i VALUE 0.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'TRY'.

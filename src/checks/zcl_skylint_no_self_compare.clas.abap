@@ -22,11 +22,6 @@ CLASS zcl_skylint_no_self_compare DEFINITION
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
                 iv_start     TYPE i.
 
-    METHODS strip_outer_parens
-      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
-      CHANGING  cv_from      TYPE i
-                cv_to        TYPE i.
-
     METHODS find_top_level_operator
       IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
                 iv_from         TYPE i
@@ -41,11 +36,13 @@ CLASS zcl_skylint_no_self_compare DEFINITION
                 iv_op_index   TYPE i
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
-    METHODS token_key
-      IMPORTING is_token      TYPE if_ci_atc_source_code_provider=>ty_token
+    METHODS build_operand_key
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_from       TYPE i
+                iv_to         TYPE i
       RETURNING VALUE(rv_key) TYPE string.
 
-    METHODS has_boolean_connector
+    METHODS has_complex_construct
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
                 iv_from       TYPE i
                 iv_to         TYPE i
@@ -78,9 +75,12 @@ CLASS zcl_skylint_no_self_compare IMPLEMENTATION.
   METHOD check.
     DATA lv_start TYPE i.
     DATA lv_equal TYPE i.
-    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
 
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
@@ -91,11 +91,6 @@ CLASS zcl_skylint_no_self_compare IMPLEMENTATION.
                                                        iv_lexeme      = '='
                                                        iv_start_index = 2 ).
           IF lv_equal = 0.
-            CONTINUE.
-          ENDIF.
-          ls_token = zcl_skylint_ast_util=>get_token( is_statement = <ls_statement>
-                                                      iv_index     = lv_equal ).
-          IF ls_token-references IS NOT INITIAL.
             CONTINUE.
           ENDIF.
           lv_start = lv_equal + 1.
@@ -120,15 +115,15 @@ CLASS zcl_skylint_no_self_compare IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    strip_outer_parens( EXPORTING is_statement = is_statement
-                        CHANGING  cv_from      = lv_from
-                                  cv_to        = lv_to ).
+    zcl_skylint_ast_util=>strip_outer_parens( EXPORTING is_statement = is_statement
+                                              CHANGING  cv_from      = lv_from
+                                                        cv_to        = lv_to ).
 
     IF lv_to < lv_from + 2.
       RETURN.
     ENDIF.
 
-    IF has_boolean_connector( is_statement = is_statement
+    IF has_complex_construct( is_statement = is_statement
                               iv_from      = lv_from
                               iv_to        = lv_to ) = abap_true.
       RETURN.
@@ -162,12 +157,6 @@ CLASS zcl_skylint_no_self_compare IMPLEMENTATION.
     ENDIF.
   ENDMETHOD.
 
-  METHOD strip_outer_parens.
-    zcl_skylint_ast_util=>strip_outer_parens( EXPORTING is_statement = is_statement
-                                              CHANGING  cv_from      = cv_from
-                                                        cv_to        = cv_to ).
-  ENDMETHOD.
-
   METHOD find_top_level_operator.
     DATA lv_depth TYPE i.
     DATA lv_lex   TYPE string.
@@ -196,10 +185,8 @@ CLASS zcl_skylint_no_self_compare IMPLEMENTATION.
     DATA lv_left_to    TYPE i.
     DATA lv_right_from TYPE i.
     DATA lv_right_to   TYPE i.
-    DATA lv_key        TYPE string.
-    DATA lv_left       TYPE string.
-    DATA lv_right      TYPE string.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_left_key   TYPE string.
+    DATA lv_right_key  TYPE string.
 
     rv_yes = abap_false.
 
@@ -209,47 +196,50 @@ CLASS zcl_skylint_no_self_compare IMPLEMENTATION.
 
     lv_left_from = iv_from.
     lv_left_to   = iv_op_index - 1.
-    strip_outer_parens( EXPORTING is_statement = is_statement
-                        CHANGING  cv_from      = lv_left_from
-                                  cv_to        = lv_left_to ).
+    zcl_skylint_ast_util=>strip_outer_parens( EXPORTING is_statement = is_statement
+                                              CHANGING  cv_from      = lv_left_from
+                                                        cv_to        = lv_left_to ).
 
     lv_right_from = iv_op_index + 1.
     lv_right_to   = iv_to.
-    strip_outer_parens( EXPORTING is_statement = is_statement
-                        CHANGING  cv_from      = lv_right_from
-                                  cv_to        = lv_right_to ).
+    zcl_skylint_ast_util=>strip_outer_parens( EXPORTING is_statement = is_statement
+                                              CHANGING  cv_from      = lv_right_from
+                                                        cv_to        = lv_right_to ).
 
     IF lv_left_from > lv_left_to OR lv_right_from > lv_right_to.
       RETURN.
     ENDIF.
 
-    LOOP AT is_statement-tokens FROM lv_left_from TO lv_left_to ASSIGNING <ls_token>.
-      lv_key = token_key( <ls_token> ).
-      lv_left = |{ lv_left } { lv_key }|.
-    ENDLOOP.
+    lv_left_key  = build_operand_key( is_statement = is_statement
+                                      iv_from      = lv_left_from
+                                      iv_to        = lv_left_to ).
 
-    LOOP AT is_statement-tokens FROM lv_right_from TO lv_right_to ASSIGNING <ls_token>.
-      lv_key = token_key( <ls_token> ).
-      lv_right = |{ lv_right } { lv_key }|.
-    ENDLOOP.
+    lv_right_key = build_operand_key( is_statement = is_statement
+                                      iv_from      = lv_right_from
+                                      iv_to        = lv_right_to ).
 
-    IF lv_left IS NOT INITIAL AND lv_left = lv_right.
+    IF lv_left_key IS NOT INITIAL AND lv_left_key = lv_right_key.
       rv_yes = abap_true.
     ENDIF.
   ENDMETHOD.
 
-  METHOD token_key.
+  METHOD build_operand_key.
     DATA ls_reference TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    ls_reference = zcl_skylint_ast_util=>get_reference( is_token ).
-    IF ls_reference-full_name IS NOT INITIAL.
-      rv_key = ls_reference-full_name.
-    ELSE.
-      rv_key = is_token-lexeme.
-    ENDIF.
+    CLEAR rv_key.
+    LOOP AT is_statement-tokens FROM iv_from TO iv_to ASSIGNING <ls_token>.
+      ls_reference = zcl_skylint_ast_util=>get_reference( <ls_token> ).
+      IF ls_reference-full_name IS NOT INITIAL.
+        rv_key = |{ rv_key } { ls_reference-full_name }|.
+      ELSE.
+        rv_key = |{ rv_key } { <ls_token>-lexeme }|.
+      ENDIF.
+    ENDLOOP.
+    rv_key = condense( rv_key ).
   ENDMETHOD.
 
-  METHOD has_boolean_connector.
+  METHOD has_complex_construct.
     DATA lv_depth TYPE i.
     DATA lv_lex   TYPE string.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
@@ -260,7 +250,7 @@ CLASS zcl_skylint_no_self_compare IMPLEMENTATION.
     LOOP AT is_statement-tokens FROM iv_from TO iv_to ASSIGNING <ls_token>.
       IF lv_depth = 0 AND <ls_token>-references IS INITIAL.
         lv_lex = <ls_token>-lexeme.
-        IF lv_lex = 'AND' OR lv_lex = 'OR'.
+        IF lv_lex = 'AND' OR lv_lex = 'OR' OR lv_lex = 'BETWEEN' OR lv_lex = 'IS'.
           rv_yes = abap_true.
           RETURN.
         ENDIF.

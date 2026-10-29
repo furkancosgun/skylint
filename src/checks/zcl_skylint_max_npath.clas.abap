@@ -38,7 +38,7 @@ CLASS zcl_skylint_max_npath DEFINITION
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
       CHANGING  ct_stack     TYPE ty_stack_frames.
 
-    METHODS handle_elseif_else
+    METHODS handle_else
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
       CHANGING  ct_stack     TYPE ty_stack_frames.
 
@@ -131,8 +131,8 @@ CLASS zcl_skylint_max_npath IMPLEMENTATION.
           handle_if( EXPORTING is_statement = <ls_statement>
                      CHANGING  ct_stack     = lt_stack ).
         WHEN 'ELSEIF' OR 'ELSE'.
-          handle_elseif_else( EXPORTING is_statement = <ls_statement>
-                              CHANGING  ct_stack     = lt_stack ).
+          handle_else( EXPORTING is_statement = <ls_statement>
+                       CHANGING  ct_stack     = lt_stack ).
         WHEN 'ENDIF'.
           handle_endif( CHANGING ct_stack = lt_stack ).
         WHEN 'CASE'.
@@ -178,7 +178,7 @@ CLASS zcl_skylint_max_npath IMPLEMENTATION.
                                  has_else             = abap_false ) TO ct_stack.
   ENDMETHOD.
 
-  METHOD handle_elseif_else.
+  METHOD handle_else.
     DATA lv_idx TYPE i.
     FIELD-SYMBOLS <ls_frame> TYPE ty_stack_frame.
 

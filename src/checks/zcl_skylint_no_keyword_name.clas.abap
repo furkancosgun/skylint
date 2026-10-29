@@ -44,7 +44,6 @@ CLASS zcl_skylint_no_keyword_name IMPLEMENTATION.
       CASE <ls_statement>-keyword.
         WHEN 'DATA' OR 'CONSTANTS' OR 'STATICS' OR 'TYPES' OR 'FIELD-SYMBOLS'.
           check_decl_statement( <ls_statement> ).
-
         WHEN OTHERS.
           check_inline_declarations( <ls_statement> ).
       ENDCASE.
@@ -53,22 +52,10 @@ CLASS zcl_skylint_no_keyword_name IMPLEMENTATION.
 
   METHOD check_decl_statement.
     DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_name  TYPE string.
 
     ls_token = zcl_skylint_ast_util=>get_declaration_token( is_statement ).
-    IF ls_token-lexeme IS INITIAL.
-      RETURN.
-    ENDIF.
 
-    lv_name = ls_token-lexeme.
-    IF lv_name CS '<'.
-      REPLACE ALL OCCURRENCES OF '<' IN lv_name WITH ''.
-    ENDIF.
-    IF lv_name CS '>'.
-      REPLACE ALL OCCURRENCES OF '>' IN lv_name WITH ''.
-    ENDIF.
-
-    IF lv_name IS NOT INITIAL AND zcl_skylint_ast_util=>is_abap_keyword( lv_name ) = abap_true.
+    IF zcl_skylint_ast_util=>is_abap_keyword( ls_token-lexeme ) = abap_true.
       report_token( is_statement    = is_statement
                     is_token        = ls_token
                     iv_finding_code = c_finding_codes-keyword_name ).
@@ -77,20 +64,11 @@ CLASS zcl_skylint_no_keyword_name IMPLEMENTATION.
 
   METHOD check_inline_declarations.
     DATA lt_inlines TYPE zcl_skylint_ast_util=>ty_inline_declarations.
-    DATA lv_name    TYPE string.
     FIELD-SYMBOLS <ls_decl> TYPE zcl_skylint_ast_util=>ty_inline_declaration.
 
     lt_inlines = zcl_skylint_ast_util=>get_inline_declarations( is_statement ).
     LOOP AT lt_inlines ASSIGNING <ls_decl>.
-      lv_name = <ls_decl>-name.
-      IF lv_name CS '<'.
-        REPLACE ALL OCCURRENCES OF '<' IN lv_name WITH ''.
-      ENDIF.
-      IF lv_name CS '>'.
-        REPLACE ALL OCCURRENCES OF '>' IN lv_name WITH ''.
-      ENDIF.
-
-      IF lv_name IS NOT INITIAL AND zcl_skylint_ast_util=>is_abap_keyword( lv_name ) = abap_true.
+      IF zcl_skylint_ast_util=>is_abap_keyword( <ls_decl>-name ) = abap_true.
         report_token( is_statement    = is_statement
                       is_token        = <ls_decl>-token
                       iv_finding_code = c_finding_codes-keyword_name ).

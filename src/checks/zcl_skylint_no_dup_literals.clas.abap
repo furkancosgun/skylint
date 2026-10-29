@@ -63,6 +63,10 @@ CLASS zcl_skylint_no_dup_literals IMPLEMENTATION.
   METHOD check.
     DATA lt_counts TYPE ty_literal_counts.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     lt_counts = count_literals( is_procedure-statements ).
     IF lt_counts IS INITIAL.
       RETURN.
@@ -132,19 +136,11 @@ CLASS zcl_skylint_no_dup_literals IMPLEMENTATION.
   METHOD is_fixed_string_literal.
     rv_yes = abap_false.
 
-    IF is_token-references IS NOT INITIAL.
-      RETURN.
-    ENDIF.
-
     IF zcl_skylint_ast_util=>token_is_literal( is_token ) = abap_false.
       RETURN.
     ENDIF.
 
     IF is_token-lexeme CO '0123456789'.
-      RETURN.
-    ENDIF.
-
-    IF is_token-lexeme CP '|*{*|'.
       RETURN.
     ENDIF.
 

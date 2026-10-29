@@ -38,8 +38,14 @@ CLASS zcl_skylint_no_exc_overlap IMPLEMENTATION.
     DATA lv_eq_idx  TYPE i.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    LOOP AT is_procedure-statements ASSIGNING <ls_statement>
-         WHERE keyword = 'CALL' OR keyword = '+CALL_METHOD'.
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF <ls_statement>-keyword <> 'CALL' AND <ls_statement>-keyword = '+CALL_METHOD'.
+        CONTINUE.
+      ENDIF.
 
       lv_exc_idx = zcl_skylint_ast_util=>find_token( is_statement = <ls_statement>
                                                      iv_lexeme    = 'EXCEPTIONS' ).

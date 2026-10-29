@@ -39,9 +39,13 @@ CLASS zcl_skylint_no_instance_of IMPLEMENTATION.
   METHOD check.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     LOOP AT is_procedure-statements ASSIGNING <ls_stmt>.
       IF zcl_skylint_ast_util=>match_token_sequence( is_statement = <ls_stmt>
-                                                     it_expected  = VALUE #( ( `IS` ) ( `INSTANCE` ) ( `OF` ) ) ) = abap_true.
+                                                     it_expected  = VALUE #( ( `INSTANCE` ) ( `OF` ) ) ) = abap_true.
         report_statement( is_statement    = <ls_stmt>
                           iv_finding_code = c_finding_codes-instance_of ).
         CONTINUE.

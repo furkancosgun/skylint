@@ -49,6 +49,10 @@ CLASS zcl_skylint_pref_insert IMPLEMENTATION.
     DATA lt_overrides TYPE zcl_skylint_ast_util=>ty_token_overrides.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_stmt_idx = sy-tabix.
       IF <ls_statement>-keyword <> 'APPEND'.
@@ -58,9 +62,8 @@ CLASS zcl_skylint_pref_insert IMPLEMENTATION.
              lt_overrides.
 
       lv_to_idx = find_top_level_to( <ls_statement> ).
-      IF     lv_to_idx > 1
-         AND zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                     iv_lexeme    = 'SORTED' )     = abap_false.
+      IF lv_to_idx > 1 AND zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                                   iv_lexeme    = 'SORTED' ) = abap_false.
         lt_overrides = VALUE #( ( index  = 1
                                   lexeme = 'INSERT' )
                                 ( index  = lv_to_idx
@@ -81,9 +84,6 @@ CLASS zcl_skylint_pref_insert IMPLEMENTATION.
   METHOD find_top_level_to.
     DATA lv_depth TYPE i.
     DATA lv_idx   TYPE i.
-    DATA lv_ch    TYPE c LENGTH 1.
-    DATA lv_pos   TYPE i.
-    DATA lv_len   TYPE i.
     FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_index = 0.
@@ -103,20 +103,7 @@ CLASS zcl_skylint_pref_insert IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      lv_len = strlen( <ls_tok>-lexeme ).
-      lv_pos = 0.
-      WHILE lv_pos < lv_len.
-        lv_ch = <ls_tok>-lexeme+lv_pos(1).
-        CASE lv_ch.
-          WHEN '(' OR '[' OR '{'.
-            lv_depth += 1.
-          WHEN ')' OR ']' OR '}'.
-            IF lv_depth > 0.
-              lv_depth -= 1.
-            ENDIF.
-        ENDCASE.
-        lv_pos += 1.
-      ENDWHILE.
+      lv_depth += zcl_skylint_ast_util=>token_paren_delta( <ls_tok> ).
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

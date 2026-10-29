@@ -51,6 +51,10 @@ CLASS zcl_skylint_no_param_escape IMPLEMENTATION.
     DATA ls_quickfix TYPE zcl_skylint_check_base=>ty_quickfix.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     LOOP AT is_procedure-statements ASSIGNING <ls_stmt>.
       lv_idx = sy-tabix.
       IF <ls_stmt>-keyword <> 'METHODS' AND <ls_stmt>-keyword <> 'CLASS-METHODS'.

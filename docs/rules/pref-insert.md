@@ -60,9 +60,9 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ## Related Rules
 
-* [Prefer FILTER for a Simple LOOP with IF and APPEND](/rules/pref-filter) — <code>#EC PREF_FILTER</code>
 * [Prefer lines( ) over DESCRIBE TABLE](/rules/pref-lines) — <code>#EC PREF_LINES</code>
 * [Modernize READ TABLE (Table Expressions & line_exists)](/rules/pref-read-table) — <code>#EC PREF_TAB_EXPR</code>
+* [Specify TRANSPORTING in Internal Table MODIFY and READ Operations](/rules/pref-transport) — <code>#EC PREF_TRANSPORT</code>
 
 ## Technical Details
 

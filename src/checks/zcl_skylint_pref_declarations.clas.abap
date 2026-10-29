@@ -61,7 +61,6 @@ CLASS zcl_skylint_pref_declarations IMPLEMENTATION.
       CASE <ls_stmt>-keyword.
         WHEN 'METHOD' OR 'FORM' OR 'FUNCTION' OR 'ENDMETHOD' OR 'ENDFORM' OR 'ENDFUNCTION'.
           CONTINUE.
-
         WHEN 'TYPES'.
           lv_curr_rank = 1.
         WHEN 'CONSTANTS'.
@@ -70,7 +69,6 @@ CLASS zcl_skylint_pref_declarations IMPLEMENTATION.
           lv_curr_rank = 3.
         WHEN 'FIELD-SYMBOLS'.
           lv_curr_rank = 4.
-
         WHEN OTHERS.
           lv_seen_executable = abap_true.
       ENDCASE.

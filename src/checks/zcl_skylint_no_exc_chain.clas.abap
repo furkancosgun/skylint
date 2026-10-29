@@ -82,7 +82,7 @@ CLASS zcl_skylint_no_exc_chain IMPLEMENTATION.
           IF lv_into_idx > 0.
             ls_into_tok = zcl_skylint_ast_util=>get_token( is_statement = <ls_statement>
                                                            iv_index     = lv_into_idx + 1 ).
-            lv_catch_var = ls_into_tok-lexeme.
+            lv_catch_var = zcl_skylint_ast_util=>extract_name_from_paren( ls_into_tok-lexeme ).
             lv_in_catch = abap_true.
           ELSE.
             lv_in_catch = abap_false.
@@ -99,7 +99,9 @@ CLASS zcl_skylint_no_exc_chain IMPLEMENTATION.
             IF    ( mv_require_previous = abap_true  AND lv_has_previous = abap_false )
                OR ( mv_require_previous = abap_false AND lv_has_previous = abap_true ).
               CLEAR ls_quickfix.
-              IF mv_require_previous = abap_true AND lv_catch_var IS NOT INITIAL.
+              IF     mv_require_previous  = abap_true
+                 AND lv_has_previous      = abap_false
+                 AND lv_catch_var        IS NOT INITIAL.
                 ls_quickfix = build_chain_quickfix( is_statement = <ls_statement>
                                                     iv_stmt_idx  = lv_stmt_idx
                                                     iv_catch_var = lv_catch_var ).
@@ -115,23 +117,22 @@ CLASS zcl_skylint_no_exc_chain IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_raise_exception.
-    DATA ls_tok2 TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_tok3 TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_is = abap_false.
     IF is_statement-keyword <> 'RAISE'.
       RETURN.
     ENDIF.
 
-    ls_tok2 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                               iv_index     = 2 ).
-    IF ls_tok2-lexeme <> 'EXCEPTION'.
+    ls_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                iv_index     = 2 ).
+    IF ls_token-lexeme <> 'EXCEPTION'.
       RETURN.
     ENDIF.
 
-    ls_tok3 = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                               iv_index     = 3 ).
-    IF ls_tok3-lexeme = 'TYPE' OR ls_tok3-lexeme = 'NEW'.
+    ls_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                iv_index     = 3 ).
+    IF ls_token-lexeme = 'TYPE' OR ls_token-lexeme = 'NEW'.
       rv_is = abap_true.
     ENDIF.
   ENDMETHOD.
@@ -156,7 +157,7 @@ CLASS zcl_skylint_no_exc_chain IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD build_chain_quickfix.
-    DATA lv_tok3      TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_token     TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA ls_last_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_last_idx  TYPE i.
     DATA lt_overrides TYPE zcl_skylint_ast_util=>ty_token_overrides.
@@ -172,12 +173,12 @@ CLASS zcl_skylint_no_exc_chain IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    lv_tok3     = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                   iv_index     = 3 ).
+    ls_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                iv_index     = 3 ).
     ls_last_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                    iv_index     = lv_last_idx ).
 
-    CASE lv_tok3-lexeme.
+    CASE ls_token-lexeme.
       WHEN 'NEW'.
         lt_overrides = VALUE #( ( index  = lv_last_idx
                                   lexeme = |previous = { iv_catch_var } )| ) ).

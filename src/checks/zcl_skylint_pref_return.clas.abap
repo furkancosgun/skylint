@@ -45,6 +45,10 @@ CLASS zcl_skylint_pref_return IMPLEMENTATION.
 
     lv_loop_depth = 0.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_stmt_idx = sy-tabix.
       CASE <ls_statement>-keyword.

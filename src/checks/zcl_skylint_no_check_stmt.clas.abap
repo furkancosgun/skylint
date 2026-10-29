@@ -67,6 +67,10 @@ CLASS zcl_skylint_no_check_stmt IMPLEMENTATION.
     DATA ls_quickfix   TYPE zcl_skylint_check_base=>ty_quickfix.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     lv_loop_depth = 0.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
@@ -142,7 +146,7 @@ CLASS zcl_skylint_no_check_stmt IMPLEMENTATION.
 
     lv_indent = repeat( val = ` `
                         occ = is_statement-position-column ).
-    lv_inner = |{ lv_indent }  |.
+    lv_inner = |{ lv_indent }|.
     APPEND |{ lv_indent }IF NOT ( { lv_cond } ).| TO rt_lines.
     IF iv_in_loop = abap_true.
       APPEND |{ lv_inner }CONTINUE.| TO rt_lines.

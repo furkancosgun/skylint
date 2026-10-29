@@ -42,6 +42,10 @@ CLASS zcl_skylint_no_ignored_return IMPLEMENTATION.
     DATA lv_found     TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF <ls_statement>-keyword = 'CALL'.
         IF zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
@@ -63,8 +67,8 @@ CLASS zcl_skylint_no_ignored_return IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      CLEAR: ls_meth,
-             lv_found.
+      CLEAR ls_meth.
+      CLEAR lv_found.
       TRY.
           zcl_skylint_rtti_util=>get_method_descr( EXPORTING iv_full_name = lv_full_name
                                                    IMPORTING es_method    = ls_meth
@@ -84,12 +88,10 @@ CLASS zcl_skylint_no_ignored_return IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD get_invoked_method_full_name.
-    DATA lv_depth     TYPE i.
-    DATA lv_first_ref TYPE string.
-    DATA ls_ref       TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+    DATA lv_depth TYPE i.
+    DATA ls_ref   TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    CLEAR rv_name.
     lv_depth = 0.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
@@ -99,23 +101,10 @@ CLASS zcl_skylint_no_ignored_return IMPLEMENTATION.
                      iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-method ).
         IF ls_ref-full_name IS NOT INITIAL.
           rv_name = ls_ref-full_name.
-          IF lv_first_ref IS INITIAL.
-            lv_first_ref = ls_ref-full_name.
-          ENDIF.
         ENDIF.
       ENDIF.
 
-      IF <ls_token>-lexeme CP '*('.
-        lv_depth += 1.
-      ELSEIF <ls_token>-lexeme = ')'.
-        IF lv_depth > 0.
-          lv_depth -= 1.
-        ENDIF.
-      ENDIF.
+      lv_depth += zcl_skylint_ast_util=>token_paren_delta( <ls_token> ).
     ENDLOOP.
-
-    IF rv_name IS INITIAL.
-      rv_name = lv_first_ref.
-    ENDIF.
   ENDMETHOD.
 ENDCLASS.

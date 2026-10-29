@@ -50,6 +50,10 @@ CLASS zcl_skylint_pref_sy IMPLEMENTATION.
 
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_stmt_idx = sy-tabix.
       lt_overrides = collect_overrides( <ls_statement> ).
@@ -80,15 +84,14 @@ CLASS zcl_skylint_pref_sy IMPLEMENTATION.
     CLEAR rt_found.
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
       lv_idx = sy-tabix.
-      IF <ls_token>-lexeme NP 'SYST*' OR <ls_token>-references IS INITIAL.
+      IF <ls_token>-lexeme NP 'SYST*'.
         CONTINUE.
       ENDIF.
 
       ls_ref = zcl_skylint_ast_util=>get_reference(
                    is_token = <ls_token>
                    iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
-      IF     ls_ref-full_name <> '\DA:SYST'
-         AND ls_ref-full_name NP '\DA:SYST\*'.
+      IF ls_ref-full_name NP '\DA:SYST\*'.
         CONTINUE.
       ENDIF.
 

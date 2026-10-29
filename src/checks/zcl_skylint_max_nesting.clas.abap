@@ -18,15 +18,6 @@ CLASS zcl_skylint_max_nesting DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'MAX_NESTING'.
 
     DATA mv_max_depth TYPE i VALUE 3.
-
-    METHODS is_block_opener
-      IMPORTING iv_keyword    TYPE string
-      RETURNING VALUE(rv_res) TYPE abap_bool.
-
-    METHODS is_block_closer
-      IMPORTING iv_keyword    TYPE string
-      RETURNING VALUE(rv_res) TYPE abap_bool.
-
 ENDCLASS.
 
 
@@ -52,35 +43,18 @@ CLASS zcl_skylint_max_nesting IMPLEMENTATION.
     lv_depth = 0.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF is_block_opener( <ls_statement>-keyword ) = abap_true.
-        lv_depth += 1.
-        IF lv_depth > mv_max_depth.
-          report_statement( is_statement    = <ls_statement>
-                            iv_finding_code = c_finding_codes-nesting_depth ).
-        ENDIF.
-      ELSEIF is_block_closer( <ls_statement>-keyword ) = abap_true.
-        IF lv_depth > 0.
-          lv_depth -= 1.
-        ENDIF.
-      ENDIF.
+      CASE <ls_statement>-keyword.
+        WHEN 'IF' OR 'CASE' OR 'LOOP' OR 'DO' OR 'WHILE' OR 'TRY'.
+          lv_depth += 1.
+          IF lv_depth > mv_max_depth.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-nesting_depth ).
+          ENDIF.
+        WHEN 'ENDIF' OR 'ENDCASE' OR 'ENDLOOP' OR 'ENDDO' OR 'ENDWHILE' OR 'ENDTRY'.
+          IF lv_depth > 0.
+            lv_depth -= 1.
+          ENDIF.
+      ENDCASE.
     ENDLOOP.
-  ENDMETHOD.
-
-  METHOD is_block_opener.
-    CASE iv_keyword.
-      WHEN 'IF' OR 'CASE' OR 'LOOP' OR 'DO' OR 'WHILE' OR 'TRY'.
-        rv_res = abap_true.
-      WHEN OTHERS.
-        rv_res = abap_false.
-    ENDCASE.
-  ENDMETHOD.
-
-  METHOD is_block_closer.
-    CASE iv_keyword.
-      WHEN 'ENDIF' OR 'ENDCASE' OR 'ENDLOOP' OR 'ENDDO' OR 'ENDWHILE' OR 'ENDTRY'.
-        rv_res = abap_true.
-      WHEN OTHERS.
-        rv_res = abap_false.
-    ENDCASE.
   ENDMETHOD.
 ENDCLASS.

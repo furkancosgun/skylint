@@ -42,6 +42,10 @@ CLASS zcl_skylint_max_returns IMPLEMENTATION.
     DATA lv_returns_count TYPE i.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     lv_returns_count = 0.
     LOOP AT is_procedure-statements ASSIGNING <ls_stmt>.
       IF <ls_stmt>-keyword = 'RETURN'.

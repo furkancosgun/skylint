@@ -117,6 +117,10 @@ CLASS zcl_skylint_pref_str_func IMPLEMENTATION.
     DATA ls_tok      TYPE if_ci_atc_source_code_provider=>ty_token.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_stmt_idx = sy-tabix.
       CLEAR ls_quickfix.

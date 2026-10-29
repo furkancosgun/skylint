@@ -42,6 +42,10 @@ CLASS zcl_skylint_no_raise_cx_sy IMPLEMENTATION.
   METHOD check.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF <ls_statement>-keyword <> 'RAISE'.
         CONTINUE.
@@ -54,21 +58,20 @@ CLASS zcl_skylint_no_raise_cx_sy IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD raises_system_exception.
-    DATA ls_type_tok TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_yes = abap_false.
 
-    ls_type_tok = zcl_skylint_ast_util=>get_token_after( is_statement   = is_statement
-                                                         iv_lexeme      = 'TYPE'
-                                                         iv_start_index = 1 ).
-    IF ls_type_tok-lexeme IS INITIAL.
-      ls_type_tok = zcl_skylint_ast_util=>get_token_after( is_statement   = is_statement
-                                                           iv_lexeme      = 'NEW'
-                                                           iv_start_index = 1 ).
+    IF zcl_skylint_ast_util=>match_token_sequence( is_statement = is_statement
+                                                   it_expected  = VALUE #( ( `RAISE` ) ( `EXCEPTION` ) ) ) = abap_false.
+      RETURN.
     ENDIF.
 
-    IF ls_type_tok-lexeme IS NOT INITIAL.
-      rv_yes = is_system_exception_token( ls_type_tok ).
+    ls_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                iv_index     = 4 ).
+
+    IF ls_token IS NOT INITIAL.
+      rv_yes = is_system_exception_token( ls_token ).
     ENDIF.
   ENDMETHOD.
 

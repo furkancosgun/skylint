@@ -54,6 +54,10 @@ CLASS zcl_skylint_pref_is_not IMPLEMENTATION.
     DATA lt_overrides TYPE zcl_skylint_ast_util=>ty_token_overrides.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_stmt_idx = sy-tabix.
       IF     <ls_statement>-keyword <> 'IF'

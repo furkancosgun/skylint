@@ -248,9 +248,9 @@
     "remoteEnabled": true,
     "attributes": [],
     "relatedRules": [
-      "pref-filter",
       "pref-lines",
-      "pref-read-table"
+      "pref-read-table",
+      "no-loop-into"
     ],
     "defaultParameters": []
   },
@@ -279,8 +279,8 @@
     ],
     "relatedRules": [
       "pref-lines",
-      "pref-filter",
-      "no-default-key"
+      "no-default-key",
+      "no-loop-into"
     ],
     "defaultParameters": [
       {
@@ -367,8 +367,8 @@
     "attributes": [],
     "relatedRules": [
       "pref-read-table",
-      "pref-filter",
-      "pref-reduce"
+      "pref-reduce",
+      "pref-std-table"
     ],
     "defaultParameters": []
   },
@@ -2202,9 +2202,9 @@
     "remoteEnabled": true,
     "attributes": [],
     "relatedRules": [
-      "pref-filter",
       "pref-lines",
-      "pref-read-table"
+      "pref-read-table",
+      "pref-transport"
     ],
     "defaultParameters": []
   },
@@ -2510,8 +2510,8 @@
     "attributes": [],
     "relatedRules": [
       "no-mod-loop-tab",
-      "pref-read-table",
-      "pref-filter"
+      "no-loop-into",
+      "pref-read-table"
     ],
     "defaultParameters": []
   },
@@ -3759,25 +3759,6 @@
     ]
   },
   {
-    "ruleId": "pref-expand-macro",
-    "title": "Expand Macro Calls into Explicit Statements",
-    "className": "ZCL_SKYLINT_PREF_EXPAND_MACRO",
-    "checkName": "ZSKYLINT_PREF_EXPAND_MACRO",
-    "category": "anti-patterns",
-    "categoryTitle": "Anti-Patterns & Bad Practices",
-    "pseudoComment": "PREF_EXPAND_MACRO",
-    "description": "Expand Macro Calls",
-    "hasQuickfix": true,
-    "remoteEnabled": true,
-    "attributes": [],
-    "relatedRules": [
-      "no-obs-arith",
-      "no-obs-control",
-      "no-obs-decl"
-    ],
-    "defaultParameters": []
-  },
-  {
     "ruleId": "no-bad-indent",
     "title": "Statement Indentation Must Match Block Nesting",
     "className": "ZCL_SKYLINT_NO_BAD_INDENT",
@@ -3997,25 +3978,6 @@
         "value": "3"
       }
     ]
-  },
-  {
-    "ruleId": "pref-filter",
-    "title": "Prefer FILTER for a Simple LOOP with IF and APPEND",
-    "className": "ZCL_SKYLINT_PREF_FILTER",
-    "checkName": "ZSKYLINT_PREF_FILTER",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "PREF_FILTER",
-    "description": "Prefer FILTER for simple LOOP/IF/APPEND",
-    "hasQuickfix": false,
-    "remoteEnabled": true,
-    "attributes": [],
-    "relatedRules": [
-      "pref-reduce",
-      "pref-insert",
-      "pref-transport"
-    ],
-    "defaultParameters": []
   },
   {
     "ruleId": "no-neg-cond",
