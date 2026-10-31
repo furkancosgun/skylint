@@ -140,10 +140,6 @@ CLASS zcl_skylint_no_dup_literals IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    IF is_token-lexeme CO '0123456789'.
-      RETURN.
-    ENDIF.
-
     rv_yes = abap_true.
   ENDMETHOD.
 

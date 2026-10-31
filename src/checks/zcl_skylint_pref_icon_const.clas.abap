@@ -51,25 +51,17 @@ CLASS zcl_skylint_pref_icon_const IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_icon_literal.
-    DATA lv_len   TYPE i.
-    DATA lv_first TYPE string.
-    DATA lv_last  TYPE string.
-    DATA lv_at1   TYPE string.
-    DATA lv_at2   TYPE string.
+    DATA lv_len TYPE i.
+    DATA lv_at1 TYPE string.
+    DATA lv_at2 TYPE string.
 
     rv_yes = abap_false.
-    lv_len = strlen( is_token-lexeme ).
-    IF lv_len <> 6.
+    IF zcl_skylint_ast_util=>token_is_literal( is_token ) = abap_false.
       RETURN.
     ENDIF.
 
-    lv_first = is_token-lexeme(1).
-    lv_last = substring( val = is_token-lexeme
-                         off = 5
-                         len = 1 ).
-
-    IF ( lv_first <> `'` OR lv_last <> `'` ) AND
-       ( lv_first <> '`' OR lv_last <> '`' ).
+    lv_len = strlen( is_token-lexeme ).
+    IF lv_len <> 6.
       RETURN.
     ENDIF.
 

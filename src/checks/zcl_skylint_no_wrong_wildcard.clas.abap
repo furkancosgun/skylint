@@ -117,23 +117,15 @@ CLASS zcl_skylint_no_wrong_wildcard IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_string_literal.
-    DATA lv_len   TYPE i.
-    DATA lv_first TYPE string.
-    DATA lv_last  TYPE string.
-
     rv_yes = abap_false.
-    lv_len = strlen( is_token-lexeme ).
-    IF lv_len < 2.
+    IF zcl_skylint_ast_util=>token_is_literal( is_token ) = abap_false.
       RETURN.
     ENDIF.
 
-    lv_first = is_token-lexeme(1).
-    lv_last = substring( val = is_token-lexeme
-                         off = lv_len - 1
-                         len = 1 ).
-
-    IF ( lv_first = `'` AND lv_last = `'` ) OR ( lv_first = '`' AND lv_last = '`' ).
-      rv_yes = abap_true.
+    IF is_token-lexeme CO '0123456789'.
+      RETURN.
     ENDIF.
+
+    rv_yes = abap_true.
   ENDMETHOD.
 ENDCLASS.
