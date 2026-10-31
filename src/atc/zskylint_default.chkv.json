@@ -1328,6 +1328,31 @@
     },
     {
       "checkName": "ZSKYLINT_NO_DEAD_STORE"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_WRONG_WILDCARD",
+      "parameters": [
+        {
+          "name": "CHECK_LIKE",
+          "value": "true"
+        },
+        {
+          "name": "CHECK_CP",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_SORT_ORDER",
+      "parameters": [
+        {
+          "name": "CHECK_BY_ONLY",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_ICON_CONST"
     }
   ]
 }

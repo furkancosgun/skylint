@@ -4500,6 +4500,91 @@ export const RULES = [
       "no-dead-code",
       "pref-final-data"
     ]
+  },
+  {
+    "ruleId": "no-wrong-wildcard",
+    "title": "Avoid Wrong Wildcards in LIKE, CP, and NP",
+    "rationale": "ABAP SQL LIKE statements use '%' (matching any sequence of characters) and '_' (matching a single character) as wildcards. In contrast, ABAP logical comparison operators CP and NP use '*' and '+' as wildcards. Using '*' in LIKE or '%' in CP/NP indicates confusion between SQL pattern matching and ABAP string matching.",
+    "className": "ZCL_SKYLINT_NO_WRONG_WILDCARD",
+    "pseudoComment": "NO_WRONG_WILDCARD",
+    "category": "anti-patterns",
+    "example": {
+      "bad": "SELECT SINGLE carrid FROM scarr WHERE carrid LIKE '*LH*' INTO @lv_text.\nIF lv_text CP 'prefix%'.\n  RETURN.\nENDIF.",
+      "good": "SELECT SINGLE carrid FROM scarr WHERE carrid LIKE '%LH%' INTO @lv_text.\nIF lv_text CP 'prefix*'.\n  RETURN.\nENDIF."
+    },
+    "parameters": {
+      "CHECK_LIKE": "Enable checking for invalid wildcard usage in LIKE comparisons (defaults to true)",
+      "CHECK_CP": "Enable checking for invalid wildcard usage in CP and NP comparisons (defaults to true)"
+    },
+    "seo": {
+      "description": "Avoid wrong wildcards in ABAP LIKE, CP, and NP comparisons: ensure % is used in SQL LIKE and * is used in CP/NP.",
+      "keywords": [
+        "ABAP LIKE wildcard",
+        "ABAP CP wildcard",
+        "wrong wildcard ABAP",
+        "Clean ABAP LIKE CP",
+        "SAP ATC check wildcard"
+      ]
+    },
+    "relatedRules": [
+      "pref-between",
+      "no-dup-literals"
+    ]
+  },
+  {
+    "ruleId": "pref-sort-order",
+    "title": "Explicitly Specify SORT Order",
+    "rationale": "When sorting internal tables by components using the BY addition, no implicit sorting order should be assumed. Developers should explicitly specify ASCENDING or DESCENDING for each field, or specify the default order before BY, making the intended order clear and resilient to future modifications.",
+    "className": "ZCL_SKYLINT_PREF_SORT_ORDER",
+    "pseudoComment": "PREF_SORT_ORDER",
+    "category": "clean-abap",
+    "example": {
+      "bad": "SORT lt_table BY field1 field2.",
+      "good": "SORT lt_table BY field1 ASCENDING field2 DESCENDING.\nSORT lt_table ASCENDING BY field1 field2."
+    },
+    "parameters": {
+      "CHECK_BY_ONLY": "Only enforce explicit order when the BY addition is used (defaults to true)"
+    },
+    "seo": {
+      "description": "Explicitly specify ASCENDING or DESCENDING sort order in ABAP SORT statements to avoid implicit default sorting behavior.",
+      "keywords": [
+        "ABAP SORT order",
+        "ABAP SORT ASCENDING DESCENDING",
+        "Clean ABAP SORT BY",
+        "SAP ATC check sort order",
+        "pref-sort-order"
+      ]
+    },
+    "relatedRules": [
+      "no-mod-loop-tab",
+      "no-obs-control"
+    ]
+  },
+  {
+    "ruleId": "pref-icon-const",
+    "title": "Prefer ICON_ Constants over Hardcoded Icon Codes",
+    "rationale": "SAP UI icons in dynpros, lists, and ALV grids are represented internally by 4-character codes enclosed in '@' symbols (such as '@01@'). Hardcoded string literals make code obscure and difficult to maintain. Clean ABAP requires using pre-defined system constants (such as icon_okay or icon_cancel from type pool ICON) instead of magic icon literals.",
+    "className": "ZCL_SKYLINT_PREF_ICON_CONST",
+    "pseudoComment": "PREF_ICON_CONST",
+    "category": "clean-abap",
+    "example": {
+      "bad": "lv_icon = '@01@'.",
+      "good": "lv_icon = icon_okay."
+    },
+    "seo": {
+      "description": "Prefer ICON_ constants over hardcoded @xx@ icon literals in ABAP to enhance readability and avoid magic strings.",
+      "keywords": [
+        "ABAP icon constants",
+        "type pool ICON",
+        "ABAP icon codes",
+        "Clean ABAP icon",
+        "SAP ATC check icon constants"
+      ]
+    },
+    "relatedRules": [
+      "no-magic-numbers",
+      "no-dup-literals"
+    ]
   }
 ];
 

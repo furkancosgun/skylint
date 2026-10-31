@@ -4694,5 +4694,90 @@
       "pref-final-data"
     ],
     "defaultParameters": []
+  },
+  {
+    "ruleId": "no-wrong-wildcard",
+    "title": "Avoid Wrong Wildcards in LIKE, CP, and NP",
+    "className": "ZCL_SKYLINT_NO_WRONG_WILDCARD",
+    "checkName": "ZSKYLINT_NO_WRONG_WILDCARD",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "NO_WRONG_WILDCARD",
+    "description": "Avoid wrong wildcards in LIKE, CP, and NP",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "CHECK_LIKE",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_CP",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "relatedRules": [
+      "pref-between",
+      "no-dup-literals"
+    ],
+    "defaultParameters": [
+      {
+        "name": "CHECK_LIKE",
+        "value": "true"
+      },
+      {
+        "name": "CHECK_CP",
+        "value": "true"
+      }
+    ]
+  },
+  {
+    "ruleId": "pref-sort-order",
+    "title": "Explicitly Specify SORT Order",
+    "className": "ZCL_SKYLINT_PREF_SORT_ORDER",
+    "checkName": "ZSKYLINT_PREF_SORT_ORDER",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "PREF_SORT_ORDER",
+    "description": "Explicitly specify ASCENDING or DESCENDING sort order",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "CHECK_BY_ONLY",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "relatedRules": [
+      "no-mod-loop-tab",
+      "no-obs-control"
+    ],
+    "defaultParameters": [
+      {
+        "name": "CHECK_BY_ONLY",
+        "value": "true"
+      }
+    ]
+  },
+  {
+    "ruleId": "pref-icon-const",
+    "title": "Prefer ICON_ Constants over Hardcoded Icon Codes",
+    "className": "ZCL_SKYLINT_PREF_ICON_CONST",
+    "checkName": "ZSKYLINT_PREF_ICON_CONST",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "PREF_ICON_CONST",
+    "description": "Prefer ICON_ constants over hardcoded icon codes",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "relatedRules": [
+      "no-magic-numbers",
+      "no-dup-literals"
+    ],
+    "defaultParameters": []
   }
 ]

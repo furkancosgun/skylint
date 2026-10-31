@@ -4,13 +4,13 @@
       "key": "clean-abap",
       "title": "Clean ABAP & Modern Syntax",
       "description": "Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.",
-      "count": 55
+      "count": 57
     },
     {
       "key": "anti-patterns",
       "title": "Anti-Patterns & Bad Practices",
       "description": "Discouraged language constructs, legacy statements, and redundant syntax.",
-      "count": 55
+      "count": 56
     },
     {
       "key": "performance",
@@ -1852,6 +1852,42 @@
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
       "pseudoComment": "NO_DEAD_STORE",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "no-wrong-wildcard",
+      "title": "Avoid Wrong Wildcards in LIKE, CP, and NP",
+      "className": "ZCL_SKYLINT_NO_WRONG_WILDCARD",
+      "description": "Avoid wrong wildcards in LIKE, CP, and NP",
+      "category": "anti-patterns",
+      "categoryTitle": "Anti-Patterns & Bad Practices",
+      "pseudoComment": "NO_WRONG_WILDCARD",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "pref-sort-order",
+      "title": "Explicitly Specify SORT Order",
+      "className": "ZCL_SKYLINT_PREF_SORT_ORDER",
+      "description": "Explicitly specify ASCENDING or DESCENDING sort order",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "PREF_SORT_ORDER",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "pref-icon-const",
+      "title": "Prefer ICON_ Constants over Hardcoded Icon Codes",
+      "className": "ZCL_SKYLINT_PREF_ICON_CONST",
+      "description": "Prefer ICON_ constants over hardcoded icon codes",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "PREF_ICON_CONST",
       "hasQuickfix": false,
       "remoteEnabled": true,
       "configurable": false

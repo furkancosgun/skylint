@@ -1,16 +1,16 @@
 ---
-title: "Clean ABAP & Modern Syntax (55 Rules)"
+title: "Clean ABAP & Modern Syntax (57 Rules)"
 description: "Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices. Comprehensive reference, finding codes, and Clean ABAP examples for Clean ABAP & Modern Syntax."
 category: "clean-abap"
 keywords: "Clean ABAP, ABAP Cloud, SAP ATC, Clean ABAP & Modern Syntax, S/4HANA Readiness, SAP BTP, Steampunk"
 ---
 
-# Clean ABAP & Modern Syntax (55 Rules)
+# Clean ABAP & Modern Syntax (57 Rules)
 
 Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.
 
 ::: tip Category Overview
-This category enforces **55 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
+This category enforces **57 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
 :::
 
 ## Rules in this Category
@@ -72,6 +72,8 @@ This category enforces **55 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Require WHEN OTHERS as the Last Branch of CASE](/rules/pref-when-others) | `ZCL_SKYLINT_PREF_WHEN_OTHERS` | <code>#EC PREF_WHEN_OTHERS</code> | ⚡ Ready |
 | [Prefer BETWEEN for Inclusive Range Checks](/rules/pref-between) | `ZCL_SKYLINT_PREF_BETWEEN` | <code>#EC PREF_BETWEEN</code> | ⚡ Ready |
 | [Avoid Boolean Flag Importing Parameters](/rules/no-bool-blindness) | `ZCL_SKYLINT_NO_BOOL_BLINDNESS` | <code>#EC NO_BOOL_BLINDNESS</code> | - |
+| [Explicitly Specify SORT Order](/rules/pref-sort-order) | `ZCL_SKYLINT_PREF_SORT_ORDER` | <code>#EC PREF_SORT_ORDER</code> | - |
+| [Prefer ICON_ Constants over Hardcoded Icon Codes](/rules/pref-icon-const) | `ZCL_SKYLINT_PREF_ICON_CONST` | <code>#EC PREF_ICON_CONST</code> | - |
 
 ---
 

@@ -1,0 +1,12 @@
+[
+  { "target": "TEST_001", "code": "PREF_SORT", "line": 3, "column": 4 },
+  { "target": "TEST_002", "code": null },
+  { "target": "TEST_003", "code": null },
+  { "target": "TEST_004", "code": null },
+  { "target": "TEST_005", "code": "PREF_SORT", "line": 3, "column": 4 },
+  { "target": "TEST_006", "code": null },
+  { "target": "TEST_007", "code": "PREF_SORT", "line": 3, "column": 4 },
+  { "target": "TEST_008", "code": null },
+  { "target": "TEST_009", "code": null },
+  { "target": "TEST_010", "code": null }
+]

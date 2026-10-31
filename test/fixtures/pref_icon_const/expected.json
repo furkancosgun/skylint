@@ -1,0 +1,8 @@
+[
+  { "target": "TEST_001", "code": "PREF_ICON", "line": 2, "column": 39 },
+  { "target": "TEST_002", "code": "PREF_ICON", "line": 3, "column": 14 },
+  { "target": "TEST_003", "code": "PREF_ICON", "line": 3, "column": 14 },
+  { "target": "TEST_004", "code": null },
+  { "target": "TEST_005", "code": null },
+  { "target": "TEST_006", "code": null }
+]

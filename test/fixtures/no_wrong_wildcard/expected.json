@@ -1,0 +1,10 @@
+[
+  { "target": "TEST_001", "code": "NO_LIKE_WL", "line": 3, "column": 54 },
+  { "target": "TEST_002", "code": null },
+  { "target": "TEST_003", "code": "NO_CP_WILD", "line": 3, "column": 18 },
+  { "target": "TEST_004", "code": null },
+  { "target": "TEST_005", "code": "NO_CP_WILD", "line": 3, "column": 18 },
+  { "target": "TEST_006", "code": null },
+  { "target": "TEST_007", "code": null },
+  { "target": "TEST_008", "code": null }
+]
