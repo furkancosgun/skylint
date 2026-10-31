@@ -1,4 +1,4 @@
-CLASS lcl_test DEFINITION.
+CLASS zcl_test_pref_sort_order DEFINITION.
   PUBLIC SECTION.
     TYPES: BEGIN OF ty_row,
              field1 TYPE string,
@@ -18,7 +18,7 @@ CLASS lcl_test DEFINITION.
     METHODS test_010.
 ENDCLASS.
 
-CLASS lcl_test IMPLEMENTATION.
+CLASS zcl_test_pref_sort_order IMPLEMENTATION.
   METHOD test_001.
     DATA lt_table TYPE ty_table.
     SORT lt_table BY field1 field2.

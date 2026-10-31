@@ -1,4 +1,4 @@
-CLASS lcl_test DEFINITION.
+CLASS zcl_test_pref_icon_const DEFINITION.
   PUBLIC SECTION.
     METHODS test_001.
     METHODS test_002.
@@ -8,7 +8,7 @@ CLASS lcl_test DEFINITION.
     METHODS test_006.
 ENDCLASS.
 
-CLASS lcl_test IMPLEMENTATION.
+CLASS zcl_test_pref_icon_const IMPLEMENTATION.
   METHOD test_001.
     DATA lv_icon TYPE c LENGTH 4 VALUE '@01@'.
   ENDMETHOD.

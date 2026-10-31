@@ -1,4 +1,4 @@
-CLASS lcl_test DEFINITION.
+CLASS zcl_test_no_wrong_wildcard DEFINITION.
   PUBLIC SECTION.
     METHODS test_001.
     METHODS test_002.
@@ -10,7 +10,7 @@ CLASS lcl_test DEFINITION.
     METHODS test_008.
 ENDCLASS.
 
-CLASS lcl_test IMPLEMENTATION.
+CLASS zcl_test_no_wrong_wildcard IMPLEMENTATION.
   METHOD test_001.
     DATA lv_text TYPE string.
     SELECT SINGLE carrid FROM scarr WHERE carrid LIKE '*LH*' INTO @lv_text.
