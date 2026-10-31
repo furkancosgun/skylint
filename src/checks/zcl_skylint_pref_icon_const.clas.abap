@@ -53,7 +53,6 @@ CLASS zcl_skylint_pref_icon_const IMPLEMENTATION.
     DATA lv_len TYPE i.
     DATA lv_val TYPE string.
 
-    rv_yes = abap_false.
     IF zcl_skylint_ast_util=>token_is_literal( is_token ) = abap_false.
       RETURN.
     ENDIF.

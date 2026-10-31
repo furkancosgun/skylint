@@ -26,18 +26,16 @@ ENDCLASS.
 
 CLASS zcl_skylint_pref_sort_order IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Explicitly specify ASCENDING or DESCENDING sort order'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-specify_order
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Specify ASCENDING or DESCENDING sort order explicitly'
-                       pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                     ( name  = 'CHECK_BY_ONLY'
-                       value = REF #( mv_check_by_only ) ) ) ) ).
+    super->constructor( VALUE #( description       = 'Explicitly specify ASCENDING or DESCENDING sort order'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-specify_order
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Specify ASCENDING or DESCENDING sort order explicitly'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                                              ( name  = 'CHECK_BY_ONLY'
+                                                                value = REF #( mv_check_by_only ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -59,11 +57,11 @@ CLASS zcl_skylint_pref_sort_order IMPLEMENTATION.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     lv_by_idx = zcl_skylint_ast_util=>find_token( is_statement = is_statement
-                                                 iv_lexeme    = 'BY' ).
+                                                  iv_lexeme    = 'BY' ).
     lv_asc_idx = zcl_skylint_ast_util=>find_token( is_statement = is_statement
-                                                  iv_lexeme    = 'ASCENDING' ).
+                                                   iv_lexeme    = 'ASCENDING' ).
     lv_desc_idx = zcl_skylint_ast_util=>find_token( is_statement = is_statement
-                                                   iv_lexeme    = 'DESCENDING' ).
+                                                    iv_lexeme    = 'DESCENDING' ).
 
     IF lv_by_idx = 0.
       IF mv_check_by_only = abap_false AND lv_asc_idx = 0 AND lv_desc_idx = 0.
@@ -73,13 +71,11 @@ CLASS zcl_skylint_pref_sort_order IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    " Explicit sort order before BY sets default for all fields
-    IF ( lv_asc_idx > 0 AND lv_asc_idx < lv_by_idx ) OR
-       ( lv_desc_idx > 0 AND lv_desc_idx < lv_by_idx ).
+    IF    ( lv_asc_idx  > 0 AND lv_asc_idx  < lv_by_idx )
+       OR ( lv_desc_idx > 0 AND lv_desc_idx < lv_by_idx ).
       RETURN.
     ENDIF.
 
-    " Dynamic sorting (e.g. BY (lt_fields))
     LOOP AT is_statement-tokens ASSIGNING <ls_token> FROM lv_by_idx + 1.
       IF <ls_token>-lexeme CA '()'.
         RETURN.
@@ -87,11 +83,9 @@ CLASS zcl_skylint_pref_sort_order IMPLEMENTATION.
     ENDLOOP.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token> FROM lv_by_idx + 1.
-      IF <ls_token>-references IS INITIAL AND
-         ( <ls_token>-lexeme = 'ASCENDING' OR <ls_token>-lexeme = 'DESCENDING' ).
+      IF <ls_token>-references IS INITIAL AND ( <ls_token>-lexeme = 'ASCENDING' OR <ls_token>-lexeme = 'DESCENDING' ).
         lv_field_order = abap_true.
-      ELSEIF <ls_token>-references IS INITIAL AND
-             ( <ls_token>-lexeme = 'AS' OR <ls_token>-lexeme = 'TEXT' ).
+      ELSEIF <ls_token>-references IS INITIAL AND ( <ls_token>-lexeme = 'AS' OR <ls_token>-lexeme = 'TEXT' ).
         CONTINUE.
       ELSE.
         IF lv_has_fields = abap_true AND lv_field_order = abap_false.
