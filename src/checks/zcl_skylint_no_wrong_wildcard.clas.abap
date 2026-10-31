@@ -37,24 +37,20 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_wrong_wildcard IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Avoid wrong wildcards in LIKE, CP, and NP'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-like_wildcard
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Use % or _ as wildcards in LIKE comparisons instead of *'
-                       pseudo_comment = c_pseudo_comment )
-                     ( code           = c_finding_codes-cp_wildcard
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Use * or + as wildcards in CP and NP comparisons instead of %'
-                       pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                     ( name  = 'CHECK_LIKE'
-                       value = REF #( mv_check_like ) )
-                     ( name  = 'CHECK_CP'
-                       value = REF #( mv_check_cp ) ) ) ) ).
+    super->constructor( VALUE #( description       = 'Avoid wrong wildcards in LIKE, CP, and NP'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     severity       = if_ci_atc_check=>finding_severities-warning
+                                     pseudo_comment = c_pseudo_comment
+                                     ( code = c_finding_codes-like_wildcard
+                                       text = 'Use % or _ as wildcards in LIKE comparisons instead of *' )
+                                     ( code = c_finding_codes-cp_wildcard
+                                       text = 'Use * or + as wildcards in CP and NP comparisons instead of %' ) )
+                                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                                              ( name  = 'CHECK_LIKE'
+                                                                value = REF #( mv_check_like ) )
+                                                              ( name  = 'CHECK_CP'
+                                                                value = REF #( mv_check_cp ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -63,11 +59,7 @@ CLASS zcl_skylint_no_wrong_wildcard IMPLEMENTATION.
     FIELD-SYMBOLS <ls_token>     TYPE if_ci_atc_source_code_provider=>ty_token.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-        IF <ls_token>-references IS NOT INITIAL.
-          CONTINUE.
-        ENDIF.
-
+      LOOP AT <ls_statement>-tokens ASSIGNING <ls_token> WHERE references IS INITIAL.
         lv_idx = sy-tabix.
         IF mv_check_like = abap_true AND <ls_token>-lexeme = 'LIKE'.
           check_like_token( is_statement = <ls_statement>
@@ -83,9 +75,8 @@ CLASS zcl_skylint_no_wrong_wildcard IMPLEMENTATION.
   METHOD check_like_token.
     DATA ls_next TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    ls_next = zcl_skylint_ast_util=>get_token(
-        is_statement = is_statement
-        iv_index     = iv_token_idx + 1 ).
+    ls_next = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                               iv_index     = iv_token_idx + 1 ).
 
     IF ls_next IS INITIAL OR is_string_literal( ls_next ) = abap_false.
       RETURN.
@@ -101,9 +92,8 @@ CLASS zcl_skylint_no_wrong_wildcard IMPLEMENTATION.
   METHOD check_cp_token.
     DATA ls_next TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    ls_next = zcl_skylint_ast_util=>get_token(
-        is_statement = is_statement
-        iv_index     = iv_token_idx + 1 ).
+    ls_next = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                               iv_index     = iv_token_idx + 1 ).
 
     IF ls_next IS INITIAL OR is_string_literal( ls_next ) = abap_false.
       RETURN.
@@ -117,7 +107,6 @@ CLASS zcl_skylint_no_wrong_wildcard IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_string_literal.
-    rv_yes = abap_false.
     IF zcl_skylint_ast_util=>token_is_literal( is_token ) = abap_false.
       RETURN.
     ENDIF.

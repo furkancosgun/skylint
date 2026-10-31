@@ -25,14 +25,13 @@ ENDCLASS.
 
 CLASS zcl_skylint_pref_icon_const IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Prefer ICON_ constants over hardcoded icon codes'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-use_icon_const
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Use icon_ constants instead of hardcoded icon codes'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'Prefer ICON_ constants over hardcoded icon codes'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-use_icon_const
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Use icon_ constants instead of hardcoded icon codes'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -52,8 +51,7 @@ CLASS zcl_skylint_pref_icon_const IMPLEMENTATION.
 
   METHOD is_icon_literal.
     DATA lv_len TYPE i.
-    DATA lv_at1 TYPE string.
-    DATA lv_at2 TYPE string.
+    DATA lv_val TYPE string.
 
     rv_yes = abap_false.
     IF zcl_skylint_ast_util=>token_is_literal( is_token ) = abap_false.
@@ -65,14 +63,11 @@ CLASS zcl_skylint_pref_icon_const IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    lv_at1 = substring( val = is_token-lexeme
+    lv_val = substring( val = is_token-lexeme
                         off = 1
-                        len = 1 ).
-    lv_at2 = substring( val = is_token-lexeme
-                        off = 4
-                        len = 1 ).
+                        len = strlen( is_token-lexeme ) - 2 ).
 
-    IF lv_at1 = '@' AND lv_at2 = '@'.
+    IF lv_val CP '@++@'.
       rv_yes = abap_true.
     ENDIF.
   ENDMETHOD.

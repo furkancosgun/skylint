@@ -102,7 +102,6 @@ CLASS zcl_skylint_no_useless_concat IMPLEMENTATION.
           CONTINUE.
         ENDIF.
 
-
         CLEAR: lt_operands,
                lt_operators.
         APPEND ls_first_op TO lt_operands.
@@ -122,7 +121,6 @@ CLASS zcl_skylint_no_useless_concat IMPLEMENTATION.
           APPEND ls_next_op TO lt_operands.
           lv_idx = ls_next_op-end_index + 1.
         ENDWHILE.
-
 
         IF lines( lt_operands ) >= 2.
           lv_all_literals = abap_true.
@@ -189,7 +187,6 @@ CLASS zcl_skylint_no_useless_concat IMPLEMENTATION.
                           off = lv_len - 1
                           len = 1 ).
 
-
     IF lv_first = `'` AND lv_last = `'` AND lv_len >= 2.
       rs_operand-is_literal  = abap_true.
       rs_operand-is_foldable = abap_true.
@@ -201,7 +198,6 @@ CLASS zcl_skylint_no_useless_concat IMPLEMENTATION.
       ENDIF.
       RETURN.
     ENDIF.
-
 
     IF lv_first = '`' AND lv_last = '`' AND lv_len >= 2.
       rs_operand-is_literal  = abap_true.
@@ -215,7 +211,6 @@ CLASS zcl_skylint_no_useless_concat IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-
     IF lv_first = '|' AND lv_last = '|' AND lv_len >= 2.
       IF ls_tok-lexeme NS '{' AND ls_tok-lexeme NS '}'.
         rs_operand-is_literal  = abap_true.
@@ -223,7 +218,6 @@ CLASS zcl_skylint_no_useless_concat IMPLEMENTATION.
       ENDIF.
       RETURN.
     ENDIF.
-
 
     IF lv_first = '|'.
       lv_has_exp = abap_false.

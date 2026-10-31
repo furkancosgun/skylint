@@ -41,7 +41,7 @@ CLASS zcl_skylint_ast_util DEFINITION
     CLASS-METHODS find_token
       IMPORTING is_statement         TYPE if_ci_atc_source_code_provider=>ty_statement
                 iv_lexeme            TYPE string
-                iv_start_index       TYPE i DEFAULT 1
+                iv_start_index       TYPE i         DEFAULT 1
                 iv_ignore_references TYPE abap_bool DEFAULT abap_false
       RETURNING VALUE(rv_index)      TYPE i.
 
@@ -463,7 +463,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
     lv_idx = iv_start_index.
     WHILE lv_idx <= lv_count.
       ASSIGN is_statement-tokens[ lv_idx ] TO <ls_tok>.
-      IF sy-subrc = 0
+      IF     sy-subrc = 0
          AND ( iv_ignore_references = abap_true OR <ls_tok>-references IS INITIAL ).
         lv_act = <ls_tok>-lexeme.
         IF lv_act = lv_exp.

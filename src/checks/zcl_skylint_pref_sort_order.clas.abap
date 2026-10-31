@@ -21,15 +21,6 @@ CLASS zcl_skylint_pref_sort_order DEFINITION
 
     METHODS inspect_sort_statement
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
-
-    METHODS has_order_before_by
-      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-                iv_by_idx     TYPE i
-      RETURNING VALUE(rv_yes) TYPE abap_bool.
-
-    METHODS check_fields_after_by
-      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
-                iv_by_idx    TYPE i.
 ENDCLASS.
 
 
@@ -53,77 +44,49 @@ CLASS zcl_skylint_pref_sort_order IMPLEMENTATION.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF <ls_statement>-keyword <> 'SORT'.
-        CONTINUE.
+      IF <ls_statement>-keyword = 'SORT'.
+        inspect_sort_statement( <ls_statement> ).
       ENDIF.
-
-      inspect_sort_statement( <ls_statement> ).
     ENDLOOP.
   ENDMETHOD.
 
   METHOD inspect_sort_statement.
-    DATA lv_by_idx TYPE i.
+    DATA lv_by_idx      TYPE i.
+    DATA lv_asc_idx     TYPE i.
+    DATA lv_desc_idx    TYPE i.
+    DATA lv_has_fields  TYPE abap_bool.
+    DATA lv_field_order TYPE abap_bool.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    LOOP AT is_statement-tokens ASSIGNING <ls_token>.
-      IF <ls_token>-lexeme = 'BY' AND <ls_token>-references IS INITIAL.
-        lv_by_idx = sy-tabix.
-        EXIT.
-      ENDIF.
-    ENDLOOP.
+    lv_by_idx = zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                                 iv_lexeme    = 'BY' ).
+    lv_asc_idx = zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                                  iv_lexeme    = 'ASCENDING' ).
+    lv_desc_idx = zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                                   iv_lexeme    = 'DESCENDING' ).
 
     IF lv_by_idx = 0.
-      IF mv_check_by_only = abap_false.
-        IF has_order_before_by( is_statement = is_statement
-                                iv_by_idx    = lines( is_statement-tokens ) + 1 ) = abap_false.
-          report_statement( is_statement    = is_statement
-                            iv_finding_code = c_finding_codes-specify_order ).
-        ENDIF.
+      IF mv_check_by_only = abap_false AND lv_asc_idx = 0 AND lv_desc_idx = 0.
+        report_statement( is_statement    = is_statement
+                          iv_finding_code = c_finding_codes-specify_order ).
       ENDIF.
       RETURN.
     ENDIF.
 
-    IF has_order_before_by( is_statement = is_statement
-                            iv_by_idx    = lv_by_idx ) = abap_true.
+    " Explicit sort order before BY sets default for all fields
+    IF ( lv_asc_idx > 0 AND lv_asc_idx < lv_by_idx ) OR
+       ( lv_desc_idx > 0 AND lv_desc_idx < lv_by_idx ).
       RETURN.
     ENDIF.
 
-    check_fields_after_by( is_statement = is_statement
-                           iv_by_idx    = lv_by_idx ).
-  ENDMETHOD.
-
-  METHOD has_order_before_by.
-    DATA lv_idx TYPE i.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
-
-    rv_yes = abap_false.
-    DO iv_by_idx - 1 TIMES.
-      lv_idx = sy-index.
-      ASSIGN is_statement-tokens[ lv_idx ] TO <ls_token>.
-      IF sy-subrc <> 0.
-        EXIT.
-      ENDIF.
-
-      IF <ls_token>-references IS INITIAL AND
-         ( <ls_token>-lexeme = 'ASCENDING' OR <ls_token>-lexeme = 'DESCENDING' ).
-        rv_yes = abap_true.
-        RETURN.
-      ENDIF.
-    ENDDO.
-  ENDMETHOD.
-
-  METHOD check_fields_after_by.
-    DATA lv_has_fields  TYPE abap_bool VALUE abap_false.
-    DATA lv_field_order TYPE abap_bool VALUE abap_false.
-    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
-
-    LOOP AT is_statement-tokens ASSIGNING <ls_token> FROM iv_by_idx + 1.
+    " Dynamic sorting (e.g. BY (lt_fields))
+    LOOP AT is_statement-tokens ASSIGNING <ls_token> FROM lv_by_idx + 1.
       IF <ls_token>-lexeme CA '()'.
         RETURN.
       ENDIF.
     ENDLOOP.
 
-    LOOP AT is_statement-tokens ASSIGNING <ls_token> FROM iv_by_idx + 1.
+    LOOP AT is_statement-tokens ASSIGNING <ls_token> FROM lv_by_idx + 1.
       IF <ls_token>-references IS INITIAL AND
          ( <ls_token>-lexeme = 'ASCENDING' OR <ls_token>-lexeme = 'DESCENDING' ).
         lv_field_order = abap_true.
