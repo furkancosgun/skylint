@@ -32,7 +32,7 @@ CLASS zcl_skylint_no_shadow IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_class_name TYPE string.
+    DATA lv_rtti_name  TYPE string.
     DATA lv_name       TYPE string.
     DATA lt_attributes TYPE string_table.
     DATA ls_ref        TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
@@ -43,12 +43,12 @@ CLASS zcl_skylint_no_shadow IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    lv_class_name = is_procedure-id-main_unit-name.
-    IF lv_class_name IS INITIAL.
+    lv_rtti_name = zcl_skylint_rtti_util=>resolve_class_rtti_name( is_procedure ).
+    IF lv_rtti_name IS INITIAL.
       RETURN.
     ENDIF.
 
-    lt_attributes = zcl_skylint_rtti_util=>get_attribute_names( lv_class_name ).
+    lt_attributes = zcl_skylint_rtti_util=>get_attribute_names( lv_rtti_name ).
     IF lt_attributes IS INITIAL.
       RETURN.
     ENDIF.

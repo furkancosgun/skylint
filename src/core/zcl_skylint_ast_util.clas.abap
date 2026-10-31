@@ -1086,47 +1086,52 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD parse_full_name.
-    DATA lv_str   TYPE string.
-    DATA lt_parts TYPE STANDARD TABLE OF string WITH EMPTY KEY.
-    DATA lv_part  TYPE string.
+    DATA lv_str    TYPE string.
+    DATA lt_parts  TYPE STANDARD TABLE OF string WITH EMPTY KEY.
+    DATA lv_part   TYPE string.
+    DATA lv_prefix TYPE string.
+    DATA lv_val    TYPE string.
 
     CLEAR: ev_program_name,
            ev_class_name,
            ev_meth_name,
            ev_data_name.
     lv_str = iv_full_name.
-
-    IF lv_str CS '=>'.
-      SPLIT lv_str AT '=>' INTO ev_class_name ev_meth_name.
-      IF ev_meth_name CS '('.
-        SPLIT ev_meth_name AT '(' INTO ev_meth_name lv_str.
-      ENDIF.
-      RETURN.
-    ENDIF.
-
     IF lv_str NS '\'.
+      IF lv_str CS '=>'.
+        SPLIT lv_str AT '=>' INTO ev_class_name ev_meth_name.
+        IF ev_meth_name CS '('.
+          SPLIT ev_meth_name AT '(' INTO ev_meth_name lv_str.
+        ENDIF.
+      ENDIF.
       RETURN.
     ENDIF.
 
     SPLIT lv_str AT '\' INTO TABLE lt_parts.
     LOOP AT lt_parts INTO lv_part.
-      IF lv_part CP 'PR:*'.
-        ev_program_name = lv_part+3.
-      ELSEIF lv_part CP 'PROGRAM=*'.
-        ev_program_name = lv_part+8.
-      ELSEIF lv_part CP 'TY:*'.
-        ev_class_name = lv_part+3.
-      ELSEIF lv_part CP 'CLASS=*'.
-        ev_class_name = lv_part+6.
-      ELSEIF lv_part CP 'INTF=*'.
-        ev_class_name = lv_part+5.
-      ELSEIF lv_part CP 'ME:*'.
-        ev_meth_name = lv_part+3.
-      ELSEIF lv_part CP 'DA:*' OR lv_part CP 'DA=*'.
-        ev_data_name = lv_part+3.
-      ELSEIF lv_part CP 'DB:*' OR lv_part CP 'DB=*'.
-        ev_data_name = lv_part+3.
+      IF strlen( lv_part ) < 3.
+        CONTINUE.
       ENDIF.
+      lv_prefix = lv_part(3).
+      lv_val    = lv_part+3.
+      CASE lv_prefix.
+        WHEN 'PR:'.
+          IF ev_program_name IS INITIAL.
+            ev_program_name = lv_val.
+          ENDIF.
+        WHEN 'TY:'.
+          IF ev_class_name IS INITIAL.
+            ev_class_name = lv_val.
+          ENDIF.
+        WHEN 'ME:'.
+          IF ev_meth_name IS INITIAL.
+            ev_meth_name = lv_val.
+          ENDIF.
+        WHEN 'DA:' OR 'DB:'.
+          IF ev_data_name IS INITIAL.
+            ev_data_name = lv_val.
+          ENDIF.
+      ENDCASE.
     ENDLOOP.
   ENDMETHOD.
 
@@ -1140,9 +1145,7 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
     LOOP AT is_token-references ASSIGNING <ls_ref>
          WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
       IF    <ls_ref>-full_name = |\\DA:SY\\DA:{ lv_target }|
-         OR <ls_ref>-full_name = |\\DA:SYST\\DA:{ lv_target }|
-         OR <ls_ref>-full_name = |\\DA=SY\\DA={ lv_target }|
-         OR <ls_ref>-full_name = |\\DA=SYST\\DA={ lv_target }|.
+         OR <ls_ref>-full_name = |\\DA:SYST\\DA:{ lv_target }|.
         rv_matched = abap_true.
         RETURN.
       ENDIF.

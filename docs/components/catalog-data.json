@@ -4,13 +4,13 @@
       "key": "clean-abap",
       "title": "Clean ABAP & Modern Syntax",
       "description": "Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.",
-      "count": 57
+      "count": 59
     },
     {
       "key": "anti-patterns",
       "title": "Anti-Patterns & Bad Practices",
       "description": "Discouraged language constructs, legacy statements, and redundant syntax.",
-      "count": 56
+      "count": 55
     },
     {
       "key": "performance",
@@ -257,6 +257,18 @@
       "categoryTitle": "Clean ABAP & Modern Syntax",
       "pseudoComment": "PREF_PARAM_NAME",
       "hasQuickfix": true,
+      "remoteEnabled": false,
+      "configurable": true
+    },
+    {
+      "ruleId": "no-unused-param",
+      "title": "Avoid Unused Parameters in Procedures",
+      "className": "ZCL_SKYLINT_NO_UNUSED_PARAM",
+      "description": "Avoid unused parameters in procedures",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "NO_UNUSED_PARAM",
+      "hasQuickfix": false,
       "remoteEnabled": false,
       "configurable": true
     },
@@ -1089,18 +1101,6 @@
       "configurable": false
     },
     {
-      "ruleId": "no-param-escape",
-      "title": "Avoid Obsolete ! Escape Prefix in Parameter Names",
-      "className": "ZCL_SKYLINT_NO_PARAM_ESCAPE",
-      "description": "Avoid unnecessary parameter escape (!param)",
-      "category": "anti-patterns",
-      "categoryTitle": "Anti-Patterns & Bad Practices",
-      "pseudoComment": "NO_PARAM_ESCAPE",
-      "hasQuickfix": true,
-      "remoteEnabled": true,
-      "configurable": false
-    },
-    {
       "ruleId": "pref-case",
       "title": "Prefer CASE over Multiple IF / ELSEIF on the Same Variable",
       "className": "ZCL_SKYLINT_PREF_CASE",
@@ -1891,6 +1891,18 @@
       "hasQuickfix": false,
       "remoteEnabled": true,
       "configurable": false
+    },
+    {
+      "ruleId": "no-unused-param",
+      "title": "Avoid Unused Parameters in Procedures",
+      "className": "ZCL_SKYLINT_NO_UNUSED_PARAM",
+      "description": "Avoid unused parameters in procedures",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "NO_UNUSED_PARAM",
+      "hasQuickfix": false,
+      "remoteEnabled": false,
+      "configurable": true
     }
   ]
 }

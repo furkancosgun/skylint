@@ -20,7 +20,7 @@ CLASS zcl_skylint_pref_name_members DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_NAME_MEMBERS'.
 
     DATA mv_attr_ignore_exceptions  TYPE abap_bool VALUE abap_true.
-    DATA mv_attr_ignore_local       TYPE abap_bool VALUE abap_true.
+    DATA mv_attr_ignore_local       TYPE abap_bool VALUE abap_false.
     DATA mv_attr_ignore_interfaces  TYPE abap_bool VALUE abap_false.
     DATA mv_attr_statics            TYPE string    VALUE '^G._.+$'.
     DATA mv_attr_instance           TYPE string    VALUE '^M._.+$'.
@@ -155,42 +155,31 @@ CLASS zcl_skylint_pref_name_members IMPLEMENTATION.
     DATA lv_is_intf     TYPE abap_bool.
     DATA lv_is_local    TYPE abap_bool.
     DATA lv_is_exc      TYPE abap_bool.
-    DATA lv_skip_attrs  TYPE abap_bool.
     DATA lv_skip_params TYPE abap_bool.
     FIELD-SYMBOLS <ls_stmt> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     LOOP AT it_statements ASSIGNING <ls_stmt>.
-      IF <ls_stmt>-keyword = 'INTERFACE'.
-        lv_is_intf = abap_true.
-        lv_is_local = xsdbool( zcl_skylint_ast_util=>statement_is_public_interface( <ls_stmt> ) = abap_false ).
-        EXIT.
-      ELSEIF     <ls_stmt>-keyword = 'CLASS'
-             AND zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_stmt>
-                                                            it_expected  = VALUE #( ( `DEFINITION` ) ) ) > 0.
-        lv_is_exc = zcl_skylint_ast_util=>statement_is_exception_class( <ls_stmt> ).
-        lv_is_local = xsdbool( zcl_skylint_ast_util=>statement_is_public_class( <ls_stmt> ) = abap_false ).
-        EXIT.
-      ENDIF.
-    ENDLOOP.
-
-    IF    ( lv_is_intf  = abap_true AND mv_attr_ignore_interfaces = abap_true )
-       OR ( lv_is_local = abap_true AND mv_attr_ignore_local      = abap_true )
-       OR ( lv_is_exc   = abap_true AND mv_attr_ignore_exceptions = abap_true ).
-      lv_skip_attrs = abap_true.
-    ENDIF.
-
-    IF lv_is_exc = abap_true AND mv_param_ignore_exceptions = abap_true.
-      lv_skip_params = abap_true.
-    ENDIF.
-
-    LOOP AT it_statements ASSIGNING <ls_stmt>.
       CASE <ls_stmt>-keyword.
+        WHEN 'INTERFACE'.
+          lv_is_intf = abap_true.
+          lv_is_exc = abap_false.
+          lv_is_local = xsdbool( zcl_skylint_ast_util=>statement_is_public_interface( <ls_stmt> ) = abap_false ).
+
+        WHEN 'CLASS'.
+          lv_is_intf = abap_false.
+          lv_is_exc = zcl_skylint_ast_util=>statement_is_exception_class( <ls_stmt> ).
+          lv_is_local = xsdbool( zcl_skylint_ast_util=>statement_is_public_class( <ls_stmt> ) = abap_false ).
+
         WHEN 'DATA' OR 'CLASS-DATA' OR 'CONSTANTS'.
-          IF lv_skip_attrs = abap_false.
-            check_class_attribute( <ls_stmt> ).
+          IF    ( lv_is_local = abap_true AND mv_attr_ignore_local      = abap_true )
+             OR ( lv_is_exc   = abap_true AND mv_attr_ignore_exceptions = abap_true )
+             OR ( lv_is_intf  = abap_true AND mv_attr_ignore_interfaces = abap_true ).
+            CONTINUE.
           ENDIF.
+          check_class_attribute( <ls_stmt> ).
 
         WHEN 'METHODS' OR 'CLASS-METHODS'.
+          lv_skip_params = xsdbool( lv_is_exc = abap_true AND mv_param_ignore_exceptions = abap_true ).
           check_method_definition( is_statement   = <ls_stmt>
                                    iv_skip_params = lv_skip_params ).
       ENDCASE.

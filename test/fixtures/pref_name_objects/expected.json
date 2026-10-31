@@ -20,23 +20,7 @@
     "column": 0
   },
   {
-    "target": "BAD_GLOBAL",
-    "code": "PREF_GCLS",
-    "line": 1,
-    "column": 0
-  },
-  {
-    "target": "BAD_GINTF",
-    "code": "PREF_GINTF",
-    "line": 1,
-    "column": 0
-  },
-  {
     "target": "LCX_VALID_ERROR",
-    "code": null
-  },
-  {
-    "target": "ZCX_VALID_GLOBAL",
     "code": null
   },
   {

@@ -1,0 +1,21 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Avoid unused parameters in procedures",
+    "originalLanguage": "en"
+  },
+  "category": "ZSKYLINT_CLEAN_ABAP",
+  "implementingClass": "ZCL_SKYLINT_NO_UNUSED_PARAM",
+  "checkType": "local",
+  "parameters": [
+    {
+      "name": "CHECK_METHODS"
+    },
+    {
+      "name": "CHECK_FORMS"
+    },
+    {
+      "name": "CHECK_FUNCS"
+    }
+  ]
+}

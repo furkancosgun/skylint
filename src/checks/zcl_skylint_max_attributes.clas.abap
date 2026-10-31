@@ -48,9 +48,6 @@ CLASS zcl_skylint_max_attributes IMPLEMENTATION.
 
     ls_first_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
                                                          iv_index      = 1 ).
-    IF ls_first_stmt-keyword IS INITIAL.
-      RETURN.
-    ENDIF.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF <ls_statement>-keyword = 'DATA' OR <ls_statement>-keyword = 'CLASS-DATA'.
@@ -58,7 +55,7 @@ CLASS zcl_skylint_max_attributes IMPLEMENTATION.
       ENDIF.
     ENDLOOP.
 
-    IF lv_count > mv_max_attributes.
+    IF lv_count > mv_max_attributes AND ls_first_stmt-keyword IS NOT INITIAL.
       report_statement( is_statement    = ls_first_stmt
                         iv_finding_code = c_finding_codes-attribute_count ).
     ENDIF.

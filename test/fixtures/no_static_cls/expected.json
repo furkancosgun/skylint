@@ -5,20 +5,5 @@
     "line": 1,
     "column": 0,
     "quickfixes": []
-  },
-  {
-    "target": "LCL_CLEAN",
-    "code": null
-  },
-  {
-    "target": "LCL_UTIL2",
-    "code": "NO_STAT_CL",
-    "line": 1,
-    "column": 0,
-    "quickfixes": []
-  },
-  {
-    "target": "LCL_MIXED2",
-    "code": null
   }
 ]

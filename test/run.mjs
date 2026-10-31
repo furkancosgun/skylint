@@ -157,9 +157,10 @@ export async function runRow({ abap, getCheck, rule, fullLines, row, proceduresC
   const statements = buildStatements(new Lexer(snippetSource).run());
   await feedRtti(fullSource, objectName, abap);
   const methodName = targetProc.kind === 'METH' ? targetProc.methodName || '' : '';
+  const fileKind = /^\s*REPORT\s+/im.test(fullSource.slice(0, 4000)) ? 'PROG' : targetProc.mainKind;
   await enrichStatements(statements, fullSource, objectName, methodName, targetProc.offset, {
     objectName,
-    objectKind: targetProc.mainKind,
+    objectKind: fileKind,
   });
 
   const procValue = buildProcedureValue(abap, {

@@ -1,16 +1,16 @@
 ---
-title: "Anti-Patterns & Bad Practices (56 Rules)"
+title: "Anti-Patterns & Bad Practices (55 Rules)"
 description: "Discouraged language constructs, legacy statements, and redundant syntax. Comprehensive reference, finding codes, and Clean ABAP examples for Anti-Patterns & Bad Practices."
 category: "anti-patterns"
 keywords: "Clean ABAP, ABAP Cloud, SAP ATC, Anti-Patterns & Bad Practices, S/4HANA Readiness, SAP BTP, Steampunk"
 ---
 
-# Anti-Patterns & Bad Practices (56 Rules)
+# Anti-Patterns & Bad Practices (55 Rules)
 
 Discouraged language constructs, legacy statements, and redundant syntax.
 
 ::: tip Category Overview
-This category enforces **56 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
+This category enforces **55 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
 :::
 
 ## Rules in this Category
@@ -52,7 +52,6 @@ This category enforces **56 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Avoid Obsolete MESSAGE ... RAISING in Methods](/rules/no-msg-raising) | `ZCL_SKYLINT_NO_MSG_RAISING` | <code>#EC NO_MSG_RAISING</code> | - |
 | [Avoid Deeply Nested TRY ... CATCH Blocks](/rules/no-nested-try) | `ZCL_SKYLINT_NO_NESTED_TRY` | <code>#EC NO_NESTED_TRY</code> | - |
 | [Eliminate Unused Local Variables and Symbols](/rules/no-unused-vars) | `ZCL_SKYLINT_NO_UNUSED_VARS` | <code>#EC NO_UNUSED_VARS</code> | - |
-| [Avoid Obsolete ! Escape Prefix in Parameter Names](/rules/no-param-escape) | `ZCL_SKYLINT_NO_PARAM_ESCAPE` | <code>#EC NO_PARAM_ESCAPE</code> | ⚡ Ready |
 | [Avoid Obsolete Inline Length Specifications (var(len))](/rules/no-inline-len) | `ZCL_SKYLINT_NO_INLINE_LEN` | <code>#EC NO_INLINE_LEN</code> | ⚡ Ready |
 | [Avoid Obsolete Dash (-) in Form Names](/rules/no-dash-in-form) | `ZCL_SKYLINT_NO_DASH_IN_FORM` | <code>#EC NO_DASH_IN_FORM</code> | ⚡ Ready |
 | [Avoid FRIENDS in class definitions](/rules/no-friends) | `ZCL_SKYLINT_NO_FRIENDS` | <code>#EC NO_FRIENDS</code> | - |

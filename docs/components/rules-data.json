@@ -522,7 +522,6 @@
     ],
     "relatedRules": [
       "max-params",
-      "no-param-escape",
       "no-call-method"
     ],
     "defaultParameters": [
@@ -533,6 +532,54 @@
       {
         "name": "REQUIRE_PARAM_NAME",
         "value": "false"
+      }
+    ]
+  },
+  {
+    "ruleId": "no-unused-param",
+    "title": "Avoid Unused Parameters in Procedures",
+    "className": "ZCL_SKYLINT_NO_UNUSED_PARAM",
+    "checkName": "ZSKYLINT_NO_UNUSED_PARAM",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "NO_UNUSED_PARAM",
+    "description": "Avoid unused parameters in procedures",
+    "hasQuickfix": false,
+    "remoteEnabled": false,
+    "attributes": [
+      {
+        "name": "CHECK_METHODS",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_FORMS",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_FUNCS",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "relatedRules": [
+      "pref-param-name",
+      "max-params",
+      "no-unused-vars"
+    ],
+    "defaultParameters": [
+      {
+        "name": "CHECK_METHODS",
+        "value": "true"
+      },
+      {
+        "name": "CHECK_FORMS",
+        "value": "true"
+      },
+      {
+        "name": "CHECK_FUNCS",
+        "value": "true"
       }
     ]
   },
@@ -2686,25 +2733,6 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "no-param-escape",
-    "title": "Avoid Obsolete ! Escape Prefix in Parameter Names",
-    "className": "ZCL_SKYLINT_NO_PARAM_ESCAPE",
-    "checkName": "ZSKYLINT_NO_PARAM_ESCAPE",
-    "category": "anti-patterns",
-    "categoryTitle": "Anti-Patterns & Bad Practices",
-    "pseudoComment": "NO_PARAM_ESCAPE",
-    "description": "Avoid unnecessary parameter escape (!param)",
-    "hasQuickfix": true,
-    "remoteEnabled": true,
-    "attributes": [],
-    "relatedRules": [
-      "pref-param-name",
-      "no-call-method",
-      "max-params"
-    ],
-    "defaultParameters": []
-  },
-  {
     "ruleId": "pref-case",
     "title": "Prefer CASE over Multiple IF / ELSEIF on the Same Variable",
     "className": "ZCL_SKYLINT_PREF_CASE",
@@ -3497,7 +3525,7 @@
       {
         "name": "ATTR_IGN_LOCAL",
         "kind": "Boolean",
-        "defaultValue": "true"
+        "defaultValue": "false"
       },
       {
         "name": "ATTR_IGN_INTF",
@@ -3567,7 +3595,7 @@
       },
       {
         "name": "ATTR_IGN_LOCAL",
-        "value": "true"
+        "value": "false"
       },
       {
         "name": "ATTR_IGN_INTF",
@@ -4779,5 +4807,52 @@
       "no-dup-literals"
     ],
     "defaultParameters": []
+  },
+  {
+    "ruleId": "no-unused-param",
+    "title": "Avoid Unused Parameters in Procedures",
+    "className": "ZCL_SKYLINT_NO_UNUSED_PARAM",
+    "checkName": "ZSKYLINT_NO_UNUSED_PARAM",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "NO_UNUSED_PARAM",
+    "description": "Avoid unused parameters in procedures",
+    "hasQuickfix": false,
+    "remoteEnabled": false,
+    "attributes": [
+      {
+        "name": "CHECK_METHODS",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_FORMS",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_FUNCS",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "relatedRules": [
+      "no-unused-vars",
+      "no-dead-code"
+    ],
+    "defaultParameters": [
+      {
+        "name": "CHECK_METHODS",
+        "value": "true"
+      },
+      {
+        "name": "CHECK_FORMS",
+        "value": "true"
+      },
+      {
+        "name": "CHECK_FUNCS",
+        "value": "true"
+      }
+    ]
   }
 ]

@@ -14,7 +14,7 @@
     "code": null
   },
   {
-    "target": "BAD_GLOBAL",
+    "target": "LCL_BAD_ATTRS",
     "code": "PREF_NMATR",
     "line": 3,
     "column": 4
@@ -58,19 +58,15 @@
     "code": null
   },
   {
-    "target": "ZCL_GLOBAL_STATICS",
+    "target": "LCL_STATICS",
     "code": "PREF_NMATR",
     "line": 4,
     "column": 4
   },
   {
-    "target": "ZCL_GLOBAL_STATICS",
+    "target": "LCL_STATICS",
     "code": "PREF_NMATR",
     "line": 8,
     "column": 4
-  },
-  {
-    "target": "LCL_LOCAL_ATTRS",
-    "code": null
   }
 ]

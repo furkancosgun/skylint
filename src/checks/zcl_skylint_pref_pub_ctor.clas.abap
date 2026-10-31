@@ -60,9 +60,8 @@ CLASS zcl_skylint_pref_pub_ctor IMPLEMENTATION.
           ENDIF.
 
         WHEN 'METHODS'.
-          IF     zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
-                                                         iv_index     = 2
-                                                         iv_expected  = `CONSTRUCTOR` ) = abap_true
+          IF     zcl_skylint_ast_util=>get_token_lexeme( is_statement = <ls_statement>
+                                                         iv_index     = 2 ) = 'CONSTRUCTOR'
              AND ( lv_section = 'PROTECTED' OR lv_section = 'PRIVATE' ).
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-constructor_not_public ).

@@ -38,8 +38,10 @@ CLASS zcl_skylint_max_inherit IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
-    DATA ls_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA lt_supers    TYPE string_table.
+    DATA ls_statement  TYPE if_ci_atc_source_code_provider=>ty_statement.
+    DATA lt_supers     TYPE string_table.
+    DATA lv_class_name TYPE string.
+    DATA lv_rtti_name  TYPE string.
 
     IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
@@ -52,8 +54,12 @@ CLASS zcl_skylint_max_inherit IMPLEMENTATION.
       RETURN.
     ENDIF.
 
+    lv_class_name = zcl_skylint_ast_util=>get_declaration_name( ls_statement ).
+    lv_rtti_name = zcl_skylint_rtti_util=>resolve_class_rtti_name( is_procedure  = is_procedure
+                                                                   iv_class_name = lv_class_name ).
+
     TRY.
-        lt_supers = zcl_skylint_rtti_util=>get_super_classes( is_procedure-id-main_unit-name ).
+        lt_supers = zcl_skylint_rtti_util=>get_super_classes( lv_rtti_name ).
       CATCH cx_root.
         RETURN.
     ENDTRY.

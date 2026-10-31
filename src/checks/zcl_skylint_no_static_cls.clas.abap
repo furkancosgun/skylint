@@ -32,9 +32,9 @@ CLASS zcl_skylint_no_static_cls IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
+    DATA ls_first_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
     DATA lv_static_cnt TYPE i.
     DATA lv_has_inst   TYPE abap_bool.
-    DATA ls_first_stmt TYPE if_ci_atc_source_code_provider=>ty_statement.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
@@ -43,9 +43,6 @@ CLASS zcl_skylint_no_static_cls IMPLEMENTATION.
 
     ls_first_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
                                                          iv_index      = 1 ).
-    IF ls_first_stmt-keyword IS INITIAL.
-      RETURN.
-    ENDIF.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
@@ -54,6 +51,7 @@ CLASS zcl_skylint_no_static_cls IMPLEMENTATION.
                                                      iv_lexeme    = 'CLASS_CONSTRUCTOR' ) = abap_false.
             lv_static_cnt += 1.
           ENDIF.
+
         WHEN 'METHODS'.
           IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
                                                      iv_lexeme    = 'CONSTRUCTOR' ) = abap_false.
@@ -62,7 +60,7 @@ CLASS zcl_skylint_no_static_cls IMPLEMENTATION.
       ENDCASE.
     ENDLOOP.
 
-    IF lv_static_cnt > 0 AND lv_has_inst = abap_false.
+    IF lv_static_cnt > 0 AND lv_has_inst = abap_false AND ls_first_stmt-keyword IS NOT INITIAL.
       report_statement( is_statement    = ls_first_stmt
                         iv_finding_code = c_finding_codes-static_class ).
     ENDIF.

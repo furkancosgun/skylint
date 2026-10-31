@@ -583,8 +583,40 @@ export const RULES = [
     },
     "relatedRules": [
       "max-params",
-      "no-param-escape",
       "no-call-method"
+    ]
+  },
+  {
+    "ruleId": "no-unused-param",
+    "title": "Avoid Unused Parameters in Procedures",
+    "rationale": "Methods, form routines, and function modules should not declare parameters that are never accessed or assigned in their implementation. Unused parameters clutter the signature, confuse callers, and may indicate incomplete implementations. If a parameter is intentionally unused, prefix its name with an underscore.",
+    "className": "ZCL_SKYLINT_NO_UNUSED_PARAM",
+    "pseudoComment": "NO_UNUSED_PARAM",
+    "category": "clean-abap",
+    "example": {
+      "bad": "METHOD do_work IMPORTING iv_used TYPE i iv_unused TYPE string.\n  DATA lv_val TYPE i.\n  lv_val = iv_used.\nENDMETHOD.",
+      "good": "METHOD do_work IMPORTING iv_used TYPE i.\n  DATA lv_val TYPE i.\n  lv_val = iv_used.\nENDMETHOD."
+    },
+    "parameters": {
+      "CHECK_METHODS": "Check method procedures for unused parameters (defaults to true)",
+      "CHECK_FORMS": "Check form routines for unused parameters (defaults to true)",
+      "CHECK_FUNCS": "Check function modules for unused parameters (defaults to true)"
+    },
+    "seo": {
+      "description": "Avoid Unused Parameters in Procedures - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud.",
+      "keywords": [
+        "Clean ABAP",
+        "SAP ATC Check",
+        "ABAP Cloud",
+        "S/4HANA Readiness",
+        "no-unused-param",
+        "clean-abap"
+      ]
+    },
+    "relatedRules": [
+      "pref-param-name",
+      "max-params",
+      "no-unused-vars"
     ]
   },
   {
@@ -2607,34 +2639,6 @@ export const RULES = [
     ]
   },
   {
-    "ruleId": "no-param-escape",
-    "title": "Avoid Obsolete ! Escape Prefix in Parameter Names",
-    "rationale": "The ! escape prefix is legacy syntax used to force a parameter name to be treated literally. It adds noise to signatures and is unnecessary in modern ABAP, where parameter names are unambiguous. Remove the ! and use a clear parameter name instead.",
-    "className": "ZCL_SKYLINT_NO_PARAM_ESCAPE",
-    "pseudoComment": "NO_PARAM_ESCAPE",
-    "category": "anti-patterns",
-    "example": {
-      "bad": "METHODS process\n  IMPORTING !iv_data TYPE string.",
-      "good": "METHODS process\n  IMPORTING iv_data TYPE string."
-    },
-    "seo": {
-      "description": "Avoid Obsolete ! Escape Prefix in Parameter Names - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud.",
-      "keywords": [
-        "Clean ABAP",
-        "SAP ATC Check",
-        "ABAP Cloud",
-        "S/4HANA Readiness",
-        "no-param-escape",
-        "anti-patterns"
-      ]
-    },
-    "relatedRules": [
-      "pref-param-name",
-      "no-call-method",
-      "max-params"
-    ]
-  },
-  {
     "ruleId": "pref-case",
     "title": "Prefer CASE over Multiple IF / ELSEIF on the Same Variable",
     "rationale": "A chain of ELSEIF statements that compares the same variable to different values is harder to scan than a CASE statement. CASE groups all alternatives under one subject and makes a missing OTHERS branch visible. Use CASE for multi-value dispatch on a single expression.",
@@ -4584,6 +4588,36 @@ export const RULES = [
     "relatedRules": [
       "no-magic-numbers",
       "no-dup-literals"
+    ]
+  },
+  {
+    "ruleId": "no-unused-param",
+    "title": "Avoid Unused Parameters in Procedures",
+    "rationale": "Methods, form routines, and function modules should not declare parameters that are never accessed or assigned in their implementation. Unused parameters clutter the signature, confuse callers, and may indicate incomplete implementations. If a parameter is intentionally unused, prefix its name with an underscore.",
+    "className": "ZCL_SKYLINT_NO_UNUSED_PARAM",
+    "pseudoComment": "NO_UNUSED_PARAM",
+    "category": "clean-abap",
+    "example": {
+      "bad": "METHOD do_work IMPORTING iv_used TYPE i iv_unused TYPE string.\n  DATA lv_val TYPE i.\n  lv_val = iv_used.\nENDMETHOD.",
+      "good": "METHOD do_work IMPORTING iv_used TYPE i.\n  DATA lv_val TYPE i.\n  lv_val = iv_used.\nENDMETHOD."
+    },
+    "parameters": {
+      "CHECK_METHODS": "Check method procedures for unused parameters (defaults to true)",
+      "CHECK_FORMS": "Check form routines for unused parameters (defaults to true)",
+      "CHECK_FUNCS": "Check function modules for unused parameters (defaults to true)"
+    },
+    "seo": {
+      "description": "Detect unused parameters in ABAP methods, forms, and functions to keep procedure signatures clean and unambiguous.",
+      "keywords": [
+        "ABAP unused parameter",
+        "Clean ABAP parameters",
+        "SAP ATC check unused parameter",
+        "no-unused-param"
+      ]
+    },
+    "relatedRules": [
+      "no-unused-vars",
+      "no-dead-code"
     ]
   }
 ];

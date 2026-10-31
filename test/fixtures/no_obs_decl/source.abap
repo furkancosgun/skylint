@@ -6,10 +6,6 @@ CLASS zcl_test_no_obs_decl DEFINITION
     METHODS test_001.
     METHODS test_002.
     METHODS test_003.
-    METHODS test_004.
-    METHODS test_005.
-    METHODS test_006.
-    METHODS test_007.
 ENDCLASS.
 
 CLASS zcl_test_no_obs_decl IMPLEMENTATION.
@@ -26,20 +22,20 @@ CLASS zcl_test_no_obs_decl IMPLEMENTATION.
   METHOD test_003.
     DATA lt_tab TYPE STANDARD TABLE OF i WITH DEFAULT KEY INITIAL SIZE 10.
   ENDMETHOD.
-
-  METHOD test_004.
-    TABLES mara.
-  ENDMETHOD.
-
-  METHOD test_005.
-    TYPE-POOLS abap.
-  ENDMETHOD.
-
-  METHOD test_006.
-    RANGES lr_matnr FOR mara-matnr.
-  ENDMETHOD.
-
-  METHOD test_007.
-    DATA lt_head TYPE STANDARD TABLE OF i WITH HEADER LINE.
-  ENDMETHOD.
 ENDCLASS.
+
+FORM test_004.
+    TABLES mara.
+ENDFORM.
+
+FORM test_005.
+    STATICS sv_cnt TYPE i.
+ENDFORM.
+
+FORM test_006.
+    RANGES lr_matnr FOR mara-matnr.
+ENDFORM.
+
+FORM test_007.
+    DATA lt_head TYPE STANDARD TABLE OF i WITH HEADER LINE.
+ENDFORM.

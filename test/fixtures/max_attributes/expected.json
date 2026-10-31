@@ -5,16 +5,5 @@
     "line": 1,
     "column": 0,
     "quickfixes": []
-  },
-  {
-    "target": "LCL_SMALL",
-    "code": null
-  },
-  {
-    "target": "LCL_STATIC_GOD",
-    "code": "MAX_ATTR",
-    "line": 1,
-    "column": 0,
-    "quickfixes": []
   }
 ]

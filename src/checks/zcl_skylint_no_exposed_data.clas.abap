@@ -47,51 +47,43 @@ CLASS zcl_skylint_no_exposed_data IMPLEMENTATION.
 
   METHOD check.
     DATA lv_in_public TYPE abap_bool.
-    DATA lv_is_intf   TYPE abap_bool.
+    DATA lv_in_intf   TYPE abap_bool.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    lv_is_intf = zcl_skylint_ast_util=>procedure_is_interface( is_procedure ).
-
-    IF lv_is_intf = abap_true.
-      IF mv_check_intf_data = abap_false.
-        RETURN.
-      ENDIF.
-      LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-        IF <ls_statement>-keyword <> 'DATA' AND <ls_statement>-keyword <> 'CLASS-DATA'.
-          CONTINUE.
-        ENDIF.
-        report_statement( is_statement    = <ls_statement>
-                          iv_finding_code = c_finding_codes-interface_data ).
-      ENDLOOP.
-      RETURN.
-    ENDIF.
-
-    IF mv_check_public_attr = abap_false.
-      RETURN.
-    ENDIF.
-
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
+        WHEN 'INTERFACE'.
+          lv_in_intf = abap_true.
+
         WHEN 'PUBLIC'.
           IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
                                                      iv_lexeme    = 'SECTION' ) = abap_true.
             lv_in_public = abap_true.
           ENDIF.
+
         WHEN 'PROTECTED' OR 'PRIVATE'.
           IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
                                                      iv_lexeme    = 'SECTION' ) = abap_true.
             lv_in_public = abap_false.
           ENDIF.
+
         WHEN 'DATA' OR 'CLASS-DATA'.
-          IF     lv_in_public = abap_true
-             AND zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                         iv_lexeme    = 'READ-ONLY' )  = abap_false.
-            report_statement( is_statement    = <ls_statement>
-                              iv_finding_code = c_finding_codes-public_attribute ).
+          IF lv_in_intf = abap_true.
+            IF mv_check_intf_data = abap_true.
+              report_statement( is_statement    = <ls_statement>
+                                iv_finding_code = c_finding_codes-interface_data ).
+            ENDIF.
+          ELSEIF lv_in_public = abap_true.
+            IF     mv_check_public_attr = abap_true
+               AND zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                           iv_lexeme    = 'READ-ONLY' )  = abap_false.
+              report_statement( is_statement    = <ls_statement>
+                                iv_finding_code = c_finding_codes-public_attribute ).
+            ENDIF.
           ENDIF.
       ENDCASE.
     ENDLOOP.

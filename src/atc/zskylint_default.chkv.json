@@ -149,6 +149,23 @@
       ]
     },
     {
+      "checkName": "ZSKYLINT_NO_UNUSED_PARAM",
+      "parameters": [
+        {
+          "name": "CHECK_METHODS",
+          "value": "true"
+        },
+        {
+          "name": "CHECK_FORMS",
+          "value": "true"
+        },
+        {
+          "name": "CHECK_FUNCS",
+          "value": "true"
+        }
+      ]
+    },
+    {
       "checkName": "ZSKYLINT_NO_CHAINED_DECL",
       "parameters": [
         {
@@ -754,9 +771,6 @@
       "checkName": "ZSKYLINT_NO_UNUSED_VARS"
     },
     {
-      "checkName": "ZSKYLINT_NO_PARAM_ESCAPE"
-    },
-    {
       "checkName": "ZSKYLINT_PREF_CASE",
       "parameters": [
         {
@@ -977,7 +991,7 @@
         },
         {
           "name": "ATTR_IGN_LOCAL",
-          "value": "true"
+          "value": "false"
         },
         {
           "name": "ATTR_IGN_INTF",
@@ -1353,6 +1367,23 @@
     },
     {
       "checkName": "ZSKYLINT_PREF_ICON_CONST"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_UNUSED_PARAM",
+      "parameters": [
+        {
+          "name": "CHECK_METHODS",
+          "value": "true"
+        },
+        {
+          "name": "CHECK_FORMS",
+          "value": "true"
+        },
+        {
+          "name": "CHECK_FUNCS",
+          "value": "true"
+        }
+      ]
     }
   ]
 }

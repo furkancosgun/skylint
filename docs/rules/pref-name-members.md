@@ -51,7 +51,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | Parameter Name | Data Type | Default Value | Description & Guidance |
 |---|---|:---:|---|
 | `ATTR_IGN_EXC` | `Boolean` | <code>true</code> | Ignore exception class attributes (cx_*) |
-| `ATTR_IGN_LOCAL` | `Boolean` | <code>true</code> | Ignore attributes in local test classes |
+| `ATTR_IGN_LOCAL` | `Boolean` | <code>false</code> | Ignore attributes in local test classes |
 | `ATTR_IGN_INTF` | `Boolean` | <code>false</code> | Ignore interface component naming |
 | `ATTR_STATICS` | `String` | <code>^G._.+$</code> | Regex pattern for static class attributes (default: ^G._.+$) |
 | `ATTR_INSTANCE` | `String` | <code>^M._.+$</code> | Regex pattern for instance class attributes (default: ^M._.+$) |

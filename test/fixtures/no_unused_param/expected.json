@@ -1,0 +1,9 @@
+[
+  { "target": "TEST_001", "code": "NO_UNUS_PR", "line": 1, "column": 2 },
+  { "target": "TEST_002", "code": null },
+  { "target": "TEST_003", "code": null },
+  { "target": "TEST_004", "code": null },
+  { "target": "TEST_005", "code": null },
+  { "target": "TEST_FORM_001", "code": "NO_UNUS_PR", "line": 1, "column": 0 },
+  { "target": "TEST_FORM_002", "code": null }
+]

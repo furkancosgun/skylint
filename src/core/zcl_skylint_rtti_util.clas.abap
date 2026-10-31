@@ -5,11 +5,23 @@ CLASS zcl_skylint_rtti_util DEFINITION
   PUBLIC SECTION.
     CLASS-METHODS describe_class
       IMPORTING iv_class_name        TYPE clike
+                iv_program_name      TYPE clike OPTIONAL
       RETURNING VALUE(ro_classdescr) TYPE REF TO cl_abap_classdescr.
 
     CLASS-METHODS describe_object
       IMPORTING iv_name            TYPE clike
+                iv_program_name    TYPE clike OPTIONAL
       RETURNING VALUE(ro_objdescr) TYPE REF TO cl_abap_objectdescr.
+
+    CLASS-METHODS build_rtti_name
+      IMPORTING iv_class_name   TYPE clike
+                iv_program_name TYPE clike OPTIONAL
+      RETURNING VALUE(rv_name)  TYPE string.
+
+    CLASS-METHODS resolve_class_rtti_name
+      IMPORTING is_procedure   TYPE if_ci_atc_source_code_provider=>ty_procedure
+                iv_class_name  TYPE clike OPTIONAL
+      RETURNING VALUE(rv_name) TYPE string.
 
     CLASS-METHODS get_super_classes
       IMPORTING iv_class_name           TYPE clike
@@ -21,6 +33,11 @@ CLASS zcl_skylint_rtti_util DEFINITION
 
     CLASS-METHODS get_method_descr
       IMPORTING iv_full_name TYPE clike
+      EXPORTING es_method    TYPE abap_methdescr
+                ev_found     TYPE abap_bool.
+
+    CLASS-METHODS get_procedure_method_descr
+      IMPORTING is_procedure TYPE if_ci_atc_source_code_provider=>ty_procedure
       EXPORTING es_method    TYPE abap_methdescr
                 ev_found     TYPE abap_bool.
 
@@ -53,39 +70,69 @@ ENDCLASS.
 
 
 CLASS zcl_skylint_rtti_util IMPLEMENTATION.
+  METHOD build_rtti_name.
+    IF iv_program_name IS NOT INITIAL.
+      rv_name = |\\PROGRAM={ iv_program_name }\\CLASS={ iv_class_name }|.
+    ELSE.
+      rv_name = iv_class_name.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD resolve_class_rtti_name.
+    DATA lv_cls TYPE string.
+
+    IF iv_class_name IS NOT INITIAL.
+      lv_cls = iv_class_name.
+    ELSEIF is_procedure-id-name CS '=>'.
+      lv_cls = segment( val   = is_procedure-id-name
+                        index = 1
+                        sep   = '=>' ).
+    ELSE.
+      lv_cls = is_procedure-id-main_unit-name.
+    ENDIF.
+
+    IF is_procedure-id-main_unit-kind = if_ci_atc_source_code_provider=>compilation_unit_kinds-class.
+      rv_name = lv_cls.
+    ELSE.
+      rv_name = build_rtti_name( iv_class_name   = lv_cls
+                                 iv_program_name = is_procedure-id-main_unit-name ).
+    ENDIF.
+  ENDMETHOD.
+
   METHOD describe_object.
     DATA lo_descr   TYPE REF TO cl_abap_typedescr.
     DATA lv_program TYPE string.
     DATA lv_class   TYPE string.
+    DATA lv_target  TYPE string.
 
-    parse_full_name( EXPORTING iv_full_name    = iv_name
-                     IMPORTING ev_program_name = lv_program
-                               ev_class_name   = lv_class ).
-    IF lv_class IS INITIAL.
-      lv_class = iv_name.
+    lv_target = iv_name.
+
+    IF lv_target CP '\PR:*' OR lv_target CP '\TY:*'.
+      zcl_skylint_ast_util=>parse_full_name( EXPORTING iv_full_name    = lv_target
+                                             IMPORTING ev_program_name = lv_program
+                                                       ev_class_name   = lv_class ).
+      lv_target = build_rtti_name( iv_class_name   = lv_class
+                                   iv_program_name = lv_program ).
+    ELSEIF iv_program_name IS NOT INITIAL AND lv_target NP '\PROGRAM=*'.
+      lv_target = build_rtti_name( iv_class_name   = lv_target
+                                   iv_program_name = iv_program_name ).
     ENDIF.
 
     TRY.
-        IF lv_program IS NOT INITIAL.
-          cl_abap_typedescr=>describe_by_name(
-            EXPORTING  p_name         = |\\PROGRAM={ lv_program }\\CLASS={ lv_class }|
-            RECEIVING  p_descr_ref    = lo_descr
-            EXCEPTIONS type_not_found = 1
-                       OTHERS         = 2 ).
-          IF sy-subrc <> 0 OR lo_descr IS NOT BOUND.
-            cl_abap_typedescr=>describe_by_name(
-              EXPORTING  p_name         = |\\PROGRAM={ lv_program }\\INTF={ lv_class }|
-              RECEIVING  p_descr_ref    = lo_descr
-              EXCEPTIONS type_not_found = 1
-                         OTHERS         = 2 ).
-          ENDIF.
-          IF ( sy-subrc <> 0 OR lo_descr IS NOT BOUND ) AND lv_class IS NOT INITIAL.
-            cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = lv_class
-                                                 RECEIVING  p_descr_ref    = lo_descr
-                                                 EXCEPTIONS type_not_found = 1
-                                                            OTHERS         = 2 ).
-          ENDIF.
-        ELSE.
+        cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = lv_target
+                                             RECEIVING  p_descr_ref    = lo_descr
+                                             EXCEPTIONS type_not_found = 1
+                                                        OTHERS         = 2 ).
+
+        IF ( sy-subrc <> 0 OR lo_descr IS NOT BOUND ) AND lv_target CP '*\CLASS=*'.
+          REPLACE FIRST OCCURRENCE OF '\CLASS=' IN lv_target WITH '\INTF='.
+          cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = lv_target
+                                               RECEIVING  p_descr_ref    = lo_descr
+                                               EXCEPTIONS type_not_found = 1
+                                                          OTHERS         = 2 ).
+        ENDIF.
+
+        IF ( sy-subrc <> 0 OR lo_descr IS NOT BOUND ) AND lv_class IS NOT INITIAL.
           cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = lv_class
                                                RECEIVING  p_descr_ref    = lo_descr
                                                EXCEPTIONS type_not_found = 1
@@ -105,7 +152,8 @@ CLASS zcl_skylint_rtti_util IMPLEMENTATION.
   METHOD describe_class.
     DATA lo_obj TYPE REF TO cl_abap_objectdescr.
 
-    lo_obj = describe_object( iv_class_name ).
+    lo_obj = describe_object( iv_name         = iv_class_name
+                              iv_program_name = iv_program_name ).
     IF lo_obj IS BOUND AND lo_obj->kind = cl_abap_typedescr=>kind_class.
       TRY.
           ro_classdescr ?= lo_obj.
@@ -180,14 +228,35 @@ CLASS zcl_skylint_rtti_util IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    IF lv_program IS NOT INITIAL.
-      lo_obj = describe_object( |\\PROGRAM={ lv_program }\\CLASS={ lv_class }| ).
-      IF lo_obj IS NOT BOUND.
-        lo_obj = describe_object( |\\PROGRAM={ lv_program }\\INTF={ lv_class }| ).
+    lo_obj = describe_object( iv_name         = lv_class
+                              iv_program_name = lv_program ).
+
+    IF lo_obj IS BOUND.
+      READ TABLE lo_obj->methods INTO es_method WITH KEY name = lv_meth.
+      IF sy-subrc = 0.
+        ev_found = abap_true.
       ENDIF.
-    ELSE.
-      lo_obj = describe_object( lv_class ).
     ENDIF.
+  ENDMETHOD.
+
+  METHOD get_procedure_method_descr.
+    DATA lv_meth      TYPE string.
+    DATA lv_rtti_name TYPE string.
+    DATA lo_obj       TYPE REF TO cl_abap_objectdescr.
+
+    CLEAR: es_method,
+           ev_found.
+
+    IF is_procedure-id-name CS '=>'.
+      lv_meth = segment( val   = is_procedure-id-name
+                         index = 2
+                         sep   = '=>' ).
+    ELSE.
+      lv_meth = is_procedure-id-name.
+    ENDIF.
+
+    lv_rtti_name = resolve_class_rtti_name( is_procedure ).
+    lo_obj = describe_object( lv_rtti_name ).
 
     IF lo_obj IS BOUND.
       READ TABLE lo_obj->methods INTO es_method WITH KEY name = lv_meth.

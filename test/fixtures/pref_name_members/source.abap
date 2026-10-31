@@ -27,13 +27,13 @@ INTERFACE lif_good.
   METHODS execute.
 ENDINTERFACE.
 
-CLASS bad_global DEFINITION PUBLIC.
+CLASS lcl_bad_attrs DEFINITION.
   PUBLIC SECTION.
     DATA bad_attr TYPE i.
     DATA bad_attr_suppressed TYPE i. "#EC PREF_NAME_MEMBERS
 ENDCLASS.
 
-CLASS bad_global IMPLEMENTATION.
+CLASS lcl_bad_attrs IMPLEMENTATION.
 ENDCLASS.
 
 CLASS lcl_param_edge DEFINITION.
@@ -82,11 +82,11 @@ CLASS lcl_param_edge IMPLEMENTATION.
   ENDMETHOD.
 ENDCLASS.
 
-CLASS lcl_events_and_tests DEFINITION.
+CLASS lcl_events_and_tests DEFINITION FOR TESTING RISK LEVEL HARMLESS DURATION SHORT.
   PUBLIC SECTION.
     EVENTS state_changed.
     METHODS on_state_changed FOR EVENT state_changed OF lcl_events_and_tests
-      IMPORTING sender TYPE i.
+      IMPORTING sender.
     METHODS test_feature FOR TESTING.
 ENDCLASS.
 
@@ -111,7 +111,7 @@ CLASS lcx_custom_error IMPLEMENTATION.
   ENDMETHOD.
 ENDCLASS.
 
-CLASS zcl_global_statics DEFINITION PUBLIC.
+CLASS lcl_statics DEFINITION.
   PUBLIC SECTION.
     CLASS-DATA gv_valid TYPE i.
     CLASS-DATA invalid_stat TYPE i.
@@ -123,13 +123,5 @@ CLASS zcl_global_statics DEFINITION PUBLIC.
           END OF invalid_struct.
 ENDCLASS.
 
-CLASS zcl_global_statics IMPLEMENTATION.
-ENDCLASS.
-
-CLASS lcl_local_attrs DEFINITION.
-  PUBLIC SECTION.
-    DATA raw_number TYPE i.
-ENDCLASS.
-
-CLASS lcl_local_attrs IMPLEMENTATION.
+CLASS lcl_statics IMPLEMENTATION.
 ENDCLASS.

@@ -1,16 +1,16 @@
 ---
-title: "Clean ABAP & Modern Syntax (57 Rules)"
+title: "Clean ABAP & Modern Syntax (59 Rules)"
 description: "Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices. Comprehensive reference, finding codes, and Clean ABAP examples for Clean ABAP & Modern Syntax."
 category: "clean-abap"
 keywords: "Clean ABAP, ABAP Cloud, SAP ATC, Clean ABAP & Modern Syntax, S/4HANA Readiness, SAP BTP, Steampunk"
 ---
 
-# Clean ABAP & Modern Syntax (57 Rules)
+# Clean ABAP & Modern Syntax (59 Rules)
 
 Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.
 
 ::: tip Category Overview
-This category enforces **57 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
+This category enforces **59 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
 :::
 
 ## Rules in this Category
@@ -29,6 +29,7 @@ This category enforces **57 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Prefer lines( ) over DESCRIBE TABLE](/rules/pref-lines) | `ZCL_SKYLINT_PREF_LINES` | <code>#EC PREF_LINES</code> | ⚡ Ready |
 | [Prefer IS NOT over NOT ... IS](/rules/pref-is-not) | `ZCL_SKYLINT_PREF_IS_NOT` | <code>#EC PREF_IS_NOT</code> | ⚡ Ready |
 | [Method Call Parameter Naming Style (Omit or Require)](/rules/pref-param-name) | `ZCL_SKYLINT_PREF_PARAM_NAME` | <code>#EC PREF_PARAM_NAME</code> | ⚡ Ready |
+| [Avoid Unused Parameters in Procedures](/rules/no-unused-param) | `ZCL_SKYLINT_NO_UNUSED_PARAM` | <code>#EC NO_UNUSED_PARAM</code> | - |
 | [Prefer String Templates over CONCATENATE](/rules/pref-str-tmpl) | `ZCL_SKYLINT_PREF_STR_TMPL` | <code>#EC PREF_STR_TMPL</code> | ⚡ Ready |
 | [Prefer RETURN over EXIT in Methods](/rules/pref-return) | `ZCL_SKYLINT_PREF_RETURN` | <code>#EC PREF_RETURN</code> | ⚡ Ready |
 | [Merge Nested IF Statements](/rules/pref-merge-ifs) | `ZCL_SKYLINT_PREF_MERGE_IFS` | <code>#EC PREF_MERGE_IFS</code> | ⚡ Ready |
@@ -74,6 +75,7 @@ This category enforces **57 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Avoid Boolean Flag Importing Parameters](/rules/no-bool-blindness) | `ZCL_SKYLINT_NO_BOOL_BLINDNESS` | <code>#EC NO_BOOL_BLINDNESS</code> | - |
 | [Explicitly Specify SORT Order](/rules/pref-sort-order) | `ZCL_SKYLINT_PREF_SORT_ORDER` | <code>#EC PREF_SORT_ORDER</code> | - |
 | [Prefer ICON_ Constants over Hardcoded Icon Codes](/rules/pref-icon-const) | `ZCL_SKYLINT_PREF_ICON_CONST` | <code>#EC PREF_ICON_CONST</code> | - |
+| [Avoid Unused Parameters in Procedures](/rules/no-unused-param) | `ZCL_SKYLINT_NO_UNUSED_PARAM` | <code>#EC NO_UNUSED_PARAM</code> | - |
 
 ---
 

@@ -72,7 +72,6 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Related Rules
 
 * [Limit Method Parameter Count and Require Multi-Line Signatures](/rules/max-params) — <code>#EC MAX_PARAMS_COUNT</code>
-* [Avoid Obsolete ! Escape Prefix in Parameter Names](/rules/no-param-escape) — <code>#EC NO_PARAM_ESCAPE</code>
 * [Avoid Obsolete CALL METHOD](/rules/no-call-method) — <code>#EC NO_CALL_METHOD</code>
 
 ## Technical Details
