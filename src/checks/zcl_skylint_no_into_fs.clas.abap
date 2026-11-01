@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_into_fs DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        into_field_symbol TYPE if_ci_atc_check=>ty_finding_code VALUE 'INTO_FS',
+        into_field_symbol TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_INTO_FS',
       END OF c_finding_codes.
 
     METHODS constructor.

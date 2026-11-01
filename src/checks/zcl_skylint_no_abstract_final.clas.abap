@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_abstract_final DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        abstract_final TYPE if_ci_atc_check=>ty_finding_code VALUE 'ABSTR_FINA',
+        abstract_final TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_ABS_FIN',
       END OF c_finding_codes.
 
     METHODS constructor.

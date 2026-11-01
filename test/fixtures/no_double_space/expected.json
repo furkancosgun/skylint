@@ -1,5 +1,5 @@
 [
-  { "target": "TEST_001", "code": "DBL_SPACE", "line": 2, "column": 10 },
+  { "target": "TEST_001", "code": "NO_DBL_SPC", "line": 2, "column": 10 },
   { "target": "TEST_002", "code": null },
   { "target": "TEST_003", "code": null }
 ]

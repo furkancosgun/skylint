@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_double_space DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        double_space TYPE if_ci_atc_check=>ty_finding_code VALUE 'DBL_SPACE',
+        double_space TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_DBL_SPC',
       END OF c_finding_codes.
 
     METHODS constructor.

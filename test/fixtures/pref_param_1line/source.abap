@@ -31,8 +31,7 @@ CLASS zcl_skylint_test_param_1l IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_003.
-    run(
-        iv_name = 'Furkan'
-        iv_age  = 100 ).
+    run( iv_name = 'Furkan'
+         iv_age  = 100 ).
   ENDMETHOD.
 ENDCLASS.

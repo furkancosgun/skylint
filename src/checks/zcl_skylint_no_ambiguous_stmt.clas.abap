@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_ambiguous_stmt DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        ambiguous_statement TYPE if_ci_atc_check=>ty_finding_code VALUE 'AMBIG_STMT',
+        ambiguous_statement TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_AMBIG',
       END OF c_finding_codes.
 
     METHODS constructor.

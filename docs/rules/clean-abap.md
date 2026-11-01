@@ -1,16 +1,16 @@
 ---
-title: "Clean ABAP & Modern Syntax (59 Rules)"
+title: "Clean ABAP & Modern Syntax (70 Rules)"
 description: "Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices. Comprehensive reference, finding codes, and Clean ABAP examples for Clean ABAP & Modern Syntax."
 category: "clean-abap"
 keywords: "Clean ABAP, ABAP Cloud, SAP ATC, Clean ABAP & Modern Syntax, S/4HANA Readiness, SAP BTP, Steampunk"
 ---
 
-# Clean ABAP & Modern Syntax (59 Rules)
+# Clean ABAP & Modern Syntax (70 Rules)
 
 Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.
 
 ::: tip Category Overview
-This category enforces **59 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
+This category enforces **70 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
 :::
 
 ## Rules in this Category
@@ -76,6 +76,17 @@ This category enforces **59 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Explicitly Specify SORT Order](/rules/pref-sort-order) | `ZCL_SKYLINT_PREF_SORT_ORDER` | <code>#EC PREF_SORT_ORDER</code> | - |
 | [Prefer ICON_ Constants over Hardcoded Icon Codes](/rules/pref-icon-const) | `ZCL_SKYLINT_PREF_ICON_CONST` | <code>#EC PREF_ICON_CONST</code> | - |
 | [Avoid Unused Parameters in Procedures](/rules/no-unused-param) | `ZCL_SKYLINT_NO_UNUSED_PARAM` | <code>#EC NO_UNUSED_PARAM</code> | - |
+| [Avoid Ambiguous Statements](/rules/no-ambiguous-stmt) | `ZCL_SKYLINT_NO_AMBIGUOUS_STMT` | <code>#EC NO_AMBIGUOUS_STMT</code> | - |
+| [Avoid Empty Procedures](/rules/no-empty-proc) | `ZCL_SKYLINT_NO_EMPTY_PROC` | <code>#EC NO_EMPTY_PROC</code> | - |
+| [Avoid Concrete Class References in Interfaces](/rules/no-intf-class-ref) | `ZCL_SKYLINT_NO_INTF_CLASS_REF` | <code>#EC NO_INTF_CLASS_REF</code> | - |
+| [Avoid ALIASES in Classes and Interfaces](/rules/no-aliases) | `ZCL_SKYLINT_NO_ALIASES` | <code>#EC NO_ALIASES</code> | - |
+| [Avoid Consecutive Whitespace Between Tokens](/rules/no-double-space) | `ZCL_SKYLINT_NO_DOUBLE_SPACE` | <code>#EC NO_DOUBLE_SPACE</code> | - |
+| [Single Parameter or Field Per Line](/rules/pref-param-1line) | `ZCL_SKYLINT_PREF_PARAM_1LINE` | <code>#EC PREF_PARAM_1LINE</code> | - |
+| [Prefer Strict SQL Host Variable Escaping](/rules/pref-strict-sql) | `ZCL_SKYLINT_PREF_STRICT_SQL` | <code>#EC PREF_STRICT_SQL</code> | - |
+| [Prefer Enumerations over Constants](/rules/pref-enum) | `ZCL_SKYLINT_PREF_ENUM` | <code>#EC PREF_ENUM</code> | - |
+| [Avoid Protected Attributes](/rules/no-protected-data) | `ZCL_SKYLINT_NO_PROTECTED_DATA` | <code>#EC NO_PROTECTED_DATA</code> | - |
+| [Avoid Excessive Method Chaining](/rules/no-method-chain) | `ZCL_SKYLINT_NO_METHOD_CHAIN` | <code>#EC NO_METHOD_CHAIN</code> | - |
+| [Avoid Generic and Implicit ANY Types](/rules/no-implicit-any) | `ZCL_SKYLINT_NO_IMPLICIT_ANY` | <code>#EC NO_IMPLICIT_ANY</code> | - |
 
 ---
 

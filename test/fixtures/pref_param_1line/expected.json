@@ -1,6 +1,6 @@
 [
   { "target": "RUN", "code": null },
-  { "target": "TEST_001", "code": "PARAM_1LIN", "line": 7, "column": 4 },
+  { "target": "TEST_001", "code": "PREF_1LINE", "line": 7, "column": 4 },
   { "target": "TEST_002", "code": null },
   { "target": "TEST_003", "code": null }
 ]

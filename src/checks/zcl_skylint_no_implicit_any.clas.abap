@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_implicit_any DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        implicit_any TYPE if_ci_atc_check=>ty_finding_code VALUE 'IMPL_ANY',
+        implicit_any TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_ANY_TYP',
       END OF c_finding_codes.
 
     METHODS constructor.

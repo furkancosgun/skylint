@@ -1424,7 +1424,7 @@
       "checkName": "ZSKYLINT_NO_DOUBLE_SPACE"
     },
     {
-      "checkName": "ZSKYLINT_PARAM_ONE_LINE"
+      "checkName": "ZSKYLINT_PREF_PARAM_1LINE"
     },
     {
       "checkName": "ZSKYLINT_NO_INTO_FS"

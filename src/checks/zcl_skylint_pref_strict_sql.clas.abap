@@ -6,7 +6,7 @@ CLASS zcl_skylint_pref_strict_sql DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        strict_sql TYPE if_ci_atc_check=>ty_finding_code VALUE 'STRICT_SQL',
+        strict_sql TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_SQL',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -62,30 +62,22 @@ CLASS zcl_skylint_pref_strict_sql IMPLEMENTATION.
 
     rv_unes = abap_false.
 
-    IF zcl_skylint_ast_util=>match_token_sequence(
-           is_statement = is_statement
-           it_expected  = VALUE #( ( `OF` ) ( `TABLE` ) ) ) = abap_true.
-      ls_tok = zcl_skylint_ast_util=>get_token_after_sequence(
-                   is_statement = is_statement
-                   it_expected  = VALUE #( ( `OF` ) ( `TABLE` ) ) ).
-    ELSEIF zcl_skylint_ast_util=>match_token_sequence(
-               is_statement = is_statement
-               it_expected  = VALUE #( ( `FIELDS` ) ( `OF` ) ) ) = abap_true.
-      ls_tok = zcl_skylint_ast_util=>get_token_after_sequence(
-                   is_statement = is_statement
-                   it_expected  = VALUE #( ( `FIELDS` ) ( `OF` ) ) ).
-    ELSEIF zcl_skylint_ast_util=>match_token_sequence(
-               is_statement = is_statement
-               it_expected  = VALUE #( ( `INTO` ) ( `TABLE` ) ) ) = abap_true.
-      ls_tok = zcl_skylint_ast_util=>get_token_after_sequence(
-                   is_statement = is_statement
-                   it_expected  = VALUE #( ( `INTO` ) ( `TABLE` ) ) ).
-    ELSEIF zcl_skylint_ast_util=>match_token_sequence(
-               is_statement = is_statement
-               it_expected  = VALUE #( ( `APPENDING` ) ( `TABLE` ) ) ) = abap_true.
-      ls_tok = zcl_skylint_ast_util=>get_token_after_sequence(
-                   is_statement = is_statement
-                   it_expected  = VALUE #( ( `APPENDING` ) ( `TABLE` ) ) ).
+    IF zcl_skylint_ast_util=>match_token_sequence( is_statement = is_statement
+                                                   it_expected  = VALUE #( ( `OF` ) ( `TABLE` ) ) ) = abap_true.
+      ls_tok = zcl_skylint_ast_util=>get_token_after_sequence( is_statement = is_statement
+                                                               it_expected  = VALUE #( ( `OF` ) ( `TABLE` ) ) ).
+    ELSEIF zcl_skylint_ast_util=>match_token_sequence( is_statement = is_statement
+                                                       it_expected  = VALUE #( ( `FIELDS` ) ( `OF` ) ) ) = abap_true.
+      ls_tok = zcl_skylint_ast_util=>get_token_after_sequence( is_statement = is_statement
+                                                               it_expected  = VALUE #( ( `FIELDS` ) ( `OF` ) ) ).
+    ELSEIF zcl_skylint_ast_util=>match_token_sequence( is_statement = is_statement
+                                                       it_expected  = VALUE #( ( `INTO` ) ( `TABLE` ) ) ) = abap_true.
+      ls_tok = zcl_skylint_ast_util=>get_token_after_sequence( is_statement = is_statement
+                                                               it_expected  = VALUE #( ( `INTO` ) ( `TABLE` ) ) ).
+    ELSEIF zcl_skylint_ast_util=>match_token_sequence( is_statement = is_statement
+                                                       it_expected  = VALUE #( ( `APPENDING` ) ( `TABLE` ) ) ) = abap_true.
+      ls_tok = zcl_skylint_ast_util=>get_token_after_sequence( is_statement = is_statement
+                                                               it_expected  = VALUE #( ( `APPENDING` ) ( `TABLE` ) ) ).
     ELSEIF zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
                                                    iv_lexeme    = 'INTO' ) = abap_true.
       ls_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement

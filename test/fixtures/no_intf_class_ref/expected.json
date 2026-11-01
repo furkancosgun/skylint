@@ -1,4 +1,16 @@
 [
-  { "target": "LIF_OTHER", "code": null },
-  { "target": "LIF_DEMO", "code": "INTF_CLS_R", "line": 2, "column": 2 }
+  {
+    "target": "LIF_OTHER",
+    "code": null
+  },
+  {
+    "target": "LIF_DEMO",
+    "code": "NO_CLS_REF",
+    "line": 2,
+    "column": 2
+  },
+  {
+    "target": "LIF_SELF",
+    "code": null
+  }
 ]

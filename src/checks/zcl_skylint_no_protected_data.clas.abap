@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_protected_data DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        protected_data TYPE if_ci_atc_check=>ty_finding_code VALUE 'PROT_DATA',
+        protected_data TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_PROTDAT',
       END OF c_finding_codes.
 
     METHODS constructor.

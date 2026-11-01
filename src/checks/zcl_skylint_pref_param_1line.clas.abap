@@ -1,4 +1,4 @@
-CLASS zcl_skylint_param_one_line DEFINITION
+CLASS zcl_skylint_pref_param_1line DEFINITION
   PUBLIC
   INHERITING FROM zcl_skylint_check_base
   CREATE PUBLIC.
@@ -6,7 +6,7 @@ CLASS zcl_skylint_param_one_line DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        multiple_params_on_line TYPE if_ci_atc_check=>ty_finding_code VALUE 'PARAM_1LIN',
+        multiple_params_on_line TYPE if_ci_atc_check=>ty_finding_code VALUE 'PREF_1LINE',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_param_one_line DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'PARAM_ONE_LINE'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_PARAM_1LINE'.
 
     METHODS has_multiple_params_on_line
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
@@ -24,7 +24,7 @@ CLASS zcl_skylint_param_one_line DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_param_one_line IMPLEMENTATION.
+CLASS zcl_skylint_pref_param_1line IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
         VALUE #( description       = 'Parameters and structure fields must be on separate lines'

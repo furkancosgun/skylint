@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_empty_proc DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        empty_procedure TYPE if_ci_atc_check=>ty_finding_code VALUE 'EMPTY_PROC',
+        empty_procedure TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_EMPTY',
       END OF c_finding_codes.
 
     METHODS constructor.

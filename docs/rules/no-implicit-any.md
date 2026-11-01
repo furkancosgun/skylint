@@ -1,0 +1,61 @@
+---
+title: "Avoid Generic and Implicit ANY Types"
+description: "Disallow untyped field symbols and generic ANY parameters in ABAP code."
+keywords: "Clean ABAP, implicit any, generic type, no-implicit-any"
+category: "clean-abap"
+ruleId: "no-implicit-any"
+---
+
+# Avoid Generic and Implicit ANY Types
+
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
+  <Badge type="tip" text="Clean ABAP & Modern Syntax" />
+  <Badge type="danger" text="#EC NO_IMPLICIT_ANY" />
+  <Badge type="info" text="Remote Enabled" />
+</div>
+
+## Overview
+
+Specify concrete types instead of generic or implicit ANY.
+
+> **ATC Finding Message:** `Specify explicit concrete types instead of generic or implicit ANY`
+
+## Rationale
+
+Untyped FIELD-SYMBOLS or method parameters defaulting to ANY sacrifice compile-time type safety. Always specify explicit concrete types.
+
+### Non-Compliant
+
+```abap
+FIELD-SYMBOLS <fs>.
+```
+
+### Compliant
+
+```abap
+FIELD-SYMBOLS <fs> TYPE string.
+```
+
+## Suppression
+
+To suppress findings for this rule, append the pseudo-comment to the statement:
+
+```abap
+" Standard pseudo-comment:
+... "#EC NO_IMPLICIT_ANY
+
+" SAP CI_ prefix format:
+... "#EC CI_NO_IMPLICIT_ANY
+```
+
+
+## Related Rules
+
+* [Require Fully Typed Variables and Parameters](/rules/pref-full-typed) — <code>#EC PREF_FULL_TYPED</code>
+* [Prefer FINAL( ) over DATA( ) when the variable is never written again](/rules/pref-final-data) — <code>#EC PREF_FINAL_DATA</code>
+
+## Technical Details
+
+* **Native ATC Class:** `ZCL_SKYLINT_NO_IMPLICIT_ANY`
+* **Implementation File:** [zcl_skylint_no_implicit_any.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_implicit_any.clas.abap)

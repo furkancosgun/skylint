@@ -1,6 +1,6 @@
 [
-  { "target": "TEST_001", "code": "AMBIG_STMT", "line": 4, "column": 4 },
-  { "target": "TEST_002", "code": "AMBIG_STMT", "line": 4, "column": 4 },
+  { "target": "TEST_001", "code": "NO_AMBIG", "line": 4, "column": 4 },
+  { "target": "TEST_002", "code": "NO_AMBIG", "line": 4, "column": 4 },
   { "target": "TEST_003", "code": null },
   { "target": "TEST_004", "code": null },
   { "target": "TEST_005", "code": null },

@@ -4638,7 +4638,11 @@ export const RULES = [
         "ambiguous statement",
         "no-ambiguous-stmt"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-strict-sql",
+      "no-db-in-loop"
+    ]
   },
   {
     "ruleId": "no-empty-proc",
@@ -4663,7 +4667,11 @@ export const RULES = [
         "empty procedure",
         "no-empty-proc"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-empty-block",
+      "no-dead-code"
+    ]
   },
   {
     "ruleId": "no-intf-class-ref",
@@ -4683,7 +4691,11 @@ export const RULES = [
         "interface class reference",
         "no-intf-class-ref"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-intf-segreg",
+      "no-exposed-data"
+    ]
   },
   {
     "ruleId": "no-aliases",
@@ -4706,7 +4718,11 @@ export const RULES = [
         "ALIASES",
         "no-aliases"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-intf-segreg",
+      "no-intf-class-ref"
+    ]
   },
   {
     "ruleId": "no-abstract-final",
@@ -4726,7 +4742,11 @@ export const RULES = [
         "abstract final",
         "no-abstract-final"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-empty-proc",
+      "no-dead-code"
+    ]
   },
   {
     "ruleId": "no-double-space",
@@ -4746,14 +4766,18 @@ export const RULES = [
         "double space",
         "no-double-space"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-param-1line",
+      "no-chained-decl"
+    ]
   },
   {
-    "ruleId": "param-one-line",
+    "ruleId": "pref-param-1line",
     "title": "Single Parameter or Field Per Line",
     "rationale": "When passing multiple parameters in method calls or constructor expressions, place each parameter or field on its own separate line.",
-    "className": "ZCL_SKYLINT_PARAM_ONE_LINE",
-    "pseudoComment": "PARAM_ONE_LINE",
+    "className": "ZCL_SKYLINT_PREF_PARAM_1LINE",
+    "pseudoComment": "PREF_PARAM_1LINE",
     "category": "clean-abap",
     "example": {
       "bad": "ls_data = VALUE #( a = 1 b = 2 ).",
@@ -4764,9 +4788,13 @@ export const RULES = [
       "keywords": [
         "Clean ABAP",
         "parameter per line",
-        "param-one-line"
+        "pref-param-1line"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-double-space",
+      "max-method-len"
+    ]
   },
   {
     "ruleId": "no-into-fs",
@@ -4786,7 +4814,11 @@ export const RULES = [
         "into field symbol",
         "no-into-fs"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-strict-sql",
+      "no-ambiguous-stmt"
+    ]
   },
   {
     "ruleId": "pref-strict-sql",
@@ -4807,7 +4839,11 @@ export const RULES = [
         "host variables",
         "pref-strict-sql"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-into-fs",
+      "no-ambiguous-stmt"
+    ]
   },
   {
     "ruleId": "pref-enum",
@@ -4828,7 +4864,11 @@ export const RULES = [
         "constants",
         "pref-enum"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-magic-numbers",
+      "no-hardcoded-env"
+    ]
   },
   {
     "ruleId": "no-protected-data",
@@ -4848,7 +4888,11 @@ export const RULES = [
         "protected data",
         "no-protected-data"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-exposed-data",
+      "max-attributes"
+    ]
   },
   {
     "ruleId": "no-method-chain",
@@ -4871,7 +4915,11 @@ export const RULES = [
         "method chaining",
         "no-method-chain"
       ]
-    }
+    },
+    "relatedRules": [
+      "no-call-method",
+      "max-method-len"
+    ]
   },
   {
     "ruleId": "no-implicit-any",
@@ -4892,7 +4940,11 @@ export const RULES = [
         "generic type",
         "no-implicit-any"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-full-typed",
+      "pref-final-data"
+    ]
   },
   {
     "ruleId": "pref-union",
@@ -4913,7 +4965,11 @@ export const RULES = [
         "UNION ALL",
         "pref-union"
       ]
-    }
+    },
+    "relatedRules": [
+      "pref-join-type",
+      "pref-strict-sql"
+    ]
   }
 ];
 

@@ -4,19 +4,19 @@
       "key": "clean-abap",
       "title": "Clean ABAP & Modern Syntax",
       "description": "Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.",
-      "count": 59
+      "count": 70
     },
     {
       "key": "anti-patterns",
       "title": "Anti-Patterns & Bad Practices",
       "description": "Discouraged language constructs, legacy statements, and redundant syntax.",
-      "count": 55
+      "count": 57
     },
     {
       "key": "performance",
       "title": "Performance & Database",
       "description": "Database query efficiency, buffer protection, and internal table operation guidelines.",
-      "count": 10
+      "count": 11
     },
     {
       "key": "security",
@@ -1903,6 +1903,174 @@
       "hasQuickfix": false,
       "remoteEnabled": false,
       "configurable": true
+    },
+    {
+      "ruleId": "no-ambiguous-stmt",
+      "title": "Avoid Ambiguous Statements",
+      "className": "ZCL_SKYLINT_NO_AMBIGUOUS_STMT",
+      "description": "Avoid ambiguous statements between itab and database",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "NO_AMBIGUOUS_STMT",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "no-empty-proc",
+      "title": "Avoid Empty Procedures",
+      "className": "ZCL_SKYLINT_NO_EMPTY_PROC",
+      "description": "Avoid empty procedures (methods, forms, functions)",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "NO_EMPTY_PROC",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "no-intf-class-ref",
+      "title": "Avoid Concrete Class References in Interfaces",
+      "className": "ZCL_SKYLINT_NO_INTF_CLASS_REF",
+      "description": "Interfaces should not reference concrete classes",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "NO_INTF_CLASS_REF",
+      "hasQuickfix": false,
+      "remoteEnabled": false,
+      "configurable": false
+    },
+    {
+      "ruleId": "no-aliases",
+      "title": "Avoid ALIASES in Classes and Interfaces",
+      "className": "ZCL_SKYLINT_NO_ALIASES",
+      "description": "Avoid using ALIASES in classes and interfaces",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "NO_ALIASES",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "no-abstract-final",
+      "title": "Avoid Abstract Final Classes",
+      "className": "ZCL_SKYLINT_NO_ABSTRACT_FINAL",
+      "description": "A class cannot be defined as both ABSTRACT and FINAL",
+      "category": "anti-patterns",
+      "categoryTitle": "Anti-Patterns & Bad Practices",
+      "pseudoComment": "NO_ABSTRACT_FINAL",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "no-double-space",
+      "title": "Avoid Consecutive Whitespace Between Tokens",
+      "className": "ZCL_SKYLINT_NO_DOUBLE_SPACE",
+      "description": "Avoid consecutive whitespace between tokens on the same line",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "NO_DOUBLE_SPACE",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "pref-param-1line",
+      "title": "Single Parameter or Field Per Line",
+      "className": "ZCL_SKYLINT_PREF_PARAM_1LINE",
+      "description": "Parameters and structure fields must be on separate lines",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "PREF_PARAM_1LINE",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "no-into-fs",
+      "title": "Avoid INTO with Field Symbols",
+      "className": "ZCL_SKYLINT_NO_INTO_FS",
+      "description": "Do not use INTO with a field symbol; use ASSIGNING instead",
+      "category": "anti-patterns",
+      "categoryTitle": "Anti-Patterns & Bad Practices",
+      "pseudoComment": "NO_INTO_FS",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "pref-strict-sql",
+      "title": "Prefer Strict SQL Host Variable Escaping",
+      "className": "ZCL_SKYLINT_PREF_STRICT_SQL",
+      "description": "Prefer strict SQL; escape host variables and targets with @",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "PREF_STRICT_SQL",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "pref-enum",
+      "title": "Prefer Enumerations over Constants",
+      "className": "ZCL_SKYLINT_PREF_ENUM",
+      "description": "Prefer ENUM over CONSTANTS for set of related values",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "PREF_ENUM",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "no-protected-data",
+      "title": "Avoid Protected Attributes",
+      "className": "ZCL_SKYLINT_NO_PROTECTED_DATA",
+      "description": "Avoid declaring DATA or CLASS-DATA in PROTECTED SECTION",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "NO_PROTECTED_DATA",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "no-method-chain",
+      "title": "Avoid Excessive Method Chaining",
+      "className": "ZCL_SKYLINT_NO_METHOD_CHAIN",
+      "description": "Avoid excessive method chaining; extract into variables",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "NO_METHOD_CHAIN",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "no-implicit-any",
+      "title": "Avoid Generic and Implicit ANY Types",
+      "className": "ZCL_SKYLINT_NO_IMPLICIT_ANY",
+      "description": "Specify concrete types instead of generic or implicit ANY",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "NO_IMPLICIT_ANY",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "pref-union",
+      "title": "Prefer UNION over UNION ALL",
+      "className": "ZCL_SKYLINT_PREF_UNION",
+      "description": "Prefer UNION over UNION ALL in SQL queries",
+      "category": "performance",
+      "categoryTitle": "Performance & Database",
+      "pseudoComment": "PREF_UNION",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
     }
   ]
 }

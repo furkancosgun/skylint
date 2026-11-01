@@ -6,7 +6,7 @@ CLASS zcl_skylint_no_method_chain DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        excessive_chaining TYPE if_ci_atc_check=>ty_finding_code VALUE 'METH_CHAIN',
+        excessive_chaining TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_CHAIN',
       END OF c_finding_codes.
 
     METHODS constructor.

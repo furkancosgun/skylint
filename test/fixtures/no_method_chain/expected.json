@@ -1,5 +1,5 @@
 [
   { "target": "METH1", "code": null },
   { "target": "METH2", "code": null },
-  { "target": "RUN", "code": "METH_CHAIN", "line": 4, "column": 4 }
+  { "target": "RUN", "code": "NO_CHAIN", "line": 4, "column": 4 }
 ]
