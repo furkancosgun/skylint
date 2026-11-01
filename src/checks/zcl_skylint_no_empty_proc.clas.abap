@@ -26,22 +26,20 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_empty_proc IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Avoid empty procedures (methods, forms, functions)'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-empty_procedure
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Procedure is empty; implement logic or remove procedure'
-                       pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                     ( name  = 'CHECK_METHODS'
-                       value = REF #( mv_check_methods ) )
-                     ( name  = 'CHECK_FORMS'
-                       value = REF #( mv_check_forms ) )
-                     ( name  = 'CHECK_FUNCS'
-                       value = REF #( mv_check_funcs ) ) ) ) ).
+    super->constructor( VALUE #( description       = 'Avoid empty procedures (methods, forms, functions)'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-empty_procedure
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Procedure is empty; implement logic or remove procedure'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                                              ( name  = 'CHECK_METHODS'
+                                                                value = REF #( mv_check_methods ) )
+                                                              ( name  = 'CHECK_FORMS'
+                                                                value = REF #( mv_check_forms ) )
+                                                              ( name  = 'CHECK_FUNCS'
+                                                                value = REF #( mv_check_funcs ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -72,11 +70,11 @@ CLASS zcl_skylint_no_empty_proc IMPLEMENTATION.
     ENDIF.
 
     IF lines( is_procedure-statements ) <= 2.
-      READ TABLE is_procedure-statements INDEX 1 INTO ls_first_stmt.
-      IF sy-subrc = 0 AND ls_first_stmt-keyword IS NOT INITIAL.
-        report_statement(
-            is_statement    = ls_first_stmt
-            iv_finding_code = c_finding_codes-empty_procedure ).
+      ls_first_stmt = zcl_skylint_ast_util=>get_statement( it_statements = is_procedure-statements
+                                                           iv_index      = 1 ).
+      IF ls_first_stmt-keyword IS NOT INITIAL.
+        report_statement( is_statement    = ls_first_stmt
+                          iv_finding_code = c_finding_codes-empty_procedure ).
       ENDIF.
     ENDIF.
   ENDMETHOD.

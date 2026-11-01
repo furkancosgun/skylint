@@ -1,5 +1,6 @@
 [
   { "target": "LCL_DEMO", "code": "IMPL_ANY", "line": 3, "column": 4 },
+  { "target": "LCL_DEMO", "code": "IMPL_ANY", "line": 4, "column": 4 },
   { "target": "TEST_001", "code": "IMPL_ANY", "line": 2, "column": 4 },
   { "target": "TEST_001", "code": "IMPL_ANY", "line": 3, "column": 4 }
 ]

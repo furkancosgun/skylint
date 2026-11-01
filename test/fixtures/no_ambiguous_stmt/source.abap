@@ -6,6 +6,7 @@ CLASS zcl_skylint_test_no_ambig DEFINITION.
     METHODS test_004.
     METHODS test_005.
     METHODS test_006.
+    METHODS test_007.
 ENDCLASS.
 
 CLASS zcl_skylint_test_no_ambig IMPLEMENTATION.
@@ -43,5 +44,9 @@ CLASS zcl_skylint_test_no_ambig IMPLEMENTATION.
     DATA lt_data TYPE string_table.
     DATA ls_row TYPE string.
     DELETE lt_data INDEX 1.
+  ENDMETHOD.
+
+  METHOD test_007.
+    DELETE FROM ztab WHERE col = 'X'.
   ENDMETHOD.
 ENDCLASS.

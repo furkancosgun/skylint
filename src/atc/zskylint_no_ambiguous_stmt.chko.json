@@ -5,6 +5,6 @@
     "originalLanguage": "en"
   },
   "category": "ZSKYLINT_CLEAN_ABAP",
-  "implementingClass": "ZCL_SKYLINT_NO_AMBIG_STMT",
+  "implementingClass": "ZCL_SKYLINT_NO_AMBIGUOUS_STMT",
   "checkType": "remoteEnabled"
 }

@@ -4621,11 +4621,11 @@ export const RULES = [
     ]
   },
   {
-    "ruleId": "no-ambig-stmt",
+    "ruleId": "no-ambiguous-stmt",
     "title": "Avoid Ambiguous Statements",
     "rationale": "ABAP allows ambiguous syntax for MODIFY and DELETE between internal tables and database tables. Use TABLE keyword or @ host escape to clarify intent.",
-    "className": "ZCL_SKYLINT_NO_AMBIG_STMT",
-    "pseudoComment": "NO_AMBIG_STMT",
+    "className": "ZCL_SKYLINT_NO_AMBIGUOUS_STMT",
+    "pseudoComment": "NO_AMBIGUOUS_STMT",
     "category": "clean-abap",
     "example": {
       "bad": "MODIFY lt_data FROM ls_row.",
@@ -4636,7 +4636,7 @@ export const RULES = [
       "keywords": [
         "Clean ABAP",
         "ambiguous statement",
-        "no-ambig-stmt"
+        "no-ambiguous-stmt"
       ]
     }
   },

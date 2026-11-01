@@ -45,24 +45,21 @@ CLASS zcl_skylint_no_protected_data IMPLEMENTATION.
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'PROTECTED'.
-          IF zcl_skylint_ast_util=>has_token_lexeme(
-                 is_statement = <ls_statement>
-                 iv_lexeme    = 'SECTION' ) = abap_true.
+          IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                     iv_lexeme    = 'SECTION' ) = abap_true.
             lv_in_protected = abap_true.
           ENDIF.
 
         WHEN 'PUBLIC' OR 'PRIVATE'.
-          IF zcl_skylint_ast_util=>has_token_lexeme(
-                 is_statement = <ls_statement>
-                 iv_lexeme    = 'SECTION' ) = abap_true.
+          IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                     iv_lexeme    = 'SECTION' ) = abap_true.
             lv_in_protected = abap_false.
           ENDIF.
 
         WHEN 'DATA' OR 'CLASS-DATA'.
           IF lv_in_protected = abap_true.
-            report_statement(
-                is_statement    = <ls_statement>
-                iv_finding_code = c_finding_codes-protected_data ).
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-protected_data ).
           ENDIF.
       ENDCASE.
     ENDLOOP.

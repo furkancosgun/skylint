@@ -1386,7 +1386,7 @@
       ]
     },
     {
-      "checkName": "ZSKYLINT_NO_AMBIG_STMT"
+      "checkName": "ZSKYLINT_NO_AMBIGUOUS_STMT"
     },
     {
       "checkName": "ZSKYLINT_NO_EMPTY_PROC",

@@ -22,19 +22,17 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_into_fs IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Do not use INTO with a field symbol; use ASSIGNING instead'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-into_field_symbol
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Do not use INTO with a field symbol; use ASSIGNING instead'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'Do not use INTO with a field symbol; use ASSIGNING instead'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-into_field_symbol
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Do not use INTO with a field symbol; use ASSIGNING instead'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_into_idx TYPE i.
-    DATA ls_target   TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_target TYPE if_ci_atc_source_code_provider=>ty_token.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
@@ -46,21 +44,15 @@ CLASS zcl_skylint_no_into_fs IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      lv_into_idx = zcl_skylint_ast_util=>find_token(
-                        is_statement = <ls_statement>
-                        iv_lexeme    = 'INTO' ).
-      IF lv_into_idx <= 0 OR lv_into_idx >= lines( <ls_statement>-tokens ).
+      ls_target = zcl_skylint_ast_util=>get_token_after( is_statement = <ls_statement>
+                                                         iv_lexeme    = 'INTO' ).
+      IF ls_target IS INITIAL.
         CONTINUE.
       ENDIF.
 
-      ls_target = zcl_skylint_ast_util=>get_token(
-                      is_statement = <ls_statement>
-                      iv_index     = lv_into_idx + 1 ).
-
-      IF ls_target-lexeme(1) = '<' AND ls_target-lexeme CP '*>'.
-        report_statement(
-            is_statement    = <ls_statement>
-            iv_finding_code = c_finding_codes-into_field_symbol ).
+      IF ls_target-lexeme(1) = '<'.
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-into_field_symbol ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.

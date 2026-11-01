@@ -275,6 +275,10 @@ CLASS zcl_skylint_pref_downport IMPLEMENTATION.
 
     rv_has = abap_false.
 
+    IF zcl_skylint_ast_util=>statement_is_method_call( is_statement ) = abap_false.
+      RETURN.
+    ENDIF.
+
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
       IF zcl_skylint_ast_util=>token_is_literal( <ls_token> ) = abap_true.
         CONTINUE.

@@ -49,9 +49,8 @@ CLASS zcl_skylint_pref_strict_sql IMPLEMENTATION.
       ENDIF.
 
       IF has_unescaped_host_var( <ls_statement> ) = abap_true.
-        report_statement(
-            is_statement    = <ls_statement>
-            iv_finding_code = c_finding_codes-strict_sql ).
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-strict_sql ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
@@ -64,44 +63,40 @@ CLASS zcl_skylint_pref_strict_sql IMPLEMENTATION.
     rv_unes = abap_false.
     lv_total = lines( is_statement-tokens ).
 
-    lv_idx = zcl_skylint_ast_util=>find_token(
-                 is_statement = is_statement
-                 iv_lexeme    = 'INTO' ).
+    lv_idx = zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                               iv_lexeme    = 'INTO' ).
     IF lv_idx <= 0.
       RETURN.
     ENDIF.
 
-    IF lv_idx + 1 <= lv_total.
-      ls_tok = zcl_skylint_ast_util=>get_token(
-                   is_statement = is_statement
-                   iv_index     = lv_idx + 1 ).
-      CASE ls_tok-lexeme.
-        WHEN 'TABLE'.
-          IF lv_idx + 2 <= lv_total.
-            ls_tok = zcl_skylint_ast_util=>get_token(
-                         is_statement = is_statement
-                         iv_index     = lv_idx + 2 ).
-          ENDIF.
+    IF lv_idx + 1 > lv_total.
+      RETURN.
+    ENDIF.
 
-        WHEN 'CORRESPONDING'.
-          lv_idx = zcl_skylint_ast_util=>find_token(
-                       is_statement = is_statement
-                       iv_lexeme    = 'OF' ).
-          IF lv_idx > 0 AND lv_idx + 1 <= lv_total.
-            ls_tok = zcl_skylint_ast_util=>get_token(
-                         is_statement = is_statement
-                         iv_index     = lv_idx + 1 ).
-            IF ls_tok-lexeme = 'TABLE' AND lv_idx + 2 <= lv_total.
-              ls_tok = zcl_skylint_ast_util=>get_token(
-                           is_statement = is_statement
-                           iv_index     = lv_idx + 2 ).
-            ENDIF.
-          ENDIF.
-      ENDCASE.
+    ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                              iv_index     = lv_idx + 1 ).
+    CASE ls_tok-lexeme.
+      WHEN 'TABLE'.
+        IF lv_idx + 2 <= lv_total.
+          ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                    iv_index     = lv_idx + 2 ).
+        ENDIF.
 
-      IF ls_tok-lexeme IS NOT INITIAL AND ls_tok-lexeme(1) <> '@'.
-        rv_unes = abap_true.
-      ENDIF.
+      WHEN 'CORRESPONDING'.
+        lv_idx = zcl_skylint_ast_util=>find_token( is_statement = is_statement
+                                                   iv_lexeme    = 'OF' ).
+        IF lv_idx > 0 AND lv_idx + 1 <= lv_total.
+          ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                    iv_index     = lv_idx + 1 ).
+          IF ls_tok-lexeme = 'TABLE' AND lv_idx + 2 <= lv_total.
+            ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                      iv_index     = lv_idx + 2 ).
+          ENDIF.
+        ENDIF.
+    ENDCASE.
+
+    IF ls_tok-lexeme IS NOT INITIAL AND ls_tok-lexeme(1) <> '@'.
+      rv_unes = abap_true.
     ENDIF.
   ENDMETHOD.
 ENDCLASS.

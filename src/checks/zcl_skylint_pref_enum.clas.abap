@@ -22,14 +22,13 @@ ENDCLASS.
 
 CLASS zcl_skylint_pref_enum IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Prefer ENUM over CONSTANTS for set of related values'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-prefer_enum
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Prefer ENUM over CONSTANTS for set of related values'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'Prefer ENUM over CONSTANTS for set of related values'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-prefer_enum
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Prefer ENUM over CONSTANTS for set of related values'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -40,16 +39,13 @@ CLASS zcl_skylint_pref_enum IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      IF     zcl_skylint_ast_util=>has_token_lexeme(
-                 is_statement = <ls_statement>
-                 iv_lexeme    = 'BEGIN' ) = abap_true
-         AND zcl_skylint_ast_util=>has_token_lexeme(
-                 is_statement = <ls_statement>
-                 iv_lexeme    = 'OF' )    = abap_true.
+      IF     zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                     iv_lexeme    = 'BEGIN' )      = abap_true
+         AND zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                     iv_lexeme    = 'OF' )         = abap_true.
 
-        report_statement(
-            is_statement    = <ls_statement>
-            iv_finding_code = c_finding_codes-prefer_enum ).
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-prefer_enum ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.

@@ -24,18 +24,17 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_aliases IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Avoid using ALIASES in classes and interfaces'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-no_aliases
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Do not use ALIASES; reference interface components explicitly'
-                       pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     ( name  = 'IGNORE_PRIVATE'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                       value = REF #( mv_ignore_private ) ) ) ) ).
+    super->constructor( VALUE #( description       = 'Avoid using ALIASES in classes and interfaces'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-no_aliases
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Do not use ALIASES; reference interface components explicitly'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 attributes        = VALUE #(
+                                     ( name  = 'IGNORE_PRIVATE'
+                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                       value = REF #( mv_ignore_private ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -51,16 +50,14 @@ CLASS zcl_skylint_no_aliases IMPLEMENTATION.
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'PRIVATE'.
-          IF zcl_skylint_ast_util=>has_token_lexeme(
-                 is_statement = <ls_statement>
-                 iv_lexeme    = 'SECTION' ) = abap_true.
+          IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                     iv_lexeme    = 'SECTION' ) = abap_true.
             lv_in_private = abap_true.
           ENDIF.
 
         WHEN 'PUBLIC' OR 'PROTECTED'.
-          IF zcl_skylint_ast_util=>has_token_lexeme(
-                 is_statement = <ls_statement>
-                 iv_lexeme    = 'SECTION' ) = abap_true.
+          IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                     iv_lexeme    = 'SECTION' ) = abap_true.
             lv_in_private = abap_false.
           ENDIF.
 
@@ -69,9 +66,8 @@ CLASS zcl_skylint_no_aliases IMPLEMENTATION.
             CONTINUE.
           ENDIF.
 
-          report_statement(
-              is_statement    = <ls_statement>
-              iv_finding_code = c_finding_codes-no_aliases ).
+          report_statement( is_statement    = <ls_statement>
+                            iv_finding_code = c_finding_codes-no_aliases ).
       ENDCASE.
     ENDLOOP.
   ENDMETHOD.

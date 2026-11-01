@@ -22,14 +22,13 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_double_space IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Avoid consecutive whitespace between tokens on the same line'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-double_space
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Use exactly one space between tokens on the same line'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'Avoid consecutive whitespace between tokens on the same line'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-double_space
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Use exactly one space between tokens on the same line'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -56,10 +55,9 @@ CLASS zcl_skylint_no_double_space IMPLEMENTATION.
         IF ls_curr_token-position-line = ls_prev_token-position-line.
           lv_expected_col = ls_prev_token-position-column + strlen( ls_prev_token-lexeme ) + 1.
           IF ls_curr_token-position-column > lv_expected_col.
-            report_token(
-                is_statement    = <ls_statement>
-                is_token        = ls_curr_token
-                iv_finding_code = c_finding_codes-double_space ).
+            report_token( is_statement    = <ls_statement>
+                          is_token        = ls_curr_token
+                          iv_finding_code = c_finding_codes-double_space ).
             EXIT.
           ENDIF.
         ENDIF.

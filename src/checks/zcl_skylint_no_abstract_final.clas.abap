@@ -22,14 +22,13 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_abstract_final IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'A class cannot be defined as both ABSTRACT and FINAL'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-abstract_final
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Class cannot be both ABSTRACT and FINAL'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #( description       = 'A class cannot be defined as both ABSTRACT and FINAL'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-abstract_final
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Class cannot be both ABSTRACT and FINAL'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -40,23 +39,15 @@ CLASS zcl_skylint_no_abstract_final IMPLEMENTATION.
     ENDIF.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF <ls_statement>-keyword <> 'CLASS'.
-        CONTINUE.
-      ENDIF.
+      IF     zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                     iv_lexeme    = 'DEFINITION' ) = abap_true
+         AND zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                     iv_lexeme    = 'ABSTRACT' )   = abap_true
+         AND zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
+                                                     iv_lexeme    = 'FINAL' )      = abap_true.
 
-      IF     zcl_skylint_ast_util=>has_token_lexeme(
-                 is_statement = <ls_statement>
-                 iv_lexeme    = 'DEFINITION' ) = abap_true
-         AND zcl_skylint_ast_util=>has_token_lexeme(
-                 is_statement = <ls_statement>
-                 iv_lexeme    = 'ABSTRACT' )   = abap_true
-         AND zcl_skylint_ast_util=>has_token_lexeme(
-                 is_statement = <ls_statement>
-                 iv_lexeme    = 'FINAL' )      = abap_true.
-
-        report_statement(
-            is_statement    = <ls_statement>
-            iv_finding_code = c_finding_codes-abstract_final ).
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-abstract_final ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.

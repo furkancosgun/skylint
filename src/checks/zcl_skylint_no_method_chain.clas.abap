@@ -36,10 +36,9 @@ CLASS zcl_skylint_no_method_chain IMPLEMENTATION.
                        severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Excessive method chaining; extract intermediate results into variables'
                        pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     ( name  = 'MAX_CHAIN'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                       value = REF #( mv_max_chain ) ) ) ) ).
+                 attributes        = VALUE #( ( name  = 'MAX_CHAIN'
+                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                                value = REF #( mv_max_chain ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -51,11 +50,14 @@ CLASS zcl_skylint_no_method_chain IMPLEMENTATION.
     ENDIF.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF zcl_skylint_ast_util=>statement_is_method_call( <ls_statement> ) = abap_false.
+        CONTINUE.
+      ENDIF.
+
       lv_chain_count = count_method_chains( <ls_statement> ).
       IF lv_chain_count > mv_max_chain.
-        report_statement(
-            is_statement    = <ls_statement>
-            iv_finding_code = c_finding_codes-excessive_chaining ).
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-excessive_chaining ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
@@ -66,8 +68,13 @@ CLASS zcl_skylint_no_method_chain IMPLEMENTATION.
     rv_count = 0.
 
     LOOP AT is_statement-tokens INTO ls_token.
-      IF ls_token-lexeme CP '*->*' OR ls_token-lexeme CP '*=>*'.
-        rv_count = rv_count + 1.
+      IF zcl_skylint_ast_util=>token_is_literal( ls_token ) = abap_true.
+        CONTINUE.
+      ENDIF.
+
+      IF contains( val = ls_token-lexeme
+                   sub = '->' ).
+        rv_count += 1.
       ENDIF.
     ENDLOOP.
   ENDMETHOD.

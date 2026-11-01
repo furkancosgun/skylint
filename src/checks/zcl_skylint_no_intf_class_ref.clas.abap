@@ -53,38 +53,27 @@ CLASS zcl_skylint_no_intf_class_ref IMPLEMENTATION.
 
   METHOD check_statement.
     DATA lt_expected   TYPE zcl_skylint_ast_util=>ty_token_lexemes.
-    DATA lv_idx        TYPE i.
-    DATA ls_type_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_token      TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lo_classdescr TYPE REF TO cl_abap_classdescr.
 
-    lt_expected = VALUE #(
-        ( `TYPE` )
-        ( `REF` )
-        ( `TO` ) ).
+    lt_expected = VALUE #( ( `TYPE` )
+                           ( `REF` )
+                           ( `TO` ) ).
 
-    lv_idx = zcl_skylint_ast_util=>find_token_sequence(
-                 is_statement = is_statement
-                 it_expected  = lt_expected ).
-    IF lv_idx <= 0.
+    ls_token = zcl_skylint_ast_util=>get_token_after_sequence( is_statement = is_statement
+                                                               it_expected  = lt_expected ).
+    IF ls_token IS INITIAL.
       RETURN.
     ENDIF.
 
-    ls_type_token = zcl_skylint_ast_util=>get_token(
-                        is_statement = is_statement
-                        iv_index     = lv_idx + 3 ).
-    IF ls_type_token-lexeme IS INITIAL.
+    IF ls_token-lexeme = 'DATA' OR ls_token-lexeme = 'OBJECT'.
       RETURN.
     ENDIF.
 
-    IF ls_type_token-lexeme = 'DATA' OR ls_type_token-lexeme = 'OBJECT'.
-      RETURN.
-    ENDIF.
-
-    lo_classdescr = zcl_skylint_rtti_util=>describe_class( ls_type_token-lexeme ).
+    lo_classdescr = zcl_skylint_rtti_util=>describe_class( ls_token-lexeme ).
     IF lo_classdescr IS BOUND.
-      report_statement(
-          is_statement    = is_statement
-          iv_finding_code = c_finding_codes-class_ref_in_interface ).
+      report_statement( is_statement    = is_statement
+                        iv_finding_code = c_finding_codes-class_ref_in_interface ).
     ENDIF.
   ENDMETHOD.
 ENDCLASS.

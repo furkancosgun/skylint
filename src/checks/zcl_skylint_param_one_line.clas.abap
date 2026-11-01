@@ -45,9 +45,8 @@ CLASS zcl_skylint_param_one_line IMPLEMENTATION.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF has_multiple_params_on_line( <ls_statement> ) = abap_true.
-        report_statement(
-            is_statement    = <ls_statement>
-            iv_finding_code = c_finding_codes-multiple_params_on_line ).
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-multiple_params_on_line ).
       ENDIF.
     ENDLOOP.
   ENDMETHOD.
@@ -62,14 +61,9 @@ CLASS zcl_skylint_param_one_line IMPLEMENTATION.
     lv_last_line = 0.
 
     LOOP AT is_statement-tokens INTO ls_token.
-      IF ls_token-lexeme CP '*(*'.
-        lv_depth = lv_depth + 1.
-      ENDIF.
-      IF ls_token-lexeme CP '*)*' AND lv_depth > 0.
-        lv_depth = lv_depth - 1.
-      ENDIF.
+      lv_depth += zcl_skylint_ast_util=>token_paren_delta( ls_token ).
 
-      IF lv_depth > 0 AND ls_token-lexeme = '=' AND ls_token-references IS INITIAL.
+      IF lv_depth > 0 AND ls_token-lexeme = '='.
         IF lv_last_line = ls_token-position-line.
           rv_has = abap_true.
           RETURN.
