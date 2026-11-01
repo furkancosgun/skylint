@@ -32,15 +32,14 @@ ENDCLASS.
 
 CLASS zcl_skylint_no_implicit_any IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #(
-            description       = 'Specify concrete types instead of generic or implicit ANY'
-            remote_enablement = abap_true
-            finding_codes     = VALUE #(
-                ( code           = c_finding_codes-implicit_any
-                  severity       = if_ci_atc_check=>finding_severities-warning
-                  text           = 'Specify explicit concrete types instead of generic or implicit ANY'
-                  pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor( VALUE #(
+                            description       = 'Specify concrete types instead of generic or implicit ANY'
+                            remote_enablement = abap_true
+                            finding_codes     = VALUE #(
+                                ( code           = c_finding_codes-implicit_any
+                                  severity       = if_ci_atc_check=>finding_severities-warning
+                                  text           = 'Specify explicit concrete types instead of generic or implicit ANY'
+                                  pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -58,8 +57,7 @@ CLASS zcl_skylint_no_implicit_any IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check_field_symbols.
-    DATA lv_type_idx TYPE i.
-    DATA ls_tok      TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
 
     IF     zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
                                                    iv_lexeme    = 'TYPE' )     = abap_false
@@ -70,15 +68,11 @@ CLASS zcl_skylint_no_implicit_any IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    lv_type_idx = zcl_skylint_ast_util=>find_token( is_statement = is_statement
-                                                    iv_lexeme    = 'TYPE' ).
-    IF lv_type_idx > 0 AND lv_type_idx < lines( is_statement-tokens ).
-      ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = lv_type_idx + 1 ).
-      IF is_generic_type( ls_tok-lexeme ) = abap_true.
-        report_statement( is_statement    = is_statement
-                          iv_finding_code = c_finding_codes-implicit_any ).
-      ENDIF.
+    ls_token = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                      iv_lexeme    = 'TYPE' ).
+    IF ls_token IS NOT INITIAL AND is_generic_type( ls_token-lexeme ) = abap_true.
+      report_statement( is_statement    = is_statement
+                        iv_finding_code = c_finding_codes-implicit_any ).
     ENDIF.
   ENDMETHOD.
 
@@ -98,10 +92,7 @@ CLASS zcl_skylint_no_implicit_any IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_generic_type.
-    DATA lv_upper TYPE string.
-
-    lv_upper = to_upper( iv_type_name ).
-    CASE lv_upper.
+    CASE iv_type_name.
       WHEN 'ANY' OR 'DATA' OR 'OBJECT' OR 'CLIKE' OR 'CSEQUENCE' OR 'XSEQUENCE'
         OR 'NUMERIC' OR 'DECFLOAT' OR 'SIMPLE' OR 'TABLE' OR 'ANY TABLE' OR 'INDEX TABLE'.
         rv_yes = abap_true.

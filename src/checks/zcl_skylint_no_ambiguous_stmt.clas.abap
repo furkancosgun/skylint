@@ -100,9 +100,9 @@ CLASS zcl_skylint_no_ambiguous_stmt IMPLEMENTATION.
         ENDIF.
 
         IF    zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                      iv_lexeme    = 'TABLE' ) = abap_true
+                                                      iv_lexeme    = 'TABLE' )    = abap_true
            OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                      iv_lexeme    = 'INDEX' ) = abap_true.
+                                                      iv_lexeme    = 'INDEX' )    = abap_true.
           RETURN.
         ENDIF.
 
