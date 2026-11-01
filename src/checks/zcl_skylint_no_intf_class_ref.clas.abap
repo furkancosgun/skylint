@@ -28,7 +28,7 @@ CLASS zcl_skylint_no_intf_class_ref IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
         VALUE #( description       = 'Interfaces should not reference concrete classes'
-                 remote_enablement = abap_true
+                 remote_enablement = abap_false
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-class_ref_in_interface
                        severity       = if_ci_atc_check=>finding_severities-warning
