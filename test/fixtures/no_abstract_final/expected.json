@@ -1,0 +1,5 @@
+[
+  { "target": "LCL_BAD", "code": "ABSTR_FINA", "line": 1, "column": 0 },
+  { "target": "LCL_GOOD", "code": null },
+  { "target": "LCL_FINAL", "code": null }
+]

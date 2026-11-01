@@ -4619,6 +4619,301 @@ export const RULES = [
       "no-unused-vars",
       "no-dead-code"
     ]
+  },
+  {
+    "ruleId": "no-ambig-stmt",
+    "title": "Avoid Ambiguous Statements",
+    "rationale": "ABAP allows ambiguous syntax for MODIFY and DELETE between internal tables and database tables. Use TABLE keyword or @ host escape to clarify intent.",
+    "className": "ZCL_SKYLINT_NO_AMBIG_STMT",
+    "pseudoComment": "NO_AMBIG_STMT",
+    "category": "clean-abap",
+    "example": {
+      "bad": "MODIFY lt_data FROM ls_row.",
+      "good": "MODIFY TABLE lt_data FROM ls_row."
+    },
+    "seo": {
+      "description": "Avoid ambiguous MODIFY/DELETE statements between internal and database tables.",
+      "keywords": [
+        "Clean ABAP",
+        "ambiguous statement",
+        "no-ambig-stmt"
+      ]
+    }
+  },
+  {
+    "ruleId": "no-empty-proc",
+    "title": "Avoid Empty Procedures",
+    "rationale": "Methods, form routines, and function modules should not be empty. Implement required logic or remove superfluous empty procedures.",
+    "className": "ZCL_SKYLINT_NO_EMPTY_PROC",
+    "pseudoComment": "NO_EMPTY_PROC",
+    "category": "clean-abap",
+    "example": {
+      "bad": "METHOD do_work.\nENDMETHOD.",
+      "good": "METHOD do_work.\n  DATA lv_val TYPE i.\n  lv_val = 1.\nENDMETHOD."
+    },
+    "parameters": {
+      "CHECK_METHODS": "Check methods (defaults to true)",
+      "CHECK_FORMS": "Check form routines (defaults to true)",
+      "CHECK_FUNCS": "Check function modules (defaults to true)"
+    },
+    "seo": {
+      "description": "Detect empty procedures including methods, forms, and function modules.",
+      "keywords": [
+        "Clean ABAP",
+        "empty procedure",
+        "no-empty-proc"
+      ]
+    }
+  },
+  {
+    "ruleId": "no-intf-class-ref",
+    "title": "Avoid Concrete Class References in Interfaces",
+    "rationale": "Interfaces should adhere to the Dependency Inversion Principle and not couple directly to concrete class implementations. Use interface references instead.",
+    "className": "ZCL_SKYLINT_NO_INTF_CLASS_REF",
+    "pseudoComment": "NO_INTF_CLASS_REF",
+    "category": "clean-abap",
+    "example": {
+      "bad": "INTERFACE lif_demo.\n  DATA mo_obj TYPE REF TO cl_concrete.\nENDINTERFACE.",
+      "good": "INTERFACE lif_demo.\n  DATA mo_obj TYPE REF TO if_contract.\nENDINTERFACE."
+    },
+    "seo": {
+      "description": "Prevent interfaces from referencing concrete classes via RTTI inspection.",
+      "keywords": [
+        "Clean ABAP",
+        "interface class reference",
+        "no-intf-class-ref"
+      ]
+    }
+  },
+  {
+    "ruleId": "no-aliases",
+    "title": "Avoid ALIASES in Classes and Interfaces",
+    "rationale": "ALIASES obscure component origins and interface contracts. Explicitly reference interface components using the interface~member syntax.",
+    "className": "ZCL_SKYLINT_NO_ALIASES",
+    "pseudoComment": "NO_ALIASES",
+    "category": "clean-abap",
+    "example": {
+      "bad": "ALIASES run FOR lif_demo~run.",
+      "good": "lif_demo~run( )."
+    },
+    "parameters": {
+      "IGNORE_PRIVATE": "Ignore ALIASES in private sections (defaults to false)"
+    },
+    "seo": {
+      "description": "Disallow ALIASES statements to enforce explicit interface qualification.",
+      "keywords": [
+        "Clean ABAP",
+        "ALIASES",
+        "no-aliases"
+      ]
+    }
+  },
+  {
+    "ruleId": "no-abstract-final",
+    "title": "Avoid Abstract Final Classes",
+    "rationale": "A class cannot be both ABSTRACT and FINAL simultaneously. Abstract classes must be inherited from, while final classes prohibit inheritance.",
+    "className": "ZCL_SKYLINT_NO_ABSTRACT_FINAL",
+    "pseudoComment": "NO_ABSTRACT_FINAL",
+    "category": "anti-patterns",
+    "example": {
+      "bad": "CLASS lcl_demo DEFINITION ABSTRACT FINAL.\nENDCLASS.",
+      "good": "CLASS lcl_demo DEFINITION FINAL.\nENDCLASS."
+    },
+    "seo": {
+      "description": "Detect classes declared with conflicting ABSTRACT and FINAL modifiers.",
+      "keywords": [
+        "Clean ABAP",
+        "abstract final",
+        "no-abstract-final"
+      ]
+    }
+  },
+  {
+    "ruleId": "no-double-space",
+    "title": "Avoid Consecutive Whitespace Between Tokens",
+    "rationale": "Tokens on the same line should be separated by exactly one space to maintain uniform formatting and readability.",
+    "className": "ZCL_SKYLINT_NO_DOUBLE_SPACE",
+    "pseudoComment": "NO_DOUBLE_SPACE",
+    "category": "clean-abap",
+    "example": {
+      "bad": "DATA  lv_a TYPE i.",
+      "good": "DATA lv_a TYPE i."
+    },
+    "seo": {
+      "description": "Flag redundant double spaces between statement tokens on the same line.",
+      "keywords": [
+        "Clean ABAP",
+        "double space",
+        "no-double-space"
+      ]
+    }
+  },
+  {
+    "ruleId": "param-one-line",
+    "title": "Single Parameter or Field Per Line",
+    "rationale": "When passing multiple parameters in method calls or constructor expressions, place each parameter or field on its own separate line.",
+    "className": "ZCL_SKYLINT_PARAM_ONE_LINE",
+    "pseudoComment": "PARAM_ONE_LINE",
+    "category": "clean-abap",
+    "example": {
+      "bad": "ls_data = VALUE #( a = 1 b = 2 ).",
+      "good": "ls_data = VALUE #(\n    a = 1\n    b = 2 )."
+    },
+    "seo": {
+      "description": "Enforce one parameter or field assignment per line in multi-argument calls.",
+      "keywords": [
+        "Clean ABAP",
+        "parameter per line",
+        "param-one-line"
+      ]
+    }
+  },
+  {
+    "ruleId": "no-into-fs",
+    "title": "Avoid INTO with Field Symbols",
+    "rationale": "Using INTO with a field symbol in READ TABLE or LOOP AT causes value assignment rather than pointer binding, which is almost always an accidental bug. Use ASSIGNING instead.",
+    "className": "ZCL_SKYLINT_NO_INTO_FS",
+    "pseudoComment": "NO_INTO_FS",
+    "category": "anti-patterns",
+    "example": {
+      "bad": "READ TABLE lt_data INTO <fs_row> INDEX 1.",
+      "good": "READ TABLE lt_data ASSIGNING <fs_row> INDEX 1."
+    },
+    "seo": {
+      "description": "Prevent accidental INTO dereferencing with field symbols in internal table reads and loops.",
+      "keywords": [
+        "Clean ABAP",
+        "into field symbol",
+        "no-into-fs"
+      ]
+    }
+  },
+  {
+    "ruleId": "pref-strict-sql",
+    "title": "Prefer Strict SQL Host Variable Escaping",
+    "rationale": "Modern ABAP SQL requires host variables and structures to be escaped with the '@' character for strict mode compliance.",
+    "className": "ZCL_SKYLINT_PREF_STRICT_SQL",
+    "pseudoComment": "PREF_STRICT_SQL",
+    "category": "clean-abap",
+    "example": {
+      "bad": "SELECT * FROM ztable INTO TABLE lt_data.",
+      "good": "SELECT * FROM ztable INTO TABLE @lt_data."
+    },
+    "seo": {
+      "description": "Ensure ABAP SQL host variables are escaped with '@' for strict SQL mode.",
+      "keywords": [
+        "Clean ABAP",
+        "strict SQL",
+        "host variables",
+        "pref-strict-sql"
+      ]
+    }
+  },
+  {
+    "ruleId": "pref-enum",
+    "title": "Prefer Enumerations over Constants",
+    "rationale": "Use TYPES: BEGIN OF ENUM ... END OF ENUM for related discrete value sets instead of structured CONSTANTS for type safety and modern syntax.",
+    "className": "ZCL_SKYLINT_PREF_ENUM",
+    "pseudoComment": "PREF_ENUM",
+    "category": "clean-abap",
+    "example": {
+      "bad": "CONSTANTS:\n  BEGIN OF c_status,\n    open TYPE string VALUE 'O',\n  END OF c_status.",
+      "good": "TYPES:\n  BEGIN OF ENUM ty_status,\n    open,\n  END OF ENUM ty_status."
+    },
+    "seo": {
+      "description": "Prefer ABAP 7.51+ ENUM definitions over structured constants for value sets.",
+      "keywords": [
+        "Clean ABAP",
+        "ENUM",
+        "constants",
+        "pref-enum"
+      ]
+    }
+  },
+  {
+    "ruleId": "no-protected-data",
+    "title": "Avoid Protected Attributes",
+    "rationale": "Protected data members expose internal class state to subclasses, violating encapsulation. Make attributes private and provide getter methods if needed.",
+    "className": "ZCL_SKYLINT_NO_PROTECTED_DATA",
+    "pseudoComment": "NO_PROTECTED_DATA",
+    "category": "clean-abap",
+    "example": {
+      "bad": "PROTECTED SECTION.\n  DATA mv_count TYPE i.",
+      "good": "PRIVATE SECTION.\n  DATA mv_count TYPE i."
+    },
+    "seo": {
+      "description": "Enforce clean encapsulation by disallowing DATA in class PROTECTED SECTION.",
+      "keywords": [
+        "Clean ABAP",
+        "protected data",
+        "no-protected-data"
+      ]
+    }
+  },
+  {
+    "ruleId": "no-method-chain",
+    "title": "Avoid Excessive Method Chaining",
+    "rationale": "Chaining multiple method calls together degrades readability and makes debugging difficult. Extract intermediate results into explanatory local variables.",
+    "className": "ZCL_SKYLINT_NO_METHOD_CHAIN",
+    "pseudoComment": "NO_METHOD_CHAIN",
+    "category": "clean-abap",
+    "example": {
+      "bad": "lo_demo->meth1( )->meth2( ).",
+      "good": "DATA(lo_step) = lo_demo->meth1( ).\nlo_step->meth2( )."
+    },
+    "parameters": {
+      "MAX_CHAIN": "Maximum allowed chained calls (defaults to 1)"
+    },
+    "seo": {
+      "description": "Limit method chaining depth to maintain readable, debuggable code.",
+      "keywords": [
+        "Clean ABAP",
+        "method chaining",
+        "no-method-chain"
+      ]
+    }
+  },
+  {
+    "ruleId": "no-implicit-any",
+    "title": "Avoid Generic and Implicit ANY Types",
+    "rationale": "Untyped FIELD-SYMBOLS or method parameters defaulting to ANY sacrifice compile-time type safety. Always specify explicit concrete types.",
+    "className": "ZCL_SKYLINT_NO_IMPLICIT_ANY",
+    "pseudoComment": "NO_IMPLICIT_ANY",
+    "category": "clean-abap",
+    "example": {
+      "bad": "FIELD-SYMBOLS <fs>.",
+      "good": "FIELD-SYMBOLS <fs> TYPE string."
+    },
+    "seo": {
+      "description": "Disallow untyped field symbols and generic ANY parameters in ABAP code.",
+      "keywords": [
+        "Clean ABAP",
+        "implicit any",
+        "generic type",
+        "no-implicit-any"
+      ]
+    }
+  },
+  {
+    "ruleId": "pref-union",
+    "title": "Prefer UNION over UNION ALL",
+    "rationale": "In ABAP SQL queries, prefer UNION to prevent duplicate record processing unless duplicates are explicitly intended and handled.",
+    "className": "ZCL_SKYLINT_PREF_UNION",
+    "pseudoComment": "PREF_UNION",
+    "category": "performance",
+    "example": {
+      "bad": "SELECT a FROM ztab1 UNION ALL SELECT a FROM ztab2 INTO TABLE @lt_data.",
+      "good": "SELECT a FROM ztab1 UNION SELECT a FROM ztab2 INTO TABLE @lt_data."
+    },
+    "seo": {
+      "description": "Prefer standard UNION over UNION ALL in ABAP SQL query combinations.",
+      "keywords": [
+        "Clean ABAP",
+        "UNION",
+        "UNION ALL",
+        "pref-union"
+      ]
+    }
   }
 ];
 

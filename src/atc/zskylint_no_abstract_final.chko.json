@@ -1,0 +1,10 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "A class cannot be defined as both ABSTRACT and FINAL",
+    "originalLanguage": "en"
+  },
+  "category": "ZSKYLINT_ANTI_PATTERNS",
+  "implementingClass": "ZCL_SKYLINT_NO_ABSTRACT_FINAL",
+  "checkType": "remoteEnabled"
+}

@@ -1,0 +1,6 @@
+[
+  { "target": "TEST_001", "code": "INTO_FS", "line": 4, "column": 4 },
+  { "target": "TEST_002", "code": "INTO_FS", "line": 4, "column": 4 },
+  { "target": "TEST_003", "code": null },
+  { "target": "TEST_004", "code": null }
+]

@@ -1,0 +1,10 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Parameters and structure fields must be on separate lines",
+    "originalLanguage": "en"
+  },
+  "category": "ZSKYLINT_CLEAN_ABAP",
+  "implementingClass": "ZCL_SKYLINT_PARAM_ONE_LINE",
+  "checkType": "remoteEnabled"
+}

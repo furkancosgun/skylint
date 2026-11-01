@@ -1,0 +1,10 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Avoid consecutive whitespace between tokens on the same line",
+    "originalLanguage": "en"
+  },
+  "category": "ZSKYLINT_CLEAN_ABAP",
+  "implementingClass": "ZCL_SKYLINT_NO_DOUBLE_SPACE",
+  "checkType": "remoteEnabled"
+}

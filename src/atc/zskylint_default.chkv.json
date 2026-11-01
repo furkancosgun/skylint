@@ -1384,6 +1384,74 @@
           "value": "true"
         }
       ]
+    },
+    {
+      "checkName": "ZSKYLINT_NO_AMBIG_STMT"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_EMPTY_PROC",
+      "parameters": [
+        {
+          "name": "CHECK_METHODS",
+          "value": "true"
+        },
+        {
+          "name": "CHECK_FORMS",
+          "value": "true"
+        },
+        {
+          "name": "CHECK_FUNCS",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_NO_INTF_CLASS_REF"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_ALIASES",
+      "parameters": [
+        {
+          "name": "IGNORE_PRIVATE",
+          "value": "false"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_NO_ABSTRACT_FINAL"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_DOUBLE_SPACE"
+    },
+    {
+      "checkName": "ZSKYLINT_PARAM_ONE_LINE"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_INTO_FS"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_STRICT_SQL"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_ENUM"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_PROTECTED_DATA"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_METHOD_CHAIN",
+      "parameters": [
+        {
+          "name": "MAX_CHAIN",
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_NO_IMPLICIT_ANY"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_UNION"
     }
   ]
 }

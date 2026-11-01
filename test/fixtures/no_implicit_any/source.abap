@@ -1,0 +1,18 @@
+CLASS lcl_demo DEFINITION.
+  PUBLIC SECTION.
+    METHODS run IMPORTING iv_param TYPE any.
+    METHODS good IMPORTING iv_param TYPE i.
+    METHODS test_001.
+ENDCLASS.
+
+CLASS lcl_demo IMPLEMENTATION.
+  METHOD run.
+  ENDMETHOD.
+  METHOD good.
+  ENDMETHOD.
+  METHOD test_001.
+    FIELD-SYMBOLS <fs_untyped>.
+    FIELD-SYMBOLS <fs_any> TYPE any.
+    FIELD-SYMBOLS <fs_typed> TYPE i.
+  ENDMETHOD.
+ENDCLASS.

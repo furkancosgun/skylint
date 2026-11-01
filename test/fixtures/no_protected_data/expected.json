@@ -1,0 +1,4 @@
+[
+  { "target": "LCL_BAD", "code": "PROT_DATA", "line": 5, "column": 4 },
+  { "target": "LCL_GOOD", "code": null }
+]
