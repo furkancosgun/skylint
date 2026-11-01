@@ -2,5 +2,9 @@
   { "target": "TEST_001", "code": "STRICT_SQL", "line": 3, "column": 4 },
   { "target": "TEST_002", "code": null },
   { "target": "TEST_003", "code": "STRICT_SQL", "line": 3, "column": 4 },
-  { "target": "TEST_004", "code": null }
+  { "target": "TEST_004", "code": null },
+  { "target": "TEST_005", "code": "STRICT_SQL", "line": 3, "column": 4 },
+  { "target": "TEST_006", "code": null },
+  { "target": "TEST_007", "code": "STRICT_SQL", "line": 4, "column": 4 },
+  { "target": "TEST_008", "code": null }
 ]

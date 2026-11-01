@@ -56,14 +56,12 @@ CLASS zcl_skylint_pref_strict_sql IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD has_unescaped_host_var.
-    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_tok            TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_in_into_parens TYPE abap_bool.
+    DATA lv_clean_lexeme   TYPE string.
+    FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_unes = abap_false.
-
-    IF zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
-                                               iv_lexeme    = 'INTO' ) = abap_false.
-      RETURN.
-    ENDIF.
 
     IF zcl_skylint_ast_util=>match_token_sequence(
            is_statement = is_statement
@@ -83,12 +81,51 @@ CLASS zcl_skylint_pref_strict_sql IMPLEMENTATION.
       ls_tok = zcl_skylint_ast_util=>get_token_after_sequence(
                    is_statement = is_statement
                    it_expected  = VALUE #( ( `INTO` ) ( `TABLE` ) ) ).
-    ELSE.
+    ELSEIF zcl_skylint_ast_util=>match_token_sequence(
+               is_statement = is_statement
+               it_expected  = VALUE #( ( `APPENDING` ) ( `TABLE` ) ) ) = abap_true.
+      ls_tok = zcl_skylint_ast_util=>get_token_after_sequence(
+                   is_statement = is_statement
+                   it_expected  = VALUE #( ( `APPENDING` ) ( `TABLE` ) ) ).
+    ELSEIF zcl_skylint_ast_util=>has_token_lexeme( is_statement = is_statement
+                                                   iv_lexeme    = 'INTO' ) = abap_true.
       ls_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
                                                       iv_lexeme    = 'INTO' ).
     ENDIF.
 
-    IF ls_tok-lexeme IS NOT INITIAL AND ls_tok-lexeme(1) <> '@'.
+    IF ls_tok-lexeme IS INITIAL.
+      RETURN.
+    ENDIF.
+
+    IF ls_tok-lexeme(1) = '('.
+      LOOP AT is_statement-tokens ASSIGNING <ls_token>.
+        IF <ls_token>-lexeme = 'INTO'.
+          lv_in_into_parens = abap_true.
+          CONTINUE.
+        ENDIF.
+
+        IF lv_in_into_parens = abap_true.
+          lv_clean_lexeme = <ls_token>-lexeme.
+          REPLACE ALL OCCURRENCES OF '(' IN lv_clean_lexeme WITH ''.
+          REPLACE ALL OCCURRENCES OF ')' IN lv_clean_lexeme WITH ''.
+          REPLACE ALL OCCURRENCES OF ',' IN lv_clean_lexeme WITH ''.
+          lv_clean_lexeme = condense( lv_clean_lexeme ).
+
+          IF lv_clean_lexeme IS NOT INITIAL AND lv_clean_lexeme(1) <> '@'.
+            rv_unes = abap_true.
+            RETURN.
+          ENDIF.
+
+          IF contains( val = <ls_token>-lexeme
+                       sub = ')' ).
+            EXIT.
+          ENDIF.
+        ENDIF.
+      ENDLOOP.
+      RETURN.
+    ENDIF.
+
+    IF ls_tok-lexeme(1) <> '@'.
       rv_unes = abap_true.
     ENDIF.
   ENDMETHOD.
