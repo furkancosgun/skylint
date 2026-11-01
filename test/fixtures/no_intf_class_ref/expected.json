@@ -1,5 +1,4 @@
 [
-  { "target": "LIF_DEMO", "code": "INTF_CLS_R", "line": 2, "column": 2 },
   { "target": "LIF_OTHER", "code": null },
-  { "target": "LCL_SERVICE", "code": null }
+  { "target": "LIF_DEMO", "code": "INTF_CLS_R", "line": 2, "column": 2 }
 ]

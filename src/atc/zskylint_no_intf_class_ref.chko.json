@@ -6,5 +6,5 @@
   },
   "category": "ZSKYLINT_CLEAN_ABAP",
   "implementingClass": "ZCL_SKYLINT_NO_INTF_CLASS_REF",
-  "checkType": "local"
+  "checkType": "remoteEnabled"
 }

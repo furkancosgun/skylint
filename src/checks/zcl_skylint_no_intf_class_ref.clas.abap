@@ -18,7 +18,8 @@ CLASS zcl_skylint_no_intf_class_ref DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_INTF_CLASS_REF'.
 
     METHODS check_statement
-      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
+      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
+                iv_program_name TYPE string OPTIONAL.
 
 ENDCLASS.
 
@@ -27,7 +28,7 @@ CLASS zcl_skylint_no_intf_class_ref IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
         VALUE #( description       = 'Interfaces should not reference concrete classes'
-                 remote_enablement = abap_false
+                 remote_enablement = abap_true
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-class_ref_in_interface
                        severity       = if_ci_atc_check=>finding_severities-warning
@@ -36,6 +37,7 @@ CLASS zcl_skylint_no_intf_class_ref IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
+    DATA lv_program_name TYPE string.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     IF is_procedure-id-kind <> if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
@@ -46,31 +48,45 @@ CLASS zcl_skylint_no_intf_class_ref IMPLEMENTATION.
       RETURN.
     ENDIF.
 
+    lv_program_name = is_procedure-id-main_unit-name.
+
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      check_statement( <ls_statement> ).
+      check_statement( is_statement    = <ls_statement>
+                       iv_program_name = lv_program_name ).
     ENDLOOP.
   ENDMETHOD.
 
   METHOD check_statement.
     DATA lt_expected   TYPE zcl_skylint_ast_util=>ty_token_lexemes.
-    DATA ls_token      TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_idx        TYPE i.
+    DATA ls_type_token TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lo_classdescr TYPE REF TO cl_abap_classdescr.
 
     lt_expected = VALUE #( ( `TYPE` )
                            ( `REF` )
                            ( `TO` ) ).
 
-    ls_token = zcl_skylint_ast_util=>get_token_after_sequence( is_statement = is_statement
-                                                               it_expected  = lt_expected ).
-    IF ls_token IS INITIAL.
+    lv_idx = zcl_skylint_ast_util=>find_token_sequence( is_statement = is_statement
+                                                        it_expected  = lt_expected ).
+    IF lv_idx <= 0.
       RETURN.
     ENDIF.
 
-    IF ls_token-lexeme = 'DATA' OR ls_token-lexeme = 'OBJECT'.
+    ls_type_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                     iv_index     = lv_idx + 3 ).
+    IF ls_type_token-lexeme IS INITIAL OR ls_type_token-lexeme = 'DATA' OR ls_type_token-lexeme = 'OBJECT'.
       RETURN.
     ENDIF.
 
-    lo_classdescr = zcl_skylint_rtti_util=>describe_class( ls_token-lexeme ).
+    IF iv_program_name IS NOT INITIAL.
+      lo_classdescr = zcl_skylint_rtti_util=>describe_class( iv_class_name   = ls_type_token-lexeme
+                                                             iv_program_name = iv_program_name ).
+    ENDIF.
+
+    IF lo_classdescr IS NOT BOUND.
+      lo_classdescr = zcl_skylint_rtti_util=>describe_class( ls_type_token-lexeme ).
+    ENDIF.
+
     IF lo_classdescr IS BOUND.
       report_statement( is_statement    = is_statement
                         iv_finding_code = c_finding_codes-class_ref_in_interface ).

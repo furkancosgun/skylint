@@ -6,18 +6,18 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_union IMPLEMENTATION.
   METHOD test_001.
-    DATA lt_data TYPE string_table.
-    SELECT a FROM ztab1
+    DATA lt_data TYPE STANDARD TABLE OF tadir-pgmid.
+    SELECT pgmid FROM tadir
       UNION ALL
-      SELECT a FROM ztab2
+      SELECT pgmid FROM tadir
       INTO TABLE @lt_data.
   ENDMETHOD.
 
   METHOD test_002.
-    DATA lt_data TYPE string_table.
-    SELECT a FROM ztab1
+    DATA lt_data TYPE STANDARD TABLE OF tadir-pgmid.
+    SELECT pgmid FROM tadir
       UNION
-      SELECT a FROM ztab2
+      SELECT pgmid FROM tadir
       INTO TABLE @lt_data.
   ENDMETHOD.
 ENDCLASS.

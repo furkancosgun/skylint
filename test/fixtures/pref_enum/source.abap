@@ -1,4 +1,4 @@
-CLASS zcl_skylint_test_enum DEFINITION.
+CLASS lcl_test_enum DEFINITION.
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_status,
@@ -9,7 +9,7 @@ CLASS zcl_skylint_test_enum DEFINITION.
     METHODS test_001.
 ENDCLASS.
 
-CLASS zcl_skylint_test_enum IMPLEMENTATION.
+CLASS lcl_test_enum IMPLEMENTATION.
   METHOD test_001.
     CONSTANTS:
       BEGIN OF c_modes,

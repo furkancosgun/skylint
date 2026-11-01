@@ -1,4 +1,4 @@
 [
-  { "target": "ZCL_SKYLINT_TEST_ENUM", "code": "PREF_ENUM", "line": 3, "column": 4 },
+  { "target": "LCL_TEST_ENUM", "code": "PREF_ENUM", "line": 3, "column": 4 },
   { "target": "TEST_001", "code": "PREF_ENUM", "line": 2, "column": 4 }
 ]

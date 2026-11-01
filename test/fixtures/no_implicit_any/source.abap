@@ -14,7 +14,7 @@ CLASS lcl_demo IMPLEMENTATION.
   METHOD good.
   ENDMETHOD.
   METHOD test_001.
-    FIELD-SYMBOLS <fs_untyped>.
+    FIELD-SYMBOLS <fs_any> TYPE any.
     FIELD-SYMBOLS <fs_clike> TYPE clike.
     FIELD-SYMBOLS <fs_typed> TYPE i.
   ENDMETHOD.

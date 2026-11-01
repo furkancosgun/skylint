@@ -36,8 +36,8 @@ CLASS zcl_skylint_test_no_ambig IMPLEMENTATION.
 
   METHOD test_005.
     DATA lt_data TYPE string_table.
-    DATA ls_row TYPE string.
-    MODIFY ztab FROM @ls_row.
+    DATA ls_row TYPE tadir.
+    MODIFY tadir FROM @ls_row.
   ENDMETHOD.
 
   METHOD test_006.
@@ -47,6 +47,6 @@ CLASS zcl_skylint_test_no_ambig IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_007.
-    DELETE FROM ztab WHERE col = 'X'.
+    DELETE FROM tadir WHERE pgmid = 'R3TR'.
   ENDMETHOD.
 ENDCLASS.
