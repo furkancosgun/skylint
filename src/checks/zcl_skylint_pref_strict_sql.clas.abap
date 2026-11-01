@@ -104,22 +104,28 @@ CLASS zcl_skylint_pref_strict_sql IMPLEMENTATION.
           CONTINUE.
         ENDIF.
 
-        IF lv_in_into_parens = abap_true.
-          lv_clean_lexeme = <ls_token>-lexeme.
-          REPLACE ALL OCCURRENCES OF '(' IN lv_clean_lexeme WITH ''.
-          REPLACE ALL OCCURRENCES OF ')' IN lv_clean_lexeme WITH ''.
-          REPLACE ALL OCCURRENCES OF ',' IN lv_clean_lexeme WITH ''.
-          lv_clean_lexeme = condense( lv_clean_lexeme ).
+        IF lv_in_into_parens = abap_false.
+          CONTINUE.
+        ENDIF.
 
-          IF lv_clean_lexeme IS NOT INITIAL AND lv_clean_lexeme(1) <> '@'.
-            rv_unes = abap_true.
-            RETURN.
-          ENDIF.
+        IF    <ls_token>-lexeme = ')'
+           OR contains( val = <ls_token>-lexeme
+                        sub = ')' ).
+          EXIT.
+        ENDIF.
 
-          IF contains( val = <ls_token>-lexeme
-                       sub = ')' ).
-            EXIT.
-          ENDIF.
+        IF <ls_token>-lexeme = '(' OR <ls_token>-lexeme = ','.
+          CONTINUE.
+        ENDIF.
+
+        lv_clean_lexeme = shift_left( val = <ls_token>-lexeme
+                                      sub = '(' ).
+        lv_clean_lexeme = shift_right( val = lv_clean_lexeme
+                                       sub = ',' ).
+
+        IF lv_clean_lexeme IS NOT INITIAL AND lv_clean_lexeme(1) <> '@'.
+          rv_unes = abap_true.
+          RETURN.
         ENDIF.
       ENDLOOP.
       RETURN.
