@@ -1,0 +1,40 @@
+[
+  {
+    "target": "TEST_001",
+    "code": "NO_HARDURL",
+    "line": 2,
+    "column": 34
+  },
+  {
+    "target": "TEST_002",
+    "code": "NO_HARDURL",
+    "line": 3,
+    "column": 13
+  },
+  {
+    "target": "TEST_003",
+    "code": "NO_HARDURL",
+    "line": 3,
+    "column": 14
+  },
+  {
+    "target": "TEST_004",
+    "code": null
+  },
+  {
+    "target": "TEST_005",
+    "code": null
+  },
+  {
+    "target": "TEST_006",
+    "code": null
+  },
+  {
+    "target": "TEST_007",
+    "code": null
+  },
+  {
+    "target": "TEST_008",
+    "code": null
+  }
+]

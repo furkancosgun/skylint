@@ -1,0 +1,36 @@
+[
+  {
+    "target": "TEST_001",
+    "code": "NO_RAWHTML",
+    "line": 2,
+    "column": 34
+  },
+  {
+    "target": "TEST_002",
+    "code": "NO_RAWHTML",
+    "line": 3,
+    "column": 14
+  },
+  {
+    "target": "TEST_003",
+    "code": "NO_RAWHTML",
+    "line": 3,
+    "column": 16
+  },
+  {
+    "target": "TEST_004",
+    "code": null
+  },
+  {
+    "target": "TEST_005",
+    "code": null
+  },
+  {
+    "target": "TEST_006",
+    "code": null
+  },
+  {
+    "target": "TEST_007",
+    "code": null
+  }
+]

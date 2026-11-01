@@ -5157,5 +5157,224 @@
       "pref-strict-sql"
     ],
     "defaultParameters": []
+  },
+  {
+    "ruleId": "no-hardcoded-url",
+    "title": "Avoid Hardcoded HTTP, HTTPS, and FTP URLs in Source Code",
+    "className": "ZCL_SKYLINT_NO_HARDCODED_URL",
+    "checkName": "ZSKYLINT_NO_HARDCODED_URL",
+    "category": "security",
+    "categoryTitle": "Security & Robustness",
+    "pseudoComment": "NO_HARDCODED_URL",
+    "description": "Avoid hardcoded HTTP, HTTPS, and FTP URLs in source code",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "CHECK_HTTP",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_FTP",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "relatedRules": [
+      "no-hardcoded-env",
+      "no-rfc-err"
+    ],
+    "defaultParameters": [
+      {
+        "name": "CHECK_HTTP",
+        "value": "true"
+      },
+      {
+        "name": "CHECK_FTP",
+        "value": "true"
+      }
+    ]
+  },
+  {
+    "ruleId": "no-hardcoded-ip",
+    "title": "Avoid Hardcoded IPv4 and IPv6 Addresses in Source Code",
+    "className": "ZCL_SKYLINT_NO_HARDCODED_IP",
+    "checkName": "ZSKYLINT_NO_HARDCODED_IP",
+    "category": "security",
+    "categoryTitle": "Security & Robustness",
+    "pseudoComment": "NO_HARDCODED_IP",
+    "description": "Avoid hardcoded IPv4 and IPv6 addresses in source code",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "CHECK_IPV4",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_IPV6",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "relatedRules": [
+      "no-hardcoded-url",
+      "no-hardcoded-env"
+    ],
+    "defaultParameters": [
+      {
+        "name": "CHECK_IPV4",
+        "value": "true"
+      },
+      {
+        "name": "CHECK_IPV6",
+        "value": "true"
+      }
+    ]
+  },
+  {
+    "ruleId": "no-raw-html",
+    "title": "Avoid Hardcoded and Unescaped Raw HTML in Source Code",
+    "className": "ZCL_SKYLINT_NO_RAW_HTML",
+    "checkName": "ZSKYLINT_NO_RAW_HTML",
+    "category": "security",
+    "categoryTitle": "Security & Robustness",
+    "pseudoComment": "NO_RAW_HTML",
+    "description": "Avoid raw unescaped HTML tags in strings and templates",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "CHECK_SCRIPTS",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_TAGS",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "relatedRules": [
+      "no-hardcoded-url",
+      "no-hardcoded-ip"
+    ],
+    "defaultParameters": [
+      {
+        "name": "CHECK_SCRIPTS",
+        "value": "true"
+      },
+      {
+        "name": "CHECK_TAGS",
+        "value": "true"
+      }
+    ]
+  },
+  {
+    "ruleId": "pref-test-attributes",
+    "title": "Require Explicit DURATION and RISK LEVEL Attributes on Test Classes",
+    "className": "ZCL_SKYLINT_PREF_TEST_ATTR",
+    "checkName": "ZSKYLINT_PREF_TEST_ATTR",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "PREF_TEST_ATTR",
+    "description": "Require DURATION and RISK LEVEL attributes on test classes",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "CHECK_DURATION",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_RISK_LEVEL",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "relatedRules": [
+      "no-prod-assert",
+      "pref-final-cls"
+    ],
+    "defaultParameters": [
+      {
+        "name": "CHECK_DURATION",
+        "value": "true"
+      },
+      {
+        "name": "CHECK_RISK_LEVEL",
+        "value": "true"
+      }
+    ]
+  },
+  {
+    "ruleId": "no-raw-str-tmpl",
+    "title": "Avoid String Templates Without Embedded Expressions",
+    "className": "ZCL_SKYLINT_NO_RAW_STR_TMPL",
+    "checkName": "ZSKYLINT_NO_RAW_STR_TMPL",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "NO_RAW_STR_TMPL",
+    "description": "Avoid string templates without embedded expressions",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "CHECK_EMPTY_TEMPLATE",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_STATIC_TEMPLATE",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "relatedRules": [
+      "pref-str-tmpl",
+      "no-useless-concat"
+    ],
+    "defaultParameters": [
+      {
+        "name": "CHECK_EMPTY_TEMPLATE",
+        "value": "true"
+      },
+      {
+        "name": "CHECK_STATIC_TEMPLATE",
+        "value": "true"
+      }
+    ]
+  },
+  {
+    "ruleId": "max-sql-joins",
+    "title": "Limit Number of Table JOINs in OpenSQL Queries",
+    "className": "ZCL_SKYLINT_MAX_SQL_JOINS",
+    "checkName": "ZSKYLINT_MAX_SQL_JOINS",
+    "category": "performance",
+    "categoryTitle": "Performance & Database",
+    "pseudoComment": "MAX_SQL_JOINS",
+    "description": "Limit number of JOINs in OpenSQL queries",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "MAX_JOINS",
+        "kind": "Integer",
+        "defaultValue": "4"
+      }
+    ],
+    "relatedRules": [
+      "pref-join-type",
+      "no-select-star"
+    ],
+    "defaultParameters": [
+      {
+        "name": "MAX_JOINS",
+        "value": "4"
+      }
+    ]
   }
 ]

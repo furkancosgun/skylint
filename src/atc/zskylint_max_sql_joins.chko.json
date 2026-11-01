@@ -1,0 +1,15 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Limit number of JOINs in OpenSQL queries",
+    "originalLanguage": "en"
+  },
+  "category": "ZSKYLINT_PERFORMANCE",
+  "implementingClass": "ZCL_SKYLINT_MAX_SQL_JOINS",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "MAX_JOINS"
+    }
+  ]
+}

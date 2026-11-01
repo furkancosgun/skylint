@@ -1,0 +1,18 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Avoid string templates without embedded expressions",
+    "originalLanguage": "en"
+  },
+  "category": "ZSKYLINT_CLEAN_ABAP",
+  "implementingClass": "ZCL_SKYLINT_NO_RAW_STR_TMPL",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "CHECK_EMPTY_TEMPLATE"
+    },
+    {
+      "name": "CHECK_STATIC_TEMPLATE"
+    }
+  ]
+}

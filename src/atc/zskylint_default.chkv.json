@@ -1452,6 +1452,80 @@
     },
     {
       "checkName": "ZSKYLINT_PREF_UNION"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_HARDCODED_URL",
+      "parameters": [
+        {
+          "name": "CHECK_HTTP",
+          "value": "true"
+        },
+        {
+          "name": "CHECK_FTP",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_NO_HARDCODED_IP",
+      "parameters": [
+        {
+          "name": "CHECK_IPV4",
+          "value": "true"
+        },
+        {
+          "name": "CHECK_IPV6",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_NO_RAW_HTML",
+      "parameters": [
+        {
+          "name": "CHECK_SCRIPTS",
+          "value": "true"
+        },
+        {
+          "name": "CHECK_TAGS",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_TEST_ATTR",
+      "parameters": [
+        {
+          "name": "CHECK_DURATION",
+          "value": "true"
+        },
+        {
+          "name": "CHECK_RISK_LEVEL",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_NO_RAW_STR_TMPL",
+      "parameters": [
+        {
+          "name": "CHECK_EMPTY_TEMPLATE",
+          "value": "true"
+        },
+        {
+          "name": "CHECK_STATIC_TEMPLATE",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_MAX_SQL_JOINS",
+      "parameters": [
+        {
+          "name": "MAX_JOINS",
+          "value": "4"
+        }
+      ]
     }
   ]
 }

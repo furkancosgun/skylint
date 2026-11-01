@@ -72,7 +72,7 @@ CLASS zcl_skylint_test_hardcoded_env IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_011.
-    IF sy-uname = 'FURKAN'.
+    IF sy-uname = 'SKYLINT'.
     ENDIF.
   ENDMETHOD.
 ENDCLASS.

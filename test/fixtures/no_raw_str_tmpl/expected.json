@@ -1,0 +1,30 @@
+[
+  {
+    "target": "TEST_001",
+    "code": "NO_RAWTMPL",
+    "line": 3,
+    "column": 13
+  },
+  {
+    "target": "TEST_002",
+    "code": "NO_RAWTMPL",
+    "line": 3,
+    "column": 15
+  },
+  {
+    "target": "TEST_003",
+    "code": null
+  },
+  {
+    "target": "TEST_004",
+    "code": null
+  },
+  {
+    "target": "TEST_005",
+    "code": null
+  },
+  {
+    "target": "TEST_006",
+    "code": null
+  }
+]

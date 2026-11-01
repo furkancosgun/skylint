@@ -1,0 +1,32 @@
+[
+  {
+    "target": "LCL_BAD",
+    "code": "PREF_TSTAT",
+    "line": 1,
+    "column": 0
+  },
+  {
+    "target": "LCL_MISS_RISK",
+    "code": "PREF_TSTAT",
+    "line": 1,
+    "column": 0
+  },
+  {
+    "target": "LCL_MISS_DUR",
+    "code": "PREF_TSTAT",
+    "line": 1,
+    "column": 0
+  },
+  {
+    "target": "LCL_GOOD",
+    "code": null
+  },
+  {
+    "target": "LCL_NORMAL",
+    "code": null
+  },
+  {
+    "target": "LCL_SUPPRESSED",
+    "code": null
+  }
+]

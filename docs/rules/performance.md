@@ -1,16 +1,16 @@
 ---
-title: "Performance & Database (11 Rules)"
+title: "Performance & Database (12 Rules)"
 description: "Database query efficiency, buffer protection, and internal table operation guidelines. Comprehensive reference, finding codes, and Clean ABAP examples for Performance & Database."
 category: "performance"
 keywords: "Clean ABAP, ABAP Cloud, SAP ATC, Performance & Database, S/4HANA Readiness, SAP BTP, Steampunk"
 ---
 
-# Performance & Database (11 Rules)
+# Performance & Database (12 Rules)
 
 Database query efficiency, buffer protection, and internal table operation guidelines.
 
 ::: tip Category Overview
-This category enforces **11 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
+This category enforces **12 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
 :::
 
 ## Rules in this Category
@@ -28,6 +28,7 @@ This category enforces **11 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Avoid String Concatenation Inside Loops (Quadratic Memory Allocation)](/rules/no-concat-loop) | `ZCL_SKYLINT_NO_CONCAT_LOOP` | <code>#EC NO_CONCAT_LOOP</code> | - |
 | [Prefer ASSIGNING over LOOP INTO Copy Targets](/rules/no-loop-into) | `ZCL_SKYLINT_NO_LOOP_INTO` | <code>#EC NO_LOOP_INTO</code> | - |
 | [Prefer UNION over UNION ALL](/rules/pref-union) | `ZCL_SKYLINT_PREF_UNION` | <code>#EC PREF_UNION</code> | - |
+| [Limit Number of Table JOINs in OpenSQL Queries](/rules/max-sql-joins) | `ZCL_SKYLINT_MAX_SQL_JOINS` | <code>#EC MAX_SQL_JOINS</code> | - |
 
 ---
 

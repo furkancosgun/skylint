@@ -4,7 +4,7 @@
       "key": "clean-abap",
       "title": "Clean ABAP & Modern Syntax",
       "description": "Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.",
-      "count": 70
+      "count": 72
     },
     {
       "key": "anti-patterns",
@@ -16,13 +16,13 @@
       "key": "performance",
       "title": "Performance & Database",
       "description": "Database query efficiency, buffer protection, and internal table operation guidelines.",
-      "count": 11
+      "count": 12
     },
     {
       "key": "security",
       "title": "Security & Robustness",
       "description": "Authorizations, dynamic execution sanitation, error handling, and runtime safety.",
-      "count": 18
+      "count": 21
     },
     {
       "key": "metrics",
@@ -2071,6 +2071,78 @@
       "hasQuickfix": false,
       "remoteEnabled": true,
       "configurable": false
+    },
+    {
+      "ruleId": "no-hardcoded-url",
+      "title": "Avoid Hardcoded HTTP, HTTPS, and FTP URLs in Source Code",
+      "className": "ZCL_SKYLINT_NO_HARDCODED_URL",
+      "description": "Avoid hardcoded HTTP, HTTPS, and FTP URLs in source code",
+      "category": "security",
+      "categoryTitle": "Security & Robustness",
+      "pseudoComment": "NO_HARDCODED_URL",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "no-hardcoded-ip",
+      "title": "Avoid Hardcoded IPv4 and IPv6 Addresses in Source Code",
+      "className": "ZCL_SKYLINT_NO_HARDCODED_IP",
+      "description": "Avoid hardcoded IPv4 and IPv6 addresses in source code",
+      "category": "security",
+      "categoryTitle": "Security & Robustness",
+      "pseudoComment": "NO_HARDCODED_IP",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "no-raw-html",
+      "title": "Avoid Hardcoded and Unescaped Raw HTML in Source Code",
+      "className": "ZCL_SKYLINT_NO_RAW_HTML",
+      "description": "Avoid raw unescaped HTML tags in strings and templates",
+      "category": "security",
+      "categoryTitle": "Security & Robustness",
+      "pseudoComment": "NO_RAW_HTML",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "pref-test-attributes",
+      "title": "Require Explicit DURATION and RISK LEVEL Attributes on Test Classes",
+      "className": "ZCL_SKYLINT_PREF_TEST_ATTR",
+      "description": "Require DURATION and RISK LEVEL attributes on test classes",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "PREF_TEST_ATTR",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "no-raw-str-tmpl",
+      "title": "Avoid String Templates Without Embedded Expressions",
+      "className": "ZCL_SKYLINT_NO_RAW_STR_TMPL",
+      "description": "Avoid string templates without embedded expressions",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "NO_RAW_STR_TMPL",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "max-sql-joins",
+      "title": "Limit Number of Table JOINs in OpenSQL Queries",
+      "className": "ZCL_SKYLINT_MAX_SQL_JOINS",
+      "description": "Limit number of JOINs in OpenSQL queries",
+      "category": "performance",
+      "categoryTitle": "Performance & Database",
+      "pseudoComment": "MAX_SQL_JOINS",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
     }
   ]
 }

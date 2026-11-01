@@ -1,16 +1,16 @@
 ---
-title: "Security & Robustness (18 Rules)"
+title: "Security & Robustness (21 Rules)"
 description: "Authorizations, dynamic execution sanitation, error handling, and runtime safety. Comprehensive reference, finding codes, and Clean ABAP examples for Security & Robustness."
 category: "security"
 keywords: "Clean ABAP, ABAP Cloud, SAP ATC, Security & Robustness, S/4HANA Readiness, SAP BTP, Steampunk"
 ---
 
-# Security & Robustness (18 Rules)
+# Security & Robustness (21 Rules)
 
 Authorizations, dynamic execution sanitation, error handling, and runtime safety.
 
 ::: tip Category Overview
-This category enforces **18 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
+This category enforces **21 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
 :::
 
 ## Rules in this Category
@@ -35,6 +35,9 @@ This category enforces **18 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Avoid UPDATE or DELETE Without a WHERE Condition (Catastrophic Data Wipe Prevention)](/rules/no-unfilt-dml) | `ZCL_SKYLINT_NO_UNFILT_DML` | <code>#EC NO_UNFILT_DML</code> | - |
 | [Provide FAILED and REPORTED in RAP EML Statements (Silent Transaction Failure Prevention)](/rules/no-unhandled-eml) | `ZCL_SKYLINT_NO_UNHANDLED_EML` | <code>#EC NO_UNHANDLED_EML</code> | ⚡ Ready |
 | [Avoid DUMMY Authorization Checks](/rules/no-dummy-auth) | `ZCL_SKYLINT_NO_DUMMY_AUTH` | <code>#EC NO_DUMMY_AUTH</code> | - |
+| [Avoid Hardcoded HTTP, HTTPS, and FTP URLs in Source Code](/rules/no-hardcoded-url) | `ZCL_SKYLINT_NO_HARDCODED_URL` | <code>#EC NO_HARDCODED_URL</code> | - |
+| [Avoid Hardcoded IPv4 and IPv6 Addresses in Source Code](/rules/no-hardcoded-ip) | `ZCL_SKYLINT_NO_HARDCODED_IP` | <code>#EC NO_HARDCODED_IP</code> | - |
+| [Avoid Hardcoded and Unescaped Raw HTML in Source Code](/rules/no-raw-html) | `ZCL_SKYLINT_NO_RAW_HTML` | <code>#EC NO_RAW_HTML</code> | - |
 
 ---
 

@@ -4970,6 +4970,179 @@ export const RULES = [
       "pref-join-type",
       "pref-strict-sql"
     ]
+  },
+  {
+    "ruleId": "no-hardcoded-url",
+    "title": "Avoid Hardcoded HTTP, HTTPS, and FTP URLs in Source Code",
+    "rationale": "Hardcoding absolute URLs and endpoint addresses directly in source code creates brittle dependencies, environment pollution, and security vulnerabilities. When promoting code across landscapes (DEV -> QA -> PROD) or deploying to ABAP Cloud environments, hardcoded URLs prevent environment-specific endpoint resolution and break proxy routing.\n\n**Best Practice:** Maintain remote endpoints in SM59 RFC destinations, Communication Arrangements, or Customizing tables, and resolve them dynamically at runtime.",
+    "className": "ZCL_SKYLINT_NO_HARDCODED_URL",
+    "pseudoComment": "NO_HARDCODED_URL",
+    "category": "security",
+    "example": {
+      "bad": "\" Anti-pattern: Hardcoded URL connection\nDATA(lo_dest) = cl_http_destination_provider=>create_by_url(\n  i_url = 'https://api.skylint.org/v1/orders' ).\nDATA(lo_client) = cl_web_http_client_manager=>create_by_http_destination( lo_dest ).",
+      "good": "\" Clean ABAP: Configuration-based destination (SM59, BTP, or Communication Arrangement)\nDATA(lo_dest) = cl_http_destination_provider=>create_by_destination(\n  i_destination = 'SKYLINT' ).\nDATA(lo_client) = cl_web_http_client_manager=>create_by_http_destination( lo_dest )."
+    },
+    "seo": {
+      "description": "Detect and eliminate hardcoded HTTP, HTTPS, and FTP URLs in ABAP source code. Enforce SM59 RFC destinations and BTP Communication Management.",
+      "keywords": [
+        "Hardcoded URL ABAP",
+        "ABAP Cloud Communication Arrangement",
+        "SM59 Destination",
+        "SAP Security Guideline"
+      ]
+    },
+    "parameters": {
+      "CHECK_HTTP": "Flag hardcoded HTTP and HTTPS URLs",
+      "CHECK_FTP": "Flag hardcoded FTP and SFTP URLs"
+    },
+    "relatedRules": [
+      "no-hardcoded-env",
+      "no-rfc-err"
+    ]
+  },
+  {
+    "ruleId": "no-hardcoded-ip",
+    "title": "Avoid Hardcoded IPv4 and IPv6 Addresses in Source Code",
+    "rationale": "Hardcoding IP addresses in ABAP source code couples business logic to physical or virtual infrastructure, breaks DNS load balancing, and violates cloud portability guidelines. In modern hybrid and cloud environments (BTP, S/4HANA Private/Public Cloud), server IP addresses are dynamic and must be resolved through hostname configuration, SM59 destinations, or Communication Arrangements.\n\n**Best Practice:** Use logical destinations (such as SM59 or BTP Destinations) or DNS hostnames instead of raw IP addresses.",
+    "className": "ZCL_SKYLINT_NO_HARDCODED_IP",
+    "pseudoComment": "NO_HARDCODED_IP",
+    "category": "security",
+    "example": {
+      "bad": "\" Anti-pattern: Hardcoded IP address connection\nDATA(lo_dest) = cl_http_destination_provider=>create_by_url(\n  i_url = 'http://192.168.1.50:8080/api' ).\nDATA(lo_client) = cl_web_http_client_manager=>create_by_http_destination( lo_dest ).",
+      "good": "\" Clean ABAP: Configuration-based destination (SM59, BTP, or Communication Arrangement)\nDATA(lo_dest) = cl_http_destination_provider=>create_by_destination(\n  i_destination = 'SKYLINT' ).\nDATA(lo_client) = cl_web_http_client_manager=>create_by_http_destination( lo_dest )."
+    },
+    "seo": {
+      "description": "Detect and eliminate hardcoded IPv4 and IPv6 addresses in ABAP source code. Enforce SM59 RFC destinations and cloud communication management.",
+      "keywords": [
+        "Hardcoded IP ABAP",
+        "IPv4 Address Linting",
+        "IPv6 Security SAP",
+        "Clean Core Network Configuration"
+      ]
+    },
+    "parameters": {
+      "CHECK_IPV4": "Detect hardcoded IPv4 addresses",
+      "CHECK_IPV6": "Detect hardcoded IPv6 addresses"
+    },
+    "relatedRules": [
+      "no-hardcoded-url",
+      "no-hardcoded-env"
+    ]
+  },
+  {
+    "ruleId": "no-raw-html",
+    "title": "Avoid Hardcoded and Unescaped Raw HTML in Source Code",
+    "rationale": "Embedding raw HTML markup strings (`<div>`, `<script>`, `<table>`) directly in ABAP source code creates Cross-Site Scripting (XSS) vulnerabilities (OWASP A03 / CWE-79) and couples backend logic to user interface rendering. When dynamic values are concatenated into raw HTML without strict escaping, malicious scripts can be executed in the user's browser session.\n\n**Best Practice:** Separate presentation from logic using SAP Fiori / SAPUI5, BSP extensions, or use `cl_abap_format` / `escape( ... format = cl_abap_format=>e_html_text )` to sanitize HTML output.",
+    "className": "ZCL_SKYLINT_NO_RAW_HTML",
+    "pseudoComment": "NO_RAW_HTML",
+    "category": "security",
+    "example": {
+      "bad": "\" Anti-pattern: Concatenating unescaped user data into raw HTML\nDATA(lv_html) = |<div class=\"user-info\"><b>{ lv_name }</b></div>|.",
+      "good": "\" Clean ABAP: Use UI framework or encode output to prevent XSS\nDATA(lv_safe_name) = escape( val = lv_name format = cl_abap_format=>e_html_text ).\nDATA(lv_html) = |<div class=\"user-info\"><b>{ lv_safe_name }</b></div>|. \"#EC NO_RAW_HTML"
+    },
+    "seo": {
+      "description": "Prevent Cross-Site Scripting (XSS) vulnerabilities by detecting raw HTML string concatenation in ABAP source code. Enforce SAP Fiori and cl_abap_format escaping.",
+      "keywords": [
+        "XSS ABAP",
+        "Raw HTML Security SAP",
+        "cl_abap_format escape_html",
+        "Clean Core UI Separation"
+      ]
+    },
+    "parameters": {
+      "CHECK_SCRIPTS": "Detect high-risk script and iframe HTML tags",
+      "CHECK_TAGS": "Detect structural HTML tags (div, table, form, etc.)"
+    },
+    "relatedRules": [
+      "no-hardcoded-url",
+      "no-hardcoded-ip"
+    ]
+  },
+  {
+    "ruleId": "pref-test-attributes",
+    "title": "Require Explicit DURATION and RISK LEVEL Attributes on Test Classes",
+    "rationale": "ABAP Unit test classes (`FOR TESTING`) should declare explicit `DURATION` (SHORT, MEDIUM, or LONG) and `RISK LEVEL` (HARMLESS, DANGEROUS, or CRITICAL) attributes on their `CLASS ... DEFINITION` statement. Without explicit attributes, the test runner assigns default values that may cause tests with external dependencies or database commits to execute in restricted test environments or time out prematurely.\n\n**Best Practice:** Always declare `DURATION SHORT RISK LEVEL HARMLESS` for fast, hermetic unit tests.",
+    "className": "ZCL_SKYLINT_PREF_TEST_ATTR",
+    "pseudoComment": "PREF_TEST_ATTR",
+    "category": "clean-abap",
+    "example": {
+      "bad": "\" Anti-pattern: Test class without duration or risk level attributes\nCLASS lcl_order_test DEFINITION FOR TESTING.\n  PUBLIC SECTION.\n    METHODS test_calculation FOR TESTING.\nENDCLASS.",
+      "good": "\" Clean ABAP: Explicit duration and risk level declaration\nCLASS lcl_order_test DEFINITION FOR TESTING\n  DURATION SHORT\n  RISK LEVEL HARMLESS.\n  PUBLIC SECTION.\n    METHODS test_calculation FOR TESTING.\nENDCLASS."
+    },
+    "seo": {
+      "description": "Enforce explicit DURATION and RISK LEVEL declarations on ABAP Unit test classes. Standardize ABAP testing best practices and CI/CD test runner stability.",
+      "keywords": [
+        "ABAP Unit FOR TESTING",
+        "DURATION SHORT ABAP",
+        "RISK LEVEL HARMLESS",
+        "Clean ABAP Testing Guidelines"
+      ]
+    },
+    "parameters": {
+      "CHECK_DURATION": "Require explicit DURATION attribute (SHORT, MEDIUM, LONG)",
+      "CHECK_RISK_LEVEL": "Require explicit RISK LEVEL attribute (HARMLESS, DANGEROUS, CRITICAL)"
+    },
+    "relatedRules": [
+      "no-prod-assert",
+      "pref-final-cls"
+    ]
+  },
+  {
+    "ruleId": "no-raw-str-tmpl",
+    "title": "Avoid String Templates Without Embedded Expressions",
+    "rationale": "Using string templates (`|...|`) without any embedded expressions `{ ... }` creates unnecessary string template runtime evaluation overhead and clutters code readability. If a string has no dynamic variables or formatting expressions, a standard single-quote literal (`'...'`) or backtick literal (``` `...` ```) should be used instead.\n\n**Best Practice:** Only use `|...|` when interpolating expressions or formatting parameters.",
+    "className": "ZCL_SKYLINT_NO_RAW_STR_TMPL",
+    "pseudoComment": "NO_RAW_STR_TMPL",
+    "category": "clean-abap",
+    "example": {
+      "bad": "\" Anti-pattern: String template with no dynamic expressions\nDATA(lv_text) = |Hello World|.\nDATA(lv_empty) = ||.",
+      "good": "\" Clean ABAP: Standard text literal or string backtick\nDATA(lv_text) = 'Hello World'.\nDATA(lv_str) = `Hello World`."
+    },
+    "seo": {
+      "description": "Detect unnecessary string templates in ABAP. Replace static |...| templates with standard string literals to optimize performance.",
+      "keywords": [
+        "String Template ABAP",
+        "Raw String Template",
+        "Clean ABAP Literals",
+        "ABAP String Performance"
+      ]
+    },
+    "parameters": {
+      "CHECK_EMPTY_TEMPLATE": "Flag empty string templates (||)",
+      "CHECK_STATIC_TEMPLATE": "Flag static string templates without expressions (|text|)"
+    },
+    "relatedRules": [
+      "pref-str-tmpl",
+      "no-useless-concat"
+    ]
+  },
+  {
+    "ruleId": "max-sql-joins",
+    "title": "Limit Number of Table JOINs in OpenSQL Queries",
+    "rationale": "Queries joining more than 4 database tables degrade database optimizer join-graph planning, create expensive intermediate temporary tables, and saturate memory on SAP HANA and relational databases. Complex multi-table entity graphs should be encapsulated in Core Data Services (CDS) Views or decomposed into targeted queries.\n\n**Best Practice:** Model multi-table join hierarchies as reusable CDS Analytical or Transactional Views.",
+    "className": "ZCL_SKYLINT_MAX_SQL_JOINS",
+    "pseudoComment": "MAX_SQL_JOINS",
+    "category": "performance",
+    "example": {
+      "bad": "\" Anti-pattern: Excessive table joins in single OpenSQL query (5 joins)\nSELECT a~id, b~val, c~text, d~status, e~curr, f~amt\n  FROM ztab_a AS a\n  INNER JOIN ztab_b AS b ON a~id = b~id\n  LEFT JOIN ztab_c AS c ON b~id = c~id\n  INNER JOIN ztab_d AS d ON c~id = d~id\n  INNER JOIN ztab_e AS e ON d~id = e~id\n  INNER JOIN ztab_f AS f ON e~id = f~id\n  INTO TABLE @DATA(lt_data).",
+      "good": "\" Clean ABAP: Encapsulate join graph in reusable CDS view or decompose\nSELECT id, val, text, status, curr, amt\n  FROM zc_order_analytics\n  INTO TABLE @DATA(lt_data)."
+    },
+    "seo": {
+      "description": "Limit table JOINs in ABAP OpenSQL queries to prevent SAP HANA optimizer bottlenecks and memory saturation. Encourage CDS View data modeling.",
+      "keywords": [
+        "Max SQL JOINs ABAP",
+        "OpenSQL Performance HANA",
+        "CDS View Data Modeling",
+        "Database Optimizer Bottleneck"
+      ]
+    },
+    "parameters": {
+      "MAX_JOINS": "Maximum number of table JOINs allowed per query (default: 4)"
+    },
+    "relatedRules": [
+      "pref-join-type",
+      "no-select-star"
+    ]
   }
 ];
 

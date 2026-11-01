@@ -1,16 +1,16 @@
 ---
-title: "Clean ABAP & Modern Syntax (70 Rules)"
+title: "Clean ABAP & Modern Syntax (72 Rules)"
 description: "Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices. Comprehensive reference, finding codes, and Clean ABAP examples for Clean ABAP & Modern Syntax."
 category: "clean-abap"
 keywords: "Clean ABAP, ABAP Cloud, SAP ATC, Clean ABAP & Modern Syntax, S/4HANA Readiness, SAP BTP, Steampunk"
 ---
 
-# Clean ABAP & Modern Syntax (70 Rules)
+# Clean ABAP & Modern Syntax (72 Rules)
 
 Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.
 
 ::: tip Category Overview
-This category enforces **70 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
+This category enforces **72 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
 :::
 
 ## Rules in this Category
@@ -87,6 +87,8 @@ This category enforces **70 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Avoid Protected Attributes](/rules/no-protected-data) | `ZCL_SKYLINT_NO_PROTECTED_DATA` | <code>#EC NO_PROTECTED_DATA</code> | - |
 | [Avoid Excessive Method Chaining](/rules/no-method-chain) | `ZCL_SKYLINT_NO_METHOD_CHAIN` | <code>#EC NO_METHOD_CHAIN</code> | - |
 | [Avoid Generic and Implicit ANY Types](/rules/no-implicit-any) | `ZCL_SKYLINT_NO_IMPLICIT_ANY` | <code>#EC NO_IMPLICIT_ANY</code> | - |
+| [Require Explicit DURATION and RISK LEVEL Attributes on Test Classes](/rules/pref-test-attributes) | `ZCL_SKYLINT_PREF_TEST_ATTR` | <code>#EC PREF_TEST_ATTR</code> | - |
+| [Avoid String Templates Without Embedded Expressions](/rules/no-raw-str-tmpl) | `ZCL_SKYLINT_NO_RAW_STR_TMPL` | <code>#EC NO_RAW_STR_TMPL</code> | - |
 
 ---
 
