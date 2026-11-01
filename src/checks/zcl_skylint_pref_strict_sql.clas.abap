@@ -58,7 +58,6 @@ CLASS zcl_skylint_pref_strict_sql IMPLEMENTATION.
   METHOD has_unescaped_host_var.
     DATA ls_tok            TYPE if_ci_atc_source_code_provider=>ty_token.
     DATA lv_in_into_parens TYPE abap_bool.
-    DATA lv_clean_lexeme   TYPE string.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     rv_unes = abap_false.
@@ -97,7 +96,7 @@ CLASS zcl_skylint_pref_strict_sql IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    IF ls_tok-lexeme(1) = '('.
+    IF ls_tok-lexeme = '('.
       LOOP AT is_statement-tokens ASSIGNING <ls_token>.
         IF <ls_token>-lexeme = 'INTO'.
           lv_in_into_parens = abap_true.
@@ -108,9 +107,7 @@ CLASS zcl_skylint_pref_strict_sql IMPLEMENTATION.
           CONTINUE.
         ENDIF.
 
-        IF    <ls_token>-lexeme = ')'
-           OR contains( val = <ls_token>-lexeme
-                        sub = ')' ).
+        IF <ls_token>-lexeme = ')'.
           EXIT.
         ENDIF.
 
@@ -118,12 +115,7 @@ CLASS zcl_skylint_pref_strict_sql IMPLEMENTATION.
           CONTINUE.
         ENDIF.
 
-        lv_clean_lexeme = shift_left( val = <ls_token>-lexeme
-                                      sub = '(' ).
-        lv_clean_lexeme = shift_right( val = lv_clean_lexeme
-                                       sub = ',' ).
-
-        IF lv_clean_lexeme IS NOT INITIAL AND lv_clean_lexeme(1) <> '@'.
+        IF <ls_token>-lexeme(1) <> '@'.
           rv_unes = abap_true.
           RETURN.
         ENDIF.
