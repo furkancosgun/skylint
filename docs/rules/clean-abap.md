@@ -1,16 +1,16 @@
 ---
-title: "Clean ABAP & Modern Syntax (77 Rules)"
+title: "Clean ABAP & Modern Syntax (78 Rules)"
 description: "Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices. Comprehensive reference, finding codes, and Clean ABAP examples for Clean ABAP & Modern Syntax."
 category: "clean-abap"
 keywords: "Clean ABAP, ABAP Cloud, SAP ATC, Clean ABAP & Modern Syntax, S/4HANA Readiness, SAP BTP, Steampunk"
 ---
 
-# Clean ABAP & Modern Syntax (77 Rules)
+# Clean ABAP & Modern Syntax (78 Rules)
 
 Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.
 
 ::: tip Category Overview
-This category enforces **77 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
+This category enforces **78 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
 :::
 
 ## Rules in this Category
@@ -92,8 +92,9 @@ This category enforces **77 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Prefer LOOP AT WHERE over IF CONTINUE Guards](/rules/pref-loop-where) | `ZCL_SKYLINT_PREF_LOOP_WHERE` | <code>#EC PREF_LOOP_WHERE</code> | - |
 | [Prefer Simpler String Functions over Plain Regex](/rules/pref-plain-regex) | `ZCL_SKYLINT_PREF_PLAIN_REGEX` | <code>#EC PREF_PLAIN_REGEX</code> | - |
 | [Limit Consecutive Blank Lines](/rules/max-blank-lines) | `ZCL_SKYLINT_MAX_BLANK_LINES` | <code>#EC MAX_BLANK_LINES</code> | - |
-| [Raise At Most One Exception Class per Method](/rules/one-exc-class) | `ZCL_SKYLINT_ONE_EXC_CLASS` | <code>#EC ONE_EXC_CLASS</code> | - |
+| [Raise At Most One Exception Class per Method](/rules/no-multi-exc) | `ZCL_SKYLINT_NO_MULTI_EXC` | <code>#EC NO_MULTI_EXC</code> | - |
 | [Avoid Dynamic MESSAGE Statements](/rules/no-dyn-message) | `ZCL_SKYLINT_NO_DYN_MESSAGE` | <code>#EC NO_DYN_MESSAGE</code> | - |
+| [Prefer nmin/nmax or clamp Expressions over Manual IF Clamping](/rules/pref-clamp) | `ZCL_SKYLINT_PREF_CLAMP` | <code>#EC PREF_CLAMP</code> | - |
 
 ---
 

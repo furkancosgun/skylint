@@ -4,7 +4,7 @@
       "key": "clean-abap",
       "title": "Clean ABAP & Modern Syntax",
       "description": "Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.",
-      "count": 77
+      "count": 78
     },
     {
       "key": "anti-patterns",
@@ -16,7 +16,7 @@
       "key": "performance",
       "title": "Performance & Database",
       "description": "Database query efficiency, buffer protection, and internal table operation guidelines.",
-      "count": 14
+      "count": 15
     },
     {
       "key": "security",
@@ -28,7 +28,7 @@
       "key": "metrics",
       "title": "Metrics & Complexity Limits",
       "description": "Quantitative boundaries for method size, nesting depth, parameter counts, and cyclomatic complexity.",
-      "count": 14
+      "count": 18
     }
   ],
   "rules": [
@@ -2205,13 +2205,13 @@
       "configurable": false
     },
     {
-      "ruleId": "one-exc-class",
+      "ruleId": "no-multi-exc",
       "title": "Raise At Most One Exception Class per Method",
-      "className": "ZCL_SKYLINT_ONE_EXC_CLASS",
+      "className": "ZCL_SKYLINT_NO_MULTI_EXC",
       "description": "Raise At Most One Exception Type per Method",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
-      "pseudoComment": "ONE_EXC_CLASS",
+      "pseudoComment": "NO_MULTI_EXC",
       "hasQuickfix": false,
       "remoteEnabled": true,
       "configurable": false
@@ -2224,6 +2224,78 @@
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
       "pseudoComment": "NO_DYN_MESSAGE",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "max-when-count",
+      "title": "Limit Number of WHEN Branches in CASE Statements",
+      "className": "ZCL_SKYLINT_MAX_WHEN_COUNT",
+      "description": "Limit number of WHEN clauses per CASE",
+      "category": "metrics",
+      "categoryTitle": "Metrics & Complexity Limits",
+      "pseudoComment": "MAX_WHEN_COUNT",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "max-elseif-count",
+      "title": "Limit Number of ELSEIF Branches in IF Statements",
+      "className": "ZCL_SKYLINT_MAX_ELSEIF_COUNT",
+      "description": "Limit number of ELSEIF clauses per IF",
+      "category": "metrics",
+      "categoryTitle": "Metrics & Complexity Limits",
+      "pseudoComment": "MAX_ELSEIF_COUNT",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "max-loop-jumps",
+      "title": "Limit Jump Statements (CONTINUE, EXIT) per Loop",
+      "className": "ZCL_SKYLINT_MAX_LOOP_JUMPS",
+      "description": "Limit jump statements (CONTINUE/EXIT) per loop",
+      "category": "metrics",
+      "categoryTitle": "Metrics & Complexity Limits",
+      "pseudoComment": "MAX_LOOP_JUMPS",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "max-catch-clauses",
+      "title": "Limit Number of CATCH Clauses per TRY Block",
+      "className": "ZCL_SKYLINT_MAX_CATCH_CLAUSES",
+      "description": "Limit CATCH clauses per TRY block",
+      "category": "metrics",
+      "categoryTitle": "Metrics & Complexity Limits",
+      "pseudoComment": "MAX_CATCH_CLAUSES",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
+    },
+    {
+      "ruleId": "pref-clamp",
+      "title": "Prefer nmin/nmax or clamp Expressions over Manual IF Clamping",
+      "className": "ZCL_SKYLINT_PREF_CLAMP",
+      "description": "Prefer nmin/nmax or clamp over manual IF clamp",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "PREF_CLAMP",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "no-nested-loop",
+      "title": "Disallow Nested LOOP AT Statements Without FROM or GROUP BY",
+      "className": "ZCL_SKYLINT_NO_NESTED_LOOP",
+      "description": "Disallow nested LOOP AT statements",
+      "category": "performance",
+      "categoryTitle": "Performance & Database",
+      "pseudoComment": "NO_NESTED_LOOP",
       "hasQuickfix": false,
       "remoteEnabled": true,
       "configurable": false

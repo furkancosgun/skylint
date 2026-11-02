@@ -1,0 +1,74 @@
+---
+title: "Limit Number of WHEN Branches in CASE Statements"
+description: "Limit the maximum number of WHEN clauses in ABAP CASE statements to maintain clean code and low cyclomatic complexity."
+keywords: "ABAP CASE WHEN limit, Cyclomatic Complexity, Clean ABAP, Polymorphism"
+category: "metrics"
+ruleId: "max-when-count"
+---
+
+# Limit Number of WHEN Branches in CASE Statements
+
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+  <Badge type="warning" text="Warning" />
+  <Badge type="tip" text="Metrics & Complexity Limits" />
+  <Badge type="danger" text="#EC MAX_WHEN_COUNT" />
+  <Badge type="info" text="Remote Enabled" />
+</div>
+
+## Overview
+
+Limit number of WHEN clauses per CASE.
+
+> **ATC Finding Message:** `CASE statement has too many WHEN clauses; consider refactoring`
+
+## Rationale
+
+A CASE statement with an excessive number of WHEN branches violates the Single Responsibility Principle and often indicates missing polymorphism, dictionary tables, or strategy patterns. Complex CASE structures are prone to bugs during maintenance.
+
+### Non-Compliant
+
+```abap
+CASE lv_status.
+  WHEN 'A'. ...
+  WHEN 'B'. ...
+  " ... 10+ more branches
+ENDCASE.
+```
+
+### Compliant
+
+```abap
+" Use a strategy pattern, lookup table, or dispatch method
+```
+
+## Configuration & Thresholds
+
+This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:
+
+| Parameter Name | Data Type | Default Value | Description & Guidance |
+|---|---|:---:|---|
+| `MAX_WHEN_COUNT` | `Integer` | <code>10</code> | Maximum number of WHEN clauses allowed per CASE statement (default: 10) |
+
+## Suppression
+
+To suppress findings for this rule, append the pseudo-comment to the statement:
+
+```abap
+" Standard pseudo-comment:
+... "#EC MAX_WHEN_COUNT
+
+" SAP CI_ prefix format:
+... "#EC CI_MAX_WHEN_COUNT
+```
+
+
+## Related Rules
+
+* [Limit Cyclomatic Complexity (McCabe Complexity Metric)](/rules/max-cyclo-comp) — <code>#EC MAX_CYCLO_COMP</code>
+* [Limit Number of ELSEIF Branches in IF Statements](/rules/max-elseif-count) — <code>#EC MAX_ELSEIF_COUNT</code>
+* [Prefer CASE over Multiple IF / ELSEIF on the Same Variable](/rules/pref-case) — <code>#EC PREF_CASE</code>
+
+## Technical Details
+
+* **Native ATC Class:** `ZCL_SKYLINT_MAX_WHEN_COUNT`
+* **Implementation File:** [zcl_skylint_max_when_count.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_max_when_count.clas.abap)

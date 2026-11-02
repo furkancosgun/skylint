@@ -1,16 +1,16 @@
 ---
-title: "Metrics & Complexity Limits (14 Rules)"
+title: "Metrics & Complexity Limits (18 Rules)"
 description: "Quantitative boundaries for method size, nesting depth, parameter counts, and cyclomatic complexity. Comprehensive reference, finding codes, and Clean ABAP examples for Metrics & Complexity Limits."
 category: "metrics"
 keywords: "Clean ABAP, ABAP Cloud, SAP ATC, Metrics & Complexity Limits, S/4HANA Readiness, SAP BTP, Steampunk"
 ---
 
-# Metrics & Complexity Limits (14 Rules)
+# Metrics & Complexity Limits (18 Rules)
 
 Quantitative boundaries for method size, nesting depth, parameter counts, and cyclomatic complexity.
 
 ::: tip Category Overview
-This category enforces **14 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
+This category enforces **18 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
 :::
 
 ## Rules in this Category
@@ -31,6 +31,10 @@ This category enforces **14 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Limit Cognitive Complexity per Method](/rules/max-cognitive) | `ZCL_SKYLINT_MAX_COGNITIVE` | <code>#EC MAX_COGNITIVE</code> | - |
 | [Limit Local Variable Count per Method](/rules/max-locals) | `ZCL_SKYLINT_MAX_LOCALS` | <code>#EC MAX_LOCALS</code> | - |
 | [Limit Type Fan-Out per Procedure](/rules/max-fanout) | `ZCL_SKYLINT_MAX_FANOUT` | <code>#EC MAX_FANOUT</code> | - |
+| [Limit Number of WHEN Branches in CASE Statements](/rules/max-when-count) | `ZCL_SKYLINT_MAX_WHEN_COUNT` | <code>#EC MAX_WHEN_COUNT</code> | - |
+| [Limit Number of ELSEIF Branches in IF Statements](/rules/max-elseif-count) | `ZCL_SKYLINT_MAX_ELSEIF_COUNT` | <code>#EC MAX_ELSEIF_COUNT</code> | - |
+| [Limit Jump Statements (CONTINUE, EXIT) per Loop](/rules/max-loop-jumps) | `ZCL_SKYLINT_MAX_LOOP_JUMPS` | <code>#EC MAX_LOOP_JUMPS</code> | - |
+| [Limit Number of CATCH Clauses per TRY Block](/rules/max-catch-clauses) | `ZCL_SKYLINT_MAX_CATCH_CLAUSES` | <code>#EC MAX_CATCH_CLAUSES</code> | - |
 
 ---
 

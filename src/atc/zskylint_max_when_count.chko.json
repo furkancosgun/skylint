@@ -1,0 +1,15 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Limit number of WHEN clauses per CASE",
+    "originalLanguage": "en"
+  },
+  "category": "ZSKYLINT_METRICS",
+  "implementingClass": "ZCL_SKYLINT_MAX_WHEN_COUNT",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "MAX_WHEN_COUNT"
+    }
+  ]
+}

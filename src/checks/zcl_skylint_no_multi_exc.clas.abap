@@ -1,4 +1,4 @@
-CLASS zcl_skylint_one_exc_class DEFINITION
+CLASS zcl_skylint_no_multi_exc DEFINITION
   PUBLIC
   INHERITING FROM zcl_skylint_check_base
   CREATE PUBLIC.
@@ -6,7 +6,7 @@ CLASS zcl_skylint_one_exc_class DEFINITION
   PUBLIC SECTION.
     CONSTANTS:
       BEGIN OF c_finding_codes,
-        one_exc_class TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_MULTEXC',
+        no_multi_exc TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_MULTEXC',
       END OF c_finding_codes.
 
     METHODS constructor.
@@ -15,7 +15,7 @@ CLASS zcl_skylint_one_exc_class DEFINITION
     METHODS check REDEFINITION.
 
   PRIVATE SECTION.
-    CONSTANTS c_pseudo_comment TYPE string VALUE 'ONE_EXC_CLASS'.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_MULTI_EXC'.
 
     METHODS get_exception_class
       IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
@@ -23,13 +23,13 @@ CLASS zcl_skylint_one_exc_class DEFINITION
 ENDCLASS.
 
 
-CLASS zcl_skylint_one_exc_class IMPLEMENTATION.
+CLASS zcl_skylint_no_multi_exc IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
         VALUE #( description       = 'Raise At Most One Exception Type per Method'
                  remote_enablement = abap_true
                  finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-one_exc_class
+                     ( code           = c_finding_codes-no_multi_exc
                        severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Method raises several different exception classes - raise one type instead'
                        pseudo_comment = c_pseudo_comment ) ) ) ).
@@ -64,7 +64,7 @@ CLASS zcl_skylint_one_exc_class IMPLEMENTATION.
       ENDIF.
 
       report_statement( is_statement    = <ls_statement>
-                        iv_finding_code = c_finding_codes-one_exc_class ).
+                        iv_finding_code = c_finding_codes-no_multi_exc ).
     ENDLOOP.
   ENDMETHOD.
 

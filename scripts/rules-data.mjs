@@ -5281,11 +5281,11 @@ export const RULES = [
     ]
   },
   {
-    "ruleId": "one-exc-class",
+    "ruleId": "no-multi-exc",
     "title": "Raise At Most One Exception Class per Method",
     "rationale": "Throwing several different exception classes from one method forces each caller to nest separate TRY/CATCH blocks and duplicate handler logic. Define a single dedicated exception type per method's interface (or a single hierarchy family) so the caller can react with one handler; packing more error detail into the exception's attributes keeps the API stable. Clean ABAP (Throw one type of exception) recommends one main exception class per method.",
-    "className": "ZCL_SKYLINT_ONE_EXC_CLASS",
-    "pseudoComment": "ONE_EXC_CLASS",
+    "className": "ZCL_SKYLINT_NO_MULTI_EXC",
+    "pseudoComment": "NO_MULTI_EXC",
     "category": "clean-abap",
     "example": {
       "bad": "METHOD add_row.\n  IF rows_full.\n    RAISE EXCEPTION TYPE cx_full.\n  ENDIF.\n  IF invalid_row.\n    RAISE EXCEPTION TYPE cx_invalid.\n  ENDIF.\nENDMETHOD.",
@@ -5332,6 +5332,174 @@ export const RULES = [
       "pref-msg-cls",
       "no-msg-raising",
       "no-dynamic-stmt"
+    ]
+  },
+  {
+    "ruleId": "max-when-count",
+    "title": "Limit Number of WHEN Branches in CASE Statements",
+    "rationale": "A CASE statement with an excessive number of WHEN branches violates the Single Responsibility Principle and often indicates missing polymorphism, dictionary tables, or strategy patterns. Complex CASE structures are prone to bugs during maintenance.",
+    "className": "ZCL_SKYLINT_MAX_WHEN_COUNT",
+    "pseudoComment": "MAX_WHEN_COUNT",
+    "category": "metrics",
+    "example": {
+      "bad": "CASE lv_status.\n  WHEN 'A'. ...\n  WHEN 'B'. ...\n  \" ... 10+ more branches\nENDCASE.",
+      "good": "\" Use a strategy pattern, lookup table, or dispatch method"
+    },
+    "seo": {
+      "description": "Limit the maximum number of WHEN clauses in ABAP CASE statements to maintain clean code and low cyclomatic complexity.",
+      "keywords": [
+        "ABAP CASE WHEN limit",
+        "Cyclomatic Complexity",
+        "Clean ABAP",
+        "Polymorphism"
+      ]
+    },
+    "parameters": {
+      "MAX_WHEN_COUNT": "Maximum number of WHEN clauses allowed per CASE statement (default: 10)"
+    },
+    "relatedRules": [
+      "max-cyclo-comp",
+      "max-elseif-count",
+      "pref-case"
+    ]
+  },
+  {
+    "ruleId": "max-elseif-count",
+    "title": "Limit Number of ELSEIF Branches in IF Statements",
+    "rationale": "Deep chains of ELSEIF statements are difficult to read and test. Consider replacing long ELSEIF cascades with a CASE statement, polymorphism, or separate dispatch methods.",
+    "className": "ZCL_SKYLINT_MAX_ELSEIF_COUNT",
+    "pseudoComment": "MAX_ELSEIF_COUNT",
+    "category": "metrics",
+    "example": {
+      "bad": "IF lv_code = 1. ...\nELSEIF lv_code = 2. ...\nELSEIF lv_code = 3. ...\n\" ... 6+ branches\nENDIF.",
+      "good": "CASE lv_code.\n  WHEN 1. ...\n  WHEN 2. ...\nENDCASE."
+    },
+    "seo": {
+      "description": "Limit the number of ELSEIF clauses in ABAP IF statements to avoid excessive branch complexity.",
+      "keywords": [
+        "ABAP ELSEIF limit",
+        "Branch Complexity",
+        "Clean ABAP",
+        "Refactor IF to CASE"
+      ]
+    },
+    "parameters": {
+      "MAX_ELSEIF_COUNT": "Maximum number of ELSEIF clauses allowed per IF statement (default: 5)"
+    },
+    "relatedRules": [
+      "max-cyclo-comp",
+      "max-when-count",
+      "pref-case"
+    ]
+  },
+  {
+    "ruleId": "max-loop-jumps",
+    "title": "Limit Jump Statements (CONTINUE, EXIT) per Loop",
+    "rationale": "Loops containing too many jump statements (CONTINUE, EXIT) have convoluted control flow that makes loop invariants difficult to reason about and maintain. Restructure the loop body using helper methods or simplified boolean conditions.",
+    "className": "ZCL_SKYLINT_MAX_LOOP_JUMPS",
+    "pseudoComment": "MAX_LOOP_JUMPS",
+    "category": "metrics",
+    "example": {
+      "bad": "LOOP AT lt_items INTO ls_item.\n  IF cond1. CONTINUE. ENDIF.\n  IF cond2. EXIT. ENDIF.\n  IF cond3. CONTINUE. ENDIF.\nENDLOOP.",
+      "good": "LOOP AT lt_items INTO ls_item WHERE ...\n  process_item( ls_item ).\nENDLOOP."
+    },
+    "seo": {
+      "description": "Limit CONTINUE and EXIT statements per ABAP loop to reduce control flow complexity.",
+      "keywords": [
+        "ABAP Loop jumps",
+        "LoopWithTooManyJumps",
+        "CONTINUE EXIT limit",
+        "Clean ABAP"
+      ]
+    },
+    "parameters": {
+      "MAX_LOOP_JUMPS": "Maximum number of jump statements (CONTINUE/EXIT) allowed per loop (default: 2)"
+    },
+    "relatedRules": [
+      "no-check-stmt",
+      "no-nested-loop",
+      "max-cyclo-comp"
+    ]
+  },
+  {
+    "ruleId": "max-catch-clauses",
+    "title": "Limit Number of CATCH Clauses per TRY Block",
+    "rationale": "A single TRY block handling an excessive number of distinct exception types indicates high coupling and overly broad responsibilities. Decompose the procedure or catch common superclasses if appropriate.",
+    "className": "ZCL_SKYLINT_MAX_CATCH_CLAUSES",
+    "pseudoComment": "MAX_CATCH_CLAUSES",
+    "category": "metrics",
+    "example": {
+      "bad": "TRY.\n    execute_workflow( ).\n  CATCH cx_a. ...\n  CATCH cx_b. ...\n  CATCH cx_c. ...\n  CATCH cx_d. ...\nENDTRY.",
+      "good": "TRY.\n    execute_workflow( ).\n  CATCH cx_workflow_error. ...\nENDTRY."
+    },
+    "seo": {
+      "description": "Limit CATCH clauses per ABAP TRY block to prevent high error-handling coupling.",
+      "keywords": [
+        "ABAP TRY CATCH limit",
+        "Error Handling Coupling",
+        "Clean ABAP",
+        "Clean Exceptions"
+      ]
+    },
+    "parameters": {
+      "MAX_CATCH_CLAUSES": "Maximum number of CATCH clauses allowed per TRY block (default: 3)"
+    },
+    "relatedRules": [
+      "no-catch-root",
+      "pref-class-exc"
+    ]
+  },
+  {
+    "ruleId": "pref-clamp",
+    "title": "Prefer nmin/nmax or clamp Expressions over Manual IF Clamping",
+    "rationale": "Manually clamping a variable between lower and upper bounds using IF/ELSEIF statements is verbose and imperative. Modern ABAP provides built-in functions like nmin( ) and nmax( ) or clamp( ) that express range containment concisely and without branch complexity.",
+    "className": "ZCL_SKYLINT_PREF_CLAMP",
+    "pseudoComment": "PREF_CLAMP",
+    "category": "clean-abap",
+    "example": {
+      "bad": "IF lv < lo.\n  lv = lo.\nELSEIF lv > hi.\n  lv = hi.\nENDIF.",
+      "good": "lv = nmin( val1 = hi\n           val2 = nmax( val1 = lo\n                        val2 = lv ) )."
+    },
+    "seo": {
+      "description": "Prefer built-in nmin, nmax, or clamp functions over manual range checking IF statements in ABAP.",
+      "keywords": [
+        "ABAP clamp",
+        "nmin nmax ABAP",
+        "manual clamp",
+        "Clean ABAP expressions"
+      ]
+    },
+    "relatedRules": [
+      "pref-between",
+      "pref-cond",
+      "pref-switch"
+    ]
+  },
+  {
+    "ruleId": "no-nested-loop",
+    "title": "Disallow Nested LOOP AT Statements Without FROM or GROUP BY",
+    "rationale": "Nesting internal table loops (LOOP AT within LOOP AT) creates O(N*M) Cartesian complexity that scales poorly with larger datasets and degrades application performance. Use GROUP BY loops, hashed/sorted secondary keys, or parallel cursor (LOOP AT itab FROM sy-tabix) instead.",
+    "className": "ZCL_SKYLINT_NO_NESTED_LOOP",
+    "pseudoComment": "NO_NESTED_LOOP",
+    "category": "performance",
+    "example": {
+      "bad": "LOOP AT lt_orders INTO ls_order.\n  LOOP AT lt_items INTO ls_item.\n    \" O(N*M) quadratic loop\n  ENDLOOP.\nENDLOOP.",
+      "good": "LOOP AT lt_orders INTO ls_order.\n  LOOP AT lt_items INTO ls_item FROM lv_start WHERE order_id = ls_order-order_id.\n    \" Parallel cursor or filtered loop\n  ENDLOOP.\nENDLOOP."
+    },
+    "seo": {
+      "description": "Disallow nested LOOP AT statements without FROM or GROUP BY in ABAP to prevent O(N*M) performance degradation.",
+      "keywords": [
+        "ABAP Nested LOOP",
+        "Parallel Cursor",
+        "Internal Table Performance",
+        "Clean ABAP",
+        "GROUP BY loop"
+      ]
+    },
+    "relatedRules": [
+      "pref-loop-where",
+      "pref-read-table",
+      "max-loop-jumps"
     ]
   }
 ];

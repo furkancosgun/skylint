@@ -3,7 +3,7 @@ title: "Raise At Most One Exception Class per Method"
 description: "Raise at most one exception class per ABAP method - Clean ABAP exception design with a single exception type per method. Simplified error handling and automated ATC inspection for SAP S/4HANA and ABAP Cloud."
 keywords: "Clean ABAP Exceptions, Raise Exception Type, Exception Class Design, Error Handling ABAP, ATC Code Review"
 category: "clean-abap"
-ruleId: "one-exc-class"
+ruleId: "no-multi-exc"
 ---
 
 # Raise At Most One Exception Class per Method
@@ -11,7 +11,7 @@ ruleId: "one-exc-class"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
-  <Badge type="danger" text="#EC ONE_EXC_CLASS" />
+  <Badge type="danger" text="#EC NO_MULTI_EXC" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
@@ -53,10 +53,10 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ```abap
 " Standard pseudo-comment:
-... "#EC ONE_EXC_CLASS
+... "#EC NO_MULTI_EXC
 
 " SAP CI_ prefix format:
-... "#EC CI_ONE_EXC_CLASS
+... "#EC CI_NO_MULTI_EXC
 ```
 
 
@@ -68,5 +68,5 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ## Technical Details
 
-* **Native ATC Class:** `ZCL_SKYLINT_ONE_EXC_CLASS`
-* **Implementation File:** [zcl_skylint_one_exc_class.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_one_exc_class.clas.abap)
+* **Native ATC Class:** `ZCL_SKYLINT_NO_MULTI_EXC`
+* **Implementation File:** [zcl_skylint_no_multi_exc.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_multi_exc.clas.abap)

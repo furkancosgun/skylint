@@ -1,16 +1,16 @@
 ---
-title: "Performance & Database (14 Rules)"
+title: "Performance & Database (15 Rules)"
 description: "Database query efficiency, buffer protection, and internal table operation guidelines. Comprehensive reference, finding codes, and Clean ABAP examples for Performance & Database."
 category: "performance"
 keywords: "Clean ABAP, ABAP Cloud, SAP ATC, Performance & Database, S/4HANA Readiness, SAP BTP, Steampunk"
 ---
 
-# Performance & Database (14 Rules)
+# Performance & Database (15 Rules)
 
 Database query efficiency, buffer protection, and internal table operation guidelines.
 
 ::: tip Category Overview
-This category enforces **14 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
+This category enforces **15 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
 :::
 
 ## Rules in this Category
@@ -31,6 +31,7 @@ This category enforces **14 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Limit Number of Table JOINs in OpenSQL Queries](/rules/max-sql-joins) | `ZCL_SKYLINT_MAX_SQL_JOINS` | <code>#EC MAX_SQL_JOINS</code> | - |
 | [Specify an Explicit SORT Key with BY](/rules/pref-sort-key) | `ZCL_SKYLINT_PREF_SORT_KEY` | <code>#EC PREF_SORT_KEY</code> | - |
 | [Prefer READ TABLE WITH KEY over WHERE](/rules/pref-read-key) | `ZCL_SKYLINT_PREF_READ_KEY` | <code>#EC PREF_READ_KEY</code> | - |
+| [Disallow Nested LOOP AT Statements Without FROM or GROUP BY](/rules/no-nested-loop) | `ZCL_SKYLINT_NO_NESTED_LOOP` | <code>#EC NO_NESTED_LOOP</code> | - |
 
 ---
 

@@ -1549,10 +1549,52 @@
       "checkName": "ZSKYLINT_PREF_READ_KEY"
     },
     {
-      "checkName": "ZSKYLINT_ONE_EXC_CLASS"
+      "checkName": "ZSKYLINT_NO_MULTI_EXC"
     },
     {
       "checkName": "ZSKYLINT_NO_DYN_MESSAGE"
+    },
+    {
+      "checkName": "ZSKYLINT_MAX_WHEN_COUNT",
+      "parameters": [
+        {
+          "name": "MAX_WHEN_COUNT",
+          "value": "10"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_MAX_ELSEIF_COUNT",
+      "parameters": [
+        {
+          "name": "MAX_ELSEIF_COUNT",
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_MAX_LOOP_JUMPS",
+      "parameters": [
+        {
+          "name": "MAX_LOOP_JUMPS",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_MAX_CATCH_CLAUSES",
+      "parameters": [
+        {
+          "name": "MAX_CATCH_CLAUSES",
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_CLAMP"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_NESTED_LOOP"
     }
   ]
 }

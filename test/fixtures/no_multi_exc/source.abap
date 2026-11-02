@@ -1,4 +1,4 @@
-CLASS zcl_test_one_exc_class DEFINITION.
+CLASS zcl_test_no_multi_exc DEFINITION.
   PUBLIC SECTION.
     DATA mv_flags TYPE abap_bool.
 
@@ -9,7 +9,7 @@ CLASS zcl_test_one_exc_class DEFINITION.
     METHODS test_005.
 ENDCLASS.
 
-CLASS zcl_test_one_exc_class IMPLEMENTATION.
+CLASS zcl_test_no_multi_exc IMPLEMENTATION.
 
   METHOD test_001.
     IF mv_flags = abap_true.
@@ -30,7 +30,7 @@ CLASS zcl_test_one_exc_class IMPLEMENTATION.
 
   METHOD test_004.
     RAISE EXCEPTION TYPE cx_smth_first.
-    RAISE EXCEPTION TYPE cx_smth_second. "#EC ONE_EXC_CLASS
+    RAISE EXCEPTION TYPE cx_smth_second. "#EC NO_MULTI_EXC
   ENDMETHOD.
 
   METHOD test_005.

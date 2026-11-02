@@ -1,0 +1,15 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Limit number of ELSEIF clauses per IF",
+    "originalLanguage": "en"
+  },
+  "category": "ZSKYLINT_METRICS",
+  "implementingClass": "ZCL_SKYLINT_MAX_ELSEIF_COUNT",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "MAX_ELSEIF_COUNT"
+    }
+  ]
+}
