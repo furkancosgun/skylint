@@ -24,6 +24,7 @@ CLASS zcl_skylint_test_dup_subexp DEFINITION
 
   PRIVATE SECTION.
     DATA lt_orders TYPE ty_orders.
+    DATA lt_copy   TYPE ty_orders.
     DATA lo_calc   TYPE REF TO lif_calc.
 ENDCLASS.
 
@@ -48,8 +49,10 @@ CLASS zcl_skylint_test_dup_subexp IMPLEMENTATION.
   METHOD test_004.
     DATA lv_total TYPE i.
     DATA lv_val   TYPE i.
+    DATA lv_diff  TYPE i.
     lv_total = lt_orders[ 1 ]-net + lt_orders[ 2 ]-vat.
-    lv_val = lo_calc->compute( 10 ) + lo_calc->compute( 20 ).
+    lv_diff  = lt_orders[ 1 ]-net + lt_copy[ 1 ]-net.
+    lv_val   = lo_calc->compute( 10 ) + lo_calc->compute( 20 ).
   ENDMETHOD.
 
   METHOD test_005.
