@@ -17,13 +17,10 @@ CLASS zcl_skylint_pref_loop_where DEFINITION
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_LOOP_WHERE'.
 
-    " A pure filtering guard: the first three statements inside the LOOP
-    " are a bare conditional, a skip statement, and its closing bracket.
     METHODS loop_starts_with_filter
       IMPORTING it_statements TYPE if_ci_atc_source_code_provider=>ty_statements
                 iv_loop_index TYPE i
       RETURNING VALUE(rv_yes) TYPE abap_bool.
-
 ENDCLASS.
 
 
@@ -40,6 +37,7 @@ CLASS zcl_skylint_pref_loop_where IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
+    DATA lv_index TYPE i.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
@@ -47,12 +45,13 @@ CLASS zcl_skylint_pref_loop_where IMPLEMENTATION.
     ENDIF.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      lv_index = sy-tabix.
       IF <ls_statement>-keyword <> 'LOOP'.
         CONTINUE.
       ENDIF.
 
       IF loop_starts_with_filter( it_statements = is_procedure-statements
-                                  iv_loop_index = sy-tabix ) = abap_true.
+                                  iv_loop_index = lv_index ) = abap_true.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-add_where ).
       ENDIF.
@@ -62,25 +61,20 @@ CLASS zcl_skylint_pref_loop_where IMPLEMENTATION.
   METHOD loop_starts_with_filter.
     DATA ls_next TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-    rv_yes = abap_false.
-
-    " the first loop statement must open the guard
     ls_next = zcl_skylint_ast_util=>get_statement( it_statements = it_statements
-                                                   iv_index     = iv_loop_index + 1 ).
+                                                   iv_index      = iv_loop_index + 1 ).
     IF ls_next-keyword <> 'IF'.
       RETURN.
     ENDIF.
 
-    " immediately followed by a plain CONTINUE
     ls_next = zcl_skylint_ast_util=>get_statement( it_statements = it_statements
-                                                   iv_index     = iv_loop_index + 2 ).
+                                                   iv_index      = iv_loop_index + 2 ).
     IF ls_next-keyword <> 'CONTINUE'.
       RETURN.
     ENDIF.
 
-    " ... and closed directly by ENDIF - anything else is real logic
     ls_next = zcl_skylint_ast_util=>get_statement( it_statements = it_statements
-                                                   iv_index     = iv_loop_index + 3 ).
+                                                   iv_index      = iv_loop_index + 3 ).
     IF ls_next-keyword <> 'ENDIF'.
       RETURN.
     ENDIF.
