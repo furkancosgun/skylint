@@ -17,11 +17,6 @@ CLASS zcl_skylint_no_dyn_message DEFINITION
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_DYN_MESSAGE'.
 
-    METHODS operand_not_literal
-      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
-                iv_index     TYPE i
-      RETURNING VALUE(rv_no) TYPE abap_bool.
-
     METHODS uses_dynamic_operand
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_no) TYPE abap_bool.
@@ -61,51 +56,21 @@ CLASS zcl_skylint_no_dyn_message IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD uses_dynamic_operand.
-    DATA lv_index   TYPE i.
-    DATA lv_id_bad  TYPE abap_bool.
-    DATA lv_typ_bad TYPE abap_bool.
-    DATA lv_num_bad TYPE abap_bool.
+    DATA ls_id_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_typ_tok TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_num_tok TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    " Inline MESSAGE 'text' and MESSAGE e001(ad) carry no ID section -
-    " message class preference ( pref-msg-cls ) is not this rule's domain
-    lv_index = zcl_skylint_ast_util=>find_token( is_statement = is_statement
-                                                 iv_lexeme    = 'ID' ).
-    IF lv_index = 0.
+    ls_id_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                       iv_lexeme    = 'ID' ).
+    IF ls_id_tok IS INITIAL.
       RETURN.
     ENDIF.
-
-    lv_id_bad = operand_not_literal( is_statement = is_statement
-                                     iv_index     = lv_index ).
-
-    lv_typ_bad = operand_not_literal( is_statement = is_statement
-                                      iv_index     = zcl_skylint_ast_util=>find_token(
-                                                         is_statement = is_statement
-                                                         iv_lexeme    = 'TYPE' ) ).
-
-    lv_num_bad = operand_not_literal( is_statement = is_statement
-                                      iv_index     = zcl_skylint_ast_util=>find_token(
-                                                         is_statement = is_statement
-                                                         iv_lexeme    = 'NUMBER' ) ).
-
-    rv_no = xsdbool( lv_id_bad = abap_true
-                     OR lv_typ_bad = abap_true
-                     OR lv_num_bad = abap_true ).
-  ENDMETHOD.
-
-  METHOD operand_not_literal.
-    DATA ls_operand TYPE if_ci_atc_source_code_provider=>ty_token.
-
-    rv_no = abap_false.
-    IF iv_index <= 0.
-      RETURN.
-    ENDIF.
-
-    ls_operand = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                  iv_index     = iv_index + 1 ).
-    IF ls_operand-lexeme IS INITIAL.
-      RETURN.
-    ENDIF.
-
-    rv_no = xsdbool( zcl_skylint_ast_util=>token_is_literal( ls_operand ) = abap_false ).
+    ls_typ_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                        iv_lexeme    = 'TYPE' ).
+    ls_num_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
+                                                        iv_lexeme    = 'NUMBER' ).
+    rv_no = xsdbool(    zcl_skylint_ast_util=>token_is_literal( ls_id_tok )  = abap_false
+                     OR zcl_skylint_ast_util=>token_is_literal( ls_typ_tok ) = abap_false
+                     OR zcl_skylint_ast_util=>token_is_literal( ls_num_tok ) = abap_false ).
   ENDMETHOD.
 ENDCLASS.

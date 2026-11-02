@@ -20,7 +20,7 @@ CLASS zcl_skylint_max_blank_lines DEFINITION
     DATA mv_max_blanks TYPE i VALUE 1.
 
     METHODS get_statement_end
-      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
+      IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_line) TYPE i.
 
 ENDCLASS.
@@ -31,39 +31,34 @@ CLASS zcl_skylint_max_blank_lines IMPLEMENTATION.
     super->constructor(
         VALUE #( description       = 'No Excessive Consecutive Empty Lines'
                  remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-max_blank
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Too many consecutive empty lines - collapse them'
-                       pseudo_comment = c_pseudo_comment ) )
+                 finding_codes     = VALUE #( ( code           = c_finding_codes-max_blank
+                                                severity       = if_ci_atc_check=>finding_severities-warning
+                                                text           = 'Too many consecutive empty lines - collapse them'
+                                                pseudo_comment = c_pseudo_comment ) )
                  attributes        = VALUE #( ( name  = 'MAX_BLANKS'
                                                 kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
                                                 value = REF #( mv_max_blanks ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_prev_end TYPE i.
-    DATA lv_end      TYPE i.
+    DATA lv_prev TYPE i.
+    DATA lv_end  TYPE i.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    CLEAR lv_prev_end.
-
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_end = get_statement_end( <ls_statement> ).
 
-      IF lv_prev_end > 0 AND <ls_statement>-position-line - lv_prev_end - 1 > mv_max_blanks.
+      IF lv_prev > 0 AND <ls_statement>-position-line - lv_prev - 1 > mv_max_blanks.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-max_blank ).
       ENDIF.
 
-      " Comments are invisible to the parser - a comment block inside the
-      " gap is counted as empty space (documented heuristic limitation)
-      IF lv_end > lv_prev_end.
-        lv_prev_end = lv_end.
+      IF lv_end > lv_prev.
+        lv_prev = lv_end.
       ENDIF.
     ENDLOOP.
   ENDMETHOD.

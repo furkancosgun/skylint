@@ -17,11 +17,9 @@ CLASS zcl_skylint_one_exc_class DEFINITION
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'ONE_EXC_CLASS'.
 
-    DATA mt_seen_classes TYPE string_table.
-
-    METHODS inspect_raise_statement
-      IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
-
+    METHODS get_exception_class
+      IMPORTING is_statement    TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_class) TYPE string.
 ENDCLASS.
 
 
@@ -38,61 +36,56 @@ CLASS zcl_skylint_one_exc_class IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check.
+    DATA lv_class   TYPE string.
+    DATA lt_classes TYPE STANDARD TABLE OF string WITH EMPTY KEY.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
     ENDIF.
 
-    CLEAR mt_seen_classes.
-
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF <ls_statement>-keyword <> 'RAISE'.
         CONTINUE.
       ENDIF.
 
-      inspect_raise_statement( <ls_statement> ).
+      lv_class = get_exception_class( <ls_statement> ).
+      IF lv_class IS INITIAL.
+        CONTINUE.
+      ENDIF.
+
+      IF lt_classes IS INITIAL.
+        APPEND lv_class TO lt_classes.
+        CONTINUE.
+      ENDIF.
+
+      IF line_exists( lt_classes[ table_line = lv_class ] ).
+        CONTINUE.
+      ENDIF.
+
+      report_statement( is_statement    = <ls_statement>
+                        iv_finding_code = c_finding_codes-one_exc_class ).
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD inspect_raise_statement.
-    DATA lv_technical TYPE string.
-    DATA lv_name      TYPE string.
+  METHOD get_exception_class.
+    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
 
-    " Classic RAISE cxx (without EXCEPTION) is not examined
-    IF zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                               iv_index     = 2 ) <> 'EXCEPTION'.
+    ls_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                iv_index     = 2 ).
+    IF ls_token-lexeme <> 'EXCEPTION'.
       RETURN.
     ENDIF.
 
-    lv_technical = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                           iv_index     = 3 ).
-    IF lv_technical <> 'TYPE' AND lv_technical <> 'NEW'.
+    ls_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                iv_index     = 3 ).
+    IF ls_token-lexeme <> 'TYPE' AND ls_token-lexeme <> 'NEW'.
       RETURN.
     ENDIF.
 
-    " NEW form: the class name can carry the opening parenthesis ( lexeme 'CX_X(' )
-    lv_name = segment( val = zcl_skylint_ast_util=>get_token_lexeme(
-                                     is_statement = is_statement
-                                     iv_index     = 4 )
-                       index = 1
-                       sep   = '(' ).
-    IF lv_name IS INITIAL.
-      RETURN.
-    ENDIF.
-
-    IF mt_seen_classes IS INITIAL.
-      APPEND lv_name TO mt_seen_classes.
-      RETURN.
-    ENDIF.
-
-    IF line_exists( mt_seen_classes[ table_line = lv_name ] ).
-      RETURN.
-    ENDIF.
-
-    report_statement( is_statement    = is_statement
-                      iv_finding_code = c_finding_codes-one_exc_class ).
-
-    APPEND lv_name TO mt_seen_classes.
+    rv_class = segment( val   = zcl_skylint_ast_util=>get_token_lexeme( is_statement = is_statement
+                                                                        iv_index     = 4 )
+                        index = 1
+                        sep   = '(' ).
   ENDMETHOD.
 ENDCLASS.

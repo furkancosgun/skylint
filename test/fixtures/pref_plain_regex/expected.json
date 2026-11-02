@@ -1,10 +1,40 @@
 [
-  { "target": "TEST_001", "code": "PREF_PREGX", "line": 2, "column": 4 },
-  { "target": "TEST_002", "code": null },
-  { "target": "TEST_003", "code": null },
-  { "target": "TEST_004", "code": null },
-  { "target": "TEST_005", "code": null },
-  { "target": "TEST_006", "code": "PREF_PREGX", "line": 2, "column": 4 },
-  { "target": "TEST_007", "code": null },
-  { "target": "TEST_008", "code": null }
+  {
+    "target": "TEST_001",
+    "code": "PREF_PREGX",
+    "line": 2,
+    "column": 4
+  },
+  {
+    "target": "TEST_002",
+    "code": null
+  },
+  {
+    "target": "TEST_003",
+    "code": null
+  },
+  {
+    "target": "TEST_004",
+    "code": "PREF_PREGX",
+    "line": 2,
+    "column": 4
+  },
+  {
+    "target": "TEST_005",
+    "code": null
+  },
+  {
+    "target": "TEST_006",
+    "code": "PREF_PREGX",
+    "line": 2,
+    "column": 4
+  },
+  {
+    "target": "TEST_007",
+    "code": null
+  },
+  {
+    "target": "TEST_008",
+    "code": null
+  }
 ]

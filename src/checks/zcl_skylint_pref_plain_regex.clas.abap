@@ -30,13 +30,14 @@ ENDCLASS.
 CLASS zcl_skylint_pref_plain_regex IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Prefer Simpler String Functions to Regex'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-plain_regex
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Regex pattern contains no metacharacters - use the simple sub / case parameter instead'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+        VALUE #(
+            description       = 'Prefer Simpler String Functions to Regex'
+            remote_enablement = abap_true
+            finding_codes     = VALUE #(
+                ( code           = c_finding_codes-plain_regex
+                  severity       = if_ci_atc_check=>finding_severities-warning
+                  text           = 'Regex pattern contains no metacharacters - use the simple sub / case parameter instead'
+                  pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -47,22 +48,14 @@ CLASS zcl_skylint_pref_plain_regex IMPLEMENTATION.
     ENDIF.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      " FIND/REPLACE REGEX statements are the domain of no-obs-strings
-      IF <ls_statement>-keyword = 'FIND' OR <ls_statement>-keyword = 'REPLACE'.
-        CONTINUE.
-      ENDIF.
-
       inspect_statement( <ls_statement> ).
     ENDLOOP.
   ENDMETHOD.
 
   METHOD inspect_statement.
-    DATA lv_index     TYPE i.
-    DATA lv_eq_index  TYPE i.
-    DATA ls_value     TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_pattern   TYPE string.
-    DATA lv_length    TYPE i.
-    DATA lv_inner     TYPE i.
+    DATA lv_index   TYPE i.
+    DATA ls_token   TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_pattern TYPE string.
 
     lv_index = zcl_skylint_ast_util=>find_token( is_statement = is_statement
                                                  iv_lexeme    = 'REGEX' ).
@@ -70,32 +63,28 @@ CLASS zcl_skylint_pref_plain_regex IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    lv_eq_index = zcl_skylint_ast_util=>find_token( is_statement    = is_statement
-                                                    iv_lexeme       = '='
-                                                    iv_start_index  = lv_index + 1 ).
-    IF lv_eq_index <> lv_index + 1.
+    ls_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                iv_index     = lv_index + 1 ).
+    IF ls_token-lexeme = '='.
+      ls_token = zcl_skylint_ast_util=>get_token( is_statement = is_statement
+                                                  iv_index     = lv_index + 2 ).
+    ENDIF.
+
+    IF zcl_skylint_ast_util=>token_is_literal( ls_token ) = abap_false.
       RETURN.
     ENDIF.
 
-    ls_value = zcl_skylint_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = lv_index + 2 ).
-    IF zcl_skylint_ast_util=>token_is_literal( ls_value ) = abap_false.
-      RETURN.
-    ENDIF.
-    " String templates can embed arbitrary expressions - not examined
-    IF ls_value-lexeme(1) = '|'.
+    IF ls_token-lexeme(1) = '|'.
       RETURN.
     ENDIF.
 
-    lv_length = strlen( ls_value-lexeme ).
-    IF lv_length <= 2.
+    IF strlen( ls_token-lexeme ) <= 2.
       RETURN.
     ENDIF.
 
-    lv_inner = lv_length - 2.
-    lv_pattern = substring( val = ls_value-lexeme
+    lv_pattern = substring( val = ls_token-lexeme
                             off = 1
-                            len = lv_inner ).
+                            len = strlen( ls_token-lexeme ) - 2 ).
 
     IF pattern_has_meta( lv_pattern ) = abap_true.
       RETURN.
