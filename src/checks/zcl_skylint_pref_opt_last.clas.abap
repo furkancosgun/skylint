@@ -50,72 +50,27 @@ CLASS zcl_skylint_pref_opt_last IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD check_method_parameters.
-    TYPES:
-      BEGIN OF ty_param_info,
-        token       TYPE if_ci_atc_source_code_provider=>ty_token,
-        section     TYPE string,
-        is_optional TYPE abap_bool,
-      END OF ty_param_info.
-
-    DATA lt_params        TYPE STANDARD TABLE OF ty_param_info WITH EMPTY KEY.
+    DATA lt_params        TYPE zcl_skylint_ast_util=>ty_method_parameters.
     DATA lv_curr_section  TYPE string.
-    DATA ls_prev_tok      TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_tabix         TYPE i.
-    DATA lv_param_idx     TYPE i.
     DATA lv_seen_optional TYPE abap_bool.
-    DATA ls_param         TYPE ty_param_info.
-    FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_p>   TYPE ty_param_info.
+    FIELD-SYMBOLS <ls_param> TYPE zcl_skylint_ast_util=>ty_method_parameter.
 
-    LOOP AT is_statement-tokens ASSIGNING <ls_tok>.
-      lv_tabix = sy-tabix.
+    lt_params = zcl_skylint_ast_util=>get_method_parameters( is_statement ).
 
-      IF <ls_tok>-references IS NOT INITIAL.
-        ls_prev_tok = <ls_tok>.
+    LOOP AT lt_params ASSIGNING <ls_param>.
+      IF <ls_param>-section <> 'IMPORTING' AND <ls_param>-section <> 'CHANGING'.
         CONTINUE.
       ENDIF.
 
-      CASE <ls_tok>-lexeme.
-        WHEN 'IMPORTING' OR 'CHANGING'.
-          lv_curr_section = <ls_tok>-lexeme.
-
-        WHEN 'EXPORTING' OR 'RETURNING' OR 'RAISING' OR 'EXCEPTIONS'
-          OR 'FOR' OR 'REDEFINITION' OR 'ABSTRACT' OR 'FINAL'.
-          CLEAR lv_curr_section.
-
-        WHEN 'TYPE' OR 'LIKE'.
-          IF lv_curr_section IS NOT INITIAL AND ls_prev_tok-lexeme IS NOT INITIAL.
-            APPEND VALUE #( token       = ls_prev_tok
-                            section     = lv_curr_section
-                            is_optional = abap_false ) TO lt_params.
-          ENDIF.
-
-        WHEN 'OPTIONAL' OR 'DEFAULT'.
-          lv_param_idx = lines( lt_params ).
-          IF lv_param_idx > 0.
-            ASSIGN lt_params[ lv_param_idx ] TO <ls_p>.
-            IF sy-subrc = 0.
-              <ls_p>-is_optional = abap_true.
-            ENDIF.
-          ENDIF.
-      ENDCASE.
-
-      ls_prev_tok = <ls_tok>.
-    ENDLOOP.
-
-    CLEAR: lv_curr_section,
-           lv_seen_optional.
-
-    LOOP AT lt_params INTO ls_param.
-      IF ls_param-section <> lv_curr_section.
-        lv_curr_section   = ls_param-section.
+      IF <ls_param>-section <> lv_curr_section.
+        lv_curr_section  = <ls_param>-section.
         lv_seen_optional = abap_false.
       ENDIF.
 
-      IF ls_param-is_optional = abap_true.
+      IF <ls_param>-is_optional = abap_true OR <ls_param>-has_default = abap_true.
         lv_seen_optional = abap_true.
       ELSEIF lv_seen_optional = abap_true.
-        report_token( is_token        = ls_param-token
+        report_token( is_token        = <ls_param>-token
                       is_statement    = is_statement
                       iv_finding_code = c_finding_codes-optional_last ).
       ENDIF.

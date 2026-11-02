@@ -5845,20 +5845,20 @@
   },
   {
     "ruleId": "no-dup-subexpr",
-    "title": "Avoid Duplicate Subexpressions in Conditions",
-    "className": "ZCL_SKYLINT_NO_DUP_SUBEXPR",
-    "checkName": "ZSKYLINT_NO_DUP_SUBEXPR",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "title": "Avoid Duplicate Subexpressions in the Same Statement",
+    "className": "ZCL_SKYLINT_NO_DUP_SUBEXP",
+    "checkName": "ZSKYLINT_NO_DUP_SUBEXP",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
     "pseudoComment": "NO_DUP_SUBEXPR",
-    "description": "Avoid duplicate subexpressions in conditions",
+    "description": "Avoid duplicate subexpressions in the same statement",
     "hasQuickfix": false,
     "remoteEnabled": true,
     "attributes": [],
     "relatedRules": [
-      "no-dup-cond",
-      "no-self-compare",
-      "max-bool-expr"
+      "pref-read-table",
+      "no-dedup-no-sort",
+      "pref-sort-key"
     ],
     "defaultParameters": []
   },

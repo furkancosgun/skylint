@@ -1,16 +1,16 @@
 ---
-title: "Clean ABAP & Modern Syntax (80 Rules)"
+title: "Clean ABAP & Modern Syntax (79 Rules)"
 description: "Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices. Comprehensive reference, finding codes, and Clean ABAP examples for Clean ABAP & Modern Syntax."
 category: "clean-abap"
 keywords: "Clean ABAP, ABAP Cloud, SAP ATC, Clean ABAP & Modern Syntax, S/4HANA Readiness, SAP BTP, Steampunk"
 ---
 
-# Clean ABAP & Modern Syntax (80 Rules)
+# Clean ABAP & Modern Syntax (79 Rules)
 
 Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.
 
 ::: tip Category Overview
-This category enforces **80 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
+This category enforces **79 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
 :::
 
 ## Rules in this Category
@@ -95,7 +95,6 @@ This category enforces **80 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Raise At Most One Exception Class per Method](/rules/no-multi-exc) | `ZCL_SKYLINT_NO_MULTI_EXC` | <code>#EC NO_MULTI_EXC</code> | - |
 | [Avoid Dynamic MESSAGE Statements](/rules/no-dyn-message) | `ZCL_SKYLINT_NO_DYN_MESSAGE` | <code>#EC NO_DYN_MESSAGE</code> | - |
 | [Prefer nmin/nmax or clamp Expressions over Manual IF Clamping](/rules/pref-clamp) | `ZCL_SKYLINT_PREF_CLAMP` | <code>#EC PREF_CLAMP</code> | ⚡ Ready |
-| [Avoid Duplicate Subexpressions in Conditions](/rules/no-dup-subexpr) | `ZCL_SKYLINT_NO_DUP_SUBEXPR` | <code>#EC NO_DUP_SUBEXPR</code> | - |
 | [Declare Optional and Default Parameters Last in Methods](/rules/pref-opt-last) | `ZCL_SKYLINT_PREF_OPT_LAST` | <code>#EC PREF_OPTIONAL_LAST</code> | - |
 
 ---

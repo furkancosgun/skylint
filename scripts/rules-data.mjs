@@ -5665,28 +5665,28 @@ export const RULES = [
   },
   {
     "ruleId": "no-dup-subexpr",
-    "title": "Avoid Duplicate Subexpressions in Conditions",
-    "rationale": "Repeating identical subexpressions inside the same boolean condition (e.g. `IF cond_a AND cond_a`) adds clutter, impairs readability, and frequently indicates copy-paste errors or missing variables.\n\n**Standard:** Eliminate duplicate boolean operands and simplify complex expressions.",
-    "className": "ZCL_SKYLINT_NO_DUP_SUBEXPR",
+    "title": "Avoid Duplicate Subexpressions in the Same Statement",
+    "rationale": "Evaluating the exact same table expression (e.g. `lt_orders[ 1 ]-net + lt_orders[ 1 ]-vat`) or method call multiple times in the same statement triggers redundant internal table index lookups, hash computations, or method executions. In performance-critical logic, this causes unnecessary overhead.\n\n**Best Practice:** Evaluate the common subexpression once into a local helper variable or field-symbol and reuse it.",
+    "className": "ZCL_SKYLINT_NO_DUP_SUBEXP",
     "pseudoComment": "NO_DUP_SUBEXPR",
-    "category": "clean-abap",
+    "category": "anti-patterns",
     "example": {
-      "bad": "IF a = 1 AND a = 1.\n  \" Redundant subexpression\nENDIF.",
-      "good": "IF a = 1.\n  \" Clean single expression\nENDIF."
+      "bad": "lv_total = lt_orders[ 1 ]-net + lt_orders[ 1 ]-vat.",
+      "good": "DATA(ls_order) = lt_orders[ 1 ].\nlv_total = ls_order-net + ls_order-vat."
     },
     "seo": {
-      "description": "Flag duplicate boolean subexpressions in ABAP IF, ELSEIF, CHECK, and WHILE conditions.",
+      "description": "Avoid duplicate table expressions and method calls in the same ABAP statement (Common Subexpression Elimination).",
       "keywords": [
-        "Duplicate Subexpression ABAP",
-        "Redundant Condition",
-        "Clean ABAP Conditions",
-        "Logic Simplification"
+        "ABAP Common Subexpression Elimination",
+        "Duplicate Table Expression",
+        "ABAP Hash Lookup Optimization",
+        "Clean ABAP Performance"
       ]
     },
     "relatedRules": [
-      "no-dup-cond",
-      "no-self-compare",
-      "max-bool-expr"
+      "pref-read-table",
+      "no-dedup-no-sort",
+      "pref-sort-key"
     ]
   },
   {

@@ -1,16 +1,16 @@
 ---
-title: "Anti-Patterns & Bad Practices (59 Rules)"
+title: "Anti-Patterns & Bad Practices (60 Rules)"
 description: "Discouraged language constructs, legacy statements, and redundant syntax. Comprehensive reference, finding codes, and Clean ABAP examples for Anti-Patterns & Bad Practices."
 category: "anti-patterns"
 keywords: "Clean ABAP, ABAP Cloud, SAP ATC, Anti-Patterns & Bad Practices, S/4HANA Readiness, SAP BTP, Steampunk"
 ---
 
-# Anti-Patterns & Bad Practices (59 Rules)
+# Anti-Patterns & Bad Practices (60 Rules)
 
 Discouraged language constructs, legacy statements, and redundant syntax.
 
 ::: tip Category Overview
-This category enforces **59 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
+This category enforces **60 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
 :::
 
 ## Rules in this Category
@@ -75,6 +75,7 @@ This category enforces **59 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Avoid Abstract Final Classes](/rules/no-abstract-final) | `ZCL_SKYLINT_NO_ABSTRACT_FINAL` | <code>#EC NO_ABSTRACT_FINAL</code> | - |
 | [Avoid INTO with Field Symbols](/rules/no-into-fs) | `ZCL_SKYLINT_NO_INTO_FS` | <code>#EC NO_INTO_FS</code> | - |
 | [Sort Internal Tables Before DELETE ADJACENT DUPLICATES](/rules/no-dedup-no-sort) | `ZCL_SKYLINT_NO_DEDUP_NO_SORT` | <code>#EC NO_DEDUP_NO_SORT</code> | - |
+| [Avoid Duplicate Subexpressions in the Same Statement](/rules/no-dup-subexpr) | `ZCL_SKYLINT_NO_DUP_SUBEXP` | <code>#EC NO_DUP_SUBEXPR</code> | - |
 | [Avoid COMMIT or ROLLBACK in BAdI Implementations](/rules/no-badi-commit) | `ZCL_SKYLINT_NO_BADI_COMMIT` | <code>#EC NO_BADI_COMMIT</code> | - |
 
 ---

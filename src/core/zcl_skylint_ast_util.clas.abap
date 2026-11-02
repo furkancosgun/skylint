@@ -297,12 +297,15 @@ CLASS zcl_skylint_ast_util DEFINITION
 
     TYPES:
       BEGIN OF ty_method_parameter,
-        name      TYPE string,
-        raw_name  TYPE string,
-        section   TYPE string,
-        type_kind TYPE string,
-        type_name TYPE string,
-        token     TYPE if_ci_atc_source_code_provider=>ty_token,
+        name        TYPE string,
+        raw_name    TYPE string,
+        section     TYPE string,
+        type_kind   TYPE string,
+        type_name   TYPE string,
+        token       TYPE if_ci_atc_source_code_provider=>ty_token,
+        is_optional TYPE abap_bool,
+        has_default TYPE abap_bool,
+        default_val TYPE string,
       END OF ty_method_parameter,
       ty_method_parameters TYPE STANDARD TABLE OF ty_method_parameter WITH EMPTY KEY.
 
@@ -1588,13 +1591,15 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD get_method_parameters.
-    DATA lv_section  TYPE string.
-    DATA ls_prev_tok TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA ls_type_tok TYPE if_ci_atc_source_code_provider=>ty_token.
-    DATA lv_tabix    TYPE i.
-    DATA lv_name     TYPE string.
+    DATA lv_section   TYPE string.
+    DATA ls_prev_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_type_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_tabix     TYPE i.
+    DATA lv_name      TYPE string.
+    DATA lv_param_idx TYPE i.
 
-    FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_tok>   TYPE if_ci_atc_source_code_provider=>ty_token.
+    FIELD-SYMBOLS <ls_param> TYPE ty_method_parameter.
 
     CLEAR rt_parameters.
 
@@ -1625,6 +1630,28 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
                             type_kind = <ls_tok>-lexeme
                             type_name = ls_type_tok-lexeme
                             token     = ls_prev_tok ) TO rt_parameters.
+          ENDIF.
+
+        WHEN 'OPTIONAL'.
+          lv_param_idx = lines( rt_parameters ).
+          IF lv_param_idx > 0.
+            ASSIGN rt_parameters[ lv_param_idx ] TO <ls_param>.
+            IF sy-subrc = 0.
+              <ls_param>-is_optional = abap_true.
+            ENDIF.
+          ENDIF.
+
+        WHEN 'DEFAULT'.
+          lv_param_idx = lines( rt_parameters ).
+          IF lv_param_idx > 0.
+            ASSIGN rt_parameters[ lv_param_idx ] TO <ls_param>.
+            IF sy-subrc = 0.
+              <ls_param>-has_default = abap_true.
+              <ls_param>-is_optional = abap_true.
+              ls_type_tok = get_token( is_statement = is_statement
+                                       iv_index     = lv_tabix + 1 ).
+              <ls_param>-default_val = ls_type_tok-lexeme.
+            ENDIF.
           ENDIF.
       ENDCASE.
 

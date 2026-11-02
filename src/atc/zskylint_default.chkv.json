@@ -1641,7 +1641,7 @@
       "checkName": "ZSKYLINT_NO_DEDUP_NO_SORT"
     },
     {
-      "checkName": "ZSKYLINT_NO_DUP_SUBEXPR"
+      "checkName": "ZSKYLINT_NO_DUP_SUBEXP"
     },
     {
       "checkName": "ZSKYLINT_NO_BADI_COMMIT"

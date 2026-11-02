@@ -342,11 +342,11 @@ export default defineConfig({
         { text: 'All Rules Overview', link: '/rules/' },
         ...[
   {
-    "text": "Clean ABAP & Modern Syntax (80)",
+    "text": "Clean ABAP & Modern Syntax (79)",
     "link": "/rules/clean-abap"
   },
   {
-    "text": "Anti-Patterns & Bad Practices (59)",
+    "text": "Anti-Patterns & Bad Practices (60)",
     "link": "/rules/anti-patterns"
   },
   {

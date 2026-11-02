@@ -1,46 +1,43 @@
 ---
-title: "Avoid Duplicate Subexpressions in Conditions"
-description: "Flag duplicate boolean subexpressions in ABAP IF, ELSEIF, CHECK, and WHILE conditions."
-keywords: "Duplicate Subexpression ABAP, Redundant Condition, Clean ABAP Conditions, Logic Simplification"
-category: "clean-abap"
+title: "Avoid Duplicate Subexpressions in the Same Statement"
+description: "Avoid duplicate table expressions and method calls in the same ABAP statement (Common Subexpression Elimination)."
+keywords: "ABAP Common Subexpression Elimination, Duplicate Table Expression, ABAP Hash Lookup Optimization, Clean ABAP Performance"
+category: "anti-patterns"
 ruleId: "no-dup-subexpr"
 ---
 
-# Avoid Duplicate Subexpressions in Conditions
+# Avoid Duplicate Subexpressions in the Same Statement
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
-  <Badge type="warning" text="Warning" />
-  <Badge type="tip" text="Clean ABAP & Modern Syntax" />
+  <Badge type="info" text="Note" />
+  <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC NO_DUP_SUBEXPR" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview
 
-Avoid duplicate subexpressions in conditions.
+Avoid duplicate subexpressions in the same statement.
 
-> **ATC Finding Message:** `Duplicate subexpression detected in boolean condition`
+> **ATC Finding Message:** `Avoid repeating duplicate subexpressions; evaluate once into a variable`
 
 ## Rationale
 
-Repeating identical subexpressions inside the same boolean condition (e.g. `IF cond_a AND cond_a`) adds clutter, impairs readability, and frequently indicates copy-paste errors or missing variables.
+Evaluating the exact same table expression (e.g. `lt_orders[ 1 ]-net + lt_orders[ 1 ]-vat`) or method call multiple times in the same statement triggers redundant internal table index lookups, hash computations, or method executions. In performance-critical logic, this causes unnecessary overhead.
 
-**Standard:** Eliminate duplicate boolean operands and simplify complex expressions.
+**Best Practice:** Evaluate the common subexpression once into a local helper variable or field-symbol and reuse it.
 
 ### Non-Compliant
 
 ```abap
-IF a = 1 AND a = 1.
-  " Redundant subexpression
-ENDIF.
+lv_total = lt_orders[ 1 ]-net + lt_orders[ 1 ]-vat.
 ```
 
 ### Compliant
 
 ```abap
-IF a = 1.
-  " Clean single expression
-ENDIF.
+DATA(ls_order) = lt_orders[ 1 ].
+lv_total = ls_order-net + ls_order-vat.
 ```
 
 ## Suppression
@@ -58,11 +55,11 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ## Related Rules
 
-* [Avoid Duplicate Branch Conditions](/rules/no-dup-cond) — <code>#EC NO_DUP_COND</code>
-* [Avoid Comparisons and Arithmetic with Identical Operands](/rules/no-self-compare) — <code>#EC NO_SELF_COMPARE</code>
-* [Limit Boolean Expression Complexity in Conditional Statements](/rules/max-bool-expr) — <code>#EC MAX_BOOL_EXPR</code>
+* [Modernize READ TABLE (Table Expressions & line_exists)](/rules/pref-read-table) — <code>#EC PREF_TAB_EXPR</code>
+* [Sort Internal Tables Before DELETE ADJACENT DUPLICATES](/rules/no-dedup-no-sort) — <code>#EC NO_DEDUP_NO_SORT</code>
+* [Specify an Explicit SORT Key with BY](/rules/pref-sort-key) — <code>#EC PREF_SORT_KEY</code>
 
 ## Technical Details
 
-* **Native ATC Class:** `ZCL_SKYLINT_NO_DUP_SUBEXPR`
-* **Implementation File:** [zcl_skylint_no_dup_subexpr.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_dup_subexpr.clas.abap)
+* **Native ATC Class:** `ZCL_SKYLINT_NO_DUP_SUBEXP`
+* **Implementation File:** [zcl_skylint_no_dup_subexp.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_dup_subexp.clas.abap)
