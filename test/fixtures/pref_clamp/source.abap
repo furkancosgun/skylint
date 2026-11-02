@@ -7,6 +7,9 @@ CLASS zcl_skylint_test_pref_clamp DEFINITION
     METHODS test_002.
     METHODS test_003.
     METHODS test_004.
+    METHODS test_005.
+    METHODS test_006.
+    METHODS test_007.
 ENDCLASS.
 
 CLASS zcl_skylint_test_pref_clamp IMPLEMENTATION.
@@ -49,6 +52,39 @@ CLASS zcl_skylint_test_pref_clamp IMPLEMENTATION.
     IF lv < lo.
       lv = lo.
     ELSEIF lv > hi.
+      lv = 0.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_005.
+    DATA lv TYPE i VALUE 5.
+    DATA lo TYPE i VALUE 1.
+    DATA hi TYPE i VALUE 10.
+    IF ( lv < lo ).
+      lv = lo.
+    ELSEIF ( lv > hi ).
+      lv = hi.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_006.
+    DATA lv TYPE i VALUE 5.
+    IF lv < 0.
+      lv = 0.
+    ELSEIF lv > 100.
+      lv = 100.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_007.
+    DATA lv TYPE i VALUE 5.
+    DATA lo TYPE i VALUE 1.
+    DATA hi TYPE i VALUE 10.
+    IF lv < lo.
+      lv = lo.
+    ELSEIF lv > hi.
+      lv = hi.
+    ELSE.
       lv = 0.
     ENDIF.
   ENDMETHOD.

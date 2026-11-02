@@ -43,11 +43,6 @@ CLASS zcl_skylint_no_unclosed_res DEFINITION
     METHODS extract_cursor_target
       IMPORTING is_statement     TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_target) TYPE string.
-
-    METHODS normalize_target
-      IMPORTING iv_lexeme            TYPE string
-      RETURNING VALUE(rv_normalized) TYPE string.
-
 ENDCLASS.
 
 
@@ -167,7 +162,7 @@ CLASS zcl_skylint_no_unclosed_res IMPLEMENTATION.
 
     ls_tok = zcl_skylint_ast_util=>get_token_after( is_statement = is_statement
                                                     iv_lexeme    = 'DATASET' ).
-    rv_target = normalize_target( ls_tok-lexeme ).
+    rv_target = zcl_skylint_ast_util=>extract_name_from_paren( ls_tok-lexeme ).
   ENDMETHOD.
 
   METHOD extract_cursor_target.
@@ -182,10 +177,6 @@ CLASS zcl_skylint_no_unclosed_res IMPLEMENTATION.
                                                       iv_lexeme    = 'CURSOR' ).
     ENDIF.
 
-    rv_target = normalize_target( ls_tok-lexeme ).
-  ENDMETHOD.
-
-  METHOD normalize_target.
-    rv_normalized = to_upper( zcl_skylint_ast_util=>extract_name_from_paren( iv_lexeme ) ).
+    rv_target = zcl_skylint_ast_util=>extract_name_from_paren( ls_tok-lexeme ).
   ENDMETHOD.
 ENDCLASS.

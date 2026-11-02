@@ -31,18 +31,17 @@ ENDCLASS.
 
 CLASS zcl_skylint_max_when_count IMPLEMENTATION.
   METHOD constructor.
-    super->constructor(
-        VALUE #( description       = 'Limit number of WHEN clauses per CASE'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-too_many_whens
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'CASE statement has too many WHEN clauses; consider refactoring'
-                       pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     ( name  = 'MAX_WHEN_COUNT'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                       value = REF #( mv_max_when_count ) ) ) ) ).
+    super->constructor( VALUE #( description       = 'Limit number of WHEN clauses per CASE'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-too_many_whens
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'CASE statement has too many WHEN clauses; consider refactoring'
+                                       pseudo_comment = c_pseudo_comment ) )
+                                 attributes        = VALUE #(
+                                     ( name  = 'MAX_WHEN_COUNT'
+                                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                       value = REF #( mv_max_when_count ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -66,7 +65,7 @@ CLASS zcl_skylint_max_when_count IMPLEMENTATION.
           lv_stack_lines = lines( lt_stack ).
           IF lv_stack_lines > 0.
             ASSIGN lt_stack[ lv_stack_lines ] TO <ls_top>.
-            <ls_top>-when_count = <ls_top>-when_count + 1.
+            <ls_top>-when_count += 1.
           ENDIF.
 
         WHEN 'ENDCASE'.

@@ -39,10 +39,9 @@ CLASS zcl_skylint_max_loop_jumps IMPLEMENTATION.
                        severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Loop has too many jump statements (CONTINUE/EXIT); simplify loop control flow'
                        pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     ( name  = 'MAX_LOOP_JUMPS'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                       value = REF #( mv_max_loop_jumps ) ) ) ) ).
+                 attributes        = VALUE #( ( name  = 'MAX_LOOP_JUMPS'
+                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                                value = REF #( mv_max_loop_jumps ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -66,7 +65,7 @@ CLASS zcl_skylint_max_loop_jumps IMPLEMENTATION.
           lv_stack_lines = lines( lt_stack ).
           IF lv_stack_lines > 0.
             ASSIGN lt_stack[ lv_stack_lines ] TO <ls_top>.
-            <ls_top>-jump_count = <ls_top>-jump_count + 1.
+            <ls_top>-jump_count += 1.
           ENDIF.
 
         WHEN 'ENDLOOP' OR 'ENDDO' OR 'ENDWHILE'.

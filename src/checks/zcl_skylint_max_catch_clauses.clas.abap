@@ -32,17 +32,17 @@ ENDCLASS.
 CLASS zcl_skylint_max_catch_clauses IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Limit CATCH clauses per TRY block'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-too_many_catches
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'TRY block has too many CATCH clauses; handling too many errors indicates coupling'
-                       pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     ( name  = 'MAX_CATCH_CLAUSES'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                       value = REF #( mv_max_catch_clauses ) ) ) ) ).
+        VALUE #(
+            description       = 'Limit CATCH clauses per TRY block'
+            remote_enablement = abap_true
+            finding_codes     = VALUE #(
+                ( code           = c_finding_codes-too_many_catches
+                  severity       = if_ci_atc_check=>finding_severities-warning
+                  text           = 'TRY block has too many CATCH clauses; handling too many errors indicates coupling'
+                  pseudo_comment = c_pseudo_comment ) )
+            attributes        = VALUE #( ( name  = 'MAX_CATCH_CLAUSES'
+                                           kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                           value = REF #( mv_max_catch_clauses ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -66,7 +66,7 @@ CLASS zcl_skylint_max_catch_clauses IMPLEMENTATION.
           lv_stack_lines = lines( lt_stack ).
           IF lv_stack_lines > 0.
             ASSIGN lt_stack[ lv_stack_lines ] TO <ls_top>.
-            <ls_top>-catch_count = <ls_top>-catch_count + 1.
+            <ls_top>-catch_count += 1.
           ENDIF.
 
         WHEN 'ENDTRY'.

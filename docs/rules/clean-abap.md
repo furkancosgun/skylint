@@ -94,7 +94,7 @@ This category enforces **78 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Limit Consecutive Blank Lines](/rules/max-blank-lines) | `ZCL_SKYLINT_MAX_BLANK_LINES` | <code>#EC MAX_BLANK_LINES</code> | - |
 | [Raise At Most One Exception Class per Method](/rules/no-multi-exc) | `ZCL_SKYLINT_NO_MULTI_EXC` | <code>#EC NO_MULTI_EXC</code> | - |
 | [Avoid Dynamic MESSAGE Statements](/rules/no-dyn-message) | `ZCL_SKYLINT_NO_DYN_MESSAGE` | <code>#EC NO_DYN_MESSAGE</code> | - |
-| [Prefer nmin/nmax or clamp Expressions over Manual IF Clamping](/rules/pref-clamp) | `ZCL_SKYLINT_PREF_CLAMP` | <code>#EC PREF_CLAMP</code> | - |
+| [Prefer nmin/nmax or clamp Expressions over Manual IF Clamping](/rules/pref-clamp) | `ZCL_SKYLINT_PREF_CLAMP` | <code>#EC PREF_CLAMP</code> | ⚡ Ready |
 
 ---
 

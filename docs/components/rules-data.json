@@ -5646,8 +5646,8 @@
     "category": "clean-abap",
     "categoryTitle": "Clean ABAP & Modern Syntax",
     "pseudoComment": "PREF_CLAMP",
-    "description": "Prefer nmin/nmax or clamp over manual IF clamp",
-    "hasQuickfix": false,
+    "description": "Prefer nmin/nmax over manual IF clamp",
+    "hasQuickfix": true,
     "remoteEnabled": true,
     "attributes": [],
     "relatedRules": [

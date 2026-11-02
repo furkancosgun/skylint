@@ -39,10 +39,9 @@ CLASS zcl_skylint_max_elseif_count IMPLEMENTATION.
                        severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'IF statement has too many ELSEIF clauses; consider CASE or polymorphism'
                        pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     ( name  = 'MAX_ELSEIF_COUNT'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
-                       value = REF #( mv_max_elseif_count ) ) ) ) ).
+                 attributes        = VALUE #( ( name  = 'MAX_ELSEIF_COUNT'
+                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-elementary
+                                                value = REF #( mv_max_elseif_count ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -66,7 +65,7 @@ CLASS zcl_skylint_max_elseif_count IMPLEMENTATION.
           lv_stack_lines = lines( lt_stack ).
           IF lv_stack_lines > 0.
             ASSIGN lt_stack[ lv_stack_lines ] TO <ls_top>.
-            <ls_top>-elseif_count = <ls_top>-elseif_count + 1.
+            <ls_top>-elseif_count += 1.
           ENDIF.
 
         WHEN 'ENDIF'.

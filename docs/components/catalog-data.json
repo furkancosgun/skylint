@@ -2280,11 +2280,11 @@
       "ruleId": "pref-clamp",
       "title": "Prefer nmin/nmax or clamp Expressions over Manual IF Clamping",
       "className": "ZCL_SKYLINT_PREF_CLAMP",
-      "description": "Prefer nmin/nmax or clamp over manual IF clamp",
+      "description": "Prefer nmin/nmax over manual IF clamp",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
       "pseudoComment": "PREF_CLAMP",
-      "hasQuickfix": false,
+      "hasQuickfix": true,
       "remoteEnabled": true,
       "configurable": false
     },

@@ -13,30 +13,30 @@ CLASS zcl_test_no_multi_exc IMPLEMENTATION.
 
   METHOD test_001.
     IF mv_flags = abap_true.
-      RAISE EXCEPTION TYPE cx_smth_first.
+      RAISE EXCEPTION TYPE cx_sy_itab_line_not_found.
     ENDIF.
-    RAISE EXCEPTION TYPE cx_smth_second.
+    RAISE EXCEPTION TYPE cx_sy_zerodivide.
   ENDMETHOD.
 
   METHOD test_002.
-    RAISE EXCEPTION TYPE cx_smth_first.
-    RAISE EXCEPTION TYPE cx_smth_first.
+    RAISE EXCEPTION TYPE cx_sy_move_cast_error.
+    RAISE EXCEPTION TYPE cx_sy_move_cast_error.
   ENDMETHOD.
 
   METHOD test_003.
-    RAISE EXCEPTION NEW cx_smth_first( ).
-    RAISE EXCEPTION NEW cx_smth_second( ).
+    RAISE EXCEPTION NEW cx_sy_itab_line_not_found( ).
+    RAISE EXCEPTION NEW cx_sy_zerodivide( ).
   ENDMETHOD.
 
   METHOD test_004.
-    RAISE EXCEPTION TYPE cx_smth_first.
-    RAISE EXCEPTION TYPE cx_smth_second. "#EC NO_MULTI_EXC
+    RAISE EXCEPTION TYPE cx_sy_itab_line_not_found.
+    RAISE EXCEPTION TYPE cx_sy_move_cast_error. "#EC NO_MULTI_EXC
   ENDMETHOD.
 
   METHOD test_005.
-    RAISE EXCEPTION TYPE cx_smth_first.
-    RAISE EXCEPTION TYPE cx_smth_second.
-    RAISE EXCEPTION TYPE cx_smth_third.
+    RAISE EXCEPTION TYPE cx_sy_itab_line_not_found.
+    RAISE EXCEPTION TYPE cx_sy_move_cast_error.
+    RAISE EXCEPTION TYPE cx_sy_zerodivide.
   ENDMETHOD.
 
 ENDCLASS.

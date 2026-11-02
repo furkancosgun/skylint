@@ -11,15 +11,16 @@ ruleId: "pref-clamp"
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
+  <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC PREF_CLAMP" />
   <Badge type="info" text="Remote Enabled" />
 </div>
 
 ## Overview
 
-Prefer nmin/nmax or clamp over manual IF clamp.
+Prefer nmin/nmax over manual IF clamp.
 
-> **ATC Finding Message:** `Manual range clamping detected; consider using nmin( ), nmax( ), or clamp( )`
+> **ATC Finding Message:** `Manual range clamping detected; consider using nmin( ) and nmax( )`
 
 ## Rationale
 
@@ -42,6 +43,13 @@ lv = nmin( val1 = hi
            val2 = nmax( val1 = lo
                         val2 = lv ) ).
 ```
+
+## Automated QuickFix
+
+This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):
+1. Position the cursor on the flagged statement.
+2. Press <kbd>Ctrl</kbd> + <kbd>1</kbd> (Quick Assist).
+3. Select the automated refactoring to apply the clean syntax immediately.
 
 ## Suppression
 

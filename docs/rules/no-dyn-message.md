@@ -23,7 +23,7 @@ Avoid Dynamic MESSAGE Statements.
 
 ## Rationale
 
-MESSAGE ... ID <dyn> TYPE <dyn> NUMBER <dyn> hides the message source: it cannot be found through a where-used search from SE91, defeats static analysis of message usage, and makes text and behavior depend on runtime values. Keep ID, TYPE and NUMBER static so the message is easy to find along the Clean ABAP Make messages easy to find guidance; inline-text MESSAGE forms are covered by pref-msg-cls.
+`MESSAGE ... ID <dyn> TYPE <dyn> NUMBER <dyn>` hides the message source: it cannot be found through a where-used search from SE91, defeats static analysis of message usage, and makes text and behavior depend on runtime values. Keep ID, TYPE and NUMBER static so the message is easy to find along the Clean ABAP Make messages easy to find guidance; inline-text MESSAGE forms are covered by pref-msg-cls.
 
 ### Non-Compliant
 

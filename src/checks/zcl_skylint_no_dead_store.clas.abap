@@ -193,7 +193,7 @@ CLASS zcl_skylint_no_dead_store IMPLEMENTATION.
 
     lv_name = zcl_skylint_ast_util=>get_reference_name( iv_full_name ).
 
-    rv_yes = xsdbool( lv_name IS NOT INITIAL AND to_upper( is_token-lexeme ) = lv_name ).
+    rv_yes = xsdbool( lv_name IS NOT INITIAL AND is_token-lexeme = lv_name ).
   ENDMETHOD.
 
   METHOD is_block_boundary.

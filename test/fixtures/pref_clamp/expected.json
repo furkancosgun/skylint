@@ -4,14 +4,13 @@
     "code": "PREF_CLAMP",
     "line": 5,
     "column": 4,
-    "quickfixes": []
+    "quickfixes": [
+      "TO_NMINMAX"
+    ]
   },
   {
     "target": "TEST_002",
-    "code": "PREF_CLAMP",
-    "line": 5,
-    "column": 4,
-    "quickfixes": []
+    "code": null
   },
   {
     "target": "TEST_003",
@@ -19,6 +18,28 @@
   },
   {
     "target": "TEST_004",
+    "code": null
+  },
+  {
+    "target": "TEST_005",
+    "code": "PREF_CLAMP",
+    "line": 5,
+    "column": 4,
+    "quickfixes": [
+      "TO_NMINMAX"
+    ]
+  },
+  {
+    "target": "TEST_006",
+    "code": "PREF_CLAMP",
+    "line": 3,
+    "column": 4,
+    "quickfixes": [
+      "TO_NMINMAX"
+    ]
+  },
+  {
+    "target": "TEST_007",
     "code": null
   }
 ]

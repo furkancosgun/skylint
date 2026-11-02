@@ -46,8 +46,7 @@ CLASS zcl_skylint_no_nested_loop IMPLEMENTATION.
     DATA lv_is_loop_at  TYPE abap_bool.
     DATA lv_has_exempt  TYPE abap_bool.
     DATA ls_tok_after   TYPE if_ci_atc_source_code_provider=>ty_token.
-    FIELD-SYMBOLS <ls_statement>  TYPE if_ci_atc_source_code_provider=>ty_statement.
-    FIELD-SYMBOLS <ls_loop_entry> TYPE ty_loop_entry.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
       RETURN.
@@ -68,14 +67,14 @@ CLASS zcl_skylint_no_nested_loop IMPLEMENTATION.
 
           lv_has_exempt = abap_false.
           IF    zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                        iv_lexeme    = 'GROUP' ) = abap_true
+                                                        iv_lexeme    = 'GROUP' )      = abap_true
              OR zcl_skylint_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                        iv_lexeme    = 'FROM' )  = abap_true.
+                                                        iv_lexeme    = 'FROM' )       = abap_true.
             lv_has_exempt = abap_true.
           ENDIF.
 
           IF lv_is_loop_at = abap_true AND lv_has_exempt = abap_false.
-            LOOP AT lt_stack ASSIGNING <ls_loop_entry>
+            LOOP AT lt_stack TRANSPORTING NO FIELDS
                  WHERE is_loop_at = abap_true AND has_exempt = abap_false.
               report_statement( is_statement    = <ls_statement>
                                 iv_finding_code = c_finding_codes-nested_loop ).
