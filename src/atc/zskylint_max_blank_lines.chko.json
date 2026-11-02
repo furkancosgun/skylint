@@ -1,0 +1,15 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "No Excessive Consecutive Empty Lines",
+    "originalLanguage": "en"
+  },
+  "category": "ZSKYLINT_CLEAN_ABAP",
+  "implementingClass": "ZCL_SKYLINT_MAX_BLANK_LINES",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "MAX_BLANKS"
+    }
+  ]
+}

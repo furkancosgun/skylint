@@ -1,0 +1,6 @@
+[
+  { "target": "TEST_001", "code": "MAX_BLANKL", "line": 5, "column": 4 },
+  { "target": "TEST_002", "code": null },
+  { "target": "TEST_003", "code": null },
+  { "target": "TEST_004", "code": null }
+]

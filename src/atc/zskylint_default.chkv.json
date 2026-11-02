@@ -1526,6 +1526,33 @@
           "value": "4"
         }
       ]
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_LOOP_WHERE"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_SORT_KEY"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_PLAIN_REGEX"
+    },
+    {
+      "checkName": "ZSKYLINT_MAX_BLANK_LINES",
+      "parameters": [
+        {
+          "name": "MAX_BLANKS",
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_READ_KEY"
+    },
+    {
+      "checkName": "ZSKYLINT_ONE_EXC_CLASS"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_DYN_MESSAGE"
     }
   ]
 }

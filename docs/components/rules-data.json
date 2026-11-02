@@ -5376,5 +5376,147 @@
         "value": "4"
       }
     ]
+  },
+  {
+    "ruleId": "pref-loop-where",
+    "title": "Prefer LOOP AT WHERE over IF CONTINUE Guards",
+    "className": "ZCL_SKYLINT_PREF_LOOP_WHERE",
+    "checkName": "ZSKYLINT_PREF_LOOP_WHERE",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "PREF_LOOP_WHERE",
+    "description": "Filter LOOP AT With a WHERE Clause",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "relatedRules": [
+      "pref-merge-ifs",
+      "no-useless-cont",
+      "pref-read-table"
+    ],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "pref-sort-key",
+    "title": "Specify an Explicit SORT Key with BY",
+    "className": "ZCL_SKYLINT_PREF_SORT_KEY",
+    "checkName": "ZSKYLINT_PREF_SORT_KEY",
+    "category": "performance",
+    "categoryTitle": "Performance & Database",
+    "pseudoComment": "PREF_SORT_KEY",
+    "description": "Sort With an Explicit Sort Key",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "relatedRules": [
+      "pref-sort-order",
+      "pref-std-table"
+    ],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "pref-plain-regex",
+    "title": "Prefer Simpler String Functions over Plain Regex",
+    "className": "ZCL_SKYLINT_PREF_PLAIN_REGEX",
+    "checkName": "ZSKYLINT_PREF_PLAIN_REGEX",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "PREF_PLAIN_REGEX",
+    "description": "Prefer Simpler String Functions to Regex",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "relatedRules": [
+      "no-obs-strings",
+      "pref-str-func",
+      "pref-str-tmpl"
+    ],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "max-blank-lines",
+    "title": "Limit Consecutive Blank Lines",
+    "className": "ZCL_SKYLINT_MAX_BLANK_LINES",
+    "checkName": "ZSKYLINT_MAX_BLANK_LINES",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "MAX_BLANK_LINES",
+    "description": "No Excessive Consecutive Empty Lines",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "MAX_BLANKS",
+        "kind": "Integer",
+        "defaultValue": "1"
+      }
+    ],
+    "relatedRules": [
+      "max-line-len",
+      "max-method-len",
+      "max-one-stmt"
+    ],
+    "defaultParameters": [
+      {
+        "name": "MAX_BLANKS",
+        "value": "1"
+      }
+    ]
+  },
+  {
+    "ruleId": "pref-read-key",
+    "title": "Prefer READ TABLE WITH KEY over WHERE",
+    "className": "ZCL_SKYLINT_PREF_READ_KEY",
+    "checkName": "ZSKYLINT_PREF_READ_KEY",
+    "category": "performance",
+    "categoryTitle": "Performance & Database",
+    "pseudoComment": "PREF_READ_KEY",
+    "description": "Read With WITH KEY Instead of WHERE",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "relatedRules": [
+      "pref-read-table",
+      "pref-loop-where"
+    ],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "one-exc-class",
+    "title": "Raise At Most One Exception Class per Method",
+    "className": "ZCL_SKYLINT_ONE_EXC_CLASS",
+    "checkName": "ZSKYLINT_ONE_EXC_CLASS",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "ONE_EXC_CLASS",
+    "description": "Raise At Most One Exception Type per Method",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "relatedRules": [
+      "pref-class-exc",
+      "no-exc-overlap",
+      "no-msg-raising"
+    ],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "no-dyn-message",
+    "title": "Avoid Dynamic MESSAGE Statements",
+    "className": "ZCL_SKYLINT_NO_DYN_MESSAGE",
+    "checkName": "ZSKYLINT_NO_DYN_MESSAGE",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "NO_DYN_MESSAGE",
+    "description": "Avoid Dynamic MESSAGE Statements",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "relatedRules": [
+      "pref-msg-cls",
+      "no-msg-raising",
+      "no-dynamic-stmt"
+    ],
+    "defaultParameters": []
   }
 ]

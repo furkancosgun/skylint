@@ -5143,6 +5143,196 @@ export const RULES = [
       "pref-join-type",
       "no-select-star"
     ]
+  },
+  {
+    "ruleId": "pref-loop-where",
+    "title": "Prefer LOOP AT WHERE over IF CONTINUE Guards",
+    "rationale": "Filtering internal table rows with the WHERE clause of LOOP AT is more efficient and more readable than starting the loop with an initial IF ... CONTINUE guard. The ABAP runtime evaluates the WHERE condition directly during row traversal, skipping non-matching rows before the loop body executes. Clean ABAP (Tables section) recommends LOOP AT ... WHERE over nested filtering inside the loop body.",
+    "className": "ZCL_SKYLINT_PREF_LOOP_WHERE",
+    "pseudoComment": "PREF_LOOP_WHERE",
+    "category": "clean-abap",
+    "example": {
+      "bad": "LOOP AT lt_rows INTO ls_row.\n  IF ls_row-status <> 'X'.\n    CONTINUE.\n  ENDIF.\n  \" loop body\nENDLOOP.",
+      "good": "LOOP AT lt_rows INTO ls_row WHERE status = 'X'.\n  \" loop body\nENDLOOP."
+    },
+    "seo": {
+      "description": "Prefer LOOP AT WHERE over initial IF CONTINUE guards in ABAP internal table processing. Clean ABAP table handling, readable loop filters, and automated ATC inspection for SAP S/4HANA and ABAP Cloud.",
+      "keywords": [
+        "LOOP AT WHERE ABAP",
+        "Clean ABAP Tables",
+        "Internal Table Filter",
+        "AbapLint LOOP WHERE",
+        "ATC Code Review"
+      ]
+    },
+    "relatedRules": [
+      "pref-merge-ifs",
+      "no-useless-cont",
+      "pref-read-table"
+    ]
+  },
+  {
+    "ruleId": "pref-sort-key",
+    "title": "Specify an Explicit SORT Key with BY",
+    "rationale": "SORT without BY sorts an internal table using its implicit standard key, which depends on the table definition (character-type components for standard tables). This makes the sort result fragile: key changes ripple into sort behavior, character field shortening alters comparisons, and unsorted parallel sorts become unpredictable. Specify the sort key explicitly with SORT ... BY so the statement is robust and self-documenting.",
+    "className": "ZCL_SKYLINT_PREF_SORT_KEY",
+    "pseudoComment": "PREF_SORT_KEY",
+    "category": "performance",
+    "example": {
+      "bad": "SORT lt_data.",
+      "good": "SORT lt_data BY field1 field2."
+    },
+    "seo": {
+      "description": "Specify an explicit SORT key with BY in ABAP instead of relying on the implicit standard key. Deterministic internal table sorting, parallel sort safety, and automated ATC inspection for SAP S/4HANA and ABAP Cloud.",
+      "keywords": [
+        "SORT BY ABAP",
+        "Implicit Sort Key",
+        "Internal Table Sorting",
+        "Clean ABAPSORT",
+        "ATC Code Review"
+      ]
+    },
+    "relatedRules": [
+      "pref-sort-order",
+      "pref-std-table"
+    ]
+  },
+  {
+    "ruleId": "pref-plain-regex",
+    "title": "Prefer Simpler String Functions over Plain Regex",
+    "rationale": "A regex literal that contains no metacharacters (such as . [ { ( ) * + ? ^ $ | or the escape backslash) performs a plain literal search yet pays the regex engine's parsing and backtracking cost. Replace plain literal patterns with the simple, cheaper and more readable sub / case parameters of find, count, replace or contains. Only literal patterns without metacharacters are flagged; textual FIND/REPLACE with REGEX is covered by no-obs-strings.",
+    "className": "ZCL_SKYLINT_PREF_PLAIN_REGEX",
+    "pseudoComment": "PREF_PLAIN_REGEX",
+    "category": "clean-abap",
+    "example": {
+      "bad": "result = replace( val = text\n  regex = 'HELLO'\n  with = 'WORLD' ).",
+      "good": "result = replace( val = text\n  sub = 'HELLO'\n  with = 'WORLD' )."
+    },
+    "seo": {
+      "description": "Prefer simpler string functions over plain regex in ABAP: replace metacharacter-free literal regex patterns with sub and case parameters. ABAP string processing performance and automated ATC inspection for SAP S/4HANA and ABAP Cloud.",
+      "keywords": [
+        "ABAP RegEx",
+        "Simple String Functions",
+        "find sub ABAP",
+        "Clean ABAP Strings",
+        "ATC Code Review"
+      ]
+    },
+    "relatedRules": [
+      "no-obs-strings",
+      "pref-str-func",
+      "pref-str-tmpl"
+    ]
+  },
+  {
+    "ruleId": "max-blank-lines",
+    "title": "Limit Consecutive Blank Lines",
+    "rationale": "Multiple consecutive empty lines scatter related code and suggest removed or unfinished logic. Keep source files compact with a single blank line to separate logical sections. The check measures the empty lines between consecutive statements in a procedure. Note: comment-only lines are not visible to the parser and are counted as empty space; configure MAX_BLANKS to your team standard.",
+    "className": "ZCL_SKYLINT_MAX_BLANK_LINES",
+    "pseudoComment": "MAX_BLANK_LINES",
+    "category": "clean-abap",
+    "example": {
+      "bad": "lv_total = 1.\n\n\nlv_total = lv_total + 2.",
+      "good": "lv_total = 1.\n\nlv_total = lv_total + 2."
+    },
+    "seo": {
+      "description": "Limit consecutive blank lines in ABAP source code for compact, readable formatting. Clean ABAP style rules, automatic empty line detection, and ATC code inspection for SAP S/4HANA and ABAP Cloud.",
+      "keywords": [
+        "Blank Lines ABAP",
+        "Source Code Formatting",
+        "Clean ABAP Style",
+        "Code Readability",
+        "ATC Code Review"
+      ]
+    },
+    "parameters": {
+      "MAX_BLANKS": "Maximum number of consecutive blank lines allowed between statements (default: 1)"
+    },
+    "relatedRules": [
+      "max-line-len",
+      "max-method-len",
+      "max-one-stmt"
+    ]
+  },
+  {
+    "ruleId": "pref-read-key",
+    "title": "Prefer READ TABLE WITH KEY over WHERE",
+    "rationale": "READ TABLE ... WITH KEY is the documented single-line access form and allows the runtime to exploit table keys and sorted access for a direct hit. The WHERE variant of READ TABLE forces a row-by-row scan of the internal table. Clean ABAP cheat sheet (Single Line Access) recommends WITH KEY for one-line lookups.",
+    "className": "ZCL_SKYLINT_PREF_READ_KEY",
+    "pseudoComment": "PREF_READ_KEY",
+    "category": "performance",
+    "example": {
+      "bad": "READ TABLE lt_data INTO ls_data WHERE field1 = 'X'.",
+      "good": "READ TABLE lt_data INTO ls_data WITH KEY field1 = 'X'."
+    },
+    "seo": {
+      "description": "Prefer READ TABLE WITH KEY over WHERE in ABAP for faster single line internal table access with key optimization. ABAP performance rules and automated ATC inspection for SAP S/4HANA and ABAP Cloud.",
+      "keywords": [
+        "READ TABLE WITH KEY",
+        "ABAP Single Line Access",
+        "Internal Table Performance",
+        "ABAP Cheat Sheet",
+        "ATC Code Review"
+      ]
+    },
+    "relatedRules": [
+      "pref-read-table",
+      "pref-loop-where"
+    ]
+  },
+  {
+    "ruleId": "one-exc-class",
+    "title": "Raise At Most One Exception Class per Method",
+    "rationale": "Throwing several different exception classes from one method forces each caller to nest separate TRY/CATCH blocks and duplicate handler logic. Define a single dedicated exception type per method's interface (or a single hierarchy family) so the caller can react with one handler; packing more error detail into the exception's attributes keeps the API stable. Clean ABAP (Throw one type of exception) recommends one main exception class per method.",
+    "className": "ZCL_SKYLINT_ONE_EXC_CLASS",
+    "pseudoComment": "ONE_EXC_CLASS",
+    "category": "clean-abap",
+    "example": {
+      "bad": "METHOD add_row.\n  IF rows_full.\n    RAISE EXCEPTION TYPE cx_full.\n  ENDIF.\n  IF invalid_row.\n    RAISE EXCEPTION TYPE cx_invalid.\n  ENDIF.\nENDMETHOD.",
+      "good": "METHOD add_row.\n  RAISE EXCEPTION TYPE cx_my_add_row\n    EXPORTING iv_reason = reason.\nENDMETHOD."
+    },
+    "seo": {
+      "description": "Raise at most one exception class per ABAP method - Clean ABAP exception design with a single exception type per method. Simplified error handling and automated ATC inspection for SAP S/4HANA and ABAP Cloud.",
+      "keywords": [
+        "Clean ABAP Exceptions",
+        "Raise Exception Type",
+        "Exception Class Design",
+        "Error Handling ABAP",
+        "ATC Code Review"
+      ]
+    },
+    "relatedRules": [
+      "pref-class-exc",
+      "no-exc-overlap",
+      "no-msg-raising"
+    ]
+  },
+  {
+    "ruleId": "no-dyn-message",
+    "title": "Avoid Dynamic MESSAGE Statements",
+    "rationale": "MESSAGE ... ID <dyn> TYPE <dyn> NUMBER <dyn> hides the message source: it cannot be found through a where-used search from SE91, defeats static analysis of message usage, and makes text and behavior depend on runtime values. Keep ID, TYPE and NUMBER static so the message is easy to find along the Clean ABAP Make messages easy to find guidance; inline-text MESSAGE forms are covered by pref-msg-cls.",
+    "className": "ZCL_SKYLINT_NO_DYN_MESSAGE",
+    "pseudoComment": "NO_DYN_MESSAGE",
+    "category": "clean-abap",
+    "example": {
+      "bad": "MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno\n  WITH sy-msgv1 sy-msgv2 INTO lv_text.",
+      "good": "MESSAGE e001(msg_class)\n  WITH sy-msgv1 sy-msgv2 INTO lv_text."
+    },
+    "seo": {
+      "description": "Avoid dynamic MESSAGE ID TYPE NUMBER statements in ABAP - keep message identifiers static for easy SE91 where-used search. Clean ABAP message handling and automated ATC inspection for SAP S/4HANA and ABAP Cloud.",
+      "keywords": [
+        "Dynamic MESSAGE ABAP",
+        "Message Class Usage",
+        "SE91 Where Used",
+        "Clean ABAP Messages",
+        "ATC Code Review"
+      ]
+    },
+    "relatedRules": [
+      "pref-msg-cls",
+      "no-msg-raising",
+      "no-dynamic-stmt"
+    ]
   }
 ];
 
