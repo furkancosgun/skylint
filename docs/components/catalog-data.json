@@ -2196,7 +2196,7 @@
       "ruleId": "pref-read-key",
       "title": "Prefer READ TABLE WITH KEY over WHERE",
       "className": "ZCL_SKYLINT_PREF_READ_KEY",
-      "description": "Read With WITH KEY Instead of WHERE",
+      "description": "READ With WITH KEY Instead of WHERE",
       "category": "performance",
       "categoryTitle": "Performance & Database",
       "pseudoComment": "PREF_READ_KEY",

@@ -17,15 +17,12 @@ CLASS zcl_skylint_pref_loop_where DEFINITION
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_LOOP_WHERE'.
 
-    DATA ms_loop_statement TYPE if_ci_atc_source_code_provider=>ty_statement.
-    DATA mv_pending     TYPE abap_bool.
-    DATA mv_guard_open  TYPE abap_bool.
-    DATA mv_guard_depth TYPE i.
-    DATA mv_guard_cont  TYPE abap_bool.
-    DATA mv_guard_other TYPE abap_bool.
-
-    METHODS reset_guard.
-    METHODS close_guard.
+    " A pure filtering guard: the first three statements inside the LOOP
+    " are a bare conditional, a skip statement, and its closing bracket.
+    METHODS loop_starts_with_filter
+      IMPORTING it_statements TYPE if_ci_atc_source_code_provider=>ty_statements
+                iv_loop_index TYPE i
+      RETURNING VALUE(rv_yes) TYPE abap_bool.
 
 ENDCLASS.
 
@@ -49,82 +46,45 @@ CLASS zcl_skylint_pref_loop_where IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    reset_guard( ).
-    mv_pending = abap_false.
-
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      CASE <ls_statement>-keyword.
-        WHEN 'LOOP'.
-          " Every LOOP opens a fresh candidate; a still-open guard belongs
-          " to the previous loop and has already become invalid ( other )
-          ms_loop_statement = <ls_statement>.
-          mv_pending = abap_true.
-          reset_guard( ).
-        WHEN 'IF'.
-          IF mv_guard_open = abap_true.
-            " nested IF inside the guard - no longer a pure filter
-            mv_pending = abap_false.
-            mv_guard_other = abap_true.
-            mv_guard_depth += 1.
-          ELSEIF mv_pending = abap_true.
-            " first statement after LOOP: candidate guard
-            mv_pending = abap_false.
-            mv_guard_open = abap_true.
-            mv_guard_depth = 1.
-            mv_guard_cont  = abap_false.
-            mv_guard_other = abap_false.
-          ELSE.
-            mv_pending = abap_false.
-          ENDIF.
-        WHEN 'CASE' OR 'TRY' OR 'DO' OR 'WHILE' OR 'AT' OR 'SELECT'.
-          mv_pending = abap_false.
-          IF mv_guard_open = abap_true.
-            mv_guard_other = abap_true.
-            mv_guard_depth += 1.
-          ENDIF.
-        WHEN 'ENDIF' OR 'ENDCASE' OR 'ENDTRY' OR 'ENDDO' OR 'ENDWHILE'
-             OR 'ENDLOOP' OR 'ENDAT' OR 'ENDSELECT'.
-          mv_pending = abap_false.
-          IF mv_guard_open = abap_true.
-            mv_guard_depth -= 1.
-            IF mv_guard_depth = 0.
-              close_guard( ).
-            ENDIF.
-          ENDIF.
-        WHEN 'CONTINUE'.
-          mv_pending = abap_false.
-          IF mv_guard_open = abap_true.
-            IF mv_guard_depth = 1.
-              mv_guard_cont = abap_true.
-            ELSE.
-              mv_guard_other = abap_true.
-            ENDIF.
-          ENDIF.
-        WHEN OTHERS.
-          mv_pending = abap_false.
-          IF mv_guard_open = abap_true.
-            mv_guard_other = abap_true.
-          ENDIF.
-      ENDCASE.
+      IF <ls_statement>-keyword <> 'LOOP'.
+        CONTINUE.
+      ENDIF.
+
+      IF loop_starts_with_filter( it_statements = is_procedure-statements
+                                  iv_loop_index = sy-tabix ) = abap_true.
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-add_where ).
+      ENDIF.
     ENDLOOP.
   ENDMETHOD.
 
-  METHOD reset_guard.
-    mv_guard_open  = abap_false.
-    mv_guard_depth = 0.
-    mv_guard_cont  = abap_false.
-    mv_guard_other = abap_false.
-  ENDMETHOD.
+  METHOD loop_starts_with_filter.
+    DATA ls_next TYPE if_ci_atc_source_code_provider=>ty_statement.
 
-  METHOD close_guard.
-    mv_guard_open = abap_false.
-    mv_guard_depth = 0.
-    IF    mv_guard_cont = abap_true
-       AND mv_guard_other = abap_false.
-      report_statement( is_statement    = ms_loop_statement
-                        iv_finding_code = c_finding_codes-add_where ).
+    rv_yes = abap_false.
+
+    " the first loop statement must open the guard
+    ls_next = zcl_skylint_ast_util=>get_statement( it_statements = it_statements
+                                                   iv_index     = iv_loop_index + 1 ).
+    IF ls_next-keyword <> 'IF'.
+      RETURN.
     ENDIF.
-    mv_guard_cont  = abap_false.
-    mv_guard_other = abap_false.
+
+    " immediately followed by a plain CONTINUE
+    ls_next = zcl_skylint_ast_util=>get_statement( it_statements = it_statements
+                                                   iv_index     = iv_loop_index + 2 ).
+    IF ls_next-keyword <> 'CONTINUE'.
+      RETURN.
+    ENDIF.
+
+    " ... and closed directly by ENDIF - anything else is real logic
+    ls_next = zcl_skylint_ast_util=>get_statement( it_statements = it_statements
+                                                   iv_index     = iv_loop_index + 3 ).
+    IF ls_next-keyword <> 'ENDIF'.
+      RETURN.
+    ENDIF.
+
+    rv_yes = abap_true.
   ENDMETHOD.
 ENDCLASS.

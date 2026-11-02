@@ -5471,7 +5471,7 @@
     "category": "performance",
     "categoryTitle": "Performance & Database",
     "pseudoComment": "PREF_READ_KEY",
-    "description": "Read With WITH KEY Instead of WHERE",
+    "description": "READ With WITH KEY Instead of WHERE",
     "hasQuickfix": false,
     "remoteEnabled": true,
     "attributes": [],

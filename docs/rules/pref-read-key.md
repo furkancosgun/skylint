@@ -17,13 +17,13 @@ ruleId: "pref-read-key"
 
 ## Overview
 
-Read With WITH KEY Instead of WHERE.
+READ With WITH KEY Instead of WHERE.
 
-> **ATC Finding Message:** `READ TABLE uses WHERE - prefer WITH KEY so the access benefits from key optimization`
+> **ATC Finding Message:** `READ TABLE WHERE - use WITH KEY so the access benefits from key optimization`
 
 ## Rationale
 
-READ TABLE ... WITH KEY is the documented single-line access form and allows the runtime to exploit table keys and sorted access for a direct hit. The WHERE variant of READ TABLE forces a row-by-row scan of the internal table. Clean ABAP cheat sheet (Single Line Access) recommends WITH KEY for one-line lookups.
+READ TABLE ... WITH KEY is the documented single-line access form and allows the runtime to exploit table keys and sorted access for a direct hit. The WHERE variant of READ TABLE forces a row-by-row scan of the internal table. The rule only reports WHERE clauses that WITH KEY can express: pure equality comparisons ( = / EQ ) combined with AND. Conditions with other operators ( CS, GT, OR, IS, ... ) cannot be converted and are not flagged. Clean ABAP cheat sheet (Single Line Access) recommends WITH KEY for one-line lookups.
 
 ### Non-Compliant
 

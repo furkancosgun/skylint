@@ -5257,7 +5257,7 @@ export const RULES = [
   {
     "ruleId": "pref-read-key",
     "title": "Prefer READ TABLE WITH KEY over WHERE",
-    "rationale": "READ TABLE ... WITH KEY is the documented single-line access form and allows the runtime to exploit table keys and sorted access for a direct hit. The WHERE variant of READ TABLE forces a row-by-row scan of the internal table. Clean ABAP cheat sheet (Single Line Access) recommends WITH KEY for one-line lookups.",
+    "rationale": "READ TABLE ... WITH KEY is the documented single-line access form and allows the runtime to exploit table keys and sorted access for a direct hit. The WHERE variant of READ TABLE forces a row-by-row scan of the internal table. The rule only reports WHERE clauses that WITH KEY can express: pure equality comparisons ( = / EQ ) combined with AND. Conditions with other operators ( CS, GT, OR, IS, ... ) cannot be converted and are not flagged. Clean ABAP cheat sheet (Single Line Access) recommends WITH KEY for one-line lookups.",
     "className": "ZCL_SKYLINT_PREF_READ_KEY",
     "pseudoComment": "PREF_READ_KEY",
     "category": "performance",
