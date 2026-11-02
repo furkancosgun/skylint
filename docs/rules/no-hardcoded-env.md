@@ -19,7 +19,7 @@ ruleId: "no-hardcoded-env"
 
 Avoid reading environment system fields (sy-sysid, etc.).
 
-> **ATC Finding Message:** `Avoid reading environment system fields (sy-sysid, sy-uname, etc.)`
+> **ATC Finding Message:** `Avoid reading environment system fields (sy-sysid, sy-uname, sy-tcode, etc.)`
 
 ## Rationale
 
@@ -61,6 +61,9 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | `CHECK_DBSYS` | `Boolean` | <code>true</code> | Detect database system checks (sy-dbsys) |
 | `CHECK_OPSYS` | `Boolean` | <code>true</code> | Detect operating system checks (sy-opsys) |
 | `CHECK_UNAME` | `Boolean` | <code>true</code> | Detect hardcoded user names (sy-uname) in conditional branches |
+| `CHECK_TCODE` | `Boolean` | <code>true</code> | Detect hardcoded transaction code comparisons (sy-tcode) |
+| `CHECK_REPID` | `Boolean` | <code>true</code> | Detect hardcoded report / program ID checks (sy-repid) |
+| `CHECK_CPROG` | `Boolean` | <code>true</code> | Detect hardcoded calling program checks (sy-cprog) |
 | `ONLY_CONDITIONAL` | `Boolean` | <code>false</code> | Only flag occurrences when used inside conditional comparisons (IF, CASE) |
 
 ## Suppression

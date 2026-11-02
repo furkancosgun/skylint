@@ -1,0 +1,15 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Flag SELECT statements on DB tables without a WHERE clause",
+    "originalLanguage": "en"
+  },
+  "category": "ZSKYLINT_PERFORMANCE",
+  "implementingClass": "ZCL_SKYLINT_NO_FULL_SCAN_SEL",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "ALLOW_UP_TO_N"
+    }
+  ]
+}

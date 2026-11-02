@@ -1,0 +1,17 @@
+[
+  {
+    "target": "TEST_001",
+    "code": "NO_SQL_HNT",
+    "line": 3,
+    "column": 42,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_002",
+    "code": null
+  },
+  {
+    "target": "TEST_003",
+    "code": null
+  }
+]

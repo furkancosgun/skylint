@@ -8,6 +8,10 @@ CLASS zcl_test_require_subrc_check DEFINITION
     METHODS test_003.
     METHODS test_004.
     METHODS test_005.
+    METHODS test_006.
+    METHODS test_007.
+    METHODS test_008.
+    METHODS test_009.
 ENDCLASS.
 
 CLASS zcl_test_require_subrc_check IMPLEMENTATION.
@@ -39,5 +43,33 @@ CLASS zcl_test_require_subrc_check IMPLEMENTATION.
 
   METHOD test_005.
     UPDATE t100 SET arbgb = 'A'.
+  ENDMETHOD.
+
+  METHOD test_006.
+    DATA lt_tab TYPE string_table.
+    DATA lv_str TYPE string.
+    INSERT lv_str INTO TABLE lt_tab.
+  ENDMETHOD.
+
+  METHOD test_007.
+    DATA lt_tab TYPE string_table.
+    DATA lv_str TYPE string.
+    INSERT lv_str INTO TABLE lt_tab.
+    IF sy-subrc = 0.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_008.
+    DATA lt_tab TYPE string_table.
+    DATA lv_str TYPE string.
+    MODIFY lt_tab FROM lv_str INDEX 1.
+  ENDMETHOD.
+
+  METHOD test_009.
+    DATA lt_tab TYPE string_table.
+    DATA lv_str TYPE string.
+    MODIFY lt_tab FROM lv_str INDEX 1.
+    IF sy-subrc = 0.
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.

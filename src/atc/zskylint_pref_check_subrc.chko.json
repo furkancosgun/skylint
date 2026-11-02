@@ -19,6 +19,12 @@
     },
     {
       "name": "CHECK_ASSIGN"
+    },
+    {
+      "name": "CHECK_INSERT"
+    },
+    {
+      "name": "CHECK_MODIFY"
     }
   ]
 }

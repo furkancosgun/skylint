@@ -1,16 +1,16 @@
 ---
-title: "Performance & Database (15 Rules)"
+title: "Performance & Database (20 Rules)"
 description: "Database query efficiency, buffer protection, and internal table operation guidelines. Comprehensive reference, finding codes, and Clean ABAP examples for Performance & Database."
 category: "performance"
 keywords: "Clean ABAP, ABAP Cloud, SAP ATC, Performance & Database, S/4HANA Readiness, SAP BTP, Steampunk"
 ---
 
-# Performance & Database (15 Rules)
+# Performance & Database (20 Rules)
 
 Database query efficiency, buffer protection, and internal table operation guidelines.
 
 ::: tip Category Overview
-This category enforces **15 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
+This category enforces **20 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
 :::
 
 ## Rules in this Category
@@ -32,6 +32,11 @@ This category enforces **15 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Specify an Explicit SORT Key with BY](/rules/pref-sort-key) | `ZCL_SKYLINT_PREF_SORT_KEY` | <code>#EC PREF_SORT_KEY</code> | - |
 | [Prefer READ TABLE WITH KEY over WHERE](/rules/pref-read-key) | `ZCL_SKYLINT_PREF_READ_KEY` | <code>#EC PREF_READ_KEY</code> | - |
 | [Disallow Nested LOOP AT Statements Without FROM or GROUP BY](/rules/no-nested-loop) | `ZCL_SKYLINT_NO_NESTED_LOOP` | <code>#EC NO_NESTED_LOOP</code> | - |
+| [Avoid Unfiltered SELECT on Database Tables (Full Table Scan Prevention)](/rules/no-full-scan-sel) | `ZCL_SKYLINT_NO_FULL_SCAN_SEL` | <code>#EC NO_FULL_SCAN_SELECT</code> | - |
+| [Avoid BYPASSING BUFFER in SELECT Statements](/rules/no-bypass-buf) | `ZCL_SKYLINT_NO_BYPASS_BUF` | <code>#EC NO_BYPASS_BUFFER</code> | - |
+| [Avoid CROSS JOIN in ABAP SQL Queries](/rules/no-cross-join) | `ZCL_SKYLINT_NO_CROSS_JOIN` | <code>#EC NO_CROSS_JOIN</code> | - |
+| [Avoid Database Hints (%_HINTS) in ABAP SQL](/rules/no-sql-hints) | `ZCL_SKYLINT_NO_SQL_HINTS` | <code>#EC NO_SQL_HINTS</code> | - |
+| [Avoid Leading Wildcards in LIKE Conditions](/rules/no-lead-wildcard) | `ZCL_SKYLINT_NO_LEAD_WILDCARD` | <code>#EC NO_LEAD_WILDCARD</code> | - |
 
 ---
 

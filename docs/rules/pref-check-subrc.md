@@ -19,7 +19,7 @@ ruleId: "pref-check-subrc"
 
 Check sy-subrc after DB, table and string operations.
 
-> **ATC Finding Message:** `Check sy-subrc after SELECT SINGLE, READ, FIND, SEARCH`
+> **ATC Finding Message:** `Check sy-subrc after SELECT SINGLE, READ, INSERT, MODIFY, FIND, SEARCH`
 
 ## Rationale
 
@@ -55,6 +55,8 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 | `CHECK_READ_TABLE` | `Boolean` | <code>true</code> | Require sy-subrc check after READ TABLE |
 | `CHECK_FIND_SEARCH` | `Boolean` | <code>true</code> | Require sy-subrc check after FIND or SEARCH |
 | `CHECK_ASSIGN` | `Boolean` | <code>true</code> | Require sy-subrc check after dynamic ASSIGN |
+| `CHECK_INSERT` | `Boolean` | <code>true</code> | Require sy-subrc check after database INSERT |
+| `CHECK_MODIFY` | `Boolean` | <code>true</code> | Require sy-subrc check after database MODIFY |
 
 ## Suppression
 

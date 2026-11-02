@@ -60,5 +60,17 @@
     "code": "NO_HARDENV",
     "line": 2,
     "column": 7
+  },
+  {
+    "target": "TEST_012",
+    "code": "NO_HARDENV",
+    "line": 2,
+    "column": 7
+  },
+  {
+    "target": "TEST_013",
+    "code": "NO_HARDENV",
+    "line": 2,
+    "column": 7
   }
 ]

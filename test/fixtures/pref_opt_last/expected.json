@@ -1,0 +1,24 @@
+[
+  {
+    "target": "LCL_BAD_OPT",
+    "code": "PREF_OPT_L",
+    "line": 6,
+    "column": 8,
+    "quickfixes": []
+  },
+  {
+    "target": "LCL_GOOD_OPT",
+    "code": null
+  },
+  {
+    "target": "LCL_BAD_DEF",
+    "code": "PREF_OPT_L",
+    "line": 6,
+    "column": 8,
+    "quickfixes": []
+  },
+  {
+    "target": "LCL_SUPPRESSED",
+    "code": null
+  }
+]

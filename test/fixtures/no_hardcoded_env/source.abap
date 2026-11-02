@@ -14,6 +14,8 @@ CLASS zcl_skylint_test_hardcoded_env DEFINITION
     METHODS test_009.
     METHODS test_010.
     METHODS test_011.
+    METHODS test_012.
+    METHODS test_013.
 
 ENDCLASS.
 
@@ -73,6 +75,16 @@ CLASS zcl_skylint_test_hardcoded_env IMPLEMENTATION.
 
   METHOD test_011.
     IF sy-uname = 'SKYLINT'.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_012.
+    IF sy-tcode = 'SE38'.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD test_013.
+    IF sy-repid = 'PROG'.
     ENDIF.
   ENDMETHOD.
 ENDCLASS.

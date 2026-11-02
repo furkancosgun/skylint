@@ -1,0 +1,29 @@
+CLASS zcl_skylint_test_full_scan DEFINITION
+  PUBLIC FINAL
+  CREATE PUBLIC.
+
+  PUBLIC SECTION.
+    METHODS test_001.
+    METHODS test_002.
+    METHODS test_003.
+    METHODS test_004.
+ENDCLASS.
+
+CLASS zcl_skylint_test_full_scan IMPLEMENTATION.
+  METHOD test_001.
+    SELECT * FROM t000 INTO TABLE @DATA(lt_data).
+  ENDMETHOD.
+
+  METHOD test_002.
+    SELECT * FROM t000 WHERE mandt = '100' INTO TABLE @DATA(lt_data).
+  ENDMETHOD.
+
+  METHOD test_003.
+    DATA lt_itab TYPE string_table.
+    SELECT * FROM @lt_itab AS itab INTO TABLE @DATA(lt_res).
+  ENDMETHOD.
+
+  METHOD test_004.
+    SELECT * FROM t000 INTO TABLE @DATA(lt_data). "#EC NO_FULL_SCAN_SELECT
+  ENDMETHOD.
+ENDCLASS.

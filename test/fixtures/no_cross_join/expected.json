@@ -1,0 +1,17 @@
+[
+  {
+    "target": "TEST_001",
+    "code": "NO_CROSS_J",
+    "line": 2,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_002",
+    "code": null
+  },
+  {
+    "target": "TEST_003",
+    "code": null
+  }
+]

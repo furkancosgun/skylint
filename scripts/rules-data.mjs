@@ -2415,7 +2415,9 @@ export const RULES = [
       "CHECK_SELECT_SINGLE": "Require sy-subrc check after SELECT SINGLE",
       "CHECK_READ_TABLE": "Require sy-subrc check after READ TABLE",
       "CHECK_FIND_SEARCH": "Require sy-subrc check after FIND or SEARCH",
-      "CHECK_ASSIGN": "Require sy-subrc check after dynamic ASSIGN"
+      "CHECK_ASSIGN": "Require sy-subrc check after dynamic ASSIGN",
+      "CHECK_INSERT": "Require sy-subrc check after database INSERT",
+      "CHECK_MODIFY": "Require sy-subrc check after database MODIFY"
     },
     "seo": {
       "description": "Verify sy-subrc Promptly After Data Retrieval and Search - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud.",
@@ -3326,6 +3328,9 @@ export const RULES = [
       "CHECK_DBSYS": "Detect database system checks (sy-dbsys)",
       "CHECK_OPSYS": "Detect operating system checks (sy-opsys)",
       "CHECK_UNAME": "Detect hardcoded user names (sy-uname) in conditional branches",
+      "CHECK_TCODE": "Detect hardcoded transaction code comparisons (sy-tcode)",
+      "CHECK_REPID": "Detect hardcoded report / program ID checks (sy-repid)",
+      "CHECK_CPROG": "Detect hardcoded calling program checks (sy-cprog)",
       "ONLY_CONDITIONAL": "Only flag occurrences when used inside conditional comparisons (IF, CASE)"
     },
     "relatedRules": [
@@ -5500,6 +5505,239 @@ export const RULES = [
       "pref-loop-where",
       "pref-read-table",
       "max-loop-jumps"
+    ]
+  },
+  {
+    "ruleId": "no-full-scan-sel",
+    "title": "Avoid Unfiltered SELECT on Database Tables (Full Table Scan Prevention)",
+    "rationale": "Executing a `SELECT` statement on a database table without an explicit `WHERE` clause reads every single row in the table, bypassing database indexes and causing full table scans. On large transactional or master data tables, this exhausts database memory, saturates network bandwidth, and leads to critical system performance degradation.\n\n**Standard:** Always filter database reads with an index-backed `WHERE` condition. For paging or sampling, use `UP TO n ROWS`.",
+    "className": "ZCL_SKYLINT_NO_FULL_SCAN_SEL",
+    "pseudoComment": "NO_FULL_SCAN_SELECT",
+    "category": "performance",
+    "example": {
+      "bad": "\" Critical: Scans millions of database rows\nSELECT * FROM t000 INTO TABLE @DATA(lt_data).",
+      "good": "\" Optimized: Targeted read with WHERE filter\nSELECT * FROM t000\n  WHERE mandt = '100'\n  INTO TABLE @DATA(lt_data)."
+    },
+    "seo": {
+      "description": "Prevent full table scans in ABAP SQL by enforcing WHERE conditions on database SELECT statements.",
+      "keywords": [
+        "ABAP Full Table Scan",
+        "SELECT without WHERE",
+        "Database Index Optimization",
+        "HANA Performance"
+      ]
+    },
+    "parameters": {
+      "ALLOW_UP_TO_N": "Allow SELECT statements without a WHERE clause when restricted by UP TO n ROWS"
+    },
+    "relatedRules": [
+      "no-unfilt-dml",
+      "no-bypass-buf",
+      "no-select-star"
+    ]
+  },
+  {
+    "ruleId": "no-bypass-buf",
+    "title": "Avoid BYPASSING BUFFER in SELECT Statements",
+    "rationale": "Using `BYPASSING BUFFER` in ABAP SQL forces an expensive direct database roundtrip, explicitly ignoring the high-performance application server table buffer. For customizing and configuration tables, this creates unnecessary database load and eliminates the benefits of SAP table buffering.\n\n**Standard:** Rely on SAP table buffering for cached tables unless an absolute real-time guarantee is strictly mandatory.",
+    "className": "ZCL_SKYLINT_NO_BYPASS_BUF",
+    "pseudoComment": "NO_BYPASS_BUFFER",
+    "category": "performance",
+    "example": {
+      "bad": "\" Bypasses application server buffer\nSELECT * FROM t000 BYPASSING BUFFER INTO TABLE @DATA(lt_data).",
+      "good": "\" Uses SAP table buffer\nSELECT * FROM t000 INTO TABLE @DATA(lt_data)."
+    },
+    "seo": {
+      "description": "Prevent unnecessary database roundtrips in ABAP by avoiding BYPASSING BUFFER on buffered tables.",
+      "keywords": [
+        "ABAP Table Buffer",
+        "BYPASSING BUFFER",
+        "SAP Application Buffer",
+        "Performance Optimization"
+      ]
+    },
+    "relatedRules": [
+      "no-full-scan-sel",
+      "no-select-star",
+      "pref-read-table"
+    ]
+  },
+  {
+    "ruleId": "no-cross-join",
+    "title": "Avoid CROSS JOIN in ABAP SQL Queries",
+    "rationale": "A `CROSS JOIN` produces the cartesian product of two tables (M * N records) without join conditions. On non-trivial tables, this leads to exponential row proliferation, database memory exhaustion, and query timeouts.\n\n**Standard:** Always connect joined tables with explicit `ON` conditions using `INNER JOIN` or `LEFT OUTER JOIN`.",
+    "className": "ZCL_SKYLINT_NO_CROSS_JOIN",
+    "pseudoComment": "NO_CROSS_JOIN",
+    "category": "performance",
+    "example": {
+      "bad": "\" Cartesian product: M * N rows\nSELECT FROM t000 CROSS JOIN t001 FIELDS t000~mandt INTO TABLE @DATA(lt_data).",
+      "good": "\" Explicit ON join condition\nSELECT FROM t000\n  INNER JOIN t001 ON t000~mandt = t001~mandt\n  FIELDS t000~mandt\n  INTO TABLE @DATA(lt_data)."
+    },
+    "seo": {
+      "description": "Avoid Cartesian products in SAP ABAP SQL by prohibiting CROSS JOIN queries.",
+      "keywords": [
+        "ABAP CROSS JOIN",
+        "Cartesian Product ABAP",
+        "SQL Join Optimization",
+        "Database Performance"
+      ]
+    },
+    "relatedRules": [
+      "no-full-scan-sel",
+      "pref-join-type",
+      "pref-strict-sql"
+    ]
+  },
+  {
+    "ruleId": "no-sql-hints",
+    "title": "Avoid Database Hints (%_HINTS) in ABAP SQL",
+    "rationale": "Hardcoding `%_HINTS` overrides the database optimizer and tightly couples ABAP code to a specific database vendor (e.g. HDB, Oracle, DB6). Hints break portability during database upgrades, HANA migrations, or ABAP Cloud downports.\n\n**Standard:** Optimize queries through proper secondary indexes, CDS views, and index-backed WHERE conditions rather than vendor-specific hints.",
+    "className": "ZCL_SKYLINT_NO_SQL_HINTS",
+    "pseudoComment": "NO_SQL_HINTS",
+    "category": "performance",
+    "example": {
+      "bad": "\" Vendor-specific database hint\nSELECT * FROM t000 INTO TABLE lt_data %_HINTS HDB 'INDEX_SEARCH'.",
+      "good": "\" Clean SQL without vendor hints\nSELECT * FROM t000 INTO TABLE lt_data."
+    },
+    "seo": {
+      "description": "Eliminate proprietary %_HINTS in ABAP SQL to ensure database portability and allow optimizer flexibility.",
+      "keywords": [
+        "ABAP %_HINTS",
+        "Database Hints SAP",
+        "HANA Migration",
+        "Vendor Agnostic SQL"
+      ]
+    },
+    "relatedRules": [
+      "no-full-scan-sel",
+      "pref-strict-sql"
+    ]
+  },
+  {
+    "ruleId": "no-lead-wildcard",
+    "title": "Avoid Leading Wildcards in LIKE Conditions",
+    "rationale": "Using a leading wildcard (`%` or `+`) in a `LIKE` condition (e.g. `LIKE '%value'`) prevents the database optimizer from using B-tree and column indexes, resulting in full index scans or table scans.\n\n**Standard:** Avoid leading wildcards in search patterns. If substring search is needed on large tables, consider SAP HANA full-text indexes or fuzzy search.",
+    "className": "ZCL_SKYLINT_NO_LEAD_WILDCARD",
+    "pseudoComment": "NO_LEAD_WILDCARD",
+    "category": "performance",
+    "example": {
+      "bad": "\" Leading wildcard prevents index utilization\nSELECT * FROM t000 WHERE mandt LIKE '%00' INTO TABLE @DATA(lt_data).",
+      "good": "\" Prefix match utilizes index\nSELECT * FROM t000 WHERE mandt LIKE '100%' INTO TABLE @DATA(lt_data)."
+    },
+    "seo": {
+      "description": "Prevent full table scans by avoiding leading wildcards (% and +) in ABAP OpenSQL LIKE conditions.",
+      "keywords": [
+        "ABAP LIKE Wildcard",
+        "Leading Percent LIKE",
+        "Index Invalidation",
+        "SQL Performance"
+      ]
+    },
+    "relatedRules": [
+      "no-full-scan-sel",
+      "pref-between"
+    ]
+  },
+  {
+    "ruleId": "no-dedup-no-sort",
+    "title": "Sort Internal Tables Before DELETE ADJACENT DUPLICATES",
+    "rationale": "`DELETE ADJACENT DUPLICATES` only removes duplicate rows that are physically consecutive. If the table is not sorted beforehand, non-adjacent identical rows are retained, leading to subtle logic errors and incomplete deduplication.\n\n**Standard:** Always issue an explicit `SORT <itab>` statement immediately before `DELETE ADJACENT DUPLICATES`.",
+    "className": "ZCL_SKYLINT_NO_DEDUP_NO_SORT",
+    "pseudoComment": "NO_DEDUP_NO_SORT",
+    "category": "anti-patterns",
+    "example": {
+      "bad": "\" Flawed deduplication: Unsorted adjacent check misses duplicates\nDELETE ADJACENT DUPLICATES FROM lt_data.",
+      "good": "\" Correct: Explicit sort guarantees consecutive duplicates\nSORT lt_data.\nDELETE ADJACENT DUPLICATES FROM lt_data."
+    },
+    "seo": {
+      "description": "Ensure internal table deduplication integrity by requiring a SORT statement prior to DELETE ADJACENT DUPLICATES in ABAP.",
+      "keywords": [
+        "DELETE ADJACENT DUPLICATES",
+        "SORT internal table",
+        "ABAP Deduplication Bug",
+        "Clean ABAP"
+      ]
+    },
+    "relatedRules": [
+      "pref-sort-key",
+      "pref-sort-order"
+    ]
+  },
+  {
+    "ruleId": "no-dup-subexpr",
+    "title": "Avoid Duplicate Subexpressions in Conditions",
+    "rationale": "Repeating identical subexpressions inside the same boolean condition (e.g. `IF cond_a AND cond_a`) adds clutter, impairs readability, and frequently indicates copy-paste errors or missing variables.\n\n**Standard:** Eliminate duplicate boolean operands and simplify complex expressions.",
+    "className": "ZCL_SKYLINT_NO_DUP_SUBEXPR",
+    "pseudoComment": "NO_DUP_SUBEXPR",
+    "category": "clean-abap",
+    "example": {
+      "bad": "IF a = 1 AND a = 1.\n  \" Redundant subexpression\nENDIF.",
+      "good": "IF a = 1.\n  \" Clean single expression\nENDIF."
+    },
+    "seo": {
+      "description": "Flag duplicate boolean subexpressions in ABAP IF, ELSEIF, CHECK, and WHILE conditions.",
+      "keywords": [
+        "Duplicate Subexpression ABAP",
+        "Redundant Condition",
+        "Clean ABAP Conditions",
+        "Logic Simplification"
+      ]
+    },
+    "relatedRules": [
+      "no-dup-cond",
+      "no-self-compare",
+      "max-bool-expr"
+    ]
+  },
+  {
+    "ruleId": "no-badi-commit",
+    "title": "Avoid COMMIT or ROLLBACK in BAdI Implementations",
+    "rationale": "Executing `COMMIT WORK` or `ROLLBACK WORK` inside a Business Add-In (BAdI) breaks the Logical Unit of Work (LUW) of the calling application. It prematurely commits or rolls back standard transactions, leading to severe database inconsistencies and SAP short dumps.\n\n**Standard:** Let the standard transaction or orchestrating caller manage commit and rollback lifecycles.",
+    "className": "ZCL_SKYLINT_NO_BADI_COMMIT",
+    "pseudoComment": "NO_BADI_COMMIT",
+    "category": "anti-patterns",
+    "example": {
+      "bad": "METHOD do_work.\n  \" Anti-pattern: Breaks caller's transaction boundary\n  COMMIT WORK.\nENDMETHOD.",
+      "good": "METHOD do_work.\n  \" Clean ABAP: Pure extension logic without transaction control\n  update_buffer( ).\nENDMETHOD."
+    },
+    "seo": {
+      "description": "Prevent LUW transaction corruption in SAP by prohibiting COMMIT WORK and ROLLBACK WORK inside BAdI implementations.",
+      "keywords": [
+        "BAdI COMMIT WORK",
+        "LUW Integrity SAP",
+        "IF_BADI_INTERFACE",
+        "Transaction Boundaries"
+      ]
+    },
+    "relatedRules": [
+      "no-unclosed-res",
+      "no-scope-leak"
+    ]
+  },
+  {
+    "ruleId": "pref-opt-last",
+    "title": "Declare Optional and Default Parameters Last in Methods",
+    "rationale": "In Clean ABAP, mandatory parameters must appear before optional (`OPTIONAL`) and default (`DEFAULT`) parameters in method signatures. Mixing optional and required parameters makes caller invocation confusing and error-prone.\n\n**Standard:** Place required parameters first, followed by optional parameters at the end of the parameter list.",
+    "className": "ZCL_SKYLINT_PREF_OPT_LAST",
+    "pseudoComment": "PREF_OPTIONAL_LAST",
+    "category": "clean-abap",
+    "example": {
+      "bad": "METHODS process_data\n  IMPORTING\n    iv_opt TYPE i OPTIONAL\n    iv_req TYPE i.",
+      "good": "METHODS process_data\n  IMPORTING\n    iv_req TYPE i\n    iv_opt TYPE i OPTIONAL."
+    },
+    "seo": {
+      "description": "Improve method readability in ABAP by placing optional and default parameters after mandatory parameters.",
+      "keywords": [
+        "Clean ABAP Parameters",
+        "OPTIONAL Parameter Order",
+        "DEFAULT Parameter",
+        "Method Signature Hygiene"
+      ]
+    },
+    "relatedRules": [
+      "pref-param-name",
+      "pref-param-1line",
+      "max-params"
     ]
   }
 ];

@@ -1,0 +1,47 @@
+INTERFACE if_badi_interface PUBLIC.
+ENDINTERFACE.
+
+CLASS zcl_test_badi_impl DEFINITION
+  PUBLIC FINAL
+  CREATE PUBLIC.
+
+  PUBLIC SECTION.
+    INTERFACES if_badi_interface.
+    METHODS test_001.
+    METHODS test_002.
+    METHODS test_003.
+    METHODS test_004.
+ENDCLASS.
+
+CLASS zcl_test_badi_impl IMPLEMENTATION.
+  METHOD test_001.
+    COMMIT WORK.
+  ENDMETHOD.
+
+  METHOD test_002.
+    ROLLBACK WORK.
+  ENDMETHOD.
+
+  METHOD test_003.
+    DATA lv_x TYPE i.
+    lv_x = 1.
+  ENDMETHOD.
+
+  METHOD test_004.
+    COMMIT WORK. "#EC NO_BADI_COMMIT
+  ENDMETHOD.
+ENDCLASS.
+
+CLASS zcl_test_normal_impl DEFINITION
+  PUBLIC FINAL
+  CREATE PUBLIC.
+
+  PUBLIC SECTION.
+    METHODS test_005.
+ENDCLASS.
+
+CLASS zcl_test_normal_impl IMPLEMENTATION.
+  METHOD test_005.
+    COMMIT WORK.
+  ENDMETHOD.
+ENDCLASS.

@@ -26,6 +26,9 @@ CLASS zcl_skylint_no_hardcoded_env DEFINITION
         dbsys TYPE string VALUE 'DBSYS',
         opsys TYPE string VALUE 'OPSYS',
         uname TYPE string VALUE 'UNAME',
+        tcode TYPE string VALUE 'TCODE',
+        repid TYPE string VALUE 'REPID',
+        cprog TYPE string VALUE 'CPROG',
       END OF c_env_vars.
 
     DATA mv_check_sysid      TYPE abap_bool VALUE abap_true.
@@ -34,6 +37,9 @@ CLASS zcl_skylint_no_hardcoded_env DEFINITION
     DATA mv_check_dbsys      TYPE abap_bool VALUE abap_true.
     DATA mv_check_opsys      TYPE abap_bool VALUE abap_true.
     DATA mv_check_uname      TYPE abap_bool VALUE abap_true.
+    DATA mv_check_tcode      TYPE abap_bool VALUE abap_true.
+    DATA mv_check_repid      TYPE abap_bool VALUE abap_true.
+    DATA mv_check_cprog      TYPE abap_bool VALUE abap_true.
     DATA mv_only_conditional TYPE abap_bool VALUE abap_false.
 
     METHODS is_env_var_token
@@ -59,7 +65,7 @@ CLASS zcl_skylint_no_hardcoded_env IMPLEMENTATION.
                  finding_codes     = VALUE #(
                      ( code           = c_finding_codes-hardcoded_env
                        severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Avoid reading environment system fields (sy-sysid, sy-uname, etc.)'
+                       text           = 'Avoid reading environment system fields (sy-sysid, sy-uname, sy-tcode, etc.)'
                        pseudo_comment = c_pseudo_comment ) )
                  attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
                                               ( name  = 'CHECK_SYSID'
@@ -74,6 +80,12 @@ CLASS zcl_skylint_no_hardcoded_env IMPLEMENTATION.
                                                 value = REF #( mv_check_opsys ) )
                                               ( name  = 'CHECK_UNAME'
                                                 value = REF #( mv_check_uname ) )
+                                              ( name  = 'CHECK_TCODE'
+                                                value = REF #( mv_check_tcode ) )
+                                              ( name  = 'CHECK_REPID'
+                                                value = REF #( mv_check_repid ) )
+                                              ( name  = 'CHECK_CPROG'
+                                                value = REF #( mv_check_cprog ) )
                                               ( name  = 'ONLY_CONDITIONAL'
                                                 value = REF #( mv_only_conditional ) ) ) ) ).
   ENDMETHOD.
@@ -125,6 +137,15 @@ CLASS zcl_skylint_no_hardcoded_env IMPLEMENTATION.
     ELSEIF zcl_skylint_ast_util=>match_system_field( is_token      = is_token
                                                      iv_field_name = 'UNAME' ) = abap_true.
       rv_env_var = c_env_vars-uname.
+    ELSEIF zcl_skylint_ast_util=>match_system_field( is_token      = is_token
+                                                     iv_field_name = 'TCODE' ) = abap_true.
+      rv_env_var = c_env_vars-tcode.
+    ELSEIF zcl_skylint_ast_util=>match_system_field( is_token      = is_token
+                                                     iv_field_name = 'REPID' ) = abap_true.
+      rv_env_var = c_env_vars-repid.
+    ELSEIF zcl_skylint_ast_util=>match_system_field( is_token      = is_token
+                                                     iv_field_name = 'CPROG' ) = abap_true.
+      rv_env_var = c_env_vars-cprog.
     ENDIF.
   ENDMETHOD.
 
@@ -143,6 +164,12 @@ CLASS zcl_skylint_no_hardcoded_env IMPLEMENTATION.
         rv_enabled = mv_check_opsys.
       WHEN c_env_vars-uname.
         rv_enabled = mv_check_uname.
+      WHEN c_env_vars-tcode.
+        rv_enabled = mv_check_tcode.
+      WHEN c_env_vars-repid.
+        rv_enabled = mv_check_repid.
+      WHEN c_env_vars-cprog.
+        rv_enabled = mv_check_cprog.
     ENDCASE.
   ENDMETHOD.
 

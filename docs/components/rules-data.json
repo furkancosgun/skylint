@@ -2479,6 +2479,16 @@
         "name": "CHECK_ASSIGN",
         "kind": "Boolean",
         "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_INSERT",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_MODIFY",
+        "kind": "Boolean",
+        "defaultValue": "true"
       }
     ],
     "relatedRules": [
@@ -2501,6 +2511,14 @@
       },
       {
         "name": "CHECK_ASSIGN",
+        "value": "true"
+      },
+      {
+        "name": "CHECK_INSERT",
+        "value": "true"
+      },
+      {
+        "name": "CHECK_MODIFY",
         "value": "true"
       }
     ]
@@ -3377,6 +3395,21 @@
         "defaultValue": "true"
       },
       {
+        "name": "CHECK_TCODE",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_REPID",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_CPROG",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
         "name": "ONLY_CONDITIONAL",
         "kind": "Boolean",
         "defaultValue": "false"
@@ -3410,6 +3443,18 @@
       },
       {
         "name": "CHECK_UNAME",
+        "value": "true"
+      },
+      {
+        "name": "CHECK_TCODE",
+        "value": "true"
+      },
+      {
+        "name": "CHECK_REPID",
+        "value": "true"
+      },
+      {
+        "name": "CHECK_CPROG",
         "value": "true"
       },
       {
@@ -5673,6 +5718,184 @@
       "pref-loop-where",
       "pref-read-table",
       "max-loop-jumps"
+    ],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "no-full-scan-sel",
+    "title": "Avoid Unfiltered SELECT on Database Tables (Full Table Scan Prevention)",
+    "className": "ZCL_SKYLINT_NO_FULL_SCAN_SEL",
+    "checkName": "ZSKYLINT_NO_FULL_SCAN_SEL",
+    "category": "performance",
+    "categoryTitle": "Performance & Database",
+    "pseudoComment": "NO_FULL_SCAN_SELECT",
+    "description": "Flag SELECT statements on DB tables without a WHERE clause",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "ALLOW_UP_TO_N",
+        "kind": "Boolean",
+        "defaultValue": "false"
+      }
+    ],
+    "relatedRules": [
+      "no-unfilt-dml",
+      "no-bypass-buf",
+      "no-select-star"
+    ],
+    "defaultParameters": [
+      {
+        "name": "ALLOW_UP_TO_N",
+        "value": "false"
+      }
+    ]
+  },
+  {
+    "ruleId": "no-bypass-buf",
+    "title": "Avoid BYPASSING BUFFER in SELECT Statements",
+    "className": "ZCL_SKYLINT_NO_BYPASS_BUF",
+    "checkName": "ZSKYLINT_NO_BYPASS_BUF",
+    "category": "performance",
+    "categoryTitle": "Performance & Database",
+    "pseudoComment": "NO_BYPASS_BUFFER",
+    "description": "Avoid BYPASSING BUFFER in SELECT statements",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "relatedRules": [
+      "no-full-scan-sel",
+      "no-select-star",
+      "pref-read-table"
+    ],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "no-cross-join",
+    "title": "Avoid CROSS JOIN in ABAP SQL Queries",
+    "className": "ZCL_SKYLINT_NO_CROSS_JOIN",
+    "checkName": "ZSKYLINT_NO_CROSS_JOIN",
+    "category": "performance",
+    "categoryTitle": "Performance & Database",
+    "pseudoComment": "NO_CROSS_JOIN",
+    "description": "Avoid CROSS JOIN in ABAP SQL queries",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "relatedRules": [
+      "no-full-scan-sel",
+      "pref-join-type",
+      "pref-strict-sql"
+    ],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "no-sql-hints",
+    "title": "Avoid Database Hints (%_HINTS) in ABAP SQL",
+    "className": "ZCL_SKYLINT_NO_SQL_HINTS",
+    "checkName": "ZSKYLINT_NO_SQL_HINTS",
+    "category": "performance",
+    "categoryTitle": "Performance & Database",
+    "pseudoComment": "NO_SQL_HINTS",
+    "description": "Avoid database hints (%_HINTS) in ABAP SQL queries",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "relatedRules": [
+      "no-full-scan-sel",
+      "pref-strict-sql"
+    ],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "no-lead-wildcard",
+    "title": "Avoid Leading Wildcards in LIKE Conditions",
+    "className": "ZCL_SKYLINT_NO_LEAD_WILDCARD",
+    "checkName": "ZSKYLINT_NO_LEAD_WILDCARD",
+    "category": "performance",
+    "categoryTitle": "Performance & Database",
+    "pseudoComment": "NO_LEAD_WILDCARD",
+    "description": "Avoid leading wildcard (% or +) in LIKE conditions",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "relatedRules": [
+      "no-full-scan-sel",
+      "pref-between"
+    ],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "no-dedup-no-sort",
+    "title": "Sort Internal Tables Before DELETE ADJACENT DUPLICATES",
+    "className": "ZCL_SKYLINT_NO_DEDUP_NO_SORT",
+    "checkName": "ZSKYLINT_NO_DEDUP_NO_SORT",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "NO_DEDUP_NO_SORT",
+    "description": "Sort internal tables before DELETE ADJACENT DUPLICATES",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "relatedRules": [
+      "pref-sort-key",
+      "pref-sort-order"
+    ],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "no-dup-subexpr",
+    "title": "Avoid Duplicate Subexpressions in Conditions",
+    "className": "ZCL_SKYLINT_NO_DUP_SUBEXPR",
+    "checkName": "ZSKYLINT_NO_DUP_SUBEXPR",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "NO_DUP_SUBEXPR",
+    "description": "Avoid duplicate subexpressions in conditions",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "relatedRules": [
+      "no-dup-cond",
+      "no-self-compare",
+      "max-bool-expr"
+    ],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "no-badi-commit",
+    "title": "Avoid COMMIT or ROLLBACK in BAdI Implementations",
+    "className": "ZCL_SKYLINT_NO_BADI_COMMIT",
+    "checkName": "ZSKYLINT_NO_BADI_COMMIT",
+    "category": "anti-patterns",
+    "categoryTitle": "Anti-Patterns & Bad Practices",
+    "pseudoComment": "NO_BADI_COMMIT",
+    "description": "Avoid COMMIT or ROLLBACK in BAdI implementations",
+    "hasQuickfix": false,
+    "remoteEnabled": false,
+    "attributes": [],
+    "relatedRules": [
+      "no-unclosed-res",
+      "no-scope-leak"
+    ],
+    "defaultParameters": []
+  },
+  {
+    "ruleId": "pref-opt-last",
+    "title": "Declare Optional and Default Parameters Last in Methods",
+    "className": "ZCL_SKYLINT_PREF_OPT_LAST",
+    "checkName": "ZSKYLINT_PREF_OPT_LAST",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "PREF_OPTIONAL_LAST",
+    "description": "Declare optional and default parameters last in methods",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "relatedRules": [
+      "pref-param-name",
+      "pref-param-1line",
+      "max-params"
     ],
     "defaultParameters": []
   }

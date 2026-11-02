@@ -702,6 +702,14 @@
         {
           "name": "CHECK_ASSIGN",
           "value": "true"
+        },
+        {
+          "name": "CHECK_INSERT",
+          "value": "true"
+        },
+        {
+          "name": "CHECK_MODIFY",
+          "value": "true"
         }
       ]
     },
@@ -944,6 +952,18 @@
         },
         {
           "name": "CHECK_UNAME",
+          "value": "true"
+        },
+        {
+          "name": "CHECK_TCODE",
+          "value": "true"
+        },
+        {
+          "name": "CHECK_REPID",
+          "value": "true"
+        },
+        {
+          "name": "CHECK_CPROG",
           "value": "true"
         },
         {
@@ -1595,6 +1615,39 @@
     },
     {
       "checkName": "ZSKYLINT_NO_NESTED_LOOP"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_FULL_SCAN_SEL",
+      "parameters": [
+        {
+          "name": "ALLOW_UP_TO_N",
+          "value": "false"
+        }
+      ]
+    },
+    {
+      "checkName": "ZSKYLINT_NO_BYPASS_BUF"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_CROSS_JOIN"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_SQL_HINTS"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_LEAD_WILDCARD"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_DEDUP_NO_SORT"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_DUP_SUBEXPR"
+    },
+    {
+      "checkName": "ZSKYLINT_NO_BADI_COMMIT"
+    },
+    {
+      "checkName": "ZSKYLINT_PREF_OPT_LAST"
     }
   ]
 }

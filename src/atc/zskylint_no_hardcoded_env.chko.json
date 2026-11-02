@@ -27,6 +27,15 @@
       "name": "CHECK_UNAME"
     },
     {
+      "name": "CHECK_TCODE"
+    },
+    {
+      "name": "CHECK_REPID"
+    },
+    {
+      "name": "CHECK_CPROG"
+    },
+    {
       "name": "ONLY_CONDITIONAL"
     }
   ]

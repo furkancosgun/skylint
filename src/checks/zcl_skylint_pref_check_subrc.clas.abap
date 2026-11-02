@@ -21,6 +21,8 @@ CLASS zcl_skylint_pref_check_subrc DEFINITION
     DATA mv_check_read_table    TYPE abap_bool VALUE abap_true.
     DATA mv_check_find_search   TYPE abap_bool VALUE abap_true.
     DATA mv_check_assign        TYPE abap_bool VALUE abap_true.
+    DATA mv_check_insert        TYPE abap_bool VALUE abap_true.
+    DATA mv_check_modify        TYPE abap_bool VALUE abap_true.
 
     METHODS statement_sets_subrc
       IMPORTING is_statement   TYPE if_ci_atc_source_code_provider=>ty_statement
@@ -36,7 +38,7 @@ CLASS zcl_skylint_pref_check_subrc IMPLEMENTATION.
                                  finding_codes     = VALUE #(
                                      ( code           = c_finding_codes-check_subrc
                                        severity       = if_ci_atc_check=>finding_severities-warning
-                                       text           = 'Check sy-subrc after SELECT SINGLE, READ, FIND, SEARCH'
+                                       text           = 'Check sy-subrc after SELECT SINGLE, READ, INSERT, MODIFY, FIND, SEARCH'
                                        pseudo_comment = c_pseudo_comment ) )
                                  attributes        = VALUE #( kind = if_ci_atc_check_meta_data=>attribute_kinds-boolean
                                                               ( name  = 'CHECK_SELECT_SINGLE'
@@ -46,7 +48,11 @@ CLASS zcl_skylint_pref_check_subrc IMPLEMENTATION.
                                                               ( name  = 'CHECK_FIND_SEARCH'
                                                                 value = REF #( mv_check_find_search ) )
                                                               ( name  = 'CHECK_ASSIGN'
-                                                                value = REF #( mv_check_assign ) ) ) ) ).
+                                                                value = REF #( mv_check_assign ) )
+                                                              ( name  = 'CHECK_INSERT'
+                                                                value = REF #( mv_check_insert ) )
+                                                              ( name  = 'CHECK_MODIFY'
+                                                                value = REF #( mv_check_modify ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -112,6 +118,15 @@ CLASS zcl_skylint_pref_check_subrc IMPLEMENTATION.
         IF zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
                                                    iv_index     = 2
                                                    iv_expected  = `FROM` ) = abap_true.
+          rv_sets = abap_true.
+        ENDIF.
+      WHEN 'INSERT'.
+        rv_sets = mv_check_insert.
+      WHEN 'MODIFY'.
+        IF     mv_check_modify = abap_true
+           AND zcl_skylint_ast_util=>matches_token_at( is_statement = is_statement
+                                                       iv_index     = 2
+                                                       iv_expected  = `SCREEN` ) = abap_false.
           rv_sets = abap_true.
         ENDIF.
     ENDCASE.
