@@ -23,13 +23,14 @@ ENDCLASS.
 CLASS zcl_skylint_no_lead_wildcard IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Avoid leading wildcard (% or +) in LIKE conditions'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-leading_wildcard
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Avoid leading wildcard (% or +) in LIKE; prevents index usage causing full scan'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+        VALUE #(
+            description       = 'Avoid leading wildcard (% or +) in LIKE conditions'
+            remote_enablement = abap_true
+            finding_codes     = VALUE #(
+                ( code           = c_finding_codes-leading_wildcard
+                  severity       = if_ci_atc_check=>finding_severities-warning
+                  text           = 'Avoid leading wildcard (% or +) in LIKE; prevents index usage causing full scan'
+                  pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -50,7 +51,8 @@ CLASS zcl_skylint_no_lead_wildcard IMPLEMENTATION.
 
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
         lv_idx = sy-tabix.
-        IF <ls_token>-references IS NOT INITIAL OR to_upper( <ls_token>-lexeme ) <> 'LIKE'.
+        IF zcl_skylint_ast_util=>token_is_keyword( is_token  = <ls_token>
+                                                   iv_lexeme = 'LIKE' ) = abap_false.
           CONTINUE.
         ENDIF.
 
@@ -71,7 +73,7 @@ CLASS zcl_skylint_no_lead_wildcard IMPLEMENTATION.
                               len = strlen( lv_val ) - 2 ).
         ENDIF.
 
-        IF lv_val IS NOT INITIAL AND ( lv_val(1) = '%' OR lv_val(1) = '+' ).
+        IF lv_val IS NOT INITIAL AND ( lv_val(1) = '%' OR lv_val(1) = '_' ).
           report_token( is_token        = ls_val_tok
                         is_statement    = <ls_statement>
                         iv_finding_code = c_finding_codes-leading_wildcard ).

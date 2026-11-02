@@ -88,7 +88,6 @@ CLASS zcl_skylint_no_dup_subexp IMPLEMENTATION.
     DATA lv_tok_count TYPE i.
     DATA lv_i         TYPE i.
     DATA lv_key       TYPE string.
-    DATA lv_end       TYPE i.
     DATA ls_tok       TYPE if_ci_atc_source_code_provider=>ty_token.
 
     lv_tok_count = lines( is_statement-tokens ).
@@ -105,23 +104,21 @@ CLASS zcl_skylint_no_dup_subexp IMPLEMENTATION.
       IF    ls_tok-lexeme(1) = ''''
          OR ls_tok-lexeme(1) = '`'
          OR ls_tok-lexeme(1) = '|'.
-        lv_i = lv_i + 1.
+        lv_i += 1.
         CONTINUE.
       ENDIF.
 
-      CLEAR: lv_key, lv_end.
+      CLEAR lv_key.
 
       IF ls_tok-lexeme CS '['.
         extract_bracket_subexpr( EXPORTING is_statement = is_statement
                                            iv_from_idx  = lv_i
-                                 IMPORTING ev_key       = lv_key
-                                           ev_end_idx   = lv_end ).
-      ELSEIF ( ls_tok-lexeme CS '->' OR ls_tok-lexeme CS '=>' )
-         AND ls_tok-lexeme CS '('.
+                                 IMPORTING ev_key       = lv_key ).
+      ELSEIF     ( ls_tok-lexeme CS '->' OR ls_tok-lexeme CS '=>' )
+             AND ls_tok-lexeme CS '('.
         extract_call_subexpr( EXPORTING is_statement = is_statement
                                         iv_from_idx  = lv_i
-                              IMPORTING ev_key       = lv_key
-                                        ev_end_idx   = lv_end ).
+                              IMPORTING ev_key       = lv_key ).
       ENDIF.
 
       IF lv_key IS NOT INITIAL.
@@ -129,7 +126,7 @@ CLASS zcl_skylint_no_dup_subexp IMPLEMENTATION.
                         token = ls_tok ) TO rt_subexprs.
       ENDIF.
 
-      lv_i = lv_i + 1.
+      lv_i += 1.
     ENDWHILE.
   ENDMETHOD.
 
@@ -147,7 +144,8 @@ CLASS zcl_skylint_no_dup_subexp IMPLEMENTATION.
     DATA lv_part      TYPE string.
     DATA lv_k         TYPE i.
 
-    CLEAR: ev_key, ev_end_idx.
+    CLEAR: ev_key,
+           ev_end_idx.
     lv_count = lines( is_statement-tokens ).
     lv_depth = 0.
     lv_j     = iv_from_idx.
@@ -163,12 +161,12 @@ CLASS zcl_skylint_no_dup_subexp IMPLEMENTATION.
                         sub = '[' ).
       lv_close = count( val = ls_tok-lexeme
                         sub = ']' ).
-      lv_depth = lv_depth + lv_open - lv_close.
+      lv_depth += lv_open - lv_close.
       IF lv_depth <= 0.
         ev_end_idx = lv_j.
         EXIT.
       ENDIF.
-      lv_j = lv_j + 1.
+      lv_j += 1.
     ENDWHILE.
 
     IF ev_end_idx = 0.
@@ -205,7 +203,7 @@ CLASS zcl_skylint_no_dup_subexp IMPLEMENTATION.
       ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                 iv_index     = lv_k ).
       ev_key = |{ ev_key } { ls_tok-lexeme }|.
-      lv_k = lv_k + 1.
+      lv_k += 1.
     ENDWHILE.
 
     lv_close_pos = find( val = ls_last-lexeme
@@ -233,7 +231,8 @@ CLASS zcl_skylint_no_dup_subexp IMPLEMENTATION.
     DATA lv_part      TYPE string.
     DATA lv_k         TYPE i.
 
-    CLEAR: ev_key, ev_end_idx.
+    CLEAR: ev_key,
+           ev_end_idx.
     lv_count = lines( is_statement-tokens ).
     lv_depth = 0.
     lv_j     = iv_from_idx.
@@ -249,12 +248,12 @@ CLASS zcl_skylint_no_dup_subexp IMPLEMENTATION.
                         sub = '(' ).
       lv_close = count( val = ls_tok-lexeme
                         sub = ')' ).
-      lv_depth = lv_depth + lv_open - lv_close.
+      lv_depth += lv_open - lv_close.
       IF lv_depth <= 0.
         ev_end_idx = lv_j.
         EXIT.
       ENDIF.
-      lv_j = lv_j + 1.
+      lv_j += 1.
     ENDWHILE.
 
     IF ev_end_idx = 0.
@@ -284,7 +283,7 @@ CLASS zcl_skylint_no_dup_subexp IMPLEMENTATION.
       ls_tok = zcl_skylint_ast_util=>get_token( is_statement = is_statement
                                                 iv_index     = lv_k ).
       ev_key = |{ ev_key } { ls_tok-lexeme }|.
-      lv_k = lv_k + 1.
+      lv_k += 1.
     ENDWHILE.
 
     lv_close_pos = find( val = ls_last-lexeme

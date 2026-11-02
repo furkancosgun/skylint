@@ -18,7 +18,7 @@ CLASS zcl_skylint_no_badi_commit DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_BADI_COMMIT'.
 
     METHODS is_badi_class
-      IMPORTING is_procedure     TYPE if_ci_atc_source_code_provider=>ty_procedure
+      IMPORTING is_procedure      TYPE if_ci_atc_source_code_provider=>ty_procedure
       RETURNING VALUE(rv_is_badi) TYPE abap_bool.
 
 ENDCLASS.
@@ -27,13 +27,14 @@ ENDCLASS.
 CLASS zcl_skylint_no_badi_commit IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Avoid COMMIT or ROLLBACK in BAdI implementations'
-                 remote_enablement = abap_false
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-badi_commit
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Avoid COMMIT or ROLLBACK WORK inside BAdI implementations (breaks LUW integrity)'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+        VALUE #(
+            description       = 'Avoid COMMIT or ROLLBACK in BAdI implementations'
+            remote_enablement = abap_false
+            finding_codes     = VALUE #(
+                ( code           = c_finding_codes-badi_commit
+                  severity       = if_ci_atc_check=>finding_severities-warning
+                  text           = 'Avoid COMMIT or ROLLBACK WORK inside BAdI implementations (breaks LUW integrity)'
+                  pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -48,14 +49,10 @@ CLASS zcl_skylint_no_badi_commit IMPLEMENTATION.
     ENDIF.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
-      IF    (     <ls_statement>-keyword = 'COMMIT'
-              AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
-                                                          iv_index     = 2
-                                                          iv_expected  = `WORK` ) = abap_true )
-         OR (     <ls_statement>-keyword = 'ROLLBACK'
-              AND zcl_skylint_ast_util=>matches_token_at( is_statement = <ls_statement>
-                                                          iv_index     = 2
-                                                          iv_expected  = `WORK` ) = abap_true ).
+      IF    zcl_skylint_ast_util=>match_token_sequence( is_statement = <ls_statement>
+                                                        it_expected  = VALUE #( ( `COMMIT` ) ( `WORK` ) ) )   = abap_true
+         OR zcl_skylint_ast_util=>match_token_sequence( is_statement = <ls_statement>
+                                                        it_expected  = VALUE #( ( `ROLLBACK` ) ( `WORK` ) ) ) = abap_true.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-badi_commit ).
       ENDIF.
@@ -65,7 +62,6 @@ CLASS zcl_skylint_no_badi_commit IMPLEMENTATION.
   METHOD is_badi_class.
     DATA lo_classdescr TYPE REF TO cl_abap_classdescr.
     DATA lv_cls_name   TYPE string.
-    FIELD-SYMBOLS <ls_intf> TYPE abap_intfdescr.
 
     rv_is_badi = abap_false.
 
@@ -79,11 +75,6 @@ CLASS zcl_skylint_no_badi_commit IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    LOOP AT lo_classdescr->interfaces ASSIGNING <ls_intf>.
-      IF <ls_intf>-name = 'IF_BADI_INTERFACE'.
-        rv_is_badi = abap_true.
-        RETURN.
-      ENDIF.
-    ENDLOOP.
+    rv_is_badi = xsdbool( line_exists( lo_classdescr->interfaces[ name = 'IF_BADI_INTERFACE' ] ) ).
   ENDMETHOD.
 ENDCLASS.

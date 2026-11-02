@@ -1148,7 +1148,9 @@ CLASS zcl_skylint_ast_util IMPLEMENTATION.
     LOOP AT is_token-references ASSIGNING <ls_ref>
          WHERE kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data.
       IF    <ls_ref>-full_name = |\\DA:SY\\DA:{ lv_target }|
-         OR <ls_ref>-full_name = |\\DA:SYST\\DA:{ lv_target }|.
+         OR <ls_ref>-full_name = |\\DA:SYST\\DA:{ lv_target }|
+         OR <ls_ref>-full_name = |\\PD:SY-{ lv_target }|
+         OR <ls_ref>-full_name = |\\PD:SYST-{ lv_target }|.
         rv_matched = abap_true.
         RETURN.
       ENDIF.

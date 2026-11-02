@@ -20,12 +20,12 @@ CLASS zcl_skylint_test_lead_wildcard IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_003.
-    SELECT * FROM t000 WHERE mandt LIKE '+00' INTO TABLE @DATA(lt_data).
+    SELECT * FROM t000 WHERE mandt LIKE '_00' INTO TABLE @DATA(lt_data).
   ENDMETHOD.
 
   METHOD test_004.
     DATA lv_pattern TYPE string.
-    SELECT * FROM t000 WHERE mandt LIKE lv_pattern INTO TABLE @DATA(lt_data).
+    SELECT * FROM t000 WHERE mandt LIKE @lv_pattern INTO TABLE @DATA(lt_data).
   ENDMETHOD.
 
   METHOD test_005.

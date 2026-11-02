@@ -44,14 +44,11 @@ CLASS zcl_skylint_no_bypass_buf IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      IF zcl_skylint_ast_util=>find_token_sequence(
-             is_statement = <ls_statement>
-             it_expected  = VALUE #( ( `BYPASSING` ) ( `BUFFER` ) ) ) = 0.
-        CONTINUE.
+      IF zcl_skylint_ast_util=>match_token_sequence( is_statement = <ls_statement>
+                                                     it_expected  = VALUE #( ( `BYPASSING` ) ( `BUFFER` ) ) ).
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-bypass_buffer ).
       ENDIF.
-
-      report_statement( is_statement    = <ls_statement>
-                        iv_finding_code = c_finding_codes-bypass_buffer ).
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

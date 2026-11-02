@@ -36,10 +36,9 @@ CLASS zcl_skylint_no_full_scan_sel IMPLEMENTATION.
                        severity       = if_ci_atc_check=>finding_severities-warning
                        text           = 'Avoid SELECT without a WHERE condition on database tables (full table scan)'
                        pseudo_comment = c_pseudo_comment ) )
-                 attributes        = VALUE #(
-                     ( name  = 'ALLOW_UP_TO_N'
-                       kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
-                       value = REF #( mv_allow_up_to_n ) ) ) ) ).
+                 attributes        = VALUE #( ( name  = 'ALLOW_UP_TO_N'
+                                                kind  = if_ci_atc_check_meta_data=>attribute_kinds-boolean
+                                                value = REF #( mv_allow_up_to_n ) ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
@@ -55,10 +54,6 @@ CLASS zcl_skylint_no_full_scan_sel IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      IF zcl_skylint_ast_util=>statement_is_db_access( <ls_statement> ) = abap_false.
-        CONTINUE.
-      ENDIF.
-
       lv_table = zcl_skylint_ast_util=>statement_get_db_target( <ls_statement> ).
       IF lv_table IS NOT INITIAL AND lv_table(1) = '@'.
         CONTINUE.
@@ -69,9 +64,8 @@ CLASS zcl_skylint_no_full_scan_sel IMPLEMENTATION.
       ENDIF.
 
       IF     mv_allow_up_to_n = abap_true
-         AND zcl_skylint_ast_util=>find_token_sequence(
-                 is_statement = <ls_statement>
-                 it_expected  = VALUE #( ( `UP` ) ( `TO` ) ) ) > 0.
+         AND zcl_skylint_ast_util=>find_token_sequence( is_statement = <ls_statement>
+                                                        it_expected  = VALUE #( ( `UP` ) ( `TO` ) ) ) > 0.
         CONTINUE.
       ENDIF.
 

@@ -18,9 +18,9 @@ CLASS zcl_skylint_no_dedup_no_sort DEFINITION
     CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_DEDUP_NO_SORT'.
 
     METHODS is_table_sorted_before
-      IMPORTING it_statements        TYPE if_ci_atc_source_code_provider=>ty_statements
-                iv_target_idx        TYPE i
-                is_table_tok         TYPE if_ci_atc_source_code_provider=>ty_token
+      IMPORTING it_statements       TYPE if_ci_atc_source_code_provider=>ty_statements
+                iv_target_idx       TYPE i
+                is_table_tok        TYPE if_ci_atc_source_code_provider=>ty_token
       RETURNING VALUE(rv_is_sorted) TYPE abap_bool.
 
 ENDCLASS.
@@ -29,19 +29,19 @@ ENDCLASS.
 CLASS zcl_skylint_no_dedup_no_sort IMPLEMENTATION.
   METHOD constructor.
     super->constructor(
-        VALUE #( description       = 'Sort internal tables before DELETE ADJACENT DUPLICATES'
-                 remote_enablement = abap_true
-                 finding_codes     = VALUE #(
-                     ( code           = c_finding_codes-dedup_no_sort
-                       severity       = if_ci_atc_check=>finding_severities-warning
-                       text           = 'Sort internal table before DELETE ADJACENT DUPLICATES to prevent unexpected results'
-                       pseudo_comment = c_pseudo_comment ) ) ) ).
+        VALUE #(
+            description       = 'Sort internal tables before DELETE ADJACENT DUPLICATES'
+            remote_enablement = abap_true
+            finding_codes     = VALUE #(
+                ( code           = c_finding_codes-dedup_no_sort
+                  severity       = if_ci_atc_check=>finding_severities-warning
+                  text           = 'Sort internal table before DELETE ADJACENT DUPLICATES to prevent unexpected results'
+                  pseudo_comment = c_pseudo_comment ) ) ) ).
   ENDMETHOD.
 
   METHOD check.
-    DATA lv_idx        TYPE i.
-    DATA lv_seq_idx    TYPE i.
-    DATA ls_target_tok TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA lv_idx TYPE i.
+    DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
@@ -54,22 +54,16 @@ CLASS zcl_skylint_no_dedup_no_sort IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      lv_seq_idx = zcl_skylint_ast_util=>find_token_sequence(
-                       is_statement = <ls_statement>
-                       it_expected  = VALUE #( ( `ADJACENT` ) ( `DUPLICATES` ) ( `FROM` ) ) ).
-      IF lv_seq_idx = 0.
-        CONTINUE.
-      ENDIF.
-
-      ls_target_tok = zcl_skylint_ast_util=>get_token( is_statement = <ls_statement>
-                                                       iv_index     = lv_seq_idx + 3 ).
-      IF ls_target_tok IS INITIAL.
+      ls_tok = zcl_skylint_ast_util=>get_token_after_sequence(
+                   is_statement = <ls_statement>
+                   it_expected  = VALUE #( ( `ADJACENT` ) ( `DUPLICATES` ) ( `FROM` ) ) ).
+      IF ls_tok IS INITIAL.
         CONTINUE.
       ENDIF.
 
       IF is_table_sorted_before( it_statements = is_procedure-statements
                                  iv_target_idx = lv_idx
-                                 is_table_tok  = ls_target_tok ) = abap_true.
+                                 is_table_tok  = ls_tok ) = abap_true.
         CONTINUE.
       ENDIF.
 
@@ -85,9 +79,9 @@ CLASS zcl_skylint_no_dedup_no_sort IMPLEMENTATION.
     DATA ls_ref1     TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
     DATA ls_ref2     TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
-    rv_is_sorted = abap_false.
-    ls_ref1 = zcl_skylint_ast_util=>get_reference( is_token = is_table_tok
-                                                   iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
+    ls_ref1 = zcl_skylint_ast_util=>get_reference(
+                  is_token = is_table_tok
+                  iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
 
     DO iv_target_idx - 1 TIMES.
       lv_i = sy-index.
@@ -97,20 +91,16 @@ CLASS zcl_skylint_no_dedup_no_sort IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      ls_sort_tok = zcl_skylint_ast_util=>get_token( is_statement = ls_stmt
-                                                     iv_index     = 2 ).
+      ls_sort_tok = zcl_skylint_ast_util=>get_token_after( is_statement = ls_stmt
+                                                           iv_lexeme    = 'SORT' ).
       IF ls_sort_tok IS INITIAL.
         CONTINUE.
       ENDIF.
 
-      IF ls_ref1-full_name IS NOT INITIAL.
-        ls_ref2 = zcl_skylint_ast_util=>get_reference( is_token = ls_sort_tok
-                                                       iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
-        IF ls_ref2-full_name = ls_ref1-full_name.
-          rv_is_sorted = abap_true.
-          RETURN.
-        ENDIF.
-      ELSEIF to_upper( ls_sort_tok-lexeme ) = to_upper( is_table_tok-lexeme ).
+      ls_ref2 = zcl_skylint_ast_util=>get_reference(
+                    is_token = ls_sort_tok
+                    iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
+      IF ls_ref2-full_name = ls_ref1-full_name.
         rv_is_sorted = abap_true.
         RETURN.
       ENDIF.

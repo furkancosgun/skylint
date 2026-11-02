@@ -19,7 +19,8 @@ CLASS zcl_skylint_test_full_scan IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_003.
-    DATA lt_itab TYPE string_table.
+    TYPES: BEGIN OF ty_row, val TYPE i, END OF ty_row.
+    DATA lt_itab TYPE STANDARD TABLE OF ty_row WITH EMPTY KEY.
     SELECT * FROM @lt_itab AS itab INTO TABLE @DATA(lt_res).
   ENDMETHOD.
 

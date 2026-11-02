@@ -44,14 +44,12 @@ CLASS zcl_skylint_no_cross_join IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      IF zcl_skylint_ast_util=>find_token_sequence(
-             is_statement = <ls_statement>
-             it_expected  = VALUE #( ( `CROSS` ) ( `JOIN` ) ) ) = 0.
-        CONTINUE.
+      IF zcl_skylint_ast_util=>match_token_sequence( is_statement = <ls_statement>
+                                                     it_expected  = VALUE #( ( `CROSS` ) ( `JOIN` ) ) ).
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-cross_join ).
       ENDIF.
 
-      report_statement( is_statement    = <ls_statement>
-                        iv_finding_code = c_finding_codes-cross_join ).
     ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

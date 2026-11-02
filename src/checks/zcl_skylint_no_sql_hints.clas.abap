@@ -46,7 +46,8 @@ CLASS zcl_skylint_no_sql_hints IMPLEMENTATION.
       ENDIF.
 
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
-        IF <ls_token>-references IS INITIAL AND to_upper( <ls_token>-lexeme ) = '%_HINTS'.
+        IF zcl_skylint_ast_util=>token_is_keyword( is_token  = <ls_token>
+                                                   iv_lexeme = '%_HINTS' ).
           report_token( is_token        = <ls_token>
                         is_statement    = <ls_statement>
                         iv_finding_code = c_finding_codes-sql_hints ).

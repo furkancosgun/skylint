@@ -10,14 +10,14 @@ ENDCLASS.
 
 CLASS zcl_skylint_test_cross_join IMPLEMENTATION.
   METHOD test_001.
-    SELECT FROM t000 CROSS JOIN t001 FIELDS t000~mandt INTO TABLE @DATA(lt_data).
+    SELECT FROM mara CROSS JOIN makt FIELDS mara~matnr INTO TABLE @DATA(lt_data).
   ENDMETHOD.
 
   METHOD test_002.
-    SELECT FROM t000 INNER JOIN t001 ON t000~mandt = t001~mandt FIELDS t000~mandt INTO TABLE @DATA(lt_data).
+    SELECT FROM mara INNER JOIN makt ON mara~matnr = makt~matnr FIELDS mara~matnr INTO TABLE @DATA(lt_data).
   ENDMETHOD.
 
   METHOD test_003.
-    SELECT FROM t000 CROSS JOIN t001 FIELDS t000~mandt INTO TABLE @DATA(lt_data). "#EC NO_CROSS_JOIN
+    SELECT FROM mara CROSS JOIN makt FIELDS mara~matnr INTO TABLE @DATA(lt_data). "#EC NO_CROSS_JOIN
   ENDMETHOD.
 ENDCLASS.
