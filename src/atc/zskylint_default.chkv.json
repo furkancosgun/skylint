@@ -1389,23 +1389,6 @@
       "checkName": "ZSKYLINT_PREF_ICON_CONST"
     },
     {
-      "checkName": "ZSKYLINT_NO_UNUSED_PARAM",
-      "parameters": [
-        {
-          "name": "CHECK_METHODS",
-          "value": "true"
-        },
-        {
-          "name": "CHECK_FORMS",
-          "value": "true"
-        },
-        {
-          "name": "CHECK_FUNCS",
-          "value": "true"
-        }
-      ]
-    },
-    {
       "checkName": "ZSKYLINT_NO_AMBIGUOUS_STMT"
     },
     {

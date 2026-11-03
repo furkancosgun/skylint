@@ -1,16 +1,16 @@
 ---
-title: "Clean ABAP & Modern Syntax (79 Rules)"
+title: "Clean ABAP & Modern Syntax (78 Rules)"
 description: "Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices. Comprehensive reference, finding codes, and Clean ABAP examples for Clean ABAP & Modern Syntax."
 category: "clean-abap"
 keywords: "Clean ABAP, ABAP Cloud, SAP ATC, Clean ABAP & Modern Syntax, S/4HANA Readiness, SAP BTP, Steampunk"
 ---
 
-# Clean ABAP & Modern Syntax (79 Rules)
+# Clean ABAP & Modern Syntax (78 Rules)
 
 Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.
 
 ::: tip Category Overview
-This category enforces **79 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
+This category enforces **78 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
 :::
 
 ## Rules in this Category
@@ -75,7 +75,6 @@ This category enforces **79 native ATC rules** adhering to SAP Clean ABAP and AB
 | [Avoid Boolean Flag Importing Parameters](/rules/no-bool-blindness) | `ZCL_SKYLINT_NO_BOOL_BLINDNESS` | <code>#EC NO_BOOL_BLINDNESS</code> | - |
 | [Explicitly Specify SORT Order](/rules/pref-sort-order) | `ZCL_SKYLINT_PREF_SORT_ORDER` | <code>#EC PREF_SORT_ORDER</code> | - |
 | [Prefer ICON_ Constants over Hardcoded Icon Codes](/rules/pref-icon-const) | `ZCL_SKYLINT_PREF_ICON_CONST` | <code>#EC PREF_ICON_CONST</code> | - |
-| [Avoid Unused Parameters in Procedures](/rules/no-unused-param) | `ZCL_SKYLINT_NO_UNUSED_PARAM` | <code>#EC NO_UNUSED_PARAM</code> | - |
 | [Avoid Ambiguous Statements](/rules/no-ambiguous-stmt) | `ZCL_SKYLINT_NO_AMBIGUOUS_STMT` | <code>#EC NO_AMBIGUOUS_STMT</code> | - |
 | [Avoid Empty Procedures](/rules/no-empty-proc) | `ZCL_SKYLINT_NO_EMPTY_PROC` | <code>#EC NO_EMPTY_PROC</code> | - |
 | [Avoid Concrete Class References in Interfaces](/rules/no-intf-class-ref) | `ZCL_SKYLINT_NO_INTF_CLASS_REF` | <code>#EC NO_INTF_CLASS_REF</code> | - |

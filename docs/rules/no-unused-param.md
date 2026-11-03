@@ -1,7 +1,7 @@
 ---
 title: "Avoid Unused Parameters in Procedures"
-description: "Detect unused parameters in ABAP methods, forms, and functions to keep procedure signatures clean and unambiguous."
-keywords: "ABAP unused parameter, Clean ABAP parameters, SAP ATC check unused parameter, no-unused-param"
+description: "Avoid Unused Parameters in Procedures - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
+keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-unused-param, clean-abap"
 category: "clean-abap"
 ruleId: "no-unused-param"
 ---
@@ -68,8 +68,9 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ## Related Rules
 
+* [Method Call Parameter Naming Style (Omit or Require)](/rules/pref-param-name) — <code>#EC PREF_PARAM_NAME</code>
+* [Limit Method Parameter Count and Require Multi-Line Signatures](/rules/max-params) — <code>#EC MAX_PARAMS_COUNT</code>
 * [Eliminate Unused Local Variables and Symbols](/rules/no-unused-vars) — <code>#EC NO_UNUSED_VARS</code>
-* [Avoid Dead Code with Constant Conditions](/rules/no-dead-code) — <code>#EC NO_DEAD_CODE</code>
 
 ## Technical Details
 

@@ -321,7 +321,7 @@ export default defineConfig({
     logo: { src: '/logo.svg', alt: 'Skylint Logo' },
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
-      { text: 'Rules (198)', link: '/rules/' },
+      { text: 'Rules (197)', link: '/rules/' },
       { text: 'Variant Builder', link: '/variant-builder' },
       { text: 'Playground', link: '/playground' },
       { text: 'GitHub', link: 'https://github.com/furkancosgun/skylint' },
@@ -344,7 +344,7 @@ export default defineConfig({
         { text: 'All Rules Overview', link: '/rules/' },
         ...[
   {
-    "text": "Clean ABAP & Modern Syntax (79)",
+    "text": "Clean ABAP & Modern Syntax (78)",
     "link": "/rules/clean-abap"
   },
   {

@@ -4,7 +4,7 @@
       "key": "clean-abap",
       "title": "Clean ABAP & Modern Syntax",
       "description": "Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.",
-      "count": 79
+      "count": 78
     },
     {
       "key": "anti-patterns",
@@ -1891,18 +1891,6 @@
       "hasQuickfix": false,
       "remoteEnabled": true,
       "configurable": false
-    },
-    {
-      "ruleId": "no-unused-param",
-      "title": "Avoid Unused Parameters in Procedures",
-      "className": "ZCL_SKYLINT_NO_UNUSED_PARAM",
-      "description": "Avoid unused parameters in procedures",
-      "category": "clean-abap",
-      "categoryTitle": "Clean ABAP & Modern Syntax",
-      "pseudoComment": "NO_UNUSED_PARAM",
-      "hasQuickfix": false,
-      "remoteEnabled": false,
-      "configurable": true
     },
     {
       "ruleId": "no-ambiguous-stmt",

@@ -4854,53 +4854,6 @@
     "defaultParameters": []
   },
   {
-    "ruleId": "no-unused-param",
-    "title": "Avoid Unused Parameters in Procedures",
-    "className": "ZCL_SKYLINT_NO_UNUSED_PARAM",
-    "checkName": "ZSKYLINT_NO_UNUSED_PARAM",
-    "category": "clean-abap",
-    "categoryTitle": "Clean ABAP & Modern Syntax",
-    "pseudoComment": "NO_UNUSED_PARAM",
-    "description": "Avoid unused parameters in procedures",
-    "hasQuickfix": false,
-    "remoteEnabled": false,
-    "attributes": [
-      {
-        "name": "CHECK_METHODS",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_FORMS",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      },
-      {
-        "name": "CHECK_FUNCS",
-        "kind": "Boolean",
-        "defaultValue": "true"
-      }
-    ],
-    "relatedRules": [
-      "no-unused-vars",
-      "no-dead-code"
-    ],
-    "defaultParameters": [
-      {
-        "name": "CHECK_METHODS",
-        "value": "true"
-      },
-      {
-        "name": "CHECK_FORMS",
-        "value": "true"
-      },
-      {
-        "name": "CHECK_FUNCS",
-        "value": "true"
-      }
-    ]
-  },
-  {
     "ruleId": "no-ambiguous-stmt",
     "title": "Avoid Ambiguous Statements",
     "className": "ZCL_SKYLINT_NO_AMBIGUOUS_STMT",

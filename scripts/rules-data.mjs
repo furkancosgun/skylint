@@ -4596,36 +4596,6 @@ export const RULES = [
     ]
   },
   {
-    "ruleId": "no-unused-param",
-    "title": "Avoid Unused Parameters in Procedures",
-    "rationale": "Methods, form routines, and function modules should not declare parameters that are never accessed or assigned in their implementation. Unused parameters clutter the signature, confuse callers, and may indicate incomplete implementations. If a parameter is intentionally unused, prefix its name with an underscore.",
-    "className": "ZCL_SKYLINT_NO_UNUSED_PARAM",
-    "pseudoComment": "NO_UNUSED_PARAM",
-    "category": "clean-abap",
-    "example": {
-      "bad": "METHOD do_work IMPORTING iv_used TYPE i iv_unused TYPE string.\n  DATA lv_val TYPE i.\n  lv_val = iv_used.\nENDMETHOD.",
-      "good": "METHOD do_work IMPORTING iv_used TYPE i.\n  DATA lv_val TYPE i.\n  lv_val = iv_used.\nENDMETHOD."
-    },
-    "parameters": {
-      "CHECK_METHODS": "Check method procedures for unused parameters (defaults to true)",
-      "CHECK_FORMS": "Check form routines for unused parameters (defaults to true)",
-      "CHECK_FUNCS": "Check function modules for unused parameters (defaults to true)"
-    },
-    "seo": {
-      "description": "Detect unused parameters in ABAP methods, forms, and functions to keep procedure signatures clean and unambiguous.",
-      "keywords": [
-        "ABAP unused parameter",
-        "Clean ABAP parameters",
-        "SAP ATC check unused parameter",
-        "no-unused-param"
-      ]
-    },
-    "relatedRules": [
-      "no-unused-vars",
-      "no-dead-code"
-    ]
-  },
-  {
     "ruleId": "no-ambiguous-stmt",
     "title": "Avoid Ambiguous Statements",
     "rationale": "ABAP allows ambiguous syntax for MODIFY and DELETE between internal tables and database tables. Use TABLE keyword or @ host escape to clarify intent.",
