@@ -42,14 +42,6 @@ IF lv_retry_count >= c_max_retries.
 ENDIF.
 ```
 
-## Try it in the Playground
-
-<script setup>
-import RulePlayground from '../components/RulePlayground.vue';
-</script>
-
-<RulePlayground rule-id="no-magic-numbers" />
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

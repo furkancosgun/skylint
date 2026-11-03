@@ -44,14 +44,6 @@ DATA(lo_order) = zcl_order_factory=>get_instance( )->create_from_request(
   iv_commit   = abap_false ).
 ```
 
-## Try it in the Playground
-
-<script setup>
-import RulePlayground from '../components/RulePlayground.vue';
-</script>
-
-<RulePlayground rule-id="max-line-len" />
-
 ## Configuration & Thresholds
 
 This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) in Eclipse ADT:

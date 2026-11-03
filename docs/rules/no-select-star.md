@@ -47,14 +47,6 @@ SELECT matnr, mtart, meins
   INTO @DATA(ls_material).
 ```
 
-## Try it in the Playground
-
-<script setup>
-import RulePlayground from '../components/RulePlayground.vue';
-</script>
-
-<RulePlayground rule-id="no-select-star" />
-
 ## Suppression
 
 To suppress findings for this rule, append the pseudo-comment to the statement:

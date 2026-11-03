@@ -327,7 +327,6 @@ export default defineConfig({
     ],
     sidebar: {
       '/variant-builder': [],
-      '/playground': [],
       '/guide/': [
         {
           text: 'Architecture & Guides',
