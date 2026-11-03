@@ -323,7 +323,6 @@ export default defineConfig({
       { text: 'Guide', link: '/guide/getting-started' },
       { text: 'Rules (197)', link: '/rules/' },
       { text: 'Variant Builder', link: '/variant-builder' },
-      { text: 'Playground', link: '/playground' },
       { text: 'GitHub', link: 'https://github.com/furkancosgun/skylint' },
     ],
     sidebar: {

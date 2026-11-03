@@ -2,11 +2,6 @@
 import { ref, reactive, computed } from 'vue';
 import { withBase } from 'vitepress';
 import rulesData from './rules-data.json';
-import { PLAYGROUND_RULE_IDS } from './playground-rules.mjs';
-
-function isPlaygroundRule(ruleId) {
-  return PLAYGROUND_RULE_IDS.includes(ruleId);
-}
 
 // --- State ---
 const searchQuery = ref('');
@@ -647,7 +642,6 @@ async function copyPseudo(pseudo) {
                 <a :href="`./rules/${rule.ruleId}.html`" class="vb-rule-title-link" target="_blank">
                   {{ rule.title }}
                 </a>
-                <code class="vb-rule-code-chip">{{ rule.checkName }}</code>
               </div>
               <p class="vb-rule-desc">{{ rule.description }}</p>
             </div>
@@ -655,13 +649,23 @@ async function copyPseudo(pseudo) {
 
           <!-- Metadata Tags Row -->
           <div class="vb-tags-row">
-            <span class="vb-tag">{{ rule.categoryTitle }}</span>
+            <span class="vb-tag">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                <line x1="7" y1="7" x2="7.01" y2="7"/>
+              </svg>
+              {{ rule.categoryTitle }}
+            </span>
             <button
               class="vb-tag pseudo"
               type="button"
               :title="'Click to copy pseudo-comment #EC ' + rule.pseudoComment"
               @click="copyPseudo(rule.pseudoComment)"
             >
+              <svg v-if="copiedPseudo !== rule.pseudoComment" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+              </svg>
               <span v-if="copiedPseudo === rule.pseudoComment" class="vb-inline-status">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                   <path d="m5 12 4 4L19 6" />
@@ -670,31 +674,19 @@ async function copyPseudo(pseudo) {
               </span>
               <span v-else>#EC {{ rule.pseudoComment }}</span>
             </button>
-            <span v-if="rule.hasQuickfix" class="vb-tag qf">
+            <span v-if="rule.hasQuickfix" class="vb-tag">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z" />
               </svg>
               QuickFix
             </span>
-            <span v-if="!rule.remoteEnabled" class="vb-tag local" title="Check runs locally only (remote_enablement = abap_false)">
+            <span v-if="!rule.remoteEnabled" class="vb-tag" title="Check runs locally only (remote_enablement = abap_false)">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <rect x="5" y="11" width="14" height="10" rx="2" />
                 <path d="M8 11V8a4 4 0 0 1 8 0v3" />
               </svg>
               Local Only
             </span>
-            <a
-              v-if="isPlaygroundRule(rule.ruleId)"
-              :href="withBase(`/playground#rule=${rule.ruleId}`)"
-              class="vb-tag playground"
-              title="Try this rule live in the interactive Playground"
-              target="_blank"
-            >
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <polygon points="5 3 19 12 5 21 5 3" />
-              </svg>
-              Playground
-            </a>
 
             <!-- Parameters Toggle (if applicable) -->
             <button
@@ -1021,16 +1013,20 @@ async function copyPseudo(pseudo) {
 
 .vb-btn-ghost {
   background: transparent;
-  color: var(--vp-c-text-2);
+  color: var(--vp-c-brand-1);
+  border-color: color-mix(in srgb, var(--vp-c-brand-1) 30%, var(--vp-c-divider));
 }
 
 .vb-btn-ghost:hover {
-  color: var(--vp-c-text-1);
+  background: var(--vp-c-brand-soft);
+  border-color: var(--vp-c-brand-1);
+  color: var(--vp-c-brand-1);
 }
 
 .vb-btn-icon {
   width: 16px;
   height: 16px;
+  color: var(--vp-c-brand-1);
 }
 
 /* Form Grid */
@@ -1322,7 +1318,7 @@ async function copyPseudo(pseudo) {
 /* Tags Row */
 .vb-tags-row {
   display: flex;
-  gap: 0.4rem;
+  gap: 0.45rem;
   flex-wrap: wrap;
   align-items: center;
   margin-top: 0.65rem;
@@ -1332,78 +1328,49 @@ async function copyPseudo(pseudo) {
 .vb-tag {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  padding: 0.15rem 0.5rem;
+  gap: 0.35rem;
+  padding: 0.2rem 0.55rem;
   border: 1px solid var(--vp-c-divider);
-  border-radius: 4px;
+  border-radius: 6px;
   background: var(--vp-c-bg);
-  color: var(--vp-c-text-2);
-  font-size: 0.72rem;
+  color: var(--vp-c-text-1);
+  font-size: 0.74rem;
   font-weight: 500;
+  transition: all 0.15s ease;
 }
 
 .vb-tag.pseudo {
-  color: var(--vp-c-text-1);
   font-family: var(--vp-font-family-mono);
   cursor: pointer;
+  color: var(--vp-c-text-1);
 }
 
 .vb-tag.pseudo:hover {
   border-color: var(--vp-c-brand-1);
   color: var(--vp-c-brand-1);
-}
-
-.vb-tag.qf {
-  background: #fef3c7;
-  color: #b45309;
-  border-color: #fde68a;
-  font-weight: 600;
-}
-
-html.dark .vb-tag.qf {
-  background: rgba(245, 158, 11, 0.15);
-  color: #fcd34d;
-  border-color: rgba(245, 158, 11, 0.3);
-}
-
-.vb-tag.local {
-  background: #e0e7ff;
-  color: #4338ca;
-  border-color: #c7d2fe;
-  font-weight: 600;
-}
-
-html.dark .vb-tag.local {
-  background: rgba(99, 102, 241, 0.15);
-  color: #a5b4fc;
-  border-color: rgba(99, 102, 241, 0.3);
-}
-
-.vb-tag.playground {
-  background: var(--vp-c-brand-soft);
-  color: var(--vp-c-brand-1);
-  border-color: var(--vp-c-brand-soft);
-  font-weight: 600;
-  text-decoration: none;
-  cursor: pointer;
-  transition: border-color 0.15s, transform 0.1s;
-}
-
-.vb-tag.playground:hover {
-  border-color: var(--vp-c-brand-1);
-  transform: translateY(-1px);
+  background: var(--vp-c-brand-softest);
 }
 
 .vb-tag.params-toggle {
   cursor: pointer;
   background: var(--vp-c-bg);
   color: var(--vp-c-brand-1);
-  border-color: var(--vp-c-brand-1);
+  border-color: color-mix(in srgb, var(--vp-c-brand-1) 35%, var(--vp-c-divider));
   font-weight: 600;
+}
+
+.vb-tag.params-toggle:hover {
+  border-color: var(--vp-c-brand-1);
+  background: var(--vp-c-brand-soft);
 }
 
 .vb-tag.params-toggle.open {
   background: var(--vp-c-brand-1);
+  border-color: var(--vp-c-brand-1);
+  color: #fff;
+}
+
+.vb-tag.params-toggle.open svg {
   color: #fff;
 }
 
@@ -1600,6 +1567,7 @@ html.dark .vb-tag.local {
 .vb-clear-btn svg {
   width: 14px;
   height: 14px;
+  color: var(--vp-c-brand-1);
 }
 
 .vb-clear-btn svg {
@@ -1607,25 +1575,30 @@ html.dark .vb-tag.local {
 }
 
 .vb-tag svg {
-  width: 12px;
-  height: 12px;
+  width: 13px;
+  height: 13px;
+  color: var(--vp-c-brand-1);
+  flex-shrink: 0;
 }
 
 .vb-inline-status {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
+  color: var(--vp-c-brand-1);
 }
 
 .vb-inline-status svg {
   width: 12px;
   height: 12px;
+  color: var(--vp-c-brand-1);
 }
 
 .vb-arrow {
   width: 12px;
   height: 12px;
   margin-left: 0.15rem;
+  color: var(--vp-c-brand-1);
   transition: transform 0.2s ease;
 }
 
@@ -1724,6 +1697,7 @@ html.dark .vb-tag.local {
 .vb-json-copy svg {
   width: 14px;
   height: 14px;
+  color: var(--vp-c-brand-1);
 }
 
 .vb-json-preview :deep(.vb-json-key) {

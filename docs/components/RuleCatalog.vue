@@ -3,39 +3,33 @@ import { computed, ref } from 'vue';
 import { withBase } from 'vitepress';
 import catalogData from './catalog-data.json';
 
-const rules = catalogData.rules;
-const categories = catalogData.categories.filter((category) => category.count > 0);
+const props = defineProps({
+  category: {
+    type: String,
+    default: '',
+  },
+});
+
+const rules = computed(() =>
+  props.category
+    ? catalogData.rules.filter((rule) => rule.category === props.category)
+    : catalogData.rules
+);
+
+const categories = computed(() => {
+  const allCats = catalogData.categories.filter((category) => category.count > 0);
+  return props.category
+    ? allCats.filter((category) => category.key === props.category)
+    : allCats;
+});
 
 const query = ref('');
-const selectedCategory = ref('ALL');
-const onlyConfigurable = ref(false);
-const onlyQuickfix = ref(false);
-const onlyLocal = ref(false);
-
-const configurableCount = rules.filter((rule) => rule.configurable).length;
-const quickfixCount = rules.filter((rule) => rule.hasQuickfix).length;
-const localCount = rules.filter((rule) => !rule.remoteEnabled).length;
-
-const hasActiveFilters = computed(
-  () =>
-    query.value.trim() !== '' ||
-    selectedCategory.value !== 'ALL' ||
-    onlyConfigurable.value ||
-    onlyQuickfix.value ||
-    onlyLocal.value
-);
 
 const filteredRules = computed(() => {
   const search = query.value.trim().toLowerCase();
+  if (!search) return rules.value;
 
-  return rules.filter((rule) => {
-    if (selectedCategory.value !== 'ALL' && rule.category !== selectedCategory.value) return false;
-    if (onlyConfigurable.value && !rule.configurable) return false;
-    if (onlyQuickfix.value && !rule.hasQuickfix) return false;
-    if (onlyLocal.value && rule.remoteEnabled) return false;
-
-    if (!search) return true;
-
+  return rules.value.filter((rule) => {
     return [rule.ruleId, rule.title, rule.className, rule.description, rule.pseudoComment, rule.categoryTitle]
       .join(' ')
       .toLowerCase()
@@ -44,22 +38,13 @@ const filteredRules = computed(() => {
 });
 
 const visibleCategories = computed(() =>
-  categories
-    .filter((category) => selectedCategory.value === 'ALL' || category.key === selectedCategory.value)
+  categories.value
     .map((category) => ({
       ...category,
       rules: filteredRules.value.filter((rule) => rule.category === category.key),
     }))
     .filter((category) => category.rules.length > 0)
 );
-
-function resetFilters() {
-  query.value = '';
-  selectedCategory.value = 'ALL';
-  onlyConfigurable.value = false;
-  onlyQuickfix.value = false;
-  onlyLocal.value = false;
-}
 </script>
 
 <template>
@@ -85,77 +70,20 @@ function resetFilters() {
         </div>
         <span class="catalog-count" aria-live="polite">{{ filteredRules.length }} / {{ rules.length }} rules</span>
       </div>
-
-      <div class="catalog-pills">
-        <button
-          type="button"
-          class="catalog-pill"
-          :class="{ active: selectedCategory === 'ALL' }"
-          :aria-pressed="selectedCategory === 'ALL'"
-          @click="selectedCategory = 'ALL'"
-        >
-          All ({{ rules.length }})
-        </button>
-        <button
-          v-for="category in categories"
-          :key="category.key"
-          type="button"
-          class="catalog-pill"
-          :class="{ active: selectedCategory === category.key }"
-          :aria-pressed="selectedCategory === category.key"
-          @click="selectedCategory = category.key"
-        >
-          {{ category.title }} ({{ category.count }})
-        </button>
-
-        <span class="catalog-divider" aria-hidden="true"></span>
-
-        <button
-          type="button"
-          class="catalog-pill toggle"
-          :class="{ active: onlyConfigurable }"
-          :aria-pressed="onlyConfigurable"
-          @click="onlyConfigurable = !onlyConfigurable"
-        >
-          Configurable ({{ configurableCount }})
-        </button>
-        <button
-          type="button"
-          class="catalog-pill toggle"
-          :class="{ active: onlyQuickfix }"
-          :aria-pressed="onlyQuickfix"
-          @click="onlyQuickfix = !onlyQuickfix"
-        >
-          QuickFix ({{ quickfixCount }})
-        </button>
-        <button
-          type="button"
-          class="catalog-pill toggle"
-          :class="{ active: onlyLocal }"
-          :aria-pressed="onlyLocal"
-          @click="onlyLocal = !onlyLocal"
-        >
-          Local Only ({{ localCount }})
-        </button>
-
-        <button v-if="hasActiveFilters" type="button" class="catalog-reset" @click="resetFilters">
-          Reset filters
-        </button>
-      </div>
     </div>
 
     <section v-for="category in visibleCategories" :id="category.key" :key="category.key" class="catalog-category">
-      <h2>{{ category.title }} ({{ category.rules.length }})</h2>
-      <p>{{ category.description }}</p>
+      <template v-if="!props.category">
+        <h2>{{ category.title }} ({{ category.rules.length }})</h2>
+        <p>{{ category.description }}</p>
+      </template>
 
       <div class="catalog-table-wrap">
         <table class="catalog-table">
           <thead>
             <tr>
               <th>Rule</th>
-              <th>ABAP Class</th>
               <th>Description</th>
-              <th>Suppression</th>
               <th class="center">QuickFix</th>
               <th class="center">Remote</th>
             </tr>
@@ -165,11 +93,37 @@ function resetFilters() {
               <td data-label="Rule">
                 <a :href="withBase(`/rules/${rule.ruleId}`)"><code>{{ rule.ruleId }}</code></a>
               </td>
-              <td data-label="ABAP Class"><code>{{ rule.className }}</code></td>
               <td data-label="Description">{{ rule.description }}</td>
-              <td data-label="Suppression"><code>#EC {{ rule.pseudoComment }}</code></td>
-              <td class="center" data-label="QuickFix">{{ rule.hasQuickfix ? 'Yes' : 'No' }}</td>
-              <td class="center" data-label="Remote">{{ rule.remoteEnabled ? 'Yes' : 'No' }}</td>
+              <td class="center" data-label="QuickFix">
+                <label
+                  class="catalog-switch"
+                  :title="rule.hasQuickfix ? 'QuickFix available' : 'No QuickFix'"
+                >
+                  <input
+                    type="checkbox"
+                    class="catalog-switch-input"
+                    :checked="rule.hasQuickfix"
+                    disabled
+                    aria-label="QuickFix"
+                  />
+                  <span class="catalog-switch-slider"></span>
+                </label>
+              </td>
+              <td class="center" data-label="Remote">
+                <label
+                  class="catalog-switch"
+                  :title="rule.remoteEnabled ? 'Remote enabled' : 'Local only'"
+                >
+                  <input
+                    type="checkbox"
+                    class="catalog-switch-input"
+                    :checked="rule.remoteEnabled"
+                    disabled
+                    aria-label="Remote enabled"
+                  />
+                  <span class="catalog-switch-slider"></span>
+                </label>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -177,9 +131,13 @@ function resetFilters() {
     </section>
 
     <p v-if="visibleCategories.length === 0" class="catalog-empty">
-      No rules match the current filters.
-      <button type="button" @click="resetFilters">Clear filters</button>
+      No rules match the current search.
+      <button type="button" @click="query = ''">Clear search</button>
     </p>
+
+    <div v-if="props.category" class="catalog-back-link">
+      <a :href="withBase('/rules/')">← Back to All Rules Catalog (197 Rules)</a>
+    </div>
   </div>
 </template>
 
@@ -192,9 +150,6 @@ function resetFilters() {
   position: sticky;
   top: var(--vp-nav-height);
   z-index: 10;
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
   margin-bottom: 1.5rem;
   padding: 0.75rem 0;
   border-bottom: 1px solid var(--vp-c-divider);
@@ -264,60 +219,6 @@ function resetFilters() {
   white-space: nowrap;
 }
 
-.catalog-pills {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-}
-
-.catalog-pill {
-  padding: 0.3rem 0.65rem;
-  border: 1px solid var(--vp-c-divider);
-  border-radius: 999px;
-  background: var(--vp-c-bg-soft);
-  color: var(--vp-c-text-2);
-  font-family: inherit;
-  font-size: 0.78rem;
-  cursor: pointer;
-  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
-}
-
-.catalog-pill:hover {
-  border-color: var(--vp-c-brand-1);
-  color: var(--vp-c-text-1);
-}
-
-.catalog-pill.active {
-  border-color: var(--vp-c-brand-1);
-  background: var(--vp-c-brand-1);
-  color: #fff;
-  font-weight: 600;
-}
-
-.catalog-pill.toggle.active {
-  background: var(--vp-c-brand-soft);
-  color: var(--vp-c-brand-1);
-}
-
-.catalog-divider {
-  width: 1px;
-  height: 20px;
-  margin: 0 0.25rem;
-  background: var(--vp-c-divider);
-}
-
-.catalog-reset {
-  padding: 0.3rem 0.55rem;
-  border: 0;
-  background: transparent;
-  color: var(--vp-c-brand-1);
-  font-family: inherit;
-  font-size: 0.78rem;
-  font-weight: 600;
-  cursor: pointer;
-}
-
 .catalog-category {
   margin-bottom: 2rem;
   scroll-margin-top: calc(var(--vp-nav-height) + 150px);
@@ -342,20 +243,26 @@ function resetFilters() {
 }
 
 .catalog-table th {
-  padding: 0.55rem 0.75rem;
+  padding: 0.6rem 0.85rem;
   border: 0;
   background: var(--vp-c-bg-soft);
   color: var(--vp-c-text-1);
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   text-align: left;
   white-space: nowrap;
 }
 
 .catalog-table td {
-  padding: 0.55rem 0.75rem;
+  padding: 0.65rem 0.85rem;
   border: 0;
   border-top: 1px solid var(--vp-c-divider);
-  vertical-align: top;
+  vertical-align: middle;
+}
+
+.catalog-table th.center,
+.catalog-table td.center {
+  text-align: center;
+  width: 90px;
 }
 
 .catalog-table tbody tr:hover {
@@ -370,8 +277,55 @@ function resetFilters() {
   text-decoration: none;
 }
 
-.catalog-table .center {
-  text-align: center;
+/* Switch (Disabled Display) */
+.catalog-switch {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+  flex-shrink: 0;
+  vertical-align: middle;
+  cursor: default;
+}
+
+.catalog-switch-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.catalog-switch-slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--vp-c-divider);
+  border-radius: 20px;
+  transition: 0.2s;
+}
+
+.catalog-switch-slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.2s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+.catalog-switch-input:checked + .catalog-switch-slider {
+  background-color: var(--vp-c-brand-1);
+}
+
+.catalog-switch-input:checked + .catalog-switch-slider:before {
+  transform: translateX(16px);
 }
 
 .catalog-empty {
@@ -389,6 +343,23 @@ function resetFilters() {
   color: var(--vp-c-brand-1);
   font-weight: 600;
   cursor: pointer;
+}
+
+.catalog-back-link {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--vp-c-divider);
+}
+
+.catalog-back-link a {
+  color: var(--vp-c-brand-1);
+  font-size: 0.88rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.catalog-back-link a:hover {
+  text-decoration: underline;
 }
 
 @media (max-width: 900px) {
@@ -411,20 +382,6 @@ function resetFilters() {
 
   .catalog-count {
     text-align: right;
-  }
-
-  .catalog-pills {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: 0.3rem;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-  }
-
-  .catalog-pill,
-  .catalog-divider,
-  .catalog-reset {
-    flex-shrink: 0;
   }
 
   .catalog-category {
@@ -465,43 +422,37 @@ function resetFilters() {
     display: block;
     padding: 0;
     border: 0;
-  }
-
-  .catalog-table td[data-label="ABAP Class"] {
-    display: none;
+    width: auto !important;
   }
 
   .catalog-table td[data-label="Rule"] {
     font-size: 0.9rem;
+    font-weight: 600;
   }
 
   .catalog-table td[data-label="Description"] {
-    margin: 0.3rem 0 0.5rem;
+    margin: 0.35rem 0 0.6rem;
     color: var(--vp-c-text-2);
-  }
-
-  .catalog-table td[data-label="Suppression"] {
-    margin-bottom: 0.45rem;
   }
 
   .catalog-table td.center {
     display: inline-flex;
     align-items: center;
-    gap: 0.25rem;
-    margin-right: 0.35rem;
-    padding: 0.15rem 0.45rem;
+    gap: 0.5rem;
+    margin-right: 0.75rem;
+    padding: 0.25rem 0.6rem;
     border: 1px solid var(--vp-c-divider);
-    border-radius: 999px;
+    border-radius: 6px;
     background: var(--vp-c-bg);
     color: var(--vp-c-text-2);
-    font-size: 0.7rem;
+    font-size: 0.78rem;
     text-align: left;
   }
 
   .catalog-table td.center::before {
     content: attr(data-label);
-    color: var(--vp-c-text-3);
-    font-weight: 600;
+    color: var(--vp-c-text-2);
+    font-weight: 500;
   }
 }
 </style>

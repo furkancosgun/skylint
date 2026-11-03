@@ -9,35 +9,8 @@ keywords: "Clean ABAP, ABAP Cloud, SAP ATC, Performance & Database, S/4HANA Read
 
 Database query efficiency, buffer protection, and internal table operation guidelines.
 
-::: tip Category Overview
-This category enforces **20 native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.
-:::
+<script setup>
+import RuleCatalog from '../components/RuleCatalog.vue';
+</script>
 
-## Rules in this Category
-
-| Rule Name | Native ATC Class | Suppression Tag | Automated QuickFix |
-|---|---|:---:|:---:|
-| [Avoid Database Access Inside Loops (N+1 Query Antipattern)](/rules/no-db-in-loop) | `ZCL_SKYLINT_NO_DB_IN_LOOP` | <code>#EC NO_DB_IN_LOOP</code> | - |
-| [Prevent Empty Driver Tables in FOR ALL ENTRIES (Full Table Scan Bug)](/rules/no-empty-fae) | `ZCL_SKYLINT_NO_EMPTY_FAE` | <code>#EC NO_EMPTY_FAE</code> | ⚡ Ready |
-| [Avoid SELECT * in OpenSQL Queries (Minimize Memory & Network Overhead)](/rules/no-select-star) | `ZCL_SKYLINT_NO_SELECT_STAR` | <code>#EC NO_SELECT_STAR</code> | - |
-| [Avoid SELECT ... ENDSELECT Row-by-Row Cursor Loops](/rules/no-endselect) | `ZCL_SKYLINT_NO_ENDSELECT` | <code>#EC NO_ENDSELECT</code> | - |
-| [Require Explicit ORDER BY for Deterministic SELECT Queries](/rules/pref-order-by) | `ZCL_SKYLINT_PREF_ORDER_BY` | <code>#EC PREF_ORDER_BY</code> | - |
-| [Specify TRANSPORTING in Internal Table MODIFY and READ Operations](/rules/pref-transport) | `ZCL_SKYLINT_PREF_TRANSPORT` | <code>#EC PREF_TRANSPORT</code> | - |
-| [Prefer Pass-by-Reference for Internal Tables in Method Signatures](/rules/pref-pass-by-ref) | `ZCL_SKYLINT_PREF_PASS_BY_REF` | <code>#EC PREF_PASS_BY_REF</code> | ⚡ Ready |
-| [Do Not Mutate the Internal Table Currently Being Looped (Iterator Invalidation)](/rules/no-mod-loop-tab) | `ZCL_SKYLINT_NO_MOD_LOOP_TAB` | <code>#EC NO_MOD_LOOP_TAB</code> | - |
-| [Avoid String Concatenation Inside Loops (Quadratic Memory Allocation)](/rules/no-concat-loop) | `ZCL_SKYLINT_NO_CONCAT_LOOP` | <code>#EC NO_CONCAT_LOOP</code> | - |
-| [Prefer ASSIGNING over LOOP INTO Copy Targets](/rules/no-loop-into) | `ZCL_SKYLINT_NO_LOOP_INTO` | <code>#EC NO_LOOP_INTO</code> | - |
-| [Prefer UNION over UNION ALL](/rules/pref-union) | `ZCL_SKYLINT_PREF_UNION` | <code>#EC PREF_UNION</code> | - |
-| [Limit Number of Table JOINs in OpenSQL Queries](/rules/max-sql-joins) | `ZCL_SKYLINT_MAX_SQL_JOINS` | <code>#EC MAX_SQL_JOINS</code> | - |
-| [Specify an Explicit SORT Key with BY](/rules/pref-sort-key) | `ZCL_SKYLINT_PREF_SORT_KEY` | <code>#EC PREF_SORT_KEY</code> | - |
-| [Prefer READ TABLE WITH KEY over WHERE](/rules/pref-read-key) | `ZCL_SKYLINT_PREF_READ_KEY` | <code>#EC PREF_READ_KEY</code> | - |
-| [Disallow Nested LOOP AT Statements Without FROM or GROUP BY](/rules/no-nested-loop) | `ZCL_SKYLINT_NO_NESTED_LOOP` | <code>#EC NO_NESTED_LOOP</code> | - |
-| [Avoid Unfiltered SELECT on Database Tables (Full Table Scan Prevention)](/rules/no-full-scan-sel) | `ZCL_SKYLINT_NO_FULL_SCAN_SEL` | <code>#EC NO_FULL_SCAN_SELECT</code> | - |
-| [Avoid BYPASSING BUFFER in SELECT Statements](/rules/no-bypass-buf) | `ZCL_SKYLINT_NO_BYPASS_BUF` | <code>#EC NO_BYPASS_BUFFER</code> | - |
-| [Avoid CROSS JOIN in ABAP SQL Queries](/rules/no-cross-join) | `ZCL_SKYLINT_NO_CROSS_JOIN` | <code>#EC NO_CROSS_JOIN</code> | - |
-| [Avoid Database Hints (%_HINTS) in ABAP SQL](/rules/no-sql-hints) | `ZCL_SKYLINT_NO_SQL_HINTS` | <code>#EC NO_SQL_HINTS</code> | - |
-| [Avoid Leading Wildcards in LIKE Conditions](/rules/no-lead-wildcard) | `ZCL_SKYLINT_NO_LEAD_WILDCARD` | <code>#EC NO_LEAD_WILDCARD</code> | - |
-
----
-
-[← Back to All Rules Catalog](/rules/)
+<RuleCatalog category="performance" />

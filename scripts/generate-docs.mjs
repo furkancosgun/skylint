@@ -489,20 +489,10 @@ for (const [catKey, catInfo] of Object.entries(CATEGORIES)) {
 
   catMd += `# ${catTitle}\n\n`;
   catMd += `${catInfo.description}\n\n`;
-  catMd += `::: tip Category Overview\n`;
-  catMd += `This category enforces **${catRules.length} native ATC rules** adhering to SAP Clean ABAP and ABAP Cloud standards. Each check executes natively inside Eclipse ADT and SAP GUI.\n`;
-  catMd += `:::\n\n`;
-
-  catMd += `## Rules in this Category\n\n`;
-  catMd += `| Rule Name | Native ATC Class | Suppression Tag | Automated QuickFix |\n`;
-  catMd += `|---|---|:---:|:---:|\n`;
-
-  for (const r of catRules) {
-    const qf = catalogRules.find(c => c.ruleId === r.ruleId)?.hasQuickfix ? '⚡ Ready' : '-';
-    catMd += `| [${r.title}](/rules/${r.ruleId}) | \`${r.className}\` | <code>#EC ${r.pseudoComment}</code> | ${qf} |\n`;
-  }
-
-  catMd += `\n---\n\n[← Back to All Rules Catalog](/rules/)\n`;
+  catMd += `<script setup>\n`;
+  catMd += `import RuleCatalog from '../components/RuleCatalog.vue';\n`;
+  catMd += `</script>\n\n`;
+  catMd += `<RuleCatalog category="${catKey}" />\n`;
 
   fs.writeFileSync(path.join(rulesDocsDir, `${catKey}.md`), catMd, 'utf8');
 }
@@ -538,6 +528,7 @@ fs.writeFileSync(path.join(componentsDir, 'catalog-data.json'), JSON.stringify(c
 // Generate docs/variant-builder.md
 const variantBuilderMd = `---
 layout: page
+footer: false
 title: ATC Variant Builder
 description: Configure custom SAP ATC check variants, tune rule parameters and download .chkv.json files for SAP GUI / abapGit.
 ---
@@ -895,7 +886,6 @@ export default defineConfig({
       { text: 'Guide', link: '/guide/getting-started' },
       { text: 'Rules (${RULES.length})', link: '/rules/' },
       { text: 'Variant Builder', link: '/variant-builder' },
-      { text: 'Playground', link: '/playground' },
       { text: 'GitHub', link: 'https://github.com/furkancosgun/skylint' },
     ],
     sidebar: {

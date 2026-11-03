@@ -1,5 +1,6 @@
 ---
 layout: page
+footer: false
 title: ATC Variant Builder
 description: Configure custom SAP ATC check variants, tune rule parameters and download .chkv.json files for SAP GUI / abapGit.
 ---
