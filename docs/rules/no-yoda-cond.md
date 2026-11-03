@@ -42,6 +42,14 @@ IF lv_status = 'ACTIVE'.
 ENDIF.
 ```
 
+## Try it in the Playground
+
+<script setup>
+import RulePlayground from '../components/RulePlayground.vue';
+</script>
+
+<RulePlayground rule-id="no-yoda-cond" />
+
 ## Automated QuickFix
 
 This rule provides an **automated QuickFix** directly in Eclipse ABAP Development Tools (ADT):

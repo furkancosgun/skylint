@@ -68,6 +68,7 @@ Skylint transforms static code analysis for SAP ecosystems by executing directly
 - [Metrics & Complexity Limits](/rules/#metrics): Quantitative boundaries for method size, nesting depth, parameter counts, and cyclomatic complexity.
 
 ### Developer Tools & Catalogs
+- [Online Playground](/playground): Try live Skylint checks in your browser — paste ABAP, see findings, apply QuickFixes.
 - [Interactive ATC Variant Builder](/variant-builder): Visually customize rules, tune thresholds, and export CHKV JSON configurations.
 - [Complete Interactive Catalog](/rules/): Browse all 198 native check rules with before-and-after Clean ABAP examples.
 - [GitHub Open Source Repository](https://github.com/furkancosgun/skylint): Source code, issue tracker, contributions, and community releases.

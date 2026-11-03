@@ -1,6 +1,12 @@
 <script setup>
 import { ref, reactive, computed } from 'vue';
+import { withBase } from 'vitepress';
 import rulesData from './rules-data.json';
+import { PLAYGROUND_RULE_IDS } from './playground-rules.mjs';
+
+function isPlaygroundRule(ruleId) {
+  return PLAYGROUND_RULE_IDS.includes(ruleId);
+}
 
 // --- State ---
 const searchQuery = ref('');
@@ -388,12 +394,6 @@ async function copyPseudo(pseudo) {
   }
 }
 
-function formatAttrKind(attr) {
-  if (attr.kind === 'Boolean') return 'Boolean';
-  if (attr.kind === 'Integer' || /^\d+$/.test(attr.defaultValue)) return 'Integer';
-  return 'String';
-}
-
 </script>
 
 <template>
@@ -479,7 +479,7 @@ function formatAttrKind(attr) {
             <p class="vb-card-desc">Define your variant metadata and export to standard SAP ATC JSON format.</p>
           </div>
         </div>
-        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap">
+        <div class="vb-card-actions">
           <input
             ref="importInput"
             type="file"
@@ -683,6 +683,18 @@ function formatAttrKind(attr) {
               </svg>
               Local Only
             </span>
+            <a
+              v-if="isPlaygroundRule(rule.ruleId)"
+              :href="withBase(`/playground#rule=${rule.ruleId}`)"
+              class="vb-tag playground"
+              title="Try this rule live in the interactive Playground"
+              target="_blank"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <polygon points="5 3 19 12 5 21 5 3" />
+              </svg>
+              Playground
+            </a>
 
             <!-- Parameters Toggle (if applicable) -->
             <button
@@ -720,29 +732,28 @@ function formatAttrKind(attr) {
                 <div class="vb-param-label-row">
                   <span class="vb-param-name">{{ attr.name }}</span>
 
-                  <div v-if="attr.kind === 'Boolean'">
-                    <div style="display: flex; align-items: center; gap: 0.6rem">
-                      <label class="vb-switch-wrapper" :title="ruleParams[rule.checkName]?.[attr.name] === 'true' ? 'Disable' : 'Enable'">
-                        <input
-                          type="checkbox"
-                          class="vb-switch-input"
-                          :checked="ruleParams[rule.checkName]?.[attr.name] === 'true'"
-                          @change="ruleParams[rule.checkName][attr.name] = $event.target.checked ? 'true' : 'false'"
-                        />
-                        <span class="vb-switch-slider"></span>
-                      </label>
-                    </div>
-                  </div>
+                  <label
+                    v-if="attr.kind === 'Boolean'"
+                    class="vb-switch-wrapper"
+                    :title="ruleParams[rule.checkName]?.[attr.name] === 'true' ? 'Disable' : 'Enable'"
+                  >
+                    <input
+                      type="checkbox"
+                      class="vb-switch-input"
+                      :checked="ruleParams[rule.checkName]?.[attr.name] === 'true'"
+                      @change="ruleParams[rule.checkName][attr.name] = $event.target.checked ? 'true' : 'false'"
+                    />
+                    <span class="vb-switch-slider"></span>
+                  </label>
 
                   <!-- Elementary / Integer Parameter -->
-                <div v-else style="display: flex;">
                   <input
+                    v-else
                     v-model="ruleParams[rule.checkName][attr.name]"
                     type="text"
                     class="vb-input vb-input-sm"
                     :placeholder="attr.defaultValue"
                   />
-                </div>
                 </div>
               </div>
             </div>
@@ -959,6 +970,12 @@ function formatAttrKind(attr) {
   font-size: 0.88rem;
   color: var(--vp-c-text-2);
   margin: 0.25rem 0 0;
+}
+
+.vb-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .vb-btn {
@@ -1362,6 +1379,21 @@ html.dark .vb-tag.local {
   border-color: rgba(99, 102, 241, 0.3);
 }
 
+.vb-tag.playground {
+  background: var(--vp-c-brand-soft);
+  color: var(--vp-c-brand-1);
+  border-color: var(--vp-c-brand-soft);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.1s;
+}
+
+.vb-tag.playground:hover {
+  border-color: var(--vp-c-brand-1);
+  transform: translateY(-1px);
+}
+
 .vb-tag.params-toggle {
   cursor: pointer;
   background: var(--vp-c-bg);
@@ -1425,18 +1457,6 @@ html.dark .vb-tag.local {
   padding: 0.3rem 0.5rem;
   font-size: 0.8rem;
   width: 280px;                 /* Input kutusunun tüm satıra esnemesini engeller */
-}
-
-.vb-param-type {
-  color: var(--vp-c-text-3);
-}
-
-.vb-checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.8rem;
-  cursor: pointer;
 }
 
 

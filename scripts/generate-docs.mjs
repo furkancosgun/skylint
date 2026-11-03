@@ -15,6 +15,22 @@ const guideDocsDir = path.join(docsDir, 'guide');
 const fixturesDir = path.join(rootDir, 'test', 'fixtures');
 const checksDir = path.join(rootDir, 'src', 'checks');
 
+// Playground-support: rules mirrored by the browser engine (docs/components/playground-rules.mjs)
+const playgroundRuleIds = ['no-check-stmt', 'no-yoda-cond', 'no-select-star', 'no-magic-numbers', 'max-line-len'];
+const playgroundFixtures = {};
+for (const pgRule of playgroundRuleIds) {
+  const pgDirCandidates = [
+    path.join(fixturesDir, pgRule.replace(/-/g, '_')),
+    path.join(fixturesDir, pgRule),
+  ];
+  const pgDir = pgDirCandidates.find((p) => fs.existsSync(path.join(p, 'source.abap')));
+  if (pgDir) {
+    playgroundFixtures[pgRule] = fs.readFileSync(path.join(pgDir, 'source.abap'), 'utf8')
+      .replace(/\r\n/g, '\n')
+      .replace(/\n$/, '');
+  }
+}
+
 // Ensure directories exist
 fs.mkdirSync(rulesDocsDir, { recursive: true });
 fs.mkdirSync(guideDocsDir, { recursive: true });
@@ -367,6 +383,15 @@ for (const rule of RULES) {
     ruleDoc += `### Compliant\n\n\`\`\`abap\n${compliantCode}\n\`\`\`\n\n`;
   }
 
+  // Interactive playground (rules mirrored by the browser engine)
+  if (playgroundRuleIds.includes(rule.ruleId) && playgroundFixtures[rule.ruleId]) {
+    ruleDoc += `## Try it in the Playground\n\n`;
+    ruleDoc += `<script setup>\n`;
+    ruleDoc += `import RulePlayground from '../components/RulePlayground.vue';\n`;
+    ruleDoc += `</script>\n\n`;
+    ruleDoc += `<RulePlayground rule-id="${rule.ruleId}" />\n\n`;
+  }
+
   // QuickFix section if available
   if (hasQuickfix) {
     ruleDoc += `## Automated QuickFix\n\n`;
@@ -486,6 +511,7 @@ for (const [catKey, catInfo] of Object.entries(CATEGORIES)) {
 const componentsDir = path.join(docsDir, 'components');
 fs.mkdirSync(componentsDir, { recursive: true });
 fs.writeFileSync(path.join(componentsDir, 'rules-data.json'), JSON.stringify(catalogRules, null, 2), 'utf8');
+fs.writeFileSync(path.join(componentsDir, 'playground-fixtures.json'), JSON.stringify(playgroundFixtures, null, 2), 'utf8');
 
 const catalogData = {
   categories: Object.entries(CATEGORIES).map(([key, info]) => ({
@@ -869,10 +895,12 @@ export default defineConfig({
       { text: 'Guide', link: '/guide/getting-started' },
       { text: 'Rules (${RULES.length})', link: '/rules/' },
       { text: 'Variant Builder', link: '/variant-builder' },
+      { text: 'Playground', link: '/playground' },
       { text: 'GitHub', link: 'https://github.com/furkancosgun/skylint' },
     ],
     sidebar: {
       '/variant-builder': [],
+      '/playground': [],
       '/guide/': [
         {
           text: 'Architecture & Guides',
@@ -976,6 +1004,7 @@ Skylint transforms static code analysis for SAP ecosystems by executing directly
 - [Metrics & Complexity Limits](/rules/#metrics): Quantitative boundaries for method size, nesting depth, parameter counts, and cyclomatic complexity.
 
 ### Developer Tools & Catalogs
+- [Online Playground](/playground): Try live Skylint checks in your browser — paste ABAP, see findings, apply QuickFixes.
 - [Interactive ATC Variant Builder](/variant-builder): Visually customize rules, tune thresholds, and export CHKV JSON configurations.
 - [Complete Interactive Catalog](/rules/): Browse all ${RULES.length} native check rules with before-and-after Clean ABAP examples.
 - [GitHub Open Source Repository](https://github.com/furkancosgun/skylint): Source code, issue tracker, contributions, and community releases.
