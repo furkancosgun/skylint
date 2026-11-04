@@ -4,15 +4,17 @@ description: "Limit the maximum number of WHEN clauses in ABAP CASE statements t
 keywords: "ABAP CASE WHEN limit, Cyclomatic Complexity, Clean ABAP, Polymorphism"
 category: "metrics"
 ruleId: "max-when-count"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L5313"
 ---
 
 # Limit Number of WHEN Branches in CASE Statements
 
-<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Metrics & Complexity Limits" />
   <Badge type="danger" text="#EC MAX_WHEN_COUNT" />
   <Badge type="info" text="Remote Enabled" />
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L5313" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -71,7 +73,8 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_MAX_WHEN_COUNT`
-* **Implementation File:** [#skyl#cl_max_when_count.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_max_when_count.clas.abap)
+* **ABAP Implementation:** [/skyl/cl_max_when_count.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_max_when_count.clas.abap)
+* **Rule Metadata:** [rules-data.mjs (Line 5313)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L5313)
 
 ## Community & Feedback
 

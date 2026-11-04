@@ -4,16 +4,18 @@ description: "Avoid Chained Assignments (a = b = c = 1) - Clean ABAP guidelines,
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-chained-assign, anti-patterns"
 category: "anti-patterns"
 ruleId: "no-chained-assign"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L654"
 ---
 
 # Avoid Chained Assignments (a = b = c = 1)
 
-<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC NO_CHAINED_ASSIGN" />
   <Badge type="info" text="Remote Enabled" />
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L654" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -69,7 +71,8 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_NO_CHAINED_ASSIGN`
-* **Implementation File:** [#skyl#cl_no_chained_assign.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_chained_assign.clas.abap)
+* **ABAP Implementation:** [/skyl/cl_no_chained_assign.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_chained_assign.clas.abap)
+* **Rule Metadata:** [rules-data.mjs (Line 654)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L654)
 
 ## Community & Feedback
 

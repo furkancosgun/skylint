@@ -4,15 +4,17 @@ description: "Avoid duplicate table expressions and method calls in the same ABA
 keywords: "ABAP Common Subexpression Elimination, Duplicate Table Expression, ABAP Hash Lookup Optimization, Clean ABAP Performance"
 category: "anti-patterns"
 ruleId: "no-dup-subexpr"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L5637"
 ---
 
 # Avoid Duplicate Subexpressions in the Same Statement
 
-<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="info" text="Note" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC NO_DUP_SUBEXPR" />
   <Badge type="info" text="Remote Enabled" />
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L5637" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -62,7 +64,8 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_NO_DUP_SUBEXP`
-* **Implementation File:** [#skyl#cl_no_dup_subexp.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_dup_subexp.clas.abap)
+* **ABAP Implementation:** [/skyl/cl_no_dup_subexp.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_dup_subexp.clas.abap)
+* **Rule Metadata:** [rules-data.mjs (Line 5637)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L5637)
 
 ## Community & Feedback
 

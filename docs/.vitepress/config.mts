@@ -57,7 +57,7 @@ export default defineConfig({
     }
 
     const ogTitle = title === 'Skylint' ? 'Skylint - Enterprise Clean ABAP & Cloud ATC Linter' : (title || 'Skylint');
-    const ogDescription = pageData.frontmatter?.description || description || 'Enterprise Clean ABAP & Cloud ATC Linter Engine with 133+ Native Rules';
+    const ogDescription = pageData.frontmatter?.description || description || 'Enterprise Clean ABAP & Cloud ATC Linter Engine with Native Rules';
     const isCategoryPage = ['clean-abap', 'anti-patterns', 'performance', 'security', 'metrics'].some(cat => cleanPath === `rules/${cat}`);
     const isRulePage = cleanPath.startsWith('rules/') && cleanPath !== 'rules' && !isCategoryPage;
     const isGuidePage = cleanPath.startsWith('guide/');
@@ -190,7 +190,7 @@ export default defineConfig({
         JSON.stringify({
           '@context': 'https://schema.org',
           '@type': 'CollectionPage',
-          'name': 'Skylint Rules Catalog - 133 Native Clean ABAP & Cloud ATC Rules',
+          'name': 'Skylint Rules Catalog - Native Clean ABAP & Cloud ATC Rules',
           'description': ogDescription,
           'url': url,
           'breadcrumb': {
@@ -214,7 +214,7 @@ export default defineConfig({
               '@type': 'WebSite',
               'name': 'Skylint',
               'url': 'https://skylint.org/',
-              'description': 'Enterprise Clean ABAP & Cloud ATC Linter Engine with 133+ Native Rules',
+              'description': 'Enterprise Clean ABAP & Cloud ATC Linter Engine with Native Rules',
               'potentialAction': {
                 '@type': 'SearchAction',
                 'target': 'https://skylint.org/rules/?q={search_term_string}',
@@ -226,7 +226,7 @@ export default defineConfig({
               'name': 'Skylint',
               'applicationCategory': 'DeveloperApplication',
               'operatingSystem': 'SAP ABAP Cloud, Node.js',
-              'description': 'Enterprise Clean ABAP & Cloud ATC Linter Engine with 133+ Native Rules',
+              'description': 'Enterprise Clean ABAP & Cloud ATC Linter Engine with Native Rules',
               'url': 'https://skylint.org/',
               'license': 'https://github.com/furkancosgun/skylint/blob/main/LICENSE',
               'image': 'https://skylint.org/og-image.png',
@@ -281,7 +281,7 @@ export default defineConfig({
                   'name': 'Can Skylint run in offline CI/CD pipelines without a live SAP system?',
                   'acceptedAnswer': {
                     '@type': 'Answer',
-                    'text': 'Yes, Skylint includes an offline Node.js transpiled test harness using @abaplint/transpiler that validates 133 checks and 680+ assertions in GitHub Actions or any CI/CD environment.'
+                    'text': 'Yes, Skylint includes an offline Node.js transpiled test harness using @abaplint/transpiler that validates all checks and test assertions in GitHub Actions or any CI/CD environment.'
                   }
                 }
               ]
@@ -321,7 +321,7 @@ export default defineConfig({
     logo: { src: '/logo.svg', alt: 'Skylint Logo' },
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
-      { text: 'Rules (197)', link: '/rules/' },
+      { text: 'Rules', link: '/rules/' },
       { text: 'Variant Builder', link: '/variant-builder' },
       {
         text: 'Community',
@@ -348,32 +348,24 @@ export default defineConfig({
       ],
       '/rules/': [
         { text: 'All Rules Overview', link: '/rules/' },
-        ...[
-  {
-    "text": "Clean ABAP & Modern Syntax (78)",
-    "link": "/rules/clean-abap"
-  },
-  {
-    "text": "Anti-Patterns & Bad Practices (60)",
-    "link": "/rules/anti-patterns"
-  },
-  {
-    "text": "Performance & Database (20)",
-    "link": "/rules/performance"
-  },
-  {
-    "text": "Security & Robustness (21)",
-    "link": "/rules/security"
-  },
-  {
-    "text": "Metrics & Complexity Limits (18)",
-    "link": "/rules/metrics"
-  }
-]
+        { text: 'Clean ABAP & Modern Syntax', link: '/rules/clean-abap' },
+        { text: 'Anti-Patterns & Bad Practices', link: '/rules/anti-patterns' },
+        { text: 'Performance & Database', link: '/rules/performance' },
+        { text: 'Security & Robustness', link: '/rules/security' },
+        { text: 'Metrics & Complexity Limits', link: '/rules/metrics' },
       ],
     },
     search: {
       provider: 'local',
+    },
+    editLink: {
+      pattern: ({ filePath, frontmatter }: any) => {
+        if (frontmatter?.customEditUrl) {
+          return frontmatter.customEditUrl;
+        }
+        return `https://github.com/furkancosgun/skylint/edit/main/docs/${filePath}`;
+      },
+      text: 'Edit this page on GitHub',
     },
     socialLinks: [
       { icon: 'github', link: 'https://github.com/furkancosgun/skylint' },

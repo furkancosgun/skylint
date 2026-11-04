@@ -4,15 +4,17 @@ description: "Prefer ABAP 7.51+ ENUM definitions over structured constants for v
 keywords: "Clean ABAP, ENUM, constants, pref-enum"
 category: "clean-abap"
 ruleId: "pref-enum"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4824"
 ---
 
 # Prefer Enumerations over Constants
 
-<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="danger" text="#EC PREF_ENUM" />
   <Badge type="info" text="Remote Enabled" />
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4824" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -64,7 +66,8 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_PREF_ENUM`
-* **Implementation File:** [#skyl#cl_pref_enum.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_pref_enum.clas.abap)
+* **ABAP Implementation:** [/skyl/cl_pref_enum.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_pref_enum.clas.abap)
+* **Rule Metadata:** [rules-data.mjs (Line 4824)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L4824)
 
 ## Community & Feedback
 

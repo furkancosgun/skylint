@@ -4,15 +4,17 @@ description: "Improve code readability and Git diff clarity in ABAP by requiring
 keywords: "One statement per line ABAP, Colon chaining Clean ABAP, Debugger Line Stepping SAP, Clean Code Formatting"
 category: "metrics"
 ruleId: "max-one-stmt"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L2703"
 ---
 
 # Limit One Statement per Source Code Line (No Inline Colon Chains)
 
-<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Metrics & Complexity Limits" />
   <Badge type="danger" text="#EC MAX_ONE_STMT" />
   <Badge type="info" text="Remote Enabled" />
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L2703" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -65,7 +67,8 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_MAX_ONE_STMT`
-* **Implementation File:** [#skyl#cl_max_one_stmt.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_max_one_stmt.clas.abap)
+* **ABAP Implementation:** [/skyl/cl_max_one_stmt.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_max_one_stmt.clas.abap)
+* **Rule Metadata:** [rules-data.mjs (Line 2703)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L2703)
 
 ## Community & Feedback
 

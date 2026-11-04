@@ -4,15 +4,17 @@ description: "Specify an explicit SORT key with BY in ABAP instead of relying on
 keywords: "SORT BY ABAP, Implicit Sort Key, Internal Table Sorting, Clean ABAPSORT, ATC Code Review"
 category: "performance"
 ruleId: "pref-sort-key"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L5150"
 ---
 
 # Specify an Explicit SORT Key with BY
 
-<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Performance & Database" />
   <Badge type="danger" text="#EC PREF_SORT_KEY" />
   <Badge type="info" text="Remote Enabled" />
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L5150" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -58,7 +60,8 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_PREF_SORT_KEY`
-* **Implementation File:** [#skyl#cl_pref_sort_key.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_pref_sort_key.clas.abap)
+* **ABAP Implementation:** [/skyl/cl_pref_sort_key.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_pref_sort_key.clas.abap)
+* **Rule Metadata:** [rules-data.mjs (Line 5150)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L5150)
 
 ## Community & Feedback
 

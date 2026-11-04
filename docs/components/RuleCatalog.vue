@@ -129,7 +129,7 @@ const visibleCategories = computed(() =>
     </p>
 
     <div v-if="props.category" class="catalog-back-link">
-      <a :href="withBase('/rules/')">← Back to All Rules Catalog (197 Rules)</a>
+      <a :href="withBase('/rules/')">← Back to All Rules Catalog</a>
     </div>
 
     <div class="catalog-community-footer">

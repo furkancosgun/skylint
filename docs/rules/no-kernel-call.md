@@ -4,15 +4,17 @@ description: "Ensure cross-platform compatibility and cloud compliance by avoidi
 keywords: "SYSTEM-CALL ABAP, EXEC SQL SAP Security, Clean Core Cloud Compliance"
 category: "security"
 ruleId: "no-kernel-call"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1931"
 ---
 
 # Avoid Kernel and Native Database Calls (SYSTEM-CALL, EXEC SQL)
 
-<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Security & Robustness" />
   <Badge type="danger" text="#EC NO_KERNEL_CALL" />
   <Badge type="info" text="Remote Enabled" />
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1931" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -61,7 +63,8 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_NO_KERNEL_CALL`
-* **Implementation File:** [#skyl#cl_no_kernel_call.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_kernel_call.clas.abap)
+* **ABAP Implementation:** [/skyl/cl_no_kernel_call.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_kernel_call.clas.abap)
+* **Rule Metadata:** [rules-data.mjs (Line 1931)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L1931)
 
 ## Community & Feedback
 

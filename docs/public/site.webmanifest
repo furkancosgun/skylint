@@ -1,7 +1,7 @@
 {
   "name": "Skylint - Enterprise Clean ABAP & Cloud ATC Linter",
   "short_name": "Skylint",
-  "description": "Enterprise Clean ABAP & Cloud ATC Linter Engine with 133+ Native Rules",
+  "description": "Enterprise Clean ABAP & Cloud ATC Linter Engine with Native Rules",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0f172a",

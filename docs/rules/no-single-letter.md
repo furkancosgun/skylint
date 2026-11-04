@@ -4,15 +4,17 @@ description: "Avoid Single-Letter Variable Names - Clean ABAP guidelines, modern
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-single-letter, clean-abap"
 category: "clean-abap"
 ruleId: "no-single-letter"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3985"
 ---
 
 # Avoid Single-Letter Variable Names
 
-<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="danger" text="#EC NO_SINGLE_LETTER" />
   <Badge type="info" text="Remote Enabled" />
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3985" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -69,7 +71,8 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_NO_SINGLE_LETTER`
-* **Implementation File:** [#skyl#cl_no_single_letter.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_single_letter.clas.abap)
+* **ABAP Implementation:** [/skyl/cl_no_single_letter.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_single_letter.clas.abap)
+* **Rule Metadata:** [rules-data.mjs (Line 3985)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L3985)
 
 ## Community & Feedback
 

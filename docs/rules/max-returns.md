@@ -4,15 +4,17 @@ description: "Balance guard clauses with predictable method exits in ABAP. Preve
 keywords: "Multiple return statements ABAP, Guard Clauses vs Single Exit, Clean ABAP Control Flow, ATC Metrics"
 category: "metrics"
 ruleId: "max-returns"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4080"
 ---
 
 # Limit Multiple Return Statements per Method Body
 
-<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Metrics & Complexity Limits" />
   <Badge type="danger" text="#EC MAX_RETURNS" />
   <Badge type="info" text="Remote Enabled" />
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4080" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -86,7 +88,8 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_MAX_RETURNS`
-* **Implementation File:** [#skyl#cl_max_returns.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_max_returns.clas.abap)
+* **ABAP Implementation:** [/skyl/cl_max_returns.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_max_returns.clas.abap)
+* **Rule Metadata:** [rules-data.mjs (Line 4080)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L4080)
 
 ## Community & Feedback
 

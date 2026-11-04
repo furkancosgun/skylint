@@ -4,15 +4,17 @@ description: "Prevent resource leaks in ABAP by ensuring all OPEN DATASET and OP
 keywords: "OPEN DATASET CLOSE DATASET ABAP, OPEN CURSOR CLOSE CURSOR ABAP, DBSQL_TOO_MANY_OPEN_CURSOR, ABAP resource leak ATC check, Clean ABAP resource management"
 category: "security"
 ruleId: "no-unclosed-res"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1187"
 ---
 
 # Ensure Opened Datasets and Cursors are Closed
 
-<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Security & Robustness" />
   <Badge type="danger" text="#EC NO_UNCLOSED_RES" />
   <Badge type="info" text="Remote Enabled" />
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1187" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -72,7 +74,8 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_NO_UNCLOSED_RES`
-* **Implementation File:** [#skyl#cl_no_unclosed_res.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_unclosed_res.clas.abap)
+* **ABAP Implementation:** [/skyl/cl_no_unclosed_res.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_unclosed_res.clas.abap)
+* **Rule Metadata:** [rules-data.mjs (Line 1187)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L1187)
 
 ## Community & Feedback
 

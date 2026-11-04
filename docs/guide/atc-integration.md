@@ -33,34 +33,37 @@ Trying to run Skylint via legacy SCI is neither supported nor possible in ABAP C
 
 ## Configuring Skylint in Eclipse ADT
 
-In modern ABAP systems (SAP BTP ABAP Environment, S/4HANA Cloud, and S/4HANA 2022+), ATC Check Variants are ABAP repository objects created and maintained directly in **Eclipse ADT**.
+In modern ABAP systems (SAP BTP ABAP Environment, S/4HANA Cloud, and S/4HANA 2022+), ATC Check Variants (`CHKV`) are ABAP repository objects created and maintained directly in **Eclipse ADT**.
 
-### Step 1: Create an ATC Check Variant in ADT
+Skylint ships with an out-of-the-box default variant: **`/SKYL/DEFAULT`** (located at `src/atc/(skyl)default.chkv.json`), pre-configured with all Clean ABAP rules enabled. You can use it immediately or create a tailored variant as described below.
+
+### Step 1: Create or Open an ATC Check Variant in ADT
 
 1. Open **Eclipse ADT** connected to your development or central check system.
-2. In the *Project Explorer*, right-click your package (e.g., `/SKYL/CONFIG`) and select:  
+2. In the *Project Explorer*, right-click your configuration package and select:  
    **New** &rarr; **Other ABAP Repository Object...**
 3. In the search filter, type `ATC Check Variant` (Object Type: `CHKV`) and click **Next**.
 4. Enter the details:
-   - **Name:** e.g., `/SKYL/CLEAN_ABAP` or `/SKYL/DEFAULT`
+   - **Name:** e.g., `/SKYL/CLEAN_ABAP` or `ZCLEAN_ABAP`
    - **Description:** `Skylint Clean ABAP Quality Rules`
-5. Click **Finish** and assign a transport request.
+5. Click **Finish** and assign a transport request if prompted.
 
 ---
 
-### Step 2: Add Skylint Checks to the Variant
+### Step 2: Configure Skylint Checks & Categories
 
-1. The **ATC Check Variant Editor** opens in Eclipse.
-2. In the **Checks** tab, click **Add Check...**.
-3. In the dialog, search for check classes using the prefix:
-   ```
-   /SKYL/CL_*
-   ```
-4. Select all desired Skylint rules (or select all rules for complete Clean ABAP coverage).
-5. For each rule, you can customize:
-   - **Default Severity:** Error, Warning, or Note.
-   - **Check-Specific Parameters:** For rules with configurable thresholds (such as `MAX_METHOD_LENGTH` or `MAX_NESTING_DEPTH`), configure the numeric bounds directly in the attribute pane.
-6. Save and activate (<kbd>Ctrl</kbd> + <kbd>F3</kbd>) the ATC Check Variant.
+1. The **ATC Check Variant Editor** opens in Eclipse ADT with a hierarchical tree view.
+2. Skylint checks are registered via standard **ATC Category (`CHKC`)** and **ATC Check (`CHKO`)** objects and appear directly in the category tree:
+   - **`/SKYL/CLEAN_ABAP`:** Modern syntax, expressions, and idiomatic Clean ABAP practices.
+   - **`/SKYL/ANTI_PATTERNS`:** Discouraged constructs, obsolete statements, and redundant code.
+   - **`/SKYL/PERFORMANCE`:** SQL query optimization, buffer protection, and internal tables.
+   - **`/SKYL/SECURITY`:** Authorization checks, dynamic statement sanitization, and runtime safety.
+   - **`/SKYL/METRICS`:** Complexity boundaries (method length, cyclomatic complexity, nesting depth).
+3. Check the box next to any category or individual rule to enable it.
+4. For each rule, you can customize:
+   - **Default Severity:** Error (blocks transport), Warning (recommended refactoring), or Note.
+   - **Parameters & Thresholds:** For rules with configurable bounds (such as `MAX_METHOD_LENGTH` or `MAX_NESTING_DEPTH`), select the check and adjust the parameter values in the bottom pane.
+5. Save (<kbd>Ctrl</kbd> + <kbd>S</kbd>) and activate (<kbd>Ctrl</kbd> + <kbd>F3</kbd>) the ATC Check Variant.
 
 ---
 
@@ -68,10 +71,15 @@ In modern ABAP systems (SAP BTP ABAP Environment, S/4HANA Cloud, and S/4HANA 202
 
 To enforce Skylint checks across your development team during transport release or central check runs:
 
+#### For On-Premise & Private Cloud (SAP GUI):
 1. In SAP GUI, execute transaction **`ATC`**.
 2. Navigate to **ATC Administration** &rarr; **Configuration**.
-3. Under **System Check Configuration**, set the **Default Check Variant** to your newly created variant (e.g., `ZCLEAN_ABAP`).
-4. Enable **Check on Transport Release** if you wish to block transport requests with priority 1 (Error) findings.
+3. Under **System Check Configuration**, set the **Default Check Variant** to `/SKYL/DEFAULT` (or your custom variant).
+4. Enable **Check on Transport Release** if you wish to block transport requests containing priority 1 (Error) findings.
+
+#### For SAP BTP ABAP Environment (Steampunk):
+1. Use your communication scenario or gCTS quality gate configuration.
+2. Set the active check variant to `/SKYL/DEFAULT` in your pipeline or quality check configuration.
 
 ---
 
@@ -85,7 +93,7 @@ Developers can execute Skylint checks on individual objects, entire packages, or
 
 ### 2. Running on Entire Packages / Software Components
 - In *Project Explorer*, right-click the target package or project &rarr; **Run As** &rarr; **ABAP Test Cockpit With...**.
-- Select your custom variant (`ZCLEAN_ABAP`).
+- Select the Skylint variant (e.g. `/SKYL/DEFAULT`).
 - The **ATC Result View** displays all findings, grouped by rule, priority, and object.
 
 ---
@@ -125,7 +133,7 @@ stage('ATC Static Analysis') {
         abapEnvironmentRunATCCheck(
             script: this,
             atcConfig: [
-                atcCheckVariant: 'ZCLEAN_ABAP',
+                atcCheckVariant: '/SKYL/DEFAULT',
                 maxSeverity: 'warning'
             ]
         )

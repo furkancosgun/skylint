@@ -4,15 +4,17 @@ description: "Avoid Obsolete ABAP Memory and Context Statements - Clean ABAP gui
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-obs-memory, anti-patterns"
 category: "anti-patterns"
 ruleId: "no-obs-memory"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1299"
 ---
 
 # Avoid Obsolete ABAP Memory and Context Statements
 
-<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC NO_OBS_MEMORY" />
   <Badge type="info" text="Remote Enabled" />
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1299" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -74,7 +76,8 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_NO_OBS_MEMORY`
-* **Implementation File:** [#skyl#cl_no_obs_memory.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_obs_memory.clas.abap)
+* **ABAP Implementation:** [/skyl/cl_no_obs_memory.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_obs_memory.clas.abap)
+* **Rule Metadata:** [rules-data.mjs (Line 1299)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L1299)
 
 ## Community & Feedback
 

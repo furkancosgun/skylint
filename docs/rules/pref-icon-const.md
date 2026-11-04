@@ -4,15 +4,17 @@ description: "Prefer ICON_ constants over hardcoded @xx@ icon literals in ABAP t
 keywords: "ABAP icon constants, type pool ICON, ABAP icon codes, Clean ABAP icon, SAP ATC check icon constants"
 category: "clean-abap"
 ruleId: "pref-icon-const"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4573"
 ---
 
 # Prefer ICON_ Constants over Hardcoded Icon Codes
 
-<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="danger" text="#EC PREF_ICON_CONST" />
   <Badge type="info" text="Remote Enabled" />
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4573" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -58,7 +60,8 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_PREF_ICON_CONST`
-* **Implementation File:** [#skyl#cl_pref_icon_const.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_pref_icon_const.clas.abap)
+* **ABAP Implementation:** [/skyl/cl_pref_icon_const.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_pref_icon_const.clas.abap)
+* **Rule Metadata:** [rules-data.mjs (Line 4573)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L4573)
 
 ## Community & Feedback
 

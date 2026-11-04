@@ -4,15 +4,17 @@ description: "Prefer simpler string functions over plain regex in ABAP: replace 
 keywords: "ABAP RegEx, Simple String Functions, find sub ABAP, Clean ABAP Strings, ATC Code Review"
 category: "clean-abap"
 ruleId: "pref-plain-regex"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L5176"
 ---
 
 # Prefer Simpler String Functions over Plain Regex
 
-<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="danger" text="#EC PREF_PLAIN_REGEX" />
   <Badge type="info" text="Remote Enabled" />
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L5176" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -63,7 +65,8 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_PREF_PLAIN_REGEX`
-* **Implementation File:** [#skyl#cl_pref_plain_regex.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_pref_plain_regex.clas.abap)
+* **ABAP Implementation:** [/skyl/cl_pref_plain_regex.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_pref_plain_regex.clas.abap)
+* **Rule Metadata:** [rules-data.mjs (Line 5176)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L5176)
 
 ## Community & Feedback
 

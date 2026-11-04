@@ -4,7 +4,7 @@ layout: home
 hero:
   name: "Skylint"
   text: "Enterprise Clean ABAP Linter"
-  tagline: "197 Native ATC Rules for Clean ABAP & Cloud-Ready Systems. 100% ABAP Cloud, zero legacy baggage, instant QuickFixes."
+  tagline: "Native ATC Rules for Clean ABAP & Cloud-Ready Systems. 100% ABAP Cloud, zero legacy baggage, instant QuickFixes."
   image:
     src: /logo.svg
     alt: Skylint Cloud Logo
@@ -13,7 +13,7 @@ hero:
       text: Get Started
       link: /guide/getting-started
     - theme: alt
-      text: Explore 197 Rules
+      text: Explore Rules
       link: /rules/
     - theme: alt
       text: Variant Builder
@@ -26,13 +26,13 @@ features:
       width: 48
       height: 48
     title: Native SAP ATC Integration
-    details: Zero adapter layers. Runs directly inside SAP GUI and Eclipse ADT via if_ci_atc_check with abapGit transport.
+    details: Zero adapter layers. Runs directly inside Eclipse ADT and SAP GUI (Tx ATC) via if_ci_atc_check with abapGit transport.
   - icon:
       src: /icons/rules.svg
       alt: Clean ABAP rule catalog
       width: 48
       height: 48
-    title: 197 Clean ABAP Rules
+    title: Clean ABAP Rule Catalog
     details: Enforcing modern syntax, expression-based ABAP, safety boundaries, and object-oriented cleanliness.
   - icon:
       src: /icons/quickfix.svg
@@ -69,5 +69,5 @@ Skylint transforms static code analysis for SAP ecosystems by executing directly
 
 ### Developer Tools & Catalogs
 - [Interactive ATC Variant Builder](/variant-builder): Visually customize rules, tune thresholds, and export CHKV JSON configurations.
-- [Complete Interactive Catalog](/rules/): Browse all 197 native check rules with before-and-after Clean ABAP examples.
+- [Complete Interactive Catalog](/rules/): Browse all native check rules with before-and-after Clean ABAP examples.
 - [GitHub Open Source Repository](https://github.com/furkancosgun/skylint): Source code, issue tracker, contributions, and community releases.

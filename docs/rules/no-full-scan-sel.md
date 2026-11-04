@@ -4,15 +4,17 @@ description: "Prevent full table scans in ABAP SQL by enforcing WHERE conditions
 keywords: "ABAP Full Table Scan, SELECT without WHERE, Database Index Optimization, HANA Performance"
 category: "performance"
 ruleId: "no-full-scan-sel"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L5481"
 ---
 
 # Avoid Unfiltered SELECT on Database Tables (Full Table Scan Prevention)
 
-<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Performance & Database" />
   <Badge type="danger" text="#EC NO_FULL_SCAN_SELECT" />
   <Badge type="info" text="Remote Enabled" />
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L5481" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -73,7 +75,8 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_NO_FULL_SCAN_SEL`
-* **Implementation File:** [#skyl#cl_no_full_scan_sel.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_full_scan_sel.clas.abap)
+* **ABAP Implementation:** [/skyl/cl_no_full_scan_sel.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_full_scan_sel.clas.abap)
+* **Rule Metadata:** [rules-data.mjs (Line 5481)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L5481)
 
 ## Community & Feedback
 

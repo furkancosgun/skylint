@@ -11,7 +11,7 @@ Skylint is an **ATC-native** static analysis engine. Configuration is handled en
 ## ATC Check Variant Architecture
 
 In modern ABAP (SAP BTP ABAP Environment, SAP S/4HANA Cloud, and S/4HANA On-Premise 2022+), an ATC Check Variant (`CHKV`) is an ABAP repository object that defines:
-1. **Enabled Checks:** Which rule classes (`/SKYL/CL_*`) are active during the inspection.
+1. **Enabled Checks:** Which ATC Checks (`CHKO`), corresponding to check rules (`/SKYL/CL_*`), are active during the inspection.
 2. **Finding Severities:** The severity assigned to findings produced by each check (`error`, `warning`, `note`).
 3. **Check Parameters & Thresholds:** Fine-tuned rule configurations (e.g., maximum method statements, nesting limits, allowed prefixes) defined via check attributes.
 
@@ -22,8 +22,8 @@ In modern ABAP (SAP BTP ABAP Environment, SAP S/4HANA Cloud, and S/4HANA On-Prem
 When editing an ATC Check Variant in Eclipse ADT:
 
 ### 1. Enabling and Disabling Rules
-- Expand the Skylint category in the Check Variant tree.
-- Check the box next to any rule (`/SKYL/CL_*`) to enable it, or uncheck to disable it.
+- Expand the Skylint categories (such as `/SKYL/CLEAN_ABAP`, `/SKYL/PERFORMANCE`, `/SKYL/SECURITY`) in the Check Variant tree.
+- Check the box next to any category or individual check rule (`/SKYL/CL_*`) to enable it, or uncheck to disable it.
 
 ### 2. Customizing Severity Levels
 For each selected check, you can override its finding severity:

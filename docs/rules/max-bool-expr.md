@@ -4,15 +4,17 @@ description: "Simplify complex boolean logic in ABAP IF statements. Extract intr
 keywords: "Boolean expression complexity ABAP, Predicate methods Clean ABAP, Operator Precedence SAP, Clean Code Logic"
 category: "metrics"
 ruleId: "max-bool-expr"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3804"
 ---
 
 # Limit Boolean Expression Complexity in Conditional Statements
 
-<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Metrics & Complexity Limits" />
   <Badge type="danger" text="#EC MAX_BOOL_EXPR" />
   <Badge type="info" text="Remote Enabled" />
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3804" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -76,7 +78,8 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_MAX_BOOL_EXPR`
-* **Implementation File:** [#skyl#cl_max_bool_expr.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_max_bool_expr.clas.abap)
+* **ABAP Implementation:** [/skyl/cl_max_bool_expr.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_max_bool_expr.clas.abap)
+* **Rule Metadata:** [rules-data.mjs (Line 3804)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L3804)
 
 ## Community & Feedback
 

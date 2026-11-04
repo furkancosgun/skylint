@@ -4,15 +4,17 @@ description: "Detect ABAP conditions and arithmetic where both operands resolve 
 keywords: "ABAP self comparison, identical operands check, Clean ABAP anti-pattern, SAP ATC check, copy paste bug ABAP"
 category: "anti-patterns"
 ruleId: "no-self-compare"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4140"
 ---
 
 # Avoid Comparisons and Arithmetic with Identical Operands
 
-<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC NO_SELF_COMPARE" />
   <Badge type="info" text="Remote Enabled" />
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4140" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -67,7 +69,8 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_NO_SELF_COMPARE`
-* **Implementation File:** [#skyl#cl_no_self_compare.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_self_compare.clas.abap)
+* **ABAP Implementation:** [/skyl/cl_no_self_compare.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_self_compare.clas.abap)
+* **Rule Metadata:** [rules-data.mjs (Line 4140)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L4140)
 
 ## Community & Feedback
 

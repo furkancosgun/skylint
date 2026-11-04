@@ -4,15 +4,17 @@ description: "Enforce clean method signatures in ABAP. Limit parameter count and
 keywords: "ABAP Method Parameters Limit, Clean ABAP Signatures, Parameter Object Pattern SAP, ATC Clean Code Metrics"
 category: "metrics"
 ruleId: "max-params"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1408"
 ---
 
 # Limit Method Parameter Count and Require Multi-Line Signatures
 
-<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Metrics & Complexity Limits" />
   <Badge type="danger" text="#EC MAX_PARAMS_COUNT" />
   <Badge type="info" text="Remote Enabled" />
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1408" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -78,7 +80,8 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_MAX_PARAMS`
-* **Implementation File:** [#skyl#cl_max_params.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_max_params.clas.abap)
+* **ABAP Implementation:** [/skyl/cl_max_params.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_max_params.clas.abap)
+* **Rule Metadata:** [rules-data.mjs (Line 1408)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L1408)
 
 ## Community & Feedback
 

@@ -4,15 +4,17 @@ description: "Disallow nested LOOP AT statements without FROM or GROUP BY in ABA
 keywords: "ABAP Nested LOOP, Parallel Cursor, Internal Table Performance, Clean ABAP, GROUP BY loop"
 category: "performance"
 ruleId: "no-nested-loop"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L5454"
 ---
 
 # Disallow Nested LOOP AT Statements Without FROM or GROUP BY
 
-<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Performance & Database" />
   <Badge type="danger" text="#EC NO_NESTED_LOOP" />
   <Badge type="info" text="Remote Enabled" />
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L5454" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -67,7 +69,8 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_NO_NESTED_LOOP`
-* **Implementation File:** [#skyl#cl_no_nested_loop.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_nested_loop.clas.abap)
+* **ABAP Implementation:** [/skyl/cl_no_nested_loop.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_nested_loop.clas.abap)
+* **Rule Metadata:** [rules-data.mjs (Line 5454)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L5454)
 
 ## Community & Feedback
 

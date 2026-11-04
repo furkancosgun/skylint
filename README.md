@@ -11,7 +11,7 @@
 <p align="center">
   <a href="https://github.com/furkancosgun/skylint/actions/workflows/ci.yml"><img src="https://github.com/furkancosgun/skylint/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
   <a href="https://skylint.org/"><img src="https://img.shields.io/badge/docs-online-blue.svg" alt="Docs" /></a>
-  <a href="https://skylint.org/rules/"><img src="https://img.shields.io/badge/rules-197-brightgreen.svg" alt="Rules" /></a>
+  <a href="https://skylint.org/rules/"><img src="https://img.shields.io/badge/rules-Clean%20ABAP-brightgreen.svg" alt="Rules" /></a>
   <img src="https://img.shields.io/badge/target-ABAP%20Cloud-informational.svg" alt="ABAP Cloud" />
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-yellow.svg" alt="License" /></a>
 </p>
@@ -26,8 +26,8 @@
 
 ## ⚡ Highlights
 
-- **🏛️ Native SAP ATC Core:** Every check implements `if_ci_atc_check` directly and is discoverable by standard ATC transactions (`ATC`, `SCI`) and Eclipse ADT.
-- **☁️ 197 Clean ABAP & Cloud Rules:** Comprehensive coverage across modern ABAP expressions, syntax modernizations, SQL performance, security, and clean architecture.
+- **🏛️ Native SAP ATC Core:** Every check implements `if_ci_atc_check` directly and is discoverable by standard ATC execution (transaction `ATC`) and Eclipse ADT.
+- **☁️ Clean ABAP & Cloud Rules:** Comprehensive coverage across modern ABAP expressions, syntax modernizations, SQL performance, security, and clean architecture.
 - **⚡ Instant QuickFixes:** Built-in QuickFix generation for rapid, automated refactoring directly from Eclipse ADT (`Ctrl + 1`).
 - **🛡️ Zero-Boilerplate Architecture:** Shared base class (`/skyl/cl_rule_base`) automatically manages statement iteration, checksum calculation, finding locations, and pseudo-comment suppression.
 - **🚀 High-Fidelity Offline CI Harness:** Runs transpiled checks through full AST and compiler-reference resolution pipelines offline, validating 1,271 test assertions and QuickFix round-trips without requiring a live SAP backend.
@@ -36,19 +36,21 @@
 
 ## 📦 Installation & Setup via abapGit
 
-Skylint is distributed as standard ABAP Cloud source code and can be imported directly into your SAP system:
+Skylint is developed in the official open-source namespace **`/SKYL/`** (Repair License Key: `32190681314202826278`).
 
-1. **Clone via abapGit:**
-   - Add this repository (`https://github.com/furkancosgun/skylint.git`) as an online repository in **abapGit**.
-   - Pull the repository to import the `/SKYL/` namespace object (`#skyl#.nspc.xml`), core framework, rules, and generated ATC objects.
-2. **Activate Objects:**
-   - Activate all classes and metadata objects under packages `/SKYL/*`.
-3. **Configure ATC Check Variant:**
-   - Open Eclipse ADT (or transaction `ATC` in SAP GUI).
-   - Create or edit an ATC Check Variant (or use the included variant `/SKYL/DEFAULT`).
-   - Enable the desired Skylint rules located under the Skylint category (`/SKYL/MAIN`).
-4. **Run Checks:**
-   - Run the ATC variant on your packages, programs, or classes via Eclipse ADT (`Alt + Shift + C, C` or `Ctrl + Shift + F2`) or standard ATC runs.
+Depending on your environment:
+
+- **SAP BTP ABAP Environment (Steampunk) & S/4HANA Cloud Public Edition (ADT Only):**
+  - Install the [abapGit ADT plugin](https://eclipse.abapgit.org/updatesite/) in Eclipse.
+  - In the *abapGit Repositories* view, clone `https://github.com/furkancosgun/skylint.git` using your GitHub Personal Access Token (PAT).
+  - Pull into target package `/SKYL/`. The namespace object (`src/#skyl#.nspc.xml`) is imported automatically.
+
+- **SAP S/4HANA (On-Premise) & S/4HANA Cloud Private Edition (SAP GUI):**
+  - Register the `/SKYL/` namespace in transaction **`SE03`** (or view `V_TRNSPACE`) with Role **`C`** (Consumer) and Repair License **`32190681314202826278`**.
+  - Create package `/SKYL/` via `SE21` / ADT.
+  - Clone and pull the repository using **abapGit** (transaction `ZABAPGIT` or ADT).
+
+For comprehensive, step-by-step setup walkthroughs, see the **[Getting Started Guide](https://skylint.org/guide/getting-started)**.
 
 ---
 
@@ -58,7 +60,7 @@ Skylint is distributed as standard ABAP Cloud source code and can be imported di
 skylint/
 ├── src/
 │   ├── core/         # Engine core: Base rule class, metadata, AST & RTTI utilities
-│   ├── rules/        # 197 modular rule implementations (/SKYL/CL_*)
+│   ├── rules/        # Modular rule implementations (/SKYL/CL_*)
 │   ├── atc/          # Generated SAP ATC objects (CHKC category, CHKO checks, CHKV variant)
 │   └── #skyl#.nspc.xml # Official SAP open-source namespace object
 ├── deps/             # Local ATC framework stubs for offline abaplint validation
@@ -66,7 +68,7 @@ skylint/
 ├── lib/              # Test harness internals, AST parser, and QuickFix validator
 ├── scripts/          # Generators for ATC descriptors, documentation, and metadata
 ├── test/
-│   ├── fixtures/     # 197 rule fixture suites (source.abap and expected.json)
+│   ├── fixtures/     # Rule fixture suites (source.abap and expected.json)
 │   └── run.mjs       # ATC-native offline test harness
 ├── abaplint.json     # ABAP Cloud validation rules
 └── package.json      # NPM build, test, and documentation scripts
@@ -74,9 +76,9 @@ skylint/
 
 ---
 
-## 📋 Clean ABAP & Cloud Rules (197 Rules)
+## 📋 Clean ABAP & Cloud Rules
 
-Skylint enforces 197 Clean ABAP, security, and cloud-native rules across 5 core categories.
+Skylint enforces comprehensive Clean ABAP, security, and cloud-native rules across 5 core categories.
 
 Explore the complete interactive catalog with detailed rationales, configuration attributes, and before/after code examples:
 
@@ -84,11 +86,11 @@ Explore the complete interactive catalog with detailed rationales, configuration
 
 ### Rule Categories
 
-- **Clean ABAP & Modern Syntax (55 Rules)** — Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.
-- **Anti-Patterns & Bad Practices (54 Rules)** — Discouraged language constructs, legacy statements, and redundant syntax.
-- **Security & Robustness (17 Rules)** — Authorizations, dynamic execution sanitation, error handling, and runtime safety.
-- **Metrics & Complexity Limits (14 Rules)** — Quantitative boundaries for method size, nesting depth, parameter counts, and cyclomatic complexity.
-- **Performance & Database (10 Rules)** — Database query efficiency, buffer protection, and internal table operation guidelines.
+- **Clean ABAP & Modern Syntax** — Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.
+- **Anti-Patterns & Bad Practices** — Discouraged language constructs, legacy statements, and redundant syntax.
+- **Security & Robustness** — Authorizations, dynamic execution sanitation, error handling, and runtime safety.
+- **Metrics & Complexity Limits** — Quantitative boundaries for method size, nesting depth, parameter counts, and cyclomatic complexity.
+- **Performance & Database** — Database query efficiency, buffer protection, and internal table operation guidelines.
 
 ---
 

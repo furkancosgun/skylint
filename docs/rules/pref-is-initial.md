@@ -4,16 +4,18 @@ description: "Prefer IS [NOT] INITIAL over lines( ) or Literal Comparisons - Cle
 keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-is-initial, clean-abap"
 category: "clean-abap"
 ruleId: "pref-is-initial"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3181"
 ---
 
 # Prefer IS [NOT] INITIAL over lines( ) or Literal Comparisons
 
-<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC PREF_IS_INITIAL" />
   <Badge type="info" text="Remote Enabled" />
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3181" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -71,7 +73,8 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_PREF_IS_INITIAL`
-* **Implementation File:** [#skyl#cl_pref_is_initial.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_pref_is_initial.clas.abap)
+* **ABAP Implementation:** [/skyl/cl_pref_is_initial.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_pref_is_initial.clas.abap)
+* **Rule Metadata:** [rules-data.mjs (Line 3181)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L3181)
 
 ## Community & Feedback
 

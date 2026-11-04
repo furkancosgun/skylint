@@ -4,15 +4,17 @@ description: "Prevent internal table iterator corruption in ABAP by avoiding APP
 keywords: "MODIFY in LOOP ABAP, SORT in LOOP Bug, Iterator Invalidation SAP, Clean ABAP Loop Integrity"
 category: "performance"
 ruleId: "no-mod-loop-tab"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3269"
 ---
 
 # Do Not Mutate the Internal Table Currently Being Looped (Iterator Invalidation)
 
-<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Performance & Database" />
   <Badge type="danger" text="#EC NO_MOD_LOOP_TAB" />
   <Badge type="info" text="Remote Enabled" />
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3269" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -86,7 +88,8 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_NO_MOD_LOOP_TAB`
-* **Implementation File:** [#skyl#cl_no_mod_loop_tab.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_mod_loop_tab.clas.abap)
+* **ABAP Implementation:** [/skyl/cl_no_mod_loop_tab.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_mod_loop_tab.clas.abap)
+* **Rule Metadata:** [rules-data.mjs (Line 3269)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L3269)
 
 ## Community & Feedback
 

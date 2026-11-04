@@ -249,6 +249,16 @@ if (fs.existsSync(chkvPath)) {
 let totalQuickFixes = 0;
 const catalogRules = [];
 
+// Map each ruleId to its exact line number in scripts/rules-data.mjs for one-click GitHub editing
+const rulesDataRaw = fs.readFileSync(path.join(rootDir, 'scripts', 'rules-data.mjs'), 'utf8');
+const ruleLineMap = new Map();
+rulesDataRaw.split('\n').forEach((line, idx) => {
+  const match = line.match(/"ruleId":\s*"([^"]+)"/);
+  if (match) {
+    ruleLineMap.set(match[1], idx + 1);
+  }
+});
+
 for (const rule of RULES) {
   const checkFile = path.join(rulesDir, `${ruleFileBase(rule)}.clas.abap`);
   let classDesc = rule.ruleId;
@@ -321,16 +331,20 @@ for (const rule of RULES) {
   const seoKeywords = rule.seo?.keywords ? rule.seo.keywords.join(', ') : '';
   const severityType = severity === 'error' ? 'danger' : severity === 'note' ? 'info' : 'warning';
   const severityLabel = severity.charAt(0).toUpperCase() + severity.slice(1);
+  const ruleLineNumber = ruleLineMap.get(rule.ruleId) || 1;
+  const ruleEditUrl = `https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L${ruleLineNumber}`;
+
   let ruleDoc = `---\ntitle: "${seoTitle}"\ndescription: "${seoDesc}"\n`;
   if (seoKeywords) {
     ruleDoc += `keywords: "${seoKeywords.replace(/"/g, '\\"')}"\n`;
   }
   ruleDoc += `category: "${rule.category}"\n`;
   ruleDoc += `ruleId: "${rule.ruleId}"\n`;
+  ruleDoc += `customEditUrl: "${ruleEditUrl}"\n`;
   ruleDoc += `---\n\n# ${meta.title}\n\n`;
 
   // Badge bar wrapper with inline margin
-  ruleDoc += `<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">\n`;
+  ruleDoc += `<div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">\n`;
   ruleDoc += `  <Badge type="${severityType}" text="${severityLabel}" />\n`;
   ruleDoc += `  <Badge type="tip" text="${categoryInfo.title}" />\n`;
   if (hasQuickfix) {
@@ -338,6 +352,7 @@ for (const rule of RULES) {
   }
   ruleDoc += `  <Badge type="danger" text="#EC ${rule.pseudoComment}" />\n`;
   ruleDoc += `  <Badge type="${remoteEnabled ? 'info' : 'warning'}" text="${remoteEnabled ? 'Remote Enabled' : 'Local Only'}" />\n`;
+  ruleDoc += `  <a href="${ruleEditUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>\n`;
   ruleDoc += `</div>\n\n`;
 
   // Meaningful Description: Include check purpose & specific finding text
@@ -425,7 +440,8 @@ for (const rule of RULES) {
   // ABAP Class Details
   ruleDoc += `\n## Technical Details\n\n`;
   ruleDoc += `* **Native ATC Class:** \`${rule.className}\`\n`;
-  ruleDoc += `* **Implementation File:** [${ruleFileBase(rule)}.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/${encodeURIComponent(ruleFileBase(rule))}.clas.abap)\n`;
+  ruleDoc += `* **ABAP Implementation:** [${rule.className.toLowerCase()}.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/${encodeURIComponent(ruleFileBase(rule))}.clas.abap)\n`;
+  ruleDoc += `* **Rule Metadata:** [rules-data.mjs (Line ${ruleLineNumber})](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L${ruleLineNumber})\n`;
 
   // Community Feedback Links
   const bugTitle = encodeURIComponent(`[Bug]: Issue in ${rule.ruleId}`);
@@ -460,14 +476,14 @@ for (const rule of RULES) {
 
 // Generate dedicated category landing pages for SEO (replaces fragment hashes)
 for (const [catKey, catInfo] of Object.entries(CATEGORIES)) {
-  const catRules = RULES.filter(r => r.category === catKey);
-  const catTitle = `${catInfo.title} (${catRules.length} Rules)`;
+  const catTitle = catInfo.title;
   const catDesc = `${catInfo.description} Comprehensive reference, finding codes, and Clean ABAP examples for ${catInfo.title}.`;
 
   let catMd = `---\n`;
   catMd += `title: "${catTitle}"\n`;
   catMd += `description: "${catDesc}"\n`;
   catMd += `category: "${catKey}"\n`;
+  catMd += `editLink: false\n`;
   catMd += `keywords: "Clean ABAP, ABAP Cloud, SAP ATC, ${catInfo.title}, S/4HANA Readiness, SAP BTP, Steampunk"\n`;
   catMd += `---\n\n`;
 
@@ -508,487 +524,19 @@ const catalogData = {
 };
 fs.writeFileSync(path.join(componentsDir, 'catalog-data.json'), JSON.stringify(catalogData, null, 2), 'utf8');
 
-// Generate docs/variant-builder.md
-const variantBuilderMd = `---
-layout: page
-footer: false
-title: ATC Variant Builder
-description: Configure custom SAP ATC check variants, tune rule parameters and download .chkv.json files for SAP GUI / abapGit.
----
-
-<script setup>
-import VariantBuilder from './components/VariantBuilder.vue';
-</script>
-
-<VariantBuilder />
-`;
-fs.writeFileSync(path.join(docsDir, 'variant-builder.md'), variantBuilderMd, 'utf8');
-
 // Generate rules/index.md with At a Glance statistics card
-let catalogMd = `---\ndescription: "Comprehensive reference and catalog for all ${RULES.length} Clean ABAP, security, performance, and architecture rules in Skylint."\n---\n\n# Rules Catalog (${RULES.length} Rules)\n\n`;
-catalogMd += `Comprehensive reference for all **${RULES.length}** Clean ABAP, security, performance, and architecture rules in Skylint.\n\n`;
+let catalogMd = `---\ndescription: "Comprehensive reference and catalog for Clean ABAP, security, performance, and architecture rules in Skylint."\neditLink: false\n---\n\n# Rules Catalog\n\n`;
+catalogMd += `Comprehensive reference for Clean ABAP, security, performance, and architecture rules in Skylint.\n\n`;
 
 catalogMd += `::: tip Skylint at a Glance\n`;
-catalogMd += `- **${RULES.length} Native ATC Rules:** 100% ABAP Cloud (Contract C1) & Steampunk Ready.\n`;
-catalogMd += `- **${totalQuickFixes} Automated QuickFixes:** Instant one-click refactoring with <kbd>Ctrl</kbd> + <kbd>1</kbd> in Eclipse ADT.\n`;
+catalogMd += `- **Native ATC Rules:** 100% ABAP Cloud (Contract C1) & Steampunk Ready.\n`;
+catalogMd += `- **Automated QuickFixes:** Instant one-click refactoring with <kbd>Ctrl</kbd> + <kbd>1</kbd> in Eclipse ADT.\n`;
 catalogMd += `- **Zero Legacy Overhead:** Built exclusively on \`IF_CI_ATC_CHECK\` (no obsolete Code Inspector / SCI dependency).\n`;
 catalogMd += `:::\n\n`;
 
 catalogMd += `<script setup>\nimport RuleCatalog from '../components/RuleCatalog.vue';\n</script>\n\n<RuleCatalog />\n`;
 
 fs.writeFileSync(path.join(rulesDocsDir, 'index.md'), catalogMd, 'utf8');
-
-// Generate VitePress Sidebar config
-const sidebarRules = Object.entries(CATEGORIES).map(([catKey, catInfo]) => ({
-  text: `${catInfo.title} (${RULES.filter(r => r.category === catKey).length})`,
-  link: `/rules/${catKey}`,
-}));
-
-const vpConfig = `import { defineConfig } from 'vitepress';
-
-const base = process.env.VITEPRESS_BASE || '/';
-
-export default defineConfig({
-  title: 'Skylint',
-  titleTemplate: ':title | Enterprise Clean ABAP & Cloud ATC Linter',
-  description: 'Enterprise Clean ABAP & Cloud ATC Linter Engine',
-  base,
-  cleanUrls: true,
-  lastUpdated: true,
-  appearance: 'dark',
-  sitemap: {
-    hostname: 'https://skylint.org/',
-  },
-  vite: {
-    build: {
-      target: 'esnext',
-      chunkSizeWarningLimit: 1500,
-    },
-    esbuild: {
-      target: 'esnext',
-    },
-  },
-  head: [
-    ['link', { rel: 'icon', type: 'image/x-icon', href: \`\${base}favicon.ico\` }],
-    ['link', { rel: 'icon', type: 'image/png', sizes: '48x48', href: \`\${base}favicon-48x48.png\` }],
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: \`\${base}logo.svg\` }],
-    ['link', { rel: 'apple-touch-icon', sizes: '180x180', href: \`\${base}apple-touch-icon.png\` }],
-    ['link', { rel: 'manifest', href: \`\${base}site.webmanifest\` }],
-    ['meta', { name: 'theme-color', content: '#0ea5e9' }],
-    ['link', { rel: 'sitemap', type: 'application/xml', title: 'Sitemap', href: 'https://skylint.org/sitemap.xml' }],
-    ['meta', { name: 'robots', content: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' }],
-    ['meta', { name: 'google-site-verification', content: 'googlebe62f3b9b7abdd43' }],
-    ['meta', { name: 'keywords', content: 'abap, clean abap, atc, sap, abap cloud, linter, static analysis, quickfix, btp, s4hana' }],
-    ['meta', { property: 'og:type', content: 'website' }],
-    ['meta', { property: 'og:image', content: 'https://skylint.org/og-image.png' }],
-    ['meta', { property: 'og:image:width', content: '1200' }],
-    ['meta', { property: 'og:image:height', content: '630' }],
-    ['meta', { property: 'og:image:type', content: 'image/png' }],
-    ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
-    ['meta', { name: 'twitter:image', content: 'https://skylint.org/og-image.png' }],
-    ['style', {}, '@media (max-width: 768px) { .vp-doc { font-size: 15px; } }'],
-  ],
-  transformHead: ({ pageData, title, description }) => {
-    const canonicalHostname = 'https://skylint.org';
-    const cleanPath = pageData.relativePath
-      .replace(/\\.md$/, '')
-      .replace(/(^|\\/)index$/, '$1');
-    const url = (canonicalHostname + '/' + cleanPath).replace(/\\/+$/, '') + (cleanPath === '' || cleanPath.endsWith('/') ? '/' : '');
-
-    if (pageData.isNotFound || cleanPath === '404') {
-      return [
-        ['meta', { name: 'robots', content: 'noindex, nofollow' }],
-        ['script', {}, 'if (typeof window !== "undefined" && location.pathname.length > 1 && location.pathname.endsWith("/")) { location.replace(location.pathname.slice(0, -1) + location.search + location.hash); }'],
-      ];
-    }
-
-    const ogTitle = title === 'Skylint' ? 'Skylint - Enterprise Clean ABAP & Cloud ATC Linter' : (title || 'Skylint');
-    const ogDescription = pageData.frontmatter?.description || description || 'Enterprise Clean ABAP & Cloud ATC Linter Engine with 133+ Native Rules';
-    const isCategoryPage = ['clean-abap', 'anti-patterns', 'performance', 'security', 'metrics'].some(cat => cleanPath === \`rules/\${cat}\`);
-    const isRulePage = cleanPath.startsWith('rules/') && cleanPath !== 'rules' && !isCategoryPage;
-    const isGuidePage = cleanPath.startsWith('guide/');
-
-    const tags = [
-      ['link', { rel: 'canonical', href: url }],
-      ['meta', { property: 'og:site_name', content: 'Skylint' }],
-      ['meta', { property: 'og:locale', content: 'en_US' }],
-      ['meta', { property: 'og:url', content: url }],
-      ['meta', { property: 'og:title', content: ogTitle }],
-      ['meta', { property: 'og:description', content: ogDescription }],
-      ['meta', { property: 'og:image', content: 'https://skylint.org/og-image.png' }],
-      ['meta', { property: 'og:image:secure_url', content: 'https://skylint.org/og-image.png' }],
-      ['meta', { property: 'og:image:width', content: '1200' }],
-      ['meta', { property: 'og:image:height', content: '630' }],
-      ['meta', { property: 'og:image:alt', content: ogTitle }],
-      ['meta', { property: 'og:updated_time', content: new Date().toISOString() }],
-      ['meta', { name: 'description', content: ogDescription }],
-      ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
-      ['meta', { name: 'twitter:title', content: ogTitle }],
-      ['meta', { name: 'twitter:description', content: ogDescription }],
-      ['meta', { name: 'twitter:image', content: 'https://skylint.org/og-image.png' }],
-      ['meta', { name: 'twitter:image:alt', content: ogTitle }],
-    ];
-
-    // Page-specific keywords meta tag
-    if (pageData.frontmatter?.keywords) {
-      const kw = Array.isArray(pageData.frontmatter.keywords)
-        ? pageData.frontmatter.keywords.join(', ')
-        : String(pageData.frontmatter.keywords);
-      tags.push(['meta', { name: 'keywords', content: kw }]);
-    }
-
-    if (isRulePage) {
-      tags.push(['meta', { property: 'og:type', content: 'article' }]);
-      tags.push(['meta', { property: 'article:modified_time', content: new Date().toISOString() }]);
-      if (pageData.frontmatter?.category) {
-        tags.push(['meta', { property: 'article:section', content: pageData.frontmatter.category }]);
-      }
-
-      // Schema.org: TechArticle for Rich Snippets in Google Search
-      tags.push([
-        'script',
-        { type: 'application/ld+json' },
-        JSON.stringify({
-          '@context': 'https://schema.org',
-          '@type': 'TechArticle',
-          'headline': ogTitle,
-          'description': ogDescription,
-          'url': url,
-          'image': 'https://skylint.org/og-image.png',
-          'inLanguage': 'en',
-          'author': {
-            '@type': 'Organization',
-            'name': 'Skylint Team',
-            'url': 'https://skylint.org'
-          },
-          'publisher': {
-            '@type': 'Organization',
-            'name': 'Skylint',
-            'logo': {
-              '@type': 'ImageObject',
-              'url': 'https://skylint.org/logo.svg'
-            }
-          },
-          'mainEntityOfPage': {
-            '@type': 'WebPage',
-            '@id': url
-          },
-          'articleSection': pageData.frontmatter?.category || 'Clean ABAP',
-          'keywords': pageData.frontmatter?.keywords || 'Clean ABAP, SAP ATC Check, ABAP Cloud'
-        })
-      ]);
-
-      // Schema.org: BreadcrumbList for rich Google Search breadcrumbs
-      tags.push([
-        'script',
-        { type: 'application/ld+json' },
-        JSON.stringify({
-          '@context': 'https://schema.org',
-          '@type': 'BreadcrumbList',
-          'itemListElement': [
-            {
-              '@type': 'ListItem',
-              'position': 1,
-              'name': 'Home',
-              'item': 'https://skylint.org/'
-            },
-            {
-              '@type': 'ListItem',
-              'position': 2,
-              'name': 'Rules Catalog',
-              'item': 'https://skylint.org/rules/'
-            },
-            {
-              '@type': 'ListItem',
-              'position': 3,
-              'name': ogTitle,
-              'item': url
-            }
-          ]
-        })
-      ]);
-    } else if (isCategoryPage) {
-      tags.push(['meta', { property: 'og:type', content: 'website' }]);
-      tags.push([
-        'script',
-        { type: 'application/ld+json' },
-        JSON.stringify({
-          '@context': 'https://schema.org',
-          '@type': 'CollectionPage',
-          'name': ogTitle,
-          'description': ogDescription,
-          'url': url,
-          'breadcrumb': {
-            '@type': 'BreadcrumbList',
-            'itemListElement': [
-              { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://skylint.org/' },
-              { '@type': 'ListItem', 'position': 2, 'name': 'Rules Catalog', 'item': 'https://skylint.org/rules/' },
-              { '@type': 'ListItem', 'position': 3, 'name': ogTitle, 'item': url }
-            ]
-          }
-        })
-      ]);
-    } else if (cleanPath === 'rules') {
-      tags.push(['meta', { property: 'og:type', content: 'website' }]);
-      tags.push([
-        'script',
-        { type: 'application/ld+json' },
-        JSON.stringify({
-          '@context': 'https://schema.org',
-          '@type': 'CollectionPage',
-          'name': 'Skylint Rules Catalog - 133 Native Clean ABAP & Cloud ATC Rules',
-          'description': ogDescription,
-          'url': url,
-          'breadcrumb': {
-            '@type': 'BreadcrumbList',
-            'itemListElement': [
-              { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://skylint.org/' },
-              { '@type': 'ListItem', 'position': 2, 'name': 'Rules Catalog', 'item': 'https://skylint.org/rules/' }
-            ]
-          }
-        })
-      ]);
-    } else if (cleanPath === '') {
-      tags.push(['meta', { property: 'og:type', content: 'website' }]);
-      tags.push([
-        'script',
-        { type: 'application/ld+json' },
-        JSON.stringify({
-          '@context': 'https://schema.org',
-          '@graph': [
-            {
-              '@type': 'WebSite',
-              'name': 'Skylint',
-              'url': 'https://skylint.org/',
-              'description': 'Enterprise Clean ABAP & Cloud ATC Linter Engine with 133+ Native Rules',
-              'potentialAction': {
-                '@type': 'SearchAction',
-                'target': 'https://skylint.org/rules/?q={search_term_string}',
-                'query-input': 'required name=search_term_string'
-              }
-            },
-            {
-              '@type': 'SoftwareApplication',
-              'name': 'Skylint',
-              'applicationCategory': 'DeveloperApplication',
-              'operatingSystem': 'SAP ABAP Cloud, Node.js',
-              'description': 'Enterprise Clean ABAP & Cloud ATC Linter Engine with 133+ Native Rules',
-              'url': 'https://skylint.org/',
-              'license': 'https://github.com/furkancosgun/skylint/blob/main/LICENSE',
-              'image': 'https://skylint.org/og-image.png',
-              'offers': {
-                '@type': 'Offer',
-                'price': '0',
-                'priceCurrency': 'USD'
-              },
-              'author': {
-                '@type': 'Person',
-                'name': 'Furkan COSGUN',
-                'url': 'https://github.com/furkancosgun'
-              }
-            },
-            {
-              '@type': 'FAQPage',
-              'mainEntity': [
-                {
-                  '@type': 'Question',
-                  'name': 'What is Skylint and how does it integrate with SAP ATC?',
-                  'acceptedAnswer': {
-                    '@type': 'Answer',
-                    'text': 'Skylint is a 100% native ABAP Test Cockpit (ATC) static code analysis framework implementing IF_CI_ATC_CHECK directly. It runs natively in Eclipse ADT and SAP GUI without external adapters.'
-                  }
-                },
-                {
-                  '@type': 'Question',
-                  'name': 'How do I install Skylint in an SAP development system?',
-                  'acceptedAnswer': {
-                    '@type': 'Answer',
-                    'text': 'Skylint is delivered as standard ABAP Cloud open-source code and can be cloned directly into your SAP system via abapGit from https://github.com/furkancosgun/skylint.'
-                  }
-                },
-                {
-                  '@type': 'Question',
-                  'name': 'How do automated QuickFixes work in Eclipse ADT?',
-                  'acceptedAnswer': {
-                    '@type': 'Answer',
-                    'text': 'In Eclipse ADT, position your cursor on any flagged statement, press Ctrl + 1 (Quick Assist), and select the recommended Skylint QuickFix to rewrite your code into modern Clean ABAP syntax automatically.'
-                  }
-                },
-                {
-                  '@type': 'Question',
-                  'name': 'How do I suppress a Skylint ATC finding?',
-                  'acceptedAnswer': {
-                    '@type': 'Answer',
-                    'text': 'Append the rule specific pseudo-comment to the statement, for example \"#EC PREF_LINES\" or \"#EC CI_PREF_LINES\". Skylint natively supports both formats.'
-                  }
-                },
-                {
-                  '@type': 'Question',
-                  'name': 'Can Skylint run in offline CI/CD pipelines without a live SAP system?',
-                  'acceptedAnswer': {
-                    '@type': 'Answer',
-                    'text': 'Yes, Skylint includes an offline Node.js transpiled test harness using @abaplint/transpiler that validates 133 checks and 680+ assertions in GitHub Actions or any CI/CD environment.'
-                  }
-                }
-              ]
-            }
-          ]
-        })
-      ]);
-    } else if (isGuidePage) {
-      tags.push(['meta', { property: 'og:type', content: 'article' }]);
-      tags.push([
-        'script',
-        { type: 'application/ld+json' },
-        JSON.stringify({
-          '@context': 'https://schema.org',
-          '@type': 'TechArticle',
-          'headline': ogTitle,
-          'description': ogDescription,
-          'url': url,
-          'image': 'https://skylint.org/og-image.png',
-          'breadcrumb': {
-            '@type': 'BreadcrumbList',
-            'itemListElement': [
-              { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://skylint.org/' },
-              { '@type': 'ListItem', 'position': 2, 'name': 'Guide', 'item': 'https://skylint.org/guide/getting-started' },
-              { '@type': 'ListItem', 'position': 3, 'name': ogTitle, 'item': url }
-            ]
-          }
-        })
-      ]);
-    } else {
-      tags.push(['meta', { property: 'og:type', content: 'website' }]);
-    }
-
-    return tags;
-  },
-  themeConfig: {
-    logo: { src: '/logo.svg', alt: 'Skylint Logo' },
-    nav: [
-      { text: 'Guide', link: '/guide/getting-started' },
-      { text: 'Rules (${RULES.length})', link: '/rules/' },
-      { text: 'Variant Builder', link: '/variant-builder' },
-      {
-        text: 'Community',
-        items: [
-          { text: '🐛 Report Bug / False Positive', link: 'https://github.com/furkancosgun/skylint/issues/new?template=bug_report.yml' },
-          { text: '💡 Propose Rule / QuickFix', link: 'https://github.com/furkancosgun/skylint/issues/new?template=feature_request.yml' },
-          { text: '💬 GitHub Discussions', link: 'https://github.com/furkancosgun/skylint/discussions' },
-          { text: '⭐️ GitHub Repository', link: 'https://github.com/furkancosgun/skylint' },
-        ],
-      },
-    ],
-    sidebar: {
-      '/variant-builder': [],
-      '/guide/': [
-        {
-          text: 'Architecture & Guides',
-          items: [
-            { text: 'Getting Started', link: '/guide/getting-started' },
-            { text: 'Configuration (ATC Variants)', link: '/guide/configuration' },
-            { text: 'SAP ATC Integration', link: '/guide/atc-integration' },
-            { text: 'Suppressions & Pragmas', link: '/guide/suppressions' },
-          ],
-        },
-      ],
-      '/rules/': [
-        { text: 'All Rules Overview', link: '/rules/' },
-        ...${JSON.stringify(sidebarRules, null, 2)}
-      ],
-    },
-    search: {
-      provider: 'local',
-    },
-    socialLinks: [
-      { icon: 'github', link: 'https://github.com/furkancosgun/skylint' },
-    ],
-    footer: {
-      message: 'Released under the MIT License.',
-      copyright: 'Copyright © 2026 Skylint Contributors',
-    },
-  },
-});
-`;
-
-fs.writeFileSync(path.join(docsDir, '.vitepress', 'config.mts'), vpConfig, 'utf8');
-
-// Generate Landing Page (docs/index.md)
-const indexMd = `---
-layout: home
-
-hero:
-  name: "Skylint"
-  text: "Enterprise Clean ABAP Linter"
-  tagline: "${RULES.length} Native ATC Rules for Clean ABAP & Cloud-Ready Systems. 100% ABAP Cloud, zero legacy baggage, instant QuickFixes."
-  image:
-    src: /logo.svg
-    alt: Skylint Cloud Logo
-  actions:
-    - theme: brand
-      text: Get Started
-      link: /guide/getting-started
-    - theme: alt
-      text: Explore ${RULES.length} Rules
-      link: /rules/
-    - theme: alt
-      text: Variant Builder
-      link: /variant-builder
-
-features:
-  - icon:
-      src: /icons/atc.svg
-      alt: Native SAP ATC integration
-      width: 48
-      height: 48
-    title: Native SAP ATC Integration
-    details: Zero adapter layers. Runs directly inside SAP GUI and Eclipse ADT via if_ci_atc_check with abapGit transport.
-  - icon:
-      src: /icons/rules.svg
-      alt: Clean ABAP rule catalog
-      width: 48
-      height: 48
-    title: ${RULES.length} Clean ABAP Rules
-    details: Enforcing modern syntax, expression-based ABAP, safety boundaries, and object-oriented cleanliness.
-  - icon:
-      src: /icons/quickfix.svg
-      alt: Automated QuickFixes
-      width: 48
-      height: 48
-    title: Automated QuickFixes
-    details: Built-in automated refactoring for modern syntax upgrades (lines, string templates, NEW #, etc.) with Ctrl + 1.
-  - icon:
-      src: /icons/variant.svg
-      alt: ATC Variant Builder
-      width: 48
-      height: 48
-    title: ATC Variant Builder
-    details: Build custom SAP ATC check variants (.chkv.json) and tune rule parameters for SAP GUI / abapGit.
----
-
-## Enterprise ABAP Quality Platform
-
-Skylint transforms static code analysis for SAP ecosystems by executing directly within the standard **ABAP Test Cockpit (ATC)** framework. It enforces Clean ABAP guidelines and cloud-readiness natively inside Eclipse ADT and automated pipelines.
-
-### Architecture & Documentation
-- [Getting Started & Installation Guide](/guide/getting-started): Step-by-step setup via abapGit for SAP BTP, S/4HANA Cloud, and On-Premise.
-- [SAP ATC Integration & ABAP Cloud](/guide/atc-integration): Learn why native ATC replaces legacy SCI and how to configure CI/CD.
-- [ATC Variant Configuration & Parameters](/guide/configuration): Configure rule severities, parameters, and thresholds in Eclipse ADT.
-- [Suppressions & Pragma Standards](/guide/suppressions): Manage intentional exceptions using standard #EC pseudo-comments and pragmas.
-
-### Clean ABAP Rule Categories
-- [Clean ABAP & Modern Syntax](/rules/#clean-abap): Modern language features, expression-oriented coding, and idiomatic practices.
-- [Anti-Patterns & Bad Practices](/rules/#anti-patterns): Discouraged constructs, obsolete statements, and redundant syntax.
-- [Performance & Database Optimization](/rules/#performance): Database query efficiency, buffer protection, and internal table operation guidelines.
-- [Security & Robustness](/rules/#security): Authorizations, dynamic execution sanitation, error handling, and runtime safety.
-- [Metrics & Complexity Limits](/rules/#metrics): Quantitative boundaries for method size, nesting depth, parameter counts, and cyclomatic complexity.
-
-### Developer Tools & Catalogs
-- [Interactive ATC Variant Builder](/variant-builder): Visually customize rules, tune thresholds, and export CHKV JSON configurations.
-- [Complete Interactive Catalog](/rules/): Browse all ${RULES.length} native check rules with before-and-after Clean ABAP examples.
-- [GitHub Open Source Repository](https://github.com/furkancosgun/skylint): Source code, issue tracker, contributions, and community releases.
-`;
-fs.writeFileSync(path.join(docsDir, 'index.md'), indexMd, 'utf8');
 
 // Generate Dynamic Open Graph Image (docs/public/og-image.svg & og-image.png)
 function generateOgImage() {
@@ -1031,14 +579,14 @@ function generateOgImage() {
   <g transform="translate(480, 210)">
     <text font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="76" font-weight="800" fill="#ffffff" letter-spacing="-1">Skylint</text>
     <text y="68" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="28" font-weight="500" fill="#38bdf8">Enterprise Clean ABAP &amp; Cloud ATC Linter Engine</text>
-    <text y="125" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="21" font-weight="400" fill="#94a3b8">Native SAP ATC Integration · ${ogRuleCount} Clean Rules · Automated ADT QuickFixes</text>
+    <text y="125" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="21" font-weight="400" fill="#94a3b8">Native SAP ATC Integration · Clean ABAP Rules · Automated ADT QuickFixes</text>
 
     <g transform="translate(0, 185)">
       <rect x="0" y="0" width="185" height="42" rx="21" fill="#0369a1" fill-opacity="0.25" stroke="#0284c7" stroke-width="1.5" />
       <text x="92" y="26" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="600" fill="#38bdf8" text-anchor="middle">⚡ 100% Native ATC</text>
 
       <rect x="200" y="0" width="190" height="42" rx="21" fill="#047857" fill-opacity="0.25" stroke="#059669" stroke-width="1.5" />
-      <text x="295" y="26" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="600" fill="#34d399" text-anchor="middle">🌿 ${ogRuleCount} Clean Rules</text>
+      <text x="295" y="26" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="600" fill="#34d399" text-anchor="middle">🌿 Clean ABAP Rules</text>
 
       <rect x="405" y="0" width="200" height="42" rx="21" fill="#7c3aed" fill-opacity="0.25" stroke="#8b5cf6" stroke-width="1.5" />
       <text x="505" y="26" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="600" fill="#a78bfa" text-anchor="middle">Instant QuickFixes</text>

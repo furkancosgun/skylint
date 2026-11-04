@@ -1,11 +1,12 @@
 ---
-title: "Clean ABAP & Modern Syntax (78 Rules)"
+title: "Clean ABAP & Modern Syntax"
 description: "Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices. Comprehensive reference, finding codes, and Clean ABAP examples for Clean ABAP & Modern Syntax."
 category: "clean-abap"
+editLink: false
 keywords: "Clean ABAP, ABAP Cloud, SAP ATC, Clean ABAP & Modern Syntax, S/4HANA Readiness, SAP BTP, Steampunk"
 ---
 
-# Clean ABAP & Modern Syntax (78 Rules)
+# Clean ABAP & Modern Syntax
 
 Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.
 
