@@ -1,20 +1,20 @@
 ---
-title: "Declare Optional and Default Parameters Last in Methods"
-description: "Improve method readability in ABAP by placing optional and default parameters after mandatory parameters."
-keywords: "Clean ABAP Parameters, OPTIONAL Parameter Order, DEFAULT Parameter, Method Signature Hygiene"
+title: "Declare OPTIONAL and DEFAULT Parameters Last"
+description: "Enforce parameter order in ABAP method signatures: mandatory IMPORTING and CHANGING parameters before OPTIONAL and DEFAULT ones for predictable calls."
+keywords: "ABAP OPTIONAL parameter, DEFAULT parameter order, method signature, pref-opt-last, Clean ABAP"
 category: "clean-abap"
 ruleId: "pref-opt-last"
-customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L5688"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L5898"
 ---
 
-# Declare Optional and Default Parameters Last in Methods
+# Declare OPTIONAL and DEFAULT Parameters Last
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="danger" text="#EC PREF_OPTIONAL_LAST" />
   <Badge type="info" text="Remote Enabled" />
-  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L5688" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L5898" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -25,26 +25,34 @@ Declare optional and default parameters last in methods.
 
 ## Rationale
 
-In Clean ABAP, mandatory parameters must appear before optional (`OPTIONAL`) and default (`DEFAULT`) parameters in method signatures. Mixing optional and required parameters makes caller invocation confusing and error-prone.
-
-**Standard:** Place required parameters first, followed by optional parameters at the end of the parameter list.
+When an OPTIONAL or DEFAULT parameter precedes a mandatory one, callers must either use named parameter notation or fill the optional slot just to reach the required argument, which produces confusing positional calls and hides which values are really supplied. Keeping mandatory parameters first and optional ones last makes positional and named calls predictable and keeps the signature stable when a new optional parameter is appended. The check parses the IMPORTING and CHANGING sections of every METHODS and CLASS-METHODS statement and reports PREF_OPT_L on the first mandatory parameter that follows an optional or defaulted one. EXPORTING and RETURNING are ignored because they are always optional for the caller.
 
 ### Non-Compliant
 
 ```abap
-METHODS process_data
-  IMPORTING
-    iv_opt TYPE i OPTIONAL
-    iv_req TYPE i.
+CLASS zcl_order_service DEFINITION
+  PUBLIC
+  CREATE PUBLIC.
+  PUBLIC SECTION.
+    METHODS create_order
+      IMPORTING
+        iv_priority TYPE i OPTIONAL
+        iv_customer TYPE kunnr.
+ENDCLASS.
 ```
 
 ### Compliant
 
 ```abap
-METHODS process_data
-  IMPORTING
-    iv_req TYPE i
-    iv_opt TYPE i OPTIONAL.
+CLASS zcl_order_service DEFINITION
+  PUBLIC
+  CREATE PUBLIC.
+  PUBLIC SECTION.
+    METHODS create_order
+      IMPORTING
+        iv_customer TYPE kunnr
+        iv_priority TYPE i OPTIONAL.
+ENDCLASS.
 ```
 
 ## Suppression
@@ -59,18 +67,38 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_OPTIONAL_LAST
 ```
 
+## Scope
+
+| Section | Inspected |
+| --- | --- |
+| `IMPORTING` | yes |
+| `CHANGING` | yes |
+| `EXPORTING` | no - always optional for the caller |
+| `RETURNING` | no - single mandatory value |
+
+- `OPTIONAL` and `DEFAULT` both count as optional; `DEFAULT` often hides the problem because callers can omit the value silently.
+- The state resets per section, so an optional `EXPORTING` parameter never influences the `IMPORTING` order.
+- Each mandatory parameter that follows an optional one is reported, so a signature with two violations produces two findings.
+- Only class definition procedures are inspected; `FORM`/`FUNCTION` interfaces are not part of this rule.
+
+## Notes
+
+- `METHODS` and `CLASS-METHODS` are both analysed, and the finding points at the offending parameter token, not at the whole statement.
+- Suppress a released API with `"#EC PREF_OPTIONAL_LAST` on the `METHODS` / `CLASS-METHODS` statement when its historical parameter order cannot change.
+- Appending a new `OPTIONAL` parameter at the end is source-compatible for existing callers; inserting it in the middle is not.
+
 
 ## Related Rules
 
-* [Method Call Parameter Naming Style (Omit or Require)](/rules/pref-param-name) — <code>#EC PREF_PARAM_NAME</code>
-* [Single Parameter or Field Per Line](/rules/pref-param-1line) — <code>#EC PREF_PARAM_1LINE</code>
-* [Limit Method Parameter Count and Require Multi-Line Signatures](/rules/max-params) — <code>#EC MAX_PARAMS_COUNT</code>
+* [Omit or Require Parameter Names in Method Calls](/rules/pref-param-name) — <code>#EC PREF_PARAM_NAME</code>
+* [One Parameter or Structure Component per Line](/rules/pref-param-1line) — <code>#EC PREF_PARAM_1LINE</code>
+* [Limit Method Parameter Count and Keep One Parameter per Line](/rules/max-params) — <code>#EC MAX_PARAMS_COUNT</code>
 
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_PREF_OPT_LAST`
 * **ABAP Implementation:** [/skyl/cl_pref_opt_last.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_pref_opt_last.clas.abap)
-* **Rule Metadata:** [rules-data.mjs (Line 5688)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L5688)
+* **Rule Metadata:** [rules-data.mjs (Line 5898)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L5898)
 
 ## Community & Feedback
 

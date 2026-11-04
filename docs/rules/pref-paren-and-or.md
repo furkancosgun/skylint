@@ -1,13 +1,13 @@
 ---
-title: "Parenthesize Combinations of AND and OR"
-description: "Parenthesize Combinations of AND and OR - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-paren-and-or, clean-abap"
+title: "Parenthesize Mixed AND/OR Conditions Explicitly"
+description: "Parenthesize mixed AND/OR conditions in IF, ELSEIF, CHECK and WHILE so operator precedence is explicit and reviewable in Clean ABAP code."
+keywords: "pref-paren-and-or, AND OR precedence, IF condition, Clean ABAP, SAP ATC"
 category: "clean-abap"
 ruleId: "pref-paren-and-or"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L86"
 ---
 
-# Parenthesize Combinations of AND and OR
+# Parenthesize Mixed AND/OR Conditions Explicitly
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -26,21 +26,21 @@ Parenthesize Combinations of AND and OR.
 
 ## Rationale
 
-Different programming languages and databases have varying operator precedences for logical operators. Unparenthesized conditions mixing AND and OR (such as a AND b OR c) are ambiguous to human readers and easily hide critical branching bugs. Explicitly parenthesize combinations as ( a AND b ) OR c to make evaluation precedence unmistakable.
+ABAP evaluates AND before OR, but SQL, JavaScript and most other languages a developer reads daily do not share that intuition, and long conditions are routinely misread. The check scans IF, ELSEIF, CHECK and WHILE conditions at each parenthesis depth and reports PREF_PAREN as soon as one depth mixes AND with OR or EQUIV. Explicit parentheses turn implicit precedence into visible grouping, which prevents bugs when a condition is later extended with one more term. The ADD_PAREN quickfix rewrites the condition with a parenthesized AND group.
 
 ### Non-Compliant
 
 ```abap
-IF cond_a AND cond_b OR cond_c.
-  step( ).
+IF lv_is_approved = abap_true AND lv_amount > lv_limit OR lv_is_escalated = abap_true.
+  release_purchase_order( ).
 ENDIF.
 ```
 
 ### Compliant
 
 ```abap
-IF ( cond_a AND cond_b ) OR cond_c.
-  step( ).
+IF ( lv_is_approved = abap_true AND lv_amount > lv_limit ) OR lv_is_escalated = abap_true.
+  release_purchase_order( ).
 ENDIF.
 ```
 
@@ -63,12 +63,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_PAREN_AND_OR
 ```
 
+## Detection Details
+
+Conditions are evaluated separately per parenthesis depth, so a mixed outer clause is reported even when an inner group already uses parentheses. A `BETWEEN ... AND ...` pair is not counted as a conjunction and therefore never produces a finding on its own. The `ADD_PAREN` quickfix wraps every `AND` group of the condition in parentheses while keeping the indentation of the original statement.
+
 
 ## Related Rules
 
 * [Limit Boolean Expression Complexity in Conditional Statements](/rules/max-bool-expr) — <code>#EC MAX_BOOL_EXPR</code>
-* [Avoid Duplicate Branch Conditions](/rules/no-dup-cond) — <code>#EC NO_DUP_COND</code>
-* [Avoid Comparing to abap_true / abap_false](/rules/no-bool-compare) — <code>#EC NO_BOOL_COMPARE</code>
+* [Avoid Duplicate Conditions in Branching Statements and Logical Operators](/rules/no-dup-cond) — <code>#EC NO_DUP_COND</code>
+* [Avoid Comparing Boolean Method Calls to abap_true or abap_false](/rules/no-bool-compare) — <code>#EC NO_BOOL_COMPARE</code>
 
 ## Technical Details
 

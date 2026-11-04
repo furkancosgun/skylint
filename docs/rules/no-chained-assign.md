@@ -1,13 +1,13 @@
 ---
-title: "Avoid Chained Assignments (a = b = c = 1)"
-description: "Avoid Chained Assignments (a = b = c = 1) - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-chained-assign, anti-patterns"
+title: "Avoid Chained Assignments Binding Multiple Targets Simultaneously"
+description: "Avoid chained assignments across multiple variables and use sequential assignment statements in Clean ABAP."
+keywords: "no-chained-assign, chained assignments, multiple assignment, Clean ABAP, SAP ATC"
 category: "anti-patterns"
 ruleId: "no-chained-assign"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L654"
 ---
 
-# Avoid Chained Assignments (a = b = c = 1)
+# Avoid Chained Assignments Binding Multiple Targets Simultaneously
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -26,20 +26,19 @@ Avoid Chained Assignments.
 
 ## Rationale
 
-Chained assignments evaluate right-to-left and bind multiple targets in a single statement, making code execution order difficult to follow and debug. Split chained assignments into distinct, explicit assignment statements.
+Chained assignments such as target_a = target_b = value evaluate from right to left, assigning intermediate evaluation results across multiple targets in a single statement. This construct reduces code clarity, complicates runtime debugging in the ABAP Debugger where step-by-step target inspection is hindered, and creates subtle bugs when types differ between variables. Split chained assignments into explicit, sequential assignment statements to ensure transparent execution order and straightforward refactoring. The check reports NO_CHN_ASG and splits assignments with the SPLITASG quickfix.
 
 ### Non-Compliant
 
 ```abap
-lv_a = lv_b = lv_c = 0.
+lv_order_status = lv_header_status = lv_default_status.
 ```
 
 ### Compliant
 
 ```abap
-lv_c = 0.
-lv_b = lv_c.
-lv_a = lv_b.
+lv_header_status = lv_default_status.
+lv_order_status = lv_header_status.
 ```
 
 ## Automated QuickFix
@@ -61,12 +60,27 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_CHAINED_ASSIGN
 ```
 
+### Execution Order and Debugging
+
+Chained assignments evaluate right-to-left:
+
+```abap
+" Anti-pattern: Chained assignment hides step-wise evaluation
+lv_invoice_total = lv_cleared_total = 0.
+
+" Recommended: Explicit sequential assignments
+lv_cleared_total = 0.
+lv_invoice_total = lv_cleared_total.
+```
+
+Equal signs inside parentheses (such as `xsdbool( lv_status = 'X' )` or method parameter bindings `compute( iv_param = 1 )`) are recognized as nested expressions and are not flagged. The `SPLITASG` quickfix unrolls chained assignments in right-to-left evaluation order. Suppress findings with `"#EC NO_CHAINED_ASSIGN`.
+
 
 ## Related Rules
 
-* [Avoid Chained Declarations (DATA:, CONSTANTS:, TYPES:)](/rules/no-chained-decl) — <code>#EC NO_CHAINED_DECL</code>
+* [Avoid Chained Declarations for Variables, Types, and Constants](/rules/no-chained-decl) — <code>#EC NO_CHAINED_DECL</code>
 * [Remove Redundant Self-Assignments and Identity Moves](/rules/no-redun-assign) — <code>#EC NO_IDENTICAL_MOVE</code>
-* [Eliminate Unused Local Variables and Symbols](/rules/no-unused-vars) — <code>#EC NO_UNUSED_VARS</code>
+* [Remove Unread Local Variables and Field Symbols](/rules/no-unused-vars) — <code>#EC NO_UNUSED_VARS</code>
 
 ## Technical Details
 

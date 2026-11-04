@@ -1,13 +1,13 @@
 ---
-title: "Prefer CORRESPONDING #( ) Operator"
-description: "Prefer CORRESPONDING #( ) Operator - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-corresp, clean-abap"
+title: "Replace MOVE-CORRESPONDING with CORRESPONDING #( )"
+description: "Replace MOVE-CORRESPONDING with the CORRESPONDING #( ) constructor expression and control field mapping with MAPPING, EXCEPT or DISCARDING."
+keywords: "pref-corresp, MOVE-CORRESPONDING, CORRESPONDING operator, Clean ABAP, SAP ATC"
 category: "clean-abap"
 ruleId: "pref-corresp"
-customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1686"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1694"
 ---
 
-# Prefer CORRESPONDING #( ) Operator
+# Replace MOVE-CORRESPONDING with CORRESPONDING #( )
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -15,7 +15,7 @@ customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-
   <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC PREF_CORRESP" />
   <Badge type="info" text="Remote Enabled" />
-  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1686" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1694" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -26,18 +26,18 @@ Prefer CORRESPONDING Expression over MOVE-CORRESPONDING.
 
 ## Rationale
 
-MOVE-CORRESPONDING is a procedural statement that copies same-named fields implicitly and cannot be nested in expressions. CORRESPONDING #( ) is expression-capable and supports EXCEPT, MAPPING, and DISCARDING to control the mapping explicitly. Use it to make structure transfers visible and type-safe.
+MOVE-CORRESPONDING is a statement, so it cannot be used inside an expression and it hides which fields are actually copied. The CORRESPONDING #( ) constructor expression is expression-capable and accepts MAPPING, EXCEPT and DISCARDING to make the field mapping explicit and reviewable. It also combines with inline declarations and BASE ( ... ), which keeps source and target structure visible in one line instead of a hidden implicit copy.
 
 ### Non-Compliant
 
 ```abap
-MOVE-CORRESPONDING ls_customer_api TO ls_customer_db.
+MOVE-CORRESPONDING ls_business_partner_api TO ls_business_partner_db.
 ```
 
 ### Compliant
 
 ```abap
-ls_customer_db = CORRESPONDING #( ls_customer_api ).
+ls_business_partner_db = CORRESPONDING #( ls_business_partner_api ).
 ```
 
 ## Automated QuickFix
@@ -59,18 +59,30 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_CORRESP
 ```
 
+### Controlled mappings
+
+`CORRESPONDING #( )` covers everything the statement does, plus explicit control over the copy:
+
+```abap
+ls_business_partner_db = CORRESPONDING #( ls_business_partner_api
+                                          MAPPING street_name = street
+                                          EXCEPT last_changed_at ).
+```
+
+The check skips `MOVE-CORRESPONDING ... EXPANDING` and `... KEEPING`, because those additions change the target structure and have no one-to-one expression equivalent. The `CORRESP` QuickFix is produced only for the plain `MOVE-CORRESPONDING source TO target.` form; suppress other findings with `"#EC PREF_CORRESP`.
+
 
 ## Related Rules
 
-* [Routine Declaration Hygiene (Top Placement & Order)](/rules/pref-declarations) — <code>#EC DEF_TOP</code>
-* [Prefer Modern Inline Declarations in ABAP 7.40+](/rules/pref-inline) — <code>#EC PREF_INLINE</code>
-* [Prefer FINAL( ) over DATA( ) when the variable is never written again](/rules/pref-final-data) — <code>#EC PREF_FINAL_DATA</code>
+* [Enforce Routine Declaration Hierarchy and Top-of-Block Placement](/rules/pref-declarations) — <code>#EC DEF_TOP</code>
+* [Prefer Inline Declarations over Separate DATA and Assignment](/rules/pref-inline) — <code>#EC PREF_INLINE</code>
+* [Declare Single-Assignment Local Variables with FINAL( )](/rules/pref-final-data) — <code>#EC PREF_FINAL_DATA</code>
 
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_PREF_CORRESP`
 * **ABAP Implementation:** [/skyl/cl_pref_corresp.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_pref_corresp.clas.abap)
-* **Rule Metadata:** [rules-data.mjs (Line 1686)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L1686)
+* **Rule Metadata:** [rules-data.mjs (Line 1694)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L1694)
 
 ## Community & Feedback
 

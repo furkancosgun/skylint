@@ -1,13 +1,13 @@
 ---
-title: "Omit RECEIVING in Method Invocations"
-description: "Omit RECEIVING in Method Invocations - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-call-receiving, anti-patterns"
+title: "Omit Explicit RECEIVING Keyword in Functional Method Invocations"
+description: "Omit redundant RECEIVING keywords and capture method results via direct left-hand side assignments in Clean ABAP."
+keywords: "no-call-receiving, RECEIVING clause, functional method call, Clean ABAP, SAP ATC"
 category: "anti-patterns"
 ruleId: "no-call-receiving"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L503"
 ---
 
-# Omit RECEIVING in Method Invocations
+# Omit Explicit RECEIVING Keyword in Functional Method Invocations
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -26,18 +26,18 @@ Omit RECEIVING in Method Invocations.
 
 ## Rationale
 
-The RECEIVING clause in a method call is legacy syntax that forces a functional call into a statement format. In modern ABAP, capture the return value directly on the left-hand side of an assignment (e.g. result = obj->meth( )) to enable clean nesting and expression-oriented programming.
+The explicit RECEIVING clause inside a method invocation forces functional calls into procedural statement syntax, preventing the returned value from participating in larger expressions or inline assignments. In Clean ABAP and ABAP Cloud, returning values should be assigned directly to the left-hand side of an assignment (e.g. result = obj->calc( )). The check identifies RECEIVING clauses in functional calls and flags them with NO_CALL_RC, while the OMITRECV quickfix hoists the receiving target variable to the LHS.
 
 ### Non-Compliant
 
 ```abap
-lo_order->calculate_total( RECEIVING rv_total = lv_total ).
+lo_order_service->calculate_total_price( RECEIVING rv_total = lv_total_price ).
 ```
 
 ### Compliant
 
 ```abap
-lv_total = lo_order->calculate_total( ).
+lv_total_price = lo_order_service->calculate_total_price( ).
 ```
 
 ## Automated QuickFix
@@ -59,12 +59,26 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_CALL_RECEIVING
 ```
 
+### Syntax Modernization and QuickFix
+
+In functional ABAP method calls, the `RECEIVING` keyword is an obsolete verbosity from procedural styles:
+
+```abap
+" Legacy procedural style:
+lo_calculator->get_factor( RECEIVING rv_factor = lv_factor ).
+
+" Modern Clean ABAP style:
+lv_factor = lo_calculator->get_factor( ).
+```
+
+Methods with non-class-based `EXCEPTIONS` clauses are ignored because classic exceptions cannot be captured on the left-hand side of an expression. The `OMITRECV` quickfix extracts the receiving variable and rewrites the statement into an LHS assignment. Suppress findings with `"#EC NO_CALL_RECEIVING`.
+
 
 ## Related Rules
 
-* [Avoid Obsolete CALL METHOD](/rules/no-call-method) — <code>#EC NO_CALL_METHOD</code>
-* [Omit Redundant EXPORTING in Method Calls](/rules/no-call-exporting) — <code>#EC NO_CALL_EXPORTING</code>
-* [Prefer Functional RETURNING Parameters](/rules/pref-returning) — <code>#EC PREF_RETURNING</code>
+* [Replace Obsolete CALL METHOD Statements with Functional Invocations](/rules/no-call-method) — <code>#EC NO_CALL_METHOD</code>
+* [Omit Redundant EXPORTING Keyword in Method Invocations](/rules/no-call-exporting) — <code>#EC NO_CALL_EXPORTING</code>
+* [Use RETURNING Instead of a Single EXPORTING Parameter](/rules/pref-returning) — <code>#EC PREF_RETURNING</code>
 
 ## Technical Details
 

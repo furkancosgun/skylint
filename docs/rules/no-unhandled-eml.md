@@ -1,13 +1,13 @@
 ---
-title: "Provide FAILED and REPORTED in RAP EML Statements (Silent Transaction Failure Prevention)"
-description: "Prevent silent data corruption in ABAP RAP by requiring FAILED and REPORTED clauses in all EML statements."
-keywords: "ABAP RAP EML Statements, FAILED REPORTED RAP, Silent Transaction Failure SAP, Clean ABAP Cloud RAP"
+title: "Provide FAILED and REPORTED in RAP EML Statements"
+description: "Enforce FAILED and REPORTED response clauses in ABAP RAP EML statements to prevent silent transactional failures and data inconsistency."
+keywords: "no-unhandled-eml, ABAP RAP EML, FAILED and REPORTED, Business Object Security, Clean ABAP, SAP ATC"
 category: "security"
 ruleId: "no-unhandled-eml"
-customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3861"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3954"
 ---
 
-# Provide FAILED and REPORTED in RAP EML Statements (Silent Transaction Failure Prevention)
+# Provide FAILED and REPORTED in RAP EML Statements
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -15,7 +15,7 @@ customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-
   <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC NO_UNHANDLED_EML" />
   <Badge type="info" text="Remote Enabled" />
-  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3861" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3954" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -26,14 +26,11 @@ Provide FAILED and REPORTED in RAP EML statements.
 
 ## Rationale
 
-In the ABAP RESTful Application Programming Model (RAP), Entity Manipulation Language (EML) statements process transactional data across Business Objects. Omitting `FAILED` and `REPORTED` clauses causes business exceptions, validation errors, and lock rejections to fail silently. The caller assumes success while the transactional buffer remains unsaved, resulting in severe data inconsistency.
-
-**RAP Standard:** Always provide both response parameters (`FAILED DATA(lt_failed) REPORTED DATA(lt_reported)`) and check `IF lt_failed IS NOT INITIAL` before proceeding or committing.
+In the ABAP RESTful Application Programming Model (RAP), Entity Manipulation Language (EML) statements interact with business objects during transactional phases. Omitting FAILED and REPORTED clauses causes validation failures, authorization denials, and lock conflicts to fail silently. When response parameters are omitted, the calling program proceeds under the mistaken assumption that changes were successfully applied, leading to transactional buffer discrepancies, partial updates, and severe data inconsistency. Clean ABAP and SAP RAP architecture require always specifying both FAILED and REPORTED clauses and validating error tables before committing transactions.
 
 ### Non-Compliant
 
 ```abap
-" Dangerous: Omits response structures; silent failure on lock or validation error
 MODIFY ENTITIES OF z_root_travel
   ENTITY travel
   UPDATE FIELDS ( description total_price )
@@ -43,7 +40,6 @@ MODIFY ENTITIES OF z_root_travel
 ### Compliant
 
 ```abap
-" Clean RAP: Inspects failed keys and propagates messages to caller
 MODIFY ENTITIES OF z_root_travel
   ENTITY travel
   UPDATE FIELDS ( description total_price )
@@ -70,8 +66,8 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value | Description & Guidance |
 |---|---|:---:|---|
-| `CHECK_MODIFY` | `Boolean` | <code>true</code> | Enforce FAILED and REPORTED on MODIFY ENTITY / ENTITIES statements |
-| `CHECK_READ` | `Boolean` | <code>true</code> | Enforce FAILED and REPORTED on READ ENTITY / ENTITIES statements |
+| `CHECK_MODIFY` | `Boolean` | <code>true</code> | Enforce FAILED and REPORTED response structures on MODIFY ENTITY and MODIFY ENTITIES statements (default: true). |
+| `CHECK_READ` | `Boolean` | <code>true</code> | Enforce FAILED and REPORTED response structures on READ ENTITY and READ ENTITIES statements (default: true). |
 
 ## Suppression
 
@@ -85,18 +81,29 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_UNHANDLED_EML
 ```
 
+## Required EML Response Handling
+
+The check inspects RAP EML operations and verifies that both response parameters are explicitly declared:
+
+| EML Statement | Parameter Checked | Finding Behavior | Quickfix Code |
+|---|---|---|---|
+| `MODIFY ENTITY` / `MODIFY ENTITIES` | Controlled by `CHECK_MODIFY` | Flagged if `FAILED` or `REPORTED` is omitted | `ADD_EML` |
+| `READ ENTITY` / `READ ENTITIES` | Controlled by `CHECK_READ` | Flagged if `FAILED` or `REPORTED` is omitted | `ADD_EML` |
+
+When either clause is missing, the `ADD_EML` quickfix automatically appends `FAILED DATA(failed)` and/or `REPORTED DATA(reported)` to the end of the EML statement. Suppress false positives using `"#EC NO_UNHANDLED_EML` or `##NO_UNHANDLED_EML`.
+
 
 ## Related Rules
 
-* [Avoid Unnecessary Dynamic Programming Constructs (SQL Injection Prevention)](/rules/no-dynamic-stmt) — <code>#EC NO_DYNAMIC_STMT</code>
-* [Avoid Dynamic Metaprogramming and Code Generation (Remote Code Execution Risk)](/rules/no-metaprogramming) — <code>#EC NO_METAPROGRAMMING</code>
-* [Avoid Kernel and Native Database Calls (SYSTEM-CALL, EXEC SQL)](/rules/no-kernel-call) — <code>#EC NO_KERNEL_CALL</code>
+* [Avoid Dynamic OpenSQL and Metaprogramming Language Constructs](/rules/no-dynamic-stmt) — <code>#EC NO_DYNAMIC_STMT</code>
+* [Avoid Dynamic Metaprogramming and Runtime Code Generation](/rules/no-metaprogramming) — <code>#EC NO_METAPROGRAMMING</code>
+* [Avoid Internal C-Kernel Calls and Native Database SQL](/rules/no-kernel-call) — <code>#EC NO_KERNEL_CALL</code>
 
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_NO_UNHANDLED_EML`
 * **ABAP Implementation:** [/skyl/cl_no_unhandled_eml.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_unhandled_eml.clas.abap)
-* **Rule Metadata:** [rules-data.mjs (Line 3861)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L3861)
+* **Rule Metadata:** [rules-data.mjs (Line 3954)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L3954)
 
 ## Community & Feedback
 

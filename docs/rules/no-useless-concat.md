@@ -1,13 +1,13 @@
 ---
-title: "Avoid Concatenating Adjacent String Literals"
-description: "Avoid Concatenating Adjacent String Literals - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-useless-concat, anti-patterns"
+title: "Fold Adjacent Static String Literals Concatenated with &&"
+description: "Fold adjacent string literals concatenated with && into a single literal in ABAP Cloud."
+keywords: "no-useless-concat, string concatenation, literal folding, Clean ABAP, SAP ATC"
 category: "anti-patterns"
 ruleId: "no-useless-concat"
-customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1630"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1638"
 ---
 
-# Avoid Concatenating Adjacent String Literals
+# Fold Adjacent Static String Literals Concatenated with &&
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="info" text="Note" />
@@ -15,7 +15,7 @@ customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-
   <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC NO_USELESS_CONCAT" />
   <Badge type="info" text="Remote Enabled" />
-  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1630" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1638" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -26,18 +26,18 @@ Avoid concatenating string literals.
 
 ## Rationale
 
-Joining two or more literals with && produces one constant value at runtime, so the operator adds no information and only fragments the text. Folding the literals makes the final string visible and removes a pointless expression. Keep && only when at least one operand is dynamic.
+Concatenating multiple static character or string literals with the chaining operator && (such as 'api/v1/' && 'orders') computes at runtime a value that is fully known at design time. Pointless literal concatenation adds runtime overhead, fragments text into confusing segments, and increases cognitive load during code reviews. Clean ABAP rules recommend combining adjacent static literals into a single string literal, reserving the && operator strictly for dynamic expressions, variables, and string functions.
 
 ### Non-Compliant
 
 ```abap
-lv_path = 'orders' && '/' && 'open'.
+lv_endpoint_url = 'https://api.gateway.internal' && '/v1/orders/' && 'status'.
 ```
 
 ### Compliant
 
 ```abap
-lv_path = 'orders/open'.
+lv_endpoint_url = 'https://api.gateway.internal/v1/orders/status'.
 ```
 
 ## Automated QuickFix
@@ -59,18 +59,28 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_USELESS_CONCAT
 ```
 
+### Literal Folding Mechanics
+
+The `FOLDLIT` QuickFix combines consecutive static literals into a single folded literal:
+
+- Text field literals (`'...'`) under 250 characters are combined into a single-quoted literal.
+- Text string literals (``` `...` ```) or strings exceeding 250 characters are combined into a backtick text string literal.
+- String templates without embedded expressions (`|...|`) are recognized as static literals.
+
+Suppress findings with `"#EC NO_USELESS_CONCAT`.
+
 
 ## Related Rules
 
-* [Avoid Obsolete String and POSIX Regex Statements](/rules/no-obs-strings) — <code>#EC NO_OBS_STRINGS</code>
-* [Avoid Repeating the Same String Literal](/rules/no-dup-literals) — <code>#EC NO_DUP_LITERALS</code>
-* [Prefer String Templates over CONCATENATE](/rules/pref-str-tmpl) — <code>#EC PREF_STR_TMPL</code>
+* [Replace Obsolete String Statements and POSIX Regular Expressions](/rules/no-obs-strings) — <code>#EC NO_OBS_STRINGS</code>
+* [Extract Repeated String Literals into Named Constants](/rules/no-dup-literals) — <code>#EC NO_DUP_LITERALS</code>
+* [Compose Messages with String Templates Instead of CONCATENATE](/rules/pref-str-tmpl) — <code>#EC PREF_STR_TMPL</code>
 
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_NO_USELESS_CONCAT`
 * **ABAP Implementation:** [/skyl/cl_no_useless_concat.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_useless_concat.clas.abap)
-* **Rule Metadata:** [rules-data.mjs (Line 1630)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L1630)
+* **Rule Metadata:** [rules-data.mjs (Line 1638)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L1638)
 
 ## Community & Feedback
 

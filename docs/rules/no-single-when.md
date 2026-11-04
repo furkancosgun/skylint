@@ -1,13 +1,13 @@
 ---
-title: "Avoid CASE with a Single WHEN Branch"
-description: "Avoid CASE with a Single WHEN Branch - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-single-when, anti-patterns"
+title: "Replace Single-Branch CASE Statements with IF Conditions"
+description: "Detect CASE statements with only one WHEN branch and convert them into direct IF conditions in ABAP Cloud."
+keywords: "no-single-when, CASE statement, IF condition, Clean ABAP, SAP ATC"
 category: "anti-patterns"
 ruleId: "no-single-when"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L948"
 ---
 
-# Avoid CASE with a Single WHEN Branch
+# Replace Single-Branch CASE Statements with IF Conditions
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -25,14 +25,14 @@ Avoid CASE statements with only one WHEN branch.
 
 ## Rationale
 
-CASE implies that a value is compared against several alternatives, so a single WHEN makes readers look for missing branches. An IF with the same condition is shorter and states the intent directly. Use CASE only when there are multiple distinct branches or when a value mapping is genuinely clearer.
+A CASE construct signals to readers that a variable is matched against multiple mutually exclusive values, so a CASE with only one WHEN branch creates false complexity and unnecessary indentation. Clean ABAP rules recommend using IF for binary or single-value evaluations, which express the conditional logic directly and clearly. In ABAP Cloud and SAP S/4HANA codebases, reserving CASE for three or more alternatives keeps decision tables focused and simplifies subsequent maintenance. Suppress valid exceptions with #EC NO_SINGLE_WHEN.
 
 ### Non-Compliant
 
 ```abap
 CASE lv_order_status.
   WHEN 'C'.
-    close_order( ).
+    close_sales_order( ).
 ENDCASE.
 ```
 
@@ -40,7 +40,7 @@ ENDCASE.
 
 ```abap
 IF lv_order_status = 'C'.
-  close_order( ).
+  close_sales_order( ).
 ENDIF.
 ```
 
@@ -56,12 +56,22 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_SINGLE_WHEN
 ```
 
+### Detection Details
+
+The check scans all CASE structures within executable procedures and counts non-OTHERS WHEN branches:
+
+- Any CASE statement containing zero WHEN branches or exactly one WHEN branch (even if accompanied by a WHEN OTHERS branch) is flagged with finding code `NO_SGL_WHN`.
+- CASE blocks inside type or class definitions are skipped.
+- When multiple alternatives exist (two or more WHEN branches), the statement is considered a genuine decision table and passes.
+
+Suppress individual occurrences using the pseudo-comment `"#EC NO_SINGLE_WHEN`.
+
 
 ## Related Rules
 
-* [Avoid Duplicate Branch Conditions](/rules/no-dup-cond) — <code>#EC NO_DUP_COND</code>
+* [Avoid Duplicate Conditions in Branching Statements and Logical Operators](/rules/no-dup-cond) — <code>#EC NO_DUP_COND</code>
 * [Prefer CASE over Multiple IF / ELSEIF on the Same Variable](/rules/pref-case) — <code>#EC PREF_CASE</code>
-* [Prefer SWITCH #( ) Expression over CASE Statement](/rules/pref-switch) — <code>#EC PREF_SWITCH</code>
+* [Convert Pure CASE Mappings into SWITCH Expressions](/rules/pref-switch) — <code>#EC PREF_SWITCH</code>
 
 ## Technical Details
 

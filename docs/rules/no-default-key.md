@@ -1,13 +1,13 @@
 ---
-title: "Avoid WITH DEFAULT KEY"
-description: "Avoid WITH DEFAULT KEY - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-default-key, anti-patterns"
+title: "Avoid WITH DEFAULT KEY in Internal Table Declarations"
+description: "Avoid WITH DEFAULT KEY declarations in internal tables and specify EMPTY KEY or explicit keys in Clean ABAP."
+keywords: "no-default-key, WITH DEFAULT KEY, WITH EMPTY KEY, internal table key, Clean ABAP"
 category: "anti-patterns"
 ruleId: "no-default-key"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L416"
 ---
 
-# Avoid WITH DEFAULT KEY
+# Avoid WITH DEFAULT KEY in Internal Table Declarations
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -26,18 +26,18 @@ Avoid WITH DEFAULT KEY; prefer EMPTY KEY or explicit keys.
 
 ## Rationale
 
-WITH DEFAULT KEY makes every non-numeric field part of the implicit table key, so which rows count as duplicates depends on the structure definition. Adding a field later silently changes the key and can introduce unexpected duplicates or sort behavior. Use WITH EMPTY KEY for standard tables that are accessed by index, or declare an explicit key for sorted and hashed tables.
+WITH DEFAULT KEY creates an implicit table key consisting of all non-numeric character fields in the line type. Adding or modifying fields in the underlying structure silently alters the table key, leading to unexpected duplicate handling in COLLECT or INSERT and unintended sort orders. In modern Clean ABAP and ABAP Cloud, internal tables must declare their key explicitly with WITH UNIQUE/NON-UNIQUE KEY or use WITH EMPTY KEY for index-accessed collections. The check flags DEFAULT KEY with finding NO_DEF_KEY and provides the USEEMPTY quickfix.
 
 ### Non-Compliant
 
 ```abap
-DATA lt_open_orders TYPE STANDARD TABLE OF ty_open_order WITH DEFAULT KEY.
+DATA lt_sales_orders TYPE STANDARD TABLE OF ty_sales_order WITH DEFAULT KEY.
 ```
 
 ### Compliant
 
 ```abap
-DATA lt_open_orders TYPE STANDARD TABLE OF ty_open_order WITH EMPTY KEY.
+DATA lt_sales_orders TYPE STANDARD TABLE OF ty_sales_order WITH EMPTY KEY.
 ```
 
 ## Automated QuickFix
@@ -59,12 +59,24 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_DEFAULT_KEY
 ```
 
+### Key Semantics and Migration
+
+In classic ABAP, `WITH DEFAULT KEY` included all text-like fields in the table key. This behavior often produces brittle code:
+
+| Declaration | Key Behavior | Recommended Scenario |
+|---|---|---|
+| `WITH DEFAULT KEY` | Brittle implicit key over all non-numeric columns | Deprecated in Clean ABAP |
+| `WITH EMPTY KEY` | No primary key; access strictly by index or iteration | Standard tables without key lookup requirements |
+| `WITH UNIQUE / NON-UNIQUE KEY ...` | Explicit component list | Sorted, hashed, or keyed standard tables |
+
+The `USEEMPTY` quickfix replaces `DEFAULT` with `EMPTY`. Statements can be suppressed using `"#EC NO_DEFAULT_KEY`.
+
 
 ## Related Rules
 
-* [Prefer TYPE STANDARD TABLE OF over TYPE TABLE OF](/rules/pref-std-table) — <code>#EC PREF_STD_TABLE</code>
-* [Only Modify Tables Defined in Your Own Package/Component](/rules/no-mod-std-table) — <code>#EC NO_MOD_STD_TABLE</code>
-* [Prefer lines( ) over DESCRIBE TABLE](/rules/pref-lines) — <code>#EC PREF_LINES</code>
+* [Declare Standard Internal Tables Explicitly with TYPE STANDARD TABLE OF](/rules/pref-std-table) — <code>#EC PREF_STD_TABLE</code>
+* [Restrict Database Modifications to Customer-Owned Tables](/rules/no-mod-std-table) — <code>#EC NO_MOD_STD_TABLE</code>
+* [Use lines( ) Instead of DESCRIBE TABLE LINES](/rules/pref-lines) — <code>#EC PREF_LINES</code>
 
 ## Technical Details
 

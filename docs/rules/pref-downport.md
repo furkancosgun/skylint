@@ -1,13 +1,13 @@
 ---
-title: "Check Downport Compatibility (7.40+ Modern Constructs)"
-description: "Check Downport Compatibility (7.40+ Modern Constructs) - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-downport, clean-abap"
+title: "Detect 7.40+ Syntax in Downport-Compatible Code"
+description: "Detect 7.40+ syntax such as table expressions, inline declarations, string templates and strict Open SQL when code must stay downport compatible."
+keywords: "pref-downport, downport compatibility, 7.40 syntax, ABAP Cloud, SAP ATC"
 category: "clean-abap"
 ruleId: "pref-downport"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L198"
 ---
 
-# Check Downport Compatibility (7.40+ Modern Constructs)
+# Detect 7.40+ Syntax in Downport-Compatible Code
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -25,22 +25,22 @@ Detect 7.40+ syntax incompatible with downport targets.
 
 ## Rationale
 
-Modern ABAP constructs such as constructor expressions, table expressions, inline declarations, string templates, and functional method chaining do not compile on legacy NetWeaver releases. When a project must remain downport-compatible, these constructs silently raise the required kernel and syntax level. The check keeps that incompatibility visible by reporting each modern construct; it is disabled by default so modern development is unaffected.
+Table expressions, inline declarations, constructor expressions, string templates and strict Open SQL silently raise the kernel and syntax level required by a program, which breaks as soon as the code is transported to a 7.31 or early 7.40 system. The check exposes every such construct behind ten independent switches, each implemented as a concrete token pattern, and reports PREF_DWNPT for the first modern construct found in a statement. All switches default to false so modern ABAP Cloud development is never disturbed, and only a real downport target enables the ones it needs.
 
 ### Non-Compliant
 
 ```abap
-DATA(lv_name) = lt_customers[ 1 ]-name.
+DATA(lv_amount) = lt_open_items[ 1 ]-amount.
 ```
 
 ### Compliant
 
 ```abap
-DATA lv_name TYPE string.
-DATA ls_customer TYPE ty_customer.
-READ TABLE lt_customers INTO ls_customer INDEX 1.
+DATA lv_amount TYPE ty_open_item-amount.
+DATA ls_open_item TYPE ty_open_item.
+READ TABLE lt_open_items INTO ls_open_item INDEX 1.
 IF sy-subrc = 0.
-  lv_name = ls_customer-name.
+  lv_amount = ls_open_item-amount.
 ENDIF.
 ```
 
@@ -50,16 +50,16 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value | Description & Guidance |
 |---|---|:---:|---|
-| `CHECK_CONSTRUCTORS` | `Boolean` | <code>false</code> | Check constructor expressions (NEW, VALUE, CORRESPONDING, COND, SWITCH) |
-| `CHECK_TABLE_EXPR` | `Boolean` | <code>false</code> | Check table expressions (lt_tab[ ... ]) incompatible with legacy releases |
-| `CHECK_INLINE_DECL` | `Boolean` | <code>false</code> | Check inline declarations (DATA(...), FIELD-SYMBOL(...)) |
-| `CHECK_STRING_TEMPL` | `Boolean` | <code>false</code> | Check string templates (&#124;...&#124;) |
-| `CHECK_CHAINING` | `Boolean` | <code>false</code> | Check functional method call chaining (lo->m1( )->m2( )) |
-| `CHECK_EMPTY_KEY` | `Boolean` | <code>false</code> | Check WITH EMPTY KEY additions on internal tables |
-| `CHECK_CALC_ASSIGN` | `Boolean` | <code>false</code> | Check calculation assignment operators (+=, -=, *=, /=) |
-| `CHECK_LINE_FUNCS` | `Boolean` | <code>false</code> | Check built-in line functions (line_exists, line_index, lines) |
-| `CHECK_STRICT_SQL` | `Boolean` | <code>false</code> | Check modern OpenSQL syntax (@ escaping and comma-separated projection) |
-| `CHECK_RAISE_MESSAGE` | `Boolean` | <code>false</code> | Check modern RAISE EXCEPTION MESSAGE syntax |
+| `CHECK_CONSTRUCTORS` | `Boolean` | <code>false</code> | Report constructor expressions (NEW, VALUE, COND, SWITCH, REDUCE, FILTER, CORRESPONDING, CONV, REF, CAST). Enable only for targets older than 7.40. |
+| `CHECK_TABLE_EXPR` | `Boolean` | <code>false</code> | Report table expressions (itab[ ... ]). Enable for target releases below 7.40 SP08, where table expressions do not exist. |
+| `CHECK_INLINE_DECL` | `Boolean` | <code>false</code> | Report inline declarations DATA(...), FINAL(...) and FIELD-SYMBOL(...). Enable when the downport target predates 7.40. |
+| `CHECK_STRING_TEMPL` | `Boolean` | <code>false</code> | Report string templates (&#124;...&#124;) in any statement. Enable when the target kernel cannot compile templates. |
+| `CHECK_CHAINING` | `Boolean` | <code>false</code> | Report functional method chaining such as lo_service->create( )->run( ). Enable when method chain expressions are unavailable. |
+| `CHECK_EMPTY_KEY` | `Boolean` | <code>false</code> | Report WITH EMPTY KEY table definitions. Enable when the target release cannot declare an empty secondary key. |
+| `CHECK_CALC_ASSIGN` | `Boolean` | <code>false</code> | Report calculation assignment operators +=, -=, *=, /= and &&=. Enable for releases before 7.40. |
+| `CHECK_LINE_FUNCS` | `Boolean` | <code>false</code> | Report the LINE_EXISTS( ) and LINE_INDEX( ) built-ins. The lines( ) function is not evaluated, so enable this switch only when line functions are missing downport. |
+| `CHECK_STRICT_SQL` | `Boolean` | <code>false</code> | Report @-escaped host expressions in Open SQL statements. Enable when only legacy Open SQL is supported by the target. |
+| `CHECK_RAISE_MESSAGE` | `Boolean` | <code>false</code> | Report RAISE EXCEPTION ... MESSAGE ... additions. Enable when the target release lacks the MESSAGE addition. |
 
 ## Suppression
 
@@ -73,12 +73,31 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_DOWNPORT
 ```
 
+## Configuration Switches
+
+Every switch is a boolean and defaults to `abap_false`. Each statement is inspected in a fixed order and stops at the first matching check, so a statement that combines several modern constructs produces exactly one finding.
+
+| Attribute | Modern construct detected |
+|---|---|
+| `CHECK_CONSTRUCTORS` | `NEW`, `VALUE`, `COND`, `SWITCH`, `REDUCE`, `FILTER`, `CORRESPONDING`, `EXACT`, `CONV`, `REF`, `CAST` followed by `(` |
+| `CHECK_TABLE_EXPR` | Any `[` or `]` token, that is a table expression |
+| `CHECK_INLINE_DECL` | `DATA(...)`, `FINAL(...)` and `FIELD-SYMBOL(...)` inline declarations |
+| `CHECK_STRING_TEMPL` | Any token containing `|`, that is a string template |
+| `CHECK_CHAINING` | Method calls whose tokens contain `)->` |
+| `CHECK_EMPTY_KEY` | `WITH EMPTY KEY` |
+| `CHECK_CALC_ASSIGN` | `+=`, `-=`, `*=`, `/=` and `&&=` |
+| `CHECK_LINE_FUNCS` | `LINE_EXISTS(` and `LINE_INDEX(`; `lines(` is not evaluated by this switch |
+| `CHECK_STRICT_SQL` | `@`-escaped host expressions in database statements |
+| `CHECK_RAISE_MESSAGE` | `RAISE EXCEPTION ... MESSAGE ...` |
+
+Enable only the switches that correspond to the oldest release you still support; mixing them all produces noise in code that is already downport-clean.
+
 
 ## Related Rules
 
-* [Prefer Calculation Assignment Operators (+=, -=, *=)](/rules/pref-calc-op) — <code>#EC PREF_CALC_OP</code>
-* [Prefer Symbol Comparison Operators (=, <>, <, >)](/rules/pref-symbol-op) — <code>#EC PREF_SYMBOL_OP</code>
-* [Prefer the Short System Field Alias SY over SYST](/rules/pref-sy) — <code>#EC PREF_SY</code>
+* [Prefer Calculation Assignment Operators (+=, -=, *=, /=)](/rules/pref-calc-op) — <code>#EC PREF_CALC_OP</code>
+* [Replace Textual Comparison Operators (EQ, NE, GT) with Symbols](/rules/pref-symbol-op) — <code>#EC PREF_SYMBOL_OP</code>
+* [Prefer Short System Field Structure Alias SY Over Legacy SYST](/rules/pref-sy) — <code>#EC PREF_SY</code>
 
 ## Technical Details
 

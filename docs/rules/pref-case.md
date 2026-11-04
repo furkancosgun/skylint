@@ -1,10 +1,10 @@
 ---
 title: "Prefer CASE over Multiple IF / ELSEIF on the Same Variable"
-description: "Prefer CASE over Multiple IF / ELSEIF on the Same Variable - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-case, clean-abap"
+description: "Convert IF/ELSEIF chains that compare one variable against many values into a readable CASE statement with an explicit WHEN OTHERS branch."
+keywords: "pref-case, CASE statement, ELSEIF chain, Clean ABAP, SAP ATC"
 category: "clean-abap"
 ruleId: "pref-case"
-customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L2644"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L2697"
 ---
 
 # Prefer CASE over Multiple IF / ELSEIF on the Same Variable
@@ -15,7 +15,7 @@ customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-
   <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC PREF_CASE" />
   <Badge type="info" text="Remote Enabled" />
-  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L2644" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L2697" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -26,30 +26,32 @@ Use CASE instead of IF when checking multiple values.
 
 ## Rationale
 
-A chain of ELSEIF statements that compares the same variable to different values is harder to scan than a CASE statement. CASE groups all alternatives under one subject and makes a missing OTHERS branch visible. Use CASE for multi-value dispatch on a single expression.
+A chain of ELSEIF statements that compares the same variable against different constants is harder to scan than a CASE statement: the subject is repeated in every branch and a missing alternative is easy to overlook. CASE names the subject once, groups all alternatives under it, and makes a deliberate WHEN OTHERS branch visible in the code review. The check counts the branches against a configurable threshold, so simple two-way decisions stay as IF and only real multi-value dispatches are converted.
 
 ### Non-Compliant
 
 ```abap
-IF lv_payment_method = 'CARD'.
-  process_card( ).
-ELSEIF lv_payment_method = 'CASH'.
-  process_cash( ).
-ELSEIF lv_payment_method = 'TRANSFER'.
-  process_transfer( ).
+IF lv_shipping_type = 'STANDARD'.
+  schedule_standard_delivery( ).
+ELSEIF lv_shipping_type = 'EXPRESS'.
+  schedule_express_delivery( ).
+ELSEIF lv_shipping_type = 'PICKUP'.
+  confirm_store_pickup( ).
 ENDIF.
 ```
 
 ### Compliant
 
 ```abap
-CASE lv_payment_method.
-  WHEN 'CARD'.
-    process_card( ).
-  WHEN 'CASH'.
-    process_cash( ).
-  WHEN 'TRANSFER'.
-    process_transfer( ).
+CASE lv_shipping_type.
+  WHEN 'STANDARD'.
+    schedule_standard_delivery( ).
+  WHEN 'EXPRESS'.
+    schedule_express_delivery( ).
+  WHEN 'PICKUP'.
+    confirm_store_pickup( ).
+  WHEN OTHERS.
+    RAISE EXCEPTION NEW zcx_invalid_shipping_type( ).
 ENDCASE.
 ```
 
@@ -66,7 +68,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value | Description & Guidance |
 |---|---|:---:|---|
-| `MIN_BRANCHES` | `Integer` | <code>3</code> | Minimum number of ELSEIF branches on the same variable before suggesting CASE (default: 2) |
+| `MIN_BRANCHES` | `Integer` | <code>3</code> | Number of comparisons on the same variable required before CASE is suggested. Default 3 means one IF plus two ELSEIF branches; set it to 2 for a stricter dispatch style. |
 
 ## Suppression
 
@@ -80,18 +82,24 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_CASE
 ```
 
+### Threshold and detection
+
+`MIN_BRANCHES` counts the `IF` plus every `ELSEIF` that compares the same variable with `=` or `EQ`. With the default of `3`, two `ELSEIF` branches are required before `PREF_CASE` is raised, so a plain `IF/ELSE` is never reported. Chains that mix variables, or that use `AND`, `OR`, `BETWEEN`, `IN` or `IS` in the condition, are left alone because they are not a single-subject dispatch.
+
+The `USE_CASE` QuickFix replaces the whole `IF/ELSEIF/ENDIF` range, converts `ELSE` to `WHEN OTHERS` and keeps the original indentation and nested statements. If the branches compare different fields, restructure the code manually instead of suppressing with `"#EC PREF_CASE`.
+
 
 ## Related Rules
 
-* [Prefer COND #( ) Expression over IF/ELSEIF/ELSE](/rules/pref-cond) — <code>#EC PREF_COND</code>
-* [Prefer SWITCH #( ) Expression over CASE Statement](/rules/pref-switch) — <code>#EC PREF_SWITCH</code>
-* [Avoid CASE with a Single WHEN Branch](/rules/no-single-when) — <code>#EC NO_SINGLE_WHEN</code>
+* [Collapse Value-Mapping IF Chains into COND](/rules/pref-cond) — <code>#EC PREF_COND</code>
+* [Convert Pure CASE Mappings into SWITCH Expressions](/rules/pref-switch) — <code>#EC PREF_SWITCH</code>
+* [Replace Single-Branch CASE Statements with IF Conditions](/rules/no-single-when) — <code>#EC NO_SINGLE_WHEN</code>
 
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_PREF_CASE`
 * **ABAP Implementation:** [/skyl/cl_pref_case.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_pref_case.clas.abap)
-* **Rule Metadata:** [rules-data.mjs (Line 2644)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L2644)
+* **Rule Metadata:** [rules-data.mjs (Line 2697)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L2697)
 
 ## Community & Feedback
 

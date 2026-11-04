@@ -400,7 +400,7 @@ for (const rule of RULES) {
       ruleDoc += `| Parameter Name | Data Type | Default Value | Description & Guidance |\n`;
       ruleDoc += `|---|---|:---:|---|\n`;
       for (const attr of attributes) {
-        const escapedDefault = attr.defaultValue.replace(/\|/g, '&#124;');
+        const escapedDefault = attr.defaultValue.replace(/\|/g, '&#124;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         const pDesc = (rule.parameters && rule.parameters[attr.name]) ? rule.parameters[attr.name].replace(/\|/g, '&#124;') : '-';
         ruleDoc += `| \`${attr.name}\` | \`${attr.kind}\` | <code>${escapedDefault}</code> | ${pDesc} |\n`;
       }
@@ -408,7 +408,7 @@ for (const rule of RULES) {
       ruleDoc += `| Parameter Name | Data Type | Default Value |\n`;
       ruleDoc += `|---|---|:---:|\n`;
       for (const attr of attributes) {
-        const escapedDefault = attr.defaultValue.replace(/\|/g, '&#124;');
+        const escapedDefault = attr.defaultValue.replace(/\|/g, '&#124;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         ruleDoc += `| \`${attr.name}\` | \`${attr.kind}\` | <code>${escapedDefault}</code> |\n`;
       }
     }

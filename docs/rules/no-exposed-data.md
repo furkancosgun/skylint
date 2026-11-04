@@ -1,13 +1,13 @@
 ---
-title: "Avoid Exposed Mutable Data in Classes and Interfaces"
-description: "Avoid Exposed Mutable Data in Classes and Interfaces - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-exposed-data, anti-patterns"
+title: "Encapsulate Public Class Attributes and Interface Variables"
+description: "Enforce encapsulation by prohibiting mutable public class attributes and interface DATA in ABAP Cloud."
+keywords: "no-exposed-data, encapsulation, READ-ONLY, interface data, Clean ABAP"
 category: "anti-patterns"
 ruleId: "no-exposed-data"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1120"
 ---
 
-# Avoid Exposed Mutable Data in Classes and Interfaces
+# Encapsulate Public Class Attributes and Interface Variables
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -27,31 +27,24 @@ Avoid mutable data in public classes and interfaces.
 
 ## Rationale
 
-Public mutable attributes in classes and DATA declarations in interfaces breach object-oriented encapsulation by allowing external callers to directly mutate internal state without invariant validation. Exposing state leaks implementation details and prevents clean contract evolution. Restrict data to PRIVATE/PROTECTED sections with getters (or READ-ONLY), and keep interfaces strictly stateless with methods and CONSTANTS.
+Exposing mutable DATA attributes in class PUBLIC sections or declaring DATA inside interfaces breaches core object-oriented encapsulation by allowing external consumers to directly mutate internal state without validation or invariant enforcement. In ABAP Cloud and Clean ABAP architecture, classes must protect internal representation using PRIVATE or PROTECTED sections accompanied by dedicated accessor methods or READ-ONLY declarations. Interfaces must represent pure contracts containing only method definitions, types, and immutable CONSTANTS.
 
 ### Non-Compliant
 
 ```abap
-CLASS cl_model DEFINITION PUBLIC.
+CLASS zcl_customer_profile DEFINITION PUBLIC CREATE PUBLIC.
   PUBLIC SECTION.
-    DATA mv_state TYPE i.
+    DATA mv_credit_limit TYPE p LENGTH 8 DECIMALS 2.
 ENDCLASS.
-INTERFACE if_customer.
-  DATA mv_balance TYPE i.
-ENDINTERFACE.
 ```
 
 ### Compliant
 
 ```abap
-CLASS cl_model DEFINITION PUBLIC.
+CLASS zcl_customer_profile DEFINITION PUBLIC CREATE PUBLIC.
   PUBLIC SECTION.
-    DATA mv_state TYPE i READ-ONLY.
+    DATA mv_credit_limit TYPE p LENGTH 8 DECIMALS 2 READ-ONLY.
 ENDCLASS.
-INTERFACE if_customer.
-  CONSTANTS c_default_status TYPE i VALUE 1.
-  METHODS get_balance RETURNING VALUE(rv_balance) TYPE i.
-ENDINTERFACE.
 ```
 
 ## Configuration & Thresholds
@@ -60,8 +53,8 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value | Description & Guidance |
 |---|---|:---:|---|
-| `CHECK_PUBLIC_ATTR` | `Boolean` | <code>true</code> | Report public data attributes in classes (encapsulation violation) |
-| `CHECK_INTF_DATA` | `Boolean` | <code>true</code> | Report data variable declarations inside interfaces (should contain only types, constants, methods) |
+| `CHECK_PUBLIC_ATTR` | `Boolean` | <code>true</code> | Report public class attributes that lack the READ-ONLY addition to prevent unrestricted mutation. |
+| `CHECK_INTF_DATA` | `Boolean` | <code>true</code> | Report mutable DATA and CLASS-DATA variable declarations inside interfaces; use methods or CONSTANTS. |
 
 ## Suppression
 
@@ -75,12 +68,21 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PUBLIC_ATTR
 ```
 
+### Finding Codes and Configuration
+
+| Finding Code | Description | Pseudo-Comment |
+|---|---|---|
+| `NO_PUB_ATR` | Mutable `DATA` or `CLASS-DATA` attribute declared in `PUBLIC SECTION` without `READ-ONLY` | `"#EC NO_PUBLIC_ATTR` |
+| `NO_INTF_DA` | Mutable `DATA` or `CLASS-DATA` declaration located inside an `INTERFACE` | `"#EC NO_INTERFACE_DATA` |
+
+Both checks are enabled by default and can be configured independently through rule parameters.
+
 
 ## Related Rules
 
-* [Avoid Purely Static Utility Classes](/rules/no-static-cls) — <code>#EC NO_STATIC_CLS</code>
-* [Prefer Interface Segregation (Small, Focused Interfaces)](/rules/pref-intf-segreg) — <code>#EC PREF_INTF_SEGREG</code>
-* [Avoid IS INSTANCE OF and CASE TYPE OF Type Tests](/rules/no-instance-of) — <code>#EC NO_INSTANCE_OF</code>
+* [Design Classes with Instance Methods and Interfaces Instead of Static-Only Utilities](/rules/no-static-cls) — <code>#EC NO_STATIC_CLS</code>
+* [Prefer Small, Role-Based Interfaces (Interface Segregation)](/rules/pref-intf-segreg) — <code>#EC PREF_INTF_SEGREG</code>
+* [Replace IS INSTANCE OF and CASE TYPE OF with Polymorphism](/rules/no-instance-of) — <code>#EC NO_INSTANCE_OF</code>
 
 ## Technical Details
 

@@ -1,13 +1,13 @@
 ---
-title: "Avoid Duplicate Branch Conditions"
-description: "Avoid Duplicate Branch Conditions - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-dup-cond, anti-patterns"
+title: "Avoid Duplicate Conditions in Branching Statements and Logical Operators"
+description: "Detect duplicate branch conditions in IF/CASE and identical operands in boolean expressions in SAP ATC."
+keywords: "no-dup-cond, duplicate condition, unreachable branch, Clean ABAP, SAP ATC"
 category: "anti-patterns"
 ruleId: "no-dup-cond"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L864"
 ---
 
-# Avoid Duplicate Branch Conditions
+# Avoid Duplicate Conditions in Branching Statements and Logical Operators
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -28,25 +28,25 @@ Avoid duplicate branch conditions in IF and CASE.
 
 ## Rationale
 
-A repeated IF/ELSEIF or WHEN condition can never be reached because the earlier branch already handles it. This is usually a copy-paste error and can leave the intended branch permanently dead. Remove the duplicate or correct the condition so every branch has a distinct purpose.
+A duplicated condition in an ELSEIF or WHEN branch can never be executed because the earlier branch with the identical condition always intercepts control first. Similarly, repeating the same operand within a single logical expression (such as cond OR cond or cond AND cond) is redundant and often masks a typographical error where an intended alternative condition was omitted. In Clean ABAP, every conditional branch must possess a distinct predicate and logical expressions must contain unique operands. The check reports NO_DUP_CND or NO_DUP_OPR and provides the REM_DUP_BR quickfix.
 
 ### Non-Compliant
 
 ```abap
-IF lv_status = 'A'.
-  process_a( ).
-ELSEIF lv_status = 'A'.
-  process_b( ).
+IF lv_delivery_status = 'DELIVERED'.
+  complete_order( ).
+ELSEIF lv_delivery_status = 'DELIVERED'.
+  archive_order( ).
 ENDIF.
 ```
 
 ### Compliant
 
 ```abap
-IF lv_status = 'A'.
-  process_a( ).
-ELSEIF lv_status = 'B'.
-  process_b( ).
+IF lv_delivery_status = 'DELIVERED'.
+  complete_order( ).
+ELSEIF lv_delivery_status = 'RETURNED'.
+  archive_order( ).
 ENDIF.
 ```
 
@@ -69,12 +69,23 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_DUP_COND
 ```
 
+### Finding Codes and Detection Modes
+
+The check inspects both branching structures and compound boolean expressions:
+
+| Finding Code | Trigger Condition | QuickFix |
+|---|---|---|
+| `NO_DUP_CND` | Duplicate condition in `ELSEIF` or duplicate value in `WHEN` | `REM_DUP_BR` removes unreachable branch |
+| `NO_DUP_OPR` | Duplicate operand within `IF`, `WHILE`, `CHECK`, or `ELSEIF` joined by same operator (`AND`/`OR`) | Manual review required |
+
+Outer parentheses are stripped before comparing expressions, so `ELSEIF ( lv_status = 'A' )` correctly matches `IF lv_status = 'A'`. Suppress findings using `"#EC NO_DUP_COND`.
+
 
 ## Related Rules
 
-* [Avoid Yoda Conditions](/rules/no-yoda-cond) — <code>#EC NO_YODA_COND</code>
-* [Avoid Negated IF Conditions with ELSE](/rules/no-neg-cond) — <code>#EC NO_NEG_COND</code>
-* [Prefer COND #( ) Expression over IF/ELSEIF/ELSE](/rules/pref-cond) — <code>#EC PREF_COND</code>
+* [Avoid Yoda Conditions by Placing Variables Before Literals](/rules/no-yoda-cond) — <code>#EC NO_YODA_COND</code>
+* [Avoid Negated IF Conditions with an ELSE Branch by Inverting Condition and Swapping Branches](/rules/no-neg-cond) — <code>#EC NO_NEG_COND</code>
+* [Collapse Value-Mapping IF Chains into COND](/rules/pref-cond) — <code>#EC PREF_COND</code>
 
 ## Technical Details
 

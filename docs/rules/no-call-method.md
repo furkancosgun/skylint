@@ -1,13 +1,13 @@
 ---
-title: "Avoid Obsolete CALL METHOD"
-description: "Avoid Obsolete CALL METHOD - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-call-method, anti-patterns"
+title: "Replace Obsolete CALL METHOD Statements with Functional Invocations"
+description: "Eliminate legacy CALL METHOD statements in favor of modern functional method calls in Clean ABAP and SAP ATC."
+keywords: "no-call-method, CALL METHOD, functional method call, Clean ABAP, ABAP Cloud"
 category: "anti-patterns"
 ruleId: "no-call-method"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L388"
 ---
 
-# Avoid Obsolete CALL METHOD
+# Replace Obsolete CALL METHOD Statements with Functional Invocations
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -26,22 +26,22 @@ Avoid static CALL METHOD statements.
 
 ## Rationale
 
-CALL METHOD is the procedural call syntax from early ABAP Objects and needs explicit EXPORTING and RECEIVING sections. Functional syntax is shorter, can be used inside expressions, and removes visual clutter around parameter lists. Use ref->method( ) or class=>method( ) for all method calls.
+The explicit CALL METHOD syntax is a legacy holdover from early ABAP Objects releases that introduces excessive syntactic verbosity. In modern Clean ABAP and ABAP Cloud, methods should always be invoked functionally as ref->method( ) or class=>method( ), enabling clean chaining, expression embedding, and streamlined parameter passing. The check reports NO_CALL_MT for static invocations, and the CALL2FUNC quickfix automatically transforms the statement into modern functional syntax.
 
 ### Non-Compliant
 
 ```abap
-CALL METHOD lo_service->calculate_tax
+CALL METHOD lo_invoice_service->calculate_tax
   EXPORTING
-    iv_amount = lv_amount
+    iv_net_amount = lv_net_amount
   RECEIVING
-    rv_tax    = lv_tax.
+    rv_tax_amount = lv_tax_amount.
 ```
 
 ### Compliant
 
 ```abap
-lv_tax = lo_service->calculate_tax( lv_amount ).
+lv_tax_amount = lo_invoice_service->calculate_tax( iv_net_amount = lv_net_amount ).
 ```
 
 ## Automated QuickFix
@@ -63,12 +63,21 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_CALL_METHOD
 ```
 
+### Scope and Dynamic Calls
+
+Static `CALL METHOD` statements are reported with finding `NO_CALL_MT`. Dynamic method calls are intentionally exempted:
+
+- `CALL METHOD lo_instance->(lv_method_name)` (dynamic method name) is ignored.
+- `PARAMETER-TABLE` and `EXCEPTION-TABLE` additions are ignored.
+
+The `CALL2FUNC` quickfix automatically strips the `CALL METHOD` keywords and converts parameter clauses into modern parenthesis-enclosed argument lists. Findings can be suppressed with `"#EC NO_CALL_METHOD`.
+
 
 ## Related Rules
 
-* [Omit Redundant EXPORTING in Method Calls](/rules/no-call-exporting) — <code>#EC NO_CALL_EXPORTING</code>
-* [Omit RECEIVING in Method Invocations](/rules/no-call-receiving) — <code>#EC NO_CALL_RECEIVING</code>
-* [Avoid Redundant ME-> Self Reference](/rules/no-me-reference) — <code>#EC NO_ME_REFERENCE</code>
+* [Omit Redundant EXPORTING Keyword in Method Invocations](/rules/no-call-exporting) — <code>#EC NO_CALL_EXPORTING</code>
+* [Omit Explicit RECEIVING Keyword in Functional Method Invocations](/rules/no-call-receiving) — <code>#EC NO_CALL_RECEIVING</code>
+* [Avoid Redundant ME-> Self-References to Instance Members](/rules/no-me-reference) — <code>#EC NO_ME_REFERENCE</code>
 
 ## Technical Details
 

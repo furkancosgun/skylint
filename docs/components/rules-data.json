@@ -1,7 +1,7 @@
 [
   {
     "ruleId": "pref-func-module",
-    "title": "Prefer Modern Class-Based APIs over Obsolete Function Modules",
+    "title": "Replace Obsolete Function Modules with Class-Based APIs",
     "className": "/SKYL/CL_PREF_FUNC_MODULE",
     "checkName": "/SKYL/PREF_FUNC_MODULE",
     "category": "clean-abap",
@@ -20,7 +20,7 @@
   },
   {
     "ruleId": "no-custom-pattern",
-    "title": "Disallow Configured Custom Regex Patterns",
+    "title": "Disallow Prohibited Naming Patterns and Terminology via Regular Expressions",
     "className": "/SKYL/CL_NO_CUSTOM_PATTERN",
     "checkName": "/SKYL/NO_CUSTOM_PATTERN",
     "category": "anti-patterns",
@@ -50,7 +50,7 @@
   },
   {
     "ruleId": "pref-paren-and-or",
-    "title": "Parenthesize Combinations of AND and OR",
+    "title": "Parenthesize Mixed AND/OR Conditions Explicitly",
     "className": "/SKYL/CL_PREF_PAREN_AND_OR",
     "checkName": "/SKYL/PREF_PAREN_AND_OR",
     "category": "clean-abap",
@@ -69,7 +69,7 @@
   },
   {
     "ruleId": "no-useless-cont",
-    "title": "Avoid Redundant CONTINUE at End of Loop",
+    "title": "Remove CONTINUE Immediately Before a Loop End",
     "className": "/SKYL/CL_NO_USELESS_CONT",
     "checkName": "/SKYL/NO_USELESS_CONT",
     "category": "clean-abap",
@@ -88,7 +88,7 @@
   },
   {
     "ruleId": "no-nested-cond",
-    "title": "Avoid Nested COND or SWITCH Expressions",
+    "title": "Avoid Nesting COND and SWITCH Constructor Expressions",
     "className": "/SKYL/CL_NO_NESTED_COND",
     "checkName": "/SKYL/NO_NESTED_COND",
     "category": "clean-abap",
@@ -107,7 +107,7 @@
   },
   {
     "ruleId": "no-single-iter",
-    "title": "Avoid Loops That Execute At Most Once",
+    "title": "Avoid Loops That Execute At Most Once Due to Unconditional Exit",
     "className": "/SKYL/CL_NO_SINGLE_ITER",
     "checkName": "/SKYL/NO_SINGLE_ITER",
     "category": "anti-patterns",
@@ -126,7 +126,7 @@
   },
   {
     "ruleId": "pref-downport",
-    "title": "Check Downport Compatibility (7.40+ Modern Constructs)",
+    "title": "Detect 7.40+ Syntax in Downport-Compatible Code",
     "className": "/SKYL/CL_PREF_DOWNPORT",
     "checkName": "/SKYL/PREF_DOWNPORT",
     "category": "clean-abap",
@@ -237,7 +237,7 @@
   },
   {
     "ruleId": "pref-reduce",
-    "title": "Prefer REDUCE #( ) Expression over Simple Aggregation LOOP",
+    "title": "Replace Single-Statement Aggregation LOOP with REDUCE",
     "className": "/SKYL/CL_PREF_REDUCE",
     "checkName": "/SKYL/PREF_REDUCE",
     "category": "clean-abap",
@@ -256,7 +256,7 @@
   },
   {
     "ruleId": "pref-read-table",
-    "title": "Modernize READ TABLE (Table Expressions & line_exists)",
+    "title": "Replace READ TABLE with Table Expressions and line_exists",
     "className": "/SKYL/CL_PREF_READ_TABLE",
     "checkName": "/SKYL/PREF_READ_TABLE",
     "category": "clean-abap",
@@ -295,7 +295,7 @@
   },
   {
     "ruleId": "pref-cond",
-    "title": "Prefer COND #( ) Expression over IF/ELSEIF/ELSE",
+    "title": "Collapse Value-Mapping IF Chains into COND",
     "className": "/SKYL/CL_PREF_COND",
     "checkName": "/SKYL/PREF_COND",
     "category": "clean-abap",
@@ -325,7 +325,7 @@
   },
   {
     "ruleId": "pref-switch",
-    "title": "Prefer SWITCH #( ) Expression over CASE Statement",
+    "title": "Convert Pure CASE Mappings into SWITCH Expressions",
     "className": "/SKYL/CL_PREF_SWITCH",
     "checkName": "/SKYL/PREF_SWITCH",
     "category": "clean-abap",
@@ -355,7 +355,7 @@
   },
   {
     "ruleId": "pref-lines",
-    "title": "Prefer lines( ) over DESCRIBE TABLE",
+    "title": "Use lines( ) Instead of DESCRIBE TABLE LINES",
     "className": "/SKYL/CL_PREF_LINES",
     "checkName": "/SKYL/PREF_LINES",
     "category": "clean-abap",
@@ -374,7 +374,7 @@
   },
   {
     "ruleId": "no-call-method",
-    "title": "Avoid Obsolete CALL METHOD",
+    "title": "Replace Obsolete CALL METHOD Statements with Functional Invocations",
     "className": "/SKYL/CL_NO_CALL_METHOD",
     "checkName": "/SKYL/NO_CALL_METHOD",
     "category": "anti-patterns",
@@ -393,7 +393,7 @@
   },
   {
     "ruleId": "no-default-key",
-    "title": "Avoid WITH DEFAULT KEY",
+    "title": "Avoid WITH DEFAULT KEY in Internal Table Declarations",
     "className": "/SKYL/CL_NO_DEFAULT_KEY",
     "checkName": "/SKYL/NO_DEFAULT_KEY",
     "category": "anti-patterns",
@@ -412,7 +412,7 @@
   },
   {
     "ruleId": "pref-is-not",
-    "title": "Prefer IS NOT over NOT ... IS",
+    "title": "Rewrite NOT ... IS Predicates as IS NOT",
     "className": "/SKYL/CL_PREF_IS_NOT",
     "checkName": "/SKYL/PREF_IS_NOT",
     "category": "clean-abap",
@@ -431,7 +431,7 @@
   },
   {
     "ruleId": "no-me-reference",
-    "title": "Avoid Redundant ME-> Self Reference",
+    "title": "Avoid Redundant ME-> Self-References to Instance Members",
     "className": "/SKYL/CL_NO_ME_REFERENCE",
     "checkName": "/SKYL/NO_ME_REFERENCE",
     "category": "anti-patterns",
@@ -461,7 +461,7 @@
   },
   {
     "ruleId": "no-call-receiving",
-    "title": "Omit RECEIVING in Method Invocations",
+    "title": "Omit Explicit RECEIVING Keyword in Functional Method Invocations",
     "className": "/SKYL/CL_NO_CALL_RECEIVING",
     "checkName": "/SKYL/NO_CALL_RECEIVING",
     "category": "anti-patterns",
@@ -480,7 +480,7 @@
   },
   {
     "ruleId": "no-call-exporting",
-    "title": "Omit Redundant EXPORTING in Method Calls",
+    "title": "Omit Redundant EXPORTING Keyword in Method Invocations",
     "className": "/SKYL/CL_NO_CALL_EXPORTING",
     "checkName": "/SKYL/NO_CALL_EXPORTING",
     "category": "anti-patterns",
@@ -499,7 +499,7 @@
   },
   {
     "ruleId": "pref-param-name",
-    "title": "Method Call Parameter Naming Style (Omit or Require)",
+    "title": "Omit or Require Parameter Names in Method Calls",
     "className": "/SKYL/CL_PREF_PARAM_NAME",
     "checkName": "/SKYL/PREF_PARAM_NAME",
     "category": "clean-abap",
@@ -537,7 +537,7 @@
   },
   {
     "ruleId": "no-unused-param",
-    "title": "Avoid Unused Parameters in Procedures",
+    "title": "Detect Declared But Unused Procedure Parameters",
     "className": "/SKYL/CL_NO_UNUSED_PARAM",
     "checkName": "/SKYL/NO_UNUSED_PARAM",
     "category": "clean-abap",
@@ -585,7 +585,7 @@
   },
   {
     "ruleId": "no-chained-decl",
-    "title": "Avoid Chained Declarations (DATA:, CONSTANTS:, TYPES:)",
+    "title": "Avoid Chained Declarations for Variables, Types, and Constants",
     "className": "/SKYL/CL_NO_CHAINED_DECL",
     "checkName": "/SKYL/NO_CHAINED_DECL",
     "category": "anti-patterns",
@@ -615,7 +615,7 @@
   },
   {
     "ruleId": "no-chained-assign",
-    "title": "Avoid Chained Assignments (a = b = c = 1)",
+    "title": "Avoid Chained Assignments Binding Multiple Targets Simultaneously",
     "className": "/SKYL/CL_NO_CHAINED_ASSIGN",
     "checkName": "/SKYL/NO_CHAINED_ASSIGN",
     "category": "anti-patterns",
@@ -634,7 +634,7 @@
   },
   {
     "ruleId": "pref-str-tmpl",
-    "title": "Prefer String Templates over CONCATENATE",
+    "title": "Compose Messages with String Templates Instead of CONCATENATE",
     "className": "/SKYL/CL_PREF_STR_TMPL",
     "checkName": "/SKYL/PREF_STR_TMPL",
     "category": "clean-abap",
@@ -653,7 +653,7 @@
   },
   {
     "ruleId": "no-bool-compare",
-    "title": "Avoid Comparing to abap_true / abap_false",
+    "title": "Avoid Comparing Boolean Method Calls to abap_true or abap_false",
     "className": "/SKYL/CL_NO_BOOL_COMPARE",
     "checkName": "/SKYL/NO_BOOL_COMPARE",
     "category": "anti-patterns",
@@ -672,7 +672,7 @@
   },
   {
     "ruleId": "pref-return",
-    "title": "Prefer RETURN over EXIT in Methods",
+    "title": "Use RETURN Instead of EXIT Outside Loops",
     "className": "/SKYL/CL_PREF_RETURN",
     "checkName": "/SKYL/PREF_RETURN",
     "category": "clean-abap",
@@ -691,7 +691,7 @@
   },
   {
     "ruleId": "no-check-stmt",
-    "title": "Avoid CHECK Statements",
+    "title": "Avoid CHECK Statements Inside and Outside Iteration Loops",
     "className": "/SKYL/CL_NO_CHECK_STMT",
     "checkName": "/SKYL/NO_CHECK_STMT",
     "category": "anti-patterns",
@@ -730,7 +730,7 @@
   },
   {
     "ruleId": "no-empty-block",
-    "title": "Avoid Empty Control Blocks",
+    "title": "Avoid Empty Control Blocks in Branching and Looping Statements",
     "className": "/SKYL/CL_NO_EMPTY_BLOCK",
     "checkName": "/SKYL/NO_EMPTY_BLOCK",
     "category": "anti-patterns",
@@ -823,7 +823,7 @@
   },
   {
     "ruleId": "no-ident-cont",
-    "title": "Avoid Identical Statements in IF Branches",
+    "title": "Extract Identical Statements Shared Across All IF and ELSE Branches",
     "className": "/SKYL/CL_NO_IDENT_CONT",
     "checkName": "/SKYL/NO_IDENT_CONT",
     "category": "anti-patterns",
@@ -842,7 +842,7 @@
   },
   {
     "ruleId": "no-dup-cond",
-    "title": "Avoid Duplicate Branch Conditions",
+    "title": "Avoid Duplicate Conditions in Branching Statements and Logical Operators",
     "className": "/SKYL/CL_NO_DUP_COND",
     "checkName": "/SKYL/NO_DUP_COND",
     "category": "anti-patterns",
@@ -861,7 +861,7 @@
   },
   {
     "ruleId": "pref-merge-ifs",
-    "title": "Merge Nested IF Statements",
+    "title": "Merge Redundant Nested IF Blocks",
     "className": "/SKYL/CL_PREF_MERGE_IFS",
     "checkName": "/SKYL/PREF_MERGE_IFS",
     "category": "clean-abap",
@@ -880,7 +880,7 @@
   },
   {
     "ruleId": "no-unreachable",
-    "title": "Avoid Dead / Unreachable Code",
+    "title": "Avoid Unreachable Statements Following Unconditional Exit or Jump Operations",
     "className": "/SKYL/CL_NO_UNREACHABLE",
     "checkName": "/SKYL/NO_UNREACHABLE",
     "category": "anti-patterns",
@@ -899,7 +899,7 @@
   },
   {
     "ruleId": "no-single-when",
-    "title": "Avoid CASE with a Single WHEN Branch",
+    "title": "Replace Single-Branch CASE Statements with IF Conditions",
     "className": "/SKYL/CL_NO_SINGLE_WHEN",
     "checkName": "/SKYL/NO_SINGLE_WHEN",
     "category": "anti-patterns",
@@ -918,7 +918,7 @@
   },
   {
     "ruleId": "no-yoda-cond",
-    "title": "Avoid Yoda Conditions",
+    "title": "Avoid Yoda Conditions by Placing Variables Before Literals",
     "className": "/SKYL/CL_NO_YODA_COND",
     "checkName": "/SKYL/NO_YODA_COND",
     "category": "anti-patterns",
@@ -937,7 +937,7 @@
   },
   {
     "ruleId": "pref-symbol-op",
-    "title": "Prefer Symbol Comparison Operators (=, <>, <, >)",
+    "title": "Replace Textual Comparison Operators (EQ, NE, GT) with Symbols",
     "className": "/SKYL/CL_PREF_SYMBOL_OP",
     "checkName": "/SKYL/PREF_SYMBOL_OP",
     "category": "clean-abap",
@@ -956,7 +956,7 @@
   },
   {
     "ruleId": "pref-new-op",
-    "title": "Prefer NEW #( ) over CREATE OBJECT",
+    "title": "Prefer NEW #( ) for Object Creation and RAISE EXCEPTION NEW",
     "className": "/SKYL/CL_PREF_NEW_OP",
     "checkName": "/SKYL/PREF_NEW_OP",
     "category": "clean-abap",
@@ -995,7 +995,7 @@
   },
   {
     "ruleId": "pref-xsdbool",
-    "title": "Prefer xsdbool( ) for Boolean Assignments",
+    "title": "Replace IF/ELSE Boolean Assignments with xsdbool( )",
     "className": "/SKYL/CL_PREF_XSDBOOL",
     "checkName": "/SKYL/PREF_XSDBOOL",
     "category": "clean-abap",
@@ -1014,7 +1014,7 @@
   },
   {
     "ruleId": "no-static-arrow",
-    "title": "Avoid Calling Static Methods via Instance References (->)",
+    "title": "Call Static Methods with Class Component Selector (=>)",
     "className": "/SKYL/CL_NO_STATIC_ARROW",
     "checkName": "/SKYL/NO_STATIC_ARROW",
     "category": "anti-patterns",
@@ -1033,7 +1033,7 @@
   },
   {
     "ruleId": "no-exposed-data",
-    "title": "Avoid Exposed Mutable Data in Classes and Interfaces",
+    "title": "Encapsulate Public Class Attributes and Interface Variables",
     "className": "/SKYL/CL_NO_EXPOSED_DATA",
     "checkName": "/SKYL/NO_EXPOSED_DATA",
     "category": "anti-patterns",
@@ -1072,7 +1072,7 @@
   },
   {
     "ruleId": "no-obs-arith",
-    "title": "Avoid Obsolete Arithmetic and Assignment Statements",
+    "title": "Replace Obsolete Arithmetic Statements with Modern Operators",
     "className": "/SKYL/CL_NO_OBS_ARITH",
     "checkName": "/SKYL/NO_OBS_ARITH",
     "category": "anti-patterns",
@@ -1138,7 +1138,7 @@
   },
   {
     "ruleId": "no-unclosed-res",
-    "title": "Ensure Opened Datasets and Cursors are Closed",
+    "title": "Close Opened Datasets and Database Cursors Explicitly",
     "className": "/SKYL/CL_NO_UNCLOSED_RES",
     "checkName": "/SKYL/NO_UNCLOSED_RES",
     "category": "security",
@@ -1176,7 +1176,7 @@
   },
   {
     "ruleId": "no-obs-decl",
-    "title": "Avoid Obsolete Declarations and Table Headers",
+    "title": "Replace Obsolete Data Declarations with Explicit Types",
     "className": "/SKYL/CL_NO_OBS_DECL",
     "checkName": "/SKYL/NO_OBS_DECL",
     "category": "anti-patterns",
@@ -1305,7 +1305,7 @@
   },
   {
     "ruleId": "no-obs-control",
-    "title": "Avoid Obsolete Control Flow and Procedural Forms",
+    "title": "Eliminate Obsolete Control Flow and Procedural Statements",
     "className": "/SKYL/CL_NO_OBS_CONTROL",
     "checkName": "/SKYL/NO_OBS_CONTROL",
     "category": "anti-patterns",
@@ -1416,7 +1416,7 @@
   },
   {
     "ruleId": "no-obs-memory",
-    "title": "Avoid Obsolete ABAP Memory and Context Statements",
+    "title": "Prohibit Obsolete ABAP Memory and Cluster Statements",
     "className": "/SKYL/CL_NO_OBS_MEMORY",
     "checkName": "/SKYL/NO_OBS_MEMORY",
     "category": "anti-patterns",
@@ -1500,7 +1500,7 @@
   },
   {
     "ruleId": "no-obs-strings",
-    "title": "Avoid Obsolete String and POSIX Regex Statements",
+    "title": "Replace Obsolete String Statements and POSIX Regular Expressions",
     "className": "/SKYL/CL_NO_OBS_STRINGS",
     "checkName": "/SKYL/NO_OBS_STRINGS",
     "category": "anti-patterns",
@@ -1566,7 +1566,7 @@
   },
   {
     "ruleId": "no-list-proc",
-    "title": "Avoid Classic List Processing Statements",
+    "title": "Prohibit Dynpro List Processing Statements in ABAP Cloud",
     "className": "/SKYL/CL_NO_LIST_PROC",
     "checkName": "/SKYL/NO_LIST_PROC",
     "category": "anti-patterns",
@@ -1650,7 +1650,7 @@
   },
   {
     "ruleId": "max-params",
-    "title": "Limit Method Parameter Count and Require Multi-Line Signatures",
+    "title": "Limit Method Parameter Count and Keep One Parameter per Line",
     "className": "/SKYL/CL_MAX_PARAMS",
     "checkName": "/SKYL/MAX_PARAMS",
     "category": "metrics",
@@ -1689,7 +1689,7 @@
   },
   {
     "ruleId": "no-db-in-loop",
-    "title": "Avoid Database Access Inside Loops (N+1 Query Antipattern)",
+    "title": "Avoid Database Queries Inside Loops (N+1 Query Antipattern)",
     "className": "/SKYL/CL_NO_DB_IN_LOOP",
     "checkName": "/SKYL/NO_DB_IN_LOOP",
     "category": "performance",
@@ -1708,7 +1708,7 @@
   },
   {
     "ruleId": "no-empty-fae",
-    "title": "Prevent Empty Driver Tables in FOR ALL ENTRIES (Full Table Scan Bug)",
+    "title": "Guard FOR ALL ENTRIES Against Empty Driving Tables",
     "className": "/SKYL/CL_NO_EMPTY_FAE",
     "checkName": "/SKYL/NO_EMPTY_FAE",
     "category": "performance",
@@ -1727,7 +1727,7 @@
   },
   {
     "ruleId": "no-select-star",
-    "title": "Avoid SELECT * in OpenSQL Queries (Minimize Memory & Network Overhead)",
+    "title": "Avoid SELECT * and Project Columns Explicitly",
     "className": "/SKYL/CL_NO_SELECT_STAR",
     "checkName": "/SKYL/NO_SELECT_STAR",
     "category": "performance",
@@ -1765,7 +1765,7 @@
   },
   {
     "ruleId": "no-scope-leak",
-    "title": "Avoid Variable Scope Leaking from Inner Blocks",
+    "title": "Prevent Variable Scope Leakage Outside Control Blocks",
     "className": "/SKYL/CL_NO_SCOPE_LEAK",
     "checkName": "/SKYL/NO_SCOPE_LEAK",
     "category": "anti-patterns",
@@ -1803,7 +1803,7 @@
   },
   {
     "ruleId": "no-shadow",
-    "title": "Avoid Local Variables Shadowing Class Attributes",
+    "title": "Prevent Local Variables from Shadowing Class Attributes",
     "className": "/SKYL/CL_NO_SHADOW",
     "checkName": "/SKYL/NO_SHADOW",
     "category": "anti-patterns",
@@ -1822,7 +1822,7 @@
   },
   {
     "ruleId": "no-useless-concat",
-    "title": "Avoid Concatenating Adjacent String Literals",
+    "title": "Fold Adjacent Static String Literals Concatenated with &&",
     "className": "/SKYL/CL_NO_USELESS_CONCAT",
     "checkName": "/SKYL/NO_USELESS_CONCAT",
     "category": "anti-patterns",
@@ -1841,7 +1841,7 @@
   },
   {
     "ruleId": "pref-full-typed",
-    "title": "Require Fully Typed Variables and Parameters",
+    "title": "Declare Constants with an Explicit TYPE and LENGTH",
     "className": "/SKYL/CL_PREF_FULL_TYPED",
     "checkName": "/SKYL/PREF_FULL_TYPED",
     "category": "clean-abap",
@@ -1860,7 +1860,7 @@
   },
   {
     "ruleId": "pref-corresp",
-    "title": "Prefer CORRESPONDING #( ) Operator",
+    "title": "Replace MOVE-CORRESPONDING with CORRESPONDING #( )",
     "className": "/SKYL/CL_PREF_CORRESP",
     "checkName": "/SKYL/PREF_CORRESP",
     "category": "clean-abap",
@@ -1918,7 +1918,7 @@
   },
   {
     "ruleId": "max-nesting",
-    "title": "Limit Control Flow Nesting Depth (Guard Clause Enforcement)",
+    "title": "Limit Control Flow Block Nesting Depth",
     "className": "/SKYL/CL_MAX_NESTING",
     "checkName": "/SKYL/MAX_NESTING",
     "category": "metrics",
@@ -1948,7 +1948,7 @@
   },
   {
     "ruleId": "no-sy-modify",
-    "title": "Avoid Directly Modifying System Fields (sy-subrc, sy-tabix)",
+    "title": "Avoid Direct Modification of System Fields (sy-*)",
     "className": "/SKYL/CL_NO_SY_MODIFY",
     "checkName": "/SKYL/NO_SY_MODIFY",
     "category": "security",
@@ -1967,7 +1967,7 @@
   },
   {
     "ruleId": "pref-returning",
-    "title": "Prefer Functional RETURNING Parameters",
+    "title": "Use RETURNING Instead of a Single EXPORTING Parameter",
     "className": "/SKYL/CL_PREF_RETURNING",
     "checkName": "/SKYL/PREF_RETURNING",
     "category": "clean-abap",
@@ -2005,7 +2005,7 @@
   },
   {
     "ruleId": "no-prod-assert",
-    "title": "Avoid Native ASSERT in Production Code (Prevent Unrecoverable Dumps)",
+    "title": "Avoid Native ASSERT Statements in Production Logic",
     "className": "/SKYL/CL_NO_PROD_ASSERT",
     "checkName": "/SKYL/NO_PROD_ASSERT",
     "category": "security",
@@ -2043,7 +2043,7 @@
   },
   {
     "ruleId": "no-metaprogramming",
-    "title": "Avoid Dynamic Metaprogramming and Code Generation (Remote Code Execution Risk)",
+    "title": "Avoid Dynamic Metaprogramming and Runtime Code Generation",
     "className": "/SKYL/CL_NO_METAPROGRAMMING",
     "checkName": "/SKYL/NO_METAPROGRAMMING",
     "category": "security",
@@ -2062,7 +2062,7 @@
   },
   {
     "ruleId": "no-kernel-call",
-    "title": "Avoid Kernel and Native Database Calls (SYSTEM-CALL, EXEC SQL)",
+    "title": "Avoid Internal C-Kernel Calls and Native Database SQL",
     "className": "/SKYL/CL_NO_KERNEL_CALL",
     "checkName": "/SKYL/NO_KERNEL_CALL",
     "category": "security",
@@ -2081,7 +2081,7 @@
   },
   {
     "ruleId": "pref-auth-check",
-    "title": "Ensure AUTHORITY-CHECK Precedes Sensitive Business Operations",
+    "title": "Protect CALL TRANSACTION Statements with AUTHORITY-CHECK",
     "className": "/SKYL/CL_PREF_AUTH_CHECK",
     "checkName": "/SKYL/PREF_AUTH_CHECK",
     "category": "security",
@@ -2100,7 +2100,7 @@
   },
   {
     "ruleId": "pref-order-by",
-    "title": "Require Explicit ORDER BY for Deterministic SELECT Queries",
+    "title": "Require Explicit ORDER BY with UP TO N ROWS Clauses",
     "className": "/SKYL/CL_PREF_ORDER_BY",
     "checkName": "/SKYL/PREF_ORDER_BY",
     "category": "performance",
@@ -2119,7 +2119,7 @@
   },
   {
     "ruleId": "max-cyclo-comp",
-    "title": "Limit Cyclomatic Complexity (McCabe Complexity Metric)",
+    "title": "Limit McCabe Cyclomatic Complexity per Procedure",
     "className": "/SKYL/CL_MAX_CYCLO_COMP",
     "checkName": "/SKYL/MAX_CYCLO_COMP",
     "category": "metrics",
@@ -2149,7 +2149,7 @@
   },
   {
     "ruleId": "max-npath",
-    "title": "Limit NPath Complexity per Method",
+    "title": "Limit NPath Execution Path Complexity per Method",
     "className": "/SKYL/CL_MAX_NPATH",
     "checkName": "/SKYL/MAX_NPATH",
     "category": "metrics",
@@ -2180,7 +2180,7 @@
   },
   {
     "ruleId": "pref-final-cls",
-    "title": "Design for Inheritance or Prohibit It (FINAL)",
+    "title": "Design for Inheritance or Prohibit It with FINAL",
     "className": "/SKYL/CL_PREF_FINAL_CLS",
     "checkName": "/SKYL/PREF_FINAL_CLS",
     "category": "clean-abap",
@@ -2219,7 +2219,7 @@
   },
   {
     "ruleId": "no-magic-numbers",
-    "title": "Avoid Magic Numbers; Use Named Constants",
+    "title": "Replace Unexplained Magic Numbers with Named Constants",
     "className": "/SKYL/CL_NO_MAGIC_NUMBERS",
     "checkName": "/SKYL/NO_MAGIC_NUMBERS",
     "category": "anti-patterns",
@@ -2257,7 +2257,7 @@
   },
   {
     "ruleId": "no-like-objects",
-    "title": "Avoid LIKE Typing on Global Dictionary Objects",
+    "title": "Declare Data Objects with Explicit TYPE Instead of LIKE",
     "className": "/SKYL/CL_NO_LIKE_OBJECTS",
     "checkName": "/SKYL/NO_LIKE_OBJECTS",
     "category": "anti-patterns",
@@ -2276,7 +2276,7 @@
   },
   {
     "ruleId": "no-static-cls",
-    "title": "Avoid Purely Static Utility Classes",
+    "title": "Design Classes with Instance Methods and Interfaces Instead of Static-Only Utilities",
     "className": "/SKYL/CL_NO_STATIC_CLS",
     "checkName": "/SKYL/NO_STATIC_CLS",
     "category": "anti-patterns",
@@ -2295,7 +2295,7 @@
   },
   {
     "ruleId": "pref-pred-name",
-    "title": "Use Predicate Naming for Boolean Methods (is_, has_, can_)",
+    "title": "Use Predicate Naming (is_, has_, can_) for Boolean Methods",
     "className": "/SKYL/CL_PREF_PRED_NAME",
     "checkName": "/SKYL/PREF_PRED_NAME",
     "category": "clean-abap",
@@ -2314,7 +2314,7 @@
   },
   {
     "ruleId": "max-inherit",
-    "title": "Limit Class Inheritance Depth (Favor Composition over Inheritance)",
+    "title": "Limit Class Inheritance Depth and Favor Object Composition",
     "className": "/SKYL/CL_MAX_INHERIT",
     "checkName": "/SKYL/MAX_INHERIT",
     "category": "metrics",
@@ -2344,7 +2344,7 @@
   },
   {
     "ruleId": "max-attributes",
-    "title": "Limit Class Member Attribute Count (Prevent God Classes)",
+    "title": "Limit Class Member Attribute Count to Prevent God Objects",
     "className": "/SKYL/CL_MAX_ATTRIBUTES",
     "checkName": "/SKYL/MAX_ATTRIBUTES",
     "category": "metrics",
@@ -2374,7 +2374,7 @@
   },
   {
     "ruleId": "no-catch-root",
-    "title": "Avoid Catching Generic CX_ROOT (Catch Specific Exceptions)",
+    "title": "Avoid Generic CATCH cx_root and Catch Specific Exceptions",
     "className": "/SKYL/CL_NO_CATCH_ROOT",
     "checkName": "/SKYL/NO_CATCH_ROOT",
     "category": "security",
@@ -2393,7 +2393,7 @@
   },
   {
     "ruleId": "no-msg-raising",
-    "title": "Avoid Obsolete MESSAGE ... RAISING in Methods",
+    "title": "Raise Class-Based Exceptions Instead of Obsolete MESSAGE ... RAISING",
     "className": "/SKYL/CL_NO_MSG_RAISING",
     "checkName": "/SKYL/NO_MSG_RAISING",
     "category": "anti-patterns",
@@ -2412,7 +2412,7 @@
   },
   {
     "ruleId": "no-nested-try",
-    "title": "Avoid Deeply Nested TRY ... CATCH Blocks",
+    "title": "Extract Nested TRY Blocks into Dedicated Helper Methods",
     "className": "/SKYL/CL_NO_NESTED_TRY",
     "checkName": "/SKYL/NO_NESTED_TRY",
     "category": "anti-patterns",
@@ -2431,7 +2431,7 @@
   },
   {
     "ruleId": "no-raise-cx-sy",
-    "title": "Avoid Raising System Exceptions Directly (CX_SY_*)",
+    "title": "Avoid Raising System Exceptions Directly (cx_sy_*)",
     "className": "/SKYL/CL_NO_RAISE_CX_SY",
     "checkName": "/SKYL/NO_RAISE_CX_SY",
     "category": "security",
@@ -2525,7 +2525,7 @@
   },
   {
     "ruleId": "pref-auth-subrc",
-    "title": "Check sy-subrc Promptly After AUTHORITY-CHECK (CWE-862 Authorization Bypass)",
+    "title": "Check sy-subrc Immediately After AUTHORITY-CHECK",
     "className": "/SKYL/CL_PREF_AUTH_SUBRC",
     "checkName": "/SKYL/PREF_AUTH_SUBRC",
     "category": "security",
@@ -2544,7 +2544,7 @@
   },
   {
     "ruleId": "no-client-spec",
-    "title": "Avoid CLIENT SPECIFIED / USING CLIENT in Cloud (Multi-Tenant Isolation)",
+    "title": "Avoid CLIENT SPECIFIED and USING CLIENT in ABAP SQL",
     "className": "/SKYL/CL_NO_CLIENT_SPEC",
     "checkName": "/SKYL/NO_CLIENT_SPEC",
     "category": "security",
@@ -2563,7 +2563,7 @@
   },
   {
     "ruleId": "pref-transport",
-    "title": "Specify TRANSPORTING in Internal Table MODIFY and READ Operations",
+    "title": "Specify TRANSPORTING in Internal Table MODIFY Inside Loops",
     "className": "/SKYL/CL_PREF_TRANSPORT",
     "checkName": "/SKYL/PREF_TRANSPORT",
     "category": "performance",
@@ -2582,7 +2582,7 @@
   },
   {
     "ruleId": "pref-str-func",
-    "title": "Prefer Built-in String Functions over SEARCH/SHIFT",
+    "title": "Replace Obsolete String Statements with Built-in String Functions",
     "className": "/SKYL/CL_PREF_STR_FUNC",
     "checkName": "/SKYL/PREF_STR_FUNC",
     "category": "clean-abap",
@@ -2666,7 +2666,7 @@
   },
   {
     "ruleId": "pref-calc-op",
-    "title": "Prefer Calculation Assignment Operators (+=, -=, *=)",
+    "title": "Prefer Calculation Assignment Operators (+=, -=, *=, /=)",
     "className": "/SKYL/CL_PREF_CALC_OP",
     "checkName": "/SKYL/PREF_CALC_OP",
     "category": "clean-abap",
@@ -2685,7 +2685,7 @@
   },
   {
     "ruleId": "pref-early-ret",
-    "title": "Prefer Early Return to Reduce Nesting (Guard Clauses)",
+    "title": "Prefer Early Return and CONTINUE Guard Clauses over Nesting",
     "className": "/SKYL/CL_PREF_EARLY_RET",
     "checkName": "/SKYL/PREF_EARLY_RET",
     "category": "clean-abap",
@@ -2733,7 +2733,7 @@
   },
   {
     "ruleId": "no-unused-vars",
-    "title": "Eliminate Unused Local Variables and Symbols",
+    "title": "Remove Unread Local Variables and Field Symbols",
     "className": "/SKYL/CL_NO_UNUSED_VARS",
     "checkName": "/SKYL/NO_UNUSED_VARS",
     "category": "anti-patterns",
@@ -2782,7 +2782,7 @@
   },
   {
     "ruleId": "no-inline-len",
-    "title": "Avoid Obsolete Inline Length Specifications (var(len))",
+    "title": "Declare Character Lengths with Explicit LENGTH Clause Instead of Parenthesized Syntax",
     "className": "/SKYL/CL_NO_INLINE_LEN",
     "checkName": "/SKYL/NO_INLINE_LEN",
     "category": "anti-patterns",
@@ -2801,7 +2801,7 @@
   },
   {
     "ruleId": "max-one-stmt",
-    "title": "Limit One Statement per Source Code Line (No Inline Colon Chains)",
+    "title": "Limit One Statement per Source Code Line",
     "className": "/SKYL/CL_MAX_ONE_STMT",
     "checkName": "/SKYL/MAX_ONE_STMT",
     "category": "metrics",
@@ -2820,7 +2820,7 @@
   },
   {
     "ruleId": "no-dash-in-form",
-    "title": "Avoid Obsolete Dash (-) in Form Names",
+    "title": "Use Underscores Instead of Hyphens in Subroutine FORM Names",
     "className": "/SKYL/CL_NO_DASH_IN_FORM",
     "checkName": "/SKYL/NO_DASH_IN_FORM",
     "category": "anti-patterns",
@@ -2839,7 +2839,7 @@
   },
   {
     "ruleId": "pref-inline",
-    "title": "Prefer Modern Inline Declarations in ABAP 7.40+",
+    "title": "Prefer Inline Declarations over Separate DATA and Assignment",
     "className": "/SKYL/CL_PREF_INLINE",
     "checkName": "/SKYL/PREF_INLINE",
     "category": "clean-abap",
@@ -2858,7 +2858,7 @@
   },
   {
     "ruleId": "pref-final-data",
-    "title": "Prefer FINAL( ) over DATA( ) when the variable is never written again",
+    "title": "Declare Single-Assignment Local Variables with FINAL( )",
     "className": "/SKYL/CL_PREF_FINAL_DATA",
     "checkName": "/SKYL/PREF_FINAL_DATA",
     "category": "clean-abap",
@@ -2877,7 +2877,7 @@
   },
   {
     "ruleId": "no-friends",
-    "title": "Avoid FRIENDS in class definitions",
+    "title": "Avoid Granting Friendship via FRIENDS in Class Definitions",
     "className": "/SKYL/CL_NO_FRIENDS",
     "checkName": "/SKYL/NO_FRIENDS",
     "category": "anti-patterns",
@@ -2896,7 +2896,7 @@
   },
   {
     "ruleId": "pref-msg-cls",
-    "title": "Use a message class (SE91) instead of inline message text",
+    "title": "Use Centralized Message Classes Instead of Hardcoded Text Literals",
     "className": "/SKYL/CL_PREF_MSG_CLS",
     "checkName": "/SKYL/PREF_MSG_CLS",
     "category": "clean-abap",
@@ -2915,7 +2915,7 @@
   },
   {
     "ruleId": "no-exc-overlap",
-    "title": "Classic EXCEPTIONS must not map two errors to the same number",
+    "title": "Assign Distinct Error Numbers in Classic Function EXCEPTIONS Clauses",
     "className": "/SKYL/CL_NO_EXC_OVERLAP",
     "checkName": "/SKYL/NO_EXC_OVERLAP",
     "category": "anti-patterns",
@@ -2934,7 +2934,7 @@
   },
   {
     "ruleId": "no-rfc-err",
-    "title": "Handle System and Communication Failures in Remote Function Calls (RFC)",
+    "title": "Handle System and Communication Failures in Remote RFC Calls",
     "className": "/SKYL/CL_NO_RFC_ERR",
     "checkName": "/SKYL/NO_RFC_ERR",
     "category": "security",
@@ -2953,7 +2953,7 @@
   },
   {
     "ruleId": "no-many-parens",
-    "title": "Remove redundant parentheses",
+    "title": "Remove Redundant Parentheses in Boolean and Assignment Expressions",
     "className": "/SKYL/CL_NO_MANY_PARENS",
     "checkName": "/SKYL/NO_MANY_PARENS",
     "category": "anti-patterns",
@@ -2972,7 +2972,7 @@
   },
   {
     "ruleId": "pref-pass-by-ref",
-    "title": "Prefer Pass-by-Reference for Internal Tables in Method Signatures",
+    "title": "Pass Importing Parameters by Reference to Avoid Value Copies",
     "className": "/SKYL/CL_PREF_PASS_BY_REF",
     "checkName": "/SKYL/PREF_PASS_BY_REF",
     "category": "performance",
@@ -2991,7 +2991,7 @@
   },
   {
     "ruleId": "no-mod-std-table",
-    "title": "Only Modify Tables Defined in Your Own Package/Component",
+    "title": "Restrict Database Modifications to Customer-Owned Tables",
     "className": "/SKYL/CL_NO_MOD_STD_TABLE",
     "checkName": "/SKYL/NO_MOD_STD_TABLE",
     "category": "security",
@@ -3030,7 +3030,7 @@
   },
   {
     "ruleId": "no-dynamic-stmt",
-    "title": "Avoid Unnecessary Dynamic Programming Constructs (SQL Injection Prevention)",
+    "title": "Avoid Dynamic OpenSQL and Metaprogramming Language Constructs",
     "className": "/SKYL/CL_NO_DYNAMIC_STMT",
     "checkName": "/SKYL/NO_DYNAMIC_STMT",
     "category": "security",
@@ -3069,7 +3069,7 @@
   },
   {
     "ruleId": "pref-pub-ctor",
-    "title": "Declare Constructor in PUBLIC SECTION",
+    "title": "Declare Instance Constructor in PUBLIC SECTION Regardless of Instantiation Scope",
     "className": "/SKYL/CL_PREF_PUB_CTOR",
     "checkName": "/SKYL/PREF_PUB_CTOR",
     "category": "clean-abap",
@@ -3088,7 +3088,7 @@
   },
   {
     "ruleId": "pref-declarations",
-    "title": "Routine Declaration Hygiene (Top Placement & Order)",
+    "title": "Enforce Routine Declaration Hierarchy and Top-of-Block Placement",
     "className": "/SKYL/CL_PREF_DECLARATIONS",
     "checkName": "/SKYL/PREF_DECLARATIONS",
     "category": "clean-abap",
@@ -3127,7 +3127,7 @@
   },
   {
     "ruleId": "no-unnec-return",
-    "title": "Omit Unnecessary RETURN Statement",
+    "title": "Omit Redundant RETURN Statement at the End of Routines",
     "className": "/SKYL/CL_NO_UNNEC_RETURN",
     "checkName": "/SKYL/NO_UNNEC_RETURN",
     "category": "anti-patterns",
@@ -3146,7 +3146,7 @@
   },
   {
     "ruleId": "no-mix-returning",
-    "title": "Do Not Mix RETURNING with EXPORTING or CHANGING",
+    "title": "Separate Functional RETURNING Parameters from EXPORTING and CHANGING Outputs",
     "className": "/SKYL/CL_NO_MIX_RETURNING",
     "checkName": "/SKYL/NO_MIX_RETURNING",
     "category": "anti-patterns",
@@ -3165,7 +3165,7 @@
   },
   {
     "ruleId": "no-overw-builtin",
-    "title": "Avoid Method Names That Overwrite Built-in Functions",
+    "title": "Prevent Declaring Methods That Shadow Built-in ABAP Functions",
     "className": "/SKYL/CL_NO_OVERW_BUILTIN",
     "checkName": "/SKYL/NO_OVERW_BUILTIN",
     "category": "anti-patterns",
@@ -3184,7 +3184,7 @@
   },
   {
     "ruleId": "pref-is-initial",
-    "title": "Prefer IS [NOT] INITIAL over lines( ) or Literal Comparisons",
+    "title": "Prefer IS [NOT] INITIAL Over lines( ) and Empty Literal Comparisons",
     "className": "/SKYL/CL_PREF_IS_INITIAL",
     "checkName": "/SKYL/PREF_IS_INITIAL",
     "category": "clean-abap",
@@ -3203,7 +3203,7 @@
   },
   {
     "ruleId": "no-ignored-return",
-    "title": "Do Not Ignore Return Value of Functional Methods",
+    "title": "Capture and Consume Return Values of Functional Method Calls",
     "className": "/SKYL/CL_NO_IGNORED_RETURN",
     "checkName": "/SKYL/NO_IGNORED_RETURN",
     "category": "anti-patterns",
@@ -3222,7 +3222,7 @@
   },
   {
     "ruleId": "pref-downcast",
-    "title": "Modernize Downcasting (CAST #( ) Expression & Inlining)",
+    "title": "Modernize Downcasting with CAST #( ) Expressions and Inline Redundant Helpers",
     "className": "/SKYL/CL_PREF_DOWNCAST",
     "checkName": "/SKYL/PREF_DOWNCAST",
     "category": "clean-abap",
@@ -3261,7 +3261,7 @@
   },
   {
     "ruleId": "no-mod-loop-tab",
-    "title": "Do Not Mutate the Internal Table Currently Being Looped (Iterator Invalidation)",
+    "title": "Do Not Mutate or Sort Tables Currently Being Looped",
     "className": "/SKYL/CL_NO_MOD_LOOP_TAB",
     "checkName": "/SKYL/NO_MOD_LOOP_TAB",
     "category": "performance",
@@ -3354,7 +3354,7 @@
   },
   {
     "ruleId": "no-hardcoded-env",
-    "title": "Avoid Hardcoding System & Tenant Environment Checks (sy-sysid, sy-mandt)",
+    "title": "Avoid Reading Environment and Landscape System Fields",
     "className": "/SKYL/CL_NO_HARDCODED_ENV",
     "checkName": "/SKYL/NO_HARDCODED_ENV",
     "category": "security",
@@ -3465,7 +3465,7 @@
   },
   {
     "ruleId": "max-line-len",
-    "title": "Limit Source Code Line Length (Avoid Horizontal Scrolling)",
+    "title": "Limit Source Code Line Length to Avoid Horizontal Scrolling",
     "className": "/SKYL/CL_MAX_LINE_LEN",
     "checkName": "/SKYL/MAX_LINE_LEN",
     "category": "metrics",
@@ -3495,7 +3495,7 @@
   },
   {
     "ruleId": "pref-naming-vars",
-    "title": "Enforce Local Variable and Field-Symbol Naming Conventions",
+    "title": "Enforce Configured Naming Conventions for Local Variables and Field-Symbols",
     "className": "/SKYL/CL_PREF_NAMING_VARS",
     "checkName": "/SKYL/PREF_NAMING_VARS",
     "category": "clean-abap",
@@ -3552,7 +3552,7 @@
   },
   {
     "ruleId": "pref-name-members",
-    "title": "Enforce Class Attribute and Method Parameter Naming Conventions",
+    "title": "Enforce Standard Naming Conventions for Class Members, Parameters and Screens",
     "className": "/SKYL/CL_PREF_NAME_MEMBERS",
     "checkName": "/SKYL/PREF_NAME_MEMBERS",
     "category": "clean-abap",
@@ -3686,7 +3686,7 @@
   },
   {
     "ruleId": "pref-name-objects",
-    "title": "Enforce Class, Interface, Type and Object Naming Conventions",
+    "title": "Enforce Standard Naming Conventions for Classes, Interfaces, Types and Global Objects",
     "className": "/SKYL/CL_PREF_NAME_OBJECTS",
     "checkName": "/SKYL/PREF_NAME_OBJECTS",
     "category": "clean-abap",
@@ -3833,7 +3833,7 @@
   },
   {
     "ruleId": "no-bad-indent",
-    "title": "Statement Indentation Must Match Block Nesting",
+    "title": "Enforce Consistent Statement Indentation Based on Block Nesting Depth",
     "className": "/SKYL/CL_NO_BAD_INDENT",
     "checkName": "/SKYL/NO_BAD_INDENT",
     "category": "clean-abap",
@@ -3863,7 +3863,7 @@
   },
   {
     "ruleId": "no-dead-code",
-    "title": "Avoid Dead Code with Constant Conditions",
+    "title": "Eliminate Unreachable Dead Code Caused by Constant False Conditions",
     "className": "/SKYL/CL_NO_DEAD_CODE",
     "checkName": "/SKYL/NO_DEAD_CODE",
     "category": "anti-patterns",
@@ -3901,7 +3901,7 @@
   },
   {
     "ruleId": "pref-join-type",
-    "title": "Prefer an Explicit JOIN Type",
+    "title": "Specify Explicit Join Types in ABAP SQL SELECT Statements",
     "className": "/SKYL/CL_PREF_JOIN_TYPE",
     "checkName": "/SKYL/PREF_JOIN_TYPE",
     "category": "clean-abap",
@@ -3920,7 +3920,7 @@
   },
   {
     "ruleId": "pref-std-table",
-    "title": "Prefer TYPE STANDARD TABLE OF over TYPE TABLE OF",
+    "title": "Declare Standard Internal Tables Explicitly with TYPE STANDARD TABLE OF",
     "className": "/SKYL/CL_PREF_STD_TABLE",
     "checkName": "/SKYL/PREF_STD_TABLE",
     "category": "clean-abap",
@@ -3939,7 +3939,7 @@
   },
   {
     "ruleId": "pref-is-supplied",
-    "title": "Prefer IS SUPPLIED over IS REQUESTED",
+    "title": "Replace Obsolete IS REQUESTED with Modern IS SUPPLIED Predicate",
     "className": "/SKYL/CL_PREF_IS_SUPPLIED",
     "checkName": "/SKYL/PREF_IS_SUPPLIED",
     "category": "clean-abap",
@@ -3958,7 +3958,7 @@
   },
   {
     "ruleId": "pref-sy",
-    "title": "Prefer the Short System Field Alias SY over SYST",
+    "title": "Prefer Short System Field Structure Alias SY Over Legacy SYST",
     "className": "/SKYL/CL_PREF_SY",
     "checkName": "/SKYL/PREF_SY",
     "category": "clean-abap",
@@ -3977,7 +3977,7 @@
   },
   {
     "ruleId": "no-unfilt-dml",
-    "title": "Avoid UPDATE or DELETE Without a WHERE Condition (Catastrophic Data Wipe Prevention)",
+    "title": "Enforce WHERE Conditions on Database UPDATE and DELETE Statements",
     "className": "/SKYL/CL_NO_UNFILT_DML",
     "checkName": "/SKYL/NO_UNFILT_DML",
     "category": "security",
@@ -3996,7 +3996,7 @@
   },
   {
     "ruleId": "no-concat-loop",
-    "title": "Avoid String Concatenation Inside Loops (Quadratic Memory Allocation)",
+    "title": "Avoid String Accumulation Inside Loops (Quadratic Memory Growth)",
     "className": "/SKYL/CL_NO_CONCAT_LOOP",
     "checkName": "/SKYL/NO_CONCAT_LOOP",
     "category": "performance",
@@ -4015,7 +4015,7 @@
   },
   {
     "ruleId": "no-dup-literals",
-    "title": "Avoid Repeating the Same String Literal",
+    "title": "Extract Repeated String Literals into Named Constants",
     "className": "/SKYL/CL_NO_DUP_LITERALS",
     "checkName": "/SKYL/NO_DUP_LITERALS",
     "category": "anti-patterns",
@@ -4054,7 +4054,7 @@
   },
   {
     "ruleId": "no-neg-cond",
-    "title": "Avoid Negated IF Conditions with ELSE",
+    "title": "Avoid Negated IF Conditions with an ELSE Branch by Inverting Condition and Swapping Branches",
     "className": "/SKYL/CL_NO_NEG_COND",
     "checkName": "/SKYL/NO_NEG_COND",
     "category": "clean-abap",
@@ -4103,7 +4103,7 @@
   },
   {
     "ruleId": "no-late-sys-idx",
-    "title": "Avoid Late Access to sy-tabix or sy-index Outside Loops",
+    "title": "Capture sy-tabix and sy-index Immediately at Loop Start",
     "className": "/SKYL/CL_NO_LATE_SYS_IDX",
     "checkName": "/SKYL/NO_LATE_SYS_IDX",
     "category": "anti-patterns",
@@ -4122,7 +4122,7 @@
   },
   {
     "ruleId": "no-unhandled-eml",
-    "title": "Provide FAILED and REPORTED in RAP EML Statements (Silent Transaction Failure Prevention)",
+    "title": "Provide FAILED and REPORTED in RAP EML Statements",
     "className": "/SKYL/CL_NO_UNHANDLED_EML",
     "checkName": "/SKYL/NO_UNHANDLED_EML",
     "category": "security",
@@ -4161,7 +4161,7 @@
   },
   {
     "ruleId": "no-empty-override",
-    "title": "Avoid Method Override That Only Delegates to Super",
+    "title": "Omit Method Redefinitions That Only Delegate to Super",
     "className": "/SKYL/CL_NO_EMPTY_OVERRIDE",
     "checkName": "/SKYL/NO_EMPTY_OVERRIDE",
     "category": "anti-patterns",
@@ -4200,7 +4200,7 @@
   },
   {
     "ruleId": "pref-composition",
-    "title": "Prefer Composition over Inheritance",
+    "title": "Favor Object Composition and Delegation Over Class Inheritance",
     "className": "/SKYL/CL_PREF_COMPOSITION",
     "checkName": "/SKYL/PREF_COMPOSITION",
     "category": "clean-abap",
@@ -4230,7 +4230,7 @@
   },
   {
     "ruleId": "pref-intf-segreg",
-    "title": "Prefer Interface Segregation (Small, Focused Interfaces)",
+    "title": "Prefer Small, Role-Based Interfaces (Interface Segregation)",
     "className": "/SKYL/CL_PREF_INTF_SEGREG",
     "checkName": "/SKYL/PREF_INTF_SEGREG",
     "category": "clean-abap",
@@ -4260,7 +4260,7 @@
   },
   {
     "ruleId": "no-single-letter",
-    "title": "Avoid Single-Letter Variable Names",
+    "title": "Avoid Single-Letter Identifiers in Declarations",
     "className": "/SKYL/CL_NO_SINGLE_LETTER",
     "checkName": "/SKYL/NO_SINGLE_LETTER",
     "category": "clean-abap",
@@ -4290,7 +4290,7 @@
   },
   {
     "ruleId": "pref-factory-name",
-    "title": "Prefer CREATE_* Prefix for Factory Methods Returning Own Class",
+    "title": "Name Static Factory Methods CREATE_* When They Return Their Own Class",
     "className": "/SKYL/CL_PREF_FACTORY_NAME",
     "checkName": "/SKYL/PREF_FACTORY_NAME",
     "category": "clean-abap",
@@ -4320,7 +4320,7 @@
   },
   {
     "ruleId": "no-hungarian",
-    "title": "Avoid Hungarian Notation and Type Prefixes",
+    "title": "Avoid Hungarian Notation and Legacy Type Prefixes in Names",
     "className": "/SKYL/CL_NO_HUNGARIAN",
     "checkName": "/SKYL/NO_HUNGARIAN",
     "category": "clean-abap",
@@ -4368,7 +4368,7 @@
   },
   {
     "ruleId": "max-returns",
-    "title": "Limit Multiple Return Statements per Method Body",
+    "title": "Limit Number of Return Statements per Procedure",
     "className": "/SKYL/CL_MAX_RETURNS",
     "checkName": "/SKYL/MAX_RETURNS",
     "category": "metrics",
@@ -4398,7 +4398,7 @@
   },
   {
     "ruleId": "no-instance-of",
-    "title": "Avoid IS INSTANCE OF and CASE TYPE OF Type Tests",
+    "title": "Replace IS INSTANCE OF and CASE TYPE OF with Polymorphism",
     "className": "/SKYL/CL_NO_INSTANCE_OF",
     "checkName": "/SKYL/NO_INSTANCE_OF",
     "category": "clean-abap",
@@ -4428,7 +4428,7 @@
   },
   {
     "ruleId": "no-self-compare",
-    "title": "Avoid Comparisons and Arithmetic with Identical Operands",
+    "title": "Avoid Comparisons and Operations with Identical Operands",
     "className": "/SKYL/CL_NO_SELF_COMPARE",
     "checkName": "/SKYL/NO_SELF_COMPARE",
     "category": "anti-patterns",
@@ -4447,7 +4447,7 @@
   },
   {
     "ruleId": "no-catch-reraise",
-    "title": "Avoid CATCH Blocks That Only Re-raise the Same Exception",
+    "title": "Avoid CATCH Handlers That Only Re-raise the Caught Exception",
     "className": "/SKYL/CL_NO_CATCH_RERAISE",
     "checkName": "/SKYL/NO_CATCH_RERAISE",
     "category": "anti-patterns",
@@ -4466,7 +4466,7 @@
   },
   {
     "ruleId": "pref-when-others",
-    "title": "Require WHEN OTHERS as the Last Branch of CASE",
+    "title": "Require WHEN OTHERS as the Last Branch of Every CASE",
     "className": "/SKYL/CL_PREF_WHEN_OTHERS",
     "checkName": "/SKYL/PREF_WHEN_OTHERS",
     "category": "clean-abap",
@@ -4505,7 +4505,7 @@
   },
   {
     "ruleId": "no-exc-chain",
-    "title": "Preserve the Original Exception with PREVIOUS",
+    "title": "Preserve Root Cause Exceptions in PREVIOUS Parameter",
     "className": "/SKYL/CL_NO_EXC_CHAIN",
     "checkName": "/SKYL/NO_EXC_CHAIN",
     "category": "anti-patterns",
@@ -4535,7 +4535,7 @@
   },
   {
     "ruleId": "pref-between",
-    "title": "Prefer BETWEEN for Inclusive Range Checks",
+    "title": "Use BETWEEN for Inclusive Range Checks",
     "className": "/SKYL/CL_PREF_BETWEEN",
     "checkName": "/SKYL/PREF_BETWEEN",
     "category": "clean-abap",
@@ -4565,7 +4565,7 @@
   },
   {
     "ruleId": "no-loop-into",
-    "title": "Prefer ASSIGNING over LOOP INTO Copy Targets",
+    "title": "Prefer ASSIGNING Field Symbols Over LOOP INTO Copy Targets",
     "className": "/SKYL/CL_NO_LOOP_INTO",
     "checkName": "/SKYL/NO_LOOP_INTO",
     "category": "performance",
@@ -4584,7 +4584,7 @@
   },
   {
     "ruleId": "max-cognitive",
-    "title": "Limit Cognitive Complexity per Method",
+    "title": "Enforce Cognitive Complexity Thresholds per Procedure",
     "className": "/SKYL/CL_MAX_COGNITIVE",
     "checkName": "/SKYL/MAX_COGNITIVE",
     "category": "metrics",
@@ -4614,7 +4614,7 @@
   },
   {
     "ruleId": "max-locals",
-    "title": "Limit Local Variable Count per Method",
+    "title": "Limit Local Variable and Field-Symbol Declarations",
     "className": "/SKYL/CL_MAX_LOCALS",
     "checkName": "/SKYL/MAX_LOCALS",
     "category": "metrics",
@@ -4644,7 +4644,7 @@
   },
   {
     "ruleId": "max-fanout",
-    "title": "Limit Type Fan-Out per Procedure",
+    "title": "Limit Distinct Class and Interface Coupling per Procedure",
     "className": "/SKYL/CL_MAX_FANOUT",
     "checkName": "/SKYL/MAX_FANOUT",
     "category": "metrics",
@@ -4674,7 +4674,7 @@
   },
   {
     "ruleId": "no-bool-blindness",
-    "title": "Avoid Boolean Flag Importing Parameters",
+    "title": "Replace Boolean Importing Parameters with Explicit APIs",
     "className": "/SKYL/CL_NO_BOOL_BLINDNESS",
     "checkName": "/SKYL/NO_BOOL_BLINDNESS",
     "category": "clean-abap",
@@ -4693,7 +4693,7 @@
   },
   {
     "ruleId": "no-static-state",
-    "title": "Avoid Static State (CLASS-DATA and STATICS)",
+    "title": "Avoid Mutable Static State via CLASS-DATA and STATICS",
     "className": "/SKYL/CL_NO_STATIC_STATE",
     "checkName": "/SKYL/NO_STATIC_STATE",
     "category": "anti-patterns",
@@ -4732,7 +4732,7 @@
   },
   {
     "ruleId": "no-dummy-auth",
-    "title": "Avoid DUMMY Authorization Checks",
+    "title": "Avoid DUMMY Addition in AUTHORITY-CHECK Statements",
     "className": "/SKYL/CL_NO_DUMMY_AUTH",
     "checkName": "/SKYL/NO_DUMMY_AUTH",
     "category": "security",
@@ -4751,7 +4751,7 @@
   },
   {
     "ruleId": "no-dead-store",
-    "title": "Avoid Assignments Whose Value Is Never Read",
+    "title": "Avoid Overwriting Variable Values Before They Are Read",
     "className": "/SKYL/CL_NO_DEAD_STORE",
     "checkName": "/SKYL/NO_DEAD_STORE",
     "category": "anti-patterns",
@@ -4770,7 +4770,7 @@
   },
   {
     "ruleId": "no-wrong-wildcard",
-    "title": "Avoid Wrong Wildcards in LIKE, CP, and NP",
+    "title": "Use Appropriate Wildcards for LIKE and CP/NP Comparisons",
     "className": "/SKYL/CL_NO_WRONG_WILDCARD",
     "checkName": "/SKYL/NO_WRONG_WILDCARD",
     "category": "anti-patterns",
@@ -4808,7 +4808,7 @@
   },
   {
     "ruleId": "pref-sort-order",
-    "title": "Explicitly Specify SORT Order",
+    "title": "Specify ASCENDING or DESCENDING on Every Sort Key",
     "className": "/SKYL/CL_PREF_SORT_ORDER",
     "checkName": "/SKYL/PREF_SORT_ORDER",
     "category": "clean-abap",
@@ -4837,7 +4837,7 @@
   },
   {
     "ruleId": "pref-icon-const",
-    "title": "Prefer ICON_ Constants over Hardcoded Icon Codes",
+    "title": "Use ICON Constants Instead of Hardcoded @xx@ Icon Codes",
     "className": "/SKYL/CL_PREF_ICON_CONST",
     "checkName": "/SKYL/PREF_ICON_CONST",
     "category": "clean-abap",
@@ -4855,7 +4855,7 @@
   },
   {
     "ruleId": "no-ambiguous-stmt",
-    "title": "Avoid Ambiguous Statements",
+    "title": "Make MODIFY, DELETE, INSERT and UPDATE Unambiguous for Itab and Database",
     "className": "/SKYL/CL_NO_AMBIGUOUS_STMT",
     "checkName": "/SKYL/NO_AMBIGUOUS_STMT",
     "category": "clean-abap",
@@ -4873,7 +4873,7 @@
   },
   {
     "ruleId": "no-empty-proc",
-    "title": "Avoid Empty Procedures",
+    "title": "Remove Empty Methods, Forms and Function Modules",
     "className": "/SKYL/CL_NO_EMPTY_PROC",
     "checkName": "/SKYL/NO_EMPTY_PROC",
     "category": "clean-abap",
@@ -4920,7 +4920,7 @@
   },
   {
     "ruleId": "no-intf-class-ref",
-    "title": "Avoid Concrete Class References in Interfaces",
+    "title": "Keep Concrete Class References Out of Interface Components",
     "className": "/SKYL/CL_NO_INTF_CLASS_REF",
     "checkName": "/SKYL/NO_INTF_CLASS_REF",
     "category": "clean-abap",
@@ -4938,7 +4938,7 @@
   },
   {
     "ruleId": "no-aliases",
-    "title": "Avoid ALIASES in Classes and Interfaces",
+    "title": "Avoid ALIASES and Reference Interface Components Explicitly",
     "className": "/SKYL/CL_NO_ALIASES",
     "checkName": "/SKYL/NO_ALIASES",
     "category": "clean-abap",
@@ -4967,7 +4967,7 @@
   },
   {
     "ruleId": "no-abstract-final",
-    "title": "Avoid Abstract Final Classes",
+    "title": "Avoid Conflicting ABSTRACT and FINAL Class Modifiers",
     "className": "/SKYL/CL_NO_ABSTRACT_FINAL",
     "checkName": "/SKYL/NO_ABSTRACT_FINAL",
     "category": "anti-patterns",
@@ -4985,7 +4985,7 @@
   },
   {
     "ruleId": "no-double-space",
-    "title": "Avoid Consecutive Whitespace Between Tokens",
+    "title": "Use Exactly One Space Between Tokens on the Same Line",
     "className": "/SKYL/CL_NO_DOUBLE_SPACE",
     "checkName": "/SKYL/NO_DOUBLE_SPACE",
     "category": "clean-abap",
@@ -5003,7 +5003,7 @@
   },
   {
     "ruleId": "pref-param-1line",
-    "title": "Single Parameter or Field Per Line",
+    "title": "One Parameter or Structure Component per Line",
     "className": "/SKYL/CL_PREF_PARAM_1LINE",
     "checkName": "/SKYL/PREF_PARAM_1LINE",
     "category": "clean-abap",
@@ -5021,7 +5021,7 @@
   },
   {
     "ruleId": "no-into-fs",
-    "title": "Avoid INTO with Field Symbols",
+    "title": "Use ASSIGNING Instead of INTO with Field Symbols",
     "className": "/SKYL/CL_NO_INTO_FS",
     "checkName": "/SKYL/NO_INTO_FS",
     "category": "anti-patterns",
@@ -5039,7 +5039,7 @@
   },
   {
     "ruleId": "pref-strict-sql",
-    "title": "Prefer Strict SQL Host Variable Escaping",
+    "title": "Escape ABAP SQL Host Variables and Table Targets with @",
     "className": "/SKYL/CL_PREF_STRICT_SQL",
     "checkName": "/SKYL/PREF_STRICT_SQL",
     "category": "clean-abap",
@@ -5057,7 +5057,7 @@
   },
   {
     "ruleId": "pref-enum",
-    "title": "Prefer Enumerations over Constants",
+    "title": "Use Enumerated Types Instead of Structured Constants",
     "className": "/SKYL/CL_PREF_ENUM",
     "checkName": "/SKYL/PREF_ENUM",
     "category": "clean-abap",
@@ -5075,7 +5075,7 @@
   },
   {
     "ruleId": "no-protected-data",
-    "title": "Avoid Protected Attributes",
+    "title": "Keep Class Attributes Private Instead of Protected",
     "className": "/SKYL/CL_NO_PROTECTED_DATA",
     "checkName": "/SKYL/NO_PROTECTED_DATA",
     "category": "clean-abap",
@@ -5093,7 +5093,7 @@
   },
   {
     "ruleId": "no-method-chain",
-    "title": "Avoid Excessive Method Chaining",
+    "title": "Avoid Method Call Chains Longer Than the Configured Limit",
     "className": "/SKYL/CL_NO_METHOD_CHAIN",
     "checkName": "/SKYL/NO_METHOD_CHAIN",
     "category": "clean-abap",
@@ -5122,7 +5122,7 @@
   },
   {
     "ruleId": "no-implicit-any",
-    "title": "Avoid Generic and Implicit ANY Types",
+    "title": "Declare Concrete Types Instead of Generic ANY",
     "className": "/SKYL/CL_NO_IMPLICIT_ANY",
     "checkName": "/SKYL/NO_IMPLICIT_ANY",
     "category": "clean-abap",
@@ -5140,7 +5140,7 @@
   },
   {
     "ruleId": "pref-union",
-    "title": "Prefer UNION over UNION ALL",
+    "title": "Prefer Distinct UNION over UNION ALL in SQL Queries",
     "className": "/SKYL/CL_PREF_UNION",
     "checkName": "/SKYL/PREF_UNION",
     "category": "performance",
@@ -5158,7 +5158,7 @@
   },
   {
     "ruleId": "no-hardcoded-url",
-    "title": "Avoid Hardcoded HTTP, HTTPS, and FTP URLs in Source Code",
+    "title": "Avoid Hardcoded HTTP and FTP URLs in Source Code",
     "className": "/SKYL/CL_NO_HARDCODED_URL",
     "checkName": "/SKYL/NO_HARDCODED_URL",
     "category": "security",
@@ -5234,7 +5234,7 @@
   },
   {
     "ruleId": "no-raw-html",
-    "title": "Avoid Hardcoded and Unescaped Raw HTML in Source Code",
+    "title": "Avoid Hardcoded Raw HTML Markup and Cross-Site Scripting",
     "className": "/SKYL/CL_NO_RAW_HTML",
     "checkName": "/SKYL/NO_RAW_HTML",
     "category": "security",
@@ -5272,7 +5272,7 @@
   },
   {
     "ruleId": "pref-test-attributes",
-    "title": "Require Explicit DURATION and RISK LEVEL Attributes on Test Classes",
+    "title": "Declare DURATION and RISK LEVEL on ABAP Unit Test Classes",
     "className": "/SKYL/CL_PREF_TEST_ATTR",
     "checkName": "/SKYL/PREF_TEST_ATTR",
     "category": "clean-abap",
@@ -5348,7 +5348,7 @@
   },
   {
     "ruleId": "max-sql-joins",
-    "title": "Limit Number of Table JOINs in OpenSQL Queries",
+    "title": "Limit Database Table JOINs in ABAP SQL Queries",
     "className": "/SKYL/CL_MAX_SQL_JOINS",
     "checkName": "/SKYL/MAX_SQL_JOINS",
     "category": "performance",
@@ -5377,7 +5377,7 @@
   },
   {
     "ruleId": "pref-loop-where",
-    "title": "Prefer LOOP AT WHERE over IF CONTINUE Guards",
+    "title": "Filter Internal Tables with LOOP AT WHERE Instead of a CONTINUE Guard",
     "className": "/SKYL/CL_PREF_LOOP_WHERE",
     "checkName": "/SKYL/PREF_LOOP_WHERE",
     "category": "clean-abap",
@@ -5396,7 +5396,7 @@
   },
   {
     "ruleId": "pref-sort-key",
-    "title": "Specify an Explicit SORT Key with BY",
+    "title": "Specify Explicit Sort Fields with SORT BY",
     "className": "/SKYL/CL_PREF_SORT_KEY",
     "checkName": "/SKYL/PREF_SORT_KEY",
     "category": "performance",
@@ -5414,7 +5414,7 @@
   },
   {
     "ruleId": "pref-plain-regex",
-    "title": "Prefer Simpler String Functions over Plain Regex",
+    "title": "Use Simple String Functions Instead of Metacharacter-Free Regex",
     "className": "/SKYL/CL_PREF_PLAIN_REGEX",
     "checkName": "/SKYL/PREF_PLAIN_REGEX",
     "category": "clean-abap",
@@ -5433,7 +5433,7 @@
   },
   {
     "ruleId": "max-blank-lines",
-    "title": "Limit Consecutive Blank Lines",
+    "title": "Limit Consecutive Blank Lines Between Statements",
     "className": "/SKYL/CL_MAX_BLANK_LINES",
     "checkName": "/SKYL/MAX_BLANK_LINES",
     "category": "clean-abap",
@@ -5463,7 +5463,7 @@
   },
   {
     "ruleId": "pref-read-key",
-    "title": "Prefer READ TABLE WITH KEY over WHERE",
+    "title": "Use WITH KEY Instead of WHERE in READ TABLE Statements",
     "className": "/SKYL/CL_PREF_READ_KEY",
     "checkName": "/SKYL/PREF_READ_KEY",
     "category": "performance",
@@ -5481,7 +5481,7 @@
   },
   {
     "ruleId": "no-multi-exc",
-    "title": "Raise At Most One Exception Class per Method",
+    "title": "Raise Only One Exception Type per Method",
     "className": "/SKYL/CL_NO_MULTI_EXC",
     "checkName": "/SKYL/NO_MULTI_EXC",
     "category": "clean-abap",
@@ -5519,7 +5519,7 @@
   },
   {
     "ruleId": "max-when-count",
-    "title": "Limit Number of WHEN Branches in CASE Statements",
+    "title": "Limit Number of WHEN Branches in CASE Blocks",
     "className": "/SKYL/CL_MAX_WHEN_COUNT",
     "checkName": "/SKYL/MAX_WHEN_COUNT",
     "category": "metrics",
@@ -5579,7 +5579,7 @@
   },
   {
     "ruleId": "max-loop-jumps",
-    "title": "Limit Jump Statements (CONTINUE, EXIT) per Loop",
+    "title": "Limit Jump Statements (CONTINUE and EXIT) per Loop",
     "className": "/SKYL/CL_MAX_LOOP_JUMPS",
     "checkName": "/SKYL/MAX_LOOP_JUMPS",
     "category": "metrics",
@@ -5638,7 +5638,7 @@
   },
   {
     "ruleId": "pref-clamp",
-    "title": "Prefer nmin/nmax or clamp Expressions over Manual IF Clamping",
+    "title": "Replace Manual IF Range Clamping with nmin( ) and nmax( )",
     "className": "/SKYL/CL_PREF_CLAMP",
     "checkName": "/SKYL/PREF_CLAMP",
     "category": "clean-abap",
@@ -5657,7 +5657,7 @@
   },
   {
     "ruleId": "no-nested-loop",
-    "title": "Disallow Nested LOOP AT Statements Without FROM or GROUP BY",
+    "title": "Avoid Unindexed Nested LOOP AT Statements",
     "className": "/SKYL/CL_NO_NESTED_LOOP",
     "checkName": "/SKYL/NO_NESTED_LOOP",
     "category": "performance",
@@ -5676,7 +5676,7 @@
   },
   {
     "ruleId": "no-full-scan-sel",
-    "title": "Avoid Unfiltered SELECT on Database Tables (Full Table Scan Prevention)",
+    "title": "Avoid Unfiltered SELECT Statements on Database Tables",
     "className": "/SKYL/CL_NO_FULL_SCAN_SEL",
     "checkName": "/SKYL/NO_FULL_SCAN_SEL",
     "category": "performance",
@@ -5706,7 +5706,7 @@
   },
   {
     "ruleId": "no-bypass-buf",
-    "title": "Avoid BYPASSING BUFFER in SELECT Statements",
+    "title": "Avoid BYPASSING BUFFER in ABAP SQL Queries",
     "className": "/SKYL/CL_NO_BYPASS_BUF",
     "checkName": "/SKYL/NO_BYPASS_BUF",
     "category": "performance",
@@ -5725,7 +5725,7 @@
   },
   {
     "ruleId": "no-cross-join",
-    "title": "Avoid CROSS JOIN in ABAP SQL Queries",
+    "title": "Avoid Unconstrained CROSS JOIN in ABAP SQL Queries",
     "className": "/SKYL/CL_NO_CROSS_JOIN",
     "checkName": "/SKYL/NO_CROSS_JOIN",
     "category": "performance",
@@ -5744,7 +5744,7 @@
   },
   {
     "ruleId": "no-sql-hints",
-    "title": "Avoid Database Hints (%_HINTS) in ABAP SQL",
+    "title": "Avoid Database Hints (%_HINTS) in ABAP SQL Queries",
     "className": "/SKYL/CL_NO_SQL_HINTS",
     "checkName": "/SKYL/NO_SQL_HINTS",
     "category": "performance",
@@ -5762,7 +5762,7 @@
   },
   {
     "ruleId": "no-lead-wildcard",
-    "title": "Avoid Leading Wildcards in LIKE Conditions",
+    "title": "Avoid Leading Wildcards in SQL LIKE Predicates",
     "className": "/SKYL/CL_NO_LEAD_WILDCARD",
     "checkName": "/SKYL/NO_LEAD_WILDCARD",
     "category": "performance",
@@ -5798,7 +5798,7 @@
   },
   {
     "ruleId": "no-dup-subexpr",
-    "title": "Avoid Duplicate Subexpressions in the Same Statement",
+    "title": "Avoid Duplicate Subexpressions in a Single Statement",
     "className": "/SKYL/CL_NO_DUP_SUBEXP",
     "checkName": "/SKYL/NO_DUP_SUBEXP",
     "category": "anti-patterns",
@@ -5817,7 +5817,7 @@
   },
   {
     "ruleId": "no-badi-commit",
-    "title": "Avoid COMMIT or ROLLBACK in BAdI Implementations",
+    "title": "Avoid COMMIT and ROLLBACK WORK Inside BAdI Implementations",
     "className": "/SKYL/CL_NO_BADI_COMMIT",
     "checkName": "/SKYL/NO_BADI_COMMIT",
     "category": "anti-patterns",
@@ -5835,7 +5835,7 @@
   },
   {
     "ruleId": "pref-opt-last",
-    "title": "Declare Optional and Default Parameters Last in Methods",
+    "title": "Declare OPTIONAL and DEFAULT Parameters Last",
     "className": "/SKYL/CL_PREF_OPT_LAST",
     "checkName": "/SKYL/PREF_OPT_LAST",
     "category": "clean-abap",

@@ -1,13 +1,13 @@
 ---
-title: "Avoid Comparing to abap_true / abap_false"
-description: "Avoid Comparing to abap_true / abap_false - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-bool-compare, anti-patterns"
+title: "Avoid Comparing Boolean Method Calls to abap_true or abap_false"
+description: "Avoid comparing boolean predicate method calls to abap_true or abap_false in Clean ABAP conditions."
+keywords: "no-bool-compare, predicate method, boolean comparison, abap_true, Clean ABAP"
 category: "anti-patterns"
 ruleId: "no-bool-compare"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L710"
 ---
 
-# Avoid Comparing to abap_true / abap_false
+# Avoid Comparing Boolean Method Calls to abap_true or abap_false
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -26,21 +26,21 @@ Avoid comparing boolean method calls to boolean literals.
 
 ## Rationale
 
-A boolean expression already evaluates to true or false, so comparing it to abap_true is redundant. The comparison hides predicate intent and can mask a missing method call or an accidental assignment. Test the expression directly and use NOT when the negative case is needed.
+Predicate methods that return a boolean flag (abap_bool) can be called directly within IF, ELSEIF, CHECK, and WHILE conditions. Comparing such method invocations to abap_true or abap_false is redundant, adds unnecessary syntax clutter, and obscures the predicate intent of the call. In Clean ABAP and ABAP Cloud, invoke the boolean-returning method directly as a predicate expression, using NOT when asserting the false condition. The check flags redundant comparisons with NO_BOOL_CM and offers the DROPBOOL quickfix to remove the literal.
 
 ### Non-Compliant
 
 ```abap
-IF is_valid( ) = abap_false.
-  RETURN.
+IF lo_permission_checker->is_authorized( ) = abap_true.
+  process_payment( ).
 ENDIF.
 ```
 
 ### Compliant
 
 ```abap
-IF NOT is_valid( ).
-  RETURN.
+IF lo_permission_checker->is_authorized( ).
+  process_payment( ).
 ENDIF.
 ```
 
@@ -63,12 +63,24 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_BOOL_COMPARE
 ```
 
+### Predicate Expressions and QuickFix
+
+In ABAP Cloud and modern kernel versions, methods returning an `abap_bool` parameter serve directly as conditional predicates:
+
+| Redundant Comparison | Clean ABAP Replacement |
+|---|---|
+| `IF lo_auth->is_valid( ) = abap_true.` | `IF lo_auth->is_valid( ).` |
+| `IF lo_auth->is_valid( ) <> abap_false.` | `IF lo_auth->is_valid( ).` |
+| `IF lo_auth->is_valid( ) = abap_false.` | `IF NOT lo_auth->is_valid( ).` |
+
+The `DROPBOOL` quickfix automatically removes `= abap_true` or `<> abap_false`. Variable comparisons (`IF lv_flag = abap_true.`) are not reported because bare variable predicates (`IF lv_flag.`) are restricted in ABAP Cloud. Suppress findings using `"#EC NO_BOOL_COMPARE`.
+
 
 ## Related Rules
 
 * [Limit Boolean Expression Complexity in Conditional Statements](/rules/max-bool-expr) — <code>#EC MAX_BOOL_EXPR</code>
-* [Avoid CASE with a Single WHEN Branch](/rules/no-single-when) — <code>#EC NO_SINGLE_WHEN</code>
-* [Avoid CHECK Statements](/rules/no-check-stmt) — <code>#EC NO_CHECK_IN_LOOP</code>
+* [Replace Single-Branch CASE Statements with IF Conditions](/rules/no-single-when) — <code>#EC NO_SINGLE_WHEN</code>
+* [Avoid CHECK Statements Inside and Outside Iteration Loops](/rules/no-check-stmt) — <code>#EC NO_CHECK_IN_LOOP</code>
 
 ## Technical Details
 

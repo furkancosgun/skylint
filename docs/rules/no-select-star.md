@@ -1,20 +1,20 @@
 ---
-title: "Avoid SELECT * in OpenSQL Queries (Minimize Memory & Network Overhead)"
-description: "Optimize SAP HANA column store performance in ABAP by avoiding SELECT * and explicitly declaring required columns in OpenSQL queries."
-keywords: "Avoid SELECT star ABAP, SAP HANA Column Store Optimization, Clean ABAP Query Guidelines, Memory Footprint Reduction SAP"
+title: "Avoid SELECT * and Project Columns Explicitly"
+description: "Enforce explicit column projection in ABAP Open SQL to optimize SAP HANA column store performance and reduce memory consumption."
+keywords: "no-select-star, SELECT star, HANA column store, Clean ABAP SQL, SAP ATC"
 category: "performance"
 ruleId: "no-select-star"
-customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1493"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1497"
 ---
 
-# Avoid SELECT * in OpenSQL Queries (Minimize Memory & Network Overhead)
+# Avoid SELECT * and Project Columns Explicitly
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Performance & Database" />
   <Badge type="danger" text="#EC NO_SELECT_STAR" />
   <Badge type="info" text="Remote Enabled" />
-  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1493" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1497" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -25,28 +25,24 @@ Avoid SELECT * (specify columns explicitly).
 
 ## Rationale
 
-Using `SELECT *` forces the SAP database interface and database engine to retrieve and transfer every single column defined on the database table, including heavy text fields, binary blobs, and irrelevant business attributes. In modern columnar databases like SAP HANA, fetching unneeded columns defeats column-store compression, inflates application server heap usage, and causes unnecessary memory allocations.
-
-**Best Practice:** Explicitly project only the exact fields required by your business process into a typed structure or inline table expression.
+Using SELECT * or table~* instructs the database interface to retrieve and transmit every column defined on a table or view, including long character strings, BLOBs, and unused administrative timestamps. On modern columnar databases such as SAP HANA, performance is driven by column-store compression and vectorized memory scans; selecting unneeded columns breaks column pruning, inflates network payload between the database and application server, and wastes heap memory in internal table buffers. Clean ABAP requires explicit column projection to fetch only the exact fields required by business logic.
 
 ### Non-Compliant
 
 ```abap
-" Anti-pattern: Pulls all 80+ fields of MARA including binary blobs and administrative logs
 SELECT *
-  FROM mara
-  WHERE matnr = @lv_matnr
-  INTO @DATA(ls_material).
+  FROM zmaterials
+  WHERE material_type = 'FERT'
+  INTO TABLE @DATA(lt_materials).
 ```
 
 ### Compliant
 
 ```abap
-" Clean ABAP: Project only required business fields
-SELECT matnr, mtart, meins
-  FROM mara
-  WHERE matnr = @lv_matnr
-  INTO @DATA(ls_material).
+SELECT material_number, material_type, base_unit_of_measure, net_weight
+  FROM zmaterials
+  WHERE material_type = 'FERT'
+  INTO TABLE @DATA(lt_materials).
 ```
 
 ## Suppression
@@ -61,18 +57,30 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_SELECT_STAR
 ```
 
+### Detection Details
+
+The check scans the field list between `SELECT` (or `FIELDS`) and the subsequent query clauses (`FROM`, `WHERE`, `INTO`). Finding code `NO_SEL_STR` is reported when an unadorned `*` or a qualified `table~*` pattern is detected.
+
+### Architectural Benefits
+
+- **HANA Column Store Optimization:** Vector engines only load columns referenced in the query.
+- **Network Reduction:** Dramatically decreases packet payload across the network layer.
+- **Resilience to Table Extensions:** Prevents unexpected structure growth or typing conflicts when new append structures are added to database tables.
+
+Suppress specialized full-row retrievals with the pseudo comment `"#EC NO_SELECT_STAR`.
+
 
 ## Related Rules
 
-* [Avoid Database Access Inside Loops (N+1 Query Antipattern)](/rules/no-db-in-loop) — <code>#EC NO_DB_IN_LOOP</code>
+* [Avoid Database Queries Inside Loops (N+1 Query Antipattern)](/rules/no-db-in-loop) — <code>#EC NO_DB_IN_LOOP</code>
 * [Avoid SELECT ... ENDSELECT Row-by-Row Cursor Loops](/rules/no-endselect) — <code>#EC NO_ENDSELECT</code>
-* [Require Explicit ORDER BY for Deterministic SELECT Queries](/rules/pref-order-by) — <code>#EC PREF_ORDER_BY</code>
+* [Require Explicit ORDER BY with UP TO N ROWS Clauses](/rules/pref-order-by) — <code>#EC PREF_ORDER_BY</code>
 
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_NO_SELECT_STAR`
 * **ABAP Implementation:** [/skyl/cl_no_select_star.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_select_star.clas.abap)
-* **Rule Metadata:** [rules-data.mjs (Line 1493)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L1493)
+* **Rule Metadata:** [rules-data.mjs (Line 1497)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L1497)
 
 ## Community & Feedback
 

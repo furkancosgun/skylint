@@ -1,20 +1,20 @@
 ---
-title: "Avoid Wrong Wildcards in LIKE, CP, and NP"
-description: "Avoid wrong wildcards in ABAP LIKE, CP, and NP comparisons: ensure % is used in SQL LIKE and * is used in CP/NP."
-keywords: "ABAP LIKE wildcard, ABAP CP wildcard, wrong wildcard ABAP, Clean ABAP LIKE CP, SAP ATC check wildcard"
+title: "Use Appropriate Wildcards for LIKE and CP/NP Comparisons"
+description: "Ensure correct wildcards in ABAP: enforce % and _ in SQL LIKE, and * and + in ABAP CP and NP comparisons."
+keywords: "ABAP LIKE wildcard, CP operator ABAP, SQL wildcards, Clean ABAP, SAP ATC check, no-wrong-wildcard"
 category: "anti-patterns"
 ruleId: "no-wrong-wildcard"
-customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4514"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4628"
 ---
 
-# Avoid Wrong Wildcards in LIKE, CP, and NP
+# Use Appropriate Wildcards for LIKE and CP/NP Comparisons
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC NO_WRONG_WILDCARD" />
   <Badge type="info" text="Remote Enabled" />
-  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4514" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4628" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -27,23 +27,27 @@ Avoid wrong wildcards in LIKE, CP, and NP.
 
 ## Rationale
 
-ABAP SQL LIKE statements use '%' (matching any sequence of characters) and '_' (matching a single character) as wildcards. In contrast, ABAP logical comparison operators CP and NP use '*' and '+' as wildcards. Using '*' in LIKE or '%' in CP/NP indicates confusion between SQL pattern matching and ABAP string matching.
+SQL pattern matching with LIKE uses standard SQL wildcards (% for multi-character sequences, _ for single characters), whereas ABAP logical comparisons with CP (Contains Pattern) and NP use ABAP wildcards (* and +). Interchanging them causes patterns to treat wildcards as literal characters, leading to silent query failures, unexpected empty result sets, or incorrect filtering logic in business workflows.
 
 ### Non-Compliant
 
 ```abap
-SELECT SINGLE carrid FROM scarr WHERE carrid LIKE '*LH*' INTO @lv_text.
-IF lv_text CP 'prefix%'.
-  RETURN.
+SELECT SINGLE customer_id FROM zcustomers
+  WHERE customer_id LIKE '*DE*'
+  INTO @DATA(lv_customer).
+IF lv_company_code CP 'US%'.
+  apply_domestic_rules( ).
 ENDIF.
 ```
 
 ### Compliant
 
 ```abap
-SELECT SINGLE carrid FROM scarr WHERE carrid LIKE '%LH%' INTO @lv_text.
-IF lv_text CP 'prefix*'.
-  RETURN.
+SELECT SINGLE customer_id FROM zcustomers
+  WHERE customer_id LIKE '%DE%'
+  INTO @DATA(lv_customer).
+IF lv_company_code CP 'US*'.
+  apply_domestic_rules( ).
 ENDIF.
 ```
 
@@ -53,8 +57,8 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value | Description & Guidance |
 |---|---|:---:|---|
-| `CHECK_LIKE` | `Boolean` | <code>true</code> | Enable checking for invalid wildcard usage in LIKE comparisons (defaults to true) |
-| `CHECK_CP` | `Boolean` | <code>true</code> | Enable checking for invalid wildcard usage in CP and NP comparisons (defaults to true) |
+| `CHECK_LIKE` | `Boolean` | <code>true</code> | Detect invalid wildcard usage such as asterisk (*) in SQL LIKE string comparisons (default true). |
+| `CHECK_CP` | `Boolean` | <code>true</code> | Detect invalid wildcard usage such as percent (%) in ABAP CP and NP pattern comparisons (default true). |
 
 ## Suppression
 
@@ -68,17 +72,31 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_WRONG_WILDCARD
 ```
 
+### Wildcard conventions reference
+
+ABAP distinguishes between Open SQL / ABAP SQL pattern syntax and internal ABAP character comparisons:
+
+| Comparison Operator | Wildcard (Multi-char) | Wildcard (Single-char) | Finding on Misuse |
+| --- | --- | --- | --- |
+| `LIKE` (SQL / string) | `%` | `_` | `NO_LIKE_WL` when `*` is used |
+| `CP` (Contains Pattern) | `*` | `+` | `NO_CP_WILD` when `%` is used |
+| `NP` (No Pattern) | `*` | `+` | `NO_CP_WILD` when `%` is used |
+
+### Suppression
+
+When querying literal percent signs in CP (escaped via `#%`) or literal asterisks in LIKE, suppress with `"#EC NO_WRONG_WILDCARD`.
+
 
 ## Related Rules
 
-* [Prefer BETWEEN for Inclusive Range Checks](/rules/pref-between) — <code>#EC PREF_BETWEEN</code>
-* [Avoid Repeating the Same String Literal](/rules/no-dup-literals) — <code>#EC NO_DUP_LITERALS</code>
+* [Use BETWEEN for Inclusive Range Checks](/rules/pref-between) — <code>#EC PREF_BETWEEN</code>
+* [Extract Repeated String Literals into Named Constants](/rules/no-dup-literals) — <code>#EC NO_DUP_LITERALS</code>
 
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_NO_WRONG_WILDCARD`
 * **ABAP Implementation:** [/skyl/cl_no_wrong_wildcard.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_wrong_wildcard.clas.abap)
-* **Rule Metadata:** [rules-data.mjs (Line 4514)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L4514)
+* **Rule Metadata:** [rules-data.mjs (Line 4628)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L4628)
 
 ## Community & Feedback
 

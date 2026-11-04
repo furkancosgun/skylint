@@ -1,20 +1,20 @@
 ---
-title: "Avoid Late Access to sy-tabix or sy-index Outside Loops"
-description: "Avoid Late Access to sy-tabix or sy-index Outside Loops - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-late-sys-idx, anti-patterns"
+title: "Capture sy-tabix and sy-index Immediately at Loop Start"
+description: "Prevent fragile sy-tabix and sy-index reads inside ABAP loops by copying loop indices immediately at block entry."
+keywords: "sy-tabix, sy-index, ABAP loop index, Clean ABAP, SAP ATC check, no-late-sys-idx"
 category: "anti-patterns"
 ruleId: "no-late-sys-idx"
-customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3833"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3925"
 ---
 
-# Avoid Late Access to sy-tabix or sy-index Outside Loops
+# Capture sy-tabix and sy-index Immediately at Loop Start
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC NO_LATE_SYS_IDX" />
   <Badge type="info" text="Remote Enabled" />
-  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3833" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3925" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -25,22 +25,23 @@ Avoid late access to sy-tabix or sy-index inside loops.
 
 ## Rationale
 
-System fields sy-tabix and sy-index are global and mutable. Reading them outside their originating LOOP, DO, or WHILE blocks creates fragile temporal coupling that breaks easily when refactoring. Inside loops, capture index into an explicit local variable, or use line_index( ) instead of relying on sy-tabix outside.
+System fields sy-tabix and sy-index are globally mutable and volatile; intervening statements, method invocations, subroutines, or secondary table reads inside a loop can alter or reset them. Accessing sy-tabix or sy-index later in a loop body rather than immediately on the first statement introduces subtle runtime bugs and fragile temporal coupling. Clean ABAP requires copying index values into an explicit local variable at loop initialization.
 
 ### Non-Compliant
 
 ```abap
-LOOP AT lt_items INTO ls_item.
+LOOP AT lt_order_items ASSIGNING FIELD-SYMBOL(<ls_order_item>).
+  process_item( <ls_order_item> ).
+  DATA(lv_current_index) = sy-tabix.
 ENDLOOP.
-lv_last_idx = sy-tabix.
 ```
 
 ### Compliant
 
 ```abap
-DATA lv_last_idx TYPE i.
-LOOP AT lt_items INTO ls_item.
-  lv_last_idx = sy-tabix.
+LOOP AT lt_order_items ASSIGNING FIELD-SYMBOL(<ls_order_item>).
+  DATA(lv_current_index) = sy-tabix.
+  process_item( <ls_order_item> ).
 ENDLOOP.
 ```
 
@@ -56,18 +57,34 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_LATE_SYS_IDX
 ```
 
+### Evaluation details
+
+The check verifies that reads of `sy-tabix` within `LOOP` blocks and `sy-index` within `DO` or `WHILE` blocks occur immediately as the first statement of the iteration body:
+
+| Loop Structure | Immediate Read (First statement) | Late Read (Subsequent statement) |
+| --- | --- | --- |
+| `LOOP AT itab ...` | Allowed: `DATA(lv_idx) = sy-tabix.` | Flagged: `NO_LATE_SY` |
+| `DO 10 TIMES ...` | Allowed: `DATA(lv_idx) = sy-index.` | Flagged: `NO_LATE_SY` |
+| `WHILE ...` | Allowed: `DATA(lv_idx) = sy-index.` | Flagged: `NO_LATE_SY` |
+
+Reads occurring outside loops are ignored by this check (governed by other system field rules).
+
+### Suppression
+
+To keep a late system index read when side effects are demonstrably impossible, add pseudo-comment `"#EC NO_LATE_SYS_IDX` to the statement reading the system field.
+
 
 ## Related Rules
 
-* [Avoid String Concatenation Inside Loops (Quadratic Memory Allocation)](/rules/no-concat-loop) — <code>#EC NO_CONCAT_LOOP</code>
-* [Avoid WITH DEFAULT KEY](/rules/no-default-key) — <code>#EC NO_DEFAULT_KEY</code>
-* [Prefer lines( ) over DESCRIBE TABLE](/rules/pref-lines) — <code>#EC PREF_LINES</code>
+* [Avoid String Accumulation Inside Loops (Quadratic Memory Growth)](/rules/no-concat-loop) — <code>#EC NO_CONCAT_LOOP</code>
+* [Avoid WITH DEFAULT KEY in Internal Table Declarations](/rules/no-default-key) — <code>#EC NO_DEFAULT_KEY</code>
+* [Use lines( ) Instead of DESCRIBE TABLE LINES](/rules/pref-lines) — <code>#EC PREF_LINES</code>
 
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_NO_LATE_SYS_IDX`
 * **ABAP Implementation:** [/skyl/cl_no_late_sys_idx.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_late_sys_idx.clas.abap)
-* **Rule Metadata:** [rules-data.mjs (Line 3833)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L3833)
+* **Rule Metadata:** [rules-data.mjs (Line 3925)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L3925)
 
 ## Community & Feedback
 

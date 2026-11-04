@@ -1,10 +1,10 @@
 ---
 title: "Prefer INSERT ... INTO TABLE over APPEND"
-description: "Prefer INSERT ... INTO TABLE over APPEND - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-insert, clean-abap"
+description: "Replace APPEND with INSERT INTO TABLE so internal table writes stay valid after switching to sorted or hashed table types in ABAP."
+keywords: "pref-insert, APPEND statement, INSERT INTO TABLE, Clean ABAP, ABAP internal tables"
 category: "clean-abap"
 ruleId: "pref-insert"
-customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L2128"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L2160"
 ---
 
 # Prefer INSERT ... INTO TABLE over APPEND
@@ -15,7 +15,7 @@ customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-
   <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC PREF_INSERT" />
   <Badge type="info" text="Remote Enabled" />
-  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L2128" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L2160" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -26,17 +26,19 @@ Prefer INSERT ... INTO TABLE over APPEND for table safety.
 
 ## Rationale
 
-APPEND only works for index tables and implies sequential insertion, so changing the table type to sorted or hashed later breaks the code. INSERT ... INTO TABLE works with every table category and states the intent generically. Use INSERT for table handling that should remain independent of the concrete table kind.
+APPEND only exists for index tables, so swapping a STANDARD TABLE for a SORTED or HASHED TABLE later breaks every APPEND in the code base. INSERT ... INTO TABLE is valid for all three table categories and states the generic intent of adding a row without implying a physical append position. The check reports PREF_INSRT on each APPEND and offers a TOINSERT QuickFix, keeping table handling independent of the concrete table kind chosen by the data model.
 
 ### Non-Compliant
 
 ```abap
+DATA lt_order_items TYPE STANDARD TABLE OF zcl_order=>ty_item.
 APPEND ls_order_item TO lt_order_items.
 ```
 
 ### Compliant
 
 ```abap
+DATA lt_order_items TYPE STANDARD TABLE OF zcl_order=>ty_item.
 INSERT ls_order_item INTO TABLE lt_order_items.
 ```
 
@@ -59,18 +61,24 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_INSERT
 ```
 
+### Why INSERT INTO TABLE
+
+`APPEND` only works for index tables, so replacing the table type with a `SORTED TABLE` or `HASHED TABLE` breaks it at activation. `INSERT ... INTO TABLE` compiles for every table category and keeps the caller independent of the table kind.
+
+The `TOINSERT` QuickFix rewrites `APPEND <line> TO <table>.` to `INSERT <line> INTO TABLE <table>.`. It is not offered for `APPEND ... SORTED BY`, because that addition has no `INSERT` equivalent and must be expressed with a separate `SORT`. Suppress a finding with `"#EC PREF_INSERT`.
+
 
 ## Related Rules
 
-* [Prefer lines( ) over DESCRIBE TABLE](/rules/pref-lines) — <code>#EC PREF_LINES</code>
-* [Modernize READ TABLE (Table Expressions & line_exists)](/rules/pref-read-table) — <code>#EC PREF_TAB_EXPR</code>
-* [Specify TRANSPORTING in Internal Table MODIFY and READ Operations](/rules/pref-transport) — <code>#EC PREF_TRANSPORT</code>
+* [Use lines( ) Instead of DESCRIBE TABLE LINES](/rules/pref-lines) — <code>#EC PREF_LINES</code>
+* [Replace READ TABLE with Table Expressions and line_exists](/rules/pref-read-table) — <code>#EC PREF_TAB_EXPR</code>
+* [Specify TRANSPORTING in Internal Table MODIFY Inside Loops](/rules/pref-transport) — <code>#EC PREF_TRANSPORT</code>
 
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_PREF_INSERT`
 * **ABAP Implementation:** [/skyl/cl_pref_insert.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_pref_insert.clas.abap)
-* **Rule Metadata:** [rules-data.mjs (Line 2128)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L2128)
+* **Rule Metadata:** [rules-data.mjs (Line 2160)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L2160)
 
 ## Community & Feedback
 

@@ -1,13 +1,13 @@
 ---
-title: "Prefer Modern Class-Based APIs over Obsolete Function Modules"
-description: "Prefer Modern Class-Based APIs over Obsolete Function Modules - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-func-module, clean-abap"
+title: "Replace Obsolete Function Modules with Class-Based APIs"
+description: "Replace obsolete CALL FUNCTION modules such as GUID_CREATE, GUI_DOWNLOAD and ROUND with released class-based APIs for ABAP Cloud and S/4HANA."
+keywords: "pref-func-module, CALL FUNCTION, obsolete function module, CL_SYSTEM_UUID, ABAP Cloud"
 category: "clean-abap"
 ruleId: "pref-func-module"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L26"
 ---
 
-# Prefer Modern Class-Based APIs over Obsolete Function Modules
+# Replace Obsolete Function Modules with Class-Based APIs
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -25,20 +25,20 @@ Prefer class-based APIs over obsolete function modules.
 
 ## Rationale
 
-Classic function modules are non-object-oriented procedural constructs. Modern ABAP provides robust, object-oriented class libraries (such as CL_SYSTEM_UUID, CL_ABAP_TSTMP, CL_ABAP_MESSAGE_DIGEST, and CL_BCS) that improve testability, type safety, and ABAP Cloud compatibility. Prefer recommended class-based APIs over obsolete function modules.
+The check compares the literal after CALL FUNCTION with a curated table of 67 legacy modules and reports PREF_FM together with the recommended replacement. Function modules keep state in global function groups, cannot be mocked as easily as class methods and are usually not released for ABAP Cloud, so every call keeps the calling code procedural and hard to unit test. The listed modules all have class-based successors (CL_SYSTEM_UUID, CL_ABAP_TSTMP, CL_ABAP_MESSAGE_DIGEST, CL_SALV_TABLE, CL_BCS, ...) that offer typed signatures and are available in S/4HANA and Steampunk.
 
 ### Non-Compliant
 
 ```abap
 CALL FUNCTION 'GUID_CREATE'
   IMPORTING
-    ev_guid_32 = lv_guid.
+    ev_guid_32 = lv_document_id.
 ```
 
 ### Compliant
 
 ```abap
-lv_guid = cl_system_uuid=>create_uuid_c32_static( ).
+lv_document_id = cl_system_uuid=>create_uuid_c32_static( ).
 ```
 
 ## Suppression
@@ -53,14 +53,14 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_FUNC_MOD
 ```
 
-## Recommended Replacements Reference
+## Detected Function Modules
 
-The following table lists all 67 obsolete classic function modules detected by this rule along with their recommended modern replacements:
+Only a literal name is resolved, so dynamic calls such as `CALL FUNCTION lv_function_name` are ignored. The table below is the complete list evaluated by the check; `CALL FUNCTION` statements with any other name are not reported.
 
-| Obsolete Function Module | Modern Recommended Replacement |
+| Obsolete function module | Recommended replacement |
 |---|---|
 | `CALCULATE_HASH_FOR_CHAR` | `CL_ABAP_MESSAGE_DIGEST` |
-| `CALCULATE_HASH_FOR_RAW` | `CL_ABAP_HMAC` or `CL_ABAP_MESSAGE_DIGEST` |
+| `CALCULATE_HASH_FOR_RAW` | `CL_ABAP_HMAC or CL_ABAP_MESSAGE_DIGEST` |
 | `CCU_TIMESTAMP_DIFFERENCE` | `CL_ABAP_TSTMP` |
 | `CLPB_EXPORT` | `CL_GUI_FRONTEND_SERVICES` |
 | `CLPB_IMPORT` | `CL_GUI_FRONTEND_SERVICES` |
@@ -128,12 +128,14 @@ The following table lists all 67 obsolete classic function modules detected by t
 | `WS_QUERY` | `CL_GUI_FRONTEND_SERVICES` |
 | `WS_UPLOAD` | `CL_GUI_FRONTEND_SERVICES` |
 
+Suppress a single finding with the pseudo comment `"#EC PREF_FUNC_MOD`.
+
 
 ## Related Rules
 
-* [Avoid Obsolete CALL METHOD](/rules/no-call-method) — <code>#EC NO_CALL_METHOD</code>
+* [Replace Obsolete CALL METHOD Statements with Functional Invocations](/rules/no-call-method) — <code>#EC NO_CALL_METHOD</code>
 * [Prefer Class-Based Exceptions over Classic EXCEPTIONS](/rules/pref-class-exc) — <code>#EC PREF_CLASS_EXC</code>
-* [Avoid Obsolete Control Flow and Procedural Forms](/rules/no-obs-control) — <code>#EC NO_OBS_CONTROL</code>
+* [Eliminate Obsolete Control Flow and Procedural Statements](/rules/no-obs-control) — <code>#EC NO_OBS_CONTROL</code>
 
 ## Technical Details
 

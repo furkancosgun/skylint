@@ -1,13 +1,13 @@
 ---
-title: "Omit Unnecessary RETURN Statement"
-description: "Omit Unnecessary RETURN Statement - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-unnec-return, anti-patterns"
+title: "Omit Redundant RETURN Statement at the End of Routines"
+description: "Eliminate useless RETURN statements at routine ends in ABAP code to maintain clean control flow with automated quickfixes."
+keywords: "no-unnec-return, Clean ABAP, ABAP Cloud, RETURN statement, control flow, SAP ATC"
 category: "anti-patterns"
 ruleId: "no-unnec-return"
-customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3097"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3169"
 ---
 
-# Omit Unnecessary RETURN Statement
+# Omit Redundant RETURN Statement at the End of Routines
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -15,7 +15,7 @@ customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-
   <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC NO_UNNEC_RETURN" />
   <Badge type="info" text="Remote Enabled" />
-  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3097" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3169" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -26,13 +26,14 @@ Omit unnecessary RETURN at end of routine.
 
 ## Rationale
 
-A RETURN as the final statement of a method, form, or function changes nothing because the routine ends at ENDMETHOD, ENDFORM, or ENDFUNCTION anyway. It adds a line that implies a special exit and can obscure the real control flow. Remove trailing RETURN statements and keep early returns only where they are meaningful.
+A RETURN statement placed immediately before the closing ENDMETHOD, ENDFORM, or ENDFUNCTION statement is completely superfluous because control flow returns automatically to the caller when reaching the routine boundary. Leaving redundant trailing returns adds visual noise, misleads reviewers into suspecting early exit logic or missing downstream code, and violates Clean ABAP simplicity principles. The ATC check flags trailing RETURN statements with NO_UNN_RET and provides the REMOVE_RET quickfix to safely delete them.
 
 ### Non-Compliant
 
 ```abap
-METHOD get_total.
-  rv_total = lv_subtotal + lv_tax.
+METHOD calculate_tax.
+  DATA lv_tax TYPE decfloat34.
+  lv_tax = iv_net_amount * '0.19'.
   RETURN.
 ENDMETHOD.
 ```
@@ -40,8 +41,9 @@ ENDMETHOD.
 ### Compliant
 
 ```abap
-METHOD get_total.
-  rv_total = lv_subtotal + lv_tax.
+METHOD calculate_tax.
+  DATA lv_tax TYPE decfloat34.
+  lv_tax = iv_net_amount * '0.19'.
 ENDMETHOD.
 ```
 
@@ -64,18 +66,30 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_UNNEC_RETURN
 ```
 
+## Detection and Quickfix Details
+
+The check evaluates executable statements in procedures. If a `RETURN` keyword is detected at the penultimate position directly preceding the closing routine delimiter (`ENDMETHOD`, `ENDFORM`, `ENDFUNCTION`), finding code `NO_UNN_RET` is reported.
+
+The automated `REMOVE_RET` quickfix deletes the statement cleanly without affecting routine execution.
+
+### Valid Return Usage
+Early `RETURN` statements used as guard clauses to exit a routine upon invalid preconditions or edge cases remain valid and are not flagged by this check.
+
+### Suppression
+Suppress with pseudo comment `"#EC NO_UNNEC_RETURN`.
+
 
 ## Related Rules
 
-* [Do Not Ignore Return Value of Functional Methods](/rules/no-ignored-return) — <code>#EC NO_IGNORED_RETURN</code>
-* [Prefer RETURN over EXIT in Methods](/rules/pref-return) — <code>#EC PREF_RETURN</code>
-* [Omit Redundant EXPORTING in Method Calls](/rules/no-call-exporting) — <code>#EC NO_CALL_EXPORTING</code>
+* [Capture and Consume Return Values of Functional Method Calls](/rules/no-ignored-return) — <code>#EC NO_IGNORED_RETURN</code>
+* [Use RETURN Instead of EXIT Outside Loops](/rules/pref-return) — <code>#EC PREF_RETURN</code>
+* [Omit Redundant EXPORTING Keyword in Method Invocations](/rules/no-call-exporting) — <code>#EC NO_CALL_EXPORTING</code>
 
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_NO_UNNEC_RETURN`
 * **ABAP Implementation:** [/skyl/cl_no_unnec_return.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_unnec_return.clas.abap)
-* **Rule Metadata:** [rules-data.mjs (Line 3097)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L3097)
+* **Rule Metadata:** [rules-data.mjs (Line 3169)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L3169)
 
 ## Community & Feedback
 

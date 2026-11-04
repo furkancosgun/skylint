@@ -1,13 +1,13 @@
 ---
-title: "Prefer IS NOT over NOT ... IS"
-description: "Prefer IS NOT over NOT ... IS - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-is-not, clean-abap"
+title: "Rewrite NOT ... IS Predicates as IS NOT"
+description: "Rewrite negated predicates such as NOT lt_items IS INITIAL into the natural reading IS NOT INITIAL in IF, CHECK and WHILE."
+keywords: "pref-is-not, IS NOT INITIAL, negated condition, predicate, Clean ABAP"
 category: "clean-abap"
 ruleId: "pref-is-not"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L444"
 ---
 
-# Prefer IS NOT over NOT ... IS
+# Rewrite NOT ... IS Predicates as IS NOT
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -26,21 +26,21 @@ Prefer IS NOT over NOT ... IS.
 
 ## Rationale
 
-Writing NOT before a complete IS expression forces the reader to negate the condition mentally and can be misread in compound logic. IS NOT keeps the subject first and reads in natural order, as in lo_instance IS NOT BOUND. Prefer IS NOT for predicates such as IS BOUND, IS INITIAL, and IS ASSIGNED.
+A leading NOT forces the reader to negate the whole predicate mentally, and in compound conditions the negation is easily attached to the wrong term. IS NOT keeps the subject first and reads in natural order, for example lo_instance IS NOT BOUND. The check inspects IF, ELSEIF, CHECK and WHILE statements for NOT followed by IS plus a supported predicate, reports PREF_ISNOT and offers an ISNOT quickfix that swaps the tokens in place.
 
 ### Non-Compliant
 
 ```abap
-IF NOT lt_items IS INITIAL.
-  process_items( lt_items ).
+IF NOT lt_open_items IS INITIAL.
+  process_open_items( lt_open_items ).
 ENDIF.
 ```
 
 ### Compliant
 
 ```abap
-IF lt_items IS NOT INITIAL.
-  process_items( lt_items ).
+IF lt_open_items IS NOT INITIAL.
+  process_open_items( lt_open_items ).
 ENDIF.
 ```
 
@@ -63,12 +63,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_IS_NOT
 ```
 
+## Supported Predicates
+
+The rewrite is offered for `IS INITIAL`, `IS BOUND`, `IS ASSIGNED`, `IS SUPPLIED`, `IS REQUESTED` and `IS INSTANCE`. Only keyword tokens are inspected, so a variable or component that happens to be named `not` or `is` never triggers a finding. The `ISNOT` quickfix is only created for the adjacent pattern `NOT x IS INITIAL`; longer negations are reported without a quickfix.
+
 
 ## Related Rules
 
-* [Prefer IS [NOT] INITIAL over lines( ) or Literal Comparisons](/rules/pref-is-initial) — <code>#EC PREF_IS_INITIAL</code>
+* [Prefer IS [NOT] INITIAL Over lines( ) and Empty Literal Comparisons](/rules/pref-is-initial) — <code>#EC PREF_IS_INITIAL</code>
 * [Prefer CASE over Multiple IF / ELSEIF on the Same Variable](/rules/pref-case) — <code>#EC PREF_CASE</code>
-* [Prefer COND #( ) Expression over IF/ELSEIF/ELSE](/rules/pref-cond) — <code>#EC PREF_COND</code>
+* [Collapse Value-Mapping IF Chains into COND](/rules/pref-cond) — <code>#EC PREF_COND</code>
 
 ## Technical Details
 

@@ -1,13 +1,13 @@
 ---
-title: "Prefer String Templates over CONCATENATE"
-description: "Prefer String Templates over CONCATENATE - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-str-tmpl, clean-abap"
+title: "Compose Messages with String Templates Instead of CONCATENATE"
+description: "Replace CONCATENATE and SEPARATED BY with |...| string templates or concat_lines_of for readable, Cloud-ready text composition."
+keywords: "pref-str-tmpl, CONCATENATE, string template, concat_lines_of, ABAP Cloud"
 category: "clean-abap"
 ruleId: "pref-str-tmpl"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L682"
 ---
 
-# Prefer String Templates over CONCATENATE
+# Compose Messages with String Templates Instead of CONCATENATE
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -26,18 +26,18 @@ Prefer string templates over CONCATENATE.
 
 ## Rationale
 
-CONCATENATE with SEPARATED BY is a procedural statement that splits a message into literals and variables and cannot be nested in expressions. String templates interpolate values directly, preserve spaces, and support formatting options for numbers, dates, and alignment. Use a template for readable text composition and reserve CONCATENATE only for legacy downport code.
+CONCATENATE needs a target variable and an optional SEPARATED BY addition, splits one message into a list of operands and cannot be nested in an expression. A string template keeps the text and the embedded values together, supports formatting options for dates, numbers and alignment, and composes directly inside method calls and constructor expressions. The check reports PREF_STMPL and the TOTEMPLATE quickfix rewrites the statement, including the CONCATENATE LINES OF variant which becomes concat_lines_of( ).
 
 ### Non-Compliant
 
 ```abap
-CONCATENATE 'Order' lv_order_id 'created' INTO lv_message SEPARATED BY space.
+CONCATENATE 'Order' lv_order_id 'was created on' lv_creation_date INTO lv_message SEPARATED BY space.
 ```
 
 ### Compliant
 
 ```abap
-lv_message = |Order { lv_order_id } created|.
+lv_message = |Order { lv_order_id } was created on { lv_creation_date }|.
 ```
 
 ## Automated QuickFix
@@ -59,12 +59,19 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_STR_TMPL
 ```
 
+## Conversion Notes
+
+- `CONCATENATE ... BYTE MODE` is ignored: binary concatenation has no string template equivalent.
+- `CONCATENATE LINES OF itab INTO target [SEPARATED BY sep]` is rewritten to `concat_lines_of( table = itab [sep = sep] )`.
+- All other statements become `target = |operand{ sep }operand|`; the `TOTEMPLATE` quickfix applies exactly that rewrite so the resulting statement stays valid ABAP.
+- `CONCATENATE` is not released for ABAP Cloud, so migrating is also a Cloud-readiness requirement.
+
 
 ## Related Rules
 
-* [Prefer Built-in String Functions over SEARCH/SHIFT](/rules/pref-str-func) — <code>#EC PREF_STR_FUNC</code>
-* [Avoid Concatenating Adjacent String Literals](/rules/no-useless-concat) — <code>#EC NO_USELESS_CONCAT</code>
-* [Avoid Obsolete String and POSIX Regex Statements](/rules/no-obs-strings) — <code>#EC NO_OBS_STRINGS</code>
+* [Replace Obsolete String Statements with Built-in String Functions](/rules/pref-str-func) — <code>#EC PREF_STR_FUNC</code>
+* [Fold Adjacent Static String Literals Concatenated with &&](/rules/no-useless-concat) — <code>#EC NO_USELESS_CONCAT</code>
+* [Replace Obsolete String Statements and POSIX Regular Expressions](/rules/no-obs-strings) — <code>#EC NO_OBS_STRINGS</code>
 
 ## Technical Details
 

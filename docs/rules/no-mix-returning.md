@@ -1,20 +1,20 @@
 ---
-title: "Do Not Mix RETURNING with EXPORTING or CHANGING"
-description: "Do Not Mix RETURNING with EXPORTING or CHANGING - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-mix-returning, anti-patterns"
+title: "Separate Functional RETURNING Parameters from EXPORTING and CHANGING Outputs"
+description: "Enforce Command-Query Separation in ABAP method signatures by disallowing RETURNING alongside EXPORTING or CHANGING."
+keywords: "no-mix-returning, Clean ABAP, ABAP Cloud, RETURNING parameter, CQS, SAP ATC"
 category: "anti-patterns"
 ruleId: "no-mix-returning"
-customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3125"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3198"
 ---
 
-# Do Not Mix RETURNING with EXPORTING or CHANGING
+# Separate Functional RETURNING Parameters from EXPORTING and CHANGING Outputs
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC NO_MIX_RETURNING" />
   <Badge type="info" text="Remote Enabled" />
-  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3125" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3198" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -25,21 +25,29 @@ Do not mix RETURNING with EXPORTING or CHANGING.
 
 ## Rationale
 
-A method that returns a value and also exports or changes parameters has a mixed contract: callers must capture the result and provide extra targets. This complicates expression use and suggests the method does more than one thing. Split it into a functional query and a separate command.
+A method signature combining a RETURNING parameter with EXPORTING or CHANGING parameters violates the Command-Query Separation (CQS) principle. Functional methods in Clean ABAP and ABAP Cloud are intended for expression-oriented evaluation; mixing side-effect parameter exports forces callers into cumbersome syntax and obscures whether a method performs a pure query or mutates state. Methods should either return a single value/structure functionally or act as a procedural command with output parameters. The check emits NO_MIX_RET.
 
 ### Non-Compliant
 
 ```abap
-METHODS get_data
-  EXPORTING ev_count TYPE i
-  RETURNING VALUE(rv_result) TYPE string.
+CLASS zcl_pricing_calculator DEFINITION PUBLIC FINAL CREATE PUBLIC.
+  PUBLIC SECTION.
+    METHODS calculate_discount
+      IMPORTING iv_customer_id TYPE kunnr
+      EXPORTING ev_discount_rate TYPE decfloat34
+      RETURNING VALUE(rv_final_price) TYPE decfloat34.
+ENDCLASS.
 ```
 
 ### Compliant
 
 ```abap
-METHODS get_data
-  RETURNING VALUE(rv_result) TYPE string.
+CLASS zcl_pricing_calculator DEFINITION PUBLIC FINAL CREATE PUBLIC.
+  PUBLIC SECTION.
+    METHODS calculate_discount
+      IMPORTING iv_customer_id TYPE kunnr
+      RETURNING VALUE(rv_final_price) TYPE decfloat34.
+ENDCLASS.
 ```
 
 ## Suppression
@@ -54,18 +62,28 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_MIX_RETURNING
 ```
 
+## Command-Query Separation (CQS)
+
+In Clean ABAP, methods with a `RETURNING` parameter are expected to behave as functional queries without side-effect output parameters. When multiple results must be returned functionally, package them into a structured type or class object instead of mixing parameter kinds.
+
+### Detection Details
+The rule inspects method signatures in class definitions (`METHODS` and `CLASS-METHODS`). If a signature contains the token `RETURNING` alongside `EXPORTING` or `CHANGING`, it reports `NO_MIX_RET`.
+
+### Suppression
+Suppress findings with pseudo comment `"#EC NO_MIX_RETURNING`.
+
 
 ## Related Rules
 
-* [Prefer Functional RETURNING Parameters](/rules/pref-returning) — <code>#EC PREF_RETURNING</code>
-* [Omit Redundant EXPORTING in Method Calls](/rules/no-call-exporting) — <code>#EC NO_CALL_EXPORTING</code>
-* [Do Not Ignore Return Value of Functional Methods](/rules/no-ignored-return) — <code>#EC NO_IGNORED_RETURN</code>
+* [Use RETURNING Instead of a Single EXPORTING Parameter](/rules/pref-returning) — <code>#EC PREF_RETURNING</code>
+* [Omit Redundant EXPORTING Keyword in Method Invocations](/rules/no-call-exporting) — <code>#EC NO_CALL_EXPORTING</code>
+* [Capture and Consume Return Values of Functional Method Calls](/rules/no-ignored-return) — <code>#EC NO_IGNORED_RETURN</code>
 
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_NO_MIX_RETURNING`
 * **ABAP Implementation:** [/skyl/cl_no_mix_returning.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_mix_returning.clas.abap)
-* **Rule Metadata:** [rules-data.mjs (Line 3125)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L3125)
+* **Rule Metadata:** [rules-data.mjs (Line 3198)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L3198)
 
 ## Community & Feedback
 

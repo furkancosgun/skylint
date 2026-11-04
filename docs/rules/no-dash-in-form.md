@@ -1,13 +1,13 @@
 ---
-title: "Avoid Obsolete Dash (-) in Form Names"
-description: "Avoid Obsolete Dash (-) in Form Names - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-dash-in-form, anti-patterns"
+title: "Use Underscores Instead of Hyphens in Subroutine FORM Names"
+description: "Prevent hyphens in FORM routine names and convert dashes to underscores in ABAP code using automated ATC quickfixes."
+keywords: "no-dash-in-form, Clean ABAP, FORM routine, subroutine naming, SAP ATC, quickfix"
 category: "anti-patterns"
 ruleId: "no-dash-in-form"
-customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L2729"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L2785"
 ---
 
-# Avoid Obsolete Dash (-) in Form Names
+# Use Underscores Instead of Hyphens in Subroutine FORM Names
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -15,7 +15,7 @@ customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-
   <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC NO_DASH_IN_FORM" />
   <Badge type="info" text="Remote Enabled" />
-  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L2729" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L2785" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -26,19 +26,19 @@ No Dashes in Form Names.
 
 ## Rationale
 
-A hyphen inside a form name is legacy ABAP and is easily confused with the component selector for structures. Use underscores in form names and reserve hyphens for component access.
+Using a hyphen inside a FORM subroutine name is an obsolete SAP syntax quirk that clashes with the structure component selector (-) in modern ABAP. It severely impairs readability, confuses static code analyzers, and introduces syntax ambiguity in legacy subroutines. Clean ABAP requires snake_case identifiers using underscores for all procedural names. The ATC check scans FORM statements for hyphens, reports NO_DASH_FM, and provides the DASH2UND quickfix to automatically replace hyphens with underscores.
 
 ### Non-Compliant
 
 ```abap
-FORM check-auth.
+FORM calculate-tax-total.
 ENDFORM.
 ```
 
 ### Compliant
 
 ```abap
-FORM check_auth.
+FORM calculate_tax_total.
 ENDFORM.
 ```
 
@@ -61,18 +61,28 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_DASH_IN_FORM
 ```
 
+## Detection Details
+
+The rule checks statements with keyword `FORM` whose second token (subroutine name) contains a hyphen (`-`). The automated quickfix `DASH2UND` replaces every hyphen in the subroutine header with an underscore.
+
+### Modern Alternative
+While this rule ensures hygiene in legacy programs that still retain subroutines, new ABAP Cloud development prohibits `FORM` entirely. Subroutines should be refactored into methods on local or global classes.
+
+### Suppression
+Suppress findings with `"#EC NO_DASH_IN_FORM`.
+
 
 ## Related Rules
 
-* [Avoid Obsolete Arithmetic and Assignment Statements](/rules/no-obs-arith) — <code>#EC NO_OBS_ARITH</code>
-* [Avoid Obsolete Control Flow and Procedural Forms](/rules/no-obs-control) — <code>#EC NO_OBS_CONTROL</code>
-* [Avoid Obsolete Declarations and Table Headers](/rules/no-obs-decl) — <code>#EC NO_OBS_DECL</code>
+* [Replace Obsolete Arithmetic Statements with Modern Operators](/rules/no-obs-arith) — <code>#EC NO_OBS_ARITH</code>
+* [Eliminate Obsolete Control Flow and Procedural Statements](/rules/no-obs-control) — <code>#EC NO_OBS_CONTROL</code>
+* [Replace Obsolete Data Declarations with Explicit Types](/rules/no-obs-decl) — <code>#EC NO_OBS_DECL</code>
 
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_NO_DASH_IN_FORM`
 * **ABAP Implementation:** [/skyl/cl_no_dash_in_form.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_dash_in_form.clas.abap)
-* **Rule Metadata:** [rules-data.mjs (Line 2729)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L2729)
+* **Rule Metadata:** [rules-data.mjs (Line 2785)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L2785)
 
 ## Community & Feedback
 

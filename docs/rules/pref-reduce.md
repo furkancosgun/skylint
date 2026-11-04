@@ -1,13 +1,13 @@
 ---
-title: "Prefer REDUCE #( ) Expression over Simple Aggregation LOOP"
-description: "Prefer REDUCE #( ) Expression over Simple Aggregation LOOP - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-reduce, clean-abap"
+title: "Replace Single-Statement Aggregation LOOP with REDUCE"
+description: "Replace a LOOP that only accumulates a running total with a single REDUCE expression and remove mutable accumulator variables."
+keywords: "pref-reduce, REDUCE, LOOP AT, aggregation, Clean ABAP"
 category: "clean-abap"
 ruleId: "pref-reduce"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L238"
 ---
 
-# Prefer REDUCE #( ) Expression over Simple Aggregation LOOP
+# Replace Single-Statement Aggregation LOOP with REDUCE
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -25,22 +25,22 @@ Prefer REDUCE #( ) expression over simple aggregation LOOP.
 
 ## Rationale
 
-A loop that only accumulates a sum or builds a single aggregated value mixes imperative control flow with a simple calculation and hides the real intent. Such loops are longer to read and easy to break when the accumulator initialization or the loop body changes. REDUCE #( ) expresses the aggregation declaratively inside one expression and removes the mutable helper state. Use REDUCE for straightforward sums, counts, and string concatenation, and keep a loop only when it performs additional side effects.
+A LOOP whose body is one self-referential assignment such as total = total + line-amount carries mutable state, an explicit work area and three lines of control flow to express a single calculation. REDUCE states the same aggregation as one expression, cannot leak an uninitialized accumulator and makes the iteration variable local to the expression. The check reports PREF_REDUC only when the loop body is exactly one such assignment, so loops with side effects or filtering stay untouched.
 
 ### Non-Compliant
 
 ```abap
-LOOP AT lt_orders INTO ls_order.
-  lv_total = lv_total + ls_order-amount.
+LOOP AT lt_order_items INTO ls_order_item.
+  lv_total_amount = lv_total_amount + ls_order_item-amount.
 ENDLOOP.
 ```
 
 ### Compliant
 
 ```abap
-lv_total = REDUCE i( INIT total = 0
-  FOR ls_order IN lt_orders
-  NEXT total = total + ls_order-amount ).
+lv_total_amount = REDUCE #( INIT lv_sum = CONV ty_amount( 0 )
+                            FOR ls_order_item IN lt_order_items
+                            NEXT lv_sum = lv_sum + ls_order_item-amount ).
 ```
 
 ## Suppression
@@ -55,12 +55,24 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_REDUCE
 ```
 
+## Narrow Trigger Conditions
+
+A LOOP is reported only when all of the following hold:
+
+- the loop reads `LOOP AT itab INTO ls_line` or `LOOP AT itab ASSIGNING <ls_line>`,
+- the body consists of a single assignment with the shape `total = total + ...`,
+- that assignment references the loop work area or field symbol,
+- no `WHERE` or `GROUP BY` addition is present,
+- the loop closes immediately with `ENDLOOP`.
+
+Additional statements, a second accumulator, an `APPEND` or `COLLECT` aggregation, or a filtered loop keep the statement unflagged. Those cases are better served by a dedicated helper method than by squeezing side effects into `REDUCE`.
+
 
 ## Related Rules
 
-* [Prefer lines( ) over DESCRIBE TABLE](/rules/pref-lines) — <code>#EC PREF_LINES</code>
-* [Modernize READ TABLE (Table Expressions & line_exists)](/rules/pref-read-table) — <code>#EC PREF_TAB_EXPR</code>
-* [Prefer ASSIGNING over LOOP INTO Copy Targets](/rules/no-loop-into) — <code>#EC NO_LOOP_INTO</code>
+* [Use lines( ) Instead of DESCRIBE TABLE LINES](/rules/pref-lines) — <code>#EC PREF_LINES</code>
+* [Replace READ TABLE with Table Expressions and line_exists](/rules/pref-read-table) — <code>#EC PREF_TAB_EXPR</code>
+* [Prefer ASSIGNING Field Symbols Over LOOP INTO Copy Targets](/rules/no-loop-into) — <code>#EC NO_LOOP_INTO</code>
 
 ## Technical Details
 

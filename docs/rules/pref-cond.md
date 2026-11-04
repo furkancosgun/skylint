@@ -1,13 +1,13 @@
 ---
-title: "Prefer COND #( ) Expression over IF/ELSEIF/ELSE"
-description: "Prefer COND #( ) Expression over IF/ELSEIF/ELSE - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-cond, clean-abap"
+title: "Collapse Value-Mapping IF Chains into COND"
+description: "Convert IF/ELSEIF/ELSE chains that only assign one variable into a single COND constructor expression, with an automatic quickfix."
+keywords: "pref-cond, COND, IF ELSEIF, constructor expression, Clean ABAP"
 category: "clean-abap"
 ruleId: "pref-cond"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L298"
 ---
 
-# Prefer COND #( ) Expression over IF/ELSEIF/ELSE
+# Collapse Value-Mapping IF Chains into COND
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -26,27 +26,27 @@ Prefer COND #( ) expression over IF/ELSEIF/ELSE statement.
 
 ## Rationale
 
-An IF/ELSEIF chain that only assigns different values to the same variable duplicates the assignment target and spreads one decision over many lines. COND #( ) turns the whole mapping into a single expression, so the target is assigned exactly once and cannot be left uninitialized. It also composes with assignments and method calls. Keep IF when branches perform multiple statements or side effects.
+An IF/ELSEIF chain in which every branch only assigns the same variable spreads one decision over many lines, repeats the target and can leave it uninitialized when no branch matches. The check detects exactly that shape and reports PREF_COND, then offers a USECOND quickfix that rewrites the entire IF..ENDIF block into one COND expression. Assigning the result once makes the value mapping verifiable at a glance, composable in expressions and safe against a forgotten ELSE branch.
 
 ### Non-Compliant
 
 ```abap
-IF lv_score >= 90.
-  lv_grade = 'A'.
-ELSEIF lv_score >= 80.
-  lv_grade = 'B'.
+IF lv_credit_score >= 800.
+  lv_credit_rating = 'A'.
+ELSEIF lv_credit_score >= 600.
+  lv_credit_rating = 'B'.
 ELSE.
-  lv_grade = 'C'.
+  lv_credit_rating = 'C'.
 ENDIF.
 ```
 
 ### Compliant
 
 ```abap
-lv_grade = COND string(
-  WHEN lv_score >= 90 THEN 'A'
-  WHEN lv_score >= 80 THEN 'B'
-  ELSE 'C' ).
+lv_credit_rating = COND string(
+  WHEN lv_credit_score >= 800 THEN 'A'
+  WHEN lv_credit_score >= 600 THEN 'B'
+  ELSE                             'C' ).
 ```
 
 ## Automated QuickFix
@@ -62,7 +62,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value | Description & Guidance |
 |---|---|:---:|---|
-| `REQUIRE_ELSE` | `Boolean` | <code>false</code> | Require explicit ELSE branch in COND #( ... ) to guarantee total coverage |
+| `REQUIRE_ELSE` | `Boolean` | <code>false</code> | Only report IF chains that already contain an explicit ELSE branch. Enable when every COND replacement must define a total mapping; partial IF chains stay untouched. |
 
 ## Suppression
 
@@ -76,12 +76,23 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_COND
 ```
 
+## When the Rule Fires
+
+`PREF_COND` is raised only when the whole IF block is a pure value mapping:
+
+- every branch contains exactly one statement,
+- that statement is a plain assignment `target = expression`,
+- every branch assigns the same target variable,
+- the block ends directly with `ENDIF`.
+
+A branch with a method call, `APPEND`, `RAISE`, several assignments or a nested block keeps the IF statement, because a COND expression cannot carry side effects. With `REQUIRE_ELSE` enabled only chains that already contain an explicit `ELSE` are reported, so a partial mapping is never silently completed by an implied ELSE.
+
 
 ## Related Rules
 
-* [Avoid Negated IF Conditions with ELSE](/rules/no-neg-cond) — <code>#EC NO_NEG_COND</code>
+* [Avoid Negated IF Conditions with an ELSE Branch by Inverting Condition and Swapping Branches](/rules/no-neg-cond) — <code>#EC NO_NEG_COND</code>
 * [Prefer CASE over Multiple IF / ELSEIF on the Same Variable](/rules/pref-case) — <code>#EC PREF_CASE</code>
-* [Prefer SWITCH #( ) Expression over CASE Statement](/rules/pref-switch) — <code>#EC PREF_SWITCH</code>
+* [Convert Pure CASE Mappings into SWITCH Expressions](/rules/pref-switch) — <code>#EC PREF_SWITCH</code>
 
 ## Technical Details
 

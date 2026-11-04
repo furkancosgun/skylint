@@ -1,20 +1,20 @@
 ---
-title: "Avoid DUMMY Authorization Checks"
-description: "Detect AUTHORITY-CHECK statements that use the DUMMY addition, which silently disables the authorization check and exposes protected operations."
-keywords: "ABAP AUTHORITY-CHECK DUMMY, ABAP authorization bypass, SAP ATC security check, ABAP authorization check, SAP security anti-pattern"
+title: "Avoid DUMMY Addition in AUTHORITY-CHECK Statements"
+description: "Detect AUTHORITY-CHECK statements using the DUMMY addition in ABAP to prevent authorization check bypasses and access control vulnerabilities."
+keywords: "no-dummy-auth, AUTHORITY-CHECK DUMMY, ABAP Authorization Security, Broken Access Control, Clean ABAP, SAP ATC"
 category: "security"
 ruleId: "no-dummy-auth"
-customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4460"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4570"
 ---
 
-# Avoid DUMMY Authorization Checks
+# Avoid DUMMY Addition in AUTHORITY-CHECK Statements
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="danger" text="Error" />
   <Badge type="tip" text="Security & Robustness" />
   <Badge type="danger" text="#EC NO_DUMMY_AUTH" />
   <Badge type="info" text="Remote Enabled" />
-  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4460" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4570" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -25,22 +25,25 @@ Avoid AUTHORITY-CHECK with the DUMMY addition.
 
 ## Rationale
 
-The DUMMY addition turns AUTHORITY-CHECK into a no-op: the runtime accepts the statement without evaluating the authorization object, so the protected operation runs for every user. Such dummy checks are frequently added to satisfy scanners or to unblock a test and then remain in production. Remove the DUMMY addition and evaluate sy-subrc so the authorization is genuinely enforced.
+The DUMMY addition in an AUTHORITY-CHECK statement bypasses authorization verification for the designated authorization field, causing the SAP kernel to accept the check without verifying the user's role assignment against that field. Developers sometimes insert DUMMY as a temporary workaround during local development or to satisfy rudimentary static security scans without implementing real access control, leaving sensitive business operations exposed to unauthorized users (OWASP Top 10 A01: Broken Access Control). Clean ABAP and SAP ATC security guidelines require supplying valid authorization field values using the FIELD addition and verifying sy-subrc immediately.
 
 ### Non-Compliant
 
 ```abap
-AUTHORITY-CHECK OBJECT 'Z_FI_BUKRS'
-  ID 'BUKRS' DUMMY.
+AUTHORITY-CHECK OBJECT 'F_BKPF_BUK'
+  ID 'BUKRS' DUMMY
+  ID 'ACTVT' FIELD '03'.
 ```
 
 ### Compliant
 
 ```abap
-AUTHORITY-CHECK OBJECT 'Z_FI_BUKRS'
-  ID 'BUKRS' FIELD lv_bukrs.
+AUTHORITY-CHECK OBJECT 'F_BKPF_BUK'
+  ID 'BUKRS' FIELD lv_company_code
+  ID 'ACTVT' FIELD '03'.
+
 IF sy-subrc <> 0.
-  RAISE EXCEPTION NEW zcx_no_authorization( ).
+  RAISE EXCEPTION NEW zcx_auth_failure( ).
 ENDIF.
 ```
 
@@ -56,18 +59,30 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_DUMMY_AUTH
 ```
 
+## Security Risk of DUMMY Field Checks
+
+In ABAP authorization checks, `ID <field> DUMMY` informs the kernel that the authorization field should be ignored during evaluation:
+
+| AUTHORITY-CHECK Construct | Kernel Evaluation Behavior | Security Status |
+|---|---|---|
+| `ID <field> DUMMY` | Authorization field is completely ignored; any user passes | Insecure (Broken Access Control) |
+| `ID <field> FIELD lv_val` | Verified against user profile / authorization role | Secure (Enforced access control) |
+| `OBJECT 'DUMMY'` | Evaluates authorization object named `DUMMY` | Permitted (string literal name) |
+
+The check scans `AUTHORITY-CHECK OBJECT` statements and flags any occurrence of the `DUMMY` keyword. Literal strings (such as authorization object names) are not flagged. Suppress approved exceptions with `"#EC NO_DUMMY_AUTH` or `##NO_DUMMY_AUTH`.
+
 
 ## Related Rules
 
-* [Check sy-subrc Promptly After AUTHORITY-CHECK (CWE-862 Authorization Bypass)](/rules/pref-auth-subrc) — <code>#EC PREF_AUTH_SUBRC</code>
-* [Ensure AUTHORITY-CHECK Precedes Sensitive Business Operations](/rules/pref-auth-check) — <code>#EC PREF_AUTH_CHECK</code>
-* [Avoid Unnecessary Dynamic Programming Constructs (SQL Injection Prevention)](/rules/no-dynamic-stmt) — <code>#EC NO_DYNAMIC_STMT</code>
+* [Check sy-subrc Immediately After AUTHORITY-CHECK](/rules/pref-auth-subrc) — <code>#EC PREF_AUTH_SUBRC</code>
+* [Protect CALL TRANSACTION Statements with AUTHORITY-CHECK](/rules/pref-auth-check) — <code>#EC PREF_AUTH_CHECK</code>
+* [Avoid Dynamic OpenSQL and Metaprogramming Language Constructs](/rules/no-dynamic-stmt) — <code>#EC NO_DYNAMIC_STMT</code>
 
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_NO_DUMMY_AUTH`
 * **ABAP Implementation:** [/skyl/cl_no_dummy_auth.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_dummy_auth.clas.abap)
-* **Rule Metadata:** [rules-data.mjs (Line 4460)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L4460)
+* **Rule Metadata:** [rules-data.mjs (Line 4570)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L4570)
 
 ## Community & Feedback
 

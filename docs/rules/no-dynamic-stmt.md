@@ -1,20 +1,20 @@
 ---
-title: "Avoid Unnecessary Dynamic Programming Constructs (SQL Injection Prevention)"
-description: "Prevent SQL injection and runtime type mismatches in SAP ABAP by avoiding unverified dynamic programming constructs."
-keywords: "CWE-89 SQL Injection ABAP, Dynamic SQL Security SAP, cl_abap_dyn_prg, Clean ABAP Static Typing"
+title: "Avoid Dynamic OpenSQL and Metaprogramming Language Constructs"
+description: "Prevent SQL injection and runtime errors in ABAP by avoiding dynamic OpenSQL queries, dynamic method calls, and dynamic assignments."
+keywords: "no-dynamic-stmt, Dynamic SQL ABAP, SQL Injection CWE-89, Clean ABAP, cl_abap_dyn_prg, SAP ATC"
 category: "security"
 ruleId: "no-dynamic-stmt"
-customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3007"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3076"
 ---
 
-# Avoid Unnecessary Dynamic Programming Constructs (SQL Injection Prevention)
+# Avoid Dynamic OpenSQL and Metaprogramming Language Constructs
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Security & Robustness" />
   <Badge type="danger" text="#EC NO_DYNAMIC_STMT" />
   <Badge type="info" text="Remote Enabled" />
-  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3007" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3076" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -25,26 +25,25 @@ No Dynamic Constructs (CALL, ASSIGN, CREATE, etc.).
 
 ## Rationale
 
-Dynamic ABAP statements (like dynamic SQL `SELECT (lt_fields) FROM (lv_table) WHERE (lv_cond)`, dynamic method calls `CALL METHOD (lv_class)=>(lv_meth)`, or dynamic assignments `ASSIGN (lv_var) TO <fs>`) bypass compile-time syntax checks, cannot be analyzed by static ATC security tools, and introduce severe **SQL Injection (CWE-89)** risks.
-
-**Security Standard:** Write static, strongly-typed OpenSQL and OOP code wherever possible. When dynamic SQL is unavoidable (e.g. in generic analytics engines), escape input variables thoroughly using `cl_abap_dyn_prg`.
+Dynamic language constructs in ABAP—such as dynamic OpenSQL queries (`FROM (lv_table)`, `WHERE (lv_where)`), dynamic method calls (`CALL METHOD lo->(lv_method)`), dynamic assignments (`ASSIGN (lv_var) TO <fs>`), and dynamic program execution (`SUBMIT (lv_prog)`)—bypass static type checking and compile-time syntax verification. Unvalidated dynamic SQL introduces high-severity SQL Injection vulnerabilities (OWASP A03 / CWE-89), prevents static ATC security scanning, and degrades database query plan caching. In Clean ABAP and ABAP Cloud, logic should be statically typed and bound to explicit artifacts; unavoidable dynamic SQL in RAP custom query providers must be strictly sanitized using cl_abap_dyn_prg.
 
 ### Non-Compliant
 
 ```abap
-" Critical Security Vulnerability: SQL Injection via unsanitized WHERE string
-DATA(lv_where) = |CUSTOMER_ID = '{ iv_user_input }'|.
-SELECT * FROM zcustomers WHERE (lv_where) INTO TABLE @DATA(lt_cust).
+DATA(lv_table_name) = 'ZCUSTOMERS'.
+SELECT customer_id, customer_name
+  FROM (lv_table_name)
+  WHERE customer_id = @lv_customer_id
+  INTO TABLE @DATA(lt_customers).
 ```
 
 ### Compliant
 
 ```abap
-" Secure: Static typed OpenSQL with host variable binding
 SELECT customer_id, customer_name
   FROM zcustomers
-  WHERE customer_id = @iv_user_input
-  INTO TABLE @DATA(lt_cust).
+  WHERE customer_id = @lv_customer_id
+  INTO TABLE @DATA(lt_customers).
 ```
 
 ## Configuration & Thresholds
@@ -53,8 +52,8 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value | Description & Guidance |
 |---|---|:---:|---|
-| `CHECK_DYNAMIC_SQL` | `Boolean` | <code>true</code> | Detect dynamic table names, column projections, and WHERE clauses in OpenSQL |
-| `IGNORE_RAP_QUERY_PROVIDER` | `Boolean` | <code>true</code> | Allow dynamic queries inside custom RAP query provider implementations (IF_RAP_QUERY_PROVIDER) |
+| `CHECK_DYNAMIC_SQL` | `Boolean` | <code>true</code> | Flag dynamic table names, column projections, and WHERE clauses enclosed in parentheses in OpenSQL (default: true). |
+| `IGNORE_RAP_QUERY_PROVIDER` | `Boolean` | <code>true</code> | Exempt dynamic OpenSQL queries located within RAP query provider methods implementing IF_RAP_QUERY_PROVIDER~SELECT (default: true). |
 
 ## Suppression
 
@@ -68,18 +67,34 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_DYNAMIC_STMT
 ```
 
+## Detected Dynamic Statements
+
+The check inspects procedure statements and flags the following dynamic patterns:
+
+| Statement Type | Dynamic Pattern Detected | Risk / Vulnerability |
+|---|---|---|
+| `SELECT` / `UPDATE` / `DELETE` | `FROM (lv_table)` or `WHERE (lv_where)` | SQL Injection (CWE-89), lack of static type checking |
+| `CALL FUNCTION` | Non-literal function name `CALL FUNCTION lv_func` | Unverified remote or local function dispatch |
+| `CALL METHOD` | Dynamic method or class dispatch `lo->(lv_meth)` | Dynamic invoke failure, runtime dump `CX_SY_DYN_CALL_ILLEGAL_METHOD` |
+| `ASSIGN` | `ASSIGN (lv_var) TO <fs>` or `ASSIGN COMPONENT` | Dynamic field symbol binding without symbol validation |
+| `CREATE OBJECT` | Dynamic type instantiation `TYPE (lv_class)` | Dynamic type mismatch, unexpected class creation |
+| `SUBMIT` / `PERFORM` | Dynamic program or routine invocation `(lv_prog)` | Arbitrary code execution risk |
+| `SORT` | Dynamic sort key `SORT itab BY (lv_col)` | Runtime dump on invalid column name |
+
+Dynamic SQL inside custom RAP query provider implementations (`IF_RAP_QUERY_PROVIDER~SELECT`) is exempted when `IGNORE_RAP_QUERY_PROVIDER` is enabled. Suppress false positives with `"#EC NO_DYNAMIC_STMT` or `##NO_DYNAMIC_STMT`.
+
 
 ## Related Rules
 
-* [Provide FAILED and REPORTED in RAP EML Statements (Silent Transaction Failure Prevention)](/rules/no-unhandled-eml) — <code>#EC NO_UNHANDLED_EML</code>
-* [Avoid Dynamic Metaprogramming and Code Generation (Remote Code Execution Risk)](/rules/no-metaprogramming) — <code>#EC NO_METAPROGRAMMING</code>
-* [Avoid Kernel and Native Database Calls (SYSTEM-CALL, EXEC SQL)](/rules/no-kernel-call) — <code>#EC NO_KERNEL_CALL</code>
+* [Provide FAILED and REPORTED in RAP EML Statements](/rules/no-unhandled-eml) — <code>#EC NO_UNHANDLED_EML</code>
+* [Avoid Dynamic Metaprogramming and Runtime Code Generation](/rules/no-metaprogramming) — <code>#EC NO_METAPROGRAMMING</code>
+* [Avoid Internal C-Kernel Calls and Native Database SQL](/rules/no-kernel-call) — <code>#EC NO_KERNEL_CALL</code>
 
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_NO_DYNAMIC_STMT`
 * **ABAP Implementation:** [/skyl/cl_no_dynamic_stmt.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_dynamic_stmt.clas.abap)
-* **Rule Metadata:** [rules-data.mjs (Line 3007)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L3007)
+* **Rule Metadata:** [rules-data.mjs (Line 3076)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L3076)
 
 ## Community & Feedback
 

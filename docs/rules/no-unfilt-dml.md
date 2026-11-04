@@ -1,20 +1,20 @@
 ---
-title: "Avoid UPDATE or DELETE Without a WHERE Condition (Catastrophic Data Wipe Prevention)"
-description: "Prevent catastrophic full-table deletion and modification in SAP ABAP by requiring WHERE clauses on all OpenSQL UPDATE and DELETE statements."
-keywords: "Unfiltered UPDATE ABAP, DELETE without WHERE SAP, Catastrophic Data Loss Prevention, OpenSQL Data Integrity"
+title: "Enforce WHERE Conditions on Database UPDATE and DELETE Statements"
+description: "Prevent catastrophic full-table data deletion or corruption in ABAP OpenSQL by requiring WHERE clauses on UPDATE and DELETE."
+keywords: "no-unfilt-dml, DELETE without WHERE, OpenSQL DML Security, UPDATE SET WHERE, Clean ABAP, SAP ATC"
 category: "security"
 ruleId: "no-unfilt-dml"
-customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3692"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3777"
 ---
 
-# Avoid UPDATE or DELETE Without a WHERE Condition (Catastrophic Data Wipe Prevention)
+# Enforce WHERE Conditions on Database UPDATE and DELETE Statements
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Security & Robustness" />
   <Badge type="danger" text="#EC NO_UNFILT_DML" />
   <Badge type="info" text="Remote Enabled" />
-  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3692" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3777" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -25,25 +25,22 @@ Flag DML without WHERE on database tables.
 
 ## Rationale
 
-Executing an `UPDATE` or `DELETE` statement targeting a database table without an explicit `WHERE` clause modifies or truncates every single record in the entire table. In production environments, this causes catastrophic data loss, brings business operations to a halt, and requires emergency point-in-time database restoration.
-
-**Safety Standard:** Always provide a restrictive `WHERE` condition on every database DML statement. If a full-table operation is genuinely required (e.g., in staging tables), enforce it through explicit administrative procedures.
+Executing OpenSQL UPDATE ... SET or DELETE FROM statements on database tables without an explicit WHERE clause mutates or truncates every record in the entire database table. In enterprise production systems, an unfiltered DML statement leads to catastrophic data destruction or widespread corruption, bringing core business processes to an immediate halt and requiring emergency database restorations. Clean ABAP, SAP ATC robustness checks, and ABAP Cloud Contract C1 require all OpenSQL database writes to be strictly bounded by explicit top-level WHERE conditions to guarantee precise transaction boundaries.
 
 ### Non-Compliant
 
 ```abap
-" Disaster: Wipes all customer purchase history in the entire system!
 DELETE FROM zorder_items.
 ```
 
 ### Compliant
 
 ```abap
-" Safe: Scoped deletion with mandatory WHERE condition
 DELETE FROM zorder_items
-  WHERE order_id = @iv_order_id.
+  WHERE order_id = @lv_order_id.
+
 IF sy-subrc <> 0.
-  " Handle not found or log
+  " Record not found or already deleted
 ENDIF.
 ```
 
@@ -59,18 +56,32 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_UNFILT_DML
 ```
 
+## Scope of DML Inspection
+
+The check inspects OpenSQL statements that modify persistent database tables:
+
+| OpenSQL Statement | Condition Checked | Action Taken |
+|---|---|---|
+| `DELETE FROM <dbtab>` | Absence of top-level `WHERE` | Flagged with finding `NO_UNF_DML` |
+| `UPDATE <dbtab> SET ...` | Absence of top-level `WHERE` | Flagged with finding `NO_UNF_DML` |
+| `DELETE FROM <dbtab> WHERE ...` | Presence of `WHERE` at parenthesis depth 0 | Passed (compliant) |
+| `UPDATE <dbtab> SET ... WHERE ...` | Presence of `WHERE` at parenthesis depth 0 | Passed (compliant) |
+| `DELETE itab` (internal table) | In-memory table operation | Ignored (non-database access) |
+
+Note that subquery `WHERE` clauses inside `SET` expressions do not count as top-level table filters. Suppress legitimate mass cleanup operations on temporary staging tables with `"#EC NO_UNFILT_DML` or `##NO_UNFILT_DML`.
+
 
 ## Related Rules
 
-* [Avoid Database Access Inside Loops (N+1 Query Antipattern)](/rules/no-db-in-loop) — <code>#EC NO_DB_IN_LOOP</code>
-* [Avoid SELECT * in OpenSQL Queries (Minimize Memory & Network Overhead)](/rules/no-select-star) — <code>#EC NO_SELECT_STAR</code>
+* [Avoid Database Queries Inside Loops (N+1 Query Antipattern)](/rules/no-db-in-loop) — <code>#EC NO_DB_IN_LOOP</code>
+* [Avoid SELECT * and Project Columns Explicitly](/rules/no-select-star) — <code>#EC NO_SELECT_STAR</code>
 * [Verify sy-subrc Promptly After Data Retrieval and Search](/rules/pref-check-subrc) — <code>#EC PREF_CHECK_SUBRC</code>
 
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_NO_UNFILT_DML`
 * **ABAP Implementation:** [/skyl/cl_no_unfilt_dml.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_unfilt_dml.clas.abap)
-* **Rule Metadata:** [rules-data.mjs (Line 3692)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L3692)
+* **Rule Metadata:** [rules-data.mjs (Line 3777)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L3777)
 
 ## Community & Feedback
 

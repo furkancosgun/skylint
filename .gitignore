@@ -10,7 +10,7 @@ docs/.vitepress/dist/
 docs/.vitepress/cache/
 deps/open-abap-core/
 tmp/
-
+.agents/
 # generated
 lib/checks-registry.mjs
 

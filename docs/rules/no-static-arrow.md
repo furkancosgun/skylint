@@ -1,13 +1,13 @@
 ---
-title: "Avoid Calling Static Methods via Instance References (->)"
-description: "Avoid Calling Static Methods via Instance References (->) - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-static-arrow, anti-patterns"
+title: "Call Static Methods with Class Component Selector (=>)"
+description: "Avoid invoking static methods via instance arrow (->); call directly via class selector (=>) in ABAP Cloud."
+keywords: "no-static-arrow, static methods, class component selector, Clean ABAP, SAP ATC"
 category: "anti-patterns"
 ruleId: "no-static-arrow"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1092"
 ---
 
-# Avoid Calling Static Methods via Instance References (->)
+# Call Static Methods with Class Component Selector (=>)
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -26,19 +26,19 @@ Avoid calling static methods via instance arrow (->).
 
 ## Rationale
 
-Calling a static method through an instance reference uses the instance arrow and suggests polymorphic dispatch that is not happening. It also creates an unnecessary dependency on a live object. Use the class name with => so readers immediately see that the method is static and cannot be overridden.
+Invoking a static method through an instance dereference arrow (->) gives the misleading impression that polymorphic dynamic dispatch is occurring, even though the call is bound statically at compile time. It also introduces an unnecessary dependency on an instantiated object reference that could be initial, obscuring actual program architecture and confusing static call-graph analyzers. Clean ABAP requires using the class component selector (=>) directly on the defining class name, which clarifies static binding and improves ABAP Cloud readiness.
 
 ### Non-Compliant
 
 ```abap
-DATA lo_helper TYPE REF TO cl_helper.
-lo_helper->format_date( lv_date ).
+DATA lo_tax_calculator TYPE REF TO zcl_tax_calculator.
+lo_tax_calculator->calculate_vat_amount( iv_net_amount = lv_net_amount ).
 ```
 
 ### Compliant
 
 ```abap
-cl_helper=>format_date( lv_date ).
+zcl_tax_calculator=>calculate_vat_amount( iv_net_amount = lv_net_amount ).
 ```
 
 ## Automated QuickFix
@@ -60,12 +60,18 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_STATIC_ARROW
 ```
 
+### Static Method Resolution
+
+The check inspects method call tokens containing `->` and uses ABAP Run-Time Type Identification (RTTI) to verify whether the target method is declared as a static `CLASS-METHODS`. Because RTTI requires local type descriptor resolution, this rule operates with `remote_enablement = abap_false`.
+
+The `STATICCL` QuickFix resolves the defining class name and replaces the instance dereference with `class_name=>method_name( )`. Suppress false positives with `"#EC NO_STATIC_ARROW`.
+
 
 ## Related Rules
 
-* [Avoid Purely Static Utility Classes](/rules/no-static-cls) — <code>#EC NO_STATIC_CLS</code>
-* [Prefer CREATE_* Prefix for Factory Methods Returning Own Class](/rules/pref-factory-name) — <code>#EC PREF_FACTORY_NAME</code>
-* [Avoid IS INSTANCE OF and CASE TYPE OF Type Tests](/rules/no-instance-of) — <code>#EC NO_INSTANCE_OF</code>
+* [Design Classes with Instance Methods and Interfaces Instead of Static-Only Utilities](/rules/no-static-cls) — <code>#EC NO_STATIC_CLS</code>
+* [Name Static Factory Methods CREATE_* When They Return Their Own Class](/rules/pref-factory-name) — <code>#EC PREF_FACTORY_NAME</code>
+* [Replace IS INSTANCE OF and CASE TYPE OF with Polymorphism](/rules/no-instance-of) — <code>#EC NO_INSTANCE_OF</code>
 
 ## Technical Details
 

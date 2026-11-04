@@ -1,13 +1,13 @@
 ---
-title: "Avoid CHECK Statements"
-description: "Avoid CHECK Statements - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-check-stmt, anti-patterns"
+title: "Avoid CHECK Statements Inside and Outside Iteration Loops"
+description: "Avoid ambiguous CHECK statements and replace them with explicit IF CONTINUE or IF RETURN guard clauses in Clean ABAP."
+keywords: "no-check-stmt, CHECK statement, guard clause, Clean ABAP, SAP ATC"
 category: "anti-patterns"
 ruleId: "no-check-stmt"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L766"
 ---
 
-# Avoid CHECK Statements
+# Avoid CHECK Statements Inside and Outside Iteration Loops
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -28,25 +28,25 @@ Avoid CHECK statements; prefer IF with RETURN or CONTINUE.
 
 ## Rationale
 
-CHECK behaves like CONTINUE inside a loop but like RETURN outside a loop, so moving the statement between contexts silently changes control flow. That dual meaning makes refactoring and reviews hazardous. Replace it with an explicit IF ... CONTINUE or IF ... RETURN that states the intended behavior.
+The CHECK statement exhibits dual, context-dependent semantics in ABAP: inside a loop (LOOP, DO, WHILE) it functions as CONTINUE to cycle iteration, whereas outside loops it abruptly acts as RETURN from the procedure. This duality creates subtle defects during code refactoring when code containing CHECK is extracted into or moved outside a loop block. Clean ABAP rules strictly prohibit CHECK, recommending explicit guard clauses such as IF NOT ( ... ) CONTINUE inside loops or IF NOT ( ... ) RETURN outside loops. The check reports NO_CHK_LP or NO_CHK_OUT and provides automated quickfixes for both scenarios.
 
 ### Non-Compliant
 
 ```abap
-LOOP AT lt_orders INTO ls_order.
-  CHECK ls_order-status = 'OPEN'.
-  process_order( ls_order ).
+LOOP AT lt_invoices INTO ls_invoice.
+  CHECK ls_invoice-payment_status = 'PAID'.
+  process_settlement( ls_invoice ).
 ENDLOOP.
 ```
 
 ### Compliant
 
 ```abap
-LOOP AT lt_orders INTO ls_order.
-  IF ls_order-status <> 'OPEN'.
+LOOP AT lt_invoices INTO ls_invoice.
+  IF ls_invoice-payment_status <> 'PAID'.
     CONTINUE.
   ENDIF.
-  process_order( ls_order ).
+  process_settlement( ls_invoice ).
 ENDLOOP.
 ```
 
@@ -63,8 +63,8 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value | Description & Guidance |
 |---|---|:---:|---|
-| `CHECK_IN_LOOP` | `Boolean` | <code>true</code> | Detect CHECK inside loops and suggest IF NOT ... CONTINUE guard clause |
-| `CHECK_OUTSIDE_LOOP` | `Boolean` | <code>true</code> | Detect CHECK outside loops and suggest IF NOT ... RETURN guard clause |
+| `CHECK_IN_LOOP` | `Boolean` | <code>true</code> | Detect CHECK statements within loops (LOOP, DO, WHILE) and propose IF NOT ... CONTINUE guard clauses. |
+| `CHECK_OUTSIDE_LOOP` | `Boolean` | <code>true</code> | Detect CHECK statements outside loops and propose IF NOT ... RETURN guard clauses. |
 
 ## Suppression
 
@@ -78,12 +78,23 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_CHECK_IN_LOOP
 ```
 
+### Contextual Semantics and QuickFixes
+
+`CHECK` has unpredictable behavior when moved between contexts:
+
+| Context | CHECK Behavior | Clean ABAP Replacement | QuickFix |
+|---|---|---|---|
+| Inside Loop (`LOOP`, `DO`, `WHILE`) | Cycles to next iteration | `IF NOT ( cond ). CONTINUE. ENDIF.` | `IFGUARD` |
+| Outside Loop (Method Body) | Exits current procedure | `IF NOT ( cond ). RETURN. ENDIF.` | `IFRET` |
+
+The check provides two distinct finding codes: `NO_CHK_LP` (suppress with `"#EC NO_CHECK_IN_LOOP`) and `NO_CHK_OUT` (suppress with `"#EC NO_CHECK_OUTSIDE_LOOP`). Both behaviors are configurable via attributes `CHECK_IN_LOOP` and `CHECK_OUTSIDE_LOOP`.
+
 
 ## Related Rules
 
-* [Avoid CASE with a Single WHEN Branch](/rules/no-single-when) — <code>#EC NO_SINGLE_WHEN</code>
-* [Avoid Comparing to abap_true / abap_false](/rules/no-bool-compare) — <code>#EC NO_BOOL_COMPARE</code>
-* [Avoid Yoda Conditions](/rules/no-yoda-cond) — <code>#EC NO_YODA_COND</code>
+* [Replace Single-Branch CASE Statements with IF Conditions](/rules/no-single-when) — <code>#EC NO_SINGLE_WHEN</code>
+* [Avoid Comparing Boolean Method Calls to abap_true or abap_false](/rules/no-bool-compare) — <code>#EC NO_BOOL_COMPARE</code>
+* [Avoid Yoda Conditions by Placing Variables Before Literals](/rules/no-yoda-cond) — <code>#EC NO_YODA_COND</code>
 
 ## Technical Details
 

@@ -1,13 +1,13 @@
 ---
-title: "Ensure Opened Datasets and Cursors are Closed"
-description: "Prevent resource leaks in ABAP by ensuring all OPEN DATASET and OPEN CURSOR statements have guaranteed CLOSE counterparts."
-keywords: "OPEN DATASET CLOSE DATASET ABAP, OPEN CURSOR CLOSE CURSOR ABAP, DBSQL_TOO_MANY_OPEN_CURSOR, ABAP resource leak ATC check, Clean ABAP resource management"
+title: "Close Opened Datasets and Database Cursors Explicitly"
+description: "Prevent resource leaks in SAP ABAP by verifying that all OPEN DATASET and OPEN CURSOR statements are explicitly paired with CLOSE operations."
+keywords: "no-unclosed-res, OPEN DATASET, OPEN CURSOR, DBSQL_TOO_MANY_OPEN_CURSOR, ABAP resource management"
 category: "security"
 ruleId: "no-unclosed-res"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1187"
 ---
 
-# Ensure Opened Datasets and Cursors are Closed
+# Close Opened Datasets and Database Cursors Explicitly
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -27,21 +27,27 @@ Ensure opened datasets and cursors are closed.
 
 ## Rationale
 
-Resources opened on the application server (OPEN DATASET) or database (OPEN CURSOR) must always be explicitly closed (CLOSE DATASET, CLOSE CURSOR). Leaving resources open causes operating system file descriptor leaks, persistent file locks, and can trigger the fatal runtime error DBSQL_TOO_MANY_OPEN_CURSOR (maximum 17 open database cursors session limit).
+Resources opened on the application server (OPEN DATASET) or database (OPEN CURSOR) must always be explicitly closed with CLOSE DATASET or CLOSE CURSOR before procedure completion. Leaving resources open causes operating system file descriptor leaks, persistent file locks, and risks triggering the fatal runtime error DBSQL_TOO_MANY_OPEN_CURSOR when reaching the SAP session limit of 17 open database cursors. In modern ABAP Cloud, legacy file and cursor operations are replaced with set-based ABAP SQL queries or released streaming APIs.
 
 ### Non-Compliant
 
 ```abap
-OPEN CURSOR @DATA(dbcur) FOR SELECT * FROM t100.
-" Cursor remains open without CLOSE CURSOR!
+OPEN CURSOR @DATA(lv_cursor) FOR
+  SELECT partner, name_first, name_last
+    FROM but000
+    WHERE type = '1'.
+FETCH NEXT CURSOR @lv_cursor INTO TABLE @DATA(lt_partners).
+" Anti-pattern: Database cursor remains unclosed without CLOSE CURSOR!
 ```
 
 ### Compliant
 
 ```abap
-OPEN CURSOR @DATA(dbcur) FOR SELECT * FROM t100.
-FETCH NEXT CURSOR @dbcur INTO TABLE @DATA(lt_data).
-CLOSE CURSOR @dbcur.
+SELECT partner, name_first, name_last
+  FROM but000
+  WHERE type = '1'
+  INTO TABLE @DATA(lt_partners)
+  UP TO 500 ROWS.
 ```
 
 ## Configuration & Thresholds
@@ -50,8 +56,8 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value | Description & Guidance |
 |---|---|:---:|---|
-| `CHECK_DATASET` | `Boolean` | <code>true</code> | Check unclosed OPEN DATASET statements |
-| `CHECK_CURSOR` | `Boolean` | <code>true</code> | Check unclosed OPEN CURSOR statements |
+| `CHECK_DATASET` | `Boolean` | <code>true</code> | Report OPEN DATASET statements that lack a subsequent CLOSE DATASET statement in the same procedure. |
+| `CHECK_CURSOR` | `Boolean` | <code>true</code> | Report OPEN CURSOR statements that lack a matching CLOSE CURSOR statement in the same procedure. |
 
 ## Suppression
 
@@ -65,11 +71,25 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_UNCLOSED_RES
 ```
 
+### Finding Codes
+
+| Finding Code | Description |
+|---|---|
+| `NO_UNCL_DS` | Reports an `OPEN DATASET` statement without a subsequent `CLOSE DATASET` targeting the same file. |
+| `NO_UNCL_CR` | Reports an `OPEN CURSOR` statement without a subsequent `CLOSE CURSOR` targeting the same cursor variable. |
+
+### Configuration Attributes
+
+- `CHECK_DATASET` (Boolean, default `abap_true`): Enables or disables detection of unclosed application server datasets.
+- `CHECK_CURSOR` (Boolean, default `abap_true`): Enables or disables detection of unclosed database cursors.
+
+Findings can be suppressed using the pseudo-comment `"#EC NO_UNCLOSED_RES`. In ABAP Cloud development, use set-based Open SQL with `UP TO n ROWS` or released file storage APIs instead of low-level cursor and dataset operations.
+
 
 ## Related Rules
 
-* [Avoid Database Access Inside Loops (N+1 Query Antipattern)](/rules/no-db-in-loop) — <code>#EC NO_DB_IN_LOOP</code>
-* [Avoid Obsolete ABAP Memory and Context Statements](/rules/no-obs-memory) — <code>#EC NO_OBS_MEMORY</code>
+* [Avoid Database Queries Inside Loops (N+1 Query Antipattern)](/rules/no-db-in-loop) — <code>#EC NO_DB_IN_LOOP</code>
+* [Prohibit Obsolete ABAP Memory and Cluster Statements](/rules/no-obs-memory) — <code>#EC NO_OBS_MEMORY</code>
 
 ## Technical Details
 

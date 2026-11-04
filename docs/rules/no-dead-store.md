@@ -1,20 +1,20 @@
 ---
-title: "Avoid Assignments Whose Value Is Never Read"
-description: "Detect dead stores in ABAP: assignments that are overwritten before any read, wasting computation and hiding leftover refactoring artifacts."
-keywords: "ABAP dead store, unused assignment ABAP, SAP ATC check dead store, Clean ABAP unused value, ABAP overwritten variable"
+title: "Avoid Overwriting Variable Values Before They Are Read"
+description: "Identify ABAP dead stores where variables are overwritten before being read, revealing dead code and refactoring bugs."
+keywords: "ABAP dead store, overwritten assignment, unused assignment, Clean ABAP, SAP ATC check, no-dead-store"
 category: "anti-patterns"
 ruleId: "no-dead-store"
-customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4487"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4599"
 ---
 
-# Avoid Assignments Whose Value Is Never Read
+# Avoid Overwriting Variable Values Before They Are Read
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC NO_DEAD_STORE" />
   <Badge type="info" text="Remote Enabled" />
-  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4487" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4599" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -25,21 +25,23 @@ Avoid assignments that are never read.
 
 ## Rationale
 
-An assignment whose value is overwritten before any read computes a result nobody uses: the work, the helper call, and the temporary state are all wasted. Such dead stores usually survive a refactor that removed the consuming branch, and they mislead readers into believing the value matters. Either read the value or delete the assignment.
+Assigning a value to a variable and then immediately overwriting it without an intervening read operation constitutes a dead store. Dead stores waste computation and memory bandwidth, but more critically, they often conceal logic flaws where an intermediate calculation or validation check was accidentally bypassed during code refactoring. Remove the redundant assignment or read the variable.
 
 ### Non-Compliant
 
 ```abap
-lv_status = 'NEW'.
-lv_status = 'DONE'.
-WRITE lv_status.
+DATA lv_order_status TYPE string.
+lv_order_status = 'PENDING'.
+lv_order_status = 'CONFIRMED'.
+log_order_status( lv_order_status ).
 ```
 
 ### Compliant
 
 ```abap
-lv_status = 'DONE'.
-WRITE lv_status.
+DATA lv_order_status TYPE string.
+lv_order_status = 'CONFIRMED'.
+log_order_status( lv_order_status ).
 ```
 
 ## Suppression
@@ -54,18 +56,36 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_DEAD_STORE
 ```
 
+### Detection logic
+
+The check inspects assignment statements (`COMPUTE` and legacy `MOVE`) for local variables:
+1. An assignment sets a pending store state on a variable.
+2. A subsequent write before any read marks the first assignment as a dead store (`NO_DEAD_ST`).
+3. Intervening block boundaries (`IF`, `CASE`, `LOOP`, `TRY`) and conditional writes (`SELECT`, `READ TABLE`) reset pending stores to prevent false positives across branches.
+4. If a variable is never read anywhere in the procedure, this check leaves it to `no-unused-vars`.
+
+| Sequence | Result |
+| --- | --- |
+| `val = 1. val = 2. log( val ).` | First assignment flagged (`NO_DEAD_ST`) |
+| `val = 1. log( val ). val = 2. log( val ).` | Compliant (read between assignments) |
+| `val = 1. IF flag = abap_true. val = 2. ENDIF.` | Compliant (branch boundary resets pending store) |
+
+### Suppression
+
+If an initial assignment is required by an external macro or interface, annotate with `"#EC NO_DEAD_STORE`.
+
 
 ## Related Rules
 
-* [Eliminate Unused Local Variables and Symbols](/rules/no-unused-vars) — <code>#EC NO_UNUSED_VARS</code>
-* [Avoid Dead Code with Constant Conditions](/rules/no-dead-code) — <code>#EC NO_DEAD_CODE</code>
-* [Prefer FINAL( ) over DATA( ) when the variable is never written again](/rules/pref-final-data) — <code>#EC PREF_FINAL_DATA</code>
+* [Remove Unread Local Variables and Field Symbols](/rules/no-unused-vars) — <code>#EC NO_UNUSED_VARS</code>
+* [Eliminate Unreachable Dead Code Caused by Constant False Conditions](/rules/no-dead-code) — <code>#EC NO_DEAD_CODE</code>
+* [Declare Single-Assignment Local Variables with FINAL( )](/rules/pref-final-data) — <code>#EC PREF_FINAL_DATA</code>
 
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_NO_DEAD_STORE`
 * **ABAP Implementation:** [/skyl/cl_no_dead_store.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_dead_store.clas.abap)
-* **Rule Metadata:** [rules-data.mjs (Line 4487)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L4487)
+* **Rule Metadata:** [rules-data.mjs (Line 4599)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L4599)
 
 ## Community & Feedback
 

@@ -1,20 +1,20 @@
 ---
-title: "Enforce Local Variable and Field-Symbol Naming Conventions"
-description: "Enforce Local Variable and Field-Symbol Naming Conventions - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-naming-vars, clean-abap"
+title: "Enforce Configured Naming Conventions for Local Variables and Field-Symbols"
+description: "Enforce standard naming conventions for ABAP local variables, constants, and field-symbols using configurable regex checks in SAP ATC."
+keywords: "pref-naming-vars, naming conventions, local variables, field-symbols, Clean ABAP"
 category: "clean-abap"
 ruleId: "pref-naming-vars"
-customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3372"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3455"
 ---
 
-# Enforce Local Variable and Field-Symbol Naming Conventions
+# Enforce Configured Naming Conventions for Local Variables and Field-Symbols
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="danger" text="#EC PREF_NAMING_VARS" />
   <Badge type="info" text="Remote Enabled" />
-  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3372" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3455" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -25,20 +25,20 @@ Local Variable and Field-Symbol Naming Conventions.
 
 ## Rationale
 
-Local variables, constants, statics, and field-symbols must follow distinct naming conventions (such as `lv_*`, `lc_*`, `sv_*`, `<ls_*>`, `<lv_*>`) to ensure clear scope boundaries, prevent unintended variable shadowing, and eliminate ambiguity during code reviews and debugging.
+Consistent variable prefixes (such as `lv_` for local variables, `lc_` for constants, `<ls_>` or `<lv_>` for field-symbols, and `sv_` for static variables) provide clear scope boundaries, clarify data types, and prevent accidental shadowing of member attributes or global structures. Adhering to predictable naming rules speeds up code reviews and improves maintainability across teams. Skylint validates all local declarations and inline declarations against configurable regex patterns, reporting PREF_NAMVR upon violation.
 
 ### Non-Compliant
 
 ```abap
-DATA customer_name TYPE string.
-FIELD-SYMBOLS <item> TYPE any.
+DATA customer_account TYPE string.
+FIELD-SYMBOLS <billing_item> TYPE any.
 ```
 
 ### Compliant
 
 ```abap
-DATA lv_customer_name TYPE string.
-FIELD-SYMBOLS <ls_item> TYPE any.
+DATA lv_customer_account TYPE string.
+FIELD-SYMBOLS <ls_billing_item> TYPE any.
 ```
 
 ## Configuration & Thresholds
@@ -47,10 +47,10 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value | Description & Guidance |
 |---|---|:---:|---|
-| `LOCAL_DATA` | `String` | <code>^L._.+$</code> | Regex pattern for local variables (default: ^L._.+$) |
-| `LOCAL_CONST` | `String` | <code>^LC_.+$</code> | Regex pattern for local constants (default: ^LC_.+$) |
-| `LOCAL_FS` | `String` | <code>^<L._.+>$</code> | Regex pattern for field-symbols (default: ^<L._.+>$) |
-| `LOCAL_STATICS` | `String` | <code>^S._.+$</code> | Regex pattern for local static variables (default: ^S._.+$) |
+| `LOCAL_DATA` | `String` | <code>^L._.+$</code> | Regex pattern for local variable declarations (DATA and inline DATA), defaulting to `^L._.+$`. |
+| `LOCAL_CONST` | `String` | <code>^LC_.+$</code> | Regex pattern for local constant declarations, defaulting to `^LC_.+$`. |
+| `LOCAL_FS` | `String` | <code>^&lt;L._.+&gt;$</code> | Regex pattern for local field-symbols (FIELD-SYMBOLS and inline FIELD-SYMBOL), defaulting to `^<L._.+>$`. |
+| `LOCAL_STATICS` | `String` | <code>^S._.+$</code> | Regex pattern for local static variable declarations (STATICS), defaulting to `^S._.+$`. |
 
 ## Suppression
 
@@ -64,18 +64,33 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_NAMING_VARS
 ```
 
+## Configured Regex Patterns
+
+Declarations in procedure bodies are validated against the following default regex rules:
+
+| Construct | Configuration Key | Default Pattern | Example Match |
+|---|---|---|---|
+| Local Variable | `LOCAL_DATA` | `^L._.+$` | `lv_amount`, `lt_items`, `ls_header` |
+| Local Constant | `LOCAL_CONST` | `^LC_.+$` | `lc_vat_rate`, `lc_max_retries` |
+| Field Symbol | `LOCAL_FS` | `^<L._.+>$` | `<ls_item>`, `<lv_value>` |
+| Local Static | `LOCAL_STATICS` | `^S._.+$` | `sv_counter`, `st_cache` |
+
+Both explicit statements (`DATA`, `STATICS`, `CONSTANTS`, `FIELD-SYMBOLS`) and inline declarations (`DATA(...)`, `FIELD-SYMBOL(...)`) are verified.
+
+Suppress individual findings with `"#EC PREF_NAMING_VARS` or `##PREF_NAMING_VARS`.
+
 
 ## Related Rules
 
-* [Enforce Class Attribute and Method Parameter Naming Conventions](/rules/pref-name-members) — <code>#EC PREF_NAME_MEMBERS</code>
-* [Enforce Class, Interface, Type and Object Naming Conventions](/rules/pref-name-objects) — <code>#EC PREF_NAME_OBJECTS</code>
-* [Eliminate Unused Local Variables and Symbols](/rules/no-unused-vars) — <code>#EC NO_UNUSED_VARS</code>
+* [Enforce Standard Naming Conventions for Class Members, Parameters and Screens](/rules/pref-name-members) — <code>#EC PREF_NAME_MEMBERS</code>
+* [Enforce Standard Naming Conventions for Classes, Interfaces, Types and Global Objects](/rules/pref-name-objects) — <code>#EC PREF_NAME_OBJECTS</code>
+* [Remove Unread Local Variables and Field Symbols](/rules/no-unused-vars) — <code>#EC NO_UNUSED_VARS</code>
 
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_PREF_NAMING_VARS`
 * **ABAP Implementation:** [/skyl/cl_pref_naming_vars.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_pref_naming_vars.clas.abap)
-* **Rule Metadata:** [rules-data.mjs (Line 3372)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L3372)
+* **Rule Metadata:** [rules-data.mjs (Line 3455)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L3455)
 
 ## Community & Feedback
 

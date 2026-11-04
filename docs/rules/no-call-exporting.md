@@ -1,13 +1,13 @@
 ---
-title: "Omit Redundant EXPORTING in Method Calls"
-description: "Omit Redundant EXPORTING in Method Calls - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-call-exporting, anti-patterns"
+title: "Omit Redundant EXPORTING Keyword in Method Invocations"
+description: "Omit redundant EXPORTING keywords in functional ABAP method calls for cleaner and more readable syntax."
+keywords: "no-call-exporting, EXPORTING keyword, functional method call, Clean ABAP, SAP ATC"
 category: "anti-patterns"
 ruleId: "no-call-exporting"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L531"
 ---
 
-# Omit Redundant EXPORTING in Method Calls
+# Omit Redundant EXPORTING Keyword in Method Invocations
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -26,18 +26,18 @@ Omit Redundant EXPORTING in Method Calls.
 
 ## Rationale
 
-In functional ABAP method calls, the EXPORTING keyword is redundant when no other clauses (such as IMPORTING, CHANGING, or EXCEPTIONS) are present. Removing EXPORTING reduces syntax noise and simplifies signature reading.
+When invoking a method functionally, the EXPORTING keyword is entirely optional unless another clause (such as IMPORTING, CHANGING, or EXCEPTIONS) is present. Writing out EXPORTING adds redundant boilerplate, clutters method parameter lists, and violates Clean ABAP conciseness principles. The check detects standalone EXPORTING clauses and reports NO_CALL_EX, while the OMIT_EXP quickfix directly deletes the superfluous keyword.
 
 ### Non-Compliant
 
 ```abap
-lo_pricing->apply_discount( EXPORTING iv_percent = 10 ).
+lo_pricing_engine->apply_discount( EXPORTING iv_discount_rate = 15 ).
 ```
 
 ### Compliant
 
 ```abap
-lo_pricing->apply_discount( iv_percent = 10 ).
+lo_pricing_engine->apply_discount( iv_discount_rate = 15 ).
 ```
 
 ## Automated QuickFix
@@ -59,12 +59,24 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_CALL_EXPORTING
 ```
 
+### Redundant vs. Mandatory EXPORTING
+
+In functional ABAP method calls, parameters passed without a section header are implicitly treated as `EXPORTING`:
+
+| Syntax Pattern | Status | QuickFix |
+|---|---|---|
+| `lo_obj->method( EXPORTING iv_val = 1 ).` | Redundant | `OMIT_EXP` removes `EXPORTING` |
+| `lo_obj->method( iv_val = 1 ).` | Clean ABAP Standard | Clean |
+| `lo_obj->method( EXPORTING iv_val = 1 IMPORTING ev_res = lv_res ).` | Required (multi-section) | Exempt |
+
+The rule ignores calls that contain `IMPORTING`, `CHANGING`, `RECEIVING`, or `EXCEPTIONS`. Suppress findings with `"#EC NO_CALL_EXPORTING`.
+
 
 ## Related Rules
 
-* [Avoid Obsolete CALL METHOD](/rules/no-call-method) — <code>#EC NO_CALL_METHOD</code>
-* [Omit RECEIVING in Method Invocations](/rules/no-call-receiving) — <code>#EC NO_CALL_RECEIVING</code>
-* [Prefer Functional RETURNING Parameters](/rules/pref-returning) — <code>#EC PREF_RETURNING</code>
+* [Replace Obsolete CALL METHOD Statements with Functional Invocations](/rules/no-call-method) — <code>#EC NO_CALL_METHOD</code>
+* [Omit Explicit RECEIVING Keyword in Functional Method Invocations](/rules/no-call-receiving) — <code>#EC NO_CALL_RECEIVING</code>
+* [Use RETURNING Instead of a Single EXPORTING Parameter](/rules/pref-returning) — <code>#EC PREF_RETURNING</code>
 
 ## Technical Details
 

@@ -1,10 +1,10 @@
 ---
 title: "Avoid Explicit RAISE SHORTDUMP in Application Logic"
-description: "Eliminate deliberate crash statements in ABAP by replacing RAISE SHORTDUMP with structured class-based exceptions."
-keywords: "RAISE SHORTDUMP ABAP, ST22 Dump Elimination, Clean ABAP Resilience"
+description: "Eliminate deliberate ST22 runtime crashes in SAP applications by replacing RAISE SHORTDUMP with structured, catchable class-based exceptions."
+keywords: "no-raise-shortdump, RAISE SHORTDUMP, ST22 dump, ABAP Cloud, Clean ABAP"
 category: "security"
 ruleId: "no-raise-shortdump"
-customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1880"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1897"
 ---
 
 # Avoid Explicit RAISE SHORTDUMP in Application Logic
@@ -14,7 +14,7 @@ customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-
   <Badge type="tip" text="Security & Robustness" />
   <Badge type="danger" text="#EC NO_RAISE_SHORTDUMP" />
   <Badge type="info" text="Remote Enabled" />
-  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1880" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1897" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -25,22 +25,22 @@ Avoid RAISE SHORTDUMP.
 
 ## Rationale
 
-The statement `RAISE SHORTDUMP` deliberately triggers an instant runtime crash and short dump in transaction ST22. Triggering intentional crashes bypasses standard cleanup handlers, cancels asynchronous update tasks, and leaves database locks dangling.
-
-**Best Practice:** Raise standard class-based exceptions inheriting from `CX_STATIC_CHECK` or `CX_NO_CHECK`. Allow the caller or global exception boundary to handle the incident gracefully.
+The RAISE SHORTDUMP statement deliberately terminates execution by creating an ST22 runtime dump with an uncatchable exception. Manually aborting application processing circumvents structured exception handling hierarchies, prevents cleanup handlers and transaction rollback routines from executing gracefully, and leaves external systems without informative error responses. Applications should raise catchable class-based exceptions (inheriting from CX_STATIC_CHECK or CX_NO_CHECK) containing contextual error parameters that permit calling layers to recover or log the failure cleanly.
 
 ### Non-Compliant
 
 ```abap
-" Anti-pattern: Forces instant ST22 crash
-RAISE SHORTDUMP TYPE zcx_fatal_error.
+IF ls_sales_order_header-customer_id IS INITIAL.
+  RAISE SHORTDUMP TYPE cx_no_check.
+ENDIF.
 ```
 
 ### Compliant
 
 ```abap
-" Clean ABAP: Structured exception allowing caller recovery
-RAISE EXCEPTION NEW zcx_fatal_error( textid = zcx_fatal_error=>c_system_unavailable ).
+IF ls_sales_order_header-customer_id IS INITIAL.
+  RAISE EXCEPTION NEW cx_no_check( ).
+ENDIF.
 ```
 
 ## Suppression
@@ -55,18 +55,26 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_RAISE_SHORTDUMP
 ```
 
+### Impact and Mitigation
+
+The rule checks for statements starting with `RAISE` that contain the `SHORTDUMP` token, reporting finding code `NO_DUMP`.
+
+Rather than executing `RAISE SHORTDUMP TYPE <class>`, application components should instantiate and raise a domain-specific exception using `RAISE EXCEPTION NEW <class>( ... )`. This allows top-level exception boundaries, background job frameworks, or OData gateway runtimes to handle the incident predictably.
+
+Findings can be suppressed using the pseudo-comment `"#EC NO_RAISE_SHORTDUMP`.
+
 
 ## Related Rules
 
-* [Avoid Raising System Exceptions Directly (CX_SY_*)](/rules/no-raise-cx-sy) — <code>#EC NO_RAISE_CX_SY</code>
-* [Ensure AUTHORITY-CHECK Precedes Sensitive Business Operations](/rules/pref-auth-check) — <code>#EC PREF_AUTH_CHECK</code>
-* [Check sy-subrc Promptly After AUTHORITY-CHECK (CWE-862 Authorization Bypass)](/rules/pref-auth-subrc) — <code>#EC PREF_AUTH_SUBRC</code>
+* [Avoid Raising System Exceptions Directly (cx_sy_*)](/rules/no-raise-cx-sy) — <code>#EC NO_RAISE_CX_SY</code>
+* [Protect CALL TRANSACTION Statements with AUTHORITY-CHECK](/rules/pref-auth-check) — <code>#EC PREF_AUTH_CHECK</code>
+* [Check sy-subrc Immediately After AUTHORITY-CHECK](/rules/pref-auth-subrc) — <code>#EC PREF_AUTH_SUBRC</code>
 
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_NO_RAISE_SHORTDUMP`
 * **ABAP Implementation:** [/skyl/cl_no_raise_shortdump.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_raise_shortdump.clas.abap)
-* **Rule Metadata:** [rules-data.mjs (Line 1880)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L1880)
+* **Rule Metadata:** [rules-data.mjs (Line 1897)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L1897)
 
 ## Community & Feedback
 

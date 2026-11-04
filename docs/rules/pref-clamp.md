@@ -1,13 +1,13 @@
 ---
-title: "Prefer nmin/nmax or clamp Expressions over Manual IF Clamping"
-description: "Prefer built-in nmin, nmax, or clamp functions over manual range checking IF statements in ABAP."
-keywords: "ABAP clamp, nmin nmax ABAP, manual clamp, Clean ABAP expressions"
+title: "Replace Manual IF Range Clamping with nmin( ) and nmax( )"
+description: "Detect manual IF ELSEIF range clamping in ABAP and rewrite it with nmin and nmax - branch-free, testable value clamping with an automatic quickfix."
+keywords: "ABAP clamp, nmin nmax, manual range check, pref-clamp, Clean ABAP expressions"
 category: "clean-abap"
 ruleId: "pref-clamp"
-customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L5428"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L5616"
 ---
 
-# Prefer nmin/nmax or clamp Expressions over Manual IF Clamping
+# Replace Manual IF Range Clamping with nmin( ) and nmax( )
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -15,7 +15,7 @@ customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-
   <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC PREF_CLAMP" />
   <Badge type="info" text="Remote Enabled" />
-  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L5428" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L5616" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -26,24 +26,26 @@ Prefer nmin/nmax over manual IF clamp.
 
 ## Rationale
 
-Manually clamping a variable between lower and upper bounds using IF/ELSEIF statements is verbose and imperative. Modern ABAP provides built-in functions like nmin( ) and nmax( ) or clamp( ) that express range containment concisely and without branch complexity.
+Clamping a value by hand costs five statements, introduces two branches that must be reviewed and tested separately, and can silently drift when one bound changes but the other does not. The built-in functions nmin( ) and nmax( ) express the same range containment as a single expression without control flow, so it can be inlined into a constructor expression, debugged in one step and unit tested as pure arithmetic. The check reports PREF_CLAMP only for the exact five-statement pattern IF / assignment / ELSEIF / assignment / ENDIF where both conditions compare the same variable with the assigned bound in opposite directions. The TO_NMINMAX quickfix rewrites the whole block, keeping the original indentation, so the migration is a single click.
 
 ### Non-Compliant
 
 ```abap
-IF lv < lo.
-  lv = lo.
-ELSEIF lv > hi.
-  lv = hi.
+DATA lv_discount_pct TYPE i VALUE 130.
+IF lv_discount_pct < 0.
+  lv_discount_pct = 0.
+ELSEIF lv_discount_pct > 100.
+  lv_discount_pct = 100.
 ENDIF.
 ```
 
 ### Compliant
 
 ```abap
-lv = nmin( val1 = hi
-           val2 = nmax( val1 = lo
-                        val2 = lv ) ).
+DATA lv_discount_pct TYPE i VALUE 130.
+lv_discount_pct = nmin( val1 = 100
+                        val2 = nmax( val1 = 0
+                                     val2 = lv_discount_pct ) ).
 ```
 
 ## Automated QuickFix
@@ -65,18 +67,51 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_CLAMP
 ```
 
+## Exact pattern
+
+All five statements must be adjacent and match this shape:
+
+```abap
+IF lv_discount_pct < 0.
+  lv_discount_pct = 0.
+ELSEIF lv_discount_pct > 100.
+  lv_discount_pct = 100.
+ENDIF.
+```
+
+- The comparison operator may be `<`, `LT`, `<=`, `LE`, `>`, `GT`, `>=` or `GE`, and the variable may stand on either side of the operator - the direction is normalised.
+- Both conditions must compare the *same* variable, and each branch must assign the *other* bound to it.
+- Parentheses around the conditions (`IF ( lv < lo ).`) are stripped before analysis.
+
+## Not reported
+
+| Shape | Why |
+| --- | --- |
+| Two separate `IF ... ENDIF` blocks | there is no `ELSEIF` chain |
+| `IF ... ELSEIF ... ELSE ... ENDIF` | the chain has a third branch |
+| Branch assigns a literal instead of the compared bound | not a clamp |
+| Condition and assignment use different variables | no clamp pattern |
+
+## QuickFix
+
+`TO_NMINMAX` replaces the five statements with one expression, preserving indentation:
+
+```abap
+lv_discount_pct = nmin( val1 = 100 val2 = nmax( val1 = 0 val2 = lv_discount_pct ) ).
+```
+
 
 ## Related Rules
 
-* [Prefer BETWEEN for Inclusive Range Checks](/rules/pref-between) — <code>#EC PREF_BETWEEN</code>
-* [Prefer COND #( ) Expression over IF/ELSEIF/ELSE](/rules/pref-cond) — <code>#EC PREF_COND</code>
-* [Prefer SWITCH #( ) Expression over CASE Statement](/rules/pref-switch) — <code>#EC PREF_SWITCH</code>
+* [Use BETWEEN for Inclusive Range Checks](/rules/pref-between) — <code>#EC PREF_BETWEEN</code>
+* [Collapse Value-Mapping IF Chains into COND](/rules/pref-cond) — <code>#EC PREF_COND</code>
+* [Convert Pure CASE Mappings into SWITCH Expressions](/rules/pref-switch) — <code>#EC PREF_SWITCH</code>
 
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_PREF_CLAMP`
 * **ABAP Implementation:** [/skyl/cl_pref_clamp.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_pref_clamp.clas.abap)
-* **Rule Metadata:** [rules-data.mjs (Line 5428)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L5428)
+* **Rule Metadata:** [rules-data.mjs (Line 5616)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L5616)
 
 ## Community & Feedback
 

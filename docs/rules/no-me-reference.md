@@ -1,13 +1,13 @@
 ---
-title: "Avoid Redundant ME-> Self Reference"
-description: "Avoid Redundant ME-> Self Reference - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-me-reference, anti-patterns"
+title: "Avoid Redundant ME-> Self-References to Instance Members"
+description: "Remove redundant ME-> self-references from instance method calls and attribute accesses in Clean ABAP."
+keywords: "no-me-reference, ME self-reference, Clean ABAP, ABAP Objects, SAP ATC"
 category: "anti-patterns"
 ruleId: "no-me-reference"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L472"
 ---
 
-# Avoid Redundant ME-> Self Reference
+# Avoid Redundant ME-> Self-References to Instance Members
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -26,20 +26,20 @@ Avoid self-reference ME->.
 
 ## Rationale
 
-Member variables and methods are already accessible inside an instance method, so prefixing every access with me-> only adds noise. Removing the prefix keeps attention on the member itself and makes genuine shadowing easier to spot. Keep me-> only where a parameter or local variable shadows the member, typically in constructors and setters.
+In ABAP Objects, instance methods and member attributes are directly visible within instance methods without requiring the me-> prefix. Adding me-> to everyday variable access or helper method calls introduces visual noise, distracts reviewers, and runs counter to Clean ABAP style guidelines. The self-reference should be reserved for disambiguating shadowed member attributes inside constructors or setters. The check flags redundant me-> tokens with NO_ME_REF and provides the OMITME quickfix.
 
 ### Non-Compliant
 
 ```abap
-me->mv_order_count = me->mv_order_count + 1.
-me->save( ).
+me->mv_total_amount = me->mv_total_amount + lv_item_amount.
+me->persist_invoice( ).
 ```
 
 ### Compliant
 
 ```abap
-mv_order_count = mv_order_count + 1.
-save( ).
+mv_total_amount = mv_total_amount + lv_item_amount.
+persist_invoice( ).
 ```
 
 ## Automated QuickFix
@@ -55,7 +55,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value | Description & Guidance |
 |---|---|:---:|---|
-| `ALLOW_IN_CONSTRUCTORS` | `Boolean` | <code>true</code> | Allow me-> in CONSTRUCTOR methods when assigning parameters with identical names to attributes |
+| `ALLOW_IN_CONSTRUCTORS` | `Boolean` | <code>true</code> | Allow me-> self-references within CONSTRUCTOR methods to resolve shadowed parameter names. |
 
 ## Suppression
 
@@ -69,12 +69,21 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_ME_REFERENCE
 ```
 
+### Disambiguation and QuickFix
+
+Clean ABAP advises omitting `me->` unless an imported parameter or local variable shares the exact name of a member attribute:
+
+- In normal methods, `me->do_something( )` and `me->mv_status` are reported.
+- When `ALLOW_IN_CONSTRUCTORS` is set to `abap_true` (default), constructor methods (`*=>CONSTRUCTOR`) are exempt to facilitate parameter assignments such as `me->mv_id = iv_id`.
+
+The `OMITME` quickfix strips `me->` from the statement automatically. Suppress findings using `"#EC NO_ME_REFERENCE`.
+
 
 ## Related Rules
 
-* [Avoid Obsolete CALL METHOD](/rules/no-call-method) — <code>#EC NO_CALL_METHOD</code>
-* [Enforce Class Attribute and Method Parameter Naming Conventions](/rules/pref-name-members) — <code>#EC PREF_NAME_MEMBERS</code>
-* [Avoid Calling Static Methods via Instance References (->)](/rules/no-static-arrow) — <code>#EC NO_STATIC_ARROW</code>
+* [Replace Obsolete CALL METHOD Statements with Functional Invocations](/rules/no-call-method) — <code>#EC NO_CALL_METHOD</code>
+* [Enforce Standard Naming Conventions for Class Members, Parameters and Screens](/rules/pref-name-members) — <code>#EC PREF_NAME_MEMBERS</code>
+* [Call Static Methods with Class Component Selector (=>)](/rules/no-static-arrow) — <code>#EC NO_STATIC_ARROW</code>
 
 ## Technical Details
 

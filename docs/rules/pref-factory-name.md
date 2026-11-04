@@ -1,20 +1,20 @@
 ---
-title: "Prefer CREATE_* Prefix for Factory Methods Returning Own Class"
-description: "Prefer CREATE_* Prefix for Factory Methods Returning Own Class - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-factory-name, clean-abap"
+title: "Name Static Factory Methods CREATE_* When They Return Their Own Class"
+description: "Enforce the CREATE_ prefix on ABAP static factory methods that return their own class, so object creation is recognisable at every call site."
+keywords: "ABAP factory method, CREATE_ naming convention, static constructor ABAP, SAP ATC, pref-factory-name"
 category: "clean-abap"
 ruleId: "pref-factory-name"
-customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4016"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4112"
 ---
 
-# Prefer CREATE_* Prefix for Factory Methods Returning Own Class
+# Name Static Factory Methods CREATE_* When They Return Their Own Class
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="danger" text="#EC PREF_FACTORY_NAME" />
   <Badge type="info" text="Remote Enabled" />
-  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4016" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4112" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -25,18 +25,26 @@ Factory methods should start with CREATE_.
 
 ## Rationale
 
-Static factory methods returning an instance of their enclosing class should clearly communicate instantiation intent by following standard naming conventions starting with CREATE_ (e.g. create, create_instance).
+A CLASS-METHODS declaration that returns TYPE REF TO its own class is a factory, and callers should recognise that from the call site alone. Names such as `build`, `new_instance` or `get_object` hide the instantiation intent, especially when they sit next to real business methods in the same class. The check compares the RETURNING type with the enclosing class name and requires the configured prefix, which keeps `lcl_invoice_service=>create_instance( )` idiomatic, greppable and consistent across packages.
 
 ### Non-Compliant
 
 ```abap
-CLASS-METHODS build RETURNING VALUE(ro_obj) TYPE REF TO lcl_service.
+CLASS lcl_invoice_service DEFINITION.
+  PUBLIC SECTION.
+    CLASS-METHODS build
+      RETURNING VALUE(ro_service) TYPE REF TO lcl_invoice_service.
+ENDCLASS.
 ```
 
 ### Compliant
 
 ```abap
-CLASS-METHODS create_instance RETURNING VALUE(ro_obj) TYPE REF TO lcl_service.
+CLASS lcl_invoice_service DEFINITION.
+  PUBLIC SECTION.
+    CLASS-METHODS create_instance
+      RETURNING VALUE(ro_service) TYPE REF TO lcl_invoice_service.
+ENDCLASS.
 ```
 
 ## Configuration & Thresholds
@@ -45,7 +53,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value | Description & Guidance |
 |---|---|:---:|---|
-| `PREFIX` | `String` | <code>CREATE_</code> | Required prefix for static factory constructor methods (default: CREATE_) |
+| `PREFIX` | `String` | <code>CREATE_</code> | Required name prefix for static factory methods returning the class's own type (default CREATE_, applied as a case-insensitive CP pattern). |
 
 ## Suppression
 
@@ -59,18 +67,38 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_FACTORY_NAME
 ```
 
+### What is (and is not) reported
+
+The rule only inspects `CLASS-METHODS` declarations directly inside a `CLASS ... DEFINITION` block and raises `PREF_FCTNM` on the declaration when **both** conditions hold:
+
+1. the method has a `RETURNING` parameter typed `TYPE REF TO <enclosing class>`, and
+2. the method name does not match the configured prefix pattern (default `CREATE_*`).
+
+| Declaration | Reported |
+| --- | --- |
+| `CLASS-METHODS build RETURNING VALUE(ro) TYPE REF TO lcl_service.` | yes |
+| `CLASS-METHODS create_instance RETURNING VALUE(ro) TYPE REF TO lcl_service.` | no |
+| `METHODS build RETURNING VALUE(ro) TYPE REF TO lcl_service.` (instance method) | no |
+| `CLASS-METHODS build RETURNING VALUE(ro) TYPE REF TO lif_service.` | no |
+| `CLASS-METHODS build RETURNING VALUE(rv_count) TYPE i.` | no |
+| `CONSTRUCTOR` | no |
+
+### Tuning the prefix
+
+`PREFIX` is matched as a `CP` wildcard pattern, so the trailing underscore matters: with the default `CREATE_`, a method called `create` is still reported while `create_instance` and `create_from_order` pass. If your guideline uses `NEW_` or `FACTORY_`, change the attribute but keep the separator so that names like `CREATION_DATE` are not accidentally accepted. A deliberate exception (for example a generated factory with a fixed name) can be suppressed with `"#EC PREF_FACTORY_NAME`.
+
 
 ## Related Rules
 
-* [Design for Inheritance or Prohibit It (FINAL)](/rules/pref-final-cls) — <code>#EC PREF_FINAL_CLASS</code>
-* [Avoid FRIENDS in class definitions](/rules/no-friends) — <code>#EC NO_FRIENDS</code>
-* [Avoid Calling Static Methods via Instance References (->)](/rules/no-static-arrow) — <code>#EC NO_STATIC_ARROW</code>
+* [Design for Inheritance or Prohibit It with FINAL](/rules/pref-final-cls) — <code>#EC PREF_FINAL_CLASS</code>
+* [Avoid Granting Friendship via FRIENDS in Class Definitions](/rules/no-friends) — <code>#EC NO_FRIENDS</code>
+* [Call Static Methods with Class Component Selector (=>)](/rules/no-static-arrow) — <code>#EC NO_STATIC_ARROW</code>
 
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_PREF_FACTORY_NAME`
 * **ABAP Implementation:** [/skyl/cl_pref_factory_name.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_pref_factory_name.clas.abap)
-* **Rule Metadata:** [rules-data.mjs (Line 4016)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L4016)
+* **Rule Metadata:** [rules-data.mjs (Line 4112)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L4112)
 
 ## Community & Feedback
 

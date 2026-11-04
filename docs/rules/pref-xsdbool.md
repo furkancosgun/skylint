@@ -1,13 +1,13 @@
 ---
-title: "Prefer xsdbool( ) for Boolean Assignments"
-description: "Prefer xsdbool( ) for Boolean Assignments - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-xsdbool, clean-abap"
+title: "Replace IF/ELSE Boolean Assignments with xsdbool( )"
+description: "Convert duplicated IF/ELSE flag assignments into a single xsdbool( ) expression to shorten boolean guards and remove dead branches in ABAP."
+keywords: "pref-xsdbool, xsdbool, boolean expression, Clean ABAP, SAP ATC"
 category: "clean-abap"
 ruleId: "pref-xsdbool"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1064"
 ---
 
-# Prefer xsdbool( ) for Boolean Assignments
+# Replace IF/ELSE Boolean Assignments with xsdbool( )
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -26,22 +26,22 @@ Prefer xsdbool( ) expression over manual IF-ELSE assignment.
 
 ## Rationale
 
-An IF/ELSE whose only task is to assign abap_true or abap_false uses many lines for a single boolean conversion. xsdbool( ) expresses the condition directly and assigns the result in one statement. This removes duplicated branches and makes the relationship between condition and flag obvious.
+When both branches of an IF only assign abap_true and abap_false to the same variable, the whole block is a single boolean expression written the long way. xsdbool( ) evaluates the condition once, returns a type-correct flag, and removes the duplicated branches so the two assignments can never drift apart during maintenance. The check only fires for the exact IF/assignment/ELSE/assignment/ENDIF shape, and its TOXSDBOOL QuickFix inverts the condition with NOT when the true branch holds the false literal.
 
 ### Non-Compliant
 
 ```abap
-IF lv_discount > 0.
-  lv_has_discount = abap_true.
+IF lv_available_quantity > lv_reorder_threshold.
+  lv_is_reorder_required = abap_true.
 ELSE.
-  lv_has_discount = abap_false.
+  lv_is_reorder_required = abap_false.
 ENDIF.
 ```
 
 ### Compliant
 
 ```abap
-lv_has_discount = xsdbool( lv_discount > 0 ).
+lv_is_reorder_required = xsdbool( lv_available_quantity > lv_reorder_threshold ).
 ```
 
 ## Automated QuickFix
@@ -63,12 +63,26 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_XSDBOOL
 ```
 
+### Detected pattern
+
+The rule only fires when the block consists of exactly five statements:
+
+```abap
+IF <condition>.
+  <target> = abap_true.
+ELSE.
+  <target> = abap_false.
+ENDIF.
+```
+
+Both assignments must target the same variable with opposite literals; an extra statement, a missing `ELSE`, or two different targets keep the `IF` untouched. When the true branch assigns `abap_false`, the QuickFix wraps the condition in `NOT ( ... )`. The finding code is `PREF_XSDBL` and the pseudo-comment is `"#EC PREF_XSDBOOL`.
+
 
 ## Related Rules
 
 * [Limit Boolean Expression Complexity in Conditional Statements](/rules/max-bool-expr) — <code>#EC MAX_BOOL_EXPR</code>
 * [Prefer CASE over Multiple IF / ELSEIF on the Same Variable](/rules/pref-case) — <code>#EC PREF_CASE</code>
-* [Prefer COND #( ) Expression over IF/ELSEIF/ELSE](/rules/pref-cond) — <code>#EC PREF_COND</code>
+* [Collapse Value-Mapping IF Chains into COND](/rules/pref-cond) — <code>#EC PREF_COND</code>
 
 ## Technical Details
 

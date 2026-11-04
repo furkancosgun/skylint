@@ -1,13 +1,13 @@
 ---
-title: "Require WHEN OTHERS as the Last Branch of CASE"
-description: "Enforce a WHEN OTHERS fallback as the last branch of ABAP CASE statements to avoid silently ignored unexpected values."
-keywords: "ABAP CASE WHEN OTHERS, default branch SAP, Clean ABAP CASE statement, SAP ATC check, unexpected value handling ABAP"
+title: "Require WHEN OTHERS as the Last Branch of Every CASE"
+description: "Enforce a WHEN OTHERS fallback as the last branch of ABAP CASE statements so unexpected statuses and enum values fail loudly instead of silently."
+keywords: "ABAP CASE WHEN OTHERS, CASE statement fallback, ABAP status enum, SAP ATC, pref-when-others"
 category: "clean-abap"
 ruleId: "pref-when-others"
-customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4194"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4294"
 ---
 
-# Require WHEN OTHERS as the Last Branch of CASE
+# Require WHEN OTHERS as the Last Branch of Every CASE
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -15,7 +15,7 @@ customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-
   <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC PREF_WHEN_OTHERS" />
   <Badge type="info" text="Remote Enabled" />
-  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4194" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4294" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -28,29 +28,29 @@ Require WHEN OTHERS as the last CASE branch.
 
 ## Rationale
 
-A CASE statement without WHEN OTHERS silently ignores unexpected values, which turns enum or status changes into hard-to-find bugs. Adding WHEN OTHERS with a RAISE or a safe default makes the state machine total and documents the fallback. WHEN OTHERS should also be the last branch so that readers immediately see the default path instead of hunting for it between explicit branches.
+A CASE without WHEN OTHERS silently does nothing when a new enum value, status or exception type appears, so the defect surfaces much later as a missing update or a stale record. A terminal WHEN OTHERS with RAISE EXCEPTION or a documented safe default makes the branching total and turns an unknown state into a loud, testable failure. Keeping it last matters as well: readers scan branches top-down and expect the fallback at the bottom instead of hidden between explicit cases.
 
 ### Non-Compliant
 
 ```abap
-CASE lv_status.
-  WHEN c_status-new.
-    process_new( ).
-  WHEN c_status-done.
-    process_done( ).
+CASE ls_order-status.
+  WHEN c_status-open.
+    release_order( ).
+  WHEN c_status-blocked.
+    reject_order( ).
 ENDCASE.
 ```
 
 ### Compliant
 
 ```abap
-CASE lv_status.
-  WHEN c_status-new.
-    process_new( ).
-  WHEN c_status-done.
-    process_done( ).
+CASE ls_order-status.
+  WHEN c_status-open.
+    release_order( ).
+  WHEN c_status-blocked.
+    reject_order( ).
   WHEN OTHERS.
-    RAISE EXCEPTION NEW zcx_illegal_status( ).
+    RAISE EXCEPTION NEW zcx_illegal_order_status( ).
 ENDCASE.
 ```
 
@@ -67,8 +67,8 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value | Description & Guidance |
 |---|---|:---:|---|
-| `MIN_BRANCHES` | `Integer` | <code>2</code> | Minimum number of explicit WHEN branches before WHEN OTHERS is required (default: 2) |
-| `REQUIRE_LAST` | `Boolean` | <code>true</code> | Require WHEN OTHERS to be the final branch of the CASE statement (default: enabled) |
+| `MIN_BRANCHES` | `Integer` | <code>2</code> | Number of explicit WHEN branches a CASE needs before WHEN OTHERS becomes mandatory (default 2). |
+| `REQUIRE_LAST` | `Boolean` | <code>true</code> | Report a WHEN OTHERS branch that is not the final WHEN branch of its CASE (default enabled). |
 
 ## Suppression
 
@@ -82,18 +82,34 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_WHEN_OTHERS
 ```
 
+### Findings and the quickfix
+
+| Finding | Raised on | Meaning |
+| --- | --- | --- |
+| `PREF_NO_WO` | the `CASE` statement | at least `MIN_BRANCHES` explicit `WHEN` branches but no `WHEN OTHERS` |
+| `PREF_WOPOS` | the offending `WHEN OTHERS` | `WHEN OTHERS` exists but further `WHEN` branches follow it |
+
+The `ADD_WO` quickfix inserts `WHEN OTHERS.` directly before `ENDCASE`, indented to the `CASE` column. It deliberately does not invent error handling: add the `RAISE EXCEPTION` or the default assignment yourself.
+
+### Threshold and exceptions
+
+- `MIN_BRANCHES` (default `2`) protects small, obviously total CASE statements such as a two-value mapping. Set it to `1` to demand a fallback everywhere, or raise it for legacy code bases full of short CASE blocks.
+- `REQUIRE_LAST` (default on) only controls `PREF_WOPOS`; switch it off if your guideline merely requires the branch to exist.
+- Nested CASE statements are tracked with an explicit stack, so an inner `WHEN OTHERS` never satisfies the outer `CASE`.
+- Suppress a deliberate exhaustive CASE with `"#EC PREF_WHEN_OTHERS` on the `CASE` statement.
+
 
 ## Related Rules
 
 * [Prefer CASE over Multiple IF / ELSEIF on the Same Variable](/rules/pref-case) — <code>#EC PREF_CASE</code>
-* [Avoid CASE with a Single WHEN Branch](/rules/no-single-when) — <code>#EC NO_SINGLE_WHEN</code>
-* [Avoid Empty Control Blocks](/rules/no-empty-block) — <code>#EC NO_EMPTY_BLOCK</code>
+* [Replace Single-Branch CASE Statements with IF Conditions](/rules/no-single-when) — <code>#EC NO_SINGLE_WHEN</code>
+* [Avoid Empty Control Blocks in Branching and Looping Statements](/rules/no-empty-block) — <code>#EC NO_EMPTY_BLOCK</code>
 
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_PREF_WHEN_OTHERS`
 * **ABAP Implementation:** [/skyl/cl_pref_when_others.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_pref_when_others.clas.abap)
-* **Rule Metadata:** [rules-data.mjs (Line 4194)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L4194)
+* **Rule Metadata:** [rules-data.mjs (Line 4294)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L4294)
 
 ## Community & Feedback
 

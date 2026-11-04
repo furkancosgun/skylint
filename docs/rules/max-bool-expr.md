@@ -1,10 +1,10 @@
 ---
 title: "Limit Boolean Expression Complexity in Conditional Statements"
-description: "Simplify complex boolean logic in ABAP IF statements. Extract intricate conditions into named predicate methods."
-keywords: "Boolean expression complexity ABAP, Predicate methods Clean ABAP, Operator Precedence SAP, Clean Code Logic"
+description: "Limit boolean expression complexity in ABAP conditional statements by extracting intricate multi-operator conditions into clean predicate methods."
+keywords: "max-bool-expr, boolean complexity ABAP, predicate method, Clean ABAP, SAP ATC check"
 category: "metrics"
 ruleId: "max-bool-expr"
-customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3804"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3894"
 ---
 
 # Limit Boolean Expression Complexity in Conditional Statements
@@ -14,7 +14,7 @@ customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-
   <Badge type="tip" text="Metrics & Complexity Limits" />
   <Badge type="danger" text="#EC MAX_BOOL_EXPR" />
   <Badge type="info" text="Remote Enabled" />
-  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3804" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L3894" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -25,26 +25,25 @@ Limit boolean expressions in conditions.
 
 ## Rationale
 
-Boolean conditions combining more than 3 to 4 `AND` and `OR` operators in a single `IF` or `WHILE` statement are notoriously prone to precedence bugs. Developers misinterpret operator binding order, and unit tests fail to cover all combinations in the truth table.
-
-**Clean ABAP Guideline:** Extract complex boolean conditions into well-named **boolean helper methods (predicate methods)** like `is_delivery_allowed( )` or `has_valid_credit_limit( )`.
+Compound boolean conditions combining multiple AND, OR, and EQUIV operators in IF, ELSEIF, WHILE, or CHECK statements severely degrade code readability and increase the risk of logical precedence bugs. In ABAP, AND binds stronger than OR, but complex truth tables make verification difficult and often lead to incomplete branch coverage in ABAP Unit tests. Clean ABAP mandates extracting complex boolean conditions into dedicated, well-named predicate methods (returning abap_bool) or intermediate boolean variables, ensuring robust compliance with Clean Core and ABAP Cloud Contract C1.
 
 ### Non-Compliant
 
 ```abap
-" Anti-pattern: Complex multi-term boolean condition
-IF ( is_order-status = 'O' OR is_order-status = 'P' )
-   AND is_order-total_amount > 500
-   AND is_customer_active( is_order-cust_id ) = abap_true
-   AND NOT ( is_order-blocked = abap_true OR is_order-on_hold = abap_true ).
+IF ls_sales_order-net_amount > 1000
+   AND ls_sales_order-currency = 'EUR'
+   AND ls_sales_order-is_blocked = abap_false
+   AND ls_sales_order-is_approved = abap_true
+   AND ls_sales_order-customer_rating = 'A'.
+  process_sales_order( ls_sales_order ).
+ENDIF.
 ```
 
 ### Compliant
 
 ```abap
-" Clean ABAP: Self-documenting predicate method call
-IF is_order_ready_for_dispatch( is_order ) = abap_true.
-  dispatch_order( is_order ).
+IF is_order_eligible_for_discount( ls_sales_order ) = abap_true.
+  process_sales_order( ls_sales_order ).
 ENDIF.
 ```
 
@@ -54,7 +53,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value | Description & Guidance |
 |---|---|:---:|---|
-| `MAX_BOOLEAN_EXPRESSIONS` | `Integer` | <code>4</code> | Maximum allowed boolean operators (AND, OR, NOT) in a single condition |
+| `MAX_BOOLEAN_EXPRESSIONS` | `Integer` | <code>4</code> | Maximum allowed boolean operands in a single condition statement (counts AND, OR, EQUIV operators plus one, default: 4). |
 
 ## Suppression
 
@@ -68,18 +67,30 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_MAX_BOOL_EXPR
 ```
 
+## Detection and Operator Evaluation
+
+The check evaluates boolean conditional expressions in `IF`, `ELSEIF`, `WHILE`, and `CHECK` statements:
+
+- **Tracked Operators**: Counts occurrences of `AND`, `OR`, and `EQUIV` keywords at condition level.
+- **Between Addition**: The `AND` keyword within a `BETWEEN ... AND ...` expression is recognized and excluded from the operator count.
+- **Operand Calculation**: Operands are calculated as `number of operators + 1`. If the operand count exceeds `MAX_BOOLEAN_EXPRESSIONS` (default `4`), the statement is reported with finding code `MAX_BOOL`.
+
+## Suppression
+
+Suppress a finding using the pseudo-comment `"#EC MAX_BOOL_EXPR` on the reported conditional statement.
+
 
 ## Related Rules
 
-* [Limit Cyclomatic Complexity (McCabe Complexity Metric)](/rules/max-cyclo-comp) — <code>#EC MAX_CYCLO_COMP</code>
-* [Avoid Comparing to abap_true / abap_false](/rules/no-bool-compare) — <code>#EC NO_BOOL_COMPARE</code>
-* [Limit Control Flow Nesting Depth (Guard Clause Enforcement)](/rules/max-nesting) — <code>#EC MAX_NESTING</code>
+* [Limit McCabe Cyclomatic Complexity per Procedure](/rules/max-cyclo-comp) — <code>#EC MAX_CYCLO_COMP</code>
+* [Avoid Comparing Boolean Method Calls to abap_true or abap_false](/rules/no-bool-compare) — <code>#EC NO_BOOL_COMPARE</code>
+* [Limit Control Flow Block Nesting Depth](/rules/max-nesting) — <code>#EC MAX_NESTING</code>
 
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_MAX_BOOL_EXPR`
 * **ABAP Implementation:** [/skyl/cl_max_bool_expr.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_max_bool_expr.clas.abap)
-* **Rule Metadata:** [rules-data.mjs (Line 3804)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L3804)
+* **Rule Metadata:** [rules-data.mjs (Line 3894)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L3894)
 
 ## Community & Feedback
 

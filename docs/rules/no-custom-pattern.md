@@ -1,20 +1,20 @@
 ---
-title: "Disallow Configured Custom Regex Patterns"
-description: "Disallow Configured Custom Regex Patterns - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-custom-pattern, anti-patterns"
+title: "Disallow Prohibited Naming Patterns and Terminology via Regular Expressions"
+description: "Detect and restrict forbidden custom naming patterns, temporary variables, and banned terminology using regex in SAP ATC for ABAP Cloud."
+keywords: "no-custom-pattern, regex pattern, Clean ABAP, naming conventions, SAP ATC, ABAP Cloud"
 category: "anti-patterns"
 ruleId: "no-custom-pattern"
-customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L55"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L54"
 ---
 
-# Disallow Configured Custom Regex Patterns
+# Disallow Prohibited Naming Patterns and Terminology via Regular Expressions
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC NO_CUSTOM_PATTERN" />
   <Badge type="info" text="Remote Enabled" />
-  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L55" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L54" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -25,19 +25,18 @@ Disallow configured custom regex patterns.
 
 ## Rationale
 
-Enterprise coding standards often require banning specific placeholder comments (such as TODO, FIXME, XXX), temporary variable patterns (such as TMP_* or DEBUG_*), sensitive keywords, or prohibited terminology. This check inspects all tokens against a configurable table of regular expressions, reporting any prohibited matches.
+Enterprise governance standards and Clean ABAP guidelines often forbid temporary naming prefixes (such as TMP_* or DEBUG_*), placeholder terms, obsolete package references, or sensitive terminology. The check evaluates every statement token against a configurable regular expression pattern and reports NO_CUSTOM for any match. Enforcing consistent vocabulary across teams prevents incomplete prototypes from entering production releases and maintains clean compliance across ABAP Cloud and SAP S/4HANA solutions.
 
 ### Non-Compliant
 
 ```abap
-" Flagged when 'TODO' is configured in PATTERNS
-DATA lv_todo_item TYPE i.
+DATA lv_todo_customer_id TYPE c LENGTH 10.
 ```
 
 ### Compliant
 
 ```abap
-DATA lv_clean_item TYPE i.
+DATA lv_verified_customer_id TYPE c LENGTH 10.
 ```
 
 ## Configuration & Thresholds
@@ -46,7 +45,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value | Description & Guidance |
 |---|---|:---:|---|
-| `PATTERN` | `String` | <code>TODO&#124;FIXME&#124;XXX</code> | Regular expression pattern to disallow (defaults to TODO&#124;FIXME&#124;XXX) |
+| `PATTERN` | `String` | <code>TODO&#124;FIXME&#124;XXX</code> | Regular expression pattern of forbidden lexemes or identifiers to disallow (defaults to TODO&#124;FIXME&#124;XXX). |
 
 ## Suppression
 
@@ -60,18 +59,28 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_CUSTOM_PATTERN
 ```
 
+### Configuration and Pattern Matching
+
+The check scans every token within procedure statements and applies case-insensitive regular expression matching against the configured `PATTERN` attribute.
+
+| Default Pattern | Purpose |
+|---|---|
+| `TODO|FIXME|XXX` | Prevents technical debt markers and temporary prototype identifiers from reaching production code. |
+
+A finding can be suppressed on an individual statement using the pseudo-comment `"#EC NO_CUSTOM_PATTERN`. Set `PATTERN` to an empty string in ATC variant configuration to disable scanning.
+
 
 ## Related Rules
 
 * [Avoid Using ABAP Keywords as Identifier Names](/rules/no-keyword-name) — <code>#EC NO_KEYWORD_NAME</code>
-* [Avoid Hardcoding System & Tenant Environment Checks (sy-sysid, sy-mandt)](/rules/no-hardcoded-env) — <code>#EC NO_HARDCODED_ENV</code>
-* [Avoid Dead Code with Constant Conditions](/rules/no-dead-code) — <code>#EC NO_DEAD_CODE</code>
+* [Avoid Reading Environment and Landscape System Fields](/rules/no-hardcoded-env) — <code>#EC NO_HARDCODED_ENV</code>
+* [Eliminate Unreachable Dead Code Caused by Constant False Conditions](/rules/no-dead-code) — <code>#EC NO_DEAD_CODE</code>
 
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_NO_CUSTOM_PATTERN`
 * **ABAP Implementation:** [/skyl/cl_no_custom_pattern.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_custom_pattern.clas.abap)
-* **Rule Metadata:** [rules-data.mjs (Line 55)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L55)
+* **Rule Metadata:** [rules-data.mjs (Line 54)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L54)
 
 ## Community & Feedback
 

@@ -1,13 +1,13 @@
 ---
-title: "Prevent Empty Driver Tables in FOR ALL ENTRIES (Full Table Scan Bug)"
-description: "Avoid full table scan database crashes in SAP ABAP by ensuring FOR ALL ENTRIES driver tables are checked for initial state before querying."
-keywords: "SAP FOR ALL ENTRIES empty, Full Table Scan ABAP, TSV_TNEW_PAGE_ALLOC_FAILED, Clean ABAP FAE Check, S/4HANA Database Stability"
+title: "Guard FOR ALL ENTRIES Against Empty Driving Tables"
+description: "Prevent disastrous full table scans and TSV_TNEW_PAGE_ALLOC_FAILED dumps in ABAP by guarding FOR ALL ENTRIES queries with an empty table check."
+keywords: "no-empty-fae, FOR ALL ENTRIES, full table scan, Clean ABAP Open SQL, SAP ATC"
 category: "performance"
 ruleId: "no-empty-fae"
-customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1466"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1469"
 ---
 
-# Prevent Empty Driver Tables in FOR ALL ENTRIES (Full Table Scan Bug)
+# Guard FOR ALL ENTRIES Against Empty Driving Tables
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -15,7 +15,7 @@ customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-
   <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC NO_EMPTY_FAE" />
   <Badge type="info" text="Remote Enabled" />
-  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1466" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1469" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -26,33 +26,29 @@ Unsecure FOR ALL ENTRIES (Missing empty itab check).
 
 ## Rationale
 
-In ABAP OpenSQL, if the internal table specified in `FOR ALL ENTRIES IN @lt_tab` is empty at runtime, **the database drops the WHERE clause entirely** and executes an unrestricted full-table scan (`SELECT * FROM dbtab`). This is a well-known legacy behavior in SAP NetWeaver and ABAP Cloud that can lock massive production tables, exhaust application server memory, and result in catastrophic runtime dumps (`TSV_TNEW_PAGE_ALLOC_FAILED`).
-
-**Best Practice:** Always guard any `FOR ALL ENTRIES` query with an explicit `IF itab IS NOT INITIAL` condition before invoking the database.
+In SAP Open SQL, if the driving internal table specified in a FOR ALL ENTRIES clause is initial (empty) at runtime, the database interface silently strips the entire WHERE condition. This transforms a targeted query into a catastrophic full-table scan (SELECT * FROM dbtab), retrieving millions of unintended rows, exhausting application server memory with TSV_TNEW_PAGE_ALLOC_FAILED runtime errors, and exhausting database shared locks. In Clean ABAP and ABAP Cloud, every FOR ALL ENTRIES query must be guarded by an explicit empty check on the driving internal table before invoking the database.
 
 ### Non-Compliant
 
 ```abap
-" Anti-pattern: If lt_items is empty, WHERE is ignored -> Entire ZINVOICES read!
-SELECT invoice_id, amount, status
-  FROM zinvoices
-  FOR ALL ENTRIES IN @lt_items
-  WHERE item_id = @lt_items-item_id
-  INTO TABLE @DATA(lt_invoices).
+SELECT order_id, item_id, material_number, net_amount
+  FROM zorder_items
+  FOR ALL ENTRIES IN @lt_orders
+  WHERE order_id = @lt_orders-order_id
+  INTO TABLE @DATA(lt_items).
 ```
 
 ### Compliant
 
 ```abap
-" Clean ABAP: Guard check guarantees safety and avoids full table scan
-IF lt_items IS NOT INITIAL.
-  SELECT invoice_id, amount, status
-    FROM zinvoices
-    FOR ALL ENTRIES IN @lt_items
-    WHERE item_id = @lt_items-item_id
-    INTO TABLE @DATA(lt_invoices).
+IF lt_orders IS NOT INITIAL.
+  SELECT order_id, item_id, material_number, net_amount
+    FROM zorder_items
+    FOR ALL ENTRIES IN @lt_orders
+    WHERE order_id = @lt_orders-order_id
+    INTO TABLE @DATA(lt_items).
 ELSE.
-  CLEAR lt_invoices.
+  CLEAR lt_items.
 ENDIF.
 ```
 
@@ -75,18 +71,35 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_EMPTY_FAE
 ```
 
+### Detection Details
+
+The check inspects `SELECT` statements containing `FOR ALL ENTRIES IN`, resolves the driving table identifier (handling `@`, `ME->`, and `[]`), and scans preceding statements to confirm an active guard. Finding code `NO_EMPTFAE` is raised when the query is unguarded.
+
+### Recognized Guards
+
+- `IF lt_table IS NOT INITIAL.` enclosing the query.
+- `CHECK lt_table IS NOT INITIAL.` prior to the query.
+- `IF lines( lt_table ) > 0.` or `IF line_exists( lt_table[ ... ] ).`
+- Early exit blocks: `IF lt_table IS INITIAL. RETURN. ENDIF.` (also `EXIT` or `RAISE`).
+
+### Quickfix
+
+The `FAEGUARD` quickfix automatically wraps the offending `SELECT` statement inside an `IF <driving_tab> IS NOT INITIAL.` / `ENDIF.` block with matching indentation.
+
+Suppress intentional full scans with the pseudo comment `"#EC NO_EMPTY_FAE`.
+
 
 ## Related Rules
 
-* [Require Explicit ORDER BY for Deterministic SELECT Queries](/rules/pref-order-by) — <code>#EC PREF_ORDER_BY</code>
-* [Avoid Database Access Inside Loops (N+1 Query Antipattern)](/rules/no-db-in-loop) — <code>#EC NO_DB_IN_LOOP</code>
-* [Avoid SELECT * in OpenSQL Queries (Minimize Memory & Network Overhead)](/rules/no-select-star) — <code>#EC NO_SELECT_STAR</code>
+* [Require Explicit ORDER BY with UP TO N ROWS Clauses](/rules/pref-order-by) — <code>#EC PREF_ORDER_BY</code>
+* [Avoid Database Queries Inside Loops (N+1 Query Antipattern)](/rules/no-db-in-loop) — <code>#EC NO_DB_IN_LOOP</code>
+* [Avoid SELECT * and Project Columns Explicitly](/rules/no-select-star) — <code>#EC NO_SELECT_STAR</code>
 
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_NO_EMPTY_FAE`
 * **ABAP Implementation:** [/skyl/cl_no_empty_fae.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_empty_fae.clas.abap)
-* **Rule Metadata:** [rules-data.mjs (Line 1466)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L1466)
+* **Rule Metadata:** [rules-data.mjs (Line 1469)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L1469)
 
 ## Community & Feedback
 

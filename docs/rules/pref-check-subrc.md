@@ -1,10 +1,10 @@
 ---
 title: "Verify sy-subrc Promptly After Data Retrieval and Search"
-description: "Verify sy-subrc Promptly After Data Retrieval and Search - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-check-subrc, clean-abap"
+description: "Enforce an immediate sy-subrc check after SELECT SINGLE, READ TABLE, FIND, SEARCH, ASSIGN and table MODIFY to stop silently ignored failures."
+keywords: "pref-check-subrc, sy-subrc, SELECT SINGLE, READ TABLE, Clean ABAP"
 category: "clean-abap"
 ruleId: "pref-check-subrc"
-customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L2404"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L2450"
 ---
 
 # Verify sy-subrc Promptly After Data Retrieval and Search
@@ -14,7 +14,7 @@ customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-
   <Badge type="tip" text="Clean ABAP & Modern Syntax" />
   <Badge type="danger" text="#EC PREF_CHECK_SUBRC" />
   <Badge type="info" text="Remote Enabled" />
-  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L2404" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L2450" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -25,25 +25,25 @@ Check sy-subrc after DB, table and string operations.
 
 ## Rationale
 
-Statements such as SELECT SINGLE, READ TABLE, FIND, and SEARCH report success through sy-subrc. If intervening statements execute before inspection, sy-subrc is overwritten and failure states are silently ignored. Check sy-subrc immediately after execution.
+Statements such as SELECT SINGLE, READ TABLE, FIND, SEARCH, dynamic ASSIGN and table MODIFY report success only through sy-subrc. If any other statement runs first, sy-subrc is overwritten and failures are silently ignored, which produces empty structures, unassigned field symbols or missing rows at runtime. The check demands that the immediately following statement evaluates sy-subrc, and its switches avoid the finding for operation kinds where the result is genuinely irrelevant.
 
 ### Non-Compliant
 
 ```abap
-SELECT SINGLE customer_id FROM /dmo/customer
-  WHERE customer_id = @lv_id
-  INTO @lv_customer_id.
-process_customer( lv_customer_id ).
+SELECT SINGLE customer_name FROM /dmo/customer
+  WHERE customer_id = @lv_customer_id
+  INTO @DATA(lv_customer_name).
+process_customer( lv_customer_name ).
 ```
 
 ### Compliant
 
 ```abap
-SELECT SINGLE customer_id FROM /dmo/customer
-  WHERE customer_id = @lv_id
-  INTO @lv_customer_id.
-IF sy-subrc = 0.
-  process_customer( lv_customer_id ).
+SELECT SINGLE customer_name FROM /dmo/customer
+  WHERE customer_id = @lv_customer_id
+  INTO @DATA(lv_customer_name).
+IF sy-subrc <> 0.
+  RAISE EXCEPTION NEW zcx_customer_not_found( ).
 ENDIF.
 ```
 
@@ -53,12 +53,12 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value | Description & Guidance |
 |---|---|:---:|---|
-| `CHECK_SELECT_SINGLE` | `Boolean` | <code>true</code> | Require sy-subrc check after SELECT SINGLE |
-| `CHECK_READ_TABLE` | `Boolean` | <code>true</code> | Require sy-subrc check after READ TABLE |
-| `CHECK_FIND_SEARCH` | `Boolean` | <code>true</code> | Require sy-subrc check after FIND or SEARCH |
-| `CHECK_ASSIGN` | `Boolean` | <code>true</code> | Require sy-subrc check after dynamic ASSIGN |
-| `CHECK_INSERT` | `Boolean` | <code>true</code> | Require sy-subrc check after database INSERT |
-| `CHECK_MODIFY` | `Boolean` | <code>true</code> | Require sy-subrc check after database MODIFY |
+| `CHECK_SELECT_SINGLE` | `Boolean` | <code>true</code> | Report SELECT SINGLE statements whose next statement does not evaluate sy-subrc. Keep enabled so empty results are never silently processed. |
+| `CHECK_READ_TABLE` | `Boolean` | <code>true</code> | Report READ TABLE statements that are not followed by a sy-subrc evaluation, so a missing table line cannot go unnoticed. |
+| `CHECK_FIND_SEARCH` | `Boolean` | <code>true</code> | Report FIND and SEARCH statements without an immediate sy-subrc check. Disable when the offset result is genuinely optional. |
+| `CHECK_ASSIGN` | `Boolean` | <code>true</code> | Report dynamic ASSIGN statements without a sy-subrc check, which otherwise leave a field symbol unassigned and cause short dumps. |
+| `CHECK_INSERT` | `Boolean` | <code>true</code> | Report database INSERT statements without a sy-subrc check. Disable for customizing writes that are validated elsewhere. |
+| `CHECK_MODIFY` | `Boolean` | <code>true</code> | Report MODIFY statements on internal tables without a sy-subrc check, which reveals rows that were not found. |
 
 ## Suppression
 
@@ -72,18 +72,31 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_CHECK_SUBRC
 ```
 
+### Covered statements
+
+| Statement | Attribute |
+| --- | --- |
+| `SELECT SINGLE` | `CHECK_SELECT_SINGLE` |
+| `READ TABLE` | `CHECK_READ_TABLE` |
+| `FIND`, `SEARCH` | `CHECK_FIND_SEARCH` |
+| `ASSIGN` | `CHECK_ASSIGN` |
+| database `INSERT` | `CHECK_INSERT` |
+| internal-table `MODIFY` | `CHECK_MODIFY` |
+
+`OPEN DATASET`, `UPDATE ... SET` and `DELETE FROM` are always inspected and have no switch. Only the directly following statement is examined, therefore a declaration or log statement between the operation and the `sy-subrc` test still produces `PREF_CHKSC` — that is intentional, because almost any statement updates `sy-subrc`. Use `"#EC PREF_CHECK_SUBRC` where the result is truly irrelevant.
+
 
 ## Related Rules
 
-* [Check sy-subrc Promptly After AUTHORITY-CHECK (CWE-862 Authorization Bypass)](/rules/pref-auth-subrc) — <code>#EC PREF_AUTH_SUBRC</code>
-* [Ensure AUTHORITY-CHECK Precedes Sensitive Business Operations](/rules/pref-auth-check) — <code>#EC PREF_AUTH_CHECK</code>
-* [Provide FAILED and REPORTED in RAP EML Statements (Silent Transaction Failure Prevention)](/rules/no-unhandled-eml) — <code>#EC NO_UNHANDLED_EML</code>
+* [Check sy-subrc Immediately After AUTHORITY-CHECK](/rules/pref-auth-subrc) — <code>#EC PREF_AUTH_SUBRC</code>
+* [Protect CALL TRANSACTION Statements with AUTHORITY-CHECK](/rules/pref-auth-check) — <code>#EC PREF_AUTH_CHECK</code>
+* [Provide FAILED and REPORTED in RAP EML Statements](/rules/no-unhandled-eml) — <code>#EC NO_UNHANDLED_EML</code>
 
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_PREF_CHECK_SUBRC`
 * **ABAP Implementation:** [/skyl/cl_pref_check_subrc.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_pref_check_subrc.clas.abap)
-* **Rule Metadata:** [rules-data.mjs (Line 2404)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L2404)
+* **Rule Metadata:** [rules-data.mjs (Line 2450)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L2450)
 
 ## Community & Feedback
 

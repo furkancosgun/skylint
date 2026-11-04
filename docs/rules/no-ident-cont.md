@@ -1,13 +1,13 @@
 ---
-title: "Avoid Identical Statements in IF Branches"
-description: "Avoid Identical Statements in IF Branches - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-ident-cont, anti-patterns"
+title: "Extract Identical Statements Shared Across All IF and ELSE Branches"
+description: "Extract identical statements shared across all IF and ELSE branches in Clean ABAP and SAP ATC."
+keywords: "no-ident-cont, identical branch statements, code duplication, Clean ABAP, SAP ATC"
 category: "anti-patterns"
 ruleId: "no-ident-cont"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L836"
 ---
 
-# Avoid Identical Statements in IF Branches
+# Extract Identical Statements Shared Across All IF and ELSE Branches
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -25,25 +25,28 @@ Avoid identical code in IF and ELSE branches.
 
 ## Rationale
 
-Statements repeated in every branch of an IF/ELSEIF/ELSE carry no branch-specific meaning and duplicate maintenance. If the same statement starts or ends every branch, extract it before or after the IF so it is written once and stays in sync.
+When the first or last statement of every branch in an IF / ELSEIF / ELSE structure is identical, the logic is being executed unconditionally regardless of which branch evaluates to true. Duplicating statements across branches clutters control structures, obscures which operations are truly branch-dependent, and creates maintenance overhead when the common operation must be changed. In Clean ABAP, hoist identical leading statements before the IF block and trailing statements after the ENDIF. The check flags duplicate branch boundaries with finding NO_IDN_CNT.
 
 ### Non-Compliant
 
 ```abap
-IF lv_is_active = abap_true.
-  process( ).
+IF lv_order_status = 'APPROVED'.
+  persist_order_changes( ).
+  log_order_event( 'Approved' ).
 ELSE.
-  process( ).
+  persist_order_changes( ).
+  log_order_event( 'Rejected' ).
 ENDIF.
 ```
 
 ### Compliant
 
 ```abap
-IF lv_is_active = abap_true.
-  process_active( ).
+persist_order_changes( ).
+IF lv_order_status = 'APPROVED'.
+  log_order_event( 'Approved' ).
 ELSE.
-  process_inactive( ).
+  log_order_event( 'Rejected' ).
 ENDIF.
 ```
 
@@ -59,12 +62,37 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_IDENT_CONT
 ```
 
+### Common Statement Extraction
+
+The rule inspects all branches (`IF`, `ELSEIF`, and `ELSE`). If every branch begins with the exact same statement, or if every branch ends with the exact same statement, finding `NO_IDN_CNT` is reported on the opening `IF`.
+
+```abap
+" Anti-pattern: Common statement duplicated in all branches
+IF lv_is_expedited = abap_true.
+  send_notification( ).
+  lv_priority = 1.
+ELSE.
+  send_notification( ).
+  lv_priority = 2.
+ENDIF.
+
+" Clean ABAP: Extracted outside the conditional block
+send_notification( ).
+IF lv_is_expedited = abap_true.
+  lv_priority = 1.
+ELSE.
+  lv_priority = 2.
+ENDIF.
+```
+
+Control structure boundary keywords (`IF`, `LOOP`, `CASE`, `TRY`) are excluded from extraction. Suppress findings using `"#EC NO_IDENT_CONT`.
+
 
 ## Related Rules
 
-* [Avoid CASE with a Single WHEN Branch](/rules/no-single-when) — <code>#EC NO_SINGLE_WHEN</code>
-* [Avoid CHECK Statements](/rules/no-check-stmt) — <code>#EC NO_CHECK_IN_LOOP</code>
-* [Avoid Comparing to abap_true / abap_false](/rules/no-bool-compare) — <code>#EC NO_BOOL_COMPARE</code>
+* [Replace Single-Branch CASE Statements with IF Conditions](/rules/no-single-when) — <code>#EC NO_SINGLE_WHEN</code>
+* [Avoid CHECK Statements Inside and Outside Iteration Loops](/rules/no-check-stmt) — <code>#EC NO_CHECK_IN_LOOP</code>
+* [Avoid Comparing Boolean Method Calls to abap_true or abap_false](/rules/no-bool-compare) — <code>#EC NO_BOOL_COMPARE</code>
 
 ## Technical Details
 

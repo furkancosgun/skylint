@@ -1,10 +1,10 @@
 ---
 title: "Remove Redundant Self-Assignments and Identity Moves"
-description: "Remove Redundant Self-Assignments and Identity Moves - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-redun-assign, anti-patterns"
+description: "Detect and delete redundant self-assignments and identity moves with automated ATC quickfixes in ABAP Cloud."
+keywords: "no-redun-assign, self-assignment, redundant assignment, Clean ABAP, SAP ATC"
 category: "anti-patterns"
 ruleId: "no-redun-assign"
-customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1573"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1581"
 ---
 
 # Remove Redundant Self-Assignments and Identity Moves
@@ -15,7 +15,7 @@ customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-
   <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC NO_IDENTICAL_MOVE" />
   <Badge type="info" text="Remote Enabled" />
-  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1573" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1581" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -26,20 +26,18 @@ Detect identical assignments and moves.
 
 ## Rationale
 
-Self-assignments (e.g. a = a or MOVE a TO a) have zero net effect on program execution state and indicate either dead code, incomplete copy-paste, or accidental reassignment. Remove these redundant statements to improve code clarity and reduce maintenance overhead.
+Identical self-assignments (such as a = a or MOVE a TO a) perform no real work and indicate copy-paste mistakes, aborted refactorings, or accidentally overlooked target variables. Leaving redundant assignments in production logic introduces noise that confuses automated linters and human code reviewers. In Clean ABAP and ABAP Cloud codebases, removing identical moves eliminates dead code and ensures that all statements contribute meaningfully to business outcomes. Suppress with #EC NO_IDENTICAL_MOVE.
 
 ### Non-Compliant
 
 ```abap
-ls_order-id = ls_order-id.
-MOVE lv_count TO lv_count.
+ls_sales_order-customer_id = ls_sales_order-customer_id.
 ```
 
 ### Compliant
 
 ```abap
-ls_order-id = iv_id.
-lv_count = iv_count.
+ls_sales_order-customer_id = iv_target_customer_id.
 ```
 
 ## Automated QuickFix
@@ -61,18 +59,24 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_IDENTICAL_MOVE
 ```
 
+### QuickFix Details
+
+The rule evaluates assignment statements (`COMPUTE` operator `=` and `?=` as well as `MOVE ... TO` and `MOVE ... ?TO`). When the compiler symbol resolution for the target matches the source symbol, finding `NO_IDN_MOV` is reported.
+
+The `DELIDENT` QuickFix deletes the redundant self-assignment statement completely without altering surrounding code. Suppress with `"#EC NO_IDENTICAL_MOVE`.
+
 
 ## Related Rules
 
-* [Avoid Chained Assignments (a = b = c = 1)](/rules/no-chained-assign) — <code>#EC NO_CHAINED_ASSIGN</code>
-* [Eliminate Unused Local Variables and Symbols](/rules/no-unused-vars) — <code>#EC NO_UNUSED_VARS</code>
-* [Avoid Comparisons and Arithmetic with Identical Operands](/rules/no-self-compare) — <code>#EC NO_SELF_COMPARE</code>
+* [Avoid Chained Assignments Binding Multiple Targets Simultaneously](/rules/no-chained-assign) — <code>#EC NO_CHAINED_ASSIGN</code>
+* [Remove Unread Local Variables and Field Symbols](/rules/no-unused-vars) — <code>#EC NO_UNUSED_VARS</code>
+* [Avoid Comparisons and Operations with Identical Operands](/rules/no-self-compare) — <code>#EC NO_SELF_COMPARE</code>
 
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_NO_REDUN_ASSIGN`
 * **ABAP Implementation:** [/skyl/cl_no_redun_assign.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_redun_assign.clas.abap)
-* **Rule Metadata:** [rules-data.mjs (Line 1573)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L1573)
+* **Rule Metadata:** [rules-data.mjs (Line 1581)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L1581)
 
 ## Community & Feedback
 

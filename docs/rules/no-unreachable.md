@@ -1,13 +1,13 @@
 ---
-title: "Avoid Dead / Unreachable Code"
-description: "Avoid Dead / Unreachable Code - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-unreachable, anti-patterns"
+title: "Avoid Unreachable Statements Following Unconditional Exit or Jump Operations"
+description: "Detect and remove unreachable dead statements after unconditional RETURN, EXIT, or RAISE in Clean ABAP."
+keywords: "no-unreachable, unreachable code, dead code, unconditional RETURN, SAP ATC"
 category: "anti-patterns"
 ruleId: "no-unreachable"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L920"
 ---
 
-# Avoid Dead / Unreachable Code
+# Avoid Unreachable Statements Following Unconditional Exit or Jump Operations
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -26,19 +26,19 @@ Detect unreachable code after jump or exit statements.
 
 ## Rationale
 
-Statements after an unconditional RETURN, RAISE EXCEPTION, or EXIT can never execute and often remain from debugging or an earlier design. They mislead maintainers and inflate apparent method size and coverage. Remove the statements or move them before the terminating statement if they are still needed.
+Statements positioned directly after an unconditional RETURN, EXIT, CONTINUE, RAISE EXCEPTION, or RAISE SHORTDUMP can never be reached by program execution flow. Such dead code typically remains from earlier debugging sessions, unfinished refactoring, or copy-paste errors, creating confusion for future maintainers and distorting unit test coverage calculations. Clean ABAP mandates removing dead code or moving statements prior to the terminating statement if their execution is required. The check reports NO_UNREACH and provides the DELSTMT quickfix to delete unreachable statements.
 
 ### Non-Compliant
 
 ```abap
 RETURN.
-lv_count = lv_count + 1.
+lv_processed_count = lv_processed_count + 1.
 ```
 
 ### Compliant
 
 ```abap
-lv_count = lv_count + 1.
+lv_processed_count = lv_processed_count + 1.
 RETURN.
 ```
 
@@ -61,11 +61,25 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_UNREACHABLE
 ```
 
+### Unconditional Jump Recognition
+
+The rule identifies statements directly following any of the following unconditional jump operations at the same block depth:
+
+| Unconditional Jump | Scope of Unreachable Code | QuickFix |
+|---|---|---|
+| `RETURN` | Statements following until `ENDMETHOD` / `ENDFORM` | `DELSTMT` |
+| `EXIT` | Statements following until `ENDLOOP` / `ENDDO` / `ENDWHILE` | `DELSTMT` |
+| `CONTINUE` | Statements following until `ENDLOOP` / `ENDDO` / `ENDWHILE` | `DELSTMT` |
+| `RAISE EXCEPTION` (non-resumable) | Statements following until enclosing block end | `DELSTMT` |
+| `RAISE SHORTDUMP` | Statements following until enclosing block end | `DELSTMT` |
+
+`RAISE RESUMABLE EXCEPTION` is recognized as resumable and does not mark subsequent statements unreachable. Suppress findings using `"#EC NO_UNREACHABLE`.
+
 
 ## Related Rules
 
-* [Avoid Dead Code with Constant Conditions](/rules/no-dead-code) — <code>#EC NO_DEAD_CODE</code>
-* [Avoid Magic Numbers; Use Named Constants](/rules/no-magic-numbers) — <code>#EC NO_MAGIC_NUMBERS</code>
+* [Eliminate Unreachable Dead Code Caused by Constant False Conditions](/rules/no-dead-code) — <code>#EC NO_DEAD_CODE</code>
+* [Replace Unexplained Magic Numbers with Named Constants](/rules/no-magic-numbers) — <code>#EC NO_MAGIC_NUMBERS</code>
 * [Limit Method and Constructor Statement Length](/rules/max-method-len) — <code>#EC MAX_METHOD_LEN</code>
 
 ## Technical Details

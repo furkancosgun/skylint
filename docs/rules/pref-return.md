@@ -1,13 +1,13 @@
 ---
-title: "Prefer RETURN over EXIT in Methods"
-description: "Prefer RETURN over EXIT in Methods - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-return, clean-abap"
+title: "Use RETURN Instead of EXIT Outside Loops"
+description: "Report EXIT statements that leave a procedure instead of a loop and offer a RETURN quickfix for explicit control flow."
+keywords: "pref-return, EXIT, RETURN, loop control, Clean ABAP"
 category: "clean-abap"
 ruleId: "pref-return"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L738"
 ---
 
-# Prefer RETURN over EXIT in Methods
+# Use RETURN Instead of EXIT Outside Loops
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -26,24 +26,24 @@ Prefer RETURN over EXIT outside loop constructs.
 
 ## Rationale
 
-EXIT has loop-specific meaning and can leave a method at a point that is easy to overlook when the surrounding code changes. RETURN explicitly ends the current procedure and cannot be confused with loop control. Use RETURN for method exit and LEAVE LOOP or CONTINUE for loop control.
+EXIT is overloaded: inside a loop it terminates the iteration, outside a loop it leaves the whole procedure, and from inside a loop it even leaves the procedure as well. That context sensitivity makes EXIT easy to misjudge when surrounding code moves. The check tracks loop nesting across LOOP, DO, WHILE and row-by-row SELECT, reports PREF_RET only for an EXIT outside every loop and offers the EXIT2RET quickfix that keeps the indentation of the original statement.
 
 ### Non-Compliant
 
 ```abap
-IF is_invalid( ).
+IF lv_order_is_locked = abap_true.
   EXIT.
 ENDIF.
-process( ).
+process_order( lv_order_id ).
 ```
 
 ### Compliant
 
 ```abap
-IF is_invalid( ).
+IF lv_order_is_locked = abap_true.
   RETURN.
 ENDIF.
-process( ).
+process_order( lv_order_id ).
 ```
 
 ## Automated QuickFix
@@ -65,12 +65,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_RETURN
 ```
 
+## Loop Detection
+
+`EXIT` is treated as loop control while inside `LOOP`, `DO`, `WHILE` or a row-by-row `SELECT`; a `SELECT SINGLE`, `SELECT ... INTO TABLE` or `SELECT ... APPENDING TABLE` does not open a loop. Only an `EXIT` outside that nesting is reported as `PREF_RET`. The `EXIT2RET` quickfix is created for a standalone `EXIT.` statement; an `EXIT` with an addition is reported without a quickfix.
+
 
 ## Related Rules
 
-* [Do Not Ignore Return Value of Functional Methods](/rules/no-ignored-return) — <code>#EC NO_IGNORED_RETURN</code>
-* [Omit Unnecessary RETURN Statement](/rules/no-unnec-return) — <code>#EC NO_UNNEC_RETURN</code>
-* [Prefer Early Return to Reduce Nesting (Guard Clauses)](/rules/pref-early-ret) — <code>#EC PREF_GUARD_METHOD</code>
+* [Capture and Consume Return Values of Functional Method Calls](/rules/no-ignored-return) — <code>#EC NO_IGNORED_RETURN</code>
+* [Omit Redundant RETURN Statement at the End of Routines](/rules/no-unnec-return) — <code>#EC NO_UNNEC_RETURN</code>
+* [Prefer Early Return and CONTINUE Guard Clauses over Nesting](/rules/pref-early-ret) — <code>#EC PREF_GUARD_METHOD</code>
 
 ## Technical Details
 

@@ -1,13 +1,13 @@
 ---
-title: "Merge Nested IF Statements"
-description: "Merge Nested IF Statements - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-merge-ifs, clean-abap"
+title: "Merge Redundant Nested IF Blocks"
+description: "Flatten nested IF blocks with boolean AND and convert an IF inside ELSE into ELSEIF to reduce cyclomatic complexity."
+keywords: "pref-merge-ifs, nested IF, ELSEIF, cyclomatic complexity, Clean ABAP"
 category: "clean-abap"
 ruleId: "pref-merge-ifs"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L892"
 ---
 
-# Merge Nested IF Statements
+# Merge Redundant Nested IF Blocks
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -28,14 +28,14 @@ Merge consecutive nested IF blocks using boolean AND.
 
 ## Rationale
 
-Nested IF statements without intermediate statements add indentation without adding meaning. Merging them with AND or converting a nested IF in an ELSE block into ELSEIF flattens the control flow and makes the combined condition explicit. Less nesting reduces cyclomatic complexity and makes the happy path easier to test.
+A nested IF that immediately follows the outer IF and closes right before the outer ENDIF adds indentation without adding a decision: the two conditions can be combined with AND. An IF that is the only statement of an ELSE block is the same story, where ELSEIF expresses the alternative in one line. The check reports PREF_MRGIF and PREF_ELSIF and offers the USE_ELSEIF quickfix that rewrites ELSE plus IF into ELSEIF and removes the inner ENDIF, lowering nesting and cyclomatic complexity.
 
 ### Non-Compliant
 
 ```abap
-IF is_active( ).
-  IF is_authorized( ).
-    process_order( ).
+IF lv_is_active = abap_true.
+  IF lv_is_authorized = abap_true.
+    release_sales_order( lv_order_id ).
   ENDIF.
 ENDIF.
 ```
@@ -43,8 +43,8 @@ ENDIF.
 ### Compliant
 
 ```abap
-IF is_active( ) AND is_authorized( ).
-  process_order( ).
+IF lv_is_active = abap_true AND lv_is_authorized = abap_true.
+  release_sales_order( lv_order_id ).
 ENDIF.
 ```
 
@@ -67,12 +67,21 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_MERGE_IFS
 ```
 
+## Finding Codes
+
+| Finding code | Pattern | Fix |
+|---|---|---|
+| `PREF_MRGIF` | The inner IF is the first statement of the outer IF and closes immediately before the outer ENDIF | Combine both conditions with `AND` |
+| `PREF_ELSIF` | The outer ELSE block contains exactly one IF that closes immediately before the outer ENDIF | Change `ELSE` + `IF` to `ELSEIF` (quickfix `USE_ELSEIF`) |
+
+Blocks where the inner IF has its own `ELSE` or `ELSEIF`, or where further statements follow it, are not reported because merging would change semantics.
+
 
 ## Related Rules
 
 * [Prefer CASE over Multiple IF / ELSEIF on the Same Variable](/rules/pref-case) — <code>#EC PREF_CASE</code>
-* [Prefer COND #( ) Expression over IF/ELSEIF/ELSE](/rules/pref-cond) — <code>#EC PREF_COND</code>
-* [Prefer SWITCH #( ) Expression over CASE Statement](/rules/pref-switch) — <code>#EC PREF_SWITCH</code>
+* [Collapse Value-Mapping IF Chains into COND](/rules/pref-cond) — <code>#EC PREF_COND</code>
+* [Convert Pure CASE Mappings into SWITCH Expressions](/rules/pref-switch) — <code>#EC PREF_SWITCH</code>
 
 ## Technical Details
 

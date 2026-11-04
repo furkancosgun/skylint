@@ -1,13 +1,13 @@
 ---
-title: "Check sy-subrc Promptly After AUTHORITY-CHECK (CWE-862 Authorization Bypass)"
+title: "Check sy-subrc Immediately After AUTHORITY-CHECK"
 description: "Prevent CWE-862 authorization bypass vulnerabilities in SAP ABAP by verifying sy-subrc immediately following AUTHORITY-CHECK statements."
-keywords: "CWE-862 ABAP, AUTHORITY-CHECK sy-subrc, SAP Security Audit Log, Clean ABAP Authorization, Privilege Escalation SAP"
+keywords: "pref-auth-subrc, AUTHORITY-CHECK, CWE-862, sy-subrc, SAP security"
 category: "security"
 ruleId: "pref-auth-subrc"
-customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L2440"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L2486"
 ---
 
-# Check sy-subrc Promptly After AUTHORITY-CHECK (CWE-862 Authorization Bypass)
+# Check sy-subrc Immediately After AUTHORITY-CHECK
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="danger" text="Error" />
@@ -15,7 +15,7 @@ customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-
   <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC PREF_AUTH_SUBRC" />
   <Badge type="info" text="Remote Enabled" />
-  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L2440" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L2486" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -26,34 +26,38 @@ Check sy-subrc immediately after AUTHORITY-CHECK.
 
 ## Rationale
 
-Executing `AUTHORITY-CHECK` without verifying `sy-subrc` immediately afterwards is one of the most critical security vulnerabilities in SAP ABAP (CWE-862: Missing Authorization Check). The SAP kernel evaluates the user's authorizations and sets `sy-subrc` to 0 on success or a non-zero code on failure. If intermediate statements execute before evaluating `sy-subrc`, another statement might overwrite `sy-subrc`, resulting in unauthorized privilege escalation.
-
-**Security Standard:** Always check `IF sy-subrc <> 0` immediately on the statement following `AUTHORITY-CHECK` and raise an authorization exception or terminate execution.
+Executing an AUTHORITY-CHECK statement without immediately inspecting sy-subrc is a critical security vulnerability classified under CWE-862 (Missing Authorization Check). The SAP kernel evaluates user authorizations and returns sy-subrc = 0 on success or a non-zero authorization return code on failure. If intermediate statements execute before evaluating sy-subrc, subsequent statements (such as SELECT, READ TABLE, or method calls) overwrite sy-subrc, inadvertently allowing unauthorized users to execute privileged operations or access confidential data.
 
 ### Non-Compliant
 
 ```abap
-" Critical Vulnerability: sy-subrc is NOT checked immediately; overwritten by subsequent SELECT
+DATA lv_partner_id TYPE string VALUE '1000001'.
 AUTHORITY-CHECK OBJECT 'S_TABU_DIS'
-  ID 'ACTVT' FIELD '02'.
+  ID 'DICBERCLS' FIELD '&NC&'
+  ID 'ACTVT'     FIELD '03'.
 
-SELECT SINGLE * FROM zsens_data INTO @DATA(ls_data). " Overwrites sy-subrc!
-IF sy-subrc <> 0. " Checks SELECT, not the authorization check!
-  MESSAGE 'Not authorized' TYPE 'E'.
-ENDIF.
+SELECT SINGLE partner, name_first
+  FROM but000
+  WHERE partner = @lv_partner_id
+  INTO @DATA(ls_partner).
+" Anti-pattern: sy-subrc was overwritten by SELECT without checking authorization!
 ```
 
 ### Compliant
 
 ```abap
-" Secure: Immediate verification prevents authorization bypass
+DATA lv_partner_id TYPE string VALUE '1000001'.
 AUTHORITY-CHECK OBJECT 'S_TABU_DIS'
-  ID 'ACTVT' FIELD '02'.
+  ID 'DICBERCLS' FIELD '&NC&'
+  ID 'ACTVT'     FIELD '03'.
 IF sy-subrc <> 0.
-  RAISE EXCEPTION NEW zcx_auth_exception( textid = zcx_auth_exception=>c_not_authorized ).
+  RETURN.
 ENDIF.
 
-SELECT SINGLE * FROM zsens_data INTO @DATA(ls_data).
+SELECT SINGLE partner, name_first
+  FROM but000
+  WHERE partner = @lv_partner_id
+  INTO @DATA(ls_partner).
 ```
 
 ## Automated QuickFix
@@ -75,18 +79,26 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_AUTH_SUBRC
 ```
 
+### Security Vulnerability (CWE-862)
+
+Omitting the `sy-subrc` check immediately following `AUTHORITY-CHECK` leads to privilege escalation because any subsequent statement that succeeds sets `sy-subrc` to 0, completely nullifying the security check.
+
+- **Finding Code:** `PREF_AUTHS` (Severity: Error)
+- **QuickFix Code:** `CHK_AUTHS` automatically inserts the standard `IF sy-subrc <> 0. RETURN. ENDIF.` block immediately following the `AUTHORITY-CHECK` statement.
+- **Suppression:** Suppress with pseudo-comment `"#EC PREF_AUTH_SUBRC`.
+
 
 ## Related Rules
 
 * [Verify sy-subrc Promptly After Data Retrieval and Search](/rules/pref-check-subrc) — <code>#EC PREF_CHECK_SUBRC</code>
-* [Ensure AUTHORITY-CHECK Precedes Sensitive Business Operations](/rules/pref-auth-check) — <code>#EC PREF_AUTH_CHECK</code>
-* [Provide FAILED and REPORTED in RAP EML Statements (Silent Transaction Failure Prevention)](/rules/no-unhandled-eml) — <code>#EC NO_UNHANDLED_EML</code>
+* [Protect CALL TRANSACTION Statements with AUTHORITY-CHECK](/rules/pref-auth-check) — <code>#EC PREF_AUTH_CHECK</code>
+* [Provide FAILED and REPORTED in RAP EML Statements](/rules/no-unhandled-eml) — <code>#EC NO_UNHANDLED_EML</code>
 
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_PREF_AUTH_SUBRC`
 * **ABAP Implementation:** [/skyl/cl_pref_auth_subrc.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_pref_auth_subrc.clas.abap)
-* **Rule Metadata:** [rules-data.mjs (Line 2440)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L2440)
+* **Rule Metadata:** [rules-data.mjs (Line 2486)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L2486)
 
 ## Community & Feedback
 

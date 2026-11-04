@@ -1,13 +1,13 @@
 ---
-title: "Prefer Symbol Comparison Operators (=, <>, <, >)"
-description: "Prefer Symbol Comparison Operators (=, <>, <, >) - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-symbol-op, clean-abap"
+title: "Replace Textual Comparison Operators (EQ, NE, GT) with Symbols"
+description: "Replace legacy EQ, NE, GT, LT, GE and LE comparison keywords with the symbolic =, <>, >, <, >= and <= operators in ABAP Cloud and S/4HANA code."
+keywords: "pref-symbol-op, Clean ABAP, comparison operators, SAP ATC, ABAP Cloud"
 category: "clean-abap"
 ruleId: "pref-symbol-op"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1004"
 ---
 
-# Prefer Symbol Comparison Operators (=, <>, <, >)
+# Replace Textual Comparison Operators (EQ, NE, GT) with Symbols
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -26,21 +26,23 @@ Prefer symbolic operators over textual EQ, NE, LT, GT.
 
 ## Rationale
 
-Text comparison operators such as EQ, NE, GT, LT, GE, and LE are legacy synonyms for the symbolic operators. Symbols are shorter, match mathematical notation, and are the Clean ABAP standard. Consistent symbols also make boolean expressions easier to scan in conditions and constructor expressions.
+EQ, NE, GT, LT, GE and LE are legacy aliases for =, <>, >, <, >= and <=, and the check also catches the outdated => and =< spellings. Symbolic operators are shorter, follow mathematical notation, and are the only form Clean ABAP allows, so every condition in the code base reads the same way. The check inspects plain keyword tokens in executable statements, therefore the migration is mechanical and the PREFEROP QuickFix can rewrite the affected line without touching anything else.
 
 ### Non-Compliant
 
 ```abap
-IF lv_total GT 100 AND lv_status NE 'X'.
-  process( ).
+IF ls_order_header-total_amount GT ls_customer-credit_limit
+   OR ls_order_header-payment_status NE 'PAID'.
+  reject_sales_order( ).
 ENDIF.
 ```
 
 ### Compliant
 
 ```abap
-IF lv_total > 100 AND lv_status <> 'X'.
-  process( ).
+IF ls_order_header-total_amount > ls_customer-credit_limit
+   OR ls_order_header-payment_status <> 'PAID'.
+  reject_sales_order( ).
 ENDIF.
 ```
 
@@ -63,12 +65,25 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_SYMBOL_OP
 ```
 
+### Replacement table
+
+| Legacy | Symbol |
+| --- | --- |
+| `EQ` | `=` |
+| `NE`, `><` | `<>` |
+| `GT` | `>` |
+| `LT` | `<` |
+| `GE`, `=>` | `>=` |
+| `LE`, `=<` | `<=` |
+
+The check only inspects executable statements: `DATA`, `TYPES`, `CONSTANTS`, `STATICS`, `PARAMETER`, `PARAMETERS`, `FIELD-SYMBOLS`, `METHODS` and `CLASS-METHODS` are skipped so that a type or parameter that happens to be spelled `EQ` is never reported. Findings can be suppressed per statement with `"#EC PREF_SYMBOL_OP`; the `PREFEROP` QuickFix rewrites the whole line with the symbolic operator.
+
 
 ## Related Rules
 
-* [Prefer Calculation Assignment Operators (+=, -=, *=)](/rules/pref-calc-op) — <code>#EC PREF_CALC_OP</code>
-* [Check Downport Compatibility (7.40+ Modern Constructs)](/rules/pref-downport) — <code>#EC PREF_DOWNPORT</code>
-* [Prefer the Short System Field Alias SY over SYST](/rules/pref-sy) — <code>#EC PREF_SY</code>
+* [Prefer Calculation Assignment Operators (+=, -=, *=, /=)](/rules/pref-calc-op) — <code>#EC PREF_CALC_OP</code>
+* [Detect 7.40+ Syntax in Downport-Compatible Code](/rules/pref-downport) — <code>#EC PREF_DOWNPORT</code>
+* [Prefer Short System Field Structure Alias SY Over Legacy SYST](/rules/pref-sy) — <code>#EC PREF_SY</code>
 
 ## Technical Details
 

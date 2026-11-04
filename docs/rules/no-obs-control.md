@@ -1,13 +1,13 @@
 ---
-title: "Avoid Obsolete Control Flow and Procedural Forms"
-description: "Avoid Obsolete Control Flow and Procedural Forms - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-obs-control, anti-patterns"
+title: "Eliminate Obsolete Control Flow and Procedural Statements"
+description: "Prevent obsolete control statements including FORM, BREAK-POINT, AT NEW, and macros in ABAP Cloud."
+keywords: "no-obs-control, FORM PERFORM, BREAK-POINT, Clean ABAP, ABAP Cloud"
 category: "anti-patterns"
 ruleId: "no-obs-control"
-customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1259"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1260"
 ---
 
-# Avoid Obsolete Control Flow and Procedural Forms
+# Eliminate Obsolete Control Flow and Procedural Statements
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -15,7 +15,7 @@ customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-
   <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC NO_OBS_CONTROL" />
   <Badge type="info" text="Remote Enabled" />
-  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1259" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1260" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -26,22 +26,19 @@ Obsolete Control Flow and Procedural Statements.
 
 ## Rationale
 
-Subroutines (FORM / PERFORM), macro definitions (DEFINE), hardcoded break points (BREAK-POINT / BREAK), control break statements (AT NEW, AT END, ON CHANGE OF, SUM), and SET EXTENDED CHECK belong to legacy procedural programming. They lack proper scope isolation, cause unpredictable side effects, and are completely prohibited in modern ABAP Cloud. Encapsulate all logic within methods, modern LOOP GROUP BY syntax, and unit tests.
+Procedural control flow constructs—including subroutines (FORM / PERFORM), macro expansions (DEFINE), unconditioned BREAK-POINT, control breaks (AT NEW, AT END, ON CHANGE OF, SUM), and SET EXTENDED CHECK—violate modern lexical scoping and are prohibited in ABAP Cloud (Contract C1). Subroutines lack typed interfaces and leak global variables, while control break statements inside loops rely on brittle field positioning in work areas. Encapsulating logic in modular class methods and modern LOOP AT ... GROUP BY expressions creates robust, testable code.
 
 ### Non-Compliant
 
 ```abap
-PERFORM calculate_total USING lv_subtotal.
-AT NEW order_id.
-  SUM.
-ENDAT.
+BREAK-POINT.
+SET EXTENDED CHECK OFF.
 ```
 
 ### Compliant
 
 ```abap
-calculate_total( iv_subtotal = lv_subtotal ).
-LOOP AT lt_orders INTO DATA(ls_order) GROUP BY ls_order-order_id ...
+calculate_subtotal( ).
 ```
 
 ## Automated QuickFix
@@ -57,16 +54,16 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value | Description & Guidance |
 |---|---|:---:|---|
-| `CHECK_FORM` | `Boolean` | <code>true</code> | Detect obsolete PERFORM / FORM subroutine routines |
-| `CHECK_LOOP_CTL` | `Boolean` | <code>true</code> | Detect obsolete control break statements (ON CHANGE OF, EXIT FROM STEP-LOOP) |
-| `CHECK_BREAK` | `Boolean` | <code>true</code> | Detect unconditioned BREAK-POINT statements in non-test code |
-| `CHECK_DEFINE` | `Boolean` | <code>true</code> | Detect DEFINE macro declarations |
-| `CHECK_TEST_SEAMS` | `Boolean` | <code>true</code> | Detect TEST-SEAM injection blocks in production logic |
-| `CHECK_CATCH_SYSTEM` | `Boolean` | <code>true</code> | Detect obsolete CATCH SYSTEM-EXCEPTIONS syntax |
-| `CHECK_SET_EXT_CHECK` | `Boolean` | <code>true</code> | Detect obsolete SET EXTENDED CHECK statements |
-| `CHECK_SELECT_NO_INTO` | `Boolean` | <code>true</code> | Detect obsolete SELECT without INTO statements |
-| `CHECK_EXIT_SQL` | `Boolean` | <code>true</code> | Detect obsolete EXIT FROM SQL statements |
-| `CHECK_SORT_BY_FS` | `Boolean` | <code>true</code> | Detect obsolete dynamic SORT BY field symbol syntax |
+| `CHECK_FORM` | `Boolean` | <code>true</code> | Report obsolete FORM definitions and PERFORM subroutine calls in favor of methods. |
+| `CHECK_LOOP_CTL` | `Boolean` | <code>true</code> | Report legacy control break statements like AT NEW, AT END, ON CHANGE OF, and SUM. |
+| `CHECK_BREAK` | `Boolean` | <code>true</code> | Report hardcoded BREAK-POINT and BREAK statements in non-test production source code. |
+| `CHECK_DEFINE` | `Boolean` | <code>true</code> | Report DEFINE macro blocks; macros hide control flow and cannot be debugged cleanly. |
+| `CHECK_TEST_SEAMS` | `Boolean` | <code>true</code> | Report TEST-SEAM and TEST-INJECT statements; use dependency injection and interfaces instead. |
+| `CHECK_CATCH_SYSTEM` | `Boolean` | <code>true</code> | Report obsolete CATCH SYSTEM-EXCEPTIONS syntax in favor of TRY ... CATCH blocks. |
+| `CHECK_SET_EXT_CHECK` | `Boolean` | <code>true</code> | Report obsolete SET EXTENDED CHECK statements that suppress code inspector checks. |
+| `CHECK_SELECT_NO_INTO` | `Boolean` | <code>true</code> | Report obsolete SELECT statements without an INTO or APPENDING clause. |
+| `CHECK_EXIT_SQL` | `Boolean` | <code>true</code> | Report obsolete EXIT FROM SQL statements that terminate open SQL loops. |
+| `CHECK_SORT_BY_FS` | `Boolean` | <code>true</code> | Report obsolete dynamic SORT itab BY `<fs>` field symbol syntax. |
 
 ## Suppression
 
@@ -80,18 +77,35 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_OBS_CONTROL
 ```
 
+### Reported Obsolete Constructs
+
+| Construct | Category | QuickFix |
+|---|---|---|
+| `BREAK-POINT` / `BREAK` | Unconditioned debugging stop | `RMBRK` (removes statement) |
+| `SET EXTENDED CHECK` | Inspection suppression | `RMEXTCHK` (removes statement) |
+| `FORM` / `PERFORM` | Procedural subroutines | None (refactor to methods) |
+| `DEFINE` | Preprocessor macros | None (refactor to methods) |
+| `AT NEW/END/FIRST/LAST` | Positional loop control breaks | None (use `GROUP BY`) |
+| `ON CHANGE OF` / `SUM` | Legacy loop calculations | None |
+| `TEST-SEAM` / `TEST-INJECT` | Legacy test seams | None (use test injection) |
+| `CATCH SYSTEM-EXCEPTIONS` | Obsolete catch syntax | None (use `TRY..CATCH`) |
+| `EXIT FROM SQL` | SQL loop termination | None |
+| `SORT itab BY <fs>` | Obsolete dynamic sort | None |
+
+Suppress findings with `"#EC NO_OBS_CONTROL`.
+
 
 ## Related Rules
 
-* [Avoid Obsolete Arithmetic and Assignment Statements](/rules/no-obs-arith) — <code>#EC NO_OBS_ARITH</code>
-* [Avoid Obsolete Declarations and Table Headers](/rules/no-obs-decl) — <code>#EC NO_OBS_DECL</code>
-* [Avoid Obsolete ABAP Memory and Context Statements](/rules/no-obs-memory) — <code>#EC NO_OBS_MEMORY</code>
+* [Replace Obsolete Arithmetic Statements with Modern Operators](/rules/no-obs-arith) — <code>#EC NO_OBS_ARITH</code>
+* [Replace Obsolete Data Declarations with Explicit Types](/rules/no-obs-decl) — <code>#EC NO_OBS_DECL</code>
+* [Prohibit Obsolete ABAP Memory and Cluster Statements](/rules/no-obs-memory) — <code>#EC NO_OBS_MEMORY</code>
 
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_NO_OBS_CONTROL`
 * **ABAP Implementation:** [/skyl/cl_no_obs_control.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_obs_control.clas.abap)
-* **Rule Metadata:** [rules-data.mjs (Line 1259)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L1259)
+* **Rule Metadata:** [rules-data.mjs (Line 1260)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L1260)
 
 ## Community & Feedback
 

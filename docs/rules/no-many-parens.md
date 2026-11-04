@@ -1,13 +1,13 @@
 ---
-title: "Remove redundant parentheses"
-description: "Remove redundant parentheses - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-many-parens, anti-patterns"
+title: "Remove Redundant Parentheses in Boolean and Assignment Expressions"
+description: "Detect and remove redundant parentheses in ABAP conditions and assignments using automated Clean ABAP ATC quickfixes."
+keywords: "no-many-parens, Clean ABAP, redundant parentheses, IF condition, SAP ATC, quickfix"
 category: "anti-patterns"
 ruleId: "no-many-parens"
-customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L2923"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L2986"
 ---
 
-# Remove redundant parentheses
+# Remove Redundant Parentheses in Boolean and Assignment Expressions
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -15,7 +15,7 @@ customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-
   <Badge type="warning" text="QuickFix Ready" />
   <Badge type="danger" text="#EC NO_MANY_PARENS" />
   <Badge type="info" text="Remote Enabled" />
-  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L2923" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L2986" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -26,21 +26,21 @@ Remove redundant parentheses.
 
 ## Rationale
 
-Parentheses that wrap an entire condition or arithmetic expression do not change evaluation order but add visual noise. They often remain after refactoring and make expressions look more complex than they are. Remove redundant outer parentheses and keep only those needed for precedence.
+Wrapping single comparison clauses, entire simple conditions, or elementary assignments in unnecessary parentheses clutters source code without changing operator precedence or runtime behavior. Redundant parentheses create visual noise, make expressions appear deceptively complex, and often remain as remnants from incomplete refactorings. Clean ABAP advises keeping expressions minimal and retaining parentheses only where logical precedence or grouping genuinely requires them. The ATC check reports NO_MNY_PAR and provides the NOPARENS quickfix.
 
 ### Non-Compliant
 
 ```abap
-IF ( lv_status = 'A' ).
-  process_a( ).
+IF ( lv_order_status = 'APPROVED' ).
+  process_purchase_order( iv_order_id = lv_order_id ).
 ENDIF.
 ```
 
 ### Compliant
 
 ```abap
-IF lv_status = 'A'.
-  process_a( ).
+IF lv_order_status = 'APPROVED'.
+  process_purchase_order( iv_order_id = lv_order_id ).
 ENDIF.
 ```
 
@@ -63,18 +63,28 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_MANY_PARENS
 ```
 
+## Detection and Quickfix Details
+
+The check inspects `IF`, `ELSEIF`, `WHILE`, `CHECK`, and `COMPUTE` statements. It determines whether an outer pair of parentheses encloses the complete condition or whether a single comparison clause without logical operators is redundantly bracketed. The automated `NOPARENS` quickfix flattens the statement by removing the unnecessary outer parentheses.
+
+### Excluded Scenarios
+Expressions containing constructor operators (`VALUE`, `COND`, `CONV`, `SWITCH`, `REDUCE`, `NEW`), `NOT` negation boundaries, or mixed `AND`/`OR` precedence groups are intentionally preserved.
+
+### Suppression
+Suppress with pseudo comment `"#EC NO_MANY_PARENS`.
+
 
 ## Related Rules
 
-* [Avoid CASE with a Single WHEN Branch](/rules/no-single-when) — <code>#EC NO_SINGLE_WHEN</code>
-* [Avoid CHECK Statements](/rules/no-check-stmt) — <code>#EC NO_CHECK_IN_LOOP</code>
-* [Avoid Comparing to abap_true / abap_false](/rules/no-bool-compare) — <code>#EC NO_BOOL_COMPARE</code>
+* [Replace Single-Branch CASE Statements with IF Conditions](/rules/no-single-when) — <code>#EC NO_SINGLE_WHEN</code>
+* [Avoid CHECK Statements Inside and Outside Iteration Loops](/rules/no-check-stmt) — <code>#EC NO_CHECK_IN_LOOP</code>
+* [Avoid Comparing Boolean Method Calls to abap_true or abap_false](/rules/no-bool-compare) — <code>#EC NO_BOOL_COMPARE</code>
 
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_NO_MANY_PARENS`
 * **ABAP Implementation:** [/skyl/cl_no_many_parens.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_many_parens.clas.abap)
-* **Rule Metadata:** [rules-data.mjs (Line 2923)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L2923)
+* **Rule Metadata:** [rules-data.mjs (Line 2986)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L2986)
 
 ## Community & Feedback
 

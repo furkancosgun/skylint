@@ -1,13 +1,13 @@
 ---
-title: "Prefer lines( ) over DESCRIBE TABLE"
-description: "Prefer lines( ) over DESCRIBE TABLE - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-lines, clean-abap"
+title: "Use lines( ) Instead of DESCRIBE TABLE LINES"
+description: "Replace DESCRIBE TABLE LINES with the lines( ) built-in to drop temporary counters and obsolete statements in ABAP Cloud."
+keywords: "pref-lines, lines( ), DESCRIBE TABLE, obsolete statement, Clean ABAP"
 category: "clean-abap"
 ruleId: "pref-lines"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L360"
 ---
 
-# Prefer lines( ) over DESCRIBE TABLE
+# Use lines( ) Instead of DESCRIBE TABLE LINES
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -26,13 +26,13 @@ Prefer lines( ) over DESCRIBE TABLE ... LINES.
 
 ## Rationale
 
-DESCRIBE TABLE LINES requires an extra variable and separates the question about table size from the code that uses the answer. The lines( ) built-in returns the row count as a value and can be embedded directly in conditions and expressions. This reduces temporary variables and makes the intent obvious at the call site.
+DESCRIBE TABLE ... LINES writes the row count into a helper variable, so the question about the table size and the code that uses the answer are separated by an extra declaration and an extra statement. The lines( ) built-in returns the count as a value, which can be tested inline in IF or WHILE and passed to any expression without a temporary variable. The check reports PREF_LINES and the TOLINES quickfix replaces the statement with an equivalent lines( ) assignment.
 
 ### Non-Compliant
 
 ```abap
-DESCRIBE TABLE lt_items LINES lv_count.
-IF lv_count = 0.
+DESCRIBE TABLE lt_order_items LINES lv_item_count.
+IF lv_item_count = 0.
   RETURN.
 ENDIF.
 ```
@@ -40,7 +40,7 @@ ENDIF.
 ### Compliant
 
 ```abap
-IF lines( lt_items ) = 0.
+IF lines( lt_order_items ) = 0.
   RETURN.
 ENDIF.
 ```
@@ -64,12 +64,16 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_LINES
 ```
 
+## Scope
+
+`DESCRIBE TABLE ... KIND` and `... OCCURS` are not reported, because `lines( )` only replaces the row count. The `TOLINES` quickfix always produces the assignment form `target = lines( itab ).`; inline it manually when the count is used only once, as in the good example.
+
 
 ## Related Rules
 
-* [Modernize READ TABLE (Table Expressions & line_exists)](/rules/pref-read-table) — <code>#EC PREF_TAB_EXPR</code>
-* [Prefer REDUCE #( ) Expression over Simple Aggregation LOOP](/rules/pref-reduce) — <code>#EC PREF_REDUCE</code>
-* [Prefer TYPE STANDARD TABLE OF over TYPE TABLE OF](/rules/pref-std-table) — <code>#EC PREF_STD_TABLE</code>
+* [Replace READ TABLE with Table Expressions and line_exists](/rules/pref-read-table) — <code>#EC PREF_TAB_EXPR</code>
+* [Replace Single-Statement Aggregation LOOP with REDUCE](/rules/pref-reduce) — <code>#EC PREF_REDUCE</code>
+* [Declare Standard Internal Tables Explicitly with TYPE STANDARD TABLE OF](/rules/pref-std-table) — <code>#EC PREF_STD_TABLE</code>
 
 ## Technical Details
 

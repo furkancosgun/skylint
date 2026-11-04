@@ -1,13 +1,13 @@
 ---
-title: "Avoid Redundant CONTINUE at End of Loop"
-description: "Avoid Redundant CONTINUE at End of Loop - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-useless-cont, clean-abap"
+title: "Remove CONTINUE Immediately Before a Loop End"
+description: "Detect CONTINUE statements directly before ENDLOOP, ENDWHILE or ENDDO and remove the dead loop control with an ATC quickfix."
+keywords: "no-useless-cont, CONTINUE, ENDLOOP, dead code, Clean ABAP"
 category: "clean-abap"
 ruleId: "no-useless-cont"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L114"
 ---
 
-# Avoid Redundant CONTINUE at End of Loop
+# Remove CONTINUE Immediately Before a Loop End
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -26,13 +26,16 @@ Avoid Redundant CONTINUE at End of Loop.
 
 ## Rationale
 
-A CONTINUE statement located immediately before ENDLOOP, ENDWHILE, or ENDDO has zero effect because loop execution naturally cycles at the end of the block. Remove redundant trailing CONTINUE statements to keep loop bodies concise and avoid misleading code reviewers into expecting remaining logic.
+A CONTINUE that directly precedes ENDLOOP, ENDWHILE or ENDDO never changes behaviour, because the loop would cycle at that point anyway. Leaving it in the code adds a dead statement that suggests additional logic was removed or is still missing, and reviewers spend time proving that nothing is skipped. The check reports NO_USE_CNT and the RMCONT quickfix deletes the statement, keeping loop bodies minimal and honest. Early CONTINUE statements that guard further processing remain untouched.
 
 ### Non-Compliant
 
 ```abap
-LOOP AT lt_items ASSIGNING <ls_item>.
-  do_work( <ls_item> ).
+LOOP AT lt_order_items ASSIGNING <ls_order_item>.
+  IF <ls_order_item>-quantity = 0.
+    CONTINUE.
+  ENDIF.
+  accumulate_net_value( <ls_order_item> ).
   CONTINUE.
 ENDLOOP.
 ```
@@ -40,8 +43,11 @@ ENDLOOP.
 ### Compliant
 
 ```abap
-LOOP AT lt_items ASSIGNING <ls_item>.
-  do_work( <ls_item> ).
+LOOP AT lt_order_items ASSIGNING <ls_order_item>.
+  IF <ls_order_item>-quantity = 0.
+    CONTINUE.
+  ENDIF.
+  accumulate_net_value( <ls_order_item> ).
 ENDLOOP.
 ```
 
@@ -67,9 +73,9 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ## Related Rules
 
-* [Avoid Loops That Execute At Most Once](/rules/no-single-iter) — <code>#EC NO_SINGLE_ITER</code>
-* [Avoid Dead Code with Constant Conditions](/rules/no-dead-code) — <code>#EC NO_DEAD_CODE</code>
-* [Avoid Dead / Unreachable Code](/rules/no-unreachable) — <code>#EC NO_UNREACHABLE</code>
+* [Avoid Loops That Execute At Most Once Due to Unconditional Exit](/rules/no-single-iter) — <code>#EC NO_SINGLE_ITER</code>
+* [Eliminate Unreachable Dead Code Caused by Constant False Conditions](/rules/no-dead-code) — <code>#EC NO_DEAD_CODE</code>
+* [Avoid Unreachable Statements Following Unconditional Exit or Jump Operations](/rules/no-unreachable) — <code>#EC NO_UNREACHABLE</code>
 
 ## Technical Details
 

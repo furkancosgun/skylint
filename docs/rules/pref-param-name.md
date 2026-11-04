@@ -1,13 +1,13 @@
 ---
-title: "Method Call Parameter Naming Style (Omit or Require)"
-description: "Method Call Parameter Naming Style (Omit or Require) - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-param-name, clean-abap"
+title: "Omit or Require Parameter Names in Method Calls"
+description: "Enforce one method call style: omit the parameter name for single-parameter methods or require explicit names via REQUIRE_PARAM_NAME."
+keywords: "pref-param-name, parameter name, functional method call, RTTI, Clean ABAP"
 category: "clean-abap"
 ruleId: "pref-param-name"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L559"
 ---
 
-# Method Call Parameter Naming Style (Omit or Require)
+# Omit or Require Parameter Names in Method Calls
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -28,18 +28,20 @@ Method Call Parameter Naming Style.
 
 ## Rationale
 
-Methods with a single importing parameter can be invoked positionally without naming the parameter, reducing verbosity for self-explanatory methods. Alternatively, teams requiring explicit naming can enable REQUIRE_PARAM_NAME to enforce explicit parameter naming for clarity and future signature extension.
+For a method with exactly one IMPORTING parameter, writing the parameter name at every call site adds noise without adding information. For teams that prefer explicit names, the opposite style is enforced instead. The check reads the method signature with RTTI to confirm the single-parameter case and reports PREF_OMIT or PREF_REQ_P accordingly, each with its own quickfix that edits the call in place. Because the signature must be resolved at runtime, the rule is not remote enabled and only runs locally.
 
 ### Non-Compliant
 
 ```abap
-lo_pricing->apply_discount( iv_percent = 10 ).
+DATA(lo_pricing_service) = NEW zcl_pricing_service( ).
+lo_pricing_service->apply_discount( iv_percent = 15 ).
 ```
 
 ### Compliant
 
 ```abap
-lo_pricing->apply_discount( 10 ).
+DATA(lo_pricing_service) = NEW zcl_pricing_service( ).
+lo_pricing_service->apply_discount( 15 ).
 ```
 
 ## Automated QuickFix
@@ -55,8 +57,8 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value | Description & Guidance |
 |---|---|:---:|---|
-| `CHECK_PARAM_NAME` | `Boolean` | <code>true</code> | Suggest omitting parameter name when invoking single-parameter methods |
-| `REQUIRE_PARAM_NAME` | `Boolean` | <code>false</code> | Require explicit parameter names when calling multi-parameter methods |
+| `CHECK_PARAM_NAME` | `Boolean` | <code>true</code> | Report single-IMPORTING-parameter calls that still pass the parameter name and suggest the positional form. Ignored while REQUIRE_PARAM_NAME is active. |
+| `REQUIRE_PARAM_NAME` | `Boolean` | <code>false</code> | Report positional calls to single-IMPORTING-parameter methods and add the parameter name. Takes precedence over CHECK_PARAM_NAME. |
 
 ## Suppression
 
@@ -70,11 +72,20 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_PARAM_NAME
 ```
 
+## Two Modes, One Rule
+
+| Attribute | Finding code | Effect |
+|---|---|---|
+| `CHECK_PARAM_NAME` (default) | `PREF_OMIT` | A method with exactly one IMPORTING parameter called as `method( iv_param = value )` is reported; the name should be dropped. |
+| `REQUIRE_PARAM_NAME` | `PREF_REQ_P` | A positional call `method( value )` is reported and the parameter name is added. Takes precedence over `CHECK_PARAM_NAME` when both are enabled. |
+
+Signatures are resolved through RTTI (`/skyl/cl_rtti_util=>get_single_importing_param`), so the check sets `remote_enablement = abap_false` and cannot run in a remote ATC scenario. Classic `CALL METHOD` statements and calls that use explicit parameter sections are skipped, and the pseudo comment `PREF_PARAM_NAME` suppresses both finding codes.
+
 
 ## Related Rules
 
-* [Limit Method Parameter Count and Require Multi-Line Signatures](/rules/max-params) — <code>#EC MAX_PARAMS_COUNT</code>
-* [Avoid Obsolete CALL METHOD](/rules/no-call-method) — <code>#EC NO_CALL_METHOD</code>
+* [Limit Method Parameter Count and Keep One Parameter per Line](/rules/max-params) — <code>#EC MAX_PARAMS_COUNT</code>
+* [Replace Obsolete CALL METHOD Statements with Functional Invocations](/rules/no-call-method) — <code>#EC NO_CALL_METHOD</code>
 
 ## Technical Details
 

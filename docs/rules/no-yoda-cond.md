@@ -1,13 +1,13 @@
 ---
-title: "Avoid Yoda Conditions"
-description: "Avoid Yoda Conditions - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-yoda-cond, anti-patterns"
+title: "Avoid Yoda Conditions by Placing Variables Before Literals"
+description: "Prevent Yoda conditions in comparisons by placing variables before constants in ABAP Cloud."
+keywords: "no-yoda-cond, Yoda conditions, comparison expressions, Clean ABAP, SAP ATC"
 category: "anti-patterns"
 ruleId: "no-yoda-cond"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L976"
 ---
 
-# Avoid Yoda Conditions
+# Avoid Yoda Conditions by Placing Variables Before Literals
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -26,21 +26,21 @@ Avoid Yoda conditions in comparison expressions.
 
 ## Rationale
 
-Yoda conditions place the literal or constant on the left side of a comparison and break the natural ABAP reading order of subject, operator, and value. The habit comes from languages where an accidental assignment in a condition is possible, which is not the case for ABAP comparisons. Keep the variable or expression on the left so conditions read like plain language.
+Yoda conditions place literals or constants on the left side of comparison operators, reversing the natural subject-verb-object reading order of ABAP logic. While originally adopted in C-family languages to prevent accidental assignment in conditional expressions, ABAP syntax strictly prohibits assignment inside IF or WHILE conditions, rendering Yoda conditions obsolete and confusing. Clean ABAP mandates variable-first comparisons to maintain idiomatic readability across ABAP Cloud and modern ATC-inspected programs.
 
 ### Non-Compliant
 
 ```abap
-IF 'ACTIVE' = lv_status.
-  process( ).
+IF 'CONFIRMED' = lv_delivery_status.
+  ship_sales_order( ).
 ENDIF.
 ```
 
 ### Compliant
 
 ```abap
-IF lv_status = 'ACTIVE'.
-  process( ).
+IF lv_delivery_status = 'CONFIRMED'.
+  ship_sales_order( ).
 ENDIF.
 ```
 
@@ -63,12 +63,27 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_YODA_COND
 ```
 
+### QuickFix Operator Inversion
+
+The `UNYODA` QuickFix automatically transposes the operands and inverts directional comparison operators where required:
+
+| Original Operator | Transposed Operator |
+|---|---|
+| `=` / `EQ` | `=` / `EQ` |
+| `<>` / `NE` | `<>` / `NE` |
+| `<` / `LT` | `>` / `GT` |
+| `>` / `GT` | `<` / `LT` |
+| `<=` / `LE` | `>=` / `GE` |
+| `>=` / `GE` | `<=` / `LE` |
+
+The rule inspects executable statements where a literal is followed by a comparison operator and a non-literal token. Suppress with `"#EC NO_YODA_COND`.
+
 
 ## Related Rules
 
-* [Avoid Duplicate Branch Conditions](/rules/no-dup-cond) — <code>#EC NO_DUP_COND</code>
-* [Avoid Negated IF Conditions with ELSE](/rules/no-neg-cond) — <code>#EC NO_NEG_COND</code>
-* [Prefer COND #( ) Expression over IF/ELSEIF/ELSE](/rules/pref-cond) — <code>#EC PREF_COND</code>
+* [Avoid Duplicate Conditions in Branching Statements and Logical Operators](/rules/no-dup-cond) — <code>#EC NO_DUP_COND</code>
+* [Avoid Negated IF Conditions with an ELSE Branch by Inverting Condition and Swapping Branches](/rules/no-neg-cond) — <code>#EC NO_NEG_COND</code>
+* [Collapse Value-Mapping IF Chains into COND](/rules/pref-cond) — <code>#EC PREF_COND</code>
 
 ## Technical Details
 

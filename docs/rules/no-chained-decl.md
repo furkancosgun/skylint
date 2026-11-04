@@ -1,13 +1,13 @@
 ---
-title: "Avoid Chained Declarations (DATA:, CONSTANTS:, TYPES:)"
-description: "Avoid Chained Declarations (DATA:, CONSTANTS:, TYPES:) - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-chained-decl, anti-patterns"
+title: "Avoid Chained Declarations for Variables, Types, and Constants"
+description: "Avoid chained declarations (DATA:, TYPES:, CONSTANTS:) and use individual statements for clean git diffs in ABAP."
+keywords: "no-chained-decl, chained declarations, DATA colon, Clean ABAP, SAP ATC"
 category: "anti-patterns"
 ruleId: "no-chained-decl"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L623"
 ---
 
-# Avoid Chained Declarations (DATA:, CONSTANTS:, TYPES:)
+# Avoid Chained Declarations for Variables, Types, and Constants
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -26,20 +26,20 @@ Avoid Chained Declarations.
 
 ## Rationale
 
-Chained declarations combine multiple definitions behind a colon and commas, obscuring types and causing noisy version control diffs for single-variable modifications. In modern Clean ABAP, each variable, constant, or type definition should be an independent, fully qualified statement for maximum readability and clean diff tracking.
+Chained declarations (such as DATA:, TYPES:, and CONSTANTS:) combine multiple independent statements behind a single colon and commas, obscuring individual types and producing noisy git diffs when adding or modifying lines. Furthermore, chained declarations encourage upfront variable dumping at the start of a procedure rather than declaring variables close to first use. In Clean ABAP and ABAP Cloud, declare each variable or constant as an individual, fully qualified statement. The check reports NO_CHN_DCL and resolves the chain via the PREFINLDCL quickfix.
 
 ### Non-Compliant
 
 ```abap
-DATA: lv_order_id TYPE string,
-      lv_status   TYPE string.
+DATA: lv_sales_order_id TYPE string,
+      lv_delivery_block TYPE string.
 ```
 
 ### Compliant
 
 ```abap
-DATA lv_order_id TYPE string.
-DATA lv_status TYPE string.
+DATA lv_sales_order_id TYPE string.
+DATA lv_delivery_block TYPE string.
 ```
 
 ## Automated QuickFix
@@ -55,7 +55,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value | Description & Guidance |
 |---|---|:---:|---|
-| `ALLOW_STRUCTURE_CHAINS` | `Boolean` | <code>true</code> | Allow chained declarations exclusively inside BEGIN OF ... END OF structure definitions |
+| `ALLOW_STRUCTURE_CHAINS` | `Boolean` | <code>true</code> | Allow chained statements exclusively for BEGIN OF ... END OF structure definitions. |
 
 ## Suppression
 
@@ -69,12 +69,28 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_CHAINED_DECL
 ```
 
+### Single Declarations vs. Structure Chains
+
+Clean ABAP advocates individual statement declarations over colon-chained blocks:
+
+```abap
+" Anti-pattern: Chained declaration obscures diffs
+DATA: lv_status TYPE bstat,
+      lv_amount TYPE dmbtr.
+
+" Recommended: Independent statements
+DATA lv_status TYPE bstat.
+DATA lv_amount TYPE dmbtr.
+```
+
+Structure definitions beginning with `BEGIN OF` are exempt when `ALLOW_STRUCTURE_CHAINS` is enabled (the default). The `PREFINLDCL` quickfix splits each chained entry into an independent statement prefixed by the appropriate declaration keyword. Suppress findings using `"#EC NO_CHAINED_DECL`.
+
 
 ## Related Rules
 
-* [Avoid Chained Assignments (a = b = c = 1)](/rules/no-chained-assign) — <code>#EC NO_CHAINED_ASSIGN</code>
-* [Prefer Modern Inline Declarations in ABAP 7.40+](/rules/pref-inline) — <code>#EC PREF_INLINE</code>
-* [Prefer FINAL( ) over DATA( ) when the variable is never written again](/rules/pref-final-data) — <code>#EC PREF_FINAL_DATA</code>
+* [Avoid Chained Assignments Binding Multiple Targets Simultaneously](/rules/no-chained-assign) — <code>#EC NO_CHAINED_ASSIGN</code>
+* [Prefer Inline Declarations over Separate DATA and Assignment](/rules/pref-inline) — <code>#EC PREF_INLINE</code>
+* [Declare Single-Assignment Local Variables with FINAL( )](/rules/pref-final-data) — <code>#EC PREF_FINAL_DATA</code>
 
 ## Technical Details
 

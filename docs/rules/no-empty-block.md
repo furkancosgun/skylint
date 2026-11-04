@@ -1,13 +1,13 @@
 ---
-title: "Avoid Empty Control Blocks"
-description: "Avoid Empty Control Blocks - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, no-empty-block, anti-patterns"
+title: "Avoid Empty Control Blocks in Branching and Looping Statements"
+description: "Detect and remove empty control blocks in IF, CASE, LOOP, and TRY statements in Clean ABAP and SAP ATC."
+keywords: "no-empty-block, empty control block, Clean ABAP, empty CATCH, SAP ATC"
 category: "anti-patterns"
 ruleId: "no-empty-block"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L798"
 ---
 
-# Avoid Empty Control Blocks
+# Avoid Empty Control Blocks in Branching and Looping Statements
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -28,23 +28,22 @@ Avoid empty control blocks (IF, CASE, LOOP, TRY, etc.).
 
 ## Rationale
 
-An empty branch usually signals unfinished logic, forgotten code, or an inverted condition. Readers must search for hidden behavior and may assume the branch does something. Restructure the condition so every branch has a purpose, or remove the empty block entirely.
+Empty control blocks in IF, ELSEIF, ELSE, CASE, LOOP, DO, WHILE, or TRY constructs typically signal forgotten business logic, incomplete error handling, or abandoned prototypes. Leaving vacant blocks confuses reviewers and maintainers, who must verify whether the lack of action was intentional or a bug. In Clean ABAP, invert or simplify the condition to remove the empty branch entirely, or remove unused loops and TRY blocks that have no CATCH handling. The check flags empty blocks with NO_EMPTY_B or NO_TRY_WO and removes redundant control blocks via the RMBLOCK quickfix.
 
 ### Non-Compliant
 
 ```abap
-IF lv_is_active = abap_true.
-  " no processing yet
+IF lv_is_contract_active = abap_true.
 ELSE.
-  process( ).
+  terminate_subscription( ).
 ENDIF.
 ```
 
 ### Compliant
 
 ```abap
-IF NOT lv_is_active.
-  process( ).
+IF lv_is_contract_active = abap_false.
+  terminate_subscription( ).
 ENDIF.
 ```
 
@@ -61,14 +60,14 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value | Description & Guidance |
 |---|---|:---:|---|
-| `CHECK_IF` | `Boolean` | <code>true</code> | Detect empty IF / ELSEIF / ELSE blocks |
-| `CHECK_LOOP` | `Boolean` | <code>true</code> | Detect empty LOOP blocks |
-| `CHECK_CASE` | `Boolean` | <code>true</code> | Detect empty CASE / WHEN blocks |
-| `CHECK_TRY` | `Boolean` | <code>true</code> | Detect empty TRY blocks |
-| `CHECK_CATCH` | `Boolean` | <code>true</code> | Detect empty CATCH blocks with no handling or comments |
-| `CHECK_TRY_NO_CATCH` | `Boolean` | <code>true</code> | Detect TRY blocks that have no CATCH or CLEANUP clause |
-| `CHECK_DO` | `Boolean` | <code>true</code> | Detect empty DO blocks |
-| `CHECK_WHILE` | `Boolean` | <code>true</code> | Detect empty WHILE blocks |
+| `CHECK_IF` | `Boolean` | <code>true</code> | Detect empty IF, ELSEIF, or ELSE branches. |
+| `CHECK_LOOP` | `Boolean` | <code>true</code> | Detect empty LOOP blocks containing no executable statements. |
+| `CHECK_CASE` | `Boolean` | <code>true</code> | Detect empty CASE or WHEN blocks. |
+| `CHECK_TRY` | `Boolean` | <code>true</code> | Detect empty TRY blocks containing no protected statements. |
+| `CHECK_CATCH` | `Boolean` | <code>true</code> | Detect empty CATCH blocks containing no exception handling. |
+| `CHECK_TRY_NO_CATCH` | `Boolean` | <code>true</code> | Detect TRY blocks that do not specify any CATCH or CLEANUP clause. |
+| `CHECK_DO` | `Boolean` | <code>true</code> | Detect empty DO iteration blocks. |
+| `CHECK_WHILE` | `Boolean` | <code>true</code> | Detect empty WHILE iteration blocks. |
 
 ## Suppression
 
@@ -82,12 +81,26 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_EMPTY_BLOCK
 ```
 
+### Supported Control Structures and Findings
+
+The rule flags empty bodies across all standard ABAP control flow statements:
+
+| Statement | Trigger Condition | Finding Code |
+|---|---|---|
+| `IF` / `ELSEIF` / `ELSE` | Consecutive boundary keywords (e.g. `IF ... ELSE`, `ELSE ... ENDIF`) | `NO_EMPTY_B` |
+| `LOOP` / `DO` / `WHILE` | Consecutive start and end loop keywords without body statements | `NO_EMPTY_B` |
+| `CASE` / `WHEN` | Consecutive `WHEN` without statements or empty `CASE ... ENDCASE` | `NO_EMPTY_B` |
+| `TRY` / `CATCH` | Empty `CATCH` block without error handling | `NO_EMPTY_B` |
+| `TRY` without `CATCH` | `TRY` block lacking any `CATCH` or `CLEANUP` handler | `NO_TRY_WO` |
+
+The `RMBLOCK` quickfix deletes empty blocks automatically. Suppress findings using `"#EC NO_EMPTY_BLOCK`.
+
 
 ## Related Rules
 
-* [Limit Control Flow Nesting Depth (Guard Clause Enforcement)](/rules/max-nesting) — <code>#EC MAX_NESTING</code>
-* [Avoid CASE with a Single WHEN Branch](/rules/no-single-when) — <code>#EC NO_SINGLE_WHEN</code>
-* [Avoid CHECK Statements](/rules/no-check-stmt) — <code>#EC NO_CHECK_IN_LOOP</code>
+* [Limit Control Flow Block Nesting Depth](/rules/max-nesting) — <code>#EC MAX_NESTING</code>
+* [Replace Single-Branch CASE Statements with IF Conditions](/rules/no-single-when) — <code>#EC NO_SINGLE_WHEN</code>
+* [Avoid CHECK Statements Inside and Outside Iteration Loops](/rules/no-check-stmt) — <code>#EC NO_CHECK_IN_LOOP</code>
 
 ## Technical Details
 

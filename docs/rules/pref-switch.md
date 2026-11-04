@@ -1,13 +1,13 @@
 ---
-title: "Prefer SWITCH #( ) Expression over CASE Statement"
-description: "Prefer SWITCH #( ) Expression over CASE Statement - Clean ABAP guidelines, modern SAP syntax rules, and automated ATC code inspection for SAP S/4HANA and ABAP Cloud."
-keywords: "Clean ABAP, SAP ATC Check, ABAP Cloud, S/4HANA Readiness, pref-switch, clean-abap"
+title: "Convert Pure CASE Mappings into SWITCH Expressions"
+description: "Replace CASE blocks whose WHEN branches only assign one variable with a compact SWITCH constructor expression."
+keywords: "pref-switch, SWITCH, CASE WHEN, constructor expression, ABAP Cloud"
 category: "clean-abap"
 ruleId: "pref-switch"
 customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L329"
 ---
 
-# Prefer SWITCH #( ) Expression over CASE Statement
+# Convert Pure CASE Mappings into SWITCH Expressions
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
@@ -26,27 +26,27 @@ Prefer SWITCH #( ) expression over CASE statement.
 
 ## Rationale
 
-A CASE statement whose branches only assign a result is a verbose value mapping: it repeats the assignment variable in every branch. SWITCH #( ) makes the input value and all possible results visible in one expression and avoids temporary state. Use SWITCH for pure mappings and CASE when a branch contains several statements or side effects.
+A CASE statement whose WHEN branches only assign the same variable is a lookup table disguised as control flow: the operand, the branches and the ENDCASE all add noise around one value. The check verifies that every branch holds exactly one assignment to the same target and reports PREF_SWTCH, then the USESWITCH quickfix rewrites the complete CASE..ENDCASE block into a SWITCH expression. The result assigns once, cannot fall through and can be passed directly to a method or constructor expression.
 
 ### Non-Compliant
 
 ```abap
-CASE lv_status.
+CASE lv_delivery_status.
   WHEN 'O'.
-    lv_text = 'Open'.
-  WHEN 'C'.
-    lv_text = 'Closed'.
+    lv_status_text = 'Open'.
+  WHEN 'S'.
+    lv_status_text = 'Shipped'.
   WHEN OTHERS.
-    lv_text = 'Unknown'.
+    lv_status_text = 'Unknown'.
 ENDCASE.
 ```
 
 ### Compliant
 
 ```abap
-lv_text = SWITCH string( lv_status
+lv_status_text = SWITCH string( lv_delivery_status
   WHEN 'O' THEN 'Open'
-  WHEN 'C' THEN 'Closed'
+  WHEN 'S' THEN 'Shipped'
   ELSE 'Unknown' ).
 ```
 
@@ -63,7 +63,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value | Description & Guidance |
 |---|---|:---:|---|
-| `REQUIRE_OTHERS` | `Boolean` | <code>false</code> | Require explicit WHEN OTHERS branch in SWITCH #( ... ) to handle missing states |
+| `REQUIRE_OTHERS` | `Boolean` | <code>false</code> | Only report CASE blocks that already contain a WHEN OTHERS branch. Enable when the SWITCH replacement must be total and unhandled states must stay visible. |
 
 ## Suppression
 
@@ -77,12 +77,18 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_PREF_SWITCH
 ```
 
+## When the Rule Fires
+
+The CASE block must consist only of `WHEN` branches, each containing exactly one assignment to the same target variable, followed directly by `ENDCASE`. Branches with several statements, method calls or different targets keep the CASE statement, which remains the correct tool for statement sequences and side effects.
+
+With `REQUIRE_OTHERS` enabled only blocks that already contain `WHEN OTHERS` are reported, so the migration cannot hide an unhandled state behind an implicit ELSE. The `USESWITCH` quickfix replaces the entire block, including the fallback.
+
 
 ## Related Rules
 
 * [Prefer CASE over Multiple IF / ELSEIF on the Same Variable](/rules/pref-case) — <code>#EC PREF_CASE</code>
-* [Prefer COND #( ) Expression over IF/ELSEIF/ELSE](/rules/pref-cond) — <code>#EC PREF_COND</code>
-* [Avoid CASE with a Single WHEN Branch](/rules/no-single-when) — <code>#EC NO_SINGLE_WHEN</code>
+* [Collapse Value-Mapping IF Chains into COND](/rules/pref-cond) — <code>#EC PREF_COND</code>
+* [Replace Single-Branch CASE Statements with IF Conditions](/rules/no-single-when) — <code>#EC NO_SINGLE_WHEN</code>
 
 ## Technical Details
 

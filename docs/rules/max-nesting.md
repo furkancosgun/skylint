@@ -1,20 +1,20 @@
 ---
-title: "Limit Control Flow Nesting Depth (Guard Clause Enforcement)"
-description: "Eliminate arrow antipattern in ABAP by enforcing control flow nesting depth limits and adopting guard clauses."
-keywords: "Control flow nesting ABAP, Arrow Antipattern SAP, Guard Clauses ABAP, Clean ABAP Nesting Limits"
+title: "Limit Control Flow Block Nesting Depth"
+description: "Enforce control flow nesting depth limits in ABAP methods to eliminate arrow antipatterns and promote clean guard clauses."
+keywords: "max-nesting, Clean ABAP, guard clauses, control flow nesting, SAP ATC"
 category: "metrics"
 ruleId: "max-nesting"
-customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1745"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1754"
 ---
 
-# Limit Control Flow Nesting Depth (Guard Clause Enforcement)
+# Limit Control Flow Block Nesting Depth
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Metrics & Complexity Limits" />
   <Badge type="danger" text="#EC MAX_NESTING" />
   <Badge type="info" text="Remote Enabled" />
-  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1745" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L1754" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -25,21 +25,20 @@ Nesting Depth Limit (excessive control block nesting).
 
 ## Rationale
 
-Deeply nested control structures (`IF`, `LOOP`, `CASE`, `DO`, `TRY`) create the dreaded "Arrow Antipattern". Code drifts to the right edge of the editor, mental stack load increases exponentially, and error handling branches become difficult to trace.
-
-**Clean ABAP Guideline:** Invert conditional checks and use **Guard Clauses** (`RETURN`, `CONTINUE`) at the top of methods and loops. Aim for a maximum nesting depth of 2 to 3 levels.
+Deeply nested control structures (such as `IF`, `CASE`, `LOOP`, `DO`, `WHILE`, and `TRY`) cause the 'Arrow Antipattern', where code drifts heavily toward the right margin of the editor. Each level of nesting multiplies the developer's cognitive load, obscures error handling branches, and drastically increases the number of execution permutations that must be exercised during automated unit testing. Clean ABAP mandates flat control flow: inverting conditions and adopting guard clauses with early `RETURN`, `EXIT`, or `CONTINUE` statements keeps the happy path unindented and transparent.
 
 ### Non-Compliant
 
 ```abap
-" Anti-pattern: 4 levels deep nesting (Arrow Pattern)
-METHOD process_item.
-  IF is_item-active = abap_true.
-    IF is_item-quantity > 0.
-      IF is_customer_eligible( is_item-customer_id ) = abap_true.
-        execute_booking( is_item ).
+METHOD process_customer_order.
+  IF is_order-is_active = abap_true.
+    LOOP AT is_order-items INTO DATA(ls_item).
+      IF ls_item-quantity > 0.
+        IF ls_item-is_blocked = abap_false.
+          reserve_inventory_stock( ls_item ).
+        ENDIF.
       ENDIF.
-    ENDIF.
+    ENDLOOP.
   ENDIF.
 ENDMETHOD.
 ```
@@ -47,21 +46,18 @@ ENDMETHOD.
 ### Compliant
 
 ```abap
-" Clean ABAP: Flat, linear flow using early return guard clauses
-METHOD process_item.
-  IF is_item-active = abap_false.
+METHOD process_customer_order.
+  IF is_order-is_active = abap_false.
     RETURN.
   ENDIF.
 
-  IF is_item-quantity <= 0.
-    RETURN.
-  ENDIF.
+  LOOP AT is_order-items INTO DATA(ls_item).
+    IF ls_item-quantity <= 0 OR ls_item-is_blocked = abap_true.
+      CONTINUE.
+    ENDIF.
 
-  IF is_customer_eligible( is_item-customer_id ) = abap_false.
-    RETURN.
-  ENDIF.
-
-  execute_booking( is_item ).
+    reserve_inventory_stock( ls_item ).
+  ENDLOOP.
 ENDMETHOD.
 ```
 
@@ -71,7 +67,7 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value | Description & Guidance |
 |---|---|:---:|---|
-| `MAX_DEPTH` | `Integer` | <code>3</code> | Maximum allowable nesting depth of IF/CASE/LOOP/DO/WHILE/TRY control blocks |
+| `MAX_DEPTH` | `Integer` | <code>3</code> | Maximum allowable nesting depth for control blocks (IF, CASE, LOOP, DO, WHILE, TRY) before reporting (default: 3). |
 
 ## Suppression
 
@@ -85,18 +81,32 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_MAX_NESTING
 ```
 
+## Monitored Block Keywords
+
+The check tracks nesting depth dynamically across all procedure statements:
+
+- **Increments Depth:** `IF`, `CASE`, `LOOP`, `DO`, `WHILE`, and `TRY`.
+- **Decrements Depth:** `ENDIF`, `ENDCASE`, `ENDLOOP`, `ENDDO`, `ENDWHILE`, and `ENDTRY`.
+
+| Finding Code | Severity | Trigger | Suppression |
+|---|---|---|---|
+| `MAX_NEST` | Warning | Block statement nested beyond `MAX_DEPTH` (default 3 levels) | `##MAX_NESTING` or `"#EC MAX_NESTING` |
+
+### Guard Clause Refactoring
+Instead of nesting positive checks deeply, invert preconditions at the start of the procedure and exit immediately via `RETURN` or `CONTINUE`.
+
 
 ## Related Rules
 
-* [Limit Class Inheritance Depth (Favor Composition over Inheritance)](/rules/max-inherit) — <code>#EC MAX_INHERIT</code>
+* [Limit Class Inheritance Depth and Favor Object Composition](/rules/max-inherit) — <code>#EC MAX_INHERIT</code>
 * [Limit Boolean Expression Complexity in Conditional Statements](/rules/max-bool-expr) — <code>#EC MAX_BOOL_EXPR</code>
-* [Limit Cyclomatic Complexity (McCabe Complexity Metric)](/rules/max-cyclo-comp) — <code>#EC MAX_CYCLO_COMP</code>
+* [Limit McCabe Cyclomatic Complexity per Procedure](/rules/max-cyclo-comp) — <code>#EC MAX_CYCLO_COMP</code>
 
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_MAX_NESTING`
 * **ABAP Implementation:** [/skyl/cl_max_nesting.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_max_nesting.clas.abap)
-* **Rule Metadata:** [rules-data.mjs (Line 1745)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L1745)
+* **Rule Metadata:** [rules-data.mjs (Line 1754)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L1754)
 
 ## Community & Feedback
 

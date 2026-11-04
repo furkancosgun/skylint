@@ -1,20 +1,20 @@
 ---
-title: "Avoid Static State (CLASS-DATA and STATICS)"
-description: "Detect CLASS-DATA attributes and STATICS variables in ABAP, highlighting hidden global state that breaks test isolation and dependency clarity."
-keywords: "ABAP CLASS-DATA, ABAP STATICS, static state anti-pattern, SAP ATC check global state, ABAP test isolation"
+title: "Avoid Mutable Static State via CLASS-DATA and STATICS"
+description: "Detect mutable CLASS-DATA and STATICS in ABAP to prevent hidden session state and unit test interference."
+keywords: "ABAP STATICS, CLASS-DATA, global state anti-pattern, Clean ABAP, SAP ATC check, no-static-state"
 category: "anti-patterns"
 ruleId: "no-static-state"
-customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4429"
+customEditUrl: "https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4537"
 ---
 
-# Avoid Static State (CLASS-DATA and STATICS)
+# Avoid Mutable Static State via CLASS-DATA and STATICS
 
 <div style="margin-top: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
   <Badge type="warning" text="Warning" />
   <Badge type="tip" text="Anti-Patterns & Bad Practices" />
   <Badge type="danger" text="#EC NO_STATIC_STATE" />
   <Badge type="info" text="Remote Enabled" />
-  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4429" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
+  <a href="https://github.com/furkancosgun/skylint/edit/main/scripts/rules-data.mjs#L4537" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--vp-c-default-soft); color: var(--vp-c-text-2); text-decoration: none;">✏️ Edit Rule on GitHub</a>
 </div>
 
 ## Overview
@@ -25,26 +25,20 @@ Avoid CLASS-DATA and STATICS state.
 
 ## Rationale
 
-Static state survives between calls and is shared by every caller in the internal session, which makes behavior order-dependent and lets unit tests interfere with each other. CLASS-DATA and STATICS also hide dependencies: a method looks self-contained while it silently reads or mutates global memory. Keep state in instances that are injected, or pass it explicitly, so lifecycles stay visible and tests stay isolated.
+Static state defined with CLASS-DATA or STATICS persists across procedure executions for the entire user session, coupling unrelated processes and introducing non-deterministic failures in unit tests. Hidden global state breaks idempotence and concurrency guarantees in ABAP Cloud stateless runtime containers. State should reside within instance attributes or be transferred explicitly via method parameters.
 
 ### Non-Compliant
 
 ```abap
-CLASS-DATA gv_counter TYPE i.
-
-METHOD increment.
-  STATICS sv_calls TYPE i.
-  sv_calls = sv_calls + 1.
-ENDMETHOD.
+STATICS sv_invoice_counter TYPE i.
+sv_invoice_counter = sv_invoice_counter + 1.
 ```
 
 ### Compliant
 
 ```abap
-METHOD increment
-  IMPORTING io_counter TYPE REF TO zcl_counter.
-  io_counter->increment( ).
-ENDMETHOD.
+DATA lv_invoice_counter TYPE i.
+lv_invoice_counter = lv_invoice_counter + 1.
 ```
 
 ## Configuration & Thresholds
@@ -53,8 +47,8 @@ This check can be fine-tuned directly in the ATC Check Variant Editor (`CHKV`) i
 
 | Parameter Name | Data Type | Default Value | Description & Guidance |
 |---|---|:---:|---|
-| `CHECK_CLASS_DATA` | `Boolean` | <code>true</code> | Detect CLASS-DATA attributes declared in class definitions |
-| `CHECK_STATICS` | `Boolean` | <code>true</code> | Detect STATICS variables declared inside methods, forms, and function modules |
+| `CHECK_CLASS_DATA` | `Boolean` | <code>true</code> | Flag CLASS-DATA declarations in class definitions to prevent static class-level memory state (default true). |
+| `CHECK_STATICS` | `Boolean` | <code>true</code> | Flag STATICS variable declarations inside methods, forms, and function modules (default true). |
 
 ## Suppression
 
@@ -68,18 +62,35 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 ... "#EC CI_NO_STATIC_STATE
 ```
 
+### Scanned declarations
+
+The check monitors static memory declarations across compilation units:
+
+| Statement | Scope | Governed By Parameter |
+| --- | --- | --- |
+| `CLASS-DATA` | Class definitions | `CHECK_CLASS_DATA` (default: `abap_true`) |
+| `STATICS` | Methods, function modules, and form routines | `CHECK_STATICS` (default: `abap_true`) |
+
+### Testability & Session Safety
+
+In modern ABAP Cloud systems, internal sessions can be reused across service calls or test executions. Retaining mutable variables in static memory leads to cross-test contamination and race conditions in multi-threaded ABAP environments. Use dependency injection and instance member attributes instead.
+
+### Suppression
+
+Legitimate performance caches or singleton registries can be suppressed with `"#EC NO_STATIC_STATE`.
+
 
 ## Related Rules
 
-* [Avoid Calling Static Methods via Instance References (->)](/rules/no-static-arrow) — <code>#EC NO_STATIC_ARROW</code>
-* [Enforce Class Attribute and Method Parameter Naming Conventions](/rules/pref-name-members) — <code>#EC PREF_NAME_MEMBERS</code>
-* [Limit Class Member Attribute Count (Prevent God Classes)](/rules/max-attributes) — <code>#EC MAX_ATTRIBUTES</code>
+* [Call Static Methods with Class Component Selector (=>)](/rules/no-static-arrow) — <code>#EC NO_STATIC_ARROW</code>
+* [Enforce Standard Naming Conventions for Class Members, Parameters and Screens](/rules/pref-name-members) — <code>#EC PREF_NAME_MEMBERS</code>
+* [Limit Class Member Attribute Count to Prevent God Objects](/rules/max-attributes) — <code>#EC MAX_ATTRIBUTES</code>
 
 ## Technical Details
 
 * **Native ATC Class:** `/SKYL/CL_NO_STATIC_STATE`
 * **ABAP Implementation:** [/skyl/cl_no_static_state.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_static_state.clas.abap)
-* **Rule Metadata:** [rules-data.mjs (Line 4429)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L4429)
+* **Rule Metadata:** [rules-data.mjs (Line 4537)](https://github.com/furkancosgun/skylint/blob/main/scripts/rules-data.mjs#L4537)
 
 ## Community & Feedback
 
