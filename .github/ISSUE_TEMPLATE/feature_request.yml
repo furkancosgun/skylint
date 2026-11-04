@@ -1,0 +1,115 @@
+name: Feature Request / Rule Proposal
+description: Suggest a new Clean ABAP rule, rule enhancement, QuickFix, or platform capability
+title: "[Proposal]: "
+labels: ["enhancement", "proposal"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping improve **Skylint**! Use this form to propose new Clean ABAP rules, QuickFix automations, or framework enhancements.
+
+  - type: dropdown
+    id: proposal_type
+    attributes:
+      label: Proposal Type
+      description: What kind of improvement are you proposing?
+      options:
+        - "New Clean ABAP Rule"
+        - "New Automated QuickFix for Existing Rule"
+        - "New Configuration Parameter / Attribute"
+        - "ATC / abapGit Framework Enhancement"
+        - "Variant Builder / Website Feature"
+        - "Other"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: rule_category
+    attributes:
+      label: Target Rule Category
+      description: If this is a rule proposal, which category does it best fit into?
+      options:
+        - "Clean ABAP & Modern Syntax (/SKYL/CLEAN_ABAP)"
+        - "Anti-Patterns & Bad Practices (/SKYL/ANTI_PATTERNS)"
+        - "Performance & Database (/SKYL/PERFORMANCE)"
+        - "Security & Robustness (/SKYL/SECURITY)"
+        - "Metrics & Complexity Limits (/SKYL/METRICS)"
+        - "Not Applicable / Core Framework"
+    validations:
+      required: true
+
+  - type: input
+    id: styleguide_ref
+    attributes:
+      label: Clean ABAP Styleguide Reference
+      description: Link to relevant Clean ABAP guidelines or SAP official documentation (if applicable).
+      placeholder: https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md#...
+    validations:
+      required: false
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation & Problem Statement
+      description: Why is this rule or feature needed? What bad pattern, bug, or inefficiency does it prevent?
+      placeholder: Explain the rationale, maintenance problem, or code readability issue...
+    validations:
+      required: true
+
+  - type: textarea
+    id: non_compliant_example
+    attributes:
+      label: Non-Compliant ABAP Code Example (What should be flagged)
+      description: Show an example of ABAP code that violates this standard.
+      render: abap
+      placeholder: |
+        " Bad / non-compliant code:
+        IF NOT lv_flag = abap_true.
+          ...
+        ENDIF.
+    validations:
+      required: false
+
+  - type: textarea
+    id: compliant_example
+    attributes:
+      label: Compliant ABAP Code Example (Clean ABAP alternative)
+      description: Show how the code should look after applying Clean ABAP principles or QuickFix.
+      render: abap
+      placeholder: |
+        " Clean ABAP compliant code:
+        IF lv_flag = abap_false.
+          ...
+        ENDIF.
+    validations:
+      required: false
+
+  - type: dropdown
+    id: default_severity
+    attributes:
+      label: Suggested Finding Severity
+      description: What should the default ATC finding severity be?
+      options:
+        - "Warning (Standard recommendation)"
+        - "Error (Critical violation / syntax risk)"
+        - "Note (Informational / stylistic hint)"
+        - "Not Applicable"
+    validations:
+      required: false
+
+  - type: input
+    id: suggested_pseudo_comment
+    attributes:
+      label: Suggested Pseudo-Comment / Pragma
+      description: What pseudo-comment or pragma should suppress this rule when needed?
+      placeholder: e.g. "#EC PREF_IS_INITIAL" or "##PREF_IS_INITIAL"
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Willingness to Contribute
+      options:
+        - label: I would be willing to submit a Pull Request implementing this rule/feature.
+        - label: I can provide real-world test cases and code fixtures for this proposal.

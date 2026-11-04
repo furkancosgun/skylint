@@ -1,0 +1,114 @@
+name: Bug Report
+description: Report a false positive, false negative, syntax crash, or incorrect QuickFix
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting an issue in **Skylint**! Please provide as much context as possible to help us reproduce and resolve the problem quickly.
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Bug Category
+      description: What type of issue are you encountering?
+      options:
+        - "False Positive (Finding raised on valid code)"
+        - "False Negative (Violation not detected)"
+        - "QuickFix Issue (Fix produces syntax error or invalid code)"
+        - "ATC Runtime / Transpiler Crash"
+        - "Documentation or Website Issue"
+        - "Other"
+    validations:
+      required: true
+
+  - type: input
+    id: rule_id
+    attributes:
+      label: Affected Rule
+      description: The rule ID or class name (e.g., `pref_lines`, `/SKYL/CL_PREF_LINES`, or "Core / AST Engine").
+      placeholder: e.g. /SKYL/CL_PREF_LINES
+    validations:
+      required: false
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: SAP / Execution Environment
+      description: Where are you running Skylint?
+      options:
+        - "SAP BTP ABAP Environment (Steampunk)"
+        - "SAP S/4HANA Cloud (Public Edition)"
+        - "SAP S/4HANA Cloud (Private Edition)"
+        - "SAP S/4HANA On-Premise 2022+"
+        - "Node.js Local Test Harness (npm test / transpiler)"
+        - "Eclipse ADT ATC Run"
+        - "Other"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the Bug
+      description: A clear and concise description of what the bug is.
+      placeholder: Describe what happened and why it is incorrect...
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproducible_code
+    attributes:
+      label: Minimal Reproducible ABAP Code Example
+      description: Provide a minimal, self-contained ABAP code snippet that triggers the issue.
+      render: abap
+      placeholder: |
+        CLASS zcl_test DEFINITION PUBLIC FINAL CREATE PUBLIC.
+          PUBLIC SECTION.
+            METHODS run.
+        ENDCLASS.
+        CLASS zcl_test IMPLEMENTATION.
+          METHOD run.
+            " Add code here that triggers the bug
+          ENDMETHOD.
+        ENDCLASS.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen instead?
+      placeholder: e.g., No finding should be raised because...
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual_behavior
+    attributes:
+      label: Actual Behavior / ATC Finding
+      description: What finding was reported, or what error was shown in the ATC result view or console?
+      placeholder: e.g., Finding PREFLINES reported at line 12 with severity Warning...
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Skylint Version / Commit
+      description: Which commit hash or version of Skylint are you using?
+      placeholder: e.g. main (commit abc1234) or v1.0.0
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Self-Check Checklist
+      options:
+        - label: I have searched existing GitHub issues and confirmed this is not a duplicate.
+          required: true
+        - label: The ABAP code compiles cleanly without standard SAP syntax errors.
+          required: true

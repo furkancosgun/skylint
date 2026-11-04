@@ -356,7 +356,11 @@ function downloadVariant() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `${vName.toLowerCase().replace(/\//g, '')}.chkv.json`;
+  const nsMatch = vName.match(/^\/([^/]+)\/(.+)$/);
+  const fileName = nsMatch
+    ? `(${nsMatch[1].toLowerCase()})${nsMatch[2].toLowerCase().replace(/[^a-z0-9_]/g, '_')}.chkv.json`
+    : `${vName.toLowerCase().replace(/[^a-z0-9_]/g, '_')}.chkv.json`;
+  a.download = fileName;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);

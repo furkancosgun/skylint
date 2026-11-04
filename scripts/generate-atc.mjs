@@ -46,6 +46,23 @@ export function generateAtcObjects() {
     fs.mkdirSync(atcDir, { recursive: true });
   }
 
+  // Ensure src/atc/package.devc.xml exists
+  const atcDevcPath = path.join(atcDir, 'package.devc.xml');
+  if (!fs.existsSync(atcDevcPath)) {
+    const atcDevcXml = `<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DEVC" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DEVC>
+    <CTEXT>Skylint ATC objects and variants</CTEXT>
+   </DEVC>
+  </asx:values>
+ </asx:abap>
+</abapGit>
+`;
+    fs.writeFileSync(atcDevcPath, atcDevcXml, 'utf8');
+  }
+
   // Clean up any stale files in src/rules/ and src/core/
   for (const d of [rulesDir, coreDir]) {
     if (fs.existsSync(d)) {

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Skylint Documentation & Rule Catalog
+    url: https://furkancosgun.github.io/skylint/
+    about: Browse documentation, all 197 Clean ABAP rules, and the interactive Variant Builder.
+  - name: Clean ABAP Official Styleguide
+    url: https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md
+    about: Read the official SAP Clean ABAP styleguide on GitHub.
