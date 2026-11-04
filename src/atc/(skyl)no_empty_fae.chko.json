@@ -1,0 +1,10 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Unsecure FOR ALL ENTRIES (Missing empty itab check)",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/PERFORMANCE",
+  "implementingClass": "/SKYL/CL_NO_EMPTY_FAE",
+  "checkType": "remoteEnabled"
+}

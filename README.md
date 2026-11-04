@@ -29,7 +29,7 @@
 - **🏛️ Native SAP ATC Core:** Every check implements `if_ci_atc_check` directly and is discoverable by standard ATC transactions (`ATC`, `SCI`) and Eclipse ADT.
 - **☁️ 197 Clean ABAP & Cloud Rules:** Comprehensive coverage across modern ABAP expressions, syntax modernizations, SQL performance, security, and clean architecture.
 - **⚡ Instant QuickFixes:** Built-in QuickFix generation for rapid, automated refactoring directly from Eclipse ADT (`Ctrl + 1`).
-- **🛡️ Zero-Boilerplate Architecture:** Shared base class (`zcl_skylint_check_base`) automatically manages statement iteration, checksum calculation, finding locations, and pseudo-comment suppression.
+- **🛡️ Zero-Boilerplate Architecture:** Shared base class (`/skyl/cl_rule_base`) automatically manages statement iteration, checksum calculation, finding locations, and pseudo-comment suppression.
 - **🚀 High-Fidelity Offline CI Harness:** Runs transpiled checks through full AST and compiler-reference resolution pipelines offline, validating 1,055 test assertions and QuickFix round-trips without requiring a live SAP backend.
 
 ---
@@ -42,11 +42,11 @@ Skylint is distributed as standard ABAP Cloud source code and can be imported di
    - Add this repository (`https://github.com/furkancosgun/skylint.git`) as an online repository in **abapGit**.
    - Pull the repository to create the core classes, checks, and generated ATC objects.
 2. **Activate Objects:**
-   - Activate all classes under packages `ZCL_SKYLINT_*`.
+   - Activate all classes under packages `/SKYL/CL_*`.
 3. **Configure ATC Check Variant:**
    - Open transaction `SCI` or `ATC` in SAP GUI (or configure ATC in Eclipse ADT).
-   - Create or edit an ATC Check Variant (or use the included variant `ZSKYLINT_DEFAULT`).
-   - Enable the desired Skylint checks located under the Skylint category (`ZSKYLINT`).
+   - Create or edit an ATC Check Variant (or use the included variant `/SKYL/DEFAULT`).
+   - Enable the desired Skylint rules located under the Skylint category (`/SKYL/MAIN`).
 4. **Run Checks:**
    - Run the ATC variant on your packages, programs, or classes via Eclipse ADT (`Alt + Shift + C, C`) or standard ATC runs.
 
@@ -93,7 +93,7 @@ Explore the complete interactive catalog with detailed rationales, configuration
 
 ## 🛠️ Architecture & Core Components
 
-Each check inherits from `zcl_skylint_check_base` and focuses strictly on its AST inspection logic:
+Each check inherits from `/skyl/cl_rule_base` and focuses strictly on its AST inspection logic:
 
 ```
                   ┌───────────────────────────────┐
@@ -101,19 +101,19 @@ Each check inherits from `zcl_skylint_check_base` and focuses strictly on its AS
                   └───────────────▲───────────────┘
                                   │
                   ┌───────────────┴───────────────┐
-                  │     zcl_skylint_check_base    │  (Procedure Loop, Locations,
+                  │     /skyl/cl_rule_base    │  (Procedure Loop, Locations,
                   └───────────────▲───────────────┘   Suppressions, QuickFix Context)
                                   │
      ┌────────────────────────────┼────────────────────────────┐
      │                            │                            │
 ┌────┴─────────────────┐ ┌────────┴──────────────┐ ┌───────────┴───────────────┐
-│ zcl_skylint_ast_util │ │ zcl_skylint_rtti_util │ │ zcl_skylint_check_meta_data │
+│ /skyl/cl_ast_util │ │ /skyl/cl_rtti_util │ │ /skyl/cl_meta_data │
 └──────────────────────┘ └───────────────────────┘ └───────────────────────────┘
 ```
 
-- **`zcl_skylint_check_base`**: Base implementation of `if_ci_atc_check~run`. Exposes concise reporting methods (`report_statement`, `report_token`, `quickfix_replace`) and coordinates finding codes, severities, and pseudo-comments.
-- **`zcl_skylint_ast_util`**: Robust AST inspection library providing token lookup, sequence matching (`find_token_sequence`), keyword validation with empty-reference guarantees, and statement classification.
-- **`zcl_skylint_rtti_util`**: Safe ABAP Run-Time Type Identification wrapper for class hierarchy analysis (`get_super_classes`). Note: rules utilizing RTTI are configured with `remote_enablement = abap_false`.
+- **`/skyl/cl_rule_base`**: Base implementation of `if_ci_atc_check~run`. Exposes concise reporting methods (`report_statement`, `report_token`, `quickfix_replace`) and coordinates finding codes, severities, and pseudo-comments.
+- **`/skyl/cl_ast_util`**: Robust AST inspection library providing token lookup, sequence matching (`find_token_sequence`), keyword validation with empty-reference guarantees, and statement classification.
+- **`/skyl/cl_rtti_util`**: Safe ABAP Run-Time Type Identification wrapper for class hierarchy analysis (`get_super_classes`). Note: rules utilizing RTTI are configured with `remote_enablement = abap_false`.
 
 ---
 
@@ -151,8 +151,8 @@ The test harness automatically applies every emitted QuickFix to the test fixtur
 
 To author a new check rule, follow the standards defined in [AGENTS.md](AGENTS.md):
 
-1. **Check Implementation:** Create `src/checks/zcl_skylint_XXX.clas.abap` inheriting from `zcl_skylint_check_base`.
-2. **Class Metadata:** Create `src/checks/zcl_skylint_XXX.clas.xml`.
+1. **Check Implementation:** Create `src/checks//skyl/cl_xxx.clas.abap` inheriting from `/skyl/cl_rule_base`.
+2. **Class Metadata:** Create `src/checks//skyl/cl_xxx.clas.xml`.
 3. **Fixture Suite:** Create `test/fixtures/<check-suffix>/source.abap` and `test/fixtures/<check-suffix>/expected.json` (e.g. `test/fixtures/pref_lines/`).
 4. **Catalog Registration:** Register the check metadata and rationale in `scripts/rules-data.mjs`.
 5. **Validation:** Run `npm run index` followed by `npm test` to verify 0 lint errors, green test execution, and valid QuickFix round-trips.

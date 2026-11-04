@@ -1,0 +1,18 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Provide FAILED and REPORTED in RAP EML statements",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/SECURITY",
+  "implementingClass": "/SKYL/CL_NO_UNHANDLED_EML",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "CHECK_MODIFY"
+    },
+    {
+      "name": "CHECK_READ"
+    }
+  ]
+}

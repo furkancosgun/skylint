@@ -1,0 +1,10 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Avoid BYPASSING BUFFER in SELECT statements",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/PERFORMANCE",
+  "implementingClass": "/SKYL/CL_NO_BYPASS_BUF",
+  "checkType": "remoteEnabled"
+}

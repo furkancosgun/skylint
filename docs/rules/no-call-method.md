@@ -70,5 +70,5 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ## Technical Details
 
-* **Native ATC Class:** `ZCL_SKYLINT_NO_CALL_METHOD`
-* **Implementation File:** [zcl_skylint_no_call_method.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_call_method.clas.abap)
+* **Native ATC Class:** `/SKYL/CL_NO_CALL_METHOD`
+* **Implementation File:** [#skyl#cl_no_call_method.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_call_method.clas.abap)

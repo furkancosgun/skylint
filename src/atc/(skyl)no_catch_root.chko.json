@@ -1,0 +1,10 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Catch specific exceptions instead of generic cx_root",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/SECURITY",
+  "implementingClass": "/SKYL/CL_NO_CATCH_ROOT",
+  "checkType": "remoteEnabled"
+}

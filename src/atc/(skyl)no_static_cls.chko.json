@@ -1,0 +1,10 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Avoid static-only classes; use instantiable classes",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/ANTI_PATTERNS",
+  "implementingClass": "/SKYL/CL_NO_STATIC_CLS",
+  "checkType": "remoteEnabled"
+}

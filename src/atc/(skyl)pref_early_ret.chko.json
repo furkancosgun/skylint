@@ -1,0 +1,21 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Prefer early return or continue over nested IF blocks",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/CLEAN_ABAP",
+  "implementingClass": "/SKYL/CL_PREF_EARLY_RET",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "CHECK_METHOD_RETURN"
+    },
+    {
+      "name": "CHECK_LOOP_CONTINUE"
+    },
+    {
+      "name": "REPORT_ELSEIF"
+    }
+  ]
+}

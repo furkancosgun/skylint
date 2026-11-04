@@ -1,0 +1,27 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Obsolete String and Regex Statements",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/ANTI_PATTERNS",
+  "implementingClass": "/SKYL/CL_NO_OBS_STRINGS",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "CHECK_PACK"
+    },
+    {
+      "name": "CHECK_UNPACK"
+    },
+    {
+      "name": "CHECK_REGEX"
+    },
+    {
+      "name": "CHECK_OCCURENCES"
+    },
+    {
+      "name": "CHECK_REPLACE_INTO"
+    }
+  ]
+}

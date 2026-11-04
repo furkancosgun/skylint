@@ -10,7 +10,7 @@ const filterOnlyConfigurable = ref(false);
 const filterOnlyQuickfix = ref(false);
 const filterOnlyRemoteEnabled = ref(false);
 
-const variantName = ref('ZSKYLINT_CUSTOM');
+const variantName = ref('/SKYL/CUSTOM');
 const variantDescription = ref('Custom Skylint Clean ABAP Variant');
 const abapLanguageVersion = ref('standard');
 
@@ -198,7 +198,7 @@ function resetDefaults() {
       }
     }
   }
-  variantName.value = 'ZSKYLINT_CUSTOM';
+  variantName.value = '/SKYL/CUSTOM';
   variantDescription.value = 'Custom Skylint Clean ABAP Variant';
   abapLanguageVersion.value = 'standard';
 }
@@ -308,7 +308,7 @@ function highlightJson(json) {
 }
 
 function generateVariantObject() {
-  const vName = (variantName.value || 'ZSKYLINT_CUSTOM').trim().toUpperCase();
+  const vName = (variantName.value || '/SKYL/CUSTOM').trim().toUpperCase();
   const selectedChecks = [];
 
   for (const rule of rulesData) {
@@ -349,14 +349,14 @@ function generateVariantObject() {
 }
 
 function downloadVariant() {
-  const vName = (variantName.value || 'ZSKYLINT_CUSTOM').trim().toUpperCase();
+  const vName = (variantName.value || '/SKYL/CUSTOM').trim().toUpperCase();
   const chkvObj = generateVariantObject();
   const jsonStr = JSON.stringify(chkvObj, null, 2);
   const blob = new Blob([jsonStr], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `${vName.toLowerCase()}.chkv.json`;
+  a.download = `${vName.toLowerCase().replace(/\//g, '')}.chkv.json`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
@@ -506,7 +506,7 @@ async function copyPseudo(pseudo) {
             v-model="variantName"
             type="text"
             class="vb-input vb-input-mono"
-            placeholder="ZSKYLINT_CUSTOM"
+            placeholder="/SKYL/CUSTOM"
             @input="variantName = variantName.toUpperCase()"
           />
         </div>
@@ -771,7 +771,7 @@ async function copyPseudo(pseudo) {
       <div class="vb-review-grid">
         <div class="vb-review-item">
           <span class="vb-review-label">Variant name</span>
-          <strong class="vb-review-value">{{ variantName || 'ZSKYLINT_CUSTOM' }}</strong>
+          <strong class="vb-review-value">{{ variantName || '/SKYL/CUSTOM' }}</strong>
         </div>
         <div class="vb-review-item">
           <span class="vb-review-label">Language version</span>

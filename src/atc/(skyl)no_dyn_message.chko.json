@@ -1,0 +1,10 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Avoid Dynamic MESSAGE Statements",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/CLEAN_ABAP",
+  "implementingClass": "/SKYL/CL_NO_DYN_MESSAGE",
+  "checkType": "remoteEnabled"
+}

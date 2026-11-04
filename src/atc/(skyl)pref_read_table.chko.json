@@ -1,0 +1,18 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Modernize READ TABLE (table expressions & line_exists)",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/CLEAN_ABAP",
+  "implementingClass": "/SKYL/CL_PREF_READ_TABLE",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "CHECK_TAB_EXPR"
+    },
+    {
+      "name": "CHECK_LINE_EXISTS"
+    }
+  ]
+}

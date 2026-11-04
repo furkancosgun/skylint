@@ -32,12 +32,12 @@ Skylint is installed directly into your SAP system as native ATC checks via abap
      ```
      https://github.com/furkancosgun/skylint.git
      ```
-   - Target package: e.g., `ZSKYLINT` (or your organization's custom package namespace).
+   - Target package: e.g., `/SKYL/` (SAP open-source namespace, see the abapGit section).
    - Pull the `main` branch into your system and activate all objects.
 
 3. **Verify Installation:**
-   - In Eclipse ADT, search for classes prefixed with `ZCL_SKYLINT_`.
-   - All check classes inherit from `ZCL_SKYLINT_CHECK_BASE` and are immediately ready for ATC variant assignment.
+   - In Eclipse ADT, search for classes prefixed with `/SKYL/CL_`.
+   - All check classes inherit from `/SKYL/CL_RULE_BASE` and are immediately ready for ATC variant assignment.
 
 ---
 

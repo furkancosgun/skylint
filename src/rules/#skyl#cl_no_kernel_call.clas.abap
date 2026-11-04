@@ -1,0 +1,63 @@
+CLASS /skyl/cl_no_kernel_call DEFINITION
+  PUBLIC
+  INHERITING FROM /skyl/cl_rule_base
+  CREATE PUBLIC.
+
+  PUBLIC SECTION.
+    CONSTANTS:
+      BEGIN OF c_finding_codes,
+        kernel_call TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_KERNEL',
+      END OF c_finding_codes.
+
+    METHODS constructor.
+
+  PROTECTED SECTION.
+    METHODS execute REDEFINITION.
+
+  PRIVATE SECTION.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_KERNEL_CALL'.
+
+ENDCLASS.
+
+
+CLASS /skyl/cl_no_kernel_call IMPLEMENTATION.
+  METHOD constructor.
+    super->constructor( VALUE #( description       = 'Avoid Kernel and Native Calls'
+                                 remote_enablement = abap_true
+                                 finding_codes     = VALUE #(
+                                     ( code           = c_finding_codes-kernel_call
+                                       severity       = if_ci_atc_check=>finding_severities-warning
+                                       text           = 'Avoid internal kernel calls (CALL, SYSTEM-CALL, EXEC SQL)'
+                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+  ENDMETHOD.
+
+  METHOD execute.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      CASE <ls_statement>-keyword.
+        WHEN 'SYSTEM-CALL'.
+          report_statement( is_statement    = <ls_statement>
+                            iv_finding_code = c_finding_codes-kernel_call ).
+
+        WHEN 'CALL'.
+          IF /skyl/cl_ast_util=>token_is_literal( /skyl/cl_ast_util=>get_token( is_statement = <ls_statement>
+                                                                                      iv_index     = 2 ) ) = abap_true.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-kernel_call ).
+          ENDIF.
+        WHEN 'EXEC'.
+          IF /skyl/cl_ast_util=>matches_token_at( is_statement = <ls_statement>
+                                                     iv_index     = 2
+                                                     iv_expected  = `SQL` ) = abap_true.
+            report_statement( is_statement    = <ls_statement>
+                              iv_finding_code = c_finding_codes-kernel_call ).
+          ENDIF.
+      ENDCASE.
+    ENDLOOP.
+  ENDMETHOD.
+ENDCLASS.

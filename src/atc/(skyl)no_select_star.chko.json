@@ -1,0 +1,10 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Avoid SELECT * (specify columns explicitly)",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/PERFORMANCE",
+  "implementingClass": "/SKYL/CL_NO_SELECT_STAR",
+  "checkType": "remoteEnabled"
+}

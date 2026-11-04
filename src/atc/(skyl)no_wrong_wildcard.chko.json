@@ -1,0 +1,18 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Avoid wrong wildcards in LIKE, CP, and NP",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/ANTI_PATTERNS",
+  "implementingClass": "/SKYL/CL_NO_WRONG_WILDCARD",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "CHECK_LIKE"
+    },
+    {
+      "name": "CHECK_CP"
+    }
+  ]
+}

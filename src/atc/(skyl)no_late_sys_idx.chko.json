@@ -1,0 +1,10 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Avoid late access to sy-tabix or sy-index inside loops",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/ANTI_PATTERNS",
+  "implementingClass": "/SKYL/CL_NO_LATE_SYS_IDX",
+  "checkType": "remoteEnabled"
+}

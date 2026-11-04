@@ -1,0 +1,21 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Avoid Hungarian notation and encoding prefixes",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/CLEAN_ABAP",
+  "implementingClass": "/SKYL/CL_NO_HUNGARIAN",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "CHECK_ATTR"
+    },
+    {
+      "name": "CHECK_LOCAL"
+    },
+    {
+      "name": "CHECK_PARAM"
+    }
+  ]
+}

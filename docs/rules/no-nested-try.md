@@ -72,5 +72,5 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ## Technical Details
 
-* **Native ATC Class:** `ZCL_SKYLINT_NO_NESTED_TRY`
-* **Implementation File:** [zcl_skylint_no_nested_try.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_nested_try.clas.abap)
+* **Native ATC Class:** `/SKYL/CL_NO_NESTED_TRY`
+* **Implementation File:** [#skyl#cl_no_nested_try.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_nested_try.clas.abap)

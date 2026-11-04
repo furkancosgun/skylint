@@ -1,0 +1,15 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Limit type fan-out per procedure",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/METRICS",
+  "implementingClass": "/SKYL/CL_MAX_FANOUT",
+  "checkType": "local",
+  "parameters": [
+    {
+      "name": "MAX_FANOUT"
+    }
+  ]
+}

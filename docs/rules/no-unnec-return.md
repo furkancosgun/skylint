@@ -71,5 +71,5 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ## Technical Details
 
-* **Native ATC Class:** `ZCL_SKYLINT_NO_UNNEC_RETURN`
-* **Implementation File:** [zcl_skylint_no_unnec_return.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_unnec_return.clas.abap)
+* **Native ATC Class:** `/SKYL/CL_NO_UNNEC_RETURN`
+* **Implementation File:** [#skyl#cl_no_unnec_return.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_unnec_return.clas.abap)

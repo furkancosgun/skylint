@@ -1,0 +1,18 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Modernize Downcasting (CAST #( ) & inlining)",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/CLEAN_ABAP",
+  "implementingClass": "/SKYL/CL_PREF_DOWNCAST",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "CHECK_CAST_SYNTAX"
+    },
+    {
+      "name": "CHECK_INLINE_CAST"
+    }
+  ]
+}

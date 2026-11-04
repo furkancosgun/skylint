@@ -1,0 +1,15 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Prefer BETWEEN for inclusive range checks",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/CLEAN_ABAP",
+  "implementingClass": "/SKYL/CL_PREF_BETWEEN",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "STRICT_RANGE"
+    }
+  ]
+}

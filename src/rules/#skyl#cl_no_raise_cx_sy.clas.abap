@@ -1,0 +1,86 @@
+CLASS /skyl/cl_no_raise_cx_sy DEFINITION
+  PUBLIC
+  INHERITING FROM /skyl/cl_rule_base
+  CREATE PUBLIC.
+
+  PUBLIC SECTION.
+    CONSTANTS:
+      BEGIN OF c_finding_codes,
+        raise_sys TYPE if_ci_atc_check=>ty_finding_code VALUE 'NO_RAIS_SY',
+      END OF c_finding_codes.
+
+    METHODS constructor.
+
+  PROTECTED SECTION.
+    METHODS execute REDEFINITION.
+
+  PRIVATE SECTION.
+    CONSTANTS c_pseudo_comment TYPE string VALUE 'NO_RAISE_CX_SY'.
+
+    METHODS raises_system_exception
+      IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
+      RETURNING VALUE(rv_yes) TYPE abap_bool.
+
+    METHODS is_system_exception_token
+      IMPORTING is_token      TYPE if_ci_atc_source_code_provider=>ty_token
+      RETURNING VALUE(rv_yes) TYPE abap_bool.
+ENDCLASS.
+
+
+CLASS /skyl/cl_no_raise_cx_sy IMPLEMENTATION.
+  METHOD constructor.
+    super->constructor(
+        VALUE #( description       = 'Avoid raising SAP internal system exceptions (cx_sy_*)'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #(
+                     ( code           = c_finding_codes-raise_sys
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Avoid raising SAP internal system exceptions; use application exceptions'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
+  ENDMETHOD.
+
+  METHOD execute.
+    FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
+
+    IF is_procedure-id-kind = if_ci_atc_source_code_provider=>procedure_kinds-class_definition.
+      RETURN.
+    ENDIF.
+
+    LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
+      IF <ls_statement>-keyword <> 'RAISE'.
+        CONTINUE.
+      ENDIF.
+      IF raises_system_exception( <ls_statement> ) = abap_true.
+        report_statement( is_statement    = <ls_statement>
+                          iv_finding_code = c_finding_codes-raise_sys ).
+      ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD raises_system_exception.
+    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
+
+    rv_yes = abap_false.
+
+    IF /skyl/cl_ast_util=>match_token_sequence( is_statement = is_statement
+                                                   it_expected  = VALUE #( ( `RAISE` ) ( `EXCEPTION` ) ) ) = abap_false.
+      RETURN.
+    ENDIF.
+
+    ls_token = /skyl/cl_ast_util=>get_token( is_statement = is_statement
+                                                iv_index     = 4 ).
+
+    IF ls_token IS NOT INITIAL.
+      rv_yes = is_system_exception_token( ls_token ).
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD is_system_exception_token.
+    DATA ls_ref TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
+
+    ls_ref = /skyl/cl_ast_util=>get_reference(
+                 is_token = is_token
+                 iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-type ).
+    rv_yes = xsdbool( ls_ref-full_name CP '\TY:CX_SY_*' ).
+  ENDMETHOD.
+ENDCLASS.

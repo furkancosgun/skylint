@@ -3,7 +3,7 @@ import path from 'node:path';
 import { execSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { RULES, CATEGORIES } from './rules-data.mjs';
-import { extractAttributes, isRemoteEnabled } from './check-metadata.mjs';
+import { extractAttributes, isRemoteEnabled, ruleFileBase, ruleShortName } from './rule-metadata.mjs';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -13,7 +13,7 @@ const docsDir = path.join(rootDir, 'docs');
 const rulesDocsDir = path.join(docsDir, 'rules');
 const guideDocsDir = path.join(docsDir, 'guide');
 const fixturesDir = path.join(rootDir, 'test', 'fixtures');
-const checksDir = path.join(rootDir, 'src', 'checks');
+const rulesDir = path.join(rootDir, 'src', 'rules');
 
 // Ensure directories exist
 fs.mkdirSync(rulesDocsDir, { recursive: true });
@@ -37,28 +37,28 @@ function validateRulesCompleteness() {
   const validCategories = new Set(Object.keys(CATEGORIES));
 
   // 1. Check all ABAP class files vs rules-data
-  const checkFiles = fs.readdirSync(checksDir).filter(f => f.endsWith('.clas.abap'));
+  const ruleFiles = fs.readdirSync(rulesDir).filter(f => f.endsWith('.clas.abap'));
   const utilityClasses = new Set([
-    'zcl_skylint_check_base.clas.abap',
-    'zcl_skylint_check_meta_data.clas.abap',
-    'zcl_skylint_ast_util.clas.abap',
-    'zcl_skylint_rtti_util.clas.abap'
+    '#skyl#cl_rule_base.clas.abap',
+    '#skyl#cl_meta_data.clas.abap',
+    '#skyl#cl_ast_util.clas.abap',
+    '#skyl#cl_rtti_util.clas.abap'
   ]);
-  const registeredClassMap = new Map(RULES.map(r => [r.className.toLowerCase(), r]));
+  const registeredClassMap = new Map(RULES.map(r => [ruleFileBase(r), r]));
 
-  // Check for check files on disk that are NOT registered in rules-data.mjs
-  for (const file of checkFiles) {
+  // Check for rule files on disk that are NOT registered in rules-data.mjs
+  for (const file of ruleFiles) {
     if (utilityClasses.has(file)) continue;
-    const classNameLower = file.replace(/\.clas\.abap$/, '');
-    if (!registeredClassMap.has(classNameLower)) {
-      errors.push(`[UNREGISTERED CHECK] Found check class '${file}' in src/checks/ but it is NOT registered in rules-data.mjs!`);
+    const fileBase = file.replace(/\.clas\.abap$/, '');
+    if (!registeredClassMap.has(fileBase)) {
+      errors.push(`[UNREGISTERED RULE] Found rule class '${file}' in src/rules/ but it is NOT registered in rules-data.mjs!`);
     }
   }
 
   // 2. Comprehensive check for each rule in rules-data.mjs
   for (const rule of RULES) {
-    const abapFile = path.join(checksDir, `${rule.className.toLowerCase()}.clas.abap`);
-    const xmlFile = path.join(checksDir, `${rule.className.toLowerCase()}.clas.xml`);
+    const abapFile = path.join(rulesDir, `${ruleFileBase(rule)}.clas.abap`);
+    const xmlFile = path.join(rulesDir, `${ruleFileBase(rule)}.clas.xml`);
 
     if (!fs.existsSync(abapFile)) {
       errors.push(`[MISSING ABAP FILE] Rule '${rule.ruleId}' specifies class '${rule.className}' but '${abapFile}' does not exist!`);
@@ -234,8 +234,8 @@ function extractSnippet(lines, methodName) {
 
 console.log(`Generating rich enterprise documentation for ${RULES.length} rules...`);
 
-// Load default parameters from src/atc/zskylint_default.chkv.json
-const chkvPath = path.join(rootDir, 'src', 'atc', 'zskylint_default.chkv.json');
+// Load default parameters from src/atc/(skyl)default.chkv.json
+const chkvPath = path.join(rootDir, 'src', 'atc', '(skyl)default.chkv.json');
 const defaultParamsMap = {};
 if (fs.existsSync(chkvPath)) {
   const chkv = JSON.parse(fs.readFileSync(chkvPath, 'utf8'));
@@ -250,7 +250,7 @@ let totalQuickFixes = 0;
 const catalogRules = [];
 
 for (const rule of RULES) {
-  const checkFile = path.join(checksDir, `${rule.className.toLowerCase()}.clas.abap`);
+  const checkFile = path.join(rulesDir, `${ruleFileBase(rule)}.clas.abap`);
   let classDesc = rule.ruleId;
   let severity = 'warning';
   let hasQuickfix = false;
@@ -288,7 +288,7 @@ for (const rule of RULES) {
   let compliantCode = rule.example?.good || '';
 
   if (!nonCompliantCode || !compliantCode) {
-    const shortName = rule.className.toLowerCase().replace(/^zcl_skylint_/, '');
+    const shortName = ruleShortName(rule);
     const fixtureDir = fs.existsSync(path.join(fixturesDir, shortName))
       ? path.join(fixturesDir, shortName)
       : path.join(fixturesDir, rule.ruleId);
@@ -426,12 +426,12 @@ for (const rule of RULES) {
   ruleDoc += `\n## Technical Details\n\n`;
   ruleDoc += `* **Native ATC Class:** \`${rule.className}\`\n`;
 
-  ruleDoc += `* **Implementation File:** [${rule.className.toLowerCase()}.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/${rule.className.toLowerCase()}.clas.abap)\n`;
+  ruleDoc += `* **Implementation File:** [${ruleFileBase(rule)}.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/${encodeURIComponent(ruleFileBase(rule))}.clas.abap)\n`;
 
   fs.writeFileSync(path.join(rulesDocsDir, `${rule.ruleId}.md`), ruleDoc, 'utf8');
 
   // Collect for interactive Variant Builder
-  const checkName = rule.className.replace(/^ZCL_/, 'Z');
+  const checkName = `/SKYL/${rule.className.replace(/^\/SKYL\/CL_/i, '')}`;
   catalogRules.push({
     ruleId: rule.ruleId,
     title: meta.title,

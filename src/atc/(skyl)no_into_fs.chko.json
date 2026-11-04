@@ -1,0 +1,10 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Do not use INTO with a field symbol; use ASSIGNING instead",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/ANTI_PATTERNS",
+  "implementingClass": "/SKYL/CL_NO_INTO_FS",
+  "checkType": "remoteEnabled"
+}

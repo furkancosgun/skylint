@@ -75,5 +75,5 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ## Technical Details
 
-* **Native ATC Class:** `ZCL_SKYLINT_MAX_BOOL_EXPR`
-* **Implementation File:** [zcl_skylint_max_bool_expr.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_max_bool_expr.clas.abap)
+* **Native ATC Class:** `/SKYL/CL_MAX_BOOL_EXPR`
+* **Implementation File:** [#skyl#cl_max_bool_expr.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_max_bool_expr.clas.abap)

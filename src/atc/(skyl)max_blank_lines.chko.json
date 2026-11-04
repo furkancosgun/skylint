@@ -1,0 +1,15 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "No Excessive Consecutive Empty Lines",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/CLEAN_ABAP",
+  "implementingClass": "/SKYL/CL_MAX_BLANK_LINES",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "MAX_BLANKS"
+    }
+  ]
+}

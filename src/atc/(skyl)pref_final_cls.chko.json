@@ -1,0 +1,18 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Prefer FINAL classes and methods by default",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/CLEAN_ABAP",
+  "implementingClass": "/SKYL/CL_PREF_FINAL_CLS",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "CHECK_CLASSES"
+    },
+    {
+      "name": "CHECK_METHODS"
+    }
+  ]
+}

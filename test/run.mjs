@@ -26,7 +26,7 @@ const rootDir = path.resolve(__dirname, '..');
 const fixturesDir = path.join(rootDir, 'test', 'fixtures');
 
 export function fixtureDirForRule(rule) {
-  const shortName = rule.className.toLowerCase().replace(/^zcl_skylint_/, '');
+  const shortName = rule.className.toLowerCase().replace(/^\/skyl\/cl_/, '');
   const shortDir = path.join(fixturesDir, shortName);
   if (fs.existsSync(shortDir)) return shortDir;
   return path.join(fixturesDir, rule.ruleId);
@@ -50,9 +50,12 @@ export function loadFixture(key) {
   return { lines, expected };
 }
 
-export function discoverChecks() {
+export function discoverRules() {
   return RULES.map((r) => r.ruleId);
 }
+
+export const discoverChecks = discoverRules;
+
 
 function sameCodes(a, b) {
   if (!Array.isArray(a) || !Array.isArray(b)) return false;

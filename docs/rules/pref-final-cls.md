@@ -85,5 +85,5 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ## Technical Details
 
-* **Native ATC Class:** `ZCL_SKYLINT_PREF_FINAL_CLS`
-* **Implementation File:** [zcl_skylint_pref_final_cls.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_pref_final_cls.clas.abap)
+* **Native ATC Class:** `/SKYL/CL_PREF_FINAL_CLS`
+* **Implementation File:** [#skyl#cl_pref_final_cls.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_pref_final_cls.clas.abap)

@@ -1,0 +1,10 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Prefer explicit TYPE STANDARD TABLE OF over TYPE TABLE OF",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/CLEAN_ABAP",
+  "implementingClass": "/SKYL/CL_PREF_STD_TABLE",
+  "checkType": "remoteEnabled"
+}

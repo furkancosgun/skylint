@@ -1,0 +1,10 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Max One Statement Per Line",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/METRICS",
+  "implementingClass": "/SKYL/CL_MAX_ONE_STMT",
+  "checkType": "remoteEnabled"
+}

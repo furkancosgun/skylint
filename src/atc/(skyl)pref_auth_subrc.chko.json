@@ -1,0 +1,10 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Check sy-subrc immediately after AUTHORITY-CHECK",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/SECURITY",
+  "implementingClass": "/SKYL/CL_PREF_AUTH_SUBRC",
+  "checkType": "remoteEnabled"
+}

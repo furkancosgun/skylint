@@ -1,0 +1,10 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "RFC calls must handle system failures",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/SECURITY",
+  "implementingClass": "/SKYL/CL_NO_RFC_ERR",
+  "checkType": "remoteEnabled"
+}

@@ -21,7 +21,7 @@
   ],
   "syntax": {
     "version": "Cloud",
-    "errorNamespace": "^(Z|Y|LCL_|TY_|LIF_)",
+    "errorNamespace": "^(Z|Y|LCL_|TY_|LIF_|/SKYL/)",
     "globalConstants": [],
     "ambigiousVoids": [],
     "globalMacros": []
@@ -911,8 +911,8 @@
       "patternKind": "required",
       "ignoreNames": [],
       "ignorePatterns": [],
-      "clas": "^ZC(L|X)_SKYLINT",
-      "intf": "^ZIF_SKYLINT",
+      "clas": "^/SKYL/CL_",
+      "intf": "^/SKYL/IF_",
       "prog": "^Z",
       "fugr": "^Z",
       "tabl": "^Z",

@@ -2,40 +2,38 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { RULES, CATEGORIES } from './rules-data.mjs';
-import { getCheckDescription, getCheckParameters, isRemoteEnabled } from './check-metadata.mjs';
+import { getRuleDescription, getRuleParameters, isRemoteEnabled } from './rule-metadata.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, '..');
 const srcDir = path.join(rootDir, 'src');
-const checksDir = path.join(srcDir, 'checks');
+const rulesDir = path.join(srcDir, 'rules');
 const coreDir = path.join(srcDir, 'core');
 const atcDir = path.join(srcDir, 'atc');
 
+// abapGit namespaced file prefix: /SKYL/NAME -> (skyl)name
+const nsFile = (name) => `(skyl)${name.toLowerCase().replace(/^\/skyl\//, '')}`;
+
 const ATC_CATEGORIES = {
   'clean-abap': {
-    code: 'ZSKYLINT_CLEAN_ABAP',
-    fileName: 'zskylint_clean_abap.chkc.json',
+    code: '/SKYL/CLEAN_ABAP',
     description: 'Skylint: Clean ABAP & Modern Syntax',
   },
   'anti-patterns': {
-    code: 'ZSKYLINT_ANTI_PATTERNS',
-    fileName: 'zskylint_anti_patterns.chkc.json',
+    code: '/SKYL/ANTI_PATTERNS',
     description: 'Skylint: Anti-Patterns & Bad Practices',
   },
   'performance': {
-    code: 'ZSKYLINT_PERFORMANCE',
-    fileName: 'zskylint_performance.chkc.json',
+    code: '/SKYL/PERFORMANCE',
     description: 'Skylint: Performance & Database',
   },
   'security': {
-    code: 'ZSKYLINT_SECURITY',
-    fileName: 'zskylint_security.chkc.json',
+    code: '/SKYL/SECURITY',
     description: 'Skylint: Security & Robustness',
   },
   'metrics': {
-    code: 'ZSKYLINT_METRICS',
-    fileName: 'zskylint_metrics.chkc.json',
+    code: '/SKYL/METRICS',
     description: 'Skylint: Metrics & Complexity Limits',
   },
 };
@@ -48,8 +46,8 @@ export function generateAtcObjects() {
     fs.mkdirSync(atcDir, { recursive: true });
   }
 
-  // Clean up any stale files in src/checks/ and src/core/
-  for (const d of [checksDir, coreDir]) {
+  // Clean up any stale files in src/rules/ and src/core/
+  for (const d of [rulesDir, coreDir]) {
     if (fs.existsSync(d)) {
       for (const f of fs.readdirSync(d)) {
         if (/\.chk[ovc]\.json$/i.test(f)) {
@@ -66,15 +64,15 @@ export function generateAtcObjects() {
     }
   }
 
-  // 1. Generate Root Category: src/atc/zskylint.chkc.json
+  // 1. Generate Root Category: src/atc/(skyl)main.chkc.json
   const rootCategoryJson = {
     formatVersion: '1',
     header: {
-      description: 'Skylint Clean ABAP Checks',
+      description: 'Skylint Clean ABAP Rules',
       originalLanguage: 'en',
     },
   };
-  fs.writeFileSync(path.join(atcDir, 'zskylint.chkc.json'), JSON.stringify(rootCategoryJson, null, 2) + '\n', 'utf8');
+  fs.writeFileSync(path.join(atcDir, nsFile('/SKYL/MAIN') + '.chkc.json'), JSON.stringify(rootCategoryJson, null, 2) + '\n', 'utf8');
 
   // 1b. Generate Domain Sub-Categories (matching website categories 1:1)
   for (const cat of Object.values(ATC_CATEGORIES)) {
@@ -84,21 +82,21 @@ export function generateAtcObjects() {
         description: cat.description,
         originalLanguage: 'en',
       },
-      parentCategory: 'ZSKYLINT',
+      parentCategory: '/SKYL/MAIN',
     };
-    fs.writeFileSync(path.join(atcDir, cat.fileName), JSON.stringify(catJson, null, 2) + '\n', 'utf8');
+    fs.writeFileSync(path.join(atcDir, nsFile(cat.code) + '.chkc.json'), JSON.stringify(catJson, null, 2) + '\n', 'utf8');
   }
 
   // 2. Generate Check Objects (CHKO) in src/atc/
   const selectedChecks = [];
   let checksWithParams = 0;
   for (const rule of RULES) {
-    const suffix = rule.className.replace(/^ZCL_SKYLINT_/, '');
-    const checkName = `ZSKYLINT_${suffix}`;
-    const fileName = `zskylint_${suffix.toLowerCase()}.chko.json`;
-    const desc = getCheckDescription(rule);
-    const params = getCheckParameters(rule);
-    const catInfo = ATC_CATEGORIES[rule.category] || { code: 'ZSKYLINT' };
+    const suffix = rule.className.replace(/^\/SKYL\/CL_/i, '');
+    const checkName = `/SKYL/${suffix}`;
+    const fileName = `${nsFile(checkName)}.chko.json`;
+    const desc = getRuleDescription(rule);
+    const params = getRuleParameters(rule);
+    const catInfo = ATC_CATEGORIES[rule.category] || { code: '/SKYL/MAIN' };
 
     const chko = {
       formatVersion: '1',
@@ -129,7 +127,7 @@ export function generateAtcObjects() {
     selectedChecks.push(checkEntry);
   }
 
-  // 3. Generate Variant (CHKV): src/atc/zskylint_default.chkv.json
+  // 3. Generate Variant (CHKV): src/atc/(skyl)default.chkv.json
   const variantJson = {
     formatVersion: '1',
     header: {
@@ -138,18 +136,27 @@ export function generateAtcObjects() {
     },
     selectedChecks,
   };
-  fs.writeFileSync(path.join(atcDir, 'zskylint_default.chkv.json'), JSON.stringify(variantJson, null, 2) + '\n', 'utf8');
-  // 4. Generate Registry of compiled ABAP check classes for live execution
-  let registryCode = '// Auto-generated registry of compiled ABAP check classes\nexport const CHECK_MODULES = {\n';
-  for (const r of RULES) {
-    const clsName = r.className.toUpperCase();
-    const fileName = r.className.toLowerCase() + '.clas.mjs';
-    registryCode += `  '${clsName}': () => import('../output/project/${fileName}'),\n`;
-  }
-  registryCode += '};\n';
-  fs.writeFileSync(path.join(rootDir, 'lib', 'checks-registry.mjs'), registryCode, 'utf8');
+  fs.writeFileSync(path.join(atcDir, nsFile('/SKYL/DEFAULT') + '.chkv.json'), JSON.stringify(variantJson, null, 2) + '\n', 'utf8');
 
-  console.log(`✓ Created 1 CHKC (category), ${RULES.length} CHKO (checks - ${checksWithParams} with parameters), 1 CHKV (variant), and lib/checks-registry.mjs.`);
+  // 4. Generate Registry of compiled ABAP rule classes for live execution.
+  // Transpiler emits namespaced objects as #skyl#cl_<trunk>.clas.mjs.
+  // The '#' in module specifiers must be %23-escaped (URL resolution);
+  // './' relative resolution keeps './%23…' intact.
+  const rules = [];
+  for (const r of RULES) {
+    const clsUpper = r.className.toUpperCase();
+    const fileBase = r.className.toLowerCase().replace(/\//g, '#'); // #skyl#cl_x
+    const sym = r.className.toLowerCase().replace(/\//g, '$');      // $skyl$cl_x
+    rules.push(`  '${clsUpper}': { file: '${fileBase}.clas.mjs', sym: '${sym}' },`);
+  }
+  const registryCode = `// Auto-generated registry of compiled ABAP rule classes
+export const RULE_MODULES = {
+${rules.join('\n')}
+};
+`;
+  fs.writeFileSync(path.join(rootDir, 'lib', 'rules-registry.mjs'), registryCode, 'utf8');
+
+  console.log(`✓ Created 1 CHKC (root) + ${Object.keys(ATC_CATEGORIES).length} CHKC (domain), ${RULES.length} CHKO (checks - ${checksWithParams} with parameters), 1 CHKV (variant), and lib/rules-registry.mjs.`);
 }
 
 generateAtcObjects();

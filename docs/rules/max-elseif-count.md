@@ -73,5 +73,5 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ## Technical Details
 
-* **Native ATC Class:** `ZCL_SKYLINT_MAX_ELSEIF_COUNT`
-* **Implementation File:** [zcl_skylint_max_elseif_count.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_max_elseif_count.clas.abap)
+* **Native ATC Class:** `/SKYL/CL_MAX_ELSEIF_COUNT`
+* **Implementation File:** [#skyl#cl_max_elseif_count.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_max_elseif_count.clas.abap)

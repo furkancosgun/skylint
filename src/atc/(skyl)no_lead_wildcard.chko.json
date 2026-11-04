@@ -1,0 +1,10 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Avoid leading wildcard (% or +) in LIKE conditions",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/PERFORMANCE",
+  "implementingClass": "/SKYL/CL_NO_LEAD_WILDCARD",
+  "checkType": "remoteEnabled"
+}

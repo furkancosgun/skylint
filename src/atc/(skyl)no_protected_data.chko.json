@@ -1,0 +1,10 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Avoid declaring DATA or CLASS-DATA in PROTECTED SECTION",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/CLEAN_ABAP",
+  "implementingClass": "/SKYL/CL_NO_PROTECTED_DATA",
+  "checkType": "remoteEnabled"
+}

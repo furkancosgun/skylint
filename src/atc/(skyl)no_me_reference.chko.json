@@ -1,0 +1,15 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Avoid self-reference ME->",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/ANTI_PATTERNS",
+  "implementingClass": "/SKYL/CL_NO_ME_REFERENCE",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "ALLOW_IN_CONSTRUCTORS"
+    }
+  ]
+}

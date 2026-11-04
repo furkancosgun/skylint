@@ -1,0 +1,10 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Avoid MODIFY itab in LOOP without TRANSPORTING clause",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/PERFORMANCE",
+  "implementingClass": "/SKYL/CL_PREF_TRANSPORT",
+  "checkType": "remoteEnabled"
+}

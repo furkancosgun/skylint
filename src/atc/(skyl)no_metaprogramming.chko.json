@@ -1,0 +1,10 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Metaprogramming and Dynamic Code Generation",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/SECURITY",
+  "implementingClass": "/SKYL/CL_NO_METAPROGRAMMING",
+  "checkType": "remoteEnabled"
+}

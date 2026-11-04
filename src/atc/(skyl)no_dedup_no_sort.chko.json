@@ -1,0 +1,10 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Sort internal tables before DELETE ADJACENT DUPLICATES",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/ANTI_PATTERNS",
+  "implementingClass": "/SKYL/CL_NO_DEDUP_NO_SORT",
+  "checkType": "remoteEnabled"
+}

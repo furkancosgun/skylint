@@ -1,0 +1,18 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Modify Only Own Database Tables",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/SECURITY",
+  "implementingClass": "/SKYL/CL_NO_MOD_STD_TABLE",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "OWN_TABLES"
+    },
+    {
+      "name": "REPORT_DYNAMIC"
+    }
+  ]
+}

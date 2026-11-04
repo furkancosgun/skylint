@@ -26,7 +26,7 @@ export const RULES = [
     "ruleId": "pref-func-module",
     "title": "Prefer Modern Class-Based APIs over Obsolete Function Modules",
     "rationale": "Classic function modules are non-object-oriented procedural constructs. Modern ABAP provides robust, object-oriented class libraries (such as CL_SYSTEM_UUID, CL_ABAP_TSTMP, CL_ABAP_MESSAGE_DIGEST, and CL_BCS) that improve testability, type safety, and ABAP Cloud compatibility. Prefer recommended class-based APIs over obsolete function modules.",
-    "className": "ZCL_SKYLINT_PREF_FUNC_MODULE",
+    "className": "/SKYL/CL_PREF_FUNC_MODULE",
     "pseudoComment": "PREF_FUNC_MOD",
     "category": "clean-abap",
     "example": {
@@ -55,7 +55,7 @@ export const RULES = [
     "ruleId": "no-custom-pattern",
     "title": "Disallow Configured Custom Regex Patterns",
     "rationale": "Enterprise coding standards often require banning specific placeholder comments (such as TODO, FIXME, XXX), temporary variable patterns (such as TMP_* or DEBUG_*), sensitive keywords, or prohibited terminology. This check inspects all tokens against a configurable table of regular expressions, reporting any prohibited matches.",
-    "className": "ZCL_SKYLINT_NO_CUSTOM_PATTERN",
+    "className": "/SKYL/CL_NO_CUSTOM_PATTERN",
     "pseudoComment": "NO_CUSTOM_PATTERN",
     "category": "anti-patterns",
     "example": {
@@ -86,7 +86,7 @@ export const RULES = [
     "ruleId": "pref-paren-and-or",
     "title": "Parenthesize Combinations of AND and OR",
     "rationale": "Different programming languages and databases have varying operator precedences for logical operators. Unparenthesized conditions mixing AND and OR (such as a AND b OR c) are ambiguous to human readers and easily hide critical branching bugs. Explicitly parenthesize combinations as ( a AND b ) OR c to make evaluation precedence unmistakable.",
-    "className": "ZCL_SKYLINT_PREF_PAREN_AND_OR",
+    "className": "/SKYL/CL_PREF_PAREN_AND_OR",
     "pseudoComment": "PREF_PAREN_AND_OR",
     "category": "clean-abap",
     "example": {
@@ -114,7 +114,7 @@ export const RULES = [
     "ruleId": "no-useless-cont",
     "title": "Avoid Redundant CONTINUE at End of Loop",
     "rationale": "A CONTINUE statement located immediately before ENDLOOP, ENDWHILE, or ENDDO has zero effect because loop execution naturally cycles at the end of the block. Remove redundant trailing CONTINUE statements to keep loop bodies concise and avoid misleading code reviewers into expecting remaining logic.",
-    "className": "ZCL_SKYLINT_NO_USELESS_CONT",
+    "className": "/SKYL/CL_NO_USELESS_CONT",
     "pseudoComment": "NO_USELESS_CONT",
     "category": "clean-abap",
     "example": {
@@ -142,7 +142,7 @@ export const RULES = [
     "ruleId": "no-nested-cond",
     "title": "Avoid Nested COND or SWITCH Expressions",
     "rationale": "Nesting COND or SWITCH constructor expressions inside each other creates deeply indented, hard-to-read expression trees. Modern Clean ABAP guidelines explicitly recommend avoiding nested constructor expressions; instead, separate complex decision branches into focused helper methods or classic CASE constructs.",
-    "className": "ZCL_SKYLINT_NO_NESTED_COND",
+    "className": "/SKYL/CL_NO_NESTED_COND",
     "pseudoComment": "NO_NESTED_COND",
     "category": "clean-abap",
     "example": {
@@ -170,7 +170,7 @@ export const RULES = [
     "ruleId": "no-single-iter",
     "title": "Avoid Loops That Execute At Most Once",
     "rationale": "A loop statement (LOOP, WHILE, or DO) containing an unconditional EXIT or RETURN at its top nesting level will execute at most once. This usually indicates an algorithmic bug, a leftover prototyping construct, or the misuse of a loop instead of a conditional block or helper method.",
-    "className": "ZCL_SKYLINT_NO_SINGLE_ITER",
+    "className": "/SKYL/CL_NO_SINGLE_ITER",
     "pseudoComment": "NO_SINGLE_ITER",
     "category": "anti-patterns",
     "example": {
@@ -198,7 +198,7 @@ export const RULES = [
     "ruleId": "pref-downport",
     "title": "Check Downport Compatibility (7.40+ Modern Constructs)",
     "rationale": "Modern ABAP constructs such as constructor expressions, table expressions, inline declarations, string templates, and functional method chaining do not compile on legacy NetWeaver releases. When a project must remain downport-compatible, these constructs silently raise the required kernel and syntax level. The check keeps that incompatibility visible by reporting each modern construct; it is disabled by default so modern development is unaffected.",
-    "className": "ZCL_SKYLINT_PREF_DOWNPORT",
+    "className": "/SKYL/CL_PREF_DOWNPORT",
     "pseudoComment": "PREF_DOWNPORT",
     "category": "clean-abap",
     "example": {
@@ -238,7 +238,7 @@ export const RULES = [
     "ruleId": "pref-reduce",
     "title": "Prefer REDUCE #( ) Expression over Simple Aggregation LOOP",
     "rationale": "A loop that only accumulates a sum or builds a single aggregated value mixes imperative control flow with a simple calculation and hides the real intent. Such loops are longer to read and easy to break when the accumulator initialization or the loop body changes. REDUCE #( ) expresses the aggregation declaratively inside one expression and removes the mutable helper state. Use REDUCE for straightforward sums, counts, and string concatenation, and keep a loop only when it performs additional side effects.",
-    "className": "ZCL_SKYLINT_PREF_REDUCE",
+    "className": "/SKYL/CL_PREF_REDUCE",
     "pseudoComment": "PREF_REDUCE",
     "category": "clean-abap",
     "example": {
@@ -266,7 +266,7 @@ export const RULES = [
     "ruleId": "pref-read-table",
     "title": "Modernize READ TABLE (Table Expressions & line_exists)",
     "rationale": "Legacy READ TABLE requires procedural work areas, field symbols, and error-prone sy-subrc checks. Modern ABAP provides table expressions (itab[ ... ]) for direct value and reference retrieval, and line_exists( ... ) for existence checks. Modernizing READ TABLE simplifies code, avoids mutable intermediary variables, and embeds seamlessly into functional expressions.",
-    "className": "ZCL_SKYLINT_PREF_READ_TABLE",
+    "className": "/SKYL/CL_PREF_READ_TABLE",
     "pseudoComment": "PREF_TAB_EXPR",
     "category": "clean-abap",
     "example": {
@@ -298,7 +298,7 @@ export const RULES = [
     "ruleId": "pref-cond",
     "title": "Prefer COND #( ) Expression over IF/ELSEIF/ELSE",
     "rationale": "An IF/ELSEIF chain that only assigns different values to the same variable duplicates the assignment target and spreads one decision over many lines. COND #( ) turns the whole mapping into a single expression, so the target is assigned exactly once and cannot be left uninitialized. It also composes with assignments and method calls. Keep IF when branches perform multiple statements or side effects.",
-    "className": "ZCL_SKYLINT_PREF_COND",
+    "className": "/SKYL/CL_PREF_COND",
     "pseudoComment": "PREF_COND",
     "category": "clean-abap",
     "example": {
@@ -329,7 +329,7 @@ export const RULES = [
     "ruleId": "pref-switch",
     "title": "Prefer SWITCH #( ) Expression over CASE Statement",
     "rationale": "A CASE statement whose branches only assign a result is a verbose value mapping: it repeats the assignment variable in every branch. SWITCH #( ) makes the input value and all possible results visible in one expression and avoids temporary state. Use SWITCH for pure mappings and CASE when a branch contains several statements or side effects.",
-    "className": "ZCL_SKYLINT_PREF_SWITCH",
+    "className": "/SKYL/CL_PREF_SWITCH",
     "pseudoComment": "PREF_SWITCH",
     "category": "clean-abap",
     "example": {
@@ -360,7 +360,7 @@ export const RULES = [
     "ruleId": "pref-lines",
     "title": "Prefer lines( ) over DESCRIBE TABLE",
     "rationale": "DESCRIBE TABLE LINES requires an extra variable and separates the question about table size from the code that uses the answer. The lines( ) built-in returns the row count as a value and can be embedded directly in conditions and expressions. This reduces temporary variables and makes the intent obvious at the call site.",
-    "className": "ZCL_SKYLINT_PREF_LINES",
+    "className": "/SKYL/CL_PREF_LINES",
     "pseudoComment": "PREF_LINES",
     "category": "clean-abap",
     "example": {
@@ -388,7 +388,7 @@ export const RULES = [
     "ruleId": "no-call-method",
     "title": "Avoid Obsolete CALL METHOD",
     "rationale": "CALL METHOD is the procedural call syntax from early ABAP Objects and needs explicit EXPORTING and RECEIVING sections. Functional syntax is shorter, can be used inside expressions, and removes visual clutter around parameter lists. Use ref->method( ) or class=>method( ) for all method calls.",
-    "className": "ZCL_SKYLINT_NO_CALL_METHOD",
+    "className": "/SKYL/CL_NO_CALL_METHOD",
     "pseudoComment": "NO_CALL_METHOD",
     "category": "anti-patterns",
     "example": {
@@ -416,7 +416,7 @@ export const RULES = [
     "ruleId": "no-default-key",
     "title": "Avoid WITH DEFAULT KEY",
     "rationale": "WITH DEFAULT KEY makes every non-numeric field part of the implicit table key, so which rows count as duplicates depends on the structure definition. Adding a field later silently changes the key and can introduce unexpected duplicates or sort behavior. Use WITH EMPTY KEY for standard tables that are accessed by index, or declare an explicit key for sorted and hashed tables.",
-    "className": "ZCL_SKYLINT_NO_DEFAULT_KEY",
+    "className": "/SKYL/CL_NO_DEFAULT_KEY",
     "pseudoComment": "NO_DEFAULT_KEY",
     "category": "anti-patterns",
     "example": {
@@ -444,7 +444,7 @@ export const RULES = [
     "ruleId": "pref-is-not",
     "title": "Prefer IS NOT over NOT ... IS",
     "rationale": "Writing NOT before a complete IS expression forces the reader to negate the condition mentally and can be misread in compound logic. IS NOT keeps the subject first and reads in natural order, as in lo_instance IS NOT BOUND. Prefer IS NOT for predicates such as IS BOUND, IS INITIAL, and IS ASSIGNED.",
-    "className": "ZCL_SKYLINT_PREF_IS_NOT",
+    "className": "/SKYL/CL_PREF_IS_NOT",
     "pseudoComment": "PREF_IS_NOT",
     "category": "clean-abap",
     "example": {
@@ -472,7 +472,7 @@ export const RULES = [
     "ruleId": "no-me-reference",
     "title": "Avoid Redundant ME-> Self Reference",
     "rationale": "Member variables and methods are already accessible inside an instance method, so prefixing every access with me-> only adds noise. Removing the prefix keeps attention on the member itself and makes genuine shadowing easier to spot. Keep me-> only where a parameter or local variable shadows the member, typically in constructors and setters.",
-    "className": "ZCL_SKYLINT_NO_ME_REFERENCE",
+    "className": "/SKYL/CL_NO_ME_REFERENCE",
     "pseudoComment": "NO_ME_REFERENCE",
     "category": "anti-patterns",
     "example": {
@@ -503,7 +503,7 @@ export const RULES = [
     "ruleId": "no-call-receiving",
     "title": "Omit RECEIVING in Method Invocations",
     "rationale": "The RECEIVING clause in a method call is legacy syntax that forces a functional call into a statement format. In modern ABAP, capture the return value directly on the left-hand side of an assignment (e.g. result = obj->meth( )) to enable clean nesting and expression-oriented programming.",
-    "className": "ZCL_SKYLINT_NO_CALL_RECEIVING",
+    "className": "/SKYL/CL_NO_CALL_RECEIVING",
     "pseudoComment": "NO_CALL_RECEIVING",
     "category": "anti-patterns",
     "example": {
@@ -531,7 +531,7 @@ export const RULES = [
     "ruleId": "no-call-exporting",
     "title": "Omit Redundant EXPORTING in Method Calls",
     "rationale": "In functional ABAP method calls, the EXPORTING keyword is redundant when no other clauses (such as IMPORTING, CHANGING, or EXCEPTIONS) are present. Removing EXPORTING reduces syntax noise and simplifies signature reading.",
-    "className": "ZCL_SKYLINT_NO_CALL_EXPORTING",
+    "className": "/SKYL/CL_NO_CALL_EXPORTING",
     "pseudoComment": "NO_CALL_EXPORTING",
     "category": "anti-patterns",
     "example": {
@@ -559,7 +559,7 @@ export const RULES = [
     "ruleId": "pref-param-name",
     "title": "Method Call Parameter Naming Style (Omit or Require)",
     "rationale": "Methods with a single importing parameter can be invoked positionally without naming the parameter, reducing verbosity for self-explanatory methods. Alternatively, teams requiring explicit naming can enable REQUIRE_PARAM_NAME to enforce explicit parameter naming for clarity and future signature extension.",
-    "className": "ZCL_SKYLINT_PREF_PARAM_NAME",
+    "className": "/SKYL/CL_PREF_PARAM_NAME",
     "pseudoComment": "PREF_PARAM_NAME",
     "category": "clean-abap",
     "example": {
@@ -590,7 +590,7 @@ export const RULES = [
     "ruleId": "no-unused-param",
     "title": "Avoid Unused Parameters in Procedures",
     "rationale": "Methods, form routines, and function modules should not declare parameters that are never accessed or assigned in their implementation. Unused parameters clutter the signature, confuse callers, and may indicate incomplete implementations. If a parameter is intentionally unused, prefix its name with an underscore.",
-    "className": "ZCL_SKYLINT_NO_UNUSED_PARAM",
+    "className": "/SKYL/CL_NO_UNUSED_PARAM",
     "pseudoComment": "NO_UNUSED_PARAM",
     "category": "clean-abap",
     "example": {
@@ -623,7 +623,7 @@ export const RULES = [
     "ruleId": "no-chained-decl",
     "title": "Avoid Chained Declarations (DATA:, CONSTANTS:, TYPES:)",
     "rationale": "Chained declarations combine multiple definitions behind a colon and commas, obscuring types and causing noisy version control diffs for single-variable modifications. In modern Clean ABAP, each variable, constant, or type definition should be an independent, fully qualified statement for maximum readability and clean diff tracking.",
-    "className": "ZCL_SKYLINT_NO_CHAINED_DECL",
+    "className": "/SKYL/CL_NO_CHAINED_DECL",
     "pseudoComment": "NO_CHAINED_DECL",
     "category": "anti-patterns",
     "example": {
@@ -654,7 +654,7 @@ export const RULES = [
     "ruleId": "no-chained-assign",
     "title": "Avoid Chained Assignments (a = b = c = 1)",
     "rationale": "Chained assignments evaluate right-to-left and bind multiple targets in a single statement, making code execution order difficult to follow and debug. Split chained assignments into distinct, explicit assignment statements.",
-    "className": "ZCL_SKYLINT_NO_CHAINED_ASSIGN",
+    "className": "/SKYL/CL_NO_CHAINED_ASSIGN",
     "pseudoComment": "NO_CHAINED_ASSIGN",
     "category": "anti-patterns",
     "example": {
@@ -682,7 +682,7 @@ export const RULES = [
     "ruleId": "pref-str-tmpl",
     "title": "Prefer String Templates over CONCATENATE",
     "rationale": "CONCATENATE with SEPARATED BY is a procedural statement that splits a message into literals and variables and cannot be nested in expressions. String templates interpolate values directly, preserve spaces, and support formatting options for numbers, dates, and alignment. Use a template for readable text composition and reserve CONCATENATE only for legacy downport code.",
-    "className": "ZCL_SKYLINT_PREF_STR_TMPL",
+    "className": "/SKYL/CL_PREF_STR_TMPL",
     "pseudoComment": "PREF_STR_TMPL",
     "category": "clean-abap",
     "example": {
@@ -710,7 +710,7 @@ export const RULES = [
     "ruleId": "no-bool-compare",
     "title": "Avoid Comparing to abap_true / abap_false",
     "rationale": "A boolean expression already evaluates to true or false, so comparing it to abap_true is redundant. The comparison hides predicate intent and can mask a missing method call or an accidental assignment. Test the expression directly and use NOT when the negative case is needed.",
-    "className": "ZCL_SKYLINT_NO_BOOL_COMPARE",
+    "className": "/SKYL/CL_NO_BOOL_COMPARE",
     "pseudoComment": "NO_BOOL_COMPARE",
     "category": "anti-patterns",
     "example": {
@@ -738,7 +738,7 @@ export const RULES = [
     "ruleId": "pref-return",
     "title": "Prefer RETURN over EXIT in Methods",
     "rationale": "EXIT has loop-specific meaning and can leave a method at a point that is easy to overlook when the surrounding code changes. RETURN explicitly ends the current procedure and cannot be confused with loop control. Use RETURN for method exit and LEAVE LOOP or CONTINUE for loop control.",
-    "className": "ZCL_SKYLINT_PREF_RETURN",
+    "className": "/SKYL/CL_PREF_RETURN",
     "pseudoComment": "PREF_RETURN",
     "category": "clean-abap",
     "example": {
@@ -766,7 +766,7 @@ export const RULES = [
     "ruleId": "no-check-stmt",
     "title": "Avoid CHECK Statements",
     "rationale": "CHECK behaves like CONTINUE inside a loop but like RETURN outside a loop, so moving the statement between contexts silently changes control flow. That dual meaning makes refactoring and reviews hazardous. Replace it with an explicit IF ... CONTINUE or IF ... RETURN that states the intended behavior.",
-    "className": "ZCL_SKYLINT_NO_CHECK_STMT",
+    "className": "/SKYL/CL_NO_CHECK_STMT",
     "pseudoComment": "NO_CHECK_IN_LOOP",
     "category": "anti-patterns",
     "example": {
@@ -798,7 +798,7 @@ export const RULES = [
     "ruleId": "no-empty-block",
     "title": "Avoid Empty Control Blocks",
     "rationale": "An empty branch usually signals unfinished logic, forgotten code, or an inverted condition. Readers must search for hidden behavior and may assume the branch does something. Restructure the condition so every branch has a purpose, or remove the empty block entirely.",
-    "className": "ZCL_SKYLINT_NO_EMPTY_BLOCK",
+    "className": "/SKYL/CL_NO_EMPTY_BLOCK",
     "pseudoComment": "NO_EMPTY_BLOCK",
     "category": "anti-patterns",
     "example": {
@@ -836,7 +836,7 @@ export const RULES = [
     "ruleId": "no-ident-cont",
     "title": "Avoid Identical Statements in IF Branches",
     "rationale": "Statements repeated in every branch of an IF/ELSEIF/ELSE carry no branch-specific meaning and duplicate maintenance. If the same statement starts or ends every branch, extract it before or after the IF so it is written once and stays in sync.",
-    "className": "ZCL_SKYLINT_NO_IDENT_CONT",
+    "className": "/SKYL/CL_NO_IDENT_CONT",
     "pseudoComment": "NO_IDENT_CONT",
     "category": "anti-patterns",
     "example": {
@@ -864,7 +864,7 @@ export const RULES = [
     "ruleId": "no-dup-cond",
     "title": "Avoid Duplicate Branch Conditions",
     "rationale": "A repeated IF/ELSEIF or WHEN condition can never be reached because the earlier branch already handles it. This is usually a copy-paste error and can leave the intended branch permanently dead. Remove the duplicate or correct the condition so every branch has a distinct purpose.",
-    "className": "ZCL_SKYLINT_NO_DUP_COND",
+    "className": "/SKYL/CL_NO_DUP_COND",
     "pseudoComment": "NO_DUP_COND",
     "category": "anti-patterns",
     "example": {
@@ -892,7 +892,7 @@ export const RULES = [
     "ruleId": "pref-merge-ifs",
     "title": "Merge Nested IF Statements",
     "rationale": "Nested IF statements without intermediate statements add indentation without adding meaning. Merging them with AND or converting a nested IF in an ELSE block into ELSEIF flattens the control flow and makes the combined condition explicit. Less nesting reduces cyclomatic complexity and makes the happy path easier to test.",
-    "className": "ZCL_SKYLINT_PREF_MERGE_IFS",
+    "className": "/SKYL/CL_PREF_MERGE_IFS",
     "pseudoComment": "PREF_MERGE_IFS",
     "category": "clean-abap",
     "example": {
@@ -920,7 +920,7 @@ export const RULES = [
     "ruleId": "no-unreachable",
     "title": "Avoid Dead / Unreachable Code",
     "rationale": "Statements after an unconditional RETURN, RAISE EXCEPTION, or EXIT can never execute and often remain from debugging or an earlier design. They mislead maintainers and inflate apparent method size and coverage. Remove the statements or move them before the terminating statement if they are still needed.",
-    "className": "ZCL_SKYLINT_NO_UNREACHABLE",
+    "className": "/SKYL/CL_NO_UNREACHABLE",
     "pseudoComment": "NO_UNREACHABLE",
     "category": "anti-patterns",
     "example": {
@@ -948,7 +948,7 @@ export const RULES = [
     "ruleId": "no-single-when",
     "title": "Avoid CASE with a Single WHEN Branch",
     "rationale": "CASE implies that a value is compared against several alternatives, so a single WHEN makes readers look for missing branches. An IF with the same condition is shorter and states the intent directly. Use CASE only when there are multiple distinct branches or when a value mapping is genuinely clearer.",
-    "className": "ZCL_SKYLINT_NO_SINGLE_WHEN",
+    "className": "/SKYL/CL_NO_SINGLE_WHEN",
     "pseudoComment": "NO_SINGLE_WHEN",
     "category": "anti-patterns",
     "example": {
@@ -976,7 +976,7 @@ export const RULES = [
     "ruleId": "no-yoda-cond",
     "title": "Avoid Yoda Conditions",
     "rationale": "Yoda conditions place the literal or constant on the left side of a comparison and break the natural ABAP reading order of subject, operator, and value. The habit comes from languages where an accidental assignment in a condition is possible, which is not the case for ABAP comparisons. Keep the variable or expression on the left so conditions read like plain language.",
-    "className": "ZCL_SKYLINT_NO_YODA_COND",
+    "className": "/SKYL/CL_NO_YODA_COND",
     "pseudoComment": "NO_YODA_COND",
     "category": "anti-patterns",
     "example": {
@@ -1004,7 +1004,7 @@ export const RULES = [
     "ruleId": "pref-symbol-op",
     "title": "Prefer Symbol Comparison Operators (=, <>, <, >)",
     "rationale": "Text comparison operators such as EQ, NE, GT, LT, GE, and LE are legacy synonyms for the symbolic operators. Symbols are shorter, match mathematical notation, and are the Clean ABAP standard. Consistent symbols also make boolean expressions easier to scan in conditions and constructor expressions.",
-    "className": "ZCL_SKYLINT_PREF_SYMBOL_OP",
+    "className": "/SKYL/CL_PREF_SYMBOL_OP",
     "pseudoComment": "PREF_SYMBOL_OP",
     "category": "clean-abap",
     "example": {
@@ -1032,7 +1032,7 @@ export const RULES = [
     "ruleId": "pref-new-op",
     "title": "Prefer NEW #( ) over CREATE OBJECT",
     "rationale": "CREATE OBJECT is the procedural object-creation statement and requires a separate declaration and assignment. NEW #( ) infers the class from the target, can be used inside expressions, and keeps construction close to where the reference is needed. Use NEW for object creation in modern ABAP and reserve CREATE OBJECT for legacy downport code.",
-    "className": "ZCL_SKYLINT_PREF_NEW_OP",
+    "className": "/SKYL/CL_PREF_NEW_OP",
     "pseudoComment": "PREF_NEW_OPERATOR",
     "category": "clean-abap",
     "example": {
@@ -1064,7 +1064,7 @@ export const RULES = [
     "ruleId": "pref-xsdbool",
     "title": "Prefer xsdbool( ) for Boolean Assignments",
     "rationale": "An IF/ELSE whose only task is to assign abap_true or abap_false uses many lines for a single boolean conversion. xsdbool( ) expresses the condition directly and assigns the result in one statement. This removes duplicated branches and makes the relationship between condition and flag obvious.",
-    "className": "ZCL_SKYLINT_PREF_XSDBOOL",
+    "className": "/SKYL/CL_PREF_XSDBOOL",
     "pseudoComment": "PREF_XSDBOOL",
     "category": "clean-abap",
     "example": {
@@ -1092,7 +1092,7 @@ export const RULES = [
     "ruleId": "no-static-arrow",
     "title": "Avoid Calling Static Methods via Instance References (->)",
     "rationale": "Calling a static method through an instance reference uses the instance arrow and suggests polymorphic dispatch that is not happening. It also creates an unnecessary dependency on a live object. Use the class name with => so readers immediately see that the method is static and cannot be overridden.",
-    "className": "ZCL_SKYLINT_NO_STATIC_ARROW",
+    "className": "/SKYL/CL_NO_STATIC_ARROW",
     "pseudoComment": "NO_STATIC_ARROW",
     "category": "anti-patterns",
     "example": {
@@ -1120,7 +1120,7 @@ export const RULES = [
     "ruleId": "no-exposed-data",
     "title": "Avoid Exposed Mutable Data in Classes and Interfaces",
     "rationale": "Public mutable attributes in classes and DATA declarations in interfaces breach object-oriented encapsulation by allowing external callers to directly mutate internal state without invariant validation. Exposing state leaks implementation details and prevents clean contract evolution. Restrict data to PRIVATE/PROTECTED sections with getters (or READ-ONLY), and keep interfaces strictly stateless with methods and CONSTANTS.",
-    "className": "ZCL_SKYLINT_NO_EXPOSED_DATA",
+    "className": "/SKYL/CL_NO_EXPOSED_DATA",
     "pseudoComment": "PUBLIC_ATTR",
     "category": "anti-patterns",
     "example": {
@@ -1152,7 +1152,7 @@ export const RULES = [
     "ruleId": "no-obs-arith",
     "title": "Avoid Obsolete Arithmetic and Assignment Statements",
     "rationale": "Legacy calculation statements (ADD, SUBTRACT, MULTIPLY, DIVIDE, ADD-CORRESPONDING, and COMPUTE) and verbose assignments (MOVE ... TO, GET REFERENCE OF ... INTO) clutter code and hinder readability. Modern ABAP provides clean functional expressions, compound arithmetic, and standard assignment operators (=, +, -, *, /, REF #()) that are strictly required in Clean ABAP and ABAP Cloud.",
-    "className": "ZCL_SKYLINT_NO_OBS_ARITH",
+    "className": "/SKYL/CL_NO_OBS_ARITH",
     "pseudoComment": "NO_OBS_ARITH",
     "category": "anti-patterns",
     "example": {
@@ -1187,7 +1187,7 @@ export const RULES = [
     "ruleId": "no-unclosed-res",
     "title": "Ensure Opened Datasets and Cursors are Closed",
     "rationale": "Resources opened on the application server (OPEN DATASET) or database (OPEN CURSOR) must always be explicitly closed (CLOSE DATASET, CLOSE CURSOR). Leaving resources open causes operating system file descriptor leaks, persistent file locks, and can trigger the fatal runtime error DBSQL_TOO_MANY_OPEN_CURSOR (maximum 17 open database cursors session limit).",
-    "className": "ZCL_SKYLINT_NO_UNCLOSED_RES",
+    "className": "/SKYL/CL_NO_UNCLOSED_RES",
     "pseudoComment": "NO_UNCLOSED_RES",
     "category": "security",
     "example": {
@@ -1217,7 +1217,7 @@ export const RULES = [
     "ruleId": "no-obs-decl",
     "title": "Avoid Obsolete Declarations and Table Headers",
     "rationale": "Legacy declaration statements like TABLES, RANGES, TYPE-POOLS, and internal tables defined WITH HEADER LINE, OCCURS, or INITIAL SIZE carry significant technical debt and implicit global state. In modern Clean ABAP and ABAP Cloud, use explicit TYPES, DATA statements with modern table types, standard RANGE OF types, and CLEAR instead of REFRESH.",
-    "className": "ZCL_SKYLINT_NO_OBS_DECL",
+    "className": "/SKYL/CL_NO_OBS_DECL",
     "pseudoComment": "NO_OBS_DECL",
     "category": "anti-patterns",
     "example": {
@@ -1259,7 +1259,7 @@ export const RULES = [
     "ruleId": "no-obs-control",
     "title": "Avoid Obsolete Control Flow and Procedural Forms",
     "rationale": "Subroutines (FORM / PERFORM), macro definitions (DEFINE), hardcoded break points (BREAK-POINT / BREAK), control break statements (AT NEW, AT END, ON CHANGE OF, SUM), and SET EXTENDED CHECK belong to legacy procedural programming. They lack proper scope isolation, cause unpredictable side effects, and are completely prohibited in modern ABAP Cloud. Encapsulate all logic within methods, modern LOOP GROUP BY syntax, and unit tests.",
-    "className": "ZCL_SKYLINT_NO_OBS_CONTROL",
+    "className": "/SKYL/CL_NO_OBS_CONTROL",
     "pseudoComment": "NO_OBS_CONTROL",
     "category": "anti-patterns",
     "example": {
@@ -1299,7 +1299,7 @@ export const RULES = [
     "ruleId": "no-obs-memory",
     "title": "Avoid Obsolete ABAP Memory and Context Statements",
     "rationale": "ABAP memory and database cluster statements (EXPORT ... TO MEMORY / DATABASE, FREE MEMORY) and Context commands (CONTEXTS, DEMAND, SUPPLY, PROVIDE) rely on hidden shared memory regions that break statelessness, multi-tenancy, and testability. In cloud systems, communicate explicitly via method parameters, database repositories, or session services.",
-    "className": "ZCL_SKYLINT_NO_OBS_MEMORY",
+    "className": "/SKYL/CL_NO_OBS_MEMORY",
     "pseudoComment": "NO_OBS_MEMORY",
     "category": "anti-patterns",
     "example": {
@@ -1336,7 +1336,7 @@ export const RULES = [
     "ruleId": "no-obs-strings",
     "title": "Avoid Obsolete String and POSIX Regex Statements",
     "rationale": "Statements such as PACK, UNPACK, REPLACE ... INTO, and FIND/REPLACE with REGEX / OCCURENCES (along with POSIX regular expression classes like CL_ABAP_REGEX=>CREATE_POSIX) are legacy constructs superseded by modern PCRE (Perl-Compatible Regular Expressions via PCRE keywords / XCO regex) and standard string expressions / built-ins.",
-    "className": "ZCL_SKYLINT_NO_OBS_STRINGS",
+    "className": "/SKYL/CL_NO_OBS_STRINGS",
     "pseudoComment": "NO_OBS_STRINGS",
     "category": "anti-patterns",
     "example": {
@@ -1371,7 +1371,7 @@ export const RULES = [
     "ruleId": "no-list-proc",
     "title": "Avoid Classic List Processing Statements",
     "rationale": "Classic list processing with WRITE, ULINE, FORMAT, and READ LINE only works in SAP GUI list reports and is unavailable in ABAP Cloud. It couples business logic to screen output and makes the code impossible to test independently. Use application logging or a modern UI framework instead of writing directly to a list.",
-    "className": "ZCL_SKYLINT_NO_LIST_PROC",
+    "className": "/SKYL/CL_NO_LIST_PROC",
     "pseudoComment": "NO_LIST_PROC",
     "category": "anti-patterns",
     "example": {
@@ -1408,7 +1408,7 @@ export const RULES = [
     "ruleId": "max-params",
     "title": "Limit Method Parameter Count and Require Multi-Line Signatures",
     "rationale": "Methods with excessive parameter signatures (more than 3-5 parameters) are a sign of weak abstraction. Callers struggle to remember parameter order, optional flags multiply, and method calls become unreadable. Furthermore, declaring multiple parameters on a single line clutters Git diffs and hinders peer review.\n\n**Clean ABAP Guideline:** Prefer 0 to 3 parameters. If more data is needed, bundle logically related fields into a dedicated parameter structure or options object. Place each parameter on its own line.",
-    "className": "ZCL_SKYLINT_MAX_PARAMS",
+    "className": "/SKYL/CL_MAX_PARAMS",
     "pseudoComment": "MAX_PARAMS_COUNT",
     "category": "metrics",
     "example": {
@@ -1438,7 +1438,7 @@ export const RULES = [
     "ruleId": "no-db-in-loop",
     "title": "Avoid Database Access Inside Loops (N+1 Query Antipattern)",
     "rationale": "Executing OpenSQL queries (SELECT, INSERT, UPDATE, DELETE) inside loops causes the notorious **N+1 query antipattern**. Every iteration incurs network latency, context switches between application server and database, and query compilation overhead. In high-volume production systems, this degrades transaction throughput by orders of magnitude and causes database connection pool saturation.\n\n**Best Practice:** Pre-fetch all necessary records in bulk before entering the loop using `FOR ALL ENTRIES` or SQL `JOIN`. Index the retrieved records in a hashed or sorted internal table and access them inside the loop in memory in $O(1)$ or $O(\\log N)$ time.",
-    "className": "ZCL_SKYLINT_NO_DB_IN_LOOP",
+    "className": "/SKYL/CL_NO_DB_IN_LOOP",
     "pseudoComment": "NO_DB_IN_LOOP",
     "category": "performance",
     "example": {
@@ -1466,7 +1466,7 @@ export const RULES = [
     "ruleId": "no-empty-fae",
     "title": "Prevent Empty Driver Tables in FOR ALL ENTRIES (Full Table Scan Bug)",
     "rationale": "In ABAP OpenSQL, if the internal table specified in `FOR ALL ENTRIES IN @lt_tab` is empty at runtime, **the database drops the WHERE clause entirely** and executes an unrestricted full-table scan (`SELECT * FROM dbtab`). This is a well-known legacy behavior in SAP NetWeaver and ABAP Cloud that can lock massive production tables, exhaust application server memory, and result in catastrophic runtime dumps (`TSV_TNEW_PAGE_ALLOC_FAILED`).\n\n**Best Practice:** Always guard any `FOR ALL ENTRIES` query with an explicit `IF itab IS NOT INITIAL` condition before invoking the database.",
-    "className": "ZCL_SKYLINT_NO_EMPTY_FAE",
+    "className": "/SKYL/CL_NO_EMPTY_FAE",
     "pseudoComment": "NO_EMPTY_FAE",
     "category": "performance",
     "example": {
@@ -1493,7 +1493,7 @@ export const RULES = [
     "ruleId": "no-select-star",
     "title": "Avoid SELECT * in OpenSQL Queries (Minimize Memory & Network Overhead)",
     "rationale": "Using `SELECT *` forces the SAP database interface and database engine to retrieve and transfer every single column defined on the database table, including heavy text fields, binary blobs, and irrelevant business attributes. In modern columnar databases like SAP HANA, fetching unneeded columns defeats column-store compression, inflates application server heap usage, and causes unnecessary memory allocations.\n\n**Best Practice:** Explicitly project only the exact fields required by your business process into a typed structure or inline table expression.",
-    "className": "ZCL_SKYLINT_NO_SELECT_STAR",
+    "className": "/SKYL/CL_NO_SELECT_STAR",
     "pseudoComment": "NO_SELECT_STAR",
     "category": "performance",
     "example": {
@@ -1519,7 +1519,7 @@ export const RULES = [
     "ruleId": "no-endselect",
     "title": "Avoid SELECT ... ENDSELECT Row-by-Row Cursor Loops",
     "rationale": "The `SELECT ... ENDSELECT` construct establishes a persistent server-side database cursor and streams rows individually back to the application server one by one. This causes massive network chatter, holds open database transaction locks, and blocks database connection pool resources. If long-running logic or exception dumps occur inside the loop, the database cursor may leak.\n\n**Best Practice:** Use package fetches or array array operations (`SELECT ... INTO TABLE`) to retrieve records in bulk, utilizing fast block-based network transfers.",
-    "className": "ZCL_SKYLINT_NO_ENDSELECT",
+    "className": "/SKYL/CL_NO_ENDSELECT",
     "pseudoComment": "NO_ENDSELECT",
     "category": "performance",
     "example": {
@@ -1545,7 +1545,7 @@ export const RULES = [
     "ruleId": "no-scope-leak",
     "title": "Avoid Variable Scope Leaking from Inner Blocks",
     "rationale": "A variable declared inside an IF or LOOP block is still visible after the block ends, so using it later creates a hidden dependency on whether the branch executed. This makes behavior hard to reason about and can leave the variable uninitialized. Declare the variable in the enclosing scope and assign it explicitly inside the branch.",
-    "className": "ZCL_SKYLINT_NO_SCOPE_LEAK",
+    "className": "/SKYL/CL_NO_SCOPE_LEAK",
     "pseudoComment": "NO_SCOPE_LEAK",
     "category": "anti-patterns",
     "example": {
@@ -1573,7 +1573,7 @@ export const RULES = [
     "ruleId": "no-redun-assign",
     "title": "Remove Redundant Self-Assignments and Identity Moves",
     "rationale": "Self-assignments (e.g. a = a or MOVE a TO a) have zero net effect on program execution state and indicate either dead code, incomplete copy-paste, or accidental reassignment. Remove these redundant statements to improve code clarity and reduce maintenance overhead.",
-    "className": "ZCL_SKYLINT_NO_REDUN_ASSIGN",
+    "className": "/SKYL/CL_NO_REDUN_ASSIGN",
     "pseudoComment": "NO_IDENTICAL_MOVE",
     "category": "anti-patterns",
     "example": {
@@ -1602,7 +1602,7 @@ export const RULES = [
     "ruleId": "no-shadow",
     "title": "Avoid Local Variables Shadowing Class Attributes",
     "rationale": "A local variable that repeats a class attribute name silently hides the member inside the method. Readers can no longer tell whether the code changes the object state or only a temporary copy, and a later refactoring may keep the wrong reference. Rename the local or use a distinct name that states its purpose.",
-    "className": "ZCL_SKYLINT_NO_SHADOW",
+    "className": "/SKYL/CL_NO_SHADOW",
     "pseudoComment": "NO_SHADOW",
     "category": "anti-patterns",
     "example": {
@@ -1630,7 +1630,7 @@ export const RULES = [
     "ruleId": "no-useless-concat",
     "title": "Avoid Concatenating Adjacent String Literals",
     "rationale": "Joining two or more literals with && produces one constant value at runtime, so the operator adds no information and only fragments the text. Folding the literals makes the final string visible and removes a pointless expression. Keep && only when at least one operand is dynamic.",
-    "className": "ZCL_SKYLINT_NO_USELESS_CONCAT",
+    "className": "/SKYL/CL_NO_USELESS_CONCAT",
     "pseudoComment": "NO_USELESS_CONCAT",
     "category": "anti-patterns",
     "example": {
@@ -1658,7 +1658,7 @@ export const RULES = [
     "ruleId": "pref-full-typed",
     "title": "Require Fully Typed Variables and Parameters",
     "rationale": "Untyped constants and data objects receive an implicit type whose length and value range are easy to misjudge. A later change to the literal can silently truncate data or alter comparisons. Declare explicit TYPE and LENGTH so the contract is visible to readers and checked by the compiler.",
-    "className": "ZCL_SKYLINT_PREF_FULL_TYPED",
+    "className": "/SKYL/CL_PREF_FULL_TYPED",
     "pseudoComment": "PREF_FULL_TYPED",
     "category": "clean-abap",
     "example": {
@@ -1686,7 +1686,7 @@ export const RULES = [
     "ruleId": "pref-corresp",
     "title": "Prefer CORRESPONDING #( ) Operator",
     "rationale": "MOVE-CORRESPONDING is a procedural statement that copies same-named fields implicitly and cannot be nested in expressions. CORRESPONDING #( ) is expression-capable and supports EXCEPT, MAPPING, and DISCARDING to control the mapping explicitly. Use it to make structure transfers visible and type-safe.",
-    "className": "ZCL_SKYLINT_PREF_CORRESP",
+    "className": "/SKYL/CL_PREF_CORRESP",
     "pseudoComment": "PREF_CORRESP",
     "category": "clean-abap",
     "example": {
@@ -1714,7 +1714,7 @@ export const RULES = [
     "ruleId": "max-method-len",
     "title": "Limit Method and Constructor Statement Length",
     "rationale": "Methods that contain hundreds of statements violate the **Single Responsibility Principle (SRP)**. They are difficult to comprehend, impossible to unit test thoroughly, and conceal copy-pasted business logic branches. Constructors are especially sensitive: heavy business logic or loops in constructors make dependency injection and mock testing impossible.\n\n**Clean ABAP Guideline:** A clean method should do one thing, do it well, and do it only. Keep regular methods under 20-30 statements and keep constructors minimal (dependency assignment only).",
-    "className": "ZCL_SKYLINT_MAX_METHOD_LEN",
+    "className": "/SKYL/CL_MAX_METHOD_LEN",
     "pseudoComment": "MAX_METHOD_LEN",
     "category": "metrics",
     "example": {
@@ -1745,7 +1745,7 @@ export const RULES = [
     "ruleId": "max-nesting",
     "title": "Limit Control Flow Nesting Depth (Guard Clause Enforcement)",
     "rationale": "Deeply nested control structures (`IF`, `LOOP`, `CASE`, `DO`, `TRY`) create the dreaded \"Arrow Antipattern\". Code drifts to the right edge of the editor, mental stack load increases exponentially, and error handling branches become difficult to trace.\n\n**Clean ABAP Guideline:** Invert conditional checks and use **Guard Clauses** (`RETURN`, `CONTINUE`) at the top of methods and loops. Aim for a maximum nesting depth of 2 to 3 levels.",
-    "className": "ZCL_SKYLINT_MAX_NESTING",
+    "className": "/SKYL/CL_MAX_NESTING",
     "pseudoComment": "MAX_NESTING",
     "category": "metrics",
     "example": {
@@ -1774,7 +1774,7 @@ export const RULES = [
     "ruleId": "no-sy-modify",
     "title": "Avoid Directly Modifying System Fields (sy-subrc, sy-tabix)",
     "rationale": "System fields in the `sy` structure (`sy-subrc`, `sy-tabix`, `sy-index`, `sy-mandt`) are maintained exclusively by the ABAP C-kernel. Directly overwriting them in application code (e.g., `sy-subrc = 0.`) creates deceptive illusion of successful operations, hides runtime failures from subsequent check tools, and produces erratic debugger state.",
-    "className": "ZCL_SKYLINT_NO_SY_MODIFY",
+    "className": "/SKYL/CL_NO_SY_MODIFY",
     "pseudoComment": "NO_SY_MODIFY",
     "category": "security",
     "example": {
@@ -1799,7 +1799,7 @@ export const RULES = [
     "ruleId": "pref-returning",
     "title": "Prefer Functional RETURNING Parameters",
     "rationale": "A single EXPORTING parameter forces callers to declare a target and invoke the method as a statement. A RETURNING parameter makes the method usable directly in assignments, expressions, and assertions. Prefer RETURNING for value-producing methods and reserve EXPORTING for methods that genuinely return several outputs.",
-    "className": "ZCL_SKYLINT_PREF_RETURNING",
+    "className": "/SKYL/CL_PREF_RETURNING",
     "pseudoComment": "PREF_RETURNING",
     "category": "clean-abap",
     "example": {
@@ -1827,7 +1827,7 @@ export const RULES = [
     "ruleId": "pref-class-exc",
     "title": "Prefer Class-Based Exceptions over Classic EXCEPTIONS",
     "rationale": "Classic exceptions report failure through sy-subrc and cannot carry a message object, stack trace, or context data. They are easy to ignore and do not propagate cleanly through call stacks. Use CX_ROOT subclasses with RAISING and CATCH so errors are explicit, typed, and carry useful information.",
-    "className": "ZCL_SKYLINT_PREF_CLASS_EXC",
+    "className": "/SKYL/CL_PREF_CLASS_EXC",
     "pseudoComment": "PREF_CLASS_EXC",
     "category": "clean-abap",
     "example": {
@@ -1855,7 +1855,7 @@ export const RULES = [
     "ruleId": "no-prod-assert",
     "title": "Avoid Native ASSERT in Production Code (Prevent Unrecoverable Dumps)",
     "rationale": "The ABAP statement `ASSERT condition` immediately raises an uncatchable short dump (`ASSERTION_FAILED`) if the condition evaluates to false. While useful in unit test classes, using unconditioned assertions in production application logic abruptly terminates end-user sessions, loses uncommitted data, and creates emergency incidents.\n\n**Best Practice:** Check conditions gracefully and raise recoverable class-based exceptions with informative error messages. Reserve `ASSERT` strictly for ABAP Unit test includes (`LCL_TEST`).",
-    "className": "ZCL_SKYLINT_NO_PROD_ASSERT",
+    "className": "/SKYL/CL_NO_PROD_ASSERT",
     "pseudoComment": "NO_PROD_ASSERT",
     "category": "security",
     "example": {
@@ -1880,7 +1880,7 @@ export const RULES = [
     "ruleId": "no-raise-shortdump",
     "title": "Avoid Explicit RAISE SHORTDUMP in Application Logic",
     "rationale": "The statement `RAISE SHORTDUMP` deliberately triggers an instant runtime crash and short dump in transaction ST22. Triggering intentional crashes bypasses standard cleanup handlers, cancels asynchronous update tasks, and leaves database locks dangling.\n\n**Best Practice:** Raise standard class-based exceptions inheriting from `CX_STATIC_CHECK` or `CX_NO_CHECK`. Allow the caller or global exception boundary to handle the incident gracefully.",
-    "className": "ZCL_SKYLINT_NO_RAISE_SHORTDUMP",
+    "className": "/SKYL/CL_NO_RAISE_SHORTDUMP",
     "pseudoComment": "NO_RAISE_SHORTDUMP",
     "category": "security",
     "example": {
@@ -1905,7 +1905,7 @@ export const RULES = [
     "ruleId": "no-metaprogramming",
     "title": "Avoid Dynamic Metaprogramming and Code Generation (Remote Code Execution Risk)",
     "rationale": "Statements like `GENERATE SUBROUTINE POOL`, `INSERT REPORT`, and dynamic `SYNTAX-CHECK` create and execute uncompiled ABAP code at runtime. Metaprogramming introduces severe **Remote Code Execution (RCE)** vulnerabilities (CWE-94), defeats static analysis in ATC, and is completely blocked in ABAP Cloud and SAP BTP.\n\n**Cloud Standard:** Use object-oriented polymorphism, strategy design patterns, or BAdIs instead of generating code dynamically.",
-    "className": "ZCL_SKYLINT_NO_METAPROGRAMMING",
+    "className": "/SKYL/CL_NO_METAPROGRAMMING",
     "pseudoComment": "NO_METAPROGRAMMING",
     "category": "security",
     "example": {
@@ -1931,7 +1931,7 @@ export const RULES = [
     "ruleId": "no-kernel-call",
     "title": "Avoid Kernel and Native Database Calls (SYSTEM-CALL, EXEC SQL)",
     "rationale": "Executing internal SAP kernel commands (`SYSTEM-CALL`) or native database procedures (`EXEC SQL`) bypasses the OpenSQL syntax layer, authorization buffers, and client separation. Kernel calls are undocumented, internal SAP proprietary instructions that break across kernel upgrades and are strictly forbidden in ABAP Cloud.",
-    "className": "ZCL_SKYLINT_NO_KERNEL_CALL",
+    "className": "/SKYL/CL_NO_KERNEL_CALL",
     "pseudoComment": "NO_KERNEL_CALL",
     "category": "security",
     "example": {
@@ -1956,7 +1956,7 @@ export const RULES = [
     "ruleId": "pref-auth-check",
     "title": "Ensure AUTHORITY-CHECK Precedes Sensitive Business Operations",
     "rationale": "Accessing or modifying sensitive business entities (such as financials, HR master data, and sales pricing) without prior authorization verification allows unauthorized users to read or tamper with protected company assets. Every business service, remote-enabled function module, or RAP BO handler must enforce an explicit authorization check at the entry point of sensitive operations.",
-    "className": "ZCL_SKYLINT_PREF_AUTH_CHECK",
+    "className": "/SKYL/CL_PREF_AUTH_CHECK",
     "pseudoComment": "PREF_AUTH_CHECK",
     "category": "security",
     "example": {
@@ -1982,7 +1982,7 @@ export const RULES = [
     "ruleId": "pref-order-by",
     "title": "Require Explicit ORDER BY for Deterministic SELECT Queries",
     "rationale": "In modern relational databases, particularly SAP HANA column store, rows in a table have no intrinsic physical order. Executing queries with `SELECT SINGLE` or `SELECT ... UP TO 1 ROWS` without an explicit `ORDER BY` clause leads to **non-deterministic results**: identical queries executed multiple times can return completely different records depending on parallel query execution, index fragmentation, or cache state.\n\n**Best Practice:** Always provide an explicit `ORDER BY` clause specifying the primary key or unique business keys when picking subset records or singular values.",
-    "className": "ZCL_SKYLINT_PREF_ORDER_BY",
+    "className": "/SKYL/CL_PREF_ORDER_BY",
     "pseudoComment": "PREF_ORDER_BY",
     "category": "performance",
     "example": {
@@ -2008,7 +2008,7 @@ export const RULES = [
     "ruleId": "max-cyclo-comp",
     "title": "Limit Cyclomatic Complexity (McCabe Complexity Metric)",
     "rationale": "Cyclomatic Complexity measures the number of linearly independent paths through a procedure's source code (branch points like `IF`, `ELSEIF`, `WHEN`, `WHILE`, `AND`, `OR`, `CATCH`). High complexity correlates directly with high defect density, regression risks during refactoring, and poor unit test branch coverage.\n\n**Clean ABAP Guideline:** Keep cyclomatic complexity under 10 (or maximum 15 for large state dispatches). Extract branches into polymorphically dispatched strategy classes or smaller helper methods.",
-    "className": "ZCL_SKYLINT_MAX_CYCLO_COMP",
+    "className": "/SKYL/CL_MAX_CYCLO_COMP",
     "pseudoComment": "MAX_CYCLO_COMP",
     "category": "metrics",
     "example": {
@@ -2037,7 +2037,7 @@ export const RULES = [
     "ruleId": "max-npath",
     "title": "Limit NPath Complexity per Method",
     "rationale": "NPath complexity measures the total number of acyclic execution paths through a procedure. Unlike cyclomatic complexity which grows linearly with decision points, NPath complexity grows multiplicatively across sequential and nested control structures (IF, CASE, loops, compound boolean expressions). High NPath complexity makes exhaustive testing impossible. Keep NPath under the threshold by breaking large procedures into cohesive helper methods.",
-    "className": "ZCL_SKYLINT_MAX_NPATH",
+    "className": "/SKYL/CL_MAX_NPATH",
     "pseudoComment": "MAX_NPATH",
     "category": "metrics",
     "example": {
@@ -2068,7 +2068,7 @@ export const RULES = [
     "ruleId": "pref-final-cls",
     "title": "Design for Inheritance or Prohibit It (FINAL)",
     "rationale": "A class that is not designed for inheritance can still be subclassed, and subclasses may depend on internal behavior that later changes. Marking the class FINAL prevents fragile base class problems and documents that no extension is intended. Remove FINAL only when the class has documented extension points.",
-    "className": "ZCL_SKYLINT_PREF_FINAL_CLS",
+    "className": "/SKYL/CL_PREF_FINAL_CLS",
     "pseudoComment": "PREF_FINAL_CLASS",
     "category": "clean-abap",
     "example": {
@@ -2100,7 +2100,7 @@ export const RULES = [
     "ruleId": "no-magic-numbers",
     "title": "Avoid Magic Numbers; Use Named Constants",
     "rationale": "A numeric literal in logic does not explain what it represents, and the same value repeated in several places must be changed consistently. Named constants turn business rules into readable intent and give the value a single source of truth. Declare typed constants and reuse them instead of scattering numbers through the code.",
-    "className": "ZCL_SKYLINT_NO_MAGIC_NUMBERS",
+    "className": "/SKYL/CL_NO_MAGIC_NUMBERS",
     "pseudoComment": "NO_MAGIC_NUMBERS",
     "category": "anti-patterns",
     "example": {
@@ -2128,7 +2128,7 @@ export const RULES = [
     "ruleId": "pref-insert",
     "title": "Prefer INSERT ... INTO TABLE over APPEND",
     "rationale": "APPEND only works for index tables and implies sequential insertion, so changing the table type to sorted or hashed later breaks the code. INSERT ... INTO TABLE works with every table category and states the intent generically. Use INSERT for table handling that should remain independent of the concrete table kind.",
-    "className": "ZCL_SKYLINT_PREF_INSERT",
+    "className": "/SKYL/CL_PREF_INSERT",
     "pseudoComment": "PREF_INSERT",
     "category": "clean-abap",
     "example": {
@@ -2156,7 +2156,7 @@ export const RULES = [
     "ruleId": "no-like-objects",
     "title": "Avoid LIKE Typing on Global Dictionary Objects",
     "rationale": "LIKE copies the type of a data object, which couples the new declaration to an implementation detail rather than to a type contract. For Dictionary objects, TYPE references the type directly and stays stable when the referenced object changes. Use LIKE only for local data objects whose type is intentionally shared.",
-    "className": "ZCL_SKYLINT_NO_LIKE_OBJECTS",
+    "className": "/SKYL/CL_NO_LIKE_OBJECTS",
     "pseudoComment": "NO_LIKE_OBJECTS",
     "category": "anti-patterns",
     "example": {
@@ -2184,7 +2184,7 @@ export const RULES = [
     "ruleId": "no-static-cls",
     "title": "Avoid Purely Static Utility Classes",
     "rationale": "A class made only of static methods cannot be mocked through an interface, so every caller is tightly coupled to the implementation. Static state also leaks between tests and makes behavior order-dependent. Inject an instance through an interface and use instance methods instead.",
-    "className": "ZCL_SKYLINT_NO_STATIC_CLS",
+    "className": "/SKYL/CL_NO_STATIC_CLS",
     "pseudoComment": "NO_STATIC_CLS",
     "category": "anti-patterns",
     "example": {
@@ -2212,7 +2212,7 @@ export const RULES = [
     "ruleId": "pref-pred-name",
     "title": "Use Predicate Naming for Boolean Methods (is_, has_, can_)",
     "rationale": "A boolean method reads best as a yes/no question, especially when it appears inside an IF condition. Names such as check_active or get_active leave the return type ambiguous and can suggest a side effect. Use is_, has_, or can_ prefixes for methods that return abap_bool.",
-    "className": "ZCL_SKYLINT_PREF_PRED_NAME",
+    "className": "/SKYL/CL_PREF_PRED_NAME",
     "pseudoComment": "PREF_PRED_NAME",
     "category": "clean-abap",
     "example": {
@@ -2240,7 +2240,7 @@ export const RULES = [
     "ruleId": "max-inherit",
     "title": "Limit Class Inheritance Depth (Favor Composition over Inheritance)",
     "rationale": "Deep class inheritance hierarchies (more than 2-3 levels) create tight coupling, brittle base class syndromes, and hidden dependencies. Subclasses inherit private state and side-effects from ancestors, making changes to base classes unpredictable across the entire codebase.\n\n**Clean ABAP Guideline:** Favor **Object Composition** over Class Inheritance. Use interfaces to define contracts and inject dependencies instead of extending deep abstract class hierarchies.",
-    "className": "ZCL_SKYLINT_MAX_INHERIT",
+    "className": "/SKYL/CL_MAX_INHERIT",
     "pseudoComment": "MAX_INHERIT",
     "category": "metrics",
     "example": {
@@ -2269,7 +2269,7 @@ export const RULES = [
     "ruleId": "max-attributes",
     "title": "Limit Class Member Attribute Count (Prevent God Classes)",
     "rationale": "Classes with dozens of member variables (`DATA mv_*`) almost always suffer from low cohesion. Such classes become stateful \"God Objects\" that manage unrelated responsibilities, leading to concurrency race conditions and untraceable state mutations.\n\n**Clean ABAP Guideline:** Classes should have a small number of instance attributes that directly represent the core identity or essential collaborators of the object. Split bloated classes into focused domain components.",
-    "className": "ZCL_SKYLINT_MAX_ATTRIBUTES",
+    "className": "/SKYL/CL_MAX_ATTRIBUTES",
     "pseudoComment": "MAX_ATTRIBUTES",
     "category": "metrics",
     "example": {
@@ -2298,7 +2298,7 @@ export const RULES = [
     "ruleId": "no-catch-root",
     "title": "Avoid Catching Generic CX_ROOT (Catch Specific Exceptions)",
     "rationale": "Catching the root exception class `CX_ROOT` indiscriminately traps all exceptions, including catastrophic system resource exhaustion (`CX_SY_RESOURCE_FAILURE`), database disconnections, and critical assertion failures. Catching `CX_ROOT` without re-raising creates the \"Black Hole Exception Antipattern\", masking fatal bugs and allowing corrupted processes to continue running.\n\n**Best Practice:** Always catch specific, expected exception classes (`CATCH zcx_order_not_found zcx_pricing_failed`).",
-    "className": "ZCL_SKYLINT_NO_CATCH_ROOT",
+    "className": "/SKYL/CL_NO_CATCH_ROOT",
     "pseudoComment": "NO_CATCH_ROOT",
     "category": "security",
     "example": {
@@ -2323,7 +2323,7 @@ export const RULES = [
     "ruleId": "no-msg-raising",
     "title": "Avoid Obsolete MESSAGE ... RAISING in Methods",
     "rationale": "MESSAGE ... RAISING mixes UI message output with exception propagation and depends on classic exception numbers. It separates poorly from business logic and is unsuitable for APIs that should return typed failures. Raise a class-based exception that references the message class text instead.",
-    "className": "ZCL_SKYLINT_NO_MSG_RAISING",
+    "className": "/SKYL/CL_NO_MSG_RAISING",
     "pseudoComment": "NO_MSG_RAISING",
     "category": "anti-patterns",
     "example": {
@@ -2351,7 +2351,7 @@ export const RULES = [
     "ruleId": "no-nested-try",
     "title": "Avoid Deeply Nested TRY ... CATCH Blocks",
     "rationale": "A TRY block inside another TRY block makes it unclear which handler owns which failure and often duplicates cleanup logic. The inner operation should have its own exception contract behind a method boundary. Extract it into a focused helper and keep one TRY per responsibility.",
-    "className": "ZCL_SKYLINT_NO_NESTED_TRY",
+    "className": "/SKYL/CL_NO_NESTED_TRY",
     "pseudoComment": "NO_NESTED_TRY",
     "category": "anti-patterns",
     "example": {
@@ -2379,7 +2379,7 @@ export const RULES = [
     "ruleId": "no-raise-cx-sy",
     "title": "Avoid Raising System Exceptions Directly (CX_SY_*)",
     "rationale": "Classes in the `CX_SY_*` namespace (such as `CX_SY_ZERODIVIDE`, `CX_SY_REF_IS_INITIAL`) are reserved for the ABAP runtime engine and virtual machine. Raising them manually in business application logic confuses callers, pollutes error logs, and obscures the true origin of technical errors.\n\n**Best Practice:** Define dedicated domain exception classes inheriting from `CX_STATIC_CHECK` or `zcx_application_error`.",
-    "className": "ZCL_SKYLINT_NO_RAISE_CX_SY",
+    "className": "/SKYL/CL_NO_RAISE_CX_SY",
     "pseudoComment": "NO_RAISE_CX_SY",
     "category": "security",
     "example": {
@@ -2404,7 +2404,7 @@ export const RULES = [
     "ruleId": "pref-check-subrc",
     "title": "Verify sy-subrc Promptly After Data Retrieval and Search",
     "rationale": "Statements such as SELECT SINGLE, READ TABLE, FIND, and SEARCH report success through sy-subrc. If intervening statements execute before inspection, sy-subrc is overwritten and failure states are silently ignored. Check sy-subrc immediately after execution.",
-    "className": "ZCL_SKYLINT_PREF_CHECK_SUBRC",
+    "className": "/SKYL/CL_PREF_CHECK_SUBRC",
     "pseudoComment": "PREF_CHECK_SUBRC",
     "category": "clean-abap",
     "example": {
@@ -2440,7 +2440,7 @@ export const RULES = [
     "ruleId": "pref-auth-subrc",
     "title": "Check sy-subrc Promptly After AUTHORITY-CHECK (CWE-862 Authorization Bypass)",
     "rationale": "Executing `AUTHORITY-CHECK` without verifying `sy-subrc` immediately afterwards is one of the most critical security vulnerabilities in SAP ABAP (CWE-862: Missing Authorization Check). The SAP kernel evaluates the user's authorizations and sets `sy-subrc` to 0 on success or a non-zero code on failure. If intermediate statements execute before evaluating `sy-subrc`, another statement might overwrite `sy-subrc`, resulting in unauthorized privilege escalation.\n\n**Security Standard:** Always check `IF sy-subrc <> 0` immediately on the statement following `AUTHORITY-CHECK` and raise an authorization exception or terminate execution.",
-    "className": "ZCL_SKYLINT_PREF_AUTH_SUBRC",
+    "className": "/SKYL/CL_PREF_AUTH_SUBRC",
     "pseudoComment": "PREF_AUTH_SUBRC",
     "category": "security",
     "example": {
@@ -2467,7 +2467,7 @@ export const RULES = [
     "ruleId": "no-client-spec",
     "title": "Avoid CLIENT SPECIFIED / USING CLIENT in Cloud (Multi-Tenant Isolation)",
     "rationale": "The clauses `CLIENT SPECIFIED` and `USING CLIENT` override automatic client handling in OpenSQL. In multi-tenant cloud architectures (SAP BTP ABAP Environment, SAP S/4HANA Cloud), querying data across tenants violates multi-tenant data privacy laws (GDPR) and breaks tenant sandbox isolation.",
-    "className": "ZCL_SKYLINT_NO_CLIENT_SPEC",
+    "className": "/SKYL/CL_NO_CLIENT_SPEC",
     "pseudoComment": "NO_CLIENT_SPEC",
     "category": "security",
     "example": {
@@ -2492,7 +2492,7 @@ export const RULES = [
     "ruleId": "pref-transport",
     "title": "Specify TRANSPORTING in Internal Table MODIFY and READ Operations",
     "rationale": "When updating internal table rows using `MODIFY itab FROM workarea`, ABAP by default copies every single field from the work area into the internal table row. If the table row contains wide structures, nested tables, or large string fields, copying unchanged fields incurs severe CPU cache misses and memory reallocation overhead.\n\n**Best Practice:** Use the `TRANSPORTING` addition to explicitly specify only the specific columns being modified.",
-    "className": "ZCL_SKYLINT_PREF_TRANSPORT",
+    "className": "/SKYL/CL_PREF_TRANSPORT",
     "pseudoComment": "PREF_TRANSPORT",
     "category": "performance",
     "example": {
@@ -2518,7 +2518,7 @@ export const RULES = [
     "ruleId": "pref-str-func",
     "title": "Prefer Built-in String Functions over SEARCH/SHIFT",
     "rationale": "Statements such as CONDENSE, TRANSLATE, SHIFT, and SEARCH mutate a variable and cannot be used inside expressions. Built-in functions return values, compose cleanly, and make the intended transformation explicit. Use functions such as to_upper, to_lower, find, substring, and shift_left instead.",
-    "className": "ZCL_SKYLINT_PREF_STR_FUNC",
+    "className": "/SKYL/CL_PREF_STR_FUNC",
     "pseudoComment": "PREF_STR_FUNC",
     "category": "clean-abap",
     "example": {
@@ -2555,7 +2555,7 @@ export const RULES = [
     "ruleId": "pref-calc-op",
     "title": "Prefer Calculation Assignment Operators (+=, -=, *=)",
     "rationale": "Assignments such as lv_total = lv_total + 1 repeat the target variable and make the update harder to scan. Compound operators +=, -=, and *= express the change directly and avoid duplicating the left-hand side. Use them for simple arithmetic updates where the target is both source and result.",
-    "className": "ZCL_SKYLINT_PREF_CALC_OP",
+    "className": "/SKYL/CL_PREF_CALC_OP",
     "pseudoComment": "PREF_CALC_OP",
     "category": "clean-abap",
     "example": {
@@ -2583,7 +2583,7 @@ export const RULES = [
     "ruleId": "pref-early-ret",
     "title": "Prefer Early Return to Reduce Nesting (Guard Clauses)",
     "rationale": "Wrapping the whole method body in IF is_valid( ) creates unnecessary nesting and pushes the happy path to the right. Guard clauses reject invalid input at the top and leave the main logic flat and easy to read. Return early for preconditions and error cases instead of indenting the successful path.",
-    "className": "ZCL_SKYLINT_PREF_EARLY_RET",
+    "className": "/SKYL/CL_PREF_EARLY_RET",
     "pseudoComment": "PREF_GUARD_METHOD",
     "category": "clean-abap",
     "example": {
@@ -2616,7 +2616,7 @@ export const RULES = [
     "ruleId": "no-unused-vars",
     "title": "Eliminate Unused Local Variables and Symbols",
     "rationale": "An unused variable or field symbol adds noise and suggests incomplete refactoring or a missing assignment. It keeps dead objects alive longer than necessary and makes reviews harder. Remove the declaration, or mark it with ##NEEDED when an external contract requires it.",
-    "className": "ZCL_SKYLINT_NO_UNUSED_VARS",
+    "className": "/SKYL/CL_NO_UNUSED_VARS",
     "pseudoComment": "NO_UNUSED_VARS",
     "category": "anti-patterns",
     "example": {
@@ -2644,7 +2644,7 @@ export const RULES = [
     "ruleId": "pref-case",
     "title": "Prefer CASE over Multiple IF / ELSEIF on the Same Variable",
     "rationale": "A chain of ELSEIF statements that compares the same variable to different values is harder to scan than a CASE statement. CASE groups all alternatives under one subject and makes a missing OTHERS branch visible. Use CASE for multi-value dispatch on a single expression.",
-    "className": "ZCL_SKYLINT_PREF_CASE",
+    "className": "/SKYL/CL_PREF_CASE",
     "pseudoComment": "PREF_CASE",
     "category": "clean-abap",
     "example": {
@@ -2675,7 +2675,7 @@ export const RULES = [
     "ruleId": "no-inline-len",
     "title": "Avoid Obsolete Inline Length Specifications (var(len))",
     "rationale": "The legacy lv_name(10) syntax mixes the identifier and its length and is easy to misread as a substring or function call. Modern ABAP writes the type and length as separate, explicit tokens. Use TYPE c LENGTH n or a named type so the declaration is unambiguous.",
-    "className": "ZCL_SKYLINT_NO_INLINE_LEN",
+    "className": "/SKYL/CL_NO_INLINE_LEN",
     "pseudoComment": "NO_INLINE_LEN",
     "category": "anti-patterns",
     "example": {
@@ -2703,7 +2703,7 @@ export const RULES = [
     "ruleId": "max-one-stmt",
     "title": "Limit One Statement per Source Code Line (No Inline Colon Chains)",
     "rationale": "Placing multiple statements on a single line (either via semicolons, colons, or simple chaining like `a = 1. b = 2.`) compromises readability, impairs debugger single-stepping, and destroys Git line-by-line diff precision. When a runtime error occurs, the debugger stops on the line without clarifying which of the statements failed.\n\n**Clean ABAP Guideline:** Write exactly one ABAP statement per source code line.",
-    "className": "ZCL_SKYLINT_MAX_ONE_STMT",
+    "className": "/SKYL/CL_MAX_ONE_STMT",
     "pseudoComment": "MAX_ONE_STMT",
     "category": "metrics",
     "example": {
@@ -2729,7 +2729,7 @@ export const RULES = [
     "ruleId": "no-dash-in-form",
     "title": "Avoid Obsolete Dash (-) in Form Names",
     "rationale": "A hyphen inside a form name is legacy ABAP and is easily confused with the component selector for structures. Use underscores in form names and reserve hyphens for component access.",
-    "className": "ZCL_SKYLINT_NO_DASH_IN_FORM",
+    "className": "/SKYL/CL_NO_DASH_IN_FORM",
     "pseudoComment": "NO_DASH_IN_FORM",
     "category": "anti-patterns",
     "example": {
@@ -2757,7 +2757,7 @@ export const RULES = [
     "ruleId": "pref-inline",
     "title": "Prefer Modern Inline Declarations in ABAP 7.40+",
     "rationale": "Declaring a variable at the top and assigning it in the very next statement separates the declaration from its first use. Inline DATA( ) keeps the variable close to where it is needed and shortens its lifetime in the reader mind. Use inline declarations when the type is obvious from the initial value.",
-    "className": "ZCL_SKYLINT_PREF_INLINE",
+    "className": "/SKYL/CL_PREF_INLINE",
     "pseudoComment": "PREF_INLINE",
     "category": "clean-abap",
     "example": {
@@ -2785,7 +2785,7 @@ export const RULES = [
     "ruleId": "pref-final-data",
     "title": "Prefer FINAL( ) over DATA( ) when the variable is never written again",
     "rationale": "An inline variable that is assigned once and never changed should be declared FINAL so the compiler enforces immutability. This prevents accidental later writes and documents that the value is a constant for the rest of the method. Use FINAL( ) for single-assignment locals.",
-    "className": "ZCL_SKYLINT_PREF_FINAL_DATA",
+    "className": "/SKYL/CL_PREF_FINAL_DATA",
     "pseudoComment": "PREF_FINAL_DATA",
     "category": "clean-abap",
     "example": {
@@ -2813,7 +2813,7 @@ export const RULES = [
     "ruleId": "no-friends",
     "title": "Avoid FRIENDS in class definitions",
     "rationale": "FRIENDS exposes private and protected members to another class and creates a hidden bidirectional dependency. It defeats encapsulation and makes both classes harder to change independently. Expose a public method or interface instead of granting friendship.",
-    "className": "ZCL_SKYLINT_NO_FRIENDS",
+    "className": "/SKYL/CL_NO_FRIENDS",
     "pseudoComment": "NO_FRIENDS",
     "category": "anti-patterns",
     "example": {
@@ -2841,7 +2841,7 @@ export const RULES = [
     "ruleId": "pref-msg-cls",
     "title": "Use a message class (SE91) instead of inline message text",
     "rationale": "Inline message texts are not translatable through SE91 and are scattered across the codebase. A message class centralizes text, numbering, and translation for all consumers. Raise messages with MESSAGE e001(zmsg) or a class-based exception that references the message text.",
-    "className": "ZCL_SKYLINT_PREF_MSG_CLS",
+    "className": "/SKYL/CL_PREF_MSG_CLS",
     "pseudoComment": "PREF_MSG_CLS",
     "category": "clean-abap",
     "example": {
@@ -2869,7 +2869,7 @@ export const RULES = [
     "ruleId": "no-exc-overlap",
     "title": "Classic EXCEPTIONS must not map two errors to the same number",
     "rationale": "When two classic exceptions map to the same sy-subrc number, the caller cannot tell which failure occurred. This makes error handling guesswork and can hide the real cause. Assign distinct numbers and reserve OTHERS for unexpected failures.",
-    "className": "ZCL_SKYLINT_NO_EXC_OVERLAP",
+    "className": "/SKYL/CL_NO_EXC_OVERLAP",
     "pseudoComment": "NO_EXC_OVERLAP",
     "category": "anti-patterns",
     "example": {
@@ -2897,7 +2897,7 @@ export const RULES = [
     "ruleId": "no-rfc-err",
     "title": "Handle System and Communication Failures in Remote Function Calls (RFC)",
     "rationale": "When invoking remote SAP systems via `CALL FUNCTION ... DESTINATION`, network timeouts, gateway unreachability, target kernel crashes, and authorization rejections trigger classic exceptions `COMMUNICATION_FAILURE` and `SYSTEM_FAILURE`. Omitting these exception handlers causes the local caller to crash with an unhandled short dump (`CALL_FUNCTION_NOT_FOUND` or `RFC_COMMUNICATION_ERROR`).\n\n**Reliability Standard:** Always catch and log both `COMMUNICATION_FAILURE` and `SYSTEM_FAILURE` with `MESSAGE lv_msg` when calling remote destinations.",
-    "className": "ZCL_SKYLINT_NO_RFC_ERR",
+    "className": "/SKYL/CL_NO_RFC_ERR",
     "pseudoComment": "NO_RFC_ERR",
     "category": "security",
     "example": {
@@ -2923,7 +2923,7 @@ export const RULES = [
     "ruleId": "no-many-parens",
     "title": "Remove redundant parentheses",
     "rationale": "Parentheses that wrap an entire condition or arithmetic expression do not change evaluation order but add visual noise. They often remain after refactoring and make expressions look more complex than they are. Remove redundant outer parentheses and keep only those needed for precedence.",
-    "className": "ZCL_SKYLINT_NO_MANY_PARENS",
+    "className": "/SKYL/CL_NO_MANY_PARENS",
     "pseudoComment": "NO_MANY_PARENS",
     "category": "anti-patterns",
     "example": {
@@ -2951,7 +2951,7 @@ export const RULES = [
     "ruleId": "pref-pass-by-ref",
     "title": "Prefer Pass-by-Reference for Internal Tables in Method Signatures",
     "rationale": "Declaring method parameters with `VALUE(it_table)` forces the ABAP runtime to perform an immediate deep copy of the entire table into a new memory allocation upon invocation. If an internal table containing thousands of rows is passed across multiple layers, memory consumption multiplies rapidly and garbage collection pressure causes latency spikes.\n\n**Best Practice:** Pass internal tables by reference (`it_table TYPE ...` without the `VALUE` keyword). In ABAP, parameters are passed by reference by default, which passes only a pointer ($O(1)$ cost).",
-    "className": "ZCL_SKYLINT_PREF_PASS_BY_REF",
+    "className": "/SKYL/CL_PREF_PASS_BY_REF",
     "pseudoComment": "PREF_PASS_BY_REF",
     "category": "performance",
     "example": {
@@ -2977,7 +2977,7 @@ export const RULES = [
     "ruleId": "no-mod-std-table",
     "title": "Only Modify Tables Defined in Your Own Package/Component",
     "rationale": "Directly executing `INSERT`, `UPDATE`, `MODIFY`, or `DELETE` statements on SAP standard tables (like `VBAK`, `BKPF`, `EKKO`, `BUT000`) bypasses core SAP document locking, document numbering, consistency validations, and business events. Such direct updates corrupt standard SAP database integrity and void SAP enterprise support agreements.\n\n**Clean Core Standard:** Always use released SAP Business APIs (BAPIs), standard Business Objects, or RAP transactional interfaces to create or update SAP standard data.",
-    "className": "ZCL_SKYLINT_NO_MOD_STD_TABLE",
+    "className": "/SKYL/CL_NO_MOD_STD_TABLE",
     "pseudoComment": "NO_MOD_STD_TABLE",
     "category": "security",
     "example": {
@@ -3007,7 +3007,7 @@ export const RULES = [
     "ruleId": "no-dynamic-stmt",
     "title": "Avoid Unnecessary Dynamic Programming Constructs (SQL Injection Prevention)",
     "rationale": "Dynamic ABAP statements (like dynamic SQL `SELECT (lt_fields) FROM (lv_table) WHERE (lv_cond)`, dynamic method calls `CALL METHOD (lv_class)=>(lv_meth)`, or dynamic assignments `ASSIGN (lv_var) TO <fs>`) bypass compile-time syntax checks, cannot be analyzed by static ATC security tools, and introduce severe **SQL Injection (CWE-89)** risks.\n\n**Security Standard:** Write static, strongly-typed OpenSQL and OOP code wherever possible. When dynamic SQL is unavoidable (e.g. in generic analytics engines), escape input variables thoroughly using `cl_abap_dyn_prg`.",
-    "className": "ZCL_SKYLINT_NO_DYNAMIC_STMT",
+    "className": "/SKYL/CL_NO_DYNAMIC_STMT",
     "pseudoComment": "NO_DYNAMIC_STMT",
     "category": "security",
     "example": {
@@ -3037,7 +3037,7 @@ export const RULES = [
     "ruleId": "pref-pub-ctor",
     "title": "Declare Constructor in PUBLIC SECTION",
     "rationale": "Even when a class uses CREATE PRIVATE or CREATE PROTECTED, its instance constructor must be declared in the public section so the runtime and frameworks can instantiate it. Declaring the constructor privately makes reflection and framework integration harder. Keep the constructor in PUBLIC and control creation through the CREATE addition.",
-    "className": "ZCL_SKYLINT_PREF_PUB_CTOR",
+    "className": "/SKYL/CL_PREF_PUB_CTOR",
     "pseudoComment": "PREF_PUB_CTOR",
     "category": "clean-abap",
     "example": {
@@ -3065,7 +3065,7 @@ export const RULES = [
     "ruleId": "pref-declarations",
     "title": "Routine Declaration Hygiene (Top Placement & Order)",
     "rationale": "Declarations placed in the middle of executable code interrupt reading flow and conceal variable scope. Moreover, arbitrary ordering can place a DATA declaration before the TYPE it references. Maintain clean routine hygiene by placing all local declarations at the beginning of the routine in strict hierarchical order: TYPES before CONSTANTS before DATA before FIELD-SYMBOLS.",
-    "className": "ZCL_SKYLINT_PREF_DECLARATIONS",
+    "className": "/SKYL/CL_PREF_DECLARATIONS",
     "pseudoComment": "DEF_TOP",
     "category": "clean-abap",
     "example": {
@@ -3097,7 +3097,7 @@ export const RULES = [
     "ruleId": "no-unnec-return",
     "title": "Omit Unnecessary RETURN Statement",
     "rationale": "A RETURN as the final statement of a method, form, or function changes nothing because the routine ends at ENDMETHOD, ENDFORM, or ENDFUNCTION anyway. It adds a line that implies a special exit and can obscure the real control flow. Remove trailing RETURN statements and keep early returns only where they are meaningful.",
-    "className": "ZCL_SKYLINT_NO_UNNEC_RETURN",
+    "className": "/SKYL/CL_NO_UNNEC_RETURN",
     "pseudoComment": "NO_UNNEC_RETURN",
     "category": "anti-patterns",
     "example": {
@@ -3125,7 +3125,7 @@ export const RULES = [
     "ruleId": "no-mix-returning",
     "title": "Do Not Mix RETURNING with EXPORTING or CHANGING",
     "rationale": "A method that returns a value and also exports or changes parameters has a mixed contract: callers must capture the result and provide extra targets. This complicates expression use and suggests the method does more than one thing. Split it into a functional query and a separate command.",
-    "className": "ZCL_SKYLINT_NO_MIX_RETURNING",
+    "className": "/SKYL/CL_NO_MIX_RETURNING",
     "pseudoComment": "NO_MIX_RETURNING",
     "category": "anti-patterns",
     "example": {
@@ -3153,7 +3153,7 @@ export const RULES = [
     "ruleId": "no-overw-builtin",
     "title": "Avoid Method Names That Overwrite Built-in Functions",
     "rationale": "Naming a method LINES, STRLEN, or XSDBOOL shadows a well-known built-in and makes the call site ambiguous. Readers cannot tell whether the built-in or the method is intended. Use a descriptive verb that does not collide with language functions.",
-    "className": "ZCL_SKYLINT_NO_OVERW_BUILTIN",
+    "className": "/SKYL/CL_NO_OVERW_BUILTIN",
     "pseudoComment": "NO_OVERW_BUILTIN",
     "category": "anti-patterns",
     "example": {
@@ -3181,7 +3181,7 @@ export const RULES = [
     "ruleId": "pref-is-initial",
     "title": "Prefer IS [NOT] INITIAL over lines( ) or Literal Comparisons",
     "rationale": "Comparing lines( ) to zero or a string to an empty literal asks an indirect question. IS INITIAL states emptiness directly and works for tables, strings, structures, and elementary values. It also avoids counting overhead and literal edge cases.",
-    "className": "ZCL_SKYLINT_PREF_IS_INITIAL",
+    "className": "/SKYL/CL_PREF_IS_INITIAL",
     "pseudoComment": "PREF_IS_INITIAL",
     "category": "clean-abap",
     "example": {
@@ -3209,7 +3209,7 @@ export const RULES = [
     "ruleId": "no-ignored-return",
     "title": "Do Not Ignore Return Value of Functional Methods",
     "rationale": "A functional method is called for its RETURNING value, so discarding that value usually means the call is pointless or the method hides side effects. If the method intentionally has side effects, it should not return a value. Assign or consume the result, or refactor the method into a command.",
-    "className": "ZCL_SKYLINT_NO_IGNORED_RETURN",
+    "className": "/SKYL/CL_NO_IGNORED_RETURN",
     "pseudoComment": "NO_IGNORED_RETURN",
     "category": "anti-patterns",
     "example": {
@@ -3237,7 +3237,7 @@ export const RULES = [
     "ruleId": "pref-downcast",
     "title": "Modernize Downcasting (CAST #( ) Expression & Inlining)",
     "rationale": "The legacy ?= and MOVE ?TO operators are obsolete downcast statements that cannot be chained or used in modern expressions. The modern CAST #( ) expression creates cleanly typed references that can be used directly in chained calls or assignments. Furthermore, single-use downcast helper variables should be inlined into the consuming expression to prevent clutter and unnecessary temporary state.",
-    "className": "ZCL_SKYLINT_PREF_DOWNCAST",
+    "className": "/SKYL/CL_PREF_DOWNCAST",
     "pseudoComment": "PREF_CAST",
     "category": "clean-abap",
     "example": {
@@ -3269,7 +3269,7 @@ export const RULES = [
     "ruleId": "no-mod-loop-tab",
     "title": "Do Not Mutate the Internal Table Currently Being Looped (Iterator Invalidation)",
     "rationale": "Modifying, deleting, inserting, or sorting the internal table currently being traversed inside a `LOOP AT itab` block invalidates the loop iterator. Sorting during a loop breaks binary search indexes and causes infinite loops or skipped rows. Deleting rows alters `sy-tabix` dynamically, leading to silent data corruption.\n\n**Best Practice:** To update row values, use field-symbols (`ASSIGNING FIELD-SYMBOL(<row>)`) which mutates memory directly in-place without altering table layout. For filtering or structural reshaping, use modern constructor expressions (`FILTER #( ... )`) or build a new secondary table.",
-    "className": "ZCL_SKYLINT_NO_MOD_LOOP_TAB",
+    "className": "/SKYL/CL_NO_MOD_LOOP_TAB",
     "pseudoComment": "NO_MOD_LOOP_TAB",
     "category": "performance",
     "example": {
@@ -3305,7 +3305,7 @@ export const RULES = [
     "ruleId": "no-hardcoded-env",
     "title": "Avoid Hardcoding System & Tenant Environment Checks (sy-sysid, sy-mandt)",
     "rationale": "Branching business logic on hardcoded SAP System IDs (`sy-sysid = 'PRD'`), client numbers (`sy-mandt = '100'`), or server hostnames makes ABAP code fragile, untestable in sandbox environments, and incompatible with cloud transports. In multi-tenant ABAP Cloud systems (BTP), hardcoding client numbers breaks tenant isolation and violates SAP Clean Core guidelines.\n\n**Best Practice:** Encapsulate environment configurations in feature toggles, custom configuration tables, or standard SAP BPF/BTP environment services.",
-    "className": "ZCL_SKYLINT_NO_HARDCODED_ENV",
+    "className": "/SKYL/CL_NO_HARDCODED_ENV",
     "pseudoComment": "NO_HARDCODED_ENV",
     "category": "security",
     "example": {
@@ -3343,7 +3343,7 @@ export const RULES = [
     "ruleId": "max-line-len",
     "title": "Limit Source Code Line Length (Avoid Horizontal Scrolling)",
     "rationale": "Excessively long code lines (beyond 120 characters) force developers to scroll horizontally during code reviews and side-by-side Git diff inspections in Eclipse ADT and web repositories. Long lines also obscure trailing conditions and operators.\n\n**Clean ABAP Guideline:** Wrap statements intelligently across multiple lines before reaching 120 characters, indenting subsequent continuation lines under the parent operator or assignment.",
-    "className": "ZCL_SKYLINT_MAX_LINE_LEN",
+    "className": "/SKYL/CL_MAX_LINE_LEN",
     "pseudoComment": "MAX_LINE_LEN",
     "category": "metrics",
     "example": {
@@ -3372,7 +3372,7 @@ export const RULES = [
     "ruleId": "pref-naming-vars",
     "title": "Enforce Local Variable and Field-Symbol Naming Conventions",
     "rationale": "Local variables, constants, statics, and field-symbols must follow distinct naming conventions (such as `lv_*`, `lc_*`, `sv_*`, `<ls_*>`, `<lv_*>`) to ensure clear scope boundaries, prevent unintended variable shadowing, and eliminate ambiguity during code reviews and debugging.",
-    "className": "ZCL_SKYLINT_PREF_NAMING_VARS",
+    "className": "/SKYL/CL_PREF_NAMING_VARS",
     "pseudoComment": "PREF_NAMING_VARS",
     "category": "clean-abap",
     "example": {
@@ -3406,7 +3406,7 @@ export const RULES = [
     "ruleId": "pref-name-members",
     "title": "Enforce Class Attribute and Method Parameter Naming Conventions",
     "rationale": "Member variables and method signatures communicate the contract of object-oriented components. Enforcing prefixes (mv_* for instance attributes, gv_* for static attributes, iv_* for importing, ev_* for exporting, cv_* for changing, and rv_* for returning parameters) clarifies usage semantics across callers.",
-    "className": "ZCL_SKYLINT_PREF_NAME_MEMBERS",
+    "className": "/SKYL/CL_PREF_NAME_MEMBERS",
     "pseudoComment": "PREF_NAME_MEMBERS",
     "category": "clean-abap",
     "example": {
@@ -3449,7 +3449,7 @@ export const RULES = [
     "ruleId": "pref-name-objects",
     "title": "Enforce Class, Interface, Type and Object Naming Conventions",
     "rationale": "Object-oriented entities and global artifacts must maintain standardized prefixes (such as zcl_ / lcl_ for classes, zif_ / lif_ for interfaces, ty_ for type definitions, and on_* for event handlers). This standard maintains harmony across packages, enhances IDE searchability, and reinforces Clean ABAP architecture.",
-    "className": "ZCL_SKYLINT_PREF_NAME_OBJECTS",
+    "className": "/SKYL/CL_PREF_NAME_OBJECTS",
     "pseudoComment": "PREF_NAME_OBJECTS",
     "category": "clean-abap",
     "example": {
@@ -3493,7 +3493,7 @@ export const RULES = [
     "ruleId": "no-bad-indent",
     "title": "Statement Indentation Must Match Block Nesting",
     "rationale": "Indentation is the fastest visual cue for block nesting, so inconsistent indentation misleads readers about which statements belong together. It also creates noisy diffs when a formatter runs. Indent each block level consistently.",
-    "className": "ZCL_SKYLINT_NO_BAD_INDENT",
+    "className": "/SKYL/CL_NO_BAD_INDENT",
     "pseudoComment": "NO_BAD_INDENT",
     "category": "clean-abap",
     "example": {
@@ -3524,7 +3524,7 @@ export const RULES = [
     "ruleId": "no-dead-code",
     "title": "Avoid Dead Code with Constant Conditions",
     "rationale": "A condition that is always false, such as 1 = 2 or abap_false, makes the branch impossible to reach. Dead branches hide unfinished logic and can contain declarations that confuse scope analysis. Remove the branch or replace the constant with the real runtime condition.",
-    "className": "ZCL_SKYLINT_NO_DEAD_CODE",
+    "className": "/SKYL/CL_NO_DEAD_CODE",
     "pseudoComment": "NO_DEAD_CODE",
     "category": "anti-patterns",
     "example": {
@@ -3552,7 +3552,7 @@ export const RULES = [
     "ruleId": "no-keyword-name",
     "title": "Avoid Using ABAP Keywords as Identifier Names",
     "rationale": "Using a language keyword such as class, type, or data as an identifier shadows the keyword and forces readers to disambiguate from context. It also complicates searching and can confuse tooling. Prefix identifiers with their role, for example lv_type.",
-    "className": "ZCL_SKYLINT_NO_KEYWORD_NAME",
+    "className": "/SKYL/CL_NO_KEYWORD_NAME",
     "pseudoComment": "NO_KEYWORD_NAME",
     "category": "anti-patterns",
     "example": {
@@ -3580,7 +3580,7 @@ export const RULES = [
     "ruleId": "pref-join-type",
     "title": "Prefer an Explicit JOIN Type",
     "rationale": "A bare JOIN defaults to INNER JOIN, but the default is invisible at the call site and easy to misread as an outer join. Explicit join types document cardinality and make reviews safer. Always write INNER JOIN, LEFT OUTER JOIN, RIGHT OUTER JOIN, or CROSS JOIN.",
-    "className": "ZCL_SKYLINT_PREF_JOIN_TYPE",
+    "className": "/SKYL/CL_PREF_JOIN_TYPE",
     "pseudoComment": "PREF_JOIN_TYPE",
     "category": "clean-abap",
     "example": {
@@ -3608,7 +3608,7 @@ export const RULES = [
     "ruleId": "pref-std-table",
     "title": "Prefer TYPE STANDARD TABLE OF over TYPE TABLE OF",
     "rationale": "TYPE TABLE OF implicitly means a standard table, so the reader must know the default to understand access costs. Spelling out STANDARD makes the table kind and its linear search behavior explicit. It also keeps declarations consistent when tables are later changed to sorted or hashed.",
-    "className": "ZCL_SKYLINT_PREF_STD_TABLE",
+    "className": "/SKYL/CL_PREF_STD_TABLE",
     "pseudoComment": "PREF_STD_TABLE",
     "category": "clean-abap",
     "example": {
@@ -3636,7 +3636,7 @@ export const RULES = [
     "ruleId": "pref-is-supplied",
     "title": "Prefer IS SUPPLIED over IS REQUESTED",
     "rationale": "IS REQUESTED is obsolete and only reports whether an output parameter was requested by the caller, not whether an input was actually supplied. IS SUPPLIED works for every parameter direction and states the real condition. Replace IS REQUESTED with IS SUPPLIED.",
-    "className": "ZCL_SKYLINT_PREF_IS_SUPPLIED",
+    "className": "/SKYL/CL_PREF_IS_SUPPLIED",
     "pseudoComment": "PREF_IS_SUPPLIED",
     "category": "clean-abap",
     "example": {
@@ -3664,7 +3664,7 @@ export const RULES = [
     "ruleId": "pref-sy",
     "title": "Prefer the Short System Field Alias SY over SYST",
     "rationale": "SYST and SY address the same system structure, so mixing both aliases makes code look inconsistent and complicates searching. SY is the conventional short form used throughout Clean ABAP. Use sy- consistently for system field access.",
-    "className": "ZCL_SKYLINT_PREF_SY",
+    "className": "/SKYL/CL_PREF_SY",
     "pseudoComment": "PREF_SY",
     "category": "clean-abap",
     "example": {
@@ -3692,7 +3692,7 @@ export const RULES = [
     "ruleId": "no-unfilt-dml",
     "title": "Avoid UPDATE or DELETE Without a WHERE Condition (Catastrophic Data Wipe Prevention)",
     "rationale": "Executing an `UPDATE` or `DELETE` statement targeting a database table without an explicit `WHERE` clause modifies or truncates every single record in the entire table. In production environments, this causes catastrophic data loss, brings business operations to a halt, and requires emergency point-in-time database restoration.\n\n**Safety Standard:** Always provide a restrictive `WHERE` condition on every database DML statement. If a full-table operation is genuinely required (e.g., in staging tables), enforce it through explicit administrative procedures.",
-    "className": "ZCL_SKYLINT_NO_UNFILT_DML",
+    "className": "/SKYL/CL_NO_UNFILT_DML",
     "pseudoComment": "NO_UNFILT_DML",
     "category": "security",
     "example": {
@@ -3718,7 +3718,7 @@ export const RULES = [
     "ruleId": "no-concat-loop",
     "title": "Avoid String Concatenation Inside Loops (Quadratic Memory Allocation)",
     "rationale": "Performing string concatenation (`lv_result = lv_result && lv_chunk` or `CONCATENATE`) inside a loop causes **quadratic memory allocation ($O(N^2)$)**. In each iteration, ABAP allocates a new heap memory buffer, copies the entire existing accumulator plus the new chunk, and marks the old buffer for garbage collection. As the iteration count increases, execution time and memory usage skyrocket.\n\n**Best Practice:** Collect string fragments into an internal table of strings (`string_table`) and join them in a single native operation using `concat_lines_of( it_strings, sep )`.",
-    "className": "ZCL_SKYLINT_NO_CONCAT_LOOP",
+    "className": "/SKYL/CL_NO_CONCAT_LOOP",
     "pseudoComment": "NO_CONCAT_LOOP",
     "category": "performance",
     "example": {
@@ -3744,7 +3744,7 @@ export const RULES = [
     "ruleId": "no-dup-literals",
     "title": "Avoid Repeating the Same String Literal",
     "rationale": "Repeating the same string literal in several places couples unrelated code to an unnamed value and makes a later change error-prone. Define a constant with a meaningful name and reuse it. The check focuses on fixed string literals that occur at least three times.",
-    "className": "ZCL_SKYLINT_NO_DUP_LITERALS",
+    "className": "/SKYL/CL_NO_DUP_LITERALS",
     "pseudoComment": "NO_DUP_LITERALS",
     "category": "anti-patterns",
     "example": {
@@ -3776,7 +3776,7 @@ export const RULES = [
     "ruleId": "no-neg-cond",
     "title": "Avoid Negated IF Conditions with ELSE",
     "rationale": "A negated condition with an ELSE branch forces readers to negate the expression mentally before understanding the main path. Invert the condition and swap the branches, so the positive case comes first. This rule ignores ELSEIF chains and IS NOT predicates handled by the dedicated rule.",
-    "className": "ZCL_SKYLINT_NO_NEG_COND",
+    "className": "/SKYL/CL_NO_NEG_COND",
     "pseudoComment": "NO_NEG_COND",
     "category": "clean-abap",
     "example": {
@@ -3804,7 +3804,7 @@ export const RULES = [
     "ruleId": "max-bool-expr",
     "title": "Limit Boolean Expression Complexity in Conditional Statements",
     "rationale": "Boolean conditions combining more than 3 to 4 `AND` and `OR` operators in a single `IF` or `WHILE` statement are notoriously prone to precedence bugs. Developers misinterpret operator binding order, and unit tests fail to cover all combinations in the truth table.\n\n**Clean ABAP Guideline:** Extract complex boolean conditions into well-named **boolean helper methods (predicate methods)** like `is_delivery_allowed( )` or `has_valid_credit_limit( )`.",
-    "className": "ZCL_SKYLINT_MAX_BOOL_EXPR",
+    "className": "/SKYL/CL_MAX_BOOL_EXPR",
     "pseudoComment": "MAX_BOOL_EXPR",
     "category": "metrics",
     "example": {
@@ -3833,7 +3833,7 @@ export const RULES = [
     "ruleId": "no-late-sys-idx",
     "title": "Avoid Late Access to sy-tabix or sy-index Outside Loops",
     "rationale": "System fields sy-tabix and sy-index are global and mutable. Reading them outside their originating LOOP, DO, or WHILE blocks creates fragile temporal coupling that breaks easily when refactoring. Inside loops, capture index into an explicit local variable, or use line_index( ) instead of relying on sy-tabix outside.",
-    "className": "ZCL_SKYLINT_NO_LATE_SYS_IDX",
+    "className": "/SKYL/CL_NO_LATE_SYS_IDX",
     "pseudoComment": "NO_LATE_SYS_IDX",
     "category": "anti-patterns",
     "example": {
@@ -3861,7 +3861,7 @@ export const RULES = [
     "ruleId": "no-unhandled-eml",
     "title": "Provide FAILED and REPORTED in RAP EML Statements (Silent Transaction Failure Prevention)",
     "rationale": "In the ABAP RESTful Application Programming Model (RAP), Entity Manipulation Language (EML) statements process transactional data across Business Objects. Omitting `FAILED` and `REPORTED` clauses causes business exceptions, validation errors, and lock rejections to fail silently. The caller assumes success while the transactional buffer remains unsaved, resulting in severe data inconsistency.\n\n**RAP Standard:** Always provide both response parameters (`FAILED DATA(lt_failed) REPORTED DATA(lt_reported)`) and check `IF lt_failed IS NOT INITIAL` before proceeding or committing.",
-    "className": "ZCL_SKYLINT_NO_UNHANDLED_EML",
+    "className": "/SKYL/CL_NO_UNHANDLED_EML",
     "pseudoComment": "NO_UNHANDLED_EML",
     "category": "security",
     "example": {
@@ -3891,7 +3891,7 @@ export const RULES = [
     "ruleId": "no-empty-override",
     "title": "Avoid Method Override That Only Delegates to Super",
     "rationale": "Redefining a method only to immediately call the superclass method without performing any additional initialization, logging, argument transformation, or side effect is redundant. It clutters the method implementation, adds needless call stack overhead, and requires maintenance whenever super signatures change. Omit the empty override and let polymorphism delegate to the superclass naturally.",
-    "className": "ZCL_SKYLINT_NO_EMPTY_OVERRIDE",
+    "className": "/SKYL/CL_NO_EMPTY_OVERRIDE",
     "pseudoComment": "NO_EMPTY_OVERRIDE",
     "category": "anti-patterns",
     "example": {
@@ -3923,7 +3923,7 @@ export const RULES = [
     "ruleId": "pref-composition",
     "title": "Prefer Composition over Inheritance",
     "rationale": "Inheritance creates tight coupling between subclasses and parent implementations, exposes internal state, and complicates refactoring. With the exception of exception hierarchies (CX_* classes) which require inheritance to participate in ABAP error handling, business objects should favor composition by holding references to collaborating classes and delegating tasks.",
-    "className": "ZCL_SKYLINT_PREF_COMPOSITION",
+    "className": "/SKYL/CL_PREF_COMPOSITION",
     "pseudoComment": "PREF_COMPOSITION",
     "category": "clean-abap",
     "example": {
@@ -3954,7 +3954,7 @@ export const RULES = [
     "ruleId": "pref-intf-segreg",
     "title": "Prefer Interface Segregation (Small, Focused Interfaces)",
     "rationale": "Fat interfaces force implementers to depend on methods they do not need and make test mock creation cumbersome. Break large interfaces into small, cohesive, role-based contracts adhering to the Interface Segregation Principle (ISP).",
-    "className": "ZCL_SKYLINT_PREF_INTF_SEGREG",
+    "className": "/SKYL/CL_PREF_INTF_SEGREG",
     "pseudoComment": "PREF_INTF_SEGREG",
     "category": "clean-abap",
     "example": {
@@ -3985,7 +3985,7 @@ export const RULES = [
     "ruleId": "no-single-letter",
     "title": "Avoid Single-Letter Variable Names",
     "rationale": "Single-letter variables (e.g. i, x, lv_i, ls_x) obscure the meaning of code, make text searching difficult, and increase cognitive load. Use intention-revealing names such as index, customer, or total_amount.",
-    "className": "ZCL_SKYLINT_NO_SINGLE_LETTER",
+    "className": "/SKYL/CL_NO_SINGLE_LETTER",
     "pseudoComment": "NO_SINGLE_LETTER",
     "category": "clean-abap",
     "example": {
@@ -4016,7 +4016,7 @@ export const RULES = [
     "ruleId": "pref-factory-name",
     "title": "Prefer CREATE_* Prefix for Factory Methods Returning Own Class",
     "rationale": "Static factory methods returning an instance of their enclosing class should clearly communicate instantiation intent by following standard naming conventions starting with CREATE_ (e.g. create, create_instance).",
-    "className": "ZCL_SKYLINT_PREF_FACTORY_NAME",
+    "className": "/SKYL/CL_PREF_FACTORY_NAME",
     "pseudoComment": "PREF_FACTORY_NAME",
     "category": "clean-abap",
     "example": {
@@ -4047,7 +4047,7 @@ export const RULES = [
     "ruleId": "no-hungarian",
     "title": "Avoid Hungarian Notation and Type Prefixes",
     "rationale": "Hungarian notation prefixes (such as lv_, ls_, lt_, mv_, iv_, rv_) add visual clutter, encode technical types that frequently change, and conflict with modern Clean ABAP principles. Name variables and parameters after their domain meaning instead.",
-    "className": "ZCL_SKYLINT_NO_HUNGARIAN",
+    "className": "/SKYL/CL_NO_HUNGARIAN",
     "pseudoComment": "NO_HUNGARIAN",
     "category": "clean-abap",
     "example": {
@@ -4080,7 +4080,7 @@ export const RULES = [
     "ruleId": "max-returns",
     "title": "Limit Multiple Return Statements per Method Body",
     "rationale": "While early return guard clauses at the top of a method are encouraged by Clean ABAP, scattering a dozen `RETURN` or `EXIT` statements throughout the middle and end of a long procedure makes control flow unpredictable. It becomes difficult to ensure that cleanup logic or post-conditions are reliably reached.\n\n**Clean ABAP Guideline:** Use early returns strictly for parameter and state validation guards at the entry point of the method. Keep the core execution flow to a single, predictable exit point.",
-    "className": "ZCL_SKYLINT_MAX_RETURNS",
+    "className": "/SKYL/CL_MAX_RETURNS",
     "pseudoComment": "MAX_RETURNS",
     "category": "metrics",
     "example": {
@@ -4109,7 +4109,7 @@ export const RULES = [
     "ruleId": "no-instance-of",
     "title": "Avoid IS INSTANCE OF and CASE TYPE OF Type Tests",
     "rationale": "Checking concrete object types at runtime via IS INSTANCE OF or CASE TYPE OF breaks polymorphism, violates the Open-Closed Principle, and introduces fragile type coupling. Instead of conditional type inspection, introduce polymorphic methods on common interfaces.",
-    "className": "ZCL_SKYLINT_NO_INSTANCE_OF",
+    "className": "/SKYL/CL_NO_INSTANCE_OF",
     "pseudoComment": "NO_INSTANCE_OF",
     "category": "clean-abap",
     "example": {
@@ -4140,7 +4140,7 @@ export const RULES = [
     "ruleId": "no-self-compare",
     "title": "Avoid Comparisons and Arithmetic with Identical Operands",
     "rationale": "Comparing an expression with itself (`lv_status = lv_status`) always yields the same result, so the condition or assignment is meaningless and usually hides a copy-paste mistake. The same applies to arithmetic that always collapses to a constant (`lv_diff = lv_x - lv_x`). Operands are resolved through compiler symbols, so shadowed names and textually equal but different symbols are not confused. Statements with an AND/OR chain are left to no-dup-cond to avoid double findings.",
-    "className": "ZCL_SKYLINT_NO_SELF_COMPARE",
+    "className": "/SKYL/CL_NO_SELF_COMPARE",
     "pseudoComment": "NO_SELF_COMPARE",
     "category": "anti-patterns",
     "example": {
@@ -4167,7 +4167,7 @@ export const RULES = [
     "ruleId": "no-catch-reraise",
     "title": "Avoid CATCH Blocks That Only Re-raise the Same Exception",
     "rationale": "A CATCH block whose only statement re-raises the identical exception type adds no value: the handler is logically transparent and only adds noise, stack depth and maintenance cost. Either remove the CATCH clause and let the exception propagate, or enrich it with context (`previous`, a domain exception, or message text). This rule only reports blocks that consist of exactly one bare re-raise statement.",
-    "className": "ZCL_SKYLINT_NO_CATCH_RERAISE",
+    "className": "/SKYL/CL_NO_CATCH_RERAISE",
     "pseudoComment": "NO_CATCH_RERAISE",
     "category": "anti-patterns",
     "example": {
@@ -4194,7 +4194,7 @@ export const RULES = [
     "ruleId": "pref-when-others",
     "title": "Require WHEN OTHERS as the Last Branch of CASE",
     "rationale": "A CASE statement without WHEN OTHERS silently ignores unexpected values, which turns enum or status changes into hard-to-find bugs. Adding WHEN OTHERS with a RAISE or a safe default makes the state machine total and documents the fallback. WHEN OTHERS should also be the last branch so that readers immediately see the default path instead of hunting for it between explicit branches.",
-    "className": "ZCL_SKYLINT_PREF_WHEN_OTHERS",
+    "className": "/SKYL/CL_PREF_WHEN_OTHERS",
     "pseudoComment": "PREF_WHEN_OTHERS",
     "category": "clean-abap",
     "example": {
@@ -4225,7 +4225,7 @@ export const RULES = [
     "ruleId": "no-exc-chain",
     "title": "Preserve the Original Exception with PREVIOUS",
     "rationale": "When a handler converts an exception into a new one without setting `previous`, the caller loses the root cause and only sees the outer symptom. Passing the caught exception object through the `previous` attribute keeps the full chain available in the stack trace and in RAP error logs. The rule inspects `RAISE EXCEPTION NEW` and `RAISE EXCEPTION TYPE` inside `CATCH ... INTO` handlers.",
-    "className": "ZCL_SKYLINT_NO_EXC_CHAIN",
+    "className": "/SKYL/CL_NO_EXC_CHAIN",
     "pseudoComment": "NO_EXC_CHAIN",
     "category": "anti-patterns",
     "example": {
@@ -4255,7 +4255,7 @@ export const RULES = [
     "ruleId": "pref-between",
     "title": "Prefer BETWEEN for Inclusive Range Checks",
     "rationale": "`lv_amount >= lv_min AND lv_amount <= lv_max` repeats the same operand and spells out a single inclusive range. `BETWEEN` expresses the intent directly, removes the duplicated operand and makes off-by-one mistakes easier to spot. The rule only reports inclusive `>=`/`<=` pairs by default; strict `>`/`<` pairs are optional because they are not semantically equivalent for fractional values.",
-    "className": "ZCL_SKYLINT_PREF_BETWEEN",
+    "className": "/SKYL/CL_PREF_BETWEEN",
     "pseudoComment": "PREF_BETWEEN",
     "category": "clean-abap",
     "example": {
@@ -4285,7 +4285,7 @@ export const RULES = [
     "ruleId": "no-loop-into",
     "title": "Prefer ASSIGNING over LOOP INTO Copy Targets",
     "rationale": "`LOOP AT ... INTO ls_row` copies every table row into a work area before the body runs. For read-only loops this allocation and copy is pure overhead; `ASSIGNING FIELD-SYMBOL(<ls_row>)` iterates by reference and keeps the code allocation-free. The rule flags LOOP statements that use INTO without ASSIGNING or REFERENCE INTO, and deliberately leaves READ TABLE ... INTO to pref-read-table to avoid duplicate findings.",
-    "className": "ZCL_SKYLINT_NO_LOOP_INTO",
+    "className": "/SKYL/CL_NO_LOOP_INTO",
     "pseudoComment": "NO_LOOP_INTO",
     "category": "performance",
     "example": {
@@ -4312,7 +4312,7 @@ export const RULES = [
     "ruleId": "max-cognitive",
     "title": "Limit Cognitive Complexity per Method",
     "rationale": "Cognitive complexity measures how hard a procedure is to understand: every branch adds one point plus the current nesting depth, so deeply nested IFs and loops escalate quickly even when the raw branch count looks acceptable. Unlike cyclomatic complexity it rewards flat guard clauses and early exits. Keep procedures below the configured threshold and extract nested logic into well-named helper methods.",
-    "className": "ZCL_SKYLINT_MAX_COGNITIVE",
+    "className": "/SKYL/CL_MAX_COGNITIVE",
     "pseudoComment": "MAX_COGNITIVE",
     "category": "metrics",
     "example": {
@@ -4342,7 +4342,7 @@ export const RULES = [
     "ruleId": "max-locals",
     "title": "Limit Local Variable Count per Method",
     "rationale": "A method with many local variables usually does several unrelated things at once and is hard to unit test. The count includes DATA, FIELD-SYMBOLS, STATICS and CONSTANTS declarations as well as inline `DATA(...)` and `FIELD-SYMBOL(...)` definitions, because each declared symbol is another piece of state a reader must track. Extract cohesive blocks into helper methods or introduce a dedicated result structure.",
-    "className": "ZCL_SKYLINT_MAX_LOCALS",
+    "className": "/SKYL/CL_MAX_LOCALS",
     "pseudoComment": "MAX_LOCALS",
     "category": "metrics",
     "example": {
@@ -4372,7 +4372,7 @@ export const RULES = [
     "ruleId": "max-fanout",
     "title": "Limit Type Fan-Out per Procedure",
     "rationale": "A procedure that references many unrelated classes and interfaces is tightly coupled to a large part of the system, which makes it fragile and hard to test in isolation. Counting distinct `kind = type` references gives a lower-bound fan-out metric that never produces false positives: only types that actually appear in the procedure body are considered. Split responsibilities or introduce a facade when the number grows.",
-    "className": "ZCL_SKYLINT_MAX_FANOUT",
+    "className": "/SKYL/CL_MAX_FANOUT",
     "pseudoComment": "MAX_FANOUT",
     "category": "metrics",
     "example": {
@@ -4402,7 +4402,7 @@ export const RULES = [
     "ruleId": "no-bool-blindness",
     "title": "Avoid Boolean Flag Importing Parameters",
     "rationale": "A boolean importing parameter turns a method call into a positional switch: callers write do_work( abap_true ) and readers cannot tell what true means without opening the signature. Boolean blindness also pushes every new variation into the same method instead of a dedicated, well-named API. Expose the alternatives as separate methods or as a meaningful typed flag, and keep abap_bool flags out of method interfaces.",
-    "className": "ZCL_SKYLINT_NO_BOOL_BLINDNESS",
+    "className": "/SKYL/CL_NO_BOOL_BLINDNESS",
     "pseudoComment": "NO_BOOL_BLINDNESS",
     "category": "clean-abap",
     "example": {
@@ -4429,7 +4429,7 @@ export const RULES = [
     "ruleId": "no-static-state",
     "title": "Avoid Static State (CLASS-DATA and STATICS)",
     "rationale": "Static state survives between calls and is shared by every caller in the internal session, which makes behavior order-dependent and lets unit tests interfere with each other. CLASS-DATA and STATICS also hide dependencies: a method looks self-contained while it silently reads or mutates global memory. Keep state in instances that are injected, or pass it explicitly, so lifecycles stay visible and tests stay isolated.",
-    "className": "ZCL_SKYLINT_NO_STATIC_STATE",
+    "className": "/SKYL/CL_NO_STATIC_STATE",
     "pseudoComment": "NO_STATIC_STATE",
     "category": "anti-patterns",
     "example": {
@@ -4460,7 +4460,7 @@ export const RULES = [
     "ruleId": "no-dummy-auth",
     "title": "Avoid DUMMY Authorization Checks",
     "rationale": "The DUMMY addition turns AUTHORITY-CHECK into a no-op: the runtime accepts the statement without evaluating the authorization object, so the protected operation runs for every user. Such dummy checks are frequently added to satisfy scanners or to unblock a test and then remain in production. Remove the DUMMY addition and evaluate sy-subrc so the authorization is genuinely enforced.",
-    "className": "ZCL_SKYLINT_NO_DUMMY_AUTH",
+    "className": "/SKYL/CL_NO_DUMMY_AUTH",
     "pseudoComment": "NO_DUMMY_AUTH",
     "category": "security",
     "example": {
@@ -4487,7 +4487,7 @@ export const RULES = [
     "ruleId": "no-dead-store",
     "title": "Avoid Assignments Whose Value Is Never Read",
     "rationale": "An assignment whose value is overwritten before any read computes a result nobody uses: the work, the helper call, and the temporary state are all wasted. Such dead stores usually survive a refactor that removed the consuming branch, and they mislead readers into believing the value matters. Either read the value or delete the assignment.",
-    "className": "ZCL_SKYLINT_NO_DEAD_STORE",
+    "className": "/SKYL/CL_NO_DEAD_STORE",
     "pseudoComment": "NO_DEAD_STORE",
     "category": "anti-patterns",
     "example": {
@@ -4514,7 +4514,7 @@ export const RULES = [
     "ruleId": "no-wrong-wildcard",
     "title": "Avoid Wrong Wildcards in LIKE, CP, and NP",
     "rationale": "ABAP SQL LIKE statements use '%' (matching any sequence of characters) and '_' (matching a single character) as wildcards. In contrast, ABAP logical comparison operators CP and NP use '*' and '+' as wildcards. Using '*' in LIKE or '%' in CP/NP indicates confusion between SQL pattern matching and ABAP string matching.",
-    "className": "ZCL_SKYLINT_NO_WRONG_WILDCARD",
+    "className": "/SKYL/CL_NO_WRONG_WILDCARD",
     "pseudoComment": "NO_WRONG_WILDCARD",
     "category": "anti-patterns",
     "example": {
@@ -4544,7 +4544,7 @@ export const RULES = [
     "ruleId": "pref-sort-order",
     "title": "Explicitly Specify SORT Order",
     "rationale": "When sorting internal tables by components using the BY addition, no implicit sorting order should be assumed. Developers should explicitly specify ASCENDING or DESCENDING for each field, or specify the default order before BY, making the intended order clear and resilient to future modifications.",
-    "className": "ZCL_SKYLINT_PREF_SORT_ORDER",
+    "className": "/SKYL/CL_PREF_SORT_ORDER",
     "pseudoComment": "PREF_SORT_ORDER",
     "category": "clean-abap",
     "example": {
@@ -4573,7 +4573,7 @@ export const RULES = [
     "ruleId": "pref-icon-const",
     "title": "Prefer ICON_ Constants over Hardcoded Icon Codes",
     "rationale": "SAP UI icons in dynpros, lists, and ALV grids are represented internally by 4-character codes enclosed in '@' symbols (such as '@01@'). Hardcoded string literals make code obscure and difficult to maintain. Clean ABAP requires using pre-defined system constants (such as icon_okay or icon_cancel from type pool ICON) instead of magic icon literals.",
-    "className": "ZCL_SKYLINT_PREF_ICON_CONST",
+    "className": "/SKYL/CL_PREF_ICON_CONST",
     "pseudoComment": "PREF_ICON_CONST",
     "category": "clean-abap",
     "example": {
@@ -4599,7 +4599,7 @@ export const RULES = [
     "ruleId": "no-ambiguous-stmt",
     "title": "Avoid Ambiguous Statements",
     "rationale": "ABAP allows ambiguous syntax for MODIFY and DELETE between internal tables and database tables. Use TABLE keyword or @ host escape to clarify intent.",
-    "className": "ZCL_SKYLINT_NO_AMBIGUOUS_STMT",
+    "className": "/SKYL/CL_NO_AMBIGUOUS_STMT",
     "pseudoComment": "NO_AMBIGUOUS_STMT",
     "category": "clean-abap",
     "example": {
@@ -4623,7 +4623,7 @@ export const RULES = [
     "ruleId": "no-empty-proc",
     "title": "Avoid Empty Procedures",
     "rationale": "Methods, form routines, and function modules should not be empty. Implement required logic or remove superfluous empty procedures.",
-    "className": "ZCL_SKYLINT_NO_EMPTY_PROC",
+    "className": "/SKYL/CL_NO_EMPTY_PROC",
     "pseudoComment": "NO_EMPTY_PROC",
     "category": "clean-abap",
     "example": {
@@ -4652,7 +4652,7 @@ export const RULES = [
     "ruleId": "no-intf-class-ref",
     "title": "Avoid Concrete Class References in Interfaces",
     "rationale": "Interfaces should adhere to the Dependency Inversion Principle and not couple directly to concrete class implementations. Use interface references instead.",
-    "className": "ZCL_SKYLINT_NO_INTF_CLASS_REF",
+    "className": "/SKYL/CL_NO_INTF_CLASS_REF",
     "pseudoComment": "NO_INTF_CLASS_REF",
     "category": "clean-abap",
     "example": {
@@ -4676,7 +4676,7 @@ export const RULES = [
     "ruleId": "no-aliases",
     "title": "Avoid ALIASES in Classes and Interfaces",
     "rationale": "ALIASES obscure component origins and interface contracts. Explicitly reference interface components using the interface~member syntax.",
-    "className": "ZCL_SKYLINT_NO_ALIASES",
+    "className": "/SKYL/CL_NO_ALIASES",
     "pseudoComment": "NO_ALIASES",
     "category": "clean-abap",
     "example": {
@@ -4703,7 +4703,7 @@ export const RULES = [
     "ruleId": "no-abstract-final",
     "title": "Avoid Abstract Final Classes",
     "rationale": "A class cannot be both ABSTRACT and FINAL simultaneously. Abstract classes must be inherited from, while final classes prohibit inheritance.",
-    "className": "ZCL_SKYLINT_NO_ABSTRACT_FINAL",
+    "className": "/SKYL/CL_NO_ABSTRACT_FINAL",
     "pseudoComment": "NO_ABSTRACT_FINAL",
     "category": "anti-patterns",
     "example": {
@@ -4727,7 +4727,7 @@ export const RULES = [
     "ruleId": "no-double-space",
     "title": "Avoid Consecutive Whitespace Between Tokens",
     "rationale": "Tokens on the same line should be separated by exactly one space to maintain uniform formatting and readability.",
-    "className": "ZCL_SKYLINT_NO_DOUBLE_SPACE",
+    "className": "/SKYL/CL_NO_DOUBLE_SPACE",
     "pseudoComment": "NO_DOUBLE_SPACE",
     "category": "clean-abap",
     "example": {
@@ -4751,7 +4751,7 @@ export const RULES = [
     "ruleId": "pref-param-1line",
     "title": "Single Parameter or Field Per Line",
     "rationale": "When passing multiple parameters in method calls or constructor expressions, place each parameter or field on its own separate line.",
-    "className": "ZCL_SKYLINT_PREF_PARAM_1LINE",
+    "className": "/SKYL/CL_PREF_PARAM_1LINE",
     "pseudoComment": "PREF_PARAM_1LINE",
     "category": "clean-abap",
     "example": {
@@ -4775,7 +4775,7 @@ export const RULES = [
     "ruleId": "no-into-fs",
     "title": "Avoid INTO with Field Symbols",
     "rationale": "Using INTO with a field symbol in READ TABLE or LOOP AT causes value assignment rather than pointer binding, which is almost always an accidental bug. Use ASSIGNING instead.",
-    "className": "ZCL_SKYLINT_NO_INTO_FS",
+    "className": "/SKYL/CL_NO_INTO_FS",
     "pseudoComment": "NO_INTO_FS",
     "category": "anti-patterns",
     "example": {
@@ -4799,7 +4799,7 @@ export const RULES = [
     "ruleId": "pref-strict-sql",
     "title": "Prefer Strict SQL Host Variable Escaping",
     "rationale": "Modern ABAP SQL requires host variables and structures to be escaped with the '@' character for strict mode compliance.",
-    "className": "ZCL_SKYLINT_PREF_STRICT_SQL",
+    "className": "/SKYL/CL_PREF_STRICT_SQL",
     "pseudoComment": "PREF_STRICT_SQL",
     "category": "clean-abap",
     "example": {
@@ -4824,7 +4824,7 @@ export const RULES = [
     "ruleId": "pref-enum",
     "title": "Prefer Enumerations over Constants",
     "rationale": "Use TYPES: BEGIN OF ENUM ... END OF ENUM for related discrete value sets instead of structured CONSTANTS for type safety and modern syntax.",
-    "className": "ZCL_SKYLINT_PREF_ENUM",
+    "className": "/SKYL/CL_PREF_ENUM",
     "pseudoComment": "PREF_ENUM",
     "category": "clean-abap",
     "example": {
@@ -4849,7 +4849,7 @@ export const RULES = [
     "ruleId": "no-protected-data",
     "title": "Avoid Protected Attributes",
     "rationale": "Protected data members expose internal class state to subclasses, violating encapsulation. Make attributes private and provide getter methods if needed.",
-    "className": "ZCL_SKYLINT_NO_PROTECTED_DATA",
+    "className": "/SKYL/CL_NO_PROTECTED_DATA",
     "pseudoComment": "NO_PROTECTED_DATA",
     "category": "clean-abap",
     "example": {
@@ -4873,7 +4873,7 @@ export const RULES = [
     "ruleId": "no-method-chain",
     "title": "Avoid Excessive Method Chaining",
     "rationale": "Chaining multiple method calls together degrades readability and makes debugging difficult. Extract intermediate results into explanatory local variables.",
-    "className": "ZCL_SKYLINT_NO_METHOD_CHAIN",
+    "className": "/SKYL/CL_NO_METHOD_CHAIN",
     "pseudoComment": "NO_METHOD_CHAIN",
     "category": "clean-abap",
     "example": {
@@ -4900,7 +4900,7 @@ export const RULES = [
     "ruleId": "no-implicit-any",
     "title": "Avoid Generic and Implicit ANY Types",
     "rationale": "Untyped FIELD-SYMBOLS or method parameters defaulting to ANY sacrifice compile-time type safety. Always specify explicit concrete types.",
-    "className": "ZCL_SKYLINT_NO_IMPLICIT_ANY",
+    "className": "/SKYL/CL_NO_IMPLICIT_ANY",
     "pseudoComment": "NO_IMPLICIT_ANY",
     "category": "clean-abap",
     "example": {
@@ -4925,7 +4925,7 @@ export const RULES = [
     "ruleId": "pref-union",
     "title": "Prefer UNION over UNION ALL",
     "rationale": "In ABAP SQL queries, prefer UNION to prevent duplicate record processing unless duplicates are explicitly intended and handled.",
-    "className": "ZCL_SKYLINT_PREF_UNION",
+    "className": "/SKYL/CL_PREF_UNION",
     "pseudoComment": "PREF_UNION",
     "category": "performance",
     "example": {
@@ -4950,7 +4950,7 @@ export const RULES = [
     "ruleId": "no-hardcoded-url",
     "title": "Avoid Hardcoded HTTP, HTTPS, and FTP URLs in Source Code",
     "rationale": "Hardcoding absolute URLs and endpoint addresses directly in source code creates brittle dependencies, environment pollution, and security vulnerabilities. When promoting code across landscapes (DEV -> QA -> PROD) or deploying to ABAP Cloud environments, hardcoded URLs prevent environment-specific endpoint resolution and break proxy routing.\n\n**Best Practice:** Maintain remote endpoints in SM59 RFC destinations, Communication Arrangements, or Customizing tables, and resolve them dynamically at runtime.",
-    "className": "ZCL_SKYLINT_NO_HARDCODED_URL",
+    "className": "/SKYL/CL_NO_HARDCODED_URL",
     "pseudoComment": "NO_HARDCODED_URL",
     "category": "security",
     "example": {
@@ -4979,7 +4979,7 @@ export const RULES = [
     "ruleId": "no-hardcoded-ip",
     "title": "Avoid Hardcoded IPv4 and IPv6 Addresses in Source Code",
     "rationale": "Hardcoding IP addresses in ABAP source code couples business logic to physical or virtual infrastructure, breaks DNS load balancing, and violates cloud portability guidelines. In modern hybrid and cloud environments (BTP, S/4HANA Private/Public Cloud), server IP addresses are dynamic and must be resolved through hostname configuration, SM59 destinations, or Communication Arrangements.\n\n**Best Practice:** Use logical destinations (such as SM59 or BTP Destinations) or DNS hostnames instead of raw IP addresses.",
-    "className": "ZCL_SKYLINT_NO_HARDCODED_IP",
+    "className": "/SKYL/CL_NO_HARDCODED_IP",
     "pseudoComment": "NO_HARDCODED_IP",
     "category": "security",
     "example": {
@@ -5008,7 +5008,7 @@ export const RULES = [
     "ruleId": "no-raw-html",
     "title": "Avoid Hardcoded and Unescaped Raw HTML in Source Code",
     "rationale": "Embedding raw HTML markup strings (`<div>`, `<script>`, `<table>`) directly in ABAP source code creates Cross-Site Scripting (XSS) vulnerabilities (OWASP A03 / CWE-79) and couples backend logic to user interface rendering. When dynamic values are concatenated into raw HTML without strict escaping, malicious scripts can be executed in the user's browser session.\n\n**Best Practice:** Separate presentation from logic using SAP Fiori / SAPUI5, BSP extensions, or use `cl_abap_format` / `escape( ... format = cl_abap_format=>e_html_text )` to sanitize HTML output.",
-    "className": "ZCL_SKYLINT_NO_RAW_HTML",
+    "className": "/SKYL/CL_NO_RAW_HTML",
     "pseudoComment": "NO_RAW_HTML",
     "category": "security",
     "example": {
@@ -5037,7 +5037,7 @@ export const RULES = [
     "ruleId": "pref-test-attributes",
     "title": "Require Explicit DURATION and RISK LEVEL Attributes on Test Classes",
     "rationale": "ABAP Unit test classes (`FOR TESTING`) should declare explicit `DURATION` (SHORT, MEDIUM, or LONG) and `RISK LEVEL` (HARMLESS, DANGEROUS, or CRITICAL) attributes on their `CLASS ... DEFINITION` statement. Without explicit attributes, the test runner assigns default values that may cause tests with external dependencies or database commits to execute in restricted test environments or time out prematurely.\n\n**Best Practice:** Always declare `DURATION SHORT RISK LEVEL HARMLESS` for fast, hermetic unit tests.",
-    "className": "ZCL_SKYLINT_PREF_TEST_ATTR",
+    "className": "/SKYL/CL_PREF_TEST_ATTR",
     "pseudoComment": "PREF_TEST_ATTR",
     "category": "clean-abap",
     "example": {
@@ -5066,7 +5066,7 @@ export const RULES = [
     "ruleId": "no-raw-str-tmpl",
     "title": "Avoid String Templates Without Embedded Expressions",
     "rationale": "Using string templates (`|...|`) without any embedded expressions `{ ... }` creates unnecessary string template runtime evaluation overhead and clutters code readability. If a string has no dynamic variables or formatting expressions, a standard single-quote literal (`'...'`) or backtick literal (``` `...` ```) should be used instead.\n\n**Best Practice:** Only use `|...|` when interpolating expressions or formatting parameters.",
-    "className": "ZCL_SKYLINT_NO_RAW_STR_TMPL",
+    "className": "/SKYL/CL_NO_RAW_STR_TMPL",
     "pseudoComment": "NO_RAW_STR_TMPL",
     "category": "clean-abap",
     "example": {
@@ -5095,7 +5095,7 @@ export const RULES = [
     "ruleId": "max-sql-joins",
     "title": "Limit Number of Table JOINs in OpenSQL Queries",
     "rationale": "Queries joining more than 4 database tables degrade database optimizer join-graph planning, create expensive intermediate temporary tables, and saturate memory on SAP HANA and relational databases. Complex multi-table entity graphs should be encapsulated in Core Data Services (CDS) Views or decomposed into targeted queries.\n\n**Best Practice:** Model multi-table join hierarchies as reusable CDS Analytical or Transactional Views.",
-    "className": "ZCL_SKYLINT_MAX_SQL_JOINS",
+    "className": "/SKYL/CL_MAX_SQL_JOINS",
     "pseudoComment": "MAX_SQL_JOINS",
     "category": "performance",
     "example": {
@@ -5123,7 +5123,7 @@ export const RULES = [
     "ruleId": "pref-loop-where",
     "title": "Prefer LOOP AT WHERE over IF CONTINUE Guards",
     "rationale": "Filtering internal table rows with the WHERE clause of LOOP AT is more efficient and more readable than starting the loop with an initial IF ... CONTINUE guard. The ABAP runtime evaluates the WHERE condition directly during row traversal, skipping non-matching rows before the loop body executes. Clean ABAP (Tables section) recommends LOOP AT ... WHERE over nested filtering inside the loop body.",
-    "className": "ZCL_SKYLINT_PREF_LOOP_WHERE",
+    "className": "/SKYL/CL_PREF_LOOP_WHERE",
     "pseudoComment": "PREF_LOOP_WHERE",
     "category": "clean-abap",
     "example": {
@@ -5150,7 +5150,7 @@ export const RULES = [
     "ruleId": "pref-sort-key",
     "title": "Specify an Explicit SORT Key with BY",
     "rationale": "SORT without BY sorts an internal table using its implicit standard key, which depends on the table definition (character-type components for standard tables). This makes the sort result fragile: key changes ripple into sort behavior, character field shortening alters comparisons, and unsorted parallel sorts become unpredictable. Specify the sort key explicitly with SORT ... BY so the statement is robust and self-documenting.",
-    "className": "ZCL_SKYLINT_PREF_SORT_KEY",
+    "className": "/SKYL/CL_PREF_SORT_KEY",
     "pseudoComment": "PREF_SORT_KEY",
     "category": "performance",
     "example": {
@@ -5176,7 +5176,7 @@ export const RULES = [
     "ruleId": "pref-plain-regex",
     "title": "Prefer Simpler String Functions over Plain Regex",
     "rationale": "A regex literal that contains no metacharacters (such as . [ { ( ) * + ? ^ $ | or the escape backslash) performs a plain literal search yet pays the regex engine's parsing and backtracking cost. Replace plain literal patterns with the simple, cheaper and more readable sub / case parameters of find, count, replace or contains. Only literal patterns without metacharacters are flagged; textual FIND/REPLACE with REGEX is covered by no-obs-strings.",
-    "className": "ZCL_SKYLINT_PREF_PLAIN_REGEX",
+    "className": "/SKYL/CL_PREF_PLAIN_REGEX",
     "pseudoComment": "PREF_PLAIN_REGEX",
     "category": "clean-abap",
     "example": {
@@ -5203,7 +5203,7 @@ export const RULES = [
     "ruleId": "max-blank-lines",
     "title": "Limit Consecutive Blank Lines",
     "rationale": "Multiple consecutive empty lines scatter related code and suggest removed or unfinished logic. Keep source files compact with a single blank line to separate logical sections. The check measures the empty lines between consecutive statements in a procedure. Note: comment-only lines are not visible to the parser and are counted as empty space; configure MAX_BLANKS to your team standard.",
-    "className": "ZCL_SKYLINT_MAX_BLANK_LINES",
+    "className": "/SKYL/CL_MAX_BLANK_LINES",
     "pseudoComment": "MAX_BLANK_LINES",
     "category": "clean-abap",
     "example": {
@@ -5233,7 +5233,7 @@ export const RULES = [
     "ruleId": "pref-read-key",
     "title": "Prefer READ TABLE WITH KEY over WHERE",
     "rationale": "READ TABLE ... WITH KEY is the documented single-line access form and allows the runtime to exploit table keys and sorted access for a direct hit. The WHERE variant of READ TABLE forces a row-by-row scan of the internal table. The rule only reports WHERE clauses that WITH KEY can express: pure equality comparisons ( = / EQ ) combined with AND. Conditions with other operators ( CS, GT, OR, IS, ... ) cannot be converted and are not flagged. Clean ABAP cheat sheet (Single Line Access) recommends WITH KEY for one-line lookups.",
-    "className": "ZCL_SKYLINT_PREF_READ_KEY",
+    "className": "/SKYL/CL_PREF_READ_KEY",
     "pseudoComment": "PREF_READ_KEY",
     "category": "performance",
     "example": {
@@ -5259,7 +5259,7 @@ export const RULES = [
     "ruleId": "no-multi-exc",
     "title": "Raise At Most One Exception Class per Method",
     "rationale": "Throwing several different exception classes from one method forces each caller to nest separate TRY/CATCH blocks and duplicate handler logic. Define a single dedicated exception type per method's interface (or a single hierarchy family) so the caller can react with one handler; packing more error detail into the exception's attributes keeps the API stable. Clean ABAP (Throw one type of exception) recommends one main exception class per method.",
-    "className": "ZCL_SKYLINT_NO_MULTI_EXC",
+    "className": "/SKYL/CL_NO_MULTI_EXC",
     "pseudoComment": "NO_MULTI_EXC",
     "category": "clean-abap",
     "example": {
@@ -5286,7 +5286,7 @@ export const RULES = [
     "ruleId": "no-dyn-message",
     "title": "Avoid Dynamic MESSAGE Statements",
     "rationale": "`MESSAGE ... ID <dyn> TYPE <dyn> NUMBER <dyn>` hides the message source: it cannot be found through a where-used search from SE91, defeats static analysis of message usage, and makes text and behavior depend on runtime values. Keep ID, TYPE and NUMBER static so the message is easy to find along the Clean ABAP Make messages easy to find guidance; inline-text MESSAGE forms are covered by pref-msg-cls.",
-    "className": "ZCL_SKYLINT_NO_DYN_MESSAGE",
+    "className": "/SKYL/CL_NO_DYN_MESSAGE",
     "pseudoComment": "NO_DYN_MESSAGE",
     "category": "clean-abap",
     "example": {
@@ -5313,7 +5313,7 @@ export const RULES = [
     "ruleId": "max-when-count",
     "title": "Limit Number of WHEN Branches in CASE Statements",
     "rationale": "A CASE statement with an excessive number of WHEN branches violates the Single Responsibility Principle and often indicates missing polymorphism, dictionary tables, or strategy patterns. Complex CASE structures are prone to bugs during maintenance.",
-    "className": "ZCL_SKYLINT_MAX_WHEN_COUNT",
+    "className": "/SKYL/CL_MAX_WHEN_COUNT",
     "pseudoComment": "MAX_WHEN_COUNT",
     "category": "metrics",
     "example": {
@@ -5342,7 +5342,7 @@ export const RULES = [
     "ruleId": "max-elseif-count",
     "title": "Limit Number of ELSEIF Branches in IF Statements",
     "rationale": "Deep chains of ELSEIF statements are difficult to read and test. Consider replacing long ELSEIF cascades with a CASE statement, polymorphism, or separate dispatch methods.",
-    "className": "ZCL_SKYLINT_MAX_ELSEIF_COUNT",
+    "className": "/SKYL/CL_MAX_ELSEIF_COUNT",
     "pseudoComment": "MAX_ELSEIF_COUNT",
     "category": "metrics",
     "example": {
@@ -5371,7 +5371,7 @@ export const RULES = [
     "ruleId": "max-loop-jumps",
     "title": "Limit Jump Statements (CONTINUE, EXIT) per Loop",
     "rationale": "Loops containing too many jump statements (CONTINUE, EXIT) have convoluted control flow that makes loop invariants difficult to reason about and maintain. Restructure the loop body using helper methods or simplified boolean conditions.",
-    "className": "ZCL_SKYLINT_MAX_LOOP_JUMPS",
+    "className": "/SKYL/CL_MAX_LOOP_JUMPS",
     "pseudoComment": "MAX_LOOP_JUMPS",
     "category": "metrics",
     "example": {
@@ -5400,7 +5400,7 @@ export const RULES = [
     "ruleId": "max-catch-clauses",
     "title": "Limit Number of CATCH Clauses per TRY Block",
     "rationale": "A single TRY block handling an excessive number of distinct exception types indicates high coupling and overly broad responsibilities. Decompose the procedure or catch common superclasses if appropriate.",
-    "className": "ZCL_SKYLINT_MAX_CATCH_CLAUSES",
+    "className": "/SKYL/CL_MAX_CATCH_CLAUSES",
     "pseudoComment": "MAX_CATCH_CLAUSES",
     "category": "metrics",
     "example": {
@@ -5428,7 +5428,7 @@ export const RULES = [
     "ruleId": "pref-clamp",
     "title": "Prefer nmin/nmax or clamp Expressions over Manual IF Clamping",
     "rationale": "Manually clamping a variable between lower and upper bounds using IF/ELSEIF statements is verbose and imperative. Modern ABAP provides built-in functions like nmin( ) and nmax( ) or clamp( ) that express range containment concisely and without branch complexity.",
-    "className": "ZCL_SKYLINT_PREF_CLAMP",
+    "className": "/SKYL/CL_PREF_CLAMP",
     "pseudoComment": "PREF_CLAMP",
     "category": "clean-abap",
     "example": {
@@ -5454,7 +5454,7 @@ export const RULES = [
     "ruleId": "no-nested-loop",
     "title": "Disallow Nested LOOP AT Statements Without FROM or GROUP BY",
     "rationale": "Nesting internal table loops (LOOP AT within LOOP AT) creates O(N*M) Cartesian complexity that scales poorly with larger datasets and degrades application performance. Use GROUP BY loops, hashed/sorted secondary keys, or parallel cursor (LOOP AT itab FROM sy-tabix) instead.",
-    "className": "ZCL_SKYLINT_NO_NESTED_LOOP",
+    "className": "/SKYL/CL_NO_NESTED_LOOP",
     "pseudoComment": "NO_NESTED_LOOP",
     "category": "performance",
     "example": {
@@ -5481,7 +5481,7 @@ export const RULES = [
     "ruleId": "no-full-scan-sel",
     "title": "Avoid Unfiltered SELECT on Database Tables (Full Table Scan Prevention)",
     "rationale": "Executing a `SELECT` statement on a database table without an explicit `WHERE` clause reads every single row in the table, bypassing database indexes and causing full table scans. On large transactional or master data tables, this exhausts database memory, saturates network bandwidth, and leads to critical system performance degradation.\n\n**Standard:** Always filter database reads with an index-backed `WHERE` condition. For paging or sampling, use `UP TO n ROWS`.",
-    "className": "ZCL_SKYLINT_NO_FULL_SCAN_SEL",
+    "className": "/SKYL/CL_NO_FULL_SCAN_SEL",
     "pseudoComment": "NO_FULL_SCAN_SELECT",
     "category": "performance",
     "example": {
@@ -5510,7 +5510,7 @@ export const RULES = [
     "ruleId": "no-bypass-buf",
     "title": "Avoid BYPASSING BUFFER in SELECT Statements",
     "rationale": "Using `BYPASSING BUFFER` in ABAP SQL forces an expensive direct database roundtrip, explicitly ignoring the high-performance application server table buffer. For customizing and configuration tables, this creates unnecessary database load and eliminates the benefits of SAP table buffering.\n\n**Standard:** Rely on SAP table buffering for cached tables unless an absolute real-time guarantee is strictly mandatory.",
-    "className": "ZCL_SKYLINT_NO_BYPASS_BUF",
+    "className": "/SKYL/CL_NO_BYPASS_BUF",
     "pseudoComment": "NO_BYPASS_BUFFER",
     "category": "performance",
     "example": {
@@ -5536,7 +5536,7 @@ export const RULES = [
     "ruleId": "no-cross-join",
     "title": "Avoid CROSS JOIN in ABAP SQL Queries",
     "rationale": "A `CROSS JOIN` produces the cartesian product of two tables (M * N records) without join conditions. On non-trivial tables, this leads to exponential row proliferation, database memory exhaustion, and query timeouts.\n\n**Standard:** Always connect joined tables with explicit `ON` conditions using `INNER JOIN` or `LEFT OUTER JOIN`.",
-    "className": "ZCL_SKYLINT_NO_CROSS_JOIN",
+    "className": "/SKYL/CL_NO_CROSS_JOIN",
     "pseudoComment": "NO_CROSS_JOIN",
     "category": "performance",
     "example": {
@@ -5562,7 +5562,7 @@ export const RULES = [
     "ruleId": "no-sql-hints",
     "title": "Avoid Database Hints (%_HINTS) in ABAP SQL",
     "rationale": "Hardcoding `%_HINTS` overrides the database optimizer and tightly couples ABAP code to a specific database vendor (e.g. HDB, Oracle, DB6). Hints break portability during database upgrades, HANA migrations, or ABAP Cloud downports.\n\n**Standard:** Optimize queries through proper secondary indexes, CDS views, and index-backed WHERE conditions rather than vendor-specific hints.",
-    "className": "ZCL_SKYLINT_NO_SQL_HINTS",
+    "className": "/SKYL/CL_NO_SQL_HINTS",
     "pseudoComment": "NO_SQL_HINTS",
     "category": "performance",
     "example": {
@@ -5587,7 +5587,7 @@ export const RULES = [
     "ruleId": "no-lead-wildcard",
     "title": "Avoid Leading Wildcards in LIKE Conditions",
     "rationale": "Using a leading wildcard (`%` or `+`) in a `LIKE` condition (e.g. `LIKE '%value'`) prevents the database optimizer from using B-tree and column indexes, resulting in full index scans or table scans.\n\n**Standard:** Avoid leading wildcards in search patterns. If substring search is needed on large tables, consider SAP HANA full-text indexes or fuzzy search.",
-    "className": "ZCL_SKYLINT_NO_LEAD_WILDCARD",
+    "className": "/SKYL/CL_NO_LEAD_WILDCARD",
     "pseudoComment": "NO_LEAD_WILDCARD",
     "category": "performance",
     "example": {
@@ -5612,7 +5612,7 @@ export const RULES = [
     "ruleId": "no-dedup-no-sort",
     "title": "Sort Internal Tables Before DELETE ADJACENT DUPLICATES",
     "rationale": "`DELETE ADJACENT DUPLICATES` only removes duplicate rows that are physically consecutive. If the table is not sorted beforehand, non-adjacent identical rows are retained, leading to subtle logic errors and incomplete deduplication.\n\n**Standard:** Always issue an explicit `SORT <itab>` statement immediately before `DELETE ADJACENT DUPLICATES`.",
-    "className": "ZCL_SKYLINT_NO_DEDUP_NO_SORT",
+    "className": "/SKYL/CL_NO_DEDUP_NO_SORT",
     "pseudoComment": "NO_DEDUP_NO_SORT",
     "category": "anti-patterns",
     "example": {
@@ -5637,7 +5637,7 @@ export const RULES = [
     "ruleId": "no-dup-subexpr",
     "title": "Avoid Duplicate Subexpressions in the Same Statement",
     "rationale": "Evaluating the exact same table expression (e.g. `lt_orders[ 1 ]-net + lt_orders[ 1 ]-vat`) or method call multiple times in the same statement triggers redundant internal table index lookups, hash computations, or method executions. In performance-critical logic, this causes unnecessary overhead.\n\n**Best Practice:** Evaluate the common subexpression once into a local helper variable or field-symbol and reuse it.",
-    "className": "ZCL_SKYLINT_NO_DUP_SUBEXP",
+    "className": "/SKYL/CL_NO_DUP_SUBEXP",
     "pseudoComment": "NO_DUP_SUBEXPR",
     "category": "anti-patterns",
     "example": {
@@ -5663,7 +5663,7 @@ export const RULES = [
     "ruleId": "no-badi-commit",
     "title": "Avoid COMMIT or ROLLBACK in BAdI Implementations",
     "rationale": "Executing `COMMIT WORK` or `ROLLBACK WORK` inside a Business Add-In (BAdI) breaks the Logical Unit of Work (LUW) of the calling application. It prematurely commits or rolls back standard transactions, leading to severe database inconsistencies and SAP short dumps.\n\n**Standard:** Let the standard transaction or orchestrating caller manage commit and rollback lifecycles.",
-    "className": "ZCL_SKYLINT_NO_BADI_COMMIT",
+    "className": "/SKYL/CL_NO_BADI_COMMIT",
     "pseudoComment": "NO_BADI_COMMIT",
     "category": "anti-patterns",
     "example": {
@@ -5688,7 +5688,7 @@ export const RULES = [
     "ruleId": "pref-opt-last",
     "title": "Declare Optional and Default Parameters Last in Methods",
     "rationale": "In Clean ABAP, mandatory parameters must appear before optional (`OPTIONAL`) and default (`DEFAULT`) parameters in method signatures. Mixing optional and required parameters makes caller invocation confusing and error-prone.\n\n**Standard:** Place required parameters first, followed by optional parameters at the end of the parameter list.",
-    "className": "ZCL_SKYLINT_PREF_OPT_LAST",
+    "className": "/SKYL/CL_PREF_OPT_LAST",
     "pseudoComment": "PREF_OPTIONAL_LAST",
     "category": "clean-abap",
     "example": {
@@ -5715,7 +5715,7 @@ export const RULES = [
 export const RULE_BY_RULE_ID = new Map(RULES.map(r => [r.ruleId, r]));
 export const RULE_BY_CLASS = new Map(RULES.map(r => [r.className.toUpperCase(), r]));
 export const RULE_BY_CLASS_LOWER = new Map(RULES.map(r => [r.className.toLowerCase(), r]));
-export const RULE_BY_SHORT_CLASS = new Map(RULES.map(r => [r.className.toLowerCase().replace(/^zcl_skylint_/, ''), r]));
+export const RULE_BY_SHORT_CLASS = new Map(RULES.map(r => [r.className.toLowerCase().replace(/^\/skyl\/cl_/, ''), r]));
 
 /**
  * Resolve rule strictly by ruleId (kebab-case), ABAP class name, or short class name
@@ -5729,7 +5729,7 @@ export function resolveRule(input) {
   if (RULE_BY_CLASS.has(upper)) return RULE_BY_CLASS.get(upper);
   const lower = raw.toLowerCase();
   if (RULE_BY_CLASS_LOWER.has(lower)) return RULE_BY_CLASS_LOWER.get(lower);
-  const shortName = lower.replace(/^zcl_skylint_/, '');
+  const shortName = lower.replace(/^\/skyl\/cl_/, '');
   if (RULE_BY_SHORT_CLASS.has(shortName)) return RULE_BY_SHORT_CLASS.get(shortName);
   return null;
 }

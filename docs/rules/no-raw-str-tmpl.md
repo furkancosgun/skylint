@@ -72,5 +72,5 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ## Technical Details
 
-* **Native ATC Class:** `ZCL_SKYLINT_NO_RAW_STR_TMPL`
-* **Implementation File:** [zcl_skylint_no_raw_str_tmpl.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_raw_str_tmpl.clas.abap)
+* **Native ATC Class:** `/SKYL/CL_NO_RAW_STR_TMPL`
+* **Implementation File:** [#skyl#cl_no_raw_str_tmpl.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_raw_str_tmpl.clas.abap)

@@ -1,0 +1,36 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Avoid empty control blocks (IF, CASE, LOOP, TRY, etc.)",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/ANTI_PATTERNS",
+  "implementingClass": "/SKYL/CL_NO_EMPTY_BLOCK",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "CHECK_IF"
+    },
+    {
+      "name": "CHECK_LOOP"
+    },
+    {
+      "name": "CHECK_CASE"
+    },
+    {
+      "name": "CHECK_TRY"
+    },
+    {
+      "name": "CHECK_CATCH"
+    },
+    {
+      "name": "CHECK_TRY_NO_CATCH"
+    },
+    {
+      "name": "CHECK_DO"
+    },
+    {
+      "name": "CHECK_WHILE"
+    }
+  ]
+}

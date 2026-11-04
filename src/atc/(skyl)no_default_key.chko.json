@@ -1,0 +1,10 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Avoid WITH DEFAULT KEY; prefer EMPTY KEY or explicit keys",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/ANTI_PATTERNS",
+  "implementingClass": "/SKYL/CL_NO_DEFAULT_KEY",
+  "checkType": "remoteEnabled"
+}

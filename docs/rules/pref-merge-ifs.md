@@ -74,5 +74,5 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ## Technical Details
 
-* **Native ATC Class:** `ZCL_SKYLINT_PREF_MERGE_IFS`
-* **Implementation File:** [zcl_skylint_pref_merge_ifs.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_pref_merge_ifs.clas.abap)
+* **Native ATC Class:** `/SKYL/CL_PREF_MERGE_IFS`
+* **Implementation File:** [#skyl#cl_pref_merge_ifs.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_pref_merge_ifs.clas.abap)

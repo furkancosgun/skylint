@@ -35,7 +35,7 @@
     {
       "ruleId": "pref-func-module",
       "title": "Prefer Modern Class-Based APIs over Obsolete Function Modules",
-      "className": "ZCL_SKYLINT_PREF_FUNC_MODULE",
+      "className": "/SKYL/CL_PREF_FUNC_MODULE",
       "description": "Prefer class-based APIs over obsolete function modules",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -47,7 +47,7 @@
     {
       "ruleId": "no-custom-pattern",
       "title": "Disallow Configured Custom Regex Patterns",
-      "className": "ZCL_SKYLINT_NO_CUSTOM_PATTERN",
+      "className": "/SKYL/CL_NO_CUSTOM_PATTERN",
       "description": "Disallow configured custom regex patterns",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -59,7 +59,7 @@
     {
       "ruleId": "pref-paren-and-or",
       "title": "Parenthesize Combinations of AND and OR",
-      "className": "ZCL_SKYLINT_PREF_PAREN_AND_OR",
+      "className": "/SKYL/CL_PREF_PAREN_AND_OR",
       "description": "Parenthesize Combinations of AND and OR",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -71,7 +71,7 @@
     {
       "ruleId": "no-useless-cont",
       "title": "Avoid Redundant CONTINUE at End of Loop",
-      "className": "ZCL_SKYLINT_NO_USELESS_CONT",
+      "className": "/SKYL/CL_NO_USELESS_CONT",
       "description": "Avoid Redundant CONTINUE at End of Loop",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -83,7 +83,7 @@
     {
       "ruleId": "no-nested-cond",
       "title": "Avoid Nested COND or SWITCH Expressions",
-      "className": "ZCL_SKYLINT_NO_NESTED_COND",
+      "className": "/SKYL/CL_NO_NESTED_COND",
       "description": "Avoid Nested COND or SWITCH Expressions",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -95,7 +95,7 @@
     {
       "ruleId": "no-single-iter",
       "title": "Avoid Loops That Execute At Most Once",
-      "className": "ZCL_SKYLINT_NO_SINGLE_ITER",
+      "className": "/SKYL/CL_NO_SINGLE_ITER",
       "description": "Avoid Loops That Execute At Most Once",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -107,7 +107,7 @@
     {
       "ruleId": "pref-downport",
       "title": "Check Downport Compatibility (7.40+ Modern Constructs)",
-      "className": "ZCL_SKYLINT_PREF_DOWNPORT",
+      "className": "/SKYL/CL_PREF_DOWNPORT",
       "description": "Detect 7.40+ syntax incompatible with downport targets",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -119,7 +119,7 @@
     {
       "ruleId": "pref-reduce",
       "title": "Prefer REDUCE #( ) Expression over Simple Aggregation LOOP",
-      "className": "ZCL_SKYLINT_PREF_REDUCE",
+      "className": "/SKYL/CL_PREF_REDUCE",
       "description": "Prefer REDUCE #( ) expression over simple aggregation LOOP",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -131,7 +131,7 @@
     {
       "ruleId": "pref-read-table",
       "title": "Modernize READ TABLE (Table Expressions & line_exists)",
-      "className": "ZCL_SKYLINT_PREF_READ_TABLE",
+      "className": "/SKYL/CL_PREF_READ_TABLE",
       "description": "Modernize READ TABLE (table expressions & line_exists)",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -143,7 +143,7 @@
     {
       "ruleId": "pref-cond",
       "title": "Prefer COND #( ) Expression over IF/ELSEIF/ELSE",
-      "className": "ZCL_SKYLINT_PREF_COND",
+      "className": "/SKYL/CL_PREF_COND",
       "description": "Prefer COND #( ) expression over IF/ELSEIF/ELSE statement",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -155,7 +155,7 @@
     {
       "ruleId": "pref-switch",
       "title": "Prefer SWITCH #( ) Expression over CASE Statement",
-      "className": "ZCL_SKYLINT_PREF_SWITCH",
+      "className": "/SKYL/CL_PREF_SWITCH",
       "description": "Prefer SWITCH #( ) expression over CASE statement",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -167,7 +167,7 @@
     {
       "ruleId": "pref-lines",
       "title": "Prefer lines( ) over DESCRIBE TABLE",
-      "className": "ZCL_SKYLINT_PREF_LINES",
+      "className": "/SKYL/CL_PREF_LINES",
       "description": "Prefer lines( ) over DESCRIBE TABLE ... LINES",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -179,7 +179,7 @@
     {
       "ruleId": "no-call-method",
       "title": "Avoid Obsolete CALL METHOD",
-      "className": "ZCL_SKYLINT_NO_CALL_METHOD",
+      "className": "/SKYL/CL_NO_CALL_METHOD",
       "description": "Avoid static CALL METHOD statements",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -191,7 +191,7 @@
     {
       "ruleId": "no-default-key",
       "title": "Avoid WITH DEFAULT KEY",
-      "className": "ZCL_SKYLINT_NO_DEFAULT_KEY",
+      "className": "/SKYL/CL_NO_DEFAULT_KEY",
       "description": "Avoid WITH DEFAULT KEY; prefer EMPTY KEY or explicit keys",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -203,7 +203,7 @@
     {
       "ruleId": "pref-is-not",
       "title": "Prefer IS NOT over NOT ... IS",
-      "className": "ZCL_SKYLINT_PREF_IS_NOT",
+      "className": "/SKYL/CL_PREF_IS_NOT",
       "description": "Prefer IS NOT over NOT ... IS",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -215,7 +215,7 @@
     {
       "ruleId": "no-me-reference",
       "title": "Avoid Redundant ME-> Self Reference",
-      "className": "ZCL_SKYLINT_NO_ME_REFERENCE",
+      "className": "/SKYL/CL_NO_ME_REFERENCE",
       "description": "Avoid self-reference ME->",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -227,7 +227,7 @@
     {
       "ruleId": "no-call-receiving",
       "title": "Omit RECEIVING in Method Invocations",
-      "className": "ZCL_SKYLINT_NO_CALL_RECEIVING",
+      "className": "/SKYL/CL_NO_CALL_RECEIVING",
       "description": "Omit RECEIVING in Method Invocations",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -239,7 +239,7 @@
     {
       "ruleId": "no-call-exporting",
       "title": "Omit Redundant EXPORTING in Method Calls",
-      "className": "ZCL_SKYLINT_NO_CALL_EXPORTING",
+      "className": "/SKYL/CL_NO_CALL_EXPORTING",
       "description": "Omit Redundant EXPORTING in Method Calls",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -251,7 +251,7 @@
     {
       "ruleId": "pref-param-name",
       "title": "Method Call Parameter Naming Style (Omit or Require)",
-      "className": "ZCL_SKYLINT_PREF_PARAM_NAME",
+      "className": "/SKYL/CL_PREF_PARAM_NAME",
       "description": "Method Call Parameter Naming Style",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -263,7 +263,7 @@
     {
       "ruleId": "no-unused-param",
       "title": "Avoid Unused Parameters in Procedures",
-      "className": "ZCL_SKYLINT_NO_UNUSED_PARAM",
+      "className": "/SKYL/CL_NO_UNUSED_PARAM",
       "description": "Avoid unused parameters in procedures",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -275,7 +275,7 @@
     {
       "ruleId": "no-chained-decl",
       "title": "Avoid Chained Declarations (DATA:, CONSTANTS:, TYPES:)",
-      "className": "ZCL_SKYLINT_NO_CHAINED_DECL",
+      "className": "/SKYL/CL_NO_CHAINED_DECL",
       "description": "Avoid Chained Declarations",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -287,7 +287,7 @@
     {
       "ruleId": "no-chained-assign",
       "title": "Avoid Chained Assignments (a = b = c = 1)",
-      "className": "ZCL_SKYLINT_NO_CHAINED_ASSIGN",
+      "className": "/SKYL/CL_NO_CHAINED_ASSIGN",
       "description": "Avoid Chained Assignments",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -299,7 +299,7 @@
     {
       "ruleId": "pref-str-tmpl",
       "title": "Prefer String Templates over CONCATENATE",
-      "className": "ZCL_SKYLINT_PREF_STR_TMPL",
+      "className": "/SKYL/CL_PREF_STR_TMPL",
       "description": "Prefer string templates over CONCATENATE",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -311,7 +311,7 @@
     {
       "ruleId": "no-bool-compare",
       "title": "Avoid Comparing to abap_true / abap_false",
-      "className": "ZCL_SKYLINT_NO_BOOL_COMPARE",
+      "className": "/SKYL/CL_NO_BOOL_COMPARE",
       "description": "Avoid comparing boolean method calls to boolean literals",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -323,7 +323,7 @@
     {
       "ruleId": "pref-return",
       "title": "Prefer RETURN over EXIT in Methods",
-      "className": "ZCL_SKYLINT_PREF_RETURN",
+      "className": "/SKYL/CL_PREF_RETURN",
       "description": "Prefer RETURN over EXIT outside loop constructs",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -335,7 +335,7 @@
     {
       "ruleId": "no-check-stmt",
       "title": "Avoid CHECK Statements",
-      "className": "ZCL_SKYLINT_NO_CHECK_STMT",
+      "className": "/SKYL/CL_NO_CHECK_STMT",
       "description": "Avoid CHECK statements; prefer IF with RETURN or CONTINUE",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -347,7 +347,7 @@
     {
       "ruleId": "no-empty-block",
       "title": "Avoid Empty Control Blocks",
-      "className": "ZCL_SKYLINT_NO_EMPTY_BLOCK",
+      "className": "/SKYL/CL_NO_EMPTY_BLOCK",
       "description": "Avoid empty control blocks (IF, CASE, LOOP, TRY, etc.)",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -359,7 +359,7 @@
     {
       "ruleId": "no-ident-cont",
       "title": "Avoid Identical Statements in IF Branches",
-      "className": "ZCL_SKYLINT_NO_IDENT_CONT",
+      "className": "/SKYL/CL_NO_IDENT_CONT",
       "description": "Avoid identical code in IF and ELSE branches",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -371,7 +371,7 @@
     {
       "ruleId": "no-dup-cond",
       "title": "Avoid Duplicate Branch Conditions",
-      "className": "ZCL_SKYLINT_NO_DUP_COND",
+      "className": "/SKYL/CL_NO_DUP_COND",
       "description": "Avoid duplicate branch conditions in IF and CASE",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -383,7 +383,7 @@
     {
       "ruleId": "pref-merge-ifs",
       "title": "Merge Nested IF Statements",
-      "className": "ZCL_SKYLINT_PREF_MERGE_IFS",
+      "className": "/SKYL/CL_PREF_MERGE_IFS",
       "description": "Merge consecutive nested IF blocks using boolean AND",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -395,7 +395,7 @@
     {
       "ruleId": "no-unreachable",
       "title": "Avoid Dead / Unreachable Code",
-      "className": "ZCL_SKYLINT_NO_UNREACHABLE",
+      "className": "/SKYL/CL_NO_UNREACHABLE",
       "description": "Detect unreachable code after jump or exit statements",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -407,7 +407,7 @@
     {
       "ruleId": "no-single-when",
       "title": "Avoid CASE with a Single WHEN Branch",
-      "className": "ZCL_SKYLINT_NO_SINGLE_WHEN",
+      "className": "/SKYL/CL_NO_SINGLE_WHEN",
       "description": "Avoid CASE statements with only one WHEN branch",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -419,7 +419,7 @@
     {
       "ruleId": "no-yoda-cond",
       "title": "Avoid Yoda Conditions",
-      "className": "ZCL_SKYLINT_NO_YODA_COND",
+      "className": "/SKYL/CL_NO_YODA_COND",
       "description": "Avoid Yoda conditions in comparison expressions",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -431,7 +431,7 @@
     {
       "ruleId": "pref-symbol-op",
       "title": "Prefer Symbol Comparison Operators (=, <>, <, >)",
-      "className": "ZCL_SKYLINT_PREF_SYMBOL_OP",
+      "className": "/SKYL/CL_PREF_SYMBOL_OP",
       "description": "Prefer symbolic operators over textual EQ, NE, LT, GT",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -443,7 +443,7 @@
     {
       "ruleId": "pref-new-op",
       "title": "Prefer NEW #( ) over CREATE OBJECT",
-      "className": "ZCL_SKYLINT_PREF_NEW_OP",
+      "className": "/SKYL/CL_PREF_NEW_OP",
       "description": "Prefer NEW operator over CREATE OBJECT and RAISE EXCEPTION",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -455,7 +455,7 @@
     {
       "ruleId": "pref-xsdbool",
       "title": "Prefer xsdbool( ) for Boolean Assignments",
-      "className": "ZCL_SKYLINT_PREF_XSDBOOL",
+      "className": "/SKYL/CL_PREF_XSDBOOL",
       "description": "Prefer xsdbool( ) expression over manual IF-ELSE assignment",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -467,7 +467,7 @@
     {
       "ruleId": "no-static-arrow",
       "title": "Avoid Calling Static Methods via Instance References (->)",
-      "className": "ZCL_SKYLINT_NO_STATIC_ARROW",
+      "className": "/SKYL/CL_NO_STATIC_ARROW",
       "description": "Avoid calling static methods via instance arrow (->)",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -479,7 +479,7 @@
     {
       "ruleId": "no-exposed-data",
       "title": "Avoid Exposed Mutable Data in Classes and Interfaces",
-      "className": "ZCL_SKYLINT_NO_EXPOSED_DATA",
+      "className": "/SKYL/CL_NO_EXPOSED_DATA",
       "description": "Avoid mutable data in public classes and interfaces",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -491,7 +491,7 @@
     {
       "ruleId": "no-obs-arith",
       "title": "Avoid Obsolete Arithmetic and Assignment Statements",
-      "className": "ZCL_SKYLINT_NO_OBS_ARITH",
+      "className": "/SKYL/CL_NO_OBS_ARITH",
       "description": "Obsolete Arithmetic and Assignment Statements",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -503,7 +503,7 @@
     {
       "ruleId": "no-unclosed-res",
       "title": "Ensure Opened Datasets and Cursors are Closed",
-      "className": "ZCL_SKYLINT_NO_UNCLOSED_RES",
+      "className": "/SKYL/CL_NO_UNCLOSED_RES",
       "description": "Ensure opened datasets and cursors are closed",
       "category": "security",
       "categoryTitle": "Security & Robustness",
@@ -515,7 +515,7 @@
     {
       "ruleId": "no-obs-decl",
       "title": "Avoid Obsolete Declarations and Table Headers",
-      "className": "ZCL_SKYLINT_NO_OBS_DECL",
+      "className": "/SKYL/CL_NO_OBS_DECL",
       "description": "Obsolete Data and Type Declarations",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -527,7 +527,7 @@
     {
       "ruleId": "no-obs-control",
       "title": "Avoid Obsolete Control Flow and Procedural Forms",
-      "className": "ZCL_SKYLINT_NO_OBS_CONTROL",
+      "className": "/SKYL/CL_NO_OBS_CONTROL",
       "description": "Obsolete Control Flow and Procedural Statements",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -539,7 +539,7 @@
     {
       "ruleId": "no-obs-memory",
       "title": "Avoid Obsolete ABAP Memory and Context Statements",
-      "className": "ZCL_SKYLINT_NO_OBS_MEMORY",
+      "className": "/SKYL/CL_NO_OBS_MEMORY",
       "description": "Obsolete Memory and Context Statements",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -551,7 +551,7 @@
     {
       "ruleId": "no-obs-strings",
       "title": "Avoid Obsolete String and POSIX Regex Statements",
-      "className": "ZCL_SKYLINT_NO_OBS_STRINGS",
+      "className": "/SKYL/CL_NO_OBS_STRINGS",
       "description": "Obsolete String and Regex Statements",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -563,7 +563,7 @@
     {
       "ruleId": "no-list-proc",
       "title": "Avoid Classic List Processing Statements",
-      "className": "ZCL_SKYLINT_NO_LIST_PROC",
+      "className": "/SKYL/CL_NO_LIST_PROC",
       "description": "Prohibit classic list processing statements",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -575,7 +575,7 @@
     {
       "ruleId": "max-params",
       "title": "Limit Method Parameter Count and Require Multi-Line Signatures",
-      "className": "ZCL_SKYLINT_MAX_PARAMS",
+      "className": "/SKYL/CL_MAX_PARAMS",
       "description": "Method parameter limits (count and lines)",
       "category": "metrics",
       "categoryTitle": "Metrics & Complexity Limits",
@@ -587,7 +587,7 @@
     {
       "ruleId": "no-db-in-loop",
       "title": "Avoid Database Access Inside Loops (N+1 Query Antipattern)",
-      "className": "ZCL_SKYLINT_NO_DB_IN_LOOP",
+      "className": "/SKYL/CL_NO_DB_IN_LOOP",
       "description": "Avoid database access inside loop iterations",
       "category": "performance",
       "categoryTitle": "Performance & Database",
@@ -599,7 +599,7 @@
     {
       "ruleId": "no-empty-fae",
       "title": "Prevent Empty Driver Tables in FOR ALL ENTRIES (Full Table Scan Bug)",
-      "className": "ZCL_SKYLINT_NO_EMPTY_FAE",
+      "className": "/SKYL/CL_NO_EMPTY_FAE",
       "description": "Unsecure FOR ALL ENTRIES (Missing empty itab check)",
       "category": "performance",
       "categoryTitle": "Performance & Database",
@@ -611,7 +611,7 @@
     {
       "ruleId": "no-select-star",
       "title": "Avoid SELECT * in OpenSQL Queries (Minimize Memory & Network Overhead)",
-      "className": "ZCL_SKYLINT_NO_SELECT_STAR",
+      "className": "/SKYL/CL_NO_SELECT_STAR",
       "description": "Avoid SELECT * (specify columns explicitly)",
       "category": "performance",
       "categoryTitle": "Performance & Database",
@@ -623,7 +623,7 @@
     {
       "ruleId": "no-endselect",
       "title": "Avoid SELECT ... ENDSELECT Row-by-Row Cursor Loops",
-      "className": "ZCL_SKYLINT_NO_ENDSELECT",
+      "className": "/SKYL/CL_NO_ENDSELECT",
       "description": "Avoid SELECT ... ENDSELECT Loops",
       "category": "performance",
       "categoryTitle": "Performance & Database",
@@ -635,7 +635,7 @@
     {
       "ruleId": "no-scope-leak",
       "title": "Avoid Variable Scope Leaking from Inner Blocks",
-      "className": "ZCL_SKYLINT_NO_SCOPE_LEAK",
+      "className": "/SKYL/CL_NO_SCOPE_LEAK",
       "description": "Avoid variable usage outside its declaring control block",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -647,7 +647,7 @@
     {
       "ruleId": "no-redun-assign",
       "title": "Remove Redundant Self-Assignments and Identity Moves",
-      "className": "ZCL_SKYLINT_NO_REDUN_ASSIGN",
+      "className": "/SKYL/CL_NO_REDUN_ASSIGN",
       "description": "Detect identical assignments and moves",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -659,7 +659,7 @@
     {
       "ruleId": "no-shadow",
       "title": "Avoid Local Variables Shadowing Class Attributes",
-      "className": "ZCL_SKYLINT_NO_SHADOW",
+      "className": "/SKYL/CL_NO_SHADOW",
       "description": "Avoid local variables shadowing class attributes",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -671,7 +671,7 @@
     {
       "ruleId": "no-useless-concat",
       "title": "Avoid Concatenating Adjacent String Literals",
-      "className": "ZCL_SKYLINT_NO_USELESS_CONCAT",
+      "className": "/SKYL/CL_NO_USELESS_CONCAT",
       "description": "Avoid concatenating string literals",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -683,7 +683,7 @@
     {
       "ruleId": "pref-full-typed",
       "title": "Require Fully Typed Variables and Parameters",
-      "className": "ZCL_SKYLINT_PREF_FULL_TYPED",
+      "className": "/SKYL/CL_PREF_FULL_TYPED",
       "description": "Enforce fully typed constant declarations",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -695,7 +695,7 @@
     {
       "ruleId": "pref-corresp",
       "title": "Prefer CORRESPONDING #( ) Operator",
-      "className": "ZCL_SKYLINT_PREF_CORRESP",
+      "className": "/SKYL/CL_PREF_CORRESP",
       "description": "Prefer CORRESPONDING Expression over MOVE-CORRESPONDING",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -707,7 +707,7 @@
     {
       "ruleId": "max-method-len",
       "title": "Limit Method and Constructor Statement Length",
-      "className": "ZCL_SKYLINT_MAX_METHOD_LEN",
+      "className": "/SKYL/CL_MAX_METHOD_LEN",
       "description": "Method and Constructor Length Limits",
       "category": "metrics",
       "categoryTitle": "Metrics & Complexity Limits",
@@ -719,7 +719,7 @@
     {
       "ruleId": "max-nesting",
       "title": "Limit Control Flow Nesting Depth (Guard Clause Enforcement)",
-      "className": "ZCL_SKYLINT_MAX_NESTING",
+      "className": "/SKYL/CL_MAX_NESTING",
       "description": "Nesting Depth Limit (excessive control block nesting)",
       "category": "metrics",
       "categoryTitle": "Metrics & Complexity Limits",
@@ -731,7 +731,7 @@
     {
       "ruleId": "no-sy-modify",
       "title": "Avoid Directly Modifying System Fields (sy-subrc, sy-tabix)",
-      "className": "ZCL_SKYLINT_NO_SY_MODIFY",
+      "className": "/SKYL/CL_NO_SY_MODIFY",
       "description": "Avoid sy-* System Variable Modification",
       "category": "security",
       "categoryTitle": "Security & Robustness",
@@ -743,7 +743,7 @@
     {
       "ruleId": "pref-returning",
       "title": "Prefer Functional RETURNING Parameters",
-      "className": "ZCL_SKYLINT_PREF_RETURNING",
+      "className": "/SKYL/CL_PREF_RETURNING",
       "description": "Prefer RETURNING over single EXPORTING",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -755,7 +755,7 @@
     {
       "ruleId": "pref-class-exc",
       "title": "Prefer Class-Based Exceptions over Classic EXCEPTIONS",
-      "className": "ZCL_SKYLINT_PREF_CLASS_EXC",
+      "className": "/SKYL/CL_PREF_CLASS_EXC",
       "description": "Prefer Class-Based Exceptions over Classic EXCEPTIONS",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -767,7 +767,7 @@
     {
       "ruleId": "no-prod-assert",
       "title": "Avoid Native ASSERT in Production Code (Prevent Unrecoverable Dumps)",
-      "className": "ZCL_SKYLINT_NO_PROD_ASSERT",
+      "className": "/SKYL/CL_NO_PROD_ASSERT",
       "description": "Native ASSERT in Production Logic",
       "category": "security",
       "categoryTitle": "Security & Robustness",
@@ -779,7 +779,7 @@
     {
       "ruleId": "no-raise-shortdump",
       "title": "Avoid Explicit RAISE SHORTDUMP in Application Logic",
-      "className": "ZCL_SKYLINT_NO_RAISE_SHORTDUMP",
+      "className": "/SKYL/CL_NO_RAISE_SHORTDUMP",
       "description": "Avoid RAISE SHORTDUMP",
       "category": "security",
       "categoryTitle": "Security & Robustness",
@@ -791,7 +791,7 @@
     {
       "ruleId": "no-metaprogramming",
       "title": "Avoid Dynamic Metaprogramming and Code Generation (Remote Code Execution Risk)",
-      "className": "ZCL_SKYLINT_NO_METAPROGRAMMING",
+      "className": "/SKYL/CL_NO_METAPROGRAMMING",
       "description": "Metaprogramming and Dynamic Code Generation",
       "category": "security",
       "categoryTitle": "Security & Robustness",
@@ -803,7 +803,7 @@
     {
       "ruleId": "no-kernel-call",
       "title": "Avoid Kernel and Native Database Calls (SYSTEM-CALL, EXEC SQL)",
-      "className": "ZCL_SKYLINT_NO_KERNEL_CALL",
+      "className": "/SKYL/CL_NO_KERNEL_CALL",
       "description": "Avoid Kernel and Native Calls",
       "category": "security",
       "categoryTitle": "Security & Robustness",
@@ -815,7 +815,7 @@
     {
       "ruleId": "pref-auth-check",
       "title": "Ensure AUTHORITY-CHECK Precedes Sensitive Business Operations",
-      "className": "ZCL_SKYLINT_PREF_AUTH_CHECK",
+      "className": "/SKYL/CL_PREF_AUTH_CHECK",
       "description": "Call Transaction Authority Check",
       "category": "security",
       "categoryTitle": "Security & Robustness",
@@ -827,7 +827,7 @@
     {
       "ruleId": "pref-order-by",
       "title": "Require Explicit ORDER BY for Deterministic SELECT Queries",
-      "className": "ZCL_SKYLINT_PREF_ORDER_BY",
+      "className": "/SKYL/CL_PREF_ORDER_BY",
       "description": "SELECT UP TO 1 ROWS requires ORDER BY",
       "category": "performance",
       "categoryTitle": "Performance & Database",
@@ -839,7 +839,7 @@
     {
       "ruleId": "max-cyclo-comp",
       "title": "Limit Cyclomatic Complexity (McCabe Complexity Metric)",
-      "className": "ZCL_SKYLINT_MAX_CYCLO_COMP",
+      "className": "/SKYL/CL_MAX_CYCLO_COMP",
       "description": "Cyclomatic Complexity Threshold",
       "category": "metrics",
       "categoryTitle": "Metrics & Complexity Limits",
@@ -851,7 +851,7 @@
     {
       "ruleId": "max-npath",
       "title": "Limit NPath Complexity per Method",
-      "className": "ZCL_SKYLINT_MAX_NPATH",
+      "className": "/SKYL/CL_MAX_NPATH",
       "description": "Limit NPath complexity per procedure",
       "category": "metrics",
       "categoryTitle": "Metrics & Complexity Limits",
@@ -863,7 +863,7 @@
     {
       "ruleId": "pref-final-cls",
       "title": "Design for Inheritance or Prohibit It (FINAL)",
-      "className": "ZCL_SKYLINT_PREF_FINAL_CLS",
+      "className": "/SKYL/CL_PREF_FINAL_CLS",
       "description": "Prefer FINAL classes and methods by default",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -875,7 +875,7 @@
     {
       "ruleId": "no-magic-numbers",
       "title": "Avoid Magic Numbers; Use Named Constants",
-      "className": "ZCL_SKYLINT_NO_MAGIC_NUMBERS",
+      "className": "/SKYL/CL_NO_MAGIC_NUMBERS",
       "description": "Avoid magic numbers in code; use named constants",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -887,7 +887,7 @@
     {
       "ruleId": "pref-insert",
       "title": "Prefer INSERT ... INTO TABLE over APPEND",
-      "className": "ZCL_SKYLINT_PREF_INSERT",
+      "className": "/SKYL/CL_PREF_INSERT",
       "description": "Prefer INSERT ... INTO TABLE over APPEND for table safety",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -899,7 +899,7 @@
     {
       "ruleId": "no-like-objects",
       "title": "Avoid LIKE Typing on Global Dictionary Objects",
-      "className": "ZCL_SKYLINT_NO_LIKE_OBJECTS",
+      "className": "/SKYL/CL_NO_LIKE_OBJECTS",
       "description": "Avoid LIKE referencing data objects; use explicit TYPE",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -911,7 +911,7 @@
     {
       "ruleId": "no-static-cls",
       "title": "Avoid Purely Static Utility Classes",
-      "className": "ZCL_SKYLINT_NO_STATIC_CLS",
+      "className": "/SKYL/CL_NO_STATIC_CLS",
       "description": "Avoid static-only classes; use instantiable classes",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -923,7 +923,7 @@
     {
       "ruleId": "pref-pred-name",
       "title": "Use Predicate Naming for Boolean Methods (is_, has_, can_)",
-      "className": "ZCL_SKYLINT_PREF_PRED_NAME",
+      "className": "/SKYL/CL_PREF_PRED_NAME",
       "description": "Enforce predicate naming (IS_, HAS_) on boolean methods",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -935,7 +935,7 @@
     {
       "ruleId": "max-inherit",
       "title": "Limit Class Inheritance Depth (Favor Composition over Inheritance)",
-      "className": "ZCL_SKYLINT_MAX_INHERIT",
+      "className": "/SKYL/CL_MAX_INHERIT",
       "description": "Avoid deep class inheritance hierarchies",
       "category": "metrics",
       "categoryTitle": "Metrics & Complexity Limits",
@@ -947,7 +947,7 @@
     {
       "ruleId": "max-attributes",
       "title": "Limit Class Member Attribute Count (Prevent God Classes)",
-      "className": "ZCL_SKYLINT_MAX_ATTRIBUTES",
+      "className": "/SKYL/CL_MAX_ATTRIBUTES",
       "description": "Limit class member attributes to prevent God Classes",
       "category": "metrics",
       "categoryTitle": "Metrics & Complexity Limits",
@@ -959,7 +959,7 @@
     {
       "ruleId": "no-catch-root",
       "title": "Avoid Catching Generic CX_ROOT (Catch Specific Exceptions)",
-      "className": "ZCL_SKYLINT_NO_CATCH_ROOT",
+      "className": "/SKYL/CL_NO_CATCH_ROOT",
       "description": "Catch specific exceptions instead of generic cx_root",
       "category": "security",
       "categoryTitle": "Security & Robustness",
@@ -971,7 +971,7 @@
     {
       "ruleId": "no-msg-raising",
       "title": "Avoid Obsolete MESSAGE ... RAISING in Methods",
-      "className": "ZCL_SKYLINT_NO_MSG_RAISING",
+      "className": "/SKYL/CL_NO_MSG_RAISING",
       "description": "Avoid MESSAGE ... RAISING; use class-based exceptions",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -983,7 +983,7 @@
     {
       "ruleId": "no-nested-try",
       "title": "Avoid Deeply Nested TRY ... CATCH Blocks",
-      "className": "ZCL_SKYLINT_NO_NESTED_TRY",
+      "className": "/SKYL/CL_NO_NESTED_TRY",
       "description": "Avoid nested TRY blocks; extract to helper methods",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -995,7 +995,7 @@
     {
       "ruleId": "no-raise-cx-sy",
       "title": "Avoid Raising System Exceptions Directly (CX_SY_*)",
-      "className": "ZCL_SKYLINT_NO_RAISE_CX_SY",
+      "className": "/SKYL/CL_NO_RAISE_CX_SY",
       "description": "Avoid raising SAP internal system exceptions (cx_sy_*)",
       "category": "security",
       "categoryTitle": "Security & Robustness",
@@ -1007,7 +1007,7 @@
     {
       "ruleId": "pref-check-subrc",
       "title": "Verify sy-subrc Promptly After Data Retrieval and Search",
-      "className": "ZCL_SKYLINT_PREF_CHECK_SUBRC",
+      "className": "/SKYL/CL_PREF_CHECK_SUBRC",
       "description": "Check sy-subrc after DB, table and string operations",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1019,7 +1019,7 @@
     {
       "ruleId": "pref-auth-subrc",
       "title": "Check sy-subrc Promptly After AUTHORITY-CHECK (CWE-862 Authorization Bypass)",
-      "className": "ZCL_SKYLINT_PREF_AUTH_SUBRC",
+      "className": "/SKYL/CL_PREF_AUTH_SUBRC",
       "description": "Check sy-subrc immediately after AUTHORITY-CHECK",
       "category": "security",
       "categoryTitle": "Security & Robustness",
@@ -1031,7 +1031,7 @@
     {
       "ruleId": "no-client-spec",
       "title": "Avoid CLIENT SPECIFIED / USING CLIENT in Cloud (Multi-Tenant Isolation)",
-      "className": "ZCL_SKYLINT_NO_CLIENT_SPEC",
+      "className": "/SKYL/CL_NO_CLIENT_SPEC",
       "description": "Avoid USING CLIENT or CLIENT SPECIFIED in ABAP SQL",
       "category": "security",
       "categoryTitle": "Security & Robustness",
@@ -1043,7 +1043,7 @@
     {
       "ruleId": "pref-transport",
       "title": "Specify TRANSPORTING in Internal Table MODIFY and READ Operations",
-      "className": "ZCL_SKYLINT_PREF_TRANSPORT",
+      "className": "/SKYL/CL_PREF_TRANSPORT",
       "description": "Avoid MODIFY itab in LOOP without TRANSPORTING clause",
       "category": "performance",
       "categoryTitle": "Performance & Database",
@@ -1055,7 +1055,7 @@
     {
       "ruleId": "pref-str-func",
       "title": "Prefer Built-in String Functions over SEARCH/SHIFT",
-      "className": "ZCL_SKYLINT_PREF_STR_FUNC",
+      "className": "/SKYL/CL_PREF_STR_FUNC",
       "description": "Detect obsolete string statements; prefer built-in functions",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1067,7 +1067,7 @@
     {
       "ruleId": "pref-calc-op",
       "title": "Prefer Calculation Assignment Operators (+=, -=, *=)",
-      "className": "ZCL_SKYLINT_PREF_CALC_OP",
+      "className": "/SKYL/CL_PREF_CALC_OP",
       "description": "Prefer calculation assignment operators (+=, -=, *=, /=)",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1079,7 +1079,7 @@
     {
       "ruleId": "pref-early-ret",
       "title": "Prefer Early Return to Reduce Nesting (Guard Clauses)",
-      "className": "ZCL_SKYLINT_PREF_EARLY_RET",
+      "className": "/SKYL/CL_PREF_EARLY_RET",
       "description": "Prefer early return or continue over nested IF blocks",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1091,7 +1091,7 @@
     {
       "ruleId": "no-unused-vars",
       "title": "Eliminate Unused Local Variables and Symbols",
-      "className": "ZCL_SKYLINT_NO_UNUSED_VARS",
+      "className": "/SKYL/CL_NO_UNUSED_VARS",
       "description": "Detect unused local variables and field symbols",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -1103,7 +1103,7 @@
     {
       "ruleId": "pref-case",
       "title": "Prefer CASE over Multiple IF / ELSEIF on the Same Variable",
-      "className": "ZCL_SKYLINT_PREF_CASE",
+      "className": "/SKYL/CL_PREF_CASE",
       "description": "Use CASE instead of IF when checking multiple values",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1115,7 +1115,7 @@
     {
       "ruleId": "no-inline-len",
       "title": "Avoid Obsolete Inline Length Specifications (var(len))",
-      "className": "ZCL_SKYLINT_NO_INLINE_LEN",
+      "className": "/SKYL/CL_NO_INLINE_LEN",
       "description": "Avoid inline length specification in declarations",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -1127,7 +1127,7 @@
     {
       "ruleId": "max-one-stmt",
       "title": "Limit One Statement per Source Code Line (No Inline Colon Chains)",
-      "className": "ZCL_SKYLINT_MAX_ONE_STMT",
+      "className": "/SKYL/CL_MAX_ONE_STMT",
       "description": "Max One Statement Per Line",
       "category": "metrics",
       "categoryTitle": "Metrics & Complexity Limits",
@@ -1139,7 +1139,7 @@
     {
       "ruleId": "no-dash-in-form",
       "title": "Avoid Obsolete Dash (-) in Form Names",
-      "className": "ZCL_SKYLINT_NO_DASH_IN_FORM",
+      "className": "/SKYL/CL_NO_DASH_IN_FORM",
       "description": "No Dashes in Form Names",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -1151,7 +1151,7 @@
     {
       "ruleId": "pref-inline",
       "title": "Prefer Modern Inline Declarations in ABAP 7.40+",
-      "className": "ZCL_SKYLINT_PREF_INLINE",
+      "className": "/SKYL/CL_PREF_INLINE",
       "description": "Prefer Inline Declarations",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1163,7 +1163,7 @@
     {
       "ruleId": "pref-final-data",
       "title": "Prefer FINAL( ) over DATA( ) when the variable is never written again",
-      "className": "ZCL_SKYLINT_PREF_FINAL_DATA",
+      "className": "/SKYL/CL_PREF_FINAL_DATA",
       "description": "Declare inline variables as FINAL when never written again",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1175,7 +1175,7 @@
     {
       "ruleId": "no-friends",
       "title": "Avoid FRIENDS in class definitions",
-      "className": "ZCL_SKYLINT_NO_FRIENDS",
+      "className": "/SKYL/CL_NO_FRIENDS",
       "description": "Avoid FRIENDS in class definitions",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -1187,7 +1187,7 @@
     {
       "ruleId": "pref-msg-cls",
       "title": "Use a message class (SE91) instead of inline message text",
-      "className": "ZCL_SKYLINT_PREF_MSG_CLS",
+      "className": "/SKYL/CL_PREF_MSG_CLS",
       "description": "Use a message class instead of inline message text",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1199,7 +1199,7 @@
     {
       "ruleId": "no-exc-overlap",
       "title": "Classic EXCEPTIONS must not map two errors to the same number",
-      "className": "ZCL_SKYLINT_NO_EXC_OVERLAP",
+      "className": "/SKYL/CL_NO_EXC_OVERLAP",
       "description": "Classic EXCEPTIONS must not overlap",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -1211,7 +1211,7 @@
     {
       "ruleId": "no-rfc-err",
       "title": "Handle System and Communication Failures in Remote Function Calls (RFC)",
-      "className": "ZCL_SKYLINT_NO_RFC_ERR",
+      "className": "/SKYL/CL_NO_RFC_ERR",
       "description": "RFC calls must handle system failures",
       "category": "security",
       "categoryTitle": "Security & Robustness",
@@ -1223,7 +1223,7 @@
     {
       "ruleId": "no-many-parens",
       "title": "Remove redundant parentheses",
-      "className": "ZCL_SKYLINT_NO_MANY_PARENS",
+      "className": "/SKYL/CL_NO_MANY_PARENS",
       "description": "Remove redundant parentheses",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -1235,7 +1235,7 @@
     {
       "ruleId": "pref-pass-by-ref",
       "title": "Prefer Pass-by-Reference for Internal Tables in Method Signatures",
-      "className": "ZCL_SKYLINT_PREF_PASS_BY_REF",
+      "className": "/SKYL/CL_PREF_PASS_BY_REF",
       "description": "Slow Parameter Passing",
       "category": "performance",
       "categoryTitle": "Performance & Database",
@@ -1247,7 +1247,7 @@
     {
       "ruleId": "no-mod-std-table",
       "title": "Only Modify Tables Defined in Your Own Package/Component",
-      "className": "ZCL_SKYLINT_NO_MOD_STD_TABLE",
+      "className": "/SKYL/CL_NO_MOD_STD_TABLE",
       "description": "Modify Only Own Database Tables",
       "category": "security",
       "categoryTitle": "Security & Robustness",
@@ -1259,7 +1259,7 @@
     {
       "ruleId": "no-dynamic-stmt",
       "title": "Avoid Unnecessary Dynamic Programming Constructs (SQL Injection Prevention)",
-      "className": "ZCL_SKYLINT_NO_DYNAMIC_STMT",
+      "className": "/SKYL/CL_NO_DYNAMIC_STMT",
       "description": "No Dynamic Constructs (CALL, ASSIGN, CREATE, etc.)",
       "category": "security",
       "categoryTitle": "Security & Robustness",
@@ -1271,7 +1271,7 @@
     {
       "ruleId": "pref-pub-ctor",
       "title": "Declare Constructor in PUBLIC SECTION",
-      "className": "ZCL_SKYLINT_PREF_PUB_CTOR",
+      "className": "/SKYL/CL_PREF_PUB_CTOR",
       "description": "Declare Constructor in PUBLIC SECTION",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1283,7 +1283,7 @@
     {
       "ruleId": "pref-declarations",
       "title": "Routine Declaration Hygiene (Top Placement & Order)",
-      "className": "ZCL_SKYLINT_PREF_DECLARATIONS",
+      "className": "/SKYL/CL_PREF_DECLARATIONS",
       "description": "Routine Declaration Hygiene (top placement & order)",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1295,7 +1295,7 @@
     {
       "ruleId": "no-unnec-return",
       "title": "Omit Unnecessary RETURN Statement",
-      "className": "ZCL_SKYLINT_NO_UNNEC_RETURN",
+      "className": "/SKYL/CL_NO_UNNEC_RETURN",
       "description": "Omit unnecessary RETURN at end of routine",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -1307,7 +1307,7 @@
     {
       "ruleId": "no-mix-returning",
       "title": "Do Not Mix RETURNING with EXPORTING or CHANGING",
-      "className": "ZCL_SKYLINT_NO_MIX_RETURNING",
+      "className": "/SKYL/CL_NO_MIX_RETURNING",
       "description": "Do not mix RETURNING with EXPORTING or CHANGING",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -1319,7 +1319,7 @@
     {
       "ruleId": "no-overw-builtin",
       "title": "Avoid Method Names That Overwrite Built-in Functions",
-      "className": "ZCL_SKYLINT_NO_OVERW_BUILTIN",
+      "className": "/SKYL/CL_NO_OVERW_BUILTIN",
       "description": "Method name overwrites built-in SAP function",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -1331,7 +1331,7 @@
     {
       "ruleId": "pref-is-initial",
       "title": "Prefer IS [NOT] INITIAL over lines( ) or Literal Comparisons",
-      "className": "ZCL_SKYLINT_PREF_IS_INITIAL",
+      "className": "/SKYL/CL_PREF_IS_INITIAL",
       "description": "Prefer IS [NOT] INITIAL over lines( ) or empty literals",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1343,7 +1343,7 @@
     {
       "ruleId": "no-ignored-return",
       "title": "Do Not Ignore Return Value of Functional Methods",
-      "className": "ZCL_SKYLINT_NO_IGNORED_RETURN",
+      "className": "/SKYL/CL_NO_IGNORED_RETURN",
       "description": "Disallow ignoring the return value of functional methods",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -1355,7 +1355,7 @@
     {
       "ruleId": "pref-downcast",
       "title": "Modernize Downcasting (CAST #( ) Expression & Inlining)",
-      "className": "ZCL_SKYLINT_PREF_DOWNCAST",
+      "className": "/SKYL/CL_PREF_DOWNCAST",
       "description": "Modernize Downcasting (CAST #( ) & inlining)",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1367,7 +1367,7 @@
     {
       "ruleId": "no-mod-loop-tab",
       "title": "Do Not Mutate the Internal Table Currently Being Looped (Iterator Invalidation)",
-      "className": "ZCL_SKYLINT_NO_MOD_LOOP_TAB",
+      "className": "/SKYL/CL_NO_MOD_LOOP_TAB",
       "description": "Avoid mutating or sorting tables inside loops",
       "category": "performance",
       "categoryTitle": "Performance & Database",
@@ -1379,7 +1379,7 @@
     {
       "ruleId": "no-hardcoded-env",
       "title": "Avoid Hardcoding System & Tenant Environment Checks (sy-sysid, sy-mandt)",
-      "className": "ZCL_SKYLINT_NO_HARDCODED_ENV",
+      "className": "/SKYL/CL_NO_HARDCODED_ENV",
       "description": "Avoid reading environment system fields (sy-sysid, etc.)",
       "category": "security",
       "categoryTitle": "Security & Robustness",
@@ -1391,7 +1391,7 @@
     {
       "ruleId": "max-line-len",
       "title": "Limit Source Code Line Length (Avoid Horizontal Scrolling)",
-      "className": "ZCL_SKYLINT_MAX_LINE_LEN",
+      "className": "/SKYL/CL_MAX_LINE_LEN",
       "description": "Maximum Line Length",
       "category": "metrics",
       "categoryTitle": "Metrics & Complexity Limits",
@@ -1403,7 +1403,7 @@
     {
       "ruleId": "pref-naming-vars",
       "title": "Enforce Local Variable and Field-Symbol Naming Conventions",
-      "className": "ZCL_SKYLINT_PREF_NAMING_VARS",
+      "className": "/SKYL/CL_PREF_NAMING_VARS",
       "description": "Local Variable and Field-Symbol Naming Conventions",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1415,7 +1415,7 @@
     {
       "ruleId": "pref-name-members",
       "title": "Enforce Class Attribute and Method Parameter Naming Conventions",
-      "className": "ZCL_SKYLINT_PREF_NAME_MEMBERS",
+      "className": "/SKYL/CL_PREF_NAME_MEMBERS",
       "description": "Class Attribute and Parameter Naming Conventions",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1427,7 +1427,7 @@
     {
       "ruleId": "pref-name-objects",
       "title": "Enforce Class, Interface, Type and Object Naming Conventions",
-      "className": "ZCL_SKYLINT_PREF_NAME_OBJECTS",
+      "className": "/SKYL/CL_PREF_NAME_OBJECTS",
       "description": "Class, Interface, Type and Object Naming",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1439,7 +1439,7 @@
     {
       "ruleId": "no-bad-indent",
       "title": "Statement Indentation Must Match Block Nesting",
-      "className": "ZCL_SKYLINT_NO_BAD_INDENT",
+      "className": "/SKYL/CL_NO_BAD_INDENT",
       "description": "Bad Statement Indentation",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1451,7 +1451,7 @@
     {
       "ruleId": "no-dead-code",
       "title": "Avoid Dead Code with Constant Conditions",
-      "className": "ZCL_SKYLINT_NO_DEAD_CODE",
+      "className": "/SKYL/CL_NO_DEAD_CODE",
       "description": "Detect Dead Code with Constant Condition",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -1463,7 +1463,7 @@
     {
       "ruleId": "no-keyword-name",
       "title": "Avoid Using ABAP Keywords as Identifier Names",
-      "className": "ZCL_SKYLINT_NO_KEYWORD_NAME",
+      "className": "/SKYL/CL_NO_KEYWORD_NAME",
       "description": "Avoid Using ABAP Keywords as Identifier Names",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -1475,7 +1475,7 @@
     {
       "ruleId": "pref-join-type",
       "title": "Prefer an Explicit JOIN Type",
-      "className": "ZCL_SKYLINT_PREF_JOIN_TYPE",
+      "className": "/SKYL/CL_PREF_JOIN_TYPE",
       "description": "Prefer an explicit JOIN type such as INNER JOIN",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1487,7 +1487,7 @@
     {
       "ruleId": "pref-std-table",
       "title": "Prefer TYPE STANDARD TABLE OF over TYPE TABLE OF",
-      "className": "ZCL_SKYLINT_PREF_STD_TABLE",
+      "className": "/SKYL/CL_PREF_STD_TABLE",
       "description": "Prefer explicit TYPE STANDARD TABLE OF over TYPE TABLE OF",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1499,7 +1499,7 @@
     {
       "ruleId": "pref-is-supplied",
       "title": "Prefer IS SUPPLIED over IS REQUESTED",
-      "className": "ZCL_SKYLINT_PREF_IS_SUPPLIED",
+      "className": "/SKYL/CL_PREF_IS_SUPPLIED",
       "description": "Prefer IS SUPPLIED over the obsolete IS REQUESTED",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1511,7 +1511,7 @@
     {
       "ruleId": "pref-sy",
       "title": "Prefer the Short System Field Alias SY over SYST",
-      "className": "ZCL_SKYLINT_PREF_SY",
+      "className": "/SKYL/CL_PREF_SY",
       "description": "Prefer the short system field alias SY over SYST",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1523,7 +1523,7 @@
     {
       "ruleId": "no-unfilt-dml",
       "title": "Avoid UPDATE or DELETE Without a WHERE Condition (Catastrophic Data Wipe Prevention)",
-      "className": "ZCL_SKYLINT_NO_UNFILT_DML",
+      "className": "/SKYL/CL_NO_UNFILT_DML",
       "description": "Flag DML without WHERE on database tables",
       "category": "security",
       "categoryTitle": "Security & Robustness",
@@ -1535,7 +1535,7 @@
     {
       "ruleId": "no-concat-loop",
       "title": "Avoid String Concatenation Inside Loops (Quadratic Memory Allocation)",
-      "className": "ZCL_SKYLINT_NO_CONCAT_LOOP",
+      "className": "/SKYL/CL_NO_CONCAT_LOOP",
       "description": "Avoid string concatenation inside loops",
       "category": "performance",
       "categoryTitle": "Performance & Database",
@@ -1547,7 +1547,7 @@
     {
       "ruleId": "no-dup-literals",
       "title": "Avoid Repeating the Same String Literal",
-      "className": "ZCL_SKYLINT_NO_DUP_LITERALS",
+      "className": "/SKYL/CL_NO_DUP_LITERALS",
       "description": "Avoid repeating the same string literal",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -1559,7 +1559,7 @@
     {
       "ruleId": "no-neg-cond",
       "title": "Avoid Negated IF Conditions with ELSE",
-      "className": "ZCL_SKYLINT_NO_NEG_COND",
+      "className": "/SKYL/CL_NO_NEG_COND",
       "description": "Avoid negated IF conditions with ELSE",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1571,7 +1571,7 @@
     {
       "ruleId": "max-bool-expr",
       "title": "Limit Boolean Expression Complexity in Conditional Statements",
-      "className": "ZCL_SKYLINT_MAX_BOOL_EXPR",
+      "className": "/SKYL/CL_MAX_BOOL_EXPR",
       "description": "Limit boolean expressions in conditions",
       "category": "metrics",
       "categoryTitle": "Metrics & Complexity Limits",
@@ -1583,7 +1583,7 @@
     {
       "ruleId": "no-late-sys-idx",
       "title": "Avoid Late Access to sy-tabix or sy-index Outside Loops",
-      "className": "ZCL_SKYLINT_NO_LATE_SYS_IDX",
+      "className": "/SKYL/CL_NO_LATE_SYS_IDX",
       "description": "Avoid late access to sy-tabix or sy-index inside loops",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -1595,7 +1595,7 @@
     {
       "ruleId": "no-unhandled-eml",
       "title": "Provide FAILED and REPORTED in RAP EML Statements (Silent Transaction Failure Prevention)",
-      "className": "ZCL_SKYLINT_NO_UNHANDLED_EML",
+      "className": "/SKYL/CL_NO_UNHANDLED_EML",
       "description": "Provide FAILED and REPORTED in RAP EML statements",
       "category": "security",
       "categoryTitle": "Security & Robustness",
@@ -1607,7 +1607,7 @@
     {
       "ruleId": "no-empty-override",
       "title": "Avoid Method Override That Only Delegates to Super",
-      "className": "ZCL_SKYLINT_NO_EMPTY_OVERRIDE",
+      "className": "/SKYL/CL_NO_EMPTY_OVERRIDE",
       "description": "Avoid method override that only calls super",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -1619,7 +1619,7 @@
     {
       "ruleId": "pref-composition",
       "title": "Prefer Composition over Inheritance",
-      "className": "ZCL_SKYLINT_PREF_COMPOSITION",
+      "className": "/SKYL/CL_PREF_COMPOSITION",
       "description": "Prefer composition over inheritance",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1631,7 +1631,7 @@
     {
       "ruleId": "pref-intf-segreg",
       "title": "Prefer Interface Segregation (Small, Focused Interfaces)",
-      "className": "ZCL_SKYLINT_PREF_INTF_SEGREG",
+      "className": "/SKYL/CL_PREF_INTF_SEGREG",
       "description": "Prefer interface segregation (small interfaces)",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1643,7 +1643,7 @@
     {
       "ruleId": "no-single-letter",
       "title": "Avoid Single-Letter Variable Names",
-      "className": "ZCL_SKYLINT_NO_SINGLE_LETTER",
+      "className": "/SKYL/CL_NO_SINGLE_LETTER",
       "description": "Avoid single-letter variable names",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1655,7 +1655,7 @@
     {
       "ruleId": "pref-factory-name",
       "title": "Prefer CREATE_* Prefix for Factory Methods Returning Own Class",
-      "className": "ZCL_SKYLINT_PREF_FACTORY_NAME",
+      "className": "/SKYL/CL_PREF_FACTORY_NAME",
       "description": "Factory methods should start with CREATE_",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1667,7 +1667,7 @@
     {
       "ruleId": "no-hungarian",
       "title": "Avoid Hungarian Notation and Type Prefixes",
-      "className": "ZCL_SKYLINT_NO_HUNGARIAN",
+      "className": "/SKYL/CL_NO_HUNGARIAN",
       "description": "Avoid Hungarian notation and encoding prefixes",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1679,7 +1679,7 @@
     {
       "ruleId": "max-returns",
       "title": "Limit Multiple Return Statements per Method Body",
-      "className": "ZCL_SKYLINT_MAX_RETURNS",
+      "className": "/SKYL/CL_MAX_RETURNS",
       "description": "Limit number of RETURN statements (PLR0911)",
       "category": "metrics",
       "categoryTitle": "Metrics & Complexity Limits",
@@ -1691,7 +1691,7 @@
     {
       "ruleId": "no-instance-of",
       "title": "Avoid IS INSTANCE OF and CASE TYPE OF Type Tests",
-      "className": "ZCL_SKYLINT_NO_INSTANCE_OF",
+      "className": "/SKYL/CL_NO_INSTANCE_OF",
       "description": "Avoid IS INSTANCE OF / CASE TYPE OF checks",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1703,7 +1703,7 @@
     {
       "ruleId": "no-self-compare",
       "title": "Avoid Comparisons and Arithmetic with Identical Operands",
-      "className": "ZCL_SKYLINT_NO_SELF_COMPARE",
+      "className": "/SKYL/CL_NO_SELF_COMPARE",
       "description": "Detect comparisons and arithmetic with identical operands",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -1715,7 +1715,7 @@
     {
       "ruleId": "no-catch-reraise",
       "title": "Avoid CATCH Blocks That Only Re-raise the Same Exception",
-      "className": "ZCL_SKYLINT_NO_CATCH_RERAISE",
+      "className": "/SKYL/CL_NO_CATCH_RERAISE",
       "description": "Detect CATCH blocks that only re-raise the same exception",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -1727,7 +1727,7 @@
     {
       "ruleId": "pref-when-others",
       "title": "Require WHEN OTHERS as the Last Branch of CASE",
-      "className": "ZCL_SKYLINT_PREF_WHEN_OTHERS",
+      "className": "/SKYL/CL_PREF_WHEN_OTHERS",
       "description": "Require WHEN OTHERS as the last CASE branch",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1739,7 +1739,7 @@
     {
       "ruleId": "no-exc-chain",
       "title": "Preserve the Original Exception with PREVIOUS",
-      "className": "ZCL_SKYLINT_NO_EXC_CHAIN",
+      "className": "/SKYL/CL_NO_EXC_CHAIN",
       "description": "Preserve the original exception with PREVIOUS",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -1751,7 +1751,7 @@
     {
       "ruleId": "pref-between",
       "title": "Prefer BETWEEN for Inclusive Range Checks",
-      "className": "ZCL_SKYLINT_PREF_BETWEEN",
+      "className": "/SKYL/CL_PREF_BETWEEN",
       "description": "Prefer BETWEEN for inclusive range checks",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1763,7 +1763,7 @@
     {
       "ruleId": "no-loop-into",
       "title": "Prefer ASSIGNING over LOOP INTO Copy Targets",
-      "className": "ZCL_SKYLINT_NO_LOOP_INTO",
+      "className": "/SKYL/CL_NO_LOOP_INTO",
       "description": "Prefer ASSIGNING over LOOP INTO copy targets",
       "category": "performance",
       "categoryTitle": "Performance & Database",
@@ -1775,7 +1775,7 @@
     {
       "ruleId": "max-cognitive",
       "title": "Limit Cognitive Complexity per Method",
-      "className": "ZCL_SKYLINT_MAX_COGNITIVE",
+      "className": "/SKYL/CL_MAX_COGNITIVE",
       "description": "Limit cognitive complexity per procedure",
       "category": "metrics",
       "categoryTitle": "Metrics & Complexity Limits",
@@ -1787,7 +1787,7 @@
     {
       "ruleId": "max-locals",
       "title": "Limit Local Variable Count per Method",
-      "className": "ZCL_SKYLINT_MAX_LOCALS",
+      "className": "/SKYL/CL_MAX_LOCALS",
       "description": "Limit local variable count per procedure",
       "category": "metrics",
       "categoryTitle": "Metrics & Complexity Limits",
@@ -1799,7 +1799,7 @@
     {
       "ruleId": "max-fanout",
       "title": "Limit Type Fan-Out per Procedure",
-      "className": "ZCL_SKYLINT_MAX_FANOUT",
+      "className": "/SKYL/CL_MAX_FANOUT",
       "description": "Limit type fan-out per procedure",
       "category": "metrics",
       "categoryTitle": "Metrics & Complexity Limits",
@@ -1811,7 +1811,7 @@
     {
       "ruleId": "no-bool-blindness",
       "title": "Avoid Boolean Flag Importing Parameters",
-      "className": "ZCL_SKYLINT_NO_BOOL_BLINDNESS",
+      "className": "/SKYL/CL_NO_BOOL_BLINDNESS",
       "description": "Avoid boolean flag importing parameters",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1823,7 +1823,7 @@
     {
       "ruleId": "no-static-state",
       "title": "Avoid Static State (CLASS-DATA and STATICS)",
-      "className": "ZCL_SKYLINT_NO_STATIC_STATE",
+      "className": "/SKYL/CL_NO_STATIC_STATE",
       "description": "Avoid CLASS-DATA and STATICS state",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -1835,7 +1835,7 @@
     {
       "ruleId": "no-dummy-auth",
       "title": "Avoid DUMMY Authorization Checks",
-      "className": "ZCL_SKYLINT_NO_DUMMY_AUTH",
+      "className": "/SKYL/CL_NO_DUMMY_AUTH",
       "description": "Avoid AUTHORITY-CHECK with the DUMMY addition",
       "category": "security",
       "categoryTitle": "Security & Robustness",
@@ -1847,7 +1847,7 @@
     {
       "ruleId": "no-dead-store",
       "title": "Avoid Assignments Whose Value Is Never Read",
-      "className": "ZCL_SKYLINT_NO_DEAD_STORE",
+      "className": "/SKYL/CL_NO_DEAD_STORE",
       "description": "Avoid assignments that are never read",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -1859,7 +1859,7 @@
     {
       "ruleId": "no-wrong-wildcard",
       "title": "Avoid Wrong Wildcards in LIKE, CP, and NP",
-      "className": "ZCL_SKYLINT_NO_WRONG_WILDCARD",
+      "className": "/SKYL/CL_NO_WRONG_WILDCARD",
       "description": "Avoid wrong wildcards in LIKE, CP, and NP",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -1871,7 +1871,7 @@
     {
       "ruleId": "pref-sort-order",
       "title": "Explicitly Specify SORT Order",
-      "className": "ZCL_SKYLINT_PREF_SORT_ORDER",
+      "className": "/SKYL/CL_PREF_SORT_ORDER",
       "description": "Explicitly specify ASCENDING or DESCENDING sort order",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1883,7 +1883,7 @@
     {
       "ruleId": "pref-icon-const",
       "title": "Prefer ICON_ Constants over Hardcoded Icon Codes",
-      "className": "ZCL_SKYLINT_PREF_ICON_CONST",
+      "className": "/SKYL/CL_PREF_ICON_CONST",
       "description": "Prefer ICON_ constants over hardcoded icon codes",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1895,7 +1895,7 @@
     {
       "ruleId": "no-ambiguous-stmt",
       "title": "Avoid Ambiguous Statements",
-      "className": "ZCL_SKYLINT_NO_AMBIGUOUS_STMT",
+      "className": "/SKYL/CL_NO_AMBIGUOUS_STMT",
       "description": "Avoid ambiguous statements between itab and database",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1907,7 +1907,7 @@
     {
       "ruleId": "no-empty-proc",
       "title": "Avoid Empty Procedures",
-      "className": "ZCL_SKYLINT_NO_EMPTY_PROC",
+      "className": "/SKYL/CL_NO_EMPTY_PROC",
       "description": "Avoid empty procedures (methods, forms, functions)",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1919,7 +1919,7 @@
     {
       "ruleId": "no-intf-class-ref",
       "title": "Avoid Concrete Class References in Interfaces",
-      "className": "ZCL_SKYLINT_NO_INTF_CLASS_REF",
+      "className": "/SKYL/CL_NO_INTF_CLASS_REF",
       "description": "Interfaces should not reference concrete classes",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1931,7 +1931,7 @@
     {
       "ruleId": "no-aliases",
       "title": "Avoid ALIASES in Classes and Interfaces",
-      "className": "ZCL_SKYLINT_NO_ALIASES",
+      "className": "/SKYL/CL_NO_ALIASES",
       "description": "Avoid using ALIASES in classes and interfaces",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1943,7 +1943,7 @@
     {
       "ruleId": "no-abstract-final",
       "title": "Avoid Abstract Final Classes",
-      "className": "ZCL_SKYLINT_NO_ABSTRACT_FINAL",
+      "className": "/SKYL/CL_NO_ABSTRACT_FINAL",
       "description": "A class cannot be defined as both ABSTRACT and FINAL",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -1955,7 +1955,7 @@
     {
       "ruleId": "no-double-space",
       "title": "Avoid Consecutive Whitespace Between Tokens",
-      "className": "ZCL_SKYLINT_NO_DOUBLE_SPACE",
+      "className": "/SKYL/CL_NO_DOUBLE_SPACE",
       "description": "Avoid consecutive whitespace between tokens on the same line",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1967,7 +1967,7 @@
     {
       "ruleId": "pref-param-1line",
       "title": "Single Parameter or Field Per Line",
-      "className": "ZCL_SKYLINT_PREF_PARAM_1LINE",
+      "className": "/SKYL/CL_PREF_PARAM_1LINE",
       "description": "Parameters and structure fields must be on separate lines",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -1979,7 +1979,7 @@
     {
       "ruleId": "no-into-fs",
       "title": "Avoid INTO with Field Symbols",
-      "className": "ZCL_SKYLINT_NO_INTO_FS",
+      "className": "/SKYL/CL_NO_INTO_FS",
       "description": "Do not use INTO with a field symbol; use ASSIGNING instead",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -1991,7 +1991,7 @@
     {
       "ruleId": "pref-strict-sql",
       "title": "Prefer Strict SQL Host Variable Escaping",
-      "className": "ZCL_SKYLINT_PREF_STRICT_SQL",
+      "className": "/SKYL/CL_PREF_STRICT_SQL",
       "description": "Prefer strict SQL; escape host variables and targets with @",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -2003,7 +2003,7 @@
     {
       "ruleId": "pref-enum",
       "title": "Prefer Enumerations over Constants",
-      "className": "ZCL_SKYLINT_PREF_ENUM",
+      "className": "/SKYL/CL_PREF_ENUM",
       "description": "Prefer ENUM over CONSTANTS for set of related values",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -2015,7 +2015,7 @@
     {
       "ruleId": "no-protected-data",
       "title": "Avoid Protected Attributes",
-      "className": "ZCL_SKYLINT_NO_PROTECTED_DATA",
+      "className": "/SKYL/CL_NO_PROTECTED_DATA",
       "description": "Avoid declaring DATA or CLASS-DATA in PROTECTED SECTION",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -2027,7 +2027,7 @@
     {
       "ruleId": "no-method-chain",
       "title": "Avoid Excessive Method Chaining",
-      "className": "ZCL_SKYLINT_NO_METHOD_CHAIN",
+      "className": "/SKYL/CL_NO_METHOD_CHAIN",
       "description": "Avoid excessive method chaining; extract into variables",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -2039,7 +2039,7 @@
     {
       "ruleId": "no-implicit-any",
       "title": "Avoid Generic and Implicit ANY Types",
-      "className": "ZCL_SKYLINT_NO_IMPLICIT_ANY",
+      "className": "/SKYL/CL_NO_IMPLICIT_ANY",
       "description": "Specify concrete types instead of generic or implicit ANY",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -2051,7 +2051,7 @@
     {
       "ruleId": "pref-union",
       "title": "Prefer UNION over UNION ALL",
-      "className": "ZCL_SKYLINT_PREF_UNION",
+      "className": "/SKYL/CL_PREF_UNION",
       "description": "Prefer UNION over UNION ALL in SQL queries",
       "category": "performance",
       "categoryTitle": "Performance & Database",
@@ -2063,7 +2063,7 @@
     {
       "ruleId": "no-hardcoded-url",
       "title": "Avoid Hardcoded HTTP, HTTPS, and FTP URLs in Source Code",
-      "className": "ZCL_SKYLINT_NO_HARDCODED_URL",
+      "className": "/SKYL/CL_NO_HARDCODED_URL",
       "description": "Avoid hardcoded HTTP, HTTPS, and FTP URLs in source code",
       "category": "security",
       "categoryTitle": "Security & Robustness",
@@ -2075,7 +2075,7 @@
     {
       "ruleId": "no-hardcoded-ip",
       "title": "Avoid Hardcoded IPv4 and IPv6 Addresses in Source Code",
-      "className": "ZCL_SKYLINT_NO_HARDCODED_IP",
+      "className": "/SKYL/CL_NO_HARDCODED_IP",
       "description": "Avoid hardcoded IPv4 and IPv6 addresses in source code",
       "category": "security",
       "categoryTitle": "Security & Robustness",
@@ -2087,7 +2087,7 @@
     {
       "ruleId": "no-raw-html",
       "title": "Avoid Hardcoded and Unescaped Raw HTML in Source Code",
-      "className": "ZCL_SKYLINT_NO_RAW_HTML",
+      "className": "/SKYL/CL_NO_RAW_HTML",
       "description": "Avoid raw unescaped HTML tags in strings and templates",
       "category": "security",
       "categoryTitle": "Security & Robustness",
@@ -2099,7 +2099,7 @@
     {
       "ruleId": "pref-test-attributes",
       "title": "Require Explicit DURATION and RISK LEVEL Attributes on Test Classes",
-      "className": "ZCL_SKYLINT_PREF_TEST_ATTR",
+      "className": "/SKYL/CL_PREF_TEST_ATTR",
       "description": "Require DURATION and RISK LEVEL attributes on test classes",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -2111,7 +2111,7 @@
     {
       "ruleId": "no-raw-str-tmpl",
       "title": "Avoid String Templates Without Embedded Expressions",
-      "className": "ZCL_SKYLINT_NO_RAW_STR_TMPL",
+      "className": "/SKYL/CL_NO_RAW_STR_TMPL",
       "description": "Avoid string templates without embedded expressions",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -2123,7 +2123,7 @@
     {
       "ruleId": "max-sql-joins",
       "title": "Limit Number of Table JOINs in OpenSQL Queries",
-      "className": "ZCL_SKYLINT_MAX_SQL_JOINS",
+      "className": "/SKYL/CL_MAX_SQL_JOINS",
       "description": "Limit number of JOINs in OpenSQL queries",
       "category": "performance",
       "categoryTitle": "Performance & Database",
@@ -2135,7 +2135,7 @@
     {
       "ruleId": "pref-loop-where",
       "title": "Prefer LOOP AT WHERE over IF CONTINUE Guards",
-      "className": "ZCL_SKYLINT_PREF_LOOP_WHERE",
+      "className": "/SKYL/CL_PREF_LOOP_WHERE",
       "description": "Filter LOOP AT With a WHERE Clause",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -2147,7 +2147,7 @@
     {
       "ruleId": "pref-sort-key",
       "title": "Specify an Explicit SORT Key with BY",
-      "className": "ZCL_SKYLINT_PREF_SORT_KEY",
+      "className": "/SKYL/CL_PREF_SORT_KEY",
       "description": "Sort With an Explicit Sort Key",
       "category": "performance",
       "categoryTitle": "Performance & Database",
@@ -2159,7 +2159,7 @@
     {
       "ruleId": "pref-plain-regex",
       "title": "Prefer Simpler String Functions over Plain Regex",
-      "className": "ZCL_SKYLINT_PREF_PLAIN_REGEX",
+      "className": "/SKYL/CL_PREF_PLAIN_REGEX",
       "description": "Prefer Simpler String Functions to Regex",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -2171,7 +2171,7 @@
     {
       "ruleId": "max-blank-lines",
       "title": "Limit Consecutive Blank Lines",
-      "className": "ZCL_SKYLINT_MAX_BLANK_LINES",
+      "className": "/SKYL/CL_MAX_BLANK_LINES",
       "description": "No Excessive Consecutive Empty Lines",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -2183,7 +2183,7 @@
     {
       "ruleId": "pref-read-key",
       "title": "Prefer READ TABLE WITH KEY over WHERE",
-      "className": "ZCL_SKYLINT_PREF_READ_KEY",
+      "className": "/SKYL/CL_PREF_READ_KEY",
       "description": "READ With WITH KEY Instead of WHERE",
       "category": "performance",
       "categoryTitle": "Performance & Database",
@@ -2195,7 +2195,7 @@
     {
       "ruleId": "no-multi-exc",
       "title": "Raise At Most One Exception Class per Method",
-      "className": "ZCL_SKYLINT_NO_MULTI_EXC",
+      "className": "/SKYL/CL_NO_MULTI_EXC",
       "description": "Raise At Most One Exception Type per Method",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -2207,7 +2207,7 @@
     {
       "ruleId": "no-dyn-message",
       "title": "Avoid Dynamic MESSAGE Statements",
-      "className": "ZCL_SKYLINT_NO_DYN_MESSAGE",
+      "className": "/SKYL/CL_NO_DYN_MESSAGE",
       "description": "Avoid Dynamic MESSAGE Statements",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -2219,7 +2219,7 @@
     {
       "ruleId": "max-when-count",
       "title": "Limit Number of WHEN Branches in CASE Statements",
-      "className": "ZCL_SKYLINT_MAX_WHEN_COUNT",
+      "className": "/SKYL/CL_MAX_WHEN_COUNT",
       "description": "Limit number of WHEN clauses per CASE",
       "category": "metrics",
       "categoryTitle": "Metrics & Complexity Limits",
@@ -2231,7 +2231,7 @@
     {
       "ruleId": "max-elseif-count",
       "title": "Limit Number of ELSEIF Branches in IF Statements",
-      "className": "ZCL_SKYLINT_MAX_ELSEIF_COUNT",
+      "className": "/SKYL/CL_MAX_ELSEIF_COUNT",
       "description": "Limit number of ELSEIF clauses per IF",
       "category": "metrics",
       "categoryTitle": "Metrics & Complexity Limits",
@@ -2243,7 +2243,7 @@
     {
       "ruleId": "max-loop-jumps",
       "title": "Limit Jump Statements (CONTINUE, EXIT) per Loop",
-      "className": "ZCL_SKYLINT_MAX_LOOP_JUMPS",
+      "className": "/SKYL/CL_MAX_LOOP_JUMPS",
       "description": "Limit jump statements (CONTINUE/EXIT) per loop",
       "category": "metrics",
       "categoryTitle": "Metrics & Complexity Limits",
@@ -2255,7 +2255,7 @@
     {
       "ruleId": "max-catch-clauses",
       "title": "Limit Number of CATCH Clauses per TRY Block",
-      "className": "ZCL_SKYLINT_MAX_CATCH_CLAUSES",
+      "className": "/SKYL/CL_MAX_CATCH_CLAUSES",
       "description": "Limit CATCH clauses per TRY block",
       "category": "metrics",
       "categoryTitle": "Metrics & Complexity Limits",
@@ -2267,7 +2267,7 @@
     {
       "ruleId": "pref-clamp",
       "title": "Prefer nmin/nmax or clamp Expressions over Manual IF Clamping",
-      "className": "ZCL_SKYLINT_PREF_CLAMP",
+      "className": "/SKYL/CL_PREF_CLAMP",
       "description": "Prefer nmin/nmax over manual IF clamp",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
@@ -2279,7 +2279,7 @@
     {
       "ruleId": "no-nested-loop",
       "title": "Disallow Nested LOOP AT Statements Without FROM or GROUP BY",
-      "className": "ZCL_SKYLINT_NO_NESTED_LOOP",
+      "className": "/SKYL/CL_NO_NESTED_LOOP",
       "description": "Disallow nested LOOP AT statements",
       "category": "performance",
       "categoryTitle": "Performance & Database",
@@ -2291,7 +2291,7 @@
     {
       "ruleId": "no-full-scan-sel",
       "title": "Avoid Unfiltered SELECT on Database Tables (Full Table Scan Prevention)",
-      "className": "ZCL_SKYLINT_NO_FULL_SCAN_SEL",
+      "className": "/SKYL/CL_NO_FULL_SCAN_SEL",
       "description": "Flag SELECT statements on DB tables without a WHERE clause",
       "category": "performance",
       "categoryTitle": "Performance & Database",
@@ -2303,7 +2303,7 @@
     {
       "ruleId": "no-bypass-buf",
       "title": "Avoid BYPASSING BUFFER in SELECT Statements",
-      "className": "ZCL_SKYLINT_NO_BYPASS_BUF",
+      "className": "/SKYL/CL_NO_BYPASS_BUF",
       "description": "Avoid BYPASSING BUFFER in SELECT statements",
       "category": "performance",
       "categoryTitle": "Performance & Database",
@@ -2315,7 +2315,7 @@
     {
       "ruleId": "no-cross-join",
       "title": "Avoid CROSS JOIN in ABAP SQL Queries",
-      "className": "ZCL_SKYLINT_NO_CROSS_JOIN",
+      "className": "/SKYL/CL_NO_CROSS_JOIN",
       "description": "Avoid CROSS JOIN in ABAP SQL queries",
       "category": "performance",
       "categoryTitle": "Performance & Database",
@@ -2327,7 +2327,7 @@
     {
       "ruleId": "no-sql-hints",
       "title": "Avoid Database Hints (%_HINTS) in ABAP SQL",
-      "className": "ZCL_SKYLINT_NO_SQL_HINTS",
+      "className": "/SKYL/CL_NO_SQL_HINTS",
       "description": "Avoid database hints (%_HINTS) in ABAP SQL queries",
       "category": "performance",
       "categoryTitle": "Performance & Database",
@@ -2339,7 +2339,7 @@
     {
       "ruleId": "no-lead-wildcard",
       "title": "Avoid Leading Wildcards in LIKE Conditions",
-      "className": "ZCL_SKYLINT_NO_LEAD_WILDCARD",
+      "className": "/SKYL/CL_NO_LEAD_WILDCARD",
       "description": "Avoid leading wildcard (% or +) in LIKE conditions",
       "category": "performance",
       "categoryTitle": "Performance & Database",
@@ -2351,7 +2351,7 @@
     {
       "ruleId": "no-dedup-no-sort",
       "title": "Sort Internal Tables Before DELETE ADJACENT DUPLICATES",
-      "className": "ZCL_SKYLINT_NO_DEDUP_NO_SORT",
+      "className": "/SKYL/CL_NO_DEDUP_NO_SORT",
       "description": "Sort internal tables before DELETE ADJACENT DUPLICATES",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -2363,7 +2363,7 @@
     {
       "ruleId": "no-dup-subexpr",
       "title": "Avoid Duplicate Subexpressions in the Same Statement",
-      "className": "ZCL_SKYLINT_NO_DUP_SUBEXP",
+      "className": "/SKYL/CL_NO_DUP_SUBEXP",
       "description": "Avoid duplicate subexpressions in the same statement",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -2375,7 +2375,7 @@
     {
       "ruleId": "no-badi-commit",
       "title": "Avoid COMMIT or ROLLBACK in BAdI Implementations",
-      "className": "ZCL_SKYLINT_NO_BADI_COMMIT",
+      "className": "/SKYL/CL_NO_BADI_COMMIT",
       "description": "Avoid COMMIT or ROLLBACK in BAdI implementations",
       "category": "anti-patterns",
       "categoryTitle": "Anti-Patterns & Bad Practices",
@@ -2387,7 +2387,7 @@
     {
       "ruleId": "pref-opt-last",
       "title": "Declare Optional and Default Parameters Last in Methods",
-      "className": "ZCL_SKYLINT_PREF_OPT_LAST",
+      "className": "/SKYL/CL_PREF_OPT_LAST",
       "description": "Declare optional and default parameters last in methods",
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",

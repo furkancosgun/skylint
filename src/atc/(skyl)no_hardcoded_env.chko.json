@@ -1,0 +1,42 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Avoid reading environment system fields (sy-sysid, etc.)",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/SECURITY",
+  "implementingClass": "/SKYL/CL_NO_HARDCODED_ENV",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "CHECK_SYSID"
+    },
+    {
+      "name": "CHECK_MANDT"
+    },
+    {
+      "name": "CHECK_HOST"
+    },
+    {
+      "name": "CHECK_DBSYS"
+    },
+    {
+      "name": "CHECK_OPSYS"
+    },
+    {
+      "name": "CHECK_UNAME"
+    },
+    {
+      "name": "CHECK_TCODE"
+    },
+    {
+      "name": "CHECK_REPID"
+    },
+    {
+      "name": "CHECK_CPROG"
+    },
+    {
+      "name": "ONLY_CONDITIONAL"
+    }
+  ]
+}

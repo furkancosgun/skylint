@@ -73,5 +73,5 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ## Technical Details
 
-* **Native ATC Class:** `ZCL_SKYLINT_PREF_INTF_SEGREG`
-* **Implementation File:** [zcl_skylint_pref_intf_segreg.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_pref_intf_segreg.clas.abap)
+* **Native ATC Class:** `/SKYL/CL_PREF_INTF_SEGREG`
+* **Implementation File:** [#skyl#cl_pref_intf_segreg.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_pref_intf_segreg.clas.abap)

@@ -53,7 +53,7 @@ Therefore, for all custom ATC check suites including Skylint:
 
 ## 3. How the Base Engine Evaluates Suppressions
 
-Every Skylint check inherits from `zcl_skylint_check_base`. When a statement or token is reported:
+Every Skylint check inherits from `/skyl/cl_rule_base`. When a statement or token is reported:
 
 1. Skylint inspects the statement's associated `pseudo_comments` table provided by the ATC framework (`if_ci_atc_source_code_provider=>ty_statement`).
 2. It evaluates whether either the registered tag (e.g. `PREF_LINES`) or its `CI_` prefixed counterpart (e.g. `CI_PREF_LINES`) is attached.

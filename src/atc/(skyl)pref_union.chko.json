@@ -1,0 +1,10 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Prefer UNION over UNION ALL in SQL queries",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/PERFORMANCE",
+  "implementingClass": "/SKYL/CL_PREF_UNION",
+  "checkType": "remoteEnabled"
+}

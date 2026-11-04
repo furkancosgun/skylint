@@ -1,0 +1,10 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Prefer CORRESPONDING Expression over MOVE-CORRESPONDING",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/CLEAN_ABAP",
+  "implementingClass": "/SKYL/CL_PREF_CORRESP",
+  "checkType": "remoteEnabled"
+}

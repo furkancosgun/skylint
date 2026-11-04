@@ -16,7 +16,7 @@ A critical design choice of Skylint is its exclusive adherence to **SAP's modern
 
 | Dimension | Legacy Code Inspector (SCI) | Modern ABAP Test Cockpit (ATC) | Skylint Architecture |
 |---|---|---|---|
-| **Base Interface** | `cl_ci_check_root` | `if_ci_atc_check` | Extends `zcl_skylint_check_base` & implements `if_ci_atc_check` |
+| **Base Interface** | `cl_ci_check_root` | `if_ci_atc_check` | Extends `/skyl/cl_rule_base` & implements `if_ci_atc_check` |
 | **ABAP Cloud Support** | **Forbidden / Not Released** | **100% Released (Contract C1)** | Native ABAP Cloud (`Language Version 5`) |
 | **Tooling & IDE** | SAP GUI (Tx `SCI`, `SCII`) | Eclipse ADT (ABAP Development Tools) | Native Eclipse ADT integration |
 | **QuickFix Automation** | Not supported | Native QuickFix API (`cl_ci_atc_quickfixes`) | One-click fixes via <kbd>Ctrl</kbd> + <kbd>1</kbd> |
@@ -38,11 +38,11 @@ In modern ABAP systems (SAP BTP ABAP Environment, S/4HANA Cloud, and S/4HANA 202
 ### Step 1: Create an ATC Check Variant in ADT
 
 1. Open **Eclipse ADT** connected to your development or central check system.
-2. In the *Project Explorer*, right-click your package (e.g., `ZSKYLINT_CONFIG`) and select:  
+2. In the *Project Explorer*, right-click your package (e.g., `/SKYL/CONFIG`) and select:  
    **New** &rarr; **Other ABAP Repository Object...**
 3. In the search filter, type `ATC Check Variant` (Object Type: `CHKV`) and click **Next**.
 4. Enter the details:
-   - **Name:** e.g., `ZCLEAN_ABAP` or `ZSKYLINT_DEFAULT`
+   - **Name:** e.g., `/SKYL/CLEAN_ABAP` or `/SKYL/DEFAULT`
    - **Description:** `Skylint Clean ABAP Quality Rules`
 5. Click **Finish** and assign a transport request.
 
@@ -54,7 +54,7 @@ In modern ABAP systems (SAP BTP ABAP Environment, S/4HANA Cloud, and S/4HANA 202
 2. In the **Checks** tab, click **Add Check...**.
 3. In the dialog, search for check classes using the prefix:
    ```
-   ZCL_SKYLINT_*
+   /SKYL/CL_*
    ```
 4. Select all desired Skylint rules (or select all rules for complete Clean ABAP coverage).
 5. For each rule, you can customize:

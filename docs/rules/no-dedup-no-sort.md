@@ -62,5 +62,5 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 ## Technical Details
 
-* **Native ATC Class:** `ZCL_SKYLINT_NO_DEDUP_NO_SORT`
-* **Implementation File:** [zcl_skylint_no_dedup_no_sort.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/checks/zcl_skylint_no_dedup_no_sort.clas.abap)
+* **Native ATC Class:** `/SKYL/CL_NO_DEDUP_NO_SORT`
+* **Implementation File:** [#skyl#cl_no_dedup_no_sort.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_no_dedup_no_sort.clas.abap)

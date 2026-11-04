@@ -1,0 +1,18 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Prefer NEW operator over CREATE OBJECT and RAISE EXCEPTION",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/CLEAN_ABAP",
+  "implementingClass": "/SKYL/CL_PREF_NEW_OP",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "CHECK_CREATE_OBJECT"
+    },
+    {
+      "name": "CHECK_RAISE_EXCEPTION"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Avoid deep class inheritance hierarchies",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/METRICS",
+  "implementingClass": "/SKYL/CL_MAX_INHERIT",
+  "checkType": "local",
+  "parameters": [
+    {
+      "name": "MAX_DEPTH"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Avoid excessive method chaining; extract into variables",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/CLEAN_ABAP",
+  "implementingClass": "/SKYL/CL_NO_METHOD_CHAIN",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "MAX_CHAIN"
+    }
+  ]
+}

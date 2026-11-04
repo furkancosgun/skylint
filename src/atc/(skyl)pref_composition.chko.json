@@ -1,0 +1,15 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Prefer composition over inheritance",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/CLEAN_ABAP",
+  "implementingClass": "/SKYL/CL_PREF_COMPOSITION",
+  "checkType": "remoteEnabled",
+  "parameters": [
+    {
+      "name": "ALLOW_TEST_CLASSES"
+    }
+  ]
+}

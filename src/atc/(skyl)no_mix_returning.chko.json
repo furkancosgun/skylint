@@ -1,0 +1,10 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Do not mix RETURNING with EXPORTING or CHANGING",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/ANTI_PATTERNS",
+  "implementingClass": "/SKYL/CL_NO_MIX_RETURNING",
+  "checkType": "remoteEnabled"
+}
