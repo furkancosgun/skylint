@@ -30,7 +30,7 @@
 - **☁️ 197 Clean ABAP & Cloud Rules:** Comprehensive coverage across modern ABAP expressions, syntax modernizations, SQL performance, security, and clean architecture.
 - **⚡ Instant QuickFixes:** Built-in QuickFix generation for rapid, automated refactoring directly from Eclipse ADT (`Ctrl + 1`).
 - **🛡️ Zero-Boilerplate Architecture:** Shared base class (`/skyl/cl_rule_base`) automatically manages statement iteration, checksum calculation, finding locations, and pseudo-comment suppression.
-- **🚀 High-Fidelity Offline CI Harness:** Runs transpiled checks through full AST and compiler-reference resolution pipelines offline, validating 1,055 test assertions and QuickFix round-trips without requiring a live SAP backend.
+- **🚀 High-Fidelity Offline CI Harness:** Runs transpiled checks through full AST and compiler-reference resolution pipelines offline, validating 1,271 test assertions and QuickFix round-trips without requiring a live SAP backend.
 
 ---
 
@@ -40,15 +40,15 @@ Skylint is distributed as standard ABAP Cloud source code and can be imported di
 
 1. **Clone via abapGit:**
    - Add this repository (`https://github.com/furkancosgun/skylint.git`) as an online repository in **abapGit**.
-   - Pull the repository to create the core classes, checks, and generated ATC objects.
+   - Pull the repository to import the `/SKYL/` namespace object (`#skyl#.nspc.xml`), core framework, rules, and generated ATC objects.
 2. **Activate Objects:**
-   - Activate all classes under packages `/SKYL/CL_*`.
+   - Activate all classes and metadata objects under packages `/SKYL/*`.
 3. **Configure ATC Check Variant:**
-   - Open transaction `SCI` or `ATC` in SAP GUI (or configure ATC in Eclipse ADT).
+   - Open Eclipse ADT (or transaction `ATC` in SAP GUI).
    - Create or edit an ATC Check Variant (or use the included variant `/SKYL/DEFAULT`).
    - Enable the desired Skylint rules located under the Skylint category (`/SKYL/MAIN`).
 4. **Run Checks:**
-   - Run the ATC variant on your packages, programs, or classes via Eclipse ADT (`Alt + Shift + C, C`) or standard ATC runs.
+   - Run the ATC variant on your packages, programs, or classes via Eclipse ADT (`Alt + Shift + C, C` or `Ctrl + Shift + F2`) or standard ATC runs.
 
 ---
 
@@ -57,9 +57,10 @@ Skylint is distributed as standard ABAP Cloud source code and can be imported di
 ```text
 skylint/
 ├── src/
-│   ├── core/         # Engine core: Base check class, metadata, AST & RTTI utilities
-│   ├── checks/       # 197 modular check implementations
-│   └── atc/          # Generated SAP ATC objects (CHKC category, CHKO checks, CHKV variant)
+│   ├── core/         # Engine core: Base rule class, metadata, AST & RTTI utilities
+│   ├── rules/        # 197 modular rule implementations (/SKYL/CL_*)
+│   ├── atc/          # Generated SAP ATC objects (CHKC category, CHKO checks, CHKV variant)
+│   └── #skyl#.nspc.xml # Official SAP open-source namespace object
 ├── deps/             # Local ATC framework stubs for offline abaplint validation
 ├── docs/             # VitePress enterprise documentation & interactive rule catalog
 ├── lib/              # Test harness internals, AST parser, and QuickFix validator
@@ -151,8 +152,8 @@ The test harness automatically applies every emitted QuickFix to the test fixtur
 
 To author a new check rule, follow the standards defined in [AGENTS.md](AGENTS.md):
 
-1. **Check Implementation:** Create `src/checks//skyl/cl_xxx.clas.abap` inheriting from `/skyl/cl_rule_base`.
-2. **Class Metadata:** Create `src/checks//skyl/cl_xxx.clas.xml`.
+1. **Rule Implementation:** Create `src/rules/#skyl#cl_xxx.clas.abap` inheriting from `/skyl/cl_rule_base`.
+2. **Class Metadata:** Create `src/rules/#skyl#cl_xxx.clas.xml`.
 3. **Fixture Suite:** Create `test/fixtures/<check-suffix>/source.abap` and `test/fixtures/<check-suffix>/expected.json` (e.g. `test/fixtures/pref_lines/`).
 4. **Catalog Registration:** Register the check metadata and rationale in `scripts/rules-data.mjs`.
 5. **Validation:** Run `npm run index` followed by `npm test` to verify 0 lint errors, green test execution, and valid QuickFix round-trips.
