@@ -137,3 +137,8 @@ The following table lists all 67 obsolete classic function modules detected by t
 
 * **Native ATC Class:** `/SKYL/CL_PREF_FUNC_MODULE`
 * **Implementation File:** [#skyl#cl_pref_func_module.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_pref_func_module.clas.abap)
+
+## Community & Feedback
+
+* 🐛 **[Report a False Positive or Bug for this rule](https://github.com/furkancosgun/skylint/issues/new?template=bug_report.yml&rule_id=%2FSKYL%2FCL_PREF_FUNC_MODULE&title=%5BBug%5D%3A%20Issue%20in%20pref-func-module)**
+* 💡 **[Suggest a QuickFix or Rule Improvement](https://github.com/furkancosgun/skylint/issues/new?template=feature_request.yml&title=%5BProposal%5D%3A%20Enhance%20pref-func-module)**

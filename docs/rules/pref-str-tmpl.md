@@ -68,3 +68,8 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 * **Native ATC Class:** `/SKYL/CL_PREF_STR_TMPL`
 * **Implementation File:** [#skyl#cl_pref_str_tmpl.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_pref_str_tmpl.clas.abap)
+
+## Community & Feedback
+
+* 🐛 **[Report a False Positive or Bug for this rule](https://github.com/furkancosgun/skylint/issues/new?template=bug_report.yml&rule_id=%2FSKYL%2FCL_PREF_STR_TMPL&title=%5BBug%5D%3A%20Issue%20in%20pref-str-tmpl)**
+* 💡 **[Suggest a QuickFix or Rule Improvement](https://github.com/furkancosgun/skylint/issues/new?template=feature_request.yml&title=%5BProposal%5D%3A%20Enhance%20pref-str-tmpl)**

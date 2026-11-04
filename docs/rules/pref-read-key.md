@@ -59,3 +59,8 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 * **Native ATC Class:** `/SKYL/CL_PREF_READ_KEY`
 * **Implementation File:** [#skyl#cl_pref_read_key.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_pref_read_key.clas.abap)
+
+## Community & Feedback
+
+* 🐛 **[Report a False Positive or Bug for this rule](https://github.com/furkancosgun/skylint/issues/new?template=bug_report.yml&rule_id=%2FSKYL%2FCL_PREF_READ_KEY&title=%5BBug%5D%3A%20Issue%20in%20pref-read-key)**
+* 💡 **[Suggest a QuickFix or Rule Improvement](https://github.com/furkancosgun/skylint/issues/new?template=feature_request.yml&title=%5BProposal%5D%3A%20Enhance%20pref-read-key)**

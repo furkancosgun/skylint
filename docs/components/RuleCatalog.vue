@@ -95,34 +95,27 @@ const visibleCategories = computed(() =>
               </td>
               <td data-label="Description">{{ rule.description }}</td>
               <td class="center" data-label="QuickFix">
-                <label
-                  class="catalog-switch"
+                <span
+                  class="catalog-icon"
+                  :class="{ active: rule.hasQuickfix }"
                   :title="rule.hasQuickfix ? 'QuickFix available' : 'No QuickFix'"
                 >
-                  <input
-                    type="checkbox"
-                    class="catalog-switch-input"
-                    :checked="rule.hasQuickfix"
-                    disabled
-                    aria-label="QuickFix"
-                  />
-                  <span class="catalog-switch-slider"></span>
-                </label>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z" />
+                  </svg>
+                </span>
               </td>
               <td class="center" data-label="Remote">
-                <label
-                  class="catalog-switch"
+                <span
+                  class="catalog-icon"
+                  :class="{ active: rule.remoteEnabled }"
                   :title="rule.remoteEnabled ? 'Remote enabled' : 'Local only'"
                 >
-                  <input
-                    type="checkbox"
-                    class="catalog-switch-input"
-                    :checked="rule.remoteEnabled"
-                    disabled
-                    aria-label="Remote enabled"
-                  />
-                  <span class="catalog-switch-slider"></span>
-                </label>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 2a14.5 14.5 0 0 0 0 20M12 2a14.5 14.5 0 0 1 0 20M2 12h20"/>
+                  </svg>
+                </span>
               </td>
             </tr>
           </tbody>
@@ -137,6 +130,18 @@ const visibleCategories = computed(() =>
 
     <div v-if="props.category" class="catalog-back-link">
       <a :href="withBase('/rules/')">← Back to All Rules Catalog (197 Rules)</a>
+    </div>
+
+    <div class="catalog-community-footer">
+      <span>Looking for a Clean ABAP rule that is not in Skylint yet?</span>
+      <a
+        href="https://github.com/furkancosgun/skylint/issues/new?template=feature_request.yml"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="catalog-proposal-link"
+      >
+        💡 Propose a Rule
+      </a>
     </div>
   </div>
 </template>
@@ -277,55 +282,24 @@ const visibleCategories = computed(() =>
   text-decoration: none;
 }
 
-/* Switch (Disabled Display) */
-.catalog-switch {
-  position: relative;
-  display: inline-block;
-  width: 36px;
-  height: 20px;
-  flex-shrink: 0;
-  vertical-align: middle;
-  cursor: default;
+/* Status Icons (QuickFix & Remote - Variant Builder Style) */
+.catalog-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--vp-c-text-3);
+  opacity: 0.25;
+  transition: color 0.15s ease, opacity 0.15s ease;
 }
 
-.catalog-switch-input {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-  pointer-events: none;
+.catalog-icon.active {
+  color: var(--vp-c-brand-1);
+  opacity: 1;
 }
 
-.catalog-switch-slider {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: var(--vp-c-divider);
-  border-radius: 20px;
-  transition: 0.2s;
-}
-
-.catalog-switch-slider:before {
-  position: absolute;
-  content: "";
-  height: 14px;
-  width: 14px;
-  left: 3px;
-  bottom: 3px;
-  background-color: white;
-  border-radius: 50%;
-  transition: 0.2s;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
-}
-
-.catalog-switch-input:checked + .catalog-switch-slider {
-  background-color: var(--vp-c-brand-1);
-}
-
-.catalog-switch-input:checked + .catalog-switch-slider:before {
-  transform: translateX(16px);
+.catalog-icon svg {
+  width: 17px;
+  height: 17px;
 }
 
 .catalog-empty {
@@ -453,6 +427,45 @@ const visibleCategories = computed(() =>
     content: attr(data-label);
     color: var(--vp-c-text-2);
     font-weight: 500;
+  }
+}
+
+.catalog-community-footer {
+  margin-top: 2rem;
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.9rem;
+  color: var(--vp-c-text-2);
+}
+
+.catalog-proposal-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 6px;
+  background: var(--vp-c-brand-1);
+  color: #fff !important;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.catalog-proposal-link:hover {
+  opacity: 0.9;
+}
+
+@media (max-width: 640px) {
+  .catalog-community-footer {
+    flex-direction: column;
+    text-align: center;
   }
 }
 </style>

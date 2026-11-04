@@ -425,8 +425,17 @@ for (const rule of RULES) {
   // ABAP Class Details
   ruleDoc += `\n## Technical Details\n\n`;
   ruleDoc += `* **Native ATC Class:** \`${rule.className}\`\n`;
-
   ruleDoc += `* **Implementation File:** [${ruleFileBase(rule)}.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/${encodeURIComponent(ruleFileBase(rule))}.clas.abap)\n`;
+
+  // Community Feedback Links
+  const bugTitle = encodeURIComponent(`[Bug]: Issue in ${rule.ruleId}`);
+  const bugUrl = `https://github.com/furkancosgun/skylint/issues/new?template=bug_report.yml&rule_id=${encodeURIComponent(rule.className)}&title=${bugTitle}`;
+  const propTitle = encodeURIComponent(`[Proposal]: Enhance ${rule.ruleId}`);
+  const propUrl = `https://github.com/furkancosgun/skylint/issues/new?template=feature_request.yml&title=${propTitle}`;
+
+  ruleDoc += `\n## Community & Feedback\n\n`;
+  ruleDoc += `* 🐛 **[Report a False Positive or Bug for this rule](${bugUrl})**\n`;
+  ruleDoc += `* 💡 **[Suggest a QuickFix or Rule Improvement](${propUrl})**\n`;
 
   fs.writeFileSync(path.join(rulesDocsDir, `${rule.ruleId}.md`), ruleDoc, 'utf8');
 
@@ -860,7 +869,15 @@ export default defineConfig({
       { text: 'Guide', link: '/guide/getting-started' },
       { text: 'Rules (${RULES.length})', link: '/rules/' },
       { text: 'Variant Builder', link: '/variant-builder' },
-      { text: 'GitHub', link: 'https://github.com/furkancosgun/skylint' },
+      {
+        text: 'Community',
+        items: [
+          { text: '🐛 Report Bug / False Positive', link: 'https://github.com/furkancosgun/skylint/issues/new?template=bug_report.yml' },
+          { text: '💡 Propose Rule / QuickFix', link: 'https://github.com/furkancosgun/skylint/issues/new?template=feature_request.yml' },
+          { text: '💬 GitHub Discussions', link: 'https://github.com/furkancosgun/skylint/discussions' },
+          { text: '⭐️ GitHub Repository', link: 'https://github.com/furkancosgun/skylint' },
+        ],
+      },
     ],
     sidebar: {
       '/variant-builder': [],

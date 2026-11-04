@@ -92,3 +92,8 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 * **Native ATC Class:** `/SKYL/CL_PREF_EARLY_RET`
 * **Implementation File:** [#skyl#cl_pref_early_ret.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_pref_early_ret.clas.abap)
+
+## Community & Feedback
+
+* 🐛 **[Report a False Positive or Bug for this rule](https://github.com/furkancosgun/skylint/issues/new?template=bug_report.yml&rule_id=%2FSKYL%2FCL_PREF_EARLY_RET&title=%5BBug%5D%3A%20Issue%20in%20pref-early-ret)**
+* 💡 **[Suggest a QuickFix or Rule Improvement](https://github.com/furkancosgun/skylint/issues/new?template=feature_request.yml&title=%5BProposal%5D%3A%20Enhance%20pref-early-ret)**

@@ -323,7 +323,15 @@ export default defineConfig({
       { text: 'Guide', link: '/guide/getting-started' },
       { text: 'Rules (197)', link: '/rules/' },
       { text: 'Variant Builder', link: '/variant-builder' },
-      { text: 'GitHub', link: 'https://github.com/furkancosgun/skylint' },
+      {
+        text: 'Community',
+        items: [
+          { text: '🐛 Report Bug / False Positive', link: 'https://github.com/furkancosgun/skylint/issues/new?template=bug_report.yml' },
+          { text: '💡 Propose Rule / QuickFix', link: 'https://github.com/furkancosgun/skylint/issues/new?template=feature_request.yml' },
+          { text: '💬 GitHub Discussions', link: 'https://github.com/furkancosgun/skylint/discussions' },
+          { text: '⭐️ GitHub Repository', link: 'https://github.com/furkancosgun/skylint' },
+        ],
+      },
     ],
     sidebar: {
       '/variant-builder': [],

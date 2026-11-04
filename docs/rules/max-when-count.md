@@ -72,3 +72,8 @@ To suppress findings for this rule, append the pseudo-comment to the statement:
 
 * **Native ATC Class:** `/SKYL/CL_MAX_WHEN_COUNT`
 * **Implementation File:** [#skyl#cl_max_when_count.clas.abap](https://github.com/furkancosgun/skylint/blob/main/src/rules/%23skyl%23cl_max_when_count.clas.abap)
+
+## Community & Feedback
+
+* 🐛 **[Report a False Positive or Bug for this rule](https://github.com/furkancosgun/skylint/issues/new?template=bug_report.yml&rule_id=%2FSKYL%2FCL_MAX_WHEN_COUNT&title=%5BBug%5D%3A%20Issue%20in%20max-when-count)**
+* 💡 **[Suggest a QuickFix or Rule Improvement](https://github.com/furkancosgun/skylint/issues/new?template=feature_request.yml&title=%5BProposal%5D%3A%20Enhance%20max-when-count)**
