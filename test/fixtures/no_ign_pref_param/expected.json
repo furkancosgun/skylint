@@ -1,0 +1,17 @@
+[
+  {
+    "target": "LCL_BAD",
+    "code": "NO_IGN_PRF",
+    "line": 7,
+    "column": 6,
+    "quickfixes": []
+  },
+  {
+    "target": "LCL_GOOD",
+    "code": null
+  },
+  {
+    "target": "LCL_SUPPRESSED",
+    "code": null
+  }
+]

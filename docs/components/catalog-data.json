@@ -4,13 +4,13 @@
       "key": "clean-abap",
       "title": "Clean ABAP & Modern Syntax",
       "description": "Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.",
-      "count": 79
+      "count": 83
     },
     {
       "key": "anti-patterns",
       "title": "Anti-Patterns & Bad Practices",
       "description": "Discouraged language constructs, legacy statements, and redundant syntax.",
-      "count": 60
+      "count": 62
     },
     {
       "key": "performance",
@@ -2419,6 +2419,78 @@
       "hasQuickfix": false,
       "remoteEnabled": true,
       "configurable": true
+    },
+    {
+      "ruleId": "no-ign-pref-param",
+      "title": "Report Ignored PREFERRED PARAMETER When Non-Optional Parameters Exist",
+      "className": "/SKYL/CL_NO_IGN_PREF_PARAM",
+      "description": "Report ignored PREFERRED PARAMETER addition",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "NO_IGN_PREF_PARAM",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "no-loop-guard",
+      "title": "Redundant IF Condition Before LOOP AT",
+      "className": "/SKYL/CL_NO_LOOP_GUARD",
+      "description": "Redundant IF condition before LOOP AT",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "NO_LOOP_GUARD",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "no-inline-packed",
+      "title": "Inline Declaration With Packed Arithmetic Loses Decimals",
+      "className": "/SKYL/CL_NO_INLINE_PACKED",
+      "description": "Inline declaration with packed arithmetic loses decimals",
+      "category": "anti-patterns",
+      "categoryTitle": "Anti-Patterns & Bad Practices",
+      "pseudoComment": "NO_INLINE_PACKED",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "no-cond-trunc",
+      "title": "Unsafe COND or SWITCH Inferred Type Truncates Values",
+      "className": "/SKYL/CL_NO_COND_TRUNC",
+      "description": "Unsafe COND or SWITCH inferred type truncates values",
+      "category": "anti-patterns",
+      "categoryTitle": "Anti-Patterns & Bad Practices",
+      "pseudoComment": "NO_COND_TRUNC",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "no-numbered-var",
+      "title": "Avoid Variable Names with Numeric Suffixes",
+      "className": "/SKYL/CL_NO_NUMBERED_VAR",
+      "description": "Avoid variable names with numeric suffixes",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "NO_NUMBERED_VAR",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "no-complex-arg",
+      "title": "Avoid Complex Expressions in Call Arguments",
+      "className": "/SKYL/CL_NO_COMPLEX_ARG",
+      "description": "Avoid complex expressions in call arguments",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "NO_COMPLEX_ARG",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
     }
   ]
 }

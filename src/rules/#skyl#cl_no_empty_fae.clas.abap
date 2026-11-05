@@ -40,36 +40,26 @@ CLASS /skyl/cl_no_empty_fae DEFINITION
 
     METHODS extract_fae_table
       IMPORTING is_statement TYPE if_ci_atc_source_code_provider=>ty_statement
-      EXPORTING ev_tab       TYPE string
-                ev_ref       TYPE string.
+      EXPORTING es_token     TYPE if_ci_atc_source_code_provider=>ty_token
+                es_ref       TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
 
     METHODS is_fae_protected
       IMPORTING it_statements TYPE if_ci_atc_source_code_provider=>ty_statements
                 iv_select_idx TYPE i
-                iv_fae_tab    TYPE string
-                iv_fae_ref    TYPE string
+                is_fae_tok    TYPE if_ci_atc_source_code_provider=>ty_token
+                is_fae_ref    TYPE if_ci_atc_source_code_provider=>ty_compiler_reference
       RETURNING VALUE(rv_yes) TYPE abap_bool.
 
     METHODS eval_condition
       IMPORTING is_statement  TYPE if_ci_atc_source_code_provider=>ty_statement
-                iv_fae_tab    TYPE string
-                iv_fae_ref    TYPE string
+                is_fae_tok    TYPE if_ci_atc_source_code_provider=>ty_token
+                is_fae_ref    TYPE if_ci_atc_source_code_provider=>ty_compiler_reference
       RETURNING VALUE(rs_res) TYPE ty_condition_result.
-
-    METHODS token_matches_table
-      IMPORTING is_token          TYPE if_ci_atc_source_code_provider=>ty_token
-                iv_fae_tab        TYPE string
-                iv_fae_ref        TYPE string
-      RETURNING VALUE(rv_matches) TYPE abap_bool.
-
-    METHODS clean_table_name
-      IMPORTING iv_lexeme      TYPE string
-      RETURNING VALUE(rv_name) TYPE string.
 
     METHODS build_quickfix
       IMPORTING is_statement         TYPE if_ci_atc_source_code_provider=>ty_statement
                 iv_stmt_idx          TYPE i
-                iv_fae_tab           TYPE string
+                is_fae_tok           TYPE if_ci_atc_source_code_provider=>ty_token
       RETURNING VALUE(rt_quickfixes) TYPE ty_quickfixes.
 
 ENDCLASS.
@@ -91,8 +81,8 @@ CLASS /skyl/cl_no_empty_fae IMPLEMENTATION.
 
   METHOD execute.
     DATA lv_idx        TYPE i.
-    DATA lv_fae_tab    TYPE string.
-    DATA lv_fae_ref    TYPE string.
+    DATA ls_fae_tok    TYPE if_ci_atc_source_code_provider=>ty_token.
+    DATA ls_fae_ref    TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
     DATA lt_quickfixes TYPE ty_quickfixes.
     FIELD-SYMBOLS <ls_statement> TYPE if_ci_atc_source_code_provider=>ty_statement.
 
@@ -108,23 +98,23 @@ CLASS /skyl/cl_no_empty_fae IMPLEMENTATION.
       ENDIF.
 
       extract_fae_table( EXPORTING is_statement = <ls_statement>
-                         IMPORTING ev_tab       = lv_fae_tab
-                                   ev_ref       = lv_fae_ref ).
+                         IMPORTING es_token     = ls_fae_tok
+                                   es_ref       = ls_fae_ref ).
 
-      IF lv_fae_tab IS INITIAL AND lv_fae_ref IS INITIAL.
+      IF ls_fae_tok-lexeme IS INITIAL.
         CONTINUE.
       ENDIF.
 
       IF is_fae_protected( it_statements = is_procedure-statements
                            iv_select_idx = lv_idx
-                           iv_fae_tab    = lv_fae_tab
-                           iv_fae_ref    = lv_fae_ref ) = abap_true.
+                           is_fae_tok    = ls_fae_tok
+                           is_fae_ref    = ls_fae_ref ) = abap_true.
         CONTINUE.
       ENDIF.
 
       lt_quickfixes = build_quickfix( is_statement = <ls_statement>
                                       iv_stmt_idx  = lv_idx
-                                      iv_fae_tab   = lv_fae_tab ).
+                                      is_fae_tok   = ls_fae_tok ).
 
       report_statement( is_statement    = <ls_statement>
                         iv_finding_code = c_finding_codes-unsecure_fae
@@ -133,8 +123,9 @@ CLASS /skyl/cl_no_empty_fae IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD build_quickfix.
-    DATA lv_indent TYPE string.
-    DATA lv_col    TYPE i.
+    DATA lv_indent   TYPE string.
+    DATA lv_col      TYPE i.
+    DATA lv_tab_name TYPE string.
 
     IF is_statement-position-column > 1.
       lv_col = is_statement-position-column - 1.
@@ -142,65 +133,35 @@ CLASS /skyl/cl_no_empty_fae IMPLEMENTATION.
                           occ = lv_col ).
     ENDIF.
 
+    lv_tab_name = is_fae_tok-lexeme.
+    IF lv_tab_name CP '@*'.
+      lv_tab_name = lv_tab_name+1.
+    ENDIF.
+
     rt_quickfixes = VALUE #(
         ( quickfix_insert_before(
               iv_quickfix_code  = c_quickfix_codes-add_guard
               iv_statement_from = iv_stmt_idx
-              it_new_code       = VALUE #( ( |{ lv_indent }IF { iv_fae_tab } IS NOT INITIAL.| ) ) ) )
+              it_new_code       = VALUE #( ( |{ lv_indent }IF { lv_tab_name } IS NOT INITIAL.| ) ) ) )
         ( quickfix_insert_after( iv_quickfix_code  = c_quickfix_codes-add_guard
                                  iv_statement_from = iv_stmt_idx
                                  it_new_code       = VALUE #( ( |{ lv_indent }ENDIF.| ) ) ) ) ).
   ENDMETHOD.
 
   METHOD extract_fae_table.
-    DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
+    CLEAR es_token.
+    CLEAR es_ref.
 
-    CLEAR ev_tab.
-    CLEAR ev_ref.
-    ls_token = /skyl/cl_ast_util=>get_token_after_sequence(
+    es_token = /skyl/cl_ast_util=>get_token_after_sequence(
                    is_statement = is_statement
                    it_expected  = VALUE #( ( `FOR` ) ( `ALL` ) ( `ENTRIES` ) ( `IN` ) ) ).
-    IF ls_token-lexeme IS INITIAL.
+    IF es_token-lexeme IS INITIAL.
       RETURN.
     ENDIF.
 
-    ev_ref = /skyl/cl_ast_util=>get_reference(
-                 is_token = ls_token
-                 iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-data )-full_name.
-    ev_tab = clean_table_name( ls_token-lexeme ).
-  ENDMETHOD.
-
-  METHOD clean_table_name.
-    rv_name = iv_lexeme.
-    IF rv_name CP '@*'.
-      rv_name = rv_name+1.
-    ENDIF.
-    IF rv_name CP 'ME->*'.
-      rv_name = rv_name+4.
-    ENDIF.
-    IF rv_name CP '*[]'.
-      rv_name = substring( val = rv_name
-                           len = strlen( rv_name ) - 2 ).
-    ENDIF.
-  ENDMETHOD.
-
-  METHOD token_matches_table.
-    DATA ls_ref TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
-
-    rv_matches = abap_false.
-
-    ls_ref = /skyl/cl_ast_util=>get_reference(
-                 is_token = is_token
+    es_ref = /skyl/cl_ast_util=>get_reference(
+                 is_token = es_token
                  iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
-
-    IF ls_ref-full_name IS NOT INITIAL AND iv_fae_ref IS NOT INITIAL AND ls_ref-full_name = iv_fae_ref.
-      rv_matches = abap_true.
-      RETURN.
-    ENDIF.
-
-    IF clean_table_name( is_token-lexeme ) = iv_fae_tab.
-      rv_matches = abap_true.
-    ENDIF.
   ENDMETHOD.
 
   METHOD is_fae_protected.
@@ -221,8 +182,8 @@ CLASS /skyl/cl_no_empty_fae IMPLEMENTATION.
       CASE <ls_stmt>-keyword.
         WHEN 'IF'.
           ls_cond = eval_condition( is_statement = <ls_stmt>
-                                    iv_fae_tab   = iv_fae_tab
-                                    iv_fae_ref   = iv_fae_ref ).
+                                    is_fae_tok   = is_fae_tok
+                                    is_fae_ref   = is_fae_ref ).
           INSERT VALUE #( keyword      = 'IF'
                           is_protected = ls_cond-is_positive
                           is_negative  = ls_cond-is_negative ) INTO TABLE lt_stack.
@@ -230,8 +191,8 @@ CLASS /skyl/cl_no_empty_fae IMPLEMENTATION.
         WHEN 'ELSEIF'.
           IF lv_stack_len > 0.
             ls_cond = eval_condition( is_statement = <ls_stmt>
-                                      iv_fae_tab   = iv_fae_tab
-                                      iv_fae_ref   = iv_fae_ref ).
+                                      is_fae_tok   = is_fae_tok
+                                      is_fae_ref   = is_fae_ref ).
             ASSIGN lt_stack[ lv_stack_len ] TO <ls_top>.
             <ls_top>-is_protected = ls_cond-is_positive.
             <ls_top>-is_negative  = ls_cond-is_negative.
@@ -270,8 +231,8 @@ CLASS /skyl/cl_no_empty_fae IMPLEMENTATION.
 
         WHEN 'CHECK'.
           ls_cond = eval_condition( is_statement = <ls_stmt>
-                                    iv_fae_tab   = iv_fae_tab
-                                    iv_fae_ref   = iv_fae_ref ).
+                                    is_fae_tok   = is_fae_tok
+                                    is_fae_ref   = is_fae_ref ).
           IF ls_cond-is_positive = abap_true.
             IF lv_stack_len = 0.
               lv_outer_guarded = abap_true.
@@ -294,8 +255,7 @@ CLASS /skyl/cl_no_empty_fae IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    LOOP AT lt_stack ASSIGNING <ls_top> WHERE    is_protected = abap_true
-                                              OR is_guarded   = abap_true.
+    LOOP AT lt_stack ASSIGNING <ls_top> WHERE is_protected = abap_true OR is_guarded = abap_true.
       rv_yes = abap_true.
       RETURN.
     ENDLOOP.
@@ -304,6 +264,7 @@ CLASS /skyl/cl_no_empty_fae IMPLEMENTATION.
   METHOD eval_condition.
     DATA lv_tab_found TYPE abap_bool.
     DATA lv_has_not   TYPE abap_bool.
+    DATA ls_tok_ref   TYPE if_ci_atc_source_code_provider=>ty_compiler_reference.
     FIELD-SYMBOLS <ls_tok> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     CLEAR rs_res.
@@ -314,9 +275,18 @@ CLASS /skyl/cl_no_empty_fae IMPLEMENTATION.
     ENDIF.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_tok>.
-      IF token_matches_table( is_token   = <ls_tok>
-                              iv_fae_tab = iv_fae_tab
-                              iv_fae_ref = iv_fae_ref ) = abap_true.
+      ls_tok_ref = /skyl/cl_ast_util=>get_reference(
+                       is_token = <ls_tok>
+                       iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
+
+      IF is_fae_ref-full_name IS NOT INITIAL AND ls_tok_ref-full_name IS NOT INITIAL.
+        IF ls_tok_ref-full_name = is_fae_ref-full_name.
+          lv_tab_found = abap_true.
+          EXIT.
+        ENDIF.
+      ELSEIF    <ls_tok>-lexeme   = is_fae_tok-lexeme
+             OR <ls_tok>-lexeme   = |@{ is_fae_tok-lexeme }|
+             OR is_fae_tok-lexeme = |@{ <ls_tok>-lexeme }|.
         lv_tab_found = abap_true.
         EXIT.
       ENDIF.
@@ -339,10 +309,8 @@ CLASS /skyl/cl_no_empty_fae IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    IF    /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                               iv_lexeme    = '0' )        = abap_true
-       OR /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                               iv_lexeme    = `'0'` )      = abap_true.
+    IF /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
+                                            iv_lexeme    = '0' ) = abap_true.
       LOOP AT is_statement-tokens TRANSPORTING NO FIELDS WHERE lexeme = '=' OR lexeme = '<='.
         lv_has_not = abap_true.
         EXIT.

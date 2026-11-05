@@ -1647,6 +1647,24 @@
           "value": "true"
         }
       ]
+    },
+    {
+      "checkName": "/SKYL/NO_IGN_PREF_PARAM"
+    },
+    {
+      "checkName": "/SKYL/NO_LOOP_GUARD"
+    },
+    {
+      "checkName": "/SKYL/NO_INLINE_PACKED"
+    },
+    {
+      "checkName": "/SKYL/NO_COND_TRUNC"
+    },
+    {
+      "checkName": "/SKYL/NO_NUMBERED_VAR"
+    },
+    {
+      "checkName": "/SKYL/NO_COMPLEX_ARG"
     }
   ]
 }

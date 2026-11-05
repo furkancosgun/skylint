@@ -1,0 +1,26 @@
+CLASS lcl_bad DEFINITION.
+  PUBLIC SECTION.
+    METHODS test_001
+      IMPORTING
+        iv_req TYPE i
+        iv_opt TYPE i OPTIONAL
+      PREFERRED PARAMETER iv_req.
+ENDCLASS.
+
+CLASS lcl_good DEFINITION.
+  PUBLIC SECTION.
+    METHODS test_002
+      IMPORTING
+        iv_opt1 TYPE i OPTIONAL
+        iv_opt2 TYPE i DEFAULT 1
+      PREFERRED PARAMETER iv_opt1.
+ENDCLASS.
+
+CLASS lcl_suppressed DEFINITION.
+  PUBLIC SECTION.
+    METHODS test_003 "#EC NO_IGN_PREF_PARAM
+      IMPORTING
+        iv_req TYPE i
+        iv_opt TYPE i OPTIONAL
+      PREFERRED PARAMETER iv_req.
+ENDCLASS.

@@ -5984,6 +5984,159 @@ export const RULES = [
       "CHECK_WHERE": "Report READ TABLE ... WHERE inside a loop, because a WHERE condition never engages a table key and always visits all rows. Disable to allow condition based reads during a migration."
     },
     "customSection": "## Access forms\n\nOnly `READ TABLE` statements inside a `LOOP`, `DO` or `WHILE` body are evaluated, and key access is separated from linear access:\n\n| Access form | Inside a loop |\n|---|---|\n| `READ TABLE lt INTO ls WITH KEY f = v.` | reported (`NO_RD_WKEY`) |\n| `READ TABLE lt TRANSPORTING NO FIELDS WITH KEY f = v.` | reported (`NO_RD_WKEY`) |\n| `READ TABLE lt INTO ls WHERE f = v.` | reported (`NO_RD_WHRE`) |\n| `READ TABLE lt INTO ls WITH TABLE KEY f = v.` | allowed, addresses a declared key |\n| `READ TABLE lt INTO ls WITH KEY f = v BINARY SEARCH.` | allowed, logarithmic search |\n| `READ TABLE lt INTO ls INDEX lv_index.` | allowed, constant time |\n\n## Notes\n\n- `READ LINE`, `READ REPORT`, `READ DATASET` and the EML `READ ENTITIES` form are not internal table reads and are never reported.\n- Keyword tokens are only recognised when they carry no compiler reference, so a variable or component named `where` or `key` cannot raise a finding.\n- The loop does not have to iterate over the table being read; a linear read of any table while a loop is open repeats the scan on every pass.\n- Fix a finding by declaring the read table `HASHED` or `SORTED` with the searched component as key and reading it with `WITH TABLE KEY`, or by resolving all lookups in a single pass before the loop.\n- Suppress an intentional read with `\"#EC NO_READ_LOOP` on the statement."
+  },
+  {
+    "ruleId": "no-ign-pref-param",
+    "title": "Report Ignored PREFERRED PARAMETER When Non-Optional Parameters Exist",
+    "rationale": "In ABAP methods, PREFERRED PARAMETER specifies the default importing parameter for positional calls. However, according to SAP ABAP rules, PREFERRED PARAMETER is ignored if there are any mandatory (non-optional) importing parameters in the signature. Such declarations mislead developers into assuming positional calls will work when in fact they are invalid or ignored.",
+    "className": "/SKYL/CL_NO_IGN_PREF_PARAM",
+    "pseudoComment": "NO_IGN_PREF_PARAM",
+    "category": "clean-abap",
+    "example": {
+      "bad": "METHODS get_data\n  IMPORTING\n    iv_req TYPE i\n    iv_opt TYPE i OPTIONAL\n  PREFERRED PARAMETER iv_req.",
+      "good": "METHODS get_data\n  IMPORTING\n    iv_req TYPE i\n    iv_opt TYPE i OPTIONAL."
+    },
+    "seo": {
+      "description": "Detect ignored PREFERRED PARAMETER clauses in ABAP methods when mandatory parameters are present.",
+      "keywords": [
+        "no-ign-pref-param",
+        "PREFERRED PARAMETER",
+        "ABAP method parameters",
+        "optional parameters"
+      ]
+    },
+    "relatedRules": [
+      "pref-opt-last",
+      "max-params"
+    ]
+  },
+  {
+    "ruleId": "no-loop-guard",
+    "title": "Redundant IF Condition Before LOOP AT",
+    "rationale": "An internal table loop (LOOP AT itab) executes zero times when the internal table is empty. Wrapping the entire loop in an IF itab IS NOT INITIAL check adds unnecessary nesting and boilerplate code.",
+    "className": "/SKYL/CL_NO_LOOP_GUARD",
+    "pseudoComment": "NO_LOOP_GUARD",
+    "category": "clean-abap",
+    "example": {
+      "bad": "IF lt_items IS NOT INITIAL.\n  LOOP AT lt_items INTO DATA(ls_item).\n    process_item( ls_item ).\n  ENDLOOP.\nENDIF.",
+      "good": "LOOP AT lt_items INTO DATA(ls_item).\n  process_item( ls_item ).\nENDLOOP."
+    },
+    "seo": {
+      "description": "Report redundant IF itab IS NOT INITIAL checks surrounding LOOP AT blocks.",
+      "keywords": [
+        "no-loop-guard",
+        "redundant loop guard",
+        "LOOP AT",
+        "IS NOT INITIAL"
+      ]
+    },
+    "relatedRules": [
+      "pref-early-ret",
+      "no-empty-block"
+    ]
+  },
+  {
+    "ruleId": "no-inline-packed",
+    "title": "Inline Declaration With Packed Arithmetic Loses Decimals",
+    "rationale": "When an arithmetic expression involving packed numbers (TYPE p) is assigned to an inline declaration DATA(...), ABAP derives the target variable type as P LENGTH 8 DECIMALS 0. As a consequence, all decimal places are silently truncated, resulting in loss of precision in financial and mathematical computations. Use an explicit DATA declaration with DECIMALS or CONV #( ... ).",
+    "className": "/SKYL/CL_NO_INLINE_PACKED",
+    "pseudoComment": "NO_INLINE_PACKED",
+    "category": "anti-patterns",
+    "example": {
+      "bad": "DATA lv_price TYPE p DECIMALS 2 VALUE '12.50'.\nDATA(lv_total) = lv_price * 10 / 3.",
+      "good": "DATA lv_price TYPE p DECIMALS 2 VALUE '12.50'.\nDATA lv_total TYPE p DECIMALS 2.\nlv_total = lv_price * 10 / 3."
+    },
+    "seo": {
+      "description": "Report inline declarations with packed arithmetic which default to 0 decimals and lose precision.",
+      "keywords": [
+        "no-inline-packed",
+        "packed arithmetic",
+        "DECIMALS 0",
+        "DATA(...) packed truncation"
+      ]
+    },
+    "relatedRules": [
+      "pref-calc-op",
+      "pref-inline"
+    ]
+  },
+  {
+    "ruleId": "no-cond-trunc",
+    "title": "Unsafe COND or SWITCH Inferred Type Truncates Values",
+    "rationale": "When using COND #( ... ) or SWITCH #( ... ) with string literals, ABAP derives the result type from the first THEN branch operand. If the first operand is a short text literal (e.g. 'OK' with type C LENGTH 2), subsequent longer branch values (such as 'PENDING') are silently truncated to match the first length. Specify the target type explicitly, e.g. COND string( ... ), or ensure the type accommodates all branches.",
+    "className": "/SKYL/CL_NO_COND_TRUNC",
+    "pseudoComment": "NO_COND_TRUNC",
+    "category": "anti-patterns",
+    "example": {
+      "bad": "DATA(lv_status) = COND #( WHEN lv_ok = abap_true THEN 'OK' ELSE 'PROCESSING' ).",
+      "good": "DATA(lv_status) = COND string( WHEN lv_ok = abap_true THEN 'OK' ELSE 'PROCESSING' )."
+    },
+    "seo": {
+      "description": "Report COND and SWITCH expressions with inferred types that cause silent character truncation.",
+      "keywords": [
+        "no-cond-trunc",
+        "COND #( )",
+        "SWITCH #( )",
+        "ABAP string truncation",
+        "inferred type truncation"
+      ]
+    },
+    "relatedRules": [
+      "pref-cond",
+      "pref-switch"
+    ]
+  },
+  {
+    "ruleId": "no-numbered-var",
+    "title": "Avoid Variable Names with Numeric Suffixes",
+    "rationale": "Numbered variable names like lv_count1, lv_idx2, or ls_tmp3 often indicate poor naming or the need for a dedicated collection or internal table. Use descriptive names that convey intent or use structured types.",
+    "className": "/SKYL/CL_NO_NUMBERED_VAR",
+    "pseudoComment": "NO_NUMBERED_VAR",
+    "category": "clean-abap",
+    "example": {
+      "bad": "DATA lv_count1 TYPE i VALUE 0.",
+      "good": "DATA lv_source_count TYPE i VALUE 0."
+    },
+    "seo": {
+      "description": "Report variables with trailing numeric suffixes such as lv_count1 or ls_tmp2.",
+      "keywords": [
+        "no-numbered-var",
+        "numbered variables",
+        "variable naming",
+        "numeric suffix",
+        "Clean ABAP naming"
+      ]
+    },
+    "relatedRules": [
+      "pref-naming-vars",
+      "no-single-letter"
+    ]
+  },
+  {
+    "ruleId": "no-complex-arg",
+    "title": "Avoid Complex Expressions in Call Arguments",
+    "rationale": "Method call arguments should be simple variables, literals, or single method calls. Nesting deep method chains or complex expressions like COND #( ... ) inside arguments reduces readability and makes debugging difficult. Extract complex expressions into local variables before the call.",
+    "className": "/SKYL/CL_NO_COMPLEX_ARG",
+    "pseudoComment": "NO_COMPLEX_ARG",
+    "category": "clean-abap",
+    "example": {
+      "bad": "lo_service->process( iv_param = lo_factory->get_builder( )->build( ) ).",
+      "good": "DATA(lo_item) = lo_factory->get_builder( )->build( ).\nlo_service->process( iv_param = lo_item )."
+    },
+    "seo": {
+      "description": "Report complex expressions and nested method chains in method call arguments.",
+      "keywords": [
+        "no-complex-arg",
+        "complex arguments",
+        "method call arguments",
+        "argument complexity",
+        "Clean ABAP"
+      ]
+    },
+    "relatedRules": [
+      "no-method-chain",
+      "max-cognitive"
+    ]
   }
 ];
 

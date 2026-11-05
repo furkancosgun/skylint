@@ -1,0 +1,43 @@
+[
+  {
+    "target": "TEST_001",
+    "code": "NO_CND_TRN",
+    "line": 3,
+    "column": 19,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_002",
+    "code": null
+  },
+  {
+    "target": "TEST_003",
+    "code": "NO_CND_TRN",
+    "line": 3,
+    "column": 19,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_004",
+    "code": null
+  },
+  {
+    "target": "TEST_005",
+    "code": null
+  },
+  {
+    "target": "TEST_006",
+    "code": null
+  },
+  {
+    "target": "TEST_007",
+    "code": "NO_CND_TRN",
+    "line": 4,
+    "column": 19,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_008",
+    "code": null
+  }
+]

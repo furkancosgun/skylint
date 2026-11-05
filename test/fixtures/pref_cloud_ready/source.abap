@@ -3,6 +3,13 @@ CLASS zcl_skylint_test_pref_cloud_ready DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
+    DATA lv_data TYPE string.
+    DATA itab_stable TYPE string_table.
+    DATA lo_ole TYPE ole2_object.
+    DATA lo_obj TYPE REF TO zcl_skylint_test_pref_cloud_ready.
+    DATA lv_result TYPE i.
+    DATA lt_tab TYPE string_table.
+
     METHODS test_001.
     METHODS test_002.
     METHODS test_003.
@@ -36,15 +43,15 @@ CLASS zcl_skylint_test_pref_cloud_ready IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_004.
-    EXPORT lv_data TO MEMORY ID 'SKYLINT'.
+    EXPORT data = lv_data TO MEMORY ID 'SKYLINT'.
   ENDMETHOD.
 
   METHOD test_005.
-    IMPORT lv_data FROM MEMORY ID 'SKYLINT'.
+    IMPORT data = lv_data FROM MEMORY ID 'SKYLINT'.
   ENDMETHOD.
 
   METHOD test_006.
-    SORT BY field.
+    DELETE DATASET 'test.txt'.
   ENDMETHOD.
 
   METHOD test_007.
@@ -52,11 +59,14 @@ CLASS zcl_skylint_test_pref_cloud_ready IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD test_008.
-    AT PF01.
+    CALL SCREEN 100.
   ENDMETHOD.
 
   METHOD test_009.
-    AT LAST.
+    LOOP AT lt_tab INTO DATA(lv_line).
+      AT LAST.
+      ENDAT.
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD test_010.

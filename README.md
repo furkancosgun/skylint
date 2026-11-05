@@ -11,7 +11,7 @@
 <p align="center">
   <a href="https://github.com/furkancosgun/skylint/actions/workflows/ci.yml"><img src="https://github.com/furkancosgun/skylint/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
   <a href="https://skylint.org/"><img src="https://img.shields.io/badge/docs-online-blue.svg" alt="Docs" /></a>
-  <a href="https://skylint.org/rules/"><img src="https://img.shields.io/badge/rules-Clean%20ABAP-brightgreen.svg" alt="Rules" /></a>
+  <a href="https://skylint.org/rules/"><img src="https://img.shields.io/badge/rules-200%2B%20Clean%20ABAP-brightgreen.svg" alt="Rules" /></a>
   <img src="https://img.shields.io/badge/target-ABAP%20Cloud-informational.svg" alt="ABAP Cloud" />
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-yellow.svg" alt="License" /></a>
 </p>
@@ -30,7 +30,7 @@
 - **☁️ Clean ABAP & Cloud Rules:** Comprehensive coverage across modern ABAP expressions, syntax modernizations, SQL performance, security, and clean architecture.
 - **⚡ Instant QuickFixes:** Built-in QuickFix generation for rapid, automated refactoring directly from Eclipse ADT (`Ctrl + 1`).
 - **🛡️ Zero-Boilerplate Architecture:** Shared base class (`/skyl/cl_rule_base`) automatically manages statement iteration, checksum calculation, finding locations, and pseudo-comment suppression.
-- **🚀 High-Fidelity Offline CI Harness:** Runs transpiled checks through full AST and compiler-reference resolution pipelines offline, validating 1,271 test assertions and QuickFix round-trips without requiring a live SAP backend.
+- **🚀 High-Fidelity Offline CI Harness:** Runs transpiled checks through full AST and compiler-reference resolution pipelines offline, validating 1,330+ test assertions and QuickFix round-trips across 200+ rules without requiring a live SAP backend.
 
 ---
 
@@ -132,7 +132,7 @@ npm run deps
 # 2. Validate ABAP Cloud syntax via abaplint
 npm run lint
 
-# 3. Transpile rules and execute all 1,000+ fixture assertions & QuickFix round-trips
+# 3. Transpile rules and execute all 1,300+ fixture assertions & QuickFix round-trips
 npm test
 
 # Run tests for a single specific check rule

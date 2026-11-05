@@ -1,0 +1,32 @@
+[
+  {
+    "target": "TEST_001",
+    "code": "NO_LOOP_GD",
+    "line": 3,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_002",
+    "code": null
+  },
+  {
+    "target": "TEST_003",
+    "code": null
+  },
+  {
+    "target": "TEST_004",
+    "code": null
+  },
+  {
+    "target": "TEST_005",
+    "code": "NO_LOOP_GD",
+    "line": 3,
+    "column": 4,
+    "quickfixes": []
+  },
+  {
+    "target": "TEST_006",
+    "code": null
+  }
+]

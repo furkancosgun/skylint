@@ -1,0 +1,10 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Unsafe COND or SWITCH inferred type truncates values",
+    "originalLanguage": "en"
+  },
+  "category": "/SKYL/ANTI_PATTERNS",
+  "implementingClass": "/SKYL/CL_NO_COND_TRUNC",
+  "checkType": "remoteEnabled"
+}
