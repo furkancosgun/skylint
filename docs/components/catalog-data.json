@@ -4,7 +4,7 @@
       "key": "clean-abap",
       "title": "Clean ABAP & Modern Syntax",
       "description": "Modern language features, expression-oriented coding, and idiomatic Clean ABAP practices.",
-      "count": 78
+      "count": 79
     },
     {
       "key": "anti-patterns",
@@ -2392,6 +2392,18 @@
       "category": "clean-abap",
       "categoryTitle": "Clean ABAP & Modern Syntax",
       "pseudoComment": "PREF_OPTIONAL_LAST",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": false
+    },
+    {
+      "ruleId": "pref-cloud-ready",
+      "title": "Use Only Statements Available in ABAP Cloud",
+      "className": "/SKYL/CL_PREF_CLOUD_READY",
+      "description": "Statements not available in ABAP Cloud",
+      "category": "clean-abap",
+      "categoryTitle": "Clean ABAP & Modern Syntax",
+      "pseudoComment": "PREF_CLOUD_READY",
       "hasQuickfix": false,
       "remoteEnabled": true,
       "configurable": false

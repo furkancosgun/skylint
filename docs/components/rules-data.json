@@ -5851,5 +5851,24 @@
       "max-params"
     ],
     "defaultParameters": []
+  },
+  {
+    "ruleId": "pref-cloud-ready",
+    "title": "Use Only Statements Available in ABAP Cloud",
+    "className": "/SKYL/CL_PREF_CLOUD_READY",
+    "checkName": "/SKYL/PREF_CLOUD_READY",
+    "category": "clean-abap",
+    "categoryTitle": "Clean ABAP & Modern Syntax",
+    "pseudoComment": "PREF_CLOUD_READY",
+    "description": "Statements not available in ABAP Cloud",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [],
+    "relatedRules": [
+      "no-obs-control",
+      "no-list-proc",
+      "pref-func-module"
+    ],
+    "defaultParameters": []
   }
 ]

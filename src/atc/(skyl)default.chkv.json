@@ -1631,6 +1631,9 @@
     },
     {
       "checkName": "/SKYL/PREF_OPT_LAST"
+    },
+    {
+      "checkName": "/SKYL/PREF_CLOUD_READY"
     }
   ]
 }
