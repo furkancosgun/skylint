@@ -45,7 +45,7 @@ CLASS /skyl/cl_no_msg_raising IMPLEMENTATION.
       ENDIF.
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
         IF /skyl/cl_ast_util=>token_is_keyword( is_token  = <ls_token>
-                                                   iv_lexeme = 'RAISING' ) = abap_true.
+                                                iv_lexeme = 'RAISING' ) = abap_true.
           report_statement( is_statement    = <ls_statement>
                             iv_finding_code = c_finding_codes-msg_raise ).
           EXIT.

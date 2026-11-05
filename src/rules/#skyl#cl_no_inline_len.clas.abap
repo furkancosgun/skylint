@@ -71,7 +71,7 @@ CLASS /skyl/cl_no_inline_len IMPLEMENTATION.
         CONTINUE.
       ENDIF.
       lv_lexeme = /skyl/cl_ast_util=>get_token_lexeme( is_statement = <ls_statement>
-                                                          iv_index     = 2 ).
+                                                       iv_index     = 2 ).
       parse_length_spec( EXPORTING iv_lexeme   = lv_lexeme
                          IMPORTING ev_name     = lv_name
                                    ev_inner    = lv_inner

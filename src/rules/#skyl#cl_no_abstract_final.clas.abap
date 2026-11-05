@@ -40,11 +40,11 @@ CLASS /skyl/cl_no_abstract_final IMPLEMENTATION.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF     /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                     iv_lexeme    = 'DEFINITION' ) = abap_true
+                                                  iv_lexeme    = 'DEFINITION' ) = abap_true
          AND /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                     iv_lexeme    = 'ABSTRACT' )   = abap_true
+                                                  iv_lexeme    = 'ABSTRACT' )   = abap_true
          AND /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                     iv_lexeme    = 'FINAL' )      = abap_true.
+                                                  iv_lexeme    = 'FINAL' )      = abap_true.
 
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-abstract_final ).

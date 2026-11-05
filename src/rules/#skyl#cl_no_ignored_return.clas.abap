@@ -49,8 +49,8 @@ CLASS /skyl/cl_no_ignored_return IMPLEMENTATION.
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF <ls_statement>-keyword = 'CALL'.
         IF /skyl/cl_ast_util=>matches_token_at( is_statement = <ls_statement>
-                                                   iv_index     = 2
-                                                   iv_expected  = 'METHOD' ) = abap_false.
+                                                iv_index     = 2
+                                                iv_expected  = 'METHOD' ) = abap_false.
           CONTINUE.
         ENDIF.
       ELSEIF <ls_statement>-keyword <> '+CALL_METHOD'.
@@ -58,7 +58,7 @@ CLASS /skyl/cl_no_ignored_return IMPLEMENTATION.
       ENDIF.
 
       IF /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                 iv_lexeme    = 'RECEIVING' ) = abap_true.
+                                              iv_lexeme    = 'RECEIVING' ) = abap_true.
         CONTINUE.
       ENDIF.
 
@@ -71,8 +71,8 @@ CLASS /skyl/cl_no_ignored_return IMPLEMENTATION.
       CLEAR lv_found.
       TRY.
           /skyl/cl_rtti_util=>get_method_descr( EXPORTING iv_full_name = lv_full_name
-                                                   IMPORTING es_method    = ls_meth
-                                                             ev_found     = lv_found ).
+                                                IMPORTING es_method    = ls_meth
+                                                          ev_found     = lv_found ).
         CATCH cx_root.
           CONTINUE.
       ENDTRY.

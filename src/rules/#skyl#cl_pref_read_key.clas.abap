@@ -50,7 +50,7 @@ CLASS /skyl/cl_pref_read_key IMPLEMENTATION.
       ENDIF.
 
       lv_index = /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                   iv_lexeme    = 'WHERE' ).
+                                                iv_lexeme    = 'WHERE' ).
       IF lv_index = 0.
         CONTINUE.
       ENDIF.

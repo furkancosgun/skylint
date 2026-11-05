@@ -45,7 +45,7 @@ CLASS /skyl/cl_pref_sort_key IMPLEMENTATION.
       ENDIF.
 
       IF /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                           iv_lexeme    = 'BY' ) = 0.
+                                        iv_lexeme    = 'BY' ) = 0.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-sort_key ).
       ENDIF.

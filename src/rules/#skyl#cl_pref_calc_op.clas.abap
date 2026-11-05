@@ -119,46 +119,46 @@ CLASS /skyl/cl_pref_calc_op IMPLEMENTATION.
     CASE is_statement-keyword.
       WHEN 'ADD'.
         IF /skyl/cl_ast_util=>matches_token_at( is_statement = is_statement
-                                                   iv_index     = 3
-                                                   iv_expected  = `TO` ) = abap_true.
+                                                iv_index     = 3
+                                                iv_expected  = `TO` ) = abap_true.
           lv_op = '+'.
           lv_value = /skyl/cl_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                             iv_index     = 2 ).
+                                                          iv_index     = 2 ).
           lv_target = /skyl/cl_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                              iv_index     = 4 ).
+                                                           iv_index     = 4 ).
         ENDIF.
 
       WHEN 'SUBTRACT'.
         IF /skyl/cl_ast_util=>matches_token_at( is_statement = is_statement
-                                                   iv_index     = 3
-                                                   iv_expected  = `FROM` ) = abap_true.
+                                                iv_index     = 3
+                                                iv_expected  = `FROM` ) = abap_true.
           lv_op = '-'.
           lv_value = /skyl/cl_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                             iv_index     = 2 ).
+                                                          iv_index     = 2 ).
           lv_target = /skyl/cl_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                              iv_index     = 4 ).
+                                                           iv_index     = 4 ).
         ENDIF.
 
       WHEN 'MULTIPLY'.
         IF /skyl/cl_ast_util=>matches_token_at( is_statement = is_statement
-                                                   iv_index     = 3
-                                                   iv_expected  = `BY` ) = abap_true.
+                                                iv_index     = 3
+                                                iv_expected  = `BY` ) = abap_true.
           lv_op = '*'.
           lv_target = /skyl/cl_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                              iv_index     = 2 ).
+                                                           iv_index     = 2 ).
           lv_value = /skyl/cl_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                             iv_index     = 4 ).
+                                                          iv_index     = 4 ).
         ENDIF.
 
       WHEN 'DIVIDE'.
         IF /skyl/cl_ast_util=>matches_token_at( is_statement = is_statement
-                                                   iv_index     = 3
-                                                   iv_expected  = `BY` ) = abap_true.
+                                                iv_index     = 3
+                                                iv_expected  = `BY` ) = abap_true.
           lv_op = '/'.
           lv_target = /skyl/cl_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                              iv_index     = 2 ).
+                                                           iv_index     = 2 ).
           lv_value = /skyl/cl_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                             iv_index     = 4 ).
+                                                          iv_index     = 4 ).
         ENDIF.
     ENDCASE.
 
@@ -185,8 +185,8 @@ CLASS /skyl/cl_pref_calc_op IMPLEMENTATION.
     ENDIF.
 
     lv_eq_idx = /skyl/cl_ast_util=>find_token( is_statement   = is_statement
-                                                  iv_lexeme      = '='
-                                                  iv_start_index = 2 ).
+                                               iv_lexeme      = '='
+                                               iv_start_index = 2 ).
     IF lv_eq_idx <= 1.
       RETURN.
     ENDIF.
@@ -209,7 +209,7 @@ CLASS /skyl/cl_pref_calc_op IMPLEMENTATION.
     ENDIF.
 
     ls_op_tok = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                 iv_index     = lv_op_idx ).
+                                              iv_index     = lv_op_idx ).
     IF is_calc_operator( ls_op_tok-lexeme ) = abap_false.
       RETURN.
     ENDIF.

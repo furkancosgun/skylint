@@ -50,9 +50,9 @@ CLASS /skyl/cl_no_badi_commit IMPLEMENTATION.
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF    /skyl/cl_ast_util=>match_token_sequence( is_statement = <ls_statement>
-                                                        it_expected  = VALUE #( ( `COMMIT` ) ( `WORK` ) ) )   = abap_true
+                                                     it_expected  = VALUE #( ( `COMMIT` ) ( `WORK` ) ) )   = abap_true
          OR /skyl/cl_ast_util=>match_token_sequence( is_statement = <ls_statement>
-                                                        it_expected  = VALUE #( ( `ROLLBACK` ) ( `WORK` ) ) ) = abap_true.
+                                                     it_expected  = VALUE #( ( `ROLLBACK` ) ( `WORK` ) ) ) = abap_true.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-badi_commit ).
       ENDIF.

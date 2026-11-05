@@ -61,13 +61,13 @@ CLASS /skyl/cl_pref_msg_cls IMPLEMENTATION.
     DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
 
     IF /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                         iv_lexeme    = 'ID' ) > 0.
+                                      iv_lexeme    = 'ID' ) > 0.
       rv_yes = abap_true.
       RETURN.
     ENDIF.
 
     ls_token = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                      iv_lexeme    = 'MESSAGE' ).
+                                                   iv_lexeme    = 'MESSAGE' ).
     IF /skyl/cl_ast_util=>token_is_literal( ls_token ) = abap_true.
       rv_yes = abap_false.
       RETURN.

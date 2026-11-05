@@ -133,12 +133,12 @@ CLASS /skyl/cl_pref_str_func IMPLEMENTATION.
             CONTINUE.
           ENDIF.
           ls_tok = /skyl/cl_ast_util=>get_token_after( is_statement = <ls_statement>
-                                                          iv_lexeme    = 'CONDENSE' ).
+                                                       iv_lexeme    = 'CONDENSE' ).
           lv_var = ls_tok-lexeme.
           lv_code = c_finding_codes-condense_stmt.
           lv_fix_code = c_quickfix_codes-condense_stmt.
           IF /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                               iv_lexeme    = 'NO-GAPS' ) > 0.
+                                            iv_lexeme    = 'NO-GAPS' ) > 0.
             lv_line = |{ lv_var } = condense( val = { lv_var } from = ` ` to = `` ).|.
           ELSE.
             lv_line = |{ lv_var } = condense( { lv_var } ).|.
@@ -149,15 +149,15 @@ CLASS /skyl/cl_pref_str_func IMPLEMENTATION.
             CONTINUE.
           ENDIF.
           ls_tok = /skyl/cl_ast_util=>get_token_after( is_statement = <ls_statement>
-                                                          iv_lexeme    = 'TRANSLATE' ).
+                                                       iv_lexeme    = 'TRANSLATE' ).
           lv_var = ls_tok-lexeme.
           lv_code = c_finding_codes-translate_stmt.
           lv_fix_code = c_quickfix_codes-translate_stmt.
           IF /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                               iv_lexeme    = 'UPPER' ) > 0.
+                                            iv_lexeme    = 'UPPER' ) > 0.
             lv_line = |{ lv_var } = to_upper( { lv_var } ).|.
           ELSEIF /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                   iv_lexeme    = 'LOWER' ) > 0.
+                                                iv_lexeme    = 'LOWER' ) > 0.
             lv_line = |{ lv_var } = to_lower( { lv_var } ).|.
           ELSE.
             lv_line = quickfix_translate_using( is_statement = <ls_statement>
@@ -169,7 +169,7 @@ CLASS /skyl/cl_pref_str_func IMPLEMENTATION.
             CONTINUE.
           ENDIF.
           ls_tok = /skyl/cl_ast_util=>get_token_after( is_statement = <ls_statement>
-                                                          iv_lexeme    = 'SHIFT' ).
+                                                       iv_lexeme    = 'SHIFT' ).
           lv_var = ls_tok-lexeme.
           lv_code = c_finding_codes-shift_stmt.
           lv_fix_code = c_quickfix_codes-shift_stmt.
@@ -193,9 +193,9 @@ CLASS /skyl/cl_pref_str_func IMPLEMENTATION.
             CONTINUE.
           ENDIF.
           IF     /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                   iv_lexeme    = 'INTO' )       > 0
+                                                iv_lexeme    = 'INTO' )       > 0
              AND /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                   iv_lexeme    = 'IN' )         = 0.
+                                                iv_lexeme    = 'IN' )         = 0.
             lv_code = c_finding_codes-replace_stmt.
             lv_fix_code = c_quickfix_codes-replace_stmt.
             lv_line = quickfix_replace_stmt( <ls_statement> ).
@@ -206,9 +206,9 @@ CLASS /skyl/cl_pref_str_func IMPLEMENTATION.
             CONTINUE.
           ENDIF.
           IF     /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                   iv_lexeme    = 'FIELD' )      > 0
+                                                iv_lexeme    = 'FIELD' )      > 0
              AND /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                   iv_lexeme    = 'LENGTH' )     > 0.
+                                                iv_lexeme    = 'LENGTH' )     > 0.
             lv_code = c_finding_codes-describe_field.
             lv_fix_code = c_quickfix_codes-describe_field.
             lv_line = quickfix_describe_field( <ls_statement> ).
@@ -243,7 +243,7 @@ CLASS /skyl/cl_pref_str_func IMPLEMENTATION.
 
     CLEAR rv_line.
     ls_mask = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                     iv_lexeme    = 'USING' ).
+                                                  iv_lexeme    = 'USING' ).
     IF /skyl/cl_ast_util=>token_is_literal( ls_mask ) = abap_false.
       RETURN.
     ENDIF.
@@ -278,19 +278,19 @@ CLASS /skyl/cl_pref_str_func IMPLEMENTATION.
 
     CLEAR rv_line.
     IF    /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                            iv_lexeme    = 'CIRCULAR' ) > 0
+                                         iv_lexeme    = 'CIRCULAR' ) > 0
        OR /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                            iv_lexeme    = 'UP' )       > 0.
+                                         iv_lexeme    = 'UP' )       > 0.
       RETURN.
     ENDIF.
 
     lv_is_right = xsdbool( /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                                             iv_lexeme    = 'RIGHT' ) > 0 ).
+                                                          iv_lexeme    = 'RIGHT' ) > 0 ).
 
     IF /skyl/cl_ast_util=>find_token_sequence( is_statement = is_statement
-                                                  it_expected  = VALUE #( ( `DELETING` ) ( `LEADING` ) ) ) > 0.
+                                               it_expected  = VALUE #( ( `DELETING` ) ( `LEADING` ) ) ) > 0.
       ls_mask = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                       iv_lexeme    = 'LEADING' ).
+                                                    iv_lexeme    = 'LEADING' ).
       IF ls_mask-lexeme IS NOT INITIAL.
         rv_line = |{ iv_var } = shift_left( val = { iv_var } sub = { ls_mask-lexeme } ).|.
       ENDIF.
@@ -298,9 +298,9 @@ CLASS /skyl/cl_pref_str_func IMPLEMENTATION.
     ENDIF.
 
     IF /skyl/cl_ast_util=>find_token_sequence( is_statement = is_statement
-                                                  it_expected  = VALUE #( ( `DELETING` ) ( `TRAILING` ) ) ) > 0.
+                                               it_expected  = VALUE #( ( `DELETING` ) ( `TRAILING` ) ) ) > 0.
       ls_mask = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                       iv_lexeme    = 'TRAILING' ).
+                                                    iv_lexeme    = 'TRAILING' ).
       IF ls_mask-lexeme IS NOT INITIAL.
         rv_line = |{ iv_var } = shift_right( val = { iv_var } sub = { ls_mask-lexeme } ).|.
       ENDIF.
@@ -308,9 +308,9 @@ CLASS /skyl/cl_pref_str_func IMPLEMENTATION.
     ENDIF.
 
     IF /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                         iv_lexeme    = 'BY' ) > 0.
+                                      iv_lexeme    = 'BY' ) > 0.
       ls_places = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                         iv_lexeme    = 'BY' ).
+                                                      iv_lexeme    = 'BY' ).
       IF ls_places-lexeme IS NOT INITIAL.
         IF lv_is_right = abap_true.
           rv_line = |{ iv_var } = shift_right( val = { iv_var } places = { ls_places-lexeme } ).|.
@@ -335,11 +335,11 @@ CLASS /skyl/cl_pref_str_func IMPLEMENTATION.
 
     CLEAR rv_line.
     ls_sub = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                    iv_lexeme    = 'REPLACE' ).
+                                                 iv_lexeme    = 'REPLACE' ).
     ls_with = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                     iv_lexeme    = 'WITH' ).
+                                                  iv_lexeme    = 'WITH' ).
     ls_into = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                     iv_lexeme    = 'INTO' ).
+                                                  iv_lexeme    = 'INTO' ).
     IF ls_sub-lexeme IS NOT INITIAL AND ls_with-lexeme IS NOT INITIAL AND ls_into-lexeme IS NOT INITIAL.
       rv_line = |{ ls_into-lexeme } = replace( val = { ls_into-lexeme } sub = { ls_sub-lexeme } with = { ls_with-lexeme } ).|.
     ENDIF.
@@ -352,14 +352,14 @@ CLASS /skyl/cl_pref_str_func IMPLEMENTATION.
 
     CLEAR rv_line.
     IF /skyl/cl_ast_util=>find_token_sequence( is_statement = is_statement
-                                                  it_expected  = VALUE #( ( `IN` ) ( `BYTE` ) ( `MODE` ) ) ) > 0.
+                                               it_expected  = VALUE #( ( `IN` ) ( `BYTE` ) ( `MODE` ) ) ) > 0.
       lv_func = 'xstrlen'.
     ENDIF.
 
     ls_field = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                      iv_lexeme    = 'FIELD' ).
+                                                   iv_lexeme    = 'FIELD' ).
     ls_len = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                    iv_lexeme    = 'LENGTH' ).
+                                                 iv_lexeme    = 'LENGTH' ).
     IF ls_field-lexeme IS NOT INITIAL AND ls_len-lexeme IS NOT INITIAL.
       rv_line = |{ ls_len-lexeme } = { lv_func }( { ls_field-lexeme } ).|.
     ENDIF.

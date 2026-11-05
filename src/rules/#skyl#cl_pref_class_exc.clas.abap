@@ -56,6 +56,6 @@ CLASS /skyl/cl_pref_class_exc IMPLEMENTATION.
 
   METHOD has_classic_exceptions.
     rv_res = /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                     iv_lexeme    = 'EXCEPTIONS' ).
+                                                  iv_lexeme    = 'EXCEPTIONS' ).
   ENDMETHOD.
 ENDCLASS.

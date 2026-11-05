@@ -72,7 +72,7 @@ CLASS /skyl/cl_no_single_when IMPLEMENTATION.
 
     WHILE lv_fwd_idx <= lv_total.
       ls_fwd_stmt = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                         iv_index      = lv_fwd_idx ).
+                                                      iv_index      = lv_fwd_idx ).
       IF ls_fwd_stmt-keyword IS INITIAL.
         EXIT.
       ENDIF.
@@ -91,7 +91,7 @@ CLASS /skyl/cl_no_single_when IMPLEMENTATION.
         WHEN 'WHEN'.
           IF     lv_depth = 0
              AND /skyl/cl_ast_util=>match_token_sequence( is_statement = ls_fwd_stmt
-                                                             it_expected  = VALUE #( ( `WHEN` ) ( `OTHERS` ) ) ) = abap_false.
+                                                          it_expected  = VALUE #( ( `WHEN` ) ( `OTHERS` ) ) ) = abap_false.
             rv_cnt += 1.
           ENDIF.
       ENDCASE.

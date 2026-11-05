@@ -163,18 +163,18 @@ CLASS /skyl/cl_no_unreachable IMPLEMENTATION.
 
       WHEN 'RAISE'.
         IF /skyl/cl_ast_util=>matches_token_at( is_statement = is_statement
-                                                   iv_index     = 2
-                                                   iv_expected  = `SHORTDUMP` ) = abap_true.
+                                                iv_index     = 2
+                                                iv_expected  = `SHORTDUMP` ) = abap_true.
           rv_res = abap_true.
         ELSEIF    /skyl/cl_ast_util=>matches_token_at( is_statement = is_statement
-                                                          iv_index     = 2
-                                                          iv_expected  = `EXCEPTION` ) = abap_true
+                                                       iv_index     = 2
+                                                       iv_expected  = `EXCEPTION` ) = abap_true
                OR /skyl/cl_ast_util=>matches_token_at( is_statement = is_statement
-                                                          iv_index     = 2
-                                                          iv_expected  = `RESUMABLE` ) = abap_true.
+                                                       iv_index     = 2
+                                                       iv_expected  = `RESUMABLE` ) = abap_true.
           rv_res = abap_true.
           IF /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                     iv_lexeme    = 'RESUMABLE' ) = abap_true.
+                                                  iv_lexeme    = 'RESUMABLE' ) = abap_true.
             rv_res = abap_false.
           ENDIF.
         ENDIF.

@@ -72,19 +72,19 @@ CLASS /skyl/cl_no_multi_exc IMPLEMENTATION.
     DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
 
     ls_token = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = 2 ).
+                                             iv_index     = 2 ).
     IF ls_token-lexeme <> 'EXCEPTION'.
       RETURN.
     ENDIF.
 
     ls_token = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = 3 ).
+                                             iv_index     = 3 ).
     IF ls_token-lexeme <> 'TYPE' AND ls_token-lexeme <> 'NEW'.
       RETURN.
     ENDIF.
 
     rv_class = segment( val   = /skyl/cl_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                                        iv_index     = 4 )
+                                                                     iv_index     = 4 )
                         index = 1
                         sep   = '(' ).
   ENDMETHOD.

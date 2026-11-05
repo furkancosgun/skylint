@@ -98,7 +98,7 @@ CLASS /skyl/cl_no_static_arrow IMPLEMENTATION.
                  iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-method ).
     IF /skyl/cl_rtti_util=>is_static_method( ls_ref-full_name ) = abap_true.
       /skyl/cl_rtti_util=>parse_full_name( EXPORTING iv_full_name  = ls_ref-full_name
-                                              IMPORTING ev_class_name = rv_class ).
+                                           IMPORTING ev_class_name = rv_class ).
     ENDIF.
   ENDMETHOD.
 
@@ -125,7 +125,7 @@ CLASS /skyl/cl_no_static_arrow IMPLEMENTATION.
                               lexeme = |{ iv_class }=>{ lv_meth }| ) ).
 
     lv_line = /skyl/cl_ast_util=>flatten_statement( is_statement = is_statement
-                                                       it_overrides = lt_overrides ).
+                                                    it_overrides = lt_overrides ).
 
     rs_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-use_class_call
                                     iv_statement_from = iv_stmt_idx

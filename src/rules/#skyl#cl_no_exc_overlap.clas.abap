@@ -48,7 +48,7 @@ CLASS /skyl/cl_no_exc_overlap IMPLEMENTATION.
       ENDIF.
 
       lv_exc_idx = /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                     iv_lexeme    = 'EXCEPTIONS' ).
+                                                  iv_lexeme    = 'EXCEPTIONS' ).
       IF lv_exc_idx = 0.
         CONTINUE.
       ENDIF.
@@ -58,15 +58,15 @@ CLASS /skyl/cl_no_exc_overlap IMPLEMENTATION.
 
       DO.
         lv_eq_idx = /skyl/cl_ast_util=>find_token( is_statement   = <ls_statement>
-                                                      iv_lexeme      = '='
-                                                      iv_start_index = lv_eq_idx + 1 ).
+                                                   iv_lexeme      = '='
+                                                   iv_start_index = lv_eq_idx + 1 ).
         IF lv_eq_idx = 0.
           EXIT.
         ENDIF.
 
         ls_number = /skyl/cl_ast_util=>get_token_after( is_statement   = <ls_statement>
-                                                           iv_lexeme      = '='
-                                                           iv_start_index = lv_eq_idx ).
+                                                        iv_lexeme      = '='
+                                                        iv_start_index = lv_eq_idx ).
 
         IF /skyl/cl_ast_util=>token_is_literal( ls_number ) = abap_true.
           IF line_exists( lt_seen[ table_line = ls_number-lexeme ] ).

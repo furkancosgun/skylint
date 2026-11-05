@@ -136,7 +136,7 @@ CLASS /skyl/cl_no_obs_control IMPLEMENTATION.
         WHEN 'ON'.
           IF     mv_check_loop_ctl = abap_true
              AND /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                   iv_lexeme    = 'CHANGE' )     > 0.
+                                                iv_lexeme    = 'CHANGE' )     > 0.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_control ).
           ENDIF.
@@ -144,13 +144,13 @@ CLASS /skyl/cl_no_obs_control IMPLEMENTATION.
         WHEN 'AT'.
           IF     mv_check_loop_ctl = abap_true
              AND (    /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                        iv_lexeme    = 'NEW' )        > 0
+                                                     iv_lexeme    = 'NEW' )        > 0
                    OR /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                        iv_lexeme    = 'END' )        > 0
+                                                     iv_lexeme    = 'END' )        > 0
                    OR /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                        iv_lexeme    = 'FIRST' )      > 0
+                                                     iv_lexeme    = 'FIRST' )      > 0
                    OR /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                        iv_lexeme    = 'LAST' )       > 0 ).
+                                                     iv_lexeme    = 'LAST' )       > 0 ).
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_control ).
           ENDIF.
@@ -158,7 +158,7 @@ CLASS /skyl/cl_no_obs_control IMPLEMENTATION.
         WHEN 'CATCH'.
           IF     mv_check_catch_system = abap_true
              AND /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                         iv_lexeme    = 'SYSTEM-EXCEPTIONS' ) = abap_true.
+                                                      iv_lexeme    = 'SYSTEM-EXCEPTIONS' ) = abap_true.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_control ).
           ENDIF.
@@ -166,7 +166,7 @@ CLASS /skyl/cl_no_obs_control IMPLEMENTATION.
         WHEN 'SET'.
           IF     mv_check_set_ext_check = abap_true
              AND /skyl/cl_ast_util=>find_token_sequence( is_statement = <ls_statement>
-                                                            it_expected  = VALUE #( ( `EXTENDED` ) ( `CHECK` ) ) ) > 0.
+                                                         it_expected  = VALUE #( ( `EXTENDED` ) ( `CHECK` ) ) ) > 0.
             ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-remove_ext_check
                                             iv_statement_from = lv_stmt_idx
                                             it_new_code       = VALUE #( ) ).
@@ -178,7 +178,7 @@ CLASS /skyl/cl_no_obs_control IMPLEMENTATION.
         WHEN 'EXIT'.
           IF     mv_check_exit_sql = abap_true
              AND /skyl/cl_ast_util=>find_token_sequence( is_statement = <ls_statement>
-                                                            it_expected  = VALUE #( ( `FROM` ) ( `SQL` ) ) ) > 0.
+                                                         it_expected  = VALUE #( ( `FROM` ) ( `SQL` ) ) ) > 0.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_control ).
           ENDIF.
@@ -204,9 +204,9 @@ CLASS /skyl/cl_no_obs_control IMPLEMENTATION.
     rv_is = abap_false.
 
     IF    /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                  iv_lexeme    = 'INTO' )      = abap_true
+                                               iv_lexeme    = 'INTO' )      = abap_true
        OR /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                  iv_lexeme    = 'APPENDING' ) = abap_true.
+                                               iv_lexeme    = 'APPENDING' ) = abap_true.
       RETURN.
     ENDIF.
 
@@ -233,9 +233,9 @@ CLASS /skyl/cl_no_obs_control IMPLEMENTATION.
 
       IF     <ls_token>-lexeme = 'COUNT('
          AND /skyl/cl_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                     iv_index     = lv_index + 1 ) = '*'
+                                                  iv_index     = lv_index + 1 ) = '*'
          AND /skyl/cl_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                     iv_index     = lv_index + 2 ) = ')'.
+                                                  iv_index     = lv_index + 2 ) = ')'.
         rv_is = abap_true.
         RETURN.
       ENDIF.
@@ -248,7 +248,7 @@ CLASS /skyl/cl_no_obs_control IMPLEMENTATION.
 
     rv_is = abap_false.
     lv_index = /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                                 iv_lexeme    = 'BY' ).
+                                              iv_lexeme    = 'BY' ).
     IF lv_index = 0.
       RETURN.
     ENDIF.

@@ -64,12 +64,12 @@ CLASS /skyl/cl_pref_func_module IMPLEMENTATION.
       ENDIF.
 
       IF /skyl/cl_ast_util=>match_token_sequence( is_statement = <ls_stmt>
-                                                     it_expected  = VALUE #( ( `CALL` ) ( `FUNCTION` ) ) ) = abap_false.
+                                                  it_expected  = VALUE #( ( `CALL` ) ( `FUNCTION` ) ) ) = abap_false.
         CONTINUE.
       ENDIF.
 
       ls_func_tok = /skyl/cl_ast_util=>get_token( is_statement = <ls_stmt>
-                                                     iv_index     = 3 ).
+                                                  iv_index     = 3 ).
       IF ls_func_tok-lexeme IS INITIAL.
         CONTINUE.
       ENDIF.

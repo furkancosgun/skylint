@@ -73,7 +73,7 @@ CLASS /skyl/cl_pref_check_subrc IMPLEMENTATION.
       ENDIF.
 
       ls_next_stmt = /skyl/cl_ast_util=>get_next_statement( it_statements    = is_procedure-statements
-                                                               iv_current_index = lv_stmt_idx ).
+                                                            iv_current_index = lv_stmt_idx ).
 
       IF ls_next_stmt-keyword IS INITIAL OR /skyl/cl_ast_util=>statement_checks_sy_subrc( ls_next_stmt ) = abap_false.
         report_statement( is_statement    = <ls_statement>
@@ -89,15 +89,15 @@ CLASS /skyl/cl_pref_check_subrc IMPLEMENTATION.
       WHEN 'SELECT'.
         IF     mv_check_select_single = abap_true
            AND /skyl/cl_ast_util=>matches_token_at( is_statement = is_statement
-                                                       iv_index     = 2
-                                                       iv_expected  = `SINGLE` )   = abap_true.
+                                                    iv_index     = 2
+                                                    iv_expected  = `SINGLE` )   = abap_true.
           rv_sets = abap_true.
         ENDIF.
       WHEN 'READ'.
         IF     mv_check_read_table = abap_true
            AND /skyl/cl_ast_util=>matches_token_at( is_statement = is_statement
-                                                       iv_index     = 2
-                                                       iv_expected  = `TABLE` )    = abap_true.
+                                                    iv_index     = 2
+                                                    iv_expected  = `TABLE` )    = abap_true.
           rv_sets = abap_true.
         ENDIF.
       WHEN 'FIND' OR 'SEARCH'.
@@ -106,19 +106,19 @@ CLASS /skyl/cl_pref_check_subrc IMPLEMENTATION.
         rv_sets = mv_check_assign.
       WHEN 'OPEN'.
         IF /skyl/cl_ast_util=>matches_token_at( is_statement = is_statement
-                                                   iv_index     = 2
-                                                   iv_expected  = `DATASET` ) = abap_true.
+                                                iv_index     = 2
+                                                iv_expected  = `DATASET` ) = abap_true.
           rv_sets = abap_true.
         ENDIF.
       WHEN 'UPDATE'.
         IF /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                             iv_lexeme    = 'SET' ) > 0.
+                                          iv_lexeme    = 'SET' ) > 0.
           rv_sets = abap_true.
         ENDIF.
       WHEN 'DELETE'.
         IF /skyl/cl_ast_util=>matches_token_at( is_statement = is_statement
-                                                   iv_index     = 2
-                                                   iv_expected  = `FROM` ) = abap_true.
+                                                iv_index     = 2
+                                                iv_expected  = `FROM` ) = abap_true.
           rv_sets = abap_true.
         ENDIF.
       WHEN 'INSERT'.

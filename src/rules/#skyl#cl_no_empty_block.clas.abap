@@ -131,7 +131,7 @@ CLASS /skyl/cl_no_empty_block IMPLEMENTATION.
       ENDCASE.
 
       ls_next_stmt = /skyl/cl_ast_util=>get_next_statement( it_statements    = is_procedure-statements
-                                                               iv_current_index = lv_stmt_idx ).
+                                                            iv_current_index = lv_stmt_idx ).
       IF     ls_next_stmt-keyword IS NOT INITIAL
          AND is_empty_control_block( iv_current_kw = <ls_statement>-keyword
                                      iv_next_kw    = ls_next_stmt-keyword )  = abap_true.

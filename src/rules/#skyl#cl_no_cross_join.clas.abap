@@ -45,7 +45,7 @@ CLASS /skyl/cl_no_cross_join IMPLEMENTATION.
       ENDIF.
 
       IF /skyl/cl_ast_util=>match_token_sequence( is_statement = <ls_statement>
-                                                     it_expected  = VALUE #( ( `CROSS` ) ( `JOIN` ) ) ).
+                                                  it_expected  = VALUE #( ( `CROSS` ) ( `JOIN` ) ) ).
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-cross_join ).
       ENDIF.

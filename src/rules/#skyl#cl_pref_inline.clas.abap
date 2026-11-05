@@ -85,22 +85,22 @@ CLASS /skyl/cl_pref_inline IMPLEMENTATION.
     CLEAR rt_quickfixes.
 
     lv_into_idx = /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                                    iv_lexeme    = 'INTO' ).
+                                                 iv_lexeme    = 'INTO' ).
     IF lv_into_idx <= 0 OR lv_into_idx >= lines( is_statement-tokens ).
       RETURN.
     ENDIF.
 
     lv_target_idx = lv_into_idx + 1.
     ls_target_tok = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                     iv_index     = lv_target_idx ).
+                                                  iv_index     = lv_target_idx ).
     IF ls_target_tok-lexeme <> iv_var.
       RETURN.
     ENDIF.
 
     lv_line = /skyl/cl_ast_util=>flatten_statement( is_statement = is_statement
-                                                       it_overrides = VALUE #( ( index  = lv_target_idx
-                                                                                 lexeme = |DATA({ iv_var })| ) )
-                                                       iv_suffix    = `.` ).
+                                                    it_overrides = VALUE #( ( index  = lv_target_idx
+                                                                              lexeme = |DATA({ iv_var })| ) )
+                                                    iv_suffix    = `.` ).
 
     ls_qf_del = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-inline_decl
                                   iv_statement_from = iv_decl_idx
@@ -127,13 +127,13 @@ CLASS /skyl/cl_pref_inline IMPLEMENTATION.
     CASE is_statement-keyword.
       WHEN 'COMPUTE'.
         IF /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                             iv_lexeme    = '?=' ) > 0.
+                                          iv_lexeme    = '?=' ) > 0.
           RETURN.
         ENDIF.
 
         /skyl/cl_ast_util=>parse_assignment( EXPORTING is_statement     = is_statement
-                                                IMPORTING ev_target        = lv_target
-                                                          ev_is_assignment = lv_is_asgn ).
+                                             IMPORTING ev_target        = lv_target
+                                                       ev_is_assignment = lv_is_asgn ).
         IF lv_is_asgn = abap_false OR lv_target <> iv_var.
           RETURN.
         ENDIF.
@@ -143,7 +143,7 @@ CLASS /skyl/cl_pref_inline IMPLEMENTATION.
         ENDIF.
 
         lv_eq_idx = /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                                      iv_lexeme    = '=' ).
+                                                   iv_lexeme    = '=' ).
         IF lv_eq_idx <= 0.
           RETURN.
         ENDIF.
@@ -156,9 +156,9 @@ CLASS /skyl/cl_pref_inline IMPLEMENTATION.
 
         ev_is_pure_write = abap_true.
         lv_line = /skyl/cl_ast_util=>flatten_statement( is_statement = is_statement
-                                                           it_overrides = VALUE #( ( index  = 1
-                                                                                     lexeme = |DATA({ iv_var })| ) )
-                                                           iv_suffix    = `.` ).
+                                                        it_overrides = VALUE #( ( index  = 1
+                                                                                  lexeme = |DATA({ iv_var })| ) )
+                                                        iv_suffix    = `.` ).
         ls_qf_del = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-inline_decl
                                       iv_statement_from = iv_decl_idx
                                       it_new_code       = VALUE #( ) ).
@@ -169,12 +169,12 @@ CLASS /skyl/cl_pref_inline IMPLEMENTATION.
 
       WHEN 'READ'.
         ls_src_tok = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                            iv_lexeme    = 'TABLE' ).
+                                                         iv_lexeme    = 'TABLE' ).
         IF ls_src_tok-lexeme = iv_var.
           RETURN.
         ENDIF.
         ls_into_tok = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                             iv_lexeme    = 'INTO' ).
+                                                          iv_lexeme    = 'INTO' ).
         IF ls_into_tok-lexeme = iv_var.
           ev_is_pure_write = abap_true.
           et_quickfixes = build_into_quickfix( is_statement = is_statement
@@ -184,12 +184,12 @@ CLASS /skyl/cl_pref_inline IMPLEMENTATION.
         ENDIF.
       WHEN 'LOOP'.
         ls_src_tok = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                            iv_lexeme    = 'AT' ).
+                                                         iv_lexeme    = 'AT' ).
         IF ls_src_tok-lexeme = iv_var.
           RETURN.
         ENDIF.
         ls_into_tok = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                             iv_lexeme    = 'INTO' ).
+                                                          iv_lexeme    = 'INTO' ).
         IF ls_into_tok-lexeme = iv_var.
           ev_is_pure_write = abap_true.
           et_quickfixes = build_into_quickfix( is_statement = is_statement
@@ -199,7 +199,7 @@ CLASS /skyl/cl_pref_inline IMPLEMENTATION.
         ENDIF.
       WHEN 'CATCH'.
         ls_into_tok = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                             iv_lexeme    = 'INTO' ).
+                                                          iv_lexeme    = 'INTO' ).
         IF ls_into_tok-lexeme = iv_var.
           ev_is_pure_write = abap_true.
           et_quickfixes = build_into_quickfix( is_statement = is_statement
@@ -234,7 +234,7 @@ CLASS /skyl/cl_pref_inline IMPLEMENTATION.
       ENDIF.
 
       IF /skyl/cl_ast_util=>match_token_sequence( is_statement = <ls_statement>
-                                                     it_expected  = VALUE #( ( `BEGIN` ) ( `OF` ) ) ).
+                                                  it_expected  = VALUE #( ( `BEGIN` ) ( `OF` ) ) ).
         CONTINUE.
       ENDIF.
 

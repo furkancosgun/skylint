@@ -61,7 +61,7 @@ CLASS /skyl/cl_no_dash_in_form IMPLEMENTATION.
         CONTINUE.
       ENDIF.
       lv_name = /skyl/cl_ast_util=>get_token_lexeme( is_statement = <ls_statement>
-                                                        iv_index     = 2 ).
+                                                     iv_index     = 2 ).
       IF NOT contains( val = lv_name
                        sub = '-' ).
         CONTINUE.
@@ -74,8 +74,8 @@ CLASS /skyl/cl_no_dash_in_form IMPLEMENTATION.
       lt_overrides = VALUE #( ( index  = 2
                                 lexeme = lv_clean ) ).
       lv_line = /skyl/cl_ast_util=>flatten_statement( is_statement = <ls_statement>
-                                                         it_overrides = lt_overrides
-                                                         iv_suffix    = '.' ).
+                                                      it_overrides = lt_overrides
+                                                      iv_suffix    = '.' ).
       ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-dash_to_underscore
                                       iv_statement_from = lv_idx
                                       it_new_code       = VALUE #( ( lv_line ) ) ).

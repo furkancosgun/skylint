@@ -108,7 +108,7 @@ CLASS /skyl/cl_pref_merge_ifs IMPLEMENTATION.
       lt_qf = build_elseif_fix( is_outer     = ls_outer
                                 is_procedure = is_procedure ).
       ls_else = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                     iv_index      = ls_outer-else_idx ).
+                                                  iv_index      = ls_outer-else_idx ).
       report_statement( is_statement    = ls_else
                         iv_finding_code = c_finding_codes-else_if
                         it_quickfixes   = lt_qf ).
@@ -127,7 +127,7 @@ CLASS /skyl/cl_pref_merge_ifs IMPLEMENTATION.
 
     WHILE lv_idx <= lv_total.
       ls_stmt = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                     iv_index      = lv_idx ).
+                                                  iv_index      = lv_idx ).
       IF ls_stmt-keyword IS INITIAL.
         EXIT.
       ENDIF.
@@ -165,7 +165,7 @@ CLASS /skyl/cl_pref_merge_ifs IMPLEMENTATION.
 
     rv_is = abap_false.
     ls_next = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                   iv_index      = iv_idx + 1 ).
+                                                iv_index      = iv_idx + 1 ).
     IF ls_next-keyword <> 'IF'.
       RETURN.
     ENDIF.
@@ -193,7 +193,7 @@ CLASS /skyl/cl_pref_merge_ifs IMPLEMENTATION.
     ENDIF.
 
     ls_next = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                   iv_index      = is_outer-else_idx + 1 ).
+                                                iv_index      = is_outer-else_idx + 1 ).
     IF ls_next-keyword <> 'IF'.
       RETURN.
     ENDIF.
@@ -221,9 +221,9 @@ CLASS /skyl/cl_pref_merge_ifs IMPLEMENTATION.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     ls_else = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                   iv_index      = is_outer-else_idx ).
+                                                iv_index      = is_outer-else_idx ).
     ls_inner = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                    iv_index      = is_outer-else_idx + 1 ).
+                                                 iv_index      = is_outer-else_idx + 1 ).
 
     LOOP AT ls_inner-tokens ASSIGNING <ls_token> FROM 2.
       IF lv_cond IS INITIAL.

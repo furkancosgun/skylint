@@ -121,11 +121,11 @@ CLASS /skyl/cl_pref_is_initial IMPLEMENTATION.
       ENDIF.
 
       IF /skyl/cl_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                 iv_index     = lv_close_idx ) = ')'.
+                                              iv_index     = lv_close_idx ) = ')'.
         ls_next_op  = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                       iv_index     = lv_close_idx + 1 ).
+                                                    iv_index     = lv_close_idx + 1 ).
         ls_next_val = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                       iv_index     = lv_close_idx + 2 ).
+                                                    iv_index     = lv_close_idx + 2 ).
         lv_op  = ls_next_op-lexeme.
         lv_val = ls_next_val-lexeme.
 
@@ -153,8 +153,8 @@ CLASS /skyl/cl_pref_is_initial IMPLEMENTATION.
         ENDIF.
 
         lv_line = /skyl/cl_ast_util=>flatten_statement( is_statement = is_statement
-                                                           it_overrides = lt_overrides
-                                                           it_deletions = lt_deletions ).
+                                                        it_overrides = lt_overrides
+                                                        it_deletions = lt_deletions ).
         ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-prefer_is_initial
                                         iv_statement_from = iv_stmt_idx
                                         it_new_code       = VALUE #( ( |{ lv_line }.| ) ) ).
@@ -210,14 +210,14 @@ CLASS /skyl/cl_pref_is_initial IMPLEMENTATION.
       lv_left_idx  = lv_idx - 1.
       lv_right_idx = lv_idx + 1.
       ls_left  = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                  iv_index     = lv_left_idx ).
+                                               iv_index     = lv_left_idx ).
       ls_right = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                  iv_index     = lv_right_idx ).
+                                               iv_index     = lv_right_idx ).
 
       IF is_initial_literal( ls_right ) = abap_true AND is_initial_literal( ls_left ) = abap_false.
         IF lines( is_statement-tokens ) > lv_right_idx.
           ls_after = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                      iv_index     = lv_right_idx + 1 ).
+                                                   iv_index     = lv_right_idx + 1 ).
           IF ls_after-lexeme = '+' OR ls_after-lexeme = '-' OR ls_after-lexeme = '*' OR ls_after-lexeme = '/'.
             CONTINUE.
           ENDIF.
@@ -234,7 +234,7 @@ CLASS /skyl/cl_pref_is_initial IMPLEMENTATION.
       ELSEIF is_initial_literal( ls_left ) = abap_true AND is_initial_literal( ls_right ) = abap_false.
         IF lv_left_idx > 1.
           ls_before = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                       iv_index     = lv_left_idx - 1 ).
+                                                    iv_index     = lv_left_idx - 1 ).
           IF ls_before-lexeme = '+' OR ls_before-lexeme = '-' OR ls_before-lexeme = '*' OR ls_before-lexeme = '/'.
             CONTINUE.
           ENDIF.
@@ -287,8 +287,8 @@ CLASS /skyl/cl_pref_is_initial IMPLEMENTATION.
     ENDIF.
 
     lv_line = /skyl/cl_ast_util=>flatten_statement( is_statement = is_statement
-                                                       it_overrides = lt_overrides
-                                                       it_deletions = lt_deletions ).
+                                                    it_overrides = lt_overrides
+                                                    it_deletions = lt_deletions ).
     ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-prefer_is_initial
                                     iv_statement_from = iv_stmt_idx
                                     it_new_code       = VALUE #( ( |{ lv_line }.| ) ) ).

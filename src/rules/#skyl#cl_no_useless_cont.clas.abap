@@ -59,7 +59,7 @@ CLASS /skyl/cl_no_useless_cont IMPLEMENTATION.
       ENDIF.
 
       ls_next = /skyl/cl_ast_util=>get_next_statement( it_statements    = is_procedure-statements
-                                                          iv_current_index = lv_idx ).
+                                                       iv_current_index = lv_idx ).
       IF is_loop_end_keyword( ls_next-keyword ) = abap_true.
         ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-remove_continue
                                         iv_statement_from = lv_idx

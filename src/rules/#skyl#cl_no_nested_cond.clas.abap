@@ -68,15 +68,15 @@ CLASS /skyl/cl_no_nested_cond IMPLEMENTATION.
 
     WHILE lv_idx <= lv_tok_cnt.
       ls_tok = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = lv_idx ).
+                                             iv_index     = lv_idx ).
 
       IF is_cond_or_switch( ls_tok ) = abap_true.
         lv_open = lv_idx + 1.
         ls_next = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                   iv_index     = lv_open ).
+                                                iv_index     = lv_open ).
         IF /skyl/cl_ast_util=>token_paren_delta( ls_next ) > 0.
           lv_close = /skyl/cl_ast_util=>find_matching_paren( is_statement  = is_statement
-                                                                iv_open_index = lv_open ).
+                                                             iv_open_index = lv_open ).
           IF lv_close > lv_open.
             scan_inner_expressions( is_statement = is_statement
                                     iv_from_idx  = lv_open + 1
@@ -97,10 +97,10 @@ CLASS /skyl/cl_no_nested_cond IMPLEMENTATION.
     lv_idx = iv_from_idx.
     WHILE lv_idx <= iv_to_idx.
       ls_tok = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = lv_idx ).
+                                             iv_index     = lv_idx ).
       IF is_cond_or_switch( ls_tok ) = abap_true.
         ls_next = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                   iv_index     = lv_idx + 1 ).
+                                                iv_index     = lv_idx + 1 ).
         IF /skyl/cl_ast_util=>token_paren_delta( ls_next ) > 0.
           report_token( is_token        = ls_tok
                         is_statement    = is_statement

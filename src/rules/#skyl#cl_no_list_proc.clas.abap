@@ -69,7 +69,7 @@ CLASS /skyl/cl_no_list_proc IMPLEMENTATION.
           ENDIF.
           IF     mv_ignore_write_to = abap_true
              AND /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                   iv_lexeme    = 'TO' )         > 0.
+                                                iv_lexeme    = 'TO' )         > 0.
             CONTINUE.
           ENDIF.
           report_statement( is_statement    = <ls_statement>
@@ -96,7 +96,7 @@ CLASS /skyl/cl_no_list_proc IMPLEMENTATION.
         WHEN 'READ'.
           IF     mv_check_other = abap_true
              AND /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                   iv_lexeme    = 'LINE' )       > 0.
+                                                iv_lexeme    = 'LINE' )       > 0.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-list_processing ).
           ENDIF.
@@ -104,7 +104,7 @@ CLASS /skyl/cl_no_list_proc IMPLEMENTATION.
         WHEN 'MODIFY'.
           IF     mv_check_other = abap_true
              AND /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                   iv_lexeme    = 'LINE' )       > 0.
+                                                iv_lexeme    = 'LINE' )       > 0.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-list_processing ).
           ENDIF.
@@ -112,7 +112,7 @@ CLASS /skyl/cl_no_list_proc IMPLEMENTATION.
         WHEN 'SCROLL'.
           IF     mv_check_other = abap_true
              AND /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                   iv_lexeme    = 'LIST' )       > 0.
+                                                iv_lexeme    = 'LIST' )       > 0.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-list_processing ).
           ENDIF.

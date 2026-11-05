@@ -48,7 +48,7 @@ CLASS /skyl/cl_pref_union IMPLEMENTATION.
       ENDIF.
 
       IF /skyl/cl_ast_util=>match_token_sequence( is_statement = <ls_statement>
-                                                     it_expected  = lt_seq ).
+                                                  it_expected  = lt_seq ).
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-prefer_union ).
       ENDIF.

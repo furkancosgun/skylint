@@ -73,7 +73,7 @@ CLASS /skyl/cl_no_many_parens IMPLEMENTATION.
       lv_index = 1.
       WHILE lv_index <= lv_count.
         ls_open = /skyl/cl_ast_util=>get_token( is_statement = <ls_statement>
-                                                   iv_index     = lv_index ).
+                                                iv_index     = lv_index ).
         lv_open = lv_index.
         IF ls_open-lexeme <> '('.
           lv_index += 1.
@@ -81,7 +81,7 @@ CLASS /skyl/cl_no_many_parens IMPLEMENTATION.
         ENDIF.
 
         lv_close = /skyl/cl_ast_util=>find_matching_paren( is_statement  = <ls_statement>
-                                                              iv_open_index = lv_open ).
+                                                           iv_open_index = lv_open ).
         IF lv_close = 0.
           lv_index += 1.
           CONTINUE.
@@ -91,14 +91,14 @@ CLASS /skyl/cl_no_many_parens IMPLEMENTATION.
                               iv_open      = lv_open
                               iv_close     = lv_close ) = abap_true.
           lv_line = /skyl/cl_ast_util=>flatten_statement( is_statement = <ls_statement>
-                                                             it_deletions = VALUE #( ( lv_open ) ( lv_close ) )
-                                                             iv_suffix    = `.` ).
+                                                          it_deletions = VALUE #( ( lv_open ) ( lv_close ) )
+                                                          iv_suffix    = `.` ).
           ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-remove_parentheses
                                           iv_statement_from = lv_tabix
                                           it_new_code       = VALUE #( ( lv_line ) ) ).
 
           ls_report = /skyl/cl_ast_util=>get_token( is_statement = <ls_statement>
-                                                       iv_index     = lv_open ).
+                                                    iv_index     = lv_open ).
           report_token( is_token        = ls_report
                         is_statement    = <ls_statement>
                         iv_finding_code = c_finding_codes-many_parentheses
@@ -123,23 +123,23 @@ CLASS /skyl/cl_no_many_parens IMPLEMENTATION.
     DATA ls_next        TYPE if_ci_atc_source_code_provider=>ty_token.
 
     IF    /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                            iv_lexeme    = 'VALUE' )         > 0
+                                         iv_lexeme    = 'VALUE' )         > 0
        OR /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                            iv_lexeme    = 'COND' )          > 0
+                                         iv_lexeme    = 'COND' )          > 0
        OR /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                            iv_lexeme    = 'CONV' )          > 0
+                                         iv_lexeme    = 'CONV' )          > 0
        OR /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                            iv_lexeme    = 'CORRESPONDING' ) > 0
+                                         iv_lexeme    = 'CORRESPONDING' ) > 0
        OR /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                            iv_lexeme    = 'REDUCE' )        > 0
+                                         iv_lexeme    = 'REDUCE' )        > 0
        OR /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                            iv_lexeme    = 'FILTER' )        > 0
+                                         iv_lexeme    = 'FILTER' )        > 0
        OR /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                            iv_lexeme    = 'EXACT' )         > 0
+                                         iv_lexeme    = 'EXACT' )         > 0
        OR /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                            iv_lexeme    = 'SWITCH' )        > 0
+                                         iv_lexeme    = 'SWITCH' )        > 0
        OR /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                            iv_lexeme    = 'NEW' )           > 0.
+                                         iv_lexeme    = 'NEW' )           > 0.
       RETURN.
     ENDIF.
 
@@ -148,19 +148,19 @@ CLASS /skyl/cl_no_many_parens IMPLEMENTATION.
 
     IF iv_open > 1.
       ls_prev = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                 iv_index     = iv_open - 1 ).
+                                              iv_index     = iv_open - 1 ).
       IF /skyl/cl_ast_util=>token_is_keyword( is_token  = ls_prev
-                                                 iv_lexeme = 'NOT' ) = abap_true.
+                                              iv_lexeme = 'NOT' ) = abap_true.
         RETURN.
       ENDIF.
     ENDIF.
 
     IF iv_close > iv_open + 2.
       ls_tok = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = iv_open + 1 ).
+                                             iv_index     = iv_open + 1 ).
       IF ls_tok-lexeme = '('.
         lv_inner_close = /skyl/cl_ast_util=>find_matching_paren( is_statement  = is_statement
-                                                                    iv_open_index = iv_open + 1 ).
+                                                                 iv_open_index = iv_open + 1 ).
         IF lv_inner_close = iv_close - 1.
           rv_yes = abap_true.
           RETURN.
@@ -182,7 +182,7 @@ CLASS /skyl/cl_no_many_parens IMPLEMENTATION.
     lv_depth = 0.
     WHILE lv_idx < iv_close.
       ls_tok = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = lv_idx ).
+                                             iv_index     = lv_idx ).
       IF lv_depth = 0 AND /skyl/cl_ast_util=>token_is_keyword( ls_tok ) = abap_true.
         IF    /skyl/cl_ast_util=>is_comparison_operator( ls_tok-lexeme ) = abap_true
            OR ls_tok-lexeme = 'IS'
@@ -208,18 +208,18 @@ CLASS /skyl/cl_no_many_parens IMPLEMENTATION.
 
     IF lv_has_or = abap_true AND iv_open > 1.
       ls_prev = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                 iv_index     = iv_open - 1 ).
+                                              iv_index     = iv_open - 1 ).
       IF /skyl/cl_ast_util=>token_is_keyword( is_token  = ls_prev
-                                                 iv_lexeme = 'AND' ) = abap_true.
+                                              iv_lexeme = 'AND' ) = abap_true.
         RETURN.
       ENDIF.
     ENDIF.
 
     IF lv_has_or = abap_true AND iv_close < lv_count.
       ls_next = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                 iv_index     = iv_close + 1 ).
+                                              iv_index     = iv_close + 1 ).
       IF /skyl/cl_ast_util=>token_is_keyword( is_token  = ls_next
-                                                 iv_lexeme = 'AND' ) = abap_true.
+                                              iv_lexeme = 'AND' ) = abap_true.
         RETURN.
       ENDIF.
     ENDIF.

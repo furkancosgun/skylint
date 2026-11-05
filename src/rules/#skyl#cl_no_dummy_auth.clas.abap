@@ -49,7 +49,7 @@ CLASS /skyl/cl_no_dummy_auth IMPLEMENTATION.
         CONTINUE.
       ENDIF.
       IF /skyl/cl_ast_util=>match_token_sequence( is_statement = <ls_statement>
-                                                     it_expected  = VALUE #( ( `AUTHORITY-CHECK` ) ( `OBJECT` ) ) ) = abap_false.
+                                                  it_expected  = VALUE #( ( `AUTHORITY-CHECK` ) ( `OBJECT` ) ) ) = abap_false.
         CONTINUE.
       ENDIF.
       IF find_dummy_token( <ls_statement> ) = 0.
@@ -70,7 +70,7 @@ CLASS /skyl/cl_no_dummy_auth IMPLEMENTATION.
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
       lv_idx = sy-tabix.
       IF /skyl/cl_ast_util=>token_is_keyword( is_token  = <ls_token>
-                                                 iv_lexeme = 'DUMMY' ) = abap_true.
+                                              iv_lexeme = 'DUMMY' ) = abap_true.
         rv_idx = lv_idx.
         RETURN.
       ENDIF.

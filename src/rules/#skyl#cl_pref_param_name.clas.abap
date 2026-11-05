@@ -87,7 +87,7 @@ CLASS /skyl/cl_pref_param_name IMPLEMENTATION.
       ENDIF.
 
       IF /skyl/cl_ast_util=>match_token_sequence( is_statement = <ls_statement>
-                                                     it_expected  = VALUE #( ( `CALL` ) ( `METHOD` ) ) ) = abap_true.
+                                                  it_expected  = VALUE #( ( `CALL` ) ( `METHOD` ) ) ) = abap_true.
         CONTINUE.
       ENDIF.
 
@@ -130,7 +130,7 @@ CLASS /skyl/cl_pref_param_name IMPLEMENTATION.
         lt_deletions = VALUE #( ( lv_param_idx )
                                 ( lv_param_idx + 1 ) ).
         lv_line = /skyl/cl_ast_util=>flatten_statement( is_statement = is_statement
-                                                           it_deletions = lt_deletions ).
+                                                        it_deletions = lt_deletions ).
         ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-omit_param
                                         iv_statement_from = iv_stmt_idx
                                         it_new_code       = VALUE #( ( |{ lv_line }.| ) ) ).
@@ -170,17 +170,17 @@ CLASS /skyl/cl_pref_param_name IMPLEMENTATION.
       ENDIF.
 
       /skyl/cl_rtti_util=>get_single_importing_param( EXPORTING iv_full_name  = ls_ref-full_name
-                                                         IMPORTING ev_param_name = lv_param_name ).
+                                                      IMPORTING ev_param_name = lv_param_name ).
       IF lv_param_name IS INITIAL.
         CONTINUE.
       ENDIF.
 
       lv_arg_lexeme = /skyl/cl_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                              iv_index     = lv_arg_idx ).
+                                                           iv_index     = lv_arg_idx ).
       lt_overrides = VALUE #( ( index  = lv_arg_idx
                                 lexeme = |{ lv_param_name } = { lv_arg_lexeme }| ) ).
       lv_line = /skyl/cl_ast_util=>flatten_statement( is_statement = is_statement
-                                                         it_overrides = lt_overrides ).
+                                                      it_overrides = lt_overrides ).
       ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-require_param
                                       iv_statement_from = iv_stmt_idx
                                       it_new_code       = VALUE #( ( |{ lv_line }.| ) ) ).
@@ -200,7 +200,7 @@ CLASS /skyl/cl_pref_param_name IMPLEMENTATION.
     rv_arg_index = 0.
 
     ls_tok = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                              iv_index     = iv_tok_idx ).
+                                           iv_index     = iv_tok_idx ).
     IF ls_tok-lexeme IS INITIAL.
       RETURN.
     ENDIF.
@@ -209,7 +209,7 @@ CLASS /skyl/cl_pref_param_name IMPLEMENTATION.
       lv_open_idx = iv_tok_idx.
     ELSE.
       ls_tok = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = iv_tok_idx + 1 ).
+                                             iv_index     = iv_tok_idx + 1 ).
       IF ls_tok-lexeme <> '('.
         RETURN.
       ENDIF.
@@ -218,14 +218,14 @@ CLASS /skyl/cl_pref_param_name IMPLEMENTATION.
 
     rv_arg_index = lv_open_idx + 1.
     ls_tok = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                              iv_index     = rv_arg_index ).
+                                           iv_index     = rv_arg_index ).
     IF ls_tok-lexeme IS INITIAL OR ls_tok-lexeme = ')'.
       rv_arg_index = 0.
       RETURN.
     ENDIF.
 
     ls_next_tok = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                   iv_index     = rv_arg_index + 1 ).
+                                                iv_index     = rv_arg_index + 1 ).
     IF ls_next_tok-lexeme = '='.
       rv_arg_index = 0.
     ENDIF.
@@ -241,15 +241,15 @@ CLASS /skyl/cl_pref_param_name IMPLEMENTATION.
     rv_param_index = 0.
 
     /skyl/cl_rtti_util=>get_single_importing_param( EXPORTING iv_full_name  = is_ref-full_name
-                                                       IMPORTING ev_param_name = lv_param_name
-                                                                 ev_is_single  = lv_is_single ).
+                                                    IMPORTING ev_param_name = lv_param_name
+                                                              ev_is_single  = lv_is_single ).
 
     IF lv_is_single = abap_false.
       RETURN.
     ENDIF.
 
     ls_tok = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                              iv_index     = iv_tok_idx ).
+                                           iv_index     = iv_tok_idx ).
     IF ls_tok-lexeme IS INITIAL.
       RETURN.
     ENDIF.
@@ -258,7 +258,7 @@ CLASS /skyl/cl_pref_param_name IMPLEMENTATION.
       lv_param_idx = iv_tok_idx + 1.
     ELSE.
       ls_tok = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = iv_tok_idx + 1 ).
+                                             iv_index     = iv_tok_idx + 1 ).
       IF ls_tok-lexeme <> '('.
         RETURN.
       ENDIF.
@@ -266,10 +266,10 @@ CLASS /skyl/cl_pref_param_name IMPLEMENTATION.
     ENDIF.
 
     ls_tok = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                              iv_index     = lv_param_idx ).
+                                           iv_index     = lv_param_idx ).
     IF ls_tok-lexeme = lv_param_name.
       ls_next_tok = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                     iv_index     = lv_param_idx + 1 ).
+                                                  iv_index     = lv_param_idx + 1 ).
       IF ls_next_tok-lexeme = '='.
         rv_param_index = lv_param_idx.
       ENDIF.

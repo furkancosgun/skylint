@@ -109,9 +109,9 @@ CLASS /skyl/cl_no_neg_cond IMPLEMENTATION.
     ASSIGN is_statement-tokens[ lv_from ] TO <ls_token>.
     IF     sy-subrc = 0
        AND /skyl/cl_ast_util=>token_is_keyword( is_token  = <ls_token>
-                                                   iv_lexeme = 'NOT' )    = abap_true
+                                                iv_lexeme = 'NOT' )    = abap_true
        AND is_prefer_is_not( is_statement = is_statement
-                             iv_index     = lv_from ) = abap_false.
+                             iv_index     = lv_from )                  = abap_false.
       rv_yes = abap_true.
       RETURN.
     ENDIF.
@@ -121,23 +121,23 @@ CLASS /skyl/cl_no_neg_cond IMPLEMENTATION.
       lv_idx = sy-tabix.
       IF lv_paren_depth = 0.
         IF    /skyl/cl_ast_util=>token_is_keyword( is_token  = <ls_token>
-                                                      iv_lexeme = 'AND' )    = abap_true
+                                                   iv_lexeme = 'AND' )    = abap_true
            OR /skyl/cl_ast_util=>token_is_keyword( is_token  = <ls_token>
-                                                      iv_lexeme = 'OR' )     = abap_true.
+                                                   iv_lexeme = 'OR' )     = abap_true.
           lv_has_and_or = abap_true.
         ELSEIF    /skyl/cl_ast_util=>token_is_keyword( is_token  = <ls_token>
-                                                          iv_lexeme = '<>' )     = abap_true
+                                                       iv_lexeme = '<>' )     = abap_true
                OR /skyl/cl_ast_util=>token_is_keyword( is_token  = <ls_token>
-                                                          iv_lexeme = 'NE' )     = abap_true.
+                                                       iv_lexeme = 'NE' )     = abap_true.
           lv_has_neg_op = abap_true.
         ELSEIF /skyl/cl_ast_util=>token_is_keyword( is_token  = <ls_token>
-                                                       iv_lexeme = 'NOT' ) = abap_true.
+                                                    iv_lexeme = 'NOT' ) = abap_true.
           ls_prev = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                     iv_index     = lv_idx - 1 ).
+                                                  iv_index     = lv_idx - 1 ).
           IF     /skyl/cl_ast_util=>token_is_keyword( is_token  = ls_prev
-                                                         iv_lexeme = 'IS' )  = abap_false
+                                                      iv_lexeme = 'IS' )  = abap_false
              AND is_prefer_is_not( is_statement = is_statement
-                                   iv_index     = lv_idx )                   = abap_false.
+                                   iv_index     = lv_idx )                = abap_false.
             lv_has_neg_op = abap_true.
           ENDIF.
         ENDIF.
@@ -155,8 +155,8 @@ CLASS /skyl/cl_no_neg_cond IMPLEMENTATION.
     ev_from = iv_from.
     ev_to   = iv_to.
     /skyl/cl_ast_util=>strip_outer_parens( EXPORTING it_tokens = it_tokens
-                                              CHANGING  cv_from   = ev_from
-                                                        cv_to     = ev_to ).
+                                           CHANGING  cv_from   = ev_from
+                                                     cv_to     = ev_to ).
   ENDMETHOD.
 
   METHOD is_prefer_is_not.
@@ -177,7 +177,7 @@ CLASS /skyl/cl_no_neg_cond IMPLEMENTATION.
           RETURN.
         WHEN 'IS'.
           ls_next = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                     iv_index     = lv_idx + 1 ).
+                                                  iv_index     = lv_idx + 1 ).
           IF /skyl/cl_ast_util=>token_is_keyword( ls_next ) = abap_true.
             CASE ls_next-lexeme.
               WHEN 'INITIAL' OR 'BOUND' OR 'ASSIGNED' OR 'SUPPLIED' OR 'REQUESTED' OR 'INSTANCE'.

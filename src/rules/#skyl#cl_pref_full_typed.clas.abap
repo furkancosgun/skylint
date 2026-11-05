@@ -66,7 +66,7 @@ CLASS /skyl/cl_pref_full_typed IMPLEMENTATION.
       lv_type = infer_constant_type( <ls_statement> ).
       IF lv_type IS NOT INITIAL.
         lv_val_idx = /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                       iv_lexeme    = 'VALUE' ).
+                                                    iv_lexeme    = 'VALUE' ).
         IF lv_val_idx > 0.
           lv_line = /skyl/cl_ast_util=>flatten_statement(
                         is_statement = <ls_statement>
@@ -93,13 +93,13 @@ CLASS /skyl/cl_pref_full_typed IMPLEMENTATION.
 
     rv_type = ''.
     lv_idx = /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                               iv_lexeme    = 'VALUE' ).
+                                            iv_lexeme    = 'VALUE' ).
     IF lv_idx <= 0 OR lv_idx >= /skyl/cl_ast_util=>token_count( is_statement ).
       RETURN.
     ENDIF.
 
     ls_tok = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                              iv_index     = lv_idx + 1 ).
+                                           iv_index     = lv_idx + 1 ).
     lv_len = strlen( ls_tok-lexeme ).
     IF lv_len >= 2.
       lv_last = lv_len - 1.
@@ -133,7 +133,7 @@ CLASS /skyl/cl_pref_full_typed IMPLEMENTATION.
     lv_is_struc = abap_false.
 
     lv_val_idx = /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                                   iv_lexeme    = 'VALUE' ).
+                                                iv_lexeme    = 'VALUE' ).
 
     LOOP AT is_statement-tokens INTO ls_tok.
       lv_idx = sy-tabix.

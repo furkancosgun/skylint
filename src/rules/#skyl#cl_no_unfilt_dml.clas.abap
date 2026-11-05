@@ -61,12 +61,12 @@ CLASS /skyl/cl_no_unfilt_dml IMPLEMENTATION.
     CASE is_statement-keyword.
       WHEN 'UPDATE'.
         IF /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                             iv_lexeme    = 'SET' ) = 0.
+                                          iv_lexeme    = 'SET' ) = 0.
           RETURN.
         ENDIF.
       WHEN 'DELETE'.
         IF /skyl/cl_ast_util=>match_token_sequence( is_statement = is_statement
-                                                       it_expected  = VALUE #( ( `DELETE` ) ( `FROM` ) ) ) = abap_false.
+                                                    it_expected  = VALUE #( ( `DELETE` ) ( `FROM` ) ) ) = abap_false.
           RETURN.
         ENDIF.
       WHEN OTHERS.
@@ -92,7 +92,7 @@ CLASS /skyl/cl_no_unfilt_dml IMPLEMENTATION.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
       IF lv_depth = 0 AND /skyl/cl_ast_util=>token_is_keyword( is_token  = <ls_token>
-                                                                  iv_lexeme = 'WHERE' ) = abap_true.
+                                                               iv_lexeme = 'WHERE' ) = abap_true.
         rv_has = abap_true.
         RETURN.
       ENDIF.

@@ -62,19 +62,19 @@ CLASS /skyl/cl_pref_loop_where IMPLEMENTATION.
     DATA ls_next TYPE if_ci_atc_source_code_provider=>ty_statement.
 
     ls_next = /skyl/cl_ast_util=>get_statement( it_statements = it_statements
-                                                   iv_index      = iv_loop_index + 1 ).
+                                                iv_index      = iv_loop_index + 1 ).
     IF ls_next-keyword <> 'IF'.
       RETURN.
     ENDIF.
 
     ls_next = /skyl/cl_ast_util=>get_statement( it_statements = it_statements
-                                                   iv_index      = iv_loop_index + 2 ).
+                                                iv_index      = iv_loop_index + 2 ).
     IF ls_next-keyword <> 'CONTINUE'.
       RETURN.
     ENDIF.
 
     ls_next = /skyl/cl_ast_util=>get_statement( it_statements = it_statements
-                                                   iv_index      = iv_loop_index + 3 ).
+                                                iv_index      = iv_loop_index + 3 ).
     IF ls_next-keyword <> 'ENDIF'.
       RETURN.
     ENDIF.

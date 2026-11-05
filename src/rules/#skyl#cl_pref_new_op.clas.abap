@@ -127,22 +127,22 @@ CLASS /skyl/cl_pref_new_op IMPLEMENTATION.
 
     rv_res = abap_false.
     IF /skyl/cl_ast_util=>match_token_sequence( is_statement = is_statement
-                                                   it_expected  = VALUE #( ( `CREATE` ) ( `OBJECT` ) ) ) = abap_false.
+                                                it_expected  = VALUE #( ( `CREATE` ) ( `OBJECT` ) ) ) = abap_false.
       RETURN.
     ENDIF.
 
     IF /skyl/cl_ast_util=>match_token_sequence( is_statement = is_statement
-                                                   it_expected  = VALUE #( ( `FOR` ) ( `TESTING` ) ) ) = abap_true.
+                                                it_expected  = VALUE #( ( `FOR` ) ( `TESTING` ) ) ) = abap_true.
       RETURN.
     ENDIF.
 
     IF /skyl/cl_ast_util=>match_token_sequence( is_statement = is_statement
-                                                   it_expected  = VALUE #( ( `PARAMETER-TABLE` ) ) ) = abap_true.
+                                                it_expected  = VALUE #( ( `PARAMETER-TABLE` ) ) ) = abap_true.
       RETURN.
     ENDIF.
 
     ls_tok = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                    iv_lexeme    = 'OBJECT' ).
+                                                 iv_lexeme    = 'OBJECT' ).
     lv_tok = ls_tok-lexeme.
     IF ls_tok-lexeme IS NOT INITIAL AND ( lv_tok(1) = `'` OR lv_tok(1) = '`' ).
       RETURN.
@@ -152,11 +152,11 @@ CLASS /skyl/cl_pref_new_op IMPLEMENTATION.
     lv_idx = 3.
     WHILE lv_idx <= lv_count.
       ls_type = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                 iv_index     = lv_idx ).
+                                              iv_index     = lv_idx ).
       IF     ls_type-lexeme = 'TYPE'
          AND ls_type-references IS INITIAL
          AND /skyl/cl_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                     iv_index     = lv_idx + 1 ) CP '(*'.
+                                                  iv_index     = lv_idx + 1 ) CP '(*'.
         RETURN.
       ENDIF.
       lv_idx += 1.
@@ -183,7 +183,7 @@ CLASS /skyl/cl_pref_new_op IMPLEMENTATION.
     ENDIF.
 
     lv_target = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                       iv_lexeme    = 'OBJECT' )-lexeme.
+                                                    iv_lexeme    = 'OBJECT' )-lexeme.
     IF lv_target IS INITIAL.
       RETURN.
     ENDIF.
@@ -192,14 +192,14 @@ CLASS /skyl/cl_pref_new_op IMPLEMENTATION.
     lv_idx = 4.
     WHILE lv_idx <= lv_count.
       lv_token = /skyl/cl_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                         iv_index     = lv_idx ).
+                                                      iv_index     = lv_idx ).
       CASE lv_token.
         WHEN 'TYPE'.
           IF lv_idx + 1 > lv_count.
             RETURN.
           ENDIF.
           lv_class = /skyl/cl_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                             iv_index     = lv_idx + 1 ).
+                                                          iv_index     = lv_idx + 1 ).
           IF lv_class IS INITIAL OR lv_class CS '('.
             RETURN.
           ENDIF.
@@ -209,16 +209,16 @@ CLASS /skyl/cl_pref_new_op IMPLEMENTATION.
           lv_first = abap_true.
           WHILE lv_idx + 2 <= lv_count.
             lv_name = /skyl/cl_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                              iv_index     = lv_idx ).
+                                                           iv_index     = lv_idx ).
             IF lv_name IS INITIAL.
               RETURN.
             ENDIF.
             IF /skyl/cl_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                       iv_index     = lv_idx + 1 ) <> '='.
+                                                    iv_index     = lv_idx + 1 ) <> '='.
               RETURN.
             ENDIF.
             lv_value = /skyl/cl_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                               iv_index     = lv_idx + 2 ).
+                                                            iv_index     = lv_idx + 2 ).
             IF lv_value IS INITIAL.
               RETURN.
             ENDIF.
@@ -252,7 +252,7 @@ CLASS /skyl/cl_pref_new_op IMPLEMENTATION.
   METHOD is_raise_exception_type.
     rv_res = abap_false.
     IF /skyl/cl_ast_util=>find_token_sequence( is_statement = is_statement
-                                                  it_expected  = VALUE #( ( `RAISE` ) ( `EXCEPTION` ) ( `TYPE` ) ) ) > 0.
+                                               it_expected  = VALUE #( ( `RAISE` ) ( `EXCEPTION` ) ( `TYPE` ) ) ) > 0.
       rv_res = abap_true.
     ENDIF.
   ENDMETHOD.
@@ -274,14 +274,14 @@ CLASS /skyl/cl_pref_new_op IMPLEMENTATION.
     ENDIF.
 
     IF /skyl/cl_ast_util=>match_token_sequence( is_statement = is_statement
-                                                   it_expected  = VALUE #( ( `RAISE` )
-                                                                           ( `EXCEPTION` )
-                                                                           ( `TYPE` ) ) ) = abap_false.
+                                                it_expected  = VALUE #( ( `RAISE` )
+                                                                        ( `EXCEPTION` )
+                                                                        ( `TYPE` ) ) ) = abap_false.
       RETURN.
     ENDIF.
 
     lv_class = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                      iv_lexeme    = 'TYPE' )-lexeme.
+                                                   iv_lexeme    = 'TYPE' )-lexeme.
     IF lv_class IS INITIAL OR lv_class CS '('.
       RETURN.
     ENDIF.
@@ -290,21 +290,21 @@ CLASS /skyl/cl_pref_new_op IMPLEMENTATION.
     lv_first = abap_true.
     WHILE lv_idx <= lv_count.
       lv_token = /skyl/cl_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                         iv_index     = lv_idx ).
+                                                      iv_index     = lv_idx ).
       IF lv_token <> 'EXPORTING'.
         RETURN.
       ENDIF.
       lv_idx += 1.
       WHILE lv_idx + 2 <= lv_count.
         lv_name = /skyl/cl_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                          iv_index     = lv_idx ).
+                                                       iv_index     = lv_idx ).
         IF    lv_name IS INITIAL
            OR /skyl/cl_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                      iv_index     = lv_idx + 1 ) <> '='.
+                                                   iv_index     = lv_idx + 1 ) <> '='.
           RETURN.
         ENDIF.
         lv_value = /skyl/cl_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                           iv_index     = lv_idx + 2 ).
+                                                        iv_index     = lv_idx + 2 ).
         IF lv_value IS INITIAL.
           RETURN.
         ENDIF.

@@ -56,21 +56,21 @@ CLASS /skyl/cl_pref_corresp IMPLEMENTATION.
       ENDIF.
 
       IF    /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                    iv_lexeme    = 'EXPANDING' )  = abap_true
+                                                 iv_lexeme    = 'EXPANDING' )  = abap_true
          OR /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                    iv_lexeme    = 'KEEPING' )    = abap_true.
+                                                 iv_lexeme    = 'KEEPING' )    = abap_true.
         CONTINUE.
       ENDIF.
 
       CLEAR ls_quickfix.
       IF     /skyl/cl_ast_util=>token_count( <ls_statement> )                   = 4
          AND /skyl/cl_ast_util=>matches_token_at( is_statement = <ls_statement>
-                                                     iv_index     = 3
-                                                     iv_expected  = `TO` )         = abap_true.
+                                                  iv_index     = 3
+                                                  iv_expected  = `TO` )         = abap_true.
         lv_src = /skyl/cl_ast_util=>get_token_lexeme( is_statement = <ls_statement>
-                                                         iv_index     = 2 ).
+                                                      iv_index     = 2 ).
         lv_dst = /skyl/cl_ast_util=>get_token_lexeme( is_statement = <ls_statement>
-                                                         iv_index     = 4 ).
+                                                      iv_index     = 4 ).
         lv_line = |{ lv_dst } = CORRESPONDING #( { lv_src } ).|.
         ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-prefer_corresponding
                                         iv_statement_from = lv_stmt_idx

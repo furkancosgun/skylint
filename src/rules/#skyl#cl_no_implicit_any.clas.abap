@@ -60,16 +60,16 @@ CLASS /skyl/cl_no_implicit_any IMPLEMENTATION.
     DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
 
     IF     /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                   iv_lexeme    = 'TYPE' )     = abap_false
+                                                iv_lexeme    = 'TYPE' )     = abap_false
        AND /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                   iv_lexeme    = 'LIKE' )     = abap_false.
+                                                iv_lexeme    = 'LIKE' )     = abap_false.
       report_statement( is_statement    = is_statement
                         iv_finding_code = c_finding_codes-implicit_any ).
       RETURN.
     ENDIF.
 
     ls_token = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                      iv_lexeme    = 'TYPE' ).
+                                                   iv_lexeme    = 'TYPE' ).
     IF ls_token IS NOT INITIAL AND is_generic_type( ls_token-lexeme ) = abap_true.
       report_statement( is_statement    = is_statement
                         iv_finding_code = c_finding_codes-implicit_any ).

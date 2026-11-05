@@ -55,9 +55,9 @@ CLASS /skyl/cl_no_empty_override IMPLEMENTATION.
     ENDIF.
 
     ls_first_stmt = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                         iv_index      = 1 ).
+                                                      iv_index      = 1 ).
     lv_method_name = /skyl/cl_ast_util=>get_token_lexeme( is_statement = ls_first_stmt
-                                                             iv_index     = 2 ).
+                                                          iv_index     = 2 ).
 
     IF mv_ignore_ctor = abap_true AND lv_method_name = 'CONSTRUCTOR'.
       RETURN.

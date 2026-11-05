@@ -95,7 +95,7 @@ CLASS /skyl/cl_no_dup_subexp IMPLEMENTATION.
 
     WHILE lv_i <= lv_tok_count.
       ls_tok = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = lv_i ).
+                                             iv_index     = lv_i ).
       IF ls_tok-lexeme IS INITIAL.
         EXIT.
       ENDIF.
@@ -152,7 +152,7 @@ CLASS /skyl/cl_no_dup_subexp IMPLEMENTATION.
 
     WHILE lv_j <= lv_count.
       ls_tok = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = lv_j ).
+                                             iv_index     = lv_j ).
       IF ls_tok-lexeme IS INITIAL.
         EXIT.
       ENDIF.
@@ -174,9 +174,9 @@ CLASS /skyl/cl_no_dup_subexp IMPLEMENTATION.
     ENDIF.
 
     ls_first = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = iv_from_idx ).
+                                             iv_index     = iv_from_idx ).
     ls_last  = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = ev_end_idx ).
+                                             iv_index     = ev_end_idx ).
 
     IF iv_from_idx = ev_end_idx.
       lv_close_pos = find( val = ls_first-lexeme
@@ -201,7 +201,7 @@ CLASS /skyl/cl_no_dup_subexp IMPLEMENTATION.
     lv_k = iv_from_idx + 1.
     WHILE lv_k < ev_end_idx.
       ls_tok = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = lv_k ).
+                                             iv_index     = lv_k ).
       ev_key = |{ ev_key } { ls_tok-lexeme }|.
       lv_k += 1.
     ENDWHILE.
@@ -239,7 +239,7 @@ CLASS /skyl/cl_no_dup_subexp IMPLEMENTATION.
 
     WHILE lv_j <= lv_count.
       ls_tok = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = lv_j ).
+                                             iv_index     = lv_j ).
       IF ls_tok-lexeme IS INITIAL.
         EXIT.
       ENDIF.
@@ -261,9 +261,9 @@ CLASS /skyl/cl_no_dup_subexp IMPLEMENTATION.
     ENDIF.
 
     ls_first = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = iv_from_idx ).
+                                             iv_index     = iv_from_idx ).
     ls_last  = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = ev_end_idx ).
+                                             iv_index     = ev_end_idx ).
 
     IF iv_from_idx = ev_end_idx.
       lv_close_pos = find( val = ls_first-lexeme
@@ -281,7 +281,7 @@ CLASS /skyl/cl_no_dup_subexp IMPLEMENTATION.
     lv_k = iv_from_idx + 1.
     WHILE lv_k < ev_end_idx.
       ls_tok = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = lv_k ).
+                                             iv_index     = lv_k ).
       ev_key = |{ ev_key } { ls_tok-lexeme }|.
       lv_k += 1.
     ENDWHILE.

@@ -88,8 +88,8 @@ CLASS ltcl_rtti_util IMPLEMENTATION.
     DATA lv_found TYPE abap_bool.
 
     /skyl/cl_rtti_util=>get_method_descr( EXPORTING iv_full_name = '\TY:/SKYL/CL_RTTI_UTIL\ME:DESCRIBE_CLASS'
-                                             IMPORTING es_method    = ls_meth
-                                                       ev_found     = lv_found ).
+                                          IMPORTING es_method    = ls_meth
+                                                    ev_found     = lv_found ).
     cl_abap_unit_assert=>assert_true( lv_found ).
     cl_abap_unit_assert=>assert_equals( exp = 'DESCRIBE_CLASS'
                                         act = ls_meth-name ).

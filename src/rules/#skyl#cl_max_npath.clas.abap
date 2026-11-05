@@ -110,7 +110,7 @@ CLASS /skyl/cl_max_npath IMPLEMENTATION.
     ENDIF.
 
     ls_first_stmt = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                         iv_index      = 1 ).
+                                                      iv_index      = 1 ).
     IF ls_first_stmt-keyword IS NOT INITIAL.
       report_statement( is_statement    = ls_first_stmt
                         iv_finding_code = c_finding_codes-npath_complexity ).
@@ -261,7 +261,7 @@ CLASS /skyl/cl_max_npath IMPLEMENTATION.
     <ls_frame>-branch_count         += 1.
     <ls_frame>-curr_branch_bool_ops  = count_bool_ops( is_statement ).
     IF /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                               iv_lexeme    = 'OTHERS' ) = abap_true.
+                                            iv_lexeme    = 'OTHERS' ) = abap_true.
       <ls_frame>-has_else = abap_true.
     ENDIF.
   ENDMETHOD.

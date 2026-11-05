@@ -77,8 +77,8 @@ CLASS /skyl/cl_no_me_reference IMPLEMENTATION.
         lt_overrides = VALUE #( ( index  = lv_tok_idx
                                   lexeme = lv_replace ) ).
         lv_line = /skyl/cl_ast_util=>flatten_statement( is_statement = <ls_statement>
-                                                           it_overrides = lt_overrides
-                                                           iv_suffix    = '.' ).
+                                                        it_overrides = lt_overrides
+                                                        iv_suffix    = '.' ).
         ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-omit_me
                                         iv_statement_from = lv_stmt_idx
                                         it_new_code       = VALUE #( ( lv_line ) ) ).

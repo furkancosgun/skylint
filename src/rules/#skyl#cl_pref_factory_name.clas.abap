@@ -52,9 +52,9 @@ CLASS /skyl/cl_pref_factory_name IMPLEMENTATION.
     ENDIF.
 
     ls_cls_stmt = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                       iv_index      = 1 ).
+                                                    iv_index      = 1 ).
     ls_cls_tok = /skyl/cl_ast_util=>get_token_after( is_statement = ls_cls_stmt
-                                                        iv_lexeme    = 'CLASS' ).
+                                                     iv_lexeme    = 'CLASS' ).
     lv_class_name = ls_cls_tok-lexeme.
     IF lv_class_name IS INITIAL.
       lv_class_name = is_procedure-id-main_unit-name.
@@ -66,12 +66,12 @@ CLASS /skyl/cl_pref_factory_name IMPLEMENTATION.
       ENDIF.
 
       IF /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_stmt>
-                                                 iv_lexeme    = 'RETURNING' ) = abap_false.
+                                              iv_lexeme    = 'RETURNING' ) = abap_false.
         CONTINUE.
       ENDIF.
 
       IF /skyl/cl_ast_util=>find_token_sequence( is_statement = <ls_stmt>
-                                                    it_expected  = VALUE #( ( `TYPE` ) ( `REF` ) ( `TO` ) ) ) = 0.
+                                                 it_expected  = VALUE #( ( `TYPE` ) ( `REF` ) ( `TO` ) ) ) = 0.
         CONTINUE.
       ENDIF.
 
@@ -84,7 +84,7 @@ CLASS /skyl/cl_pref_factory_name IMPLEMENTATION.
       ENDIF.
 
       ls_meth_tok = /skyl/cl_ast_util=>get_token_after( is_statement = <ls_stmt>
-                                                           iv_lexeme    = 'CLASS-METHODS' ).
+                                                        iv_lexeme    = 'CLASS-METHODS' ).
       lv_method_name = ls_meth_tok-lexeme.
       IF lv_method_name CP |{ mv_prefix }*|.
         CONTINUE.

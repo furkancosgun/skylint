@@ -67,7 +67,7 @@ CLASS /skyl/cl_no_unused_param IMPLEMENTATION.
     ENDIF.
 
     ls_first_stmt = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                         iv_index      = 1 ).
+                                                      iv_index      = 1 ).
 
     CASE is_procedure-id-kind.
       WHEN if_ci_atc_source_code_provider=>procedure_kinds-method.
@@ -124,8 +124,8 @@ CLASS /skyl/cl_no_unused_param IMPLEMENTATION.
 
     TRY.
         /skyl/cl_rtti_util=>get_procedure_method_descr( EXPORTING is_procedure = is_procedure
-                                                           IMPORTING es_method    = ls_method
-                                                                     ev_found     = lv_found ).
+                                                        IMPORTING es_method    = ls_method
+                                                                  ev_found     = lv_found ).
       CATCH cx_root.
         RETURN.
     ENDTRY.
@@ -173,7 +173,7 @@ CLASS /skyl/cl_no_unused_param IMPLEMENTATION.
         CONTINUE.
       ENDIF.
       /skyl/cl_ast_util=>parse_full_name( EXPORTING iv_full_name = ls_ref-full_name
-                                             IMPORTING ev_data_name = lv_name ).
+                                          IMPORTING ev_data_name = lv_name ).
       IF lv_name IS NOT INITIAL AND lv_name(1) <> '_'.
         APPEND lv_name TO rt_parameters.
       ENDIF.
@@ -193,7 +193,7 @@ CLASS /skyl/cl_no_unused_param IMPLEMENTATION.
                           iv_kind      = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
       LOOP AT lt_references ASSIGNING <ls_reference>.
         /skyl/cl_ast_util=>parse_full_name( EXPORTING iv_full_name = <ls_reference>-full_name
-                                               IMPORTING ev_data_name = lv_root ).
+                                            IMPORTING ev_data_name = lv_root ).
         IF lv_root IS NOT INITIAL.
           INSERT lv_root INTO TABLE rt_names.
         ENDIF.

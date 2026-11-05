@@ -45,7 +45,7 @@ CLASS /skyl/cl_no_bypass_buf IMPLEMENTATION.
       ENDIF.
 
       IF /skyl/cl_ast_util=>match_token_sequence( is_statement = <ls_statement>
-                                                     it_expected  = VALUE #( ( `BYPASSING` ) ( `BUFFER` ) ) ).
+                                                  it_expected  = VALUE #( ( `BYPASSING` ) ( `BUFFER` ) ) ).
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-bypass_buffer ).
       ENDIF.

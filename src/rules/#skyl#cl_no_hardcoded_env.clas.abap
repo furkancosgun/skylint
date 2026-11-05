@@ -120,31 +120,31 @@ CLASS /skyl/cl_no_hardcoded_env IMPLEMENTATION.
     rv_env_var = c_env_vars-none.
 
     IF /skyl/cl_ast_util=>match_system_field( is_token      = is_token
-                                                 iv_field_name = 'SYSID' ) = abap_true.
+                                              iv_field_name = 'SYSID' ) = abap_true.
       rv_env_var = c_env_vars-sysid.
     ELSEIF /skyl/cl_ast_util=>match_system_field( is_token      = is_token
-                                                     iv_field_name = 'MANDT' ) = abap_true.
+                                                  iv_field_name = 'MANDT' ) = abap_true.
       rv_env_var = c_env_vars-mandt.
     ELSEIF /skyl/cl_ast_util=>match_system_field( is_token      = is_token
-                                                     iv_field_name = 'HOST' ) = abap_true.
+                                                  iv_field_name = 'HOST' ) = abap_true.
       rv_env_var = c_env_vars-host.
     ELSEIF /skyl/cl_ast_util=>match_system_field( is_token      = is_token
-                                                     iv_field_name = 'DBSYS' ) = abap_true.
+                                                  iv_field_name = 'DBSYS' ) = abap_true.
       rv_env_var = c_env_vars-dbsys.
     ELSEIF /skyl/cl_ast_util=>match_system_field( is_token      = is_token
-                                                     iv_field_name = 'OPSYS' ) = abap_true.
+                                                  iv_field_name = 'OPSYS' ) = abap_true.
       rv_env_var = c_env_vars-opsys.
     ELSEIF /skyl/cl_ast_util=>match_system_field( is_token      = is_token
-                                                     iv_field_name = 'UNAME' ) = abap_true.
+                                                  iv_field_name = 'UNAME' ) = abap_true.
       rv_env_var = c_env_vars-uname.
     ELSEIF /skyl/cl_ast_util=>match_system_field( is_token      = is_token
-                                                     iv_field_name = 'TCODE' ) = abap_true.
+                                                  iv_field_name = 'TCODE' ) = abap_true.
       rv_env_var = c_env_vars-tcode.
     ELSEIF /skyl/cl_ast_util=>match_system_field( is_token      = is_token
-                                                     iv_field_name = 'REPID' ) = abap_true.
+                                                  iv_field_name = 'REPID' ) = abap_true.
       rv_env_var = c_env_vars-repid.
     ELSEIF /skyl/cl_ast_util=>match_system_field( is_token      = is_token
-                                                     iv_field_name = 'CPROG' ) = abap_true.
+                                                  iv_field_name = 'CPROG' ) = abap_true.
       rv_env_var = c_env_vars-cprog.
     ENDIF.
   ENDMETHOD.

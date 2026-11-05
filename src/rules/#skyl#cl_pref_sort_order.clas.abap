@@ -57,11 +57,11 @@ CLASS /skyl/cl_pref_sort_order IMPLEMENTATION.
     FIELD-SYMBOLS <ls_token> TYPE if_ci_atc_source_code_provider=>ty_token.
 
     lv_by_idx = /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                                  iv_lexeme    = 'BY' ).
+                                               iv_lexeme    = 'BY' ).
     lv_asc_idx = /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                                   iv_lexeme    = 'ASCENDING' ).
+                                                iv_lexeme    = 'ASCENDING' ).
     lv_desc_idx = /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                                    iv_lexeme    = 'DESCENDING' ).
+                                                 iv_lexeme    = 'DESCENDING' ).
 
     IF lv_by_idx = 0.
       IF mv_check_by_only = abap_false AND lv_asc_idx = 0 AND lv_desc_idx = 0.

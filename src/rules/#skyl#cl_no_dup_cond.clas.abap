@@ -118,7 +118,7 @@ CLASS /skyl/cl_no_dup_cond IMPLEMENTATION.
 
     WHILE lv_back_idx >= 1.
       ls_back_stmt = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                          iv_index      = lv_back_idx ).
+                                                       iv_index      = lv_back_idx ).
       IF ls_back_stmt-keyword IS INITIAL.
         EXIT.
       ENDIF.
@@ -185,7 +185,7 @@ CLASS /skyl/cl_no_dup_cond IMPLEMENTATION.
 
     WHILE lv_back_idx >= 1.
       ls_back_stmt = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                          iv_index      = lv_back_idx ).
+                                                       iv_index      = lv_back_idx ).
       IF ls_back_stmt-keyword IS INITIAL.
         EXIT.
       ENDIF.
@@ -308,8 +308,8 @@ CLASS /skyl/cl_no_dup_cond IMPLEMENTATION.
 
   METHOD strip_outer_parens.
     /skyl/cl_ast_util=>strip_outer_parens( EXPORTING is_statement = is_statement
-                                              CHANGING  cv_from      = cv_from
-                                                        cv_to        = cv_to ).
+                                           CHANGING  cv_from      = cv_from
+                                                     cv_to        = cv_to ).
   ENDMETHOD.
 
   METHOD normalize_operand_str.
@@ -382,7 +382,7 @@ CLASS /skyl/cl_no_dup_cond IMPLEMENTATION.
 
     WHILE lv_idx <= lines( it_statements ).
       ls_stmt = /skyl/cl_ast_util=>get_statement( it_statements = it_statements
-                                                     iv_index      = lv_idx ).
+                                                  iv_index      = lv_idx ).
       IF ls_stmt-keyword IS INITIAL.
         EXIT.
       ENDIF.

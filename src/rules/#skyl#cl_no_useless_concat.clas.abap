@@ -96,7 +96,7 @@ CLASS /skyl/cl_no_useless_concat IMPLEMENTATION.
         ENDIF.
 
         ls_oper_tok = /skyl/cl_ast_util=>get_token( is_statement = <ls_statement>
-                                                       iv_index     = ls_first_op-end_index + 1 ).
+                                                    iv_index     = ls_first_op-end_index + 1 ).
         IF is_concat_operator( ls_oper_tok ) = abap_false.
           lv_idx = ls_first_op-end_index + 1.
           CONTINUE.
@@ -109,7 +109,7 @@ CLASS /skyl/cl_no_useless_concat IMPLEMENTATION.
         lv_idx = ls_first_op-end_index + 1.
         WHILE lv_idx <= lv_tok_cnt.
           ls_oper_tok = /skyl/cl_ast_util=>get_token( is_statement = <ls_statement>
-                                                         iv_index     = lv_idx ).
+                                                      iv_index     = lv_idx ).
           IF is_concat_operator( ls_oper_tok ) = abap_false.
             EXIT.
           ENDIF.
@@ -174,7 +174,7 @@ CLASS /skyl/cl_no_useless_concat IMPLEMENTATION.
     ENDIF.
 
     ls_tok = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                              iv_index     = iv_index ).
+                                           iv_index     = iv_index ).
     lv_len = strlen( ls_tok-lexeme ).
     IF lv_len = 0.
       RETURN.
@@ -225,7 +225,7 @@ CLASS /skyl/cl_no_useless_concat IMPLEMENTATION.
 
       WHILE lv_scan <= lv_total.
         ls_curr = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                   iv_index     = lv_scan ).
+                                                iv_index     = lv_scan ).
         IF ls_curr-lexeme = '|'.
           rs_operand-end_index = lv_scan.
           IF lv_has_exp = abap_false.
@@ -245,7 +245,7 @@ CLASS /skyl/cl_no_useless_concat IMPLEMENTATION.
 
   METHOD is_concat_operator.
     rv_yes = /skyl/cl_ast_util=>token_is_keyword( is_token  = is_token
-                                                     iv_lexeme = '&&' ).
+                                                  iv_lexeme = '&&' ).
   ENDMETHOD.
 
   METHOD build_fold_quickfix.
@@ -292,8 +292,8 @@ CLASS /skyl/cl_no_useless_concat IMPLEMENTATION.
     ENDWHILE.
 
     lv_line = /skyl/cl_ast_util=>flatten_statement( is_statement = is_statement
-                                                       it_overrides = lt_overrides
-                                                       it_deletions = lt_deletions ).
+                                                    it_overrides = lt_overrides
+                                                    it_deletions = lt_deletions ).
     rs_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-fold_literals
                                     iv_statement_from = iv_statement_idx
                                     it_new_code       = VALUE #( ( |{ lv_line }.| ) ) ).

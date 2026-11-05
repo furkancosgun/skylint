@@ -188,7 +188,7 @@ CLASS /skyl/cl_pref_early_ret IMPLEMENTATION.
 
     WHILE lv_idx <= lines( it_statements ).
       ls_stmt = /skyl/cl_ast_util=>get_statement( it_statements = it_statements
-                                                     iv_index      = lv_idx ).
+                                                  iv_index      = lv_idx ).
       IF ls_stmt-keyword IS INITIAL.
         EXIT.
       ENDIF.
@@ -248,7 +248,7 @@ CLASS /skyl/cl_pref_early_ret IMPLEMENTATION.
 
     WHILE lv_scan_idx <= lv_max AND lv_if_depth > 0.
       ls_stmt = /skyl/cl_ast_util=>get_statement( it_statements = it_statements
-                                                     iv_index      = lv_scan_idx ).
+                                                  iv_index      = lv_scan_idx ).
       IF ls_stmt-keyword IS INITIAL.
         EXIT.
       ENDIF.
@@ -267,7 +267,7 @@ CLASS /skyl/cl_pref_early_ret IMPLEMENTATION.
               rv_yes = abap_true.
             ELSE.
               ls_after = /skyl/cl_ast_util=>get_next_statement( it_statements    = it_statements
-                                                                   iv_current_index = lv_scan_idx ).
+                                                                iv_current_index = lv_scan_idx ).
               IF lv_has_else = abap_false AND ls_after-keyword = 'ENDMETHOD'.
                 rv_yes = abap_true.
               ENDIF.
@@ -295,7 +295,7 @@ CLASS /skyl/cl_pref_early_ret IMPLEMENTATION.
     ENDIF.
 
     ls_first = /skyl/cl_ast_util=>get_next_statement( it_statements    = it_statements
-                                                         iv_current_index = iv_loop_idx ).
+                                                      iv_current_index = iv_loop_idx ).
     IF ls_first-keyword <> 'IF'.
       RETURN.
     ENDIF.
@@ -306,7 +306,7 @@ CLASS /skyl/cl_pref_early_ret IMPLEMENTATION.
 
     WHILE lv_scan_idx <= lv_max AND lv_if_depth > 0.
       ls_stmt = /skyl/cl_ast_util=>get_statement( it_statements = it_statements
-                                                     iv_index      = lv_scan_idx ).
+                                                  iv_index      = lv_scan_idx ).
       IF ls_stmt-keyword IS INITIAL.
         EXIT.
       ENDIF.
@@ -322,7 +322,7 @@ CLASS /skyl/cl_pref_early_ret IMPLEMENTATION.
           lv_if_depth -= 1.
           IF lv_if_depth = 0.
             ls_after = /skyl/cl_ast_util=>get_next_statement( it_statements    = it_statements
-                                                                 iv_current_index = lv_scan_idx ).
+                                                              iv_current_index = lv_scan_idx ).
             IF     lv_has_else = abap_false
                AND ( ls_after-keyword = 'ENDLOOP' OR ls_after-keyword = 'ENDDO' OR ls_after-keyword = 'ENDWHILE' ).
               rs_if = ls_first.
@@ -339,7 +339,7 @@ CLASS /skyl/cl_pref_early_ret IMPLEMENTATION.
 
     rv_yes = abap_false.
     ls_previous = /skyl/cl_ast_util=>get_previous_statement( it_statements    = it_statements
-                                                                iv_current_index = iv_index ).
+                                                             iv_current_index = iv_index ).
     IF ls_previous-keyword IS INITIAL.
       RETURN.
     ENDIF.
@@ -354,7 +354,7 @@ CLASS /skyl/cl_pref_early_ret IMPLEMENTATION.
         rv_yes = abap_true.
       WHEN 'RAISE'.
         ls_second = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                     iv_index     = 2 ).
+                                                  iv_index     = 2 ).
         rv_yes = xsdbool( ls_second-lexeme <> 'EVENT' OR ls_second-references IS NOT INITIAL ).
       WHEN OTHERS.
         rv_yes = abap_false.

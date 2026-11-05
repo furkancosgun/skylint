@@ -57,7 +57,7 @@ CLASS /skyl/cl_no_call_exporting IMPLEMENTATION.
       ENDIF.
 
       IF /skyl/cl_ast_util=>match_token_sequence( is_statement = <ls_statement>
-                                                     it_expected  = VALUE #( ( `CALL` ) ( `METHOD` ) ) ) = abap_true.
+                                                  it_expected  = VALUE #( ( `CALL` ) ( `METHOD` ) ) ) = abap_true.
         CONTINUE.
       ENDIF.
 
@@ -66,7 +66,7 @@ CLASS /skyl/cl_no_call_exporting IMPLEMENTATION.
       ENDIF.
 
       lv_tok_idx = /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                     iv_lexeme    = 'EXPORTING' ).
+                                                  iv_lexeme    = 'EXPORTING' ).
       IF lv_tok_idx > 0.
         ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-omit_exporting
                                         iv_statement_from = lv_stmt_idx

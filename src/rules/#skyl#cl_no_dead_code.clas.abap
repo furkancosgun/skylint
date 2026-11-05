@@ -140,7 +140,7 @@ CLASS /skyl/cl_no_dead_code IMPLEMENTATION.
 
     WHILE lv_idx <= lines( it_statements ).
       ls_stmt = /skyl/cl_ast_util=>get_statement( it_statements = it_statements
-                                                     iv_index      = lv_idx ).
+                                                  iv_index      = lv_idx ).
       CASE ls_stmt-keyword.
         WHEN 'IF' OR 'WHILE'.
           lv_depth += 1.
@@ -279,7 +279,7 @@ CLASS /skyl/cl_no_dead_code IMPLEMENTATION.
 
     IF lv_from = lv_to.
       ls_t1 = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                               iv_index     = lv_from ).
+                                            iv_index     = lv_from ).
       IF ls_t1-lexeme = 'ABAP_FALSE'.
         rv_res = abap_true.
       ENDIF.
@@ -288,11 +288,11 @@ CLASS /skyl/cl_no_dead_code IMPLEMENTATION.
 
     IF lv_to = lv_from + 2.
       ls_t1 = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                               iv_index     = lv_from ).
+                                            iv_index     = lv_from ).
       ls_t2 = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                               iv_index     = lv_from + 1 ).
+                                            iv_index     = lv_from + 1 ).
       ls_t3 = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                               iv_index     = lv_to ).
+                                            iv_index     = lv_to ).
 
       IF is_literal_or_constant( ls_t1 ) = abap_false OR is_literal_or_constant( ls_t3 ) = abap_false.
         RETURN.
@@ -306,15 +306,15 @@ CLASS /skyl/cl_no_dead_code IMPLEMENTATION.
 
     IF lv_to = lv_from + 4.
       ls_t1 = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                               iv_index     = lv_from ).
+                                            iv_index     = lv_from ).
       ls_t2 = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                               iv_index     = lv_from + 1 ).
+                                            iv_index     = lv_from + 1 ).
       ls_t3 = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                               iv_index     = lv_from + 2 ).
+                                            iv_index     = lv_from + 2 ).
       ls_t4 = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                               iv_index     = lv_from + 3 ).
+                                            iv_index     = lv_from + 3 ).
       ls_t5 = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                               iv_index     = lv_to ).
+                                            iv_index     = lv_to ).
 
       IF ls_t2-lexeme = 'BETWEEN' AND ls_t4-lexeme = 'AND'.
         IF     is_literal_or_constant( ls_t1 ) = abap_true
@@ -330,8 +330,8 @@ CLASS /skyl/cl_no_dead_code IMPLEMENTATION.
 
   METHOD strip_outer_parens.
     /skyl/cl_ast_util=>strip_outer_parens( EXPORTING is_statement = is_statement
-                                              CHANGING  cv_from      = cv_from
-                                                        cv_to        = cv_to ).
+                                           CHANGING  cv_from      = cv_from
+                                                     cv_to        = cv_to ).
   ENDMETHOD.
 
   METHOD is_number.

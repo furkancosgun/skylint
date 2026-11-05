@@ -46,13 +46,13 @@ CLASS /skyl/cl_no_protected_data IMPLEMENTATION.
       CASE <ls_statement>-keyword.
         WHEN 'PROTECTED'.
           IF /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                     iv_lexeme    = 'SECTION' ) = abap_true.
+                                                  iv_lexeme    = 'SECTION' ) = abap_true.
             lv_in_protected = abap_true.
           ENDIF.
 
         WHEN 'PUBLIC' OR 'PRIVATE'.
           IF /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                     iv_lexeme    = 'SECTION' ) = abap_true.
+                                                  iv_lexeme    = 'SECTION' ) = abap_true.
             lv_in_protected = abap_false.
           ENDIF.
 

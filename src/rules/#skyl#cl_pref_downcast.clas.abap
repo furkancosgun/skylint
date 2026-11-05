@@ -122,10 +122,10 @@ CLASS /skyl/cl_pref_downcast IMPLEMENTATION.
 
       IF mv_check_cast_syntax = abap_true.
         lv_tok_idx = /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                       iv_lexeme    = '?=' ).
+                                                    iv_lexeme    = '?=' ).
         IF lv_tok_idx > 1.
           ls_tok = /skyl/cl_ast_util=>get_token( is_statement = <ls_statement>
-                                                    iv_index     = lv_tok_idx ).
+                                                 iv_index     = lv_tok_idx ).
           IF /skyl/cl_ast_util=>token_is_keyword( ls_tok ) = abap_true.
             CLEAR: lt_overrides,
                    ls_quickfix.
@@ -133,7 +133,7 @@ CLASS /skyl/cl_pref_downcast IMPLEMENTATION.
             lt_overrides = VALUE #( ( index  = lv_tok_idx
                                       lexeme = '= CAST #(' ) ).
             lv_line = /skyl/cl_ast_util=>flatten_statement( is_statement = <ls_statement>
-                                                               it_overrides = lt_overrides ).
+                                                            it_overrides = lt_overrides ).
             ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-use_cast
                                             iv_statement_from = lv_stmt_idx
                                             it_new_code       = VALUE #( ( |{ lv_line } ).| ) ) ).
@@ -146,7 +146,7 @@ CLASS /skyl/cl_pref_downcast IMPLEMENTATION.
 
         IF <ls_statement>-keyword = 'MOVE'.
           lv_tok_idx = /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                         iv_lexeme    = '?TO' ).
+                                                      iv_lexeme    = '?TO' ).
           IF lv_tok_idx > 2 AND lines( <ls_statement>-tokens ) >= lv_tok_idx + 1.
             ls_quickfix = build_move_cast_quickfix( is_statement = <ls_statement>
                                                     iv_stmt_idx  = lv_stmt_idx
@@ -164,7 +164,7 @@ CLASS /skyl/cl_pref_downcast IMPLEMENTATION.
       ENDIF.
 
       lv_cast_idx = /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                      iv_lexeme    = 'CAST' ).
+                                                   iv_lexeme    = 'CAST' ).
       IF lv_cast_idx = 0.
         CONTINUE.
       ENDIF.
@@ -177,7 +177,7 @@ CLASS /skyl/cl_pref_downcast IMPLEMENTATION.
                      iv_usage_mode = if_ci_atc_source_code_provider=>usage_modes-definition_with_write ).
         IF     ls_ref-full_name IS NOT INITIAL
            AND /skyl/cl_ast_util=>token_is_inline_declaration( is_token  = ls_tok
-                                                                  iv_prefix = 'DATA' )  = abap_true.
+                                                               iv_prefix = 'DATA' )  = abap_true.
           lv_full_name = ls_ref-full_name.
           EXIT.
         ENDIF.
@@ -188,7 +188,7 @@ CLASS /skyl/cl_pref_downcast IMPLEMENTATION.
       ENDIF.
 
       lv_assign = /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                    iv_lexeme    = '=' ).
+                                                 iv_lexeme    = '=' ).
       IF lv_assign = 0 OR lv_cast_idx <> lv_assign + 1 OR lv_stmt_idx + 1 > lines( is_procedure-statements ).
         CONTINUE.
       ENDIF.
@@ -210,7 +210,7 @@ CLASS /skyl/cl_pref_downcast IMPLEMENTATION.
       ENDIF.
 
       ls_next = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                     iv_index      = ls_usage-statement_index ).
+                                                  iv_index      = ls_usage-statement_index ).
       IF is_supported_use( is_statement = ls_next
                            iv_index     = ls_usage-token_index ) = abap_false.
         CONTINUE.
@@ -251,7 +251,7 @@ CLASS /skyl/cl_pref_downcast IMPLEMENTATION.
     lv_idx = 2.
     WHILE lv_idx < iv_to_idx.
       ls_tok = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = lv_idx ).
+                                             iv_index     = lv_idx ).
       IF lv_src IS INITIAL.
         lv_src = ls_tok-lexeme.
       ELSE.
@@ -263,7 +263,7 @@ CLASS /skyl/cl_pref_downcast IMPLEMENTATION.
     lv_idx = iv_to_idx + 1.
     WHILE lv_idx <= lines( is_statement-tokens ).
       ls_tok = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = lv_idx ).
+                                             iv_index     = lv_idx ).
       IF lv_dst IS INITIAL.
         lv_dst = ls_tok-lexeme.
       ELSE.
@@ -325,14 +325,14 @@ CLASS /skyl/cl_pref_downcast IMPLEMENTATION.
 
     lv_count = /skyl/cl_ast_util=>token_count( is_statement ).
     lv_index = /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                                 iv_lexeme    = 'CAST' ).
+                                              iv_lexeme    = 'CAST' ).
     IF lv_index = 0.
       RETURN.
     ENDIF.
 
     WHILE lv_index <= lv_count.
       ls_token = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                  iv_index     = lv_index ).
+                                               iv_index     = lv_index ).
       IF rv_text IS INITIAL.
         rv_text = ls_token-lexeme.
       ELSE.
@@ -358,7 +358,7 @@ CLASS /skyl/cl_pref_downcast IMPLEMENTATION.
     CLEAR rv_suffix.
 
     lv_lex = /skyl/cl_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                     iv_index     = iv_index ).
+                                                  iv_index     = iv_index ).
     IF lv_lex IS INITIAL.
       RETURN.
     ENDIF.
@@ -385,7 +385,7 @@ CLASS /skyl/cl_pref_downcast IMPLEMENTATION.
           RETURN.
         ENDIF.
         ls_prev = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                   iv_index     = iv_index - 1 ).
+                                                iv_index     = iv_index - 1 ).
         rv_yes = xsdbool( ls_prev-lexeme = '=' AND ls_prev-references IS INITIAL ).
       WHEN '+CALL_METHOD'.
         rv_yes = xsdbool( iv_index = 1 ).

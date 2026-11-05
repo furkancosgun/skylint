@@ -297,10 +297,10 @@ CLASS /skyl/cl_rule_base IMPLEMENTATION.
   METHOD if_ci_atc_check~get_meta_data.
     IF mo_meta_data IS INITIAL.
       mo_meta_data = NEW /skyl/cl_meta_data( iv_description       = ms_config-description
-                                                      it_finding_codes     = ms_config-finding_codes
-                                                      it_quickfix_codes    = ms_config-quickfix_codes
-                                                      it_attributes        = ms_config-attributes
-                                                      iv_remote_enablement = ms_config-remote_enablement ).
+                                             it_finding_codes     = ms_config-finding_codes
+                                             it_quickfix_codes    = ms_config-quickfix_codes
+                                             it_attributes        = ms_config-attributes
+                                             iv_remote_enablement = ms_config-remote_enablement ).
     ENDIF.
     meta_data = mo_meta_data.
   ENDMETHOD.

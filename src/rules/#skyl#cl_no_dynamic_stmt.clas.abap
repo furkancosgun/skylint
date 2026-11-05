@@ -85,19 +85,19 @@ CLASS /skyl/cl_no_dynamic_stmt IMPLEMENTATION.
     CASE is_statement-keyword.
       WHEN 'CALL'.
         IF /skyl/cl_ast_util=>matches_token_at( is_statement = is_statement
-                                                   iv_index     = 2
-                                                   iv_expected  = 'FUNCTION' ) = abap_true.
+                                                iv_index     = 2
+                                                iv_expected  = 'FUNCTION' ) = abap_true.
           ls_token = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                            iv_lexeme    = 'FUNCTION' ).
+                                                         iv_lexeme    = 'FUNCTION' ).
           IF /skyl/cl_ast_util=>token_is_literal( ls_token ) = abap_false.
             rv_yes = abap_true.
             RETURN.
           ENDIF.
         ELSEIF /skyl/cl_ast_util=>matches_token_at( is_statement = is_statement
-                                                       iv_index     = 2
-                                                       iv_expected  = 'METHOD' ) = abap_true.
+                                                    iv_index     = 2
+                                                    iv_expected  = 'METHOD' ) = abap_true.
           ls_token = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                            iv_lexeme    = 'METHOD' ).
+                                                         iv_lexeme    = 'METHOD' ).
           IF ls_token-lexeme CS '(' AND ls_token-lexeme CS ')'.
             rv_yes = abap_true.
             RETURN.
@@ -105,7 +105,7 @@ CLASS /skyl/cl_no_dynamic_stmt IMPLEMENTATION.
         ENDIF.
       WHEN 'ASSIGN'.
         ls_token = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                    iv_index     = 2 ).
+                                                 iv_index     = 2 ).
         IF ( ls_token-lexeme = 'COMPONENT' AND ls_token-references IS INITIAL ) OR ls_token-lexeme CP '(*)'.
           rv_yes = abap_true.
           RETURN.
@@ -113,9 +113,9 @@ CLASS /skyl/cl_no_dynamic_stmt IMPLEMENTATION.
 
       WHEN 'CREATE'.
         IF /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                   iv_lexeme    = 'TYPE' ) = abap_true.
+                                                iv_lexeme    = 'TYPE' ) = abap_true.
           ls_token = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                            iv_lexeme    = 'TYPE' ).
+                                                         iv_lexeme    = 'TYPE' ).
           IF ls_token-lexeme CP '(*)'.
             rv_yes = abap_true.
             RETURN.
@@ -124,7 +124,7 @@ CLASS /skyl/cl_no_dynamic_stmt IMPLEMENTATION.
 
       WHEN 'SUBMIT' OR 'PERFORM'.
         ls_token = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                    iv_index     = 2 ).
+                                                 iv_index     = 2 ).
         IF ls_token-lexeme CP '(*)'.
           rv_yes = abap_true.
           RETURN.
@@ -132,9 +132,9 @@ CLASS /skyl/cl_no_dynamic_stmt IMPLEMENTATION.
 
       WHEN 'SORT'.
         IF /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                   iv_lexeme    = 'BY' ) = abap_true.
+                                                iv_lexeme    = 'BY' ) = abap_true.
           ls_token = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                            iv_lexeme    = 'BY' ).
+                                                         iv_lexeme    = 'BY' ).
           IF ls_token-lexeme CP '(*)'.
             rv_yes = abap_true.
             RETURN.

@@ -64,7 +64,7 @@ CLASS /skyl/cl_no_intf_class_ref IMPLEMENTATION.
                            ( `TO` ) ).
 
     ls_type_token = /skyl/cl_ast_util=>get_token_after_sequence( is_statement = is_statement
-                                                                    it_expected  = lt_expected ).
+                                                                 it_expected  = lt_expected ).
     IF    ls_type_token-lexeme IS INITIAL
        OR ls_type_token-lexeme  = is_procedure-id-name
        OR ls_type_token-lexeme  = 'DATA'

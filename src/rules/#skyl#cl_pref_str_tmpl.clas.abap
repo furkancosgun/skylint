@@ -79,7 +79,7 @@ CLASS /skyl/cl_pref_str_tmpl IMPLEMENTATION.
 
   METHOD is_byte_mode.
     rv_byte_mode = /skyl/cl_ast_util=>match_token_sequence( is_statement = is_statement
-                                                               it_expected  = VALUE #( ( `BYTE` ) ( `MODE` ) ) ).
+                                                            it_expected  = VALUE #( ( `BYTE` ) ( `MODE` ) ) ).
   ENDMETHOD.
 
   METHOD build_template.
@@ -96,20 +96,20 @@ CLASS /skyl/cl_pref_str_tmpl IMPLEMENTATION.
 
     CLEAR rv_line.
     ls_target = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                       iv_lexeme    = 'INTO' ).
+                                                    iv_lexeme    = 'INTO' ).
     lv_target = ls_target-lexeme.
     IF lv_target IS INITIAL.
       RETURN.
     ENDIF.
 
     ls_sep = /skyl/cl_ast_util=>get_token_after_sequence( is_statement = is_statement
-                                                             it_expected  = VALUE #( ( `SEPARATED` ) ( `BY` ) ) ).
+                                                          it_expected  = VALUE #( ( `SEPARATED` ) ( `BY` ) ) ).
     lv_sep = ls_sep-lexeme.
 
     IF /skyl/cl_ast_util=>match_token_sequence( is_statement = is_statement
-                                                   it_expected  = VALUE #( ( `LINES` ) ( `OF` ) ) ) = abap_true.
+                                                it_expected  = VALUE #( ( `LINES` ) ( `OF` ) ) ) = abap_true.
       ls_table = /skyl/cl_ast_util=>get_token_after_sequence( is_statement = is_statement
-                                                                 it_expected  = VALUE #( ( `LINES` ) ( `OF` ) ) ).
+                                                              it_expected  = VALUE #( ( `LINES` ) ( `OF` ) ) ).
       IF lv_sep IS INITIAL.
         rv_line = |{ lv_target } = concat_lines_of( table = { ls_table-lexeme } ).|.
       ELSE.
@@ -119,7 +119,7 @@ CLASS /skyl/cl_pref_str_tmpl IMPLEMENTATION.
     ENDIF.
 
     lv_into = /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                                iv_lexeme    = 'INTO' ).
+                                             iv_lexeme    = 'INTO' ).
     IF lv_into <= 2.
       RETURN.
     ENDIF.
@@ -127,7 +127,7 @@ CLASS /skyl/cl_pref_str_tmpl IMPLEMENTATION.
     lv_idx = 2.
     WHILE lv_idx < lv_into.
       APPEND /skyl/cl_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                     iv_index     = lv_idx ) TO lt_ops.
+                                                  iv_index     = lv_idx ) TO lt_ops.
       lv_idx += 1.
     ENDWHILE.
 

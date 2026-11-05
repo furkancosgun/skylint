@@ -72,28 +72,28 @@ CLASS /skyl/cl_max_bool_expr IMPLEMENTATION.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
       IF /skyl/cl_ast_util=>token_is_keyword( is_token  = <ls_token>
-                                                 iv_lexeme = 'BETWEEN' ) = abap_true.
+                                              iv_lexeme = 'BETWEEN' ) = abap_true.
         lv_between = abap_true.
         CONTINUE.
       ENDIF.
 
       IF     /skyl/cl_ast_util=>token_is_keyword( is_token  = <ls_token>
-                                                     iv_lexeme = 'AND' )    = abap_true
+                                                  iv_lexeme = 'AND' )    = abap_true
          AND lv_between = abap_true.
         lv_between = abap_false.
         CONTINUE.
       ENDIF.
 
       IF /skyl/cl_ast_util=>token_is_keyword( is_token  = <ls_token>
-                                                 iv_lexeme = 'AND' ) = abap_true.
+                                              iv_lexeme = 'AND' ) = abap_true.
         rv_count += 1.
         CONTINUE.
       ENDIF.
 
       IF    /skyl/cl_ast_util=>token_is_keyword( is_token  = <ls_token>
-                                                    iv_lexeme = 'OR' )     = abap_true
+                                                 iv_lexeme = 'OR' )     = abap_true
          OR /skyl/cl_ast_util=>token_is_keyword( is_token  = <ls_token>
-                                                    iv_lexeme = 'EQUIV' )  = abap_true.
+                                                 iv_lexeme = 'EQUIV' )  = abap_true.
         rv_count += 1.
       ENDIF.
     ENDLOOP.

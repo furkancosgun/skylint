@@ -53,24 +53,23 @@ CLASS /skyl/cl_no_rfc_err IMPLEMENTATION.
       ENDIF.
 
       IF /skyl/cl_ast_util=>match_token_sequence( is_statement = <ls_stmt>
-                                                     it_expected  = VALUE #( ( `CALL` ) ( `FUNCTION` ) ) ) = abap_false.
+                                                  it_expected  = VALUE #( ( `CALL` ) ( `FUNCTION` ) ) ) = abap_false.
         CONTINUE.
       ENDIF.
 
       lv_is_rfc = xsdbool(    /skyl/cl_ast_util=>find_token( is_statement = <ls_stmt>
-                                                                iv_lexeme    = 'DESTINATION' ) > 0
+                                                             iv_lexeme    = 'DESTINATION' ) > 0
                            OR /skyl/cl_ast_util=>find_token( is_statement = <ls_stmt>
-                                                                iv_lexeme    = 'STARTING' )    > 0 ).
+                                                             iv_lexeme    = 'STARTING' )    > 0 ).
       IF lv_is_rfc = abap_false.
         CONTINUE.
       ENDIF.
 
-      lv_is_group = xsdbool( /skyl/cl_ast_util=>match_token_sequence(
-                                 is_statement = <ls_stmt>
-                                 it_expected  = VALUE #( ( `IN` ) ( `GROUP` ) ) ) = abap_true ).
+      lv_is_group = xsdbool( /skyl/cl_ast_util=>match_token_sequence( is_statement = <ls_stmt>
+                                                                      it_expected  = VALUE #( ( `IN` ) ( `GROUP` ) ) ) = abap_true ).
 
       lv_exc_idx = /skyl/cl_ast_util=>find_token( is_statement = <ls_stmt>
-                                                     iv_lexeme    = 'EXCEPTIONS' ).
+                                                  iv_lexeme    = 'EXCEPTIONS' ).
 
       IF    lv_exc_idx = 0
          OR has_exception( is_statement = <ls_stmt>
@@ -93,7 +92,7 @@ CLASS /skyl/cl_no_rfc_err IMPLEMENTATION.
 
   METHOD has_exception.
     rv_has = xsdbool( /skyl/cl_ast_util=>find_token( is_statement   = is_statement
-                                                        iv_lexeme      = iv_exc_name
-                                                        iv_start_index = iv_exc_idx ) > 0 ).
+                                                     iv_lexeme      = iv_exc_name
+                                                     iv_start_index = iv_exc_idx ) > 0 ).
   ENDMETHOD.
 ENDCLASS.

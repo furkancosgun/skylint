@@ -106,27 +106,27 @@ CLASS /skyl/cl_pref_read_table IMPLEMENTATION.
     ENDIF.
 
     IF /skyl/cl_ast_util=>matches_token_at( is_statement = is_statement
-                                               iv_index     = 2
-                                               iv_expected  = `TABLE` ) = abap_false.
+                                            iv_index     = 2
+                                            iv_expected  = `TABLE` ) = abap_false.
       RETURN.
     ENDIF.
 
     IF /skyl/cl_ast_util=>find_token_sequence( is_statement = is_statement
-                                                  it_expected  = VALUE #( ( `BINARY` ) ( `SEARCH` ) ) ) > 0.
+                                               it_expected  = VALUE #( ( `BINARY` ) ( `SEARCH` ) ) ) > 0.
       RETURN.
     ENDIF.
 
     IF /skyl/cl_ast_util=>find_token_sequence( is_statement = is_statement
-                                                  it_expected  = VALUE #( ( `TRANSPORTING` ) ( `NO` ) ( `FIELDS` ) ) ) > 0.
+                                               it_expected  = VALUE #( ( `TRANSPORTING` ) ( `NO` ) ( `FIELDS` ) ) ) > 0.
       RETURN.
     ENDIF.
 
     lv_into_pos   = /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                                      iv_lexeme    = 'INTO' ).
+                                                   iv_lexeme    = 'INTO' ).
     lv_assign_pos = /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                                      iv_lexeme    = 'ASSIGNING' ).
+                                                   iv_lexeme    = 'ASSIGNING' ).
     lv_ref_pos    = /skyl/cl_ast_util=>find_token_sequence( is_statement = is_statement
-                                                               it_expected  = VALUE #( ( `REFERENCE` ) ( `INTO` ) ) ).
+                                                            it_expected  = VALUE #( ( `REFERENCE` ) ( `INTO` ) ) ).
 
     IF lv_into_pos > 0.
       lv_target_start = lv_into_pos + 1.
@@ -143,9 +143,9 @@ CLASS /skyl/cl_pref_read_table IMPLEMENTATION.
     ENDIF.
 
     lv_index_pos = /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                                     iv_lexeme    = 'INDEX' ).
+                                                  iv_lexeme    = 'INDEX' ).
     lv_key_pos   = /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                                     iv_lexeme    = 'WITH' ).
+                                                  iv_lexeme    = 'WITH' ).
 
     lt_cond_terms = VALUE #( ( `INTO` ) ( `ASSIGNING` ) ( `REFERENCE` ) ( `BINARY` ) ( `TRANSPORTING` ) ).
 
@@ -160,15 +160,15 @@ CLASS /skyl/cl_pref_read_table IMPLEMENTATION.
       ENDIF.
     ELSEIF lv_key_pos > 0.
       IF /skyl/cl_ast_util=>matches_token_at( is_statement = is_statement
-                                                 iv_index     = lv_key_pos + 1
-                                                 iv_expected  = `KEY` ) = abap_true.
+                                              iv_index     = lv_key_pos + 1
+                                              iv_expected  = `KEY` ) = abap_true.
         lv_cond_start = lv_key_pos + 2.
       ELSEIF     /skyl/cl_ast_util=>matches_token_at( is_statement = is_statement
-                                                         iv_index     = lv_key_pos + 1
-                                                         iv_expected  = `TABLE` )      = abap_true
+                                                      iv_index     = lv_key_pos + 1
+                                                      iv_expected  = `TABLE` )      = abap_true
              AND /skyl/cl_ast_util=>matches_token_at( is_statement = is_statement
-                                                         iv_index     = lv_key_pos + 2
-                                                         iv_expected  = `KEY` )        = abap_true.
+                                                      iv_index     = lv_key_pos + 2
+                                                      iv_expected  = `KEY` )        = abap_true.
         lv_cond_start = lv_key_pos + 3.
       ENDIF.
 
@@ -194,7 +194,7 @@ CLASS /skyl/cl_pref_read_table IMPLEMENTATION.
     lv_depth = 0.
     WHILE lv_idx <= iv_max.
       ls_tok = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = lv_idx ).
+                                             iv_index     = lv_idx ).
       IF     lv_depth           = 0
          AND ls_tok-references IS INITIAL
          AND line_exists( it_keywords[ table_line = ls_tok-lexeme ] ).
@@ -210,17 +210,17 @@ CLASS /skyl/cl_pref_read_table IMPLEMENTATION.
     rv_has = abap_false.
 
     IF /skyl/cl_ast_util=>find_token_sequence( is_statement = is_statement
-                                                  it_expected  = VALUE #( ( `BINARY` ) ( `SEARCH` ) ) ) > 0.
+                                               it_expected  = VALUE #( ( `BINARY` ) ( `SEARCH` ) ) ) > 0.
       RETURN.
     ENDIF.
 
     IF /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                         iv_lexeme    = 'WHERE' ) > 0.
+                                      iv_lexeme    = 'WHERE' ) > 0.
       RETURN.
     ENDIF.
 
     IF /skyl/cl_ast_util=>find_token_sequence( is_statement = is_statement
-                                                  it_expected  = VALUE #( ( `TRANSPORTING` ) ( `NO` ) ( `FIELDS` ) ) ) > 0.
+                                               it_expected  = VALUE #( ( `TRANSPORTING` ) ( `NO` ) ( `FIELDS` ) ) ) > 0.
       rv_has = abap_true.
     ENDIF.
   ENDMETHOD.

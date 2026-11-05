@@ -64,7 +64,7 @@ CLASS /skyl/cl_no_call_receiving IMPLEMENTATION.
       ENDIF.
 
       IF /skyl/cl_ast_util=>match_token_sequence( is_statement = <ls_statement>
-                                                     it_expected  = VALUE #( ( `CALL` ) ( `METHOD` ) ) ) = abap_true.
+                                                  it_expected  = VALUE #( ( `CALL` ) ( `METHOD` ) ) ) = abap_true.
         CONTINUE.
       ENDIF.
 
@@ -80,12 +80,12 @@ CLASS /skyl/cl_no_call_receiving IMPLEMENTATION.
 
   METHOD has_receiving.
     rv_has = /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                     iv_lexeme    = 'RECEIVING' ).
+                                                  iv_lexeme    = 'RECEIVING' ).
   ENDMETHOD.
 
   METHOD has_exceptions.
     rv_has = /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                     iv_lexeme    = 'EXCEPTIONS' ).
+                                                  iv_lexeme    = 'EXCEPTIONS' ).
   ENDMETHOD.
 
   METHOD build_receiving_quickfix.
@@ -95,13 +95,13 @@ CLASS /skyl/cl_no_call_receiving IMPLEMENTATION.
     DATA lt_deletions TYPE /skyl/cl_ast_util=>ty_token_deletions.
 
     lv_recv_idx = /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                                    iv_lexeme    = 'RECEIVING' ).
+                                                 iv_lexeme    = 'RECEIVING' ).
     IF lv_recv_idx = 0 OR lv_recv_idx + 3 > lines( is_statement-tokens ).
       RETURN.
     ENDIF.
 
     lv_target = /skyl/cl_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                        iv_index     = lv_recv_idx + 3 ).
+                                                     iv_index     = lv_recv_idx + 3 ).
     IF lv_target IS INITIAL.
       RETURN.
     ENDIF.
@@ -112,7 +112,7 @@ CLASS /skyl/cl_no_call_receiving IMPLEMENTATION.
                             ( lv_recv_idx + 3 ) ).
 
     lv_code = /skyl/cl_ast_util=>flatten_statement( is_statement = is_statement
-                                                       it_deletions = lt_deletions ).
+                                                    it_deletions = lt_deletions ).
 
     rs_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-omit_receiving
                                     iv_statement_from = iv_stmt_idx

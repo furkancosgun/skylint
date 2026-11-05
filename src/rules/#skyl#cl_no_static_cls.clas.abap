@@ -42,19 +42,19 @@ CLASS /skyl/cl_no_static_cls IMPLEMENTATION.
     ENDIF.
 
     ls_first_stmt = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                         iv_index      = 1 ).
+                                                      iv_index      = 1 ).
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       CASE <ls_statement>-keyword.
         WHEN 'CLASS-METHODS'.
           IF /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                     iv_lexeme    = 'CLASS_CONSTRUCTOR' ) = abap_false.
+                                                  iv_lexeme    = 'CLASS_CONSTRUCTOR' ) = abap_false.
             lv_static_cnt += 1.
           ENDIF.
 
         WHEN 'METHODS'.
           IF /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                     iv_lexeme    = 'CONSTRUCTOR' ) = abap_false.
+                                                  iv_lexeme    = 'CONSTRUCTOR' ) = abap_false.
             lv_has_inst = abap_true.
           ENDIF.
       ENDCASE.

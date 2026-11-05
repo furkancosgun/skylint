@@ -105,7 +105,7 @@ CLASS /skyl/cl_pref_naming_vars IMPLEMENTATION.
 
   METHOD matches_pattern.
     rv_matches = /skyl/cl_ast_util=>matches_regex( iv_text    = iv_text
-                                                      iv_pattern = iv_pattern ).
+                                                   iv_pattern = iv_pattern ).
   ENDMETHOD.
 
   METHOD get_stmt_name.

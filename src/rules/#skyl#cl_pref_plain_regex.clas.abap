@@ -58,16 +58,16 @@ CLASS /skyl/cl_pref_plain_regex IMPLEMENTATION.
     DATA lv_pattern TYPE string.
 
     lv_index = /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                                 iv_lexeme    = 'REGEX' ).
+                                              iv_lexeme    = 'REGEX' ).
     IF lv_index = 0.
       RETURN.
     ENDIF.
 
     ls_token = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = lv_index + 1 ).
+                                             iv_index     = lv_index + 1 ).
     IF ls_token-lexeme = '='.
       ls_token = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                  iv_index     = lv_index + 2 ).
+                                               iv_index     = lv_index + 2 ).
     ENDIF.
 
     IF /skyl/cl_ast_util=>token_is_literal( ls_token ) = abap_false.

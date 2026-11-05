@@ -41,7 +41,7 @@ CLASS /skyl/cl_no_raise_shortdump IMPLEMENTATION.
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF     <ls_statement>-keyword = 'RAISE'
          AND /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                     iv_lexeme    = 'SHORTDUMP' )  = abap_true.
+                                                  iv_lexeme    = 'SHORTDUMP' )  = abap_true.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-raise_shortdump ).
       ENDIF.

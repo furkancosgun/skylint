@@ -109,8 +109,8 @@ CLASS /skyl/cl_rtti_util IMPLEMENTATION.
 
     IF lv_target CP '\PR:*' OR lv_target CP '\TY:*'.
       /skyl/cl_ast_util=>parse_full_name( EXPORTING iv_full_name    = lv_target
-                                             IMPORTING ev_program_name = lv_program
-                                                       ev_class_name   = lv_class ).
+                                          IMPORTING ev_program_name = lv_program
+                                                    ev_class_name   = lv_class ).
       lv_target = build_rtti_name( iv_class_name   = lv_class
                                    iv_program_name = lv_program ).
     ELSEIF iv_program_name IS NOT INITIAL AND lv_target NP '\PROGRAM=*'.
@@ -204,10 +204,10 @@ CLASS /skyl/cl_rtti_util IMPLEMENTATION.
 
   METHOD parse_full_name.
     /skyl/cl_ast_util=>parse_full_name( EXPORTING iv_full_name    = iv_full_name
-                                           IMPORTING ev_program_name = ev_program_name
-                                                     ev_class_name   = ev_class_name
-                                                     ev_meth_name    = ev_meth_name
-                                                     ev_data_name    = ev_data_name ).
+                                        IMPORTING ev_program_name = ev_program_name
+                                                  ev_class_name   = ev_class_name
+                                                  ev_meth_name    = ev_meth_name
+                                                  ev_data_name    = ev_data_name ).
   ENDMETHOD.
 
   METHOD get_method_descr.
@@ -324,6 +324,6 @@ CLASS /skyl/cl_rtti_util IMPLEMENTATION.
 
   METHOD has_compiler_reference.
     rv_has = /skyl/cl_ast_util=>statement_has_reference( is_statement = is_statement
-                                                            iv_kind      = iv_kind ).
+                                                         iv_kind      = iv_kind ).
   ENDMETHOD.
 ENDCLASS.

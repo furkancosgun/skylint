@@ -47,7 +47,7 @@ CLASS /skyl/cl_max_attributes IMPLEMENTATION.
     ENDIF.
 
     ls_first_stmt = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                         iv_index      = 1 ).
+                                                      iv_index      = 1 ).
 
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       IF <ls_statement>-keyword = 'DATA' OR <ls_statement>-keyword = 'CLASS-DATA'.

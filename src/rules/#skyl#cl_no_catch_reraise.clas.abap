@@ -54,13 +54,13 @@ CLASS /skyl/cl_no_catch_reraise IMPLEMENTATION.
       lv_idx = sy-tabix.
 
       ls_next1 = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                      iv_index      = lv_idx + 1 ).
+                                                   iv_index      = lv_idx + 1 ).
       IF ls_next1-keyword <> 'RAISE'.
         CONTINUE.
       ENDIF.
 
       ls_next2 = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                      iv_index      = lv_idx + 2 ).
+                                                   iv_index      = lv_idx + 2 ).
       IF     ls_next2-keyword <> 'CATCH'
          AND ls_next2-keyword <> 'CLEANUP'
          AND ls_next2-keyword <> 'ENDTRY'.
@@ -86,13 +86,13 @@ CLASS /skyl/cl_no_catch_reraise IMPLEMENTATION.
     rv_yes = abap_false.
 
     ls_into = /skyl/cl_ast_util=>get_token_after( is_statement = is_catch
-                                                     iv_lexeme    = 'INTO' ).
+                                                  iv_lexeme    = 'INTO' ).
     IF ls_into-lexeme IS NOT INITIAL.
       lv_caught_var = /skyl/cl_ast_util=>extract_name_from_paren( ls_into-lexeme ).
     ENDIF.
 
     ls_exc = /skyl/cl_ast_util=>get_token_after( is_statement = is_raise
-                                                    iv_lexeme    = 'EXCEPTION' ).
+                                                 iv_lexeme    = 'EXCEPTION' ).
     IF ls_exc IS INITIAL.
       RETURN.
     ENDIF.
@@ -105,16 +105,16 @@ CLASS /skyl/cl_no_catch_reraise IMPLEMENTATION.
     ENDIF.
 
     IF    /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_raise
-                                                  iv_lexeme    = 'EXPORTING' ) = abap_true
+                                               iv_lexeme    = 'EXPORTING' ) = abap_true
        OR /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_raise
-                                                  iv_lexeme    = 'MESSAGE' )   = abap_true
+                                               iv_lexeme    = 'MESSAGE' )   = abap_true
        OR /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_raise
-                                                  iv_lexeme    = 'PREVIOUS' )  = abap_true.
+                                               iv_lexeme    = 'PREVIOUS' )  = abap_true.
       RETURN.
     ENDIF.
 
     ls_raised_type = /skyl/cl_ast_util=>get_token_after( is_statement = is_raise
-                                                            iv_lexeme    = ls_exc-lexeme ).
+                                                         iv_lexeme    = ls_exc-lexeme ).
     IF ls_raised_type IS INITIAL.
       RETURN.
     ENDIF.
@@ -127,7 +127,7 @@ CLASS /skyl/cl_no_catch_reraise IMPLEMENTATION.
     lv_idx = 2.
     DO.
       ls_tok = /skyl/cl_ast_util=>get_token( is_statement = is_catch
-                                                iv_index     = lv_idx ).
+                                             iv_index     = lv_idx ).
 
       IF ls_tok-lexeme IS INITIAL OR ls_tok-lexeme = 'INTO'.
         EXIT.

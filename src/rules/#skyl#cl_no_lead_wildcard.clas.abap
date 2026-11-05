@@ -52,12 +52,12 @@ CLASS /skyl/cl_no_lead_wildcard IMPLEMENTATION.
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
         lv_idx = sy-tabix.
         IF /skyl/cl_ast_util=>token_is_keyword( is_token  = <ls_token>
-                                                   iv_lexeme = 'LIKE' ) = abap_false.
+                                                iv_lexeme = 'LIKE' ) = abap_false.
           CONTINUE.
         ENDIF.
 
         ls_val_tok = /skyl/cl_ast_util=>get_token( is_statement = <ls_statement>
-                                                      iv_index     = lv_idx + 1 ).
+                                                   iv_index     = lv_idx + 1 ).
         IF ls_val_tok-references IS NOT INITIAL.
           CONTINUE.
         ENDIF.

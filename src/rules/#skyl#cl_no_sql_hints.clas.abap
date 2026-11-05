@@ -47,7 +47,7 @@ CLASS /skyl/cl_no_sql_hints IMPLEMENTATION.
 
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
         IF /skyl/cl_ast_util=>token_is_keyword( is_token  = <ls_token>
-                                                   iv_lexeme = '%_HINTS' ).
+                                                iv_lexeme = '%_HINTS' ).
           report_token( is_token        = <ls_token>
                         is_statement    = <ls_statement>
                         iv_finding_code = c_finding_codes-sql_hints ).

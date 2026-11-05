@@ -52,17 +52,17 @@ CLASS /skyl/cl_pref_test_attr IMPLEMENTATION.
       ENDIF.
 
       IF /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                 iv_lexeme    = 'DEFINITION' ) = abap_false.
+                                              iv_lexeme    = 'DEFINITION' ) = abap_false.
         CONTINUE.
       ENDIF.
 
       IF /skyl/cl_ast_util=>find_token_sequence( is_statement = <ls_statement>
-                                                    it_expected  = VALUE #( ( `FOR` ) ( `TESTING` ) ) ) = 0.
+                                                 it_expected  = VALUE #( ( `FOR` ) ( `TESTING` ) ) ) = 0.
         CONTINUE.
       ENDIF.
 
       IF mv_check_duration = abap_true AND /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                                                   iv_lexeme    = 'DURATION' ) = abap_false.
+                                                                                iv_lexeme    = 'DURATION' ) = abap_false.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-test_attributes ).
         CONTINUE.

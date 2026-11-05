@@ -161,7 +161,7 @@ CLASS /skyl/cl_no_unclosed_res IMPLEMENTATION.
     DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
 
     ls_tok = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                    iv_lexeme    = 'DATASET' ).
+                                                 iv_lexeme    = 'DATASET' ).
     rv_target = /skyl/cl_ast_util=>extract_name_from_paren( ls_tok-lexeme ).
   ENDMETHOD.
 
@@ -169,12 +169,12 @@ CLASS /skyl/cl_no_unclosed_res IMPLEMENTATION.
     DATA ls_tok TYPE if_ci_atc_source_code_provider=>ty_token.
 
     IF /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                               iv_lexeme    = 'HOLD' ) = abap_true.
+                                            iv_lexeme    = 'HOLD' ) = abap_true.
       ls_tok = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                      iv_lexeme    = 'HOLD' ).
+                                                   iv_lexeme    = 'HOLD' ).
     ELSE.
       ls_tok = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                      iv_lexeme    = 'CURSOR' ).
+                                                   iv_lexeme    = 'CURSOR' ).
     ENDIF.
 
     rv_target = /skyl/cl_ast_util=>extract_name_from_paren( ls_tok-lexeme ).

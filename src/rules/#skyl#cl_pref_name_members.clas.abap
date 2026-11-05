@@ -144,7 +144,7 @@ CLASS /skyl/cl_pref_name_members IMPLEMENTATION.
 
   METHOD matches_pattern.
     rv_matches = /skyl/cl_ast_util=>matches_regex( iv_text    = iv_text
-                                                      iv_pattern = iv_pattern ).
+                                                   iv_pattern = iv_pattern ).
   ENDMETHOD.
 
   METHOD get_stmt_name.
@@ -224,16 +224,16 @@ CLASS /skyl/cl_pref_name_members IMPLEMENTATION.
     DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
 
     ls_tok = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                    iv_lexeme    = is_statement-keyword ).
+                                                 iv_lexeme    = is_statement-keyword ).
     lv_name = ls_tok-lexeme.
     IF lv_name IS INITIAL.
       RETURN.
     ENDIF.
 
     IF    /skyl/cl_ast_util=>find_token_sequence( is_statement = is_statement
-                                                     it_expected  = VALUE #( ( `FOR` ) ( `EVENT` ) ) )   > 0
+                                                  it_expected  = VALUE #( ( `FOR` ) ( `EVENT` ) ) )   > 0
        OR /skyl/cl_ast_util=>find_token_sequence( is_statement = is_statement
-                                                     it_expected  = VALUE #( ( `FOR` ) ( `TESTING` ) ) ) > 0.
+                                                  it_expected  = VALUE #( ( `FOR` ) ( `TESTING` ) ) ) > 0.
       RETURN.
     ENDIF.
 

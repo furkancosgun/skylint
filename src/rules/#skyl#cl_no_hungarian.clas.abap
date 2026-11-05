@@ -92,10 +92,10 @@ CLASS /skyl/cl_no_hungarian IMPLEMENTATION.
     lv_name = ls_tok-lexeme.
 
     ls_type_tok = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                         iv_lexeme    = 'TYPE' ).
+                                                      iv_lexeme    = 'TYPE' ).
     IF ls_type_tok-lexeme IS INITIAL.
       ls_type_tok = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                           iv_lexeme    = 'LIKE' ).
+                                                        iv_lexeme    = 'LIKE' ).
     ENDIF.
     lv_type = ls_type_tok-lexeme.
 

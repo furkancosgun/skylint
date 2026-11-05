@@ -55,7 +55,7 @@ CLASS /skyl/cl_max_returns IMPLEMENTATION.
 
     IF lv_returns_count > mv_max_returns.
       ls_first_stmt = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                           iv_index      = 1 ).
+                                                        iv_index      = 1 ).
       report_statement( is_statement    = ls_first_stmt
                         iv_finding_code = c_finding_codes-too_many_returns ).
     ENDIF.

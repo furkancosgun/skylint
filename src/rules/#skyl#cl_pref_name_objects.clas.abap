@@ -183,7 +183,7 @@ CLASS /skyl/cl_pref_name_objects IMPLEMENTATION.
 
   METHOD matches_pattern.
     rv_matches = /skyl/cl_ast_util=>matches_regex( iv_text    = iv_text
-                                                      iv_pattern = iv_pattern ).
+                                                   iv_pattern = iv_pattern ).
   ENDMETHOD.
 
   METHOD get_stmt_name.
@@ -197,7 +197,7 @@ CLASS /skyl/cl_pref_name_objects IMPLEMENTATION.
       CASE <ls_stmt>-keyword.
         WHEN 'CLASS'.
           IF /skyl/cl_ast_util=>find_token_sequence( is_statement = <ls_stmt>
-                                                        it_expected  = VALUE #( ( `DEFINITION` ) ) ) > 0.
+                                                     it_expected  = VALUE #( ( `DEFINITION` ) ) ) > 0.
             check_class_statement( <ls_stmt> ).
           ENDIF.
 
@@ -221,14 +221,14 @@ CLASS /skyl/cl_pref_name_objects IMPLEMENTATION.
     DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
 
     ls_token = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                      iv_lexeme    = 'CLASS' ).
+                                                   iv_lexeme    = 'CLASS' ).
     lv_name = ls_token-lexeme.
     IF lv_name IS INITIAL.
       RETURN.
     ENDIF.
 
     IF /skyl/cl_ast_util=>find_token_sequence( is_statement = is_statement
-                                                  it_expected  = VALUE #( ( `FOR` ) ( `TESTING` ) ) ) > 0.
+                                               it_expected  = VALUE #( ( `FOR` ) ( `TESTING` ) ) ) > 0.
       IF matches_pattern( iv_text    = lv_name
                           iv_pattern = mv_class_test ) = abap_false.
         report_statement( is_statement    = is_statement
@@ -255,7 +255,7 @@ CLASS /skyl/cl_pref_name_objects IMPLEMENTATION.
     DATA ls_token TYPE if_ci_atc_source_code_provider=>ty_token.
 
     ls_token = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                      iv_lexeme    = 'INTERFACE' ).
+                                                   iv_lexeme    = 'INTERFACE' ).
     lv_name = ls_token-lexeme.
     IF lv_name IS INITIAL.
       RETURN.
@@ -279,7 +279,7 @@ CLASS /skyl/cl_pref_name_objects IMPLEMENTATION.
     DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
 
     ls_tok = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                    iv_lexeme    = is_statement-keyword ).
+                                                 iv_lexeme    = is_statement-keyword ).
     lv_name = ls_tok-lexeme.
     IF lv_name IS INITIAL.
       RETURN.
@@ -297,14 +297,14 @@ CLASS /skyl/cl_pref_name_objects IMPLEMENTATION.
     DATA ls_tok  TYPE if_ci_atc_source_code_provider=>ty_token.
 
     ls_tok = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                    iv_lexeme    = is_statement-keyword ).
+                                                 iv_lexeme    = is_statement-keyword ).
     lv_name = ls_tok-lexeme.
     IF lv_name IS INITIAL.
       RETURN.
     ENDIF.
 
     IF /skyl/cl_ast_util=>find_token_sequence( is_statement = is_statement
-                                                  it_expected  = VALUE #( ( `FOR` ) ( `EVENT` ) ) ) > 0.
+                                               it_expected  = VALUE #( ( `FOR` ) ( `EVENT` ) ) ) > 0.
       IF matches_pattern( iv_text    = lv_name
                           iv_pattern = mv_event_handler ) = abap_false.
         report_statement( is_statement    = is_statement
@@ -314,7 +314,7 @@ CLASS /skyl/cl_pref_name_objects IMPLEMENTATION.
     ENDIF.
 
     IF     /skyl/cl_ast_util=>find_token_sequence( is_statement = is_statement
-                                                      it_expected  = VALUE #( ( `FOR` ) ( `TESTING` ) ) ) > 0
+                                                   it_expected  = VALUE #( ( `FOR` ) ( `TESTING` ) ) ) > 0
        AND matches_pattern( iv_text    = lv_name
                             iv_pattern = mv_test_method ) = abap_false.
       report_statement( is_statement    = is_statement

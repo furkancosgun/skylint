@@ -114,14 +114,14 @@ CLASS /skyl/cl_no_concat_loop IMPLEMENTATION.
 
     IF is_statement-keyword = 'COMPUTE'.
       IF     /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                               iv_lexeme    = '&&' )       = 0
+                                            iv_lexeme    = '&&' )       = 0
          AND has_template_target( is_statement = is_statement
-                                  iv_full_name = ls_target-full_name )     = abap_false.
+                                  iv_full_name = ls_target-full_name )  = abap_false.
         RETURN.
       ENDIF.
     ELSE.
       lv_into = /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                                  iv_lexeme    = 'INTO' ).
+                                               iv_lexeme    = 'INTO' ).
       IF lv_into = 0.
         RETURN.
       ENDIF.

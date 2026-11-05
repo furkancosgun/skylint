@@ -48,15 +48,15 @@ CLASS /skyl/cl_max_inherit IMPLEMENTATION.
     ENDIF.
 
     ls_statement = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                        iv_index      = 1 ).
+                                                     iv_index      = 1 ).
     IF /skyl/cl_ast_util=>has_token_lexeme( is_statement = ls_statement
-                                               iv_lexeme    = 'INHERITING' ) = abap_false.
+                                            iv_lexeme    = 'INHERITING' ) = abap_false.
       RETURN.
     ENDIF.
 
     lv_class_name = /skyl/cl_ast_util=>get_declaration_name( ls_statement ).
     lv_rtti_name = /skyl/cl_rtti_util=>resolve_class_rtti_name( is_procedure  = is_procedure
-                                                                   iv_class_name = lv_class_name ).
+                                                                iv_class_name = lv_class_name ).
 
     TRY.
         lt_supers = /skyl/cl_rtti_util=>get_super_classes( lv_rtti_name ).

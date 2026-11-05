@@ -65,7 +65,7 @@ CLASS /skyl/cl_no_full_scan_sel IMPLEMENTATION.
 
       IF     mv_allow_up_to_n = abap_true
          AND /skyl/cl_ast_util=>find_token_sequence( is_statement = <ls_statement>
-                                                        it_expected  = VALUE #( ( `UP` ) ( `TO` ) ) ) > 0.
+                                                     it_expected  = VALUE #( ( `UP` ) ( `TO` ) ) ) > 0.
         CONTINUE.
       ENDIF.
 
@@ -82,7 +82,7 @@ CLASS /skyl/cl_no_full_scan_sel IMPLEMENTATION.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
       IF lv_depth = 0 AND /skyl/cl_ast_util=>token_is_keyword( is_token  = <ls_token>
-                                                                  iv_lexeme = 'WHERE' ) = abap_true.
+                                                               iv_lexeme = 'WHERE' ) = abap_true.
         rv_has = abap_true.
         RETURN.
       ENDIF.

@@ -75,10 +75,10 @@ CLASS /skyl/cl_no_unhandled_eml IMPLEMENTATION.
 
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
         IF /skyl/cl_ast_util=>token_is_keyword( is_token  = <ls_token>
-                                                   iv_lexeme = 'FAILED' ) = abap_true.
+                                                iv_lexeme = 'FAILED' ) = abap_true.
           lv_has_failed = abap_true.
         ELSEIF /skyl/cl_ast_util=>token_is_keyword( is_token  = <ls_token>
-                                                       iv_lexeme = 'REPORTED' ) = abap_true.
+                                                    iv_lexeme = 'REPORTED' ) = abap_true.
           lv_has_reported = abap_true.
         ENDIF.
       ENDLOOP.
@@ -109,18 +109,18 @@ CLASS /skyl/cl_no_unhandled_eml IMPLEMENTATION.
 
     IF     mv_check_modify = abap_true
        AND (    /skyl/cl_ast_util=>match_token_sequence( is_statement = is_statement
-                                                            it_expected  = VALUE #( ( `MODIFY` ) ( `ENTITIES` ) ) ) = abap_true
+                                                         it_expected  = VALUE #( ( `MODIFY` ) ( `ENTITIES` ) ) ) = abap_true
              OR /skyl/cl_ast_util=>match_token_sequence( is_statement = is_statement
-                                                            it_expected  = VALUE #( ( `MODIFY` ) ( `ENTITY` ) ) )   = abap_true ).
+                                                         it_expected  = VALUE #( ( `MODIFY` ) ( `ENTITY` ) ) )   = abap_true ).
       rv_yes = abap_true.
       RETURN.
     ENDIF.
 
     IF     mv_check_read = abap_true
        AND (    /skyl/cl_ast_util=>match_token_sequence( is_statement = is_statement
-                                                            it_expected  = VALUE #( ( `READ` ) ( `ENTITIES` ) ) ) = abap_true
+                                                         it_expected  = VALUE #( ( `READ` ) ( `ENTITIES` ) ) ) = abap_true
              OR /skyl/cl_ast_util=>match_token_sequence( is_statement = is_statement
-                                                            it_expected  = VALUE #( ( `READ` ) ( `ENTITY` ) ) )   = abap_true ).
+                                                         it_expected  = VALUE #( ( `READ` ) ( `ENTITY` ) ) )   = abap_true ).
       rv_yes = abap_true.
     ENDIF.
   ENDMETHOD.

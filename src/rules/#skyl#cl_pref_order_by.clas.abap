@@ -63,12 +63,12 @@ CLASS /skyl/cl_pref_order_by IMPLEMENTATION.
     lv_has_order_by = abap_false.
 
     IF /skyl/cl_ast_util=>find_token_sequence( is_statement = is_statement
-                                                  it_expected  = VALUE #( ( `UP` ) ( `TO` ) ) ) > 0.
+                                               it_expected  = VALUE #( ( `UP` ) ( `TO` ) ) ) > 0.
       lv_has_up_to = abap_true.
     ENDIF.
 
     IF /skyl/cl_ast_util=>find_token_sequence( is_statement = is_statement
-                                                  it_expected  = VALUE #( ( `ORDER` ) ( `BY` ) ) ) > 0.
+                                               it_expected  = VALUE #( ( `ORDER` ) ( `BY` ) ) ) > 0.
       lv_has_order_by = abap_true.
     ENDIF.
 

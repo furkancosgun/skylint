@@ -97,7 +97,7 @@ CLASS /skyl/cl_pref_case IMPLEMENTATION.
 
       WHILE lv_idx <= lv_total AND lv_depth > 0.
         ls_stmt = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                       iv_index      = lv_idx ).
+                                                    iv_index      = lv_idx ).
         CASE ls_stmt-keyword.
           WHEN 'IF'.
             lv_depth += 1.
@@ -134,7 +134,7 @@ CLASS /skyl/cl_pref_case IMPLEMENTATION.
     CLEAR rt_qf.
     lv_total = lines( is_procedure-statements ).
     ls_if_stmt = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                      iv_index      = iv_stmt_idx ).
+                                                   iv_index      = iv_stmt_idx ).
     IF ls_if_stmt-position-column > 1.
       lv_indent = repeat( val = ` `
                           occ = ls_if_stmt-position-column - 1 ).
@@ -157,7 +157,7 @@ CLASS /skyl/cl_pref_case IMPLEMENTATION.
 
     WHILE lv_idx <= lv_total AND lv_depth > 0.
       ls_stmt = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                     iv_index      = lv_idx ).
+                                                  iv_index      = lv_idx ).
       CASE ls_stmt-keyword.
         WHEN 'IF'.
           lv_depth += 1.
@@ -314,7 +314,7 @@ CLASS /skyl/cl_pref_case IMPLEMENTATION.
 
   METHOD strip_outer_parens.
     /skyl/cl_ast_util=>strip_outer_parens( EXPORTING is_statement = is_statement
-                                              CHANGING  cv_from      = cv_from
-                                                        cv_to        = cv_to ).
+                                           CHANGING  cv_from      = cv_from
+                                                     cv_to        = cv_to ).
   ENDMETHOD.
 ENDCLASS.

@@ -76,11 +76,11 @@ CLASS /skyl/cl_pref_final_data IMPLEMENTATION.
           CONTINUE.
         ENDIF.
         IF /skyl/cl_ast_util=>token_is_inline_declaration( is_token  = ls_token
-                                                              iv_prefix = 'FINAL' ) = abap_true.
+                                                           iv_prefix = 'FINAL' ) = abap_true.
           EXIT.
         ENDIF.
         IF /skyl/cl_ast_util=>token_is_inline_declaration( is_token  = ls_token
-                                                              iv_prefix = 'DATA' ) = abap_false.
+                                                           iv_prefix = 'DATA' ) = abap_false.
           CONTINUE.
         ENDIF.
         ls_declaration-token_index = lv_token_index.
@@ -101,11 +101,10 @@ CLASS /skyl/cl_pref_final_data IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      lv_line     = /skyl/cl_ast_util=>flatten_statement(
-                        is_statement = <ls_statement>
-                        it_overrides = VALUE #( ( index  = ls_declaration-token_index
-                                                  lexeme = |FINAL({ lv_name })| ) )
-                        iv_suffix    = `.` ).
+      lv_line     = /skyl/cl_ast_util=>flatten_statement( is_statement = <ls_statement>
+                                                          it_overrides = VALUE #( ( index  = ls_declaration-token_index
+                                                                                    lexeme = |FINAL({ lv_name })| ) )
+                                                          iv_suffix    = `.` ).
       ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-to_final
                                       iv_statement_from = lv_idx
                                       it_new_code       = VALUE #( ( lv_line ) ) ).
@@ -119,6 +118,6 @@ CLASS /skyl/cl_pref_final_data IMPLEMENTATION.
 
   METHOD is_written.
     rv_written = /skyl/cl_ast_util=>has_data_write_usage( it_statements = it_statements
-                                                             iv_full_name  = iv_full_name ).
+                                                          iv_full_name  = iv_full_name ).
   ENDMETHOD.
 ENDCLASS.

@@ -16,7 +16,7 @@ CLASS /skyl/cl_pref_cloud_ready DEFINITION
 
   PRIVATE SECTION.
     CONSTANTS c_pseudo_comment TYPE string VALUE 'PREF_CLOUD_READY'.
-    CONSTANTS c_at_pf_regex TYPE string VALUE `^PF\d\d?$`.
+    CONSTANTS c_at_pf_regex    TYPE string VALUE `^PF\d\d?$`.
     CONSTANTS:
       BEGIN OF c_create_object_sections,
         type            TYPE string VALUE 'TYPE',
@@ -45,19 +45,19 @@ CLASS /skyl/cl_pref_cloud_ready DEFINITION
       RETURNING VALUE(rv_length) TYPE i.
 
     METHODS is_at_pf
-      IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
+      IMPORTING is_statement     TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_result) TYPE abap_bool.
 
     METHODS is_sort_dataset
-      IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
+      IMPORTING is_statement     TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_result) TYPE abap_bool.
 
     METHODS is_ole_create
-      IMPORTING is_statement      TYPE if_ci_atc_source_code_provider=>ty_statement
+      IMPORTING is_statement     TYPE if_ci_atc_source_code_provider=>ty_statement
       RETURNING VALUE(rv_result) TYPE abap_bool.
 
     METHODS is_create_object_section
-      IMPORTING iv_lexeme         TYPE string
+      IMPORTING iv_lexeme        TYPE string
       RETURNING VALUE(rv_result) TYPE abap_bool.
 
 ENDCLASS.
@@ -65,13 +65,14 @@ ENDCLASS.
 
 CLASS /skyl/cl_pref_cloud_ready IMPLEMENTATION.
   METHOD constructor.
-    super->constructor( VALUE #( description       = 'Statements not available in ABAP Cloud'
-                                 remote_enablement = abap_true
-                                 finding_codes     = VALUE #(
-                                     ( code           = c_finding_codes-cloud_forbidden
-                                       severity       = if_ci_atc_check=>finding_severities-warning
-                                       text           = 'Statement is not available in ABAP Cloud; use a released API'
-                                       pseudo_comment = c_pseudo_comment ) ) ) ).
+    super->constructor(
+        VALUE #( description       = 'Statements not available in ABAP Cloud'
+                 remote_enablement = abap_true
+                 finding_codes     = VALUE #(
+                     ( code           = c_finding_codes-cloud_forbidden
+                       severity       = if_ci_atc_check=>finding_severities-warning
+                       text           = 'Statement is not supported in ABAP Cloud; use modern syntax or a released API'
+                       pseudo_comment = c_pseudo_comment ) ) ) ).
     load_patterns( ).
   ENDMETHOD.
 

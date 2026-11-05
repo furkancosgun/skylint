@@ -82,8 +82,8 @@ CLASS /skyl/cl_pref_join_type IMPLEMENTATION.
       ENDIF.
 
       lv_line = /skyl/cl_ast_util=>flatten_statement( is_statement = <ls_statement>
-                                                         it_overrides = lt_overrides
-                                                         iv_suffix    = '.' ).
+                                                      it_overrides = lt_overrides
+                                                      iv_suffix    = '.' ).
       ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-add_inner
                                       iv_statement_from = lv_stmt_idx
                                       it_new_code       = VALUE #( ( lv_line ) ) ).
@@ -99,7 +99,7 @@ CLASS /skyl/cl_pref_join_type IMPLEMENTATION.
 
     rv_is = abap_false.
     ls_prev = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                               iv_index     = iv_token_idx - 1 ).
+                                            iv_index     = iv_token_idx - 1 ).
     IF ls_prev-references IS NOT INITIAL.
       RETURN.
     ENDIF.

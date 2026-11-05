@@ -58,8 +58,8 @@ CLASS /skyl/cl_pref_std_table IMPLEMENTATION.
       ENDIF.
 
       lv_line = /skyl/cl_ast_util=>flatten_statement( is_statement = <ls_statement>
-                                                         it_overrides = lt_overrides
-                                                         iv_suffix    = '.' ).
+                                                      it_overrides = lt_overrides
+                                                      iv_suffix    = '.' ).
       ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-add_standard
                                       iv_statement_from = lv_stmt_idx
                                       it_new_code       = VALUE #( ( lv_line ) ) ).
@@ -81,8 +81,8 @@ CLASS /skyl/cl_pref_std_table IMPLEMENTATION.
 
     WHILE lv_start > 0 AND lv_start <= lv_count.
       lv_index = /skyl/cl_ast_util=>find_token_sequence( is_statement   = is_statement
-                                                            it_expected    = VALUE #( ( `TYPE` ) ( `TABLE` ) ( `OF` ) )
-                                                            iv_start_index = lv_start ).
+                                                         it_expected    = VALUE #( ( `TYPE` ) ( `TABLE` ) ( `OF` ) )
+                                                         iv_start_index = lv_start ).
       IF lv_index = 0.
         EXIT.
       ENDIF.

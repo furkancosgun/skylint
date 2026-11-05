@@ -44,13 +44,13 @@ CLASS /skyl/cl_no_loop_into IMPLEMENTATION.
       ENDIF.
 
       IF     /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                     iv_lexeme    = 'AT' )         = abap_true
+                                                  iv_lexeme    = 'AT' )         = abap_true
          AND /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                     iv_lexeme    = 'INTO' )       = abap_true
+                                                  iv_lexeme    = 'INTO' )       = abap_true
          AND /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                     iv_lexeme    = 'ASSIGNING' )  = abap_false
+                                                  iv_lexeme    = 'ASSIGNING' )  = abap_false
          AND /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                     iv_lexeme    = 'REFERENCE' )  = abap_false.
+                                                  iv_lexeme    = 'REFERENCE' )  = abap_false.
 
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-loop_copy ).

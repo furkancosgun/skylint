@@ -63,13 +63,13 @@ CLASS /skyl/cl_pref_insert IMPLEMENTATION.
 
       lv_to_idx = find_top_level_to( <ls_statement> ).
       IF lv_to_idx > 1 AND /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                                   iv_lexeme    = 'SORTED' ) = abap_false.
+                                                                iv_lexeme    = 'SORTED' ) = abap_false.
         lt_overrides = VALUE #( ( index  = 1
                                   lexeme = 'INSERT' )
                                 ( index  = lv_to_idx
                                   lexeme = 'INTO TABLE' ) ).
         lv_line = /skyl/cl_ast_util=>flatten_statement( is_statement = <ls_statement>
-                                                           it_overrides = lt_overrides ).
+                                                        it_overrides = lt_overrides ).
         ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-prefer_insert
                                         iv_statement_from = lv_stmt_idx
                                         it_new_code       = VALUE #( ( |{ lv_line }.| ) ) ).
@@ -94,7 +94,7 @@ CLASS /skyl/cl_pref_insert IMPLEMENTATION.
       ENDIF.
 
       IF lv_depth = 0 AND /skyl/cl_ast_util=>token_is_keyword( is_token  = <ls_tok>
-                                                                  iv_lexeme = 'TO' ) = abap_true.
+                                                               iv_lexeme = 'TO' ) = abap_true.
         rv_index = lv_idx.
         RETURN.
       ENDIF.

@@ -46,47 +46,47 @@ CLASS /skyl/cl_no_metaprogramming IMPLEMENTATION.
 
         WHEN 'GENERATE'.
           IF    /skyl/cl_ast_util=>matches_token_at( is_statement = <ls_statement>
-                                                        iv_index     = 2
-                                                        iv_expected  = `SUBROUTINE` ) = abap_true
+                                                     iv_index     = 2
+                                                     iv_expected  = `SUBROUTINE` ) = abap_true
              OR /skyl/cl_ast_util=>matches_token_at( is_statement = <ls_statement>
-                                                        iv_index     = 2
-                                                        iv_expected  = `REPORT` )     = abap_true
+                                                     iv_index     = 2
+                                                     iv_expected  = `REPORT` )     = abap_true
              OR /skyl/cl_ast_util=>matches_token_at( is_statement = <ls_statement>
-                                                        iv_index     = 2
-                                                        iv_expected  = `DYNPRO` )     = abap_true.
+                                                     iv_index     = 2
+                                                     iv_expected  = `DYNPRO` )     = abap_true.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-metaprogramming ).
           ENDIF.
 
         WHEN 'INSERT'.
           IF    /skyl/cl_ast_util=>matches_token_at( is_statement = <ls_statement>
-                                                        iv_index     = 2
-                                                        iv_expected  = `REPORT` )     = abap_true
+                                                     iv_index     = 2
+                                                     iv_expected  = `REPORT` )     = abap_true
              OR /skyl/cl_ast_util=>matches_token_at( is_statement = <ls_statement>
-                                                        iv_index     = 2
-                                                        iv_expected  = `TEXTPOOL` )   = abap_true.
+                                                     iv_index     = 2
+                                                     iv_expected  = `TEXTPOOL` )   = abap_true.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-metaprogramming ).
           ENDIF.
 
         WHEN 'DELETE'.
           IF    /skyl/cl_ast_util=>matches_token_at( is_statement = <ls_statement>
-                                                        iv_index     = 2
-                                                        iv_expected  = `REPORT` )     = abap_true
+                                                     iv_index     = 2
+                                                     iv_expected  = `REPORT` )     = abap_true
              OR /skyl/cl_ast_util=>matches_token_at( is_statement = <ls_statement>
-                                                        iv_index     = 2
-                                                        iv_expected  = `TEXTPOOL` )   = abap_true
+                                                     iv_index     = 2
+                                                     iv_expected  = `TEXTPOOL` )   = abap_true
              OR /skyl/cl_ast_util=>matches_token_at( is_statement = <ls_statement>
-                                                        iv_index     = 2
-                                                        iv_expected  = `DYNPRO` )     = abap_true.
+                                                     iv_index     = 2
+                                                     iv_expected  = `DYNPRO` )     = abap_true.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-metaprogramming ).
           ENDIF.
 
         WHEN 'EXPORT'.
           IF /skyl/cl_ast_util=>matches_token_at( is_statement = <ls_statement>
-                                                     iv_index     = 2
-                                                     iv_expected  = `DYNPRO` ) = abap_true.
+                                                  iv_index     = 2
+                                                  iv_expected  = `DYNPRO` ) = abap_true.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-metaprogramming ).
           ENDIF.

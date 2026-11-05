@@ -78,10 +78,10 @@ CLASS /skyl/cl_no_exc_chain IMPLEMENTATION.
         WHEN 'CATCH'.
           CLEAR lv_catch_var.
           lv_into_idx = /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                          iv_lexeme    = 'INTO' ).
+                                                       iv_lexeme    = 'INTO' ).
           IF lv_into_idx > 0.
             ls_into_tok = /skyl/cl_ast_util=>get_token( is_statement = <ls_statement>
-                                                           iv_index     = lv_into_idx + 1 ).
+                                                        iv_index     = lv_into_idx + 1 ).
             lv_catch_var = /skyl/cl_ast_util=>extract_name_from_paren( ls_into_tok-lexeme ).
             lv_in_catch = abap_true.
           ELSE.
@@ -125,13 +125,13 @@ CLASS /skyl/cl_no_exc_chain IMPLEMENTATION.
     ENDIF.
 
     ls_token = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = 2 ).
+                                             iv_index     = 2 ).
     IF ls_token-lexeme <> 'EXCEPTION'.
       RETURN.
     ENDIF.
 
     ls_token = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = 3 ).
+                                             iv_index     = 3 ).
     IF ls_token-lexeme = 'TYPE' OR ls_token-lexeme = 'NEW'.
       rv_is = abap_true.
     ENDIF.
@@ -147,7 +147,7 @@ CLASS /skyl/cl_no_exc_chain IMPLEMENTATION.
       lv_idx = sy-tabix.
       IF ls_tok-lexeme = 'PREVIOUS'.
         ls_next = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                   iv_index     = lv_idx + 1 ).
+                                                iv_index     = lv_idx + 1 ).
         IF ls_next-lexeme = '='.
           rv_has = abap_true.
           RETURN.
@@ -174,9 +174,9 @@ CLASS /skyl/cl_no_exc_chain IMPLEMENTATION.
     ENDIF.
 
     ls_token = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = 3 ).
+                                             iv_index     = 3 ).
     ls_last_tok = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                   iv_index     = lv_last_idx ).
+                                                iv_index     = lv_last_idx ).
 
     CASE ls_token-lexeme.
       WHEN 'NEW'.
@@ -184,7 +184,7 @@ CLASS /skyl/cl_no_exc_chain IMPLEMENTATION.
                                   lexeme = |previous = { iv_catch_var } )| ) ).
       WHEN 'TYPE'.
         IF /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                   iv_lexeme    = 'EXPORTING' ) = abap_true.
+                                                iv_lexeme    = 'EXPORTING' ) = abap_true.
           lt_overrides = VALUE #( ( index  = lv_last_idx
                                     lexeme = |{ ls_last_tok-lexeme } previous = { iv_catch_var }| ) ).
         ELSE.
@@ -198,8 +198,8 @@ CLASS /skyl/cl_no_exc_chain IMPLEMENTATION.
     ENDIF.
 
     lv_line = /skyl/cl_ast_util=>flatten_statement( is_statement = is_statement
-                                                       it_overrides = lt_overrides
-                                                       iv_suffix    = '.' ).
+                                                    it_overrides = lt_overrides
+                                                    iv_suffix    = '.' ).
 
     rs_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-add_previous
                                     iv_statement_from = iv_stmt_idx

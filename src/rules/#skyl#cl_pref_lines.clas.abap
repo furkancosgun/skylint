@@ -63,25 +63,25 @@ CLASS /skyl/cl_pref_lines IMPLEMENTATION.
       ENDIF.
 
       IF    /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                    iv_lexeme    = 'KIND' )       = abap_true
+                                                 iv_lexeme    = 'KIND' )       = abap_true
          OR /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                    iv_lexeme    = 'OCCURS' )     = abap_true.
+                                                 iv_lexeme    = 'OCCURS' )     = abap_true.
         CONTINUE.
       ENDIF.
 
       lv_table_idx = /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                       iv_lexeme    = 'TABLE' ).
+                                                    iv_lexeme    = 'TABLE' ).
       lv_lines_idx = /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                       iv_lexeme    = 'LINES' ).
+                                                    iv_lexeme    = 'LINES' ).
 
       IF lv_table_idx = 0 OR lv_lines_idx = 0.
         CONTINUE.
       ENDIF.
 
       lv_table = /skyl/cl_ast_util=>get_token_lexeme( is_statement = <ls_statement>
-                                                         iv_index     = lv_table_idx + 1 ).
+                                                      iv_index     = lv_table_idx + 1 ).
       lv_target = /skyl/cl_ast_util=>get_token_lexeme( is_statement = <ls_statement>
-                                                          iv_index     = lv_lines_idx + 1 ).
+                                                       iv_index     = lv_lines_idx + 1 ).
       IF lv_table IS INITIAL OR lv_target IS INITIAL.
         CONTINUE.
       ENDIF.

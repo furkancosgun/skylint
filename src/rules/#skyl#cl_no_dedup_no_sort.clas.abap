@@ -86,13 +86,13 @@ CLASS /skyl/cl_no_dedup_no_sort IMPLEMENTATION.
     DO iv_target_idx - 1 TIMES.
       lv_i = sy-index.
       ls_stmt = /skyl/cl_ast_util=>get_statement( it_statements = it_statements
-                                                     iv_index      = lv_i ).
+                                                  iv_index      = lv_i ).
       IF ls_stmt-keyword <> 'SORT'.
         CONTINUE.
       ENDIF.
 
       ls_sort_tok = /skyl/cl_ast_util=>get_token_after( is_statement = ls_stmt
-                                                           iv_lexeme    = 'SORT' ).
+                                                        iv_lexeme    = 'SORT' ).
       IF ls_sort_tok IS INITIAL.
         CONTINUE.
       ENDIF.

@@ -58,7 +58,7 @@ CLASS /skyl/cl_no_call_method IMPLEMENTATION.
       ENDIF.
 
       IF /skyl/cl_ast_util=>match_token_sequence( is_statement = <ls_statement>
-                                                     it_expected  = VALUE #( ( `CALL` ) ( `METHOD` ) ) ) = abap_false.
+                                                  it_expected  = VALUE #( ( `CALL` ) ( `METHOD` ) ) ) = abap_false.
         CONTINUE.
       ENDIF.
 
@@ -85,15 +85,15 @@ CLASS /skyl/cl_no_call_method IMPLEMENTATION.
     rv_dynamic = abap_false.
 
     IF    /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                  iv_lexeme    = 'PARAMETER-TABLE' ) = abap_true
+                                               iv_lexeme    = 'PARAMETER-TABLE' ) = abap_true
        OR /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                  iv_lexeme    = 'EXCEPTION-TABLE' ) = abap_true.
+                                               iv_lexeme    = 'EXCEPTION-TABLE' ) = abap_true.
       rv_dynamic = abap_true.
       RETURN.
     ENDIF.
 
     ls_third = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = 3 ).
+                                             iv_index     = 3 ).
     rv_dynamic = xsdbool( ls_third-lexeme CS '(' AND ls_third-lexeme CS ')' ).
   ENDMETHOD.
 ENDCLASS.

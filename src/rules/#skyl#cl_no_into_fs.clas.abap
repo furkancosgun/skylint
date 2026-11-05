@@ -45,7 +45,7 @@ CLASS /skyl/cl_no_into_fs IMPLEMENTATION.
       ENDIF.
 
       ls_target = /skyl/cl_ast_util=>get_token_after( is_statement = <ls_statement>
-                                                         iv_lexeme    = 'INTO' ).
+                                                      iv_lexeme    = 'INTO' ).
       IF ls_target IS INITIAL.
         CONTINUE.
       ENDIF.

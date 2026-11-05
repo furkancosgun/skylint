@@ -71,7 +71,7 @@ CLASS /skyl/cl_no_empty_proc IMPLEMENTATION.
 
     IF lines( is_procedure-statements ) <= 2.
       ls_first_stmt = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                           iv_index      = 1 ).
+                                                        iv_index      = 1 ).
       IF ls_first_stmt-keyword IS NOT INITIAL.
         report_statement( is_statement    = ls_first_stmt
                           iv_finding_code = c_finding_codes-empty_procedure ).

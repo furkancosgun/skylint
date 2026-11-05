@@ -62,20 +62,20 @@ CLASS /skyl/cl_pref_returning IMPLEMENTATION.
     rv_yes = abap_false.
 
     IF    /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                  iv_lexeme    = 'CONSTRUCTOR' )  = abap_true
+                                               iv_lexeme    = 'CONSTRUCTOR' )  = abap_true
        OR /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                  iv_lexeme    = 'FOR' )          = abap_true
+                                               iv_lexeme    = 'FOR' )          = abap_true
        OR /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                  iv_lexeme    = 'REDEFINITION' ) = abap_true
+                                               iv_lexeme    = 'REDEFINITION' ) = abap_true
        OR /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                  iv_lexeme    = 'CHANGING' )     = abap_true
+                                               iv_lexeme    = 'CHANGING' )     = abap_true
        OR /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                  iv_lexeme    = 'RETURNING' )    = abap_true.
+                                               iv_lexeme    = 'RETURNING' )    = abap_true.
       RETURN.
     ENDIF.
 
     lv_exp_idx = /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                                   iv_lexeme    = 'EXPORTING' ).
+                                                iv_lexeme    = 'EXPORTING' ).
     IF lv_exp_idx = 0.
       RETURN.
     ENDIF.
@@ -83,7 +83,7 @@ CLASS /skyl/cl_pref_returning IMPLEMENTATION.
     lv_idx = lv_exp_idx + 1.
     WHILE lv_idx <= lines( is_statement-tokens ).
       ls_tok = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = lv_idx ).
+                                             iv_index     = lv_idx ).
       IF /skyl/cl_ast_util=>token_is_keyword( ls_tok ) = abap_true.
         CASE ls_tok-lexeme.
           WHEN 'EXCEPTIONS' OR 'RAISING'.

@@ -54,17 +54,17 @@ CLASS /skyl/cl_pref_xsdbool IMPLEMENTATION.
            ev_valid.
 
     /skyl/cl_ast_util=>parse_assignment( EXPORTING is_statement     = is_statement
-                                            IMPORTING ev_target        = ev_target
-                                                      ev_expr          = lv_expr
-                                                      ev_is_assignment = lv_is_assign ).
+                                         IMPORTING ev_target        = ev_target
+                                                   ev_expr          = lv_expr
+                                                   ev_is_assignment = lv_is_assign ).
     IF lv_is_assign = abap_false.
       RETURN.
     ENDIF.
 
     ls_first_tok = /skyl/cl_ast_util=>get_token_before( is_statement = is_statement
-                                                           iv_lexeme    = '=' ).
+                                                        iv_lexeme    = '=' ).
     ls_last_tok = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                         iv_lexeme    = '=' ).
+                                                      iv_lexeme    = '=' ).
     IF ls_first_tok IS INITIAL OR ls_last_tok IS INITIAL.
       RETURN.
     ENDIF.
@@ -108,13 +108,13 @@ CLASS /skyl/cl_pref_xsdbool IMPLEMENTATION.
       ENDIF.
 
       ls_then_stmt  = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                           iv_index      = lv_idx + 1 ).
+                                                        iv_index      = lv_idx + 1 ).
       ls_else_stmt  = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                           iv_index      = lv_idx + 2 ).
+                                                        iv_index      = lv_idx + 2 ).
       ls_else_body  = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                           iv_index      = lv_idx + 3 ).
+                                                        iv_index      = lv_idx + 3 ).
       ls_endif_stmt = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                           iv_index      = lv_idx + 4 ).
+                                                        iv_index      = lv_idx + 4 ).
 
       IF ls_else_stmt-keyword <> 'ELSE' OR ls_endif_stmt-keyword <> 'ENDIF'.
         CONTINUE.
@@ -138,8 +138,8 @@ CLASS /skyl/cl_pref_xsdbool IMPLEMENTATION.
       ENDIF.
 
       lv_cond = /skyl/cl_ast_util=>extract_tokens_text( is_statement = <ls_stmt>
-                                                           iv_from_idx  = 2
-                                                           iv_to_idx    = lines( <ls_stmt>-tokens ) ).
+                                                        iv_from_idx  = 2
+                                                        iv_to_idx    = lines( <ls_stmt>-tokens ) ).
 
       lv_indent = repeat( val = ` `
                           occ = <ls_stmt>-position-column ).

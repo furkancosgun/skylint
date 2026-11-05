@@ -116,7 +116,7 @@ CLASS /skyl/cl_no_obs_decl IMPLEMENTATION.
         WHEN 'REFRESH'.
           IF mv_check_refresh = abap_true.
             lv_dst = /skyl/cl_ast_util=>get_token_after( is_statement = <ls_statement>
-                                                            iv_lexeme    = 'REFRESH' )-lexeme.
+                                                         iv_lexeme    = 'REFRESH' )-lexeme.
             IF lv_dst IS NOT INITIAL.
               lv_line = |CLEAR { lv_dst }.|.
               ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-replace_declaration
@@ -148,13 +148,13 @@ CLASS /skyl/cl_no_obs_decl IMPLEMENTATION.
         WHEN 'DATA' OR 'TYPES'.
           IF     mv_check_occurs = abap_true
              AND /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                   iv_lexeme    = 'OCCURS' )     > 0.
+                                                iv_lexeme    = 'OCCURS' )     > 0.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_declaration ).
 
           ELSEIF     mv_check_initial_size = abap_true
                  AND /skyl/cl_ast_util=>find_token_sequence( is_statement = <ls_statement>
-                                                                it_expected  = VALUE #( ( `INITIAL` ) ( `SIZE` ) ) ) > 0.
+                                                             it_expected  = VALUE #( ( `INITIAL` ) ( `SIZE` ) ) ) > 0.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_declaration ).
 
@@ -167,14 +167,14 @@ CLASS /skyl/cl_no_obs_decl IMPLEMENTATION.
 
           ELSEIF     mv_check_common_part = abap_true
                  AND /skyl/cl_ast_util=>find_token_sequence( is_statement = <ls_statement>
-                                                                it_expected  = VALUE #( ( `COMMON` ) ( `PART` ) ) ) > 0.
+                                                             it_expected  = VALUE #( ( `COMMON` ) ( `PART` ) ) ) > 0.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_declaration ).
           ENDIF.
         WHEN 'FIELD-SYMBOLS'.
           IF     mv_check_fs_structure = abap_true
              AND /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                   iv_lexeme    = 'STRUCTURE' )  > 0.
+                                                iv_lexeme    = 'STRUCTURE' )  > 0.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_declaration ).
           ENDIF.
@@ -182,7 +182,7 @@ CLASS /skyl/cl_no_obs_decl IMPLEMENTATION.
         WHEN 'CLASS' OR 'INTERFACE'.
           IF     mv_check_load = abap_true
              AND /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                   iv_lexeme    = 'LOAD' )       > 0.
+                                                iv_lexeme    = 'LOAD' )       > 0.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_declaration ).
           ENDIF.

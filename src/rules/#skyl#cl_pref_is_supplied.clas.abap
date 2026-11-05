@@ -62,8 +62,8 @@ CLASS /skyl/cl_pref_is_supplied IMPLEMENTATION.
       ENDIF.
 
       lv_line = /skyl/cl_ast_util=>flatten_statement( is_statement = <ls_statement>
-                                                         it_overrides = lt_overrides
-                                                         iv_suffix    = '.' ).
+                                                      it_overrides = lt_overrides
+                                                      iv_suffix    = '.' ).
       ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-use_supplied
                                       iv_statement_from = lv_stmt_idx
                                       it_new_code       = VALUE #( ( lv_line ) ) ).
@@ -90,9 +90,9 @@ CLASS /skyl/cl_pref_is_supplied IMPLEMENTATION.
       ENDIF.
 
       lv_prev = /skyl/cl_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                        iv_index     = lv_curr_idx - 1 ).
+                                                     iv_index     = lv_curr_idx - 1 ).
       lv_prev_prev = /skyl/cl_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                             iv_index     = lv_curr_idx - 2 ).
+                                                          iv_index     = lv_curr_idx - 2 ).
       IF lv_prev <> 'IS' AND ( lv_prev <> 'NOT' OR lv_prev_prev <> 'IS' ).
         CONTINUE.
       ENDIF.

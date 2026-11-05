@@ -46,14 +46,14 @@ CLASS /skyl/cl_no_kernel_call IMPLEMENTATION.
 
         WHEN 'CALL'.
           IF /skyl/cl_ast_util=>token_is_literal( /skyl/cl_ast_util=>get_token( is_statement = <ls_statement>
-                                                                                      iv_index     = 2 ) ) = abap_true.
+                                                                                iv_index     = 2 ) ) = abap_true.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-kernel_call ).
           ENDIF.
         WHEN 'EXEC'.
           IF /skyl/cl_ast_util=>matches_token_at( is_statement = <ls_statement>
-                                                     iv_index     = 2
-                                                     iv_expected  = `SQL` ) = abap_true.
+                                                  iv_index     = 2
+                                                  iv_expected  = `SQL` ) = abap_true.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-kernel_call ).
           ENDIF.

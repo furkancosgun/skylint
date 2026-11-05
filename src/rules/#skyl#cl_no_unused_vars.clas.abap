@@ -84,13 +84,13 @@ CLASS /skyl/cl_no_unused_vars IMPLEMENTATION.
     LOOP AT it_statements ASSIGNING <ls_stmt>.
       IF <ls_stmt>-keyword = 'DATA' OR <ls_stmt>-keyword = 'FIELD-SYMBOLS'.
         IF /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_stmt>
-                                                   iv_lexeme    = 'BEGIN' ) = abap_true.
+                                                iv_lexeme    = 'BEGIN' ) = abap_true.
           lv_struct_depth += 1.
           IF lv_struct_depth > 1.
             CONTINUE.
           ENDIF.
         ELSEIF /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_stmt>
-                                                       iv_lexeme    = 'END' ) = abap_true.
+                                                    iv_lexeme    = 'END' ) = abap_true.
           IF lv_struct_depth > 0.
             lv_struct_depth -= 1.
           ENDIF.
@@ -134,6 +134,6 @@ CLASS /skyl/cl_no_unused_vars IMPLEMENTATION.
 
   METHOD is_variable_read.
     rv_read = /skyl/cl_ast_util=>has_data_read_usage( it_statements = it_statements
-                                                         iv_full_name  = iv_full_name ).
+                                                      iv_full_name  = iv_full_name ).
   ENDMETHOD.
 ENDCLASS.

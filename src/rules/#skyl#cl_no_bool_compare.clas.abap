@@ -108,14 +108,14 @@ CLASS /skyl/cl_no_bool_compare IMPLEMENTATION.
       CASE ls_tok-lexeme.
         WHEN '=' OR 'EQ' OR '<>' OR 'NE' OR '><'.
           ls_prev = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                     iv_index     = lv_tok_idx - 1 ).
+                                                  iv_index     = lv_tok_idx - 1 ).
           IF is_boolean_literal_token( ls_prev ) = abap_true.
             rs_comp-op_idx  = lv_tok_idx.
             rs_comp-lit_idx = lv_tok_idx - 1.
             lv_lit_lex      = ls_prev-lexeme.
           ELSE.
             ls_next = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                       iv_index     = lv_tok_idx + 1 ).
+                                                    iv_index     = lv_tok_idx + 1 ).
             IF is_boolean_literal_token( ls_next ) = abap_true.
               rs_comp-op_idx  = lv_tok_idx.
               rs_comp-lit_idx = lv_tok_idx + 1.

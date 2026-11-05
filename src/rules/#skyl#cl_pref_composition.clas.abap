@@ -50,7 +50,7 @@ CLASS /skyl/cl_pref_composition IMPLEMENTATION.
       ENDIF.
 
       IF /skyl/cl_ast_util=>find_token_sequence( is_statement = <ls_stmt>
-                                                    it_expected  = VALUE #( ( `INHERITING` ) ( `FROM` ) ) ) = 0.
+                                                 it_expected  = VALUE #( ( `INHERITING` ) ( `FROM` ) ) ) = 0.
         CONTINUE.
       ENDIF.
 
@@ -60,7 +60,7 @@ CLASS /skyl/cl_pref_composition IMPLEMENTATION.
 
       IF     mv_allow_test_classes = abap_true
          AND /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_stmt>
-                                                     iv_lexeme    = 'TESTING' ) = abap_true.
+                                                  iv_lexeme    = 'TESTING' ) = abap_true.
         CONTINUE.
       ENDIF.
 

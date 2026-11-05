@@ -140,7 +140,7 @@ CLASS /skyl/cl_pref_switch IMPLEMENTATION.
 
     WHILE lv_curr <= iv_total.
       ls_stmt = /skyl/cl_ast_util=>get_statement( it_statements = it_statements
-                                                     iv_index      = lv_curr ).
+                                                  iv_index      = lv_curr ).
       IF ls_stmt-keyword IS INITIAL.
         EXIT.
       ENDIF.
@@ -159,13 +159,13 @@ CLASS /skyl/cl_pref_switch IMPLEMENTATION.
       ls_branch-when_idx = lv_curr.
 
       IF /skyl/cl_ast_util=>match_token_sequence( is_statement = ls_stmt
-                                                     it_expected  = VALUE #( ( `WHEN` ) ( `OTHERS` ) ) ) = abap_true.
+                                                  it_expected  = VALUE #( ( `WHEN` ) ( `OTHERS` ) ) ) = abap_true.
         ls_branch-is_others = abap_true.
         lv_has_others = abap_true.
       ELSE.
         ls_branch-cond_text = /skyl/cl_ast_util=>extract_tokens_text( is_statement = ls_stmt
-                                                                         iv_from_idx  = 2
-                                                                         iv_to_idx    = lines( ls_stmt-tokens ) ).
+                                                                      iv_from_idx  = 2
+                                                                      iv_to_idx    = lines( ls_stmt-tokens ) ).
       ENDIF.
 
       lv_curr += 1.
@@ -175,11 +175,11 @@ CLASS /skyl/cl_pref_switch IMPLEMENTATION.
       ENDIF.
 
       ls_body = /skyl/cl_ast_util=>get_statement( it_statements = it_statements
-                                                     iv_index      = lv_curr ).
+                                                  iv_index      = lv_curr ).
       /skyl/cl_ast_util=>parse_assignment( EXPORTING is_statement     = ls_body
-                                              IMPORTING ev_target        = lv_curr_target
-                                                        ev_expr          = lv_curr_expr
-                                                        ev_is_assignment = lv_is_assign ).
+                                           IMPORTING ev_target        = lv_curr_target
+                                                     ev_expr          = lv_curr_expr
+                                                     ev_is_assignment = lv_is_assign ).
 
       IF lv_is_assign = abap_false.
         ev_valid = abap_false.
@@ -201,7 +201,7 @@ CLASS /skyl/cl_pref_switch IMPLEMENTATION.
         lv_curr += 1.
         IF lv_curr <= iv_total.
           ls_stmt = /skyl/cl_ast_util=>get_statement( it_statements = it_statements
-                                                         iv_index      = lv_curr ).
+                                                      iv_index      = lv_curr ).
           IF ls_stmt-keyword = 'ENDCASE'.
             ev_endcase_idx = lv_curr.
             EXIT.
@@ -231,8 +231,8 @@ CLASS /skyl/cl_pref_switch IMPLEMENTATION.
     lv_num_tok = lines( is_case_stmt-tokens ).
     IF lv_num_tok >= 2.
       lv_operand = /skyl/cl_ast_util=>extract_tokens_text( is_statement = is_case_stmt
-                                                              iv_from_idx  = 2
-                                                              iv_to_idx    = lv_num_tok ).
+                                                           iv_from_idx  = 2
+                                                           iv_to_idx    = lv_num_tok ).
     ENDIF.
 
     ls_first_tok = /skyl/cl_ast_util=>get_first_token( is_case_stmt ).

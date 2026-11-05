@@ -153,7 +153,7 @@ CLASS /skyl/cl_no_dead_store IMPLEMENTATION.
 
     LOOP AT lt_dead ASSIGNING <lv_dead>.
       ls_statement = /skyl/cl_ast_util=>get_statement( it_statements = it_statements
-                                                          iv_index      = <lv_dead> ).
+                                                       iv_index      = <lv_dead> ).
       report_statement( is_statement    = ls_statement
                         iv_finding_code = c_finding_codes-dead_store ).
     ENDLOOP.
@@ -172,7 +172,7 @@ CLASS /skyl/cl_no_dead_store IMPLEMENTATION.
                    iv_kind  = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ).
       IF    ls_ref-full_name IS INITIAL
          OR /skyl/cl_ast_util=>reference_matches( iv_full_name = iv_full_name
-                                                     iv_reference = ls_ref-full_name )  = abap_false.
+                                                  iv_reference = ls_ref-full_name )  = abap_false.
         CONTINUE.
       ENDIF.
 
@@ -182,7 +182,7 @@ CLASS /skyl/cl_no_dead_store IMPLEMENTATION.
 
       IF     /skyl/cl_ast_util=>is_full_write_usage( ls_ref ) = abap_true
          AND is_whole_object( is_token     = <ls_token>
-                              iv_full_name = iv_full_name )      = abap_true.
+                              iv_full_name = iv_full_name )   = abap_true.
         ev_write = abap_true.
       ENDIF.
     ENDLOOP.

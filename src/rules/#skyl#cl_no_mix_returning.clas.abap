@@ -58,14 +58,14 @@ CLASS /skyl/cl_no_mix_returning IMPLEMENTATION.
     rv_yes = abap_false.
 
     IF /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                               iv_lexeme    = 'RETURNING' ) = abap_false.
+                                            iv_lexeme    = 'RETURNING' ) = abap_false.
       RETURN.
     ENDIF.
 
     IF    /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                  iv_lexeme    = 'EXPORTING' ) = abap_true
+                                               iv_lexeme    = 'EXPORTING' ) = abap_true
        OR /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                  iv_lexeme    = 'CHANGING' )  = abap_true.
+                                               iv_lexeme    = 'CHANGING' )  = abap_true.
       rv_yes = abap_true.
     ENDIF.
   ENDMETHOD.

@@ -56,10 +56,10 @@ CLASS /skyl/cl_no_nested_loop IMPLEMENTATION.
       CASE <ls_statement>-keyword.
         WHEN 'LOOP'.
           lv_is_loop_at = /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                                  iv_lexeme    = 'AT' ).
+                                                               iv_lexeme    = 'AT' ).
           IF lv_is_loop_at = abap_true.
             ls_tok_after = /skyl/cl_ast_util=>get_token_after( is_statement = <ls_statement>
-                                                                  iv_lexeme    = 'AT' ).
+                                                               iv_lexeme    = 'AT' ).
             IF ls_tok_after-lexeme = 'SCREEN'.
               lv_is_loop_at = abap_false.
             ENDIF.
@@ -67,9 +67,9 @@ CLASS /skyl/cl_no_nested_loop IMPLEMENTATION.
 
           lv_has_exempt = abap_false.
           IF    /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                        iv_lexeme    = 'GROUP' )      = abap_true
+                                                     iv_lexeme    = 'GROUP' )      = abap_true
              OR /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                        iv_lexeme    = 'FROM' )       = abap_true.
+                                                     iv_lexeme    = 'FROM' )       = abap_true.
             lv_has_exempt = abap_true.
           ENDIF.
 

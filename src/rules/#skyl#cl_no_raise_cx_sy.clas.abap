@@ -63,12 +63,12 @@ CLASS /skyl/cl_no_raise_cx_sy IMPLEMENTATION.
     rv_yes = abap_false.
 
     IF /skyl/cl_ast_util=>match_token_sequence( is_statement = is_statement
-                                                   it_expected  = VALUE #( ( `RAISE` ) ( `EXCEPTION` ) ) ) = abap_false.
+                                                it_expected  = VALUE #( ( `RAISE` ) ( `EXCEPTION` ) ) ) = abap_false.
       RETURN.
     ENDIF.
 
     ls_token = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = 4 ).
+                                             iv_index     = 4 ).
 
     IF ls_token IS NOT INITIAL.
       rv_yes = is_system_exception_token( ls_token ).

@@ -59,7 +59,7 @@ CLASS /skyl/cl_pref_intf_segreg IMPLEMENTATION.
 
     IF lv_method_count > mv_max_methods.
       ls_first_stmt = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                           iv_index      = 1 ).
+                                                        iv_index      = 1 ).
       report_statement( is_statement    = ls_first_stmt
                         iv_finding_code = c_finding_codes-interface_segregation ).
     ENDIF.

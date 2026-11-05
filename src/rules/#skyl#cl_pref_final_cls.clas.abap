@@ -77,7 +77,7 @@ CLASS /skyl/cl_pref_final_cls IMPLEMENTATION.
       CASE <ls_statement>-keyword.
         WHEN 'CLASS'.
           lv_class_is_final = /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                                      iv_lexeme    = 'FINAL' ).
+                                                                   iv_lexeme    = 'FINAL' ).
           IF     lv_class_is_final = abap_false
              AND mv_check_classes = abap_true
              AND is_class_missing_final( <ls_statement> ) = abap_true.
@@ -89,29 +89,29 @@ CLASS /skyl/cl_pref_final_cls IMPLEMENTATION.
             CONTINUE.
           ENDIF.
           IF    /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                        iv_lexeme    = 'FINAL' )        = abap_true
+                                                     iv_lexeme    = 'FINAL' )        = abap_true
              OR /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                        iv_lexeme    = 'ABSTRACT' )     = abap_true
+                                                     iv_lexeme    = 'ABSTRACT' )     = abap_true
              OR /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                        iv_lexeme    = 'REDEFINITION' ) = abap_true
+                                                     iv_lexeme    = 'REDEFINITION' ) = abap_true
              OR /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                        iv_lexeme    = 'FOR' )          = abap_true
+                                                     iv_lexeme    = 'FOR' )          = abap_true
              OR /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                        iv_lexeme    = 'CONSTRUCTOR' )  = abap_true
+                                                     iv_lexeme    = 'CONSTRUCTOR' )  = abap_true
              OR /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                        iv_lexeme    = 'DEFAULT' )      = abap_true.
+                                                     iv_lexeme    = 'DEFAULT' )      = abap_true.
             CONTINUE.
           ENDIF.
 
           ls_meth_tok = /skyl/cl_ast_util=>get_token_after( is_statement = <ls_statement>
-                                                               iv_lexeme    = 'METHODS' ).
+                                                            iv_lexeme    = 'METHODS' ).
           IF ls_meth_tok-lexeme IS INITIAL.
             CONTINUE.
           ENDIF.
 
           lv_meth_idx = /skyl/cl_ast_util=>find_token( is_statement         = <ls_statement>
-                                                          iv_lexeme            = ls_meth_tok-lexeme
-                                                          iv_ignore_references = abap_true ).
+                                                       iv_lexeme            = ls_meth_tok-lexeme
+                                                       iv_ignore_references = abap_true ).
           IF lv_meth_idx <= 0.
             CONTINUE.
           ENDIF.

@@ -76,7 +76,7 @@ CLASS /skyl/cl_no_wrong_wildcard IMPLEMENTATION.
     DATA ls_next TYPE if_ci_atc_source_code_provider=>ty_token.
 
     ls_next = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                               iv_index     = iv_token_idx + 1 ).
+                                            iv_index     = iv_token_idx + 1 ).
 
     IF ls_next IS INITIAL OR is_string_literal( ls_next ) = abap_false.
       RETURN.
@@ -93,7 +93,7 @@ CLASS /skyl/cl_no_wrong_wildcard IMPLEMENTATION.
     DATA ls_next TYPE if_ci_atc_source_code_provider=>ty_token.
 
     ls_next = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                               iv_index     = iv_token_idx + 1 ).
+                                            iv_index     = iv_token_idx + 1 ).
 
     IF ls_next IS INITIAL OR is_string_literal( ls_next ) = abap_false.
       RETURN.

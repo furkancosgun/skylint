@@ -84,7 +84,7 @@ CLASS /skyl/cl_no_yoda_cond IMPLEMENTATION.
         IF is_yoda_at( is_statement = <ls_statement>
                        iv_index     = lv_tok_idx ) = abap_true.
           lv_op = /skyl/cl_ast_util=>get_token_lexeme( is_statement = <ls_statement>
-                                                          iv_index     = lv_tok_idx + 1 ).
+                                                       iv_index     = lv_tok_idx + 1 ).
           CLEAR ls_quickfix.
           IF can_quickfix( is_statement = <ls_statement>
                            iv_match     = lv_tok_idx
@@ -113,11 +113,11 @@ CLASS /skyl/cl_no_yoda_cond IMPLEMENTATION.
     rv_is = abap_false.
 
     ls_t1 = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                             iv_index     = iv_index ).
+                                          iv_index     = iv_index ).
     ls_t2 = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                             iv_index     = iv_index + 1 ).
+                                          iv_index     = iv_index + 1 ).
     ls_t3 = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                             iv_index     = iv_index + 2 ).
+                                          iv_index     = iv_index + 2 ).
 
     IF     /skyl/cl_ast_util=>token_is_literal( ls_t1 )               = abap_true
        AND ls_t2-references IS INITIAL
@@ -138,13 +138,13 @@ CLASS /skyl/cl_no_yoda_cond IMPLEMENTATION.
     ENDIF.
 
     ls_t3 = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                             iv_index     = iv_match + 2 ).
+                                          iv_index     = iv_match + 2 ).
     IF ls_t3-lexeme IS INITIAL OR ls_t3-lexeme CA '()[]{}`''"'.
       RETURN.
     ENDIF.
 
     ls_t4 = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                             iv_index     = iv_match + 3 ).
+                                          iv_index     = iv_match + 3 ).
     IF     ls_t4-lexeme IS NOT INITIAL
        AND ls_t4-lexeme <> '.'
        AND ls_t4-lexeme <> ')'
@@ -164,9 +164,9 @@ CLASS /skyl/cl_no_yoda_cond IMPLEMENTATION.
     DATA lt_overrides TYPE /skyl/cl_ast_util=>ty_token_overrides.
 
     lv_lit = /skyl/cl_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                     iv_index     = iv_match ).
+                                                  iv_index     = iv_match ).
     lv_var = /skyl/cl_ast_util=>get_token_lexeme( is_statement = is_statement
-                                                     iv_index     = iv_match + 2 ).
+                                                  iv_index     = iv_match + 2 ).
     lv_mirror = mirror_operator( iv_operator ).
 
     lt_overrides = VALUE #( ( index  = iv_match
@@ -177,7 +177,7 @@ CLASS /skyl/cl_no_yoda_cond IMPLEMENTATION.
                               lexeme = lv_lit ) ).
 
     lv_line = /skyl/cl_ast_util=>flatten_statement( is_statement = is_statement
-                                                       it_overrides = lt_overrides ).
+                                                    it_overrides = lt_overrides ).
 
     rs_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-unyoda
                                     iv_statement_from = iv_stmt_idx

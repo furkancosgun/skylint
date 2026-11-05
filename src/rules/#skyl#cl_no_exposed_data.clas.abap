@@ -61,13 +61,13 @@ CLASS /skyl/cl_no_exposed_data IMPLEMENTATION.
 
         WHEN 'PUBLIC'.
           IF /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                     iv_lexeme    = 'SECTION' ) = abap_true.
+                                                  iv_lexeme    = 'SECTION' ) = abap_true.
             lv_in_public = abap_true.
           ENDIF.
 
         WHEN 'PROTECTED' OR 'PRIVATE'.
           IF /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                     iv_lexeme    = 'SECTION' ) = abap_true.
+                                                  iv_lexeme    = 'SECTION' ) = abap_true.
             lv_in_public = abap_false.
           ENDIF.
 
@@ -80,7 +80,7 @@ CLASS /skyl/cl_no_exposed_data IMPLEMENTATION.
           ELSEIF lv_in_public = abap_true.
             IF     mv_check_public_attr = abap_true
                AND /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                           iv_lexeme    = 'READ-ONLY' )  = abap_false.
+                                                        iv_lexeme    = 'READ-ONLY' )  = abap_false.
               report_statement( is_statement    = <ls_statement>
                                 iv_finding_code = c_finding_codes-public_attribute ).
             ENDIF.

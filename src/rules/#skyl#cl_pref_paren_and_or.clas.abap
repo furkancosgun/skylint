@@ -112,7 +112,7 @@ CLASS /skyl/cl_pref_paren_and_or IMPLEMENTATION.
 
     WHILE lv_idx <= lv_tok_cnt.
       ls_tok = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = lv_idx ).
+                                             iv_index     = lv_idx ).
       lv_delta = /skyl/cl_ast_util=>token_paren_delta( ls_tok ).
       IF lv_delta > 0.
         lv_depth += lv_delta.
@@ -192,7 +192,7 @@ CLASS /skyl/cl_pref_paren_and_or IMPLEMENTATION.
 
     WHILE lv_idx <= lv_tok_cnt.
       ls_tok = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                iv_index     = lv_idx ).
+                                             iv_index     = lv_idx ).
       lv_delta = /skyl/cl_ast_util=>token_paren_delta( ls_tok ).
       IF lv_delta > 0.
         lv_depth += lv_delta.
@@ -243,7 +243,7 @@ CLASS /skyl/cl_pref_paren_and_or IMPLEMENTATION.
     LOOP AT lt_clauses ASSIGNING <ls_cl>.
       IF sy-tabix > 1.
         ls_tok = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                  iv_index     = <ls_cl>-from_idx - 1 ).
+                                               iv_index     = <ls_cl>-from_idx - 1 ).
         lv_line = |{ lv_line } { ls_tok-lexeme }|.
       ENDIF.
 
@@ -254,7 +254,7 @@ CLASS /skyl/cl_pref_paren_and_or IMPLEMENTATION.
       lv_idx = <ls_cl>-from_idx.
       WHILE lv_idx <= <ls_cl>-to_idx.
         ls_tok = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                  iv_index     = lv_idx ).
+                                               iv_index     = lv_idx ).
         lv_line = |{ lv_line } { ls_tok-lexeme }|.
         lv_idx += 1.
       ENDWHILE.

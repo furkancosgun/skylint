@@ -67,7 +67,7 @@ CLASS /skyl/cl_pref_auth_subrc IMPLEMENTATION.
       ENDIF.
 
       ls_next_stmt = /skyl/cl_ast_util=>get_next_statement( it_statements    = is_procedure-statements
-                                                               iv_current_index = lv_stmt_idx ).
+                                                            iv_current_index = lv_stmt_idx ).
 
       IF ls_next_stmt-keyword IS NOT INITIAL AND checks_sy_subrc( ls_next_stmt ) = abap_true.
         CONTINUE.
@@ -108,6 +108,6 @@ CLASS /skyl/cl_pref_auth_subrc IMPLEMENTATION.
 
   METHOD is_subrc_token.
     rv_is = /skyl/cl_ast_util=>match_system_field( is_token      = is_token
-                                                      iv_field_name = 'SUBRC' ).
+                                                   iv_field_name = 'SUBRC' ).
   ENDMETHOD.
 ENDCLASS.

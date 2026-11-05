@@ -57,11 +57,11 @@ CLASS /skyl/cl_pref_return IMPLEMENTATION.
 
         WHEN 'SELECT'.
           IF     /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                         iv_lexeme    = 'SINGLE' ) = abap_false
+                                                      iv_lexeme    = 'SINGLE' ) = abap_false
              AND /skyl/cl_ast_util=>find_token_sequence( is_statement = <ls_statement>
-                                                            it_expected  = VALUE #( ( `INTO` ) ( `TABLE` ) ) )      = 0
+                                                         it_expected  = VALUE #( ( `INTO` ) ( `TABLE` ) ) )      = 0
              AND /skyl/cl_ast_util=>find_token_sequence( is_statement = <ls_statement>
-                                                            it_expected  = VALUE #( ( `APPENDING` ) ( `TABLE` ) ) ) = 0.
+                                                         it_expected  = VALUE #( ( `APPENDING` ) ( `TABLE` ) ) ) = 0.
             lv_loop_depth += 1.
           ENDIF.
 

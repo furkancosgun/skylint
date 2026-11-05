@@ -71,13 +71,13 @@ CLASS /skyl/cl_no_hardcoded_ip IMPLEMENTATION.
     rv_yes = abap_false.
 
     IF mv_check_ipv4 = abap_true AND /skyl/cl_ast_util=>matches_regex( iv_text    = iv_lexeme
-                                                                          iv_pattern = c_ipv4_pattern ) = abap_true.
+                                                                       iv_pattern = c_ipv4_pattern ) = abap_true.
       rv_yes = abap_true.
       RETURN.
     ENDIF.
 
     IF mv_check_ipv6 = abap_true AND /skyl/cl_ast_util=>matches_regex( iv_text    = iv_lexeme
-                                                                          iv_pattern = c_ipv6_pattern ) = abap_true.
+                                                                       iv_pattern = c_ipv6_pattern ) = abap_true.
       rv_yes = abap_true.
     ENDIF.
   ENDMETHOD.

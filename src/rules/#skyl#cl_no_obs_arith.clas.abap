@@ -100,10 +100,10 @@ CLASS /skyl/cl_no_obs_arith IMPLEMENTATION.
         WHEN 'COMPUTE'.
           IF     mv_check_compute = abap_true
              AND /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                   iv_lexeme    = 'COMPUTE' )    > 0.
+                                                iv_lexeme    = 'COMPUTE' )    > 0.
             lv_line = condense( /skyl/cl_ast_util=>flatten_statement( is_statement = <ls_statement>
-                                                                         it_deletions = VALUE #( ( 1 ) )
-                                                                         iv_suffix    = '.' ) ).
+                                                                      it_deletions = VALUE #( ( 1 ) )
+                                                                      iv_suffix    = '.' ) ).
             IF lv_line IS NOT INITIAL.
               ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-replace_arithmetic
                                               iv_statement_from = lv_stmt_idx
@@ -117,11 +117,11 @@ CLASS /skyl/cl_no_obs_arith IMPLEMENTATION.
         WHEN 'MOVE'.
           IF mv_check_move = abap_true.
             IF /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                       iv_lexeme    = 'TO' ) = abap_true.
+                                                    iv_lexeme    = 'TO' ) = abap_true.
               lv_src = /skyl/cl_ast_util=>get_token_after( is_statement = <ls_statement>
-                                                              iv_lexeme    = 'MOVE' )-lexeme.
+                                                           iv_lexeme    = 'MOVE' )-lexeme.
               lv_dst = /skyl/cl_ast_util=>get_token_after( is_statement = <ls_statement>
-                                                              iv_lexeme    = 'TO' )-lexeme.
+                                                           iv_lexeme    = 'TO' )-lexeme.
               IF lv_src IS NOT INITIAL AND lv_dst IS NOT INITIAL.
                 lv_line = |{ lv_dst } = { lv_src }.|.
                 ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-replace_arithmetic
@@ -137,13 +137,13 @@ CLASS /skyl/cl_no_obs_arith IMPLEMENTATION.
         WHEN 'GET'.
           IF     mv_check_get_ref = abap_true
              AND /skyl/cl_ast_util=>find_token_sequence( is_statement = <ls_statement>
-                                                            it_expected  = VALUE #( ( `REFERENCE` ) ( `OF` ) ) ) > 0
+                                                         it_expected  = VALUE #( ( `REFERENCE` ) ( `OF` ) ) ) > 0
              AND /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                         iv_lexeme    = 'INTO' ) = abap_true.
+                                                      iv_lexeme    = 'INTO' ) = abap_true.
             lv_src = /skyl/cl_ast_util=>get_token_after( is_statement = <ls_statement>
-                                                            iv_lexeme    = 'OF' )-lexeme.
+                                                         iv_lexeme    = 'OF' )-lexeme.
             lv_dst = /skyl/cl_ast_util=>get_token_after( is_statement = <ls_statement>
-                                                            iv_lexeme    = 'INTO' )-lexeme.
+                                                         iv_lexeme    = 'INTO' )-lexeme.
             IF lv_src IS NOT INITIAL AND lv_dst IS NOT INITIAL.
               lv_line = |{ lv_dst } = REF #( { lv_src } ).|.
               ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-replace_arithmetic
@@ -170,27 +170,27 @@ CLASS /skyl/cl_no_obs_arith IMPLEMENTATION.
     CASE lv_kw.
       WHEN 'ADD'.
         lv_src = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                        iv_lexeme    = 'ADD' )-lexeme.
+                                                     iv_lexeme    = 'ADD' )-lexeme.
         lv_dst = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                        iv_lexeme    = 'TO' )-lexeme.
+                                                     iv_lexeme    = 'TO' )-lexeme.
         lv_op = '+'.
       WHEN 'SUBTRACT'.
         lv_src = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                        iv_lexeme    = 'SUBTRACT' )-lexeme.
+                                                     iv_lexeme    = 'SUBTRACT' )-lexeme.
         lv_dst = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                        iv_lexeme    = 'FROM' )-lexeme.
+                                                     iv_lexeme    = 'FROM' )-lexeme.
         lv_op = '-'.
       WHEN 'MULTIPLY'.
         lv_dst = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                        iv_lexeme    = 'MULTIPLY' )-lexeme.
+                                                     iv_lexeme    = 'MULTIPLY' )-lexeme.
         lv_src = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                        iv_lexeme    = 'BY' )-lexeme.
+                                                     iv_lexeme    = 'BY' )-lexeme.
         lv_op = '*'.
       WHEN 'DIVIDE'.
         lv_dst = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                        iv_lexeme    = 'DIVIDE' )-lexeme.
+                                                     iv_lexeme    = 'DIVIDE' )-lexeme.
         lv_src = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                        iv_lexeme    = 'BY' )-lexeme.
+                                                     iv_lexeme    = 'BY' )-lexeme.
         lv_op = '/'.
     ENDCASE.
 

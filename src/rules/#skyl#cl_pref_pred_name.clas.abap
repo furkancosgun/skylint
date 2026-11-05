@@ -74,14 +74,14 @@ CLASS /skyl/cl_pref_pred_name IMPLEMENTATION.
     rv_has_bool = abap_false.
 
     lv_ret_idx = /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                                   iv_lexeme    = 'RETURNING' ).
+                                                iv_lexeme    = 'RETURNING' ).
     IF lv_ret_idx = 0.
       RETURN.
     ENDIF.
 
     ls_type_tok = /skyl/cl_ast_util=>get_token_after( is_statement   = is_statement
-                                                         iv_lexeme      = 'TYPE'
-                                                         iv_start_index = lv_ret_idx ).
+                                                      iv_lexeme      = 'TYPE'
+                                                      iv_start_index = lv_ret_idx ).
     IF ls_type_tok-lexeme IS INITIAL.
       RETURN.
     ENDIF.

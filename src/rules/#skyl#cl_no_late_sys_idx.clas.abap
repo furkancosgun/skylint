@@ -49,7 +49,7 @@ CLASS /skyl/cl_no_late_sys_idx IMPLEMENTATION.
     LOOP AT is_procedure-statements ASSIGNING <ls_statement>.
       lv_stmt_idx = sy-tabix.
       ls_prev_stmt = /skyl/cl_ast_util=>get_previous_statement( it_statements    = is_procedure-statements
-                                                                   iv_current_index = lv_stmt_idx ).
+                                                                iv_current_index = lv_stmt_idx ).
 
       IF lv_loop_depth > 0 AND ls_prev_stmt-keyword <> 'LOOP'.
         inspect_statement( is_statement  = <ls_statement>
@@ -85,7 +85,7 @@ CLASS /skyl/cl_no_late_sys_idx IMPLEMENTATION.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
       IF /skyl/cl_ast_util=>match_system_field( is_token      = <ls_token>
-                                                   iv_field_name = iv_field_name ) = abap_true.
+                                                iv_field_name = iv_field_name ) = abap_true.
         report_token( is_token        = <ls_token>
                       is_statement    = is_statement
                       iv_finding_code = c_finding_codes-late_sys_idx ).

@@ -79,16 +79,16 @@ CLASS /skyl/cl_no_raw_html IMPLEMENTATION.
 
     IF     mv_check_scripts = abap_true
        AND /skyl/cl_ast_util=>matches_regex( iv_text    = lv_lower
-                                                iv_pattern = c_script_pattern
-                                                iv_pcre    = abap_true )      = abap_true.
+                                             iv_pattern = c_script_pattern
+                                             iv_pcre    = abap_true )      = abap_true.
       rv_yes = abap_true.
       RETURN.
     ENDIF.
 
     IF     mv_check_tags = abap_true
        AND /skyl/cl_ast_util=>matches_regex( iv_text    = lv_lower
-                                                iv_pattern = c_tags_pattern
-                                                iv_pcre    = abap_true )    = abap_true.
+                                             iv_pattern = c_tags_pattern
+                                             iv_pcre    = abap_true )    = abap_true.
       rv_yes = abap_true.
     ENDIF.
   ENDMETHOD.

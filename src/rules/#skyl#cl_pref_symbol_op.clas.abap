@@ -72,11 +72,11 @@ CLASS /skyl/cl_pref_symbol_op IMPLEMENTATION.
       LOOP AT <ls_statement>-tokens ASSIGNING <ls_token>.
         lv_tok_idx = sy-tabix.
         IF     /skyl/cl_ast_util=>token_is_keyword( <ls_token> ) = abap_true
-           AND is_legacy_operator( <ls_token>-lexeme )              = abap_true.
+           AND is_legacy_operator( <ls_token>-lexeme )           = abap_true.
           lt_overrides = VALUE #( ( index  = lv_tok_idx
                                     lexeme = map_to_symbol( <ls_token>-lexeme ) ) ).
           lv_line = /skyl/cl_ast_util=>flatten_statement( is_statement = <ls_statement>
-                                                             it_overrides = lt_overrides ).
+                                                          it_overrides = lt_overrides ).
           ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-prefer_operator
                                           iv_statement_from = lv_stmt_idx
                                           it_new_code       = VALUE #( ( |{ lv_line }.| ) ) ).

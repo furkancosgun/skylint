@@ -216,7 +216,7 @@ CLASS /skyl/cl_pref_downport IMPLEMENTATION.
          OR lv_lex = 'REF'
          OR lv_lex = 'CAST'.
         ls_next = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                   iv_index     = lv_idx + 1 ).
+                                                iv_index     = lv_idx + 1 ).
         IF ls_next-lexeme CP '*('.
           rv_has = abap_true.
           RETURN.
@@ -245,11 +245,11 @@ CLASS /skyl/cl_pref_downport IMPLEMENTATION.
 
     LOOP AT is_statement-tokens ASSIGNING <ls_token>.
       IF    /skyl/cl_ast_util=>token_is_inline_declaration( is_token  = <ls_token>
-                                                               iv_prefix = 'DATA' )         = abap_true
+                                                            iv_prefix = 'DATA' )         = abap_true
          OR /skyl/cl_ast_util=>token_is_inline_declaration( is_token  = <ls_token>
-                                                               iv_prefix = 'FINAL' )        = abap_true
+                                                            iv_prefix = 'FINAL' )        = abap_true
          OR /skyl/cl_ast_util=>token_is_inline_declaration( is_token  = <ls_token>
-                                                               iv_prefix = 'FIELD-SYMBOL' ) = abap_true.
+                                                            iv_prefix = 'FIELD-SYMBOL' ) = abap_true.
         rv_has = abap_true.
         RETURN.
       ENDIF.
@@ -358,13 +358,13 @@ CLASS /skyl/cl_pref_downport IMPLEMENTATION.
     ENDIF.
 
     IF /skyl/cl_ast_util=>matches_token_at( is_statement = is_statement
-                                               iv_index     = 2
-                                               iv_expected  = `EXCEPTION` ) = abap_false.
+                                            iv_index     = 2
+                                            iv_expected  = `EXCEPTION` ) = abap_false.
       RETURN.
     ENDIF.
 
     lv_msg_idx = /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                                   iv_lexeme    = 'MESSAGE' ).
+                                                iv_lexeme    = 'MESSAGE' ).
     IF lv_msg_idx > 2.
       rv_has = abap_true.
     ENDIF.

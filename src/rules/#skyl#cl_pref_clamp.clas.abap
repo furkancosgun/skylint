@@ -69,9 +69,9 @@ CLASS /skyl/cl_pref_clamp IMPLEMENTATION.
     CLEAR rs_branch.
 
     /skyl/cl_ast_util=>parse_assignment( EXPORTING is_statement     = is_body
-                                            IMPORTING ev_target        = lv_var
-                                                      ev_expr          = lv_bound
-                                                      ev_is_assignment = lv_is_assign ).
+                                         IMPORTING ev_target        = lv_var
+                                                   ev_expr          = lv_bound
+                                                   ev_is_assignment = lv_is_assign ).
     IF lv_is_assign = abap_false.
       RETURN.
     ENDIF.
@@ -83,8 +83,8 @@ CLASS /skyl/cl_pref_clamp IMPLEMENTATION.
     ENDIF.
 
     /skyl/cl_ast_util=>strip_outer_parens( EXPORTING is_statement = is_cond
-                                              CHANGING  cv_from      = lv_from
-                                                        cv_to        = lv_to ).
+                                           CHANGING  cv_from      = lv_from
+                                                     cv_to        = lv_to ).
 
     LOOP AT is_cond-tokens ASSIGNING <ls_token> FROM lv_from TO lv_to.
       IF     <ls_token>-references IS INITIAL
@@ -102,20 +102,20 @@ CLASS /skyl/cl_pref_clamp IMPLEMENTATION.
     lv_left_from = lv_from.
     lv_left_to   = lv_op_idx - 1.
     /skyl/cl_ast_util=>strip_outer_parens( EXPORTING is_statement = is_cond
-                                              CHANGING  cv_from      = lv_left_from
-                                                        cv_to        = lv_left_to ).
+                                           CHANGING  cv_from      = lv_left_from
+                                                     cv_to        = lv_left_to ).
     lv_left = /skyl/cl_ast_util=>extract_tokens_text( is_statement = is_cond
-                                                         iv_from_idx  = lv_left_from
-                                                         iv_to_idx    = lv_left_to ).
+                                                      iv_from_idx  = lv_left_from
+                                                      iv_to_idx    = lv_left_to ).
 
     lv_right_from = lv_op_idx + 1.
     lv_right_to   = lv_to.
     /skyl/cl_ast_util=>strip_outer_parens( EXPORTING is_statement = is_cond
-                                              CHANGING  cv_from      = lv_right_from
-                                                        cv_to        = lv_right_to ).
+                                           CHANGING  cv_from      = lv_right_from
+                                                     cv_to        = lv_right_to ).
     lv_right = /skyl/cl_ast_util=>extract_tokens_text( is_statement = is_cond
-                                                          iv_from_idx  = lv_right_from
-                                                          iv_to_idx    = lv_right_to ).
+                                                       iv_from_idx  = lv_right_from
+                                                       iv_to_idx    = lv_right_to ).
 
     IF to_upper( lv_var ) = to_upper( lv_left ) AND to_upper( lv_bound ) = to_upper( lv_right ).
       CASE lv_op.
@@ -168,13 +168,13 @@ CLASS /skyl/cl_pref_clamp IMPLEMENTATION.
       ENDIF.
 
       ls_body1  = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                       iv_index      = lv_idx + 1 ).
+                                                    iv_index      = lv_idx + 1 ).
       ls_elseif = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                       iv_index      = lv_idx + 2 ).
+                                                    iv_index      = lv_idx + 2 ).
       ls_body2  = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                       iv_index      = lv_idx + 3 ).
+                                                    iv_index      = lv_idx + 3 ).
       ls_endif  = /skyl/cl_ast_util=>get_statement( it_statements = is_procedure-statements
-                                                       iv_index      = lv_idx + 4 ).
+                                                    iv_index      = lv_idx + 4 ).
 
       IF ls_elseif-keyword <> 'ELSEIF' OR ls_endif-keyword <> 'ENDIF'.
         CONTINUE.

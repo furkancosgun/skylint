@@ -49,14 +49,14 @@ CLASS /skyl/cl_no_default_key IMPLEMENTATION.
       CASE <ls_statement>-keyword.
         WHEN 'TYPES' OR 'DATA' OR 'STATICS' OR 'CLASS-DATA' OR 'FIELD-SYMBOL'.
           lv_idx = /skyl/cl_ast_util=>find_token_sequence( is_statement = <ls_statement>
-                                                              it_expected  = VALUE #( ( `DEFAULT` ) ( `KEY` ) ) ).
+                                                           it_expected  = VALUE #( ( `DEFAULT` ) ( `KEY` ) ) ).
           IF lv_idx > 0.
             CLEAR: lt_overrides,
                    ls_quickfix.
             lt_overrides = VALUE #( ( index  = lv_idx
                                       lexeme = 'EMPTY' ) ).
             lv_line = /skyl/cl_ast_util=>flatten_statement( is_statement = <ls_statement>
-                                                               it_overrides = lt_overrides ).
+                                                            it_overrides = lt_overrides ).
             ls_quickfix = quickfix_replace( iv_quickfix_code  = c_quickfix_codes-use_empty_key
                                             iv_statement_from = lv_stmt_idx
                                             it_new_code       = VALUE #( ( |{ lv_line }.| ) ) ).

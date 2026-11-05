@@ -37,7 +37,7 @@ CLASS /skyl/cl_no_like_objects IMPLEMENTATION.
       IF     (    <ls_statement>-keyword = 'DATA'    OR <ls_statement>-keyword = 'TYPES'
                OR <ls_statement>-keyword = 'STATICS' OR <ls_statement>-keyword = 'CONSTANTS' )
          AND /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                     iv_lexeme    = 'LIKE' ) = abap_true.
+                                                  iv_lexeme    = 'LIKE' ) = abap_true.
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-avoid_like ).
       ENDIF.

@@ -309,7 +309,7 @@ CLASS /skyl/cl_no_empty_fae IMPLEMENTATION.
     CLEAR rs_res.
 
     IF /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                               iv_lexeme    = 'OR' ) = abap_true.
+                                            iv_lexeme    = 'OR' ) = abap_true.
       RETURN.
     ENDIF.
 
@@ -327,10 +327,10 @@ CLASS /skyl/cl_no_empty_fae IMPLEMENTATION.
     ENDIF.
 
     lv_has_not = /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                         iv_lexeme    = 'NOT' ).
+                                                      iv_lexeme    = 'NOT' ).
 
     IF /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                               iv_lexeme    = 'INITIAL' ) = abap_true.
+                                            iv_lexeme    = 'INITIAL' ) = abap_true.
       IF lv_has_not = abap_true.
         rs_res-is_positive = abap_true.
       ELSE.
@@ -340,9 +340,9 @@ CLASS /skyl/cl_no_empty_fae IMPLEMENTATION.
     ENDIF.
 
     IF    /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                  iv_lexeme    = '0' )        = abap_true
+                                               iv_lexeme    = '0' )        = abap_true
        OR /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                  iv_lexeme    = `'0'` )      = abap_true.
+                                               iv_lexeme    = `'0'` )      = abap_true.
       LOOP AT is_statement-tokens TRANSPORTING NO FIELDS WHERE lexeme = '=' OR lexeme = '<='.
         lv_has_not = abap_true.
         EXIT.
@@ -350,9 +350,9 @@ CLASS /skyl/cl_no_empty_fae IMPLEMENTATION.
     ENDIF.
 
     IF    /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                  iv_lexeme    = 'LINES(' )       = abap_true
+                                               iv_lexeme    = 'LINES(' )       = abap_true
        OR /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                  iv_lexeme    = 'LINE_EXISTS(' ) = abap_true.
+                                               iv_lexeme    = 'LINE_EXISTS(' ) = abap_true.
       IF lv_has_not = abap_true.
         rs_res-is_negative = abap_true.
       ELSE.

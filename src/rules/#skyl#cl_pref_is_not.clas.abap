@@ -79,9 +79,9 @@ CLASS /skyl/cl_pref_is_not IMPLEMENTATION.
 
       IF lv_is_idx = lv_not_idx + 2.
         lv_x_lex = /skyl/cl_ast_util=>get_token_lexeme( is_statement = <ls_statement>
-                                                           iv_index     = lv_not_idx + 1 ).
+                                                        iv_index     = lv_not_idx + 1 ).
         lv_y_lex = /skyl/cl_ast_util=>get_token_lexeme( is_statement = <ls_statement>
-                                                           iv_index     = lv_is_idx + 1 ).
+                                                        iv_index     = lv_is_idx + 1 ).
         lt_overrides = VALUE #( ( index  = lv_not_idx
                                   lexeme = lv_x_lex )
                                 ( index  = lv_not_idx + 1
@@ -91,7 +91,7 @@ CLASS /skyl/cl_pref_is_not IMPLEMENTATION.
                                 ( index  = lv_is_idx + 1
                                   lexeme = lv_y_lex ) ).
         lv_line = /skyl/cl_ast_util=>flatten_statement( is_statement = <ls_statement>
-                                                           it_overrides = lt_overrides ).
+                                                        it_overrides = lt_overrides ).
         ls_quickfix = quickfix_replace( iv_quickfix_code = c_quickfix_codes-prefer_is_not
                                        iv_statement_from = lv_stmt_idx
                                         it_new_code      = VALUE #( ( |{ lv_line }.| ) ) ).
@@ -129,7 +129,7 @@ CLASS /skyl/cl_pref_is_not IMPLEMENTATION.
         lv_in_not = abap_false.
       ELSEIF lv_in_not = abap_true AND lv_lexeme = 'IS'.
         ls_next = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                   iv_index     = lv_idx + 1 ).
+                                                iv_index     = lv_idx + 1 ).
         lv_next_lexeme = ls_next-lexeme.
         IF /skyl/cl_ast_util=>token_is_keyword( ls_next ) = abap_true.
           CASE lv_next_lexeme.

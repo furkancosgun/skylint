@@ -82,7 +82,7 @@ CLASS /skyl/cl_no_mod_std_table IMPLEMENTATION.
 
   METHOD is_own_table.
     rv_is_z = /skyl/cl_ast_util=>matches_regex( iv_text    = to_lower( iv_name )
-                                                   iv_pattern = mv_own_tables
-                                                   iv_pcre    = abap_false ).
+                                                iv_pattern = mv_own_tables
+                                                iv_pcre    = abap_false ).
   ENDMETHOD.
 ENDCLASS.

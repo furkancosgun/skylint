@@ -28,23 +28,23 @@ CLASS ltcl_ast_util IMPLEMENTATION.
                                             references = lt_refs ) ) ).
 
     cl_abap_unit_assert=>assert_false( /skyl/cl_ast_util=>has_token_lexeme( is_statement = ls_stmt
-                                                                               iv_lexeme    = 'EXPORTING' ) ).
+                                                                            iv_lexeme    = 'EXPORTING' ) ).
     cl_abap_unit_assert=>assert_equals( exp = 0
                                         act = /skyl/cl_ast_util=>find_token( is_statement = ls_stmt
-                                                                                iv_lexeme    = 'EXPORTING' ) ).
+                                                                             iv_lexeme    = 'EXPORTING' ) ).
     cl_abap_unit_assert=>assert_false( /skyl/cl_ast_util=>matches_token_at( is_statement = ls_stmt
-                                                                               iv_index     = 2
-                                                                               iv_expected  = 'EXPORTING' ) ).
+                                                                            iv_index     = 2
+                                                                            iv_expected  = 'EXPORTING' ) ).
 
     ls_stmt = VALUE #( keyword = 'CALL'
                        tokens  = VALUE #( ( lexeme = 'CALL' )
                                           ( lexeme = 'EXPORTING' ) ) ).
 
     cl_abap_unit_assert=>assert_true( /skyl/cl_ast_util=>has_token_lexeme( is_statement = ls_stmt
-                                                                              iv_lexeme    = 'EXPORTING' ) ).
+                                                                           iv_lexeme    = 'EXPORTING' ) ).
     cl_abap_unit_assert=>assert_equals( exp = 2
                                         act = /skyl/cl_ast_util=>find_token( is_statement = ls_stmt
-                                                                                iv_lexeme    = 'EXPORTING' ) ).
+                                                                             iv_lexeme    = 'EXPORTING' ) ).
   ENDMETHOD.
 
   METHOD test_token_getters.
@@ -62,12 +62,12 @@ CLASS ltcl_ast_util IMPLEMENTATION.
                                         act = /skyl/cl_ast_util=>token_count( ls_stmt ) ).
 
     ls_tok = /skyl/cl_ast_util=>get_token( is_statement = ls_stmt
-                                              iv_index     = 1 ).
+                                           iv_index     = 1 ).
     cl_abap_unit_assert=>assert_equals( exp = 'DATA'
                                         act = ls_tok-lexeme ).
 
     ls_tok = /skyl/cl_ast_util=>get_token( is_statement = ls_stmt
-                                              iv_index     = 99 ).
+                                           iv_index     = 99 ).
     cl_abap_unit_assert=>assert_initial( ls_tok-lexeme ).
 
     ls_tok = /skyl/cl_ast_util=>get_first_token( ls_stmt ).
@@ -79,7 +79,7 @@ CLASS ltcl_ast_util IMPLEMENTATION.
                                         act = ls_tok-lexeme ).
 
     lv_lex = /skyl/cl_ast_util=>get_token_lexeme( is_statement = ls_stmt
-                                                     iv_index     = 4 ).
+                                                  iv_index     = 4 ).
     cl_abap_unit_assert=>assert_equals( exp = 'I'
                                         act = lv_lex ).
   ENDMETHOD.
@@ -98,17 +98,17 @@ CLASS ltcl_ast_util IMPLEMENTATION.
                                         act = /skyl/cl_ast_util=>statement_count( lt_stmts ) ).
 
     ls_curr = /skyl/cl_ast_util=>get_statement( it_statements = lt_stmts
-                                                   iv_index      = 1 ).
+                                                iv_index      = 1 ).
     cl_abap_unit_assert=>assert_equals( exp = 'DATA'
                                         act = ls_curr-keyword ).
 
     ls_next = /skyl/cl_ast_util=>get_next_statement( it_statements    = lt_stmts
-                                                        iv_current_index = 1 ).
+                                                     iv_current_index = 1 ).
     cl_abap_unit_assert=>assert_equals( exp = 'COMPUTE'
                                         act = ls_next-keyword ).
 
     ls_prev = /skyl/cl_ast_util=>get_previous_statement( it_statements    = lt_stmts
-                                                            iv_current_index = 2 ).
+                                                         iv_current_index = 2 ).
     cl_abap_unit_assert=>assert_equals( exp = 'DATA'
                                         act = ls_prev-keyword ).
   ENDMETHOD.
@@ -128,22 +128,22 @@ CLASS ltcl_ast_util IMPLEMENTATION.
                                           ( lexeme = '@DATA(lt_res)' ) ) ).
 
     lv_idx = /skyl/cl_ast_util=>find_token( is_statement = ls_stmt
-                                               iv_lexeme    = 'FROM' ).
+                                            iv_lexeme    = 'FROM' ).
     cl_abap_unit_assert=>assert_equals( exp = 3
                                         act = lv_idx ).
 
     ls_tok = /skyl/cl_ast_util=>get_token_after( is_statement = ls_stmt
-                                                    iv_lexeme    = 'FROM' ).
+                                                 iv_lexeme    = 'FROM' ).
     cl_abap_unit_assert=>assert_equals( exp = 'SFLIGHT'
                                         act = ls_tok-lexeme  ).
 
     ls_tok = /skyl/cl_ast_util=>get_token_before( is_statement = ls_stmt
-                                                     iv_lexeme    = 'FROM' ).
+                                                  iv_lexeme    = 'FROM' ).
     cl_abap_unit_assert=>assert_equals( exp = '*'
                                         act = ls_tok-lexeme ).
 
     ls_tok = /skyl/cl_ast_util=>get_token_after_sequence( is_statement = ls_stmt
-                                                             it_expected  = VALUE #( ( `INTO` ) ( `TABLE` ) ) ).
+                                                          it_expected  = VALUE #( ( `INTO` ) ( `TABLE` ) ) ).
     cl_abap_unit_assert=>assert_equals( exp = '@DATA(lt_res)'
                                         act = ls_tok-lexeme ).
   ENDMETHOD.
@@ -160,15 +160,15 @@ CLASS ltcl_ast_util IMPLEMENTATION.
     cl_abap_unit_assert=>assert_true( /skyl/cl_ast_util=>is_assignment( ls_stmt ) ).
 
     ls_tok = /skyl/cl_ast_util=>get_token( is_statement = ls_stmt
-                                              iv_index     = 1 ).
+                                           iv_index     = 1 ).
     cl_abap_unit_assert=>assert_true( /skyl/cl_ast_util=>token_is_identifier( ls_tok ) ).
 
     ls_tok = /skyl/cl_ast_util=>get_token( is_statement = ls_stmt
-                                              iv_index     = 2 ).
+                                           iv_index     = 2 ).
     cl_abap_unit_assert=>assert_true( /skyl/cl_ast_util=>is_comparison_operator( ls_tok-lexeme ) ).
 
     ls_tok = /skyl/cl_ast_util=>get_token( is_statement = ls_stmt
-                                              iv_index     = 3 ).
+                                           iv_index     = 3 ).
     cl_abap_unit_assert=>assert_true( /skyl/cl_ast_util=>token_is_literal( ls_tok ) ).
   ENDMETHOD.
 
@@ -210,9 +210,9 @@ CLASS ltcl_ast_util IMPLEMENTATION.
     ls_tok = VALUE #( lexeme = 'FRIENDS' ).
     cl_abap_unit_assert=>assert_true( /skyl/cl_ast_util=>token_is_keyword( ls_tok ) ).
     cl_abap_unit_assert=>assert_true( /skyl/cl_ast_util=>token_is_keyword( is_token  = ls_tok
-                                                                              iv_lexeme = 'FRIENDS' ) ).
+                                                                           iv_lexeme = 'FRIENDS' ) ).
     cl_abap_unit_assert=>assert_false( /skyl/cl_ast_util=>token_is_keyword( is_token  = ls_tok
-                                                                               iv_lexeme = 'OTHER' ) ).
+                                                                            iv_lexeme = 'OTHER' ) ).
 
     ls_tok-references = VALUE #( ( kind = if_ci_atc_source_code_provider=>compiler_reference_kinds-data ) ).
     cl_abap_unit_assert=>assert_false( /skyl/cl_ast_util=>token_is_keyword( ls_tok ) ).
@@ -228,7 +228,7 @@ CLASS ltcl_ast_util IMPLEMENTATION.
                                      kind       = if_ci_atc_source_code_provider=>compiler_reference_kinds-type ) ) ) ) ) ).
 
     lv_type = /skyl/cl_ast_util=>get_declared_type( it_statements = lt_stmts
-                                                       iv_full_name  = '\PR:TEST\DA:LX_ERR' ).
+                                                    iv_full_name  = '\PR:TEST\DA:LX_ERR' ).
     cl_abap_unit_assert=>assert_equals( exp = '\TY:CX_ROOT'
                                         act = lv_type ).
   ENDMETHOD.

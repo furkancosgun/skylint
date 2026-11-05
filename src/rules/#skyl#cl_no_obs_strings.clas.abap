@@ -77,18 +77,18 @@ CLASS /skyl/cl_no_obs_strings IMPLEMENTATION.
         WHEN 'FIND' OR 'REPLACE'.
           IF     mv_check_regex = abap_true
              AND /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                   iv_lexeme    = 'REGEX' )      > 0.
+                                                iv_lexeme    = 'REGEX' )      > 0.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_string ).
           ELSEIF     mv_check_occurences = abap_true
                  AND /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                       iv_lexeme    = 'OCCURENCES' ) > 0.
+                                                    iv_lexeme    = 'OCCURENCES' ) > 0.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_string ).
           ELSEIF     mv_check_replace_into = abap_true
                  AND <ls_statement>-keyword = 'REPLACE'
                  AND /skyl/cl_ast_util=>find_token( is_statement = <ls_statement>
-                                                       iv_lexeme    = 'INTO' )       > 0.
+                                                    iv_lexeme    = 'INTO' )       > 0.
             report_statement( is_statement    = <ls_statement>
                               iv_finding_code = c_finding_codes-obsolete_string ).
           ENDIF.

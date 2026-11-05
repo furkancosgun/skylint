@@ -143,8 +143,8 @@ CLASS /skyl/cl_pref_cond IMPLEMENTATION.
     CLEAR ls_branch.
     ls_branch-branch_idx = iv_if_idx.
     ls_branch-cond_text  = /skyl/cl_ast_util=>extract_tokens_text( is_statement = is_if_stmt
-                                                                      iv_from_idx  = 2
-                                                                      iv_to_idx    = lines( is_if_stmt-tokens ) ).
+                                                                   iv_from_idx  = 2
+                                                                   iv_to_idx    = lines( is_if_stmt-tokens ) ).
 
     lv_curr = iv_if_idx + 1.
     IF lv_curr > iv_total.
@@ -153,11 +153,11 @@ CLASS /skyl/cl_pref_cond IMPLEMENTATION.
     ENDIF.
 
     ls_body = /skyl/cl_ast_util=>get_statement( it_statements = it_statements
-                                                   iv_index      = lv_curr ).
+                                                iv_index      = lv_curr ).
     /skyl/cl_ast_util=>parse_assignment( EXPORTING is_statement     = ls_body
-                                            IMPORTING ev_target        = lv_curr_target
-                                                      ev_expr          = lv_curr_expr
-                                                      ev_is_assignment = lv_is_assign ).
+                                         IMPORTING ev_target        = lv_curr_target
+                                                   ev_expr          = lv_curr_expr
+                                                   ev_is_assignment = lv_is_assign ).
 
     IF lv_is_assign = abap_false.
       ev_valid = abap_false.
@@ -173,7 +173,7 @@ CLASS /skyl/cl_pref_cond IMPLEMENTATION.
 
     WHILE lv_curr <= iv_total.
       ls_stmt = /skyl/cl_ast_util=>get_statement( it_statements = it_statements
-                                                     iv_index      = lv_curr ).
+                                                  iv_index      = lv_curr ).
       IF ls_stmt-keyword IS INITIAL.
         EXIT.
       ENDIF.
@@ -196,8 +196,8 @@ CLASS /skyl/cl_pref_cond IMPLEMENTATION.
         lv_has_else       = abap_true.
       ELSE.
         ls_branch-cond_text = /skyl/cl_ast_util=>extract_tokens_text( is_statement = ls_stmt
-                                                                         iv_from_idx  = 2
-                                                                         iv_to_idx    = lines( ls_stmt-tokens ) ).
+                                                                      iv_from_idx  = 2
+                                                                      iv_to_idx    = lines( ls_stmt-tokens ) ).
       ENDIF.
 
       lv_curr += 1.
@@ -207,11 +207,11 @@ CLASS /skyl/cl_pref_cond IMPLEMENTATION.
       ENDIF.
 
       ls_body = /skyl/cl_ast_util=>get_statement( it_statements = it_statements
-                                                     iv_index      = lv_curr ).
+                                                  iv_index      = lv_curr ).
       /skyl/cl_ast_util=>parse_assignment( EXPORTING is_statement     = ls_body
-                                              IMPORTING ev_target        = lv_curr_target
-                                                        ev_expr          = lv_curr_expr
-                                                        ev_is_assignment = lv_is_assign ).
+                                           IMPORTING ev_target        = lv_curr_target
+                                                     ev_expr          = lv_curr_expr
+                                                     ev_is_assignment = lv_is_assign ).
 
       IF lv_is_assign = abap_false OR lv_curr_target <> ev_target.
         ev_valid = abap_false.
@@ -226,7 +226,7 @@ CLASS /skyl/cl_pref_cond IMPLEMENTATION.
         lv_curr += 1.
         IF lv_curr <= iv_total.
           ls_stmt = /skyl/cl_ast_util=>get_statement( it_statements = it_statements
-                                                         iv_index      = lv_curr ).
+                                                      iv_index      = lv_curr ).
           IF ls_stmt-keyword = 'ENDIF'.
             ev_endif_idx = lv_curr.
             EXIT.

@@ -40,9 +40,9 @@ CLASS /skyl/cl_pref_enum IMPLEMENTATION.
       ENDIF.
 
       IF     /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                     iv_lexeme    = 'BEGIN' )      = abap_true
+                                                  iv_lexeme    = 'BEGIN' )      = abap_true
          AND /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                     iv_lexeme    = 'OF' )         = abap_true.
+                                                  iv_lexeme    = 'OF' )         = abap_true.
 
         report_statement( is_statement    = <ls_statement>
                           iv_finding_code = c_finding_codes-prefer_enum ).

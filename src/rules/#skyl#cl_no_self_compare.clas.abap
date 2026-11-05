@@ -88,8 +88,8 @@ CLASS /skyl/cl_no_self_compare IMPLEMENTATION.
           lv_start = 2.
         WHEN 'COMPUTE'.
           lv_equal = /skyl/cl_ast_util=>find_token( is_statement   = <ls_statement>
-                                                       iv_lexeme      = '='
-                                                       iv_start_index = 2 ).
+                                                    iv_lexeme      = '='
+                                                    iv_start_index = 2 ).
           IF lv_equal = 0.
             CONTINUE.
           ENDIF.
@@ -116,8 +116,8 @@ CLASS /skyl/cl_no_self_compare IMPLEMENTATION.
     ENDIF.
 
     /skyl/cl_ast_util=>strip_outer_parens( EXPORTING is_statement = is_statement
-                                              CHANGING  cv_from      = lv_from
-                                                        cv_to        = lv_to ).
+                                           CHANGING  cv_from      = lv_from
+                                                     cv_to        = lv_to ).
 
     IF lv_to < lv_from + 2.
       RETURN.
@@ -197,14 +197,14 @@ CLASS /skyl/cl_no_self_compare IMPLEMENTATION.
     lv_left_from = iv_from.
     lv_left_to   = iv_op_index - 1.
     /skyl/cl_ast_util=>strip_outer_parens( EXPORTING is_statement = is_statement
-                                              CHANGING  cv_from      = lv_left_from
-                                                        cv_to        = lv_left_to ).
+                                           CHANGING  cv_from      = lv_left_from
+                                                     cv_to        = lv_left_to ).
 
     lv_right_from = iv_op_index + 1.
     lv_right_to   = iv_to.
     /skyl/cl_ast_util=>strip_outer_parens( EXPORTING is_statement = is_statement
-                                              CHANGING  cv_from      = lv_right_from
-                                                        cv_to        = lv_right_to ).
+                                           CHANGING  cv_from      = lv_right_from
+                                                     cv_to        = lv_right_to ).
 
     IF lv_left_from > lv_left_to OR lv_right_from > lv_right_to.
       RETURN.

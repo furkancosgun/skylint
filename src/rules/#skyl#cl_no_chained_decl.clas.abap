@@ -106,7 +106,7 @@ CLASS /skyl/cl_no_chained_decl IMPLEMENTATION.
             ENDIF.
 
             ls_target = /skyl/cl_ast_util=>get_next_statement( it_statements    = is_procedure-statements
-                                                                  iv_current_index = lv_idx ).
+                                                               iv_current_index = lv_idx ).
             IF ls_target-keyword IS NOT INITIAL.
               report_statement( is_statement    = ls_target
                                 iv_finding_code = c_finding_codes-chained_declaration
@@ -127,7 +127,7 @@ CLASS /skyl/cl_no_chained_decl IMPLEMENTATION.
     lv_done = abap_false.
     WHILE lv_done = abap_false.
       ls_next = /skyl/cl_ast_util=>get_statement( it_statements = it_statements
-                                                     iv_index      = lv_next_idx ).
+                                                  iv_index      = lv_next_idx ).
       IF ls_next-keyword IS INITIAL.
         lv_done = abap_true.
       ELSEIF ls_next-keyword <> is_head-keyword.
@@ -153,7 +153,7 @@ CLASS /skyl/cl_no_chained_decl IMPLEMENTATION.
 
   METHOD is_structure_start.
     rv_is = /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                    iv_lexeme    = 'BEGIN' ).
+                                                 iv_lexeme    = 'BEGIN' ).
   ENDMETHOD.
 
   METHOD is_same_position.

@@ -69,25 +69,25 @@ CLASS /skyl/cl_no_ambiguous_stmt IMPLEMENTATION.
         ENDIF.
 
         IF    /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                      iv_lexeme    = 'TABLE' )    = abap_true
+                                                   iv_lexeme    = 'TABLE' )    = abap_true
            OR /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                      iv_lexeme    = 'INDEX' )    = abap_true
+                                                   iv_lexeme    = 'INDEX' )    = abap_true
            OR /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                      iv_lexeme    = 'ADJACENT' ) = abap_true.
+                                                   iv_lexeme    = 'ADJACENT' ) = abap_true.
           RETURN.
         ENDIF.
 
         ls_second_tok = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                         iv_index     = 2 ).
+                                                      iv_index     = 2 ).
         IF ls_second_tok-lexeme = 'FROM'.
           RETURN.
         ENDIF.
 
         lv_from_idx = /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                                        iv_lexeme    = 'FROM' ).
+                                                     iv_lexeme    = 'FROM' ).
         IF lv_from_idx > 2 AND lv_from_idx < lv_tokens_count.
           ls_from_target = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                            iv_index     = lv_from_idx + 1 ).
+                                                         iv_index     = lv_from_idx + 1 ).
           IF ls_from_target-lexeme(1) <> '@'.
             rv_yes = abap_true.
           ENDIF.
@@ -100,17 +100,17 @@ CLASS /skyl/cl_no_ambiguous_stmt IMPLEMENTATION.
         ENDIF.
 
         IF    /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                      iv_lexeme    = 'TABLE' )    = abap_true
+                                                   iv_lexeme    = 'TABLE' )    = abap_true
            OR /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                      iv_lexeme    = 'INDEX' )    = abap_true.
+                                                   iv_lexeme    = 'INDEX' )    = abap_true.
           RETURN.
         ENDIF.
 
         lv_from_idx = /skyl/cl_ast_util=>find_token( is_statement = is_statement
-                                                        iv_lexeme    = 'FROM' ).
+                                                     iv_lexeme    = 'FROM' ).
         IF lv_from_idx > 2 AND lv_from_idx < lv_tokens_count.
           ls_from_target = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                            iv_index     = lv_from_idx + 1 ).
+                                                         iv_index     = lv_from_idx + 1 ).
           IF ls_from_target-lexeme(1) <> '@'.
             rv_yes = abap_true.
           ENDIF.

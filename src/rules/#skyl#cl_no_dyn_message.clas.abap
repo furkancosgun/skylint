@@ -61,14 +61,14 @@ CLASS /skyl/cl_no_dyn_message IMPLEMENTATION.
     DATA ls_num_tok TYPE if_ci_atc_source_code_provider=>ty_token.
 
     ls_id_tok = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                       iv_lexeme    = 'ID' ).
+                                                    iv_lexeme    = 'ID' ).
     IF ls_id_tok IS INITIAL.
       RETURN.
     ENDIF.
     ls_typ_tok = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                        iv_lexeme    = 'TYPE' ).
+                                                     iv_lexeme    = 'TYPE' ).
     ls_num_tok = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                        iv_lexeme    = 'NUMBER' ).
+                                                     iv_lexeme    = 'NUMBER' ).
     rv_no = xsdbool(    /skyl/cl_ast_util=>token_is_literal( ls_id_tok )  = abap_false
                      OR /skyl/cl_ast_util=>token_is_literal( ls_typ_tok ) = abap_false
                      OR /skyl/cl_ast_util=>token_is_literal( ls_num_tok ) = abap_false ).

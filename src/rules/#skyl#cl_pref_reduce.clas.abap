@@ -86,41 +86,41 @@ CLASS /skyl/cl_pref_reduce IMPLEMENTATION.
     ENDIF.
 
     ls_loop_stmt = /skyl/cl_ast_util=>get_statement( it_statements = it_statements
-                                                        iv_index      = iv_loop_idx ).
+                                                     iv_index      = iv_loop_idx ).
     ls_body_stmt = /skyl/cl_ast_util=>get_statement( it_statements = it_statements
-                                                        iv_index      = iv_loop_idx + 1 ).
+                                                     iv_index      = iv_loop_idx + 1 ).
     ls_end_stmt  = /skyl/cl_ast_util=>get_statement( it_statements = it_statements
-                                                        iv_index      = iv_loop_idx + 2 ).
+                                                     iv_index      = iv_loop_idx + 2 ).
 
     IF ls_end_stmt-keyword <> 'ENDLOOP'.
       RETURN.
     ENDIF.
 
     IF    /skyl/cl_ast_util=>find_token( is_statement = ls_loop_stmt
-                                            iv_lexeme    = 'WHERE' )    > 0
+                                         iv_lexeme    = 'WHERE' )    > 0
        OR /skyl/cl_ast_util=>find_token( is_statement = ls_loop_stmt
-                                            iv_lexeme    = 'GROUP' )    > 0.
+                                         iv_lexeme    = 'GROUP' )    > 0.
       RETURN.
     ENDIF.
 
     IF /skyl/cl_ast_util=>matches_token_at( is_statement = ls_loop_stmt
-                                               iv_index     = 2
-                                               iv_expected  = `AT` ) = abap_false.
+                                            iv_index     = 2
+                                            iv_expected  = `AT` ) = abap_false.
       RETURN.
     ENDIF.
 
     lv_into_pos   = /skyl/cl_ast_util=>find_token( is_statement = ls_loop_stmt
-                                                      iv_lexeme    = 'INTO' ).
+                                                   iv_lexeme    = 'INTO' ).
     lv_assign_pos = /skyl/cl_ast_util=>find_token( is_statement = ls_loop_stmt
-                                                      iv_lexeme    = 'ASSIGNING' ).
+                                                   iv_lexeme    = 'ASSIGNING' ).
 
     IF lv_into_pos > 0.
       ls_tok = /skyl/cl_ast_util=>get_token( is_statement = ls_loop_stmt
-                                                iv_index     = lv_into_pos + 1 ).
+                                             iv_index     = lv_into_pos + 1 ).
       lv_target = /skyl/cl_ast_util=>extract_name_from_paren( ls_tok-lexeme ).
     ELSEIF lv_assign_pos > 0.
       ls_tok = /skyl/cl_ast_util=>get_token( is_statement = ls_loop_stmt
-                                                iv_index     = lv_assign_pos + 1 ).
+                                             iv_index     = lv_assign_pos + 1 ).
       lv_target = /skyl/cl_ast_util=>extract_name_from_paren( ls_tok-lexeme ).
     ELSE.
       RETURN.
@@ -151,9 +151,9 @@ CLASS /skyl/cl_pref_reduce IMPLEMENTATION.
 
     ls_first  = /skyl/cl_ast_util=>get_first_token( is_statement ).
     ls_second = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                 iv_index     = 2 ).
+                                              iv_index     = 2 ).
     ls_third  = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                 iv_index     = 3 ).
+                                              iv_index     = 3 ).
 
     IF ls_second-lexeme <> '='.
       RETURN.

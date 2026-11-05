@@ -63,25 +63,25 @@ CLASS /skyl/cl_pref_strict_sql IMPLEMENTATION.
     rv_unes = abap_false.
 
     IF /skyl/cl_ast_util=>match_token_sequence( is_statement = is_statement
-                                                   it_expected  = VALUE #( ( `OF` ) ( `TABLE` ) ) ) = abap_true.
+                                                it_expected  = VALUE #( ( `OF` ) ( `TABLE` ) ) ) = abap_true.
       ls_tok = /skyl/cl_ast_util=>get_token_after_sequence( is_statement = is_statement
-                                                               it_expected  = VALUE #( ( `OF` ) ( `TABLE` ) ) ).
+                                                            it_expected  = VALUE #( ( `OF` ) ( `TABLE` ) ) ).
     ELSEIF /skyl/cl_ast_util=>match_token_sequence( is_statement = is_statement
-                                                       it_expected  = VALUE #( ( `FIELDS` ) ( `OF` ) ) ) = abap_true.
+                                                    it_expected  = VALUE #( ( `FIELDS` ) ( `OF` ) ) ) = abap_true.
       ls_tok = /skyl/cl_ast_util=>get_token_after_sequence( is_statement = is_statement
-                                                               it_expected  = VALUE #( ( `FIELDS` ) ( `OF` ) ) ).
+                                                            it_expected  = VALUE #( ( `FIELDS` ) ( `OF` ) ) ).
     ELSEIF /skyl/cl_ast_util=>match_token_sequence( is_statement = is_statement
-                                                       it_expected  = VALUE #( ( `INTO` ) ( `TABLE` ) ) ) = abap_true.
+                                                    it_expected  = VALUE #( ( `INTO` ) ( `TABLE` ) ) ) = abap_true.
       ls_tok = /skyl/cl_ast_util=>get_token_after_sequence( is_statement = is_statement
-                                                               it_expected  = VALUE #( ( `INTO` ) ( `TABLE` ) ) ).
+                                                            it_expected  = VALUE #( ( `INTO` ) ( `TABLE` ) ) ).
     ELSEIF /skyl/cl_ast_util=>match_token_sequence( is_statement = is_statement
-                                                       it_expected  = VALUE #( ( `APPENDING` ) ( `TABLE` ) ) ) = abap_true.
+                                                    it_expected  = VALUE #( ( `APPENDING` ) ( `TABLE` ) ) ) = abap_true.
       ls_tok = /skyl/cl_ast_util=>get_token_after_sequence( is_statement = is_statement
-                                                               it_expected  = VALUE #( ( `APPENDING` ) ( `TABLE` ) ) ).
+                                                            it_expected  = VALUE #( ( `APPENDING` ) ( `TABLE` ) ) ).
     ELSEIF /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                   iv_lexeme    = 'INTO' ) = abap_true.
+                                                iv_lexeme    = 'INTO' ) = abap_true.
       ls_tok = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                      iv_lexeme    = 'INTO' ).
+                                                   iv_lexeme    = 'INTO' ).
     ENDIF.
 
     IF ls_tok-lexeme IS INITIAL.

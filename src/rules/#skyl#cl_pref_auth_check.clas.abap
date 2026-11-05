@@ -70,7 +70,7 @@ CLASS /skyl/cl_pref_auth_check IMPLEMENTATION.
       CLEAR ls_quickfix.
       lv_flat = /skyl/cl_ast_util=>flatten_statement( <ls_statement> ).
       lv_tcode = /skyl/cl_ast_util=>get_token_after( is_statement = <ls_statement>
-                                                        iv_lexeme    = 'TRANSACTION' )-lexeme.
+                                                     iv_lexeme    = 'TRANSACTION' )-lexeme.
       IF lv_tcode IS NOT INITIAL.
         REPLACE FIRST OCCURRENCE OF lv_tcode IN lv_flat WITH |{ lv_tcode } WITH AUTHORITY-CHECK|.
         IF sy-subrc = 0.
@@ -87,9 +87,8 @@ CLASS /skyl/cl_pref_auth_check IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_call_transaction.
-    rv_res = xsdbool( /skyl/cl_ast_util=>find_token_sequence(
-                          is_statement = is_statement
-                          it_expected  = VALUE #( ( `CALL` ) ( `TRANSACTION` ) ) ) > 0 ).
+    rv_res = xsdbool( /skyl/cl_ast_util=>find_token_sequence( is_statement = is_statement
+                                                              it_expected  = VALUE #( ( `CALL` ) ( `TRANSACTION` ) ) ) > 0 ).
   ENDMETHOD.
 
   METHOD has_inline_auth_check.

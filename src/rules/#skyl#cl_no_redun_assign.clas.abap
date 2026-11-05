@@ -98,7 +98,7 @@ CLASS /skyl/cl_no_redun_assign IMPLEMENTATION.
         ENDIF.
 
         ls_op = /skyl/cl_ast_util=>get_token( is_statement = is_statement
-                                                 iv_index     = 2 ).
+                                              iv_index     = 2 ).
 
         IF ls_op-lexeme <> '=' AND ls_op-lexeme <> '?='.
           RETURN.
@@ -111,15 +111,15 @@ CLASS /skyl/cl_no_redun_assign IMPLEMENTATION.
       WHEN 'MOVE'.
         lv_lexeme = 'TO'.
         IF /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                   iv_lexeme    = '?TO' ) = abap_true.
+                                                iv_lexeme    = '?TO' ) = abap_true.
           lv_lexeme = '?TO'.
         ENDIF.
 
         ls_left  = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                          iv_lexeme    = lv_lexeme ).
+                                                       iv_lexeme    = lv_lexeme ).
 
         ls_right = /skyl/cl_ast_util=>get_token_before( is_statement = is_statement
-                                                           iv_lexeme    = lv_lexeme ).
+                                                        iv_lexeme    = lv_lexeme ).
 
         rv_res = xsdbool( get_symbol( ls_left ) = get_symbol( ls_right ) ).
     ENDCASE.

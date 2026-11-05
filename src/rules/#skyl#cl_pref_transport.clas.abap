@@ -58,12 +58,12 @@ CLASS /skyl/cl_pref_transport IMPLEMENTATION.
             ENDIF.
 
             lv_has_transporting = /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                                          iv_lexeme    = 'TRANSPORTING' ).
+                                                                       iv_lexeme    = 'TRANSPORTING' ).
             lv_is_itab_modify = xsdbool(
                  /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                         iv_lexeme    = 'FROM' )       = abap_true
+                                                      iv_lexeme    = 'FROM' )       = abap_true
               OR /skyl/cl_ast_util=>has_token_lexeme( is_statement = <ls_statement>
-                                                         iv_lexeme    = 'INDEX' )      = abap_true ).
+                                                      iv_lexeme    = 'INDEX' )      = abap_true ).
 
             IF lv_is_itab_modify = abap_true AND lv_has_transporting = abap_false.
               report_statement( is_statement    = <ls_statement>

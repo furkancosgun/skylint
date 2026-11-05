@@ -185,7 +185,7 @@ CLASS /skyl/cl_no_mod_loop_tab IMPLEMENTATION.
     CLEAR rv_full_name.
 
     ls_tok = /skyl/cl_ast_util=>get_token_after_sequence( is_statement = is_statement
-                                                             it_expected  = VALUE #( ( `LOOP` ) ( `AT` ) ) ).
+                                                          it_expected  = VALUE #( ( `LOOP` ) ( `AT` ) ) ).
     IF ls_tok-lexeme IS INITIAL OR ls_tok-lexeme = 'GROUP'.
       RETURN.
     ENDIF.
@@ -199,51 +199,50 @@ CLASS /skyl/cl_no_mod_loop_tab IMPLEMENTATION.
     CASE is_statement-keyword.
       WHEN 'APPEND'.
         rs_token = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                          iv_lexeme    = 'TO' ).
+                                                       iv_lexeme    = 'TO' ).
 
       WHEN 'INSERT'.
         rs_token = /skyl/cl_ast_util=>get_token_after_sequence( is_statement = is_statement
-                                                                   it_expected  = VALUE #( ( `INTO` ) ( `TABLE` ) ) ).
+                                                                it_expected  = VALUE #( ( `INTO` ) ( `TABLE` ) ) ).
         IF rs_token-lexeme IS INITIAL.
           rs_token = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                            iv_lexeme    = 'INTO' ).
+                                                         iv_lexeme    = 'INTO' ).
         ENDIF.
 
       WHEN 'MODIFY'.
         rs_token = /skyl/cl_ast_util=>get_token_after_sequence( is_statement = is_statement
-                                                                   it_expected  = VALUE #( ( `MODIFY` ) ( `TABLE` ) ) ).
+                                                                it_expected  = VALUE #( ( `MODIFY` ) ( `TABLE` ) ) ).
         IF rs_token-lexeme IS INITIAL.
           rs_token = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                            iv_lexeme    = 'MODIFY' ).
+                                                         iv_lexeme    = 'MODIFY' ).
         ENDIF.
 
       WHEN 'DELETE'.
         IF /skyl/cl_ast_util=>has_token_lexeme( is_statement = is_statement
-                                                   iv_lexeme    = 'ADJACENT' ) = abap_true.
+                                                iv_lexeme    = 'ADJACENT' ) = abap_true.
           rs_token = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                            iv_lexeme    = 'FROM' ).
+                                                         iv_lexeme    = 'FROM' ).
         ELSE.
-          rs_token = /skyl/cl_ast_util=>get_token_after_sequence(
-                         is_statement = is_statement
-                         it_expected  = VALUE #( ( `DELETE` ) ( `TABLE` ) ) ).
+          rs_token = /skyl/cl_ast_util=>get_token_after_sequence( is_statement = is_statement
+                                                                  it_expected  = VALUE #( ( `DELETE` ) ( `TABLE` ) ) ).
 
           IF rs_token-lexeme IS INITIAL.
             rs_token = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                              iv_lexeme    = 'DELETE' ).
+                                                           iv_lexeme    = 'DELETE' ).
           ENDIF.
         ENDIF.
 
       WHEN 'CLEAR' OR 'FREE'.
         rs_token = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                          iv_lexeme    = is_statement-keyword ).
+                                                       iv_lexeme    = is_statement-keyword ).
 
       WHEN 'SORT'.
         rs_token = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                          iv_lexeme    = 'SORT' ).
+                                                       iv_lexeme    = 'SORT' ).
 
       WHEN 'COLLECT'.
         rs_token = /skyl/cl_ast_util=>get_token_after( is_statement = is_statement
-                                                          iv_lexeme    = 'INTO' ).
+                                                       iv_lexeme    = 'INTO' ).
     ENDCASE.
   ENDMETHOD.
 
