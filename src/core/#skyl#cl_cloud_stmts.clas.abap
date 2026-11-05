@@ -4,8 +4,8 @@ CLASS /skyl/cl_cloud_stmts DEFINITION
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-    TYPES ty_lines TYPE STANDARD TABLE OF string WITH EMPTY KEY.
-    TYPES ty_tokens TYPE STANDARD TABLE OF string WITH EMPTY KEY.
+    TYPES ty_tokens         TYPE STANDARD TABLE OF string WITH EMPTY KEY.
+    TYPES ty_lines          TYPE STANDARD TABLE OF string WITH EMPTY KEY.
     TYPES ty_token_patterns TYPE STANDARD TABLE OF ty_tokens WITH EMPTY KEY.
 
     CLASS-METHODS get_forbidden_patterns

@@ -5950,6 +5950,40 @@ export const RULES = [
       "pref-func-module"
     ],
     "customSection": "### Statement Scope and Handling\n\nThe check scans statement prefixes against the ABAP Cloud forbidden catalog:\n\n| Statement Construct | Status | Note |\n|---|---|---|\n| `SUBMIT ...` | Forbidden | Classic report execution |\n| `CALL TRANSACTION ...` | Forbidden | Dynpro transaction call |\n| `EXEC SQL ...` | Forbidden | Native SQL |\n| `CALL FUNCTION ...` | Allowed | Released function modules |\n| `CREATE OBJECT ... TYPE ...` | Allowed | Standard ABAP OO instantiation |\n| `SORT itab BY ...` | Allowed | Internal table sorting |\n\n### Prefix Disambiguation\n\nWhen a keyword prefix is shared between classic and cloud syntax, the longest match applies:\n- `CALL` is forbidden, but `CALL FUNCTION` and `CALL METHOD` are allowed.\n- `SORT` without an internal table is forbidden (dataset sort); `SORT itab` is allowed.\n- `CREATE OBJECT` with `TYPE` is allowed; OLE automation (`CREATE OBJECT ref 'PROGID'`) is forbidden.\n- Loop events (`AT NEW`, `AT LAST`) are allowed; dynpro events (`AT PF01`, `AT LINE-SELECTION`) are forbidden.\n\n### Suppression\n\nSuppress intentional legacy usages with `\"#EC PREF_CLOUD_READY`."
+  },
+  {
+    "ruleId": "no-read-in-loop",
+    "title": "Avoid Linear READ TABLE Scans Inside Loops",
+    "rationale": "A READ TABLE that addresses rows through WITH KEY or WHERE walks the internal table entry by entry, so placing it inside a LOOP turns the routine into an O(N*M) scan: doubling both tables quadruples the work, and code that passes a smoke test with fifty rows stalls once production feeds it fifty thousand. Declaring the looked-up table as HASHED or SORTED with the searched component as key, or resolving the values in one pass before the loop, keeps each lookup at constant or logarithmic cost. The rule reports only the linear access forms; reads through WITH TABLE KEY, BINARY SEARCH or INDEX address a declared key and stay unreported.",
+    "className": "/SKYL/CL_NO_READ_IN_LOOP",
+    "pseudoComment": "NO_READ_LOOP",
+    "category": "performance",
+    "example": {
+      "bad": "LOOP AT lt_orders INTO DATA(ls_order).\n  READ TABLE lt_items INTO DATA(ls_item) WITH KEY order_id = ls_order-id.\n  APPEND ls_item TO lt_selected.\nENDLOOP.",
+      "good": "DATA lt_items_by_id TYPE HASHED TABLE OF ty_item WITH UNIQUE KEY order_id.\nlt_items_by_id = VALUE #( FOR ls_item IN lt_items ( ( ls_item ) ) ).\n\nLOOP AT lt_orders INTO DATA(ls_order).\n  READ TABLE lt_items_by_id INTO DATA(ls_item) WITH TABLE KEY order_id = ls_order-id.\n  APPEND ls_item TO lt_selected.\nENDLOOP."
+    },
+    "seo": {
+      "description": "Find READ TABLE statements with WITH KEY or WHERE inside a loop, which rescan the internal table on every pass, and replace them with hashed or sorted table keys.",
+      "keywords": [
+        "no-read-in-loop",
+        "READ TABLE inside loop",
+        "O(N*M) internal table scan",
+        "hashed table lookup ABAP",
+        "ABAP loop performance",
+        "SAP ATC check"
+      ]
+    },
+    "relatedRules": [
+      "no-nested-loop",
+      "pref-read-key",
+      "no-db-in-loop",
+      "no-mod-loop-tab"
+    ],
+    "parameters": {
+      "CHECK_WITH_KEY": "Report READ TABLE ... WITH KEY inside a loop, because the key is compared against every row. Disable when a codebase only treats the WHERE form as a defect while table types are still being converted.",
+      "CHECK_WHERE": "Report READ TABLE ... WHERE inside a loop, because a WHERE condition never engages a table key and always visits all rows. Disable to allow condition based reads during a migration."
+    },
+    "customSection": "## Access forms\n\nOnly `READ TABLE` statements inside a `LOOP`, `DO` or `WHILE` body are evaluated, and key access is separated from linear access:\n\n| Access form | Inside a loop |\n|---|---|\n| `READ TABLE lt INTO ls WITH KEY f = v.` | reported (`NO_RD_WKEY`) |\n| `READ TABLE lt TRANSPORTING NO FIELDS WITH KEY f = v.` | reported (`NO_RD_WKEY`) |\n| `READ TABLE lt INTO ls WHERE f = v.` | reported (`NO_RD_WHRE`) |\n| `READ TABLE lt INTO ls WITH TABLE KEY f = v.` | allowed, addresses a declared key |\n| `READ TABLE lt INTO ls WITH KEY f = v BINARY SEARCH.` | allowed, logarithmic search |\n| `READ TABLE lt INTO ls INDEX lv_index.` | allowed, constant time |\n\n## Notes\n\n- `READ LINE`, `READ REPORT`, `READ DATASET` and the EML `READ ENTITIES` form are not internal table reads and are never reported.\n- Keyword tokens are only recognised when they carry no compiler reference, so a variable or component named `where` or `key` cannot raise a finding.\n- The loop does not have to iterate over the table being read; a linear read of any table while a loop is open repeats the scan on every pass.\n- Fix a finding by declaring the read table `HASHED` or `SORTED` with the searched component as key and reading it with `WITH TABLE KEY`, or by resolving all lookups in a single pass before the loop.\n- Suppress an intentional read with `\"#EC NO_READ_LOOP` on the statement."
   }
 ];
 

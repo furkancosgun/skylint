@@ -5870,5 +5870,45 @@
       "pref-func-module"
     ],
     "defaultParameters": []
+  },
+  {
+    "ruleId": "no-read-in-loop",
+    "title": "Avoid Linear READ TABLE Scans Inside Loops",
+    "className": "/SKYL/CL_NO_READ_IN_LOOP",
+    "checkName": "/SKYL/NO_READ_IN_LOOP",
+    "category": "performance",
+    "categoryTitle": "Performance & Database",
+    "pseudoComment": "NO_READ_LOOP",
+    "description": "Avoid linear READ TABLE scans inside loop iterations",
+    "hasQuickfix": false,
+    "remoteEnabled": true,
+    "attributes": [
+      {
+        "name": "CHECK_WITH_KEY",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      },
+      {
+        "name": "CHECK_WHERE",
+        "kind": "Boolean",
+        "defaultValue": "true"
+      }
+    ],
+    "relatedRules": [
+      "no-nested-loop",
+      "pref-read-key",
+      "no-db-in-loop",
+      "no-mod-loop-tab"
+    ],
+    "defaultParameters": [
+      {
+        "name": "CHECK_WITH_KEY",
+        "value": "true"
+      },
+      {
+        "name": "CHECK_WHERE",
+        "value": "true"
+      }
+    ]
   }
 ]

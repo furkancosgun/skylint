@@ -16,7 +16,7 @@
       "key": "performance",
       "title": "Performance & Database",
       "description": "Database query efficiency, buffer protection, and internal table operation guidelines.",
-      "count": 20
+      "count": 21
     },
     {
       "key": "security",
@@ -2407,6 +2407,18 @@
       "hasQuickfix": false,
       "remoteEnabled": true,
       "configurable": false
+    },
+    {
+      "ruleId": "no-read-in-loop",
+      "title": "Avoid Linear READ TABLE Scans Inside Loops",
+      "className": "/SKYL/CL_NO_READ_IN_LOOP",
+      "description": "Avoid linear READ TABLE scans inside loop iterations",
+      "category": "performance",
+      "categoryTitle": "Performance & Database",
+      "pseudoComment": "NO_READ_LOOP",
+      "hasQuickfix": false,
+      "remoteEnabled": true,
+      "configurable": true
     }
   ]
 }

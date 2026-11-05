@@ -191,8 +191,8 @@ function generateAbap(catalog) {
   lines.push('  CREATE PUBLIC.');
   lines.push('');
   lines.push('  PUBLIC SECTION.');
-  lines.push('    TYPES ty_lines TYPE STANDARD TABLE OF string WITH EMPTY KEY.');
-  lines.push('    TYPES ty_tokens TYPE STANDARD TABLE OF string WITH EMPTY KEY.');
+  lines.push('    TYPES ty_tokens         TYPE STANDARD TABLE OF string WITH EMPTY KEY.');
+  lines.push('    TYPES ty_lines          TYPE STANDARD TABLE OF string WITH EMPTY KEY.');
   lines.push('    TYPES ty_token_patterns TYPE STANDARD TABLE OF ty_tokens WITH EMPTY KEY.');
   lines.push('');
   lines.push('    CLASS-METHODS get_forbidden_patterns');
@@ -297,12 +297,12 @@ if (checkOnly) {
   if (process.exitCode === undefined) {
     console.log(
       `[cloud-statements] Up to date: ${catalog.forbiddenNames.size} Cloud-forbidden statements, ` +
-        `${catalog.forbiddenPatterns.length} forbidden and ${catalog.allowedPatterns.length} allowed patterns.`,
+      `${catalog.forbiddenPatterns.length} forbidden and ${catalog.allowedPatterns.length} allowed patterns.`,
     );
   }
 } else {
   console.log(
     `[cloud-statements] Generated ${catalog.forbiddenNames.size} Cloud-forbidden statements, ` +
-      `${catalog.forbiddenPatterns.length} forbidden and ${catalog.allowedPatterns.length} allowed patterns.`,
+    `${catalog.forbiddenPatterns.length} forbidden and ${catalog.allowedPatterns.length} allowed patterns.`,
   );
 }

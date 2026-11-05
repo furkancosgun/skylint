@@ -1634,6 +1634,19 @@
     },
     {
       "checkName": "/SKYL/PREF_CLOUD_READY"
+    },
+    {
+      "checkName": "/SKYL/NO_READ_IN_LOOP",
+      "parameters": [
+        {
+          "name": "CHECK_WITH_KEY",
+          "value": "true"
+        },
+        {
+          "name": "CHECK_WHERE",
+          "value": "true"
+        }
+      ]
     }
   ]
 }
